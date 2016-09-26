@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0-*",
+
+    "dependencies": {
+        "Microsoft.Extensions.FileProviders.Abstractions": "1.0.0",
+        "Microsoft.Extensions.FileSystemGlobbing": "1.0.0",
+        "NETStandard.Library": "1.6.0",
+        "System.IO.FileSystem": "4.0.1"
+    },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}
