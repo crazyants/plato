@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0-*",
+
+    "dependencies": {
+        "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-rc1-final",
+        "Microsoft.AspNetCore.Hosting.Abstractions": "1.0.0",
+        "NETStandard.Library": "1.6.0"
+    },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}

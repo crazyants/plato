@@ -16,8 +16,34 @@ namespace Plato.Hosting.Web.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddPlato(this IServiceCollection services)
+        public static IServiceCollection AddPlato(
+            this IServiceCollection services)
         {
+
+            
+            services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
+
+            // shell context (settings, features etc)
+
+            services.AddSingleton<IShellContextFactory, ShellContextFactory>();
+
+            // implement our own IHostEnvironment 
+
+            //services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
+
+            // file system
+            services.AddSingleton<IFileProvider, PhysicalFileProvider>();
+            services.AddSingleton<IPlatoFileSystem, PlatoFileSystem>();
+
+            services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
+
+            
+
+            // modules
+
+            services.AddSingleton<IModuleLocator, ModuleLocator>();
+            //services.AddSingleton<IModuleLibraryService, ModuleLibraryService>();
+
 
             services.Configure<RazorViewEngineOptions>(configureOptions: options =>
             {
@@ -26,19 +52,6 @@ namespace Plato.Hosting.Web.Extensions
 
                 var expander = new ThemeViewLocationExpander("classic");
                 options.ViewLocationExpanders.Add(expander);
-
-                // shell context
-
-                services.AddSingleton<IShellContextFactory, ShellContextFactory>();
-
-                // file system
-
-                services.AddTransient<IPlatoFileSystem, PlatodFileSystem>();
-
-                // modules
-
-                services.AddSingleton<IModuleLocator, ModuleLocator>();
-                //services.AddSingleton<IModuleLibraryService, ModuleLibraryService>();
                 
                 // load view components
 

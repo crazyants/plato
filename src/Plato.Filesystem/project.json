@@ -2,8 +2,11 @@
   "version": "1.0.0-*",
 
     "dependencies": {
+        "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-rc1-final",
+        "Microsoft.AspNetCore.Hosting": "1.0.0",
         "Microsoft.Extensions.FileProviders.Abstractions": "1.0.0",
         "Microsoft.Extensions.FileSystemGlobbing": "1.0.0",
+        "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
         "NETStandard.Library": "1.6.0",
         "System.IO.FileSystem": "4.0.1"
     },

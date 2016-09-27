@@ -24,7 +24,8 @@
     "Microsoft.AspNetCore.Mvc.Razor": "1.0.1",
     "Plato.Hosting.Web": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.1",
-    "Microsoft.AspNetCore.Mvc.Abstractions": "1.0.1"
+    "Microsoft.AspNetCore.Mvc.Abstractions": "1.0.1",
+    "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-rc1-final"
   },
 
   "tools": {

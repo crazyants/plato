@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Plato.FileSystem;
 using System.IO;
 using Plato.Utility;
@@ -11,7 +9,7 @@ namespace Plato.Environment.Modules
     public class ModuleLocator : IModuleLocator
     {
 
-        #region "Private Variables"
+        #region "Private Memberrs"
 
         private const string NameSection = "name";
         private const string PathSection = "path";
@@ -32,14 +30,41 @@ namespace Plato.Environment.Modules
         private const string FeaturesSection = "features";
         private const string SessionStateSection = "sessionstate";
 
+        private readonly IPlatoFileSystem _fileSystem;
+
         #endregion
 
-        private readonly IPlatoFileSystem _fileSystem;
+        #region "Constructor"
 
         public ModuleLocator(IPlatoFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
         }
+
+        #endregion
+
+        #region "Implementation"
+
+        public IEnumerable<ModuleDescriptor> LocateModuless(
+            IEnumerable<string> paths, 
+            string extensionType, 
+            string manifestName, 
+            bool manifestIsOptional)
+        {
+            var descriptors = new List<ModuleDescriptor>();
+            foreach (string path in paths)
+            {
+                descriptors.AddRange(AvailableModules(path, extensionType, manifestName, manifestIsOptional));
+
+            }
+
+            return descriptors;
+
+        }
+
+        #endregion
+
+        #region "Private Methods"
 
         private IEnumerable<ModuleDescriptor> AvailableModules(string path, string extensionType, string manifestName, bool manifestIsOptional)
         {
@@ -115,7 +140,7 @@ namespace Plato.Environment.Modules
             return GetDescriptorForExtension(locationPath, extensionId, extensionType, manifestText);
         }
 
-        public static ModuleDescriptor GetDescriptorForExtension(string locationPath, string extensionId, string extensionType, string manifestText)
+        private static ModuleDescriptor GetDescriptorForExtension(string locationPath, string extensionId, string extensionType, string manifestText)
         {
             Dictionary<string, string> manifest = ParseManifest(manifestText);
             var moduleDescriptor = new ModuleDescriptor
@@ -229,9 +254,8 @@ namespace Plato.Environment.Modules
             return manifest;
         }
 
-        public IEnumerable<ModuleDescriptor> LocateModuless(IEnumerable<string> paths, string extensionType, string manifestName, bool manifestIsOptional)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
+
+
     }
 }

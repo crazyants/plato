@@ -1,6 +1,21 @@
-﻿@{
+﻿@model IEnumerable<object>
+@{
     ViewData["Title"] = "Home Page";
 }
 
+
+<h2>Located Modules (from model)</h2>
+
+@foreach (object o in @Model)
+{
+    @o;
+}
+
 @await Component.InvokeAsync("Plato.Modules.Simple")
+
+<br /><br />
+
+<br /><br />
+
+@ViewData["result"]
 

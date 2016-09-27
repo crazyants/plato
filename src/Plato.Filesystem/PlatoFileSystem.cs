@@ -6,24 +6,28 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace Plato.FileSystem
 {
-    public class PlatodFileSystem : IPlatoFileSystem
+    public class PlatoFileSystem : IPlatoFileSystem
     {
 
         private readonly IFileProvider _fileProvider;
+        private readonly ILogger _logger;
 
-        public PlatodFileSystem(
-            IFileProvider fileProvicer,
-            string rootPath)
+        public PlatoFileSystem(
+            string rootPath,
+            IFileProvider fileProvider,
+            ILogger logger)
         {
-
-            _fileProvider = fileProvicer;
-
+            _fileProvider = fileProvider;
+            _logger = logger;
             RootPath = rootPath;
-                     
+
+            //T = NullLocalizer.Instance;
         }
+
 
         public string RootPath
         {
@@ -222,5 +226,6 @@ namespace Plato.FileSystem
 
             return directory.EnumerateDirectories();
         }
+
     }
 }
