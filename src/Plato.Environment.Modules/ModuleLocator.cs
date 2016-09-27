@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Plato.Filesystem;
+using Plato.FileSystem;
 using System.IO;
 using Plato.Utility;
 
 namespace Plato.Environment.Modules
 {
-    public class ModuleLocator
+    public class ModuleLocator : IModuleLocator
     {
 
         #region "Private Variables"
@@ -123,7 +123,7 @@ namespace Plato.Environment.Modules
                 //Location = locationPath,
                 //Id = extensionId,
                 //ExtensionType = extensionType,
-                //Name = GetValue(manifest, NameSection) ?? extensionId,
+                Name = GetValue(manifest, NameSection) ?? extensionId,
                 Path = GetValue(manifest, PathSection),
                 //Description = GetValue(manifest, DescriptionSection),
                 //Version = GetValue(manifest, VersionSection),
@@ -229,5 +229,9 @@ namespace Plato.Environment.Modules
             return manifest;
         }
 
+        public IEnumerable<ModuleDescriptor> LocateModuless(IEnumerable<string> paths, string extensionType, string manifestName, bool manifestIsOptional)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

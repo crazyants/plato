@@ -7,25 +7,23 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
 
-namespace Plato.Filesystem
+namespace Plato.FileSystem
 {
-    public class OrchardFileSystem : IPlatoFileSystem
+    public class PlatodFileSystem : IPlatoFileSystem
     {
 
         private readonly IFileProvider _fileProvider;
 
-        public OrchardFileSystem(
+        public PlatodFileSystem(
             IFileProvider fileProvicer,
             string rootPath)
         {
 
             _fileProvider = fileProvicer;
+
             RootPath = rootPath;
-
-            //T = NullLocalizer.Instance;
+                     
         }
-
-        //public Localizer T { get; set; }
 
         public string RootPath
         {
@@ -36,7 +34,7 @@ namespace Plato.Filesystem
         {
             var destinationFileName = fileInfo.PhysicalPath;
             bool isDirectory = Directory.Exists(destinationFileName);
-            // Try deleting the destination first
+         
             try
             {
                 if (isDirectory)

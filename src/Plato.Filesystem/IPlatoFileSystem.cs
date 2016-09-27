@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileSystemGlobbing;
 
-namespace Plato.Filesystem
+namespace Plato.FileSystem
 {
     public interface IPlatoFileSystem
     {
