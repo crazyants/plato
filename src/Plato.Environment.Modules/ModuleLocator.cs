@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Plato.FileSystem;
 using System.IO;
 using Plato.Utility;
+using Plato.Abstractions.Utility.Extensions;
 
 namespace Plato.Environment.Modules
 {
@@ -29,7 +30,6 @@ namespace Plato.Environment.Modules
         private const string PrioritySection = "priority";
         private const string FeaturesSection = "features";
         private const string SessionStateSection = "sessionstate";
-
         private readonly IPlatoFileSystem _fileSystem;
 
         #endregion
@@ -51,11 +51,19 @@ namespace Plato.Environment.Modules
             string manifestName, 
             bool manifestIsOptional)
         {
+
+            if (paths == null)            
+                throw new ArgumentNullException(nameof(paths));
+            
             var descriptors = new List<ModuleDescriptor>();
             foreach (string path in paths)
             {
-                descriptors.AddRange(AvailableModules(path, extensionType, manifestName, manifestIsOptional));
-
+                descriptors.AddRange(
+                    AvailableModules(
+                        path, extensionType,
+                        manifestName, 
+                        manifestIsOptional)
+                    );
             }
 
             return descriptors;
@@ -68,10 +76,19 @@ namespace Plato.Environment.Modules
 
         private IEnumerable<ModuleDescriptor> AvailableModules(string path, string extensionType, string manifestName, bool manifestIsOptional)
         {
-            return AvailableModulesInFolder(path, extensionType, manifestName, manifestIsOptional).ToReadOnlyCollection();
+            return AvailableModulesInFolder(
+                path, 
+                extensionType, 
+                manifestName, 
+                manifestIsOptional).ToReadOnlyCollection();
+
         }
            
-        private List<ModuleDescriptor> AvailableModulesInFolder(string path, string extensionType, string manifestName, bool manifestIsOptional)
+        private List<ModuleDescriptor> AvailableModulesInFolder(
+            string path, 
+            string moduleType, 
+            string manifestName, 
+            bool manifestIsOptional)
         {
             var localList = new List<ModuleDescriptor>();
 
@@ -83,72 +100,85 @@ namespace Plato.Environment.Modules
             var subfolders = _fileSystem.ListDirectories(path);
             foreach (var subfolder in subfolders)
             {
-                var extensionId = subfolder.Name;
-                var manifestPath = _fileSystem.Combine(path, extensionId, manifestName);
+                var moduleId = subfolder.Name;
+                var manifestPath = _fileSystem.Combine(path, moduleId, manifestName);
                 try
                 {
-                    var descriptor = GetModuleDescriptor(path, extensionId, extensionType, manifestPath, manifestIsOptional);
+                    var descriptor = GetModuleDescriptor(
+                        path, 
+                        moduleId, 
+                        moduleType, 
+                        manifestPath, 
+                        manifestIsOptional);
 
                     if (descriptor == null)
                         continue;
 
-                    //if (descriptor.Path != null && !descriptor.Path.IsValidUrlSegment())
-                    //{
-                    //    //_logger.LogError("The module '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces.",
-                    //    //             extensionId,
-                    //    //             descriptor.Path);
-                    //    continue;
-                    //}
+                    if (descriptor.Path != null && !descriptor.Path.IsValidUrlSegment())
+                    {
+                        //_logger.LogError("The module '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces.",
+                        //             extensionId,
+                        //             descriptor.Path);
+                        continue;
+                    }
 
-                    //if (descriptor.Path == null)
-                    //{
-                    //    descriptor.Path = descriptor.Name.IsValidUrlSegment()
-                    //                          ? descriptor.Name
-                    //                          : descriptor.Id;
-                    //}
+                    if (descriptor.Path == null)
+                    {
+                        descriptor.Path = descriptor.Name.IsValidUrlSegment()
+                                              ? descriptor.Name
+                                              : descriptor.ID;
+                    }
 
                     localList.Add(descriptor);
                 }
                 catch (Exception ex)
                 {
-                    // Ignore invalid module manifests
-                    //_logger.LogError(string.Format("The module '{0}' could not be loaded. It was ignored.", extensionId), ex);
+                    throw ex;
+                    // TODO: implement logging
                 }
             }
-            //if (_logger.IsEnabled(LogLevel.Information))
-            //{
-            //    _logger.LogInformation("Done looking for extensions in '{0}': {1}", path, string.Join(", ", localList.Select(d => d.Id)));
-            //}
+        
             return localList;
         }
 
-        private ModuleDescriptor GetModuleDescriptor(string locationPath, string extensionId, string extensionType, string manifestPath, bool manifestIsOptional)
+        private ModuleDescriptor GetModuleDescriptor(
+            string locationPath, 
+            string extensionId, 
+            string extensionType, 
+            string manifestPath, 
+            bool manifestIsOptional)
         {
             var manifestText = _fileSystem.ReadFileAsync(manifestPath).Result;
             if (manifestText == null)
             {
-                if (manifestIsOptional)
-                {
-                    manifestText = string.Format("Id: {0}", extensionId);
-                }
-                else
-                {
-                    return null;
-                }
+
+                if (manifestIsOptional)                
+                    manifestText = string.Format("Id: {0}", extensionId);                
+                else                
+                    return null;                
             }
 
-            return GetDescriptorForExtension(locationPath, extensionId, extensionType, manifestText);
+            return GetDescriptorForModule(
+                locationPath, 
+                extensionId, 
+                extensionType, 
+                manifestText);
+
         }
 
-        private static ModuleDescriptor GetDescriptorForExtension(string locationPath, string extensionId, string extensionType, string manifestText)
+        private static ModuleDescriptor GetDescriptorForModule(
+            string locationPath, 
+            string moduleId, 
+            string moduleType, 
+            string manifestText)
         {
             Dictionary<string, string> manifest = ParseManifest(manifestText);
             var moduleDescriptor = new ModuleDescriptor
             {
                 //Location = locationPath,
-                //Id = extensionId,
-                //ExtensionType = extensionType,
-                Name = GetValue(manifest, NameSection) ?? extensionId,
+                ID = moduleId,
+                ModuleType = moduleType,
+                Name = GetValue(manifest, NameSection) ?? moduleId,
                 Path = GetValue(manifest, PathSection),
                 //Description = GetValue(manifest, DescriptionSection),
                 //Version = GetValue(manifest, VersionSection),

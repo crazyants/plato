@@ -25,7 +25,13 @@
     "Plato.Hosting.Web": "1.0.0-*",
     "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.1",
     "Microsoft.AspNetCore.Mvc.Abstractions": "1.0.1",
-    "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-rc1-final"
+    "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Mvc.Abstractions": "6.0.0-rc1-final",
+    "Microsoft.AspNet.Mvc.ViewFeatures": "6.0.0-rc1-final",
+    "Microsoft.AspNetCore.Mvc.DataAnnotations": "1.0.1",
+    "Microsoft.AspNetCore.Mvc.Core": "1.0.1",
+    "Microsoft.AspNetCore.Razor": "1.0.0",
+    "Microsoft.AspNetCore.Mvc.Razor.Host": "1.0.1"
   },
 
   "tools": {
