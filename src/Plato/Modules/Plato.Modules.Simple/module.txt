@@ -1,0 +1,2 @@
+Name: Simple Component Test
+Author: InstantASP

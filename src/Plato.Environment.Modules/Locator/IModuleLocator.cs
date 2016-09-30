@@ -7,6 +7,7 @@ namespace Plato.Environment.Modules
 {
     public interface IModuleLocator
     {
-        IEnumerable<ModuleDescriptor> LocateModuless(IEnumerable<string> paths, string extensionType, string manifestName, bool manifestIsOptional);
+
+        IEnumerable<ModuleDescriptor> LocateModules(IEnumerable<string> paths, string extensionType, string manifestName, bool manifestIsOptional);
     }
 }

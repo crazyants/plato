@@ -15,7 +15,8 @@
     },
     "buildOptions": {
         "embed": {
-            "include": "Views/**/*.cshtml",     
-        }  
-    } 
+            "include": "Views/**/*.cshtml"
+        }
+    }
+
 }

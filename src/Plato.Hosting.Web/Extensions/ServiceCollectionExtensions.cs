@@ -1,10 +1,8 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Plato.Modules.Simple;
 using Plato.FileSystem;
 using Plato.Environment.Modules;
 using Plato.Hosting.Web.Expanders;
@@ -13,8 +11,9 @@ using System.IO;
 using System.Text;
 using System;
 using Microsoft.Extensions.Primitives;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -24,15 +23,24 @@ namespace Plato.Hosting.Web.Extensions
         public static IServiceCollection AddPlato(
             this IServiceCollection services)
         {
-    
-            services.AddMvcCore(options =>
-            {
-                options.Filters.Add(typeof(AutoValidateAntiforgeryTokenAuthorizationFilter));
-            })
-            .AddViews()
-            .AddViewLocalization()
-            .AddRazorViewEngine()
-            .AddJsonFormatters();
+
+            services.AddMvc();
+
+            services.AddModuleViewExpanders("Modules");
+
+            // services.AddMvc();
+
+            //services.AddMvcCore(options =>
+            //{
+            //    options.Filters.Add(typeof(AutoValidateAntiforgeryTokenAuthorizationFilter));
+            //})
+            //.AddViews()
+            //.AddViewLocalization()
+            //.AddRazorViewEngine()
+            //.AddJsonFormatters();
+
+            //services.AddSingleton<ILogger, Logger>();
+
             
             services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
 
@@ -47,51 +55,67 @@ namespace Plato.Hosting.Web.Extensions
             // file system
             services.AddSingleton<IFileProvider, PhysicalFileProvider>();
             services.AddSingleton<IPlatoFileSystem, PlatoFileSystem>();
-
             services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
-                       
-
+            
             // modules
-
+           
             services.AddSingleton<IModuleLocator, ModuleLocator>();
 
-            //services.AddSingleton<IModuleLibraryService, ModuleLibraryService>();
-
-
+            services.AddSingleton<IModuleLoaderService, ModuleLoaderService>();
+            //services.AddSingleton<IModuleLoader, ModuleLoader>();
+                     
             services.Configure<RazorViewEngineOptions>(configureOptions: options =>
             {
+                             
+                options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
+                //options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
 
-                // dynamically load theme at run-time
+                var moduleLocater = services.BuildServiceProvider().GetService<IModuleLocator>();
+                var moduleLoder = services.BuildServiceProvider().GetService<IModuleLoaderService>();
+                var moduleDescriptors = moduleLocater.LocateModules(
+                  new string[] { "Modules" },
+                  "Modules",
+                  "module.txt",
+                  false);
 
-                //var expander = new ThemeViewLocationExpander("classic");
-                //options.ViewLocationExpanders.Add(expander);
+                foreach (ModuleDescriptor module in moduleDescriptors)
+                {
 
-                options.FileProviders.Add(new ThemingFileProvider());
-             
+                    var assemblies = moduleLoder.LoadModule(module);
+                    foreach (var assembly in assemblies)
+                    {
+                        var embeddedFileProviders = new EmbeddedFileProvider(
+                            assembly,
+                            module.ID
+                        );
+
+                        options.FileProviders.Add(new CompositeFileProvider(embeddedFileProviders));
+                    }
+                                    
+                    
+                }
+                               
+
+                //options.FileProviders.Add(new ThemingFileProvider());
+
                 // load view components
-
-                var embeddedFileProviders = new EmbeddedFileProvider(
-                      typeof(SimpleViewComponent).GetTypeInfo().Assembly,
-                      "Plato.Modules.Simple"
-                  );
-
-                options.FileProviders.Add(new CompositeFileProvider(embeddedFileProviders));
                 
+                
+
             });
             
             return services;
 
         }
-
-
+        
         public static IApplicationBuilder UsePlato(
          this IApplicationBuilder app,
          IHostingEnvironment env,
          ILoggerFactory loggerFactory)
         {
-     
-            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            //loggerFactory.AddDebug();
+
+            //loggerFactory.AddConsole(IConfiguration.GetSection("Logging"));
+            loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
             {
@@ -105,37 +129,19 @@ namespace Plato.Hosting.Web.Extensions
 
             app.UseStaticFiles();
 
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Home}/{action=Index}/{id?}");
-            //});
-
-            var moduleLocator = app.ApplicationServices.GetRequiredService<IModuleLocator>();
-
-            //var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
-
-            var descriptors = moduleLocator.LocateModuless(
-                new[] { "Modules" },
-                "Module",
-                "Module.txt",
-                false);
-
-            Console.Write("desciptor..");
-            foreach (ModuleDescriptor desciptor in descriptors)
+            app.UseMvc(routes =>
             {
-                Console.Write(desciptor.Name);
-            }
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
 
-
-
+     
             return app;
         }
 
     }
-
-
+    
 
     public class ContentFileInfo : IFileInfo
     {

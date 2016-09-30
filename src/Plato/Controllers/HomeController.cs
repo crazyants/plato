@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Plato.FileSystem;
 using Plato.Environment.Modules;
 
@@ -30,14 +25,14 @@ namespace Plato.Controllers
             string path = Request.Path;
             ViewData["path"] = path;
 
-            string rootDirectory = _fileSystem.GetDirectoryInfo(path).FullName;
+            string rootDirectory = _fileSystem.GetDirectoryInfo("Modules").FullName;
 
-            var result = _moduleLocator.LocateModuless(
+            var result = _moduleLocator.LocateModules(
                 new string[] {
                     rootDirectory
                 }, 
                 "Module", 
-                "module.txt", 
+                "component.txt", 
                 false);                
 
             ViewData["result"] = result;

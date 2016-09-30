@@ -16,5 +16,8 @@ namespace Plato.Environment.Modules
 
         public string Path { get; set;  }
 
+        public string Location { get; set;  }
+
+        public string BinLocation { get; set; }
     }
 }

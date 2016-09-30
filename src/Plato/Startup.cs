@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Hosting.Web.Extensions;
 
-
 namespace Plato
 {
     public class Startup
@@ -18,6 +17,7 @@ namespace Plato
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+
             Configuration = builder.Build();
 
         }
@@ -26,14 +26,8 @@ namespace Plato
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-
-            // Add framework services.
-            //services.AddMvc();
-
+        {                    
             services.AddPlato();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,10 +35,8 @@ namespace Plato
             IApplicationBuilder app,
             IHostingEnvironment env, 
             ILoggerFactory loggerFactory)
-        {
-            
+        {            
             app.UsePlato(env, loggerFactory);
-
         }
 
 

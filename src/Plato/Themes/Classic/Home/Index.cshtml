@@ -6,12 +6,17 @@
 
 <h2>Located Modules (from model)</h2>
 
-@foreach (object o in @Model)
-{
-    @o;
-}
+<ul>
+    @foreach (dynamic o in @Model)
+    {
+        <li>
+            @o.Name - (@o.ID)
+        </li>
+        <br />
+    }
+</ul>
 
-@await Component.InvokeAsync("Plato.Modules.Simple")
+@await Component.InvokeAsync("Plato.Modules.Simple", new { value = "test" } )
 
 <br /><br />
 

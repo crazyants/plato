@@ -45,7 +45,7 @@ namespace Plato.Environment.Modules
 
         #region "Implementation"
 
-        public IEnumerable<ModuleDescriptor> LocateModuless(
+        public IEnumerable<ModuleDescriptor> LocateModules(
             IEnumerable<string> paths, 
             string extensionType, 
             string manifestName, 
@@ -60,7 +60,8 @@ namespace Plato.Environment.Modules
             {
                 descriptors.AddRange(
                     AvailableModules(
-                        path, extensionType,
+                        path,
+                        extensionType,
                         manifestName, 
                         manifestIsOptional)
                     );
@@ -100,27 +101,20 @@ namespace Plato.Environment.Modules
             var subfolders = _fileSystem.ListDirectories(path);
             foreach (var subfolder in subfolders)
             {
+           
                 var moduleId = subfolder.Name;
                 var manifestPath = _fileSystem.Combine(path, moduleId, manifestName);
                 try
                 {
                     var descriptor = GetModuleDescriptor(
-                        path, 
-                        moduleId, 
-                        moduleType, 
-                        manifestPath, 
+                        path,
+                        moduleId,
+                        moduleType,
+                        manifestPath,
                         manifestIsOptional);
 
                     if (descriptor == null)
                         continue;
-
-                    if (descriptor.Path != null && !descriptor.Path.IsValidUrlSegment())
-                    {
-                        //_logger.LogError("The module '{0}' could not be loaded because it has an invalid Path ({1}). It was ignored. The Path if specified must be a valid URL segment. The best bet is to stick with letters and numbers with no spaces.",
-                        //             extensionId,
-                        //             descriptor.Path);
-                        continue;
-                    }
 
                     if (descriptor.Path == null)
                     {
@@ -134,17 +128,18 @@ namespace Plato.Environment.Modules
                 catch (Exception ex)
                 {
                     throw ex;
-                    // TODO: implement logging
                 }
+
             }
         
             return localList;
+
         }
 
         private ModuleDescriptor GetModuleDescriptor(
             string locationPath, 
-            string extensionId, 
-            string extensionType, 
+            string moduleId, 
+            string moduleType, 
             string manifestPath, 
             bool manifestIsOptional)
         {
@@ -153,33 +148,37 @@ namespace Plato.Environment.Modules
             {
 
                 if (manifestIsOptional)                
-                    manifestText = string.Format("Id: {0}", extensionId);                
+                    manifestText = string.Format("Id: {0}", moduleId);                
                 else                
                     return null;                
             }
 
-            return GetDescriptorForModule(
+            return GetModuleDescriptorFromManifest(
                 locationPath, 
-                extensionId, 
-                extensionType, 
+                moduleId, 
+                moduleType, 
                 manifestText);
 
         }
 
-        private static ModuleDescriptor GetDescriptorForModule(
+        private ModuleDescriptor GetModuleDescriptorFromManifest(
             string locationPath, 
             string moduleId, 
             string moduleType, 
             string manifestText)
         {
-            Dictionary<string, string> manifest = ParseManifest(manifestText);
+
+            Dictionary<string, string> manifest = ParseManifest(manifestText);            
+            string pathToBin = _fileSystem.Combine(locationPath, moduleId, "Bin");
+            
             var moduleDescriptor = new ModuleDescriptor
             {
-                //Location = locationPath,
+                Location = locationPath,
+                BinLocation = pathToBin,
                 ID = moduleId,
                 ModuleType = moduleType,
                 Name = GetValue(manifest, NameSection) ?? moduleId,
-                Path = GetValue(manifest, PathSection),
+                //Path = GetValue(manifest, PathSection),
                 //Description = GetValue(manifest, DescriptionSection),
                 //Version = GetValue(manifest, VersionSection),
                 //OrchardVersion = GetValue(manifest, OrchardVersionSection),

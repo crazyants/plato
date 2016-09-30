@@ -8,21 +8,23 @@
         "Microsoft.AspNetCore.Hosting.Abstractions": "1.0.0",
         "Microsoft.AspNetCore.Html.Abstractions": "1.0.0",
         "Microsoft.AspNetCore.Http.Abstractions": "1.0.0",
+        "Microsoft.AspNetCore.Mvc": "1.0.1",
         "Microsoft.AspNetCore.Mvc.Localization": "1.0.1",
         "Microsoft.AspNetCore.Mvc.Razor": "1.0.1",
         "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.1",
         "Microsoft.AspNetCore.StaticFiles": "1.0.0",
         "Microsoft.Extensions.FileProviders.Composite": "1.0.0",
         "Microsoft.Extensions.FileProviders.Embedded": "1.0.0",
+        "Microsoft.Extensions.Logging.Console": "1.0.0",
+        "Microsoft.Extensions.Logging.Debug": "1.0.0",
+        "Microsoft.Extensions.Options": "1.0.0",
         "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
         "NETStandard.Library": "1.6.0",
         "Plato.Environment.Modules": "1.0.0-*",
         "Plato.Environment.Shell": "1.0.0-*",
         "Plato.Filesystem": "1.0.0-*",
-        "Plato.Hosting": "1.0.0-*",
-        "Plato.Modules.Simple": "1.0.0-*"
+        "Plato.Hosting": "1.0.0-*"
     },
-
   "frameworks": {
     "netstandard1.6": {
       "imports": "dnxcore50"

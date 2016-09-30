@@ -10,7 +10,7 @@ namespace Plato.Modules.Simple
     public class SimpleViewComponent : ViewComponent
     {
 
-        public IViewComponentResult Invoke(string value)
+        public IViewComponentResult Invoke(object value)
         {
             return View(value);
         }
