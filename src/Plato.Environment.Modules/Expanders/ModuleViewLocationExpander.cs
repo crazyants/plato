@@ -8,7 +8,15 @@ namespace Plato.Environment.Modules
 {
     public class ModuleViewLocationExpander : IViewLocationExpander
     {
-            
+
+
+        private string _moduleId;
+
+        public ModuleViewLocationExpander(string moduleId)
+        {
+            _moduleId = moduleId;
+        }
+
         public void PopulateValues(ViewLocationExpanderContext context)
         {
         }
@@ -17,12 +25,12 @@ namespace Plato.Environment.Modules
             ViewLocationExpanderContext context,        
             IEnumerable<string> viewLocations)
         {
-            var result = new List<string>();
-            result.Add("/Modules/{2}/Views/Shared/Components/{1}/{0}.cshtml");
 
-            result.AddRange(viewLocations);
-   
+            var result = new List<string>();
+            result.Add("/Modules/" + _moduleId  + "/Views/Shared/{0}.cshtml");
+            result.AddRange(viewLocations);   
             return result;
+
         }
     }
 

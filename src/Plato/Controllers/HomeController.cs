@@ -32,7 +32,7 @@ namespace Plato.Controllers
                     rootDirectory
                 }, 
                 "Module", 
-                "component.txt", 
+                "module.txt", 
                 false);                
 
             ViewData["result"] = result;

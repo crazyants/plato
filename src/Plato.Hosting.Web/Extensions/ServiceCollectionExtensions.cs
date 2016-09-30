@@ -25,11 +25,7 @@ namespace Plato.Hosting.Web.Extensions
         {
 
             services.AddMvc();
-
-            services.AddModuleViewExpanders("Modules");
-
-            // services.AddMvc();
-
+              
             //services.AddMvcCore(options =>
             //{
             //    options.Filters.Add(typeof(AutoValidateAntiforgeryTokenAuthorizationFilter));
@@ -40,8 +36,7 @@ namespace Plato.Hosting.Web.Extensions
             //.AddJsonFormatters();
 
             //services.AddSingleton<ILogger, Logger>();
-
-            
+                        
             services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
 
             // shell context (settings, features etc)
@@ -53,6 +48,7 @@ namespace Plato.Hosting.Web.Extensions
             //services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
 
             // file system
+
             services.AddSingleton<IFileProvider, PhysicalFileProvider>();
             services.AddSingleton<IPlatoFileSystem, PlatoFileSystem>();
             services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
@@ -60,48 +56,13 @@ namespace Plato.Hosting.Web.Extensions
             // modules
            
             services.AddSingleton<IModuleLocator, ModuleLocator>();
+            services.AddSingleton<IModuleLoader, ModuleLoader>();
 
-            services.AddSingleton<IModuleLoaderService, ModuleLoaderService>();
-            //services.AddSingleton<IModuleLoader, ModuleLoader>();
-                     
+            services.AddModuleViewLocationExpanders();
+
             services.Configure<RazorViewEngineOptions>(configureOptions: options =>
-            {
-                             
-                options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
-                //options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
-
-                var moduleLocater = services.BuildServiceProvider().GetService<IModuleLocator>();
-                var moduleLoder = services.BuildServiceProvider().GetService<IModuleLoaderService>();
-                var moduleDescriptors = moduleLocater.LocateModules(
-                  new string[] { "Modules" },
-                  "Modules",
-                  "module.txt",
-                  false);
-
-                foreach (ModuleDescriptor module in moduleDescriptors)
-                {
-
-                    var assemblies = moduleLoder.LoadModule(module);
-                    foreach (var assembly in assemblies)
-                    {
-                        var embeddedFileProviders = new EmbeddedFileProvider(
-                            assembly,
-                            module.ID
-                        );
-
-                        options.FileProviders.Add(new CompositeFileProvider(embeddedFileProviders));
-                    }
-                                    
-                    
-                }
-                               
-
-                //options.FileProviders.Add(new ThemingFileProvider());
-
-                // load view components
-                
-                
-
+            {                             
+                options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));       
             });
             
             return services;
