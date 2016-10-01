@@ -16,9 +16,11 @@
     }
 </ul>
 
-@await Component.InvokeAsync("Plato.Modules.Simple", new { value = "test" } )
+@await Component.InvokeAsync("Plato.Modules.Template", new { value = "test" } )
 
-@await Component.InvokeAsync("Plato.Modules.ContentBlock", new { value = "test" })
+@await Component.InvokeAsync("Plato.Modules.ContentArea", new { value = "test" })
+
+Display("Zone 1")
 
 
 <br /><br />

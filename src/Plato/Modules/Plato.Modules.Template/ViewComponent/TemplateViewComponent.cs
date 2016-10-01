@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Plato.Modules.Simple
+namespace Plato.Modules.Template
 {
 
-    [ViewComponent(Name = "Plato.Modules.Simple")]
-    public class SimpleViewComponent : ViewComponent
+    [ViewComponent(Name = "Plato.Modules.Template")]
+    public class TemplateViewComponent : ViewComponent
     {
 
         public IViewComponentResult Invoke(object value)

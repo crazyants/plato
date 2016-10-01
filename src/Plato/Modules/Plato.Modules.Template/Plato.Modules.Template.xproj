@@ -7,8 +7,8 @@
 
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>f73942e1-973a-4c1c-b7fe-e31366eb0457</ProjectGuid>
-    <RootNamespace>Plato.Modules.ContentBlock</RootNamespace>
+    <ProjectGuid>9790a1f8-01a1-4f90-9c2a-26e60a93a447</ProjectGuid>
+    <RootNamespace>Plato.Modules.Template</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Plato.Modules.ContentBlock
+namespace Plato.Modules.ContentArea
 {
 
-    [ViewComponent(Name = "Plato.Modules.ContentBlock")]
-    public class ContentBlockViewComponent : ViewComponent
+    [ViewComponent(Name = "Plato.Modules.ContentArea")]
+    public class ContentAreaViewComponent : ViewComponent
     {
 
         public IViewComponentResult Invoke(object value)

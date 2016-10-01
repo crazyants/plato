@@ -38,7 +38,16 @@
         </div>
     </div>
     <div class="container body-content">
+
+        XXXXXXXXXXXXXXXXXXXXXXXXX
+        <br />
+        await RenderSectionAsync("Header")
+
         @RenderBody()
+
+        await RenderSectionAsync("Footer")
+        <br />
+        XXXXXXXXXXXXXXXXXXXXXXXXX
         <hr />
         <footer>
             <p>&copy; 2016 - Plato</p>

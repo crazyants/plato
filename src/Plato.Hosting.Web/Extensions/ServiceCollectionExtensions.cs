@@ -52,12 +52,11 @@ namespace Plato.Hosting.Web.Extensions
             services.AddSingleton<IFileProvider, PhysicalFileProvider>();
             services.AddSingleton<IPlatoFileSystem, PlatoFileSystem>();
             services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
-            
+
             // modules
-           
+
             services.AddSingleton<IModuleLocator, ModuleLocator>();
             services.AddSingleton<IModuleLoader, ModuleLoader>();
-
             services.AddModuleViewLocationExpanders();
 
             services.Configure<RazorViewEngineOptions>(configureOptions: options =>
