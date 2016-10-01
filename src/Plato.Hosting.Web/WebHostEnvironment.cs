@@ -5,7 +5,6 @@ namespace Plato.Hosting.Web
 {
     public class WebHostEnvironment : HostEnvironment
     {
-
         public WebHostEnvironment(
         IHostingEnvironment hostingEnvironment) : 
             base(hostingEnvironment)

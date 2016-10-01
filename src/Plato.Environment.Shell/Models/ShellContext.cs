@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.OLE.Interop;
 
 namespace Plato.Environment.Shell.Models
 {
@@ -26,10 +25,7 @@ namespace Plato.Environment.Shell.Models
                 if (disposing)
                 {
                 }
-
-                //Settings = null;
-                //Blueprint = null;
-
+                         
                 // Disposes all the services registered for this shell
                 (ServiceProvider as IDisposable).Dispose();
                 IsActivated = false;

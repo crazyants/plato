@@ -31,7 +31,8 @@
     "Microsoft.AspNetCore.Mvc.DataAnnotations": "1.0.1",
     "Microsoft.AspNetCore.Mvc.Core": "1.0.1",
     "Microsoft.AspNetCore.Razor": "1.0.0",
-    "Microsoft.AspNetCore.Mvc.Razor.Host": "1.0.1"
+    "Microsoft.AspNetCore.Mvc.Razor.Host": "1.0.1",
+    "Plato.Repositories": "1.0.0-*"
   },
 
   "tools": {

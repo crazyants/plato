@@ -14,6 +14,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using Plato.Environment.Shell.Extensions;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -24,17 +25,10 @@ namespace Plato.Hosting.Web.Extensions
             this IServiceCollection services)
         {
 
+            services.AddShell();
+
             services.AddMvc();
               
-            //services.AddMvcCore(options =>
-            //{
-            //    options.Filters.Add(typeof(AutoValidateAntiforgeryTokenAuthorizationFilter));
-            //})
-            //.AddViews()
-            //.AddViewLocalization()
-            //.AddRazorViewEngine()
-            //.AddJsonFormatters();
-
             //services.AddSingleton<ILogger, Logger>();
                         
             services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
