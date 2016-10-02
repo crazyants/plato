@@ -9,7 +9,7 @@ namespace Plato.Repositories.Models
     public interface IModel<T> where T : class
     {
 
-        void BuildModelFromDataReader(IDataReader dr);
+        void PopulateModelFromDataReader(IDataReader dr);
 
     }
 }

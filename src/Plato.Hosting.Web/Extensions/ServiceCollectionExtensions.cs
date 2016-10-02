@@ -13,8 +13,11 @@ using System;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using System.Reflection;
 using Plato.Environment.Shell.Extensions;
+using Plato.Data.Extensions;
+using Plato.Repositories.Extensions;
+using Plato.Data;
+using Plato.Layout;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -24,8 +27,11 @@ namespace Plato.Hosting.Web.Extensions
         public static IServiceCollection AddPlato(
             this IServiceCollection services)
         {
-
+                    
             services.AddShell();
+
+            services.AddPlatoDbContext();
+            services.AddRepositories();
 
             services.AddMvc();
               
@@ -46,13 +52,16 @@ namespace Plato.Hosting.Web.Extensions
             services.AddSingleton<IFileProvider, PhysicalFileProvider>();
             services.AddSingleton<IPlatoFileSystem, PlatoFileSystem>();
             services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
-
+            
             // modules
 
             services.AddSingleton<IModuleLocator, ModuleLocator>();
             services.AddSingleton<IModuleLoader, ModuleLoader>();
             services.AddModuleViewLocationExpanders();
 
+            // layout
+            services.AddSingleton<ILayoutManager, LayoutManager>();
+            
             services.Configure<RazorViewEngineOptions>(configureOptions: options =>
             {                             
                 options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));       

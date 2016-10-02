@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.IO;
+using Plato.Layout;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Plato.Hosting.Web.Razor
 {
@@ -13,16 +11,31 @@ namespace Plato.Hosting.Web.Razor
     {
 
 
-        //public IHtmlContent Display(string shape)
-        //{
-        //    var htmlContentBuilder = new HtmlContentBuilder();
-        //    htmlContentBuilder.AppendHtml("<div>zone 1</div>");
+        private ILayoutManager _layoutManager;
+        public ILayoutManager LayoutManager
+        {
+            get
+            {
+                EnsureLayoutManager();
+                return _layoutManager;
+            }
+        }
 
-        //    return (IHtmlContent)htmlContentBuilder;
+        private void EnsureLayoutManager()
+        {
+            if (_layoutManager == null)
+            {
+                _layoutManager = ViewContext.HttpContext.RequestServices.GetService<ILayoutManager>();
+            }
+        }
+                
+        public async Task<IHtmlContent> DisplayAsync(string sectionName)
+        {
+            return await LayoutManager.DisplayAsync(sectionName);
+        }
 
-        //}
 
-        public new Task<IHtmlContent>  RenderSectionAsync(string name, bool required)
+        public new Task<IHtmlContent> RenderSectionAsync(string name, bool required)
         {
 
             //IHtmlContent result = Display(zone);
@@ -38,6 +51,7 @@ namespace Plato.Hosting.Web.Razor
 
     public abstract class RazorPage : RazorPage<dynamic>
     {
+
     }
 
 }

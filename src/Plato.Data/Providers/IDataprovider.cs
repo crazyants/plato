@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Plato.Data
 {
-    public interface IDataProvider
+    public interface IDataProvider : IDisposable
     {
 
         IDataReader ExecuteReader(string sql, params object[] args);
@@ -14,6 +11,10 @@ namespace Plato.Data
         T ExecuteScalar<T>(string sql, params object[] args);
 
         int Execute(string sql, params object[] args);
+
+        void HandleException(Exception x);
+
+        event DbEventHandlers.DbExceptionEventHandler OnException;
 
     }
 }

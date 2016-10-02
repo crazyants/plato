@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Plato.Data.Migrations;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Data.Migrations;
+using Microsoft.Extensions.Options;
 
 namespace Plato.Data.Extensions
 {
     public static class ServiceCollectionExtensions
     {
 
-        public static IServiceCollection AddDataAccess(
+        public static IServiceCollection AddPlatoDbContext(
             this IServiceCollection services)
         {
 
-            services.AddScoped<IDbContextt, DbContext>();
+            //services.AddSingleton<IDbContextOptions, DbContextOptions>();
 
-            services.AddScoped<IDataMigrationManager, DataMigrationManager>();
-            services.AddScoped<AutomaticDataMigrations>();
+            services.AddSingleton<IConfigureOptions<DbContextOptions>, DbContextOptionsConfigure>();         
+            services.AddTransient<IDbContextt, DbContext>();
+
+            services.AddTransient<IDataMigrationManager, DataMigrationManager>();
+            services.AddTransient<AutomaticDataMigrations>();
 
             return services;
+
         }
 
 

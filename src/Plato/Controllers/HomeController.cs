@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Plato.FileSystem;
 using Plato.Environment.Modules;
-using Plato.Repositories.Users;
+using Plato.Repositories;
+using Plato.Repositories.Models;
+using System.Collections.Generic;
 
 namespace Plato.Controllers
 {
@@ -10,12 +12,12 @@ namespace Plato.Controllers
         
         private readonly IPlatoFileSystem _fileSystem;
         private readonly IModuleLocator _moduleLocator;
-        private IUserRepository<UserRepository> _userRepository;
+        private IUserRepository<User> _userRepository;
 
         public HomeController(
             IPlatoFileSystem fileSystem,
             IModuleLocator moduleLocator,
-            IUserRepository<UserRepository> userRepository)
+            IUserRepository<User> userRepository)
         {
             _fileSystem = fileSystem;
             _moduleLocator = moduleLocator;
@@ -40,12 +42,13 @@ namespace Plato.Controllers
             //    false);                
 
             //ViewData["result"] = result;
-
+                  
             var user = _userRepository.Select(1);
 
-          
+            var users = new List<User>();
+            users.Add(user);
 
-            return View(user);
+            return View(users);
         }
 
         public IActionResult About()

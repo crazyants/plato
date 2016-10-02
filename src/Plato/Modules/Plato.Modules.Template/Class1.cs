@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plato.Repositories
+namespace Plato.Modules.Template
 {
-    public interface IUserRepository<T> : IRepository<T> where T : class
+    public class Class1
     {
+        public Class1()
+        {
+        }
     }
 }

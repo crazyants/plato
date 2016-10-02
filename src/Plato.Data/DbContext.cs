@@ -6,50 +6,62 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using Microsoft.Extensions.Options;
 
 namespace Plato.Data
 {
-    public class DbContext : IDbContextt
+    public class DbContext : IDbContextt, IDisposable
     {
 
         #region "Private Variables"
 
-        private string _connectionString;    
-        private IDbConnection _connection;
+        private string _providerName;
+        private string _connectionString;       
         private IDataProvider _provider;
 
         #endregion
 
+        public DbContext(IOptions<DbContextOptions> dbContextOptions)
+            : this(dbContextOptions.Value.ConnectionString, dbContextOptions.Value.ProviderName)
+        {
+
+        }
+
         #region "Constructos"
 
-        public DbContext()
+        public DbContext(string connectionString, string providerName = "SqlClient")
         {
-            _connectionString =  "";
-        }
 
-        public DbContext(string connectionString)
-        {
-            _connectionString = connectionString;
-            _provider = ProviderFactory.GetProvider(_connectionString);
-        }
-        public DbContext(string connectionString, IDataProvider provider)
-        {
-            _connectionString = connectionString;
-            _provider = provider;
-        }
+            if (string.IsNullOrEmpty(connectionString))
+                throw new ArgumentNullException(nameof(connectionString));
 
+            _connectionString = connectionString;
+            _providerName = providerName;
+            _provider = ProviderFactory.GetProvider(_connectionString, _providerName);
+            
+            _provider.OnException += (object sender, DbExceptionEventArgs args) =>
+            {
+                throw args.Exception;
+            };
+
+        }
+        
         #endregion
 
         #region "Implementation"
 
         public IDataReader ExecuteReader(CommandType commandType, string sql, params object[] commandParams)
         {
-
             if (commandType == CommandType.StoredProcedure)            
                 sql = GenerateExecuteStoredProcedureSql(sql, commandParams);            
             return _provider.ExecuteReader(sql, commandParams);
         }
-        
+
+        //public IDataReader ExecuteReader(CommandType commandType, string sql, List<DbParameter> commandParams)
+        //{
+        //    return _provider.ExecuteReader(sql, commandParams);
+        //}
+
         public T ExecuteScalar<T>(CommandType commandType, string sql, params object[] args)
         {
             if (commandType == CommandType.StoredProcedure)            
@@ -91,9 +103,10 @@ namespace Plato.Data
         
         public void Dispose()
         {
-            //_database.Dispose();
+            _provider.Dispose();
         }
 
+      
 
         #endregion
 

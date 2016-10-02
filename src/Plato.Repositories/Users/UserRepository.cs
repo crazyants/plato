@@ -6,10 +6,10 @@ using Plato.Data;
 using System.Data;
 using Plato.Repositories.Models;
 
-namespace Plato.Repositories.Users
+namespace Plato.Repositories
 {
     
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IUserRepository<User>
     {
 
         #region "Private Variables"
@@ -20,7 +20,8 @@ namespace Plato.Repositories.Users
         
         #region "Constructor"
 
-        public UserRepository(IDbContextt dbContext)
+        public UserRepository(
+            IDbContextt dbContext)
         {
             _dbContext = dbContext;
         }
@@ -43,35 +44,37 @@ namespace Plato.Repositories.Users
         {
             User User = new User();
 
-            using (var context = new DbContext("connectionstring"))
+            using (var context = _dbContext)
             {
 
-                try
+                IDataReader reader = context.ExecuteReader(
+                  CommandType.StoredProcedure,
+                  "iasp_sp_SelectUserData",                
+                      "",
+                      "",
+                      "",
+                      1,
+                      1                 
+                  );
+
+
+                //var p = new List<DbParameter>();
+                //p.Add(new DbParameter("strUsername", ""));
+                //p.Add(new DbParameter("strPassword", ""));
+                //p.Add(new DbParameter("strEncyptedPassword", ""));
+                //p.Add(new DbParameter("intLoginUsing", 1));
+                //p.Add(new DbParameter("intUserID", 1));
+
+                //IDataReader reader = context.ExecuteReader(
+                //     CommandType.StoredProcedure,
+                //     "iasp_sp_SelectUserData", p);       
+
+                if (reader != null)
                 {
-                    IDataReader reader = context.ExecuteReader(
-                      CommandType.StoredProcedure,
-                      "iasp_sp_SelectUserData",
-                      new
-                      {
-                          @strUsername = "",
-                          @strPassword = "",
-                          @strEncyptedPassword = "",
-                          @intLoginUsing = 1,
-                          @intUserID = 1
-                      });
-
-
-                    if (reader != null)
-                    {
-                        User.PopulateModelFromDataReader(reader);
-                    }
+                    reader.Read();
+                    User.PopulateModelFromDataReader(reader);
                 }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-
-
+                                
             }
 
             return User;
