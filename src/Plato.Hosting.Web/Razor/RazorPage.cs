@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Plato.Layout;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Plato.Hosting.Web.Razor
 {
     public abstract class RazorPage<TModel> :
         Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
+
 
 
         private ILayoutManager _layoutManager;
@@ -26,13 +29,76 @@ namespace Plato.Hosting.Web.Razor
             if (_layoutManager == null)
             {
                 _layoutManager = ViewContext.HttpContext.RequestServices.GetService<ILayoutManager>();
+                _layoutManager.ViewContext = this.ViewContext;
             }
         }
-                
-        public async Task<IHtmlContent> DisplayAsync(string sectionName)
+
+        public IHtmlContent Display(string Shape, object arguments = null)
         {
-            return await LayoutManager.DisplayAsync(sectionName);
+            return LayoutManager.Display(Shape, arguments);
+            //return (IHtmlContent)Shape;
         }
+
+
+        public IHtmlContent Zone(dynamic Display, dynamic Shape)
+        {
+            var htmlContents = new List<IHtmlContent>();
+            foreach (var item in Shape)
+            {
+                htmlContents.Add(Display(item));
+            }
+
+            var htmlContentBuilder = new HtmlContentBuilder();
+            foreach (var htmlContent in htmlContents)
+            {
+                htmlContentBuilder.AppendHtml(htmlContent);
+            }
+
+            return htmlContentBuilder;
+        }
+
+
+        public IHtmlContent ContentZone(dynamic Display, dynamic Shape)
+        {
+            var htmlContents = new List<IHtmlContent>();
+
+            var shapes = ((IEnumerable<dynamic>)Shape);
+            var tabbed = shapes.GroupBy(x => (string)x.Metadata.Tab).ToList();
+
+            if (tabbed.Count > 1)
+            {
+                foreach (var tab in tabbed)
+                {
+                    var tabName = string.IsNullOrWhiteSpace(tab.Key) ? "Content" : tab.Key;
+                    var tabBuilder = new TagBuilder("div");
+                    tabBuilder.Attributes["id"] = "tab-" + tabName;
+                    tabBuilder.Attributes["data-tab"] = tabName;
+                    foreach (var item in tab)
+                    {
+                        tabBuilder.InnerHtml.AppendHtml(Display(item));
+                    }
+                    htmlContents.Add(tabBuilder);
+                }
+            }
+            else if (tabbed.Count > 0)
+            {
+                foreach (var item in tabbed[0])
+                {
+                    htmlContents.Add(Display(item));
+                }
+            }
+
+            var htmlContentBuilder = new HtmlContentBuilder();
+            foreach (var htmlContent in htmlContents)
+            {
+                htmlContentBuilder.AppendHtml(htmlContent);
+            }
+
+            return htmlContentBuilder;
+        }
+
+
+
 
 
         public new Task<IHtmlContent> RenderSectionAsync(string name, bool required)

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Plato.Environment.Modules
 {
-    public interface IModuleLoader
+    public class ModuleOptions
     {
-        List<Assembly> LoadModule(ModuleDescriptor descriptor);      
-        
+
+        public string VirtualPathToModules { get; set;  }
+
     }
 }

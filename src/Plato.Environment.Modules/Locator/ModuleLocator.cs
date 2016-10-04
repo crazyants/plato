@@ -4,6 +4,7 @@ using Plato.FileSystem;
 using System.IO;
 using Plato.Utility;
 using Plato.Abstractions.Utility.Extensions;
+using Plato.Environment.Modules.Abstractions;
 
 namespace Plato.Environment.Modules
 {
@@ -45,7 +46,7 @@ namespace Plato.Environment.Modules
 
         #region "Implementation"
 
-        public IEnumerable<ModuleDescriptor> LocateModules(
+        public IEnumerable<IModuleDescriptor> LocateModules(
             IEnumerable<string> paths, 
             string extensionType, 
             string manifestName, 
@@ -116,9 +117,9 @@ namespace Plato.Environment.Modules
                     if (descriptor == null)
                         continue;
 
-                    if (descriptor.Path == null)
+                    if (descriptor.RootPath == null)
                     {
-                        descriptor.Path = descriptor.Name.IsValidUrlSegment()
+                        descriptor.RootPath = descriptor.Name.IsValidUrlSegment()
                                               ? descriptor.Name
                                               : descriptor.ID;
                     }
@@ -162,19 +163,19 @@ namespace Plato.Environment.Modules
         }
 
         private ModuleDescriptor GetModuleDescriptorFromManifest(
-            string locationPath, 
+            string rootPath, 
             string moduleId, 
             string moduleType, 
             string manifestText)
         {
 
             Dictionary<string, string> manifest = ParseManifest(manifestText);            
-            string pathToBin = _fileSystem.Combine(locationPath, moduleId, "Bin");
-            
+            string virtualPathToBin = _fileSystem.Combine(rootPath, moduleId, "Bin");
+      
             var moduleDescriptor = new ModuleDescriptor
             {
-                Location = locationPath,
-                BinLocation = pathToBin,
+                RootPath = rootPath,
+                VirtualPathToBin = virtualPathToBin.Replace("/", "\\"),
                 ID = moduleId,
                 ModuleType = moduleType,
                 Name = GetValue(manifest, NameSection) ?? moduleId,

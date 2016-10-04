@@ -7,6 +7,7 @@ using System.IO;
 using Plato.FileSystem;
 using System.Collections.Concurrent;
 using System.Runtime.Loader;
+using Plato.Environment.Modules.Abstractions;
 
 namespace Plato.Environment.Modules
 {
@@ -45,9 +46,11 @@ namespace Plato.Environment.Modules
 
         #region "Implementation"
       
-        public List<Assembly> LoadModule(ModuleDescriptor descriptor)
+        public List<Assembly> LoadModule(IModuleDescriptor descriptor)
         {
-            return LoadAssembliesInFolder(descriptor.Location, new List<Assembly>());            
+            var assemblies = LoadAssembliesInFolder(descriptor.VirtualPathToBin, new List<Assembly>());
+
+            return assemblies;
         }
 
         #endregion
@@ -91,6 +94,7 @@ namespace Plato.Environment.Modules
                 
         private Assembly LoadFromAssemblyPath(string assemblyPath)
         {
+
             return _loadedAssemblies.GetOrAdd(Path.GetFileNameWithoutExtension(assemblyPath),
                 new Lazy<Assembly>(() =>
                 {

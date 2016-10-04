@@ -2,14 +2,17 @@
   "version": "1.0.0-*",
 
     "dependencies": {
+        "Microsoft.AspNetCore.Hosting.Abstractions": "1.0.0",
         "Microsoft.AspNetCore.Mvc.Razor": "1.0.1",
         "Microsoft.DotNet.Compiler.Common": "1.0.0-preview2-003121",
         "Microsoft.DotNet.ProjectModel": "1.0.0-rc4-003206",
         "Microsoft.Extensions.DependencyModel": "1.0.1-beta-003206",
         "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
         "Microsoft.Extensions.Options": "1.0.0",
+        "Microsoft.Extensions.PlatformAbstractions": "1.0.0",
         "NETStandard.Library": "1.6.0",
         "Plato.Abstractions": "1.0.0-*",
+        "Plato.Environment.Modules.Abstractions": "1.0.0-*",
         "Plato.Filesystem": "1.0.0-*"
     },
 

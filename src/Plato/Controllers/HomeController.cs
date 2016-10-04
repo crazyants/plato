@@ -4,6 +4,7 @@ using Plato.Environment.Modules;
 using Plato.Repositories;
 using Plato.Repositories.Models;
 using System.Collections.Generic;
+using Plato.Environment.Modules.Abstractions;
 
 namespace Plato.Controllers
 {

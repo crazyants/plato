@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,9 @@ namespace Plato.Layout
     public interface ILayoutManager
     {
 
-        Task<IHtmlContent> DisplayAsync(string sectionName);
+        ViewContext ViewContext { get; set;  }
+
+        IHtmlContent Display(string sectionName, object arguments = null);
 
     }
 }

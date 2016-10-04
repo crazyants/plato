@@ -18,11 +18,17 @@
 
 <!--
 await Component.InvokeAsync("Plato.Modules.Template", new { value = "test" } )
-await Component.InvokeAsync("Plato.Modules.ContentArea", new { value = "test" })
+
 await Component.InvokeAsync("Plato.Modules.Login", new { value = "test" })
     -->
+await Component.InvokeAsync("Plato.Modules.ContentArea", new { value = "test" })
 
-@await DisplayAsync("Zone1")
+
+<br />
+------------------------------------------------------<br />
+@Display("Zone1", @Model)
+<br />
+------------------------------------------------------<br />
 
 <br /><br />
 
