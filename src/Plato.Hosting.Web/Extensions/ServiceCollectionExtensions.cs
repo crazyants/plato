@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Plato.FileSystem;
 using Plato.Environment.Modules;
 using Plato.Hosting.Web.Expanders;
 using Plato.Environment.Shell;
@@ -46,12 +45,7 @@ namespace Plato.Hosting.Web.Extensions
 
             //services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
 
-            // file system
-
-            services.AddSingleton<IFileProvider, PhysicalFileProvider>();
-            services.AddSingleton<IPlatoFileSystem, PlatoFileSystem>();
-            services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
-            
+     
             // modules
                   
             services.AddModules();

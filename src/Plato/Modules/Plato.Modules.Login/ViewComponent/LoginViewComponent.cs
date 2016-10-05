@@ -11,7 +11,7 @@ namespace Plato.Modules.Login
     public class LoginViewComponent : ViewComponent
     {
 
-        public IViewComponentResult Invoke(object value)
+        public IViewComponentResult Invoke(dynamic value)
         {
             return View(value);
         }

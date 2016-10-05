@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.FileSystem;
+using Microsoft.Extensions.FileProviders;
 
 namespace Plato.Environment.Shell.Extensions
 {
@@ -13,7 +15,12 @@ namespace Plato.Environment.Shell.Extensions
             this IServiceCollection services)
         {
 
-            
+            // file system
+
+            services.AddSingleton<IFileProvider, PhysicalFileProvider>();
+            services.AddSingleton<IPlatoFileSystem, PlatoFileSystem>();
+            services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
+
             return services;
         }
 

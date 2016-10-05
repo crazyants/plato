@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Plato.Layout.Display;
+using Plato.Layout.Elements;
 
 namespace Plato.Layout
 {
@@ -44,7 +46,7 @@ namespace Plato.Layout
         [ViewContext]
         public ViewContext ViewContext { get; set;  }
 
-        public IHtmlContent Display(string sectionName, object arguments)
+        public IHtmlContent Display(string sectionName, object model)
         {
 
             var htmlContentBuilder = new HtmlContentBuilder();
@@ -52,20 +54,18 @@ namespace Plato.Layout
             var entries = _moduleManager.ModuleEntries;
             foreach (var entry in entries)
             {
+                string id = entry.Descriptor.ID;
+                                
+                    ((IViewContextAware)_helper).Contextualize(this.ViewContext);
+                    var descriptor = _selector.SelectComponent(id);
 
-                //var helper = new DefaultViewComponentHelper(_selector, _factory);
+                    var component = DisplayElement(descriptor.FullName, model);
 
-                ((IViewContextAware)_helper).Contextualize(this.ViewContext);
-                var descriptor = _selector.SelectComponent(entry.Descriptor.ID);
-              
-                Task<IHtmlContent> task = _helper.InvokeAsync(descriptor.FullName, arguments);              
-                task.Wait();
-
-                var writer = new System.IO.StringWriter();
-                task.Result.WriteTo(writer, HtmlEncoder.Default);
-                htmlContentBuilder.AppendHtml("<div> XX ZONE 123 XX </div>");
-                htmlContentBuilder.AppendHtml(writer.ToString());
-
+                    var writer = new System.IO.StringWriter();
+                    component.WriteTo(writer, HtmlEncoder.Default);
+                    htmlContentBuilder.AppendHtml("<div> XX ZONE 123 XX </div>");
+                    htmlContentBuilder.AppendHtml(writer.ToString());
+                             
 
             }
 
@@ -73,40 +73,70 @@ namespace Plato.Layout
             return result;
 
         }
-
-
-
-
-
-        private bool Exists(string name)
+        
+        public async Task<IHtmlContent> DisplayAsync(string sectionName, object model)
         {
-            return _selector.SelectComponent(name) != null;
-        }
+            var htmlContentBuilder = new HtmlContentBuilder();
 
-        private bool Exists(Type componentType)
-        {
-            var componentTypeInfo = componentType.GetTypeInfo();
-            var descriptors = _descriptorProvider.ViewComponents;
-            for (int i = 0; i < descriptors.Items.Count; i++)
+            var entries = _moduleManager.ModuleEntries;
+            foreach (var entry in entries)
             {
-                var descriptor = descriptors.Items[i];
-                if (descriptor.TypeInfo == componentTypeInfo)
-                {
-                    return true;
-                }
-            }
+                string id = entry.Descriptor.ID;
 
-            return false;
+                ((IViewContextAware)_helper).Contextualize(this.ViewContext);
+                var descriptor = _selector.SelectComponent(id);
+
+                var component = await _helper.InvokeAsync(id, model);
+
+                //htmlContentBuilder.AppendHtml("<div>start</div><br>");
+                htmlContentBuilder.AppendHtml(component);
+                //htmlContentBuilder.AppendHtml("<div>end</div><br>");
+
+
+            }
+               
+            return htmlContentBuilder;
         }
 
-        private static string GetTypeForviewComponent(Type type, string extensionId)
+        public IHtmlContent DisplayElement(string fullName, object arguments)
         {
-            foreach (PlatoViewComponent featureAttribute in type.GetTypeInfo().GetCustomAttributes(typeof(PlatoViewComponent), false))
-            {
-                return featureAttribute.Name;
-            }
-            return extensionId;
+            Task<IHtmlContent> task = _helper.InvokeAsync(fullName, arguments);
+            task.Wait();
+            return task.Result;
         }
+        
+
+
+
+        //private bool Exists(string name)
+        //{
+        //    return _selector.SelectComponent(name) != null;
+        //}
+
+        //private bool Exists(Type componentType)
+        //{
+        //    var componentTypeInfo = componentType.GetTypeInfo();
+        //    var descriptors = _descriptorProvider.ViewComponents;
+        //    for (int i = 0; i < descriptors.Items.Count; i++)
+        //    {
+        //        var descriptor = descriptors.Items[i];
+        //        if (descriptor.TypeInfo == componentTypeInfo)
+        //        {
+        //            return true;
+        //        }
+        //    }
+
+        //    return false;
+        //}
+
+        //private static string GetTypeForviewComponent(Type type, string extensionId)
+        //{
+        //    foreach (PlatoViewComponent featureAttribute in type.GetTypeInfo().GetCustomAttributes(typeof(PlatoViewComponent), false))
+        //    {
+        //        return featureAttribute.Name;
+        //    }
+        //    return extensionId;
+        //}
 
 
     }

@@ -22,9 +22,7 @@
         "Plato.Data": "1.0.0-*",
         "Plato.Environment.Modules": "1.0.0-*",
         "Plato.Environment.Shell": "1.0.0-*",
-        "Plato.Filesystem": "1.0.0-*",
-        "Plato.Hosting": "1.0.0-*",
-        "Plato.Layout": "1.0.0-*",
+        "Plato.Hosting": "1.0.0-*",    
         "Plato.Repositories": "1.0.0-*"
     },
   "frameworks": {

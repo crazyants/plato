@@ -3,10 +3,12 @@
 
     "dependencies": {
         "Microsoft.AspNetCore.Html.Abstractions": "1.0.0",
+        "Microsoft.AspNetCore.Mvc.Razor": "1.0.1",
         "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.0.1",
         "NETStandard.Library": "1.6.0",
         "Plato.Abstractions": "1.0.0-*",
-        "Plato.Environment.Modules.Abstractions": "1.0.0-*"
+        "Plato.Environment.Modules.Abstractions": "1.0.0-*",
+        "Plato.FileSystem": "1.0.0-*"
     },
 
   "frameworks": {

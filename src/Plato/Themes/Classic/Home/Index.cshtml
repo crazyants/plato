@@ -1,38 +1,42 @@
-﻿@model IEnumerable<object>
+﻿@model  dynamic
 @{
     ViewData["Title"] = "Home Page";
 }
 
-
-<h2>Located Modules (from model)</h2>
-
+<!--
 <ul>
-    @foreach (dynamic o in @Model)
+    foreach (dynamic o in Model)
     {
         <li>
-            @o.Name - (@o.ID)
+            o.Name - (o.ID)
         </li>
         <br />
     }
 </ul>
+    
+await Component.InvokeAsync("Plato.Modules.Template", new { value = "test" } )
+await Component.InvokeAsync("Plato.Modules.Login", new { value = "test" })
+await Component.InvokeAsync("Plato.Modules.ContentArea", new { value = "test" })
+    -->
+
+@Model.Name
+
+Display("Zone1", Model)
+@await DisplayAsync("Zone1", new { model = @Model, edit = false })
+
+
+
+-----------------------<br />
+<component name="Plato.Modules.ContentArea" 
+           params="new { model = @Model, edit = false }"></component>
+<br />--------------------------
 
 <!--
-await Component.InvokeAsync("Plato.Modules.Template", new { value = "test" } )
-
-await Component.InvokeAsync("Plato.Modules.Login", new { value = "test" })
+BuildElement("Plato.Modules.ContentArea")
     -->
-await Component.InvokeAsync("Plato.Modules.ContentArea", new { value = "test" })
 
 
-<br />
-------------------------------------------------------<br />
-@Display("Zone1", @Model)
-<br />
-------------------------------------------------------<br />
 
-<br /><br />
-
-<br /><br />
 
 @ViewData["result"]
 

@@ -5,6 +5,7 @@ using Plato.Environment.Modules.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyModel;
 using System.Reflection;
+using Plato.Environment.Modules.Abstractions.Features;
 
 namespace Plato.Environment.Modules
 {
@@ -94,7 +95,12 @@ namespace Plato.Environment.Modules
             }
 
         }
-        
+
+        public IEnumerable<FeatureDescriptor> AvailableFeatures()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
     }

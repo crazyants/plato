@@ -12,7 +12,9 @@ namespace Plato.Layout
 
         ViewContext ViewContext { get; set;  }
 
-        IHtmlContent Display(string sectionName, object arguments = null);
+        IHtmlContent Display(string sectionName, dynamic arguments);
+
+        Task<IHtmlContent> DisplayAsync(string sectionName, dynamic arguments);
 
     }
 }

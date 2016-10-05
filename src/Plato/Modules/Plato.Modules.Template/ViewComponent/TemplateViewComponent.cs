@@ -11,7 +11,7 @@ namespace Plato.Modules.Template
     public class TemplateViewComponent : ViewComponent
     {
 
-        public IViewComponentResult Invoke(object value)
+        public IViewComponentResult Invoke(dynamic value)
         {
             return View(value);
         }

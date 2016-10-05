@@ -5,8 +5,10 @@ using Plato.Layout;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
+using Plato.Layout.Elements;
+using Plato.Layout.Display;
 
-namespace Plato.Hosting.Web.Razor
+namespace Plato.Layout.Mvc.Razor
 {
     public abstract class RazorPage<TModel> :
         Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
@@ -33,11 +35,41 @@ namespace Plato.Hosting.Web.Razor
             }
         }
 
-        public IHtmlContent Display(string Shape, object arguments = null)
+        public IHtmlContent Display(string Shape, dynamic model)
         {
-            return LayoutManager.Display(Shape, arguments);
-            //return (IHtmlContent)Shape;
+            return LayoutManager.Display(Shape, model);        
         }
+
+        public async Task<IHtmlContent> DisplayAsync(string Shape, dynamic model)
+        {
+            return await LayoutManager.DisplayAsync(Shape, model);
+        }
+
+        
+        IElementFactory _elementFactory;
+        public IElementFactory Factory
+        {
+            get
+            {
+                //EnsureShapeFactory();
+                return _elementFactory;
+            }
+        }
+
+        public IHtmlContent BuildElement(string fullName)
+        {
+
+            var element = new Element()
+                .Add("Plato.Modules.Login");
+
+            var helper = new DisplayHelper();
+
+            Task<IHtmlContent> task = helper.ShapeExecuteAsync(element);
+            task.Wait();
+            return task.Result;
+
+        }
+
 
 
         public IHtmlContent Zone(dynamic Display, dynamic Shape)

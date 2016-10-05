@@ -28,6 +28,7 @@ namespace Plato.Environment.Modules
 
             var result = new List<string>();
             result.Add("/Modules/" + _moduleId  + "/Views/Shared/{0}.cshtml");
+            result.Add("/Modules/" + _moduleId + "/Views/Shared/{0}.cshtml");
             result.AddRange(viewLocations);   
             return result;
 
