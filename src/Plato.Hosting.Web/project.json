@@ -2,8 +2,6 @@
   "version": "1.0.0-*",
 
     "dependencies": {
-        "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-rc1-final",
-        "Microsoft.AspNet.Http.Abstractions": "1.0.0-rc1-final",
         "Microsoft.AspNetCore.Diagnostics": "1.0.0",
         "Microsoft.AspNetCore.Hosting.Abstractions": "1.0.0",
         "Microsoft.AspNetCore.Html.Abstractions": "1.0.0",
@@ -20,10 +18,11 @@
         "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
         "NETStandard.Library": "1.6.0",
         "Plato.Data": "1.0.0-*",
-        "Plato.Environment.Modules": "1.0.0-*",
-        "Plato.Environment.Shell": "1.0.0-*",
-        "Plato.Hosting": "1.0.0-*",    
-        "Plato.Repositories": "1.0.0-*"
+        "Plato.Hosting": "1.0.0-*",
+        "Plato.Layout": "1.0.0-*",
+        "Plato.Modules": "1.0.0-*",
+        "Plato.Repositories": "1.0.0-*",
+        "Plato.Shell": "1.0.0-*"
     },
   "frameworks": {
     "netstandard1.6": {

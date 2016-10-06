@@ -13,9 +13,7 @@ namespace Plato.Layout.Mvc.Razor
     public abstract class RazorPage<TModel> :
         Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
-
-
-
+        
         private ILayoutManager _layoutManager;
         public ILayoutManager LayoutManager
         {
@@ -44,106 +42,90 @@ namespace Plato.Layout.Mvc.Razor
         {
             return await LayoutManager.DisplayAsync(Shape, model);
         }
+              
+        //public IHtmlContent BuildElement(string fullName)
+        //{
 
+        //    var element = new Element()
+        //        .Add("Plato.Modules.Login");
+
+        //    var helper = new DisplayHelper();
+
+        //    Task<IHtmlContent> task = helper.ShapeExecuteAsync(element);
+        //    task.Wait();
+        //    return task.Result;
+
+        //}
         
-        IElementFactory _elementFactory;
-        public IElementFactory Factory
-        {
-            get
-            {
-                //EnsureShapeFactory();
-                return _elementFactory;
-            }
-        }
+        //public IHtmlContent Zone(dynamic Display, dynamic Shape)
+        //{
+        //    var htmlContents = new List<IHtmlContent>();
+        //    foreach (var item in Shape)
+        //    {
+        //        htmlContents.Add(Display(item));
+        //    }
 
-        public IHtmlContent BuildElement(string fullName)
-        {
+        //    var htmlContentBuilder = new HtmlContentBuilder();
+        //    foreach (var htmlContent in htmlContents)
+        //    {
+        //        htmlContentBuilder.AppendHtml(htmlContent);
+        //    }
 
-            var element = new Element()
-                .Add("Plato.Modules.Login");
-
-            var helper = new DisplayHelper();
-
-            Task<IHtmlContent> task = helper.ShapeExecuteAsync(element);
-            task.Wait();
-            return task.Result;
-
-        }
+        //    return htmlContentBuilder;
+        //}
 
 
+        //public IHtmlContent ContentZone(dynamic Display, dynamic Shape)
+        //{
 
-        public IHtmlContent Zone(dynamic Display, dynamic Shape)
-        {
-            var htmlContents = new List<IHtmlContent>();
-            foreach (var item in Shape)
-            {
-                htmlContents.Add(Display(item));
-            }
+        //    var htmlContents = new List<IHtmlContent>();
 
-            var htmlContentBuilder = new HtmlContentBuilder();
-            foreach (var htmlContent in htmlContents)
-            {
-                htmlContentBuilder.AppendHtml(htmlContent);
-            }
+        //    var shapes = ((IEnumerable<dynamic>)Shape);
+        //    var tabbed = shapes.GroupBy(x => (string)x.Metadata.Tab).ToList();
 
-            return htmlContentBuilder;
-        }
+        //    if (tabbed.Count > 1)
+        //    {
+        //        foreach (var tab in tabbed)
+        //        {
+        //            var tabName = string.IsNullOrWhiteSpace(tab.Key) ? "Content" : tab.Key;
+        //            var tabBuilder = new TagBuilder("div");
+        //            tabBuilder.Attributes["id"] = "tab-" + tabName;
+        //            tabBuilder.Attributes["data-tab"] = tabName;
+        //            foreach (var item in tab)
+        //            {
+        //                tabBuilder.InnerHtml.AppendHtml(Display(item));
+        //            }
+        //            htmlContents.Add(tabBuilder);
+        //        }
+        //    }
+        //    else if (tabbed.Count > 0)
+        //    {
+        //        foreach (var item in tabbed[0])
+        //        {
+        //            htmlContents.Add(Display(item));
+        //        }
+        //    }
 
+        //    var htmlContentBuilder = new HtmlContentBuilder();
+        //    foreach (var htmlContent in htmlContents)
+        //    {
+        //        htmlContentBuilder.AppendHtml(htmlContent);
+        //    }
 
-        public IHtmlContent ContentZone(dynamic Display, dynamic Shape)
-        {
-            var htmlContents = new List<IHtmlContent>();
+        //    return htmlContentBuilder;
+        //}
+        
+        //public new Task<IHtmlContent> RenderSectionAsync(string name, bool required)
+        //{
 
-            var shapes = ((IEnumerable<dynamic>)Shape);
-            var tabbed = shapes.GroupBy(x => (string)x.Metadata.Tab).ToList();
+        //    //IHtmlContent result = Display(zone);
 
-            if (tabbed.Count > 1)
-            {
-                foreach (var tab in tabbed)
-                {
-                    var tabName = string.IsNullOrWhiteSpace(tab.Key) ? "Content" : tab.Key;
-                    var tabBuilder = new TagBuilder("div");
-                    tabBuilder.Attributes["id"] = "tab-" + tabName;
-                    tabBuilder.Attributes["data-tab"] = tabName;
-                    foreach (var item in tab)
-                    {
-                        tabBuilder.InnerHtml.AppendHtml(Display(item));
-                    }
-                    htmlContents.Add(tabBuilder);
-                }
-            }
-            else if (tabbed.Count > 0)
-            {
-                foreach (var item in tabbed[0])
-                {
-                    htmlContents.Add(Display(item));
-                }
-            }
+        //    var htmlContentBuilder = new HtmlContentBuilder();
+        //    htmlContentBuilder.AppendHtml("<div>zone 1</div>");
 
-            var htmlContentBuilder = new HtmlContentBuilder();
-            foreach (var htmlContent in htmlContents)
-            {
-                htmlContentBuilder.AppendHtml(htmlContent);
-            }
+        //    return Task.FromResult((IHtmlContent)htmlContentBuilder);
 
-            return htmlContentBuilder;
-        }
-
-
-
-
-
-        public new Task<IHtmlContent> RenderSectionAsync(string name, bool required)
-        {
-
-            //IHtmlContent result = Display(zone);
-
-            var htmlContentBuilder = new HtmlContentBuilder();
-            htmlContentBuilder.AppendHtml("<div>zone 1</div>");
-
-            return Task.FromResult((IHtmlContent)htmlContentBuilder);
-
-        }
+        //}
 
     }
 

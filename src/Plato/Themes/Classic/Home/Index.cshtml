@@ -22,14 +22,15 @@ await Component.InvokeAsync("Plato.Modules.ContentArea", new { value = "test" })
 @Model.Name
 
 Display("Zone1", Model)
-@await DisplayAsync("Zone1", new { model = @Model, edit = false })
+await DisplayAsync("Zone1", new { model = Model, edit = false })
 
 
-
+<!--
 -----------------------<br />
-<component name="Plato.Modules.ContentArea" 
-           params="new { model = @Model, edit = false }"></component>
+component name="Plato.Modules.ContentArea" 
+           params="new { model = Model, edit = false }"></component>
 <br />--------------------------
+-->
 
 <!--
 BuildElement("Plato.Modules.ContentArea")

@@ -1,32 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Plato.Environment.Modules;
-using Plato.Repositories;
-using Plato.Repositories.Models;
 using System.Collections.Generic;
-using Plato.Environment.Modules.Abstractions;
 
-namespace Plato.Controllers
+namespace Plato.Discussions
 {
-    public class HomeController : Controller
+    public class DiscussionsController : Controller
     {
-            
-        private readonly IModuleLocator _moduleLocator;
-        private IUserRepository<User> _userRepository;
-
-        public HomeController(
-            IModuleLocator moduleLocator,
-            IUserRepository<User> userRepository)
-        {
-            //_fileSystem = fileSystem;
-            _moduleLocator = moduleLocator;
-            _userRepository = userRepository;
-            
+                   
+        public DiscussionsController()
+        {                      
         }
         
         public IActionResult Index()
         {
-
-           
 
             string path = Request.Path;
             ViewData["path"] = path;
@@ -43,12 +28,8 @@ namespace Plato.Controllers
 
             //ViewData["result"] = result;
                   
-            var user = _userRepository.Select(1);
-
-            var users = new List<User>();
-            users.Add(user);
-
-            return RedirectToAction("Index", "Discussions"); 
+         
+            return View();
         }
 
         public IActionResult About()
