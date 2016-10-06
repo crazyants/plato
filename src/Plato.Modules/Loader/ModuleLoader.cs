@@ -47,10 +47,8 @@ namespace Plato.Environment.Modules
         #region "Implementation"
       
         public List<Assembly> LoadModule(IModuleDescriptor descriptor)
-        {
-            var assemblies = LoadAssembliesInFolder(descriptor.VirtualPathToBin, new List<Assembly>());
-
-            return assemblies;
+        {            
+            return LoadAssembliesInFolder(descriptor.VirtualPathToBin, new List<Assembly>());
         }
 
         #endregion
@@ -94,7 +92,7 @@ namespace Plato.Environment.Modules
                 
         private Assembly LoadFromAssemblyPath(string assemblyPath)
         {
-
+                     
             return _loadedAssemblies.GetOrAdd(Path.GetFileNameWithoutExtension(assemblyPath),
                 new Lazy<Assembly>(() =>
                 {

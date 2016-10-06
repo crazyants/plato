@@ -1,0 +1,13 @@
+﻿@model List<Plato.Discussions.TextObject>
+
+@{
+    ViewData["Title"] = "Discussions";
+}
+
+Discussions View 
+
+@foreach (var test in @Model)
+    {
+        @test.Name
+        <br />
+    }

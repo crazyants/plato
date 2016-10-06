@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Environment.Modules.Abstractions.Features;
+using System.Reflection;
 
 namespace Plato.Environment.Modules.Abstractions
 {
     public interface IModuleManager
     {
 
-        IEnumerable<FeatureDescriptor> AvailableFeatures();
+
+        IEnumerable<Assembly> AvailableAssemblies { get;  }
 
         IEnumerable<IModuleEntry> ModuleEntries { get; }
 

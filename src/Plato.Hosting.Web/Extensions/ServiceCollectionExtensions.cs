@@ -28,7 +28,8 @@ namespace Plato.Hosting.Web.Extensions
         {
                     
             services.AddShell();
-            services.AddMvc();
+        
+            // database
 
             services.AddPlatoDbContext();
             services.AddRepositories();
@@ -45,21 +46,25 @@ namespace Plato.Hosting.Web.Extensions
 
             //services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
 
-     
-            // modules
-                  
-            services.AddModules();
+
+            // mvc
+            var mvcBuilder = services.AddMvc();
 
             // theme
 
+            //var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
             services.Configure<RazorViewEngineOptions>(configureOptions: options =>
-            {                             
-                options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));       
+            {
+
+                options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
+                
             });
 
             // layout
 
             services.AddSingleton<ILayoutManager, LayoutManager>();
+
+            services.AddModules(mvcBuilder);
 
             return services;
 
@@ -70,6 +75,11 @@ namespace Plato.Hosting.Web.Extensions
          IHostingEnvironment env,
          ILoggerFactory loggerFactory)
         {
+
+            
+         
+
+
 
             //loggerFactory.AddConsole(IConfiguration.GetSection("Logging"));
             loggerFactory.AddDebug();

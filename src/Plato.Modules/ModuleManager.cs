@@ -17,7 +17,9 @@ namespace Plato.Environment.Modules
         IModuleLocator _moduleLocator;
         IModuleLoader _moduleLoader;       
         IEnumerable<IModuleDescriptor> _moduleDescriptors;
+
         static List<IModuleEntry> _moduleEntries;
+        static List<Assembly> _loadedAssemblies;
 
         string _contentRootPath;       
         string _virtualPathToModules;
@@ -28,12 +30,24 @@ namespace Plato.Environment.Modules
 
         public IEnumerable<IModuleEntry> ModuleEntries
         {
-            get {
+            get
+            {
                 InitializeModules();
                 return _moduleEntries;
             }
         }
-        
+
+        public IEnumerable<Assembly> AvailableAssemblies
+        {
+
+            get
+            {
+                InitializeModules();
+                return _loadedAssemblies;
+            }
+        }
+
+
         #endregion
 
         #region "Constructor"
@@ -58,11 +72,12 @@ namespace Plato.Environment.Modules
 
         #region "Implementation"
 
-       void InitializeModules()
+       public void InitializeModules()
         {
             if (_moduleEntries == null)
             {
                 _moduleEntries = new List<IModuleEntry>();
+                _loadedAssemblies = new List<Assembly>();
                 LoadModuleDescriptors();
                 LoadModules();
             }
@@ -83,22 +98,16 @@ namespace Plato.Environment.Modules
                       
             foreach (var descriptor in _moduleDescriptors)
             {
-
                 List<Assembly> assemblies = _moduleLoader.LoadModule(descriptor);
                 _moduleEntries.Add(new ModuleEntry()
                 {
                     Descriptor = descriptor,
-                    Assmeblies = assemblies              
-                    
+                    Assmeblies = assemblies                                  
                 });
-
+                _loadedAssemblies.AddRange(assemblies);
+                
             }
 
-        }
-
-        public IEnumerable<FeatureDescriptor> AvailableFeatures()
-        {
-            throw new NotImplementedException();
         }
 
         #endregion

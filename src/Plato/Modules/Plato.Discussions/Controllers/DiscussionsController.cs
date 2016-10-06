@@ -27,10 +27,17 @@ namespace Plato.Discussions
             //    false);                
 
             //ViewData["result"] = result;
-                  
-         
-            return View();
+
+            List<TextObject> list = new List<TextObject>();
+            list.Add(new TextObject("Ryan"));
+            list.Add(new TextObject("Jane"));
+            list.Add(new TextObject("Mike"));
+            list.Add(new TextObject("Roger"));
+
+            return View(list);
         }
+
+        
 
         public IActionResult About()
         {
@@ -50,5 +57,15 @@ namespace Plato.Discussions
         {
             return View();
         }
+    }
+
+    public class TextObject
+    {
+        public TextObject(string name)
+        {
+            this.Name = name;
+        }
+
+        public string Name { get; set; }
     }
 }
