@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Plato.Environment.Modules.Abstractions;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.DependencyModel;
 using System.Reflection;
-using Plato.Environment.Modules.Abstractions.Features;
 
 namespace Plato.Environment.Modules
 {
@@ -28,7 +26,7 @@ namespace Plato.Environment.Modules
 
         #region "Public ReadOnly Propertoes"
 
-        public IEnumerable<IModuleEntry> ModuleEntries
+        public IEnumerable<IModuleEntry> AvailableModules
         {
             get
             {
@@ -37,9 +35,8 @@ namespace Plato.Environment.Modules
             }
         }
 
-        public IEnumerable<Assembly> AvailableAssemblies
+        public IEnumerable<Assembly> AllAvailableAssemblies
         {
-
             get
             {
                 InitializeModules();
@@ -62,8 +59,7 @@ namespace Plato.Environment.Modules
             _moduleLocator = moduleLocator;
             _moduleLoader = moduleLoader;
             _contentRootPath = hostingEnvironment.ContentRootPath;
-            _virtualPathToModules = moduleOptions.Value.VirtualPathToModules;
-            
+            _virtualPathToModules = moduleOptions.Value.VirtualPathToModules;            
             InitializeModules();
 
         }
@@ -71,24 +67,6 @@ namespace Plato.Environment.Modules
         #endregion
 
         #region "Implementation"
-
-       public void InitializeModules()
-        {
-            if (_moduleEntries == null)
-            {
-                _moduleEntries = new List<IModuleEntry>();
-                _loadedAssemblies = new List<Assembly>();
-                LoadModuleDescriptors();
-                LoadModules();
-            }
-        }
-
-        public void LoadModuleDescriptors()
-        {
-            _moduleDescriptors = _moduleLocator.LocateModules(
-             new string[] { _contentRootPath + "\\" + _virtualPathToModules },
-             "Module", "module.txt", false);
-        }
 
         public void LoadModules()
         {
@@ -108,6 +86,28 @@ namespace Plato.Environment.Modules
                 
             }
 
+        }
+
+        #endregion
+
+        #region "Private Methods"
+        
+        void InitializeModules()
+        {
+            if (_moduleEntries == null)
+            {
+                _moduleEntries = new List<IModuleEntry>();
+                _loadedAssemblies = new List<Assembly>();
+                LoadModuleDescriptors();
+                LoadModules();
+            }
+        }
+
+        void LoadModuleDescriptors()
+        {
+            _moduleDescriptors = _moduleLocator.LocateModules(
+             new string[] { _contentRootPath + "\\" + _virtualPathToModules },
+             "Module", "module.txt", false);
         }
 
         #endregion

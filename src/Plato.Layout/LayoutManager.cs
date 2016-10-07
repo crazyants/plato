@@ -51,7 +51,7 @@ namespace Plato.Layout
 
             var htmlContentBuilder = new HtmlContentBuilder();
 
-            var entries = _moduleManager.ModuleEntries;
+            var entries = _moduleManager.AvailableModules;
             foreach (var entry in entries)
             {
                 string id = entry.Descriptor.ID;
@@ -78,7 +78,7 @@ namespace Plato.Layout
         {
             var htmlContentBuilder = new HtmlContentBuilder();
 
-            var entries = _moduleManager.ModuleEntries;
+            var entries = _moduleManager.AvailableModules;
             foreach (var entry in entries)
             {
                 string id = entry.Descriptor.ID;

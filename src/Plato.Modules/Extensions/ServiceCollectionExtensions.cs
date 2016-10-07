@@ -22,40 +22,36 @@ namespace Plato.Environment.Modules
             services.AddSingleton<IModuleLocator, ModuleLocator>();
             services.AddSingleton<IModuleLoader, ModuleLoader>();
             services.AddSingleton<IModuleManager, ModuleManager>();
-
-            //services.AddSingleton<IAssemblyProvider, CompositeModuleProvider>();
-            
+                        
+            // register dynamically loaded module assemblies with 
             var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
-            foreach (ModuleEntry moduleEntry in moduleManager.ModuleEntries)
+            foreach (ModuleEntry moduleEntry in moduleManager.AvailableModules)
             {
                 foreach (var assembly in moduleEntry.Assmeblies)                
                     mvcBuilder.AddApplicationPart(assembly);
             }
-
             mvcBuilder.AddControllersAsServices();
           
             services.Configure<RazorViewEngineOptions>(configureOptions: options =>
             {                
-                foreach (ModuleEntry moduleEntry in moduleManager.ModuleEntries)
+
+                // add view location expanders for each available module
+                foreach (ModuleEntry moduleEntry in moduleManager.AvailableModules)
                 {
                     options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.ID));
                 }
 
                 // invoke context for model binding within dynamic views                                
-                var moduleAssemblies = moduleManager.AvailableAssemblies.Select(x => MetadataReference.CreateFromFile(x.Location)).ToList();
+                var moduleAssemblies = moduleManager.AllAvailableAssemblies.Select(x => MetadataReference.CreateFromFile(x.Location)).ToList();
                 var previous = options.CompilationCallback;
                 options.CompilationCallback = (context) =>
                 {
                     previous?.Invoke(context);
                     context.Compilation = context.Compilation.AddReferences(moduleAssemblies);
                 };
-
-
+                
             });
-
             
-
-
             return services;
         }
 

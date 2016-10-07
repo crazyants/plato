@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Plato.Environment.Modules.Abstractions.Features;
+﻿using System.Collections.Generic;
 using System.Reflection;
 
 namespace Plato.Environment.Modules.Abstractions
 {
     public interface IModuleManager
     {
+        
+        IEnumerable<Assembly> AllAvailableAssemblies { get;  }
 
-
-        IEnumerable<Assembly> AvailableAssemblies { get;  }
-
-        IEnumerable<IModuleEntry> ModuleEntries { get; }
-
-        void LoadModuleDescriptors();
+        IEnumerable<IModuleEntry> AvailableModules { get; }
 
         void LoadModules();
 
