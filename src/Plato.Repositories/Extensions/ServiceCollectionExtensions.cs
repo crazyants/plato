@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Repositories;
-using Plato.Repositories.Models;
+using Plato.Models.User;
 
 namespace Plato.Repositories.Extensions
 {

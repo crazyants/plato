@@ -1,32 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Plato.Environment.Modules;
-using Plato.Repositories;
 using System.Collections.Generic;
-using Plato.Environment.Modules.Abstractions;
-using Plato.Models.User;
 
-namespace Plato.Controllers
+namespace Plato.Discussions
 {
-    public class HomeController : Controller
+    public class LoginController : Controller
     {
-            
-        private readonly IModuleLocator _moduleLocator;
-        private IUserRepository<User> _userRepository;
-
-        public HomeController(
-            IModuleLocator moduleLocator,
-            IUserRepository<User> userRepository)
-        {
-            //_fileSystem = fileSystem;
-            _moduleLocator = moduleLocator;
-            _userRepository = userRepository;
-            
+                   
+        public LoginController()
+        {                      
         }
         
         public IActionResult Index()
         {
-
-           
 
             string path = Request.Path;
             ViewData["path"] = path;
@@ -42,14 +27,17 @@ namespace Plato.Controllers
             //    false);                
 
             //ViewData["result"] = result;
-                  
-            var user = _userRepository.Select(1);
 
-            var users = new List<User>();
-            users.Add(user);
+            List<TextObject> list = new List<TextObject>();
+            list.Add(new TextObject("Ryan"));
+            list.Add(new TextObject("Jane"));
+            list.Add(new TextObject("Mike"));
+            list.Add(new TextObject("Roger"));
 
-            return RedirectToAction("Index", "Discussions"); 
+            return View(list);
         }
+
+        
 
         public IActionResult About()
         {
@@ -69,5 +57,15 @@ namespace Plato.Controllers
         {
             return View();
         }
+    }
+
+    public class TextObject
+    {
+        public TextObject(string name)
+        {
+            this.Name = name;
+        }
+
+        public string Name { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Plato.Data;
 using System.Data;
-using Plato.Repositories.Models;
+using Plato.Models.User;
 
 namespace Plato.Repositories
 {

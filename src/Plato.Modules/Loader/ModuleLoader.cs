@@ -62,6 +62,10 @@ namespace Plato.Environment.Modules
             if (string.IsNullOrEmpty(path))
                 return localList;
 
+            // no bin folder within module
+            if (!_fileSystem.DirectoryExists(path))
+                return localList;
+
             var folder = _fileSystem.GetDirectoryInfo(path);
             foreach (var file in folder.GetFiles())
             {
