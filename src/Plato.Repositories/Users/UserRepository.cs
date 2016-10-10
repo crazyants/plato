@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Plato.Data;
 using System.Data;
 using Plato.Models.User;
+using Plato.Abstractions.Extensions;
 
 namespace Plato.Repositories
 {
@@ -49,13 +50,7 @@ namespace Plato.Repositories
 
                 IDataReader reader = context.ExecuteReader(
                   CommandType.StoredProcedure,
-                  "iasp_sp_SelectUserData",                
-                      "",
-                      "",
-                      "",
-                      1,
-                      1                 
-                  );
+                  "plato_sp_SelectUser", id);
 
 
                 //var p = new List<DbParameter>();
@@ -69,7 +64,7 @@ namespace Plato.Repositories
                 //     CommandType.StoredProcedure,
                 //     "iasp_sp_SelectUserData", p);       
 
-                if (reader != null)
+                if ((reader != null) && (reader.HasRows()))
                 {
                     reader.Read();
                     User.PopulateModelFromDataReader(reader);

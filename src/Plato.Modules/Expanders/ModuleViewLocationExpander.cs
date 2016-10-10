@@ -11,6 +11,7 @@ namespace Plato.Environment.Modules
 
         private string _moduleId;
         private const string _moduleKey = "module";
+        private const string _controllerKey = "controller";
 
         public ModuleViewLocationExpander(string moduleId)
         {
@@ -32,8 +33,9 @@ namespace Plato.Environment.Modules
             var controller = context.ActionContext.ActionDescriptor.DisplayName;
             var moduleName = controller.Split('.')[2];
             if (moduleName != "WebHost")
-            {
-                context.Values[_moduleKey] = _moduleId;
+            {                
+                context.Values[_controllerKey] = controller;
+                context.Values[_moduleKey] = moduleName;
             }
         }
 
@@ -49,8 +51,8 @@ namespace Plato.Environment.Modules
                 {
                     var moduleViewLocations = new string[]
                     {
-                       "/Modules/" + module + "/Views/{1}/{0}.cshtml",
-                       "/Modules/" + module + "/Views/Shared/{0}.cshtml"
+                       "/Modules/" + _moduleId + "/Views/{1}/{0}.cshtml",
+                       "/Modules/" + _moduleId + "/Views/Shared/{0}.cshtml"
                     };
 
                     viewLocations = moduleViewLocations.Concat(viewLocations);

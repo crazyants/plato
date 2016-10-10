@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
-namespace Plato.Discussions
+namespace Plato.Login
 {
     public class LoginController : Controller
     {
@@ -28,11 +28,11 @@ namespace Plato.Discussions
 
             //ViewData["result"] = result;
 
-            List<TextObject> list = new List<TextObject>();
-            list.Add(new TextObject("Ryan"));
-            list.Add(new TextObject("Jane"));
-            list.Add(new TextObject("Mike"));
-            list.Add(new TextObject("Roger"));
+            List<TextObject1> list = new List<TextObject1>();
+            list.Add(new TextObject1("Ryan"));
+            list.Add(new TextObject1("Jane"));
+            list.Add(new TextObject1("Mike"));
+            list.Add(new TextObject1("Roger"));
 
             return View(list);
         }
@@ -59,9 +59,9 @@ namespace Plato.Discussions
         }
     }
 
-    public class TextObject
+    public class TextObject1
     {
-        public TextObject(string name)
+        public TextObject1(string name)
         {
             this.Name = name;
         }
