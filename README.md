@@ -7,7 +7,7 @@ EntityId						INT NOT NULL,
 SiteId							INT NOT NULL,
 TableName						NVARCHAR(75) DEFAULT('') NOT NULL,
 ColumnName						NVARCHAR(75) DEFAULT('') NOT NULL,
-Values							NVARCHAR(75) DEFAULT('') NOT NULL,
+[Values]						NVARCHAR(75) DEFAULT('') NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
 CONSTRAINT PK_Plato_AuditLog_Id PRIMARY KEY CLUSTERED ( Id )
@@ -92,7 +92,7 @@ AppVersion						NVARCHAR(10) DEFAULT ('') NOT NULL,
 SchemaUpdates					NVARCHAR(MAX) DEFAULT('') NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
-CONSTRAINT PK_Plato_Sites_Id PRIMARY KEY CLUSTERED ( Id )
+CONSTRAINT PK_Plato_SiteMigrations_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
@@ -186,6 +186,45 @@ CONSTRAINT PK_Plato_Teams_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
+CREATE TABLE Plato_Products
+(
+Id								INT IDENTITY(1,1) NOT NULL,
+SiteId							INT DEFAULT (0) NOT NULL,
+Name							NVARCHAR(255) DEFAULT('') NOT NULL,
+Description						NVARCHAR(255) DEFAULT('') NOT NULL,
+Image							IMAGE NOT NULL,
+WebSiteUrl						NVARCHAR(255) DEFAULT('') NOT NULL,
+CreatedDate						DATETIME2 NULL,
+CreatedUserId					INT DEFAULT (0) NOT NULL,
+ModifiedDate					DATETIME2 NULL,
+ModifiedUserId					INT DEFAULT (0) NOT NULL,
+IsDeleted						BIT DEFAULT(0) NOT NULL,
+DeletedDate						DATETIME2 NULL,
+DeletedUserId					INT DEFAULT (0) NOT NULL,
+IsDisabled						BIT DEFAULT(0) NOT NULL,
+DisabledDate					DATETIME2 NULL,
+DisabledUserId					INT DEFAULT (0) NOT NULL,
+CONSTRAINT PK_Plato_Products_Id PRIMARY KEY CLUSTERED ( Id )
+)
+
+GO
+
+
+CREATE TABLE Plato_TeamProducts
+(
+Id								INT IDENTITY(1,1) NOT NULL,
+TeamId							INT DEFAULT (0) NOT NULL,
+ProductId						INT DEFAULT (0) NOT NULL,
+CreatedDate						DATETIME2 NULL,
+CreatedUserId					INT DEFAULT (0) NOT NULL,
+ModifiedDate					DATETIME2 NULL,
+ModifiedUserId					INT DEFAULT (0) NOT NULL,
+CONSTRAINT PK_Plato_TeamProducts_Id PRIMARY KEY CLUSTERED ( Id )
+)
+
+GO
+
+
 CREATE TABLE Plato_UserTeams
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -203,7 +242,7 @@ CREATE TABLE Plato_Settings
 Id								INT IDENTITY(1,1) NOT NULL,
 SiteId							INT DEFAULT (0) NOT NULL,
 SpaceId							INT DEFAULT (0) NOT NULL,
-Key								NVARCHAR(255) DEFAULT('') NOT NULL,
+[Key]							NVARCHAR(255) DEFAULT('') NOT NULL,
 Value							NVARCHAR(255) DEFAULT('') NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
@@ -225,7 +264,7 @@ EmailAddress					NVARCHAR(255) DEFAULT('') NOT NULL,
 DisplayName						NVARCHAR(255) DEFAULT('') NOT NULL,
 SamAccountName					NVARCHAR(255) DEFAULT('') NOT NULL,
 PhotoId							INT DEFAULT (0) NOT NULL,
-PhotoBlob						IMAGE NULL,
+Photo							IMAGE NULL,
 CONSTRAINT PK_Plato_Users_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
@@ -257,14 +296,14 @@ ApiKey							NVARCHAR(255) DEFAULT('') NOT NULL,
 Visits							INT DEFAULT (0) NOT NULL,
 Answers							INT DEFAULT (0) NOT NULL,
 Entities						INT DEFAULT (0) NOT NULL,
-EntityReplies					INT DEFAULT (0) NOT NULL,
+Replies							INT DEFAULT (0) NOT NULL,
 Reactions						INT DEFAULT (0) NOT NULL,
 Mentions						INT DEFAULT (0) NOT NULL,
-Mentions						INT DEFAULT (0) NOT NULL,
+Follows							INT DEFAULT (0) NOT NULL,
+Badges							INT DEFAULT (0) NOT NULL,
 ReputationRank					INT DEFAULT (0) NOT NULL,
 ReputationPoints				INT DEFAULT (0) NOT NULL,
-Badges							INT DEFAULT (0) NOT NULL,
-BannerBlob						IMAGE NULL,
+Banner							IMAGE NULL,
 ClientIpAddress					NVARCHAR(255) DEFAULT('') NOT NULL,
 ClientName						NVARCHAR(255) DEFAULT('') NOT NULL,
 EmailConfirmationCode			NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -283,6 +322,7 @@ BannedUserId					INT DEFAULT (0) NOT NULL,
 IsLocked						BIT DEFAULT(0) NOT NULL,
 LockedDate						DATETIME2 NULL,
 LockedUserId					INT DEFAULT (0) NOT NULL,
+UnLockDate						DATETIME2 NULL,
 IsSpam							BIT DEFAULT(0) NOT NULL,
 SpamDate						DATETIME2 NULL,
 SpamUserId						INT DEFAULT (0) NOT NULL,
@@ -298,6 +338,8 @@ Id								INT IDENTITY(1,1) NOT NULL,
 UserId							INT DEFAULT (0) NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
+IsStreamDisabled				BIT DEFAULT (0) NOT NULL,
+IsEmailDisabled					BIT DEFAULT (0) NOT NULL,
 OptOutCode						NVARCHAR(255) DEFAULT('') NOT NULL,
 CONSTRAINT PK_Plato_UserFollows_Id PRIMARY KEY CLUSTERED ( Id )
 )
@@ -310,12 +352,27 @@ Id								INT IDENTITY(1,1) NOT NULL,
 TeamId							INT DEFAULT (0) NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
+IsStreamDisabled				BIT DEFAULT (0) NOT NULL,
+IsEmailDisabled					BIT DEFAULT (0) NOT NULL,
 OptOutCode						NVARCHAR(255) DEFAULT('') NOT NULL,
-CONSTRAINT PK_Plato_UserFollows_Id PRIMARY KEY CLUSTERED ( Id )
+CONSTRAINT PK_Plato_TeamFollows_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
 
+CREATE TABLE Plato_ProductFollows
+(
+Id								INT IDENTITY(1,1) NOT NULL,
+ProductId						INT DEFAULT (0) NOT NULL,
+CreatedDate						DATETIME2 NULL,
+CreatedUserId					INT DEFAULT (0) NOT NULL,
+IsStreamDisabled				BIT DEFAULT (0) NOT NULL,
+IsEmailDisabled					BIT DEFAULT (0) NOT NULL,
+OptOutCode						NVARCHAR(255) DEFAULT('') NOT NULL,
+CONSTRAINT PK_Plato_ProductFollows_Id PRIMARY KEY CLUSTERED ( Id )
+)
+
+GO
 
 CREATE TABLE Plato_UserFields
 (
@@ -325,7 +382,7 @@ Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 NameLocalizaed					NVARCHAR(100) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
 DescriptionLocalizaed			NVARCHAR(100) DEFAULT('') NOT NULL,
-Values							NVARCHAR(MAX) DEFAULT('') NOT NULL,
+[Values]						NVARCHAR(MAX) DEFAULT('') NOT NULL,
 FieldTypeId						INT DEFAULT (0) NOT NULL,
 SortOrder						INT DEFAULT (0) NOT NULL,
 RegExValidation					NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -358,7 +415,7 @@ CREATE TABLE Plato_UserSettings
 (
 Id								INT IDENTITY(1,1) NOT NULL,
 UserId							INT DEFAULT (0) NOT NULL,
-Key								NVARCHAR(255) DEFAULT('') NOT NULL,
+[Key]							NVARCHAR(255) DEFAULT('') NOT NULL,
 Value							NVARCHAR(255) DEFAULT('') NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
@@ -493,8 +550,8 @@ GO
 CREATE TABLE Plato_EntityAssignees
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-UserId							INT IDENTITY(1,1) NOT NULL,
 EntityId						INT DEFAULT (0) NOT NULL,
+UserId							INT DEFAULT(0) NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
 CONSTRAINT PK_Plato_EntityAssignees_Id PRIMARY KEY CLUSTERED ( Id )
@@ -502,7 +559,7 @@ CONSTRAINT PK_Plato_EntityAssignees_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-CREATE TABLE Plato_SpaceFields
+CREATE TABLE Plato_EntityFields
 (
 Id								INT IDENTITY(1,1) NOT NULL,
 SpaceId							INT DEFAULT (0) NOT NULL,
@@ -510,7 +567,7 @@ Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 NameLocalizaed					NVARCHAR(100) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
 DescriptionLocalizaed			NVARCHAR(100) DEFAULT('') NOT NULL,
-Values							NVARCHAR(MAX) DEFAULT('') NOT NULL,
+[Values]						NVARCHAR(MAX) DEFAULT('') NOT NULL,
 FieldTypeId						INT DEFAULT (0) NOT NULL,
 SortOrder						INT DEFAULT (0) NOT NULL,
 RegExValidation					NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -523,8 +580,6 @@ CONSTRAINT PK_Plato_EntityFields_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
-/* values populated by fields defined within Plato_SpaceFields */
 CREATE TABLE Plato_EntityFieldValues
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -616,6 +671,22 @@ LabelId							INT DEFAULT (0) NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
 CONSTRAINT PK_Plato_EntityLabels_Id PRIMARY KEY CLUSTERED ( Id )
+)
+
+
+GO
+
+
+CREATE TABLE Plato_EntityProducts
+(
+Id								INT IDENTITY(1,1) NOT NULL,
+EntityId						INT DEFAULT (0) NOT NULL,
+ProductId						INT DEFAULT (0) NOT NULL,
+CreatedDate						DATETIME2 NULL,
+CreatedUserId					INT DEFAULT (0) NOT NULL,
+ModifiedDate					DATETIME2 NULL,
+ModifiedUserId					INT DEFAULT (0) NOT NULL,
+CONSTRAINT PK_Plato_EntityProducts_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
@@ -822,7 +893,7 @@ CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
 ModifiedDate					DATETIME2 NULL,
 ModifiedUserId					INT DEFAULT (0) NOT NULL,
-CONSTRAINT PK_Plato_WorkFlowSteps_Id PRIMARY KEY CLUSTERED ( Id )
+CONSTRAINT PK_Plato_WorkFlowNextSteps_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
@@ -895,9 +966,9 @@ UserId							INT DEFAULT (0) NOT NULL,
 EntityId						INT DEFAULT (0) NOT NULL,
 Action							INT DEFAULT (0) NOT NULL,
 ReputationPoints				INT DEFAULT (0) NOT NULL,
-Day								INT DEFAULT (0) NOT NULL,
-Month							INT DEFAULT (0) NOT NULL,
-Year							INT DEFAULT (0) NOT NULL,
+[Day]							INT DEFAULT (0) NOT NULL,
+[Month]							INT DEFAULT (0) NOT NULL,
+[Year]							INT DEFAULT (0) NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
 CONSTRAINT PK_Plato_UserReputations_Id PRIMARY KEY CLUSTERED ( Id )
