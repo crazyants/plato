@@ -1,2 +1,3 @@
 Name: Simple Component Test
 Author: InstantASP
+Content Type: Discussion
