@@ -2,10 +2,14 @@
   "version": "1.0.0-*",
 
     "dependencies": {
+        "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
+        "Microsoft.Extensions.Configuration.Json": "1.0.0",
+        "Microsoft.Extensions.Configuration.Xml": "1.0.0",
         "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
         "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
         "NETStandard.Library": "1.6.0",
-        "Plato.FileSystem": "1.0.0-*"
+        "Plato.FileSystem": "1.0.0-*",
+        "Plato.Yaml": "1.0.0-*"
     },
 
   "frameworks": {

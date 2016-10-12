@@ -13,7 +13,7 @@ namespace Plato.Environment.Modules.Abstractions
 
         string Name { get; set; }
 
-        string RootPath { get; set; }
+        string Location { get; set; }
            
         string VirtualPathToBin { get; set; }
     }

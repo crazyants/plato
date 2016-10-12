@@ -117,9 +117,9 @@ namespace Plato.Environment.Modules
                     if (descriptor == null)
                         continue;
 
-                    if (descriptor.RootPath == null)
+                    if (descriptor.Location == null)
                     {
-                        descriptor.RootPath = descriptor.Name.IsValidUrlSegment()
+                        descriptor.Location = descriptor.Name.IsValidUrlSegment()
                                               ? descriptor.Name
                                               : descriptor.ID;
                     }
@@ -174,7 +174,7 @@ namespace Plato.Environment.Modules
       
             var moduleDescriptor = new ModuleDescriptor
             {
-                RootPath = rootPath,
+                Location = rootPath,
                 VirtualPathToBin = virtualPathToBin.Replace("/", "\\"),
                 ID = moduleId,
                 ModuleType = moduleType,

@@ -45,10 +45,10 @@ namespace Plato.Controllers
                   
             var user = _userRepository.Select(1);
 
-            var users = new List<User>();
-            users.Add(user);
+        
 
-            return RedirectToAction("Index", "Discussions"); 
+            return View(user);
+            //return RedirectToAction("Index", "Discussions"); 
         }
 
         public IActionResult About()

@@ -15,8 +15,6 @@ namespace Plato.Environment.Modules
 
         public string Name { get; set;  }
 
-        public string RootPath { get; set;  }
-
         public string Location { get; set;  }
 
         public string VirtualPathToBin { get; set; }

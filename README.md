@@ -36,32 +36,10 @@ CONSTRAINT PK_Plato_Editions_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-CREATE TABLE Plato_Tennets
-(
-Id								INT IDENTITY(1,1) NOT NULL,
-Name							NVARCHAR(255) DEFAULT('') NOT NULL,
-Description						NVARCHAR(255) DEFAULT('') NOT NULL,
-ConnectionString				NVARCHAR(255) DEFAULT('') NOT NULL,
-CreatedDate						DATETIME2 NULL,
-CreatedUserId					INT DEFAULT (0) NOT NULL,
-ModifiedDate					DATETIME2 NULL,
-ModifiedUserId					INT DEFAULT (0) NOT NULL,
-IsDeleted						BIT DEFAULT(0) NOT NULL,
-DeletedDate						DATETIME2 NULL,
-DeletedUserId					INT DEFAULT (0) NOT NULL,
-IsDisabled						BIT DEFAULT(0) NOT NULL,
-DisabledDate					DATETIME2 NULL,
-DisabledUserId					INT DEFAULT (0) NOT NULL,
-CONSTRAINT PK_Plato_Tennets_Id PRIMARY KEY CLUSTERED ( Id )
-)
-
-GO
-
 
 CREATE TABLE Plato_Sites
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-TennetId						INT DEFAULT (0) NOT NULL,
 EditionId						INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 Description						NVARCHAR(MAX) DEFAULT('') NOT NULL,
@@ -257,7 +235,6 @@ GO
 CREATE TABLE Plato_Users
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-TennetId						INT DEFAULT (0) NOT NULL,
 SiteId							INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 EmailAddress					NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -634,6 +611,7 @@ DescriptionLocalizaed			NVARCHAR(100) DEFAULT('') NOT NULL,
 BackColor						NVARCHAR(20) DEFAULT('') NOT NULL,
 ForeColor						NVARCHAR(20) DEFAULT('') NOT NULL,
 IconClassName					NVARCHAR(MAX) DEFAULT('') NOT NULL,
+Image							IMAGE NOT NULL,
 SortOrder						INT DEFAULT (0) NOT NULL,
 Follows							INT DEFAULT (0) NOT NULL,
 Entities						INT DEFAULT (0) NOT NULL,
@@ -976,3 +954,451 @@ CONSTRAINT PK_Plato_UserReputations_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
+---------------
+
+GO
+
+
+CREATE PROCEDURE plato_sp_SelectUser (
+@Id int
+) AS
+SET NOCOUNT ON 
+
+SELECT u.*, us.*, ud.* FROM 
+Plato_Users u WITH (nolock) 
+INNER JOIN Plato_UserSecrets AS us WITH (nolock) ON u.Id = us.Id
+INNER JOIN Plato_UserDetails AS ud WITH (nolock) ON u.Id = ud.Id
+WHERE (u.Id = @Id)
+	
+-- select roles for user
+--EXEC iasp_sp_SelectUserRoles @intLocalUserID
+
+RETURN
+
+
+
+GO
+
+------------------------
+
+GO
+
+
+CREATE PROCEDURE plato_sp_InsertUpdateUser (
+	@Id int,
+	@SiteId int,
+	@Name nvarchar(255),
+	@EmailAddress nvarchar(255),
+	@DisplayName nvarchar(255),
+	@SamAccountName nvarchar(255),
+	@PhotoId int,
+	@Photo image,
+	@intIdentity int output
+) AS
+
+SET NOCOUNT ON 
+
+IF EXISTS( 
+	SELECT Id 
+	FROM Plato_Users 
+	WHERE (Id = @Id)
+	)
+BEGIN
+
+	-- UPDATE
+	UPDATE Plato_Users SET
+		SiteId = @SiteId,
+		Name = @Name,
+		EmailAddress = @EmailAddress,
+		DisplayName = @DisplayName,
+		SamAccountName = @SamAccountName,
+		PhotoId = @PhotoId,
+		Photo = @Photo
+	WHERE (Id = @Id);
+
+	SET @intIdentity = @Id;
+
+END
+ELSE
+BEGIN
+
+	-- INSERT
+	INSERT INTO Plato_Users (
+		SiteId,
+		Name,
+		EmailAddress,
+		DisplayName,
+		SamAccountName,
+		PhotoId,
+		Photo		 
+	) VALUES (
+		@SiteId,
+		@Name,
+		@EmailAddress,
+		@DisplayName,
+		@SamAccountName,
+		@PhotoId,
+		@Photo		 
+	);
+
+	SET @intIdentity = @@IDENTITY;
+
+END
+
+RETURN
+
+
+GO
+
+------------------------
+
+GO
+
+
+CREATE PROCEDURE plato_sp_InsertUpdateUserSecret (
+	@Id int,
+	@UserId int,
+	@Password nvarchar(255),
+	@Salts nvarchar(255),
+	@intIdentity int output
+) AS
+
+SET NOCOUNT ON 
+
+IF EXISTS( 
+	SELECT Id 
+	FROM Plato_UserSecrets 
+	WHERE (Id = @Id)
+	)
+BEGIN
+
+	-- UPDATE
+	UPDATE Plato_UserSecrets SET
+		UserId = @UserId,
+		[Password] = @Password,
+		Salts = @Salts	
+	WHERE (Id = @Id);
+
+	SET @intIdentity = @Id;
+
+END
+ELSE
+BEGIN
+
+	-- INSERT
+	INSERT INTO Plato_UserSecrets (
+		UserId,
+		[Password],
+		Salts		
+	) VALUES (
+		@UserId,
+		@Password,
+		@Salts	 
+	);
+
+	SET @intIdentity = @@IDENTITY;
+
+END
+
+RETURN
+
+
+GO
+
+------------------------------
+
+GO
+
+
+CREATE PROCEDURE plato_sp_InsertUpdateUserDetail (
+	@Id int,
+	@UserId int,
+	@EditionId int,
+	@RoleId int,
+	@TeamId int,
+	@Culture nvarchar(50),
+	@FirstName nvarchar(100),
+	@LastName nvarchar(100),
+	@WebSiteUrl nvarchar(100),
+	@ApiKey nvarchar(255),
+	@Visits int,
+	@Answers int,
+	@Entities int,
+	@Replies int,
+	@Reactions int,
+	@Mentions int,
+	@Follows int,
+	@Badges int,
+	@ReputationRank int,
+	@ReputationPoints int,
+	@Banner image,
+	@ClientIpAddress nvarchar(255),
+	@ClientName nvarchar(255),
+	@EmailConfirmationCode nvarchar(255),
+	@PasswordResetCode nvarchar(255),
+	@IsEmailConfirmed bit,
+	@CreatedDate datetime2,
+	@CreatedUserId int,
+	@ModifiedDate datetime2,
+	@ModifiedUserId int,
+	@IsDeleted bit,
+	@DeletedDate datetime2,
+	@DeletedUserId int,
+	@IsBanned bit,
+	@BannedDate datetime2,
+	@BannedUserId int,
+	@IsLocked bit,
+	@LockedDate datetime2,
+	@LockedUserId int,
+	@UnLockDate datetime2,
+	@IsSpam bit,
+	@SpamDate datetime2,
+	@SpamUserId int,
+	@LastLoginDate datetime2,
+	@intIdentity int output
+) AS
+
+SET NOCOUNT ON 
+
+IF EXISTS( 
+	SELECT Id 
+	FROM Plato_UserDetails 
+	WHERE (Id = @Id)
+	)
+BEGIN
+
+	-- UPDATE
+	UPDATE Plato_UserDetails SET
+		UserId = @UserId,
+		EditionId = @EditionId,
+		RoleId = @RoleId,
+		TeamId = @TeamId,
+		Culture = @Culture,
+		FirstName = @FirstName,
+		LastName = @LastName,
+		WebSiteUrl = @WebSiteUrl,
+		ApiKey = @ApiKey,
+		Visits = @Visits,
+		Answers = @Answers,
+		Entities = @Entities,
+		Replies = @Replies,
+		Reactions = @Reactions,
+		Mentions = @Mentions,
+		Follows = @Follows,
+		Badges = @Badges,
+		ReputationRank = @ReputationRank,
+		ReputationPoints = @ReputationPoints,
+		Banner = @Banner,
+		ClientIpAddress = @ClientIpAddress,
+		ClientName = @ClientName,
+		EmailConfirmationCode = @EmailConfirmationCode,
+		PasswordResetCode = @PasswordResetCode,
+		IsEmailConfirmed = @IsEmailConfirmed,
+		CreatedDate = @CreatedDate,
+		CreatedUserId = @CreatedUserId,
+		ModifiedDate = @ModifiedDate,
+		ModifiedUserId = @ModifiedUserId,
+		IsDeleted = @IsDeleted,
+		DeletedDate = @DeletedDate,
+		DeletedUserId = @DeletedUserId,
+		IsBanned = @IsBanned,
+		BannedDate = @BannedDate,
+		BannedUserId = @BannedUserId,
+		IsLocked = @IsLocked,
+		LockedDate = @LockedDate,
+		LockedUserId = @LockedUserId,
+		UnLockDate = @UnLockDate,
+		IsSpam = @IsSpam,
+		SpamDate = @SpamDate,
+		SpamUserId = @SpamUserId,
+		LastLoginDate = @LastLoginDate
+	WHERE (Id = @Id);
+
+	SET @intIdentity = @Id;
+
+END
+ELSE
+BEGIN
+
+	-- INSERT
+	INSERT INTO Plato_UserDetails (
+		UserId,
+		EditionId,
+		RoleId,
+		TeamId,
+		Culture,
+		FirstName,
+		LastName,
+		WebSiteUrl,
+		ApiKey,
+		Visits,
+		Answers,
+		Entities,
+		Replies,
+		Reactions,
+		Mentions,
+		Follows,
+		Badges,
+		ReputationRank,
+		ReputationPoints,
+		Banner,
+		ClientIpAddress,
+		ClientName,
+		EmailConfirmationCode,
+		PasswordResetCode,
+		IsEmailConfirmed,
+		CreatedDate,
+		CreatedUserId,
+		ModifiedDate,
+		ModifiedUserId,
+		IsDeleted,
+		DeletedDate,
+		DeletedUserId,
+		IsBanned,
+		BannedDate,
+		BannedUserId,
+		IsLocked,
+		LockedDate,
+		LockedUserId,
+		UnLockDate,
+		IsSpam,
+		SpamDate,
+		SpamUserId,
+		LastLoginDate
+	) VALUES (
+		@UserId,
+		@EditionId,
+		@RoleId,
+		@TeamId,
+		@Culture,
+		@FirstName,
+		@LastName,
+		@WebSiteUrl,
+		@ApiKey,
+		@Visits,
+		@Answers,
+		@Entities,
+		@Replies,
+		@Reactions,
+		@Mentions,
+		@Follows,
+		@Badges,
+		@ReputationRank,
+		@ReputationPoints,
+		@Banner,
+		@ClientIpAddress,
+		@ClientName,
+		@EmailConfirmationCode,
+		@PasswordResetCode ,
+		@IsEmailConfirmed,
+		@CreatedDate,
+		@CreatedUserId,
+		@ModifiedDate,
+		@ModifiedUserId,
+		@IsDeleted,
+		@DeletedDate,
+		@DeletedUserId,
+		@IsBanned,
+		@BannedDate,
+		@BannedUserId,
+		@IsLocked,
+		@LockedDate,
+		@LockedUserId,
+		@UnLockDate,
+		@IsSpam,
+		@SpamDate,
+		@SpamUserId,
+		@LastLoginDate
+	);
+
+	SET @intIdentity = @@IDENTITY;
+
+END
+
+RETURN
+
+
+GO
+
+--------------------------
+
+GO
+
+
+-- ************************************
+-- INSERT DEFAULT DATA
+-- ************************************
+
+DECLARE	@UserId int, @intIdentity int;
+
+EXEC	@UserId = plato_sp_InsertUpdateUser
+		@Id = 0,
+		@SiteId = 1,
+		@Name = N'Admin',
+		@EmailAddress = N'admin@admin.com',
+		@DisplayName = N'',
+		@SamAccountName = N'',
+		@PhotoId = 1,
+		@Photo = NULL,
+		@intIdentity = @intIdentity OUTPUT
+
+DECLARE	@UserSecretId int;
+
+EXEC	@UserSecretId = plato_sp_InsertUpdateUserSecret
+		@Id = 0,
+		@UserId = @UserId,
+		@Password = N'admin123',
+		@Salts = N'',
+		@intIdentity = @intIdentity OUTPUT
+		
+DECLARE	@UserDetailId int;
+
+EXEC	@UserDetailId = plato_sp_InsertUpdateUserDetail
+		@Id = 0,
+		@UserId = @UserId,
+		@EditionId = 0,
+		@RoleId = 5,
+		@TeamId = 1,
+		@Culture = '',
+		@FirstName = '',
+		@LastName = '',
+		@WebSiteUrl = '',
+		@ApiKey = '',
+		@Visits = '',
+		@Answers = 0,
+		@Entities = 0,
+		@Replies = 0,
+		@Reactions = 0,
+		@Mentions = 0,
+		@Follows = 0,
+		@Badges = 0,
+		@ReputationRank = 0,
+		@ReputationPoints = 0,
+		@Banner = NULL,
+		@ClientIpAddress = '',
+		@ClientName = '',
+		@EmailConfirmationCode = '',
+		@PasswordResetCode = '',
+		@IsEmailConfirmed = 1,		
+		@CreatedDate = NULL,
+		@CreatedUserId = 0,
+		@ModifiedDate = NULL,
+		@ModifiedUserId = 0,
+		@IsDeleted = 0,
+		@DeletedDate = NULL,
+		@DeletedUserId = 0,
+		@IsBanned = 0,
+		@BannedDate = NULL,
+		@BannedUserId = 0,
+		@IsLocked = 0,
+		@LockedDate = NULL,
+		@LockedUserId = 0,
+		@UnLockDate = NULL,
+		@IsSpam = 0,
+		@SpamDate = NULL,
+		@SpamUserId = 0,
+		@LastLoginDate = NULL,
+		@intIdentity = @intIdentity OUTPUT
+		
+
+GO

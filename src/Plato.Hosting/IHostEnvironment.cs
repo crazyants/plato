@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Plato.Hosting
+﻿namespace Plato.Hosting
 {
     public interface IHostEnvironment 
     {
+
+        string MapPath(string virtualPath);
+
     }
 }

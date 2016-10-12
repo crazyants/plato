@@ -34,6 +34,7 @@ namespace Plato.Discussions
             list.Add(new TextObject("Mike"));
             list.Add(new TextObject("Roger"));
 
+
             return View(list);
         }
 

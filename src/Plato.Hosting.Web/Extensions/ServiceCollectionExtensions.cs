@@ -5,18 +5,20 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Plato.Environment.Modules;
 using Plato.Hosting.Web.Expanders;
-using Plato.Environment.Shell;
 using System.IO;
 using System.Text;
 using System;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Plato.Environment.Shell.Extensions;
+using Plato.Shell.Extensions;
 using Plato.Data.Extensions;
 using Plato.Repositories.Extensions;
-using Plato.Data;
 using Plato.Layout;
+using Plato.Hosting.Extensions;
+using Plato.Environment.Modules.Abstractions;
+using Plato.Hosting.Web.Middleware;
+using Plato.FileSystem;
+using Microsoft.AspNetCore.Http;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -26,9 +28,27 @@ namespace Plato.Hosting.Web.Extensions
         public static IServiceCollection AddPlato(
             this IServiceCollection services)
         {
-                    
+
+            // file system
             services.AddShell();
-        
+
+            // tennent services
+            services.AddHostCore();
+            services.AddWebHost();
+
+
+            // default shell
+            services.ConfigureShell("sites");
+                   
+            // standard .NET core extensions
+            //services.AddLogging();
+            //services.AddOptions();
+            //services.AddLocalization();
+            
+            //services.AddHostCore();
+
+
+
             // database
 
             services.AddPlatoDbContext();
@@ -36,11 +56,9 @@ namespace Plato.Hosting.Web.Extensions
                                    
             //services.AddSingleton<ILogger, Logger>();
                         
-            services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
+           
 
             // shell context (settings, features etc)
-
-            services.AddSingleton<IShellContextFactory, ShellContextFactory>();
 
             // implement our own IHostEnvironment 
 
@@ -69,18 +87,24 @@ namespace Plato.Hosting.Web.Extensions
             return services;
 
         }
+
+
+
+        public static IServiceCollection AddWebHost(this IServiceCollection services)
+        {
+            services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
+            services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            return services;
+        }
         
+
         public static IApplicationBuilder UsePlato(
          this IApplicationBuilder app,
          IHostingEnvironment env,
          ILoggerFactory loggerFactory)
         {
-
             
-         
-
-
-
             //loggerFactory.AddConsole(IConfiguration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -95,6 +119,27 @@ namespace Plato.Hosting.Web.Extensions
             }
 
             app.UseStaticFiles();
+                        
+            // Ensure the shell tenants are loaded when a request comes in
+            // and replaces the current service provider for the tenant's one.
+          //  app.UseMiddleware<PlatoContainerMiddleware>();
+            
+            // serve static files within module folders
+
+            var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
+            foreach (ModuleEntry moduleEntry in moduleManager.AvailableModules)
+            {
+                var contentPath = Path.Combine(env.ContentRootPath, moduleEntry.Descriptor.Location, moduleEntry.Descriptor.ID, "Content");
+                if (Directory.Exists(contentPath))
+                {
+                    app.UseStaticFiles(new StaticFileOptions()
+                    {
+                        RequestPath = "/" + moduleEntry.Descriptor.ID,
+                        FileProvider = new PhysicalFileProvider(contentPath)
+                    });
+                }
+            }
+                     
 
             app.UseMvc(routes =>
             {

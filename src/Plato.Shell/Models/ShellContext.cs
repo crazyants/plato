@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plato.Environment.Shell.Models
+namespace Plato.Shell.Models
 {
     public class ShellContext : IDisposable
     {
@@ -11,11 +12,11 @@ namespace Plato.Environment.Shell.Models
         private bool _disposed = false;
 
         public bool IsActivated;
+
         public ShellSettings Settings { get; set; }
 
-        public IServiceProvider ServiceProvider { get; set; }
-
         #region IDisposable Support
+
         private bool disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
@@ -27,7 +28,7 @@ namespace Plato.Environment.Shell.Models
                 }
                          
                 // Disposes all the services registered for this shell
-                (ServiceProvider as IDisposable).Dispose();
+                //(ServiceProvider as IDisposable).Dispose();
                 IsActivated = false;
 
                 _disposed = true;
