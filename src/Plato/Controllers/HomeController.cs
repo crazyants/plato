@@ -27,7 +27,6 @@ namespace Plato.Controllers
         {
 
            
-
             string path = Request.Path;
             ViewData["path"] = path;
 
@@ -42,12 +41,35 @@ namespace Plato.Controllers
             //    false);                
 
             //ViewData["result"] = result;
+
+
+            System.Random rand = new System.Random(500);
+
+            var newUser = _userRepository.InsertUpdate(
+                new User()
+                {
+                    UserName = "John Doe" + rand.Next(),
+                    Email = "email" + +rand.Next() + "@address.com",
+                    DisplayName = "Jon Doe" + rand.Next(),                          
+                    Detail = new UserDetail()
+                    {
+                        EditionId = 0,
+                        FirstName = "Jonny",
+                        LastName = "Doe",
+                        RoleId = 5
+                    },
+                    Secret = new UserSecret()
+                    {
+                        Password = "123",
+                        Salts = new int[] { +rand.Next(), 123232 }
+                    }
+                });
+            
                   
-            var user = _userRepository.Select(1);
+            //var user = _userRepository.SelectById(1);
+                    
 
-        
-
-            return View(user);
+            return View(newUser);
             //return RedirectToAction("Index", "Discussions"); 
         }
 

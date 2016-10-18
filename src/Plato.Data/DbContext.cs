@@ -52,12 +52,7 @@ namespace Plato.Data
                 sql = GenerateExecuteStoredProcedureSql(sql, commandParams);            
             return _provider.ExecuteReader(sql, commandParams);
         }
-
-        //public IDataReader ExecuteReader(CommandType commandType, string sql, List<DbParameter> commandParams)
-        //{
-        //    return _provider.ExecuteReader(sql, commandParams);
-        //}
-
+             
         public T ExecuteScalar<T>(CommandType commandType, string sql, params object[] args)
         {
             if (commandType == CommandType.StoredProcedure)            
@@ -81,10 +76,10 @@ namespace Plato.Data
         {
             System.Text.StringBuilder sb = new StringBuilder(";EXEC ");
             sb.Append(procedureName);
-            for (int i = 0; i < args.Count(); i++)
+            for (int i = 0; i < args.Length; i++)
             {
                 sb.Append(String.Format(" @{0}", i));
-                if (i < args.Count() - 1)
+                if (i < args.Length - 1)
                 {
                     sb.Append(",");
                 }

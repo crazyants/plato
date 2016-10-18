@@ -16,14 +16,6 @@ namespace Plato.Abstractions.Extensions
             }
             return false;
         }
-        
-        public static bool HasRows(
-        this IDataReader dr)
-        {
-            if (dr.Depth == 0)
-                return false;
-            return true;
-        }
-        
+       
     }
 }

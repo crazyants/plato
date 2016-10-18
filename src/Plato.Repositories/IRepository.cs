@@ -9,12 +9,12 @@ namespace Plato.Repositories
 {
     public interface IRepository<T> where T : class
     {
-        int InsertUpdate(T entity);
+        T InsertUpdate(T entity);
 
-        T Select(int id);
+        T SelectById(int Id);
 
         IEnumerable<T> SelectPaged(int pageIndex, int pageSize, object options);
 
-        bool Dlete(int id);
+        bool Dlete(int Id);
     }
 }

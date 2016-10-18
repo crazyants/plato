@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Plato.Repositories;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Plato.Repositories.Users;
 using Plato.Models.User;
 
 namespace Plato.Repositories.Extensions
@@ -17,6 +12,9 @@ namespace Plato.Repositories.Extensions
         {
 
             services.AddScoped<IUserRepository<User>, UserRepository>();
+            services.AddScoped<IUserSecretRepository<UserSecret>, UserSecretRepository>();
+            services.AddScoped<IUserDetailRepository<UserDetail>, UserDetailRepository>();
+            services.AddScoped<IUserPhotoRepository<UserPhoto>, UserPhotoRepository>();
 
             return services;
 

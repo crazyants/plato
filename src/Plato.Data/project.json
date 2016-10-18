@@ -7,6 +7,7 @@
         "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
         "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
         "NETStandard.Library": "1.6.0",
+        "Plato.Abstractions": "1.0.0-*",
         "System.Data.Common": "4.1.0",
         "System.Data.SqlClient": "4.1.0"
     },

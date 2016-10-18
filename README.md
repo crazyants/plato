@@ -79,7 +79,7 @@ GO
 CREATE TABLE Plato_LoginAttempts
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-UserNameOrEmailAddress			NVARCHAR(255) DEFAULT('') NOT NULL,
+UserNameOrEmail					NVARCHAR(255) DEFAULT('') NOT NULL,
 ClientIpAddress					NVARCHAR(255) DEFAULT('') NOT NULL,
 ClientName						NVARCHAR(255) DEFAULT('') NOT NULL,
 BrowserInfo						NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -236,29 +236,50 @@ CREATE TABLE Plato_Users
 (
 Id								INT IDENTITY(1,1) NOT NULL,
 SiteId							INT DEFAULT (0) NOT NULL,
-Name							NVARCHAR(255) DEFAULT('') NOT NULL,
-EmailAddress					NVARCHAR(255) DEFAULT('') NOT NULL,
+UserName						NVARCHAR(255) DEFAULT('') NOT NULL,
+Email							NVARCHAR(255) DEFAULT('') NOT NULL,
 DisplayName						NVARCHAR(255) DEFAULT('') NOT NULL,
 SamAccountName					NVARCHAR(255) DEFAULT('') NOT NULL,
-PhotoId							INT DEFAULT (0) NOT NULL,
-Photo							IMAGE NULL,
 CONSTRAINT PK_Plato_Users_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
 
-CREATE TABLE Plato_UserSecrets
+
+CREATE TABLE Plato_UserPhoto
+(
+Id								INT IDENTITY(1,1) NOT NULL,
+UserId							INT DEFAULT (0) NOT NULL,
+Name							NVARCHAR(255) DEFAULT('') NOT NULL,
+BackColor						NVARCHAR(20) DEFAULT('') NOT NULL,
+ForeColor						NVARCHAR(20) DEFAULT('') NOT NULL,
+ContentBlob						IMAGE NOT NULL,
+ContentType						NVARCHAR(75) DEFAULT('') NOT NULL,
+ContentLength					FLOAT DEFAULT(0) NOT NULL,
+CreatedDate						DATETIME2 NULL,
+CreatedUserId					INT DEFAULT (0) NOT NULL,
+ModifiedDate					DATETIME2 NULL,
+ModifiedUserId					INT DEFAULT (0) NOT NULL,
+CONSTRAINT PK_Plato_UserPhoto_Id PRIMARY KEY CLUSTERED ( Id )
+)
+
+GO
+
+
+
+
+CREATE TABLE Plato_UserSecret
 (
 Id								INT IDENTITY(1,1) NOT NULL,
 UserId							INT DEFAULT (0) NOT NULL,
 Password						NVARCHAR(255) DEFAULT('') NOT NULL,
 Salts							NVARCHAR(255) DEFAULT('') NOT NULL,
-CONSTRAINT PK_Plato_UserSecrets_Id PRIMARY KEY CLUSTERED ( Id )
+CONSTRAINT PK_Plato_UserSecret_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
 
-CREATE TABLE Plato_UserDetails
+CREATE TABLE Plato_UserDetail
 (
 Id								INT IDENTITY(1,1) NOT NULL,
 UserId							INT DEFAULT (0) NOT NULL,
@@ -304,7 +325,7 @@ IsSpam							BIT DEFAULT(0) NOT NULL,
 SpamDate						DATETIME2 NULL,
 SpamUserId						INT DEFAULT (0) NOT NULL,
 LastLoginDate					DATETIME2 NULL,
-CONSTRAINT PK_Plato_UserDetails_Id PRIMARY KEY CLUSTERED ( Id )
+CONSTRAINT PK_Plato_UserDetail_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
@@ -771,9 +792,9 @@ SiteId							INT DEFAULT (0) NOT NULL,
 UserId							INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
-Blob							IMAGE NOT NULL,
-Type							NVARCHAR(255) DEFAULT('') NOT NULL,
-Length							FLOAT DEFAULT(0) NOT NULL,
+ContentBlob						IMAGE NOT NULL,
+ContentType						NVARCHAR(255) DEFAULT('') NOT NULL,
+ContentLength					FLOAT DEFAULT(0) NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
 ModifiedDate					DATETIME2 NULL,
@@ -884,7 +905,7 @@ Id								INT IDENTITY(1,1) NOT NULL,
 SiteId							INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
-Type							INT DEFAULT (0) NOT NULL,
+BadgeType						INT DEFAULT (0) NOT NULL,
 Level							INT DEFAULT (0) NOT NULL,
 Threshold						INT DEFAULT (0) NOT NULL,
 Image							IMAGE NOT NULL,
@@ -958,16 +979,15 @@ GO
 
 GO
 
-
-CREATE PROCEDURE plato_sp_SelectUser (
+CREATE PROCEDURE [plato_sp_SelectUser] (
 @Id int
 ) AS
 SET NOCOUNT ON 
 
 SELECT u.*, us.*, ud.* FROM 
 Plato_Users u WITH (nolock) 
-INNER JOIN Plato_UserSecrets AS us WITH (nolock) ON u.Id = us.Id
-INNER JOIN Plato_UserDetails AS ud WITH (nolock) ON u.Id = ud.Id
+INNER JOIN Plato_UserSecret AS us WITH (nolock) ON u.Id = us.UserId
+INNER JOIN Plato_UserDetail AS ud WITH (nolock) ON u.Id = ud.UserId
 WHERE (u.Id = @Id)
 	
 -- select roles for user
@@ -977,6 +997,43 @@ RETURN
 
 
 
+
+GO
+
+------------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectUserSecret] (
+@Id int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_UserSecret WITH (nolock)
+WHERE (Id = @Id)
+	
+RETURN
+
+GO
+
+-----------------------
+
+GO
+
+
+CREATE PROCEDURE [plato_sp_SelectUserSecretByUserId] (
+@UserId int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_UserSecret WITH (nolock)
+WHERE (UserId = @UserId)
+	
+RETURN
+
+
 GO
 
 ------------------------
@@ -984,19 +1041,90 @@ GO
 GO
 
 
-CREATE PROCEDURE plato_sp_InsertUpdateUser (
+CREATE PROCEDURE [plato_sp_SelectUserDetail] (
+@Id int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_UserDetail WITH (nolock)
+WHERE (Id = @Id)
+	
+RETURN
+
+GO
+
+------------------------
+
+GO
+
+
+CREATE PROCEDURE [plato_sp_SelectUserDetailByUserId] (
+@UserId int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_UserDetail WITH (nolock)
+WHERE (UserId = @UserId)
+	
+RETURN
+
+
+GO
+
+--------------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectUserPhoto] (
+@Id int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_UserPhoto WITH (nolock)
+WHERE (Id = @Id)
+	
+RETURN
+
+GO
+
+------------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectUserPhotoByUserId] (
+@UserId int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_UserPhoto WITH (nolock)
+WHERE (UserId = @UserId)
+	
+RETURN
+
+
+GO
+
+------------------------
+
+GO
+
+
+CREATE PROCEDURE [plato_sp_InsertUpdateUser] (
 	@Id int,
 	@SiteId int,
-	@Name nvarchar(255),
-	@EmailAddress nvarchar(255),
+	@UserName nvarchar(255),
+	@Email nvarchar(255),
 	@DisplayName nvarchar(255),
-	@SamAccountName nvarchar(255),
-	@PhotoId int,
-	@Photo image,
-	@intIdentity int output
+	@SamAccountName nvarchar(255)
 ) AS
 
 SET NOCOUNT ON 
+
+DECLARE @intIdentity int;
 
 IF EXISTS( 
 	SELECT Id 
@@ -1008,12 +1136,10 @@ BEGIN
 	-- UPDATE
 	UPDATE Plato_Users SET
 		SiteId = @SiteId,
-		Name = @Name,
-		EmailAddress = @EmailAddress,
+		UserName = @UserName,
+		Email = @Email,
 		DisplayName = @DisplayName,
-		SamAccountName = @SamAccountName,
-		PhotoId = @PhotoId,
-		Photo = @Photo
+		SamAccountName = @SamAccountName
 	WHERE (Id = @Id);
 
 	SET @intIdentity = @Id;
@@ -1025,27 +1151,26 @@ BEGIN
 	-- INSERT
 	INSERT INTO Plato_Users (
 		SiteId,
-		Name,
-		EmailAddress,
+		UserName,
+		Email,
 		DisplayName,
-		SamAccountName,
-		PhotoId,
-		Photo		 
+		SamAccountName
 	) VALUES (
 		@SiteId,
-		@Name,
-		@EmailAddress,
+		@UserName,
+		@Email,
 		@DisplayName,
-		@SamAccountName,
-		@PhotoId,
-		@Photo		 
+		@SamAccountName 
 	);
 
 	SET @intIdentity = @@IDENTITY;
 
 END
 
+SELECT @intIdentity
+
 RETURN
+
 
 
 GO
@@ -1054,26 +1179,26 @@ GO
 
 GO
 
-
-CREATE PROCEDURE plato_sp_InsertUpdateUserSecret (
+CREATE PROCEDURE [plato_sp_InsertUpdateUserSecret] (
 	@Id int,
 	@UserId int,
 	@Password nvarchar(255),
-	@Salts nvarchar(255),
-	@intIdentity int output
+	@Salts nvarchar(255)
 ) AS
 
 SET NOCOUNT ON 
 
+DECLARE @intIdentity int;
+
 IF EXISTS( 
 	SELECT Id 
-	FROM Plato_UserSecrets 
+	FROM Plato_UserSecret 
 	WHERE (Id = @Id)
 	)
 BEGIN
 
 	-- UPDATE
-	UPDATE Plato_UserSecrets SET
+	UPDATE Plato_UserSecret SET
 		UserId = @UserId,
 		[Password] = @Password,
 		Salts = @Salts	
@@ -1086,7 +1211,7 @@ ELSE
 BEGIN
 
 	-- INSERT
-	INSERT INTO Plato_UserSecrets (
+	INSERT INTO Plato_UserSecret (
 		UserId,
 		[Password],
 		Salts		
@@ -1100,6 +1225,97 @@ BEGIN
 
 END
 
+SELECT @intIdentity;
+
+RETURN
+
+
+GO
+
+-------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_InsertUpdateUserPhoto] (
+	@Id int,
+	@UserId int,
+	@Name nvarchar(255),
+	@BackColor nvarchar(20),
+	@ForeColor nvarchar(20),
+	@ContentBlob image,
+	@ContentType nvarchar(75),
+	@ContentLength float,
+	@CreatedDate DateTime2,
+	@CreatedUserId int,
+	@ModifiedDate DateTime2,
+	@ModifiedUserId int
+) AS
+
+SET NOCOUNT ON 
+
+DECLARE @intIdentity int;
+
+IF EXISTS( 
+	SELECT Id 
+	FROM Plato_UserPhoto
+	WHERE (Id = @Id)
+	)
+BEGIN
+
+	-- UPDATE
+	UPDATE Plato_UserPhoto SET
+		UserId = @UserId,
+		Name = @Name,
+		BackColor = @BackColor,
+		ForeColor = ForeColor,
+		ContentBlob = @ContentBlob,
+		ContentType = @ContentType,
+		ContentLength = @ContentLength,
+		CreatedDate = @CreatedDate,
+		CreatedUserId = @CreatedUserId,
+		ModifiedDate = @ModifiedDate,
+		ModifiedUserId = @ModifiedUserId
+	WHERE (Id = @Id);
+
+	SET @intIdentity = @Id;
+
+END
+ELSE
+BEGIN
+
+	-- INSERT
+	INSERT INTO Plato_UserPhoto (
+		UserId,
+		Name,
+		BackColor,
+		ForeColor,
+		ContentBlob,
+		ContentType,
+		ContentLength,
+		CreatedDate,
+		CreatedUserId,
+		ModifiedDate,
+		ModifiedUserId
+	) VALUES (
+		@UserId,
+		@Name,
+		@BackColor,
+		@ForeColor,
+		@ContentBlob,
+		@ContentType,
+		@ContentLength,
+		@CreatedDate,
+		@CreatedUserId,
+		@ModifiedDate,
+		@ModifiedUserId
+	);
+
+	SET @intIdentity = @@IDENTITY;
+
+END
+
+SELECT @intIdentity;
+
 RETURN
 
 
@@ -1110,7 +1326,7 @@ GO
 GO
 
 
-CREATE PROCEDURE plato_sp_InsertUpdateUserDetail (
+CREATE PROCEDURE [plato_sp_InsertUpdateUserDetail] (
 	@Id int,
 	@UserId int,
 	@EditionId int,
@@ -1132,10 +1348,10 @@ CREATE PROCEDURE plato_sp_InsertUpdateUserDetail (
 	@ReputationRank int,
 	@ReputationPoints int,
 	@Banner image,
-	@ClientIpAddress nvarchar(255),
-	@ClientName nvarchar(255),
-	@EmailConfirmationCode nvarchar(255),
-	@PasswordResetCode nvarchar(255),
+	@ClientIpAddress  nvarchar(255),
+	@ClientName  nvarchar(255),
+	@EmailConfirmationCode  nvarchar(255),
+	@PasswordResetCode  nvarchar(255),
 	@IsEmailConfirmed bit,
 	@CreatedDate datetime2,
 	@CreatedUserId int,
@@ -1154,21 +1370,22 @@ CREATE PROCEDURE plato_sp_InsertUpdateUserDetail (
 	@IsSpam bit,
 	@SpamDate datetime2,
 	@SpamUserId int,
-	@LastLoginDate datetime2,
-	@intIdentity int output
+	@LastLoginDate datetime2
 ) AS
 
 SET NOCOUNT ON 
 
+DECLARE @intIdentity int;
+
 IF EXISTS( 
 	SELECT Id 
-	FROM Plato_UserDetails 
+	FROM Plato_UserDetail 
 	WHERE (Id = @Id)
 	)
 BEGIN
 
 	-- UPDATE
-	UPDATE Plato_UserDetails SET
+	UPDATE Plato_UserDetail SET
 		UserId = @UserId,
 		EditionId = @EditionId,
 		RoleId = @RoleId,
@@ -1221,7 +1438,7 @@ ELSE
 BEGIN
 
 	-- INSERT
-	INSERT INTO Plato_UserDetails (
+	INSERT INTO Plato_UserDetail (
 		UserId,
 		EditionId,
 		RoleId,
@@ -1315,6 +1532,8 @@ BEGIN
 
 END
 
+SELECT @intIdentity;
+
 RETURN
 
 
@@ -1329,18 +1548,15 @@ GO
 -- INSERT DEFAULT DATA
 -- ************************************
 
-DECLARE	@UserId int, @intIdentity int;
+DECLARE	@UserId int;
 
 EXEC	@UserId = plato_sp_InsertUpdateUser
 		@Id = 0,
 		@SiteId = 1,
-		@Name = N'Admin',
-		@EmailAddress = N'admin@admin.com',
+		@UserName = N'Admin',
+		@Email = N'admin@admin.com',
 		@DisplayName = N'',
-		@SamAccountName = N'',
-		@PhotoId = 1,
-		@Photo = NULL,
-		@intIdentity = @intIdentity OUTPUT
+		@SamAccountName = N''
 
 DECLARE	@UserSecretId int;
 
@@ -1348,8 +1564,7 @@ EXEC	@UserSecretId = plato_sp_InsertUpdateUserSecret
 		@Id = 0,
 		@UserId = @UserId,
 		@Password = N'admin123',
-		@Salts = N'',
-		@intIdentity = @intIdentity OUTPUT
+		@Salts = N''
 		
 DECLARE	@UserDetailId int;
 
@@ -1397,8 +1612,7 @@ EXEC	@UserDetailId = plato_sp_InsertUpdateUserDetail
 		@IsSpam = 0,
 		@SpamDate = NULL,
 		@SpamUserId = 0,
-		@LastLoginDate = NULL,
-		@intIdentity = @intIdentity OUTPUT
+		@LastLoginDate = NULL
 		
 
 GO

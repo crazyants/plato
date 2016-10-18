@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using Plato.Abstractions.Extensions;
 
 namespace Plato.Data
 {
@@ -112,55 +113,27 @@ namespace Plato.Data
 
         }
 
-        public IDataReader ExecuteReader(string sql, List<DbParameter> args)
-        {
-            System.Data.IDataReader reader;
-            try
-            {
-                Open();
-                using (IDbCommand command = CreateCommand(_dbConnection, sql, args))
-                {
-                    reader = command.ExecuteReader(CommandBehavior.CloseConnection);
-                    OnExecutedCommand(command);
-                }
-            }
-            catch (Exception exception)
-            {
-                HandleException(exception);
-                reader = null;
-            }
-
-            return reader;
-
-
-        }
-
 
         public T ExecuteScalar<T>(string sql, params object[] args)
         {
+            object output = null;
             try
             {
                 Open();
-                try
+                using (var cmd = CreateCommand(_dbConnection, sql, args))
                 {
-                    using (var cmd = CreateCommand(_dbConnection, sql, args))
-                    {
-                        object val = cmd.ExecuteScalar();
-                        OnExecutedCommand(cmd);
-                        return (T)Convert.ChangeType(val, typeof(T));
-                    }
+                    output = cmd.ExecuteScalar();
+                    OnExecutedCommand(cmd);
                 }
-                finally
-                {
-                    Close();
-                }
+
             }
             catch (Exception x)
             {
                 HandleException(x);
-                throw;
+                throw x;
             }
-                
+          
+            return (T)Convert.ChangeType(output, typeof(T)); ;
 
         }
 
@@ -213,49 +186,15 @@ namespace Plato.Data
 
             foreach (var item in args)
             {
-                var type = item.GetType();
-
-                if (item == typeof(string[]))
-                {
-                    AddParamExplict(cmd, ((string[])item));
-                } else
-                {
-                    AddParam(cmd, item);
-                }
-                
+                AddParam(cmd, item);                
             }
 
-            if (!String.IsNullOrEmpty(sql))
+            if (!string.IsNullOrEmpty(sql))
                 DoPreExecute(cmd);
 
             return cmd;
         }
-
-        IDbCommand CreateCommand(
-        IDbConnection connection,
-        string sql,
-        List<DbParameter> dbParams)
-        {
-
-            // Create the command and add parameters
-            IDbCommand cmd = connection.CreateCommand();
-            cmd.Connection = connection;
-            cmd.CommandText = sql;
-            cmd.Transaction = _transaction;
-
-            foreach (var item in dbParams)
-            {
-
-                cmd.Parameters.Add(item);
-
-            }
-
-            if (!String.IsNullOrEmpty(sql))
-                DoPreExecute(cmd);
-
-            return cmd;
-        }
-
+        
 
         void DoPreExecute(IDbCommand cmd)
         {
@@ -277,67 +216,15 @@ namespace Plato.Data
 
         }
 
-        void AddParamExplict(IDbCommand cmd, string[] items)
-        {
-
-            //foreach(var item in items)
-            //{
-
-            //    string key = (string)item.lo[0];
-            //    object value = (object)item[0]
-
-            //    var p = cmd.CreateParameter();
-            //    p.ParameterName = string.Format("{0}{1}", parameterPrefix, cmd.Parameters.Count);
-            //    if (value == null)
-            //    {
-            //        p.Value = DBNull.Value;
-            //    }
-            //    else
-            //    {
-            //        var t = item.GetType();
-            //        if (t == typeof(Guid))
-            //        {
-            //            p.Value = item.ToString();
-            //            p.DbType = DbType.String;
-            //            p.Size = 40;
-            //        }
-            //        else if (t == typeof(string))
-            //        {
-            //            p.Size = Math.Max((item as string).Length + 1, 4000);       // Help query plan caching by using common size
-            //            p.Value = item;
-            //        }
-            //        else if (t == typeof(bool))
-            //        {
-            //            p.Value = ((bool)item) ? 1 : 0;
-            //        }
-            //        else if (t == typeof(int))
-            //        {
-            //            p.Value = ((int)item);
-            //        }
-            //        else
-            //        {
-            //            p.Value = item;
-            //        }
-            //    }
-
-            //    cmd.Parameters.Add(p);
-
-            //}
-                     
-        }
-
         void AddParam(IDbCommand cmd, object item)
         {
 
-            string parameterPrefix = "@";
-
-            var fn = GetToDbConverter(item.GetType());
-            if (fn != null)
-                item = fn(item);
-
-         
+            string paramPrefix = "@";
+                       
             var p = cmd.CreateParameter();
-            p.ParameterName = string.Format("{0}{1}", parameterPrefix, cmd.Parameters.Count);
+            p.ParameterName = string.Format("{0}{1}", 
+                paramPrefix, cmd.Parameters.Count);
+            
             if (item == null)
             {
                 p.Value = DBNull.Value;
@@ -350,6 +237,11 @@ namespace Plato.Data
                     p.Value = item.ToString();
                     p.DbType = DbType.String;
                     p.Size = 40;
+                }
+                else if (t == typeof(byte[]))
+                {
+                    p.Value = item;
+                    p.DbType = DbType.Binary;            
                 }
                 else if (t == typeof(string))
                 {
@@ -374,10 +266,10 @@ namespace Plato.Data
 
         }
 
-        public Func<object, object> GetToDbConverter(Type SourceType)
-        {
-            return null;
-        }
+        //public Func<object, object> GetToDbConverter(Type SourceType)
+        //{
+        //    return null;
+        //}
 
         #endregion
 
@@ -386,9 +278,9 @@ namespace Plato.Data
         // mainly used to hook in and override behaviour
 
         public virtual void OnExecutedCommand(IDbCommand cmd) { }
-
-        
+                
         public event DbEventHandlers.DbExceptionEventHandler OnException;  
+
         public virtual void HandleException(Exception x)
         {                     
             System.Diagnostics.Debug.WriteLine(x.ToString());           
