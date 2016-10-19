@@ -28,6 +28,10 @@ namespace Plato.Models.User
 
         public int TeamId { get; set; }
 
+        public double TimeZoneOffSet { get; set;  }
+
+        public bool ObserveDST { get; set;  }
+
         public string Culture { get; set; }
 
         public string FirstName { get; set; }
@@ -137,6 +141,12 @@ namespace Plato.Models.User
 
             if (dr.ColumnIsNotNull("TeamId"))
                 this.TeamId = Convert.ToInt32(dr["TeamId"]);
+
+            if (dr.ColumnIsNotNull("TimeZoneOffSet"))
+                this.TimeZoneOffSet = Convert.ToDouble(dr["TimeZoneOffSet"]);
+
+            if (dr.ColumnIsNotNull("ObserveDST"))
+                this.ObserveDST = Convert.ToBoolean(dr["ObserveDST"]);
 
             if (dr.ColumnIsNotNull("Culture"))
                 this.Culture = Convert.ToString(dr["Culture"]);

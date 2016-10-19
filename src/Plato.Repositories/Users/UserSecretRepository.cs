@@ -4,7 +4,7 @@ using Plato.Data;
 using System.Data;
 using Plato.Models.User;
 using Plato.Abstractions.Extensions;
-
+using System.Threading.Tasks;
 
 namespace Plato.Repositories.Users
 {
@@ -34,7 +34,7 @@ namespace Plato.Repositories.Users
             throw new NotImplementedException();
         }
 
-        public UserSecret InsertUpdate(UserSecret secret)
+        public async Task<UserSecret> InsertUpdate(UserSecret secret)
         {
             
             int id = InsertUpdateInternal(
@@ -44,19 +44,20 @@ namespace Plato.Repositories.Users
                 secret.Salts);
 
             if (id > 0)
-                return SelectById(id);
+                return await SelectById(id);
 
             return null;
 
 
         }
 
-        public UserSecret SelectById(int Id)
+
+        public async Task<UserSecret> SelectById(int Id)
         {
             UserSecret secret = null;
             using (var context = _dbContext)
             {
-                IDataReader reader = context.ExecuteReader(
+                IDataReader reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectUserSecret", Id);
 

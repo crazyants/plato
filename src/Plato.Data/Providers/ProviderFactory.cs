@@ -14,26 +14,50 @@ namespace Plato.Data
         private const string MySql = "mysql";
         private const string Oracle = "oracle";
 
-        public static IDataProvider GetProvider(
+        private string _connectionString;
+        private IDataProvider _provider;
+        private System.Data.IDataReader _reader;
+        
+        public string ConnectionString
+        {
+            get
+            {
+                return _connectionString;
+            }
+        }
+
+
+        public IDataProvider Provider
+        {
+            get
+            {
+                return _provider;
+            }
+        }
+
+        public ProviderFactory(
             string connectionString,
             string providerNAme)
         {
-
             if (string.IsNullOrEmpty(providerNAme))
                 throw new ArgumentNullException(nameof(providerNAme));
 
-            // encapculate the logic for each database within it's
-            // own implemnetation deriving from IDataProvider
-
+            _connectionString = ConnectionString;
+                     
             switch (providerNAme.ToLower())
             {
                 case Sql:
-                    return new SqlProvider(connectionString);
+                    {
+                        _provider = new SqlProvider(connectionString);
+                        break;
+                    }
+
             }
 
-            throw new Exception("No data provider has been configured");
 
         }
+
+
 
     }
 }

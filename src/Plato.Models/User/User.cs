@@ -12,8 +12,7 @@ namespace Plato.Models.User
     {
 
         #region "Public Properties"
-
-      
+              
         [ColumnName("SiteId", typeof(int))]
         public int SiteId { get; set; }
 
@@ -58,7 +57,6 @@ namespace Plato.Models.User
             if (dr.ColumnIsNotNull("DisplayName"))            
                 this.DisplayName = Convert.ToString(dr["DisplayName"]);
             
-
         }
 
         #endregion        

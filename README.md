@@ -286,6 +286,8 @@ UserId							INT DEFAULT (0) NOT NULL,
 EditionId						INT DEFAULT (0) NOT NULL,
 RoleId							INT DEFAULT (0) NOT NULL,
 TeamId							INT DEFAULT (0) NOT NULL,
+TimeZoneOffset					FLOAT DEFAULT (0) NOT NULL,
+ObserveDST						BIT DEFAULT (0) NOT NULL,
 Culture							NVARCHAR(50) DEFAULT('') NOT NULL,
 FirstName						NVARCHAR(100) DEFAULT('') NOT NULL,
 LastName						NVARCHAR(100) DEFAULT('') NOT NULL,
@@ -979,21 +981,28 @@ GO
 
 GO
 
+
 CREATE PROCEDURE [plato_sp_SelectUser] (
 @Id int
 ) AS
 SET NOCOUNT ON 
 
-SELECT u.*, us.*, ud.* FROM 
-Plato_Users u WITH (nolock) 
-INNER JOIN Plato_UserSecret AS us WITH (nolock) ON u.Id = us.UserId
-INNER JOIN Plato_UserDetail AS ud WITH (nolock) ON u.Id = ud.UserId
-WHERE (u.Id = @Id)
+SELECT * FROM
+Plato_Users WITH (nolock) 
+WHERE (Id = @Id)
 	
--- select roles for user
---EXEC iasp_sp_SelectUserRoles @intLocalUserID
+EXEC plato_sp_SelectUserSecretByUserId @Id
+
+EXEC plato_sp_SelectUserDetailByUserId @Id
+
+EXEC plato_sp_SelectUserPhotoByUserId @Id
 
 RETURN
+
+
+
+
+
 
 
 
@@ -1332,6 +1341,8 @@ CREATE PROCEDURE [plato_sp_InsertUpdateUserDetail] (
 	@EditionId int,
 	@RoleId int,
 	@TeamId int,
+	@TimeZoneOffset float,
+	@ObserveDST bit,
 	@Culture nvarchar(50),
 	@FirstName nvarchar(100),
 	@LastName nvarchar(100),
@@ -1390,6 +1401,8 @@ BEGIN
 		EditionId = @EditionId,
 		RoleId = @RoleId,
 		TeamId = @TeamId,
+		TimeZoneOffset = @TimeZoneOffset,
+		ObserveDST = @ObserveDST,
 		Culture = @Culture,
 		FirstName = @FirstName,
 		LastName = @LastName,
@@ -1443,6 +1456,8 @@ BEGIN
 		EditionId,
 		RoleId,
 		TeamId,
+		TimeZoneOffset,
+		ObserveDST,
 		Culture,
 		FirstName,
 		LastName,
@@ -1487,6 +1502,8 @@ BEGIN
 		@EditionId,
 		@RoleId,
 		@TeamId,
+		@TimeZoneOffset,
+		@ObserveDST,
 		@Culture,
 		@FirstName,
 		@LastName,
@@ -1574,6 +1591,8 @@ EXEC	@UserDetailId = plato_sp_InsertUpdateUserDetail
 		@EditionId = 0,
 		@RoleId = 5,
 		@TeamId = 1,
+		@TimeZoneOffSet = 0,
+		@ObserveDST = 1,
 		@Culture = '',
 		@FirstName = '',
 		@LastName = '',

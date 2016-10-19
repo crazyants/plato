@@ -3,6 +3,7 @@ using System.Linq;
 using System.Data;
 using System.Text;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace Plato.Data
 {
@@ -10,31 +11,30 @@ namespace Plato.Data
     {
 
         #region "Private Variables"
-
-        private string _providerName;
-        private string _connectionString;       
+            
         private IDataProvider _provider;
 
         #endregion
 
-        public DbContext(IOptions<DbContextOptions> dbContextOptions)
+        #region "Constructos"
+
+        public DbContext(
+            IOptions<DbContextOptions> dbContextOptions)
             : this(dbContextOptions.Value.ConnectionString, dbContextOptions.Value.ProviderName)
         {
 
         }
-
-        #region "Constructos"
-
+        
         public DbContext(string connectionString, string providerName = "SqlClient")
         {
 
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentNullException(nameof(connectionString));
+                 
+            var providerFactory = new ProviderFactory(connectionString, providerName);
 
-            _connectionString = connectionString;
-            _providerName = providerName;
-            _provider = ProviderFactory.GetProvider(_connectionString, _providerName);
-            
+            _provider = providerFactory.Provider;
+                       
             _provider.OnException += (object sender, DbExceptionEventArgs args) =>
             {
                 throw args.Exception;
@@ -52,12 +52,27 @@ namespace Plato.Data
                 sql = GenerateExecuteStoredProcedureSql(sql, commandParams);            
             return _provider.ExecuteReader(sql, commandParams);
         }
-             
+
+        public async Task<IDataReader> ExecuteReaderAsync(CommandType commandType, string sql,  params object[] commandParams)
+        {
+            if (commandType == CommandType.StoredProcedure)
+                sql = GenerateExecuteStoredProcedureSql(sql, commandParams);
+            return await _provider.ExecuteReaderAsync(sql, commandParams);
+        }
+
+
         public T ExecuteScalar<T>(CommandType commandType, string sql, params object[] args)
         {
             if (commandType == CommandType.StoredProcedure)            
                 sql = GenerateExecuteStoredProcedureSql(sql, args);            
             return _provider.ExecuteScalar<T>(sql, args);
+        }
+
+        public async Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] args)
+        {
+            if (commandType == CommandType.StoredProcedure)
+                sql = GenerateExecuteStoredProcedureSql(sql, args);
+            return await _provider.ExecuteScalarAsync<T>(sql, args);
         }
 
         public void Execute(CommandType commandType, string sql, params object[] args)

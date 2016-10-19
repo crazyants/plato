@@ -4,6 +4,7 @@ using Plato.Data;
 using System.Data;
 using Plato.Models.User;
 using Plato.Abstractions.Extensions;
+using System.Threading.Tasks;
 
 namespace Plato.Repositories.Users
 {
@@ -33,7 +34,7 @@ namespace Plato.Repositories.Users
             throw new NotImplementedException();
         }
 
-        public UserPhoto InsertUpdate(UserPhoto photo)
+        public async Task<UserPhoto> InsertUpdate(UserPhoto photo)
         {
 
             int id = InsertUpdateInternal(
@@ -51,19 +52,21 @@ namespace Plato.Repositories.Users
                 photo.ModifiedUserId);
 
             if (id > 0)
-                return SelectById(id);
+                return await SelectById(id);
 
             return null;
 
 
         }
 
-        public UserPhoto SelectById(int Id)
+ 
+
+        public async Task<UserPhoto> SelectById(int Id)
         {
             UserPhoto photo = null;
             using (var context = _dbContext)
             {
-                IDataReader reader = context.ExecuteReader(
+                IDataReader reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectUserPhoto", Id);
 

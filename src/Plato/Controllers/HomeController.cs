@@ -4,6 +4,7 @@ using Plato.Repositories;
 using System.Collections.Generic;
 using Plato.Environment.Modules.Abstractions;
 using Plato.Models.User;
+using System.Threading.Tasks;
 
 namespace Plato.Controllers
 {
@@ -22,8 +23,9 @@ namespace Plato.Controllers
             _userRepository = userRepository;
             
         }
-        
-        public IActionResult Index()
+
+   
+        public async Task<IActionResult> Index()
         {
 
            
@@ -43,14 +45,14 @@ namespace Plato.Controllers
             //ViewData["result"] = result;
 
 
-            System.Random rand = new System.Random(500);
-
-            var newUser = _userRepository.InsertUpdate(
+            System.Random rand = new System.Random();
+            
+            User newUser = await _userRepository.InsertUpdate(
                 new User()
                 {
-                    UserName = "John Doe" + rand.Next(),
-                    Email = "email" + +rand.Next() + "@address.com",
-                    DisplayName = "Jon Doe" + rand.Next(),                          
+                    UserName = "John Doe" + rand.Next(1, 500),
+                    Email = "email" + +rand.Next(1, 500) + "@address.com",
+                    DisplayName = "Jon Doe" + rand.Next(1, 500),
                     Detail = new UserDetail()
                     {
                         EditionId = 0,
@@ -61,7 +63,7 @@ namespace Plato.Controllers
                     Secret = new UserSecret()
                     {
                         Password = "123",
-                        Salts = new int[] { +rand.Next(), 123232 }
+                        Salts = new int[] { +rand.Next(1, 500), 123232 }
                     }
                 });
             

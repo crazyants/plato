@@ -3,8 +3,8 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Data.SqlClient;
-using System.Collections.Generic;
 using Plato.Abstractions.Extensions;
+using System.Threading.Tasks;
 
 namespace Plato.Data
 {
@@ -14,7 +14,7 @@ namespace Plato.Data
         #region "Private Variables"
 
         private string _connectionString;
-        private IDbConnection _dbConnection;
+        private SqlConnection _dbConnection;
         private DbTransaction _transaction;
         private static int _sharedConnectionDepth;
         private int _oneTimeCommandTimeout;
@@ -71,6 +71,20 @@ namespace Plato.Data
             _sharedConnectionDepth++;
         }
 
+        public async Task OpenAsync()
+        {
+            if (_sharedConnectionDepth == 0)
+            {
+
+                _dbConnection = new SqlConnection();
+                _dbConnection.ConnectionString = _connectionString;
+                await _dbConnection.OpenAsync();
+                if (KeepConnectionAlive)
+                    _sharedConnectionDepth++;
+            }
+            _sharedConnectionDepth++;
+        }
+
 
         public void Close()
         {
@@ -88,7 +102,7 @@ namespace Plato.Data
 
         #endregion
 
-        #region "Public Methods"
+        #region "Implementation"
 
         public IDataReader ExecuteReader(string sql, params object[] args)
         {
@@ -109,6 +123,29 @@ namespace Plato.Data
                 reader = null;
             }
         
+            return reader;
+
+        }
+
+        public async Task<IDataReader> ExecuteReaderAsync(string sql, params object[] args)
+        {
+
+            SqlDataReader reader;
+            try
+            {
+                await OpenAsync();           
+                using (SqlCommand command = CreateCommand(_dbConnection, sql, args))
+                {
+                    reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                    OnExecutedCommand(command);
+                }
+            }
+            catch (Exception exception)
+            {
+                HandleException(exception);
+                reader = null;
+            }
+
             return reader;
 
         }
@@ -136,6 +173,34 @@ namespace Plato.Data
             return (T)Convert.ChangeType(output, typeof(T)); ;
 
         }
+
+        public Task<T> ExecuteScalarAsync<T>(string sql, params object[] args)
+        {
+
+            object output = null;
+            try
+            {
+                Open();
+                using (var cmd = CreateCommand(_dbConnection, sql, args))
+                {
+                    output = cmd.ExecuteScalar();
+                    OnExecutedCommand(cmd);
+                }
+
+            }
+            catch (Exception x)
+            {
+                HandleException(x);
+                throw x;
+            }
+
+        
+            return Task.FromResult((T)Convert.ChangeType(output, typeof(T)));
+
+            //return  (T)Convert.ChangeType(output, typeof(T)); ;
+
+        }
+                
 
         public int Execute(string sql, params object[] args)
         {
@@ -167,23 +232,22 @@ namespace Plato.Data
         {
             Close();
         }
-        
+
         #endregion
 
         #region "Private Methods"
 
-        IDbCommand CreateCommand(
-            IDbConnection connection,
+        SqlCommand CreateCommand(
+            SqlConnection connection,
             string sql, 
             params object[] args)
         {
-                      
+
             // Create the command and add parameters
-            IDbCommand cmd = connection.CreateCommand();
+            SqlCommand cmd = connection.CreateCommand();
             cmd.Connection = connection;
             cmd.CommandText = sql;
-            cmd.Transaction = _transaction;
-
+          
             foreach (var item in args)
             {
                 AddParam(cmd, item);                

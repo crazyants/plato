@@ -4,6 +4,7 @@ using Plato.Data;
 using System.Data;
 using Plato.Models.User;
 using Plato.Abstractions.Extensions;
+using System.Threading.Tasks;
 
 namespace Plato.Repositories.Users
 {
@@ -33,7 +34,7 @@ namespace Plato.Repositories.Users
             throw new NotImplementedException();
         }
 
-        public UserDetail InsertUpdate(UserDetail detail)
+        public async Task<UserDetail> InsertUpdate(UserDetail detail)
         {
 
             int id = InsertUpdateInternal(
@@ -42,6 +43,8 @@ namespace Plato.Repositories.Users
                 detail.EditionId,
                 detail.RoleId,
                 detail.TeamId,
+                detail.TimeZoneOffSet,
+                detail.ObserveDST,
                 detail.Culture,
                 detail.FirstName,
                 detail.LastName,
@@ -83,18 +86,19 @@ namespace Plato.Repositories.Users
                 detail.LastLoginDate);
 
             if (id > 0)
-                return SelectById(id);
+                return await SelectById(id);
 
             return null;
 
         }
+         
 
-        public UserDetail SelectById(int Id)
+        public async Task<UserDetail> SelectById(int Id)
         {
             UserDetail detail = null;
             using (var context = _dbContext)
             {
-                IDataReader reader = context.ExecuteReader(
+                IDataReader reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectUserDetail", Id);
 
@@ -124,6 +128,8 @@ namespace Plato.Repositories.Users
             int EditionId,
             int RoleId,
             int TeamId,
+            double TimeZoneOffSet,
+            bool ObserveDST,
             string Culture,
             string FirstName,
             string LastName,
@@ -178,6 +184,8 @@ namespace Plato.Repositories.Users
                     EditionId,
                     RoleId,
                     TeamId,
+                    TimeZoneOffSet,
+                    ObserveDST,
                     Culture.ToEmptyIfNull(),
                     FirstName.ToEmptyIfNull(),
                     LastName.ToEmptyIfNull(),

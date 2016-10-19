@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace Plato.Abstractions.Extensions
 {
@@ -16,6 +18,16 @@ namespace Plato.Abstractions.Extensions
             }
             return false;
         }
-       
+
+        public static IEnumerable<T> Select<T>(
+        this IDataReader reader, Func<IDataReader, T> projection)
+        {
+
+            while (reader.Read())
+            {
+                yield return projection(reader);
+            }
+        }
+
     }
 }

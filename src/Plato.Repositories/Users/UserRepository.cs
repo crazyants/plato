@@ -4,9 +4,55 @@ using Plato.Data;
 using System.Data;
 using Plato.Models.User;
 using Plato.Abstractions.Extensions;
+using System.Threading.Tasks;
 
 namespace Plato.Repositories.Users
 {
+
+    public class UserBuilder
+    {
+
+        public static User Build(IDataReader dr)
+        {
+
+            User user = new User()
+            {
+                Id = Convert.ToInt32(dr["Id"]),
+                UserName = (dr.ColumnIsNotNull("UserName") ? Convert.ToString(dr["UserName"]) : string.Empty),
+                Email = (dr.ColumnIsNotNull("Email") ? Convert.ToString(dr["Email"]) : string.Empty),
+                DisplayName = (dr.ColumnIsNotNull("DisplayName") ? Convert.ToString(dr["DisplayName"]) : string.Empty)
+
+            };
+
+            if (dr.NextResult())
+            {
+                dr.Read();
+                user.Secret = new UserSecret();
+                user.Secret.PopulateModel(dr);
+            }
+
+
+            if (dr.NextResult())
+            {
+                dr.Read();
+                user.Detail = new UserDetail();
+                user.Detail.PopulateModel(dr);
+            }
+
+            if (dr.NextResult())
+            {
+                dr.Read();
+                user.Photo = new UserPhoto();
+                user.Photo.PopulateModel(dr);
+            }
+
+
+            return user;
+
+        }
+
+
+    }
 
     public class UserRepository : IUserRepository<User>
     {
@@ -44,7 +90,7 @@ namespace Plato.Repositories.Users
             throw new NotImplementedException();
         }
 
-        public User InsertUpdate(User user)
+        public async Task<User> InsertUpdate(User user)
         {
 
             if (_userSecretRepository == null)
@@ -53,7 +99,7 @@ namespace Plato.Repositories.Users
             if (_userDetailRepository == null)
                 throw new ArgumentNullException(nameof(_userDetailRepository));
 
-            int Id = InsertUpdateInternal(
+            int id = InsertUpdateInternal(
                 user.Id,
                 user.SiteId,
                 user.UserName,
@@ -61,7 +107,7 @@ namespace Plato.Repositories.Users
                 user.DisplayName,
                 user.SamAccountName);
 
-            if (Id > 0)
+            if (id > 0)
             {
 
                 // secerts
@@ -69,45 +115,45 @@ namespace Plato.Repositories.Users
                 if (user.Secret == null)
                     user.Secret = new UserSecret();
                 if (user.Id == 0 || user.Secret.UserId == 0)
-                    user.Secret.UserId = Id;
-                _userSecretRepository.InsertUpdate(user.Secret);
+                    user.Secret.UserId = id;
+                await _userSecretRepository.InsertUpdate(user.Secret);
 
                 // detail
 
                 if (user.Detail == null)
                     user.Detail = new UserDetail();
                 if (user.Id == 0 || user.Detail.UserId == 0)
-                    user.Detail.UserId = Id;
-                _userDetailRepository.InsertUpdate(user.Detail);
-
-
+                    user.Detail.UserId = id;
+                await _userDetailRepository.InsertUpdate(user.Detail);
+                
                 // photos
 
                 if (user.Photo == null)
                     user.Photo = new UserPhoto();
                 if (user.Id == 0 || user.Photo.UserId == 0)
-                    user.Photo.UserId = Id;
-                _userPhotoRepository.InsertUpdate(user.Photo);
+                    user.Photo.UserId = id;
+                await _userPhotoRepository.InsertUpdate(user.Photo);
              
                 // return
 
-                return SelectById(Id);
+                return await SelectById(id);
 
             }
-            
-            return null;     
+
+            return null;    
 
         }
-
-        public User SelectById(int Id)
+        
+        public async Task<User> SelectById(int Id)
         {
 
             User user = new User();
             using (var context = _dbContext)
             {
-                IDataReader reader = context.ExecuteReader(
+                IDataReader reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectUser", Id);
+                  //.Select(u => UserBuilder.Build(reader));
 
                 if (reader != null)
                 {
