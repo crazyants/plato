@@ -1,4 +1,4 @@
-﻿@model  Plato.Models.User.User
+﻿@model  Plato.Models.Users.User
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -33,6 +33,11 @@ Email:
 
 Name: 
 @Model.UserName
+
+<br />
+
+Web:
+@Model.Detail.WebSiteUrl
 
 <!--
 Display("Zone1", Model)

@@ -2,57 +2,58 @@
 using System.Collections.Generic;
 using Plato.Data;
 using System.Data;
-using Plato.Models.User;
+using Plato.Models.Users;
 using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Plato.Repositories.Users
 {
 
-    public class UserBuilder
-    {
+    //public class UserBuilder
+    //{
 
-        public static User Build(IDataReader dr)
-        {
+    //    public static User Build(IDataReader dr)
+    //    {
 
-            User user = new User()
-            {
-                Id = Convert.ToInt32(dr["Id"]),
-                UserName = (dr.ColumnIsNotNull("UserName") ? Convert.ToString(dr["UserName"]) : string.Empty),
-                Email = (dr.ColumnIsNotNull("Email") ? Convert.ToString(dr["Email"]) : string.Empty),
-                DisplayName = (dr.ColumnIsNotNull("DisplayName") ? Convert.ToString(dr["DisplayName"]) : string.Empty)
+    //        User user = new User()
+    //        {
+    //            Id = Convert.ToInt32(dr["Id"]),
+    //            UserName = (dr.ColumnIsNotNull("UserName") ? Convert.ToString(dr["UserName"]) : string.Empty),
+    //            Email = (dr.ColumnIsNotNull("Email") ? Convert.ToString(dr["Email"]) : string.Empty),
+    //            DisplayName = (dr.ColumnIsNotNull("DisplayName") ? Convert.ToString(dr["DisplayName"]) : string.Empty)
 
-            };
+    //        };
 
-            if (dr.NextResult())
-            {
-                dr.Read();
-                user.Secret = new UserSecret();
-                user.Secret.PopulateModel(dr);
-            }
-
-
-            if (dr.NextResult())
-            {
-                dr.Read();
-                user.Detail = new UserDetail();
-                user.Detail.PopulateModel(dr);
-            }
-
-            if (dr.NextResult())
-            {
-                dr.Read();
-                user.Photo = new UserPhoto();
-                user.Photo.PopulateModel(dr);
-            }
+    //        if (dr.NextResult())
+    //        {
+    //            dr.Read();
+    //            user.Secret = new UserSecret();
+    //            user.Secret.PopulateModel(dr);
+    //        }
 
 
-            return user;
+    //        if (dr.NextResult())
+    //        {
+    //            dr.Read();
+    //            user.Detail = new UserDetail();
+    //            user.Detail.PopulateModel(dr);
+    //        }
 
-        }
+    //        if (dr.NextResult())
+    //        {
+    //            dr.Read();
+    //            user.Photo = new UserPhoto();
+    //            user.Photo.PopulateModel(dr);
+    //        }
 
 
-    }
+    //        return user;
+
+    //    }
+
+
+    //}
 
     public class UserRepository : IUserRepository<User>
     {
@@ -63,6 +64,7 @@ namespace Plato.Repositories.Users
         private IUserSecretRepository<UserSecret> _userSecretRepository;
         private IUserDetailRepository<UserDetail> _userDetailRepository;
         private IUserPhotoRepository<UserPhoto> _userPhotoRepository;
+        private ILogger<UserSecretRepository> _logger;
 
         #endregion
 
@@ -72,12 +74,15 @@ namespace Plato.Repositories.Users
             IDbContextt dbContext,
             IUserSecretRepository<UserSecret> userSecretRepository,
             IUserDetailRepository<UserDetail> userDetailRepository,
-            IUserPhotoRepository<UserPhoto> userPhotoRepository)
+            IUserPhotoRepository<UserPhoto> userPhotoRepository,
+            ILogger<UserSecretRepository> logger)
         {
+
             _dbContext = dbContext;
             _userSecretRepository = userSecretRepository;
             _userDetailRepository = userDetailRepository;
             _userPhotoRepository = userPhotoRepository;
+            _logger = logger;
 
         }
 
@@ -85,7 +90,7 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
-        public bool Dlete(int id)
+        public Task<bool> Delete(int id)
         {
             throw new NotImplementedException();
         }
@@ -189,9 +194,11 @@ namespace Plato.Repositories.Users
 
         }
 
-        public IEnumerable<User> SelectPaged(int pageIndex, int pageSize, object options)
+        public Task<IEnumerable<User>> SelectPaged(int pageIndex, int pageSize, object options)
         {
-            throw new NotImplementedException();
+
+            return null;
+           
         }
 
         #endregion

@@ -3,7 +3,7 @@ using Plato.Environment.Modules;
 using Plato.Repositories;
 using System.Collections.Generic;
 using Plato.Environment.Modules.Abstractions;
-using Plato.Models.User;
+using Plato.Models.Users;
 using System.Threading.Tasks;
 
 namespace Plato.Controllers
@@ -58,7 +58,8 @@ namespace Plato.Controllers
                         EditionId = 0,
                         FirstName = "Jonny",
                         LastName = "Doe",
-                        RoleId = 5
+                        RoleId = 5,
+                        WebSiteUrl = "http://www.instantasp.co.uk/"
                     },
                     Secret = new UserSecret()
                     {

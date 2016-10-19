@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Plato.Abstractions.Extensions
@@ -72,18 +74,13 @@ namespace Plato.Abstractions.Extensions
             return input;
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
+        
+        public static Stream StringToStream(this string input)
+        {
+            byte[] byteArray = Encoding.UTF8.GetBytes(input);
+            return new MemoryStream(byteArray);
+        }
+                
 
     }
 

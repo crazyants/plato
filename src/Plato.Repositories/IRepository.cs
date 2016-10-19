@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Plato.Models.User;
 
 namespace Plato.Repositories
 {
@@ -13,9 +12,8 @@ namespace Plato.Repositories
 
         Task<T> SelectById(int Id);
 
+        Task<IEnumerable<T>> SelectPaged(int pageIndex, int pageSize, object options);
 
-        IEnumerable<T> SelectPaged(int pageIndex, int pageSize, object options);
-
-        bool Dlete(int Id);
+        Task<bool> Delete(int Id);
     }
 }

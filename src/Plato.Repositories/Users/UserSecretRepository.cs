@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using Plato.Data;
 using System.Data;
-using Plato.Models.User;
+using Plato.Models.Users;
 using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Plato.Repositories.Users
 {
@@ -14,22 +15,25 @@ namespace Plato.Repositories.Users
         #region "Private Variables"
 
         private IDbContextt _dbContext;
+        private ILogger<UserSecretRepository> _logger;
 
         #endregion
 
         #region "Constructor"
 
         public UserSecretRepository(
-            IDbContextt dbContext)
+            IDbContextt dbContext,
+            ILogger<UserSecretRepository> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         #endregion
 
         #region "Implementation"
 
-        public bool Dlete(int Id)
+        public async Task<bool> Delete(int Id)
         {
             throw new NotImplementedException();
         }
@@ -72,7 +76,7 @@ namespace Plato.Repositories.Users
             return secret;
         }
 
-        public IEnumerable<UserSecret> SelectPaged(int pageIndex, int pageSize, object options)
+        public async Task<IEnumerable<UserSecret>> SelectPaged(int pageIndex, int pageSize, object options)
         {
             throw new NotImplementedException();
         }

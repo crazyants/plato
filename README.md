@@ -221,7 +221,7 @@ Id								INT IDENTITY(1,1) NOT NULL,
 SiteId							INT DEFAULT (0) NOT NULL,
 SpaceId							INT DEFAULT (0) NOT NULL,
 [Key]							NVARCHAR(255) DEFAULT('') NOT NULL,
-Value							NVARCHAR(255) DEFAULT('') NOT NULL,
+Value							NVARCHAR(MAX) DEFAULT('') NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
 ModifiedDate					DATETIME2 NULL,
@@ -1172,7 +1172,7 @@ BEGIN
 		@SamAccountName 
 	);
 
-	SET @intIdentity = @@IDENTITY;
+	SET @intIdentity = SCOPE_IDENTITY();
 
 END
 
@@ -1230,7 +1230,7 @@ BEGIN
 		@Salts	 
 	);
 
-	SET @intIdentity = @@IDENTITY;
+	SET @intIdentity = SCOPE_IDENTITY();
 
 END
 
@@ -1319,7 +1319,7 @@ BEGIN
 		@ModifiedUserId
 	);
 
-	SET @intIdentity = @@IDENTITY;
+	SET @intIdentity = SCOPE_IDENTITY();
 
 END
 
@@ -1545,7 +1545,7 @@ BEGIN
 		@LastLoginDate
 	);
 
-	SET @intIdentity = @@IDENTITY;
+	SET @intIdentity = SCOPE_IDENTITY();
 
 END
 
@@ -1559,6 +1559,143 @@ GO
 --------------------------
 
 GO
+
+
+
+CREATE PROCEDURE [plato_sp_InsertUpdateSetting] (
+	@Id int,
+	@SiteId int,
+	@SpaceId int,
+	@Key nvarchar(255),
+	@Value nvarchar(max),
+	@CreatedDate datetime2,
+	@CreatedUserId int,
+	@ModifiedDate datetime2,
+	@ModifiedUserId int
+) AS
+
+SET NOCOUNT ON 
+
+DECLARE @intIdentity int;
+
+IF EXISTS( 
+	SELECT Id 
+	FROM Plato_Settings 
+	WHERE (Id = @Id)
+	)
+BEGIN
+
+	-- UPDATE
+	UPDATE Plato_Settings SET
+		SiteId = @SiteId,
+		SpaceId = @SpaceId,
+		[Key] = @Key,
+		Value = @Value,
+		CreatedDate = @CreatedDate,
+		CreatedUserId = @CreatedUserId,
+		ModifiedDate = @ModifiedDate,
+		ModifiedUserId = @ModifiedUserId
+	WHERE (Id = @Id);
+
+	SET @intIdentity = @Id;
+
+END
+ELSE
+BEGIN
+
+	-- INSERT
+	INSERT INTO Plato_Settings (
+		SiteId,
+		SpaceId,
+		[Key],
+		Value,
+		CreatedDate,
+		CreatedUserId,
+		ModifiedDate,
+		ModifiedUserId
+	) VALUES (
+		@SiteId,
+		@SpaceId,
+		@Key,
+		@Value,
+		@CreatedDate,
+		@CreatedUserId,
+		@ModifiedDate,
+		@ModifiedUserId
+	);
+
+	SET @intIdentity = SCOPE_IDENTITY();
+
+END
+
+SELECT @intIdentity;
+
+RETURN
+
+
+
+
+GO
+
+------------------
+
+GO
+
+
+CREATE PROCEDURE [dbo].[plato_sp_SelectSetting] (
+@Id int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_Settings WITH (nolock)
+WHERE (Id = @Id)
+	
+RETURN
+
+GO
+
+---------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectSettingsBySiteId] (
+@SiteId int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_Settings WITH (nolock)
+WHERE (SiteId = @SiteId)
+	
+RETURN
+
+GO
+
+-----------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectSettingsBySpaceId] (
+@SpaceId int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_Settings WITH (nolock)
+WHERE (SpaceId = @SpaceId)
+	
+RETURN
+
+
+
+GO
+
+---------------------
+
+GO
+
+
 
 
 -- ************************************

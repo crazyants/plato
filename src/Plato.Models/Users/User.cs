@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Plato.Abstractions.Extensions;
 using Plato.Models.Annotations;
 
-namespace Plato.Models.User
+namespace Plato.Models.Users
 {
 
     [TableName("Plato_Users")]

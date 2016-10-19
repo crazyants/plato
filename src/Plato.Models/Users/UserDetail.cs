@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using Plato.Models.Annotations;
 using Plato.Abstractions.Extensions;
 
-namespace Plato.Models.User
+namespace Plato.Models.Users
 {
 
-    [TableName("Plato_UserDetails")]
+    [TableName("Plato_UserDetail")]
     public class UserDetail : IModel<UserDetail>
     {
 
