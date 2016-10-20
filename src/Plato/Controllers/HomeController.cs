@@ -4,7 +4,12 @@ using Plato.Repositories;
 using System.Collections.Generic;
 using Plato.Environment.Modules.Abstractions;
 using Plato.Models.Users;
+
+using Plato.Repositories.Settings;
+using Plato.Models.Settings;
+
 using System.Threading.Tasks;
+using Plato.Shell;
 
 namespace Plato.Controllers
 {
@@ -13,15 +18,26 @@ namespace Plato.Controllers
             
         private readonly IModuleLocator _moduleLocator;
         private IUserRepository<User> _userRepository;
+        private ISettingRepository<Setting> _settingRepository;
+        private ISettingsFactory _settingsFactory;
+        private IShellSettingsManager _shellSettingsManager;
 
         public HomeController(
             IModuleLocator moduleLocator,
-            IUserRepository<User> userRepository)
+            IUserRepository<User> userRepository,
+            ISettingRepository<Setting> settingRepository,
+            ISettingsFactory settingsFactory,
+            IShellSettingsManager shellSettingsManager)
         {
             //_fileSystem = fileSystem;
             _moduleLocator = moduleLocator;
             _userRepository = userRepository;
-            
+            _settingRepository = settingRepository;
+            _settingsFactory = settingsFactory;
+            _shellSettingsManager = shellSettingsManager;
+
+
+
         }
 
    
@@ -43,7 +59,57 @@ namespace Plato.Controllers
             //    false);                
 
             //ViewData["result"] = result;
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
+
+            IEnumerable<ShellSettings> shellSettings =
+                _shellSettingsManager.LoadSettings();
+
+            foreach(var shellSetting in shellSettings)
+            {
+                sb.Append(shellSetting.Name);
+                sb.Append(" - ");
+                sb.Append(shellSetting.ConnectionString);
+                sb.Append(" - ");
+                sb.Append(shellSetting.RequestUrlPrefix);
+                sb.Append(" - ");
+                sb.Append(shellSetting.RequestUrlHost);
+                sb.Append(" - ");
+                sb.Append("<br><br>");
+
+            }
+
+
+
+         
+            // ------------------------
+            // settings 
+            // -------------------------
+
+        
+            var newSetting = await _settingRepository.InsertUpdate(
+                new Setting()
+                {
+                    SiteId = 1,
+                    SpaceId = 0,
+                    Key = "Group 2",
+                    Value = "{ 'Group 1': 123, 'Group 2': 'hello', 'Group 3': true }"
+                });
+
+
+            var sf = _settingsFactory.SelectBySiteId(1);
+            var settings = sf.Result.Settings;
+
+
+            var test = _settingsFactory.TryGetValue("Group 4");
+
+            foreach (var setting in settings)
+            {
+                sb.Append(setting.Key + " : " + setting.Value);
+                sb.Append("<br>");
+            }
+
+   
 
             System.Random rand = new System.Random();
             
@@ -67,10 +133,12 @@ namespace Plato.Controllers
                         Salts = new int[] { +rand.Next(1, 500), 123232 }
                     }
                 });
-            
-                  
+
+
             //var user = _userRepository.SelectById(1);
-                    
+
+
+            ViewData["result"] = sb.ToString();
 
             return View(newUser);
             //return RedirectToAction("Index", "Discussions"); 

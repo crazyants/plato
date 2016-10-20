@@ -14,7 +14,9 @@ namespace Plato.Repositories.Extensions
         {
 
             services.AddScoped<ISettingRepository<Setting>, SettingRepository>();
-
+            services.AddScoped<ISettingsFactory, SettingsFactory>();
+    
+            
             services.AddScoped<IUserRepository<User>, UserRepository>();
             services.AddScoped<IUserSecretRepository<UserSecret>, UserSecretRepository>();
             services.AddScoped<IUserDetailRepository<UserDetail>, UserDetailRepository>();

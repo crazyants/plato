@@ -41,9 +41,25 @@ namespace Plato.Repositories.Settings
             throw new NotImplementedException();
         }
 
-        public Task<Setting> InsertUpdate(Setting setting)
+        public async Task<Setting> InsertUpdate(Setting setting)
         {
-            throw new NotImplementedException();
+
+            int id = InsertUpdateInternal(
+                setting.Id,
+                setting.SiteId,
+                setting.SpaceId,
+                setting.Key,
+                setting.Value,
+                setting.CreatedDate,
+                setting.CreatedUserId,
+                setting.ModifiedDate,
+                setting.ModifiedUserId);
+
+            if (id > 0)
+                return await SelectById(id);
+
+            return null;
+
         }
 
         public async Task<Setting> SelectById(int Id)

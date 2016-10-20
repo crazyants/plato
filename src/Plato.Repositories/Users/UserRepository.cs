@@ -158,8 +158,7 @@ namespace Plato.Repositories.Users
                 IDataReader reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectUser", Id);
-                  //.Select(u => UserBuilder.Build(reader));
-
+              
                 if (reader != null)
                 {
                     reader.Read();   

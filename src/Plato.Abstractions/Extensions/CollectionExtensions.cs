@@ -17,12 +17,12 @@ namespace Plato.Abstractions.Extensions
             return new ReadOnlyCollection<T>(new List<T>(enumerable).ToArray());
         }
         
-        public static IDictionary<string, string> DictionaryToJson(this string json)
+        public static IDictionary<string, string> JsonToDictionary(this string json)
         { 
             return JsonConvert.DeserializeObject<IDictionary<string, string>>(json);
         }
 
-        public static string JsonToDictionary(this IDictionary<string, string> dictionary)
+        public static string DictionaryToJson(this IDictionary<string, string> dictionary)
         {
 
             JsonSerializer serializer = new JsonSerializer();

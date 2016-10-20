@@ -15,7 +15,7 @@ namespace Plato.Models.Settings
         private IDictionary<string, string> _settings;
 
         #endregion
-
+        
         #region "Public Properties"
 
         public int Id { get; set;  }
@@ -40,13 +40,13 @@ namespace Plato.Models.Settings
 
         #region "Public Read Only Properties"
 
-        #endregion
-
-        #region "Public ReadOnly Properties"
-        
         public IDictionary<string, string> Settings
         {
-            get { return _settings; }
+
+            get
+            {
+                return _settings;
+            }
         }
 
         #endregion
@@ -83,38 +83,13 @@ namespace Plato.Models.Settings
             if (dr.ColumnIsNotNull("ModifiedDate"))
                 this.ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
 
-
-            Deserialize();
-        }
-
-        #endregion
-
-
-        #region "Private Methods"
-
-        private string Serialize()
-        {
-
             if (!string.IsNullOrEmpty(this.Value))
-            {
-
-                _settings = new Dictionary<string, string>();
-
-            }
-
-            return string.Empty;
-        }
-
-        private string Deserialize()
-        {
-
-
-            return string.Empty;
-
+                _settings = this.Value.JsonToDictionary();
+          
         }
 
         #endregion
-
+        
 
     }
 }

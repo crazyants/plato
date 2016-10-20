@@ -12,11 +12,8 @@ namespace Plato.Shell
            
         private readonly ILogger _logger;
 
-        public ShellContextFactory(
-     
-             ILogger<ShellContextFactory> logger)
-        {
-          
+        public ShellContextFactory(ILogger<ShellContextFactory> logger)
+        {          
             _logger = logger;
         }
 

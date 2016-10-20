@@ -13,8 +13,8 @@ namespace Plato.Shell.Extensions
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection ConfigureShell(
-        this IServiceCollection services,
-        string shellLocation)
+            this IServiceCollection services,
+            string shellLocation)
         {
             return services.Configure<ShellOptions>(options =>
             {
