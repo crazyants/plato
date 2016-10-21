@@ -6,6 +6,7 @@ using Plato.Data;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using Plato.Abstractions.Extensions;
+using System.Data.Common;
 
 namespace Plato.Repositories.Settings
 {
@@ -16,7 +17,7 @@ namespace Plato.Repositories.Settings
 
         private IDbContextt _dbContext;
         ILogger<SettingRepository> _logger;
-
+     
         #endregion
 
         #region "Constructor"
@@ -44,7 +45,7 @@ namespace Plato.Repositories.Settings
         public async Task<Setting> InsertUpdate(Setting setting)
         {
 
-            int id = InsertUpdateInternal(
+            int id = await InsertUpdateInternal(
                 setting.Id,
                 setting.SiteId,
                 setting.SpaceId,
@@ -68,13 +69,13 @@ namespace Plato.Repositories.Settings
             Setting setting = new Setting();
             using (var context = _dbContext)
             {
-                IDataReader reader = await context.ExecuteReaderAsync(
+                DbDataReader reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectSetting", Id);
                
                 if (reader != null)
                 {
-                    reader.Read();
+                    await reader.ReadAsync();
                     setting.PopulateModel(reader);
                 }
             }
@@ -142,7 +143,7 @@ namespace Plato.Repositories.Settings
 
         #region "Private Methods"
 
-        private int InsertUpdateInternal(
+        private async Task<int> InsertUpdateInternal(
             int Id,
             int SiteId,
             int SpaceId,
@@ -158,7 +159,7 @@ namespace Plato.Repositories.Settings
             int id = 0;
             using (var context = _dbContext)
             {
-                id = context.ExecuteScalar<int>(
+                id = await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateSetting",
                     Id,

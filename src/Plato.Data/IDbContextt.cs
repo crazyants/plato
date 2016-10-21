@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace Plato.Data
 
         IDataReader ExecuteReader(CommandType commandType, string sql, params object[] commandParams);
 
-        Task<IDataReader> ExecuteReaderAsync(CommandType commandType, string sql, params object[] commandParams);
+        Task<DbDataReader> ExecuteReaderAsync(CommandType commandType, string sql, params object[] commandParams);
 
         //IDataReader ExecuteReader(CommandType commandType, string sql, List<DbParameter> commandParams);
 

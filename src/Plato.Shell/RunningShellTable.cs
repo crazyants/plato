@@ -127,7 +127,7 @@ namespace Plato.Shell
 
         private string GetHostAndPrefix(ShellSettings shellSettings)
         {
-            return shellSettings.RequestUrlHost + "/" + shellSettings.RequestUrlPrefix;
+            return shellSettings.HostName + "/" + shellSettings.SubDomain;
         }
     }
 }

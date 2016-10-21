@@ -68,19 +68,21 @@ namespace Plato.Controllers
             foreach(var shellSetting in shellSettings)
             {
                 sb.Append(shellSetting.Name);
-                sb.Append(" - ");
+                sb.Append("<br>");
+                sb.Append(shellSetting.Location);
+                sb.Append("<br>");
                 sb.Append(shellSetting.ConnectionString);
-                sb.Append(" - ");
-                sb.Append(shellSetting.RequestUrlPrefix);
-                sb.Append(" - ");
-                sb.Append(shellSetting.RequestUrlHost);
-                sb.Append(" - ");
+                sb.Append("<br>");
+                sb.Append(shellSetting.TablePrefix);
+                sb.Append("<br>");
+                sb.Append(shellSetting.SubDomain);
+                sb.Append("<br>");
+                sb.Append(shellSetting.HostName);
+                sb.Append("<br>");
                 sb.Append("<br><br>");
 
             }
-
-
-
+            
          
             // ------------------------
             // settings 

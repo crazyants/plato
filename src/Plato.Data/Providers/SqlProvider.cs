@@ -127,7 +127,7 @@ namespace Plato.Data
 
         }
 
-        public async Task<IDataReader> ExecuteReaderAsync(string sql, params object[] args)
+        public async Task<DbDataReader> ExecuteReaderAsync(string sql, params object[] args)
         {
 
             SqlDataReader reader;

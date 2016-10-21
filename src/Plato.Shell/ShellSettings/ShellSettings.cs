@@ -21,8 +21,8 @@ namespace Plato.Shell
             _values = new Dictionary<string, string>(settings._values, StringComparer.OrdinalIgnoreCase);
 
             Name = settings.Name;
-            RequestUrlHost = settings.RequestUrlHost;
-            RequestUrlPrefix = settings.RequestUrlPrefix;
+            HostName = settings.HostName;
+            SubDomain = settings.SubDomain;
             State = settings.State;
             DatabaseProvider = settings.DatabaseProvider;
             ConnectionString = settings.ConnectionString;
@@ -48,13 +48,19 @@ namespace Plato.Shell
             set { this["Name"] = value; }
         }
 
-        public string RequestUrlHost
+        public string Location
+        {
+            get { return this["Location"] ?? ""; }
+            set { this["Location"] = value; }
+        }
+
+        public string HostName
         {
             get { return this["RequestUrlHost"]; }
             set { this["RequestUrlHost"] = value; }
         }
 
-        public string RequestUrlPrefix
+        public string SubDomain
         {
             get { return this["RequestUrlPrefix"]; }
             set { _values["RequestUrlPrefix"] = value; }

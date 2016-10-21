@@ -13,8 +13,8 @@ namespace Plato.Shell
 
             TenantState state;
             shellSettings.State = Enum.TryParse(configuration["State"], true, out state) ? state : TenantState.Uninitialized;
-            shellSettings.RequestUrlHost = configuration["RequestUrlHost"];
-            shellSettings.RequestUrlPrefix = configuration["RequestUrlPrefix"];
+            shellSettings.HostName = configuration["HostName"];
+            shellSettings.SubDomain = configuration["SubDomain"];
             shellSettings.ConnectionString = configuration["ConnectionString"];
             shellSettings.TablePrefix = configuration["TablePrefix"];
             shellSettings.DatabaseProvider = configuration["DatabaseProvider"];

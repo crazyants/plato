@@ -1,6 +1,7 @@
 State: Initializing
-Name: Default
+Name: Default Plato Tenant
 DatabaseProvider: SqlClient
 ConnectionString: server=localhost;trusted_connection=true;database=plato_1
 TablePrefix: test
-RequestUrlPrefix: Plato
+HostName: instantasp.net
+SubDomain: plato

@@ -6,6 +6,7 @@ using Plato.Models.Users;
 using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System.Data.Common;
 
 namespace Plato.Repositories.Users
 {
@@ -41,7 +42,7 @@ namespace Plato.Repositories.Users
         public async Task<UserSecret> InsertUpdate(UserSecret secret)
         {
             
-            int id = InsertUpdateInternal(
+            int id = await InsertUpdateInternal(
                 secret.Id,
                 secret.UserId,
                 secret.Password,
@@ -52,7 +53,6 @@ namespace Plato.Repositories.Users
 
             return null;
 
-
         }
 
 
@@ -61,22 +61,23 @@ namespace Plato.Repositories.Users
             UserSecret secret = null;
             using (var context = _dbContext)
             {
-                IDataReader reader = await context.ExecuteReaderAsync(
+                DbDataReader reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectUserSecret", Id);
 
                 if (reader != null)
                 {
-                    reader.Read();
+                    await reader.ReadAsync();
                     secret = new UserSecret();
                     secret.PopulateModel(reader);
                 }
             }
 
             return secret;
+
         }
 
-        public async Task<IEnumerable<UserSecret>> SelectPaged(int pageIndex, int pageSize, object options)
+        public Task<IEnumerable<UserSecret>> SelectPaged(int pageIndex, int pageSize, object options)
         {
             throw new NotImplementedException();
         }
@@ -86,7 +87,7 @@ namespace Plato.Repositories.Users
 
         #region "Private Methods"
         
-        private int InsertUpdateInternal(
+        private async Task<int> InsertUpdateInternal(
             int Id,
             int UserId,
             string Password,           
@@ -101,7 +102,7 @@ namespace Plato.Repositories.Users
             using (var context = _dbContext)
             {
 
-                id = context.ExecuteScalar<int>(
+                id = await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateUserSecret",
                     Id,

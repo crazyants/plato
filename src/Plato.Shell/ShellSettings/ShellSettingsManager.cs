@@ -60,6 +60,7 @@ namespace Plato.Shell
 
                 var config = configurationContainer.Build();
                 var shellSetting = ShellSettingsSerializer.ParseSettings(config);
+                shellSetting.Location = tenant.Name;
                 shellSettings.Add(shellSetting);
 
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -87,7 +88,7 @@ namespace Plato.Shell
             var tenantPath = _appDataFolder.MapPath(
                 _appDataFolder.Combine(
                     _optionsAccessor.Value.Location,
-                    shellSettings.Name,
+                    shellSettings.Location,
                     string.Format(SettingsFileNameFormat, "txt")));
 
             var configurationProvider = new YamlConfigurationProvider(new YamlConfigurationSource

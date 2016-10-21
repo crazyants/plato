@@ -6,6 +6,7 @@ using Plato.Models.Users;
 using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System.Data.Common;
 
 namespace Plato.Repositories.Users
 {
@@ -41,7 +42,7 @@ namespace Plato.Repositories.Users
         public async Task<UserDetail> InsertUpdate(UserDetail detail)
         {
 
-            int id = InsertUpdateInternal(
+            int id = await InsertUpdateInternal(
                 detail.Id,
                 detail.UserId,
                 detail.EditionId,
@@ -102,13 +103,13 @@ namespace Plato.Repositories.Users
             UserDetail detail = null;
             using (var context = _dbContext)
             {
-                IDataReader reader = await context.ExecuteReaderAsync(
+                DbDataReader reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectUserDetail", Id);
 
                 if (reader != null)
                 {                    
-                    reader.Read();
+                    await reader.ReadAsync();
                     detail = new UserDetail();
                     detail.PopulateModel(reader);
                 }
@@ -126,7 +127,7 @@ namespace Plato.Repositories.Users
 
         #region "Private Methods"
         
-        private int InsertUpdateInternal(
+        private async Task<int> InsertUpdateInternal(
             int Id,     
             int UserId,
             int EditionId,
@@ -180,7 +181,7 @@ namespace Plato.Repositories.Users
             using (var context = _dbContext)
             {
 
-                id = context.ExecuteScalar<int>(
+                id = await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateUserDetail",
                     Id, 

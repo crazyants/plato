@@ -6,6 +6,7 @@ using Plato.Models.Users;
 using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System.Data.Common;
 
 namespace Plato.Repositories.Users
 {
@@ -41,7 +42,7 @@ namespace Plato.Repositories.Users
         public async Task<UserPhoto> InsertUpdate(UserPhoto photo)
         {
 
-            int id = InsertUpdateInternal(
+            int id = await InsertUpdateInternal(
                 photo.Id,
                 photo.UserId,
                 photo.Name,
@@ -55,11 +56,8 @@ namespace Plato.Repositories.Users
                 photo.ModifiedDate,
                 photo.ModifiedUserId);
 
-            if (id > 0)
-            {               
-                return await SelectById(id);
-            }
-                
+            if (id > 0)                          
+                return await SelectById(id);                            
 
             return null;
 
@@ -72,13 +70,13 @@ namespace Plato.Repositories.Users
             UserPhoto photo = null;
             using (var context = _dbContext)
             {
-                IDataReader reader = await context.ExecuteReaderAsync(
+                DbDataReader reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectUserPhoto", Id);
 
                 if (reader != null)
                 {
-                    reader.Read();
+                    await reader.ReadAsync();
                     photo = new UserPhoto();
                     photo.PopulateModel(reader);
                 }
@@ -97,7 +95,7 @@ namespace Plato.Repositories.Users
 
         #region "Private Methods"
 
-        private int InsertUpdateInternal(
+        private async Task<int> InsertUpdateInternal(
             int Id,
             int UserId,
             string Name,
@@ -117,7 +115,7 @@ namespace Plato.Repositories.Users
             using (var context = _dbContext)
             {
 
-                id = context.ExecuteScalar<int>(
+                id = await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateUserPhoto",
                     Id,
@@ -125,7 +123,7 @@ namespace Plato.Repositories.Users
                     Name.ToEmptyIfNull(),
                     BackColor.ToEmptyIfNull(),
                     ForeColor.ToEmptyIfNull(),
-                    ContentBlob ?? new byte[0],
+                    ContentBlob ?? new byte[0], // don't allow nulls so we can determine parameter type
                     ContentType.ToEmptyIfNull(),
                     ContentLength,             
                     CreatedDate,

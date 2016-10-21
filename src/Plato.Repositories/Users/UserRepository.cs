@@ -6,6 +6,7 @@ using Plato.Models.Users;
 using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System.Data.Common;
 
 namespace Plato.Repositories.Users
 {
@@ -104,7 +105,7 @@ namespace Plato.Repositories.Users
             if (_userDetailRepository == null)
                 throw new ArgumentNullException(nameof(_userDetailRepository));
 
-            int id = InsertUpdateInternal(
+            int id = await InsertUpdateInternal(
                 user.Id,
                 user.SiteId,
                 user.UserName,
@@ -155,33 +156,33 @@ namespace Plato.Repositories.Users
             User user = new User();
             using (var context = _dbContext)
             {
-                IDataReader reader = await context.ExecuteReaderAsync(
+                DbDataReader reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectUser", Id);
               
                 if (reader != null)
                 {
-                    reader.Read();   
+                    await reader.ReadAsync();   
                     user.PopulateModel(reader);
 
-                    if (reader.NextResult())
+                    if (await reader.NextResultAsync())
                     {
-                        reader.Read();
+                        await reader.ReadAsync();
                         user.Secret = new UserSecret();
                         user.Secret.PopulateModel(reader);
                     }
                     
 
-                    if (reader.NextResult())
+                    if (await reader.NextResultAsync())
                     {
-                        reader.Read();
+                        await reader.ReadAsync();
                         user.Detail = new UserDetail();
                         user.Detail.PopulateModel(reader);
                     }
 
-                    if (reader.NextResult())
+                    if (await reader.NextResultAsync())
                     {
-                        reader.Read();
+                        await reader.ReadAsync();
                         user.Photo = new UserPhoto();
                         user.Photo.PopulateModel(reader);
                     }
@@ -204,7 +205,7 @@ namespace Plato.Repositories.Users
 
         #region "Private Methods"
 
-        private int InsertUpdateInternal(
+        private async Task<int> InsertUpdateInternal(
             int Id,
             int SiteId,
             string Name,
@@ -217,7 +218,7 @@ namespace Plato.Repositories.Users
             using (var context = _dbContext)
             {
 
-                id = context.ExecuteScalar<int>(
+                id = await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateUser",
                     Id,

@@ -4,6 +4,7 @@ using System.Data;
 using System.Text;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
+using System.Data.Common;
 
 namespace Plato.Data
 {
@@ -53,14 +54,13 @@ namespace Plato.Data
             return _provider.ExecuteReader(sql, commandParams);
         }
 
-        public async Task<IDataReader> ExecuteReaderAsync(CommandType commandType, string sql,  params object[] commandParams)
+        public async Task<DbDataReader> ExecuteReaderAsync(CommandType commandType, string sql,  params object[] commandParams)
         {
             if (commandType == CommandType.StoredProcedure)
                 sql = GenerateExecuteStoredProcedureSql(sql, commandParams);
             return await _provider.ExecuteReaderAsync(sql, commandParams);
         }
-
-
+        
         public T ExecuteScalar<T>(CommandType commandType, string sql, params object[] args)
         {
             if (commandType == CommandType.StoredProcedure)            
@@ -93,11 +93,10 @@ namespace Plato.Data
             sb.Append(procedureName);
             for (int i = 0; i < args.Length; i++)
             {
+                // TODO: Hot code path, look at String.Format allos & perf impact
                 sb.Append(String.Format(" @{0}", i));
-                if (i < args.Length - 1)
-                {
-                    sb.Append(",");
-                }
+                if (i < args.Length - 1)                
+                    sb.Append(",");                
             }
 
             return sb.ToString();
@@ -111,9 +110,7 @@ namespace Plato.Data
         {
             _provider.Dispose();
         }
-
-      
-
+        
         #endregion
 
 
