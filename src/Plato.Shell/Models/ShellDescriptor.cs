@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Plato.Shell.Models
 {
@@ -10,7 +7,7 @@ namespace Plato.Shell.Models
 
         public int SerialNumber { get; set;  }
 
-        public IList<ShellFeature> Features { get; set; } = new List<ShellFeature>();
+        public IList<ShellModule> Modules { get; set; } = new List<ShellModule>();
 
     }
 }

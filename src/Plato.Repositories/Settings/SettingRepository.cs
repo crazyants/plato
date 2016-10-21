@@ -179,6 +179,5 @@ namespace Plato.Repositories.Settings
 
         #endregion
 
-
     }
 }

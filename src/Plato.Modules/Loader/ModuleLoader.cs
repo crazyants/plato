@@ -7,9 +7,9 @@ using System.IO;
 using Plato.FileSystem;
 using System.Collections.Concurrent;
 using System.Runtime.Loader;
-using Plato.Environment.Modules.Abstractions;
+using Plato.Modules.Abstractions;
 
-namespace Plato.Environment.Modules
+namespace Plato.Modules
 {
     public class ModuleLoader : IModuleLoader
     {

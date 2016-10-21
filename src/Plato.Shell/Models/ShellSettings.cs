@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Plato.Shell.Models;
 
-namespace Plato.Shell
+namespace Plato.Shell.Models
 {
     public class ShellSettings
     {
@@ -22,12 +22,13 @@ namespace Plato.Shell
 
             Name = settings.Name;
             HostName = settings.HostName;
-            SubDomain = settings.SubDomain;
-            State = settings.State;
+            SubDomain = settings.SubDomain;      
             DatabaseProvider = settings.DatabaseProvider;
             ConnectionString = settings.ConnectionString;
-            TablePrefix = settings.TablePrefix;
+            TablePrefix = settings.TablePrefix;           
+            Theme = settings.Theme;
             State = settings.State;
+
         }
 
         public string this[string key]
@@ -56,14 +57,14 @@ namespace Plato.Shell
 
         public string HostName
         {
-            get { return this["RequestUrlHost"]; }
-            set { this["RequestUrlHost"] = value; }
+            get { return this["HostName"]; }
+            set { this["HostName"] = value; }
         }
 
         public string SubDomain
         {
-            get { return this["RequestUrlPrefix"]; }
-            set { _values["RequestUrlPrefix"] = value; }
+            get { return this["SubDomain"]; }
+            set { _values["SubDomain"] = value; }
         }
 
         public string ConnectionString
@@ -83,6 +84,13 @@ namespace Plato.Shell
             get { return this["DatabaseProvider"]; }
             set { _values["DatabaseProvider"] = value; }
         }
+
+        public string Theme
+        {
+            get { return this["Theme"]; }
+            set { _values["Theme"] = value; }
+        }
+
 
         TenantState _tenantState;
 

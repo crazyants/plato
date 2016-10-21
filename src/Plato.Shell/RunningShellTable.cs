@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using Plato.Shell.Models;
 
 namespace Plato.Shell
 {
     public class RunningShellTable : IRunningShellTable
     {
-        private readonly Dictionary<string, ShellSettings> _shellsByHostAndPrefix = new Dictionary<string, ShellSettings>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, ShellSettings> _shellsByHostAndPrefix =
+            new Dictionary<string, ShellSettings>(StringComparer.OrdinalIgnoreCase);
+
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
         private ShellSettings _single;
@@ -102,6 +103,15 @@ namespace Plato.Shell
                 _lock.ExitReadLock();
             }
         }
+
+        public IDictionary<string, ShellSettings> ShellsByHostAndPrefix
+        {
+            get
+            {
+                return _shellsByHostAndPrefix;
+            }
+        }
+        
 
         private string GetHostAndPrefix(string host, string appRelativePath)
         {

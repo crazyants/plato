@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
-using Plato.Environment.Modules.Abstractions;
+using Plato.Modules.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 
-namespace Plato.Environment.Modules
+namespace Plato.Modules
 {
     public class ModuleManager : IModuleManager
     {

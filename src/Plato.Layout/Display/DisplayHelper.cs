@@ -48,8 +48,6 @@ namespace Plato.Layout.Display
 
 
 
-
-
             return element.MetaData.ChildContent;
 
             //return await Task.FromResult(new HtmlString(""));

@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Encodings.Web;
-using Plato.Environment.Modules.Abstractions;
+using Plato.Modules.Abstractions;
 using System.Reflection;
 using Plato.Abstractions.Layout;
 using Microsoft.AspNetCore.Mvc.ViewComponents;

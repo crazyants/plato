@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Plato.Environment.Modules;
+using Plato.Modules;
 using Plato.Repositories;
 using System.Collections.Generic;
-using Plato.Environment.Modules.Abstractions;
+using System.Threading.Tasks;
+using Plato.Modules.Abstractions;
 using Plato.Models.Users;
-
+using Plato.Shell.Models;
 using Plato.Repositories.Settings;
 using Plato.Models.Settings;
-
-using System.Threading.Tasks;
 using Plato.Shell;
 
 namespace Plato.Controllers
@@ -22,12 +21,15 @@ namespace Plato.Controllers
         private ISettingsFactory _settingsFactory;
         private IShellSettingsManager _shellSettingsManager;
 
+        private IRunningShellTable _runningShellTable;
+
         public HomeController(
             IModuleLocator moduleLocator,
             IUserRepository<User> userRepository,
             ISettingRepository<Setting> settingRepository,
             ISettingsFactory settingsFactory,
-            IShellSettingsManager shellSettingsManager)
+            IShellSettingsManager shellSettingsManager,
+            IRunningShellTable runningShellTable)
         {
             //_fileSystem = fileSystem;
             _moduleLocator = moduleLocator;
@@ -35,9 +37,9 @@ namespace Plato.Controllers
             _settingRepository = settingRepository;
             _settingsFactory = settingsFactory;
             _shellSettingsManager = shellSettingsManager;
+            _runningShellTable = runningShellTable;
 
-
-
+            
         }
 
    
@@ -77,18 +79,37 @@ namespace Plato.Controllers
                 sb.Append("<br>");
                 sb.Append(shellSetting.SubDomain);
                 sb.Append("<br>");
-                sb.Append(shellSetting.HostName);
-                sb.Append("<br>");
+                sb.Append(shellSetting.HostName);        
                 sb.Append("<br><br>");
 
             }
-            
-         
+
+            sb.Append("Running Shell Table");
+            sb.Append("<br>");
+
+            var shellsByHostAndPrefi = _runningShellTable.ShellsByHostAndPrefix;
+
+            foreach (var item in shellsByHostAndPrefi)
+            {
+                sb.Append("Key");
+                sb.Append(item.Key);
+                sb.Append("<br>");
+                sb.Append("Value");
+                sb.Append(item.Value.Name + " - ");
+                sb.Append(item.Value.State.ToString()); ;
+                sb.Append("<br>");
+            }
+
+
+            sb.Append("<br>");
+            sb.Append("----------------------");
+            sb.Append("<br>");
+
             // ------------------------
             // settings 
             // -------------------------
 
-        
+
             var newSetting = await _settingRepository.InsertUpdate(
                 new Setting()
                 {

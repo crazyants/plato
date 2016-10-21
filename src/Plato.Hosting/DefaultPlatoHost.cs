@@ -7,7 +7,6 @@ using Plato.Shell.Models;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 
-
 namespace Plato.Hosting
 {
     public class DefaultPlatoHost : IPlatoHost
@@ -19,8 +18,7 @@ namespace Plato.Hosting
         private readonly IShellContextFactory _shellContextFactory;
         private readonly IRunningShellTable _runningShellTable;
         private readonly ILogger _logger;
-        //private readonly IExtensionManager _extensionManager;
-
+   
         private readonly static object _syncLock = new object();
         private ConcurrentDictionary<string, ShellContext> _shellContexts;
 
@@ -63,13 +61,13 @@ namespace Plato.Hosting
 
         public void UpdateShellSettings(ShellSettings settings)
         {
-            ShellContext context;
 
+            ShellContext context;
             _shellSettingsManager.SaveSettings(settings);
             _runningShellTable.Remove(settings);
             if (_shellContexts.TryRemove(settings.Name, out context))
             {
-              //  context.Dispose();
+                //context.Dispose();
             }
             GetOrCreateShellContext(settings);
         }
@@ -95,9 +93,10 @@ namespace Plato.Hosting
 
         IDictionary<string, ShellContext> BuildCurrent()
         {
+
             if (_shellContexts == null)
             {
-                lock (this)
+                lock (_syncLock)
                 {
                     if (_shellContexts == null)
                     {
@@ -113,13 +112,12 @@ namespace Plato.Hosting
 
         void CreateAndActivateShells()
         {
+
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation("Start creation of shells");
             }
-            
-            //_extensionManager.LoadFeatures(_extensionManager.AvailableFeatures());
-
+                     
             // Is there any tenant right now?
             var allSettings = _shellSettingsManager.LoadSettings()
                 .Where(settings =>
@@ -170,49 +168,20 @@ namespace Plato.Hosting
                 _runningShellTable.Add(context.Settings);
             }
         }
+        
 
-
-        /// <summary>
-        /// Creates a transient shell for the default tenant's setup.
-        /// </summary>
         ShellContext CreateSetupContext()
         {
+
             if (_logger.IsEnabled(LogLevel.Debug))
             {
                 _logger.LogDebug("Creating shell context for root setup.");
             }
             return _shellContextFactory.CreateSetupContext(ShellHelper.BuildDefaultUninitializedShell);
+
         }
 
-        /// <summary>
-        /// A feature is enabled/disabled, the tenant needs to be restarted
-        /// </summary>
-        //Task IShellDescriptorManagerEventHandler.Changed(ShellDescriptor descriptor, string tenant)
-        //{
-        //    if (_logger.IsEnabled(LogLevel.Information))
-        //    {
-        //        _logger.LogInformation("A tenant needs to be restarted {0}", tenant);
-        //    }
-
-        //    if (_shellContexts == null)
-        //    {
-        //        return Task.CompletedTask;
-        //    }
-
-        //    ShellContext context;
-        //    if (!_shellContexts.TryGetValue(tenant, out context))
-        //    {
-        //        return Task.CompletedTask;
-        //    }
-
-        //    if (_shellContexts.TryRemove(tenant, out context))
-        //    {
-        //        context.Dispose();
-        //    }
-
-        //    return Task.CompletedTask;
-        //}
-        
+    
         #endregion
         
 

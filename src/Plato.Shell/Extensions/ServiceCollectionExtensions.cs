@@ -22,7 +22,7 @@ namespace Plato.Shell.Extensions
             });
         }
 
-        public static IServiceCollection AddShell(
+        public static IServiceCollection AddFileSystem(
             this IServiceCollection services)
         {
 

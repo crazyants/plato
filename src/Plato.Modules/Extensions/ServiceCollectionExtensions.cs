@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc.Razor;
-using Plato.Environment.Modules.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 using System.Linq;
-
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Plato.Modules.Abstractions;
 
-namespace Plato.Environment.Modules
+namespace Plato.Modules.Extensions
 {
     public static class ServiceCollectionExtensions
     {

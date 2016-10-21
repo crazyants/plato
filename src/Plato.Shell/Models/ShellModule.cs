@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Plato.Shell.Models
 {
-    public class ShellFeature
+    public class ShellModule
     {
         public string Name { get; set; }
     }

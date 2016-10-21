@@ -12,7 +12,8 @@ namespace Plato.Shell
            
         private readonly ILogger _logger;
 
-        public ShellContextFactory(ILogger<ShellContextFactory> logger)
+        public ShellContextFactory(
+            ILogger<ShellContextFactory> logger)
         {          
             _logger = logger;
         }
@@ -20,23 +21,25 @@ namespace Plato.Shell
         ShellContext IShellContextFactory.CreateShellContext(ShellSettings settings)
         {
 
-            //var describedContext = CreateDescribedContext(settings, MinimumShellDescriptor());
-            //ShellDescriptor currentDescriptor;
+            return CreateDescribedContext(settings, MinimumShellDescriptor());
+            
+        }
 
-            //using (var scope = describedContext.CreateServiceScope())
+        public ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor shellDescriptor)
+        {
+
+            //if (_logger.IsEnabled(LogLevel.Debug))
             //{
-            //    //var shellDescriptorManager = scope.ServiceProvider.GetService<IShellDescriptorManager>();
-            //    //currentDescriptor = shellDescriptorManager.GetShellDescriptorAsync().Result;
+            //    _logger.LogDebug("Creating described context for tenant {0}", settings.Name);
             //}
 
-            //if (currentDescriptor != null)
-            //{
-            //    return CreateDescribedContext(settings, currentDescriptor);
-            //}
+            //var blueprint = _compositionStrategy.Compose(settings, shellDescriptor);
+            //var provider = _shellContainerFactory.CreateContainer(settings, blueprint);
 
-            //return describedContext;
-
-            return null;
+            return new ShellContext
+            {
+                Settings = settings                
+            };
 
         }
 
@@ -49,46 +52,31 @@ namespace Plato.Shell
             var descriptor = new ShellDescriptor
             {
                 SerialNumber = -1,
-                Features = new[] {
-                    new ShellFeature { Name = "Orchard.Logging.Console" },
-                    new ShellFeature { Name = "Orchard.Setup" },
-                    new ShellFeature { Name = "Orchard.Recipes" }
+                Modules = new[] {
+                    new ShellModule { Name = "Orchard.Logging.Console" },
+                    new ShellModule { Name = "Orchard.Setup" },
+                    new ShellModule { Name = "Orchard.Recipes" }
                 }
             };
 
             return CreateDescribedContext(settings, descriptor);
         }
 
-        public ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor shellDescriptor)
-        {
-            //if (_logger.IsEnabled(LogLevel.Debug))
-            //{
-            //    _logger.LogDebug("Creating described context for tenant {0}", settings.Name);
-            //}
-
-            //var blueprint = _compositionStrategy.Compose(settings, shellDescriptor);
-            //var provider = _shellContainerFactory.CreateContainer(settings, blueprint);
-
-            return new ShellContext
-            {
-                Settings = settings
-            };
-        }
 
         private static ShellDescriptor MinimumShellDescriptor()
         {
             return new ShellDescriptor
             {
                 SerialNumber = -1,
-                Features = new[]
+                Modules = new[]
                 {
-                    new ShellFeature { Name = "Orchard.Logging.Console" },
-                    new ShellFeature { Name = "Orchard.Hosting" },
-                    new ShellFeature { Name = "Orchard.Admin" },
-                    new ShellFeature { Name = "Orchard.Themes" },
-                    new ShellFeature { Name = "TheAdmin" },
-                    new ShellFeature { Name = "SafeMode" },
-                    new ShellFeature { Name = "Orchard.Recipes" }
+                    new ShellModule { Name = "Orchard.Logging.Console" },
+                    new ShellModule { Name = "Orchard.Hosting" },
+                    new ShellModule { Name = "Orchard.Admin" },
+                    new ShellModule { Name = "Orchard.Themes" },
+                    new ShellModule { Name = "TheAdmin" },
+                    new ShellModule { Name = "SafeMode" },
+                    new ShellModule { Name = "Orchard.Recipes" }
                 }
             };
         }

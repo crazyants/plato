@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Plato.Environment.Modules.Abstractions;
-using Plato.Environment.Modules.Abstractions.Features;
+using Plato.Modules.Abstractions;
+using Plato.Modules.Abstractions.Features;
 
-namespace Plato.Environment.Modules.Features
+namespace Plato.Modules.Features
 {
     public class FeatureManager 
     {

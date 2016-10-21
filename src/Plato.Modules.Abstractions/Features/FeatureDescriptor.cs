@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Plato.Environment.Modules.Abstractions;
+using Plato.Modules.Abstractions;
 
-namespace Plato.Environment.Modules.Abstractions.Features
+namespace Plato.Modules.Abstractions.Features
 {
     public class FeatureDescriptor
     {

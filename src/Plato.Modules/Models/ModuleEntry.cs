@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Plato.Environment.Modules.Abstractions;
+using Plato.Modules.Abstractions;
 
-namespace Plato.Environment.Modules
+namespace Plato.Modules
 {
     public class ModuleEntry : IModuleEntry
     {

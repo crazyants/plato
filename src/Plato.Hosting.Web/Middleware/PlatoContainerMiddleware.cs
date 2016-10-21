@@ -17,12 +17,12 @@ namespace Plato.Hosting.Web.Middleware
 
         public PlatoContainerMiddleware(
             RequestDelegate next,
-            IPlatoHost orchardHost,
+            IPlatoHost platoHost,
             IRunningShellTable runningShellTable,
             ILogger<PlatoContainerMiddleware> logger)
         {
             _next = next;
-            _platoHost = orchardHost;
+            _platoHost = platoHost;
             _runningShellTable = runningShellTable;
             _logger = logger;
         }
@@ -66,7 +66,7 @@ namespace Plato.Hosting.Web.Middleware
                 //    await _next.Invoke(httpContext);
                 //}
 
-                await _next.Invoke(httpContext);
+               
 
                 //using (var scope = shellContext.CreateServiceScope())
                 //{
@@ -79,6 +79,9 @@ namespace Plato.Hosting.Web.Middleware
                 //    }
                 //}
             }
+
+            await _next.Invoke(httpContext);
+
         }
     }
 }

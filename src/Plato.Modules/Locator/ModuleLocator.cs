@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Plato.FileSystem;
 using System.IO;
 using Plato.Abstractions.Extensions;
-using Plato.Environment.Modules.Abstractions;
+using Plato.Modules.Abstractions;
 
-namespace Plato.Environment.Modules
+namespace Plato.Modules
 {
     public class ModuleLocator : IModuleLocator
     {
