@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Plato.Shell.Models;
 
 namespace Plato.Shell
@@ -28,10 +24,10 @@ namespace Plato.Shell
         public ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor shellDescriptor)
         {
 
-            //if (_logger.IsEnabled(LogLevel.Debug))
-            //{
-            //    _logger.LogDebug("Creating described context for tenant {0}", settings.Name);
-            //}
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug("Creating described context for tenant {0}", settings.Name);
+            }
 
             //var blueprint = _compositionStrategy.Compose(settings, shellDescriptor);
             //var provider = _shellContainerFactory.CreateContainer(settings, blueprint);

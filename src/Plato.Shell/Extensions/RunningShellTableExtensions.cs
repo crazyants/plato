@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Plato.Shell;
-using System;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 using Plato.Shell.Models;
 
-namespace Plato.Hosting.Web.Extensions
+namespace Plato.Shell.Extensions
 {
     public static class RunningShellTableExtensions
     {
+
         public static ShellSettings Match(
-            this IRunningShellTable table, 
-            HttpContext httpContext)
+        this IRunningShellTable table,
+        HttpContext httpContext)
         {
             // use Host header to prevent proxy alteration of the orignal request
             try
@@ -30,5 +30,6 @@ namespace Plato.Hosting.Web.Extensions
                 return null;
             }
         }
+
     }
 }

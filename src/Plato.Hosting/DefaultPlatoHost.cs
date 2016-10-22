@@ -180,8 +180,7 @@ namespace Plato.Hosting
             return _shellContextFactory.CreateSetupContext(ShellHelper.BuildDefaultUninitializedShell);
 
         }
-
-    
+            
         #endregion
         
 

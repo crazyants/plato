@@ -128,7 +128,7 @@ namespace Plato.Hosting.Web.Extensions
             app.UseMiddleware<PlatoContainerMiddleware>();
 
             // Route the request to the correct tenant specific pipeline
-           // app.UseMiddleware<PlatoRouterMiddleware>();
+            //app.UseMiddleware<PlatoRouterMiddleware>();
 
 
             // configure routes

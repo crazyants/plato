@@ -1,7 +1,7 @@
 State: Initializing
-Name: Test Tenant
+Name: Site 2 Tenant
 DatabaseProvider: SqlClient
 ConnectionString: server=localhost;trusted_connection=true;database=plato_2
-TablePrefix: test2
-HostName: test.com
-SubDomain: test
+TablePrefix: site2
+RequestedUrlHost:
+RequestedUrlPrefix: Site2

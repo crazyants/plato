@@ -88,11 +88,6 @@ namespace Plato.Shell
                     if (!_shellsByHostAndPrefix.TryGetValue(noHostAndPrefix, out result))
                     {
                         result = _default;
-
-                        // no specific match, then look for star mapping
-                        // TODO: implement * mapping by adding another index to match the domain with the
-                        // star mapped domain. It's done by adding the star-mapped domain in the index
-                        // when the settings are added to the shell table.
                     }
                 }
 
@@ -117,27 +112,21 @@ namespace Plato.Shell
         {
             // removing the port from the host
             var hostLength = host.IndexOf(':');
-            if (hostLength != -1)
-            {
+            if (hostLength != -1)            
                 host = host.Substring(0, hostLength);
-            }
-
+            
             // appRelativePath starts with /
             int firstSegmentIndex = appRelativePath.IndexOf('/', 1);
-            if (firstSegmentIndex > -1)
-            {
-                return host + appRelativePath.Substring(0, firstSegmentIndex);
-            }
-            else
-            {
-                return host + appRelativePath;
-            }
+            if (firstSegmentIndex > -1)            
+                return host + appRelativePath.Substring(0, firstSegmentIndex);            
+            else            
+                return host + appRelativePath;            
 
         }
 
         private string GetHostAndPrefix(ShellSettings shellSettings)
         {
-            return shellSettings.HostName + "/" + shellSettings.SubDomain;
+            return shellSettings.RequestedUrlHost + "/" + shellSettings.RequestedUrlPrefix;
         }
     }
 }

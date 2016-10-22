@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System.Data;
 using Plato.Abstractions.Extensions;
 using System.Data.Common;
+using Plato.Abstractions.Settings;
 
 namespace Plato.Repositories.Settings
 {
@@ -46,8 +47,7 @@ namespace Plato.Repositories.Settings
         {
 
             int id = await InsertUpdateInternal(
-                setting.Id,
-                setting.SiteId,
+                setting.Id,          
                 setting.SpaceId,
                 setting.Key,
                 setting.Value,
@@ -84,19 +84,19 @@ namespace Plato.Repositories.Settings
 
         }
 
-        public async Task<IEnumerable<Setting>> SelectBySiteId(int siteId)
+        public async Task<IEnumerable<Setting>> SelectSettings()
         {
 
             List<Setting> settings = new List<Setting>();
             using (var context = _dbContext)
             {
-                IDataReader reader = await context.ExecuteReaderAsync(
+                DbDataReader reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                  "plato_sp_SelectSettingsBySiteId", siteId);
+                  "plato_sp_SelectSettings");
 
                 if (reader != null)
                 {
-                    while (reader.Read())
+                    while (await reader.ReadAsync())
                     {
                         var setting = new Setting();
                         setting.PopulateModel(reader);
@@ -144,8 +144,7 @@ namespace Plato.Repositories.Settings
         #region "Private Methods"
 
         private async Task<int> InsertUpdateInternal(
-            int Id,
-            int SiteId,
+            int Id,    
             int SpaceId,
             string Key,
             string Value,
@@ -156,14 +155,14 @@ namespace Plato.Repositories.Settings
             )
         {
 
+      
             int id = 0;
             using (var context = _dbContext)
             {
                 id = await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateSetting",
-                    Id,
-                    SiteId,
+                    Id,               
                     SpaceId,
                     Key.ToEmptyIfNull(),
                     Value.ToEmptyIfNull(),

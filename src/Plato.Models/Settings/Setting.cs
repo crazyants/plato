@@ -4,23 +4,17 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Abstractions.Extensions;
+using Plato.Abstractions.Settings;
 
 namespace Plato.Models.Settings
 {
     public class Setting : IModel<Setting>
     {
 
-        #region "Private Variables"
-
-        private IDictionary<string, string> _settings;
-
-        #endregion
-        
+         
         #region "Public Properties"
 
         public int Id { get; set;  }
-
-        public int SiteId { get; set; }
 
         public int SpaceId { get; set; }
 
@@ -38,19 +32,6 @@ namespace Plato.Models.Settings
 
         #endregion
 
-        #region "Public Read Only Properties"
-
-        public IDictionary<string, string> Settings
-        {
-
-            get
-            {
-                return _settings;
-            }
-        }
-
-        #endregion
-
         #region "Public Methods"
 
         public void PopulateModel(IDataReader dr)
@@ -58,10 +39,7 @@ namespace Plato.Models.Settings
 
             if (dr.ColumnIsNotNull("id"))
                 this.Id = Convert.ToInt32(dr["Id"]);
-
-            if (dr.ColumnIsNotNull("SiteId"))
-                this.SiteId = Convert.ToInt32(dr["SiteId"]);
-
+                   
             if (dr.ColumnIsNotNull("SpaceId"))
                 this.SpaceId = Convert.ToInt32(dr["SpaceId"]);
 
@@ -69,8 +47,10 @@ namespace Plato.Models.Settings
                 this.Key = Convert.ToString(dr["Key"]);
 
             if (dr.ColumnIsNotNull("Value"))
+            {              
                 this.Value = Convert.ToString((dr["Value"]));
-
+            }
+             
             if (dr.ColumnIsNotNull("CreatedDate"))
                 this.CreatedDate = Convert.ToDateTime((dr["CreatedDate"]));
 
@@ -82,9 +62,6 @@ namespace Plato.Models.Settings
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
                 this.ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
-
-            if (!string.IsNullOrEmpty(this.Value))
-                _settings = this.Value.JsonToDictionary();
           
         }
 

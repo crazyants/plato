@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Plato.Models.Settings;
 using Plato.Abstractions.Extensions;
+using Plato.Abstractions.Settings;
 
 namespace Plato.Repositories.Settings
 {
@@ -14,7 +15,7 @@ namespace Plato.Repositories.Settings
 
         private ISettingRepository<Setting> _settingRepository;
 
-        private IDictionary<string, string> _settings;
+  
 
         #endregion
 
@@ -29,81 +30,60 @@ namespace Plato.Repositories.Settings
 
         #endregion
 
-        #region "Implementation"
+        #region "Implemention"
 
-        public string TryGetValue(string key)
+        public T GetSettings<T>(string key)
         {
-            string value = null;
-            bool ok = _settings.TryGetValue(key, out value);
-            if (ok)
-                return value;
-
-            return null;
+            throw new NotImplementedException();
         }
 
-        public IDictionary<string, string> Settings
+        public T InsertSettings<T>(string key, ISettingValue value)
         {
-            get { return _settings; }
+            throw new NotImplementedException();
         }
 
-        public async Task<ISettingsFactory> SelectById(int Id)
+        public T UpdateSettings<T>(string key, ISettingValue value)
         {
-
-            var setting = await _settingRepository.SelectById(Id);
-            if (setting != null)       
-                _settings = setting.Value.JsonToDictionary();
-
-            return this;
+            throw new NotImplementedException();
         }
-
-        public async Task<ISettingsFactory> SelectBySiteId(int SiteId)
-        {
-
-            _settings = new Dictionary<string, string>();
-            IEnumerable<Setting> settings = await _settingRepository.SelectBySiteId(SiteId);
-            if (settings != null)
-            {
-                foreach (var setting in settings)
-                {
-                    foreach (KeyValuePair<string, string> kvp in setting.Settings)
-                    {
-                        if (!_settings.ContainsKey(kvp.Key))
-                            _settings.Add(kvp.Key, kvp.Value);
-                    }
-                }
-
-            }
-
-            return this;   
-
-        }
-
-        public async Task<ISettingsFactory> SelectBySpaceId(int SpaceId)
-        {
-
-            _settings = new Dictionary<string, string>();
-            IEnumerable<Setting> settings = await _settingRepository.SelectBySpaceId(SpaceId);
-            if (settings != null)
-            {
-                foreach (var setting in settings)
-                {
-                    foreach (KeyValuePair<string, string> kvp in setting.Settings)
-                    {
-                        if (!_settings.ContainsKey(kvp.Key))
-                            _settings.Add(kvp.Key, kvp.Value);
-                    }
-                }
-
-            }
-
-            return this;
-
-
-        }
-
 
         #endregion
-          
+
+        #region "Private Methods"
+
+        private async Task AvailableSettings()
+        {
+         
+
+        }
+
+
+        private async Task<Dictionary<string, string>> GetAvailableSettings()
+        {
+
+
+            var output = new Dictionary<string, string>();
+            IEnumerable<Setting> settings = await _settingRepository.SelectSettings();
+            if (settings != null)
+            {
+                foreach (var setting in settings)
+                {
+                    foreach (KeyValuePair<string, string> kvp in setting.Settings)
+                    {
+                        if (!output.ContainsKey(kvp.Key))
+                            output.Add(kvp.Key, kvp.Value);
+                    }
+                }
+
+            }
+
+            return output;
+
+
+        }
+        #endregion
+
+
 
     }
 }

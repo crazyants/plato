@@ -106,8 +106,7 @@ namespace Plato.Repositories.Users
                 throw new ArgumentNullException(nameof(_userDetailRepository));
 
             int id = await InsertUpdateInternal(
-                user.Id,
-                user.SiteId,
+                user.Id,         
                 user.UserName,
                 user.Email,
                 user.DisplayName,
@@ -206,8 +205,7 @@ namespace Plato.Repositories.Users
         #region "Private Methods"
 
         private async Task<int> InsertUpdateInternal(
-            int Id,
-            int SiteId,
+            int Id,      
             string Name,
             string EmailAddress,
             string DisplayName,
@@ -221,8 +219,7 @@ namespace Plato.Repositories.Users
                 id = await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateUser",
-                    Id,
-                    SiteId,
+                    Id,           
                     Name.ToEmptyIfNull(),
                     EmailAddress.ToEmptyIfNull(),
                     DisplayName.ToEmptyIfNull(),

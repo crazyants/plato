@@ -61,7 +61,7 @@ namespace Plato.Hosting.Web.Routing
                     }
                 }
             }
-
+            
             // Remove the values that should not be rendered in the query string
             foreach (var key in _tokens.Keys)
             {

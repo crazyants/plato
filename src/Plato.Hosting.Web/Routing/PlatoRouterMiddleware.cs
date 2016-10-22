@@ -73,9 +73,9 @@ namespace Plato.Hosting.Web.Routing
             IApplicationBuilder appBuilder = new ApplicationBuilder(serviceProvider);
 
             string routePrefix = "";
-            if (!string.IsNullOrWhiteSpace(shellSettings.SubDomain))
+            if (!string.IsNullOrWhiteSpace(shellSettings.RequestedUrlPrefix))
             {
-                routePrefix = shellSettings.SubDomain + "/";
+                routePrefix = shellSettings.RequestedUrlPrefix + "/";
             }
 
             var routeBuilder = new RouteBuilder(appBuilder)
@@ -116,7 +116,7 @@ namespace Plato.Hosting.Web.Routing
             if (siteService != null)
             {
                 // Add home page route
-                routeBuilder.Routes.Add(new HomePageRoute(shellSettings.SubDomain, siteService, routeBuilder, inlineConstraintResolver));
+                routeBuilder.Routes.Add(new HomePageRoute(shellSettings.RequestedUrlPrefix, siteService, routeBuilder, inlineConstraintResolver));
             }
 
             var router = prefixedRouteBuilder.Build();

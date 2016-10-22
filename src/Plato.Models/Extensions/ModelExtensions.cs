@@ -10,10 +10,6 @@ namespace Plato.Models.Extensions
             return JsonConvert.SerializeObject(model);
         }
 
-        public static T Deserialize<T>(this string json)
-        {
-            return JsonConvert.DeserializeObject<T>(json);
-        }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -80,7 +81,13 @@ namespace Plato.Abstractions.Extensions
             byte[] byteArray = Encoding.UTF8.GetBytes(input);
             return new MemoryStream(byteArray);
         }
-                
+        
+
+        public static T Deserialize<T>(this string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
 
     }
 

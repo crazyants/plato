@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Plato.Abstractions.Settings;
 
 namespace Plato.Repositories.Settings
 {
     public interface ISettingsFactory
     {
+        
+        T GetSettings<T>(string key);
 
-        IDictionary<string, string> Settings { get; }
+        T UpdateSettings<T>(string key, ISettingValue value);
 
-        string TryGetValue(string key);
-
-        Task<ISettingsFactory> SelectById(int Id);
-
-        Task<ISettingsFactory> SelectBySiteId(int SiteId);
+        T InsertSettings<T>(string key, ISettingValue value);
 
     }
 }

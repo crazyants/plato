@@ -11,8 +11,8 @@ namespace Plato.Shell
             var shellSettings = new ShellSettings();
 
             shellSettings.Name = configuration["Name"];            
-            shellSettings.HostName = configuration["HostName"];
-            shellSettings.SubDomain = configuration["SubDomain"];
+            shellSettings.RequestedUrlHost = configuration["RequestedUrlHost"];
+            shellSettings.RequestedUrlPrefix = configuration["RequestedUrlPrefix"];
             shellSettings.ConnectionString = configuration["ConnectionString"];
             shellSettings.TablePrefix = configuration["TablePrefix"];
             shellSettings.DatabaseProvider = configuration["DatabaseProvider"];

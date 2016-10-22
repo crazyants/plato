@@ -9,6 +9,10 @@ using Plato.Shell.Models;
 using Plato.Repositories.Settings;
 using Plato.Models.Settings;
 using Plato.Shell;
+using Plato.Shell.Extensions;
+
+
+using Plato.Abstractions.Settings;
 
 namespace Plato.Controllers
 {
@@ -77,9 +81,9 @@ namespace Plato.Controllers
                 sb.Append("<br>");
                 sb.Append(shellSetting.TablePrefix);
                 sb.Append("<br>");
-                sb.Append(shellSetting.SubDomain);
+                sb.Append(shellSetting.RequestedUrlPrefix);
                 sb.Append("<br>");
-                sb.Append(shellSetting.HostName);        
+                sb.Append(shellSetting.RequestedUrlHost);        
                 sb.Append("<br><br>");
 
             }
@@ -105,34 +109,58 @@ namespace Plato.Controllers
             sb.Append("----------------------");
             sb.Append("<br>");
 
+
+            var currentSettings = _runningShellTable.Match(HttpContext);
+
+            sb.Append("Matched Shell Settings");
+            sb.Append("<br>");
+
+            sb.Append(currentSettings.ConnectionString);
+            sb.Append("<br>");
+
+            sb.Append(currentSettings.Name);
+
+
+            sb.Append("<br>");
+            sb.Append("----------------------");
+            sb.Append("<br>");
+
+
             // ------------------------
             // settings 
             // -------------------------
 
 
-            var newSetting = await _settingRepository.InsertUpdate(
-                new Setting()
+            //var newSetting = await _settingRepository.InsertUpdate(
+            //    new Setting()
+            //    {                  
+            //        SpaceId = 0,
+            //        Key = "SiteSettings",
+            //        Value = new Abstractions.Settings.SiteSettings()
+            //        {
+            //            PageTitleSeparator = "-",
+            //            BaseUrl = "-",
+            //        }
+            //    });
+
+
+            var settings =
+                _settingsFactory.InsertSettings("SiteSettings",
+                new SiteSettings()
                 {
-                    SiteId = 1,
-                    SpaceId = 0,
-                    Key = "Group 2",
-                    Value = "{ 'Group 1': 123, 'Group 2': 'hello', 'Group 3': true }"
+                    PageTitleSeparator = "-",
+                    BaseUrl = "123"
+                    
                 });
 
 
-            var sf = _settingsFactory.SelectBySiteId(1);
-            var settings = sf.Result.Settings;
 
 
-            var test = _settingsFactory.TryGetValue("Group 4");
+            var test = _settingsFactory.GetSettings<SiteSettings>("SiteSettings");
 
-            foreach (var setting in settings)
-            {
-                sb.Append(setting.Key + " : " + setting.Value);
-                sb.Append("<br>");
-            }
-
-   
+            sb.Append(test.BaseUrl);
+            sb.Append("<br>");
+            
 
             System.Random rand = new System.Random();
             

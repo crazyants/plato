@@ -12,10 +12,7 @@ namespace Plato.Models.Users
     {
 
         #region "Public Properties"
-              
-        [ColumnName("SiteId", typeof(int))]
-        public int SiteId { get; set; }
-
+                   
         [ColumnName("DisplayName", typeof(string), 255)]
         public string DisplayName { get; set; }
         

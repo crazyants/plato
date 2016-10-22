@@ -10,11 +10,11 @@ namespace Plato.Abstractions.Settings
         /// <summary>
         /// Return the site settings for the current tenant.
         /// </summary>
-        Task<ISite> GetSiteSettingsAsync();
+        Task<ISiteSettings> GetSiteSettingsAsync();
 
         /// <summary>
         /// Persists the changes to the site settings.
         /// </summary>
-        Task UpdateSiteSettingsAsync(ISite site);
+        Task UpdateSiteSettingsAsync(ISiteSettings site);
     }
 }

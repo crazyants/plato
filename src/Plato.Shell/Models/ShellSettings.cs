@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Plato.Shell.Models;
 
 namespace Plato.Shell.Models
 {
@@ -21,8 +18,8 @@ namespace Plato.Shell.Models
             _values = new Dictionary<string, string>(settings._values, StringComparer.OrdinalIgnoreCase);
 
             Name = settings.Name;
-            HostName = settings.HostName;
-            SubDomain = settings.SubDomain;      
+            RequestedUrlHost = settings.RequestedUrlHost;
+            RequestedUrlPrefix = settings.RequestedUrlPrefix;      
             DatabaseProvider = settings.DatabaseProvider;
             ConnectionString = settings.ConnectionString;
             TablePrefix = settings.TablePrefix;           
@@ -55,16 +52,16 @@ namespace Plato.Shell.Models
             set { this["Location"] = value; }
         }
 
-        public string HostName
+        public string RequestedUrlHost
         {
-            get { return this["HostName"]; }
-            set { this["HostName"] = value; }
+            get { return this["RequestedUrlHost"]; }
+            set { this["RequestedUrlHost"] = value; }
         }
 
-        public string SubDomain
+        public string RequestedUrlPrefix
         {
-            get { return this["SubDomain"]; }
-            set { _values["SubDomain"] = value; }
+            get { return this["RequestedUrlPrefix"]; }
+            set { _values["RequestedUrlPrefix"] = value; }
         }
 
         public string ConnectionString
