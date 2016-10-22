@@ -13,6 +13,7 @@ using Plato.Shell.Extensions;
 
 
 using Plato.Abstractions.Settings;
+using Microsoft.AspNetCore.Routing;
 
 namespace Plato.Controllers
 {
@@ -131,35 +132,32 @@ namespace Plato.Controllers
             // -------------------------
 
 
-            //var newSetting = await _settingRepository.InsertUpdate(
-            //    new Setting()
-            //    {                  
-            //        SpaceId = 0,
-            //        Key = "SiteSettings",
-            //        Value = new Abstractions.Settings.SiteSettings()
-            //        {
-            //            PageTitleSeparator = "-",
-            //            BaseUrl = "-",
-            //        }
-            //    });
+           var HomeRoute = new RouteValueDictionary();
+            HomeRoute.Add("Action", "Index");
+            HomeRoute.Add("Controller", "Home");
+            HomeRoute.Add("Area", "Orchard.Demo");
 
-
-            var settings =
-                _settingsFactory.InsertSettings("SiteSettings",
+            SiteSettings settings =
+                await _settingsFactory.UpdateSettingsAsync<SiteSettings>(SettingGroups.SiteSettings,
                 new SiteSettings()
                 {
                     PageTitleSeparator = "-",
-                    BaseUrl = "123"
-                    
+                    BaseUrl = "1231231231313123123",
+                    HomeRoute = HomeRoute
                 });
 
 
-
-
-            var test = _settingsFactory.GetSettings<SiteSettings>("SiteSettings");
-
-            sb.Append(test.BaseUrl);
             sb.Append("<br>");
+
+            var test = _settingsFactory.GetSettingsAsync<SiteSettings>(SettingGroups.SiteSettings);
+
+            if (test != null)
+            {
+                sb.Append("BASE URL: ");
+                sb.Append(test.Result.BaseUrl);
+                sb.Append("<br>");
+            }
+       
             
 
             System.Random rand = new System.Random();

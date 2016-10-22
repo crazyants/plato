@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Abstractions.Settings;
+using Plato.Repositories.Settings;
 
 namespace Plato.Hosting.Web.Routing
 {
@@ -12,31 +13,33 @@ namespace Plato.Hosting.Web.Routing
         private readonly IRouteBuilder _routeBuilder;
 
         private RouteValueDictionary _tokens;
-        private readonly ISiteService _siteService;
+        private readonly ISettingsFactory _settingsFactory;
 
         public HomePageRoute(
             string prefix, 
-            ISiteService siteService, 
+            ISettingsFactory settingsFactory, 
             IRouteBuilder routeBuilder, 
             IInlineConstraintResolver inlineConstraintResolver)
             : base(routeBuilder.DefaultHandler, prefix ?? "", inlineConstraintResolver)
         {
-            _siteService = siteService;
+            _settingsFactory = settingsFactory;
             _routeBuilder = routeBuilder;
         }
 
         protected override async Task OnRouteMatched(RouteContext context)
         {
-            var siteSettings = await _siteService.GetSiteSettingsAsync();
 
+            var siteSettings = await _settingsFactory.GetSettingsAsync<SiteSettings>(SettingGroups.SiteSettings);
+            
             foreach (var entry in siteSettings.HomeRoute)
             {
                 context.RouteData.Values[entry.Key] = entry.Value;
             }
 
             _tokens = siteSettings.HomeRoute;
-
+            
             await base.OnRouteMatched(context);
+
         }
 
         public override VirtualPathData GetVirtualPath(VirtualPathContext context)

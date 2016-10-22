@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Plato.Abstractions.Settings
 {
-    public sealed class SiteSettings : ISettingValue, ISiteSettings
+    public sealed class SiteSettings : SettingValue, ISiteSettings
     {
 
         public string BaseUrl { get; set; }
@@ -35,14 +35,6 @@ namespace Plato.Abstractions.Settings
 
         public RouteValueDictionary HomeRoute { get; set; }
 
-        public string Serialize()
-        {
-            throw new NotImplementedException();
-        }
 
-        public SiteSettings Deserialize<T>(string json)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

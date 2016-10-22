@@ -10,8 +10,7 @@ namespace Plato.Repositories.Settings
     {
 
         Task<IEnumerable<Setting>> SelectSettings();
-
-        
+                
 
     }
 

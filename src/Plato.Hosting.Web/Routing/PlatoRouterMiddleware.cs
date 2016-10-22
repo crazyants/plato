@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Abstractions.Settings;
 using Plato.Shell.Models;
+using Plato.Repositories.Settings;
 
 namespace Plato.Hosting.Web.Routing
 {
@@ -109,14 +110,12 @@ namespace Plato.Hosting.Web.Routing
                 null,
                 inlineConstraintResolver)
             );
-
-            var siteService = routeBuilder.ServiceProvider.GetService<ISiteService>();
-
-            // ISiteService might not be registered during Setup
-            if (siteService != null)
+            
+            var settingFactory = routeBuilder.ServiceProvider.GetService<ISettingsFactory>();                
+            if (settingFactory != null)
             {
                 // Add home page route
-                routeBuilder.Routes.Add(new HomePageRoute(shellSettings.RequestedUrlPrefix, siteService, routeBuilder, inlineConstraintResolver));
+                routeBuilder.Routes.Add(new HomePageRoute(shellSettings.RequestedUrlPrefix, settingFactory, routeBuilder, inlineConstraintResolver));
             }
 
             var router = prefixedRouteBuilder.Build();

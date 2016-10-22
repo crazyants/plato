@@ -14,12 +14,9 @@ namespace Plato.Repositories.Settings
         #region "Private Variables"
 
         private ISettingRepository<Setting> _settingRepository;
-
-  
-
+         
         #endregion
-
-
+        
         #region ""Constructor"
 
         public SettingsFactory(
@@ -32,47 +29,70 @@ namespace Plato.Repositories.Settings
 
         #region "Implemention"
 
-        public T GetSettings<T>(string key)
+        public async Task<T> GetSettingsAsync<T>(string key)
         {
-            throw new NotImplementedException();
-        }
+     
+            var setting = await GetSettingFromRepository(key);
+            if (setting != null)            
+                return await setting.Value.DeserializeAsync<T>();                                 
+        
+            return await Task.FromResult<T>(default(T));
 
-        public T InsertSettings<T>(string key, ISettingValue value)
-        {
-            throw new NotImplementedException();
         }
-
-        public T UpdateSettings<T>(string key, ISettingValue value)
+        
+        public async Task<T> UpdateSettingsAsync<T>(string key, ISettingValue value)
         {
-            throw new NotImplementedException();
+
+            // get existing setting
+            var existingSetting = await GetSettingFromRepository(key);
+
+            // create new setting if not found
+            if (existingSetting == null)
+            {
+                existingSetting = new Setting()
+                {
+                    Key = key
+                };
+            }
+
+            // serilize object
+            existingSetting.Value = value.Serialize();
+
+            // update setting & return deserialized setting value
+            var updatedSetting = await _settingRepository.InsertUpdate(existingSetting);
+            if (updatedSetting != null)            
+                return await GetSettingsAsync<T>(updatedSetting.Key);
+               
+            return await Task.FromResult<T>(default(T));
+
         }
 
         #endregion
 
         #region "Private Methods"
 
-        private async Task AvailableSettings()
+
+        private async Task<Setting> GetSettingFromRepository(string key)
         {
-         
+   
+            var availableSettings = await GetSettingsAsync();
+            if (availableSettings != null)
+                return availableSettings.Where(s => s.Key == key).FirstOrDefault();
+     
+            return await Task.FromResult<Setting>(default(Setting));
 
         }
 
-
-        private async Task<Dictionary<string, string>> GetAvailableSettings()
+        private async Task<IEnumerable<Setting>> GetSettingsAsync()
         {
-
-
-            var output = new Dictionary<string, string>();
+            
+            var output = new List<Setting>();
             IEnumerable<Setting> settings = await _settingRepository.SelectSettings();
             if (settings != null)
             {
                 foreach (var setting in settings)
                 {
-                    foreach (KeyValuePair<string, string> kvp in setting.Settings)
-                    {
-                        if (!output.ContainsKey(kvp.Key))
-                            output.Add(kvp.Key, kvp.Value);
-                    }
+                   output.Add(setting);               
                 }
 
             }

@@ -14,10 +14,5 @@ namespace Plato.Abstractions.Settings
             return JsonConvert.SerializeObject(this);
         }
 
-        public T Deserialize<T>(string json)
-        {
-            return JsonConvert.DeserializeObject<T>(json);
-        }
-
     }
 }

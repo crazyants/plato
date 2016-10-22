@@ -88,6 +88,11 @@ namespace Plato.Abstractions.Extensions
             return JsonConvert.DeserializeObject<T>(json);
         }
 
+        public static async Task<T> DeserializeAsync<T>(this string json)
+        {
+            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json)); 
+        }
+
 
     }
 

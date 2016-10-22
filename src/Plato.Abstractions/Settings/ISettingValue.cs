@@ -5,6 +5,5 @@
 
         string Serialize();
 
-        T Deserialize<T>(string json);
     }
 }

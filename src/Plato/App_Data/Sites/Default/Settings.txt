@@ -1,4 +1,4 @@
-State: Initializing
+State: Running
 Name: Default
 DatabaseProvider: SqlClient
 ConnectionString: server=localhost;trusted_connection=true;database=plato_1

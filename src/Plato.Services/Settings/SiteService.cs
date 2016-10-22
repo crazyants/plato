@@ -36,21 +36,7 @@ namespace Plato.Services.Settings
             if (!_memoryCache.TryGetValue(SiteCacheKey, out site))
             {
 
-                _settings = new Dictionary<string, string>();
-                IEnumerable<Setting> settings = await _settingRepository.SelectSettings();
-                if (settings != null)
-                {
-                    foreach (var setting in settings)
-                    {
-                        foreach (KeyValuePair<string, string> kvp in setting.Settings)
-                        {
-                            if (!_settings.ContainsKey(kvp.Key))
-                                _settings.Add(kvp.Key, kvp.Value);
-                        }
-                    }
-
-                }
-
+             
                 _memoryCache.Set(SiteCacheKey, site);
 
 

@@ -1,15 +1,15 @@
 ﻿using Plato.Abstractions.Settings;
+using System.Threading.Tasks;
 
 namespace Plato.Repositories.Settings
 {
     public interface ISettingsFactory
     {
         
-        T GetSettings<T>(string key);
+        Task<T> GetSettingsAsync<T>(string key);
 
-        T UpdateSettings<T>(string key, ISettingValue value);
-
-        T InsertSettings<T>(string key, ISettingValue value);
+        Task<T> UpdateSettingsAsync<T>(string key, ISettingValue value);
+        
 
     }
 }
