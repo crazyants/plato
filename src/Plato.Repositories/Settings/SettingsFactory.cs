@@ -74,11 +74,11 @@ namespace Plato.Repositories.Settings
 
         private async Task<Setting> GetSettingFromRepository(string key)
         {
-   
+                     
             var availableSettings = await GetSettingsAsync();
             if (availableSettings != null)
                 return availableSettings.Where(s => s.Key == key).FirstOrDefault();
-     
+        
             return await Task.FromResult<Setting>(default(Setting));
 
         }
@@ -90,11 +90,8 @@ namespace Plato.Repositories.Settings
             IEnumerable<Setting> settings = await _settingRepository.SelectSettings();
             if (settings != null)
             {
-                foreach (var setting in settings)
-                {
-                   output.Add(setting);               
-                }
-
+                foreach (var setting in settings)                
+                   output.Add(setting);  
             }
 
             return output;

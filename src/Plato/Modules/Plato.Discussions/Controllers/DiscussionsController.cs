@@ -1,16 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Plato.Abstractions.Settings;
+using System.Threading.Tasks;
 
 namespace Plato.Discussions
 {
     public class DiscussionsController : Controller
     {
-                   
-        public DiscussionsController()
-        {                      
+
+        ISiteService _siteService;
+        
+        public DiscussionsController(
+            ISiteService siteService)
+        {
+            _siteService = siteService;
         }
         
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
 
             string path = Request.Path;
@@ -28,12 +34,14 @@ namespace Plato.Discussions
 
             //ViewData["result"] = result;
 
+            var settings = await _siteService.GetSiteSettingsAsync();
+
             List<TextObject> list = new List<TextObject>();
             list.Add(new TextObject("Ryan"));
             list.Add(new TextObject("Jane"));
             list.Add(new TextObject("Mike"));
             list.Add(new TextObject("Roger"));
-
+            list.Add(new TextObject(settings.BaseUrl));
 
             return View(list);
         }

@@ -1,7 +1,7 @@
 ﻿using Plato.Abstractions.Settings;
 using System.Threading.Tasks;
 
-namespace Plato.Repositories.Settings
+namespace Plato.Abstractions.Settings
 {
     public interface ISettingsFactory
     {
@@ -10,6 +10,5 @@ namespace Plato.Repositories.Settings
 
         Task<T> UpdateSettingsAsync<T>(string key, ISettingValue value);
         
-
     }
 }

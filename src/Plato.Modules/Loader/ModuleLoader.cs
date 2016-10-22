@@ -40,6 +40,11 @@ namespace Plato.Modules
         {
             _fileSystem = fileSystem;
             //_logger = logger;
+
+
+            _loadedAssemblies.TryAdd("Plato.Abstractions", null);
+
+
         }
 
         #endregion

@@ -1,18 +1,15 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Builder.Internal;
-using Plato.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Plato.Shell;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Abstractions.Settings;
 using Plato.Shell.Models;
-using Plato.Repositories.Settings;
 
 namespace Plato.Hosting.Web.Routing
 {
@@ -50,14 +47,14 @@ namespace Plato.Hosting.Web.Routing
                     {
                         pipeline = BuildTenantPipeline(shellSettings, httpContext.RequestServices);
 
-                        if (shellSettings.State == Shell.Models.TenantState.Running)
-                        {
+                        //if (shellSettings.State == Shell.Models.TenantState.Running)
+                        //{
                             // TODO: Invalidate the pipeline automatically when the shell context is changed
                             // such that we can reload the middlewares and the routes. Implement something similar
                             // to IRunningShellTable but for the pipelines.
 
                             _pipelines.Add(shellSettings.Name, pipeline);
-                        }
+                        //}
                     }
                 }
             }
@@ -66,7 +63,9 @@ namespace Plato.Hosting.Web.Routing
         }
 
         // Build the middleware pipeline for the current tenant
-        public RequestDelegate BuildTenantPipeline(ShellSettings shellSettings, IServiceProvider serviceProvider)
+        public RequestDelegate BuildTenantPipeline(
+            ShellSettings shellSettings, 
+            IServiceProvider serviceProvider)
         {
             var startups = serviceProvider.GetServices<IStartup>();
             var inlineConstraintResolver = serviceProvider.GetService<IInlineConstraintResolver>();
@@ -111,11 +110,11 @@ namespace Plato.Hosting.Web.Routing
                 inlineConstraintResolver)
             );
             
-            var settingFactory = routeBuilder.ServiceProvider.GetService<ISettingsFactory>();                
-            if (settingFactory != null)
+            var siteService = routeBuilder.ServiceProvider.GetService<ISiteService>();                
+            if (siteService != null)
             {
                 // Add home page route
-                routeBuilder.Routes.Add(new HomePageRoute(shellSettings.RequestedUrlPrefix, settingFactory, routeBuilder, inlineConstraintResolver));
+                routeBuilder.Routes.Add(new HomePageRoute(shellSettings.RequestedUrlPrefix, siteService, routeBuilder, inlineConstraintResolver));
             }
 
             var router = prefixedRouteBuilder.Build();

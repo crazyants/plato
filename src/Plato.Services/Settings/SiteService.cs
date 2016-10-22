@@ -12,45 +12,38 @@ namespace Plato.Services.Settings
     public class SiteService : ISiteService
     {
 
-        private string SiteCacheKey = "SiteSettings";
-        private IDictionary<string, string> _settings;
-
-        ISettingRepository<Setting> _settingRepository;
+        private string _key = "SiteSettings";
+    
+        ISettingsFactory _settingsFactory;
         IMemoryCache _memoryCache;
 
         public SiteService(
-           ISettingRepository<Setting> settingRepository,
+           ISettingsFactory settingsFactory,
            IMemoryCache memoryCache)
         {
-            _settingRepository = settingRepository;
+            _settingsFactory =settingsFactory;
             _memoryCache = memoryCache;
         }
 
         public async Task<ISiteSettings> GetSiteSettingsAsync()
         {
-
-            throw new NotImplementedException();
-         
-            ISiteSettings site;
-
-            if (!_memoryCache.TryGetValue(SiteCacheKey, out site))
+                    
+            ISiteSettings siteSettings;
+            if (!_memoryCache.TryGetValue(_key, out siteSettings))
             {
-
-             
-                _memoryCache.Set(SiteCacheKey, site);
-
-
+                siteSettings = await _settingsFactory.GetSettingsAsync<SiteSettings>(_key);
+                _memoryCache.Set(_key, siteSettings);
             }
-
-
+            
+            return siteSettings;
 
         }
-
-         
-
-        public Task UpdateSiteSettingsAsync(ISiteSettings site)
+    
+        public async Task<ISiteSettings> UpdateSiteSettingsAsync(ISiteSettings siteSettings)
         {
-            throw new NotImplementedException();
+            var settings = await _settingsFactory.UpdateSettingsAsync<SiteSettings>(_key, siteSettings);
+            _memoryCache.Set(_key, settings);
+            return settings;
         }
 
     }

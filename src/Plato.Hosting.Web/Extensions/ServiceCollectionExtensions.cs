@@ -21,6 +21,8 @@ using Plato.Hosting.Web.Middleware;
 using Plato.FileSystem;
 using Microsoft.AspNetCore.Http;
 using Plato.Hosting.Web.Routing;
+using Plato.Services.Extensions;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -38,11 +40,7 @@ namespace Plato.Hosting.Web.Extensions
             // configure tenants
 
             services.ConfigureShell("sites");
-
-            // services
-
-            services.AddHostCore();
-            services.AddWebHost();
+               
                    
             // standard .NET core extensions
 
@@ -53,13 +51,26 @@ namespace Plato.Hosting.Web.Extensions
             // database
 
             services.AddPlatoDbContext();
+
             services.AddRepositories();
-                  
-            // add mvc
-            var mvcBuilder = services.AddMvc();
+
+            services.AddServices();
+
+
+            // add mvc core
+            var mvcBuilder = services.AddMvcCore();
+            mvcBuilder.AddViews()
+                .AddViewLocalization()
+                .AddRazorViewEngine()
+                .AddJsonFormatters();
+
+            services.AddLogging()
+                .AddHostCore()
+                .AddWebHost()
+                .AddMemoryCache();
 
             // theme
-                        
+
             services.Configure<RazorViewEngineOptions>(configureOptions: options =>
             {
                 options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));                
@@ -128,7 +139,15 @@ namespace Plato.Hosting.Web.Extensions
             app.UseMiddleware<PlatoContainerMiddleware>();
 
             // Route the request to the correct tenant specific pipeline
-            app.UseMiddleware<PlatoRouterMiddleware>();
+            //app.UseMiddleware<PlatoRouterMiddleware>();
+
+            var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
+            
+            foreach (ModuleEntry moduleEntry in moduleManager.AvailableModules)
+            {
+                foreach (var assembly in moduleEntry.Assmeblies)
+                    applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
+            }
 
 
             // configure routes
@@ -139,7 +158,7 @@ namespace Plato.Hosting.Web.Extensions
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-     
+
             return app;
         }
 

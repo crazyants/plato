@@ -1,13 +1,21 @@
-﻿@model List<Plato.Login.TextObject1>
+﻿@using System.Collections.Generic
+@using Microsoft.AspNetCore.Http
+@using Plato.Login.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http.Authentication
+@model LoginViewModel
+
+
 @{
     ViewData["Title"] = "Discussions";
 }
 
-Login View
-<br /><br />
 
-@foreach (var test in @Model)
-    {
-        @test.Name
-        <br />
-    }
+Password...<br />
+@Model.Email
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
+

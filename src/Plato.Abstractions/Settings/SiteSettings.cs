@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Plato.Abstractions.Settings
 {
-    public sealed class SiteSettings : SettingValue, ISiteSettings
+    public sealed class SiteSettings : ISiteSettings
     {
 
-        public string BaseUrl { get; set; }
+        public string SiteName { get; set; }
+
+        public string SiteSalt { get; set; }
 
         public string Calendar { get; set; }
 
@@ -23,18 +22,19 @@ namespace Plato.Abstractions.Settings
 
         public string PageTitleSeparator { get; set; }
    
-        public string SiteName { get; set; }
-
-        public string SiteSalt { get; set; }
-
         public string SuperUser { get; set; }
 
         public string TimeZone { get; set; }
+        
+        public string BaseUrl { get; set; }
 
         public bool UseCdn { get; set; }
 
         public RouteValueDictionary HomeRoute { get; set; }
 
-
+        public string Serialize()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

@@ -4,6 +4,7 @@
     "dependencies": {
         "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-rc1-final",
         "Microsoft.AspNetCore.Hosting.Abstractions": "1.0.0",
+        "Microsoft.AspNetCore.Routing": "1.0.1",
         "NETStandard.Library": "1.6.0",
         "Plato.Shell": "1.0.0-*",
         "System.Threading.Tasks.Parallel": "4.0.1"

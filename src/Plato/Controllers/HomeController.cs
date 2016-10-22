@@ -25,6 +25,7 @@ namespace Plato.Controllers
         private ISettingRepository<Setting> _settingRepository;
         private ISettingsFactory _settingsFactory;
         private IShellSettingsManager _shellSettingsManager;
+        private ISiteService _siteService;
 
         private IRunningShellTable _runningShellTable;
 
@@ -34,7 +35,8 @@ namespace Plato.Controllers
             ISettingRepository<Setting> settingRepository,
             ISettingsFactory settingsFactory,
             IShellSettingsManager shellSettingsManager,
-            IRunningShellTable runningShellTable)
+            IRunningShellTable runningShellTable,
+            ISiteService siteService)
         {
             //_fileSystem = fileSystem;
             _moduleLocator = moduleLocator;
@@ -43,8 +45,10 @@ namespace Plato.Controllers
             _settingsFactory = settingsFactory;
             _shellSettingsManager = shellSettingsManager;
             _runningShellTable = runningShellTable;
+            _siteService = siteService;
 
-            
+
+
         }
 
    
@@ -93,7 +97,6 @@ namespace Plato.Controllers
             sb.Append("<br>");
 
             var shellsByHostAndPrefi = _runningShellTable.ShellsByHostAndPrefix;
-
             foreach (var item in shellsByHostAndPrefi)
             {
                 sb.Append("Key");
@@ -135,13 +138,14 @@ namespace Plato.Controllers
            var HomeRoute = new RouteValueDictionary();
             HomeRoute.Add("Action", "Index");
             HomeRoute.Add("Controller", "Home");
-            HomeRoute.Add("Area", "Orchard.Demo");
-
-            SiteSettings settings =
-                await _settingsFactory.UpdateSettingsAsync<SiteSettings>(SettingGroups.SiteSettings,
+            HomeRoute.Add("Area", "Plato.Login");
+           
+            ISiteSettings settings =
+                await _siteService.UpdateSiteSettingsAsync(
                 new SiteSettings()
-                {
-                    PageTitleSeparator = "-",
+                {                    
+                    SiteName = "My Site",
+                    SiteSalt = "salty123",
                     BaseUrl = "1231231231313123123",
                     HomeRoute = HomeRoute
                 });
@@ -149,12 +153,17 @@ namespace Plato.Controllers
 
             sb.Append("<br>");
 
-            var test = _settingsFactory.GetSettingsAsync<SiteSettings>(SettingGroups.SiteSettings);
-
+            var test = await _siteService.GetSiteSettingsAsync();
             if (test != null)
             {
-                sb.Append("BASE URL: ");
-                sb.Append(test.Result.BaseUrl);
+
+                sb.Append("GetSiteSettingsAsync");
+                sb.Append("<br>");
+                sb.Append("SiteName: ");
+                sb.Append(test.SiteName);
+                sb.Append("<br>");
+                sb.Append("BaseUrl: ");
+                sb.Append(test.BaseUrl);
                 sb.Append("<br>");
             }
        

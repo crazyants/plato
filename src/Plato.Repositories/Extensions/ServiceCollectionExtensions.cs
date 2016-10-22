@@ -3,6 +3,7 @@ using Plato.Repositories.Users;
 using Plato.Repositories.Settings;
 using Plato.Models.Users;
 using Plato.Models.Settings;
+using Plato.Abstractions.Settings;
 
 namespace Plato.Repositories.Extensions
 {
@@ -15,8 +16,7 @@ namespace Plato.Repositories.Extensions
 
             services.AddScoped<ISettingRepository<Setting>, SettingRepository>();
             services.AddScoped<ISettingsFactory, SettingsFactory>();
-    
-            
+                
             services.AddScoped<IUserRepository<User>, UserRepository>();
             services.AddScoped<IUserSecretRepository<UserSecret>, UserSecretRepository>();
             services.AddScoped<IUserDetailRepository<UserDetail>, UserDetailRepository>();

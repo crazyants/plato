@@ -1,35 +1,33 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Plato.Abstractions.Settings;
-using Plato.Repositories.Settings;
 
 namespace Plato.Hosting.Web.Routing
 {
     public class HomePageRoute : Route
     {
+
         private readonly IRouteBuilder _routeBuilder;
 
         private RouteValueDictionary _tokens;
-        private readonly ISettingsFactory _settingsFactory;
+        private readonly ISiteService _siteService;
 
         public HomePageRoute(
             string prefix, 
-            ISettingsFactory settingsFactory, 
+            ISiteService siteService, 
             IRouteBuilder routeBuilder, 
             IInlineConstraintResolver inlineConstraintResolver)
             : base(routeBuilder.DefaultHandler, prefix ?? "", inlineConstraintResolver)
         {
-            _settingsFactory = settingsFactory;
+            _siteService = siteService;
             _routeBuilder = routeBuilder;
         }
 
         protected override async Task OnRouteMatched(RouteContext context)
         {
 
-            var siteSettings = await _settingsFactory.GetSettingsAsync<SiteSettings>(SettingGroups.SiteSettings);
+            var siteSettings = await _siteService.GetSiteSettingsAsync();
             
             foreach (var entry in siteSettings.HomeRoute)
             {

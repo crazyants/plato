@@ -33,7 +33,7 @@ namespace Plato.Modules
             //var controller = context.ActionContext.ActionDescriptor.DisplayName;
             //var moduleName = controller.Split('.')[2];
             //if (moduleName != "WebHost")
-            //{                
+            //{
             //    context.Values[_controllerKey] = controller;
             //    context.Values[_moduleKey] = moduleName;
             //}
@@ -44,20 +44,42 @@ namespace Plato.Modules
             IEnumerable<string> viewLocations)
         {
 
+            var result = new List<string>();
+
+            result.Add("Modules/{2}/Views/{1}/{0}.cshtml");
+            result.Add("Modules/{2}/Views/Shared/{0}.cshtml");
+
+
+            result.Add("Modules/" + _moduleId + "/Views/{1}/{0}.cshtml");
+            result.Add("Modules/" + _moduleId + "/Views/Shared/{0}.cshtml");
+
+
+            //result.Add("{2}/Modules/" + _moduleId + "/Views/{1}/{0}.cshtml");
+            //result.Add("{2}/Modules/" + _moduleId + "/Views/Shared/{0}.cshtml");
+
+            //result.Add("{2}/Modules/Plato.Login/Views/{1}/{0}.cshtml");
+            //result.Add("{2}/Modules/Plato.Login/Views/Shared/{0}.cshtml");
+
+            result.AddRange(viewLocations);
+
+            return result;
+
             //if (context.Values.ContainsKey(_moduleKey))
             //{
             //    var module = context.Values[_moduleKey];
             //    if (!string.IsNullOrWhiteSpace(module))
             //    {
-                    var moduleViewLocations = new string[]
-                    {
-                       "/Modules/" + _moduleId + "/Views/{1}/{0}.cshtml",
-                       "/Modules/" + _moduleId + "/Views/Shared/{0}.cshtml"
-                    };
+            //var moduleViewLocations = new string[]
+            //        {
+            //           "/Modules/" + _moduleId + "/Views/{1}/{0}.cshtml",
+            //           "/Modules/" + _moduleId + "/Views/Shared/{0}.cshtml",
+            //           "/Modules/{2}/Views/{1}/{0}.cshtml",
+            //           "/Modules/{2}/Views/Shared/{0}.cshtml"
+            //        };
 
-                    viewLocations = moduleViewLocations.Concat(viewLocations);
-            //    }
-            //}
+            //        viewLocations = moduleViewLocations.Concat(viewLocations);
+            ////    }
+            ////}
             return viewLocations;
         }
 

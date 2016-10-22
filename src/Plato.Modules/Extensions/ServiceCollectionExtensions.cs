@@ -12,7 +12,7 @@ namespace Plato.Modules.Extensions
 
         public static IServiceCollection AddModules(
             this IServiceCollection services,
-            IMvcBuilder mvcBuilder)
+            IMvcCoreBuilder mvcCoreBuilder)
         {
 
             services.AddSingleton<IConfigureOptions<ModuleOptions>, ModuleOptionsConfigure>();
@@ -22,13 +22,13 @@ namespace Plato.Modules.Extensions
                         
             // register dynamically loaded module assemblies with 
             var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
-            foreach (ModuleEntry moduleEntry in moduleManager.AvailableModules)
-            {
-                foreach (var assembly in moduleEntry.Assmeblies)                
-                    mvcBuilder.AddApplicationPart(assembly);
-            }
-            mvcBuilder.AddControllersAsServices();
-          
+            //foreach (ModuleEntry moduleEntry in moduleManager.AvailableModules)
+            //{
+            //    foreach (var assembly in moduleEntry.Assmeblies)
+            //        mvcCoreBuilder.AddApplicationPart(assembly);
+            //}
+            //mvcCoreBuilder.AddControllersAsServices();
+
             services.Configure<RazorViewEngineOptions>(configureOptions: options =>
             {                
 

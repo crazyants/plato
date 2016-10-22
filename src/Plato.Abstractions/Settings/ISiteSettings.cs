@@ -1,19 +1,15 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Plato.Abstractions.Settings
 {
-    public interface ISiteSettings
+    public interface ISiteSettings : ISettingValue
     {
-
-        string PageTitleSeparator { get; set; }
 
         string SiteName { get; set; }
 
         string SiteSalt { get; set; }
+        
+        string PageTitleSeparator { get; set; }
 
         string SuperUser { get; set; }
 
