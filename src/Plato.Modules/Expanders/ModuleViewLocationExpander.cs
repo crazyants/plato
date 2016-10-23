@@ -46,10 +46,9 @@ namespace Plato.Modules
 
             var result = new List<string>();
 
-            result.Add("Modules/{2}/Views/{1}/{0}.cshtml");
-            result.Add("Modules/{2}/Views/Shared/{0}.cshtml");
-
-
+            result.Add("/Modules/{2}/Views/{1}/{0}.cshtml");
+            result.Add("/Modules/{2}/Views/Shared/{0}.cshtml");
+            
             result.Add("Modules/" + _moduleId + "/Views/{1}/{0}.cshtml");
             result.Add("Modules/" + _moduleId + "/Views/Shared/{0}.cshtml");
 

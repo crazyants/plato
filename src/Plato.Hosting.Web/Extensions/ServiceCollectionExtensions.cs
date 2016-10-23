@@ -23,79 +23,133 @@ using Microsoft.AspNetCore.Http;
 using Plato.Hosting.Web.Routing;
 using Plato.Services.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using System.Linq;
+using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
+using Plato.Shell.Models;
+using Plato.Data;
+using Plato.Shell;
 
 namespace Plato.Hosting.Web.Extensions
 
 {
+
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddPlato(
-            this IServiceCollection services)
+
+        
+        public static IServiceCollection AddHost(
+               this IServiceCollection services,
+               Action<IServiceCollection> additionalDependencies)
+        {
+            services.AddFileSystem();
+            additionalDependencies(services);
+
+            return services;
+        }
+
+
+
+        public static IServiceCollection AddWebHost(this IServiceCollection services)
+        {
+            return services.AddHost(internalServices =>
+            {
+                internalServices.AddLogging();
+                internalServices.AddOptions();
+                internalServices.AddLocalization();
+                internalServices.AddHostCore();
+                internalServices.AddModules();
+           
+                internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
+                internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
+                internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+                
+                internalServices.AddPlatoDbContext()
+                    .AddRepositories()
+                    .AddServices();
+
+            });
+        }
+
+
+        public static IServiceCollection AddPlatoMvc(
+      this IServiceCollection services)
         {
 
-            // file system
-
-            services.AddFileSystem();
-
-            // configure tenants
-
-            services.ConfigureShell("sites");
-               
-                   
-            // standard .NET core extensions
-
-            services.AddLogging();
-            services.AddOptions();
-            services.AddLocalization();
-            
-            // database
-
-            services.AddPlatoDbContext();
-
-            services.AddRepositories();
-
-            services.AddServices();
-
-
             // add mvc core
-            var mvcBuilder = services.AddMvcCore();
-            mvcBuilder.AddViews()
+            services.AddMvcCore()
+                .AddViews()
                 .AddViewLocalization()
                 .AddRazorViewEngine()
                 .AddJsonFormatters();
 
-            services.AddLogging()
-                .AddHostCore()
-                .AddWebHost()
-                .AddMemoryCache();
-
-            // theme
+            var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
 
             services.Configure<RazorViewEngineOptions>(configureOptions: options =>
             {
-                options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));                
+
+                // view location expanders for modules
+                foreach (ModuleEntry moduleEntry in moduleManager.AvailableModules)
+                {
+                    options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.ID));
+                }
+
+                //((List<MetadataReference>)options.AdditionalCompilationReferences).AddRange(extensionLibraryService.MetadataReferences());
+
+                // invoke context for model binding within dynamic modules                                
+                var moduleAssemblies = moduleManager.AllAvailableAssemblies.Select(x => MetadataReference.CreateFromFile(x.Location)).ToList();
+                var previous = options.CompilationCallback;
+                options.CompilationCallback = (context) =>
+                {
+                    previous?.Invoke(context);
+                    context.Compilation = context.Compilation.AddReferences(moduleAssemblies);
+                };
+
             });
 
-            // layout
 
-            services.AddSingleton<ILayoutManager, LayoutManager>();
+            return services;
 
-            // add external modules
+        }
 
-            services.AddModules(mvcBuilder);
+
+        public static IServiceCollection AddPlato(
+            this IServiceCollection services)
+        {
+
+            services.AddWebHost();
+
+            // configure tenants
+
+            services.ConfigureShell("sites")
+                .AddModules()          
+                .AddSingleton<ILayoutManager, LayoutManager>();
+            
+            services.AddPlatoMvc();
+
+            // Save the list of service definitions
+            services.AddSingleton(_ => services);
 
             return services;
 
         }
         
 
-        public static IServiceCollection AddWebHost(this IServiceCollection services)
-        {
-            services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
-            services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            return services;
-        }
+        //public static IServiceCollection AddWebHost(this IServiceCollection services)
+        //{
+
+        //    services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
+        //    services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
+        //    services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            
+        //    services.Configure<RazorViewEngineOptions>(configureOptions: options =>
+        //    {
+        //        options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
+        //    });
+
+
+        //    return services;
+        //}
         
 
         public static IApplicationBuilder UsePlato(
@@ -139,15 +193,22 @@ namespace Plato.Hosting.Web.Extensions
             app.UseMiddleware<PlatoContainerMiddleware>();
 
             // Route the request to the correct tenant specific pipeline
-            //app.UseMiddleware<PlatoRouterMiddleware>();
+           // app.UseMiddleware<PlatoRouterMiddleware>();
 
-            var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
-            
+            var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();            
             foreach (ModuleEntry moduleEntry in moduleManager.AvailableModules)
             {
                 foreach (var assembly in moduleEntry.Assmeblies)
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
             }
+                               
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{site=Default}/{controller=Home}/{action=Index}/{id?}");
+            });
 
 
             // configure routes

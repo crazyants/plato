@@ -21,9 +21,9 @@ namespace Plato.Login
             model.Email = "123456";
 
             return View(model);
+
         }
 
-
-
+        
     }
 }

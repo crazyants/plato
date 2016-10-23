@@ -6,6 +6,7 @@ using Plato.Shell;
 using Plato.Shell.Models;
 using Plato.Hosting.Web.Extensions;
 
+
 namespace Plato.Hosting.Web.Middleware
 {
     public class PlatoContainerMiddleware
@@ -43,30 +44,30 @@ namespace Plato.Hosting.Web.Middleware
             {
                 ShellContext shellContext = _platoHost.GetOrCreateShellContext(shellSetting);
 
-                //using (var scope = shellContext.CreateServiceScope())
-                //{
-                //    httpContext.RequestServices = scope.ServiceProvider;
+                using (var scope = shellContext.CreateServiceScope())
+                {
+                    httpContext.RequestServices = scope.ServiceProvider;
 
-                //    if (!shellContext.IsActivated)
-                //    {
-                //        lock (shellSetting)
-                //        {
-                //            // The tenant gets activated here
-                //            if (!shellContext.IsActivated)
-                //            {
-                //                //var eventBus = scope.ServiceProvider.GetService<IEventBus>();
-                //                //eventBus.NotifyAsync<IOrchardShellEvents>(x => x.ActivatingAsync()).Wait();
-                //                //eventBus.NotifyAsync<IOrchardShellEvents>(x => x.ActivatedAsync()).Wait();
+                    if (!shellContext.IsActivated)
+                    {
+                        lock (shellSetting)
+                        {
+                            // The tenant gets activated here
+                            if (!shellContext.IsActivated)
+                            {
+                                //var eventBus = scope.ServiceProvider.GetService<IEventBus>();
+                                //eventBus.NotifyAsync<IOrchardShellEvents>(x => x.ActivatingAsync()).Wait();
+                                //eventBus.NotifyAsync<IOrchardShellEvents>(x => x.ActivatedAsync()).Wait();
 
-                //                shellContext.IsActivated = true;
-                //            }
-                //        }
-                //    }
+                                shellContext.IsActivated = true;
+                            }
+                        }
+                    }
 
-                //    await _next.Invoke(httpContext);
-                //}
+                    await _next.Invoke(httpContext);
+                }
 
-               
+
 
                 //using (var scope = shellContext.CreateServiceScope())
                 //{

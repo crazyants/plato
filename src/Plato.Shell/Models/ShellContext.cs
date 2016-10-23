@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Plato.Data;
 
 namespace Plato.Shell.Models
 {
@@ -15,6 +16,8 @@ namespace Plato.Shell.Models
 
         public ShellSettings Settings { get; set; }
 
+        public IServiceProvider ServiceProvider { get; set; }
+
         #region IDisposable Support
 
         private bool disposedValue = false; // To detect redundant calls
@@ -26,7 +29,7 @@ namespace Plato.Shell.Models
                 if (disposing)
                 {
                 }
-                         
+
                 // Disposes all the services registered for this shell
                 //(ServiceProvider as IDisposable).Dispose();
                 IsActivated = false;
@@ -34,18 +37,16 @@ namespace Plato.Shell.Models
                 _disposed = true;
             }
         }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~ShellContext() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
+        
+        public IServiceScope CreateServiceScope()
+        {
+            return ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+        }
+           
         void IDisposable.Dispose()
         {
             Dispose(true);
-            //GC.SuppressFinalize(this);
+            GC.SuppressFinalize(this);
         }
         
         ~ShellContext()

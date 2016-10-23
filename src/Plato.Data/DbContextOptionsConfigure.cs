@@ -9,7 +9,7 @@ namespace Plato.Data
     {
 
         private readonly IServiceScopeFactory _serviceScopeFactory;
-
+     
         public DbContextOptionsConfigure(
             IServiceScopeFactory serivceScopeFactory)
         {
@@ -22,7 +22,9 @@ namespace Plato.Data
             {
                 var configuration = scope.ServiceProvider.GetRequiredService<IConfigurationRoot>();
                 options.ConnectionString = configuration.GetConnectionString("DefaultConnection");
-                options.ProviderName = configuration.GetConnectionString("ProviderName");
+                options.DatabaseProvider = configuration.GetConnectionString("ProviderName");
+                options.TablePrefix = configuration.GetConnectionString("TablePrefix");
+
             }
         }
 

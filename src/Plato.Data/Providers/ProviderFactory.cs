@@ -43,8 +43,7 @@ namespace Plato.Data
                 return _connectionString;
             }
         }
-
-
+        
         public IDataProvider Provider
         {
             get
@@ -65,11 +64,7 @@ namespace Plato.Data
                 throw new ArgumentNullException(nameof(providerNAme));
 
             _connectionString = ConnectionString;
-            
-            
-            // System.Data.EntityClient            
-            // System.Data.OleDb
-            
+                    
             switch (providerNAme.ToLower())
             {
                 case Sql:

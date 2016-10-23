@@ -12,7 +12,6 @@ namespace Plato.Hosting.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-
  
         public static IServiceCollection AddHostCore(
             this IServiceCollection services)
@@ -25,9 +24,8 @@ namespace Plato.Hosting.Extensions
 
             services.AddSingleton<IShellSettingsManager, ShellSettingsManager>();
             services.AddSingleton<IShellContextFactory, ShellContextFactory>();
-            {
-                //services.AddSingleton<ICompositionStrategy, CompositionStrategy>();
-                //services.AddSingleton<IShellContainerFactory, ShellContainerFactory>();
+            {              
+                services.AddSingleton<IShellContainerFactory, ShellContainerFactory>();
             }
 
             services.AddSingleton<IRunningShellTable, RunningShellTable>();

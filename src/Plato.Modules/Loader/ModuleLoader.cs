@@ -8,6 +8,7 @@ using Plato.FileSystem;
 using System.Collections.Concurrent;
 using System.Runtime.Loader;
 using Plato.Modules.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace Plato.Modules
 {
@@ -32,17 +33,24 @@ namespace Plato.Modules
         #region "Constructor"
 
         private IPlatoFileSystem _fileSystem;
-        //private ILogger _logger;
+        private ILogger _logger;
 
         public ModuleLoader(
-            IPlatoFileSystem fileSystem         
+            IPlatoFileSystem fileSystem,     
+            ILogger<ModuleLoader> logger    
             )
         {
             _fileSystem = fileSystem;
-            //_logger = logger;
+            _logger = logger;
 
-
+            // ensure core assemblies are not loaded
             _loadedAssemblies.TryAdd("Plato.Abstractions", null);
+            _loadedAssemblies.TryAdd("Plato.Hosting", null);
+            _loadedAssemblies.TryAdd("Plato.Shell", null);
+            _loadedAssemblies.TryAdd("Plato.FileSystem", null);
+            _loadedAssemblies.TryAdd("Plato.Data", null);
+            _loadedAssemblies.TryAdd("Plato.Hosting.Web", null);
+            _loadedAssemblies.TryAdd("Plato.Layout", null);
 
 
         }
@@ -50,7 +58,7 @@ namespace Plato.Modules
         #endregion
 
         #region "Implementation"
-      
+
         public List<Assembly> LoadModule(IModuleDescriptor descriptor)
         {            
             return LoadAssembliesInFolder(descriptor.VirtualPathToBin, new List<Assembly>());

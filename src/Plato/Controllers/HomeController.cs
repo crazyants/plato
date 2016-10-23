@@ -119,10 +119,15 @@ namespace Plato.Controllers
             sb.Append("Matched Shell Settings");
             sb.Append("<br>");
 
-            sb.Append(currentSettings.ConnectionString);
-            sb.Append("<br>");
+            if (currentSettings != null)
+            {
+                sb.Append(currentSettings.ConnectionString);
+                sb.Append("<br>");
 
-            sb.Append(currentSettings.Name);
+                sb.Append(currentSettings.Name);
+
+            }
+    
 
 
             sb.Append("<br>");
@@ -137,7 +142,7 @@ namespace Plato.Controllers
 
            var HomeRoute = new RouteValueDictionary();
             HomeRoute.Add("Action", "Index");
-            HomeRoute.Add("Controller", "Home");
+            HomeRoute.Add("Controller", "Login");
             HomeRoute.Add("Area", "Plato.Login");
            
             ISiteSettings settings =
@@ -156,7 +161,12 @@ namespace Plato.Controllers
             var test = await _siteService.GetSiteSettingsAsync();
             if (test != null)
             {
-
+                foreach (var route in test.HomeRoute)
+                {
+                    sb.Append(route.Key + "<BR>");
+                    sb.Append(route.Value + "<BR>");
+                }
+                sb.Append("<br>");
                 sb.Append("GetSiteSettingsAsync");
                 sb.Append("<br>");
                 sb.Append("SiteName: ");

@@ -17,23 +17,36 @@ namespace Plato.Data
 
         #endregion
 
+        #region "Public Properties"
+        
+        public DbContextOptions Configuration { get; set; }
+        
+        #endregion
+
         #region "Constructos"
 
         public DbContext(
             IOptions<DbContextOptions> dbContextOptions)
-            : this(dbContextOptions.Value.ConnectionString, dbContextOptions.Value.ProviderName)
         {
+            Configure(dbContextOptions.Value);
+        }
+
+        public DbContext(Action<DbContextOptions> cfg)
+        {
+
+            this.Configuration = new DbContextOptions();
+            cfg(this.Configuration);
+            Configure(this.Configuration);
 
         }
-        
-        public DbContext(string connectionString, string providerName = "SqlClient")
+
+        public void Configure(DbContextOptions cfg)
         {
 
-            if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentNullException(nameof(connectionString));
+            if (string.IsNullOrEmpty(cfg.ConnectionString))
+                throw new ArgumentNullException(nameof(cfg.ConnectionString));
                  
-            var providerFactory = new ProviderFactory(connectionString, providerName);
-
+            var providerFactory = new ProviderFactory(cfg.ConnectionString, cfg.DatabaseProvider);
             _provider = providerFactory.Provider;
                        
             _provider.OnException += (object sender, DbExceptionEventArgs args) =>
@@ -41,8 +54,9 @@ namespace Plato.Data
                 throw args.Exception;
             };
 
+            this.Configuration = cfg;
         }
-        
+    
         #endregion
 
         #region "Implementation"

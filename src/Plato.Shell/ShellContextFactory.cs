@@ -1,22 +1,30 @@
 ﻿using Microsoft.Extensions.Logging;
 using Plato.Shell.Models;
+using Plato.Data;
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 
 namespace Plato.Shell
 {
     public class ShellContextFactory : IShellContextFactory
     {
-           
+
+
+        private readonly IShellContainerFactory _shellContainerFactory;
         private readonly ILogger _logger;
 
         public ShellContextFactory(
+            IShellContainerFactory shellContainerFactory,
             ILogger<ShellContextFactory> logger)
-        {          
+        {
+
+            _shellContainerFactory = shellContainerFactory;
             _logger = logger;
         }
 
         ShellContext IShellContextFactory.CreateShellContext(ShellSettings settings)
         {
-
             return CreateDescribedContext(settings, MinimumShellDescriptor());
             
         }
@@ -28,13 +36,13 @@ namespace Plato.Shell
             {
                 _logger.LogDebug("Creating described context for tenant {0}", settings.Name);
             }
-
-            //var blueprint = _compositionStrategy.Compose(settings, shellDescriptor);
-            //var provider = _shellContainerFactory.CreateContainer(settings, blueprint);
-
+                        
+            var serviceProvider = _shellContainerFactory.CreateContainer(settings);
+                        
             return new ShellContext
             {
-                Settings = settings                
+                Settings = settings,
+                ServiceProvider = serviceProvider              
             };
 
         }
@@ -57,8 +65,7 @@ namespace Plato.Shell
 
             return CreateDescribedContext(settings, descriptor);
         }
-
-
+        
         private static ShellDescriptor MinimumShellDescriptor()
         {
             return new ShellDescriptor
