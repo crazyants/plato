@@ -59,7 +59,8 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddLocalization();
                 internalServices.AddHostCore();
                 internalServices.AddModules();
-           
+              
+
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -73,7 +74,7 @@ namespace Plato.Hosting.Web.Extensions
 
 
         public static IServiceCollection AddPlatoMvc(
-      this IServiceCollection services)
+            this IServiceCollection services)
         {
 
             // add mvc core
@@ -94,9 +95,9 @@ namespace Plato.Hosting.Web.Extensions
                     options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.ID));
                 }
 
-                //((List<MetadataReference>)options.AdditionalCompilationReferences).AddRange(extensionLibraryService.MetadataReferences());
+                // theme
+                options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
 
-                // invoke context for model binding within dynamic modules                                
                 var moduleAssemblies = moduleManager.AllAvailableAssemblies.Select(x => MetadataReference.CreateFromFile(x.Location)).ToList();
                 var previous = options.CompilationCallback;
                 options.CompilationCallback = (context) =>
@@ -104,6 +105,7 @@ namespace Plato.Hosting.Web.Extensions
                     previous?.Invoke(context);
                     context.Compilation = context.Compilation.AddReferences(moduleAssemblies);
                 };
+
 
             });
 
@@ -122,18 +124,39 @@ namespace Plato.Hosting.Web.Extensions
             // configure tenants
 
             services.ConfigureShell("sites")
-                .AddModules()          
+                .AddModuleFolder("Modules")              
                 .AddSingleton<ILayoutManager, LayoutManager>();
             
             services.AddPlatoMvc();
-
+      
             // Save the list of service definitions
             services.AddSingleton(_ => services);
 
             return services;
 
         }
-        
+
+        public static IServiceCollection AddModuleFolder(
+         this IServiceCollection services,
+         string virtualPath)
+        {
+            
+
+            //return services.Configure<ExtensionHarvestingOptions>(configureOptions: options =>
+            //{
+            //    var expander = new ExtensionLocationExpander(
+            //        "Module",
+            //        new[] { virtualPath },
+            //        "Module.txt"
+            //        );
+
+            //    options.ExtensionLocationExpanders.Add(expander);
+            //});
+
+            return services;
+
+        }
+
 
         //public static IServiceCollection AddWebHost(this IServiceCollection services)
         //{
@@ -141,7 +164,7 @@ namespace Plato.Hosting.Web.Extensions
         //    services.AddSingleton<IHostEnvironment, WebHostEnvironment>();
         //    services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
         //    services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            
+
         //    services.Configure<RazorViewEngineOptions>(configureOptions: options =>
         //    {
         //        options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
@@ -150,7 +173,7 @@ namespace Plato.Hosting.Web.Extensions
 
         //    return services;
         //}
-        
+
 
         public static IApplicationBuilder UsePlato(
          this IApplicationBuilder app,

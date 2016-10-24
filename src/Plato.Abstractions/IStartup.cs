@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using Microsoft.AspNetCore.Routing;
 
 namespace Plato.Abstractions
 {
     public interface IStartup
     {
- 
+   
         /// <param name="services">The collection of service descriptors.</param>
         void ConfigureServices(IServiceCollection services);
 

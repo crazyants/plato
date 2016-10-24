@@ -16,27 +16,11 @@ namespace Plato.Modules
         public ModuleViewLocationExpander(string moduleId)
         {
             _moduleId = moduleId;
-
-            //var expander = new ExtensionLocationExpander(
-            // DefaultExtensionTypes.Module,
-            // new[] { virtualPath },
-            // "Module.txt"
-            // );
-
-            //options.ExtensionLocationExpanders.Add(expander);
-
+        
         }
-
-
+        
         public void PopulateValues(ViewLocationExpanderContext context)
-        {
-            //var controller = context.ActionContext.ActionDescriptor.DisplayName;
-            //var moduleName = controller.Split('.')[2];
-            //if (moduleName != "WebHost")
-            //{
-            //    context.Values[_controllerKey] = controller;
-            //    context.Values[_moduleKey] = moduleName;
-            //}
+        {   
         }
 
         public virtual IEnumerable<string> ExpandViewLocations(
@@ -46,12 +30,12 @@ namespace Plato.Modules
 
             var result = new List<string>();
 
-            result.Add("/Modules/{2}/Views/{1}/{0}.cshtml");
-            result.Add("/Modules/{2}/Views/Shared/{0}.cshtml");
+            //result.Add("/Modules/{2}/Views/{1}/{0}.cshtml");
+            //result.Add("/Modules/{2}/Views/Shared/{0}.cshtml");
             
             result.Add("Modules/" + _moduleId + "/Views/{1}/{0}.cshtml");
             result.Add("Modules/" + _moduleId + "/Views/Shared/{0}.cshtml");
-
+        
 
             //result.Add("{2}/Modules/" + _moduleId + "/Views/{1}/{0}.cshtml");
             //result.Add("{2}/Modules/" + _moduleId + "/Views/Shared/{0}.cshtml");

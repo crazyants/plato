@@ -44,41 +44,30 @@ namespace Plato.Hosting.Web.Middleware
             {
                 ShellContext shellContext = _platoHost.GetOrCreateShellContext(shellSetting);
 
-                using (var scope = shellContext.CreateServiceScope())
-                {
-                    httpContext.RequestServices = scope.ServiceProvider;
-
-                    if (!shellContext.IsActivated)
-                    {
-                        lock (shellSetting)
-                        {
-                            // The tenant gets activated here
-                            if (!shellContext.IsActivated)
-                            {
-                                //var eventBus = scope.ServiceProvider.GetService<IEventBus>();
-                                //eventBus.NotifyAsync<IOrchardShellEvents>(x => x.ActivatingAsync()).Wait();
-                                //eventBus.NotifyAsync<IOrchardShellEvents>(x => x.ActivatedAsync()).Wait();
-
-                                shellContext.IsActivated = true;
-                            }
-                        }
-                    }
-
-                    await _next.Invoke(httpContext);
-                }
-
-
-
                 //using (var scope = shellContext.CreateServiceScope())
                 //{
-                //    var deferredTaskEngine = scope.ServiceProvider.GetService<IDeferredTaskEngine>();
+                //    httpContext.RequestServices = scope.ServiceProvider;
 
-                //    if (deferredTaskEngine != null && deferredTaskEngine.HasPendingTasks)
+                //    if (!shellContext.IsActivated)
                 //    {
-                //        var context = new DeferredTaskContext(scope.ServiceProvider);
-                //        await deferredTaskEngine.ExecuteTasksAsync(context);
+                //        lock (shellSetting)
+                //        {
+                //            // The tenant gets activated here
+                //            if (!shellContext.IsActivated)
+                //            {
+                //                //var eventBus = scope.ServiceProvider.GetService<IEventBus>();
+                //                //eventBus.NotifyAsync<IOrchardShellEvents>(x => x.ActivatingAsync()).Wait();
+                //                //eventBus.NotifyAsync<IOrchardShellEvents>(x => x.ActivatedAsync()).Wait();
+
+                //                shellContext.IsActivated = true;
+                //            }
+                //        }
                 //    }
+
+                //    await _next.Invoke(httpContext);
                 //}
+
+                
             }
 
             await _next.Invoke(httpContext);

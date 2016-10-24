@@ -18,8 +18,7 @@ namespace Plato.Modules.Extensions
             services.AddSingleton<IModuleLocator, ModuleLocator>();
             services.AddSingleton<IModuleLoader, ModuleLoader>();
             services.AddSingleton<IModuleManager, ModuleManager>();
-                        
-         
+                                 
             return services;
         }
 

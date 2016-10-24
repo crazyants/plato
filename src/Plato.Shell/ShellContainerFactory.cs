@@ -8,6 +8,7 @@ using Plato.Shell.Models;
 using Plato.Shell.Extensions;
 using Plato.Data;
 using System.Reflection;
+using Plato.Abstractions;
 
 namespace Plato.Shell
 {
@@ -31,51 +32,85 @@ namespace Plato.Shell
             _logger = logger;
         }
 
-     
+
 
         public IServiceProvider CreateContainer(ShellSettings settings)
         {
 
-            IServiceCollection tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
-
-            tenantServiceCollection.AddSingleton(settings);
-
-
-            var dbContext = new DbContext(cfg =>
+            try
             {
-                cfg.ConnectionString = settings.ConnectionString;
-                cfg.DatabaseProvider = settings.DatabaseProvider;
-                cfg.TablePrefix = settings.TablePrefix;
-            });
 
-            tenantServiceCollection.AddSingleton<IDbContextt>(dbContext);
+                IServiceCollection tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
+
+                tenantServiceCollection.AddSingleton(settings);
+
+                // modules
+
+                //IServiceCollection moduleServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
+
+                ////foreach (var dependency in blueprint.Dependencies.Where(t => typeof(IStartup).IsAssignableFrom(t.Type)))
+                ////{
+                ////    moduleServiceCollection.AddSingleton(typeof(IStartup), dependency.Type);
+                ////    tenantServiceCollection.AddSingleton(typeof(IStartup), dependency.Type);
+                ////}
+
+                //// Make shell settings available to the modules
+                //moduleServiceCollection.AddSingleton(settings);
+
+                //var moduleServiceProvider = moduleServiceCollection.BuildServiceProvider();
+
+                //// Let any module add custom service descriptors to the tenant
+                //foreach (var service in moduleServiceProvider.GetServices<IStartup>())
+                //{
+                //    service.ConfigureServices(tenantServiceCollection);
+                //}
+
+                //(moduleServiceProvider as IDisposable).Dispose();
 
 
-            // add already instanciated services like DefaultOrchardHost
-            var applicationServiceDescriptors = _applicationServices.Where(x => x.Lifetime == ServiceLifetime.Singleton);
-            
-            var shellServiceProvider = tenantServiceCollection.BuildServiceProvider();
+                // configure data access
 
-            // Register event handlers on the event bus
+                var dbContext = new DbContext(cfg =>
+                {
+                    cfg.ConnectionString = settings.ConnectionString;
+                    cfg.DatabaseProvider = settings.DatabaseProvider;
+                    cfg.TablePrefix = settings.TablePrefix;
+                });
 
-            //.Select(x => x.ImplementationType)
-            //.Distinct()
-            //.Where(t => t != null && typeof(IEventHandler).IsAssignableFrom(t) && t.GetTypeInfo().IsClass)
-            //.ToArray();
+                tenantServiceCollection.AddSingleton<IDbContextt>(dbContext);
 
-            var services = applicationServiceDescriptors
-                .Select(x => x.ImplementationType)
-                .Distinct()
-                .Where(t => t != null && t.GetTypeInfo().IsClass)
-                .ToArray();
 
-            foreach (var service in applicationServiceDescriptors)
-            {
-                tenantServiceCollection.AddScoped(service.ServiceType, service.ImplementationFactory);
+                // add already instanciated services like DefaultOrchardHost
+                //var applicationServiceDescriptors = _applicationServices.Where(x => x.Lifetime == ServiceLifetime.Singleton);
+                
+                //var services = applicationServiceDescriptors
+                //    .Select(x => x.ImplementationType)
+                //    .Distinct()
+                //    .Where(t => t != null && t.GetTypeInfo().IsClass)
+                //    .ToArray();
+
+                //foreach (var service in applicationServiceDescriptors)
+                //{
+                //    tenantServiceCollection.AddScoped(service.ServiceType, service.ImplementationFactory);
+                //}
+
+                var shellServiceProvider = tenantServiceCollection.BuildServiceProvider();
+                return shellServiceProvider;
+
             }
-            
+            catch (Exception e)
+            {
 
-            return shellServiceProvider;
+                if (_logger.IsEnabled(LogLevel.Debug))
+                {
+                    _logger.LogDebug("Error creating container for tenant {0} - {1}", settings.Name, e.Message);
+                }
+
+            }
+
+            return null;
+
+
 
         }
     }
