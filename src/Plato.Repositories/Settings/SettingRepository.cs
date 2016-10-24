@@ -16,7 +16,7 @@ namespace Plato.Repositories.Settings
 
         #region Private Variables"
 
-        private IDbContextt _dbContext;
+        private IDbContext _dbContext;
         ILogger<SettingRepository> _logger;
      
         #endregion
@@ -24,7 +24,7 @@ namespace Plato.Repositories.Settings
         #region "Constructor"
 
         public SettingRepository(
-            IDbContextt dbContext,
+            IDbContext dbContext,
             ILogger<SettingRepository> logger)
         {
 

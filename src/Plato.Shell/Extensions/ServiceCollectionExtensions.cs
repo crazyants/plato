@@ -25,12 +25,7 @@ namespace Plato.Shell.Extensions
         public static IServiceCollection AddFileSystem(
             this IServiceCollection services)
         {
-
-            // file system
-
-            services.AddSingleton<IFileProvider, PhysicalFileProvider>();
-            services.AddSingleton<IPlatoFileSystem, PlatoFileSystem>();
-            services.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
+                    
             services.AddSingleton<IAppDataFolder, PhysicalAppDataFolder>();
 
             return services;

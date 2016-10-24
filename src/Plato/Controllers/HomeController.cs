@@ -14,6 +14,7 @@ using Plato.Shell.Extensions;
 
 using Plato.Abstractions.Settings;
 using Microsoft.AspNetCore.Routing;
+using Plato.Data;
 
 namespace Plato.Controllers
 {
@@ -26,27 +27,30 @@ namespace Plato.Controllers
         private ISettingsFactory _settingsFactory;
         private IShellSettingsManager _shellSettingsManager;
         private ISiteService _siteService;
+        private IDbContext _dbContext;
 
         private IRunningShellTable _runningShellTable;
 
         public HomeController(
-            IModuleLocator moduleLocator,
-            IUserRepository<User> userRepository,
-            ISettingRepository<Setting> settingRepository,
-            ISettingsFactory settingsFactory,
-            IShellSettingsManager shellSettingsManager,
-            IRunningShellTable runningShellTable,
-            ISiteService siteService)
+            //IDbContext dbContext,
+            //IModuleLocator moduleLocator,
+            //IUserRepository<User> userRepository,
+            //ISettingRepository<Setting> settingRepository,
+            //ISettingsFactory settingsFactory,
+            //IShellSettingsManager shellSettingsManager,
+            //IRunningShellTable runningShellTable,
+            //ISiteService siteService
+            )
         {
             //_fileSystem = fileSystem;
-            _moduleLocator = moduleLocator;
-            _userRepository = userRepository;
-            _settingRepository = settingRepository;
-            _settingsFactory = settingsFactory;
-            _shellSettingsManager = shellSettingsManager;
-            _runningShellTable = runningShellTable;
-            _siteService = siteService;
-
+            //_moduleLocator = moduleLocator;
+            //_userRepository = userRepository;
+            //_settingRepository = settingRepository;
+            //_settingsFactory = settingsFactory;
+            //_shellSettingsManager = shellSettingsManager;
+            //_runningShellTable = runningShellTable;
+            //_siteService = siteService;
+            //_dbContext = dbContext;
 
 
         }
@@ -55,7 +59,9 @@ namespace Plato.Controllers
         public async Task<IActionResult> Index()
         {
 
-           
+            return View(new User());
+
+
             string path = Request.Path;
             ViewData["path"] = path;
 
@@ -72,6 +78,9 @@ namespace Plato.Controllers
             //ViewData["result"] = result;
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
+            sb.Append("dbContext: <BR>");
+            sb.Append(_dbContext.Configuration.ConnectionString);
+            sb.Append("<BR><BR>");
 
             IEnumerable<ShellSettings> shellSettings =
                 _shellSettingsManager.LoadSettings();

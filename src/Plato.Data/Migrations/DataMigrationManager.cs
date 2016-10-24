@@ -10,7 +10,7 @@ namespace Plato.Data.Migrations
 
         #region "Private Variables"
               
-        private IDbContextt _dbContext;
+        private IDbContext _dbContext;
 
         private List<DataMigration> _successfulMigrations;
         private List<DataMigration> _failedMigrations;
@@ -20,7 +20,7 @@ namespace Plato.Data.Migrations
         #region "constructor"
 
         public DataMigrationManager(
-            IDbContextt dbContext)
+            IDbContext dbContext)
         {
             _dbContext = dbContext;                  
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Data;
 using System.Text;
 using Microsoft.Extensions.Options;
@@ -8,13 +7,13 @@ using System.Data.Common;
 
 namespace Plato.Data
 {
-    public class DbContext : IDbContextt, IDisposable
+    public class DbContext : IDbContext, IDisposable
     {
 
         #region "Private Variables"
             
         private IDataProvider _provider;
-
+    
         #endregion
 
         #region "Public Properties"
@@ -27,17 +26,15 @@ namespace Plato.Data
 
         public DbContext(
             IOptions<DbContextOptions> dbContextOptions)
-        {
+        {        
             Configure(dbContextOptions.Value);
         }
 
-        public DbContext(Action<DbContextOptions> cfg)
-        {
-
-            this.Configuration = new DbContextOptions();
-            cfg(this.Configuration);
-            Configure(this.Configuration);
-
+        public DbContext(Action<DbContextOptions> action)
+        {          
+            var cfg = new DbContextOptions();
+            action(cfg);
+            Configure(cfg);
         }
 
         public void Configure(DbContextOptions cfg)
@@ -46,15 +43,18 @@ namespace Plato.Data
             if (string.IsNullOrEmpty(cfg.ConnectionString))
                 throw new ArgumentNullException(nameof(cfg.ConnectionString));
                  
-            var providerFactory = new ProviderFactory(cfg.ConnectionString, cfg.DatabaseProvider);
+            var providerFactory = new DataProviderFactory(cfg.ConnectionString, cfg.DatabaseProvider);
+            if (providerFactory.Provider == null)            
+                throw new Exception(string.Format("The specified data provider \"{0}\" is not supported!", cfg.DatabaseProvider));
+            
             _provider = providerFactory.Provider;
-                       
             _provider.OnException += (object sender, DbExceptionEventArgs args) =>
             {
                 throw args.Exception;
             };
-
+                  
             this.Configuration = cfg;
+
         }
     
         #endregion

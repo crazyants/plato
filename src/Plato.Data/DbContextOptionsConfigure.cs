@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System;
 
 namespace Plato.Data
 {
@@ -9,7 +10,11 @@ namespace Plato.Data
     {
 
         private readonly IServiceScopeFactory _serviceScopeFactory;
-     
+        public DbContextOptionsConfigure()
+        {
+
+        }
+
         public DbContextOptionsConfigure(
             IServiceScopeFactory serivceScopeFactory)
         {
@@ -28,6 +33,12 @@ namespace Plato.Data
             }
         }
 
+        public static void Configure(Action<DbContextOptions> action)
+        {
+            var options = new DbContextOptions();
+            action(options);
+
+        }
     }
 
 }

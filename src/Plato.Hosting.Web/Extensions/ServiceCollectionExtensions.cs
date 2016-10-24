@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Plato.Modules;
 using Plato.Hosting.Web.Expanders;
 using System.IO;
-using System.Text;
 using System;
-using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Hosting;
 using Plato.Shell.Extensions;
 using Plato.Data.Extensions;
@@ -20,15 +18,11 @@ using Plato.Modules.Abstractions;
 using Plato.Hosting.Web.Middleware;
 using Plato.FileSystem;
 using Microsoft.AspNetCore.Http;
-using Plato.Hosting.Web.Routing;
 using Plato.Services.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using System.Linq;
 using Microsoft.CodeAnalysis;
-using System.Collections.Generic;
-using Plato.Shell.Models;
-using Plato.Data;
-using Plato.Shell;
+using Plato.Hosting.Web.Routing;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -60,8 +54,12 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddHostCore();
                 internalServices.AddModules();
               
-
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
+
+                //internalServices.AddSingleton<IFileProvider, PhysicalFileProvider>();
+                //internalServices.AddSingleton<IPlatoFileSystem, PlatoFileSystem>();
+                //internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
+
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 
@@ -113,8 +111,7 @@ namespace Plato.Hosting.Web.Extensions
             return services;
 
         }
-
-
+        
         public static IServiceCollection AddPlato(
             this IServiceCollection services)
         {
@@ -124,8 +121,9 @@ namespace Plato.Hosting.Web.Extensions
             // configure tenants
 
             services.ConfigureShell("sites")
-                .AddModuleFolder("Modules")              
-                .AddSingleton<ILayoutManager, LayoutManager>();
+                .AddModuleFolder("Modules");
+            
+            services.AddSingleton<ILayoutManager, LayoutManager>();
             
             services.AddPlatoMvc();
       
@@ -216,7 +214,7 @@ namespace Plato.Hosting.Web.Extensions
             app.UseMiddleware<PlatoContainerMiddleware>();
 
             // Route the request to the correct tenant specific pipeline
-           // app.UseMiddleware<PlatoRouterMiddleware>();
+          // app.UseMiddleware<PlatoRouterMiddleware>();
 
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();            
             foreach (ModuleEntry moduleEntry in moduleManager.AvailableModules)
@@ -224,7 +222,7 @@ namespace Plato.Hosting.Web.Extensions
                 foreach (var assembly in moduleEntry.Assmeblies)
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
             }
-                               
+
 
             app.UseMvc(routes =>
             {

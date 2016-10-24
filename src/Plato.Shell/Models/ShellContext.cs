@@ -18,9 +18,21 @@ namespace Plato.Shell.Models
 
         public IServiceProvider ServiceProvider { get; set; }
 
+        public IServiceScope CreateServiceScope()
+        {
+            return ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+        }
+
         #region IDisposable Support
 
         private bool disposedValue = false; // To detect redundant calls
+
+           
+        void IDisposable.Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -30,25 +42,16 @@ namespace Plato.Shell.Models
                 {
                 }
 
+                Settings = null;
+        
                 // Disposes all the services registered for this shell
-                //(ServiceProvider as IDisposable).Dispose();
+                (ServiceProvider as IDisposable).Dispose();
                 IsActivated = false;
 
                 _disposed = true;
             }
         }
-        
-        public IServiceScope CreateServiceScope()
-        {
-            return ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
-        }
-           
-        void IDisposable.Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        
+
         ~ShellContext()
         {
             Dispose(false);

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
+using System;
 
 namespace Plato.Data
 {
-    public class ProviderFactory
+    public class DataProviderFactory
     {
 
         #region "Consts"
 
         // System.Data.SqlClient
-        private const string Sql = "sql";
+        private const string SqlClient = "sqlclient";
 
         // System.Data.SqlClient
         private const string SqlLite = "sqllite";
@@ -30,6 +28,7 @@ namespace Plato.Data
         #region "Private Variables"
 
         private string _connectionString;
+        private string _providerName;
         private IDataProvider _provider;
 
         #endregion
@@ -56,23 +55,31 @@ namespace Plato.Data
 
         #region "Constructor"
         
-        public ProviderFactory(
+        public DataProviderFactory(            
             string connectionString,
-            string providerNAme)
+            string providerName)
         {
-            if (string.IsNullOrEmpty(providerNAme))
-                throw new ArgumentNullException(nameof(providerNAme));
+            if (string.IsNullOrEmpty(providerName))
+                throw new ArgumentNullException(nameof(providerName));
+                   
+            _connectionString = connectionString;
+            _providerName = providerName;
 
-            _connectionString = ConnectionString;
-                    
-            switch (providerNAme.ToLower())
+            BuildDataProvider();
+
+        }
+
+
+        void BuildDataProvider()
+        {
+
+            switch (_providerName.ToLower())
             {
-                case Sql:
+                case SqlClient:
                     {
-                        _provider = new SqlProvider(connectionString);
+                        _provider = new SqlProvider(_connectionString);
                         break;
                     }
-
             }
 
 

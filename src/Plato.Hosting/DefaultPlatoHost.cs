@@ -29,8 +29,7 @@ namespace Plato.Hosting
         public DefaultPlatoHost(
             IShellSettingsManager shellSettingsManager,
             IShellContextFactory shellContextFactory,
-            IRunningShellTable runningShellTable,
-            //IExtensionManager extensionManager,
+            IRunningShellTable runningShellTable, 
             ILogger<DefaultPlatoHost> logger)
         {
             //_extensionManager = extensionManager;

@@ -33,8 +33,7 @@ namespace Plato.Data
         {
             _connectionString = connectionString;          
         }
-
-    
+            
         #endregion
 
         #region "Properties"

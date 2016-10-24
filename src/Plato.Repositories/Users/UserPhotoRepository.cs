@@ -15,7 +15,7 @@ namespace Plato.Repositories.Users
 
         #region "Private Variables"
 
-        private IDbContextt _dbContext;
+        private IDbContext _dbContext;
         private ILogger<UserSecretRepository> _logger;
 
         #endregion
@@ -23,7 +23,7 @@ namespace Plato.Repositories.Users
         #region "Constructor"
 
         public UserPhotoRepository(
-            IDbContextt dbContext,
+            IDbContext dbContext,
             ILogger<UserSecretRepository> logger)
         {
             _dbContext = dbContext;

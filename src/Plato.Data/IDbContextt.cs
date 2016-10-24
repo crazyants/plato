@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace Plato.Data
 {
-    public interface IDbContextt : IDisposable
+    public interface IDbContext : IDisposable
     {
+
+        DbContextOptions Configuration { get; set; }
 
         IDataReader ExecuteReader(CommandType commandType, string sql, params object[] commandParams);
 

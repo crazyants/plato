@@ -41,6 +41,8 @@ namespace Plato.Discussions
             list.Add(new TextObject("Jane"));
             list.Add(new TextObject("Mike"));
             list.Add(new TextObject("Roger"));
+            list.Add(new TextObject(settings.SiteName));
+
             list.Add(new TextObject(settings.BaseUrl));
 
             return View(list);

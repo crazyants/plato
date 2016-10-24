@@ -61,7 +61,7 @@ namespace Plato.Repositories.Users
 
         #region "Private Variables"
 
-        private IDbContextt _dbContext;
+        private IDbContext _dbContext;
         private IUserSecretRepository<UserSecret> _userSecretRepository;
         private IUserDetailRepository<UserDetail> _userDetailRepository;
         private IUserPhotoRepository<UserPhoto> _userPhotoRepository;
@@ -72,7 +72,7 @@ namespace Plato.Repositories.Users
         #region "Constructor"
 
         public UserRepository(
-            IDbContextt dbContext,
+            IDbContext dbContext,
             IUserSecretRepository<UserSecret> userSecretRepository,
             IUserDetailRepository<UserDetail> userDetailRepository,
             IUserPhotoRepository<UserPhoto> userPhotoRepository,

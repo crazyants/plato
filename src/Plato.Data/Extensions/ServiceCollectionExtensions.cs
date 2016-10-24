@@ -11,11 +11,11 @@ namespace Plato.Data.Extensions
             this IServiceCollection services)
         {
 
-            services.AddSingleton<IConfigureOptions<DbContextOptions>, DbContextOptionsConfigure>();         
-            services.AddTransient<IDbContextt, DbContext>();
+            //services.AddSingleton<IConfigureOptions<DbContextOptions>, DbContextOptionsConfigure>();         
+            //services.AddTransient<IDbContext, DbContext>();
 
-            services.AddTransient<IDataMigrationManager, DataMigrationManager>();
-            services.AddTransient<AutomaticDataMigrations>();
+            //services.AddTransient<IDataMigrationManager, DataMigrationManager>();
+            //services.AddTransient<AutomaticDataMigrations>();
             
             return services;
                     }

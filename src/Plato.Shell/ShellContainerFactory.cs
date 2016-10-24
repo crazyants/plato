@@ -9,6 +9,7 @@ using Plato.Shell.Extensions;
 using Plato.Data;
 using System.Reflection;
 using Plato.Abstractions;
+using Microsoft.Extensions.Options;
 
 namespace Plato.Shell
 {
@@ -66,8 +67,7 @@ namespace Plato.Shell
                 //}
 
                 //(moduleServiceProvider as IDisposable).Dispose();
-
-
+                
                 // configure data access
 
                 var dbContext = new DbContext(cfg =>
@@ -77,12 +77,24 @@ namespace Plato.Shell
                     cfg.TablePrefix = settings.TablePrefix;
                 });
 
-                tenantServiceCollection.AddSingleton<IDbContextt>(dbContext);
 
+                var dbContextOptions = new DbContextOptions()
+                {
+                    ConnectionString = settings.ConnectionString,
+                    DatabaseProvider = settings.DatabaseProvider,
+                    TablePrefix = settings.TablePrefix
 
-                // add already instanciated services like DefaultOrchardHost
-                //var applicationServiceDescriptors = _applicationServices.Where(x => x.Lifetime == ServiceLifetime.Singleton);
+                };
+
+                //tenantServiceCollection.AddSingleton<IConfigureOptions<DbContextOptions>>(spdbContextOptions);
                 
+                tenantServiceCollection.AddSingleton<IDbContext>(dbContext);
+                tenantServiceCollection.AddScoped<IDbContext>(sp => dbContext);
+
+
+                // add already instanciated services like DefaultPlatoHost
+                //var applicationServiceDescriptors = _applicationServices.Where(x => x.Lifetime == ServiceLifetime.Singleton);
+
                 //var services = applicationServiceDescriptors
                 //    .Select(x => x.ImplementationType)
                 //    .Distinct()
