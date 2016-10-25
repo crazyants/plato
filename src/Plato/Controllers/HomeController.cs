@@ -10,7 +10,7 @@ using Plato.Repositories.Settings;
 using Plato.Models.Settings;
 using Plato.Shell;
 using Plato.Shell.Extensions;
-
+using Plato.Repositories.Users;
 
 using Plato.Abstractions.Settings;
 using Microsoft.AspNetCore.Routing;
@@ -32,25 +32,25 @@ namespace Plato.Controllers
         private IRunningShellTable _runningShellTable;
 
         public HomeController(
-            //IDbContext dbContext,
-            //IModuleLocator moduleLocator,
-            //IUserRepository<User> userRepository,
-            //ISettingRepository<Setting> settingRepository,
-            //ISettingsFactory settingsFactory,
-            //IShellSettingsManager shellSettingsManager,
-            //IRunningShellTable runningShellTable,
-            //ISiteService siteService
+            IDbContext dbContext,
+            IModuleLocator moduleLocator,
+            IUserRepository<User> userRepository,
+            ISettingRepository<Setting> settingRepository,
+            ISettingsFactory settingsFactory,
+            IShellSettingsManager shellSettingsManager,
+            IRunningShellTable runningShellTable,
+            ISiteService siteService
             )
         {
             //_fileSystem = fileSystem;
-            //_moduleLocator = moduleLocator;
-            //_userRepository = userRepository;
-            //_settingRepository = settingRepository;
-            //_settingsFactory = settingsFactory;
-            //_shellSettingsManager = shellSettingsManager;
-            //_runningShellTable = runningShellTable;
-            //_siteService = siteService;
-            //_dbContext = dbContext;
+            _moduleLocator = moduleLocator;
+            _userRepository = userRepository;
+            _settingRepository = settingRepository;
+            _settingsFactory = settingsFactory;
+            _shellSettingsManager = shellSettingsManager;
+            _runningShellTable = runningShellTable;
+            _siteService = siteService;
+            _dbContext = dbContext;
 
 
         }
@@ -59,9 +59,7 @@ namespace Plato.Controllers
         public async Task<IActionResult> Index()
         {
 
-            return View(new User());
-
-
+      
             string path = Request.Path;
             ViewData["path"] = path;
 

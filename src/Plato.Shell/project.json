@@ -10,6 +10,7 @@
         "NETStandard.Library": "1.6.0",
         "Plato.Data": "1.0.0-*",
         "Plato.FileSystem": "1.0.0-*",
+        "Plato.Modules.Abstractions": "1.0.0-*",
         "Plato.Yaml": "1.0.0-*",
         "System.Reflection.TypeExtensions": "4.1.0"
     },

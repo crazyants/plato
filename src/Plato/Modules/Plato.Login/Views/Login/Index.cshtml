@@ -1,10 +1,11 @@
 ﻿@using System.Collections.Generic
 @using Microsoft.AspNetCore.Http
 @using Plato.Login.Models
+@using Plato.Models.Users;
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Http.Authentication
 @model LoginViewModel
-
+@inject SignInManager<User> SignInManager
 
 @{
     ViewData["Title"] = "Discussions";

@@ -11,51 +11,6 @@ using System.Data.Common;
 namespace Plato.Repositories.Users
 {
 
-    //public class UserBuilder
-    //{
-
-    //    public static User Build(IDataReader dr)
-    //    {
-
-    //        User user = new User()
-    //        {
-    //            Id = Convert.ToInt32(dr["Id"]),
-    //            UserName = (dr.ColumnIsNotNull("UserName") ? Convert.ToString(dr["UserName"]) : string.Empty),
-    //            Email = (dr.ColumnIsNotNull("Email") ? Convert.ToString(dr["Email"]) : string.Empty),
-    //            DisplayName = (dr.ColumnIsNotNull("DisplayName") ? Convert.ToString(dr["DisplayName"]) : string.Empty)
-
-    //        };
-
-    //        if (dr.NextResult())
-    //        {
-    //            dr.Read();
-    //            user.Secret = new UserSecret();
-    //            user.Secret.PopulateModel(dr);
-    //        }
-
-
-    //        if (dr.NextResult())
-    //        {
-    //            dr.Read();
-    //            user.Detail = new UserDetail();
-    //            user.Detail.PopulateModel(dr);
-    //        }
-
-    //        if (dr.NextResult())
-    //        {
-    //            dr.Read();
-    //            user.Photo = new UserPhoto();
-    //            user.Photo.PopulateModel(dr);
-    //        }
-
-
-    //        return user;
-
-    //    }
-
-
-    //}
-
     public class UserRepository : IUserRepository<User>
     {
 

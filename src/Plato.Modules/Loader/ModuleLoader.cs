@@ -45,13 +45,19 @@ namespace Plato.Modules
 
             // ensure core assemblies are not loaded
             _loadedAssemblies.TryAdd("Plato.Abstractions", null);
+            _loadedAssemblies.TryAdd("Plato.Cache", null);
             _loadedAssemblies.TryAdd("Plato.Hosting", null);
             _loadedAssemblies.TryAdd("Plato.Shell", null);
+            _loadedAssemblies.TryAdd("Plato.Shell.Abstractions", null);
             _loadedAssemblies.TryAdd("Plato.FileSystem", null);
             _loadedAssemblies.TryAdd("Plato.Data", null);
             _loadedAssemblies.TryAdd("Plato.Hosting.Web", null);
             _loadedAssemblies.TryAdd("Plato.Layout", null);
-
+            _loadedAssemblies.TryAdd("Plato.Localization", null);
+            _loadedAssemblies.TryAdd("Plato.Modules.Abstractions", null);
+            _loadedAssemblies.TryAdd("Plato.Services", null);
+            _loadedAssemblies.TryAdd("Plato.Repositories", null);
+            _loadedAssemblies.TryAdd("Plato.Yaml", null);
 
         }
 

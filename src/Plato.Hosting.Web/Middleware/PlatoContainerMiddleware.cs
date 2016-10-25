@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Shell;
 using Plato.Shell.Models;
 using Plato.Hosting.Web.Extensions;
-
 
 namespace Plato.Hosting.Web.Middleware
 {
@@ -36,15 +34,15 @@ namespace Plato.Hosting.Web.Middleware
 
             var shellSetting = _runningShellTable.Match(httpContext);
 
-            // Register the shell settings as a custom feature.
+            // register shell settings as a custom feature
             httpContext.Features[typeof(ShellSettings)] = shellSetting;
 
-            // We only serve the next request if the tenant has been resolved.
+            // only serve the next request if the tenant has been resolved.
             if (shellSetting != null)
             {
 
                 ShellContext shellContext = _platoHost.GetOrCreateShellContext(shellSetting);
-           
+
                 using (var scope = shellContext.CreateServiceScope())
                 {
                     httpContext.RequestServices = scope.ServiceProvider;
@@ -53,26 +51,18 @@ namespace Plato.Hosting.Web.Middleware
                     {
                         lock (shellSetting)
                         {
-                            // The tenant gets activated here
+                            // activate the tanant
                             if (!shellContext.IsActivated)
-                            {
-                                //var eventBus = scope.ServiceProvider.GetService<IEventBus>();
-                                //eventBus.NotifyAsync<IOrchardShellEvents>(x => x.ActivatingAsync()).Wait();
-                                //eventBus.NotifyAsync<IOrchardShellEvents>(x => x.ActivatedAsync()).Wait();
-
                                 shellContext.IsActivated = true;
-                            }
                         }
                     }
 
                     await _next.Invoke(httpContext);
                 }
 
-
             }
 
-            //await _next.Invoke(httpContext);
-
         }
+
     }
 }

@@ -10,6 +10,7 @@ using Plato.Data;
 using System.Reflection;
 using Plato.Abstractions;
 using Microsoft.Extensions.Options;
+using Plato.Modules.Abstractions;
 
 namespace Plato.Shell
 {
@@ -20,17 +21,20 @@ namespace Plato.Shell
         private readonly ILogger _logger;
         private readonly ILoggerFactory _loggerFactory;
         private readonly IServiceCollection _applicationServices;
+        private readonly IModuleManager _moduleManager;
 
         public ShellContainerFactory(
             IServiceProvider serviceProvider,
             ILoggerFactory loggerFactory,
             ILogger<ShellContainerFactory> logger,
-            IServiceCollection applicationServices)
+            IServiceCollection applicationServices,
+            IModuleManager moduleManager)
         {
             _applicationServices = applicationServices;
             _serviceProvider = serviceProvider;
             _loggerFactory = loggerFactory;
             _logger = logger;
+            _moduleManager = moduleManager;
         }
 
 
@@ -41,70 +45,55 @@ namespace Plato.Shell
             try
             {
 
+                // clone services
                 IServiceCollection tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
 
+                // add tenant settings
                 tenantServiceCollection.AddSingleton(settings);
-
-                // modules
-
-                //IServiceCollection moduleServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
-
-                ////foreach (var dependency in blueprint.Dependencies.Where(t => typeof(IStartup).IsAssignableFrom(t.Type)))
-                ////{
-                ////    moduleServiceCollection.AddSingleton(typeof(IStartup), dependency.Type);
-                ////    tenantServiceCollection.AddSingleton(typeof(IStartup), dependency.Type);
-                ////}
-
-                //// Make shell settings available to the modules
-                //moduleServiceCollection.AddSingleton(settings);
-
-                //var moduleServiceProvider = moduleServiceCollection.BuildServiceProvider();
-
-                //// Let any module add custom service descriptors to the tenant
-                //foreach (var service in moduleServiceProvider.GetServices<IStartup>())
-                //{
-                //    service.ConfigureServices(tenantServiceCollection);
-                //}
-
-                //(moduleServiceProvider as IDisposable).Dispose();
-                
-                // configure data access
-
-                var dbContext = new DbContext(cfg =>
+                           
+                // add tenant specific DbContext
+                tenantServiceCollection.AddScoped<IDbContext>(sp => new DbContext(cfg =>
                 {
                     cfg.ConnectionString = settings.ConnectionString;
                     cfg.DatabaseProvider = settings.DatabaseProvider;
                     cfg.TablePrefix = settings.TablePrefix;
-                });
+                }));
 
 
-                var dbContextOptions = new DbContextOptions()
+                // add service descriptors from modules to the tenant
+
+                IServiceCollection moduleServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
+
+                var assemblies = _moduleManager.AllAvailableAssemblies;
+
+                var types = new List<Type>();
+                foreach (Assembly assmebly in assemblies)
                 {
-                    ConnectionString = settings.ConnectionString,
-                    DatabaseProvider = settings.DatabaseProvider,
-                    TablePrefix = settings.TablePrefix
+                    types.AddRange(assmebly.GetTypes());
+                }
 
-                };
+                foreach (var type in types.Where(t => typeof(IStartup).IsAssignableFrom(t)))
+                {
+                    moduleServiceCollection.AddSingleton(typeof(IStartup), type);
+                    tenantServiceCollection.AddSingleton(typeof(IStartup), type);
+                }
 
-                //tenantServiceCollection.AddSingleton<IConfigureOptions<DbContextOptions>>(spdbContextOptions);
-                
-                tenantServiceCollection.AddSingleton<IDbContext>(dbContext);
-                tenantServiceCollection.AddScoped<IDbContext>(sp => dbContext);
+                // Make shell settings available to the modules
+                moduleServiceCollection.AddSingleton(settings);
+
+                var moduleServiceProvider = moduleServiceCollection.BuildServiceProvider();                            
+                foreach (var service in moduleServiceProvider.GetServices<IStartup>())
+                {
+                    service.ConfigureServices(tenantServiceCollection);
+                }
+
+                (moduleServiceProvider as IDisposable).Dispose();
 
 
-                // add already instanciated services like DefaultPlatoHost
-                //var applicationServiceDescriptors = _applicationServices.Where(x => x.Lifetime == ServiceLifetime.Singleton);
 
-                //var services = applicationServiceDescriptors
-                //    .Select(x => x.ImplementationType)
-                //    .Distinct()
-                //    .Where(t => t != null && t.GetTypeInfo().IsClass)
-                //    .ToArray();
+                // return
 
-                //foreach (var service in applicationServiceDescriptors)
-                //{
-                //    tenantServiceCollection.AddScoped(service.ServiceType, service.ImplementationFactory);
-                //}
+
 
                 var shellServiceProvider = tenantServiceCollection.BuildServiceProvider();
                 return shellServiceProvider;
@@ -121,11 +110,9 @@ namespace Plato.Shell
             }
 
             return null;
-
-
-
+            
         }
-    }
 
+    }
 
 }

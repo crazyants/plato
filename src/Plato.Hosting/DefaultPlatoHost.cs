@@ -107,8 +107,7 @@ namespace Plato.Hosting
 
             return _shellContexts;
         }
-
-
+        
         void CreateAndActivateShells()
         {
 
