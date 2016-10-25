@@ -7,6 +7,7 @@
         "Microsoft.AspNetCore.Mvc.Razor": "1.0.1",
         "NETStandard.Library": "1.6.0",
         "Plato.Hosting": "1.0.0-*",
+        "Plato.Layout": "1.0.0-*",
         "Plato.Models": "1.0.0-*",
         "Plato.Repositories": "1.0.0-*",
         "Plato.Services": "1.0.0-*"

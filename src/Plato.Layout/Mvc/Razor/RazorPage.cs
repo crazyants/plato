@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Plato.Layout.Elements;
 using Plato.Layout.Display;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.Localization;
 
 namespace Plato.Layout.Mvc.Razor
 {
@@ -42,7 +44,23 @@ namespace Plato.Layout.Mvc.Razor
         {
             return await LayoutManager.DisplayAsync(Shape, model);
         }
-              
+
+        private IViewLocalizer _t;
+
+        public IViewLocalizer T
+        {
+            get
+            {
+                if (_t == null)
+                {
+                    _t = ViewContext.HttpContext.RequestServices.GetRequiredService<IViewLocalizer>();
+                    ((IViewContextAware)_t).Contextualize(this.ViewContext);
+                }
+
+                return _t;
+            }
+        }
+
         //public IHtmlContent BuildElement(string fullName)
         //{
 
@@ -56,7 +74,7 @@ namespace Plato.Layout.Mvc.Razor
         //    return task.Result;
 
         //}
-        
+
         //public IHtmlContent Zone(dynamic Display, dynamic Shape)
         //{
         //    var htmlContents = new List<IHtmlContent>();
@@ -114,7 +132,7 @@ namespace Plato.Layout.Mvc.Razor
 
         //    return htmlContentBuilder;
         //}
-        
+
         //public new Task<IHtmlContent> RenderSectionAsync(string name, bool required)
         //{
 

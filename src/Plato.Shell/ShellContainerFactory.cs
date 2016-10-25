@@ -46,9 +46,13 @@ namespace Plato.Shell
             {
 
                 // clone services
+                // ---------------
+
                 IServiceCollection tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
 
                 // add tenant settings
+                // ---------------
+
                 tenantServiceCollection.AddSingleton(settings);
                            
                 // add tenant specific DbContext
@@ -58,27 +62,22 @@ namespace Plato.Shell
                     cfg.DatabaseProvider = settings.DatabaseProvider;
                     cfg.TablePrefix = settings.TablePrefix;
                 }));
-
-
+                
                 // add service descriptors from modules to the tenant
+                // ---------------
+                           
+                var types = new List<Type>();
+                foreach (Assembly assmebly in _moduleManager.AllAvailableAssemblies)                
+                    types.AddRange(assmebly.GetTypes());
 
                 IServiceCollection moduleServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
-
-                var assemblies = _moduleManager.AllAvailableAssemblies;
-
-                var types = new List<Type>();
-                foreach (Assembly assmebly in assemblies)
-                {
-                    types.AddRange(assmebly.GetTypes());
-                }
-
                 foreach (var type in types.Where(t => typeof(IStartup).IsAssignableFrom(t)))
                 {
                     moduleServiceCollection.AddSingleton(typeof(IStartup), type);
                     tenantServiceCollection.AddSingleton(typeof(IStartup), type);
                 }
 
-                // Make shell settings available to the modules
+                // make shell settings available to the modules
                 moduleServiceCollection.AddSingleton(settings);
 
                 var moduleServiceProvider = moduleServiceCollection.BuildServiceProvider();                            
@@ -88,25 +87,18 @@ namespace Plato.Shell
                 }
 
                 (moduleServiceProvider as IDisposable).Dispose();
-
-
-
+                
                 // return
-
-
-
+                // ---------------
+                
                 var shellServiceProvider = tenantServiceCollection.BuildServiceProvider();
                 return shellServiceProvider;
 
             }
             catch (Exception e)
             {
-
-                if (_logger.IsEnabled(LogLevel.Debug))
-                {
-                    _logger.LogDebug("Error creating container for tenant {0} - {1}", settings.Name, e.Message);
-                }
-
+                if (_logger.IsEnabled(LogLevel.Debug))                
+                    _logger.LogDebug("Error creating container for tenant {0} - {1}", settings.Name, e.Message);                
             }
 
             return null;

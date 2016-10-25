@@ -32,13 +32,11 @@ namespace Plato.Shell
         public ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor shellDescriptor)
         {
 
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
+            if (_logger.IsEnabled(LogLevel.Debug))            
                 _logger.LogDebug("Creating described context for tenant {0}", settings.Name);
-            }
-                        
+            
             var serviceProvider = _shellContainerFactory.CreateContainer(settings);
-                        
+                                    
             return new ShellContext
             {
                 Settings = settings,
