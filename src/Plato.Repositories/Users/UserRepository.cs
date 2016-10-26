@@ -16,11 +16,11 @@ namespace Plato.Repositories.Users
 
         #region "Private Variables"
 
-        private IDbContext _dbContext;
-        private IUserSecretRepository<UserSecret> _userSecretRepository;
-        private IUserDetailRepository<UserDetail> _userDetailRepository;
-        private IUserPhotoRepository<UserPhoto> _userPhotoRepository;
-        private ILogger<UserSecretRepository> _logger;
+        private readonly IDbContext _dbContext;
+        private readonly IUserSecretRepository<UserSecret> _userSecretRepository;
+        private readonly IUserDetailRepository<UserDetail> _userDetailRepository;
+        private readonly IUserPhotoRepository<UserPhoto> _userPhotoRepository;
+        private readonly ILogger<UserSecretRepository> _logger;
 
         #endregion
 
@@ -52,6 +52,10 @@ namespace Plato.Repositories.Users
         public async Task<User> InsertUpdateAsync(User user)
         {
 
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            // ensure we have our dependencies
             if (_userSecretRepository == null)
                 throw new ArgumentNullException(nameof(_userSecretRepository));
 
@@ -278,11 +282,11 @@ namespace Plato.Repositories.Users
             string samAccountName)
         {
 
-            var userId = 0;
+            var dbId = 0;
             using (var context = _dbContext)
             {
 
-                userId = await context.ExecuteScalarAsync<int>(
+                dbId = await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateUser",
                     id,           
@@ -295,7 +299,7 @@ namespace Plato.Repositories.Users
 
             }
                        
-            return userId;
+            return dbId;
 
         }
 

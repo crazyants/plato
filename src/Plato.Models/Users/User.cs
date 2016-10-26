@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Plato.Abstractions.Extensions;
 using Plato.Models.Annotations;
+using Plato.Models.Roles;
+using System.Collections.Generic;
 
 namespace Plato.Models.Users
 {
@@ -24,6 +27,8 @@ namespace Plato.Models.Users
         public UserDetail Detail { get; set; }
 
         public UserPhoto Photo { get; set; }
+
+        public IEnumerable<Role> UserRoles { get; set; }
         
         #endregion
 

@@ -418,6 +418,7 @@ ModifiedUserId					INT DEFAULT (0) NOT NULL,
 IsDeleted						BIT DEFAULT(0) NOT NULL,
 DeletedDate						DATETIME2 NULL,
 DeletedUserId					INT DEFAULT (0) NOT NULL,
+ConcurrencyStamp				NVARCHAR(100) DEFAULT('') NOT NULL,
 CONSTRAINT PK_Plato_Roles_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
