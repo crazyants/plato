@@ -7,11 +7,12 @@ using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
+using Plato.Models.Roles;
 
 namespace Plato.Repositories.Users
 {
 
-    public class UserRepository : IUserRepository<User>
+    public class UserRepository : IUserRepository<User> 
     {
 
         #region "Private Variables"
@@ -20,6 +21,7 @@ namespace Plato.Repositories.Users
         private readonly IUserSecretRepository<UserSecret> _userSecretRepository;
         private readonly IUserDetailRepository<UserDetail> _userDetailRepository;
         private readonly IUserPhotoRepository<UserPhoto> _userPhotoRepository;
+        private readonly IUserRolesRepository<UserRole> _userRolesRepository;
         private readonly ILogger<UserSecretRepository> _logger;
 
         #endregion
@@ -31,12 +33,14 @@ namespace Plato.Repositories.Users
             IUserSecretRepository<UserSecret> userSecretRepository,
             IUserDetailRepository<UserDetail> userDetailRepository,
             IUserPhotoRepository<UserPhoto> userPhotoRepository,
+            IUserRolesRepository<UserRole> userRolesRepository,
             ILogger<UserSecretRepository> logger)
         {
             _dbContext = dbContext;
             _userSecretRepository = userSecretRepository;
             _userDetailRepository = userDetailRepository;
             _userPhotoRepository = userPhotoRepository;
+            _userRolesRepository = userRolesRepository;
             _logger = logger;
         }
 
@@ -90,14 +94,26 @@ namespace Plato.Repositories.Users
                     user.Detail.UserId = id;
                 await _userDetailRepository.InsertUpdateAsync(user.Detail);
                 
-                // photos
+                // photo
 
                 if (user.Photo == null)
                     user.Photo = new UserPhoto();
                 if (user.Id == 0 || user.Photo.UserId == 0)
                     user.Photo.UserId = id;
                 await _userPhotoRepository.InsertUpdateAsync(user.Photo);
-             
+
+                // roles
+
+                if (user.RoleNames.Count > 0)
+                {
+                    //_userRolesRepository.InsertUserRole()
+                }
+                //if (user.UserRoles == null)
+                //    user.UserRoles = new List<Role>();
+                //if (user.Id == 0 || user.Photo.UserId == 0)
+                //    user.Photo.UserId = id;
+                //await _userPhotoRepository.InsertUpdateAsync(user.Photo);
+                
                 // return
 
                 return await SelectByIdAsync(id);
@@ -245,26 +261,40 @@ namespace Plato.Repositories.Users
                 await reader.ReadAsync();
                 user.PopulateModel(reader);
 
-                if (await reader.NextResultAsync())
-                {
-                    await reader.ReadAsync();
-                    user.Secret = new UserSecret();
-                    user.Secret.PopulateModel(reader);
-                }
+                // user
 
                 if (await reader.NextResultAsync())
                 {
                     await reader.ReadAsync();
-                    user.Detail = new UserDetail();
-                    user.Detail.PopulateModel(reader);
+                    user.Secret = new UserSecret(reader);
                 }
+
+                // detail
 
                 if (await reader.NextResultAsync())
                 {
                     await reader.ReadAsync();
-                    user.Photo = new UserPhoto();
-                    user.Photo.PopulateModel(reader);
+                    user.Detail = new UserDetail(reader);
                 }
+
+                // photo
+
+                if (await reader.NextResultAsync())
+                {
+                    await reader.ReadAsync();
+                    user.Photo = new UserPhoto(reader);
+                }
+
+                // roles
+
+                if (await reader.NextResultAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        user.UserRoles.Add(new Role(reader));
+                    }
+                }
+
 
             }
 
@@ -281,25 +311,23 @@ namespace Plato.Repositories.Users
             string displayName,
             string samAccountName)
         {
-
-            var dbId = 0;
+       
             using (var context = _dbContext)
             {
 
-                dbId = await context.ExecuteScalarAsync<int>(
+                return await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateUser",
                     id,           
-                    userName.ToEmptyIfNull(),
-                    normalizedUserName.ToEmptyIfNull(),
-                    email.ToEmptyIfNull(),
-                    normalizedEmail.ToEmptyIfNull(),
-                    displayName.ToEmptyIfNull(),
-                    samAccountName.ToEmptyIfNull());
+                    userName.ToEmptyIfNull().TrimToSize(255),
+                    normalizedUserName.ToEmptyIfNull().TrimToSize(255),
+                    email.ToEmptyIfNull().TrimToSize(255),
+                    normalizedEmail.ToEmptyIfNull().TrimToSize(255),
+                    displayName.ToEmptyIfNull().TrimToSize(255),
+                    samAccountName.ToEmptyIfNull().TrimToSize(255));
 
             }
-                       
-            return dbId;
+                 
 
         }
 

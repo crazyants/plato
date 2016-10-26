@@ -11,11 +11,11 @@ namespace Plato.Abstractions.Extensions
     public static class StringExtensions
     {
 
-        private static readonly char[] _inValidSegmentChars = "/?#[]@\"^{}|`<>\t\r\n\f ".ToCharArray();
+        private static readonly char[] InValidSegmentChars = "/?#[]@\"^{}|`<>\t\r\n\f ".ToCharArray();
 
         public static bool IsValidUrlSegment(this string segment)
         {       
-            return !segment.ContainsCharacters(_inValidSegmentChars);
+            return !segment.ContainsCharacters(InValidSegmentChars);
         }
 
         public static bool ContainsCharacters(this string subject, params char[] chars)
@@ -39,7 +39,13 @@ namespace Plato.Abstractions.Extensions
         public static string ToEmptyIfNull(this string input)
         {
             return input ?? string.Empty;
-            
+        }
+
+        public static string TrimToSize(this string input, int maxLength)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+            return input.Length > maxLength ? input.Substring(maxLength) : input;
         }
 
         public static int[] ToIntArray(this string input, char delimiter = ',')
@@ -66,19 +72,14 @@ namespace Plato.Abstractions.Extensions
 
         public static string TryTrimEnd(this string input, char trim)
         {
-            if (input.EndsWith(trim.ToString()))            
-                input = input.TrimEnd(trim);
-            return input;
-
+            return input.EndsWith(trim.ToString()) ? input.TrimEnd(trim) : input;
         }
         
         public static Stream StringToStream(this string input)
         {
-            byte[] byteArray = Encoding.UTF8.GetBytes(input);
-            return new MemoryStream(byteArray);
+            return new MemoryStream(Encoding.UTF8.GetBytes(input));
         }
         
-
         public static T Deserialize<T>(this string json)
         {
             return JsonConvert.DeserializeObject<T>(json);

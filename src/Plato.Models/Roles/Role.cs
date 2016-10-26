@@ -52,7 +52,32 @@ namespace Plato.Models.Roles
         public DateTime? DeletedDate { get; set; }
 
         public int DeletedUserId { get; set; }
-        
+
+        #endregion
+
+        #region "Constructor"
+        public Role()
+        {
+
+        }
+
+        public Role(string name)
+            :this(0, name)
+        {
+            
+        }
+
+        public Role(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
+        public Role(IDataReader reader)
+        {
+           PopulateModel(reader);
+        }
+
         #endregion
 
         #region "Implementation"
@@ -61,69 +86,68 @@ namespace Plato.Models.Roles
         {
 
             if (dr.ColumnIsNotNull("id"))
-                this.Id = Convert.ToInt32(dr["Id"]);
+                Id = Convert.ToInt32(dr["Id"]);
 
             if (dr.ColumnIsNotNull("PermissionId"))
-                this.PermissionId = Convert.ToInt32(dr["PermissionId"]);
+                PermissionId = Convert.ToInt32(dr["PermissionId"]);
 
             if (dr.ColumnIsNotNull("Name"))
-                this.Name = Convert.ToString(dr["Name"]);
+                Name = Convert.ToString(dr["Name"]);
 
             if (dr.ColumnIsNotNull("Description"))
-                this.Description = Convert.ToString(dr["Description"]);
+                Description = Convert.ToString(dr["Description"]);
 
             if (dr.ColumnIsNotNull("HtmlPrefix"))
-                this.HtmlPrefix = Convert.ToString(dr["HtmlPrefix"]);
+                HtmlPrefix = Convert.ToString(dr["HtmlPrefix"]);
 
             if (dr.ColumnIsNotNull("HtmlSuffix"))
-                this.HtmlSuffix = Convert.ToString(dr["HtmlSuffix"]);
+                HtmlSuffix = Convert.ToString(dr["HtmlSuffix"]);
 
             if (dr.ColumnIsNotNull("IsAdministrator"))
-                this.IsAdministrator = Convert.ToBoolean(dr["IsAdministrator"]);
+                IsAdministrator = Convert.ToBoolean(dr["IsAdministrator"]);
 
             if (dr.ColumnIsNotNull("IsEmployee"))
-                this.IsEmployee = Convert.ToBoolean(dr["IsEmployee"]);
+                IsEmployee = Convert.ToBoolean(dr["IsEmployee"]);
             
             if (dr.ColumnIsNotNull("IsAnonymous"))
-                this.IsAnonymous = Convert.ToBoolean(dr["IsAnonymous"]);
+                IsAnonymous = Convert.ToBoolean(dr["IsAnonymous"]);
 
             if (dr.ColumnIsNotNull("IsMember"))
-                this.IsMember = Convert.ToBoolean(dr["IsMember"]);
+                IsMember = Convert.ToBoolean(dr["IsMember"]);
 
             if (dr.ColumnIsNotNull("IsWaitingConfirmation"))
-                this.IsWaitingConfirmation = Convert.ToBoolean(dr["IsWaitingConfirmation"]);
+                IsWaitingConfirmation = Convert.ToBoolean(dr["IsWaitingConfirmation"]);
 
             if (dr.ColumnIsNotNull("IsBanned"))
-                this.IsBanned = Convert.ToBoolean(dr["IsBanned"]);
+                IsBanned = Convert.ToBoolean(dr["IsBanned"]);
 
             if (dr.ColumnIsNotNull("SortOrder"))
-                this.SortOrder = Convert.ToInt32(dr["SortOrder"]);
+                SortOrder = Convert.ToInt32(dr["SortOrder"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                this.CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+                CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
 
             if (dr.ColumnIsNotNull("CreatedUserId"))
-                this.CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
+                CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                this.ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
+                ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
 
             if (dr.ColumnIsNotNull("ModifiedUserId"))
-                this.ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
+                ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
 
             if (dr.ColumnIsNotNull("IsDeleted"))
-                this.IsDeleted = Convert.ToBoolean(dr["IsDeleted"]);
+                IsDeleted = Convert.ToBoolean(dr["IsDeleted"]);
 
             if (dr.ColumnIsNotNull("DeletedDate"))
-                this.DeletedDate = Convert.ToDateTime(dr["DeletedDate"]);
+                DeletedDate = Convert.ToDateTime(dr["DeletedDate"]);
 
             if (dr.ColumnIsNotNull("DeletedUserId"))
-                this.DeletedUserId = Convert.ToInt32(dr["DeletedUserId"]);
+                DeletedUserId = Convert.ToInt32(dr["DeletedUserId"]);
 
             if (dr.ColumnIsNotNull("ConcurrencyStamp"))
-                this.ConcurrencyStamp = Convert.ToString(dr["ConcurrencyStamp"]);
+                ConcurrencyStamp = Convert.ToString(dr["ConcurrencyStamp"]);
             
-
         }
 
         public void PopulateModel(Action<Role> action)

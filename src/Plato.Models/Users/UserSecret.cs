@@ -30,6 +30,20 @@ namespace Plato.Models.Users
 
         #endregion
 
+        #region "Constructor"
+
+        public UserSecret()
+        {
+            
+        }
+
+        public UserSecret(IDataReader reader)
+        {
+            PopulateModel(reader);
+        }
+
+        #endregion
+
         #region "Implementation"
 
         public void PopulateModel(IDataReader dr)

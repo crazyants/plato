@@ -28,7 +28,9 @@ namespace Plato.Models.Users
 
         public UserPhoto Photo { get; set; }
 
-        public IEnumerable<Role> UserRoles { get; set; }
+        public List<string> RoleNames { get; set; } = new List<string>();
+
+        public List<Role> UserRoles { get; } = new List<Role>();
         
         #endregion
 
@@ -70,11 +72,8 @@ namespace Plato.Models.Users
 
         }
 
-        public void PopulateModel(Action<User> action)
-        {
-            action(this);
-        }
 
+     
         #endregion
 
     }

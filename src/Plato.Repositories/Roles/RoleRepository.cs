@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Extensions;
 using Plato.Data;
 using Plato.Models.Roles;
+using Plato.Models.Users;
 
 namespace Plato.Repositories.Roles
 {
@@ -50,19 +51,18 @@ namespace Plato.Repositories.Roles
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
-
-            var dbId = 0;
+            
             using (var context = _dbContext)
             {
-                dbId = await context.ExecuteScalarAsync<int>(
+                return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "plato_sp_InsertUpdateRole",
                     id,
                     permissionId,
-                    name,
-                    description.ToEmptyIfNull(),
-                    htmlPrefix.ToEmptyIfNull(),
-                    htmlSuffix.ToEmptyIfNull(),
+                    name.TrimToSize(255),
+                    description.ToEmptyIfNull().TrimToSize(255),
+                    htmlPrefix.ToEmptyIfNull().TrimToSize(100),
+                    htmlSuffix.ToEmptyIfNull().TrimToSize(100),
                     isAdministrator,
                     isEmployee,
                     isAnonymous,
@@ -77,11 +77,10 @@ namespace Plato.Repositories.Roles
                     isDeleted,
                     deletedDate,
                     deletedUserId,
-                    concurrencyStamp.ToEmptyIfNull()
+                    concurrencyStamp.ToEmptyIfNull().TrimToSize(255)
                 );
             }
-
-            return dbId;
+            
         }
 
         #endregion
@@ -102,6 +101,7 @@ namespace Plato.Repositories.Roles
 
         public async Task<Role> InsertUpdateAsync(Role role)
         {
+
             if (role == null)
                 throw new ArgumentNullException(nameof(role));
 
@@ -134,14 +134,48 @@ namespace Plato.Repositories.Roles
             return null;
         }
 
-        public Task<Role> SelectByIdAsync(int id)
+        public async Task<Role> SelectByIdAsync(int id)
         {
-            throw new NotImplementedException();
+
+            Role role = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                  CommandType.StoredProcedure,
+                  "plato_sp_SelectRole", id);
+
+                if (reader != null)
+                {
+                    await reader.ReadAsync();
+                    role = new Role();
+                    role.PopulateModel(reader);
+                }
+            }
+
+            return role;
+
         }
 
-        public Task<Role> SelectByNameAsync(string name)
+        public async Task<Role> SelectByNameAsync(string name)
         {
-            throw new NotImplementedException();
+
+            Role role = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                  CommandType.StoredProcedure,
+                  "plato_sp_SelectRoleByName", name);
+
+                if (reader != null)
+                {
+                    await reader.ReadAsync();
+                    role = new Role();
+                    role.PopulateModel(reader);
+                }
+            }
+
+            return role;
+
         }
 
         public Task<IEnumerable<Role>> SelectPagedAsync(int pageIndex, int pageSize, object options)

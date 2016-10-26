@@ -15,8 +15,8 @@ namespace Plato.Repositories.Users
 
         #region "Private Variables"
 
-        private IDbContext _dbContext;
-        private ILogger<UserSecretRepository> _logger;
+        private readonly IDbContext _dbContext;
+        private readonly ILogger<UserSecretRepository> _logger;
 
         #endregion
 
@@ -34,7 +34,7 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int Id)
+        public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -108,9 +108,9 @@ namespace Plato.Repositories.Users
                   "plato_sp_InsertUpdateUserSecret",
                     id,
                     userId,
-                    passwordHash.ToEmptyIfNull(),
-                    delimitedSalts.ToEmptyIfNull(),
-                    securityStamp.ToEmptyIfNull());
+                    passwordHash.ToEmptyIfNull().TrimToSize(255),
+                    delimitedSalts.ToEmptyIfNull().TrimToSize(255),
+                    securityStamp.ToEmptyIfNull().TrimToSize(255));
 
             }
                      

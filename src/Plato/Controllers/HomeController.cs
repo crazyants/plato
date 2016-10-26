@@ -3,6 +3,7 @@ using Plato.Modules;
 using Plato.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Plato.Modules.Abstractions;
 using Plato.Models.Users;
 using Plato.Shell.Models;
@@ -15,6 +16,7 @@ using Plato.Repositories.Users;
 using Plato.Abstractions.Settings;
 using Microsoft.AspNetCore.Routing;
 using Plato.Data;
+using Plato.Models.Roles;
 
 namespace Plato.Controllers
 {
@@ -22,14 +24,13 @@ namespace Plato.Controllers
     {
             
         private readonly IModuleLocator _moduleLocator;
-        private IUserRepository<User> _userRepository;
-        private ISettingRepository<Setting> _settingRepository;
-        private ISettingsFactory _settingsFactory;
-        private IShellSettingsManager _shellSettingsManager;
-        private ISiteService _siteService;
-        private IDbContext _dbContext;
-
-        private IRunningShellTable _runningShellTable;
+        private readonly IUserRepository<User> _userRepository;
+        private readonly ISettingRepository<Setting> _settingRepository;
+        private readonly ISettingsFactory _settingsFactory;
+        private readonly IShellSettingsManager _shellSettingsManager;
+        private readonly ISiteService _siteService;
+        private readonly IDbContext _dbContext;
+        private readonly IRunningShellTable _runningShellTable;
 
         public HomeController(
             IDbContext dbContext,
@@ -188,11 +189,12 @@ namespace Plato.Controllers
 
             System.Random rand = new System.Random();
             
-            User newUser = await _userRepository.InsertUpdateAsync(
+            var newUser = await _userRepository.InsertUpdateAsync(
                 new User()
                 {
                     UserName = "John Doe" + rand.Next(1, 500),
                     Email = "email" + +rand.Next(1, 500) + "@address.com",
+                    NormalizedUserName = "test",
                     DisplayName = "Jon Doe" + rand.Next(1, 500),
                     Detail = new UserDetail()
                     {
@@ -207,12 +209,31 @@ namespace Plato.Controllers
                         PasswordHash = "123",
                         Salts = new int[] { +rand.Next(1, 500), 123232 },
                         SecurityStamp = "test"
+                    },
+                    RoleNames = new List<string>()
+                    {
+                        "Administrator", "Moderator",
                     }
                 });
 
 
-            //var user = _userRepository.SelectByIdAsync(1);
+            var userRoles = new List<UserRole>()
+            {
+                new UserRole()
+                {
+                    UserId = 1,
+                    RoleId = 1
+                },
+                new UserRole()
+                {
+                    UserId = 1,
+                    RoleId = 2
+                }
+            };
             
+
+            //var user = _userRepository.SelectByIdAsync(1);
+
             ViewData["result"] = sb.ToString();
 
             return View(newUser);

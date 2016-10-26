@@ -402,8 +402,8 @@ Id								INT IDENTITY(1,1) NOT NULL,
 PermissionId					INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
-HtmlPrefix						NVARCHAR(255) DEFAULT('') NOT NULL,
-HtmlSuffix						NVARCHAR(255) DEFAULT('') NOT NULL,
+HtmlPrefix						NVARCHAR(100) DEFAULT('') NOT NULL,
+HtmlSuffix						NVARCHAR(100) DEFAULT('') NOT NULL,
 IsAdministrator					BIT DEFAULT(0) NOT NULL,
 IsEmployee						BIT DEFAULT(0) NOT NULL,
 IsAnonymous						BIT DEFAULT(0) NOT NULL,
@@ -433,6 +433,7 @@ CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
 ModifiedDate					DATETIME2 NULL,
 ModifiedUserId					INT DEFAULT (0) NOT NULL,
+ConcurrencyStamp				NVARCHAR(100) DEFAULT('') NOT NULL,
 CONSTRAINT PK_Plato_UserRoles_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
@@ -950,7 +951,6 @@ GO
 
 GO
 
-
 CREATE PROCEDURE [plato_sp_SelectUser] (
 @Id int
 ) AS
@@ -966,15 +966,9 @@ EXEC plato_sp_SelectUserDetailByUserId @Id
 
 EXEC plato_sp_SelectUserPhotoByUserId @Id
 
+EXEC plato_sp_SelectRolesByUserId @Id
+
 RETURN
-
-
-
-
-
-
-
-
 
 GO
 
@@ -1776,6 +1770,259 @@ GO
 
 GO
 
+CREATE PROCEDURE [plato_sp_InsertUpdateRole] (
+	@Id int,
+	@PermissionId int,
+	@Name nvarchar(255),
+	@NormalizedUserName nvarchar(255),
+	@Description nvarchar(255),
+	@HtmlPrefix nvarchar(100),	
+	@HtmlSuffix nvarchar(100),
+	@IsAdministrator bit,
+	@IsEmployee bit,
+	@IsAnonymous bit,
+	@IsMember bit,
+	@IsWaitingConfirmation bit,
+	@IsBanned bit,
+	@SortOrder int,
+	@CreatedDate datetime2,
+	@CreatedUserId int,
+	@ModifiedDate datetime2,
+	@ModifiedUserId int,
+	@IsDeleted bit,
+	@DeletedDate datetime2,
+	@DeletedUserId int,
+	@ConcurrencyStamp nvarchar(255)
+) AS
+
+SET NOCOUNT ON 
+
+DECLARE @intIdentity int;
+
+IF EXISTS( 
+	SELECT Id 
+	FROM Plato_Roles
+	WHERE (Id = @Id)
+	)
+BEGIN
+
+	-- UPDATE
+	UPDATE Plato_Roles SET
+		PermissionId = @PermissionId,
+		Name = @Name,
+		[Description] = @Description,
+		HtmlPrefix = @HtmlPrefix,
+		HtmlSuffix = @HtmlSuffix,
+		IsAdministrator = @IsAdministrator,
+		IsEmployee = @IsEmployee,
+		IsAnonymous = @IsAnonymous,
+		IsMember = @IsMember,
+		IsWaitingConfirmation = @IsWaitingConfirmation,
+		IsBanned = @IsBanned,
+		SortOrder = @SortOrder,
+		CreatedDate = @CreatedDate,
+		CreatedUserId = @CreatedUserId,
+		ModifiedDate = @ModifiedDate,
+		ModifiedUserId = @ModifiedUserId,
+		IsDeleted = @IsDeleted,
+		DeletedDate = @DeletedDate,
+		DeletedUserId = @DeletedUserId,
+		ConcurrencyStamp = @ConcurrencyStamp		
+	WHERE (Id = @Id);
+
+	SET @intIdentity = @Id;
+
+END
+ELSE
+BEGIN
+
+	-- INSERT
+	INSERT INTO Plato_Roles (
+		PermissionId,
+		Name,
+		[Description],
+		HtmlPrefix,
+		HtmlSuffix,
+		IsAdministrator,
+		IsEmployee,
+		IsAnonymous,
+		IsMember,
+		IsWaitingConfirmation,
+		IsBanned,
+		SortOrder,
+		CreatedDate,
+		CreatedUserId,
+		ModifiedDate,
+		ModifiedUserId,
+		IsDeleted,
+		DeletedDate,
+		DeletedUserId,
+		ConcurrencyStamp
+	) VALUES (
+		@PermissionId,
+		@Name,
+		@Description,
+		@HtmlPrefix,
+		@HtmlSuffix,
+		@IsAdministrator,
+		@IsEmployee,
+		@IsAnonymous,
+		@IsMember,
+		@IsWaitingConfirmation,
+		@IsBanned,
+		@SortOrder,
+		@CreatedDate,
+		@CreatedUserId,
+		@ModifiedDate,
+		@ModifiedUserId,
+		@IsDeleted,
+		@DeletedDate,
+		@DeletedUserId,
+		@ConcurrencyStamp
+	);
+
+	SET @intIdentity = SCOPE_IDENTITY();
+
+END
+
+SELECT @intIdentity
+
+RETURN
+
+GO
+
+----------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_InsertUpdateUserRole] (
+	@Id int,
+	@UserId int,
+	@RoleId int,
+	@CreatedDate datetime2,
+	@CreatedUserId int,
+	@ModifiedDate datetime2,
+	@ModifiedUserId int,
+	@ConcurrencyStamp nvarchar(50)
+) AS
+
+SET NOCOUNT ON 
+
+DECLARE @intIdentity int;
+
+IF EXISTS( 
+	SELECT Id 
+	FROM Plato_UserRoles
+	WHERE (Id = @Id)
+	)
+BEGIN
+
+	-- UPDATE
+	UPDATE Plato_UserRoles SET	
+		UserId = @UserId,
+		RoleId = @RoleId,
+		CreatedDate = @CreatedDate,
+		CreatedUserId = @CreatedUserId,
+		ModifiedDate = @ModifiedDate,
+		ModifiedUserId = @ModifiedUserId,
+		ConcurrencyStamp = @ConcurrencyStamp
+	WHERE (Id = @Id);
+
+	SET @intIdentity = @Id;
+
+END
+ELSE
+BEGIN
+
+	-- INSERT
+	INSERT INTO Plato_UserRoles (
+		UserId,
+		RoleId,
+		CreatedDate,
+		CreatedUserId,
+		ModifiedDate,
+		ModifiedUserId,
+		ConcurrencyStamp
+	) VALUES (
+		@UserId,
+		@RoleId,
+		@CreatedDate,
+		@CreatedUserId,
+		@ModifiedDate,
+		@ModifiedUserId,
+		@ConcurrencyStamp
+	);
+
+	SET @intIdentity = SCOPE_IDENTITY();
+
+END
+
+SELECT @intIdentity;
+
+RETURN
+
+GO
+
+---------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectRole] (
+@Id int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_Roles WITH (nolock)
+WHERE (Id = @Id)
+	
+RETURN
+
+GO
+
+---------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectRoleByName] (
+@Name nvarchar(255)
+) AS
+SET NOCOUNT ON 
+
+DECLARE @Id int;
+SET @Id = (SELECT Id FROM 
+Plato_Roles WITH (nolock)
+WHERE (Name = @Name))
+
+EXEC plato_sp_SelectRole @id;
+	
+RETURN
+
+GO
+
+---------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectRolesByUserId] (
+@UserId int
+) AS
+SET NOCOUNT ON 
+
+DECLARE @Id int;
+SELECT r.* FROM 
+Plato_Roles r WITH (nolock)
+INNER JOIN Plato_UserRoles ur WITH (nolock) ON ur.RoleId = r.Id
+WHERE (ur.UserId = @UserId)
+	
+RETURN
+
+
+GO
+
+---------------------
+
+GO
 
 
 
@@ -1788,7 +2035,9 @@ DECLARE	@UserId int;
 EXEC	@UserId = plato_sp_InsertUpdateUser
 		@Id = 0,
 		@UserName = N'Admin',
+		@NormalizedUserName = '',
 		@Email = N'admin@admin.com',
+		@NormalizedEmail = '',
 		@DisplayName = N'',
 		@SamAccountName = N''
 

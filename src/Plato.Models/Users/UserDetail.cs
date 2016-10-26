@@ -8,7 +8,7 @@ namespace Plato.Models.Users
 {
 
     [TableName("Plato_UserDetail")]
-    public class UserDetail : IModel<UserDetail>
+    public class UserDetail : IModel<UserDetail> 
     {
 
         #region "Public Properties"
@@ -118,12 +118,25 @@ namespace Plato.Models.Users
 
         public int SpamUserId { get; set; }
 
-        public User SpamBy{ get; set; }
+        public User SpamBy { get; set; }
 
         public DateTime? LastLoginDate { get; set;  }
 
         #endregion
 
+        #region "constructors"
+
+        public UserDetail()
+        {
+            
+        }
+
+        public UserDetail(IDataReader reader)
+        {
+            PopulateModel(reader);
+        }
+
+        #endregion
 
         #region "Implementation"
 
@@ -267,12 +280,7 @@ namespace Plato.Models.Users
             
 
         }
-
-        public void PopulateModel(Action<UserDetail> model)
-        {
-            model(this);
-        }
-
+        
         #endregion
 
 

@@ -1,25 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plato.Data;
 using System.Data;
-using Plato.Models.Users;
-using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using System.Data.Common;
+using Plato.Abstractions.Extensions;
+using Plato.Data;
+using Plato.Models.Users;
 
 namespace Plato.Repositories.Users
 {
     public class UserDetailRepository : IUserDetailRepository<UserDetail>
     {
-
-        #region "Private Variables"
-
-        private IDbContext _dbContext;
-        private ILogger<UserSecretRepository> _logger;
-
-        #endregion
-
         #region "Constructor"
 
         public UserDetailRepository(
@@ -32,6 +23,123 @@ namespace Plato.Repositories.Users
 
         #endregion
 
+        #region "Private Methods"
+
+        private async Task<int> InsertUpdateInternal(
+            int Id,
+            int userId,
+            int editionId,
+            int roleId,
+            int teamId,
+            double timeZoneOffSet,
+            bool observeDst,
+            string culture,
+            string firstName,
+            string lastName,
+            string webSiteUrl,
+            string apiKey,
+            int visits,
+            int answers,
+            int entities,
+            int replies,
+            int reactions,
+            int mentions,
+            int follows,
+            int badges,
+            int reputationRank,
+            int reputationPoints,
+            byte[] banner,
+            string clientIpAddress,
+            string clientName,
+            string emailConfirmationCode,
+            string passwordResetCode,
+            bool isEmailConfirmed,
+            DateTime? createdDate,
+            int createdUserId,
+            DateTime? modifiedDate,
+            int modifiedUserId,
+            bool isDeleted,
+            DateTime? deletedDate,
+            int deletedUserId,
+            bool isBanned,
+            DateTime? bannedDate,
+            int bannedUserId,
+            bool isLocked,
+            DateTime? lockedDate,
+            int lockedUserId,
+            DateTime? unLockDate,
+            bool isSpam,
+            DateTime? spamDate,
+            int spamUserId,
+            DateTime? lastLoginDate
+        )
+        {
+            var id = 0;
+            using (var context = _dbContext)
+            {
+                id = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "plato_sp_InsertUpdateUserDetail",
+                    Id,
+                    userId,
+                    editionId,
+                    roleId,
+                    teamId,
+                    timeZoneOffSet,
+                    observeDst,
+                    culture.ToEmptyIfNull().TrimToSize(50),
+                    firstName.ToEmptyIfNull().TrimToSize(100),
+                    lastName.ToEmptyIfNull().TrimToSize(100),
+                    webSiteUrl.ToEmptyIfNull().TrimToSize(100),
+                    apiKey.ToEmptyIfNull().TrimToSize(255),
+                    visits,
+                    answers,
+                    entities,
+                    replies,
+                    reactions,
+                    mentions,
+                    follows,
+                    badges,
+                    reputationRank,
+                    reputationPoints,
+                    banner ?? new byte[0],
+                    clientIpAddress.ToEmptyIfNull().TrimToSize(255),
+                    clientName.ToEmptyIfNull().TrimToSize(255),
+                    emailConfirmationCode.ToEmptyIfNull().TrimToSize(255),
+                    passwordResetCode.ToEmptyIfNull().TrimToSize(255),
+                    isEmailConfirmed,
+                    createdDate,
+                    createdUserId,
+                    modifiedDate,
+                    modifiedUserId,
+                    isDeleted,
+                    deletedDate,
+                    deletedUserId,
+                    isBanned,
+                    bannedDate,
+                    bannedUserId,
+                    isLocked,
+                    lockedDate,
+                    lockedUserId,
+                    unLockDate,
+                    isSpam,
+                    spamDate,
+                    spamUserId,
+                    lastLoginDate);
+            }
+
+            return id;
+        }
+
+        #endregion
+
+        #region "Private Variables"
+
+        private readonly IDbContext _dbContext;
+        private ILogger<UserSecretRepository> _logger;
+
+        #endregion
+
         #region "Implementation"
 
         public Task<bool> DeleteAsync(int Id)
@@ -41,8 +149,7 @@ namespace Plato.Repositories.Users
 
         public async Task<UserDetail> InsertUpdateAsync(UserDetail detail)
         {
-
-            int id = await InsertUpdateInternal(
+            var id = await InsertUpdateInternal(
                 detail.Id,
                 detail.UserId,
                 detail.EditionId,
@@ -94,21 +201,20 @@ namespace Plato.Repositories.Users
                 return await SelectByIdAsync(id);
 
             return null;
-
         }
-         
+
 
         public async Task<UserDetail> SelectByIdAsync(int Id)
         {
             UserDetail detail = null;
             using (var context = _dbContext)
             {
-                DbDataReader reader = await context.ExecuteReaderAsync(
-                  CommandType.StoredProcedure,
-                  "plato_sp_SelectUserDetail", Id);
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "plato_sp_SelectUserDetail", Id);
 
                 if (reader != null)
-                {                    
+                {
                     await reader.ReadAsync();
                     detail = new UserDetail();
                     detail.PopulateModel(reader);
@@ -124,122 +230,5 @@ namespace Plato.Repositories.Users
         }
 
         #endregion
-
-        #region "Private Methods"
-        
-        private async Task<int> InsertUpdateInternal(
-            int Id,     
-            int UserId,
-            int EditionId,
-            int RoleId,
-            int TeamId,
-            double TimeZoneOffSet,
-            bool ObserveDST,
-            string Culture,
-            string FirstName,
-            string LastName,
-            string WebSiteUrl,
-            string ApiKey,
-            int Visits,
-            int Answers,
-            int Entities,
-            int Replies,
-            int Reactions,
-            int Mentions,
-            int Follows,
-            int Badges,
-            int ReputationRank,
-            int ReputationPoints,
-            byte[] Banner,
-            string ClientIpAddress,
-            string ClientName,
-            string EmailConfirmationCode,
-            string PasswordResetCode,
-            bool IsEmailConfirmed,
-            DateTime? CreatedDate,
-            int CreatedUserId,
-            DateTime? ModifiedDate,
-            int ModifiedUserId,
-            bool IsDeleted,
-            DateTime? DeletedDate,
-            int DeletedUserId,
-            bool IsBanned,
-            DateTime? BannedDate,
-            int BannedUserId,
-            bool IsLocked,
-            DateTime? LockedDate,
-            int LockedUserId,
-            DateTime? UnLockDate,
-            bool IsSpam,
-            DateTime? SpamDate,
-            int SpamUserId,
-            DateTime? LastLoginDate
-            )
-        {
-
-            int id = 0;
-            using (var context = _dbContext)
-            {
-
-                id = await context.ExecuteScalarAsync<int>(
-                  CommandType.StoredProcedure,
-                  "plato_sp_InsertUpdateUserDetail",
-                    Id, 
-                    UserId,                  
-                    EditionId,
-                    RoleId,
-                    TeamId,
-                    TimeZoneOffSet,
-                    ObserveDST,
-                    Culture.ToEmptyIfNull(),
-                    FirstName.ToEmptyIfNull(),
-                    LastName.ToEmptyIfNull(),
-                    WebSiteUrl.ToEmptyIfNull(),
-                    ApiKey.ToEmptyIfNull(),
-                    Visits,
-                    Answers,
-                    Entities,
-                    Replies,
-                    Reactions,
-                    Mentions,
-                    Follows,
-                    Badges,
-                    ReputationRank,
-                    ReputationPoints,
-                    Banner ?? new byte[0],
-                    ClientIpAddress.ToEmptyIfNull(),
-                    ClientName.ToEmptyIfNull(),
-                    EmailConfirmationCode.ToEmptyIfNull(),
-                    PasswordResetCode.ToEmptyIfNull(),
-                    IsEmailConfirmed,
-                    CreatedDate,
-                    CreatedUserId,
-                    ModifiedDate,
-                    ModifiedUserId,
-                    IsDeleted,
-                    DeletedDate,
-                    DeletedUserId,
-                    IsBanned,
-                    BannedDate,
-                    BannedUserId,
-                    IsLocked,
-                    LockedDate,
-                    LockedUserId,
-                    UnLockDate,
-                    IsSpam,
-                    SpamDate,
-                    SpamUserId,
-                    LastLoginDate);
-
-            }
-     
-            return id;
-
-        }
-
-        #endregion
-
-
-
     }
 }

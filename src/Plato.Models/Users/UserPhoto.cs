@@ -47,6 +47,11 @@ namespace Plato.Models.Users
         {       
         }
 
+        public UserPhoto(IDataReader reader)
+        {
+            PopulateModel(reader);
+        }
+
         #endregion
 
         #region "Implementation"
