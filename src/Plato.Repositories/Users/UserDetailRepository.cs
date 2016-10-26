@@ -34,12 +34,12 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
-        public Task<bool> Delete(int Id)
+        public Task<bool> DeleteAsync(int Id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<UserDetail> InsertUpdate(UserDetail detail)
+        public async Task<UserDetail> InsertUpdateAsync(UserDetail detail)
         {
 
             int id = await InsertUpdateInternal(
@@ -91,14 +91,14 @@ namespace Plato.Repositories.Users
                 detail.LastLoginDate);
 
             if (id > 0)
-                return await SelectById(id);
+                return await SelectByIdAsync(id);
 
             return null;
 
         }
          
 
-        public async Task<UserDetail> SelectById(int Id)
+        public async Task<UserDetail> SelectByIdAsync(int Id)
         {
             UserDetail detail = null;
             using (var context = _dbContext)
@@ -118,7 +118,7 @@ namespace Plato.Repositories.Users
             return detail;
         }
 
-        public Task<IEnumerable<UserDetail>> SelectPaged(int pageIndex, int pageSize, object options)
+        public Task<IEnumerable<UserDetail>> SelectPagedAsync(int pageIndex, int pageSize, object options)
         {
             throw new NotImplementedException();
         }

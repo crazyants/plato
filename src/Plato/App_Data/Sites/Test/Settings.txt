@@ -1,7 +1,7 @@
 State: Initializing
 Name: Site 2 Tenant
 DatabaseProvider: SqlClient
-ConnectionString: server=localhost;trusted_connection=true;database=plato_3
+ConnectionString: server=localhost;trusted_connection=true;database=plato_2
 TablePrefix: site2
 RequestedUrlHost:
 RequestedUrlPrefix: Site2

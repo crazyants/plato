@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace Plato.Models
 {
@@ -6,6 +7,8 @@ namespace Plato.Models
     {
 
         void PopulateModel(IDataReader dr);
+
+        void PopulateModel(Action<T> action);
 
     }
 }

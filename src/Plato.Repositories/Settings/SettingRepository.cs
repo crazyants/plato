@@ -38,12 +38,12 @@ namespace Plato.Repositories.Settings
         
         #region "Implementation"
 
-        public Task<bool> Delete(int Id)
+        public Task<bool> DeleteAsync(int Id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Setting> InsertUpdate(Setting setting)
+        public async Task<Setting> InsertUpdateAsync(Setting setting)
         {
 
             int id = await InsertUpdateInternal(
@@ -57,13 +57,13 @@ namespace Plato.Repositories.Settings
                 setting.ModifiedUserId);
 
             if (id > 0)
-                return await SelectById(id);
+                return await SelectByIdAsync(id);
 
             return null;
 
         }
 
-        public async Task<Setting> SelectById(int Id)
+        public async Task<Setting> SelectByIdAsync(int Id)
         {
 
             Setting setting = new Setting();
@@ -134,7 +134,7 @@ namespace Plato.Repositories.Settings
             return settings;
         }
 
-        public Task<IEnumerable<Setting>> SelectPaged(int pageIndex, int pageSize, object options)
+        public Task<IEnumerable<Setting>> SelectPagedAsync(int pageIndex, int pageSize, object options)
         {
             throw new NotImplementedException();
         }

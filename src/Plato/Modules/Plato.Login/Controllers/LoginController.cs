@@ -19,6 +19,7 @@ namespace Plato.Login
 
             var model = new LoginViewModel();
             model.Email = "123456";
+            model.UserName = "admin";
 
             return View(model);
 

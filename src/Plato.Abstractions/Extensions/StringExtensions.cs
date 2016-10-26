@@ -11,11 +11,11 @@ namespace Plato.Abstractions.Extensions
     public static class StringExtensions
     {
 
-        private static readonly char[] inValidSegmentChars = "/?#[]@\"^{}|`<>\t\r\n\f ".ToCharArray();
+        private static readonly char[] _inValidSegmentChars = "/?#[]@\"^{}|`<>\t\r\n\f ".ToCharArray();
 
         public static bool IsValidUrlSegment(this string segment)
         {       
-            return !segment.ContainsCharacters(inValidSegmentChars);
+            return !segment.ContainsCharacters(_inValidSegmentChars);
         }
 
         public static bool ContainsCharacters(this string subject, params char[] chars)
@@ -26,11 +26,10 @@ namespace Plato.Abstractions.Extensions
             
             Array.Sort(chars);
 
-            for (var i = 0; i < subject.Length; i++)
+            foreach (var current in subject)
             {
-                char current = subject[i];
                 if (Array.BinarySearch(chars, current) >= 0)                
-                    return true;                
+                    return true;
             }
 
             return false;
@@ -39,10 +38,10 @@ namespace Plato.Abstractions.Extensions
 
         public static string ToEmptyIfNull(this string input)
         {
-            return input == null ? string.Empty : input;
+            return input ?? string.Empty;
             
         }
-        
+
         public static int[] ToIntArray(this string input, char delimiter = ',')
         {
 
@@ -50,23 +49,20 @@ namespace Plato.Abstractions.Extensions
                 return null;
 
             int[] output = null;
-            if (input != null)
+            var array = input.Split(delimiter);
+            output = new int[array.Length];
+            for (var i = 0; i <= array.Length - 1; i++)
             {
-                string[] array = input.Split(delimiter);
-                output = new int[array.Length];
-                for (int i = 0; i <= array.Length - 1; i++)
-                {
-                    int id = 0;
-                    bool ok = Int32.TryParse(array.GetValue(i).ToString(), out id);
-                    if (ok)
-                        output.SetValue(id, i);
-                }
+                var id = 0;
+                var ok = int.TryParse(array.GetValue(i).ToString(), out id);
+                if (ok)
+                    output.SetValue(id, i);
             }
-            
+
             return output;
 
         }
-        
+
 
         public static string TryTrimEnd(this string input, char trim)
         {

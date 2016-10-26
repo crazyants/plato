@@ -34,36 +34,37 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
-        public Task<bool> Delete(int Id)
+        public Task<bool> DeleteAsync(int Id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<UserSecret> InsertUpdate(UserSecret secret)
+        public async Task<UserSecret> InsertUpdateAsync(UserSecret secret)
         {
             
-            int id = await InsertUpdateInternal(
+            var id = await InsertUpdateInternal(
                 secret.Id,
                 secret.UserId,
-                secret.Password,
-                secret.Salts);
+                secret.PasswordHash,
+                secret.Salts,
+                secret.SecurityStamp);
 
             if (id > 0)
-                return await SelectById(id);
+                return await SelectByIdAsync(id);
 
             return null;
 
         }
 
 
-        public async Task<UserSecret> SelectById(int Id)
+        public async Task<UserSecret> SelectByIdAsync(int id)
         {
             UserSecret secret = null;
             using (var context = _dbContext)
             {
-                DbDataReader reader = await context.ExecuteReaderAsync(
+                var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                  "plato_sp_SelectUserSecret", Id);
+                  "plato_sp_SelectUserSecret", id);
 
                 if (reader != null)
                 {
@@ -77,42 +78,43 @@ namespace Plato.Repositories.Users
 
         }
 
-        public Task<IEnumerable<UserSecret>> SelectPaged(int pageIndex, int pageSize, object options)
+        public Task<IEnumerable<UserSecret>> SelectPagedAsync(int pageIndex, int pageSize, object options)
         {
             throw new NotImplementedException();
         }
 
         #endregion
-
-
+        
         #region "Private Methods"
         
         private async Task<int> InsertUpdateInternal(
-            int Id,
-            int UserId,
-            string Password,           
-            int[] Salts)
+            int id,
+            int userId,
+            string passwordHash,           
+            int[] salts,
+            string securityStamp)
         {
 
             string delimitedSalts = null;
-            if (Salts != null)
-                delimitedSalts = Salts.ToDelimitedString();
+            if (salts != null)
+                delimitedSalts = salts.ToDelimitedString();
             
-            int id = 0;
+            var dbId = 0;
             using (var context = _dbContext)
             {
 
-                id = await context.ExecuteScalarAsync<int>(
+                dbId = await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateUserSecret",
-                    Id,
-                    UserId,
-                    Password.ToEmptyIfNull(),
-                    delimitedSalts.ToEmptyIfNull());
+                    id,
+                    userId,
+                    passwordHash.ToEmptyIfNull(),
+                    delimitedSalts.ToEmptyIfNull(),
+                    securityStamp.ToEmptyIfNull());
 
             }
                      
-            return id;
+            return dbId;
 
         }
         

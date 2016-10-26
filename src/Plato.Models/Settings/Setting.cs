@@ -65,8 +65,13 @@ namespace Plato.Models.Settings
           
         }
 
+        public void PopulateModel(Action<Setting> model)
+        {
+            model(this);
+        }
+
         #endregion
-        
+
 
     }
 }

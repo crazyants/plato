@@ -26,13 +26,13 @@ namespace Plato.Modules
         private static readonly Lazy<HashSet<string>> _applicationAssemblyNames =
             new Lazy<HashSet<string>>(GetApplicationAssemblyNames);
 
-        private static string _assemblyExtension = ".dll";
+        private const string AssemblyExtension = ".dll";
 
         #endregion
 
         #region "Constructor"
 
-        private IPlatoFileSystem _fileSystem;
+        private readonly IPlatoFileSystem _fileSystem;
         private ILogger _logger;
 
         public ModuleLoader(
@@ -46,18 +46,22 @@ namespace Plato.Modules
             // ensure core assemblies are not loaded
             _loadedAssemblies.TryAdd("Plato.Abstractions", null);
             _loadedAssemblies.TryAdd("Plato.Cache", null);
-            _loadedAssemblies.TryAdd("Plato.Hosting", null);
-            _loadedAssemblies.TryAdd("Plato.Shell", null);
-            _loadedAssemblies.TryAdd("Plato.Shell.Abstractions", null);
             _loadedAssemblies.TryAdd("Plato.FileSystem", null);
             _loadedAssemblies.TryAdd("Plato.Data", null);
+            _loadedAssemblies.TryAdd("Plato.Hosting", null);
             _loadedAssemblies.TryAdd("Plato.Hosting.Web", null);
             _loadedAssemblies.TryAdd("Plato.Layout", null);
             _loadedAssemblies.TryAdd("Plato.Localization", null);
+            _loadedAssemblies.TryAdd("Plato.Modules", null);
             _loadedAssemblies.TryAdd("Plato.Modules.Abstractions", null);
+            _loadedAssemblies.TryAdd("Plato.Models", null);
             _loadedAssemblies.TryAdd("Plato.Services", null);
+            _loadedAssemblies.TryAdd("Plato.Shell", null);
+            _loadedAssemblies.TryAdd("Plato.Shell.Abstractions", null);
             _loadedAssemblies.TryAdd("Plato.Repositories", null);
             _loadedAssemblies.TryAdd("Plato.Yaml", null);
+         
+    
 
         }
 
@@ -88,7 +92,7 @@ namespace Plato.Modules
             var folder = _fileSystem.GetDirectoryInfo(path);
             foreach (var file in folder.GetFiles())
             {
-                if ((file.Extension != null) && (file.Extension.ToLower() == _assemblyExtension))
+                if ((file.Extension != null) && (file.Extension.ToLower() == AssemblyExtension))
                 {
                     if (!IsAssemblyLoaded(Path.GetFileNameWithoutExtension(file.FullName)))
                     {
@@ -96,23 +100,20 @@ namespace Plato.Modules
                         if (assembly != null)
                             localList.Add(assembly);
                     }
-                  
+
                 }
 
             }
 
             // recursive lookup
             string[] subFolders = Directory.GetDirectories(path);
-            if (folder != null)
-            {
-                for (int i = 0; i <= subFolders.Length - 1; i++)                
-                    LoadAssembliesInFolder(subFolders.GetValue(i).ToString(), localList);                
-            }
+            for (int i = 0; i <= subFolders.Length - 1; i++)
+                LoadAssembliesInFolder(subFolders.GetValue(i).ToString(), localList);
             
             return localList;
 
         }
-                
+
         private Assembly LoadFromAssemblyPath(string assemblyPath)
         {
                      

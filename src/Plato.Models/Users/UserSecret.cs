@@ -21,10 +21,12 @@ namespace Plato.Models.Users
         public int UserId { get; set; }
 
         [ColumnName("Password", typeof(string), 255)]
-        public string Password { get; set; }
+        public string PasswordHash { get; set; }
 
         [ColumnName("Salts", typeof(List<int>))]
         public int[] Salts { get; set; }
+
+        public string SecurityStamp { get; set; }
 
         #endregion
 
@@ -39,12 +41,20 @@ namespace Plato.Models.Users
             if (dr.ColumnIsNotNull("UserId"))
                 this.UserId = Convert.ToInt32(dr["UserId"]);
 
-            if (dr.ColumnIsNotNull("Password"))
-                this.Password = Convert.ToString(dr["Password"]);
+            if (dr.ColumnIsNotNull("PasswordHash"))
+                this.PasswordHash = Convert.ToString(dr["PasswordHash"]);
 
             if (dr.ColumnIsNotNull("Salts"))
                 this.Salts = Convert.ToString(dr["Salts"]).ToIntArray();
 
+            if (dr.ColumnIsNotNull("SecurityStamp"))
+                this.SecurityStamp = Convert.ToString(dr["SecurityStamp"]);
+
+        }
+
+        public void PopulateModel(Action<UserSecret> model)
+        {
+            model(this);
         }
 
         #endregion

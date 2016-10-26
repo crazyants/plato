@@ -4,7 +4,6 @@ CREATE TABLE Plato_AuditLog
 (
 Id								INT IDENTITY(1,1) NOT NULL,
 EntityId						INT NOT NULL,
-SiteId							INT NOT NULL,
 TableName						NVARCHAR(75) DEFAULT('') NOT NULL,
 ColumnName						NVARCHAR(75) DEFAULT('') NOT NULL,
 [Values]						NVARCHAR(75) DEFAULT('') NOT NULL,
@@ -37,35 +36,9 @@ CONSTRAINT PK_Plato_Editions_Id PRIMARY KEY CLUSTERED ( Id )
 GO
 
 
-CREATE TABLE Plato_Sites
-(
-Id								INT IDENTITY(1,1) NOT NULL,
-EditionId						INT DEFAULT (0) NOT NULL,
-Name							NVARCHAR(255) DEFAULT('') NOT NULL,
-Description						NVARCHAR(MAX) DEFAULT('') NOT NULL,
-SafeUrlName						NVARCHAR(100) DEFAULT('') NOT NULL,
-DefaultTheme					NVARCHAR(50) DEFAULT('') NOT NULL,
-ApiKey							NVARCHAR(255) DEFAULT('') NOT NULL,
-CreatedDate						DATETIME2 NULL,
-CreatedUserId					INT DEFAULT (0) NOT NULL,
-ModifiedDate					DATETIME2 NULL,
-ModifiedUserId					INT DEFAULT (0) NOT NULL,
-IsDeleted						BIT DEFAULT(0) NOT NULL,
-DeletedDate						DATETIME2 NULL,
-DeletedUserId					INT DEFAULT (0) NOT NULL,
-IsDisabled						BIT DEFAULT(0) NOT NULL,
-DisabledDate					DATETIME2 NULL,
-DisabledUserId					INT DEFAULT (0) NOT NULL,
-CONSTRAINT PK_Plato_Sites_Id PRIMARY KEY CLUSTERED ( Id )
-)
-
-GO
-
-
 CREATE TABLE Plato_SiteMigrations
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-SiteId							INT DEFAULT (0) NOT NULL,
 AppVersion						NVARCHAR(10) DEFAULT ('') NOT NULL,
 SchemaUpdates					NVARCHAR(MAX) DEFAULT('') NOT NULL,
 CreatedDate						DATETIME2 NULL,
@@ -93,7 +66,6 @@ GO
 CREATE TABLE Plato_Spaces
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-SiteId							INT DEFAULT (0) NOT NULL,
 ParentId						INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 NameLocalized					NVARCHAR(100) DEFAULT('') NOT NULL,
@@ -120,7 +92,6 @@ GO
 CREATE TABLE Plato_SpaceRoles
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-SiteId							INT DEFAULT (0) NOT NULL,
 SpaceId							INT DEFAULT (0) NOT NULL,
 RoleId							INT DEFAULT (0) NOT NULL,
 CreatedDate						DATETIME2 NULL,
@@ -167,7 +138,6 @@ GO
 CREATE TABLE Plato_Products
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-SiteId							INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
 Image							IMAGE NOT NULL,
@@ -218,7 +188,6 @@ GO
 CREATE TABLE Plato_Settings
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-SiteId							INT DEFAULT (0) NOT NULL,
 SpaceId							INT DEFAULT (0) NOT NULL,
 [Key]							NVARCHAR(255) DEFAULT('') NOT NULL,
 Value							NVARCHAR(MAX) DEFAULT('') NOT NULL,
@@ -235,9 +204,10 @@ GO
 CREATE TABLE Plato_Users
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-SiteId							INT DEFAULT (0) NOT NULL,
 UserName						NVARCHAR(255) DEFAULT('') NOT NULL,
+NormalizedUserName				NVARCHAR(255) DEFAULT('') NOT NULL,
 Email							NVARCHAR(255) DEFAULT('') NOT NULL,
+NormalizedEmail					NVARCHAR(255) DEFAULT('') NOT NULL,
 DisplayName						NVARCHAR(255) DEFAULT('') NOT NULL,
 SamAccountName					NVARCHAR(255) DEFAULT('') NOT NULL,
 CONSTRAINT PK_Plato_Users_Id PRIMARY KEY CLUSTERED ( Id )
@@ -274,6 +244,7 @@ Id								INT IDENTITY(1,1) NOT NULL,
 UserId							INT DEFAULT (0) NOT NULL,
 Password						NVARCHAR(255) DEFAULT('') NOT NULL,
 Salts							NVARCHAR(255) DEFAULT('') NOT NULL,
+SecurityStamp					NVARCHAR(255) DEFAULT('') NOT NULL,
 CONSTRAINT PK_Plato_UserSecret_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
@@ -377,7 +348,6 @@ GO
 CREATE TABLE Plato_UserFields
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-SiteId							INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 NameLocalizaed					NVARCHAR(100) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -429,7 +399,6 @@ GO
 CREATE TABLE Plato_Roles
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-SiteId							INT DEFAULT (0) NOT NULL,
 PermissionId					INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -487,6 +456,7 @@ SpaceId							INT DEFAULT (0) NOT NULL,
 ParentId						INT DEFAULT (0) NOT NULL,
 WorkFlowId						INT DEFAULT (0) NOT NULL,
 Title							NVARCHAR(255) DEFAULT('') NOT NULL,
+TitleNormalized					NVARCHAR(255) DEFAULT('') NOT NULL,
 Body							NVARCHAR(MAX) DEFAULT('') NOT NULL,
 Abstract						NVARCHAR(255) DEFAULT('') NOT NULL,
 ImageUrl						NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -628,7 +598,8 @@ Id								INT IDENTITY(1,1) NOT NULL,
 ParentId						INT DEFAULT (0) NOT NULL,
 SpaceId							INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
-NameLocalizaed					NVARCHAR(100) DEFAULT('') NOT NULL,
+NameLocalized					NVARCHAR(100) DEFAULT('') NOT NULL,
+NameNormalized					NVARCHAR(100) DEFAULT('') NOT NULL,
 Description						NVARCHAR(MAX) DEFAULT('') NOT NULL,
 DescriptionLocalizaed			NVARCHAR(100) DEFAULT('') NOT NULL,
 BackColor						NVARCHAR(20) DEFAULT('') NOT NULL,
@@ -769,7 +740,6 @@ GO
 CREATE TABLE Plato_Permissions
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-SiteId							INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
 Claims							NVARCHAR(MAX) DEFAULT('') NOT NULL,
@@ -790,7 +760,6 @@ GO
 CREATE TABLE Plato_Attachments
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-SiteId							INT DEFAULT (0) NOT NULL,
 UserId							INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -904,7 +873,6 @@ GO
 CREATE TABLE Plato_Badges
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-SiteId							INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
 BadgeType						INT DEFAULT (0) NOT NULL,
@@ -1124,9 +1092,10 @@ GO
 
 CREATE PROCEDURE [plato_sp_InsertUpdateUser] (
 	@Id int,
-	@SiteId int,
 	@UserName nvarchar(255),
+	@NormalizedUserName nvarchar(255),
 	@Email nvarchar(255),
+	@NormalizedEmail nvarchar(255),	
 	@DisplayName nvarchar(255),
 	@SamAccountName nvarchar(255)
 ) AS
@@ -1144,9 +1113,10 @@ BEGIN
 
 	-- UPDATE
 	UPDATE Plato_Users SET
-		SiteId = @SiteId,
 		UserName = @UserName,
+		NormalizedUserName = @NormalizedUserName,
 		Email = @Email,
+		NormalizedEmail = @NormalizedEmail,
 		DisplayName = @DisplayName,
 		SamAccountName = @SamAccountName
 	WHERE (Id = @Id);
@@ -1159,15 +1129,17 @@ BEGIN
 
 	-- INSERT
 	INSERT INTO Plato_Users (
-		SiteId,
 		UserName,
+		NormalizedUserName,
 		Email,
+		NormalizedEmail,
 		DisplayName,
 		SamAccountName
 	) VALUES (
-		@SiteId,
 		@UserName,
+		@NormalizedUserName,
 		@Email,
+		@NormalizedEmail,
 		@DisplayName,
 		@SamAccountName 
 	);
@@ -1191,8 +1163,9 @@ GO
 CREATE PROCEDURE [plato_sp_InsertUpdateUserSecret] (
 	@Id int,
 	@UserId int,
-	@Password nvarchar(255),
-	@Salts nvarchar(255)
+	@PasswordHash nvarchar(255),
+	@Salts nvarchar(255),
+	@SecurityStamp nvarchar(255)
 ) AS
 
 SET NOCOUNT ON 
@@ -1209,8 +1182,9 @@ BEGIN
 	-- UPDATE
 	UPDATE Plato_UserSecret SET
 		UserId = @UserId,
-		[Password] = @Password,
-		Salts = @Salts	
+		PasswordHash = @PasswordHash,
+		Salts = @Salts,
+		SecurityStamp = @SecurityStamp
 	WHERE (Id = @Id);
 
 	SET @intIdentity = @Id;
@@ -1222,12 +1196,14 @@ BEGIN
 	-- INSERT
 	INSERT INTO Plato_UserSecret (
 		UserId,
-		[Password],
-		Salts		
+		PasswordHash,
+		Salts,
+		SecurityStamp
 	) VALUES (
 		@UserId,
-		@Password,
-		@Salts	 
+		@PasswordHash,
+		@Salts,
+		@SecurityStamp
 	);
 
 	SET @intIdentity = SCOPE_IDENTITY();
@@ -1327,6 +1303,135 @@ SELECT @intIdentity;
 
 RETURN
 
+
+GO
+
+--------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectUserByUserName] (
+@UserName nvarchar(255)
+) AS
+SET NOCOUNT ON 
+
+DECLARE @Id int;
+SELECT Id FROM
+Plato_Users WITH (nolock) 
+WHERE (UserName = @UserName)
+	
+EXEC plato_sp_SelectUser @Id;
+
+RETURN
+
+GO
+
+------------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectUserByUserNameNormalized] (
+@NormalizedUserName nvarchar(255)
+) AS
+SET NOCOUNT ON 
+
+DECLARE @Id int;
+SELECT Id FROM
+Plato_Users WITH (nolock) 
+WHERE (NormalizedUserName = @NormalizedUserName)
+	
+EXEC plato_sp_SelectUser @Id;
+
+RETURN
+
+
+GO
+
+----------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectUserByApiKey] (
+@ApiKey nvarchar(255)
+) AS
+SET NOCOUNT ON 
+
+DECLARE @Id int;
+SELECT u.Id FROM
+Plato_Users u WITH (nolock) 
+INNER JOIN Plato_UserDetail ud ON ud.UserId = u.Id
+WHERE (ud.ApiKey = @ApiKey)
+	
+EXEC plato_sp_SelectUser @Id;
+
+RETURN
+
+
+GO
+
+----------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectUserByUserNameAndPassword] (
+@UserName nvarchar(255),
+@PasswordHash nvarchar(255)
+) AS
+SET NOCOUNT ON 
+
+DECLARE @Id int;
+SELECT u.Id FROM
+Plato_Users u WITH (nolock) 
+INNER JOIN Plato_UserSecret us ON us.UserId = u.Id
+WHERE (u.UserName = @UserName AND us.PasswordHash = @PasswordHash)
+	
+EXEC plato_sp_SelectUser @Id;
+
+RETURN
+
+GO
+
+-------------------
+
+GO
+
+
+CREATE PROCEDURE [plato_sp_SelectUserByEmailAndPassword] (
+@Email nvarchar(255),
+@PasswordHash nvarchar(255)
+) AS
+SET NOCOUNT ON 
+
+DECLARE @Id int;
+SELECT u.Id FROM
+Plato_Users u WITH (nolock) 
+INNER JOIN Plato_UserSecret us ON us.UserId = u.Id
+WHERE (u.Email = @Email AND us.PasswordHash = @PasswordHash)
+	
+EXEC plato_sp_SelectUser @Id;
+
+RETURN
+
+
+GO
+
+--------------------
+
+GO
+
+CREATE PROCEDURE [plato_sp_SelectUserByEmail] (
+@Email nvarchar(255)
+) AS
+SET NOCOUNT ON 
+
+DECLARE @Id int;
+SELECT u.Id FROM
+Plato_Users u WITH (nolock) 
+WHERE (u.Email = @Email)
+	
+EXEC plato_sp_SelectUser @Id;
+
+RETURN
 
 GO
 
@@ -1564,7 +1669,6 @@ GO
 
 CREATE PROCEDURE [plato_sp_InsertUpdateSetting] (
 	@Id int,
-	@SiteId int,
 	@SpaceId int,
 	@Key nvarchar(255),
 	@Value nvarchar(max),
@@ -1586,8 +1690,7 @@ IF EXISTS(
 BEGIN
 
 	-- UPDATE
-	UPDATE Plato_Settings SET
-		SiteId = @SiteId,
+	UPDATE Plato_Settings SET	
 		SpaceId = @SpaceId,
 		[Key] = @Key,
 		Value = @Value,
@@ -1605,7 +1708,6 @@ BEGIN
 
 	-- INSERT
 	INSERT INTO Plato_Settings (
-		SiteId,
 		SpaceId,
 		[Key],
 		Value,
@@ -1614,7 +1716,6 @@ BEGIN
 		ModifiedDate,
 		ModifiedUserId
 	) VALUES (
-		@SiteId,
 		@SpaceId,
 		@Key,
 		@Value,
@@ -1659,35 +1760,14 @@ GO
 
 GO
 
-CREATE PROCEDURE [plato_sp_SelectSettingsBySiteId] (
-@SiteId int
-) AS
+CREATE PROCEDURE [plato_sp_SelectSettings] 
+AS
 SET NOCOUNT ON 
 
 SELECT * FROM 
 Plato_Settings WITH (nolock)
-WHERE (SiteId = @SiteId)
 	
 RETURN
-
-GO
-
------------------
-
-GO
-
-CREATE PROCEDURE [plato_sp_SelectSettingsBySpaceId] (
-@SpaceId int
-) AS
-SET NOCOUNT ON 
-
-SELECT * FROM 
-Plato_Settings WITH (nolock)
-WHERE (SpaceId = @SpaceId)
-	
-RETURN
-
-
 
 GO
 
@@ -1706,7 +1786,6 @@ DECLARE	@UserId int;
 
 EXEC	@UserId = plato_sp_InsertUpdateUser
 		@Id = 0,
-		@SiteId = 1,
 		@UserName = N'Admin',
 		@Email = N'admin@admin.com',
 		@DisplayName = N'',

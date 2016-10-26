@@ -48,15 +48,29 @@ namespace Plato.Models.Users
             if (dr.ColumnIsNotNull("UserName"))
                 this.UserName = Convert.ToString(dr["UserName"]);
 
+            if (dr.ColumnIsNotNull("NormalizedUserName"))
+                this.NormalizedUserName = Convert.ToString(dr["NormalizedUserName"]);
+            
             if (dr.ColumnIsNotNull("Email"))
                 this.Email = Convert.ToString(dr["Email"]);
-                  
+
+            if (dr.ColumnIsNotNull("NormalizedEmail"))
+                this.NormalizedEmail = Convert.ToString(dr["NormalizedEmail"]);
+            
             if (dr.ColumnIsNotNull("DisplayName"))            
                 this.DisplayName = Convert.ToString(dr["DisplayName"]);
-            
+
+            if (dr.ColumnIsNotNull("SamAccountName"))
+                this.SamAccountName = Convert.ToString(dr["SamAccountName"]);
+
         }
 
-        #endregion        
+        public void PopulateModel(Action<User> action)
+        {
+            action(this);
+        }
+
+        #endregion
 
     }
        

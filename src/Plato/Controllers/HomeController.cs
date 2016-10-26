@@ -188,7 +188,7 @@ namespace Plato.Controllers
 
             System.Random rand = new System.Random();
             
-            User newUser = await _userRepository.InsertUpdate(
+            User newUser = await _userRepository.InsertUpdateAsync(
                 new User()
                 {
                     UserName = "John Doe" + rand.Next(1, 500),
@@ -204,15 +204,15 @@ namespace Plato.Controllers
                     },
                     Secret = new UserSecret()
                     {
-                        Password = "123",
-                        Salts = new int[] { +rand.Next(1, 500), 123232 }
+                        PasswordHash = "123",
+                        Salts = new int[] { +rand.Next(1, 500), 123232 },
+                        SecurityStamp = "test"
                     }
                 });
 
 
-            //var user = _userRepository.SelectById(1);
-
-
+            //var user = _userRepository.SelectByIdAsync(1);
+            
             ViewData["result"] = sb.ToString();
 
             return View(newUser);

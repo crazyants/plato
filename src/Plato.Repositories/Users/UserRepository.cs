@@ -33,25 +33,23 @@ namespace Plato.Repositories.Users
             IUserPhotoRepository<UserPhoto> userPhotoRepository,
             ILogger<UserSecretRepository> logger)
         {
-
             _dbContext = dbContext;
             _userSecretRepository = userSecretRepository;
             _userDetailRepository = userDetailRepository;
             _userPhotoRepository = userPhotoRepository;
             _logger = logger;
-
         }
 
         #endregion
 
         #region "Implementation"
 
-        public Task<bool> Delete(int id)
+        public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<User> InsertUpdate(User user)
+        public async Task<User> InsertUpdateAsync(User user)
         {
 
             if (_userSecretRepository == null)
@@ -60,10 +58,12 @@ namespace Plato.Repositories.Users
             if (_userDetailRepository == null)
                 throw new ArgumentNullException(nameof(_userDetailRepository));
 
-            int id = await InsertUpdateInternal(
+            var id = await InsertUpdateInternal(
                 user.Id,         
                 user.UserName,
+                user.NormalizedUserName,
                 user.Email,
+                user.NormalizedEmail,
                 user.DisplayName,
                 user.SamAccountName);
 
@@ -76,7 +76,7 @@ namespace Plato.Repositories.Users
                     user.Secret = new UserSecret();
                 if (user.Id == 0 || user.Secret.UserId == 0)
                     user.Secret.UserId = id;
-                await _userSecretRepository.InsertUpdate(user.Secret);
+                await _userSecretRepository.InsertUpdateAsync(user.Secret);
 
                 // detail
 
@@ -84,7 +84,7 @@ namespace Plato.Repositories.Users
                     user.Detail = new UserDetail();
                 if (user.Id == 0 || user.Detail.UserId == 0)
                     user.Detail.UserId = id;
-                await _userDetailRepository.InsertUpdate(user.Detail);
+                await _userDetailRepository.InsertUpdateAsync(user.Detail);
                 
                 // photos
 
@@ -92,11 +92,11 @@ namespace Plato.Repositories.Users
                     user.Photo = new UserPhoto();
                 if (user.Id == 0 || user.Photo.UserId == 0)
                     user.Photo.UserId = id;
-                await _userPhotoRepository.InsertUpdate(user.Photo);
+                await _userPhotoRepository.InsertUpdateAsync(user.Photo);
              
                 // return
 
-                return await SelectById(id);
+                return await SelectByIdAsync(id);
 
             }
 
@@ -104,88 +104,201 @@ namespace Plato.Repositories.Users
 
         }
         
-        public async Task<User> SelectById(int Id)
+        public async Task<User> SelectByIdAsync(int id)
         {
-
-            User user = new User();
             using (var context = _dbContext)
             {
-                DbDataReader reader = await context.ExecuteReaderAsync(
+                var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                  "plato_sp_SelectUser", Id);
-              
-                if (reader != null)
-                {
-                    await reader.ReadAsync();   
-                    user.PopulateModel(reader);
+                  "plato_sp_SelectUser", id);
 
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        user.Secret = new UserSecret();
-                        user.Secret.PopulateModel(reader);
-                    }
-                    
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        user.Detail = new UserDetail();
-                        user.Detail.PopulateModel(reader);
-                    }
-
-                    if (await reader.NextResultAsync())
-                    {
-                        await reader.ReadAsync();
-                        user.Photo = new UserPhoto();
-                        user.Photo.PopulateModel(reader);
-                    }
-
-                }
+                return await BuildUserFromResultSets(reader);
             }
+        }
 
-            return user;
+        public Task<IEnumerable<User>> SelectPagedAsync(int pageIndex, int pageSize, object options)
+        {
+
+            throw new NotImplementedException();
+            
+        }
+
+        public async Task<User> SelectByUserNameNormalizedAsync(string userNameNormalized)
+        {
+
+            if (string.IsNullOrEmpty(userNameNormalized))
+                throw new ArgumentNullException(nameof(userNameNormalized));
+
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                  CommandType.StoredProcedure,
+                  "plato_sp_SelectUserByUserNameNormalized", userNameNormalized);
+
+                return await BuildUserFromResultSets(reader);
+            }
+        }
+        
+        public async Task<User> SelectByEmailAsync(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                throw new ArgumentNullException(nameof(email));
+
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                  CommandType.StoredProcedure,
+                  "plato_sp_SelectUserByEmail", email);
+
+                return await BuildUserFromResultSets(reader);
+            }
+        }
+        
+        public async Task<User> SelectByUserNameAsync(string userName)
+        {
+
+            if (string.IsNullOrEmpty(userName))
+                throw new ArgumentNullException(nameof(userName));
+
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                  CommandType.StoredProcedure,
+                  "plato_sp_SelectUserByUserName", userName);
+
+                return await BuildUserFromResultSets(reader);
+            }
 
         }
 
-        public Task<IEnumerable<User>> SelectPaged(int pageIndex, int pageSize, object options)
+        public async Task<User> SelectByUserNameAndPasswordAsync(string userName, string password)
         {
 
-            return null;
-           
+            if (string.IsNullOrEmpty(userName))
+                throw new ArgumentNullException(nameof(userName));
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentNullException(nameof(password));
+            
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                  CommandType.StoredProcedure,
+                  "plato_sp_SelectUserByUserNameAndPassword",
+                  userName,
+                  password);
+
+                return await BuildUserFromResultSets(reader);
+            }
+
+        }
+
+        public async Task<User> SelectByEmailAndPasswordAsync(string email, string password)
+        {
+
+            if (string.IsNullOrEmpty(email))
+                throw new ArgumentNullException(nameof(email));
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentNullException(nameof(password));
+
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                  CommandType.StoredProcedure,
+                  "plato_sp_SelectUserByEmailAndPassword",
+                  email,
+                  password);
+
+                return await BuildUserFromResultSets(reader);
+            }
+
+        }
+
+        public async Task<User> SelectByApiKeyAsync(string apiKey)
+        {
+            if (string.IsNullOrEmpty(apiKey))
+                throw new ArgumentNullException(nameof(apiKey));
+       
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                  CommandType.StoredProcedure,
+                  "plato_sp_SelectUserByApiKey", apiKey);
+
+                return await BuildUserFromResultSets(reader);
+            }
+
         }
 
         #endregion
 
         #region "Private Methods"
-
-        private async Task<int> InsertUpdateInternal(
-            int Id,      
-            string Name,
-            string EmailAddress,
-            string DisplayName,
-            string SamAccountName)
+        
+        private async Task<User> BuildUserFromResultSets(DbDataReader reader)
         {
-
-            int id = 0;
-            using (var context = _dbContext)
+            var user = new User();
+            if (reader != null)
             {
+                await reader.ReadAsync();
+                user.PopulateModel(reader);
 
-                id = await context.ExecuteScalarAsync<int>(
-                  CommandType.StoredProcedure,
-                  "plato_sp_InsertUpdateUser",
-                    Id,           
-                    Name.ToEmptyIfNull(),
-                    EmailAddress.ToEmptyIfNull(),
-                    DisplayName.ToEmptyIfNull(),
-                    SamAccountName.ToEmptyIfNull());
+                if (await reader.NextResultAsync())
+                {
+                    await reader.ReadAsync();
+                    user.Secret = new UserSecret();
+                    user.Secret.PopulateModel(reader);
+                }
+
+                if (await reader.NextResultAsync())
+                {
+                    await reader.ReadAsync();
+                    user.Detail = new UserDetail();
+                    user.Detail.PopulateModel(reader);
+                }
+
+                if (await reader.NextResultAsync())
+                {
+                    await reader.ReadAsync();
+                    user.Photo = new UserPhoto();
+                    user.Photo.PopulateModel(reader);
+                }
 
             }
-                       
-            return id;
+
+            return user;
 
         }
         
+        private async Task<int> InsertUpdateInternal(
+            int id,      
+            string userName,
+            string normalizedUserName,
+            string email,
+            string normalizedEmail,
+            string displayName,
+            string samAccountName)
+        {
+
+            var userId = 0;
+            using (var context = _dbContext)
+            {
+
+                userId = await context.ExecuteScalarAsync<int>(
+                  CommandType.StoredProcedure,
+                  "plato_sp_InsertUpdateUser",
+                    id,           
+                    userName.ToEmptyIfNull(),
+                    normalizedUserName.ToEmptyIfNull(),
+                    email.ToEmptyIfNull(),
+                    normalizedEmail.ToEmptyIfNull(),
+                    displayName.ToEmptyIfNull(),
+                    samAccountName.ToEmptyIfNull());
+
+            }
+                       
+            return userId;
+
+        }
+
         #endregion
 
     }

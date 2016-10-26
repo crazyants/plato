@@ -268,6 +268,11 @@ namespace Plato.Models.Users
 
         }
 
+        public void PopulateModel(Action<UserDetail> model)
+        {
+            model(this);
+        }
+
         #endregion
 
 

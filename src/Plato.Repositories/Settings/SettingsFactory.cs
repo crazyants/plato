@@ -59,7 +59,7 @@ namespace Plato.Repositories.Settings
             existingSetting.Value = value.Serialize();
 
             // update setting & return deserialized setting value
-            var updatedSetting = await _settingRepository.InsertUpdate(existingSetting);
+            var updatedSetting = await _settingRepository.InsertUpdateAsync(existingSetting);
             if (updatedSetting != null)            
                 return await GetSettingsAsync<T>(updatedSetting.Key);
                
