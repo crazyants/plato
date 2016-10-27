@@ -10,7 +10,7 @@
         "Plato.Layout": "1.0.0-*",
         "Plato.Models": "1.0.0-*",
         "Plato.Repositories": "1.0.0-*",
-        "Plato.Services": "1.0.0-*"
+        "Plato.Stores": "1.0.0-*"
     },
 
   "frameworks": {

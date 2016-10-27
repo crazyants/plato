@@ -11,8 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Plato.Models.Users;
 using Plato.Models.Roles;
 using Plato.Repositories.Users;
-using Plato.Services.Users;
-
+using Plato.Stores.Users;
 
 namespace Plato.Login
 {

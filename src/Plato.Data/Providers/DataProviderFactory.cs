@@ -27,8 +27,7 @@ namespace Plato.Data
 
         #region "Private Variables"
 
-        private string _connectionString;
-        private string _providerName;
+        private DbContextOptions _cfg;
         private IDataProvider _provider;
 
         #endregion
@@ -39,7 +38,7 @@ namespace Plato.Data
         {
             get
             {
-                return _connectionString;
+                return _cfg.ConnectionString;
             }
         }
         
@@ -55,15 +54,12 @@ namespace Plato.Data
 
         #region "Constructor"
         
-        public DataProviderFactory(            
-            string connectionString,
-            string providerName)
+        public DataProviderFactory(DbContextOptions cfg)
         {
-            if (string.IsNullOrEmpty(providerName))
-                throw new ArgumentNullException(nameof(providerName));
-                   
-            _connectionString = connectionString;
-            _providerName = providerName;
+            if (string.IsNullOrEmpty(cfg.ConnectionString))
+                throw new ArgumentNullException(nameof(cfg.ConnectionString));
+
+            _cfg = cfg;
 
             BuildDataProvider();
 
@@ -73,11 +69,11 @@ namespace Plato.Data
         void BuildDataProvider()
         {
 
-            switch (_providerName.ToLower())
+            switch (_cfg.DatabaseProvider.ToLower())
             {
                 case SqlClient:
                     {
-                        _provider = new SqlProvider(_connectionString);
+                        _provider = new SqlProvider(_cfg.ConnectionString);
                         break;
                     }
             }

@@ -11,6 +11,7 @@ using System.Data.Common;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Plato.Abstractions.Extensions;
 using Plato.Repositories.Roles;
+using Plato.Data.Query;
 
 namespace Plato.Repositories.Users
 {
@@ -150,6 +151,16 @@ namespace Plato.Repositories.Users
 
             }
             
+        }
+
+        public Task<IEnumerable<UserRole>> Select(object args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IQuery> QueryAsync()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

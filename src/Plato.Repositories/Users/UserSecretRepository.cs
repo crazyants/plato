@@ -7,6 +7,7 @@ using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
+using Plato.Data.Query;
 
 namespace Plato.Repositories.Users
 {
@@ -56,6 +57,15 @@ namespace Plato.Repositories.Users
 
         }
 
+        public Task<IQuery> QueryAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<UserSecret>> Select(object args)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<UserSecret> SelectByIdAsync(int id)
         {

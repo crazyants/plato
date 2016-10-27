@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using System;
 using System.Threading.Tasks;
-using Plato.Abstractions.Settings;
+using Plato.Abstractions.Stores;
+
 
 namespace Plato.Hosting.Web.Routing
 {
@@ -11,23 +12,23 @@ namespace Plato.Hosting.Web.Routing
         private readonly IRouteBuilder _routeBuilder;
 
         private RouteValueDictionary _tokens;
-        private readonly ISiteService _siteService;
+        private readonly ISiteSettingsStore _settingsStore;
 
         public HomePageRoute(
             string prefix, 
-            ISiteService siteService, 
+            ISiteSettingsStore settingsStore, 
             IRouteBuilder routeBuilder, 
             IInlineConstraintResolver inlineConstraintResolver)
             : base(routeBuilder.DefaultHandler, prefix ?? "", inlineConstraintResolver)
         {
-            _siteService = siteService;
+            _settingsStore = settingsStore;
             _routeBuilder = routeBuilder;
         }
 
         protected override async Task OnRouteMatched(RouteContext context)
         {
 
-            var siteSettings = await _siteService.GetSiteSettingsAsync();
+            var siteSettings = await _settingsStore.GetAsync();
             
             foreach (var entry in siteSettings.HomeRoute)
             {

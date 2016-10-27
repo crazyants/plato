@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plato.Services
+namespace Plato.Abstractions.Stores
 {
     public interface IStorePaged<T> where T : class 
     {

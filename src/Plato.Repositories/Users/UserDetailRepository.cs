@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Extensions;
 using Plato.Data;
+using Plato.Data.Query;
 using Plato.Models.Users;
 
 namespace Plato.Repositories.Users
@@ -225,6 +226,16 @@ namespace Plato.Repositories.Users
         }
 
         public Task<IEnumerable<UserDetail>> SelectPagedAsync(int pageIndex, int pageSize, object options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<UserDetail>> Select(object args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IQuery> QueryAsync()
         {
             throw new NotImplementedException();
         }

@@ -5,13 +5,13 @@ namespace Plato.Data
     public class DbExceptionEventArgs : EventArgs
     {
 
-        internal Exception _x;
+        internal Exception _e;
 
         public Exception Exception
         {
             get
             {
-                return _x;
+                return _e;
             }
         }
 
@@ -20,9 +20,9 @@ namespace Plato.Data
 
         }
 
-        public DbExceptionEventArgs(Exception x)
+        public DbExceptionEventArgs(Exception e)
         {
-            _x = x;
+            _e = e;
         }
 
     }

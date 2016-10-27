@@ -3,8 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Plato.Abstractions.Settings;
-using Plato.Services.Settings;
+
 
 namespace Plato.Services.Extensions
 {
@@ -15,7 +14,7 @@ namespace Plato.Services.Extensions
          this IServiceCollection services)
         {
 
-            services.AddScoped<ISiteService, SiteService>();
+      
          
             return services;
 

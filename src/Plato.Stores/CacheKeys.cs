@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plato.Services.Roles
+namespace Plato.Stores
 {
-    public class RoleStore
+    public enum CacheKeys
     {
+        SiteSettings,
+        Roles
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Plato.Data.Query;
 
 namespace Plato.Repositories
 {
@@ -10,8 +12,12 @@ namespace Plato.Repositories
 
         Task<T> SelectByIdAsync(int id);
  
-        Task<IEnumerable<T>> SelectPagedAsync(int pageIndex, int pageSize, object options);
+        Task<IEnumerable<T>> SelectPagedAsync(int pageIndex, int pageSize, object args);
+
+        Task<IEnumerable<T>> Select(object args);
 
         Task<bool> DeleteAsync(int id);
+
     }
+
 }

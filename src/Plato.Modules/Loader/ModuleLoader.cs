@@ -60,8 +60,9 @@ namespace Plato.Modules
             _loadedAssemblies.TryAdd("Plato.Shell.Abstractions", null);
             _loadedAssemblies.TryAdd("Plato.Repositories", null);
             _loadedAssemblies.TryAdd("Plato.Yaml", null);
-         
-    
+            _loadedAssemblies.TryAdd("Plato.Stores", null);
+
+
 
         }
 

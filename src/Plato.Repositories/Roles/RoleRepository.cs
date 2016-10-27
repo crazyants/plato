@@ -7,6 +7,8 @@ using Plato.Abstractions.Extensions;
 using Plato.Data;
 using Plato.Models.Roles;
 using Plato.Models.Users;
+using Plato.Data.Query;
+using System.Linq.Expressions;
 
 namespace Plato.Repositories.Roles
 {
@@ -93,6 +95,7 @@ namespace Plato.Repositories.Roles
         #endregion
 
         #region "Implementation"
+        
 
         public Task<bool> DeleteAsync(int id)
         {
@@ -182,6 +185,17 @@ namespace Plato.Repositories.Roles
         {
             throw new NotImplementedException();
         }
+
+        public Task<IEnumerable<Role>> Select(object args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Role>> QueryAsync(string sql)
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion
     }

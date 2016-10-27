@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using Plato.Abstractions.Settings;
 using System.Threading.Tasks;
+using Plato.Abstractions.Stores;
 
 namespace Plato.Discussions
 {
     public class DiscussionsController : Controller
     {
 
-        ISiteService _siteService;
+        private readonly ISiteSettingsStore _settingsStore;
         
         public DiscussionsController(
-            ISiteService siteService)
+            ISiteSettingsStore settingsStore)
         {
-            _siteService = siteService;
+            _settingsStore = settingsStore;
         }
         
         public async Task<IActionResult> Index()
@@ -34,7 +35,7 @@ namespace Plato.Discussions
 
             //ViewData["result"] = result;
 
-            var settings = await _siteService.GetSiteSettingsAsync();
+            var settings = await _settingsStore.GetAsync();
 
             List<TextObject> list = new List<TextObject>();
             list.Add(new TextObject("Ryan"));

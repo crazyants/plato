@@ -18,11 +18,11 @@ using Plato.Modules.Abstractions;
 using Plato.Hosting.Web.Middleware;
 using Plato.FileSystem;
 using Microsoft.AspNetCore.Http;
-using Plato.Services.Extensions;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Plato.Hosting.Web.Routing;
+using Plato.Stores.Extensions;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -65,7 +65,7 @@ namespace Plato.Hosting.Web.Extensions
                 
                 internalServices.AddPlatoDbContext()
                     .AddRepositories()
-                    .AddServices();
+                    .AddStores();
 
             });
         }

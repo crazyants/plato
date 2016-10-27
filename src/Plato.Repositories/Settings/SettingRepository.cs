@@ -8,6 +8,7 @@ using System.Data;
 using Plato.Abstractions.Extensions;
 using System.Data.Common;
 using Plato.Abstractions.Settings;
+using Plato.Data.Query;
 
 namespace Plato.Repositories.Settings
 {
@@ -134,6 +135,11 @@ namespace Plato.Repositories.Settings
             return settings;
         }
 
+        public Task<IEnumerable<Setting>> Select(object args)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<Setting>> SelectPagedAsync(int pageIndex, int pageSize, object options)
         {
             throw new NotImplementedException();
@@ -144,37 +150,42 @@ namespace Plato.Repositories.Settings
         #region "Private Methods"
 
         private async Task<int> InsertUpdateInternal(
-            int Id,    
-            int SpaceId,
-            string Key,
-            string Value,
-            DateTime? CreatedDate,
-            int CreatedUserId,
-            DateTime? ModifiedDate,
-            int ModifiedUserId
+            int id,    
+            int spaceId,
+            string key,
+            string value,
+            DateTime? createdDate,
+            int createdUserId,
+            DateTime? modifiedDate,
+            int modifiedUserId
             )
         {
-
-      
-            int id = 0;
+            
             using (var context = _dbContext)
             {
-                id = await context.ExecuteScalarAsync<int>(
+                return await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateSetting",
-                    Id,               
-                    SpaceId,
-                    Key.ToEmptyIfNull(),
-                    Value.ToEmptyIfNull(),
-                    CreatedDate,
-                    CreatedUserId,
-                    ModifiedDate,
-                    ModifiedUserId);
+                    id,               
+                    spaceId,
+                    key.ToEmptyIfNull().TrimToSize(255),
+                    value.ToEmptyIfNull(),
+                    createdDate,
+                    createdUserId,
+                    modifiedDate,
+                    modifiedUserId);
             }
 
-            return id;
+      
 
         }
+
+        public Task<IQuery> QueryAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+
 
         #endregion
 

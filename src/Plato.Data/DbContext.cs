@@ -4,6 +4,10 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 using System.Data.Common;
+using Plato.Data.Query;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+
 
 namespace Plato.Data
 {
@@ -43,7 +47,7 @@ namespace Plato.Data
             if (string.IsNullOrEmpty(cfg.ConnectionString))
                 throw new ArgumentNullException(nameof(cfg.ConnectionString));
                  
-            var providerFactory = new DataProviderFactory(cfg.ConnectionString, cfg.DatabaseProvider);
+            var providerFactory = new DataProviderFactory(cfg);
             if (providerFactory.Provider == null)            
                 throw new Exception(string.Format("The specified data provider \"{0}\" is not supported!", cfg.DatabaseProvider));
             
@@ -96,7 +100,7 @@ namespace Plato.Data
             _provider.Execute(sql, args);
 
         }
-
+        
         #endregion
 
         #region "Private Methods"
@@ -124,7 +128,8 @@ namespace Plato.Data
         {
             _provider.Dispose();
         }
-        
+
+
         #endregion
 
 

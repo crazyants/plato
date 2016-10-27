@@ -3,8 +3,11 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Data.SqlClient;
+using System.Linq.Expressions;
 using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
+using Plato.Data.Query;
+using System.Collections.Generic;
 
 namespace Plato.Data
 {
@@ -13,13 +16,13 @@ namespace Plato.Data
 
         #region "Private Variables"
 
-        private string _connectionString;
+        private readonly string _connectionString;
+        private readonly string _tablePrefix;
         private SqlConnection _dbConnection;
-        private DbTransaction _transaction;
         private static int _sharedConnectionDepth;
         private int _oneTimeCommandTimeout;
         private string _lastSql;
-        object[] _lastArgs;
+        private object[] _lastArgs;
 
         #endregion
 
@@ -30,10 +33,26 @@ namespace Plato.Data
         }
 
         public SqlProvider(string connectionString)
+            : this(connectionString, "", 120)
         {
-            _connectionString = connectionString;          
+                  
         }
-            
+        public SqlProvider(string connectionString, string tablePrefix)
+      : this(connectionString, tablePrefix, 120)
+        {
+
+        }
+
+        public SqlProvider(
+            string connectionString, 
+            string tablePrefix,
+            int oneTimeCommandTimeout)
+        {
+            _connectionString = connectionString;
+            _tablePrefix = tablePrefix;
+            _oneTimeCommandTimeout = oneTimeCommandTimeout;
+        }
+
         #endregion
 
         #region "Properties"
@@ -44,11 +63,13 @@ namespace Plato.Data
 
         public int CommandTimeout { get; set; }
 
-        public DbTransaction Transaction
+        public DbTransaction Transaction { get; }
+
+        public IDbConnection Connection
         {
             get
-            {       
-                return _transaction;
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -61,8 +82,10 @@ namespace Plato.Data
             if (_sharedConnectionDepth == 0)
             {
 
-                _dbConnection = new SqlConnection();
-                _dbConnection.ConnectionString = _connectionString;
+                _dbConnection = new SqlConnection
+                {
+                    ConnectionString = _connectionString
+                };
                 _dbConnection.Open();
                 if (KeepConnectionAlive)
                     _sharedConnectionDepth++;
@@ -75,8 +98,7 @@ namespace Plato.Data
             if (_sharedConnectionDepth == 0)
             {
 
-                _dbConnection = new SqlConnection();
-                _dbConnection.ConnectionString = _connectionString;
+                _dbConnection = new SqlConnection {ConnectionString = _connectionString};
                 await _dbConnection.OpenAsync();
                 if (KeepConnectionAlive)
                     _sharedConnectionDepth++;
@@ -195,9 +217,7 @@ namespace Plato.Data
 
         
             return Task.FromResult((T)Convert.ChangeType(output, typeof(T)));
-
-            //return  (T)Convert.ChangeType(output, typeof(T)); ;
-
+            
         }
                 
 
@@ -226,7 +246,9 @@ namespace Plato.Data
                 throw;
             }
         }
-        
+
+
+
         public void Dispose()
         {
             Close();
@@ -282,7 +304,7 @@ namespace Plato.Data
         void AddParam(IDbCommand cmd, object item)
         {
 
-            string paramPrefix = "@";
+            var paramPrefix = "@";
                        
             var p = cmd.CreateParameter();
             p.ParameterName = string.Format("{0}{1}", 
@@ -329,11 +351,7 @@ namespace Plato.Data
 
         }
 
-        //public Func<object, object> GetToDbConverter(Type SourceType)
-        //{
-        //    return null;
-        //}
-
+      
         #endregion
 
         #region "Virtual Methods"
@@ -354,7 +372,7 @@ namespace Plato.Data
         public virtual void OnConnectionClosing(IDbConnection conn) { }
 
         public virtual void OnExecutingCommand(IDbCommand cmd) { }
-
+        
         #endregion
 
     }

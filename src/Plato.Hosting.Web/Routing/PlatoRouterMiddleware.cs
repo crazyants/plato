@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Plato.Abstractions.Settings;
 using Plato.Shell.Models;
 using Plato.Abstractions;
+using Plato.Abstractions.Stores;
 
 namespace Plato.Hosting.Web.Routing
 {
@@ -111,7 +112,7 @@ namespace Plato.Hosting.Web.Routing
                 inlineConstraintResolver)
             );
             
-            var siteService = routeBuilder.ServiceProvider.GetService<ISiteService>();                
+            var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();                
             if (siteService != null)
             {
                 // Add home page route

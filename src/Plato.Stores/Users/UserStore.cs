@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Plato.Models.Users;
 using Plato.Repositories.Users;
 
-namespace Plato.Services.Users
+namespace Plato.Stores.Users
 {
     public class UserStore :
         IUserStore<User>,

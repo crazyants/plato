@@ -12,11 +12,14 @@ using Plato.Models.Settings;
 using Plato.Shell;
 using Plato.Shell.Extensions;
 using Plato.Repositories.Users;
-
 using Plato.Abstractions.Settings;
 using Microsoft.AspNetCore.Routing;
 using Plato.Data;
 using Plato.Models.Roles;
+using Plato.Abstractions.Stores;
+using Plato.Stores.Roles;
+using Plato.Stores.Users;
+using Plato.Repositories.Roles;
 
 namespace Plato.Controllers
 {
@@ -28,9 +31,13 @@ namespace Plato.Controllers
         private readonly ISettingRepository<Setting> _settingRepository;
         private readonly ISettingsFactory _settingsFactory;
         private readonly IShellSettingsManager _shellSettingsManager;
-        private readonly ISiteService _siteService;
+        private readonly ISiteSettingsStore _settingsStore;
         private readonly IDbContext _dbContext;
         private readonly IRunningShellTable _runningShellTable;
+        private IRoleRepository<Role> _rolesRepository;
+        private readonly IRoleStore _roleStore;
+
+
 
         public HomeController(
             IDbContext dbContext,
@@ -40,7 +47,9 @@ namespace Plato.Controllers
             ISettingsFactory settingsFactory,
             IShellSettingsManager shellSettingsManager,
             IRunningShellTable runningShellTable,
-            ISiteService siteService
+            ISiteSettingsStore settingsStore,
+            IRoleRepository<Role> rolesRepository,
+            IRoleStore roleStore
             )
         {
             //_fileSystem = fileSystem;
@@ -50,7 +59,9 @@ namespace Plato.Controllers
             _settingsFactory = settingsFactory;
             _shellSettingsManager = shellSettingsManager;
             _runningShellTable = runningShellTable;
-            _siteService = siteService;
+            _settingsStore = settingsStore;
+            _rolesRepository = rolesRepository;
+            _roleStore = roleStore;
             _dbContext = dbContext;
 
 
@@ -154,7 +165,7 @@ namespace Plato.Controllers
             HomeRoute.Add("Area", "Plato.Login");
            
             ISiteSettings settings =
-                await _siteService.UpdateSiteSettingsAsync(
+                await _settingsStore.SaveAsync(
                 new SiteSettings()
                 {                    
                     SiteName = "My Site",
@@ -166,7 +177,7 @@ namespace Plato.Controllers
 
             sb.Append("<br>");
 
-            var test = await _siteService.GetSiteSettingsAsync();
+            var test = await _settingsStore.GetAsync();
             if (test != null)
             {
                 foreach (var route in test.HomeRoute)
@@ -184,8 +195,14 @@ namespace Plato.Controllers
                 sb.Append(test.BaseUrl);
                 sb.Append("<br>");
             }
-       
-            
+
+
+
+            //var roles = _roleStore.GetAsync(1, 20,
+            //    Username = "Ryan");
+
+
+
 
             System.Random rand = new System.Random();
             
@@ -230,7 +247,11 @@ namespace Plato.Controllers
                     RoleId = 2
                 }
             };
-            
+
+
+            var roles = await _rolesRepository.QueryAsync(r => r.Name == "Administrator");
+
+
 
             //var user = _userRepository.SelectByIdAsync(1);
 

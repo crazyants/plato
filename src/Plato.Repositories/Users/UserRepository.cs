@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
 using Plato.Models.Roles;
+using Plato.Data.Query;
 
 namespace Plato.Repositories.Users
 {
@@ -329,6 +330,16 @@ namespace Plato.Repositories.Users
             }
                  
 
+        }
+
+        public Task<IEnumerable<User>> Select(object args)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IQuery> QueryAsync()
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
