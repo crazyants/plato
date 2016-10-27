@@ -7,8 +7,8 @@ using Plato.Abstractions.Extensions;
 using Plato.Data;
 using Plato.Models.Roles;
 using Plato.Models.Users;
-using Plato.Data.Query;
 using System.Linq.Expressions;
+using Plato.Data.Query;
 
 namespace Plato.Repositories.Roles
 {
@@ -180,23 +180,51 @@ namespace Plato.Repositories.Roles
             return role;
 
         }
-
-        public Task<IEnumerable<Role>> SelectPagedAsync(int pageIndex, int pageSize, object options)
+        
+        public async Task<IEnumerable<Role>> SelectAsync(IQuery query)
         {
-            throw new NotImplementedException();
-        }
 
-        public Task<IEnumerable<Role>> Select(object args)
-        {
-            throw new NotImplementedException();
-        }
+            List<Role> roles = null;
+            using (var context = _dbContext)
+            {
 
-        public Task<IEnumerable<Role>> QueryAsync(string sql)
-        {
-            throw new NotImplementedException();
-        }
+                var reader = await context.ExecuteReaderAsync(
+                  CommandType.StoredProcedure,
+                  "plato_sp_SelectRole",
+                      query.PageIndex,
+                      query.PageSize,
+                      query.BuildSql(),
+                      query.BuildSqlCount());
 
+                if (reader != null)
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var role = new Role();
+                        role.PopulateModel(reader);
+                        roles.Add(role);
+                    };
+                
+                }
+           
+            }
+
+            return roles;
+
+        }
 
         #endregion
+
+        private RoleQuery _query = null;
+
+        public IQuery Query
+        {
+            get
+            {
+                if (_query == null)
+                    _query = new RoleQuery();
+                return _query;
+            }
+        }
     }
 }

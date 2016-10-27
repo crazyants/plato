@@ -12,10 +12,8 @@ namespace Plato.Repositories
 
         Task<T> SelectByIdAsync(int id);
  
-        Task<IEnumerable<T>> SelectPagedAsync(int pageIndex, int pageSize, object args);
-
-        Task<IEnumerable<T>> Select(object args);
-
+        Task<IEnumerable<T>> SelectAsync(IQuery query);
+        
         Task<bool> DeleteAsync(int id);
 
     }

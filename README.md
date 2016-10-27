@@ -2026,6 +2026,76 @@ GO
 
 
 
+CREATE PROCEDURE [plato_sp_SelectUsersPaged] (
+@PageIndex int,
+@PageSize int,
+@SQLPopulate nvarchar(max),
+@SQLCount nvarchar(max),
+@SQLMaxRank nvarchar(max),
+@ReturnCount bit
+)
+AS
+
+SET NOCOUNT ON
+
+IF (@SQLPopulate <> '')
+BEGIN
+
+	DECLARE @temp TABLE
+	(
+		IndexID int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
+		UserId int, 
+		[Rank] int,
+		MaxRank int
+	)
+
+	INSERT INTO @temp (UserId, [Rank]) 
+	EXECUTE sp_executesql @SQLPopulate 
+
+	-- return our full text max rank
+	DECLARE @intMaxRank int
+	IF (@SQLMaxRank <> '')
+	BEGIN
+
+		-- insert full text max rank
+		INSERT INTO @temp (MaxRank)
+		EXECUTE sp_executesql @SQLMaxRank
+	
+		-- set max rank
+		SET @intMaxRank = (SELECT IsNull(MaxRank, 0) FROM @temp WHERE IndexID = @@IDENTITY)
+		DELETE FROM @temp WHERE IndexID = @@IDENTITY
+		UPDATE @temp SET MaxRank = @intMaxRank
+
+	END
+
+	SELECT 
+	u.*,
+	IPI.[Rank], 
+	IPI.MaxRank	
+	FROM @temp AS IPI
+		INNER JOIN Plato_Users u WITH (nolock) 
+		ON u.Id = IPI.UserId  		
+	ORDER BY IPI.IndexID
+
+END
+
+-- return rcord count?
+IF (@ReturnCount = 1)
+BEGIN
+	EXECUTE sp_executesql @SQLCount
+END
+
+
+
+GO
+
+-------------------------------
+
+GO
+
+
+
+
 -- ************************************
 -- INSERT DEFAULT DATA
 -- ************************************

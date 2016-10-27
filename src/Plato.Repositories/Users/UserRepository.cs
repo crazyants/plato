@@ -137,12 +137,6 @@ namespace Plato.Repositories.Users
             }
         }
 
-        public Task<IEnumerable<User>> SelectPagedAsync(int pageIndex, int pageSize, object options)
-        {
-
-            throw new NotImplementedException();
-            
-        }
 
         public async Task<User> SelectByUserNameNormalizedAsync(string userNameNormalized)
         {
@@ -249,11 +243,44 @@ namespace Plato.Repositories.Users
             }
 
         }
+        
+        public async Task<IEnumerable<User>> SelectAsync(IQuery query)
+        {
+
+            List<User> users = null;
+            using (var context = _dbContext)
+            {
+
+                var reader = await context.ExecuteReaderAsync(
+                  CommandType.StoredProcedure,
+                  "plato_sp_SelectRole",
+                      query.PageIndex,
+                      query.PageSize,
+                      query.BuildSql(),
+                      query.BuildSqlCount());
+
+                if (reader != null)
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var user = new User();
+                        user.PopulateModel(reader);
+                        users.Add(user);
+                    };
+
+                }
+
+            }
+
+            return users;
+
+        }
+
 
         #endregion
 
         #region "Private Methods"
-        
+
         private async Task<User> BuildUserFromResultSets(DbDataReader reader)
         {
             var user = new User();
@@ -332,15 +359,7 @@ namespace Plato.Repositories.Users
 
         }
 
-        public Task<IEnumerable<User>> Select(object args)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<IQuery> QueryAsync()
-        {
-            throw new NotImplementedException();
-        }
 
         #endregion
 

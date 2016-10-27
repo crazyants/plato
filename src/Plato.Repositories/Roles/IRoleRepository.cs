@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Plato.Data.Query;
 
 namespace Plato.Repositories.Roles
 {
@@ -11,8 +12,7 @@ namespace Plato.Repositories.Roles
       
         Task<T> SelectByNameAsync(string name);
         
-        Task<IEnumerable<T>> QueryAsync(string sql);
-
+        IQuery Query { get; }
 
     }
 }

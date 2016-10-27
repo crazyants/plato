@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 using System.Linq.Expressions;
 using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
-using Plato.Data.Query;
 using System.Collections.Generic;
 
 namespace Plato.Data

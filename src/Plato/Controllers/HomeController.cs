@@ -17,9 +17,11 @@ using Microsoft.AspNetCore.Routing;
 using Plato.Data;
 using Plato.Models.Roles;
 using Plato.Abstractions.Stores;
+using Plato.Data.Query;
 using Plato.Stores.Roles;
 using Plato.Stores.Users;
 using Plato.Repositories.Roles;
+using Remotion.Linq.Clauses;
 
 namespace Plato.Controllers
 {
@@ -249,10 +251,39 @@ namespace Plato.Controllers
             };
 
 
-            var roles = await _rolesRepository.QueryAsync(r => r.Name == "Administrator");
+            var name = "admin";
+            var data = _rolesRepository.SelectAsync(new RoleQuery()
+            {
+                PageIndex = 1,
+                PageSize = 20,
+                Criteria = new RoleCriteria()
+                {
+                    Name = name
+                },
+                SortBy = "Name",
+                SortOrder = QuerySortOrder.Desc
+            });
 
 
 
+            var users = await _userRepository.SelectAsync(new UserQuery()
+            {
+                PageIndex = 1,
+                PageSize = 20,
+                Criteria = new UserCriteria()
+                {
+                    Name = "admin"
+                }
+            });
+
+            foreach (var user in users)
+            {
+                sb.Append(user.UserName);
+                sb.Append("<br>");
+            }
+           
+
+                
             //var user = _userRepository.SelectByIdAsync(1);
 
             ViewData["result"] = sb.ToString();

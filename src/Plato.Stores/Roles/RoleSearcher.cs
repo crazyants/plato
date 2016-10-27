@@ -11,22 +11,18 @@ namespace Plato.Stores.Roles
     public static class RoleSearcher
     {
 
-        public async static Task<IEnumerable<T>> QueryAsync<T>(
+        public static Task<IEnumerable<T>> QueryAsync<T>(
             this IRoleRepository<T> roleRepository, 
             Expression<Func<T, bool>> predicate) where T : class
         {
 
-            
-            return await roleRepository.QueryAsync(sql => SimpleMapper<T>(predicate));
-
-            // need access to at minimum dbContact
-
-
-            return null;
-
+            throw new NotImplementedException();
+            //return roleRepository.QueryAsync(SimpleMapper<T>(predicate));
+       
         }
 
-        private static string SimpleMapper<T>(Expression<Func<T, bool>> predicate)
+        private static string SimpleMapper<T>(
+            Expression<Func<T, bool>> predicate)
         {
 
             dynamic operation = predicate.Body;
@@ -37,12 +33,13 @@ namespace Plato.Stores.Roles
             ops.Add(ExpressionType.Equal, "=");
             ops.Add(ExpressionType.GreaterThan, ">");
 
-            return String.Format("SELECT * FROM {0} WHERE {1} {2} {3}",
+            var sql = String.Format("SELECT * FROM {0} WHERE {1} {2} {3}",
                 typeof(T),
                 left.Member.Name,
                 ops[operation.NodeType],
                 right.Value);
 
+            return sql;
 
         }
 
