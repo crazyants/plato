@@ -8957,7 +8957,7 @@ function buildParams( prefix, obj, traditional, add ) {
 }
 
 // Serialize an array of form elements or a set of
-// key/values into a query string
+// key/values into a queryBuilder string
 jQuery.param = function( a, traditional ) {
 	var prefix,
 		s = [],

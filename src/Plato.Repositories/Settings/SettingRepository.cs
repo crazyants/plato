@@ -134,16 +134,13 @@ namespace Plato.Repositories.Settings
 
             return settings;
         }
+        
 
-        public Task<IEnumerable<Setting>> Select(object args)
+        public Task<IEnumerable<Setting>> SelectAsync(IQueryBuilder queryBuilder)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Setting>> SelectPagedAsync(int pageIndex, int pageSize, object options)
-        {
-            throw new NotImplementedException();
-        }
 
         #endregion
 
@@ -180,11 +177,10 @@ namespace Plato.Repositories.Settings
 
         }
 
-        public Task<IQuery> QueryAsync()
+        public Task<IEnumerable<TModel>> SelectAsync<TModel>(IQueryBuilder queryBuilder) where TModel : class
         {
             throw new NotImplementedException();
         }
-
 
 
         #endregion

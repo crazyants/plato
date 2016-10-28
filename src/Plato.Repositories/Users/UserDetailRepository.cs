@@ -224,18 +224,13 @@ namespace Plato.Repositories.Users
 
             return detail;
         }
-
-        public Task<IEnumerable<UserDetail>> SelectPagedAsync(int pageIndex, int pageSize, object options)
+        
+        public Task<IEnumerable<UserDetail>> SelectAsync(IQueryBuilder queryBuilder)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<UserDetail>> Select(object args)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IQuery> QueryAsync()
+        public Task<IEnumerable<TModel>> SelectAsync<TModel>(IQueryBuilder queryBuilder) where TModel : class
         {
             throw new NotImplementedException();
         }

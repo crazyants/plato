@@ -12,7 +12,6 @@ namespace Plato.Repositories.Roles
       
         Task<T> SelectByNameAsync(string name);
         
-        IQuery Query { get; }
 
     }
 }

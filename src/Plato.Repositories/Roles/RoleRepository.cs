@@ -91,11 +91,11 @@ namespace Plato.Repositories.Roles
 
         private readonly IDbContext _dbContext;
         private readonly ILogger<RoleRepository> _logger;
-
+        
         #endregion
 
         #region "Implementation"
-        
+
 
         public Task<bool> DeleteAsync(int id)
         {
@@ -180,51 +180,50 @@ namespace Plato.Repositories.Roles
             return role;
 
         }
-        
-        public async Task<IEnumerable<Role>> SelectAsync(IQuery query)
+
+        public Task<IEnumerable<T>> SelectAsync<T>(IQueryBuilder queryBuilder) where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task<IEnumerable<Role>> SelectAsync(IQueryBuilder queryBuilder)
         {
 
-            List<Role> roles = null;
-            using (var context = _dbContext)
-            {
+            return null;
 
-                var reader = await context.ExecuteReaderAsync(
-                  CommandType.StoredProcedure,
-                  "plato_sp_SelectRole",
-                      query.PageIndex,
-                      query.PageSize,
-                      query.BuildSql(),
-                      query.BuildSqlCount());
+            //List<Role> roles = null;
+            //using (var context = _dbContext)
+            //{
 
-                if (reader != null)
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var role = new Role();
-                        role.PopulateModel(reader);
-                        roles.Add(role);
-                    };
+            //    var reader = await context.ExecuteReaderAsync(
+            //      CommandType.StoredProcedure,
+            //      "plato_sp_SelectRole",
+            //          queryBuilder.PageIndex,
+            //          queryBuilder.PageSize,
+            //          queryBuilder.BuildSqlStartId(),
+            //          queryBuilder.BuildSqlPopulate(),
+            //          queryBuilder.BuildSqlCount(),
+            //          queryBuilder.BuildSqlParams());
+
+            //    if (reader != null)
+            //    {
+            //        while (await reader.ReadAsync())
+            //        {
+            //            var role = new Role();
+            //            role.PopulateModel(reader);
+            //            roles.Add(role);
+            //        };
                 
-                }
+            //    }
            
-            }
+            //}
 
-            return roles;
+            //return roles;
 
         }
 
         #endregion
-
-        private RoleQuery _query = null;
-
-        public IQuery Query
-        {
-            get
-            {
-                if (_query == null)
-                    _query = new RoleQuery();
-                return _query;
-            }
-        }
+        
     }
 }

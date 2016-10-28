@@ -64,13 +64,13 @@ namespace Plato.Repositories.Users
 
 
         }
-
-        public Task<IQuery> QueryAsync()
+        
+        public Task<IEnumerable<UserPhoto>> SelectAsync(IQueryBuilder queryBuilder)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<UserPhoto>> Select(object args)
+        public Task<IEnumerable<TModel>> SelectAsync<TModel>(IQueryBuilder queryBuilder) where TModel : class
         {
             throw new NotImplementedException();
         }

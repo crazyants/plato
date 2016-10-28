@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Plato.Data.Query;
 
 namespace Plato.Data
 {
@@ -20,7 +21,7 @@ namespace Plato.Data
         Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] commandParams);
         
         void Execute(CommandType commandType, string sql, params object[] commandParams);
-
+        
     }
 
 }

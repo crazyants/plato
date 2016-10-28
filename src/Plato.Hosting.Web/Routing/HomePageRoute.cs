@@ -64,7 +64,7 @@ namespace Plato.Hosting.Web.Routing
                 }
             }
             
-            // Remove the values that should not be rendered in the query string
+            // Remove the values that should not be rendered in the queryResult string
             foreach (var key in _tokens.Keys)
             {
                 context.Values.Remove(key);

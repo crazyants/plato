@@ -35,6 +35,11 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
+        public Task<IEnumerable<UserSecret>> SelectAsync(IQueryBuilder queryBuilder)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
@@ -57,16 +62,6 @@ namespace Plato.Repositories.Users
 
         }
 
-        public Task<IQuery> QueryAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<UserSecret>> Select(object args)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<UserSecret> SelectByIdAsync(int id)
         {
             UserSecret secret = null;
@@ -87,12 +82,7 @@ namespace Plato.Repositories.Users
             return secret;
 
         }
-
-        public Task<IEnumerable<UserSecret>> SelectPagedAsync(int pageIndex, int pageSize, object options)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         #endregion
         
         #region "Private Methods"
@@ -127,7 +117,12 @@ namespace Plato.Repositories.Users
             return dbId;
 
         }
-        
+
+        public Task<IEnumerable<TModel>> SelectAsync<TModel>(IQueryBuilder queryBuilder) where TModel : class
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
     }

@@ -2,6 +2,7 @@
 using Plato.Modules;
 using Plato.Repositories;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Plato.Modules.Abstractions;
@@ -14,6 +15,7 @@ using Plato.Shell.Extensions;
 using Plato.Repositories.Users;
 using Plato.Abstractions.Settings;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.CodeAnalysis;
 using Plato.Data;
 using Plato.Models.Roles;
 using Plato.Abstractions.Stores;
@@ -249,41 +251,32 @@ namespace Plato.Controllers
                     RoleId = 2
                 }
             };
+            
+            var users = await _userRepository
+                .Query()
+                .Page(1, 20)
+                //.Where<User>(u => u.UserName == "Admnistrator")
+                .Where<User>(u => u.Id > 10)
+                .ToListAsync<User>();
 
+            sb.Append("<h2>Users</h2>");
 
-            var name = "admin";
-            var data = _rolesRepository.SelectAsync(new RoleQuery()
+            if (users != null)
             {
-                PageIndex = 1,
-                PageSize = 20,
-                Criteria = new RoleCriteria()
+                foreach (var user in users)
                 {
-                    Name = name
-                },
-                SortBy = "Name",
-                SortOrder = QuerySortOrder.Desc
-            });
-
-
-
-            var users = await _userRepository.SelectAsync(new UserQuery()
-            {
-                PageIndex = 1,
-                PageSize = 20,
-                Criteria = new UserCriteria()
-                {
-                    Name = "admin"
+                    sb.Append(user.UserName);
+                    sb.Append("<br>");
                 }
-            });
 
-            foreach (var user in users)
-            {
-                sb.Append(user.UserName);
-                sb.Append("<br>");
             }
-           
+            else
+            {
+                sb.Append(("No Users!"));
+            }
 
-                
+
+
             //var user = _userRepository.SelectByIdAsync(1);
 
             ViewData["result"] = sb.ToString();

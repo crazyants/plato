@@ -40,15 +40,17 @@ namespace Plato.Stores.Roles
         public async Task<IEnumerable<Role>> GetAsync(int pageIndex, int pageSize, params object[] args)
         {
 
-            List<Role> roles;
-            if (!_memoryCache.TryGetValue(_key, out roles))
-            {
-                roles = await _roleRepository.SelectPagedAsync(pageIndex, pageSize, null) as List<Role>;
-                if (roles != null)
-                    _memoryCache.Set(_key, roles.ToList());
-            }
+            throw new NotImplementedException();
 
-            return roles;
+            //List<Role> roles;
+            //if (!_memoryCache.TryGetValue(_key, out roles))
+            //{
+            //    roles = await _roleRepository(pageIndex, pageSize, null) as List<Role>;
+            //    if (roles != null)
+            //        _memoryCache.Set(_key, roles.ToList());
+            //}
+
+            //return roles;
 
         }
 

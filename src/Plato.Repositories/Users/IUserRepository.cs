@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Plato.Data.Query;
 
 namespace Plato.Repositories.Users
 {
@@ -20,5 +21,9 @@ namespace Plato.Repositories.Users
 
         Task<T> SelectByApiKeyAsync(string apiKey);
         
+        IQuery Query();
+
+        
     }
+
 }

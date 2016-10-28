@@ -244,35 +244,54 @@ namespace Plato.Repositories.Users
 
         }
         
-        public async Task<IEnumerable<User>> SelectAsync(IQuery query)
+        public IQuery Query()
+        {
+            return new UserQuery(this);
+        }
+        
+        public Task<IEnumerable<User>> SelectAsync(IQueryBuilder queryBuilder)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<T>> SelectAsync<T>(IQueryBuilder queryBuilder) where T : class
         {
 
-            List<User> users = null;
+            string first = queryBuilder.BuildSqlStartId();
+            string populate = queryBuilder.BuildSqlPopulate();
+            string count = queryBuilder.BuildSqlCount();
+            string param = queryBuilder.BuildSqlParams();
+
+            List<T> data = null;
             using (var context = _dbContext)
             {
 
                 var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                  "plato_sp_SelectRole",
-                      query.PageIndex,
-                      query.PageSize,
-                      query.BuildSql(),
-                      query.BuildSqlCount());
+                  "plato_sp_SelectUsersPaged2",
+                      queryBuilder.PageIndex,
+                      queryBuilder.PageSize,
+                      queryBuilder.BuildSqlStartId(),
+                      queryBuilder.BuildSqlPopulate(),
+                      queryBuilder.BuildSqlCount(),
+                      queryBuilder.BuildSqlParams()
+                      );
 
                 if (reader != null)
                 {
+                    data = new List<T>();
                     while (await reader.ReadAsync())
                     {
                         var user = new User();
                         user.PopulateModel(reader);
-                        users.Add(user);
+                        data.Add((T)Convert.ChangeType(user, typeof(T)));
                     };
 
                 }
 
             }
 
-            return users;
+            return data;
 
         }
 
@@ -359,7 +378,7 @@ namespace Plato.Repositories.Users
 
         }
 
-
+   
 
         #endregion
 

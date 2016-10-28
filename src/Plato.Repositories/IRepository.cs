@@ -11,8 +11,10 @@ namespace Plato.Repositories
         Task<T> InsertUpdateAsync(T entity);
 
         Task<T> SelectByIdAsync(int id);
- 
-        Task<IEnumerable<T>> SelectAsync(IQuery query);
+
+        Task<IEnumerable<T>> SelectAsync(IQueryBuilder queryBuilder);
+
+        Task<IEnumerable<TModel>> SelectAsync<TModel>(IQueryBuilder queryBuilder) where TModel : class;
         
         Task<bool> DeleteAsync(int id);
 

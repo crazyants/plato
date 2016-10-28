@@ -74,12 +74,11 @@ namespace Plato.Repositories.Users
         {
             throw new NotImplementedException();
         }
-
-        public Task<IEnumerable<UserRole>> SelectPagedAsync(int pageIndex, int pageSize, object options)
+        
+        public Task<IEnumerable<UserRole>> SelectAsync(IQueryBuilder queryBuilder)
         {
             throw new NotImplementedException();
         }
-
 
         public Task<IEnumerable<UserRole>> InsertUserRoles(int userId, IEnumerable<string> roleNames)
         {
@@ -153,15 +152,13 @@ namespace Plato.Repositories.Users
             
         }
 
-        public Task<IEnumerable<UserRole>> Select(object args)
+        public Task<IEnumerable<TModel>> SelectAsync<TModel>(IQueryBuilder queryBuilder) where TModel : class
         {
             throw new NotImplementedException();
         }
 
-        public Task<IQuery> QueryAsync()
-        {
-            throw new NotImplementedException();
-        }
+
+
 
         #endregion
 
