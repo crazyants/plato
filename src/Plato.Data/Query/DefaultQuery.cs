@@ -34,6 +34,7 @@ namespace Plato.Data.Query
         public DefaultQuery()
         {
             _builder = new StringBuilder();
+            _expressions = new List<QueryExpression>();
         }
         
         private int _pageIndex;

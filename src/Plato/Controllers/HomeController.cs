@@ -255,8 +255,9 @@ namespace Plato.Controllers
             var users = await _userRepository
                 .Query()
                 .Page(1, 10)
-                .Where<User>(u => u.UserName == "Admnistrator")
-                .Where<User>(u => u.Id > 10)
+                .Where<User>(u => u.UserName.StartsWith("Mark"))
+                //.Where<User>(u => u.UserName == "Mark")
+                //.Where<User>(u => u.Id > 10)
                 .ToListAsync<User>();
 
             sb.Append("<h2>Users</h2>");
