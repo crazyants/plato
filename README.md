@@ -2085,7 +2085,77 @@ BEGIN
 	EXECUTE sp_executesql @SQLCount
 END
 
+GO
 
+------------------------------
+
+GP
+
+
+
+CREATE  PROCEDURE plato_sp_SelectUsersPaged
+(    
+	@PageIndex int = 1,
+    @PageSize int = 10,
+	@SqlStartId nvarchar(max) = 'SELECT @start_id_out = Id FROM Plato_Users ORDER BY Id',
+	@SqlPopulate nvarchar(max) = 'SELECT * FROM Plato_Users WHERE Id >= @start_id_in ORDER BY Id',
+	@SqlCount nvarchar(max) = 'SELECT COUNT(Id) FROM Plato_Users',
+	@SqlParams nvarchar(max) = '@Id int, @UserName nvarchar(255), @Email nvarchar(255)',
+	@Id int = 0,
+	@UserName nvarchar(255) = '',
+	@Email nvarchar(255) = ''
+)
+AS
+
+DECLARE @first_id int, 
+	@start_row int
+
+-- set start row pageSize * pageIndex - pageSize - 1
+-- 1 * 5  = 1, 2 * 5 = 6, 3 * 5 = 11
+-- 1 * 10  = 1, 2 * 10 = 11, 3 * 10 = 21
+SET @start_row = 1;
+IF (@PageIndex > 1)
+	SET @start_row = (
+		(@PageIndex * @PageSize) - ( @PageSize - 1 )
+	)
+
+-- Get the first row for our page of records
+SET ROWCOUNT @start_row
+DECLARE @parms nvarchar(100);
+
+-- get the first Id
+SET @parms = '@start_id_out int OUTPUT,' + + @SqlParams;  
+EXECUTE sp_executesql  @SqlStartId, @parms, 
+	@start_id_out = @first_id OUTPUT,
+	@Id = 1,
+	@UserName = '',
+	@Email = ''
+
+-- set to our page size
+SET ROWCOUNT @PageSize
+
+-- add our start parameter to the start
+SET @SqlParams = '@start_id_in int,' + @SqlParams;
+
+-- get all records >= @first_id
+EXECUTE sp_executesql @SqlPopulate, @SqlParams, 
+	@start_id_in = @first_id,
+	@Id = 1,
+	@UserName = '',
+	@Email = ''
+
+SET ROWCOUNT 0;
+
+-- total count
+IF (@SqlCount <> '')
+	EXECUTE sp_executesql @SqlCount, @SqlParams, 
+		@start_id_in = @first_id,
+		@Id = 1,
+		@UserName = '',
+		@Email = ''
+		
+
+GO
 
 GO
 
