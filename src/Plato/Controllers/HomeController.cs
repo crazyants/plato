@@ -254,8 +254,8 @@ namespace Plato.Controllers
             
             var users = await _userRepository
                 .Query()
-                .Page(1, 20)
-                //.Where<User>(u => u.UserName == "Admnistrator")
+                .Page(1, 10)
+                .Where<User>(u => u.UserName == "Admnistrator")
                 .Where<User>(u => u.Id > 10)
                 .ToListAsync<User>();
 

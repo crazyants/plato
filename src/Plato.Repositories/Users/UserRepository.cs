@@ -254,28 +254,18 @@ namespace Plato.Repositories.Users
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<T>> SelectAsync<T>(IQueryBuilder queryBuilder) where T : class
+        public async Task<IEnumerable<T>> SelectAsync<T>(params object[] inputParameters) where T : class
         {
-
-            string first = queryBuilder.BuildSqlStartId();
-            string populate = queryBuilder.BuildSqlPopulate();
-            string count = queryBuilder.BuildSqlCount();
-            string param = queryBuilder.BuildSqlParams();
-
+            
             List<T> data = null;
             using (var context = _dbContext)
             {
 
                 var reader = await context.ExecuteReaderAsync(
-                  CommandType.StoredProcedure,
-                  "plato_sp_SelectUsersPaged2",
-                      queryBuilder.PageIndex,
-                      queryBuilder.PageSize,
-                      queryBuilder.BuildSqlStartId(),
-                      queryBuilder.BuildSqlPopulate(),
-                      queryBuilder.BuildSqlCount(),
-                      queryBuilder.BuildSqlParams()
-                      );
+                    CommandType.StoredProcedure,
+                    "plato_sp_SelectUsersPaged2",
+                    inputParameters
+                );
 
                 if (reader != null)
                 {

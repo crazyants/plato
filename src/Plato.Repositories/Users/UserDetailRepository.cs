@@ -225,12 +225,13 @@ namespace Plato.Repositories.Users
             return detail;
         }
         
-        public Task<IEnumerable<UserDetail>> SelectAsync(IQueryBuilder queryBuilder)
+   
+        public Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<TModel>> SelectAsync<TModel>(IQueryBuilder queryBuilder) where TModel : class
+        public Task<IEnumerable<UserDetail>> SelectAsync(IQueryBuilder queryBuilder)
         {
             throw new NotImplementedException();
         }

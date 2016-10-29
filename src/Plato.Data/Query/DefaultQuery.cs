@@ -20,11 +20,9 @@ namespace Plato.Data.Query
 
         IQuery Where<T>(Expression<Func<T, bool>> predicate);
 
-        string ToString();
-
         Task<IEnumerable<T>> ToListAsync<T>() where T : class;
         
-        IEnumerable<QueryExpression> Expressions { get; }
+        List<QueryExpression> Expressions { get; }
 
     }
 
@@ -72,21 +70,21 @@ namespace Plato.Data.Query
             ops.Add(ExpressionType.LessThan, "<");
             ops.Add(ExpressionType.LessThanOrEqual, "<=");
             
-            AddExpressions(
-                left.Member.Name,
-                operation.NodeType,
-                ops[operation.NodeType],
-                right.Value);
+            if (_expressions == null)
+                _expressions = new List<QueryExpression>();
             
+            _expressions.Add(new QueryExpression()
+            {
+                Name = left.Member.Name,
+                ExpressionType = operation.NodeType,
+                ExpressionOperator = ops[operation.NodeType],
+                Value = right.Value,
+            });
+
             return this;
 
         }
-
-        public override string ToString()
-        {
-            return _builder.ToString();
-        }
-
+        
         public virtual Task<IEnumerable<T>> ToListAsync<T>() where T : class
         {
             return null;
@@ -94,33 +92,15 @@ namespace Plato.Data.Query
 
         // ---------------------
         
-        public IEnumerable<QueryExpression> Expressions => _expressions;
+        public List<QueryExpression> Expressions => _expressions;
 
         private List<QueryExpression> _expressions;
 
-        private void AddExpressions(
-            string name, 
-            ExpressionType expressionType, 
-            string expressionOperator,
-            object value)
-        {
-
-            if (_expressions == null)
-                _expressions = new List<QueryExpression>();
-
-            _expressions.Add(new QueryExpression()
-            {
-                Name = name,
-                ExpressionType = expressionType,
-                ExpressionOperator = expressionOperator,
-                Value = value,
-            });
 
 
         }
         
-    }
-
+  
     public class QueryExpression
     {
         public string Name { get; set; }
@@ -138,5 +118,7 @@ namespace Plato.Data.Query
         Asc,
         Desc
     }
+
+
 
 }

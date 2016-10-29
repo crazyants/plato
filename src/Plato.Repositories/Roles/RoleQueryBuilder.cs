@@ -55,11 +55,7 @@ namespace Plato.Repositories.Roles
             return sb.ToString();
         }
 
-        public override string BuildSqlParams()
-        {
-            throw new NotImplementedException();
-
-        }
+     
 
         private string Buildwhere()
         {

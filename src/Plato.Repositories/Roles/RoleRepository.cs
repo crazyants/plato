@@ -187,7 +187,7 @@ namespace Plato.Repositories.Roles
         }
 
 
-        public Task<IEnumerable<Role>> SelectAsync(IQueryBuilder queryBuilder)
+        public Task<IEnumerable<Role>> SelectAsync(IQueryBuilder queryBuilder, params object[] inputParameterss)
         {
 
             return null;
@@ -204,7 +204,7 @@ namespace Plato.Repositories.Roles
             //          queryBuilder.BuildSqlStartId(),
             //          queryBuilder.BuildSqlPopulate(),
             //          queryBuilder.BuildSqlCount(),
-            //          queryBuilder.BuildSqlParams());
+            //          queryBuilder.BuildSqlInputParams());
 
             //    if (reader != null)
             //    {
@@ -223,7 +223,17 @@ namespace Plato.Repositories.Roles
 
         }
 
+        public Task<IEnumerable<Role>> SelectAsync(IQueryBuilder queryBuilder)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
-        
+
     }
 }

@@ -157,6 +157,11 @@ namespace Plato.Repositories.Users
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        {
+            throw new NotImplementedException();
+        }
+
 
 
 

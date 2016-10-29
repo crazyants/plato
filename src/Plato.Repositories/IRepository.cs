@@ -14,7 +14,7 @@ namespace Plato.Repositories
 
         Task<IEnumerable<T>> SelectAsync(IQueryBuilder queryBuilder);
 
-        Task<IEnumerable<TModel>> SelectAsync<TModel>(IQueryBuilder queryBuilder) where TModel : class;
+        Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class;
         
         Task<bool> DeleteAsync(int id);
 

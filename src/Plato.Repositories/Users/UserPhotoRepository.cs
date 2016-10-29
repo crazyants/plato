@@ -75,6 +75,11 @@ namespace Plato.Repositories.Users
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<UserPhoto> SelectByIdAsync(int Id)
         {
             UserPhoto photo = null;
@@ -94,12 +99,7 @@ namespace Plato.Repositories.Users
 
             return photo;
         }
-
-        public Task<IEnumerable<UserPhoto>> SelectPagedAsync(int pageIndex, int pageSize, object options)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         #endregion
         
         #region "Private Methods"

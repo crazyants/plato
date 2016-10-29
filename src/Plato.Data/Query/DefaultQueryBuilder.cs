@@ -20,7 +20,6 @@ namespace Plato.Data.Query
 
         string BuildSqlCount();
 
-        string BuildSqlParams();
 
     }
     
@@ -31,14 +30,12 @@ namespace Plato.Data.Query
 
         public virtual int PageSize { get; } = 10;
 
-        public abstract string BuildSqlCount();
-
-        public abstract string BuildSqlParams();
+        public abstract string BuildSqlStartId();
         
         public abstract string BuildSqlPopulate();
 
-        public abstract string BuildSqlStartId();
-
+        public abstract string BuildSqlCount();
+        
     }
 
 }

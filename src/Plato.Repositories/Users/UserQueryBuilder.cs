@@ -30,8 +30,27 @@ namespace Plato.Repositories.Users
 
         public override async Task<IEnumerable<T>> ToListAsync<T>() 
         {
-            IQueryBuilder qr = new UserQueryBuilder(this);
-            return await _repository.SelectAsync<T>(qr);
+
+            IQueryBuilder builder = new UserQueryBuilder(this);
+
+            // define all searchable input parameters 
+
+            var id = this.Expressions.FirstOrDefault(e => e.Name == "Id");
+            var userName = this.Expressions.FirstOrDefault(e => e.Name == "UserName");
+            var email = this.Expressions.FirstOrDefault(e => e.Name == "Email");
+            
+            return await _repository.SelectAsync<T>(
+                builder.PageIndex,
+                builder.PageSize,
+                builder.BuildSqlStartId(),
+                builder.BuildSqlPopulate(),
+                builder.BuildSqlCount(),
+                "@id int, @UserName nvarchar(255), @Email nvarchar(255)",
+                id != null ? id.Value : 0,
+                userName != null ? userName.Value : string.Empty,
+                email != null ? email.Value : string.Empty
+                );
+
         }
         
     }
@@ -43,10 +62,13 @@ namespace Plato.Repositories.Users
     public class UserQueryBuilder : DefaultQueryBuilder
     {
         private readonly IQuery _query;
-
+        
         public UserQueryBuilder(IQuery query)
         {
             _query = query;
+
+      
+            
         }
 
         public override string BuildSqlStartId()
@@ -81,36 +103,11 @@ namespace Plato.Repositories.Users
 
             return sb.ToString();
         }
-
-        public override string BuildSqlParams()
-        {
-
-            //var expressions = _query.Expressions.ToList();
-            //var sb = new StringBuilder();
-
-            //var i = 0;
-            //foreach (var exp in expressions)
-            //{
-            //    sb.Append("@");
-            //    sb.Append(exp.Name);
-            //    sb.Append(" sql_variant");
-            //    if (i < expressions.Count - 1)
-            //        sb.Append(", ");
-            //    i += 1;
-            //}
-
-            //return sb.ToString();
-
-            // @FirstId is required and represents the Id to start from
-            return @"@Id int, @UserName nvarchar(255), @Email nvarchar(255)";
-
-        }
+        
         
         private string BuildWhere(bool includeStartId = true)
         {
-
             
-
             var sb = new StringBuilder();
             foreach (var exp in _query.Expressions)
             {
