@@ -251,13 +251,18 @@ namespace Plato.Controllers
                     RoleId = 2
                 }
             };
-            
+
+            var o = new UserQueryObject();
+            o.Id = 7;
+
             var users = await _userRepository
                 .Query()
                 .Page(1, 10)
-                .Where<User>(u => u.UserName.StartsWith("Mark"))
-                //.Where<User>(u => u.UserName == "Mark")
-                //.Where<User>(u => u.Id > 10)
+                .Define<UserQueryObject>(qb =>
+                {
+                    //qb.Id = 1;
+                    qb.UserNameContains = "Doe";
+                })
                 .ToListAsync<User>();
 
             sb.Append("<h2>Users</h2>");

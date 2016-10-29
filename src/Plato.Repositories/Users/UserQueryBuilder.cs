@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Plato.Data.Query;
 using Plato.Data;
 using Plato.Repositories.Roles;
@@ -16,7 +18,18 @@ using Plato.Abstractions.Extensions;
 
 namespace Plato.Repositories.Users
 {
-    
+
+    public class UserQueryObject 
+    {
+        public int Id;
+        public int[] Ids;
+        public string UserNameEquals;
+        public string UserNameStartsWith;
+        public string UserNameEndsWith;
+        public string UserNameContains;
+        public string Email;
+    }
+
     #region "UserQuery"
 
     public class UserQuery : DefaultQuery
@@ -28,17 +41,37 @@ namespace Plato.Repositories.Users
             _repository = repository;
         }
 
+        public UserQueryObject Paramaters { get; set; }
+
+        public override IQuery Define<T>(Action<T> action)
+        {
+            var defaultQueryObject = new UserQueryObject();
+            action((T)Convert.ChangeType(defaultQueryObject, typeof(T)));
+            this.Paramaters = defaultQueryObject;
+            return this;
+        }
+
         public override async Task<IEnumerable<T>> ToListAsync<T>() 
         {
-
+            
             IQueryBuilder builder = new UserQueryBuilder(this);
 
             // define all searchable input parameters 
 
-            var id = this.Expressions.FirstOrDefault(e => e.Name == "Id");
-            var userName = this.Expressions.FirstOrDefault(e => e.Name == "UserName");
-            var email = this.Expressions.FirstOrDefault(e => e.Name == "Email");
-            
+            var id = this.Paramaters.Id;
+            var userName = this.Paramaters.UserNameEquals;
+            var email = this.Paramaters.Email;
+
+            if (string.IsNullOrEmpty(userName))
+                userName = this.Paramaters.UserNameStartsWith;
+
+            if (string.IsNullOrEmpty(userName))
+                userName = this.Paramaters.UserNameEndsWith;
+
+            if (string.IsNullOrEmpty(userName))
+                userName = this.Paramaters.UserNameContains;
+
+
             return await _repository.SelectAsync<T>(
                 builder.PageIndex,
                 builder.PageSize,
@@ -46,9 +79,9 @@ namespace Plato.Repositories.Users
                 builder.BuildSqlPopulate(),
                 builder.BuildSqlCount(),
                 "@id int, @UserName nvarchar(255), @Email nvarchar(255)",
-                id != null ? id.Value : 0,
-                userName != null ? userName.Value : string.Empty,
-                email != null ? email.Value : string.Empty
+                id,
+                userName.ToEmptyIfNull(),
+                email.ToEmptyIfNull()
                 );
 
         }
@@ -61,16 +94,16 @@ namespace Plato.Repositories.Users
 
     public class UserQueryBuilder : DefaultQueryBuilder
     {
-        private readonly IQuery _query;
-        
-        public UserQueryBuilder(IQuery query)
+
+        private readonly UserQuery _query;
+   
+        public UserQueryBuilder(UserQuery query)
         {
             _query = query;
-
       
-            
         }
 
+        
         public override string BuildSqlStartId()
         {
             var where = BuildWhere(false);
@@ -104,53 +137,59 @@ namespace Plato.Repositories.Users
             return sb.ToString();
         }
         
-        
         private string BuildWhere(bool includeStartId = true)
         {
             
             var sb = new StringBuilder();
-            foreach (var exp in _query.Expressions)
+            if (includeStartId)
+                sb.Append(("Id >= @start_id_in"));
+
+        
+            if (_query.Paramaters.Id > 0)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(" AND ");
-                sb.Append(exp.Name)
-                .Append(exp.ExpressionOperator) 
-                .Append("@").Append(exp.Name);
+                sb.Append("Id = @Id");
+            }
+            
+            if (!string.IsNullOrEmpty(_query.Paramaters.UserNameEquals))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(" AND ");
+                sb.Append("UserName = @UserName");
+            }
+
+            if (!string.IsNullOrEmpty(_query.Paramaters.UserNameStartsWith))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(" AND ");
+                sb.Append("UserName LIKE '%' + @UserName");
+            }
+
+            if (!string.IsNullOrEmpty(_query.Paramaters.UserNameEndsWith))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(" AND ");
+                sb.Append("UserName LIKE @UserName + '%'");
+            }
+
+            if (!string.IsNullOrEmpty(_query.Paramaters.UserNameContains))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(" AND ");
+                sb.Append("UserName LIKE '%' + @UserName + '%'");
             }
 
 
             return sb.ToString();
 
-            //return _query.ToString();
-
-            //var sb = new StringBuilder();
-        
-            //if (includeStartId)
-            //    sb.Append("Id >= @start_id_in");
-
-            //if (!string.IsNullOrEmpty(UserCriteria.UserName))
-            //{
-            //    if (!string.IsNullOrEmpty(sb.ToString()))
-            //        sb.Append(" AND ");
-            //    sb.Append("UserName = @UserName");
-            //}
-
-            //if (!string.IsNullOrEmpty(UserCriteria.Email))
-            //{
-            //    if (!string.IsNullOrEmpty(sb.ToString()))
-            //        sb.Append(" AND ");
-            //    sb.Append("Email = @Email");
-            //}
-            
-
-            //return sb.ToString();
         }
 
         private string BuildOrderBy()
         {
-            var sb = new StringBuilder();
 
-            return sb.ToString();
+            return "";
+
         }
 
     }

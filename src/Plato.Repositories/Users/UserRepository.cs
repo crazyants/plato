@@ -263,7 +263,7 @@ namespace Plato.Repositories.Users
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUsersPaged2",
+                    "plato_sp_SelectUsersPaged",
                     inputParameters
                 );
 
