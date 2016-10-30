@@ -2164,6 +2164,50 @@ GO
 GO
 
 
+ALTER FUNCTION plato_fn_ListToTable
+(
+	@Delimiter              char(1),          
+	@String                 varchar(8000)    
+)
+RETURNS
+@temptable table
+(
+    Items varchar(500)
+)
+AS
+BEGIN
+
+	DECLARE @idx int       
+	DECLARE @slice varchar(8000)       
+
+    SELECT @idx = 1       
+        IF len(@String)<1 or @String is null  return       
+
+    WHILE @idx!= 0       
+    BEGIN       
+        SET @idx = charindex(@Delimiter,@String)       
+        IF @idx != 0       
+            SET @slice = left(@String,@idx - 1)       
+        ELSE       
+            SET @slice = @String       
+
+        IF(len(@slice)>0)  
+            INSERT INTO @temptable(Items) VALUES (@slice)       
+
+        SET @String = right(@String,len(@String) - @idx)       
+        IF len(@String) = 0 break       
+    END   
+
+	RETURN
+
+END 
+
+GO
+
+----------------------------
+
+GP
+
 
 
 -- ************************************
