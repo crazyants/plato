@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Abstractions.Query;
 
-namespace Plato.Data.Query123
+namespace Plato.Stores.Query
 {
     public abstract class DefaultQuery : IQuery
     {

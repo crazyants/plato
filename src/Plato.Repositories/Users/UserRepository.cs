@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
 using Plato.Models.Roles;
-using Plato.Data.Query;
+using Plato.Abstractions.Query;
 
 namespace Plato.Repositories.Users
 {
@@ -49,7 +49,7 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int id)
+        public Task<User> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -66,6 +66,9 @@ namespace Plato.Repositories.Users
 
             if (_userDetailRepository == null)
                 throw new ArgumentNullException(nameof(_userDetailRepository));
+
+            if (_userRolesRepository == null)
+                throw new ArgumentNullException(nameof(_userRolesRepository));
 
             var id = await InsertUpdateInternal(
                 user.Id,         
@@ -136,8 +139,7 @@ namespace Plato.Repositories.Users
                 return await BuildUserFromResultSets(reader);
             }
         }
-
-
+        
         public async Task<User> SelectByUserNameNormalizedAsync(string userNameNormalized)
         {
 
@@ -243,17 +245,7 @@ namespace Plato.Repositories.Users
             }
 
         }
-        
-        public IQuery Query()
-        {
-            return new UserQuery(this);
-        }
-        
-        public Task<IEnumerable<User>> SelectAsync(IQueryBuilder queryBuilder)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         public async Task<IEnumerable<T>> SelectAsync<T>(params object[] inputParameters) where T : class
         {
             
@@ -274,8 +266,8 @@ namespace Plato.Repositories.Users
                     {
                         var user = new User();
                         user.PopulateModel(reader);
-                        data.Add((T)Convert.ChangeType(user, typeof(T)));
-                    };
+                        data.Add((T) Convert.ChangeType(user, typeof(T)));
+                    }
 
                 }
 

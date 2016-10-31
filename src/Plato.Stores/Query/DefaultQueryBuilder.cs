@@ -1,38 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Plato.Abstractions.Extensions;
 
-namespace Plato.Data.Query123
+namespace Plato.Stores.Query
 {
-    
     public interface IQueryBuilder
     {
-
-
         string BuildSqlStartId();
 
         string BuildSqlPopulate();
 
         string BuildSqlCount();
-
-
     }
-    
+
     public class WhereString
     {
-        private string _value;
-        private QueryOperator _operator = QueryOperator.And;
         private readonly StringBuilder _builder;
+        private QueryOperator _operator = QueryOperator.And;
 
         public WhereString()
         {
             _builder = new StringBuilder();
         }
 
-        public string Value => _value;
+        public string Value { get; private set; }
 
         public string Operator => _operator == QueryOperator.And ? " AND " : " OR ";
 
@@ -41,6 +31,7 @@ namespace Plato.Data.Query123
             _operator = QueryOperator.Or;
             return this;
         }
+
         public WhereString And()
         {
             _operator = QueryOperator.And;
@@ -51,7 +42,7 @@ namespace Plato.Data.Query123
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = value;
+            Value = value;
             _builder.Append("{0} = @{0}");
             return this;
         }
@@ -60,7 +51,7 @@ namespace Plato.Data.Query123
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = value;
+            Value = value;
             _builder.Append("{0} LIKE '%' + @{0}");
             return this;
         }
@@ -69,7 +60,7 @@ namespace Plato.Data.Query123
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = value;
+            Value = value;
             _builder.Append("{0} LIKE @{0} + '%'");
             return this;
         }
@@ -78,7 +69,7 @@ namespace Plato.Data.Query123
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = value;
+            Value = value;
             _builder
                 .Append("{0} IN ( SELECT * FROM plato_fn_ListToTable('")
                 .Append(delimiter)
@@ -90,7 +81,7 @@ namespace Plato.Data.Query123
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = value;
+            Value = value;
             _builder.Append("{0} LIKE '%' + @{0}");
             return this;
         }
@@ -99,21 +90,19 @@ namespace Plato.Data.Query123
         {
             return _builder.ToString().Replace("{0}", parameterName);
         }
-        
     }
-    
+
     public class WhereInt
     {
-        private int _value;
-        private QueryOperator _operator = QueryOperator.And;
         private readonly StringBuilder _builder;
+        private QueryOperator _operator = QueryOperator.And;
 
         public WhereInt()
         {
             _builder = new StringBuilder();
         }
 
-        public int Value => _value;
+        public int Value { get; private set; }
 
         public string Operator => _operator == QueryOperator.And ? " AND " : " OR ";
 
@@ -122,6 +111,7 @@ namespace Plato.Data.Query123
             _operator = QueryOperator.Or;
             return this;
         }
+
         public WhereInt And()
         {
             _operator = QueryOperator.And;
@@ -132,7 +122,7 @@ namespace Plato.Data.Query123
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = value;
+            Value = value;
             _builder.Append("{0} = @{0}");
             return this;
         }
@@ -141,7 +131,7 @@ namespace Plato.Data.Query123
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = value;
+            Value = value;
             _builder.Append("{0} < @{0}");
             return this;
         }
@@ -150,16 +140,16 @@ namespace Plato.Data.Query123
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = value;
+            Value = value;
             _builder.Append("{0} <= @{0}");
             return this;
         }
-        
+
         public WhereInt GreaterThan(int value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = value;
+            Value = value;
             _builder.Append("{0} >= @{0}");
             return this;
         }
@@ -168,7 +158,7 @@ namespace Plato.Data.Query123
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = value;
+            Value = value;
             _builder.Append("{0} >= @{0}");
             return this;
         }
@@ -178,7 +168,7 @@ namespace Plato.Data.Query123
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = max;
+            Value = max;
             _builder
                 .Append("{0} >= ")
                 .Append(min.ToString())
@@ -187,12 +177,12 @@ namespace Plato.Data.Query123
                 .Append(max.ToString());
             return this;
         }
-        
+
         public WhereInt IsIn(int[] value, char delimiter = ',')
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
-            _value = value[0];
+            Value = value[0];
             _builder
                 .Append("{0} IN ( SELECT * FROM plato_fn_ListToTable('")
                 .Append(delimiter)
@@ -201,20 +191,16 @@ namespace Plato.Data.Query123
                 Append("' )");
             return this;
         }
-        
+
         public string ToSqlString(string parameterName)
         {
             return _builder.ToString().Replace("{0}", parameterName);
         }
-
     }
-    
+
     public enum QueryOperator
     {
         And,
         Or
     }
-
-
-
 }

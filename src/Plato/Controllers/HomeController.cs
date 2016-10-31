@@ -16,7 +16,9 @@ using Plato.Repositories.Settings;
 using Plato.Repositories.Users;
 using Plato.Shell;
 using Plato.Shell.Extensions;
+
 using Plato.Stores.Roles;
+using Plato.Stores.Users;
 
 namespace Plato.Controllers
 {
@@ -34,6 +36,8 @@ namespace Plato.Controllers
         private readonly IUserRepository<User> _userRepository;
         private IRoleRepository<Role> _rolesRepository;
 
+        private IPlatoUserStore _userStore;
+
 
         public HomeController(
             IDbContext dbContext,
@@ -45,7 +49,8 @@ namespace Plato.Controllers
             IRunningShellTable runningShellTable,
             ISiteSettingsStore settingsStore,
             IRoleRepository<Role> rolesRepository,
-            IRoleStore roleStore
+            IRoleStore roleStore,
+            IPlatoUserStore userStore
         )
         {
             //_fileSystem = fileSystem;
@@ -59,6 +64,7 @@ namespace Plato.Controllers
             _rolesRepository = rolesRepository;
             _roleStore = roleStore;
             _dbContext = dbContext;
+            _userStore = userStore;
         }
 
 
@@ -237,15 +243,16 @@ namespace Plato.Controllers
             };
 
            
-            var users = await _userRepository
-                .Query()
-                .Page(1, 10)
-                .Define<UserQueryParams>(q =>
+            var users = await _userStore.QueryAsync()
+                .Page(1, 20)
+                .Select<UserQueryParams>(q =>
                 {
-                    q.UserName.IsIn("Admin,Mark");
-                    q.Email.Or().IsIn("email440@address.com,email420@address.com");
+                   // q.UserName.IsIn("Admin,Mark");
+                    //q.Email.Or().IsIn("email440@address.com,email420@address.com");
+                    q.Id.Between(1, 5);
+
                 })
-                .ToListAsync<User>();
+                .ToList<User>();
 
             sb.Append("<h2>Users</h2>");
             

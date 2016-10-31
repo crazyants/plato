@@ -8,6 +8,7 @@ namespace Plato.Stores
     public enum CacheKeys
     {
         SiteSettings,
-        Roles
+        Roles,
+        Users
     }
 }

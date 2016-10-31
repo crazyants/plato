@@ -7,7 +7,6 @@ using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
-using Plato.Data.Query;
 
 namespace Plato.Repositories.Users
 {
@@ -35,7 +34,7 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int Id)
+        public Task<UserPhoto> DeleteAsync(int Id)
         {
             throw new NotImplementedException();
         }
@@ -65,15 +64,6 @@ namespace Plato.Repositories.Users
 
         }
         
-        public Task<IEnumerable<UserPhoto>> SelectAsync(IQueryBuilder queryBuilder)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<TModel>> SelectAsync<TModel>(IQueryBuilder queryBuilder) where TModel : class
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
         {

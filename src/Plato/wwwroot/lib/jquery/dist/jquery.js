@@ -67,7 +67,7 @@ var support = {};
 var
 	version = "2.2.0",
 
-	// Define a local copy of jQuery
+	// Select a local copy of jQuery
 	jQuery = function( selector, context ) {
 
 		// The jQuery object is actually just the init constructor 'enhanced'
@@ -5835,7 +5835,7 @@ function curCSS( elem, name, computed ) {
 
 function addGetHookIf( conditionFn, hookFn ) {
 
-	// Define the hook, we'll check on the first run if it's really needed.
+	// Select the hook, we'll check on the first run if it's really needed.
 	return {
 		get: function() {
 			if ( conditionFn() ) {

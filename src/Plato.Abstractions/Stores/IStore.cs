@@ -1,16 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Plato.Abstractions.Query;
+using Plato.Abstractions.Collections;
 
 namespace Plato.Abstractions.Stores
 {
+
     public interface IStore<TModel> where TModel : class
     {
-        Task<IEnumerable<TModel>> GetAsync(int pageIndex, int pageSize, params object[] args);
+ 
+        Task<TModel> CreateAsync(TModel model);
 
-        Task<TModel> GetAsync(TModel model);
+        Task<TModel> UpdateAsync(TModel model);
+        
+        Task<TModel> DeleteAsync(TModel model);
 
-        Task<TModel> SaveAsync(TModel model);
+        Task<TModel> GetByIdAsync(int id);
 
-        Task<bool> DeleteAsync(TModel model);
+        IQuery QueryAsync();
+
+        Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class;
+
+
     }
 }

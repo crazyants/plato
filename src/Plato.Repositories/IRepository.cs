@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Plato.Data.Query;
+using Plato.Abstractions.Collections;
 
 namespace Plato.Repositories
 {
@@ -12,11 +12,9 @@ namespace Plato.Repositories
 
         Task<T> SelectByIdAsync(int id);
 
-        Task<IEnumerable<T>> SelectAsync(IQueryBuilder queryBuilder);
-
-        Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class;
+        Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class;
         
-        Task<bool> DeleteAsync(int id);
+        Task<T> DeleteAsync(int id);
 
     }
 

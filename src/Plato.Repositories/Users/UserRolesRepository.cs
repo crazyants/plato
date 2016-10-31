@@ -1,33 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Plato.Abstractions.Extensions;
 using Plato.Data;
 using Plato.Models.Roles;
 using Plato.Models.Users;
-using System.Data.Common;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Plato.Abstractions.Extensions;
 using Plato.Repositories.Roles;
-using Plato.Data.Query;
 
 namespace Plato.Repositories.Users
 {
-
     public class UserRolesRepository : IUserRolesRepository<UserRole>
     {
-
-        #region "Private Variables"
-
-        private readonly IDbContext _dbContext;
-        private readonly IRoleRepository<Role> _rolesRepository;
-        private readonly ILogger<UserSecretRepository> _logger;
-        
-        #endregion
-
-
         #region "Constructor"
 
         public UserRolesRepository(
@@ -41,17 +26,24 @@ namespace Plato.Repositories.Users
         }
 
         #endregion
-        
+
+        #region "Private Variables"
+
+        private readonly IDbContext _dbContext;
+        private readonly IRoleRepository<Role> _rolesRepository;
+        private readonly ILogger<UserSecretRepository> _logger;
+
+        #endregion
+
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int id)
+        public Task<UserRole> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
         public async Task<UserRole> InsertUpdateAsync(UserRole userRole)
         {
-
             var id = 0;
             id = await InsertUpdateInternal(
                 userRole.Id,
@@ -67,18 +59,13 @@ namespace Plato.Repositories.Users
                 return await SelectByIdAsync(id);
 
             return null;
-
         }
 
         public Task<UserRole> SelectByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
-        
-        public Task<IEnumerable<UserRole>> SelectAsync(IQueryBuilder queryBuilder)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public Task<IEnumerable<UserRole>> InsertUserRoles(int userId, IEnumerable<string> roleNames)
         {
@@ -96,7 +83,6 @@ namespace Plato.Repositories.Users
         {
             foreach (var id in roleIds)
             {
-
             }
             throw new NotImplementedException();
         }
@@ -119,26 +105,23 @@ namespace Plato.Repositories.Users
 
         #endregion
 
-
         #region "Private Methods"
 
         private async Task<int> InsertUpdateInternal(
-          int id,
-          int userId,
-          int roleId,
-          DateTime? createdDate,
-          int createdUserId,
-          DateTime? modifiedDate,
-          int modifiedUserId,
-          string concurrencyStamp)
+            int id,
+            int userId,
+            int roleId,
+            DateTime? createdDate,
+            int createdUserId,
+            DateTime? modifiedDate,
+            int modifiedUserId,
+            string concurrencyStamp)
         {
-            
             using (var context = _dbContext)
             {
-
                 return await context.ExecuteScalarAsync<int>(
-                CommandType.StoredProcedure,
-                "plato_sp_InsertUpdateUserRole",
+                    CommandType.StoredProcedure,
+                    "plato_sp_InsertUpdateUserRole",
                     id,
                     userId,
                     roleId,
@@ -147,25 +130,15 @@ namespace Plato.Repositories.Users
                     modifiedDate,
                     modifiedUserId,
                     concurrencyStamp.ToEmptyIfNull().TrimToSize(50));
-
             }
-            
         }
 
-        public Task<IEnumerable<TModel>> SelectAsync<TModel>(IQueryBuilder queryBuilder) where TModel : class
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
         {
             throw new NotImplementedException();
         }
 
-
-
-
         #endregion
-
     }
 }

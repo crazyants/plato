@@ -16,6 +16,13 @@ namespace Plato.Stores.Users
         IUserEmailStore<User>,
         IUserSecurityStampStore<User>
     {
+        #region "Dispose"
+
+        public void Dispose()
+        {
+        }
+
+        #endregion
 
         #region "UserStore"
 
@@ -26,6 +33,10 @@ namespace Plato.Stores.Users
         {
             _userRepository = userRepository;
         }
+
+        #endregion
+
+        #region "IPlatoUserStore"
 
         #endregion
 
@@ -157,7 +168,7 @@ namespace Plato.Stores.Users
         }
 
         #endregion
-        
+
         #region "IUserPasswordStore"
 
         public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
@@ -165,9 +176,7 @@ namespace Plato.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
 
             user.PasswordHash = passwordHash;
 
@@ -179,9 +188,7 @@ namespace Plato.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
 
             return Task.FromResult(user.PasswordHash);
         }
@@ -191,15 +198,13 @@ namespace Plato.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
 
             return Task.FromResult(user.PasswordHash != null);
         }
 
         #endregion
-        
+
         #region "IUserSecurityStampStore"
 
         public Task SetSecurityStampAsync(User user, string stamp, CancellationToken cancellationToken)
@@ -207,9 +212,7 @@ namespace Plato.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
 
             user.SecurityStamp = stamp;
 
@@ -221,14 +224,12 @@ namespace Plato.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
             return Task.FromResult(user.SecurityStamp);
         }
 
         #endregion
-        
+
         #region "IUserEmailStore"
 
         public Task SetEmailAsync(User user, string email, CancellationToken cancellationToken)
@@ -236,9 +237,7 @@ namespace Plato.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
 
             user.Email = email;
 
@@ -250,9 +249,7 @@ namespace Plato.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
 
             return Task.FromResult(user.Email);
         }
@@ -262,9 +259,7 @@ namespace Plato.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
 
             return Task.FromResult(user.Detail.IsEmailConfirmed);
         }
@@ -274,9 +269,7 @@ namespace Plato.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
 
             user.Detail.IsEmailConfirmed = confirmed;
             return Task.CompletedTask;
@@ -294,9 +287,7 @@ namespace Plato.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
 
             return Task.FromResult(user.NormalizedEmail);
         }
@@ -306,9 +297,7 @@ namespace Plato.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
 
             user.NormalizedEmail = normalizedEmail;
 
@@ -345,14 +334,5 @@ namespace Plato.Stores.Users
         }
 
         #endregion
-
-        #region "Dispose"
-
-        public void Dispose()
-        {
-        }
-
-        #endregion
-
     }
 }

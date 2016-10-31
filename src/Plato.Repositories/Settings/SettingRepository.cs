@@ -8,7 +8,6 @@ using System.Data;
 using Plato.Abstractions.Extensions;
 using System.Data.Common;
 using Plato.Abstractions.Settings;
-using Plato.Data.Query;
 
 namespace Plato.Repositories.Settings
 {
@@ -39,7 +38,7 @@ namespace Plato.Repositories.Settings
         
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int Id)
+        public Task<Setting> DeleteAsync(int Id)
         {
             throw new NotImplementedException();
         }
@@ -135,12 +134,7 @@ namespace Plato.Repositories.Settings
             return settings;
         }
         
-
-        public Task<IEnumerable<Setting>> SelectAsync(IQueryBuilder queryBuilder)
-        {
-            throw new NotImplementedException();
-        }
-
+        
 
         #endregion
 

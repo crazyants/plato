@@ -8,7 +8,7 @@ using Plato.Data;
 using Plato.Models.Roles;
 using Plato.Models.Users;
 using System.Linq.Expressions;
-using Plato.Data.Query;
+
 
 namespace Plato.Repositories.Roles
 {
@@ -97,7 +97,7 @@ namespace Plato.Repositories.Roles
         #region "Implementation"
 
 
-        public Task<bool> DeleteAsync(int id)
+        public Task<Role> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -181,54 +181,10 @@ namespace Plato.Repositories.Roles
 
         }
 
-        public Task<IEnumerable<T>> SelectAsync<T>(IQueryBuilder queryBuilder) where T : class
-        {
-            throw new NotImplementedException();
-        }
 
 
-        public Task<IEnumerable<Role>> SelectAsync(IQueryBuilder queryBuilder, params object[] inputParameterss)
-        {
 
-            return null;
-
-            //List<Role> roles = null;
-            //using (var context = _dbContext)
-            //{
-
-            //    var reader = await context.ExecuteReaderAsync(
-            //      CommandType.StoredProcedure,
-            //      "plato_sp_SelectRole",
-            //          queryBuilder.PageIndex,
-            //          queryBuilder.PageSize,
-            //          queryBuilder.BuildSqlStartId(),
-            //          queryBuilder.BuildSqlPopulate(),
-            //          queryBuilder.BuildSqlCount(),
-            //          queryBuilder.BuildSqlInputParams());
-
-            //    if (reader != null)
-            //    {
-            //        while (await reader.ReadAsync())
-            //        {
-            //            var role = new Role();
-            //            role.PopulateModel(reader);
-            //            roles.Add(role);
-            //        };
-                
-            //    }
-           
-            //}
-
-            //return roles;
-
-        }
-
-        public Task<IEnumerable<Role>> SelectAsync(IQueryBuilder queryBuilder)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        public Task<IEnumerable<T>> SelectAsync<T>(params object[] inputParams) where T : class
         {
             throw new NotImplementedException();
         }
