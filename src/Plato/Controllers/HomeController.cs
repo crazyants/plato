@@ -249,9 +249,9 @@ namespace Plato.Controllers
                 .Page(1, 20)
                 .Select<UserQueryParams>(q =>
                 {
-                    // q.UserName.IsIn("Admin,Mark");
-                    //q.Email.Or().IsIn("email440@address.com,email420@address.com");
-                    //q.Id.Between(1, 5);
+                    // q.UserName.IsIn("Admin,Mark").Or();
+                    // q.Email.IsIn("email440@address.com,email420@address.com");
+                    // q.Id.Between(1, 5);
 
                 })
                 .OrderBy("UserName")

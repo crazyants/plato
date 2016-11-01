@@ -8,6 +8,9 @@ using Plato.Repositories.Roles;
 using Plato.Abstractions.Stores;
 using Plato.Abstractions.Query;
 using Plato.Abstractions.Collections;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 
 namespace Plato.Stores.Roles
 {
@@ -20,6 +23,8 @@ namespace Plato.Stores.Roles
 
         private readonly IRoleRepository<Role> _roleRepository;
         private readonly IMemoryCache _memoryCache;
+        private readonly IDistributedCache _distributedCache;
+        private readonly ILogger<PlatoRoleStore> _logger;
 
         #endregion
 
@@ -27,56 +32,86 @@ namespace Plato.Stores.Roles
 
         public PlatoRoleStore(
            IRoleRepository<Role> roleRepository,
-           IMemoryCache memoryCache)
+           IMemoryCache memoryCache,
+            IDistributedCache distributedCache,
+            ILogger<PlatoRoleStore> logger)
         {
             _roleRepository = roleRepository;
             _memoryCache = memoryCache;
+            _distributedCache = distributedCache;
+            _logger = logger;
         }
 
         #endregion
 
         #region "Implementation"
-
-
-        //public async Task<IEnumerable<Role>> GetAsync(int pageIndex, int pageSize, params object[] args)
-        //{
-
-        //    throw new NotImplementedException();
-
-        //    //List<Role> roles;
-        //    //if (!_memoryCache.TryGetValue(_key, out roles))
-        //    //{
-        //    //    roles = await _roleRepository(pageIndex, pageSize, null) as List<Role>;
-        //    //    if (roles != null)
-        //    //        _memoryCache.Set(_key, roles.ToList());
-        //    //}
-
-        //    //return roles;
-
-        //}
-
-
-
-        #endregion
-
-        public Task<Role> CreateAsync(Role model)
+        
+        public async Task<Role> CreateAsync(Role model)
         {
-            throw new NotImplementedException();
+            return await _roleRepository.InsertUpdateAsync(model);
         }
 
-        public Task<Role> UpdateAsync(Role model)
+        public async Task<Role> UpdateAsync(Role model)
         {
-            throw new NotImplementedException();
+            _memoryCache.Remove(_key);
+            return await _roleRepository.InsertUpdateAsync(model);
         }
 
-        public Task<Role> DeleteAsync(Role model)
+        public async Task<Role> DeleteAsync(Role model)
         {
-            throw new NotImplementedException();
+            _memoryCache.Remove(_key);
+            return await _roleRepository.DeleteAsync(model.Id);
         }
 
-        public Task<Role> GetByIdAsync(int id)
+        public async Task<Role> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+
+            Role role;
+            if (!_memoryCache.TryGetValue(_key, out role))
+            {
+                role = await _roleRepository.SelectByIdAsync(id);
+                if (role != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.", _memoryCache.GetType().Name, _key);
+                    _memoryCache.Set(_key, role);
+                }
+            }
+            return role;
+
+        }
+
+
+        public async Task<Role> GetByName(string name)
+        {
+            Role role;
+            if (!_memoryCache.TryGetValue(_key, out role))
+            {
+                role = await _roleRepository.SelectByNameAsync(name);
+                if (role != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.", _memoryCache.GetType().Name, _key);
+                    _memoryCache.Set(_key, role);
+                }
+            }
+            return role;
+        }
+
+        public async Task<Role> GetByNormalizedName(string nameNormalized)
+        {
+            Role role;
+            if (!_memoryCache.TryGetValue(_key, out role))
+            {
+                role = await _roleRepository.SelectByNormalizedNameAsync(nameNormalized);
+                if (role != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.", _memoryCache.GetType().Name, _key);
+                    _memoryCache.Set(_key, role);
+                }
+            }
+            return role;
         }
 
         public IQuery QueryAsync()
@@ -88,6 +123,9 @@ namespace Plato.Stores.Roles
         {
             throw new NotImplementedException();
         }
+
+
+        #endregion
 
     }
 

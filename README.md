@@ -401,6 +401,7 @@ CREATE TABLE Plato_Roles
 Id								INT IDENTITY(1,1) NOT NULL,
 PermissionId					INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
+NormalizedName					NVARCHAR(255) DEFAULT('') NOT NULL,
 Description						NVARCHAR(255) DEFAULT('') NOT NULL,
 HtmlPrefix						NVARCHAR(100) DEFAULT('') NOT NULL,
 HtmlSuffix						NVARCHAR(100) DEFAULT('') NOT NULL,
@@ -1774,7 +1775,7 @@ CREATE PROCEDURE [plato_sp_InsertUpdateRole] (
 	@Id int,
 	@PermissionId int,
 	@Name nvarchar(255),
-	@NormalizedUserName nvarchar(255),
+	@NormalizedName nvarchar(255),
 	@Description nvarchar(255),
 	@HtmlPrefix nvarchar(100),	
 	@HtmlSuffix nvarchar(100),
@@ -1810,6 +1811,7 @@ BEGIN
 	UPDATE Plato_Roles SET
 		PermissionId = @PermissionId,
 		Name = @Name,
+		NormalizedName = @NormalizedName,
 		[Description] = @Description,
 		HtmlPrefix = @HtmlPrefix,
 		HtmlSuffix = @HtmlSuffix,
@@ -1840,6 +1842,7 @@ BEGIN
 	INSERT INTO Plato_Roles (
 		PermissionId,
 		Name,
+		NormalizedName,
 		[Description],
 		HtmlPrefix,
 		HtmlSuffix,
@@ -1861,6 +1864,7 @@ BEGIN
 	) VALUES (
 		@PermissionId,
 		@Name,
+		@NormalizedName,
 		@Description,
 		@HtmlPrefix,
 		@HtmlSuffix,
@@ -1894,6 +1898,28 @@ GO
 ----------------------
 
 GO
+
+CREATE PROCEDURE [plato_sp_SelectRoleByNameNormalized] (
+@NormalizedName nvarchar(255)
+) AS
+SET NOCOUNT ON 
+
+DECLARE @Id int;
+SET @Id = (SELECT Id FROM 
+Plato_Roles WITH (nolock)
+WHERE (NormalizedName = @NormalizedName))
+
+EXEC plato_sp_SelectRole @id;
+	
+RETURN
+
+
+GO
+
+-------------------
+
+GO
+
 
 CREATE PROCEDURE [plato_sp_InsertUpdateUserRole] (
 	@Id int,
@@ -2162,7 +2188,6 @@ GO
 -------------------------------
 
 GO
-
 
 ALTER FUNCTION plato_fn_ListToTable
 (

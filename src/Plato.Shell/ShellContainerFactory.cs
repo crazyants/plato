@@ -67,10 +67,11 @@ namespace Plato.Shell
                 // ---------------
                            
                 var types = new List<Type>();
-                foreach (Assembly assmebly in _moduleManager.AllAvailableAssemblies)                
+                foreach (var assmebly in _moduleManager.AllAvailableAssemblies)                
                     types.AddRange(assmebly.GetTypes());
 
-                IServiceCollection moduleServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
+                IServiceCollection moduleServiceCollection = 
+                    _serviceProvider.CreateChildContainer(_applicationServices);
                 foreach (var type in types.Where(t => typeof(IStartup).IsAssignableFrom(t)))
                 {
                     moduleServiceCollection.AddSingleton(typeof(IStartup), type);

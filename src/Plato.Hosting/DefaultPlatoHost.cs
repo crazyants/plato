@@ -19,7 +19,7 @@ namespace Plato.Hosting
         private readonly IRunningShellTable _runningShellTable;
         private readonly ILogger _logger;
    
-        private readonly static object _syncLock = new object();
+        private static readonly object _syncLock = new object();
         private ConcurrentDictionary<string, ShellContext> _shellContexts;
 
         #endregion
@@ -32,7 +32,6 @@ namespace Plato.Hosting
             IRunningShellTable runningShellTable, 
             ILogger<DefaultPlatoHost> logger)
         {
-            //_extensionManager = extensionManager;
             _shellSettingsManager = shellSettingsManager;
             _shellContextFactory = shellContextFactory;
             _runningShellTable = runningShellTable;
@@ -152,9 +151,7 @@ namespace Plato.Hosting
             }
         }
 
-        /// <summary>
-        /// Registers the shell settings in RunningShellTable
-        /// </summary>
+
         void ActivateShell(ShellContext context)
         {
             if (_logger.IsEnabled(LogLevel.Debug))

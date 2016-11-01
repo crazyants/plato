@@ -41,7 +41,7 @@ namespace Plato.Modules
         #region "Constructor"
 
         private readonly IPlatoFileSystem _fileSystem;
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         public ModuleLoader(
             IPlatoFileSystem fileSystem,
@@ -51,24 +51,10 @@ namespace Plato.Modules
             _fileSystem = fileSystem;
             _logger = logger;
 
-            // ensure core assemblies are not loaded
-            _loadedAssemblies.TryAdd("Plato.Abstractions", null);
-            _loadedAssemblies.TryAdd("Plato.Cache", null);
-            _loadedAssemblies.TryAdd("Plato.FileSystem", null);
-            _loadedAssemblies.TryAdd("Plato.Data", null);
-            _loadedAssemblies.TryAdd("Plato.Hosting", null);
-            _loadedAssemblies.TryAdd("Plato.Hosting.Web", null);
-            _loadedAssemblies.TryAdd("Plato.Layout", null);
-            _loadedAssemblies.TryAdd("Plato.Localization", null);
-            _loadedAssemblies.TryAdd("Plato.Modules", null);
-            _loadedAssemblies.TryAdd("Plato.Modules.Abstractions", null);
-            _loadedAssemblies.TryAdd("Plato.Models", null);
-            _loadedAssemblies.TryAdd("Plato.Services", null);
-            _loadedAssemblies.TryAdd("Plato.Shell", null);
-            _loadedAssemblies.TryAdd("Plato.Shell.Abstractions", null);
-            _loadedAssemblies.TryAdd("Plato.Repositories", null);
-            _loadedAssemblies.TryAdd("Plato.Yaml", null);
-            _loadedAssemblies.TryAdd("Plato.Stores", null);
+            // ensure referenced assemblies are not loaded
+            foreach (var name in ApplicationAssemblyNames)
+                _loadedAssemblies.TryAdd(name, null);
+       
         }
 
         #endregion
@@ -105,9 +91,25 @@ namespace Plato.Modules
 
         private Assembly LoadFromAssemblyPath(string assemblyPath)
         {
-            return _loadedAssemblies.GetOrAdd(Path.GetFileNameWithoutExtension(assemblyPath),
-                    new Lazy<Assembly>(() => { return AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath); }))
-                .Value;
+            try
+            {
+                return _loadedAssemblies.GetOrAdd(
+                   Path.GetFileNameWithoutExtension(assemblyPath),
+                   new Lazy<Assembly>(() =>
+                   {
+                       return AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
+                   }))
+               .Value;
+            }
+            catch (Exception e)
+            {
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Module loader failed to load assemby - {0}", e.Message);
+                }
+            }
+            return null;
+
         }
 
         private static HashSet<string> GetApplicationAssemblyNames()
@@ -118,8 +120,7 @@ namespace Plato.Modules
                     .Select(path => Path.GetFileNameWithoutExtension(path)),
                 StringComparer.OrdinalIgnoreCase);
         }
-
-
+        
         private bool IsAssemblyLoaded(string assemblyName)
         {
             return _loadedAssemblies.ContainsKey(assemblyName);

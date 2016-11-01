@@ -34,30 +34,29 @@ namespace Plato.Login
             _tenantPrefix = shellSettings.RequestedUrlPrefix;
         }
 
-        public override void ConfigureServices(IServiceCollection serviceCollection)
+        public override void ConfigureServices(IServiceCollection services)
         {
-            new IdentityBuilder(typeof(User), typeof(Role), serviceCollection).AddDefaultTokenProviders();
+            new IdentityBuilder(typeof(User), typeof(Role), services).AddDefaultTokenProviders();
 
             // Identity services
-            serviceCollection.TryAddSingleton<IdentityMarkerService>();
-            serviceCollection.TryAddScoped<IUserValidator<User>, UserValidator<User>>();
-            serviceCollection.TryAddScoped<IPasswordValidator<User>, PasswordValidator<User>>();
-            serviceCollection.TryAddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-            serviceCollection.TryAddScoped<ILookupNormalizer, UpperInvariantLookupNormalizer>();
+            services.TryAddSingleton<IdentityMarkerService>();
+            services.TryAddScoped<IUserValidator<User>, UserValidator<User>>();
+            services.TryAddScoped<IPasswordValidator<User>, PasswordValidator<User>>();
+            services.TryAddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.TryAddScoped<ILookupNormalizer, UpperInvariantLookupNormalizer>();
 
             // No interface for the error describer so we can add errors without rev'ing the interface
-            serviceCollection.TryAddScoped<IdentityErrorDescriber>();
-            serviceCollection.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<User>>();
-            serviceCollection.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
-            serviceCollection.TryAddScoped<UserManager<User>>();
-            serviceCollection.TryAddScoped<RoleManager<Role>>();
-            serviceCollection.TryAddScoped<SignInManager<User>>();
-            //serviceCollection.TryAddScoped<IUserRepository<User>, UserRepository>();
-            serviceCollection.TryAddScoped<IUserStore<User>, UserStore>();
+            services.TryAddScoped<IdentityErrorDescriber>();
+            services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<User>>();
+            services.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
+         
+            services.TryAddScoped<IUserStore<User>, UserStore>();
+            services.TryAddScoped<IRoleStore<Role>, RoleStore>();
+            services.TryAddScoped<UserManager<User>>();
+            services.TryAddScoped<RoleManager<Role>>();
+            services.TryAddScoped<SignInManager<User>>();
 
-           
-
-            serviceCollection.Configure<IdentityOptions>(options =>
+            services.Configure<IdentityOptions>(options =>
             {
                 options.Cookies.ApplicationCookie.CookieName = "platoauth_" + _tenantName;
                 options.Cookies.ApplicationCookie.CookiePath = _tenantPrefix;

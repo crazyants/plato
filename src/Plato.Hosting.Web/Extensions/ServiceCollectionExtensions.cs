@@ -138,12 +138,15 @@ namespace Plato.Hosting.Web.Extensions
             
             app.UseMiddleware<PlatoContainerMiddleware>();
 
-            // serve static files within module folders
+           
+            // configure modules
 
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
             var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
             foreach (var moduleEntry in moduleManager.AvailableModules)
             {
+
+                // serve static files within module folders
                 var contentPath = Path.Combine(env.ContentRootPath, moduleEntry.Descriptor.Location,
                     moduleEntry.Descriptor.ID, "Content");
                 if (Directory.Exists(contentPath))
@@ -152,10 +155,9 @@ namespace Plato.Hosting.Web.Extensions
                         RequestPath = "/" + moduleEntry.Descriptor.ID,
                         FileProvider = new PhysicalFileProvider(contentPath)
                     });
+                // add modules as application parts
                 foreach (var assembly in moduleEntry.Assmeblies)
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
-
-
             }
 
             // Route the request to the correct tenant specific pipeline

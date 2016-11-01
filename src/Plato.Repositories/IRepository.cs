@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Abstractions.Collections;
 
 namespace Plato.Repositories
@@ -13,9 +10,7 @@ namespace Plato.Repositories
         Task<T> SelectByIdAsync(int id);
 
         Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class;
-        
+
         Task<T> DeleteAsync(int id);
-
     }
-
 }
