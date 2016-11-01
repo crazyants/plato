@@ -8,6 +8,7 @@ using System.Data;
 using Plato.Abstractions.Extensions;
 using System.Data.Common;
 using Plato.Abstractions.Settings;
+using Plato.Abstractions.Collections;
 
 namespace Plato.Repositories.Settings
 {
@@ -171,7 +172,7 @@ namespace Plato.Repositories.Settings
 
         }
 
-        public Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
         {
             throw new NotImplementedException();
         }

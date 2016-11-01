@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Data;
 
 namespace Plato.Abstractions.Collections
 {
-    public interface IPagedResults<T> where T : class
+    public interface IPagedResults<T> : IList<T> where T : class
     {
-
         int Total { get; set; }
 
+        void PopulateTotal(IDataReader reader);
     }
 }

@@ -1,25 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using Plato.Data;
 using System.Data;
-using Plato.Models.Users;
-using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using System.Data.Common;
+using Plato.Abstractions.Collections;
+using Plato.Abstractions.Extensions;
+using Plato.Data;
+using Plato.Models.Users;
 
 namespace Plato.Repositories.Users
 {
     public class UserSecretRepository : IUserSecretRepository<UserSecret>
     {
-
-        #region "Private Variables"
-
-        private readonly IDbContext _dbContext;
-        private readonly ILogger<UserSecretRepository> _logger;
-
-        #endregion
-
         #region "Constructor"
 
         public UserSecretRepository(
@@ -32,6 +23,13 @@ namespace Plato.Repositories.Users
 
         #endregion
 
+        #region "Private Variables"
+
+        private readonly IDbContext _dbContext;
+        private readonly ILogger<UserSecretRepository> _logger;
+
+        #endregion
+
         #region "Implementation"
 
         public Task<UserSecret> DeleteAsync(int id)
@@ -41,7 +39,6 @@ namespace Plato.Repositories.Users
 
         public async Task<UserSecret> InsertUpdateAsync(UserSecret secret)
         {
-            
             var id = await InsertUpdateInternal(
                 secret.Id,
                 secret.UserId,
@@ -53,7 +50,6 @@ namespace Plato.Repositories.Users
                 return await SelectByIdAsync(id);
 
             return null;
-
         }
 
         public async Task<UserSecret> SelectByIdAsync(int id)
@@ -62,8 +58,8 @@ namespace Plato.Repositories.Users
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
-                  CommandType.StoredProcedure,
-                  "plato_sp_SelectUserSecret", id);
+                    CommandType.StoredProcedure,
+                    "plato_sp_SelectUserSecret", id);
 
                 if (reader != null)
                 {
@@ -74,51 +70,45 @@ namespace Plato.Repositories.Users
             }
 
             return secret;
-
         }
-        
+
         #endregion
-        
+
         #region "Private Methods"
-        
+
         private async Task<int> InsertUpdateInternal(
             int id,
             int userId,
-            string passwordHash,           
+            string passwordHash,
             int[] salts,
             string securityStamp)
         {
-
             string delimitedSalts = null;
             if (salts != null)
                 delimitedSalts = salts.ToDelimitedString();
-            
+
             var dbId = 0;
             using (var context = _dbContext)
             {
-
                 dbId = await context.ExecuteScalarAsync<int>(
-                  CommandType.StoredProcedure,
-                  "plato_sp_InsertUpdateUserSecret",
+                    CommandType.StoredProcedure,
+                    "plato_sp_InsertUpdateUserSecret",
                     id,
                     userId,
                     passwordHash.ToEmptyIfNull().TrimToSize(255),
                     delimitedSalts.ToEmptyIfNull().TrimToSize(255),
                     securityStamp.ToEmptyIfNull().TrimToSize(255));
-
             }
-                     
+
             return dbId;
-
         }
-        
 
-        public Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+
+        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
         {
             throw new NotImplementedException();
         }
 
         #endregion
-
     }
 }

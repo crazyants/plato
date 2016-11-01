@@ -8,6 +8,7 @@ using Plato.Data;
 using Plato.Models.Roles;
 using Plato.Models.Users;
 using System.Linq.Expressions;
+using Plato.Abstractions.Collections;
 
 
 namespace Plato.Repositories.Roles
@@ -184,7 +185,7 @@ namespace Plato.Repositories.Roles
 
 
 
-        public Task<IEnumerable<T>> SelectAsync<T>(params object[] inputParams) where T : class
+        public Task<IPagedResults<T>> SelectAsync<T>(params object[] inputParams) where T : class
         {
             throw new NotImplementedException();
         }

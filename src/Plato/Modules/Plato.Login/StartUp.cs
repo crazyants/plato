@@ -1,28 +1,29 @@
 ﻿using System;
-using Plato.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
-using Plato.Hosting.Extensions;
-using Plato.Shell.Models;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Plato.Models.Users;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
+using Plato.Hosting;
+using Plato.Hosting.Extensions;
 using Plato.Models.Roles;
+using Plato.Models.Users;
 using Plato.Repositories.Users;
+using Plato.Shell.Models;
 using Plato.Stores.Users;
+using Plato.Stores.Roles;
 
 namespace Plato.Login
 {
-
     public class Startup : StartupBase
     {
+        private readonly IdentityOptions _options;
 
         private readonly string _tenantName;
         private readonly string _tenantPrefix;
-        private readonly IdentityOptions _options;
-        
+
 
         public Startup(
             ShellSettings shellSettings,
@@ -35,7 +36,6 @@ namespace Plato.Login
 
         public override void ConfigureServices(IServiceCollection serviceCollection)
         {
-
             new IdentityBuilder(typeof(User), typeof(Role), serviceCollection).AddDefaultTokenProviders();
 
             // Identity services
@@ -50,17 +50,27 @@ namespace Plato.Login
             serviceCollection.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<User>>();
             serviceCollection.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
             serviceCollection.TryAddScoped<UserManager<User>>();
+            serviceCollection.TryAddScoped<RoleManager<Role>>();
             serviceCollection.TryAddScoped<SignInManager<User>>();
-
-            serviceCollection.TryAddScoped<IUserRepository<User>, UserRepository>();
+            //serviceCollection.TryAddScoped<IUserRepository<User>, UserRepository>();
             serviceCollection.TryAddScoped<IUserStore<User>, UserStore>();
+
+           
+
+            serviceCollection.Configure<IdentityOptions>(options =>
+            {
+                options.Cookies.ApplicationCookie.CookieName = "platoauth_" + _tenantName;
+                options.Cookies.ApplicationCookie.CookiePath = _tenantPrefix;
+                options.Cookies.ApplicationCookie.LoginPath = new PathString("/Plato.Login/");
+                options.Cookies.ApplicationCookie.AccessDeniedPath = new PathString("/Plato.Login/");
+            });
 
 
         }
 
         public override void Configure(
-            IApplicationBuilder builder, 
-            IRouteBuilder routes, 
+            IApplicationBuilder builder,
+            IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
             builder.UseIdentity();
@@ -71,16 +81,12 @@ namespace Plato.Login
                 .UseCookieAuthentication(_options.Cookies.TwoFactorUserIdCookie);
 
             routes.MapAreaRoute(
-                name: "Login",
-                area: "Plato.Login",
-                template: "admin",
-                controller: "Login",
-                action: "Index"
+                "Login",
+                "Plato.Login",
+                "admin",
+                "Login",
+                "Index"
             );
         }
-
     }
-
-
-
 }

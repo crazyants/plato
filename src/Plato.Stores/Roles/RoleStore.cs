@@ -1,93 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Identity;
 using Plato.Models.Roles;
-using Plato.Repositories.Roles;
-using Plato.Abstractions.Stores;
-using Plato.Abstractions.Query;
 
 namespace Plato.Stores.Roles
 {
-    public class RoleStore : IRoleStore
+    public class RoleStore : IRoleStore<Role>
     {
 
-        #region "Private Variables"
-
-        private readonly string _key = CacheKeys.Roles.ToString();
-
-        private readonly IRoleRepository<Role> _roleRepository;
-        private readonly IMemoryCache _memoryCache;
-
-        #endregion
-
-        #region "Constructor"
-
-        public RoleStore(
-           IRoleRepository<Role> roleRepository,
-           IMemoryCache memoryCache)
+        private readonly IPlatoRoleStore _platoRoleStore;
+        public RoleStore(IPlatoRoleStore platoRoleStore)
         {
-            _roleRepository = roleRepository;
-            _memoryCache = memoryCache;
+            _platoRoleStore = platoRoleStore;
         }
 
-        #endregion
-
-        #region "Implementation"
-
-
-        //public async Task<IEnumerable<Role>> GetAsync(int pageIndex, int pageSize, params object[] args)
-        //{
-
-        //    throw new NotImplementedException();
-
-        //    //List<Role> roles;
-        //    //if (!_memoryCache.TryGetValue(_key, out roles))
-        //    //{
-        //    //    roles = await _roleRepository(pageIndex, pageSize, null) as List<Role>;
-        //    //    if (roles != null)
-        //    //        _memoryCache.Set(_key, roles.ToList());
-        //    //}
-
-        //    //return roles;
-
-        //}
-
-
-
-        #endregion
-
-        public Task<Role> CreateAsync(Role model)
+        public Task<IdentityResult> CreateAsync(Role role, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Role> UpdateAsync(Role model)
+        public Task<IdentityResult> DeleteAsync(Role role, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Role> DeleteAsync(Role model)
+        public void Dispose()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Role> GetByIdAsync(int id)
+        public Task<Role> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public IQuery QueryAsync()
+        public Task<Role> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<T>> SelectAsync<T>(params object[] args) where T : class
+        public Task<string> GetNormalizedRoleNameAsync(Role role, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
+        public Task<string> GetRoleIdAsync(Role role, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetRoleNameAsync(Role role, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetNormalizedRoleNameAsync(Role role, string normalizedName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetRoleNameAsync(Role role, string roleName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IdentityResult> UpdateAsync(Role role, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }
-
 }

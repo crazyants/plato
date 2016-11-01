@@ -21,10 +21,11 @@ namespace Plato.Stores.Extensions
             // settings
 
             services.AddScoped<ISiteSettingsStore, SiteSettingsStore>();
-            
+
+
             // roles
 
-            services.AddScoped<IRoleStore, RoleStore>();
+            services.AddScoped<IPlatoRoleStore, PlatoRoleStore>();
             services.AddScoped<IPlatoUserStore, PlatoUserStore>();
 
             return services;

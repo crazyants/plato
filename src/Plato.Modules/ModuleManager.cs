@@ -12,15 +12,15 @@ namespace Plato.Modules
 
         #region "Private Variables"
 
-        IModuleLocator _moduleLocator;
-        IModuleLoader _moduleLoader;       
+        readonly IModuleLocator _moduleLocator;
+        readonly IModuleLoader _moduleLoader;       
         IEnumerable<IModuleDescriptor> _moduleDescriptors;
 
         static List<IModuleEntry> _moduleEntries;
         static List<Assembly> _loadedAssemblies;
 
-        string _contentRootPath;       
-        string _virtualPathToModules;
+        readonly string _contentRootPath;
+        readonly string _virtualPathToModules;
 
         #endregion
 

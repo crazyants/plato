@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Plato.Abstractions.Query;
 using Plato.Abstractions.Settings;
 using Plato.Abstractions.Stores;
 using Plato.Data;
@@ -27,7 +29,7 @@ namespace Plato.Controllers
         private readonly IDbContext _dbContext;
 
         private readonly IModuleLocator _moduleLocator;
-        private readonly IRoleStore _roleStore;
+        private readonly IPlatoRoleStore _roleStore;
         private readonly IRunningShellTable _runningShellTable;
         private readonly ISettingRepository<Setting> _settingRepository;
         private readonly ISettingsFactory _settingsFactory;
@@ -36,7 +38,7 @@ namespace Plato.Controllers
         private readonly IUserRepository<User> _userRepository;
         private IRoleRepository<Role> _rolesRepository;
 
-        private IPlatoUserStore _userStore;
+        private readonly IPlatoUserStore _userStore;
 
 
         public HomeController(
@@ -49,7 +51,7 @@ namespace Plato.Controllers
             IRunningShellTable runningShellTable,
             ISiteSettingsStore settingsStore,
             IRoleRepository<Role> rolesRepository,
-            IRoleStore roleStore,
+            IPlatoRoleStore roleStore,
             IPlatoUserStore userStore
         )
         {
@@ -242,22 +244,28 @@ namespace Plato.Controllers
                 }
             };
 
-           
+
             var users = await _userStore.QueryAsync()
                 .Page(1, 20)
                 .Select<UserQueryParams>(q =>
                 {
-                   // q.UserName.IsIn("Admin,Mark");
+                    // q.UserName.IsIn("Admin,Mark");
                     //q.Email.Or().IsIn("email440@address.com,email420@address.com");
-                    q.Id.Between(1, 5);
+                    //q.Id.Between(1, 5);
 
                 })
+                .OrderBy("UserName")
                 .ToList<User>();
 
             sb.Append("<h2>Users</h2>");
-            
 
-            if (users != null)
+
+            sb.Append("Total: ");
+            sb.Append(users.Total);
+            sb.Append("<BR>");
+            sb.Append("<BR>");
+
+            if (users.Any())
                 foreach (var user in users)
                 {
                     sb.Append(user.UserName);

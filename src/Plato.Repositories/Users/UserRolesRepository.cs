@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Plato.Abstractions.Collections;
 using Plato.Abstractions.Extensions;
 using Plato.Data;
 using Plato.Models.Roles;
@@ -134,7 +135,7 @@ namespace Plato.Repositories.Users
         }
 
 
-        public Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
         {
             throw new NotImplementedException();
         }

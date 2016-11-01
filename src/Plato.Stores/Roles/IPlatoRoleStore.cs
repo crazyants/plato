@@ -3,7 +3,7 @@ using Plato.Models.Roles;
 
 namespace Plato.Stores.Roles
 {
-    public interface IRoleStore : IStore<Role>
+    public interface IPlatoRoleStore : IStore<Role>
     {
     }
 }

@@ -18,6 +18,18 @@ namespace Plato.Abstractions.Extensions
             }
             return false;
         }
+        public static bool ColumnIsNotNull(
+          this IDataReader dr,
+          int columnIndex)
+        {
+
+            if ((!object.ReferenceEquals((object)dr[columnIndex], System.DBNull.Value)) &&
+                ((object)dr[columnIndex] != null))
+            {
+                return true;
+            }
+            return false;
+        }
 
         public static IEnumerable<T> Select<T>(
         this IDataReader reader, Func<IDataReader, T> projection)

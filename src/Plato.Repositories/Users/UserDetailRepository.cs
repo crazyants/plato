@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Extensions;
 using Plato.Data;
 using Plato.Models.Users;
+using Plato.Abstractions.Collections;
 
 namespace Plato.Repositories.Users
 {
@@ -225,7 +226,7 @@ namespace Plato.Repositories.Users
         }
         
    
-        public Task<IEnumerable<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
         {
             throw new NotImplementedException();
         }

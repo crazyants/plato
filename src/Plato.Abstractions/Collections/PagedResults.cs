@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Data;
+using Plato.Abstractions.Extensions;
 
 namespace Plato.Abstractions.Collections
 {
@@ -11,5 +10,11 @@ namespace Plato.Abstractions.Collections
     {
         public int Total { get; set; }
 
+
+        public void PopulateTotal(IDataReader reader)
+        {
+            if (reader.ColumnIsNotNull(0))
+                Total = Convert.ToInt32(reader[0]);
+        }
     }
 }

@@ -1,32 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
+using Plato.Abstractions.Collections;
 using Plato.Abstractions.Query;
 using Plato.Models.Users;
 using Plato.Repositories.Users;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Plato.Stores.Users
 {
     public class PlatoUserStore : IPlatoUserStore
     {
-
         private readonly string _key = CacheKeys.Users.ToString();
-
-        private readonly IUserRepository<User> _userRepository;
         private readonly IMemoryCache _memoryCache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserRepository<User> _userRepository;
 
         public PlatoUserStore(
             IUserRepository<User> userRepository,
+            IHttpContextAccessor httpContextAccessor,
             IMemoryCache memoryCache
-            )
+        )
         {
             _userRepository = userRepository;
+            _httpContextAccessor = httpContextAccessor;
             _memoryCache = memoryCache;
         }
-        
+
         public Task<User> CreateAsync(User model)
         {
             throw new NotImplementedException();
@@ -48,7 +48,6 @@ namespace Plato.Stores.Users
             }
 
             return user;
-
         }
 
         public IQuery QueryAsync()
@@ -61,23 +60,16 @@ namespace Plato.Stores.Users
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<T>> SelectAsync<T>(params object[] args) where T : class
+        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
         {
-
-            IEnumerable<T> users;
-            
+            IPagedResults<T> users;
             if (!_memoryCache.TryGetValue(_key, out users))
             {
-                users = await _userRepository.SelectAsync<T>(args));
+                users = await _userRepository.SelectAsync<T>(args);
                 if (users != null)
-                    _memoryCache.Set(_key, users.ToList());
+                    _memoryCache.Set(_key, users);
             }
-
             return users;
-            
-
         }
-
-
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Plato.Abstractions.Collections;
 using Plato.Abstractions.Query;
-using Plato.Models.Users;
 using Plato.Abstractions.Stores;
+using Plato.Models.Users;
 using Plato.Stores.Query;
 
 namespace Plato.Stores.Users
@@ -55,7 +56,7 @@ namespace Plato.Stores.Users
             return this;
         }
 
-        public override async Task<IEnumerable<T>> ToList<T>()
+        public override async Task<IPagedResults<T>> ToList<T>()
         {
             var builder = new UserQueryBuilder(this);
 
@@ -75,10 +76,6 @@ namespace Plato.Stores.Users
 
 
             return users;
-
-
-
-
         }
     }
 
@@ -99,34 +96,37 @@ namespace Plato.Stores.Users
 
         public string BuildSqlStartId()
         {
-            var where = BuildWhere(false);
+            var whereClause = BuildWhereClause(false);
+            var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
             sb.Append("SELECT @start_id_out = Id FROM Plato_Users");
-            if (!string.IsNullOrEmpty(where))
-                sb.Append(" WHERE (").Append(where).Append(")");
-
+            if (!string.IsNullOrEmpty(whereClause))
+                sb.Append(" WHERE (").Append(whereClause).Append(")");
+            if (!string.IsNullOrEmpty(orderBy))
+                sb.Append(" ORDER BY ").Append(orderBy);
             return sb.ToString();
         }
 
         public string BuildSqlPopulate()
         {
-            var where = BuildWhere();
+            var whereClause = BuildWhereClause();
+            var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
             sb.Append("SELECT * FROM Plato_Users");
-            if (!string.IsNullOrEmpty(where))
-                sb.Append(" WHERE (").Append(where).Append(")");
-
+            if (!string.IsNullOrEmpty(whereClause))
+                sb.Append(" WHERE (").Append(whereClause).Append(")");
+            if (!string.IsNullOrEmpty(orderBy))
+                sb.Append(" ORDER BY ").Append(orderBy);
             return sb.ToString();
         }
 
         public string BuildSqlCount()
         {
-            var where = BuildWhere();
+            var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
             sb.Append("SELECT COUNT(Id) FROM Plato_Users");
-            if (!string.IsNullOrEmpty(where))
-                sb.Append(" WHERE (").Append(where).Append(")");
-
+            if (!string.IsNullOrEmpty(whereClause))
+                sb.Append(" WHERE (").Append(whereClause).Append(")");
             return sb.ToString();
         }
 
@@ -134,7 +134,7 @@ namespace Plato.Stores.Users
 
         #region "Private Methods"
 
-        private string BuildWhere(bool includeStartId = true)
+        private string BuildWhereClause(bool includeStartId = true)
         {
             var sb = new StringBuilder();
             if (includeStartId)
@@ -166,7 +166,19 @@ namespace Plato.Stores.Users
 
         private string BuildOrderBy()
         {
-            return "";
+            if (!_query.SortColumns.Any()) return null;
+            var sb = new StringBuilder();
+            var i = 0;
+            foreach (var sortColumn in _query.SortColumns)
+            {
+                sb.Append(sortColumn.Key);
+                if (sortColumn.Value != OrderBy.Asc)
+                    sb.Append(" DESC");
+                if (i < _query.SortColumns.Count - 1)
+                    sb.Append(", ");
+                i += 1;
+            }
+            return sb.ToString();
         }
 
         #endregion
