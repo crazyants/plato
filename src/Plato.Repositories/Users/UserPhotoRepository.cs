@@ -35,7 +35,7 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
-        public Task<UserPhoto> DeleteAsync(int Id)
+        public Task<bool> DeleteAsync(int Id)
         {
             throw new NotImplementedException();
         }

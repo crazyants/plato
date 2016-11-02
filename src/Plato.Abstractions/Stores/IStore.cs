@@ -14,7 +14,7 @@ namespace Plato.Abstractions.Stores
 
         Task<TModel> UpdateAsync(TModel model);
         
-        Task<TModel> DeleteAsync(TModel model);
+        Task<bool> DeleteAsync(TModel model);
 
         Task<TModel> GetByIdAsync(int id);
 

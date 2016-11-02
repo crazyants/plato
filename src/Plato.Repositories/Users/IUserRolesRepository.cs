@@ -8,15 +8,15 @@ namespace Plato.Repositories.Users
     public interface IUserRolesRepository<T> : IRepository<T> where T : class
     {
 
-        Task<IEnumerable<T>> InsertUserRoles(int userId, IEnumerable<string> roleNames);
+        Task<IEnumerable<T>> InsertUserRolesAsync(int userId, IEnumerable<string> roleNames);
 
-        Task<IEnumerable<T>> InsertUserRoles(int userId, IEnumerable<int> roleIds);
+        Task<IEnumerable<T>> InsertUserRolesAsync(int userId, IEnumerable<int> roleIds);
 
-        bool DeletetUserRoles(int userId);
+        Task<bool> DeletetUserRolesAsync(int userId);
 
-        bool DeletetUserRole(int userId, string roleName);
+        Task<bool> DeletetUserRole(int userId, string roleName);
 
-        bool DeletetUserRole(int userId, int roleId);
+        Task<bool> DeletetUserRole(int userId, int roleId);
 
     }
 

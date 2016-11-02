@@ -39,7 +39,7 @@ namespace Plato.Repositories.Settings
         
         #region "Implementation"
 
-        public Task<Setting> DeleteAsync(int Id)
+        public Task<bool> DeleteAsync(int Id)
         {
             throw new NotImplementedException();
         }

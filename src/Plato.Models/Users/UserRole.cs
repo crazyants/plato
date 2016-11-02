@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Plato.Abstractions.Extensions;
 
 namespace Plato.Models.Users
 {
-    public class UserRole : IdentityUserRole<int>
+    public class UserRole : IdentityUserRole<int>, IModel<UserRole>
     {
-
         public int Id { get; set; }
 
         public DateTime? CreatedDate { get; set; }
@@ -18,8 +16,34 @@ namespace Plato.Models.Users
         public DateTime? ModifiedDate { get; set; }
 
         public int ModifiedUserId { get; set; }
-        
+
         public string ConcurrencyStamp { get; set; }
 
+        public void PopulateModel(IDataReader dr)
+        {
+            if (dr.ColumnIsNotNull("id"))
+                Id = Convert.ToInt32(dr["Id"]);
+
+            if (dr.ColumnIsNotNull("UserId"))
+                UserId = Convert.ToInt32(dr["UserId"]);
+
+            if (dr.ColumnIsNotNull("RoleId"))
+                RoleId = Convert.ToInt32(dr["RoleId"]);
+
+            if (dr.ColumnIsNotNull("CreatedDate"))
+                CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+
+            if (dr.ColumnIsNotNull("CreatedUserId"))
+                CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
+
+            if (dr.ColumnIsNotNull("ModifiedDate"))
+                ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
+
+            if (dr.ColumnIsNotNull("ModifiedUserId"))
+                ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
+
+            if (dr.ColumnIsNotNull("ConcurrencyStamp"))
+                ConcurrencyStamp = Convert.ToString(dr["ConcurrencyStamp"]);
+        }
     }
 }

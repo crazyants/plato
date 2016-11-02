@@ -22,6 +22,7 @@ using Plato.Modules.Extensions;
 using Plato.Repositories.Extensions;
 using Plato.Shell.Extensions;
 using Plato.Stores.Extensions;
+using Plato.Cache.Extensions;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -48,11 +49,14 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddLocalization();
                 internalServices.AddHostCore();
                 internalServices.AddModules();
-                
+                internalServices.AddCaching();
+
+
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+       
                 internalServices.AddPlatoDbContext()
                     .AddRepositories()
                     .AddStores();

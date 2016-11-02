@@ -1322,6 +1322,69 @@ RETURN
 
 GO
 
+-------------------------
+
+GO
+
+
+CREATE PROCEDURE [plato_sp_DeleteUserRole] (
+@Id int
+) AS
+SET NOCOUNT ON 
+
+
+DECLARE @Success bit;
+SET @Success = 0;	
+
+IF (EXISTS(	
+	SELECT Id FROM Plato_UserRoles 
+	WHERE (Id = @Id)
+		)
+	)
+BEGIN
+	DELETE FROM 
+	Plato_UserRoles
+	WHERE (Id = @Id)
+	SET @Success = 1;	
+END
+
+SELECT @Success;
+
+RETURN
+
+GO
+
+------------------------
+
+GO
+
+
+CREATE PROCEDURE [plato_sp_DeleteUserRoles] (
+@UserId int
+) AS
+SET NOCOUNT ON 
+
+DECLARE @Success bit;
+SET @Success = 0;	
+
+IF (EXISTS(	
+	SELECT Id FROM Plato_UserRoles 
+	WHERE (UserId = @UserId)
+		)
+	)
+BEGIN
+	DELETE FROM 
+	Plato_UserRoles
+	WHERE (UserId = @UserId)
+	SET @Success = 1;	
+END
+
+SELECT @Success;
+
+RETURN
+
+GO
+
 ------------------------
 
 GO
@@ -2006,6 +2069,9 @@ RETURN
 
 GO
 
+----------------------
+
+
 ---------------------
 
 GO
@@ -2232,6 +2298,24 @@ GO
 ----------------------------
 
 GP
+
+
+CREATE PROCEDURE [plato_sp_SelectUserRole] (
+@Id int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_UserRoles WITH (nolock)
+WHERE (Id = @Id)
+	
+RETURN
+
+GO
+
+--------------------------
+
+GO
 
 
 

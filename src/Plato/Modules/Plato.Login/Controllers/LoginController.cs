@@ -26,8 +26,13 @@ namespace Plato.Login
         public IActionResult Index(string returnUrl = null)
         {
 
+            var model = new LoginViewModel();
+            model.Email = "admin@admin.com";
+            model.UserName = "admin@admin.com";
+            model.Password = "admin";
+
             ViewData["ReturnUrl"] = returnUrl;
-            return View();
+            return View(model);
 
         }
 

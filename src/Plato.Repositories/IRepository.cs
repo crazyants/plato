@@ -11,6 +11,6 @@ namespace Plato.Repositories
 
         Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class;
 
-        Task<T> DeleteAsync(int id);
+        Task<bool> DeleteAsync(int id);
     }
 }

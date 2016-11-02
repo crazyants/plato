@@ -46,7 +46,7 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
-        public Task<User> DeleteAsync(int id)
+        public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -242,7 +242,7 @@ namespace Plato.Repositories.Users
                     inputParameters
                 );
 
-                if (reader != null)
+                if ((reader != null) && (reader.HasRows))
                 {
                     output = new PagedResults<T>();
                     while (await reader.ReadAsync())
@@ -270,8 +270,9 @@ namespace Plato.Repositories.Users
         private async Task<User> BuildUserFromResultSets(DbDataReader reader)
         {
             var user = new User();
-            if (reader != null)
+            if ((reader != null) && (reader.HasRows))
             {
+                
                 await reader.ReadAsync();
                 user.PopulateModel(reader);
 

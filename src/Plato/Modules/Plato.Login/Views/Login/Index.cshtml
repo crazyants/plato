@@ -20,6 +20,13 @@
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
+                    <label asp-for="@Model.Email" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="@Model.Email" value="@Model.Email" class="form-control" />
+                        <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label asp-for="@Model.UserName" class="col-md-2 control-label"></label>
                     <div class="col-md-10">
                         <input asp-for="@Model.UserName" value="@Model.UserName" class="form-control" />

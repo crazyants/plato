@@ -57,7 +57,7 @@ namespace Plato.Stores.Roles
             return await _roleRepository.InsertUpdateAsync(model);
         }
 
-        public async Task<Role> DeleteAsync(Role model)
+        public async Task<bool> DeleteAsync(Role model)
         {
             _memoryCache.Remove(_key);
             return await _roleRepository.DeleteAsync(model.Id);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Collections;
@@ -38,9 +39,16 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
-        public Task<UserRole> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            bool success;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<bool>(
+                    CommandType.StoredProcedure,
+                    "plato_sp_DeleteUserRole", id);
+            }
+            return success;
         }
 
         public async Task<UserRole> InsertUpdateAsync(UserRole userRole)
@@ -62,44 +70,93 @@ namespace Plato.Repositories.Users
             return null;
         }
 
-        public Task<UserRole> SelectByIdAsync(int id)
+        public async Task<UserRole> SelectByIdAsync(int id)
         {
-            throw new NotImplementedException();
-        }
-
-
-        public Task<IEnumerable<UserRole>> InsertUserRoles(int userId, IEnumerable<string> roleNames)
-        {
-            //var roles = _rolesRepository.SelectByNameAsync()
-            //var userRoles = new List<UserRole>();
-            //foreach (var name in roleNames)
-            //{
-            //    var role = 
-
-            //}
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<UserRole>> InsertUserRoles(int userId, IEnumerable<int> roleIds)
-        {
-            foreach (var id in roleIds)
+            UserRole userRole = null;
+            using (var context = _dbContext)
             {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "plato_sp_SelectUserRole", id);
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    await reader.ReadAsync();
+                    userRole = new UserRole();
+                    userRole.PopulateModel(reader);
+                }
             }
-            throw new NotImplementedException();
+
+            return userRole;
         }
 
 
-        public bool DeletetUserRoles(int userId)
+        public async Task<IEnumerable<UserRole>> InsertUserRolesAsync(
+            int userId, IEnumerable<string> roleNames)
+        {
+
+            List<UserRole> userRoles = null;
+            foreach (var roleName in roleNames)
+            {
+                var role = _rolesRepository.SelectByNameAsync(roleName);
+                if (role != null)
+                {
+                    var userRole = await InsertUpdateAsync(new UserRole()
+                    {
+                        UserId = userId,
+                        RoleId = role.Id
+                    });
+                    if (userRoles == null)
+                        userRoles = new List<UserRole>();
+                    userRoles.Add(userRole);
+                }
+            }
+
+            return userRoles;
+
+        }
+
+        public async Task<IEnumerable<UserRole>> InsertUserRolesAsync(int userId, IEnumerable<int> roleIds)
+        {
+            List<UserRole> userRoles = null;
+            foreach (var roleId in roleIds)
+            {
+                var role = _rolesRepository.SelectByIdAsync(roleId);
+                if (role != null)
+                {
+                    var userRole = await InsertUpdateAsync(new UserRole()
+                    {
+                        UserId = userId,
+                        RoleId = role.Id
+                    });
+                    if (userRoles == null)
+                        userRoles = new List<UserRole>();
+                    userRoles.Add(userRole);
+                }
+            }
+
+            return userRoles;
+        }
+
+
+        public async Task<bool> DeletetUserRolesAsync(int userId)
+        {
+            bool success;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<bool>(
+                    CommandType.StoredProcedure,
+                    "plato_sp_DeleteUserRoles", userId);
+            }
+            return success;
+        }
+
+        public Task<bool> DeletetUserRole(int userId, string roleName)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeletetUserRole(int userId, string roleName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool DeletetUserRole(int userId, int roleId)
+        public Task<bool> DeletetUserRole(int userId, int roleId)
         {
             throw new NotImplementedException();
         }

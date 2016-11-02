@@ -201,7 +201,7 @@ namespace Plato.Controllers
 
             var rand = new Random();
 
-            var newUser = await _userRepository.InsertUpdateAsync(
+            var newUser = await _userStore.CreateAsync(
                 new User
                 {
                     UserName = "John Doe" + rand.Next(1, 500),
@@ -218,7 +218,7 @@ namespace Plato.Controllers
                     },
                     Secret = new UserSecret
                     {
-                        PasswordHash = "123",
+                        PasswordHash = "admin",
                         Salts = new[] {+rand.Next(1, 500), 123232},
                         SecurityStamp = "test"
                     },

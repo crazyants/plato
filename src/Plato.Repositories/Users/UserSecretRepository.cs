@@ -32,7 +32,7 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
-        public Task<UserSecret> DeleteAsync(int id)
+        public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }

@@ -40,7 +40,7 @@ namespace Plato.Stores.Users
             throw new NotImplementedException();
         }
 
-        public Task<User> DeleteAsync(User model)
+        public Task<bool> DeleteAsync(User model)
         {
             throw new NotImplementedException();
         }

@@ -17,6 +17,7 @@
         "Microsoft.Extensions.Logging.Debug": "1.0.0",
         "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0",
         "NETStandard.Library": "1.6.0",
+        "Plato.Cache": "1.0.0-*",
         "Plato.Data": "1.0.0-*",
         "Plato.Hosting": "1.0.0-*",
         "Plato.Layout": "1.0.0-*",

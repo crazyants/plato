@@ -94,6 +94,9 @@ namespace Plato.Models.Roles
             if (dr.ColumnIsNotNull("Name"))
                 Name = Convert.ToString(dr["Name"]);
 
+            if (dr.ColumnIsNotNull("NormalizedName"))
+                NormalizedName = Convert.ToString(dr["NormalizedName"]);
+
             if (dr.ColumnIsNotNull("Description"))
                 Description = Convert.ToString(dr["Description"]);
 

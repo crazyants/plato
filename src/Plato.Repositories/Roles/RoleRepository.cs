@@ -94,7 +94,7 @@ namespace Plato.Repositories.Roles
 
         #region "Implementation"
 
-        public Task<Role> DeleteAsync(int id)
+        public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
