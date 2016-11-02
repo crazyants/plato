@@ -1,21 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Plato.Abstractions.Collections;
+using Plato.Abstractions.Query;
 using Plato.Models.Roles;
 using Plato.Repositories.Roles;
-using Plato.Abstractions.Stores;
-using Plato.Abstractions.Query;
-using Plato.Abstractions.Collections;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
 
 namespace Plato.Stores.Roles
 {
     public class PlatoRoleStore : IPlatoRoleStore
     {
+        #region "Constructor"
+
+        public PlatoRoleStore(
+            IRoleRepository<Role> roleRepository,
+            IMemoryCache memoryCache,
+            IDistributedCache distributedCache,
+            ILogger<PlatoRoleStore> logger)
+        {
+            _roleRepository = roleRepository;
+            _memoryCache = memoryCache;
+            _distributedCache = distributedCache;
+            _logger = logger;
+        }
+
+        #endregion
 
         #region "Private Variables"
 
@@ -28,24 +39,8 @@ namespace Plato.Stores.Roles
 
         #endregion
 
-        #region "Constructor"
-
-        public PlatoRoleStore(
-           IRoleRepository<Role> roleRepository,
-           IMemoryCache memoryCache,
-            IDistributedCache distributedCache,
-            ILogger<PlatoRoleStore> logger)
-        {
-            _roleRepository = roleRepository;
-            _memoryCache = memoryCache;
-            _distributedCache = distributedCache;
-            _logger = logger;
-        }
-
-        #endregion
-
         #region "Implementation"
-        
+
         public async Task<Role> CreateAsync(Role model)
         {
             return await _roleRepository.InsertUpdateAsync(model);
@@ -65,7 +60,6 @@ namespace Plato.Stores.Roles
 
         public async Task<Role> GetByIdAsync(int id)
         {
-
             Role role;
             if (!_memoryCache.TryGetValue(_key, out role))
             {
@@ -73,14 +67,13 @@ namespace Plato.Stores.Roles
                 if (role != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.", _memoryCache.GetType().Name, _key);
+                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
+                            _memoryCache.GetType().Name, _key);
                     _memoryCache.Set(_key, role);
                 }
             }
             return role;
-
         }
-
 
         public async Task<Role> GetByName(string name)
         {
@@ -91,7 +84,8 @@ namespace Plato.Stores.Roles
                 if (role != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.", _memoryCache.GetType().Name, _key);
+                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
+                            _memoryCache.GetType().Name, _key);
                     _memoryCache.Set(_key, role);
                 }
             }
@@ -107,7 +101,8 @@ namespace Plato.Stores.Roles
                 if (role != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.", _memoryCache.GetType().Name, _key);
+                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
+                            _memoryCache.GetType().Name, _key);
                     _memoryCache.Set(_key, role);
                 }
             }
@@ -119,14 +114,23 @@ namespace Plato.Stores.Roles
             throw new NotImplementedException();
         }
 
-        public Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
+        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
         {
-            throw new NotImplementedException();
+            IPagedResults<T> roles;
+            if (!_memoryCache.TryGetValue(_key, out roles))
+            {
+                roles = await _roleRepository.SelectAsync<T>(args);
+                if (roles != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
+                            _memoryCache.GetType().Name, _key);
+                    _memoryCache.Set(_key, roles);
+                }
+            }
+            return roles;
         }
 
-
         #endregion
-
     }
-
 }

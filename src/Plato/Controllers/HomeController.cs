@@ -275,6 +275,14 @@ namespace Plato.Controllers
                 sb.Append("No Users!");
 
 
+
+            var role = await _roleStore.CreateAsync(new Role()
+            {
+                Name = "Test Role 1"
+            });
+
+
+
             //var user = _userRepository.SelectByIdAsync(1);
 
             ViewData["result"] = sb.ToString();

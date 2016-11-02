@@ -35,9 +35,23 @@ namespace Plato.Stores.Users
             _logger = logger;
         }
 
-        public Task<User> CreateAsync(User model)
+        public async Task<User> CreateAsync(User user)
         {
-            throw new NotImplementedException();
+            
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+            if (user.Id > 0)
+                throw new ArgumentOutOfRangeException(nameof(user.Id));
+            var newUser = await _userRepository.InsertUpdateAsync(user);
+            if (newUser != null)
+            {
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug("Entry removed from cache of type {0}. Entry key: {1}.", _memoryCache.GetType().Name, _key);
+                _memoryCache.Remove(_key);
+            }
+         
+            return newUser;
+
         }
 
         public Task<bool> DeleteAsync(User model)
@@ -68,9 +82,21 @@ namespace Plato.Stores.Users
             return new UserQuery(this);
         }
 
-        public Task<User> UpdateAsync(User model)
+        public async Task<User> UpdateAsync(User user)
         {
-            throw new NotImplementedException();
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+            if (user.Id == 0)
+                throw new ArgumentOutOfRangeException(nameof(user.Id));
+            var updatedUser  = await _userRepository.InsertUpdateAsync(user);
+            if (updatedUser != null)
+            {
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug("Entry removed from cache of type {0}. Entry key: {1}.", _memoryCache.GetType().Name, _key);
+                _memoryCache.Remove(_key);
+            }
+
+            return updatedUser;
         }
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
@@ -88,5 +114,7 @@ namespace Plato.Stores.Users
             }
             return users;
         }
+
     }
+
 }
