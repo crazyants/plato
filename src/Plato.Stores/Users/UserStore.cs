@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Models.Users;
 using Plato.Repositories.Users;
+using Plato.Stores.Roles;
 
 namespace Plato.Stores.Users
 {
@@ -27,11 +28,17 @@ namespace Plato.Stores.Users
         #region "UserStore"
 
         private readonly IUserRepository<User> _userRepository;
+        private readonly IUserRolesRepository<UserRole> _userRolesRepository;
+        private readonly IPlatoRoleStore _platoRoleStore;
 
         public UserStore(
-            IUserRepository<User> userRepository)
+            IUserRepository<User> userRepository,
+            IUserRolesRepository<UserRole> userRolesRepository,
+             IPlatoRoleStore platoRoleStore)
         {
             _userRepository = userRepository;
+            _userRolesRepository = userRolesRepository;
+            _platoRoleStore = platoRoleStore;
         }
 
         #endregion
@@ -308,14 +315,26 @@ namespace Plato.Stores.Users
 
         #region "IUserRoleStore"
 
-        public Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        public async Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+
+            var role = await _platoRoleStore.GetByName(roleName);
+            if (role != null)
+            {
+               var userRole = await _userRolesRepository.InsertUpdateAsync(new UserRole()
+                {
+                    RoleId = role.Id,
+                    UserId = user.Id
+               });
+            }
+         
         }
 
-        public Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        public async Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var role = await _platoRoleStore.GetByName(roleName);
+            if (role != null)
+                await _userRolesRepository.DeletetUserRole(user.Id, role.Id);
         }
 
         public Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)

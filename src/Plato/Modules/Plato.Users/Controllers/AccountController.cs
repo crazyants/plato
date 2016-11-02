@@ -81,16 +81,58 @@ namespace Plato.Users.Controllers
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
-
-            var model = new RegisterViewModel();
-            model.Email = "admin@admin.com";
-            model.UserName = "admin@admin.com";
-            model.Password = "admin";
+   
+            var model = new RegisterViewModel
+            {
+                Email = "admin@admin.com",
+                UserName = "admin@Adm1in.com",
+                Password = "admin@Adm1in.com"
+            };
 
             ViewData["ReturnUrl"] = returnUrl;
             return View(model);
 
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(
+            RegisterViewModel model, 
+            string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                var user = new User
+                {
+                    UserName = model.UserName,
+                    Email = model.Email
+                };
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
+                    // Send an email with this link
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                    //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
+                    //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    //_logger.LogInformation(3, "User created a new account with password.");
+                    return RedirectToLocal(returnUrl);
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
 
         private IActionResult RedirectToLocal(string returnUrl)
         {

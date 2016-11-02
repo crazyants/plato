@@ -35,7 +35,10 @@ namespace Plato.Users
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            new IdentityBuilder(typeof(User), typeof(Role), services).AddDefaultTokenProviders();
+            new IdentityBuilder(
+                typeof(User), 
+                typeof(Role), 
+                services).AddDefaultTokenProviders();
 
             // Identity services
             services.TryAddSingleton<IdentityMarkerService>();

@@ -141,8 +141,7 @@ namespace Plato.Hosting.Web.Extensions
             app.UseStaticFiles();
             
             app.UseMiddleware<PlatoContainerMiddleware>();
-
-           
+            
             // configure modules
 
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
