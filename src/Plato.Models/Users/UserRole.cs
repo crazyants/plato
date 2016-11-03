@@ -2,6 +2,7 @@
 using System.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Plato.Abstractions.Extensions;
+using Plato.Models.Roles;
 
 namespace Plato.Models.Users
 {
@@ -19,8 +20,11 @@ namespace Plato.Models.Users
 
         public string ConcurrencyStamp { get; set; }
 
+        public Role Role { get; set; }
+
         public void PopulateModel(IDataReader dr)
         {
+
             if (dr.ColumnIsNotNull("id"))
                 Id = Convert.ToInt32(dr["Id"]);
 
@@ -44,6 +48,7 @@ namespace Plato.Models.Users
 
             if (dr.ColumnIsNotNull("ConcurrencyStamp"))
                 ConcurrencyStamp = Convert.ToString(dr["ConcurrencyStamp"]);
+
         }
     }
 }

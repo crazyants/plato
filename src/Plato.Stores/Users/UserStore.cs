@@ -340,6 +340,8 @@ namespace Plato.Stores.Users
         public Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
+            //var roles = _userRolesRepository.se
+
         }
 
         public Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)

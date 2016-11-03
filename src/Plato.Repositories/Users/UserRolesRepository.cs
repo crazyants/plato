@@ -89,8 +89,7 @@ namespace Plato.Repositories.Users
 
             return userRole;
         }
-
-
+        
         public async Task<IEnumerable<UserRole>> InsertUserRolesAsync(
             int userId, IEnumerable<string> roleNames)
         {
@@ -137,8 +136,7 @@ namespace Plato.Repositories.Users
 
             return userRoles;
         }
-
-
+        
         public async Task<bool> DeletetUserRolesAsync(int userId)
         {
             bool success;
@@ -151,9 +149,16 @@ namespace Plato.Repositories.Users
             return success;
         }
 
-        public Task<bool> DeletetUserRole(int userId, string roleName)
+        public async Task<bool> DeletetUserRole(int userId, string roleName)
         {
-            throw new NotImplementedException();
+            bool success;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<bool>(
+                    CommandType.StoredProcedure,
+                    "plato_sp_DeleteUserRole", userId);
+            }
+            return success;
         }
 
         public Task<bool> DeletetUserRole(int userId, int roleId)
@@ -195,6 +200,40 @@ namespace Plato.Repositories.Users
         public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<UserRole>> SelectUserRoles(int userId)
+        {
+            List<UserRole> output = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "plato_sp_SelectUserRoles", 
+                    userId
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new List<UserRole>();
+                    while (await reader.ReadAsync())
+                    {
+                        var userRole = new UserRole();
+                        userRole.PopulateModel(reader);
+                        if (userRole.RoleId > 0)
+                        {
+                            userRole.Role = new Role();
+                            userRole.Role.PopulateModel(reader);
+                        }
+                        output.Add(userRole);
+                    }
+
+                }
+            }
+
+
+            return output;
+
         }
 
         #endregion

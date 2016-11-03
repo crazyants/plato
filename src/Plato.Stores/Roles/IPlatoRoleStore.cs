@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Plato.Abstractions.Stores;
 using Plato.Models.Roles;
 
@@ -10,5 +11,6 @@ namespace Plato.Stores.Roles
         Task<Role> GetByName(string name);
 
         Task<Role> GetByNormalizedName(string nameNormalized);
+
     }
 }
