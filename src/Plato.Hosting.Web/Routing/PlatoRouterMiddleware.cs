@@ -72,9 +72,9 @@ namespace Plato.Hosting.Web.Routing
             var startups = serviceProvider.GetServices<IStartup>();
             var inlineConstraintResolver = serviceProvider.GetService<IInlineConstraintResolver>();
 
-            IApplicationBuilder appBuilder = new ApplicationBuilder(serviceProvider);
+            var appBuilder = new ApplicationBuilder(serviceProvider);
 
-            string routePrefix = "";
+            var routePrefix = "";
             if (!string.IsNullOrWhiteSpace(shellSettings.RequestedUrlPrefix))
             {
                 routePrefix = shellSettings.RequestedUrlPrefix + "/";
@@ -87,21 +87,13 @@ namespace Plato.Hosting.Web.Routing
 
             var prefixedRouteBuilder = new PrefixedRouteBuilder(routePrefix, routeBuilder, inlineConstraintResolver);
 
-            // Register one top level TenantRoute per tenant. Each instance contains all the routes
-            // for this tenant.
-
-            // In the case of several tenants, they will all be checked by ShellSettings. To optimize
-            // the TenantRoute resolution we can create a single Router type that would index the
-            // TenantRoute object by their ShellSetting. This way there would just be one lookup.
-            // And the ShellSettings test in TenantRoute would also be useless.
-
             foreach (var startup in startups)
             {
                 startup.Configure(appBuilder, prefixedRouteBuilder, serviceProvider);
             }
 
 
-            // The default route is added to each tenant as a template route, with a prefix
+            //// The default route is added to each tenant as a template route, with a prefix
             prefixedRouteBuilder.Routes.Add(new Route(
                 prefixedRouteBuilder.DefaultHandler,
                 "Default",
@@ -111,8 +103,8 @@ namespace Plato.Hosting.Web.Routing
                 null,
                 inlineConstraintResolver)
             );
-            
-            var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();                
+
+            var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();
             if (siteService != null)
             {
                 // Add home page route
@@ -120,7 +112,6 @@ namespace Plato.Hosting.Web.Routing
             }
 
             var router = prefixedRouteBuilder.Build();
-
             appBuilder.UseRouter(router);
 
             var pipeline = appBuilder.Build();

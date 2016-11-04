@@ -63,17 +63,45 @@ namespace Plato.Models.Users
 
             if (dr.ColumnIsNotNull("NormalizedEmail"))
                 this.NormalizedEmail = Convert.ToString(dr["NormalizedEmail"]);
-            
+
+
+            if (dr.ColumnIsNotNull("EmailConfirmed"))
+                this.EmailConfirmed = Convert.ToBoolean(dr["EmailConfirmed"]);
+
             if (dr.ColumnIsNotNull("DisplayName"))            
                 this.DisplayName = Convert.ToString(dr["DisplayName"]);
 
             if (dr.ColumnIsNotNull("SamAccountName"))
                 this.SamAccountName = Convert.ToString(dr["SamAccountName"]);
 
+            if (dr.ColumnIsNotNull("PasswordHash"))
+                this.PasswordHash = Convert.ToString(dr["PasswordHash"]);
+
+            if (dr.ColumnIsNotNull("SecurityStamp"))
+                this.SecurityStamp = Convert.ToString(dr["SecurityStamp"]);
+
+            if (dr.ColumnIsNotNull("PhoneNumber"))
+                this.PhoneNumber = Convert.ToString(dr["PhoneNumber"]);
+
+            if (dr.ColumnIsNotNull("PhoneNumberConfirmed"))
+                this.PhoneNumberConfirmed = Convert.ToBoolean(dr["PhoneNumberConfirmed"]);
+
+            if (dr.ColumnIsNotNull("TwoFactorEnabled"))
+                this.TwoFactorEnabled = Convert.ToBoolean(dr["TwoFactorEnabled"]);
+
+            if (dr.ColumnIsNotNull("LockoutEnd"))
+                this.LockoutEnd = Convert.ToDateTime(dr["LockoutEnd"]);
+
+            if (dr.ColumnIsNotNull("LockoutEnabled"))
+                this.LockoutEnabled = Convert.ToBoolean(dr["LockoutEnabled"]);
+
+            if (dr.ColumnIsNotNull("AccessFailedCount"))
+                this.AccessFailedCount = Convert.ToInt32(dr["AccessFailedCount"]);
+
         }
 
 
-     
+
         #endregion
 
     }

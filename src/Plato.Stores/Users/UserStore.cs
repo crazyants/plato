@@ -352,7 +352,7 @@ namespace Plato.Stores.Users
 
             var roles = await _platoRoleStore.GetRolesByUserId(user.Id);
             if (roles == null)
-                return null;
+                return new List<string>();
 
             IList<string> output = new List<string>();
             foreach (var role in roles)

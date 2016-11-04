@@ -208,8 +208,17 @@ UserName						NVARCHAR(255) DEFAULT('') NOT NULL,
 NormalizedUserName				NVARCHAR(255) DEFAULT('') NOT NULL,
 Email							NVARCHAR(255) DEFAULT('') NOT NULL,
 NormalizedEmail					NVARCHAR(255) DEFAULT('') NOT NULL,
+@EmailConfirmed					BIT DEFAULT(0) NOT NULL,
 DisplayName						NVARCHAR(255) DEFAULT('') NOT NULL,
 SamAccountName					NVARCHAR(255) DEFAULT('') NOT NULL,
+PasswordHash					NVARCHAR(255) DEFAULT('') NOT NULL,
+SecurityStamp					NVARCHAR(255) DEFAULT('') NOT NULL,
+PhoneNumber						NVARCHAR(255) DEFAULT('') NOT NULL,
+PhoneNumberConfirmed			BIT DEFAULT(0) NOT NULL,
+TwoFactorEnabled				BIT DEFAULT(0) NOT NULL,
+LockoutEnd						DATETIME2,
+LockoutEnabled					BIT DEFAULT(0) NOT NULL,
+AccessFailedCount				INT DEFAULT(0) NOT NULL,
 CONSTRAINT PK_Plato_Users_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
@@ -1085,15 +1094,23 @@ GO
 
 GO
 
-
 CREATE PROCEDURE [plato_sp_InsertUpdateUser] (
 	@Id int,
 	@UserName nvarchar(255),
 	@NormalizedUserName nvarchar(255),
 	@Email nvarchar(255),
 	@NormalizedEmail nvarchar(255),	
+	@EmailConfirmed bit,
 	@DisplayName nvarchar(255),
-	@SamAccountName nvarchar(255)
+	@SamAccountName nvarchar(255),
+	@PasswordHash nvarchar(255),
+	@SecurityStamp nvarchar(255),
+	@PhoneNumber nvarchar(255),
+	@PhoneNumberConfirmed bit,
+	@TwoFactorEnabled bit,
+	@LockoutEnd datetime2,
+	@LockoutEnabled bit,
+	@AccessFailedCount int
 ) AS
 
 SET NOCOUNT ON 
@@ -1113,8 +1130,17 @@ BEGIN
 		NormalizedUserName = @NormalizedUserName,
 		Email = @Email,
 		NormalizedEmail = @NormalizedEmail,
+		EmailConfirmed = @EmailConfirmed,
 		DisplayName = @DisplayName,
-		SamAccountName = @SamAccountName
+		SamAccountName = @SamAccountName,
+		PasswordHash = @PasswordHash,
+		SecurityStamp = @SecurityStamp,
+		PhoneNumber = @PhoneNumber,
+		PhoneNumberConfirmed = @PhoneNumberConfirmed,
+		TwoFactorEnabled = @TwoFactorEnabled,
+		LockoutEnd = @LockoutEnd,
+		LockoutEnabled = @LockoutEnabled,
+		AccessFailedCount = @AccessFailedCount
 	WHERE (Id = @Id);
 
 	SET @intIdentity = @Id;
@@ -1129,15 +1155,33 @@ BEGIN
 		NormalizedUserName,
 		Email,
 		NormalizedEmail,
+		EmailConfirmed,
 		DisplayName,
-		SamAccountName
+		SamAccountName,
+		PasswordHash,
+		SecurityStamp,
+		PhoneNumber,
+		PhoneNumberConfirmed,
+		TwoFactorEnabled,
+		LockoutEnd,
+		LockoutEnabled,
+		AccessFailedCount
 	) VALUES (
 		@UserName,
 		@NormalizedUserName,
 		@Email,
 		@NormalizedEmail,
+		@EmailConfirmed,
 		@DisplayName,
-		@SamAccountName 
+		@SamAccountName,
+		@PasswordHash,
+		@SecurityStamp,
+		@PhoneNumber,
+		@PhoneNumberConfirmed,
+		@TwoFactorEnabled,
+		@LockoutEnd,
+		@LockoutEnabled,
+		@AccessFailedCount
 	);
 
 	SET @intIdentity = SCOPE_IDENTITY();
@@ -1147,7 +1191,6 @@ END
 SELECT @intIdentity
 
 RETURN
-
 
 
 GO

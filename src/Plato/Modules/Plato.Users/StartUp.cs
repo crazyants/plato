@@ -62,31 +62,42 @@ namespace Plato.Users
             {
                 options.Cookies.ApplicationCookie.CookieName = "platoauth_" + _tenantName;
                 options.Cookies.ApplicationCookie.CookiePath = _tenantPrefix;
-                options.Cookies.ApplicationCookie.LoginPath = new PathString("/Plato.Login/");
-                options.Cookies.ApplicationCookie.AccessDeniedPath = new PathString("/Plato.Login/");
+                options.Cookies.ApplicationCookie.LoginPath = new PathString("/Plato.Users/Account/Login/");
+                options.Cookies.ApplicationCookie.AutomaticChallenge = true;
+                options.Cookies.ApplicationCookie.AccessDeniedPath = new PathString("/Plato.Users/Account/Login/");
             });
 
         }
 
         public override void Configure(
-            IApplicationBuilder builder,
+            IApplicationBuilder app,
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-            builder.UseIdentity();
-            builder
-                .UseCookieAuthentication(_options.Cookies.ApplicationCookie)
+
+            app.UseIdentity();
+            app.UseCookieAuthentication(_options.Cookies.ApplicationCookie)
                 .UseCookieAuthentication(_options.Cookies.ExternalCookie)
                 .UseCookieAuthentication(_options.Cookies.TwoFactorRememberMeCookie)
                 .UseCookieAuthentication(_options.Cookies.TwoFactorUserIdCookie);
+            
+            routes.MapAreaRoute(
+                name: "Login",
+                area: "Plato.Users",
+                template: "login",
+                controller: "Account",
+                action: "Login"
+            );
 
-            //routes.MapAreaRoute(
-            //    "Users",
-            //    "Plato.Users",
-            //    "admin",
-            //    "Account",
-            //    "Login"
-            //);
+            routes.MapAreaRoute(
+               name: "Register",
+               area: "Plato.Users",
+               template: "Register",
+               controller: "Account",
+               action: "Register"
+           );
+
+
         }
     }
 }

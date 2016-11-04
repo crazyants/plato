@@ -67,8 +67,17 @@ namespace Plato.Repositories.Users
                 user.NormalizedUserName,
                 user.Email,
                 user.NormalizedEmail,
+                user.EmailConfirmed,
                 user.DisplayName,
-                user.SamAccountName);
+                user.SamAccountName,
+                user.PasswordHash,
+                user.SecurityStamp,
+                user.PhoneNumber,
+                user.PhoneNumberConfirmed,
+                user.TwoFactorEnabled,
+                user.LockoutEnd,
+                user.LockoutEnabled,
+                user.AccessFailedCount);
 
             if (id > 0)
             {
@@ -299,8 +308,19 @@ namespace Plato.Repositories.Users
             string normalizedUserName,
             string email,
             string normalizedEmail,
+            bool emailConfirmed,
             string displayName,
-            string samAccountName)
+            string samAccountName,
+            string passwordHash,
+            string securityStamp,
+            string phoneNumber,
+            bool phoneNumberConfirmed,
+            bool twoFactorEnabled,
+            DateTimeOffset? lockoutEnd,
+            bool lockoutEnabled,
+            int accessFailedCount
+
+            )
         {
             using (var context = _dbContext)
             {
@@ -312,8 +332,18 @@ namespace Plato.Repositories.Users
                     normalizedUserName.ToEmptyIfNull().TrimToSize(255),
                     email.ToEmptyIfNull().TrimToSize(255),
                     normalizedEmail.ToEmptyIfNull().TrimToSize(255),
+                    emailConfirmed,
                     displayName.ToEmptyIfNull().TrimToSize(255),
-                    samAccountName.ToEmptyIfNull().TrimToSize(255));
+                    samAccountName.ToEmptyIfNull().TrimToSize(255),
+                    passwordHash.ToEmptyIfNull().TrimToSize(255),
+                    securityStamp.ToEmptyIfNull().TrimToSize(255),
+                    phoneNumber.ToEmptyIfNull().TrimToSize(255),
+                    phoneNumberConfirmed,
+                    twoFactorEnabled,
+                    lockoutEnd,
+                    lockoutEnabled,
+                    accessFailedCount
+                    );
             }
         }
 

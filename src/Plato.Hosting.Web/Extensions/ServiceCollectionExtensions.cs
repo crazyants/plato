@@ -23,6 +23,7 @@ using Plato.Repositories.Extensions;
 using Plato.Shell.Extensions;
 using Plato.Stores.Extensions;
 using Plato.Cache.Extensions;
+using Plato.Hosting.Web.Routing;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -50,16 +51,15 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddHostCore();
                 internalServices.AddModules();
                 internalServices.AddCaching();
-
-
+                
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+                
+                internalServices.AddPlatoDbContext();
+                internalServices.AddRepositories();
+                internalServices.AddStores();
 
-       
-                internalServices.AddPlatoDbContext()
-                    .AddRepositories()
-                    .AddStores();
             });
         }
 
@@ -67,6 +67,7 @@ namespace Plato.Hosting.Web.Extensions
         public static IServiceCollection AddPlatoMvc(
             this IServiceCollection services)
         {
+
             // add mvc core
             services.AddMvcCore()
                 .AddViews()
@@ -118,8 +119,6 @@ namespace Plato.Hosting.Web.Extensions
             return services;
         }
         
-        
-
         public static IApplicationBuilder UsePlato(
             this IApplicationBuilder app,
             IHostingEnvironment env,
@@ -138,12 +137,16 @@ namespace Plato.Hosting.Web.Extensions
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            // load static files
             app.UseStaticFiles();
             
+            // create services container for each shell
             app.UseMiddleware<PlatoContainerMiddleware>();
-            
-            // configure modules
 
+            // create uniuqe pipeline for each shell
+            app.UseMiddleware<PlatoRouterMiddleware>();
+            
+            // load module controllers
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
             var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
             foreach (var moduleEntry in moduleManager.AvailableModules)
@@ -163,24 +166,21 @@ namespace Plato.Hosting.Web.Extensions
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
             }
 
-            // Route the request to the correct tenant specific pipeline
-            // app.UseMiddleware<PlatoRouterMiddleware>();
-            
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    "default",
-                    "{site=Default}/{controller=Home}/{action=Index}/{id?}");
-            });
+      
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        "default",
+            //        "{site=Default}/{controller=Home}/{action=Index}/{id?}");
+            //});
             
             // configure routes
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    "default",
-                    "{controller=Home}/{action=Index}/{id?}");
-            });
-
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        "default",
+            //        "{controller=Home}/{action=Index}/{id?}");
+            //});
 
             return app;
         }
