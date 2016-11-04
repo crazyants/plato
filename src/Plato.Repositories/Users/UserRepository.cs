@@ -20,14 +20,12 @@ namespace Plato.Repositories.Users
             IUserSecretRepository<UserSecret> userSecretRepository,
             IUserDetailRepository<UserDetail> userDetailRepository,
             IUserPhotoRepository<UserPhoto> userPhotoRepository,
-            IUserRolesRepository<UserRole> userRolesRepository,
             ILogger<UserSecretRepository> logger)
         {
             _dbContext = dbContext;
             _userSecretRepository = userSecretRepository;
             _userDetailRepository = userDetailRepository;
             _userPhotoRepository = userPhotoRepository;
-            _userRolesRepository = userRolesRepository;
             _logger = logger;
         }
 
@@ -39,7 +37,7 @@ namespace Plato.Repositories.Users
         private readonly IUserSecretRepository<UserSecret> _userSecretRepository;
         private readonly IUserDetailRepository<UserDetail> _userDetailRepository;
         private readonly IUserPhotoRepository<UserPhoto> _userPhotoRepository;
-        private readonly IUserRolesRepository<UserRole> _userRolesRepository;
+     
         private readonly ILogger<UserSecretRepository> _logger;
 
         #endregion
@@ -62,10 +60,7 @@ namespace Plato.Repositories.Users
 
             if (_userDetailRepository == null)
                 throw new ArgumentNullException(nameof(_userDetailRepository));
-
-            if (_userRolesRepository == null)
-                throw new ArgumentNullException(nameof(_userRolesRepository));
-
+            
             var id = await InsertUpdateInternal(
                 user.Id,
                 user.UserName,
@@ -100,18 +95,6 @@ namespace Plato.Repositories.Users
                 if ((user.Id == 0) || (user.Photo.UserId == 0))
                     user.Photo.UserId = id;
                 await _userPhotoRepository.InsertUpdateAsync(user.Photo);
-
-                // roles
-
-                if (user.RoleNames.Count > 0)
-                {
-                    //_userRolesRepository.InsertUserRole()
-                }
-                //if (user.UserRoles == null)
-                //    user.UserRoles = new List<Role>();
-                //if (user.Id == 0 || user.Photo.UserId == 0)
-                //    user.Photo.UserId = id;
-                //await _userPhotoRepository.InsertUpdateAsync(user.Photo);
 
                 // return
 

@@ -18,6 +18,9 @@ namespace Plato.Stores.Users
 
         private WhereString _userName;
 
+        public WhereInt _roleId;
+        private WhereString _roleName;
+
         public WhereInt Id
         {
             get { return _id ?? (_id = new WhereInt()); }
@@ -35,6 +38,19 @@ namespace Plato.Stores.Users
             get { return _email ?? (_email = new WhereString()); }
             set { _email = value; }
         }
+
+        public WhereInt RoleId
+        {
+            get { return _roleId ?? (_roleId = new WhereInt()); }
+            set { _roleId = value; }
+        }
+
+        public WhereString RoleName
+        {
+            get { return _roleName ?? (_roleName = new WhereString()); }
+            set { _roleName = value; }
+        }
+        
     }
 
     public class UserQuery : DefaultQuery

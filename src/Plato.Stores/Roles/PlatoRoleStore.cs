@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -131,7 +132,24 @@ namespace Plato.Stores.Roles
             }
             return roles;
         }
-        
+
+        public async Task<IList<Role>> GetRolesByUserId(int userId)
+        {
+            IList<Role> roles;
+            if (!_memoryCache.TryGetValue(_key, out roles))
+            {
+                roles = await _roleRepository.SelectByUserIdAsync(userId);
+                if (roles != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
+                            _memoryCache.GetType().Name, _key);
+                    _memoryCache.Set(_key, roles);
+                }
+            }
+            return roles;
+        }
+
         #endregion
     }
 }

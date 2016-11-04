@@ -7,10 +7,10 @@ namespace Plato.Stores.Roles
 {
     public interface IPlatoRoleStore : IStore<Role>
     {
-
         Task<Role> GetByName(string name);
 
-        Task<Role> GetByNormalizedName(string nameNormalized);
+        Task<IList<Role>> GetRolesByUserId(int userId);
 
+        Task<Role> GetByNormalizedName(string nameNormalized);
     }
 }

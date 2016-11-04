@@ -62,6 +62,11 @@ namespace Plato.Stores.Users
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<UserRole>> GetUserRoles(int ustId)
+        {
+            throw new NotImplementedException();
+        }
+
         public IQuery QueryAsync()
         {
             throw new NotImplementedException();

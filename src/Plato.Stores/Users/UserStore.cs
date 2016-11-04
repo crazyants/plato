@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Plato.Abstractions.Query;
 using Plato.Models.Users;
 using Plato.Repositories.Users;
 using Plato.Stores.Roles;
@@ -29,15 +30,19 @@ namespace Plato.Stores.Users
 
         private readonly IUserRepository<User> _userRepository;
         private readonly IUserRolesRepository<UserRole> _userRolesRepository;
+
+        private readonly IPlatoUserStore _platoUserStore;
         private readonly IPlatoRoleStore _platoRoleStore;
 
         public UserStore(
             IUserRepository<User> userRepository,
             IUserRolesRepository<UserRole> userRolesRepository,
-             IPlatoRoleStore platoRoleStore)
+            IPlatoUserStore platoUserStore,
+            IPlatoRoleStore platoRoleStore)
         {
             _userRepository = userRepository;
             _userRolesRepository = userRolesRepository;
+            _platoUserStore = platoUserStore;
             _platoRoleStore = platoRoleStore;
         }
 
@@ -317,6 +322,7 @@ namespace Plato.Stores.Users
 
         public async Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
 
             var role = await _platoRoleStore.GetByName(roleName);
             if (role != null)
@@ -332,26 +338,54 @@ namespace Plato.Stores.Users
 
         public async Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var role = await _platoRoleStore.GetByName(roleName);
             if (role != null)
                 await _userRolesRepository.DeletetUserRole(user.Id, role.Id);
         }
 
-        public Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
+        public async Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-            //var roles = _userRolesRepository.se
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var roles = await _platoRoleStore.GetRolesByUserId(user.Id);
+            if (roles == null)
+                return null;
+
+            IList<string> output = new List<string>();
+            foreach (var role in roles)
+                output.Add(role.Name);
+            return output;
 
         }
 
-        public Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        public async Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var roleNames = await GetRolesAsync(user, cancellationToken);
+            if (roleNames == null)
+                return false;
+            foreach (var name in roleNames)
+            {
+                if (string.Equals(name, roleName, StringComparison.CurrentCultureIgnoreCase))
+                    return true;
+            }
+            return false;
         }
 
-        public Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+        public async Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return await _platoUserStore.QueryAsync()
+                .Page(1, 1000)
+                .Select<UserQueryParams>(q => q.RoleName.Equals(roleName))
+                .OrderBy("Id", OrderBy.Desc)
+                .ToList<User>();
         }
 
         #endregion

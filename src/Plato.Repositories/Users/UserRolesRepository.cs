@@ -202,40 +202,7 @@ namespace Plato.Repositories.Users
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<UserRole>> SelectUserRoles(int userId)
-        {
-            List<UserRole> output = null;
-            using (var context = _dbContext)
-            {
-                var reader = await context.ExecuteReaderAsync(
-                    CommandType.StoredProcedure,
-                    "plato_sp_SelectUserRoles", 
-                    userId
-                );
-
-                if ((reader != null) && (reader.HasRows))
-                {
-                    output = new List<UserRole>();
-                    while (await reader.ReadAsync())
-                    {
-                        var userRole = new UserRole();
-                        userRole.PopulateModel(reader);
-                        if (userRole.RoleId > 0)
-                        {
-                            userRole.Role = new Role();
-                            userRole.Role.PopulateModel(reader);
-                        }
-                        output.Add(userRole);
-                    }
-
-                }
-            }
-
-
-            return output;
-
-        }
-
+       
         #endregion
     }
 }
