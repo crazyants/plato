@@ -27,9 +27,9 @@ namespace Plato.Users.Controllers
         {
 
             var model = new LoginViewModel();
-            model.Email = "admin@admin.com";
-            model.UserName = "admin@admin.com";
-            model.Password = "admin";
+            model.Email = "";
+            model.UserName = "";
+            model.Password = "";
 
             ViewData["ReturnUrl"] = returnUrl;
             return View(model);
@@ -133,6 +133,15 @@ namespace Plato.Users.Controllers
             return View(model);
         }
 
+        //
+        // POST: /Account/LogOff
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOff()
+        {
+            await _signInManager.SignOutAsync();
+            return Redirect("~/");
+        }
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
