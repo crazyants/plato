@@ -5,46 +5,38 @@
 }
 
 
-<h2>@ViewData["Title"].</h2>
+<h2>@ViewData["Title"]</h2>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
         <section>
             <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
                 <h4>@T["Create a new account."]</h4>
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="@Model.UserName" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="@Model.UserName" class="form-control" />
-                        <span asp-validation-for="@Model.UserName" class="text-danger"></span>
-                    </div>
+                    <label asp-for="@Model.UserName" class="col-md-2 form-control-label font-weight-bold"></label>
+                    <span asp-validation-for="@Model.UserName" class="text-danger float-xs-right"></span>
+                    <input asp-for="@Model.UserName" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.Email" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="@Model.Email" class="form-control" />
-                        <span asp-validation-for="@Model.Email" class="text-danger"></span>
-                    </div>
+                    <label asp-for="@Model.Email" class="col-md-2 form-control-label font-weight-bold"></label>
+                    <span asp-validation-for="@Model.Email" class="text-danger float-xs-right"></span>
+                    <input asp-for="@Model.Email" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.Password" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="@Model.Password" class="form-control" />
-                        <span asp-validation-for="@Model.Password" class="text-danger"></span>
-                    </div>
+                    <label asp-for="@Model.Password" class="col-md-2 form-control-label font-weight-bold"></label>
+                    <span asp-validation-for="@Model.Password" class="text-danger float-xs-right"></span>
+                    <input asp-for="@Model.Password" class="form-control" />
+                    
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.ConfirmPassword" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="@Model.ConfirmPassword" class="form-control" />
-                        <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
-                    </div>
+                    <label asp-for="@Model.ConfirmPassword" class="col-md-2 form-control-label font-weight-bold"></label>
+                    <span asp-validation-for="@Model.ConfirmPassword" class="text-danger float-xs-right"></span>
+                    <input asp-for="@Model.ConfirmPassword" class="form-control" />
+                    
                 </div>
                 <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-default">@T["Register"]</button>
-                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">@T["Register"]</button>
                 </div>
             </form>
         </section>
