@@ -58,6 +58,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Plato.WebApi", "src\Plato.W
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Plato.Users", "src\Plato\Modules\Plato.Users\Plato.Users.xproj", "{2E3FD24A-A1EC-4D45-89B8-F367CC28D797}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Plato.WebApi", "src\Plato\Modules\Plato.WebApi\Plato.WebApi.xproj", "{0BE6A39A-F553-4450-BE80-DE3B892FAC18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -144,6 +146,10 @@ Global
 		{2E3FD24A-A1EC-4D45-89B8-F367CC28D797}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E3FD24A-A1EC-4D45-89B8-F367CC28D797}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E3FD24A-A1EC-4D45-89B8-F367CC28D797}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BE6A39A-F553-4450-BE80-DE3B892FAC18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BE6A39A-F553-4450-BE80-DE3B892FAC18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BE6A39A-F553-4450-BE80-DE3B892FAC18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BE6A39A-F553-4450-BE80-DE3B892FAC18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -170,5 +176,6 @@ Global
 		{2D4594D4-EF34-4905-AE2C-1DF29BA94D93} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{F101B8E3-DD1E-48AE-A9E7-FD3E6C0D1BDF} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{2E3FD24A-A1EC-4D45-89B8-F367CC28D797} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{0BE6A39A-F553-4450-BE80-DE3B892FAC18} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 EndGlobal

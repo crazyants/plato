@@ -39,8 +39,8 @@
         "Microsoft.AspNetCore.Mvc.Razor.Host": "1.0.1",
             "Plato.Hosting.Web": "1.0.0-*",
             "Microsoft.AspNetCore.Identity": "1.0.0",
-            "Plato.WebApi": "1.0.0-*"
-    },
+            "Microsoft.AspNetCore.Mvc.WebApiCompatShim": "1.0.1",
+            "Microsoft.AspNet.WebApi.Client": "5.2.3"    },
     "frameworks": {
         "netcoreapp1.0": {
             "imports": [

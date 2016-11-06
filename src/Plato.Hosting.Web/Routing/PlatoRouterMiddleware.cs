@@ -86,13 +86,9 @@ namespace Plato.Hosting.Web.Routing
             };
 
             var prefixedRouteBuilder = new PrefixedRouteBuilder(routePrefix, routeBuilder, inlineConstraintResolver);
-
             foreach (var startup in startups)
-            {
                 startup.Configure(appBuilder, prefixedRouteBuilder, serviceProvider);
-            }
-
-
+            
             //// The default route is added to each tenant as a template route, with a prefix
             prefixedRouteBuilder.Routes.Add(new Route(
                 prefixedRouteBuilder.DefaultHandler,
@@ -103,7 +99,7 @@ namespace Plato.Hosting.Web.Routing
                 null,
                 inlineConstraintResolver)
             );
-
+            
             var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();
             if (siteService != null)
             {

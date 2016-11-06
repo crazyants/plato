@@ -62,10 +62,10 @@ namespace Plato.Hosting.Extensions
             {
                 object routeValue;
 
+
                 if (values.TryGetValue(routeKey, out routeValue) && routeValue != null)
                 {
                     var parameterValueString = Convert.ToString(routeValue, CultureInfo.InvariantCulture);
-
                     return _value.Equals(parameterValueString, StringComparison.OrdinalIgnoreCase);
                 }
 

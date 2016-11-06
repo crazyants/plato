@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0-*",
+
+    "dependencies": {
+        "Microsoft.AspNetCore.Identity": "1.0.0",
+        "Microsoft.AspNetCore.Mvc": "1.0.1",
+        "Microsoft.AspNetCore.Mvc.Razor": "1.0.1",
+        "NETStandard.Library": "1.6.0",
+        "Plato.Hosting": "1.0.0-*",
+        "Plato.Layout": "1.0.0-*",
+        "Plato.Models": "1.0.0-*",
+        "Plato.Repositories": "1.0.0-*",
+        "Plato.Stores": "1.0.0-*"
+    },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}
