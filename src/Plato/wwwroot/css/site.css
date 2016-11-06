@@ -43,21 +43,21 @@ aside {
     transition: all .35s;
 }
 
-    .btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open > .dropdown-toggle.btn-default {
-        color: #222;
-        background-color: #f2f2f2;
-        border-color: #ededed;
-    }
+.btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open > .dropdown-toggle.btn-default {
+    color: #222;
+    background-color: #f2f2f2;
+    border-color: #ededed;
+}
 
-    .btn-default.disabled, .btn-default.disabled.active, .btn-default.disabled.focus, .btn-default.disabled:active, .btn-default.disabled:focus, .btn-default.disabled:hover, .btn-default[disabled], .btn-default[disabled].active, .btn-default[disabled].focus, .btn-default[disabled]:active, .btn-default[disabled]:focus, .btn-default[disabled]:hover, fieldset[disabled] .btn-default, fieldset[disabled] .btn-default.active, fieldset[disabled] .btn-default.focus, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:hover {
-        background-color: #fff;
-        border-color: #fff;
-    }
+.btn-default.disabled, .btn-default.disabled.active, .btn-default.disabled.focus, .btn-default.disabled:active, .btn-default.disabled:focus, .btn-default.disabled:hover, .btn-default[disabled], .btn-default[disabled].active, .btn-default[disabled].focus, .btn-default[disabled]:active, .btn-default[disabled]:focus, .btn-default[disabled]:hover, fieldset[disabled] .btn-default, fieldset[disabled] .btn-default.active, fieldset[disabled] .btn-default.focus, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:hover {
+    background-color: #fff;
+    border-color: #fff;
+}
 
-    .btn-default .badge {
-        color: #fff;
-        background-color: #222;
-    }
+.btn-default .badge {
+    color: #fff;
+    background-color: #222;
+}
 
 .btn-primary {
     -webkit-transition: all .35s;
@@ -65,10 +65,9 @@ aside {
     transition: all .35s;
 }
 
-
 .btn {
     border: none;
-    border-radius: 300px;
+    border-radius: 4px;
 }
 
 .btn-xl {
