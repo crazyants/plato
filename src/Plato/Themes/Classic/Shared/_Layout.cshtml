@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Plato</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
         <link rel="stylesheet" href="~/lib/magnific-popup/dist/magnific-popup.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <script src="~/ng-lib/core-js/client/shim.min.js"></script>
+        <script src="~/ng-lib/zone.js/dist/zone.js"></script>
+        <script src="~/ng-lib/reflect-metadata/Reflect.js"></script>
+        <script src="~/ng-lib/systemjs/dist/system.src.js"></script>
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
@@ -21,10 +24,10 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
-
+    @RenderSection("HeaderScripts", required: false)
 </head>
 <body>
-
+    
 <div class="collapse" id="navbar-header">
     <div class="container-fluid bg-inverse p-1">
         <h3>Collapsed content</h3>
@@ -34,7 +37,7 @@
 
 <nav class="navbar navbar-light navbar-full nav-tabs mb-3">
     <div class="container-fluid">
-    
+
         <ul class="nav nav-pills float-xs-right">
             <li class="nav-item">
                 <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
@@ -73,22 +76,22 @@
                 <li class="nav-item hidden-sm-down">
                     <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
                 </li>
-            
+
             }
             <li class="nav-item">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="@T["Toggle navigation"]"></button>
             </li>
         </ul>
-      
+
         <h3 class="navbar-brand text-muted">@T["Plato"]</h3>
     </div>
 </nav>
-    
+
 <div class="container">
 
     @RenderBody()
 
-    <hr />
+    <hr/>
     <footer>
         <p>&copy; 2016 - Plato</p>
     </footer>
@@ -104,24 +107,18 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
             asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
             asp-fallback-test="window.jQuery">
-
     </script>
     <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.0/bootstrap.min.js"
             asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
             asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-
     </script>
-    <script src="~/lib/magnific-popup/dist/jquery.magnific-popup.js">
-        
-    </script>
-    
-    <script src="~/lib/scrollreveal/dist/scrollreveal.js">
-
-    </script>
+    <script src="~/lib/magnific-popup/dist/jquery.magnific-popup.js"></script>
+    <script src="~/lib/scrollreveal/dist/scrollreveal.js"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
 </environment>
 
 @RenderSection("scripts", required: false)
+
 
 </body>
 </html>

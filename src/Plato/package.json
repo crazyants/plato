@@ -1,0 +1,26 @@
+{
+    "name": "Plato",
+    "version": "1.0.0",
+    "dependencies": {
+        "@angular/common": "~2.1.1",
+        "@angular/compiler": "~2.1.1",
+        "@angular/core": "~2.1.1",
+        "@angular/forms": "~2.1.1",
+        "@angular/http": "~2.1.1",
+        "@angular/platform-browser": "~2.1.1",
+        "@angular/platform-browser-dynamic": "~2.1.1",
+        "@angular/router": "~3.1.1",
+        "@angular/upgrade": "~2.1.1",
+        "core-js": "^2.4.1",
+        "reflect-metadata": "^0.1.8",
+        "rxjs": "5.0.0-beta.12",
+        "systemjs": "0.19.39",
+        "zone.js": "^0.6.25"
+    },
+    "devDependencies": {
+        "@types/core-js": "^0.9.34",
+        "gulp": "^3.9.1",
+        "q": "^1.4.1",
+        "rimraf": "^2.5.2"
+    }
+}

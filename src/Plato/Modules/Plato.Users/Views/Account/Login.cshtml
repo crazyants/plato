@@ -9,6 +9,10 @@
 }
 
 
+<my-app>Loading...</my-app>
+
+
+
 <h2>@ViewData["Title"]</h2>
 
 <div class="row">
@@ -89,6 +93,13 @@
 
 
     </div>        
+
+
+
+@section HeaderScripts {
+    @{ await Html.RenderPartialAsync("_ModuleBootStrapPartial"); }
+}
+
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }

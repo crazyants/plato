@@ -140,12 +140,6 @@ namespace Plato.Hosting.Web.Extensions
             // load static files
             app.UseStaticFiles();
             
-            // create services container for each shell
-            app.UseMiddleware<PlatoContainerMiddleware>();
-
-            // create uniuqe pipeline for each shell
-            app.UseMiddleware<PlatoRouterMiddleware>();
-            
             // load module controllers
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
             var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
@@ -153,27 +147,35 @@ namespace Plato.Hosting.Web.Extensions
             {
 
                 // serve static files within module folders
-                var contentPath = Path.Combine(env.ContentRootPath, moduleEntry.Descriptor.Location,
+                var contentPath = Path.Combine(env.ContentRootPath, 
+                    moduleEntry.Descriptor.Location,
                     moduleEntry.Descriptor.ID, "Content");
                 if (Directory.Exists(contentPath))
+                {
                     app.UseStaticFiles(new StaticFileOptions
                     {
-                        RequestPath = "/" + moduleEntry.Descriptor.ID,
+                        RequestPath = "/" + moduleEntry.Descriptor.ID.ToLower(),
                         FileProvider = new PhysicalFileProvider(contentPath)
                     });
+                }
                 // add modules as application parts
                 foreach (var assembly in moduleEntry.Assmeblies)
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
             }
 
-      
+            // create services container for each shell
+            app.UseMiddleware<PlatoContainerMiddleware>();
+
+            // create uniuqe pipeline for each shell
+            app.UseMiddleware<PlatoRouterMiddleware>();
+
             //app.UseMvc(routes =>
             //{
             //    routes.MapRoute(
             //        "default",
             //        "{site=Default}/{controller=Home}/{action=Index}/{id?}");
             //});
-            
+
             // configure routes
             //app.UseMvc(routes =>
             //{

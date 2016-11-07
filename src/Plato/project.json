@@ -3,7 +3,10 @@
         "emitEntryPoint": true,
         "preserveCompilationContext": true,
         "compile": {
-            "exclude": "modules"
+            "exclude": [
+                "modules",
+                "node_modules"
+            ]
         }
     },
         "dependencies": {
