@@ -9,17 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var ForumListComponent = (function () {
-    function ForumListComponent() {
+var AppComponent = (function () {
+    function AppComponent() {
     }
-    ForumListComponent = __decorate([
+    AppComponent = __decorate([
         core_1.Component({
-            selector: 'forum-list',
-            template: 'hello from forum list'
+            selector: 'my-app',
+            templateUrl: './plato.users/ng-app/components/app/app.html?1333=233332323232232323'
         }), 
         __metadata('design:paramtypes', [])
-    ], ForumListComponent);
-    return ForumListComponent;
+    ], AppComponent);
+    return AppComponent;
 }());
-exports.ForumListComponent = ForumListComponent;
-//# sourceMappingURL=forum-list.js.map
+exports.AppComponent = AppComponent;
+//# sourceMappingURL=app.component.js.map

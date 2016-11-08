@@ -12,7 +12,7 @@
         map: {
 
             // our app is within the ng-app folder
-            app: './plato.users/',
+            app: './plato.users/ng-app',
 
             // angular bundles
             '@angular/core': 'npm:@angular/core/bundles/core.umd.js',

@@ -8,10 +8,9 @@
     ViewData["Title"] = "Login";
 }
 
+<link rel="stylesheet" href="~/plato.users/css/plato-users.css" />
 
 <my-app>Loading...</my-app>
-
-
 
 <h2>@ViewData["Title"]</h2>
 
@@ -97,11 +96,12 @@
 
 
 @section HeaderScripts {
-    @{ await Html.RenderPartialAsync("_ModuleBootStrapPartial"); }
+
 }
 
 
 @section Scripts {
+    @{ await Html.RenderPartialAsync("_AngularBootStrapPartial"); }
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
 
