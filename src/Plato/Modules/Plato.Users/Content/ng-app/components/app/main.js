@@ -1,4 +1,4 @@
-/// <reference path="../../../../../../typings/globals/core-js/index.d.ts" />
+/// <reference path="../../../../../../typings/index.d.ts" />
 "use strict";
 var platform_browser_dynamic_1 = require('@angular/platform-browser-dynamic');
 var app_module_1 = require('./app.module');

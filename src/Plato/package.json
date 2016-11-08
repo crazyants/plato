@@ -18,7 +18,6 @@
         "zone.js": "^0.6.25"
     },
     "devDependencies": {
-        "@types/core-js": "^0.9.34",
         "gulp": "^3.9.1",
         "q": "^1.4.1",
         "rimraf": "^2.5.2"
