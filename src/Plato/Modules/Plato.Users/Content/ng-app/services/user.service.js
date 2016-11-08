@@ -14,8 +14,9 @@ var Observable_1 = require('rxjs/Observable');
 require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
 require('rxjs/add/observable/throw');
-var GithubService = (function () {
-    function GithubService(http) {
+var UserService = (function () {
+    function UserService(http) {
+        this.http = http;
         // private clientId: string = '<Client Id>';
         // private clientSecret: string = '<Client Secret Key>';
         this.clientId = '60b9f23dedffbdfc476c';
@@ -24,48 +25,49 @@ var GithubService = (function () {
         this.userName = '';
         this.http = http;
     }
-    GithubService.prototype.load = function () {
+    UserService.prototype.get = function () {
         console.log("came here in service");
         var headers = new http_1.Headers();
         headers.append('Authorization', '123123123');
-        this.http.get('http://localhost:50439/api/users', {
+        return this.http.get('http://localhost:50439/api/users', {
             headers: headers
         })
-            .map(function (res) { return console.log("Response came!!!"); });
-        console.log("done . . .");
+            .map(function (res) { return console.log(res.json()); })
+            .catch(this.handleError);
+        //console.log("done . . .");
     };
-    GithubService.prototype.getUser = function () {
-        if (this.userName) {
-            return this.http.get('http://api.github.com/users/' + this.userName
-                + '?client_id=' + this.clientId
-                + '&client_secret=' + this.clientSecret)
-                .map(function (res) { return res.json(); })
-                .catch(this.handleError);
-        }
-        // Bu şekilde de dönen değer üzerinden hatalar yakalanabilir. Ya da catch te....
-        // .map(res => {
-        //     console.log(res);
-        //     if (res.status != 200) {
-        //         throw new Error('This request has failed ' + res.status);
-        //     }
-        //     else {
-        //         return res.json();
-        //     }
-        // })
-    };
-    GithubService.prototype.getRepos = function () {
-        if (this.userName) {
-            return this.http.get('http://api.github.com/users/' + this.userName
-                + '/repos?client_id=' + this.clientId
-                + '&client_secret=' + this.clientSecret)
-                .map(function (res) { return res.json(); })
-                .catch(this.handleError);
-        }
-    };
-    GithubService.prototype.updateUser = function (userName) {
-        this.userName = userName;
-    };
-    GithubService.prototype.handleError = function (error) {
+    //getUser() {
+    //    if (this.userName) {
+    //        return this.http.get('http://api.github.com/users/' + this.userName
+    //            + '?client_id=' + this.clientId
+    //            + '&client_secret=' + this.clientSecret)
+    //            .map(res => res.json())
+    //            .catch(this.handleError);
+    //    }
+    //    // Bu şekilde de dönen değer üzerinden hatalar yakalanabilir. Ya da catch te....
+    //    // .map(res => {
+    //    //     console.log(res);
+    //    //     if (res.status != 200) {
+    //    //         throw new Error('This request has failed ' + res.status);
+    //    //     }
+    //    //     else {
+    //    //         return res.json();
+    //    //     }
+    //    // })
+    //}
+    //getRepos() {
+    //    if (this.userName) {
+    //        return this.http.get('http://api.github.com/users/' + this.userName
+    //            + '/repos?client_id=' + this.clientId
+    //            + '&client_secret=' + this.clientSecret)
+    //            .map(res => res.json())
+    //            .catch(this.handleError);
+    //    }
+    //}
+    //updateUser(userName: string) {
+    //    this.userName = userName;
+    //}
+    UserService.prototype.handleError = function (error) {
         if (error.status === 401) {
             return Observable_1.Observable.throw(error.status);
         }
@@ -73,11 +75,11 @@ var GithubService = (function () {
             return Observable_1.Observable.throw(error.status || 'Server error');
         }
     };
-    GithubService = __decorate([
+    UserService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
-    ], GithubService);
-    return GithubService;
+    ], UserService);
+    return UserService;
 }());
-exports.GithubService = GithubService;
+exports.UserService = UserService;
 //# sourceMappingURL=user.service.js.map
