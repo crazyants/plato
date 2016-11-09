@@ -76,10 +76,8 @@ namespace Plato.Hosting.Web.Routing
 
             var routePrefix = "";
             if (!string.IsNullOrWhiteSpace(shellSettings.RequestedUrlPrefix))
-            {
                 routePrefix = shellSettings.RequestedUrlPrefix + "/";
-            }
-
+            
             var routeBuilder = new RouteBuilder(appBuilder)
             {
                 DefaultHandler = serviceProvider.GetRequiredService<MvcRouteHandler>()

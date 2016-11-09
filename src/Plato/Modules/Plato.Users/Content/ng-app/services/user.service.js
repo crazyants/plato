@@ -15,25 +15,20 @@ require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
 require('rxjs/add/observable/throw');
 var UserService = (function () {
-    // private clientId: string = '<Client Id>';
-    // private clientSecret: string = '<Client Secret Key>';
-    //private clientId: string = '60b9f23dedffbdfc476c';
-    //private clientSecret: string = 'd1c186c6373f96571c0bfcf76b84e4dc6fd0c15a';
     function UserService(http) {
         this.http = http;
         console.log('User Service Ready.');
         this.http = http;
         this.userName = '';
     }
-    UserService.prototype.get = function () {
-        console.log("get() in UserService called");
+    UserService.prototype.get = function (page, pageSize) {
         var headers = new http_1.Headers();
         headers.append('Authorization', '123123123');
-        return this.http.get('http://localhost:50439/api/users', {
+        return this.http.get('http://localhost:50439/api/users?page=' +
+            page.toString() + '&pageSize=' + pageSize.toString(), {
             headers: headers
         })
             .map(function (res) {
-            console.log(JSON.stringify(res.json()));
             return res.json();
         })
             .catch(this.handleError);

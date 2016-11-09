@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Stores.Users;
 using Plato.Models.Users;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Plato.WebApi.Controllers
 {
-
 
 
     public class UsersController : Controller
@@ -27,11 +29,12 @@ namespace Plato.WebApi.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> Get()
+        [ResponseCache(NoStore = true)]
+        public async Task<IActionResult> Get(int page = 1, int pageSize = 5)
         {
 
             var users = await _userStore.QueryAsync()
-                .Page(1, 10)
+                .Page(page, pageSize)
                 .Select<UserQueryParams>(q =>
                 {
                     // q.UserName.IsIn("Admin,Mark").Or();
@@ -45,7 +48,7 @@ namespace Plato.WebApi.Controllers
 
             return new ObjectResult(new
             {
-                Data = users,
+                users = users,
                 StatusCode = HttpStatusCode.OK,
                 Message = "Album created successfully."
             });

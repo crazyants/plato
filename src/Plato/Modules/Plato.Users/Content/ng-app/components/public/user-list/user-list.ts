@@ -7,32 +7,59 @@ import { UserService } from '../../../services/user.service';
 
 @Component({
     selector: 'user-list',
-    templateUrl: './plato.users/ng-app/components/public/user-list/user-list.html?123123=123123'
+    templateUrl: './plato.users/ng-app/components/public/user-list/user-list.html?444443434=4343434'
 })
 
-export class UserListComponent {
+export class UserListComponent implements OnInit {
 
     @Input() viewModel: models.UserListViewModel;
-    //@Output() userUpdated = new EventEmitter<IUser>();
-
-
-    //public viewModel: models.UserListViewModel;
+    @Input() page: number;
+    @Input() pageSize: number;
+    @Output() userUpdated = new EventEmitter<models.UserListViewModel>();
     
+    public totalPages: number;
+
     constructor(private userService: UserService) {
         this.userService = userService;
-        this.init();
+        this.page = 1;
+        this.pageSize = 10;
     }
     
+    ngOnInit() {
 
+        alert("test")
+        if (this.page && this.pageSize) {
+            this.init();
+        }
     
-    init() {
+    }
+
+    prevPageClick() {
+        this.page = this.page - 1;
+        if (this.page < 1) {
+            this.page = 1;
+        }
+        this.init();
+    }
+
+    nextPageClick() {
+        this.page = this.page + 1;
+        this.init();
+    }
+
+    setTotalPages(total: number) {
         
-        this.userService.get()
+        this.totalPages = Math.ceil(total / this.pageSize);
+
+    }
+
+    init() {
+    
+        this.userService.get(this.page, this.pageSize)
             .subscribe(result => {
-               
-                this.viewModel = result;
-                 
-                    //this.userUpdated.emit(this.users);
+                    this.viewModel = result;
+                    this.setTotalPages(result.users.total);
+                    this.userUpdated.emit(this.viewModel);
                 },
                 (err) => {
                     console.log('err:' + err);

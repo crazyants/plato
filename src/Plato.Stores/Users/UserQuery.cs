@@ -138,7 +138,7 @@ namespace Plato.Stores.Users
 
         public string BuildSqlCount()
         {
-            var whereClause = BuildWhereClause();
+            var whereClause = BuildWhereClause(false);
             var sb = new StringBuilder();
             sb.Append("SELECT COUNT(Id) FROM Plato_Users");
             if (!string.IsNullOrEmpty(whereClause))

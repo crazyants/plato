@@ -1,127 +1,128 @@
 
+<p *ngIf="viewModel && viewModel.users && viewModel.users.data">
+    Page {{ page }} of {{ totalPages }}
 
-123123
+    Showing {{ viewModel.users.data.length }} of {{ viewModel.users.total }}:
+</p>
 
-<div *ngIf="viewModel && viewModel.data">
-
+<div *ngIf="viewModel && viewModel.users && viewModel.users.data">
     <div class="list-group">
-
-        <a *ngFor="let user of viewModel.data" href="#" target="_blank" class="list-group-item list-group-item-action">
-            <span class="tag tag-info float-xs-right">{{user.id}}</span>
-            <span class="tag tag-success float-xs-right m-r-05">{{user.id}} Forks</span>
-            <h5 class="list-group-item-heading">{{user.userName}}</h5>
+        <a *ngFor="let user of viewModel.users.data" href="#" target="_blank" class="list-group-item list-group-item-action">
+            <span class="tag tag-info float-md-right mx-1">{{user.id}}</span>
+            <span class="tag tag-success float-md-right">{{user.id}} Forks</span>
+            <h6 class="list-group-item-heading">{{user.userName}}</h6>
             <p class="list-group-item-text">{{user.displayName}}</p>
         </a>
-
     </div>
-    
 </div>
 
-123123123
+<div class="mx-auto">
+    <button class="btn btn-primary" (click)="prevPageClick()">Prev</button>
+    <button class="btn btn-primary" (click)="nextPageClick()">Next</button>
+</div>
 
+<section class="section my-3 user-list">
 
-    <section class="section my-3 user-list">
+    <div class="row text-md-center">
 
-        <div class="row text-md-center">
+        <!--First column-->
+        <div class="col-lg-2 col-md-6 mb-r">
 
-            <!--First column-->
-            <div class="col-lg-2 col-md-6 mb-r">
-
-                <div class="avatar">
-                    <img src="http://mdbootstrap.com/images/avatars/img%20(1).jpg" class="rounded-circle img-responsive">
-                </div>
-                <h5 class="mt-1">Anna Deynah</h5>
-
-                <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
-                <a class="icons-sm tw-ic"><i class="fa fa-twitter"> </i></a>
-                <a class="icons-sm drib-ic"><i class="fa fa-dribbble"> </i></a>
-
+            <div class="avatar">
+                <img src="http://mdbootstrap.com/images/avatars/img%20(1).jpg" class="rounded-circle img-responsive">
             </div>
-            <!--/First column-->
-            <!--Second column-->
-            <div class="col-lg-2 col-md-6 mb-r">
+            <h5 class="mt-1">Anna Deynah</h5>
 
-                <div class="avatar">
-                    <img src="http://mdbootstrap.com/images/avatars/img%20(3).jpg" class="rounded-circle">
-                </div>
-                <h5 class="mt-1">John Doe</h5>
+            <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
+            <a class="icons-sm tw-ic"><i class="fa fa-twitter"> </i></a>
+            <a class="icons-sm drib-ic"><i class="fa fa-dribbble"> </i></a>
 
-                <!--Linkedin-->
-                <a class="icons-sm li-ic"><i class="fa fa-linkedin"> </i></a>
-                <!--Facebook-->
-                <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
-                <!--GitHub-->
-                <a class="icons-sm git-ic"><i class="fa fa-github"> </i></a>
-
-            </div>
-            <!--/Second column-->
-            <!--Third column-->
-            <div class="col-lg-2 col-md-6 mb-r">
-
-                <div class="avatar">
-                    <img src="http://mdbootstrap.com/images/avatars/img%20(2).jpg" class="rounded-circle">
-                </div>
-
-                <h5 class="mt-1">Maria Kate</h5>
-
-                <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
-                <a class="icons-sm pin-ic"><i class="fa fa-pinterest"> </i></a>
-                <a class="icons-sm ins-ic"><i class="fa fa-instagram"> </i></a>
-
-            </div>
-            <!--/Third column-->
-            <!--Fourth column-->
-            <div class="col-lg-2 col-md-6 mb-r">
-
-                <div class="avatar">
-                    <img src="http://mdbootstrap.com/images/avatars/img%20(4).jpg" class="rounded-circle">
-                </div>
-                <h5 class="mt-1">Sarah Melyah</h5>
-
-                <a class="icons-sm gplus-ic"><i class="fa fa-google-plus"> </i></a>
-                <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
-                <a class="icons-sm git-ic"><i class="fa fa-github"> </i></a>
-
-            </div>
-            <!--/Fourth column-->
-            <!--Fitth column-->
-            <div class="col-lg-2 col-md-6 mb-r">
-
-                <div class="avatar">
-                    <img src="http://mdbootstrap.com/images/avatars/img%20(4).jpg" class="rounded-circle">
-                </div>
-                <h5 class="mt-1">Sarah Melyah</h5>
-
-                <!--Google +-->
-                <a class="icons-sm gplus-ic"><i class="fa fa-google-plus"> </i></a>
-                <!--Facebook-->
-                <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
-                <!--GitHub-->
-                <a class="icons-sm git-ic"><i class="fa fa-github"> </i></a>
-
-            </div>
-            <!--/Fitth column-->
-            <!--Sixth column-->
-            <div class="col-lg-2 col-md-6 mb-r">
-
-                <div class="avatar">
-                    <img src="http://mdbootstrap.com/images/avatars/img%20(4).jpg" class="rounded-circle">
-                </div>
-                <h5 class="mt-1">Sarah Melyah</h5>
-
-                <!--Google +-->
-                <a class="icons-sm gplus-ic"><i class="fa fa-google-plus"> </i></a>
-                <!--Facebook-->
-                <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
-                <!--GitHub-->
-                <a class="icons-sm git-ic"><i class="fa fa-github"> </i></a>
-
-            </div>
-            <!--/Sixth column-->
         </div>
+        <!--/First column-->
+        <!--Second column-->
+        <div class="col-lg-2 col-md-6 mb-r">
+
+            <div class="avatar">
+                <img src="http://mdbootstrap.com/images/avatars/img%20(3).jpg" class="rounded-circle">
+            </div>
+            <h5 class="mt-1">John Doe</h5>
+
+            <!--Linkedin-->
+            <a class="icons-sm li-ic"><i class="fa fa-linkedin"> </i></a>
+            <!--Facebook-->
+            <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
+            <!--GitHub-->
+            <a class="icons-sm git-ic"><i class="fa fa-github"> </i></a>
+
+        </div>
+        <!--/Second column-->
+        <!--Third column-->
+        <div class="col-lg-2 col-md-6 mb-r">
+
+            <div class="avatar">
+                <img src="http://mdbootstrap.com/images/avatars/img%20(2).jpg" class="rounded-circle">
+            </div>
+
+            <h5 class="mt-1">Maria Kate</h5>
+
+            <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
+            <a class="icons-sm pin-ic"><i class="fa fa-pinterest"> </i></a>
+            <a class="icons-sm ins-ic"><i class="fa fa-instagram"> </i></a>
+
+        </div>
+        <!--/Third column-->
+        <!--Fourth column-->
+        <div class="col-lg-2 col-md-6 mb-r">
+
+            <div class="avatar">
+                <img src="http://mdbootstrap.com/images/avatars/img%20(4).jpg" class="rounded-circle">
+            </div>
+            <h5 class="mt-1">Sarah Melyah</h5>
+
+            <a class="icons-sm gplus-ic"><i class="fa fa-google-plus"> </i></a>
+            <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
+            <a class="icons-sm git-ic"><i class="fa fa-github"> </i></a>
+
+        </div>
+        <!--/Fourth column-->
+        <!--Fitth column-->
+        <div class="col-lg-2 col-md-6 mb-r">
+
+            <div class="avatar">
+                <img src="http://mdbootstrap.com/images/avatars/img%20(4).jpg" class="rounded-circle">
+            </div>
+            <h5 class="mt-1">Sarah Melyah</h5>
+
+            <!--Google +-->
+            <a class="icons-sm gplus-ic"><i class="fa fa-google-plus"> </i></a>
+            <!--Facebook-->
+            <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
+            <!--GitHub-->
+            <a class="icons-sm git-ic"><i class="fa fa-github"> </i></a>
+
+        </div>
+        <!--/Fitth column-->
+        <!--Sixth column-->
+        <div class="col-lg-2 col-md-6 mb-r">
+
+            <div class="avatar">
+                <img src="http://mdbootstrap.com/images/avatars/img%20(4).jpg" class="rounded-circle">
+            </div>
+            <h5 class="mt-1">Sarah Melyah</h5>
+
+            <!--Google +-->
+            <a class="icons-sm gplus-ic"><i class="fa fa-google-plus"> </i></a>
+            <!--Facebook-->
+            <a class="icons-sm fb-ic"><i class="fa fa-facebook"> </i></a>
+            <!--GitHub-->
+            <a class="icons-sm git-ic"><i class="fa fa-github"> </i></a>
+
+        </div>
+        <!--/Sixth column-->
+    </div>
 
 
-    </section>
+</section>
 
 
 

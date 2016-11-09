@@ -9,32 +9,40 @@ namespace Plato.Hosting.Extensions
     public static class RouteBuilderExtensions
     {
  
-        public static IRouteBuilder MapAreaRoute(this IRouteBuilder routeBuilder,
+        public static IRouteBuilder MapAreaRoute(
+            this IRouteBuilder routeBuilder,
             string name,
             string area,
             string template,
             string controller,
             string action)
         {
+
             if (routeBuilder == null)
-            {
                 throw new ArgumentNullException(nameof(routeBuilder));
-            }
-
+            
             if (string.IsNullOrEmpty(area))
-            {
                 throw new ArgumentException(nameof(area));
-            }
+            
+            var defaultsDictionary = new RouteValueDictionary
+            {
+                ["area"] = area,
+                ["controller"] = controller,
+                ["action"] = action
+            };
 
-            var defaultsDictionary = new RouteValueDictionary();
-            defaultsDictionary["area"] = area;
-            defaultsDictionary["controller"] = controller;
-            defaultsDictionary["action"] = action;
+            var constraintsDictionary = new RouteValueDictionary
+            {
+                ["area"] = new StringRouteConstraint(area)
+            };
 
-            var constraintsDictionary = new RouteValueDictionary();
-            constraintsDictionary["area"] = new StringRouteConstraint(area);
+            routeBuilder.MapRoute(
+                name, 
+                template, 
+                defaultsDictionary, 
+                constraintsDictionary, 
+                null);
 
-            routeBuilder.MapRoute(name, template, defaultsDictionary, constraintsDictionary, null);
             return routeBuilder;
         }
 
@@ -45,10 +53,7 @@ namespace Plato.Hosting.Extensions
             public StringRouteConstraint(string value)
             {
                 if (value == null)
-                {
                     throw new ArgumentNullException(nameof(value));
-                }
-
                 _value = value;
             }
 
@@ -61,14 +66,11 @@ namespace Plato.Hosting.Extensions
                 RouteDirection routeDirection)
             {
                 object routeValue;
-
-
                 if (values.TryGetValue(routeKey, out routeValue) && routeValue != null)
                 {
                     var parameterValueString = Convert.ToString(routeValue, CultureInfo.InvariantCulture);
                     return _value.Equals(parameterValueString, StringComparison.OrdinalIgnoreCase);
                 }
-
                 return false;
             }
         }

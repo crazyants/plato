@@ -54,7 +54,7 @@ namespace Plato.Modules
             // ensure referenced assemblies are not loaded
             foreach (var name in ApplicationAssemblyNames)
                 _loadedAssemblies.TryAdd(name, null);
-       
+
         }
 
         #endregion
@@ -91,33 +91,19 @@ namespace Plato.Modules
 
         private Assembly LoadFromAssemblyPath(string assemblyPath)
         {
-            try
-            {
-                return _loadedAssemblies.GetOrAdd(
-                   Path.GetFileNameWithoutExtension(assemblyPath),
-                   new Lazy<Assembly>(() =>
-                   {
-                       return AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
-                   }))
-               .Value;
-            }
-            catch (Exception e)
-            {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Module loader failed to load assemby - {0}", e.Message);
-                }
-            }
-            return null;
-
+            return _loadedAssemblies.GetOrAdd(
+                    Path.GetFileNameWithoutExtension(assemblyPath),
+                    new Lazy<Assembly>(() => AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath)))
+                .Value;
         }
 
         private static HashSet<string> GetApplicationAssemblyNames()
         {
-            return new HashSet<string>(DependencyContext.Default.RuntimeLibraries
+            return new HashSet<string>(
+                    DependencyContext.Default.RuntimeLibraries
                     .SelectMany(library => library.RuntimeAssemblyGroups)
                     .SelectMany(assetGroup => assetGroup.AssetPaths)
-                    .Select(path => Path.GetFileNameWithoutExtension(path)),
+                    .Select(Path.GetFileNameWithoutExtension),
                 StringComparer.OrdinalIgnoreCase);
         }
         

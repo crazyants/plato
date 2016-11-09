@@ -1,5 +1,6 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="../gulpfile.js" />
+/// <reference path="../modules/plato.users/content/ng-app/components/app/app.component.js" />
 /// <reference path="../modules/plato.users/content/ng-app/components/app/app.module.js" />
 /// <reference path="../modules/plato.users/content/ng-app/components/app/main.js" />
 /// <reference path="../modules/plato.users/content/ng-app/components/public/user-list/user-list.js" />

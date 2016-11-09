@@ -5,9 +5,23 @@ using Plato.Abstractions.Extensions;
 
 namespace Plato.Abstractions.Collections
 {
-    public class PagedResults<T> : List<T>,
-        IPagedResults<T> where T : class
+    public class PagedResults<T> : IPagedResults<T> where T : class
     {
+
+        private IList<T> _data;
+
+        public IList<T> Data
+        {
+            get
+            {
+                if (_data == null)
+                    _data = new List<T>();
+                return _data;
+            }
+
+            set { _data = value; }
+        }
+
         public int Total { get; set; }
 
 

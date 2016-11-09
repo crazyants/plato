@@ -36,14 +36,12 @@ namespace Plato.Shell
             _logger = logger;
             _moduleManager = moduleManager;
         }
-
-
-
+        
         public IServiceProvider CreateContainer(ShellSettings settings)
         {
 
-            try
-            {
+            //try
+            //{
 
                 // clone services
                 // ---------------
@@ -95,12 +93,12 @@ namespace Plato.Shell
                 var shellServiceProvider = tenantServiceCollection.BuildServiceProvider();
                 return shellServiceProvider;
 
-            }
-            catch (Exception e)
-            {
-                if (_logger.IsEnabled(LogLevel.Debug))                
-                    _logger.LogDebug("Error creating container for tenant {0} - {1}", settings.Name, e.Message);                
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    if (_logger.IsEnabled(LogLevel.Debug))                
+            //        _logger.LogDebug("Error creating container for tenant {0} - {1}", settings.Name, e.Message);                
+            //}
 
             return null;
             

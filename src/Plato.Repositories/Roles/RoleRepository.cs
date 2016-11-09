@@ -244,7 +244,7 @@ namespace Plato.Repositories.Roles
                     {
                         var role = new Role();
                         role.PopulateModel(reader);
-                        output.Add((T)Convert.ChangeType(role, typeof(T)));
+                        output.Data.Add((T)Convert.ChangeType(role, typeof(T)));
                     }
 
                     if (await reader.NextResultAsync())

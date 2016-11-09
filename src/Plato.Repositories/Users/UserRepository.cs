@@ -241,7 +241,7 @@ namespace Plato.Repositories.Users
                     {
                         var user = new User();
                         user.PopulateModel(reader);
-                        output.Add((T) Convert.ChangeType(user, typeof(T)));
+                        output.Data.Add((T) Convert.ChangeType(user, typeof(T)));
                     }
 
                     if (await reader.NextResultAsync())

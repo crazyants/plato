@@ -265,8 +265,8 @@ namespace Plato.Controllers
             sb.Append("<BR>");
             sb.Append("<BR>");
 
-            if (users.Any())
-                foreach (var user in users)
+            if (users.Data.Any())
+                foreach (var user in users.Data)
                 {
                     sb.Append(user.UserName);
                     sb.Append("<br>");

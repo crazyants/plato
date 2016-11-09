@@ -22,8 +22,7 @@ namespace Plato.Users
 
         private readonly string _tenantName;
         private readonly string _tenantPrefix;
-
-
+        
         public Startup(
             ShellSettings shellSettings,
             IOptions<IdentityOptions> options)

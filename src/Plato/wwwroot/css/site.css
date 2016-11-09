@@ -1,8 +1,7 @@
-﻿/*!
-* Start Bootstrap - Creative v3.3.7+1 (http://startbootstrap.com/template-overviews/creative)
-* Copyright 2013-2016 Start Bootstrap
-* Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
-*/
+﻿
+/* ------------------------------------ */
+/* BootStrap CSS */
+/* ------------------------------------ */
 
 .navbar-default, a {
     -webkit-transition: all .35s;
@@ -94,4 +93,96 @@ img::selection {
 img::-moz-selection {
     color: #fff;
     background: 0 0;
+}
+
+
+/* ------------------------------------ */
+/* angular CSS */
+/* ------------------------------------ */
+
+.ng-loader {width: 200px; text-align: center; }
+
+/* ------------------------------------ */
+/* Plato CSS */
+/* ------------------------------------ */
+
+/* loader CSS */
+
+.p-loader {
+    display: inline-block;
+    position: relative;    
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    border-radius: 50%; 
+}
+
+.p-loader:after {
+    position: absolute;
+    content: '-';
+    z-index:2;
+    text-indent: -5000px;
+    top: 0;
+    left: 0; 
+    width: 20px;
+    height: 20px; 
+    overflow:hidden;    
+    box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 1);  
+    -webkit-mask-image: -webkit-linear-gradient(top, #000000, rgba(0, 0, 0, 0));
+    clip: rect(0,10px,20px,0);
+    border-radius: 50%;
+    -webkit-transform-origin: 10px 10px;
+    -moz-transform-origin: 10px 10px;
+    -o-transform-origin: 10px 10px;
+    -ms-transform-origin: 10px 10px;      
+    -webkit-animation: p-rotate .8s infinite linear;
+    -moz-animation: p-rotate .8s infinite linear;
+    -o-animation: p-rotate .8s infinite linear; 
+    animation: p-rotate .8s infinite linear;    
+}
+
+.p-loader-2x {
+    width: 40px;
+    height: 40px;
+}
+.p-loader-2x:after  {
+    width: 40px;
+    height: 40px; 
+    box-shadow: inset 0 0 0 5px rgba(100, 100, 100, 1);  
+    clip: rect(0,20px,40px,0);
+    -webkit-transform-origin: 20px 20px;
+    -moz-transform-origin: 20px 20px;
+    -o-transform-origin: 20px 20px;
+    -ms-transform-origin: 20px 20px;   
+}
+
+.p-loader-3x {
+    width: 60px;
+    height: 60px;
+}
+.p-loader-3x:after  {
+    width: 60px;
+    height: 60px; 
+    clip: rect(0,30px,60px,0);
+    -webkit-transform-origin: 30px 30px;
+    -moz-transform-origin: 30px 30px;
+    -o-transform-origin: 30px 30px;
+    -ms-transform-origin: 30px 30px;   
+}
+
+@-webkit-keyframes p-rotate { 
+    0% { -webkit-transform: rotate(0);} 
+    100% { -webkit-transform: rotate(360deg);}
+}
+@-moz-keyframes p-rotate { 
+    0% { -moz-transform: rotate(0);} 
+    100% { -moz-transform: rotate(360deg);}
+}
+@-o-keyframes p-rotate { 
+    0% { -o-transform: rotate(0); } 
+    100% { -o-transform: rotate(360deg); }
+}
+@keyframes p-rotate { 
+    0% {-webkit-transform: rotate(0);-moz-transform: rotate(0);-ms-transform: rotate(0);transform: rotate(0); } 
+    100% {-webkit-transform: rotate(360deg);-moz-transform: rotate(360deg);-ms-transform: rotate(360deg);transform: rotate(360deg); }
 }

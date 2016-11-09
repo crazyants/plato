@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Plato.Abstractions.Collections;
 using Plato.Abstractions.Query;
 using Plato.Models.Users;
 using Plato.Repositories.Users;
@@ -381,11 +382,13 @@ namespace Plato.Stores.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return await _platoUserStore.QueryAsync()
+            IPagedResults<User> pagedResult  = await _platoUserStore.QueryAsync()
                 .Page(1, 1000)
                 .Select<UserQueryParams>(q => q.RoleName.Equals(roleName))
                 .OrderBy("Id", OrderBy.Desc)
                 .ToList<User>();
+
+            return pagedResult.Data;
         }
 
         #endregion
