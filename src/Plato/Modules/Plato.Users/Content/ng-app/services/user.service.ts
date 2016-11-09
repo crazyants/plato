@@ -1,6 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
-
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -14,18 +13,18 @@ export class UserService {
     // private clientId: string = '<Client Id>';
     // private clientSecret: string = '<Client Secret Key>';
 
-    private clientId: string = '60b9f23dedffbdfc476c';
-    private clientSecret: string = 'd1c186c6373f96571c0bfcf76b84e4dc6fd0c15a';
+    //private clientId: string = '60b9f23dedffbdfc476c';
+    //private clientSecret: string = 'd1c186c6373f96571c0bfcf76b84e4dc6fd0c15a';
 
     constructor(private http: Http) {
-        console.log('Github Service Ready.');
-        this.userName = '';
+        console.log('User Service Ready.');
         this.http = http;
+        this.userName = '';
     }
 
     get() {
 
-        console.log("came here in service");
+        console.log("get() in UserService called");
         const headers = new Headers();
         headers.append('Authorization', '123123123');
 
@@ -33,10 +32,12 @@ export class UserService {
             {
                 headers: headers
             })
-            .map(res => console.log(res.json()))
+            .map(res => {
+                console.log(JSON.stringify(res.json()));
+                return res.json();
+            })
             .catch(this.handleError);
-
-        //console.log("done . . .");
+        
     }
 
     //getUser() {

@@ -31,7 +31,7 @@ namespace Plato.WebApi.Controllers
         {
 
             var users = await _userStore.QueryAsync()
-                .Page(1, 5)
+                .Page(1, 10)
                 .Select<UserQueryParams>(q =>
                 {
                     // q.UserName.IsIn("Admin,Mark").Or();

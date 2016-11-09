@@ -1,11 +1,11 @@
 "use strict";
-var User = (function () {
-    function User(user, repos, userName) {
-        this.user = user;
-        this.repos = repos;
-        this.userName = userName;
+var UserListViewModel = (function () {
+    function UserListViewModel(data, statusCode, message) {
+        this.data = data;
+        this.statusCode = statusCode;
+        this.message = message;
     }
-    return User;
+    return UserListViewModel;
 }());
-exports.User = User;
+exports.UserListViewModel = UserListViewModel;
 //# sourceMappingURL=user.js.map

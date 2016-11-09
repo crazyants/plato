@@ -15,26 +15,28 @@ require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
 require('rxjs/add/observable/throw');
 var UserService = (function () {
+    // private clientId: string = '<Client Id>';
+    // private clientSecret: string = '<Client Secret Key>';
+    //private clientId: string = '60b9f23dedffbdfc476c';
+    //private clientSecret: string = 'd1c186c6373f96571c0bfcf76b84e4dc6fd0c15a';
     function UserService(http) {
         this.http = http;
-        // private clientId: string = '<Client Id>';
-        // private clientSecret: string = '<Client Secret Key>';
-        this.clientId = '60b9f23dedffbdfc476c';
-        this.clientSecret = 'd1c186c6373f96571c0bfcf76b84e4dc6fd0c15a';
-        console.log('Github Service Ready.');
-        this.userName = '';
+        console.log('User Service Ready.');
         this.http = http;
+        this.userName = '';
     }
     UserService.prototype.get = function () {
-        console.log("came here in service");
+        console.log("get() in UserService called");
         var headers = new http_1.Headers();
         headers.append('Authorization', '123123123');
         return this.http.get('http://localhost:50439/api/users', {
             headers: headers
         })
-            .map(function (res) { return console.log(res.json()); })
+            .map(function (res) {
+            console.log(JSON.stringify(res.json()));
+            return res.json();
+        })
             .catch(this.handleError);
-        //console.log("done . . .");
     };
     //getUser() {
     //    if (this.userName) {

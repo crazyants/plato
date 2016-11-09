@@ -3,6 +3,7 @@
 /// <reference path="../modules/plato.users/content/ng-app/components/app/app.module.js" />
 /// <reference path="../modules/plato.users/content/ng-app/components/app/main.js" />
 /// <reference path="../modules/plato.users/content/ng-app/components/public/user-list/user-list.js" />
+/// <reference path="../modules/plato.users/content/ng-app/models/user.js" />
 /// <reference path="../modules/plato.users/content/ng-app/services/user.service.js" />
 /// <reference path="js/site.js" />
 /// <reference path="lib/bootstrap/dist/js/bootstrap.js" />

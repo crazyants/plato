@@ -11,29 +11,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 /// <reference path="../../../../../../../typings/globals/core-js/index.d.ts" />
 var core_1 = require('@angular/core');
 require('rxjs/add/operator/map');
-var User_1 = require('../../../models/User');
+var models = require('../../../models/User');
 var user_service_1 = require('../../../services/user.service');
 var UserListComponent = (function () {
+    //@Output() userUpdated = new EventEmitter<IUser>();
+    //public viewModel: models.UserListViewModel;
     function UserListComponent(userService) {
         this.userService = userService;
-        this.userUpdated = new core_1.EventEmitter();
         this.userService = userService;
+        this.init();
     }
-    UserListComponent.prototype.ngOnInit = function () {
-        if (this.user) {
-            this.user.user = false;
-            this.init();
-        }
-    };
     UserListComponent.prototype.init = function () {
         var _this = this;
         this.userService.get()
-            .subscribe(function (user) {
-            _this.user.user = user;
-            _this.userUpdated.emit(_this.user);
+            .subscribe(function (result) {
+            _this.viewModel = result;
+            //this.userUpdated.emit(this.users);
         }, function (err) {
             console.log('err:' + err);
-            _this.user.user = false;
+            _this.viewModel = null;
         }, function () { return console.log('Done'); });
         //this._githubService.getRepos().subscribe(repos => {
         //    // console.log(repos);
@@ -49,16 +45,12 @@ var UserListComponent = (function () {
     };
     __decorate([
         core_1.Input(), 
-        __metadata('design:type', User_1.User)
-    ], UserListComponent.prototype, "user", void 0);
-    __decorate([
-        core_1.Output(), 
-        __metadata('design:type', Object)
-    ], UserListComponent.prototype, "userUpdated", void 0);
+        __metadata('design:type', models.UserListViewModel)
+    ], UserListComponent.prototype, "viewModel", void 0);
     UserListComponent = __decorate([
         core_1.Component({
             selector: 'user-list',
-            templateUrl: './plato.users/ng-app/components/public/user-list/user-list.html'
+            templateUrl: './plato.users/ng-app/components/public/user-list/user-list.html?123123=123123'
         }), 
         __metadata('design:paramtypes', [user_service_1.UserService])
     ], UserListComponent);

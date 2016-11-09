@@ -2,43 +2,41 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import 'rxjs/add/operator/map';
 
-import { User } from '../../../models/User';
+import * as models from '../../../models/User';
 import { UserService } from '../../../services/user.service';
 
 @Component({
     selector: 'user-list',
-    templateUrl: './plato.users/ng-app/components/public/user-list/user-list.html'
+    templateUrl: './plato.users/ng-app/components/public/user-list/user-list.html?123123=123123'
 })
 
-export class UserListComponent implements OnInit {
+export class UserListComponent {
 
-    @Input() user: User;
-    @Output() userUpdated = new EventEmitter<User>();
+    @Input() viewModel: models.UserListViewModel;
+    //@Output() userUpdated = new EventEmitter<IUser>();
+
+
+    //public viewModel: models.UserListViewModel;
     
     constructor(private userService: UserService) {
         this.userService = userService;
+        this.init();
     }
     
 
-    ngOnInit() {
-        if (this.user) {
-            this.user.user = false;
-            this.init();
-        }
-    }
-
-
+    
     init() {
-
-
+        
         this.userService.get()
-            .subscribe(user => {
-                    this.user.user = user;
-                    this.userUpdated.emit(this.user);
+            .subscribe(result => {
+               
+                this.viewModel = result;
+                 
+                    //this.userUpdated.emit(this.users);
                 },
                 (err) => {
                     console.log('err:' + err);
-                    this.user.user = false;
+                    this.viewModel = null;
                 },
                 () => console.log('Done')
             );

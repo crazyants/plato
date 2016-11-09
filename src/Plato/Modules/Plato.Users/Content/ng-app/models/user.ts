@@ -1,8 +1,15 @@
 ﻿
-export class User {
+export interface IUser {
+    id: number;
+    userName: string;
+    displayName: string;
+}
+
+
+export class UserListViewModel {
     constructor(
-        public user: any,
-        public repos: any,
-        public userName: string
+        public data: any[],
+        public statusCode: number,
+        public message: string
     ) { }
 }
