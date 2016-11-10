@@ -27,7 +27,7 @@ export class UserListComponent implements OnInit {
     
     ngOnInit() {
 
-        alert("test")
+        alert("new test");
         if (this.page && this.pageSize) {
             this.init();
         }

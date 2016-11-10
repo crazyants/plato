@@ -22,12 +22,10 @@ var UserService = (function () {
         this.userName = '';
     }
     UserService.prototype.get = function (page, pageSize) {
-        var headers = new http_1.Headers();
-        headers.append('Authorization', '123123123');
+        //const headers = new Headers();
+        //headers.append('Authorization', '123123123');
         return this.http.get('http://localhost:50439/api/users?page=' +
-            page.toString() + '&pageSize=' + pageSize.toString(), {
-            headers: headers
-        })
+            page.toString() + '&pageSize=' + pageSize.toString())
             .map(function (res) {
             return res.json();
         })

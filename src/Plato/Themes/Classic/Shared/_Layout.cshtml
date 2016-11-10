@@ -4,11 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Plato</title>
+    <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
         <link rel="stylesheet" href="~/lib/magnific-popup/dist/magnific-popup.css" />
+        <link rel="stylesheet" href="~/lib/tether/dist/css/tether.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <script src="~/ng-lib/core-js/client/shim.min.js"></script>
         <script src="~/ng-lib/zone.js/dist/zone.js"></script>
@@ -23,6 +25,10 @@
               asp-fallback-href="~/lib/font-awesome/css/font-awesome.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <script src="~/ng-lib/core-js/client/shim.min.js"></script>
+        <script src="~/ng-lib/zone.js/dist/zone.min.js"></script>
+        <script src="~/ng-lib/reflect-metadata/Reflect.js"></script>
+        <script src="~/ng-lib/systemjs/dist/system.src.js"></script>
     </environment>
     @RenderSection("HeaderScripts", required: false)
 </head>
@@ -101,6 +107,7 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <script src="~/lib/magnific-popup/dist/jquery.magnific-popup.js"></script>
+    <script src="~/lib/tether/dist/js/tether.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 </environment>
 <environment names="Staging,Production">
@@ -112,20 +119,18 @@
             asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
             asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
     </script>
-    <script src="~/lib/magnific-popup/dist/jquery.magnific-popup.js"></script>
-    <script src="~/lib/scrollreveal/dist/scrollreveal.js"></script>
+    <script src="~/lib/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+    <script src="~/lib/scrollreveal/dist/scrollreveal.min.js"></script>
+    <script src="~/lib/tether/dist/js/tether.min.js"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
 </environment>
     
     
 <script type="text/javascript">
-    
     var plato = {
         baseUrl: 'http://localhost:50439/',
         ApiKey: '1234567'
-    }
-
-
+    };
 </script>
 
 @RenderSection("scripts", required: false)

@@ -2,7 +2,7 @@
 
 @Component({
     selector: 'my-app',
-    templateUrl: './plato.users/ng-app/components/app/app.html?13=2342344'
+    templateUrl: './plato.users/ng-app/components/app/app.html?1333333333=2222222'
 
 })
 export class AppComponent { }

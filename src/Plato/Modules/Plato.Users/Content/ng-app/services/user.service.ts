@@ -19,14 +19,11 @@ export class UserService {
 
     get(page: number, pageSize: number) {
         
-        const headers = new Headers();
-        headers.append('Authorization', '123123123');
+        //const headers = new Headers();
+        //headers.append('Authorization', '123123123');
         
         return this.http.get('http://localhost:50439/api/users?page=' +
-            page.toString() + '&pageSize=' + pageSize.toString(),
-            {
-                headers: headers
-            })
+            page.toString() + '&pageSize=' + pageSize.toString())
             .map(res => {
                 return res.json();
             })

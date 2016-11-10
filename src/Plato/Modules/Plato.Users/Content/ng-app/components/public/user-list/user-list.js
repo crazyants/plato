@@ -22,7 +22,7 @@ var UserListComponent = (function () {
         this.pageSize = 10;
     }
     UserListComponent.prototype.ngOnInit = function () {
-        alert("test");
+        alert("new test");
         if (this.page && this.pageSize) {
             this.init();
         }

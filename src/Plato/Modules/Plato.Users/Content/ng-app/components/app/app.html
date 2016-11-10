@@ -1,5 +1,7 @@
 
-<h2>Users</h2>
-<hr />
+<nav>
+    <a routerLink="/users" routerLinkActive="active">Users</a>
+    <a routerLink="/login">Login</a>
+</nav>
 
-<user-list [page]="1"></user-list>
+<router-outlet></router-outlet>
