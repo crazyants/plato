@@ -1,7 +1,14 @@
 
 <nav>
-    <a routerLink="/users" routerLinkActive="active">Users</a>
-    <a routerLink="/login">Login</a>
+    <a routerLink="/users" routerLinkActive="active" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Users</a>
+    <a routerLink="/login" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Login</a>
 </nav>
 
-<router-outlet></router-outlet>
+<div class="ng-loader mx-auto" *ngIf="loading">
+    <div class="p-loader p-loader-2x p-loader-dark"></div>
+    <h6 class="mt-2">Loading</h6>
+</div>
+
+<div [style.display]="isLoading()">
+    <router-outlet></router-outlet>
+</div>

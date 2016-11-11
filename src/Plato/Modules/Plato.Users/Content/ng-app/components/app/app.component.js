@@ -9,15 +9,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var router_1 = require('@angular/router');
 var AppComponent = (function () {
-    function AppComponent() {
+    function AppComponent(router) {
+        var _this = this;
+        this.router = router;
+        this.loading = true;
+        router.events.subscribe(function (event) {
+            if (event instanceof router_1.NavigationStart)
+                _this.loading = true;
+            if (event instanceof router_1.NavigationEnd) {
+                window.setTimeout(function () {
+                    _this.loading = false;
+                }, 200);
+            }
+            if (event instanceof router_1.NavigationCancel)
+                _this.loading = false;
+            if (event instanceof router_1.NavigationError)
+                _this.loading = false;
+        });
     }
+    AppComponent.prototype.isLoading = function () {
+        if (this.loading)
+            return "none";
+        else
+            return "block";
+    };
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
-            templateUrl: './plato.users/ng-app/components/app/app.html?1333333333=2222222'
+            templateUrl: './plato.users/ng-app/components/app/app.html'
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [router_1.Router])
     ], AppComponent);
     return AppComponent;
 }());

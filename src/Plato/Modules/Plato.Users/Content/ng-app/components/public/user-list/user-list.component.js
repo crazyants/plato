@@ -1,3 +1,4 @@
+/// <reference path="../../../../../../../typings/globals/core-js/index.d.ts" />
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -8,24 +9,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-/// <reference path="../../../../../../../typings/globals/core-js/index.d.ts" />
 var core_1 = require('@angular/core');
-require('rxjs/add/operator/map');
-var models = require('../../../models/User');
-var user_service_1 = require('../../../services/user.service');
+require("rxjs/add/operator/map");
+var models = require("../../../models/User");
+var user_service_1 = require("../../../services/user.service");
 var UserListComponent = (function () {
     function UserListComponent(userService) {
         this.userService = userService;
-        this.userUpdated = new core_1.EventEmitter();
-        this.userService = userService;
         this.page = 1;
         this.pageSize = 10;
-    }
-    UserListComponent.prototype.ngOnInit = function () {
-        alert("new test");
+        this.userUpdated = new core_1.EventEmitter();
+        this.userService = userService;
         if (this.page && this.pageSize) {
             this.init();
         }
+    }
+    UserListComponent.prototype.ngOnInit = function () {
+    };
+    UserListComponent.prototype.ngOnDestroy = function () {
     };
     UserListComponent.prototype.prevPageClick = function () {
         this.page = this.page - 1;
@@ -83,11 +84,11 @@ var UserListComponent = (function () {
     UserListComponent = __decorate([
         core_1.Component({
             selector: 'user-list',
-            templateUrl: './plato.users/ng-app/components/public/user-list/user-list.html?444443434=4343434'
+            templateUrl: './plato.users/ng-app/components/public/user-list/user-list.html'
         }), 
         __metadata('design:paramtypes', [user_service_1.UserService])
     ], UserListComponent);
     return UserListComponent;
 }());
 exports.UserListComponent = UserListComponent;
-//# sourceMappingURL=user-list.js.map
+//# sourceMappingURL=user-list.component.js.map

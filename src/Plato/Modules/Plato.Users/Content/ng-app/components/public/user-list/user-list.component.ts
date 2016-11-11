@@ -1,37 +1,37 @@
 ﻿/// <reference path="../../../../../../../typings/globals/core-js/index.d.ts" />
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import 'rxjs/add/operator/map';
 
-import * as models from '../../../models/User';
-import { UserService } from '../../../services/user.service';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import "rxjs/add/operator/map";
+
+import * as models from "../../../models/User";
+import { UserService } from "../../../services/user.service";
 
 @Component({
     selector: 'user-list',
-    templateUrl: './plato.users/ng-app/components/public/user-list/user-list.html?444443434=4343434'
+    templateUrl: './plato.users/ng-app/components/public/user-list/user-list.html'
 })
 
-export class UserListComponent implements OnInit {
+export class UserListComponent {
 
     @Input() viewModel: models.UserListViewModel;
-    @Input() page: number;
-    @Input() pageSize: number;
+    @Input() page: number = 1;
+    @Input() pageSize: number = 10;
     @Output() userUpdated = new EventEmitter<models.UserListViewModel>();
     
     public totalPages: number;
 
     constructor(private userService: UserService) {
-        this.userService = userService;
-        this.page = 1;
-        this.pageSize = 10;
-    }
-    
-    ngOnInit() {
 
-        alert("new test");
+        this.userService = userService;
         if (this.page && this.pageSize) {
             this.init();
         }
+    }
     
+    ngOnInit() {
+    }
+
+    ngOnDestroy() {
     }
 
     prevPageClick() {

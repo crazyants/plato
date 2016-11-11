@@ -18,9 +18,11 @@ var platform_browser_1 = require('@angular/platform-browser');
 var http_1 = require('@angular/http');
 var forms_1 = require('@angular/forms');
 var router_1 = require('@angular/router');
+var common_1 = require('@angular/common');
 // components
 var app_component_1 = require('./app.component');
-var user_list_1 = require('../public/user-list/user-list');
+var login_form_component_1 = require('../public/login-form/login-form.component');
+var user_list_component_1 = require('../public/user-list/user-list.component');
 // services
 var user_service_1 = require('../../services/user.service');
 // extend http request options
@@ -49,19 +51,21 @@ var AppModule = (function () {
                 http_1.HttpModule,
                 forms_1.FormsModule,
                 router_1.RouterModule.forRoot([
-                    { path: '', component: user_list_1.UserListComponent },
-                    { path: 'users', component: user_list_1.UserListComponent },
-                    { path: 'login', component: user_list_1.UserListComponent }
+                    { path: '', component: user_list_component_1.UserListComponent },
+                    { path: 'users', component: user_list_component_1.UserListComponent },
+                    { path: 'login', component: login_form_component_1.LoginFormComponent }
                 ])
             ],
             declarations: [
                 app_component_1.AppComponent,
-                user_list_1.UserListComponent
+                user_list_component_1.UserListComponent,
+                login_form_component_1.LoginFormComponent
             ],
             bootstrap: [app_component_1.AppComponent],
             providers: [
                 user_service_1.UserService,
-                { provide: http_1.RequestOptions, useClass: DefaultRequestOptions }
+                { provide: http_1.RequestOptions, useClass: DefaultRequestOptions },
+                { provide: common_1.LocationStrategy, useClass: common_1.HashLocationStrategy }
             ]
         }), 
         __metadata('design:paramtypes', [])
