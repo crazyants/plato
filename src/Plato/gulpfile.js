@@ -7,6 +7,7 @@ gulp.task('clean', function (cb) {
 });
 
 gulp.task('copy:lib', ['clean'], function () {
+    
     var libs = [
         "@angular",
         "systemjs",
