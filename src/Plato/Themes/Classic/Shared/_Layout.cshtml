@@ -105,9 +105,10 @@
 
 <environment names="Development">
     <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/tether/dist/js/tether.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <script src="~/lib/magnific-popup/dist/jquery.magnific-popup.js"></script>
-    <script src="~/lib/tether/dist/js/tether.js"></script>
+    
     <script src="~/js/site.js" asp-append-version="true"></script>
 </environment>
 <environment names="Staging,Production">
@@ -115,13 +116,14 @@
             asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
             asp-fallback-test="window.jQuery">
     </script>
+    <script src="~/lib/tether/dist/js/tether.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.0/bootstrap.min.js"
             asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
             asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
     </script>
     <script src="~/lib/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
     <script src="~/lib/scrollreveal/dist/scrollreveal.min.js"></script>
-    <script src="~/lib/tether/dist/js/tether.min.js"></script>
+    
     <script src="~/js/site.min.js" asp-append-version="true"></script>
 </environment>
     

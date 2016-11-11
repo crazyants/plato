@@ -21,11 +21,12 @@ var UserService = (function () {
         this.http = http;
         this.userName = '';
     }
-    UserService.prototype.get = function (page, pageSize) {
-        //const headers = new Headers();
-        //headers.append('Authorization', '123123123');
-        return this.http.get('http://localhost:50439/api/users?page=' +
-            page.toString() + '&pageSize=' + pageSize.toString())
+    UserService.prototype.get = function (page, pageSize, sortBy, sortDesc) {
+        return this.http.get('/api/users?' +
+            'page=' + page.toString() +
+            '&pageSize=' + pageSize.toString() +
+            '&sortBy=' + sortBy +
+            '&sortOrder=' + (sortDesc ? " DESC" : ""))
             .map(function (res) {
             return res.json();
         })

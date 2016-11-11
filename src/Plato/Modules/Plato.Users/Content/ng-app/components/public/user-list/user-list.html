@@ -1,8 +1,30 @@
 
+
+
+
 <p *ngIf="viewModel && viewModel.users && viewModel.users.data">
     Page {{ page }} of {{ totalPages }}
     Showing {{ viewModel.users.data.length }} of {{ viewModel.users.total }}:
 </p>
+
+<div class="btn-group">
+
+    <a [routerLink]="['/Users/', pageIndex-1 ]" *ngIf="pageIndex && pageIndex>1" class="btn btn-primary">Prev Page</a>
+    <a [routerLink]="['/Users/', pageIndex+1 ]" *ngIf="pageIndex && pageIndex<totalPages" class="btn btn-primary">Next Page</a>
+
+</div>
+
+<div class="btn-group">
+    <button class="btn btn-default" [disabled]="!canGoBack" (click)="goToPage(1)">First</button>
+    <button class="btn btn-default" [disabled]="!canGoBack" (click)="goToPage(pageIndex - 1)">Previous</button>
+    <button class="btn" *ngFor="let page of pageLinks"
+            [ngClass]="{ 'btn-info': page.isCurrent, 'btn-default': !page.isCurrent }"
+            (click)="goToPage(page.index)">
+        {{ page.text }}
+    </button>
+    <button class="btn btn-default" [disabled]="!canGoForward" (click)="goToPage(pageIndex + 1)">Next</button>
+    <button class="btn btn-default" [disabled]="!canGoForward" (click)="goToLast()">Last</button>
+</div>
 
 <div *ngIf="viewModel && viewModel.users && viewModel.users.data">
     <div class="list-group">
@@ -15,10 +37,7 @@
     </div>
 </div>
 
-<div class="mx-auto">
-    <button class="btn btn-primary" (click)="prevPageClick()">Prev</button>
-    <button class="btn btn-primary" (click)="nextPageClick()">Next</button>
-</div>
+
 
 <section style="display: none;" class="section my-3 user-list">
 

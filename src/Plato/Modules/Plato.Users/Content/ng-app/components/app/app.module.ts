@@ -27,9 +27,15 @@ export class DefaultRequestOptions extends RequestOptions {
         HttpModule,
         FormsModule,
         RouterModule.forRoot([
-            { path: '', component: UserListComponent },
-            { path: 'users', component: UserListComponent },
-            { path: 'login', component: LoginFormComponent }
+            {
+                path: '',
+                redirectTo: 'Users',
+                pathMatch: 'full'
+            },
+            //{ path: '', component: UserListComponent },
+            { path: 'Users', component: UserListComponent },
+            { path: 'Login', component: LoginFormComponent },
+            { path: 'Users/:page', component: UserListComponent }
         ])
     ],
     declarations: [

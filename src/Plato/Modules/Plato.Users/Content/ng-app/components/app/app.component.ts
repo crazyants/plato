@@ -29,7 +29,7 @@ export class AppComponent {
                 window.setTimeout(() => {
                         this.loading = false;
                     },
-                    200);
+                    100);
             }
 
             if (event instanceof NavigationCancel) 
@@ -42,7 +42,14 @@ export class AppComponent {
 
     }
 
-    isLoading() {
+    getRouteLoaderDisplayState() {
+        if (this.loading)
+            return "block";
+        else
+            return "none";
+    }
+
+    getRouteOutletDisplayState() {
         if (this.loading)
             return "none";
         else 

@@ -21,7 +21,7 @@ var AppComponent = (function () {
             if (event instanceof router_1.NavigationEnd) {
                 window.setTimeout(function () {
                     _this.loading = false;
-                }, 200);
+                }, 100);
             }
             if (event instanceof router_1.NavigationCancel)
                 _this.loading = false;
@@ -29,7 +29,13 @@ var AppComponent = (function () {
                 _this.loading = false;
         });
     }
-    AppComponent.prototype.isLoading = function () {
+    AppComponent.prototype.getRouteLoaderDisplayState = function () {
+        if (this.loading)
+            return "block";
+        else
+            return "none";
+    };
+    AppComponent.prototype.getRouteOutletDisplayState = function () {
         if (this.loading)
             return "none";
         else

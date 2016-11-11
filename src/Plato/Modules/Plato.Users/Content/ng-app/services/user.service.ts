@@ -17,13 +17,13 @@ export class UserService {
     }
 
 
-    get(page: number, pageSize: number) {
+    get(page: number, pageSize: number, sortBy: string, sortDesc: boolean) {
         
-        //const headers = new Headers();
-        //headers.append('Authorization', '123123123');
-        
-        return this.http.get('http://localhost:50439/api/users?page=' +
-            page.toString() + '&pageSize=' + pageSize.toString())
+        return this.http.get('/api/users?' +
+            'page=' + page.toString() +
+            '&pageSize=' + pageSize.toString() +
+            '&sortBy=' + sortBy +
+            '&sortOrder=' + (sortDesc ? " DESC" : ""))
             .map(res => {
                 return res.json();
             })

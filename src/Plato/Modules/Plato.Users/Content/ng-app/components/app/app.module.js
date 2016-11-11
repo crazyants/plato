@@ -51,9 +51,15 @@ var AppModule = (function () {
                 http_1.HttpModule,
                 forms_1.FormsModule,
                 router_1.RouterModule.forRoot([
-                    { path: '', component: user_list_component_1.UserListComponent },
-                    { path: 'users', component: user_list_component_1.UserListComponent },
-                    { path: 'login', component: login_form_component_1.LoginFormComponent }
+                    {
+                        path: '',
+                        redirectTo: 'Users',
+                        pathMatch: 'full'
+                    },
+                    //{ path: '', component: UserListComponent },
+                    { path: 'Users', component: user_list_component_1.UserListComponent },
+                    { path: 'Login', component: login_form_component_1.LoginFormComponent },
+                    { path: 'Users/:page', component: user_list_component_1.UserListComponent }
                 ])
             ],
             declarations: [
