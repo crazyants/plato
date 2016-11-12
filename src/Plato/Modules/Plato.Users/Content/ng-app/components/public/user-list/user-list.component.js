@@ -9,9 +9,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+// angular
 var core_1 = require('@angular/core');
 require("rxjs/add/operator/map");
 var router_1 = require('@angular/router');
+// module specific 
 var models = require("../../../models/User");
 var user_service_1 = require("../../../services/user.service");
 var UserListComponent = (function () {
@@ -39,6 +41,10 @@ var UserListComponent = (function () {
         enumerable: true,
         configurable: true
     });
+    UserListComponent.prototype.pagerClick = function (data) {
+        this._pageIndex = data.pageIndex;
+        this.router.navigate(['Users', data.pageIndex]);
+    };
     UserListComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.route.params.forEach(function (params) {
@@ -49,31 +55,11 @@ var UserListComponent = (function () {
                 _this.refreshData();
         });
     };
-    UserListComponent.prototype.goToPage = function (pageIndex) {
-        this._pageIndex = pageIndex;
-        this.router.navigate(['Users', pageIndex]);
-        //this.refreshData();
-    };
-    UserListComponent.prototype.goToLast = function () {
-        this.goToPage(this.totalPages);
-    };
     UserListComponent.prototype.sortBy = function (col) {
         this._sortDesc = col === this._sortBy ? !this._sortDesc : false;
         this._sortBy = col;
         this.refreshData();
     };
-    //prevPageClick() {
-    //    this.page = this.page - 1;
-    //    if (this.page <= 1) {
-    //        this.router.navigate(['users']);
-    //    } else {
-    //        this.router.navigate(['users', this.page]);
-    //    }
-    //}
-    //nextPageClick() {
-    //    this.page = this.page + 1;
-    //    this.router.navigate(['users', this.page]);
-    //}
     UserListComponent.prototype.refreshData = function () {
         var _this = this;
         this.userService.get(this._pageIndex, this.pageSize, "Id", this._sortDesc)
@@ -82,16 +68,6 @@ var UserListComponent = (function () {
             _this.userUpdated.emit(_this.viewModel);
             _this.totalCount = result.users.total;
             _this.totalPages = Math.ceil(_this.totalCount / _this.pageSize);
-            _this.pageLinks = [];
-            for (var i = 1; i <= _this.totalPages; i++) {
-                _this.pageLinks.push({
-                    index: i,
-                    text: i.toString(),
-                    isCurrent: i === _this._pageIndex
-                });
-            }
-            _this.canGoBack = _this.pageLinks.length && !_this.pageLinks[0].isCurrent;
-            _this.canGoForward = _this.pageLinks.length && !_this.pageLinks[_this.pageLinks.length - 1].isCurrent;
         }, function (err) {
             console.log('err:' + err);
             _this.viewModel = null;
@@ -108,7 +84,7 @@ var UserListComponent = (function () {
     UserListComponent = __decorate([
         core_1.Component({
             selector: 'user-list',
-            templateUrl: './plato.users/ng-app/components/public/user-list/user-list.html'
+            templateUrl: './plato.users/content/ng-app/components/public/user-list/user-list.html'
         }), 
         __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router, user_service_1.UserService])
     ], UserListComponent);

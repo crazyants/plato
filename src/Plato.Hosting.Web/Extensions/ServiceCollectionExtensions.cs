@@ -154,7 +154,7 @@ namespace Plato.Hosting.Web.Extensions
                 {
                     app.UseStaticFiles(new StaticFileOptions
                     {
-                        RequestPath = "/" + moduleEntry.Descriptor.ID.ToLower(),
+                        RequestPath = "/" + moduleEntry.Descriptor.ID.ToLower() + "/content",
                         FileProvider = new PhysicalFileProvider(contentPath)
                     });
                 }

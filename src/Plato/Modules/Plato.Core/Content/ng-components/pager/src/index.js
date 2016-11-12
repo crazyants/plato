@@ -1,4 +1,3 @@
-/// <reference path="../../../../../../../typings/globals/core-js/index.d.ts" />
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -10,20 +9,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-require("rxjs/add/operator/map");
-var user_service_1 = require("../../../services/user.service");
-var LoginFormComponent = (function () {
-    function LoginFormComponent(userService) {
-        this.userService = userService;
+var common_1 = require('@angular/common');
+var pager_1 = require("./pager");
+var PagerModule = (function () {
+    function PagerModule() {
     }
-    LoginFormComponent = __decorate([
-        core_1.Component({
-            selector: 'login-form',
-            templateUrl: './plato.users/content/ng-app/components/public/login-form/login-form.html'
+    PagerModule = __decorate([
+        core_1.NgModule({
+            // import the angular 2 common module for base directives
+            imports: [common_1.CommonModule],
+            // register our components
+            declarations: [pager_1.PagerComponent],
+            // ensure we can export our components
+            exports: [pager_1.PagerComponent],
+            // services for our components
+            providers: []
         }), 
-        __metadata('design:paramtypes', [user_service_1.UserService])
-    ], LoginFormComponent);
-    return LoginFormComponent;
+        __metadata('design:paramtypes', [])
+    ], PagerModule);
+    return PagerModule;
 }());
-exports.LoginFormComponent = LoginFormComponent;
-//# sourceMappingURL=login-form.component.js.map
+exports.PagerModule = PagerModule;
+//# sourceMappingURL=index.js.map

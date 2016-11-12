@@ -19,6 +19,8 @@ var http_1 = require('@angular/http');
 var forms_1 = require('@angular/forms');
 var router_1 = require('@angular/router');
 var common_1 = require('@angular/common');
+// shared components
+var pager_1 = require('../../../../../plato.core/content/ng-components/pager/pager');
 // components
 var app_component_1 = require('./app.component');
 var login_form_component_1 = require('../public/login-form/login-form.component');
@@ -50,6 +52,7 @@ var AppModule = (function () {
                 platform_browser_1.BrowserModule,
                 http_1.HttpModule,
                 forms_1.FormsModule,
+                pager_1.PagerModule,
                 router_1.RouterModule.forRoot([
                     {
                         path: '',

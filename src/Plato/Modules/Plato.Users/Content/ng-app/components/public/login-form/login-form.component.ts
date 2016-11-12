@@ -8,7 +8,7 @@ import { UserService } from "../../../services/user.service";
 
 @Component({
     selector: 'login-form',
-    templateUrl: './plato.users/ng-app/components/public/login-form/login-form.html'
+    templateUrl: './plato.users/content/ng-app/components/public/login-form/login-form.html'
 })
 
 export class LoginFormComponent {

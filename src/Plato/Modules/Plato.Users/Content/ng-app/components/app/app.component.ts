@@ -1,4 +1,4 @@
-﻿import { Component, } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import {
     NavigationStart,
     NavigationEnd,
@@ -8,12 +8,14 @@ import {
     RouterModule,
     Event as RouterEvent
 } from '@angular/router'
+
 declare var jQuery: JQueryStatic;
 
 @Component({
     selector: 'my-app',
-    templateUrl: './plato.users/ng-app/components/app/app.html'
+    templateUrl: './plato.users/content/ng-app/components/app/app.html'
 })
+
 export class AppComponent {
     
     loading: boolean = true;

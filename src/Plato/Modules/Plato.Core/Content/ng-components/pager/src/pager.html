@@ -1,0 +1,18 @@
+
+
+
+<p>
+    Page {{ pageIndex }} of {{ totalPages }}    
+</p>
+    
+<div class="btn-group" *ngIf="totalPages">
+    <button class="btn btn-default" [disabled]="!canGoBack" (click)="goToPage(1)">First</button>
+    <button class="btn btn-default" [disabled]="!canGoBack" (click)="goToPage({ pageIndex: pageIndex - 1 })">Previous</button>
+    <button class="btn" *ngFor="let page of pageLinks"
+            [ngClass]="{ 'btn-info': page.isCurrent, 'btn-default': !page.isCurrent }"
+            (click)="goToPage({ pageIndex: page.index })">
+        {{ page.text }}
+    </button>
+    <button class="btn btn-default" [disabled]="!canGoForward" (click)="goToPage({ pageIndex: pageIndex + 1 })">Next</button>
+    <button class="btn btn-default" [disabled]="!canGoForward" (click)="goToLast()">Last</button>
+</div>

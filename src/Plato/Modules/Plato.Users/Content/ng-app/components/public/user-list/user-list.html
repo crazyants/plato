@@ -1,14 +1,16 @@
 
 
 
+<pager [pageIndex]="pageIndex" 
+       [totalPages]="totalPages" 
+       (pageClick)="pagerClick($event)"></pager>
 
 <p *ngIf="viewModel && viewModel.users && viewModel.users.data">
-    Page {{ page }} of {{ totalPages }}
-    Showing {{ viewModel.users.data.length }} of {{ viewModel.users.total }}:
+     {{ totalCount }} users
 </p>
 
+<!--
 <div class="btn-group">
-
     <a [routerLink]="['/Users/', pageIndex-1 ]" *ngIf="pageIndex && pageIndex>1" class="btn btn-primary">Prev Page</a>
     <a [routerLink]="['/Users/', pageIndex+1 ]" *ngIf="pageIndex && pageIndex<totalPages" class="btn btn-primary">Next Page</a>
 
@@ -25,6 +27,7 @@
     <button class="btn btn-default" [disabled]="!canGoForward" (click)="goToPage(pageIndex + 1)">Next</button>
     <button class="btn btn-default" [disabled]="!canGoForward" (click)="goToLast()">Last</button>
 </div>
+-->
 
 <div *ngIf="viewModel && viewModel.users && viewModel.users.data">
     <div class="list-group">

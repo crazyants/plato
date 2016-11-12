@@ -44,7 +44,7 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         core_1.Component({
             selector: 'my-app',
-            templateUrl: './plato.users/ng-app/components/app/app.html'
+            templateUrl: './plato.users/content/ng-app/components/app/app.html'
         }), 
         __metadata('design:paramtypes', [router_1.Router])
     ], AppComponent);

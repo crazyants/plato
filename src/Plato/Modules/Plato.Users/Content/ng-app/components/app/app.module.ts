@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
+// shared components
+import { PagerModule } from '../../../../../plato.core/content/ng-components/pager/pager';
 
 // components
 import { AppComponent } from './app.component';
@@ -27,6 +29,7 @@ export class DefaultRequestOptions extends RequestOptions {
         BrowserModule,
         HttpModule,
         FormsModule,
+        PagerModule,
         RouterModule.forRoot([
             {
                 path: '',

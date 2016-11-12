@@ -6,7 +6,6 @@
 /// <reference path="../modules/plato.users/content/ng-app/components/app/app.component.js" />
 /// <reference path="../modules/plato.users/content/ng-app/components/app/app.module.js" />
 /// <reference path="../Modules/Plato.Users/Content/ng-app/components/app/main.js" />
-/// <reference path="../Modules/Plato.Users/Content/ng-app/components/app/plato.core.js" />
 /// <reference path="../Modules/Plato.Users/Content/ng-app/components/public/login-form/login-form.component.js" />
 /// <reference path="../modules/plato.users/content/ng-app/components/public/user-list/user-list.component.js" />
 /// <reference path="../Modules/Plato.Users/Content/ng-app/models/user.js" />
