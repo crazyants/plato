@@ -9,7 +9,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-require("rxjs/add/operator/map");
 var PagerComponent = (function () {
     function PagerComponent(element, zone) {
         this.element = element;
@@ -43,16 +42,53 @@ var PagerComponent = (function () {
             this.init();
     };
     PagerComponent.prototype.init = function () {
+        this.buildPagingButtonts();
+        this.canGoBack = this.pageLinks.length && !this.pageLinks[0].isCurrent;
+        this.canGoForward = this.pageLinks.length && !this.pageLinks[this.pageLinks.length - 1].isCurrent;
+    };
+    PagerComponent.prototype.buildPagingButtonts = function () {
+        var pagesToShow = 5;
+        if (this.totalPages <= pagesToShow) {
+            this.buildButtonRange(1, this.totalPages);
+        }
+        else {
+            var firstPage = (this.pageIndex - 2);
+            var lastPage = (this.pageIndex + 2);
+            if (firstPage < 0) {
+                firstPage = 1;
+            }
+            if (this.pageIndex === 1) {
+                this.buildButtonRange(1, pagesToShow);
+            }
+            else if (this.pageIndex === 2) {
+                this.buildButtonRange(1, pagesToShow);
+            }
+            else if (this.pageIndex === 3) {
+                this.buildButtonRange(1, pagesToShow);
+            }
+            else if (this.pageIndex < this.totalPages - 2) {
+                this.buildButtonRange(firstPage, lastPage);
+            }
+            else if (this.pageIndex === this.totalPages - 2) {
+                this.buildButtonRange(this.totalPages - (pagesToShow - 1), this.pageIndex + 2);
+            }
+            else if (this.pageIndex === this.totalPages - 1) {
+                this.buildButtonRange(this.totalPages - (pagesToShow - 1), this.pageIndex + 1);
+            }
+            else if (this.pageIndex === this.totalPages) {
+                this.buildButtonRange(this.totalPages - (pagesToShow - 1), this.pageIndex);
+            }
+        }
+    };
+    PagerComponent.prototype.buildButtonRange = function (start, end) {
         this.pageLinks = [];
-        for (var i = 1; i <= this.totalPages; i++) {
+        for (var i = start; i <= end; i++) {
             this.pageLinks.push({
                 index: i,
                 text: i.toString(),
                 isCurrent: i === this._pageIndex
             });
         }
-        this.canGoBack = this.pageLinks.length && !this.pageLinks[0].isCurrent;
-        this.canGoForward = this.pageLinks.length && !this.pageLinks[this.pageLinks.length - 1].isCurrent;
     };
     PagerComponent.prototype.goToPage = function (data) {
         var _this = this;

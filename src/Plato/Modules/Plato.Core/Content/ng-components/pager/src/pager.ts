@@ -1,18 +1,12 @@
 ﻿import {
     Component,
     ElementRef,
-    Input,
-    Output,
+    Input, Output,
     EventEmitter,
-    OnDestroy,
-    OnInit,
-    OnChanges,
+    OnDestroy, OnInit, OnChanges,
     SimpleChanges,
     NgZone
 } from '@angular/core';
-
-
-import "rxjs/add/operator/map";
 
 @Component({
     selector: 'pager',
@@ -60,18 +54,71 @@ export class PagerComponent implements OnDestroy, OnInit, OnChanges {
     
     private init() {
         
+        this.buildPagingButtonts();
+        this.canGoBack = this.pageLinks.length && !this.pageLinks[0].isCurrent;
+        this.canGoForward = this.pageLinks.length && !this.pageLinks[this.pageLinks.length - 1].isCurrent;
+    }
+    
+    private buildPagingButtonts() {
+
+        let pagesToShow: number = 5;
+
+        if (this.totalPages <= pagesToShow) {
+
+            this.buildButtonRange(1, this.totalPages);
+
+        } else {
+
+            let firstPage = (this.pageIndex - 2);
+            let lastPage = (this.pageIndex + 2);
+            if (firstPage < 0) {
+                firstPage = 1;
+            }
+
+            if (this.pageIndex === 1) {
+
+                this.buildButtonRange(1, pagesToShow);
+
+            } else if (this.pageIndex === 2) {
+
+                this.buildButtonRange(1, pagesToShow);
+
+            } else if (this.pageIndex === 3) {
+
+                this.buildButtonRange(1, pagesToShow);
+
+            } else if (this.pageIndex < this.totalPages - 2) {
+
+                this.buildButtonRange(firstPage, lastPage);
+
+            } else if (this.pageIndex === this.totalPages - 2) {
+
+                this.buildButtonRange(this.totalPages - (pagesToShow - 1), this.pageIndex + 2);
+
+            } else if (this.pageIndex === this.totalPages - 1) {
+
+                this.buildButtonRange(this.totalPages - (pagesToShow - 1), this.pageIndex + 1);
+
+            } else if (this.pageIndex === this.totalPages) {
+
+                this.buildButtonRange(this.totalPages - (pagesToShow - 1), this.pageIndex);
+            }
+
+        }
+        
+    }
+
+    private buildButtonRange(start: number, end: number) {
+
         this.pageLinks = [];
-        for (let i = 1; i <= this.totalPages; i++) {
+        for (let i = start; i <= end; i++) {
             this.pageLinks.push({
                 index: i,
                 text: i.toString(),
                 isCurrent: i === this._pageIndex
             });
         }
-        
-        this.canGoBack = this.pageLinks.length && !this.pageLinks[0].isCurrent;
-        this.canGoForward = this.pageLinks.length && !this.pageLinks[this.pageLinks.length - 1].isCurrent;
-        
+
     }
 
     public goToPage(data: IPageClickEvent = { pageIndex: 1 }) {

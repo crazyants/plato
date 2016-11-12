@@ -12,7 +12,6 @@ import { IPageClickEvent } from '../../../../../../plato.core/content/ng-compone
 import * as models from "../../../models/User";
 import { UserService } from "../../../services/user.service";
 
-
 @Component({
     selector: 'user-list',
     templateUrl: './plato.users/content/ng-app/components/public/user-list/user-list.html'
@@ -49,7 +48,8 @@ export class UserListComponent implements OnInit {
 
     pagerClick(data: IPageClickEvent) {
         this._pageIndex = data.pageIndex;
-        this.router.navigate(['Users', data.pageIndex]);
+        //this.router.navigate(['Users', data.pageIndex]);
+        this.refreshData();
     }
     
     ngOnInit() {

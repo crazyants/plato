@@ -43,7 +43,8 @@ var UserListComponent = (function () {
     });
     UserListComponent.prototype.pagerClick = function (data) {
         this._pageIndex = data.pageIndex;
-        this.router.navigate(['Users', data.pageIndex]);
+        //this.router.navigate(['Users', data.pageIndex]);
+        this.refreshData();
     };
     UserListComponent.prototype.ngOnInit = function () {
         var _this = this;
