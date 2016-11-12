@@ -67,7 +67,7 @@ namespace Plato.Hosting.Web.Extensions
         public static IServiceCollection AddPlatoMvc(
             this IServiceCollection services)
         {
-
+            
             // add mvc core
             services.AddMvcCore()
                 .AddViews()
@@ -108,7 +108,7 @@ namespace Plato.Hosting.Web.Extensions
             // configure tenants
 
             services.ConfigureShell("sites");
-
+            
             services.AddSingleton<ILayoutManager, LayoutManager>();
 
             services.AddPlatoMvc();

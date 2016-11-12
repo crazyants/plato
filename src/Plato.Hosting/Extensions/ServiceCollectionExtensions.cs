@@ -7,6 +7,7 @@ using Plato.Shell;
 using Plato.FileSystem.AppData;
 using Plato.FileSystem;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace Plato.Hosting.Extensions
 {
@@ -17,6 +18,7 @@ namespace Plato.Hosting.Extensions
             this IServiceCollection services)
         {
             
+
             services.AddSingleton<DefaultPlatoHost>();
             services.AddSingleton<IPlatoHost>(sp => sp.GetRequiredService<DefaultPlatoHost>());
 

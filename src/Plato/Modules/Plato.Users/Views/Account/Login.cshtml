@@ -96,16 +96,9 @@
 
     </div>        
 
-
-
-@section HeaderScripts {
-
-}
-
-
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_AngularBootStrapPartial"); }
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_AngularBootStrapPartial"); }
 }
 
 

@@ -1,5 +1,4 @@
-﻿"use strict";
-
+﻿
 /* 
  * 
  * You must first install webpack and ts-loader...
@@ -8,19 +7,11 @@
  * npm install ts-loader -g
  * 
  */
+ 
+var environment = (process.env.NODE_ENV || "development").trim();
 
-module.exports = {
-    entry: "./plato.core.ts",
-    output: {
-        path: "./wwwroot/webpack",
-        filename: "bundle.js"
-    },
-    module: {
-        loaders: [
-            {
-                test: /\.ts?$/,
-                loader: "ts-loader"
-            }
-        ]
-    }
-};
+if (environment === "development") {
+    module.exports = require('./webpack.dev.js');
+} else {
+    module.exports = require('./webpack.prod.js');
+}

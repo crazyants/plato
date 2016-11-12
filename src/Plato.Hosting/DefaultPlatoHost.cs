@@ -111,10 +111,8 @@ namespace Plato.Hosting
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
-            {
                 _logger.LogInformation("Start creation of shells");
-            }
-                     
+            
             // Is there any tenant right now?
             var allSettings = _shellSettingsManager.LoadSettings()
                 .Where(settings =>
@@ -155,25 +153,17 @@ namespace Plato.Hosting
         void ActivateShell(ShellContext context)
         {
             if (_logger.IsEnabled(LogLevel.Debug))
-            {
                 _logger.LogDebug("Activating context for tenant {0}", context.Settings.Name);
-            }
+            
             if (_shellContexts.TryAdd(context.Settings.Name, context))
-            {
                 _runningShellTable.Add(context.Settings);
-            }
         }
         
-
         ShellContext CreateSetupContext()
         {
-
             if (_logger.IsEnabled(LogLevel.Debug))
-            {
                 _logger.LogDebug("Creating shell context for root setup.");
-            }
             return _shellContextFactory.CreateSetupContext(ShellHelper.BuildDefaultUninitializedShell);
-
         }
             
         #endregion
