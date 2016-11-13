@@ -53,13 +53,16 @@ $(function() {
     
     // initialize bootstrap tooltips
     if (o.BSToolTipEnabled) {
-        $("body").tooltip({ selector: o.BSToolTipSelector });
-      
+        var tips = $("body").tooltip({ selector: o.BSToolTipSelector });
+        tips.on('show.bs.tooltip', function () {
+            // only one tooltip should ever be open at a time
+            $('.tooltip').not(this).tooltip('hide');
+        });
     }
 
-    //$(document)
-    //    .click(function () {
-    //        $("body").tooltip('hide');
-    //    });
+    $(document)
+        .click(function () {
+            $("body").tooltip('hide');
+        });
 
 });

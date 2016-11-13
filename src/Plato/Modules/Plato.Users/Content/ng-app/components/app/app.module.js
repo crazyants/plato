@@ -1,9 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -17,32 +12,18 @@ var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
 var http_1 = require('@angular/http');
 var forms_1 = require('@angular/forms');
-var router_1 = require('@angular/router');
 var common_1 = require('@angular/common');
+var app_routes_1 = require('./app.routes');
 // shared components
 var pager_1 = require('../../../../../plato.core/content/ng-components/pager/pager');
+// shared services
+var http_2 = require('../../../../../plato.core/content/ng-services/http/http');
 // components
 var app_component_1 = require('./app.component');
 var login_form_component_1 = require('../public/login-form/login-form.component');
 var user_list_component_1 = require('../public/user-list/user-list.component');
 // services
 var user_service_1 = require('../../services/user.service');
-// extend http request options
-var DefaultRequestOptions = (function (_super) {
-    __extends(DefaultRequestOptions, _super);
-    function DefaultRequestOptions() {
-        _super.apply(this, arguments);
-        this.headers = new http_1.Headers({
-            'Auth': '1234567890'
-        });
-    }
-    DefaultRequestOptions = __decorate([
-        core_1.Injectable(), 
-        __metadata('design:paramtypes', [])
-    ], DefaultRequestOptions);
-    return DefaultRequestOptions;
-}(http_1.RequestOptions));
-exports.DefaultRequestOptions = DefaultRequestOptions;
 var AppModule = (function () {
     function AppModule() {
     }
@@ -53,17 +34,7 @@ var AppModule = (function () {
                 http_1.HttpModule,
                 forms_1.FormsModule,
                 pager_1.PagerModule,
-                router_1.RouterModule.forRoot([
-                    {
-                        path: '',
-                        redirectTo: 'Users',
-                        pathMatch: 'full'
-                    },
-                    //{ path: '', component: UserListComponent },
-                    { path: 'Users', component: user_list_component_1.UserListComponent },
-                    { path: 'Login', component: login_form_component_1.LoginFormComponent },
-                    { path: 'Users/:page', component: user_list_component_1.UserListComponent }
-                ])
+                app_routes_1.UsersRouterModule
             ],
             declarations: [
                 app_component_1.AppComponent,
@@ -73,7 +44,7 @@ var AppModule = (function () {
             bootstrap: [app_component_1.AppComponent],
             providers: [
                 user_service_1.UserService,
-                { provide: http_1.RequestOptions, useClass: DefaultRequestOptions },
+                { provide: http_1.RequestOptions, useClass: http_2.PlatoRequestOptions },
                 { provide: common_1.LocationStrategy, useClass: common_1.HashLocationStrategy }
             ]
         }), 

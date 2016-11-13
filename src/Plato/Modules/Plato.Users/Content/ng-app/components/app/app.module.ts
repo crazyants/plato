@@ -4,9 +4,13 @@ import { HttpModule, Headers, RequestOptions } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { UsersRouterModule } from './app.routes';
 
 // shared components
 import { PagerModule } from '../../../../../plato.core/content/ng-components/pager/pager';
+
+// shared services
+import { PlatoRequestOptions } from '../../../../../plato.core/content/ng-services/http/http';
 
 // components
 import { AppComponent } from './app.component';
@@ -16,31 +20,13 @@ import { UserListComponent } from '../public/user-list/user-list.component';
 // services
 import { UserService } from '../../services/user.service';
 
-// extend http request options
-@Injectable()
-export class DefaultRequestOptions extends RequestOptions {
-   headers: Headers = new Headers({
-        'Auth': '1234567890'
-    });
-}
-
 @NgModule({ 
     imports: [
         BrowserModule,
         HttpModule,
         FormsModule,
         PagerModule,
-        RouterModule.forRoot([
-            {
-                path: '',
-                redirectTo: 'Users',
-                pathMatch: 'full'
-            },
-            //{ path: '', component: UserListComponent },
-            { path: 'Users', component: UserListComponent },
-            { path: 'Login', component: LoginFormComponent },
-            { path: 'Users/:page', component: UserListComponent }
-        ])
+        UsersRouterModule
     ],
     declarations: [
         AppComponent,
@@ -50,7 +36,7 @@ export class DefaultRequestOptions extends RequestOptions {
     bootstrap: [AppComponent],
     providers: [
         UserService,
-        { provide: RequestOptions, useClass: DefaultRequestOptions },
+        { provide: RequestOptions, useClass: PlatoRequestOptions },
         { provide: LocationStrategy, useClass: HashLocationStrategy }
     ]
     

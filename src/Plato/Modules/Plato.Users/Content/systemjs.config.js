@@ -24,8 +24,9 @@
             '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
             '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
 
-            // our core components are within plato.core/ng-components
+            // configure core components & services
             '@plato/core': './plato.core/content/ng-components/',
+            '@plato/services': './plato.core/content/ng-services/',
 
             // other libraries
             'rxjs': 'npm:rxjs'
@@ -37,7 +38,11 @@
                 defaultExtension: 'js'
             },
             '@plato/core': {
-                main: './plato.core.js',
+                main: './plato.components.js',
+                defaultExtension: 'js'
+            },
+            '@plato/services': {
+                main: './plato.services.js',
                 defaultExtension: 'js'
             },
             rxjs: {
