@@ -62,7 +62,6 @@ CONSTRAINT PK_Plato_LoginAttempts_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_Spaces
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -72,7 +71,7 @@ NameLocalized					NVARCHAR(100) DEFAULT('') NOT NULL,
 Description						NVARCHAR(MAX) DEFAULT('') NOT NULL,
 DescriptionLocalized			NVARCHAR(100) DEFAULT('') NOT NULL,
 SafeUrlName						NVARCHAR(MAX) DEFAULT('') NOT NULL,
-ModuleId						NVARCHAR(100) DEFAULT('') NOT NULL,
+ModuleIds						NVARCHAR(max) DEFAULT('') NOT NULL,
 IconClassName					NVARCHAR(50) DEFAULT('') NOT NULL,
 CreatedDate						DATETIME2 NULL,
 CreatedUserId					INT DEFAULT (0) NOT NULL,
@@ -208,7 +207,7 @@ UserName						NVARCHAR(255) DEFAULT('') NOT NULL,
 NormalizedUserName				NVARCHAR(255) DEFAULT('') NOT NULL,
 Email							NVARCHAR(255) DEFAULT('') NOT NULL,
 NormalizedEmail					NVARCHAR(255) DEFAULT('') NOT NULL,
-@EmailConfirmed					BIT DEFAULT(0) NOT NULL,
+EmailConfirmed					BIT DEFAULT(0) NOT NULL,
 DisplayName						NVARCHAR(255) DEFAULT('') NOT NULL,
 SamAccountName					NVARCHAR(255) DEFAULT('') NOT NULL,
 PasswordHash					NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -251,7 +250,7 @@ CREATE TABLE Plato_UserSecret
 (
 Id								INT IDENTITY(1,1) NOT NULL,
 UserId							INT DEFAULT (0) NOT NULL,
-Password						NVARCHAR(255) DEFAULT('') NOT NULL,
+Secret							NVARCHAR(255) DEFAULT('') NOT NULL,
 Salts							NVARCHAR(255) DEFAULT('') NOT NULL,
 SecurityStamp					NVARCHAR(255) DEFAULT('') NOT NULL,
 CONSTRAINT PK_Plato_UserSecret_Id PRIMARY KEY CLUSTERED ( Id )
@@ -1199,10 +1198,12 @@ GO
 
 GO
 
+
+
 CREATE PROCEDURE [plato_sp_InsertUpdateUserSecret] (
 	@Id int,
 	@UserId int,
-	@PasswordHash nvarchar(255),
+	@Secret nvarchar(255),
 	@Salts nvarchar(255),
 	@SecurityStamp nvarchar(255)
 ) AS
@@ -1221,7 +1222,7 @@ BEGIN
 	-- UPDATE
 	UPDATE Plato_UserSecret SET
 		UserId = @UserId,
-		PasswordHash = @PasswordHash,
+		[Secret] = @Secret,
 		Salts = @Salts,
 		SecurityStamp = @SecurityStamp
 	WHERE (Id = @Id);
@@ -1235,12 +1236,12 @@ BEGIN
 	-- INSERT
 	INSERT INTO Plato_UserSecret (
 		UserId,
-		PasswordHash,
+		[Secret],
 		Salts,
 		SecurityStamp
 	) VALUES (
 		@UserId,
-		@PasswordHash,
+		@Secret,
 		@Salts,
 		@SecurityStamp
 	);

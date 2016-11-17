@@ -41,8 +41,7 @@ namespace Plato.Hosting.Web.Middleware
             if (shellSetting != null)
             {
 
-                ShellContext shellContext = _platoHost.GetOrCreateShellContext(shellSetting);
-
+                var shellContext = _platoHost.GetOrCreateShellContext(shellSetting);
                 using (var scope = shellContext.CreateServiceScope())
                 {
                     httpContext.RequestServices = scope.ServiceProvider;

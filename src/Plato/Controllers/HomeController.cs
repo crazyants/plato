@@ -218,7 +218,7 @@ namespace Plato.Controllers
                     },
                     Secret = new UserSecret
                     {
-                        PasswordHash = "admin",
+                        Secret = "admin",
                         Salts = new[] {+rand.Next(1, 500), 123232},
                         SecurityStamp = "test"
                     },

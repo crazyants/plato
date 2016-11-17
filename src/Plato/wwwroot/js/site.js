@@ -25,7 +25,10 @@ $.Plato = {};
 $.Plato.options = {
     // bootstrap tooltips
     BSToolTipEnabled: true,
-    BSToolTipSelector: "[data-toggle='tooltip']"
+    BSToolTipSelector: "[data-toggle='tooltip']",
+    
+    MagnificSelector: "[data-toggle='dialog']",
+
 };
 
 
@@ -60,9 +63,19 @@ $(function() {
         });
     }
 
-    $(document)
-        .click(function () {
-            $("body").tooltip('hide');
-        });
+
+    // initialize magnific popup 
+    $(o.MagnificSelector).magnificPopup({
+          type: 'inline',
+          fixedContentPos: false,
+          fixedBgPos: true,
+          overflowY: 'auto',
+          closeBtnInside: true,
+          preloader: false,
+          midClick: true,
+          removalDelay: 300,
+          mainClass: 'plato-mfp-zoom-in'
+     });
+
 
 });

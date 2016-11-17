@@ -25,6 +25,7 @@ namespace Plato.Users.Controllers
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
         {
+            
 
             var model = new LoginViewModel();
             model.Email = "";
@@ -81,6 +82,7 @@ namespace Plato.Users.Controllers
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
+
    
             var model = new RegisterViewModel
             {

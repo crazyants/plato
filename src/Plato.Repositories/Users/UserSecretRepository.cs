@@ -42,7 +42,7 @@ namespace Plato.Repositories.Users
             var id = await InsertUpdateInternal(
                 secret.Id,
                 secret.UserId,
-                secret.PasswordHash,
+                secret.Secret,
                 secret.Salts,
                 secret.SecurityStamp);
 
@@ -79,7 +79,7 @@ namespace Plato.Repositories.Users
         private async Task<int> InsertUpdateInternal(
             int id,
             int userId,
-            string passwordHash,
+            string secret,
             int[] salts,
             string securityStamp)
         {
@@ -95,7 +95,7 @@ namespace Plato.Repositories.Users
                     "plato_sp_InsertUpdateUserSecret",
                     id,
                     userId,
-                    passwordHash.ToEmptyIfNull().TrimToSize(255),
+                    secret.ToEmptyIfNull().TrimToSize(255),
                     delimitedSalts.ToEmptyIfNull().TrimToSize(255),
                     securityStamp.ToEmptyIfNull().TrimToSize(255));
             }

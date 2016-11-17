@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "";
+    ViewData["Title"] = "Login";
+}
+   
+<form asp-controller="Upload" asp-action="Index" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal"  enctype="multipart/form-data">
+
+    <input type="file" name="files" multiple />
+    <input type="submit" value="Upload" />
+    
+</form>

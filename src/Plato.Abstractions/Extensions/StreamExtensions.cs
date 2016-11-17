@@ -19,5 +19,16 @@ namespace Plato.Abstractions.Extensions
             }
         }
 
+
+        public static byte[] StreamToByteArray(this Stream stream)
+        {
+
+            var fileData = new byte[(int)stream.Length - 1 + 1];
+            stream.Read(fileData, 0, fileData.Length);
+            return fileData;
+
+        }
+
+
     }
 }

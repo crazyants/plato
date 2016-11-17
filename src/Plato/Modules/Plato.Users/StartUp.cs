@@ -96,6 +96,14 @@ namespace Plato.Users
                action: "Register"
            );
 
+            routes.MapAreaRoute(
+             name: "Users",
+             area: "Plato.Users",
+             template: "users/{controller}/{action}/{id?}",
+             controller: "Upload",
+             action: "Index"
+         );
+
 
         }
     }

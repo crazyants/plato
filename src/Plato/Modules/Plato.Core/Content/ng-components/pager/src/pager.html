@@ -1,17 +1,69 @@
+<nav aria-label="...">
+    <ul class="pagination">
+        <li [ngClass]="canGoBack ? 'page-item': 'page-item disabled'">
+            <a href="javascript:void(0);" class="page-link" (click)="goToPage({ pageIndex: 1 })" data-toggle="tooltip" data-placement="bottom" title="First Page" tabindex="-1" aria-label="First Page">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">First Page</span>
+            </a>
+        </li>
+        <li [ngClass]="canGoBack ? 'page-item': 'page-item disabled'">
+            <a href="javascript:void(0);" class="page-link" (click)="goToPage({ pageIndex: pageIndex - 1 })" data-toggle="tooltip" data-placement="bottom" title="Previous Page" tabindex="-2" aria-label="Previous">
+                <span aria-hidden="true">Prev</span>
+                <span class="sr-only">Previous Page</span>
+            </a>
+        </li>
+      
+        <li [ngClass]="page.isCurrent ? 'page-item active' : 'page-item'"
+            *ngFor="let page of pageLinks">
+            <a href="javascript:void(0);" (click)="goToPage({ pageIndex: page.index })"
+               data-toggle="tooltip" data-placement="bottom" title="Page {{ page.index }} of {{ totalPages }}"
+                class="page-link" aria-label="">
+                <span aria-hidden="true">{{ page.text }}</span>
+                <span class="sr-only">{{ page.text }}</span>
+            </a>
+        </li>
 
-<p>
-    Page {{ pageIndex }} of {{ totalPages }}    
-</p>
-    
-<div class="btn-group" *ngIf="totalPages">
-    <button class="btn btn-default" [disabled]="!canGoBack" (click)="goToPage({ pageIndex: 1 })" data-toggle="tooltip" data-placement="bottom" title="First Page">«<</button>
-    <button class="btn btn-default" [disabled]="!canGoBack" (click)="goToPage({ pageIndex: pageIndex - 1 })" data-toggle="tooltip" data-placement="bottom" title="Previous Page">Prev</button>
-    <button class="btn" *ngFor="let page of pageLinks"
-            [ngClass]="{ 'btn-info': page.isCurrent, 'btn-default': !page.isCurrent }"
-            data-toggle="tooltip" data-placement="bottom" title="Page {{ page.index }} of {{ totalPages }}"
-            (click)="goToPage({ pageIndex: page.index })">
-        {{ page.text }}
-    </button>
-    <button class="btn btn-default" [disabled]="!canGoForward" (click)="goToPage({ pageIndex: pageIndex + 1 })" data-toggle="tooltip" data-placement="bottom" title="Next Page">Next</button>
-    <button class="btn btn-default" [disabled]="!canGoForward" (click)="goToLast()" data-toggle="tooltip" data-placement="bottom" title="Last Page">»</button>
+        <li [ngClass]="canGoForward ? 'page-item': 'page-item disabled'">
+            <a href="javascript:void(0);" class="page-link" (click)="goToPage({ pageIndex: pageIndex + 1 })" data-toggle="tooltip" data-placement="bottom" title="Next Page" aria-label="Next">
+                <span aria-hidden="true">Next</span>
+                <span class="sr-only">Next Page</span>
+            </a>
+        </li>
+        <li [ngClass]="canGoForward ? 'page-item' : 'page-item disabled'">
+            <a href="javascript:void(0);" class="page-link" (click)="goToLast()" data-toggle="tooltip" data-placement="bottom" title="Last Page" aria-label="Last Page">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Last Page</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <p class="page-link">
+                Page {{ pageIndex }} of {{ totalPages }}
+            </p>
+        </li>
+    </ul>
+</nav>
+
+<!--
+<div class="btn-toolbar" role="toolbar" aria-label="Navigate between pages">
+    <div class="btn-group " *ngIf="totalPages" role="group" aria-label="Junmp to page">
+        <button class="btn btn-secondary" [disabled]="!canGoBack" (click)="goToPage({ pageIndex: 1 })" data-toggle="tooltip" data-placement="bottom" title="First Page">&#171;</button>
+        <button class="btn btn-secondary" [disabled]="!canGoBack" (click)="goToPage({ pageIndex: pageIndex - 1 })" data-toggle="tooltip" data-placement="bottom" title="Previous Page">Prev</button>
+        <button class="btn" *ngFor="let page of pageLinks"
+                [ngClass]="{ 'btn-primary': page.isCurrent, 'btn-secondary': !page.isCurrent }"
+                data-toggle="tooltip" data-placement="bottom" title="Page {{ page.index }} of {{ totalPages }}"
+                (click)="goToPage({ pageIndex: page.index })">
+            {{ page.text }}
+        </button>
+        <button class="btn btn-secondary" [disabled]="!canGoForward" (click)="goToPage({ pageIndex: pageIndex + 1 })" data-toggle="tooltip" data-placement="bottom" title="Next Page">Next</button>
+        <button class="btn btn-secondary" [disabled]="!canGoForward" (click)="goToLast()" data-toggle="tooltip" data-placement="bottom" title="Last Page">&#187;</button>
+        <div class="btn">
+            
+        </div>
+    </div>
 </div>
+    -->
+
+
+
+
+

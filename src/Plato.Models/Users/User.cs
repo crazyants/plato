@@ -99,9 +99,7 @@ namespace Plato.Models.Users
                 this.AccessFailedCount = Convert.ToInt32(dr["AccessFailedCount"]);
 
         }
-
-
-
+        
         #endregion
 
     }

@@ -21,8 +21,8 @@ export class PagerComponent implements OnDestroy, OnInit, OnChanges {
     @Output() pageClick = new EventEmitter<IPageClickEvent>();
     
     public pageLinks: any[];
-    public canGoBack: boolean;
-    public canGoForward: boolean;
+    public canGoBack: boolean = false;
+    public canGoForward: boolean = false;
 
     public get pageIndex() {
         return this._pageIndex;
@@ -53,7 +53,6 @@ export class PagerComponent implements OnDestroy, OnInit, OnChanges {
     }
     
     private init() {
-        
         this.buildPagingButtonts();
         this.canGoBack = this.pageLinks.length && !this.pageLinks[0].isCurrent;
         this.canGoForward = this.pageLinks.length && !this.pageLinks[this.pageLinks.length - 1].isCurrent;

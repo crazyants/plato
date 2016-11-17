@@ -21,7 +21,7 @@ namespace Plato.Models.Users
         public int UserId { get; set; }
 
         [ColumnName("Password", typeof(string), 255)]
-        public string PasswordHash { get; set; }
+        public string Secret { get; set; }
 
         [ColumnName("Salts", typeof(List<int>))]
         public int[] Salts { get; set; }
@@ -55,8 +55,8 @@ namespace Plato.Models.Users
             if (dr.ColumnIsNotNull("UserId"))
                 this.UserId = Convert.ToInt32(dr["UserId"]);
 
-            if (dr.ColumnIsNotNull("PasswordHash"))
-                this.PasswordHash = Convert.ToString(dr["PasswordHash"]);
+            if (dr.ColumnIsNotNull("Secret"))
+                this.Secret = Convert.ToString(dr["Secret"]);
 
             if (dr.ColumnIsNotNull("Salts"))
                 this.Salts = Convert.ToString(dr["Salts"]).ToIntArray();

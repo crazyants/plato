@@ -94,11 +94,6 @@ namespace Plato.Models.Users
             
         }
 
-        public void PopulateModel(Action<UserPhoto> model)
-        {
-            model(this);
-        }
-
         #endregion
 
     }

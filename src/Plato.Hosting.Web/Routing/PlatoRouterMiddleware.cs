@@ -32,10 +32,8 @@ namespace Plato.Hosting.Web.Routing
         public async Task Invoke(HttpContext httpContext)
         {
             if (_logger.IsEnabled(LogLevel.Information))
-            {
                 _logger.LogInformation("Begin Routing Request");
-            }
-
+            
             var shellSettings = (ShellSettings)httpContext.Features[typeof(ShellSettings)];
 
             RequestDelegate pipeline;

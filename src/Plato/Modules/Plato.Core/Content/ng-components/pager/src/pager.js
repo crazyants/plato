@@ -16,6 +16,8 @@ var PagerComponent = (function () {
         this._totalPages = 0;
         this._pageIndex = 1;
         this.pageClick = new core_1.EventEmitter();
+        this.canGoBack = false;
+        this.canGoForward = false;
     }
     Object.defineProperty(PagerComponent.prototype, "pageIndex", {
         get: function () {
