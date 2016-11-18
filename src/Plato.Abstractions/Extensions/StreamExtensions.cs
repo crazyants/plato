@@ -12,6 +12,8 @@ namespace Plato.Abstractions.Extensions
 
         public static string StreamToString(this Stream stream)
         {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
             stream.Position = 0;
             using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
             {
@@ -22,11 +24,11 @@ namespace Plato.Abstractions.Extensions
 
         public static byte[] StreamToByteArray(this Stream stream)
         {
-
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
             var fileData = new byte[(int)stream.Length - 1 + 1];
             stream.Read(fileData, 0, fileData.Length);
             return fileData;
-
         }
 
 

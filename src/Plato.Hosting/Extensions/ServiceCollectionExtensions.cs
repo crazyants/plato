@@ -18,11 +18,10 @@ namespace Plato.Hosting.Extensions
             this IServiceCollection services)
         {
             
-
             services.AddSingleton<DefaultPlatoHost>();
             services.AddSingleton<IPlatoHost>(sp => sp.GetRequiredService<DefaultPlatoHost>());
 
-            // shell context
+            // shell / tenant context
 
             services.AddSingleton<IShellSettingsManager, ShellSettingsManager>();
             services.AddSingleton<IShellContextFactory, ShellContextFactory>();

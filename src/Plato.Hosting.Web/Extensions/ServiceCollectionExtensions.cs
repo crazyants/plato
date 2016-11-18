@@ -55,11 +55,12 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-                internalServices.AddSingleton<IContextFacade, ContextFacade>();
                 
                 internalServices.AddPlatoDbContext();
                 internalServices.AddRepositories();
                 internalServices.AddStores();
+
+    
 
             });
         }
@@ -113,6 +114,7 @@ namespace Plato.Hosting.Web.Extensions
             services.AddSingleton<ILayoutManager, LayoutManager>();
 
             services.AddPlatoMvc();
+        
 
             // Save the list of service definitions
             services.AddSingleton(_ => services);

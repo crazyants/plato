@@ -9,7 +9,7 @@ namespace Plato.Hosting.Web
     public interface IContextFacade
     {
 
-        Task<User> GetAuthenticatedUser();
+        Task<User> GetAuthenticatedUserAsync();
 
     }
 }

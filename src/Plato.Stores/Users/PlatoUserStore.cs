@@ -77,7 +77,7 @@ namespace Plato.Stores.Users
         public Task<bool> DeleteAsync(User user)
         {
             throw new NotImplementedException();
-            ClearUserCache(user);
+            //ClearUserCache(user);
         }
 
         public async Task<User> GetByIdAsync(int id)
@@ -122,7 +122,7 @@ namespace Plato.Stores.Users
         {
             User user;
             var key = GetCacheKey(LocalCacheKeys.ByUserNameNormalzied, userNameNormalized);
-            if (!_memoryCache.TryGetValue(key + userNameNormalized, out user))
+            if (!_memoryCache.TryGetValue(key, out user))
             {
                 user = await _userRepository.SelectByUserNameNormalizedAsync(userNameNormalized);
                 if (user != null)
@@ -140,7 +140,7 @@ namespace Plato.Stores.Users
         {
             User user;
             var key = GetCacheKey(LocalCacheKeys.ByUserName, userName);
-            if (!_memoryCache.TryGetValue(key + userName, out user))
+            if (!_memoryCache.TryGetValue(key, out user))
             {
                 user = await _userRepository.SelectByUserNameAsync(userName);
                 if (user != null)
@@ -156,9 +156,9 @@ namespace Plato.Stores.Users
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            User user;
+            User user = null;
             var key = GetCacheKey(LocalCacheKeys.ByEmail, email);
-            if (!_memoryCache.TryGetValue(key + email, out user))
+            if (!_memoryCache.TryGetValue(key, out user))
             {
                 user = await _userRepository.SelectByEmailAsync(email);
                 if (user != null)

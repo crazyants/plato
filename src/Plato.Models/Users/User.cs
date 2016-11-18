@@ -25,9 +25,7 @@ namespace Plato.Models.Users
         public UserSecret Secret { get; set;  }
 
         public UserDetail Detail { get; set; }
-
-        public UserPhoto Photo { get; set; }
-
+        
         public List<string> RoleNames { get; set; } = new List<string>();
 
         public List<Role> UserRoles { get; } = new List<Role>();
@@ -63,8 +61,7 @@ namespace Plato.Models.Users
 
             if (dr.ColumnIsNotNull("NormalizedEmail"))
                 this.NormalizedEmail = Convert.ToString(dr["NormalizedEmail"]);
-
-
+            
             if (dr.ColumnIsNotNull("EmailConfirmed"))
                 this.EmailConfirmed = Convert.ToBoolean(dr["EmailConfirmed"]);
 

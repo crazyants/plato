@@ -3,9 +3,12 @@
     ViewData["Title"] = "Login";
 }
    
-<form asp-controller="Upload" asp-action="Index" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal"  enctype="multipart/form-data">
+@ViewData["Test"]
 
-    <input type="file" name="files" multiple />
+<form asp-controller="Photo" asp-action="Upload" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal"  enctype="multipart/form-data">
+    
+    <input type="file" name="file" />
+    <br/><br/>
     <input type="submit" value="Upload" />
     
 </form>

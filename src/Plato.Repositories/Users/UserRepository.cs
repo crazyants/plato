@@ -19,13 +19,11 @@ namespace Plato.Repositories.Users
             IDbContext dbContext,
             IUserSecretRepository<UserSecret> userSecretRepository,
             IUserDetailRepository<UserDetail> userDetailRepository,
-            IUserPhotoRepository<UserPhoto> userPhotoRepository,
             ILogger<UserSecretRepository> logger)
         {
             _dbContext = dbContext;
             _userSecretRepository = userSecretRepository;
             _userDetailRepository = userDetailRepository;
-            _userPhotoRepository = userPhotoRepository;
             _logger = logger;
         }
 
@@ -96,15 +94,7 @@ namespace Plato.Repositories.Users
                 if ((user.Id == 0) || (user.Detail.UserId == 0))
                     user.Detail.UserId = id;
                 await _userDetailRepository.InsertUpdateAsync(user.Detail);
-
-                // photo
-
-                if (user.Photo == null)
-                    user.Photo = new UserPhoto();
-                if ((user.Id == 0) || (user.Photo.UserId == 0))
-                    user.Photo.UserId = id;
-                await _userPhotoRepository.InsertUpdateAsync(user.Photo);
-
+                
                 // return
 
                 return await SelectByIdAsync(id);
@@ -127,6 +117,7 @@ namespace Plato.Repositories.Users
 
         public async Task<User> SelectByUserNameNormalizedAsync(string userNameNormalized)
         {
+
             if (string.IsNullOrEmpty(userNameNormalized))
                 throw new ArgumentNullException(nameof(userNameNormalized));
 
@@ -134,7 +125,8 @@ namespace Plato.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserByUserNameNormalized", userNameNormalized);
+                    "plato_sp_SelectUserByUserNameNormalized",
+                    userNameNormalized.TrimToSize(255));
 
                 return await BuildUserFromResultSets(reader);
             }
@@ -149,7 +141,8 @@ namespace Plato.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserByEmail", email);
+                    "plato_sp_SelectUserByEmail", 
+                    email.TrimToSize(255));
 
                 return await BuildUserFromResultSets(reader);
             }
@@ -164,7 +157,8 @@ namespace Plato.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserByUserName", userName);
+                    "plato_sp_SelectUserByUserName", 
+                    userName.TrimToSize(255));
 
                 return await BuildUserFromResultSets(reader);
             }
@@ -182,8 +176,8 @@ namespace Plato.Repositories.Users
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUserByUserNameAndPassword",
-                    userName,
-                    password);
+                    userName.TrimToSize(255),
+                    password.TrimToSize(255));
 
                 return await BuildUserFromResultSets(reader);
             }
@@ -201,8 +195,8 @@ namespace Plato.Repositories.Users
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUserByEmailAndPassword",
-                    email,
-                    password);
+                    email.TrimToSize(255),
+                    password.TrimToSize(255));
 
                 return await BuildUserFromResultSets(reader);
             }
@@ -217,7 +211,8 @@ namespace Plato.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserByApiKey", apiKey);
+                    "plato_sp_SelectUserByApiKey",
+                    apiKey.TrimToSize(255));
 
                 return await BuildUserFromResultSets(reader);
             }
@@ -241,7 +236,7 @@ namespace Plato.Repositories.Users
                     {
                         var user = new User();
                         user.PopulateModel(reader);
-                        output.Data.Add((T) Convert.ChangeType(user, typeof(T)));
+                        output.Data.Add((T)Convert.ChangeType(user, typeof(T)));
                     }
 
                     if (await reader.NextResultAsync())
@@ -261,10 +256,11 @@ namespace Plato.Repositories.Users
 
         private async Task<User> BuildUserFromResultSets(DbDataReader reader)
         {
-            var user = new User();
+            User user = null;
             if ((reader != null) && (reader.HasRows))
             {
-                
+
+                user = new User();
                 await reader.ReadAsync();
                 user.PopulateModel(reader);
 
@@ -283,15 +279,7 @@ namespace Plato.Repositories.Users
                     await reader.ReadAsync();
                     user.Detail = new UserDetail(reader);
                 }
-
-                // photo
-
-                if (await reader.NextResultAsync())
-                {
-                    await reader.ReadAsync();
-                    user.Photo = new UserPhoto(reader);
-                }
-
+                
                 // roles
 
                 if (await reader.NextResultAsync())

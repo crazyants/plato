@@ -973,8 +973,6 @@ EXEC plato_sp_SelectUserSecretByUserId @Id
 
 EXEC plato_sp_SelectUserDetailByUserId @Id
 
-EXEC plato_sp_SelectUserPhotoByUserId @Id
-
 EXEC plato_sp_SelectRolesByUserId @Id
 
 RETURN
@@ -1476,19 +1474,22 @@ GO
 
 GO
 
-CREATE PROCEDURE [plato_sp_SelectUserByUserNameAndPassword] (
-@UserName nvarchar(255),
-@PasswordHash nvarchar(255)
+CREATE PROCEDURE [plato_sp_SelectUserByUserName] (
+@UserName nvarchar(255)
 ) AS
 SET NOCOUNT ON 
 
 DECLARE @Id int;
-SELECT u.Id FROM
-Plato_Users u WITH (nolock) 
-INNER JOIN Plato_UserSecret us ON us.UserId = u.Id
-WHERE (u.UserName = @UserName AND us.PasswordHash = @PasswordHash)
+SET @Id = (
+	SELECT Id FROM
+	Plato_Users WITH (nolock) 
+	WHERE (UserName = @UserName)
+)
 	
-EXEC plato_sp_SelectUser @Id;
+IF (@Id > 0)
+BEGIN
+	EXEC plato_sp_SelectUser @Id;
+END
 
 RETURN
 
@@ -1528,11 +1529,16 @@ CREATE PROCEDURE [plato_sp_SelectUserByEmail] (
 SET NOCOUNT ON 
 
 DECLARE @Id int;
-SELECT u.Id FROM
-Plato_Users u WITH (nolock) 
-WHERE (u.Email = @Email)
-	
-EXEC plato_sp_SelectUser @Id;
+SET @Id = (
+	SELECT u.Id FROM
+	Plato_Users u WITH (nolock) 
+	WHERE (u.Email = @Email)
+)
+
+IF (@Id > 0)
+BEGIN
+	EXEC plato_sp_SelectUser @Id;
+END
 
 RETURN
 

@@ -13,6 +13,7 @@ using Plato.Models.Users;
 using Plato.Shell.Models;
 using Plato.Stores.Roles;
 using Plato.Stores.Users;
+using Plato.Hosting.Web;
 
 namespace Plato.Users
 {
@@ -57,6 +58,8 @@ namespace Plato.Users
             services.TryAddScoped<RoleManager<Role>>();
             services.TryAddScoped<SignInManager<User>>();
 
+            services.AddSingleton<IContextFacade, ContextFacade>();
+
             services.Configure<IdentityOptions>(options =>
             {
                 options.Cookies.ApplicationCookie.CookieName = "platoauth_" + _tenantName;
@@ -79,7 +82,7 @@ namespace Plato.Users
                 .UseCookieAuthentication(_options.Cookies.ExternalCookie)
                 .UseCookieAuthentication(_options.Cookies.TwoFactorRememberMeCookie)
                 .UseCookieAuthentication(_options.Cookies.TwoFactorUserIdCookie);
-            
+
             routes.MapAreaRoute(
                 name: "Login",
                 area: "Plato.Users",
@@ -89,20 +92,20 @@ namespace Plato.Users
             );
 
             routes.MapAreaRoute(
-               name: "Register",
-               area: "Plato.Users",
-               template: "Register",
-               controller: "Account",
-               action: "Register"
-           );
-
+                name: "Register",
+                area: "Plato.Users",
+                template: "register",
+                controller: "Account",
+                action: "Register"
+            );
+            
             routes.MapAreaRoute(
-             name: "Users",
-             area: "Plato.Users",
-             template: "users/{controller}/{action}/{id?}",
-             controller: "Upload",
-             action: "Index"
-         );
+                name: "Users",
+                area: "Plato.Users",
+                template: "users/{controller}/{action}/{id?}",
+                controller: "Account",
+                action: "Login"
+            );
 
 
         }

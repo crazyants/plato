@@ -29,7 +29,7 @@ namespace Plato.Models.Users
              
         public string ContentType { get; set; }
 
-        public float ContentLength { get; set; }
+        public long ContentLength { get; set; }
 
         public DateTime? CreatedDate { get; set; }
 
@@ -38,7 +38,7 @@ namespace Plato.Models.Users
         public DateTime? ModifiedDate { get; set; }
 
         public int ModifiedUserId { get; set; }
-        
+
         #endregion
 
         #region "constructor"

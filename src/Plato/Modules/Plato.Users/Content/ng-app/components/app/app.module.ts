@@ -14,8 +14,8 @@ import { PlatoRequestOptions } from '../../../../../plato.core/content/ng-servic
 
 // components
 import { AppComponent } from './app.component';
-import { LoginFormComponent } from '../public/login-form/login-form.component';
-import { UserListComponent } from '../public/user-list/user-list.component';
+import { LoginFormComponent } from '../public/login-form/login-form';
+import { UserListComponent } from '../public/user-list/user-list';
 
 // services
 import { UserService } from '../../services/user.service';

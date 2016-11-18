@@ -35,7 +35,7 @@ namespace Plato.Repositories.Users
 
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int Id)
+        public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -43,7 +43,7 @@ namespace Plato.Repositories.Users
         public async Task<UserPhoto> InsertUpdateAsync(UserPhoto photo)
         {
 
-            int id = await InsertUpdateInternal(
+            var id = await InsertUpdateInternal(
                 photo.Id,
                 photo.UserId,
                 photo.Name,
@@ -71,28 +71,46 @@ namespace Plato.Repositories.Users
             throw new NotImplementedException();
         }
 
-        public async Task<UserPhoto> SelectByIdAsync(int Id)
+        public async Task<UserPhoto> SelectByIdAsync(int id)
         {
             UserPhoto photo = null;
             using (var context = _dbContext)
             {
-                DbDataReader reader = await context.ExecuteReaderAsync(
+                var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                  "plato_sp_SelectUserPhoto", Id);
+                  "plato_sp_SelectUserPhoto", id);
 
-                if (reader != null)
+                if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
-                    photo = new UserPhoto();
-                    photo.PopulateModel(reader);
+                    photo = new UserPhoto(reader);
                 }
             }
 
             return photo;
         }
-        
+
+        public async Task<UserPhoto> SelectByUserIdAsync(int userId)
+        {
+            UserPhoto photo = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                  CommandType.StoredProcedure,
+                  "plato_sp_SelectUserPhotoByUserId", userId);
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    await reader.ReadAsync();
+                    photo = new UserPhoto(reader);
+                }
+            }
+
+            return photo;
+        }
+
         #endregion
-        
+
         #region "Private Methods"
 
         private async Task<int> InsertUpdateInternal(
@@ -109,12 +127,9 @@ namespace Plato.Repositories.Users
             DateTime? modifiedDate,
             int modifiedUserId)
         {
-
-       
-         
+            
             using (var context = _dbContext)
             {
-
                 return await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
                   "plato_sp_InsertUpdateUserPhoto",
@@ -130,9 +145,7 @@ namespace Plato.Repositories.Users
                     createdUserId,
                     modifiedDate,
                     modifiedUserId);
-
             }
-            
 
         }
 

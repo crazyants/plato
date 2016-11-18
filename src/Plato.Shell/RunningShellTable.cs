@@ -78,13 +78,11 @@ namespace Plato.Shell
                     return _single;
                 }
 
-                string hostAndPrefix = GetHostAndPrefix(host, appRelativePath);
-
+                var hostAndPrefix = GetHostAndPrefix(host, appRelativePath);
                 ShellSettings result;
                 if (!_shellsByHostAndPrefix.TryGetValue(hostAndPrefix, out result))
                 {
                     var noHostAndPrefix = GetHostAndPrefix("", appRelativePath);
-
                     if (!_shellsByHostAndPrefix.TryGetValue(noHostAndPrefix, out result))
                     {
                         result = _default;

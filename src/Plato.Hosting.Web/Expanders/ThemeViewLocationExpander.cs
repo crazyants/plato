@@ -8,8 +8,7 @@ namespace Plato.Hosting.Web.Expanders
 {
     public class ThemeViewLocationExpander : IViewLocationExpander
     {
-
-        string _theme;
+        readonly string _theme;
 
         public ThemeViewLocationExpander(string theme)
         {

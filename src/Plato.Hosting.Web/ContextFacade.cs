@@ -23,13 +23,13 @@ namespace Plato.Hosting.Web
             _platoUserStore = platoUserStore;
         }
         
-        public async Task<User> GetAuthenticatedUser()
+        public async Task<User> GetAuthenticatedUserAsync()
         {
             var user = _httpContextAccessor.HttpContext.User;
             var identity = user?.Identity;
             if ((identity != null) && (identity.IsAuthenticated))
             {
-                return await _platoUserStore.GetByEmailAsync(identity.Name);
+                return await _platoUserStore.GetByUserNameAsync(identity.Name);
             }
             return null;
         } 

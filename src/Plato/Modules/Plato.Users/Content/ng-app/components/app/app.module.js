@@ -20,8 +20,8 @@ var pager_1 = require('../../../../../plato.core/content/ng-components/pager/pag
 var http_2 = require('../../../../../plato.core/content/ng-services/http/http');
 // components
 var app_component_1 = require('./app.component');
-var login_form_component_1 = require('../public/login-form/login-form.component');
-var user_list_component_1 = require('../public/user-list/user-list.component');
+var login_form_1 = require('../public/login-form/login-form');
+var user_list_1 = require('../public/user-list/user-list');
 // services
 var user_service_1 = require('../../services/user.service');
 var AppModule = (function () {
@@ -38,8 +38,8 @@ var AppModule = (function () {
             ],
             declarations: [
                 app_component_1.AppComponent,
-                user_list_component_1.UserListComponent,
-                login_form_component_1.LoginFormComponent
+                user_list_1.UserListComponent,
+                login_form_1.LoginFormComponent
             ],
             bootstrap: [app_component_1.AppComponent],
             providers: [
