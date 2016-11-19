@@ -9,11 +9,13 @@ namespace Plato.WebApi.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly IPlatoUserStore _userStore;
+        private readonly IPlatoUserStore<User> _ploatUserStore;
 
-        public UsersController(IPlatoUserStore userStore)
+        public UsersController(
+            IPlatoUserStore<User> platoUserStore
+            )
         {
-            _userStore = userStore;
+            _ploatUserStore = platoUserStore;
         }
 
         [HttpGet]
@@ -25,7 +27,7 @@ namespace Plato.WebApi.Controllers
             OrderBy sortOrder = OrderBy.Asc)
         {
 
-            var users = await _userStore.QueryAsync()
+            var users = await _ploatUserStore.QueryAsync()
                 .Page(page, pageSize)
                 .Select<UserQueryParams>(q =>
                 {

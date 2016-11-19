@@ -13,11 +13,11 @@ namespace Plato.Hosting.Web
     {
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPlatoUserStore _platoUserStore;
+        private readonly IPlatoUserStore<User> _platoUserStore;
 
         public ContextFacade(
             IHttpContextAccessor httpContextAccessor,
-            IPlatoUserStore platoUserStore)
+            IPlatoUserStore<User> platoUserStore)
         {
             _httpContextAccessor = httpContextAccessor;
             _platoUserStore = platoUserStore;

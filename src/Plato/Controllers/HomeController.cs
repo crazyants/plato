@@ -38,9 +38,8 @@ namespace Plato.Controllers
         private readonly IUserRepository<User> _userRepository;
         private IRoleRepository<Role> _rolesRepository;
 
-        private readonly IPlatoUserStore _userStore;
-
-
+        private readonly IPlatoUserStore<User> _userStore;
+        
         public HomeController(
             IDbContext dbContext,
             IModuleLocator moduleLocator,
@@ -52,7 +51,7 @@ namespace Plato.Controllers
             ISiteSettingsStore settingsStore,
             IRoleRepository<Role> rolesRepository,
             IPlatoRoleStore roleStore,
-            IPlatoUserStore userStore
+            IPlatoUserStore<User> userStore
         )
         {
             //_fileSystem = fileSystem;

@@ -10,7 +10,7 @@ import { UsersRouterModule } from './app.routes';
 import { PagerModule } from '../../../../../plato.core/content/ng-components/pager/pager';
 
 // shared services
-import { PlatoRequestOptions } from '../../../../../plato.core/content/ng-services/http/http';
+import { PlatoHttpModule, PlatoHttp } from '../../../../../plato.core/content/ng-services/http/http';
 
 // components
 import { AppComponent } from './app.component';
@@ -24,6 +24,7 @@ import { UserService } from '../../services/user.service';
     imports: [
         BrowserModule,
         HttpModule,
+        PlatoHttpModule,
         FormsModule,
         PagerModule,
         UsersRouterModule
@@ -35,8 +36,8 @@ import { UserService } from '../../services/user.service';
     ],
     bootstrap: [AppComponent],
     providers: [
+        PlatoHttp,
         UserService,
-        { provide: RequestOptions, useClass: PlatoRequestOptions },
         { provide: LocationStrategy, useClass: HashLocationStrategy }
     ]
     

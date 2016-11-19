@@ -3,13 +3,14 @@
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
-var PlatoRequestOptions_1 = require('./src/PlatoRequestOptions');
+var PlatoHttp_1 = require('./src/PlatoHttp');
+__export(require('./src/PlatoHttp'));
 __export(require('./src/PlatoRequestOptions'));
 __export(require('./src/index'));
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     providers: [
-        PlatoRequestOptions_1.PlatoRequestOptions
+        PlatoHttp_1.PlatoHttp
     ]
 };
 //# sourceMappingURL=http.js.map

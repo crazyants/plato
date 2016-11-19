@@ -4,16 +4,16 @@ using System.Threading.Tasks;
 
 namespace Plato.Stores.Users
 {
-    public interface IPlatoUserStore : IStore<User>
+    public interface IPlatoUserStore<T> : IStore<T> where T : class
     {
 
-        Task<User> GetByUserNameNormalizedAsync(string userNameNormalized);
+        Task<T> GetByUserNameNormalizedAsync(string userNameNormalized);
 
-        Task<User> GetByUserNameAsync(string userName);
+        Task<T> GetByUserNameAsync(string userName);
 
-        Task<User> GetByEmailAsync(string email);
+        Task<T> GetByEmailAsync(string email);
 
-        Task<User> GetByApiKeyAsync(string apiKey);
+        Task<T> GetByApiKeyAsync(string apiKey);
 
     }
 }

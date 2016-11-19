@@ -5,29 +5,50 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
+import { PlatoHttp } from '../../../../plato.core/content/ng-services/http/http';
+
+
 @Injectable()
 export class UserService {
 
-    private userName: string;
-    
-    constructor(private http: Http) {
+
+    private Url = "api/users";
+
+    constructor(
+        private http: Http,
+        private platoHttp: PlatoHttp
+    ) {
         console.log('User Service Ready.');
         this.http = http;
-        this.userName = '';
     }
+    
+    get(
+        page: number,
+        pageSize: number,
+        sortBy: string,
+        sortDesc: boolean
+    ) {
 
-
-    get(page: number, pageSize: number, sortBy: string, sortDesc: boolean) {
+        return this.platoHttp.get({
+            url: this.Url,
+            params: {
+                page: page,
+                pageSize: pageSize,
+                sortBy: sortBy,
+                sortDesc: sortDesc
+            },
+            data: {}
+        });
         
-        return this.http.get('/api/users?' +
-            'page=' + page.toString() +
-            '&pageSize=' + pageSize.toString() +
-            '&sortBy=' + sortBy +
-            '&sortOrder=' + (sortDesc ? " DESC" : ""))
-            .map(res => {
-                return res.json();
-            })
-            .catch(this.handleError);
+        //return this.http.get('/api/users?' +
+        //    'page=' + page.toString() +
+        //    '&pageSize=' + pageSize.toString() +
+        //    '&sortBy=' + sortBy +
+        //    '&sortOrder=' + (sortDesc ? " DESC" : ""))
+        //    .map(res => {
+        //        return res.json();
+        //    })
+        //    .catch(this.handleError);
         
     }
 

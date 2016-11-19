@@ -32,6 +32,7 @@ var AppModule = (function () {
             imports: [
                 platform_browser_1.BrowserModule,
                 http_1.HttpModule,
+                http_2.PlatoHttpModule,
                 forms_1.FormsModule,
                 pager_1.PagerModule,
                 app_routes_1.UsersRouterModule
@@ -43,8 +44,8 @@ var AppModule = (function () {
             ],
             bootstrap: [app_component_1.AppComponent],
             providers: [
+                http_2.PlatoHttp,
                 user_service_1.UserService,
-                { provide: http_1.RequestOptions, useClass: http_2.PlatoRequestOptions },
                 { provide: common_1.LocationStrategy, useClass: common_1.HashLocationStrategy }
             ]
         }), 

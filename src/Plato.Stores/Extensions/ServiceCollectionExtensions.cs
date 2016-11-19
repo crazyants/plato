@@ -8,6 +8,7 @@ using Plato.Abstractions.Stores;
 using Plato.Stores.Settings;
 using Plato.Stores.Roles;
 using Plato.Stores.Users;
+using Plato.Models.Users;
 
 namespace Plato.Stores.Extensions
 {
@@ -26,7 +27,11 @@ namespace Plato.Stores.Extensions
             // roles
 
             services.AddScoped<IPlatoRoleStore, PlatoRoleStore>();
-            services.AddScoped<IPlatoUserStore, PlatoUserStore>();
+
+            // users
+
+            services.AddScoped<IPlatoUserStore<User>, PlatoUserStore>();
+            services.AddScoped<IUserPhotoStore<UserPhoto>, UserPhotoStore>();
 
             return services;
 

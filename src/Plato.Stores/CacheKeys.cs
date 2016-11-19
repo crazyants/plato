@@ -9,6 +9,7 @@ namespace Plato.Stores
     {
         SiteSettings,
         Roles,
-        Users
+        Users,
+        UserPhotos
     }
 }

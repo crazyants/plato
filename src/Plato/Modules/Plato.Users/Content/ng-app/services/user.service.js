@@ -14,23 +14,35 @@ var Observable_1 = require('rxjs/Observable');
 require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
 require('rxjs/add/observable/throw');
+var http_2 = require('../../../../plato.core/content/ng-services/http/http');
 var UserService = (function () {
-    function UserService(http) {
+    function UserService(http, platoHttp) {
         this.http = http;
+        this.platoHttp = platoHttp;
+        this.Url = "api/users";
         console.log('User Service Ready.');
         this.http = http;
-        this.userName = '';
     }
     UserService.prototype.get = function (page, pageSize, sortBy, sortDesc) {
-        return this.http.get('/api/users?' +
-            'page=' + page.toString() +
-            '&pageSize=' + pageSize.toString() +
-            '&sortBy=' + sortBy +
-            '&sortOrder=' + (sortDesc ? " DESC" : ""))
-            .map(function (res) {
-            return res.json();
-        })
-            .catch(this.handleError);
+        return this.platoHttp.get({
+            url: this.Url,
+            params: {
+                page: page,
+                pageSize: pageSize,
+                sortBy: sortBy,
+                sortDesc: sortDesc
+            },
+            data: {}
+        });
+        //return this.http.get('/api/users?' +
+        //    'page=' + page.toString() +
+        //    '&pageSize=' + pageSize.toString() +
+        //    '&sortBy=' + sortBy +
+        //    '&sortOrder=' + (sortDesc ? " DESC" : ""))
+        //    .map(res => {
+        //        return res.json();
+        //    })
+        //    .catch(this.handleError);
     };
     //getUser() {
     //    if (this.userName) {
@@ -73,7 +85,7 @@ var UserService = (function () {
     };
     UserService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [http_1.Http])
+        __metadata('design:paramtypes', [http_1.Http, http_2.PlatoHttp])
     ], UserService);
     return UserService;
 }());

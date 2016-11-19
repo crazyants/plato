@@ -21,7 +21,7 @@ var PlatoRequestOptions = (function (_super) {
     function PlatoRequestOptions() {
         _super.apply(this, arguments);
         this.headers = new http_1.Headers({
-            'Auth': 'SHARED'
+            'Auth': 'SHAREAPIKEY'
         });
     }
     PlatoRequestOptions = __decorate([

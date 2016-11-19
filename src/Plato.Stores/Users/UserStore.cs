@@ -32,13 +32,13 @@ namespace Plato.Stores.Users
         private readonly IUserRepository<User> _userRepository;
         private readonly IUserRolesRepository<UserRole> _userRolesRepository;
 
-        private readonly IPlatoUserStore _platoUserStore;
+        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IPlatoRoleStore _platoRoleStore;
 
         public UserStore(
             IUserRepository<User> userRepository,
             IUserRolesRepository<UserRole> userRolesRepository,
-            IPlatoUserStore platoUserStore,
+            IPlatoUserStore<User> platoUserStore,
             IPlatoRoleStore platoRoleStore)
         {
             _userRepository = userRepository;
@@ -48,11 +48,7 @@ namespace Plato.Stores.Users
         }
 
         #endregion
-
-        #region "IPlatoUserStore"
-
-        #endregion
-
+        
         #region "IUserStore"
 
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
