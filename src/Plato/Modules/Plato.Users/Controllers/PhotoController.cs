@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Abstractions.Extensions;
+using Plato.FileSystem;
 using Plato.Hosting.Web;
 using Plato.Models.Users;
 using Plato.Stores.Users;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Plato.Users.Controllers
 {
@@ -16,22 +18,32 @@ namespace Plato.Users.Controllers
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IPlatoFileSystem _fileSystem;
 
         public PhotoController(
             IContextFacade contextFacade,
             IPlatoUserStore<User> platoUserStore,
-            IUserPhotoStore<UserPhoto> userPhotoStore
+            IUserPhotoStore<UserPhoto> userPhotoStore,
+            IHostingEnvironment hostingEnvironment,
+            IPlatoFileSystem fileSystem
         )
         {
             _contextFacade = contextFacade;
             _platoUserStore = platoUserStore;
             _userPhotoStore = userPhotoStore;
+            _hostingEnvironment = hostingEnvironment;
+            _fileSystem = fileSystem;
         }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Upload(string returnUrl = null)
         {
+
+        
+      
+
             return View();
         }
 
@@ -92,18 +104,43 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Serve(int id)
         {
             var userPhoto = await _userPhotoStore.GetByUserIdAsync(id);
-            if (userPhoto == null)
-                return View();
-            if (userPhoto.ContentLength <= 0)
-                return View();
+
 
             var r = Response;
             r.Clear();
-            r.ContentType = userPhoto.ContentType;
-            r.Headers.Add("content-disposition", "filename=\"" + userPhoto.Name + "\"");
-            r.Body.Write(userPhoto.ContentBlob, 0, (int) userPhoto.ContentLength);
+            if (userPhoto != null && userPhoto.ContentLength >= 0)
+            {
+                r.ContentType = userPhoto.ContentType;
+                r.Headers.Add("content-disposition", "filename=\"" + userPhoto.Name + "\"");
+                r.Body.Write(userPhoto.ContentBlob, 0, (int) userPhoto.ContentLength);
+            }
+            else
+            {
+                var bytes = GetPlaceHolder();
+                r.ContentType = "image/png";
+                r.Headers.Add("content-disposition", "filename=\"empty.png\"");
+                r.Body.Write(bytes, 0, (int) bytes.Length);
+            }
 
             return View();
+
         }
+
+
+        public byte[] GetPlaceHolder()
+        {
+
+            var file = _fileSystem.OpenFile(_fileSystem.Combine(
+                _hostingEnvironment.ContentRootPath,
+                "wwwroot",
+                "images",
+                "empty.png"));
+
+            return file.StreamToByteArray();
+            
+        }
+
+
+
     }
 }

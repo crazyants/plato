@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plato.FileSystem;
 using System.IO;
 using Plato.Abstractions.Extensions;
+using Plato.FileSystem;
 using Plato.Modules.Abstractions;
 
-namespace Plato.Modules
+namespace Plato.Modules.Locator
 {
     public class ModuleLocator : IModuleLocator
     {

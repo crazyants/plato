@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Plato.Modules.Abstractions;
+using Plato.Modules.Loader;
+using Plato.Modules.Locator;
 
 namespace Plato.Modules.Extensions
 {

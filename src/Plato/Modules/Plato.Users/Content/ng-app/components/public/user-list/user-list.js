@@ -15,12 +15,12 @@ require("rxjs/add/operator/map");
 var router_1 = require('@angular/router');
 // module specific 
 var models = require("../../../models/User");
-var user_service_1 = require("../../../services/user.service");
+var users_service_1 = require("../../../../../../plato.core/content/app-services/users.service");
 var UserListComponent = (function () {
-    function UserListComponent(route, router, userService) {
+    function UserListComponent(route, router, usersService) {
         this.route = route;
         this.router = router;
-        this.userService = userService;
+        this.usersService = usersService;
         this.userUpdated = new core_1.EventEmitter();
         this._pageIndex = 1;
         this._pageSize = 10;
@@ -63,7 +63,7 @@ var UserListComponent = (function () {
     };
     UserListComponent.prototype.refreshData = function () {
         var _this = this;
-        this.userService.get(this._pageIndex, this.pageSize, "Id", this._sortDesc)
+        this.usersService.get(this._pageIndex, this.pageSize, "Id", this._sortDesc)
             .subscribe(function (result) {
             _this.viewModel = result;
             _this.userUpdated.emit(_this.viewModel);
@@ -87,7 +87,7 @@ var UserListComponent = (function () {
             selector: 'user-list',
             templateUrl: './plato.users/content/ng-app/components/public/user-list/user-list.html'
         }), 
-        __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router, user_service_1.UserService])
+        __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router, users_service_1.UsersService])
     ], UserListComponent);
     return UserListComponent;
 }());

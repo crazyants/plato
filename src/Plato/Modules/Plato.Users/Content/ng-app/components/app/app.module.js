@@ -16,6 +16,7 @@ var common_1 = require('@angular/common');
 var app_routes_1 = require('./app.routes');
 // shared components
 var pager_1 = require('../../../../../plato.core/content/ng-components/pager/pager');
+var photo_1 = require('../../../../../plato.core/content/ng-components/photo/photo');
 // shared services
 var http_2 = require('../../../../../plato.core/content/ng-services/http/http');
 // components
@@ -23,7 +24,7 @@ var app_component_1 = require('./app.component');
 var login_form_1 = require('../public/login-form/login-form');
 var user_list_1 = require('../public/user-list/user-list');
 // services
-var user_service_1 = require('../../services/user.service');
+var users_service_1 = require("../../../../../plato.core/content/app-services/users.service");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -35,6 +36,7 @@ var AppModule = (function () {
                 http_2.PlatoHttpModule,
                 forms_1.FormsModule,
                 pager_1.PagerModule,
+                photo_1.PhotoModule,
                 app_routes_1.UsersRouterModule
             ],
             declarations: [
@@ -45,7 +47,7 @@ var AppModule = (function () {
             bootstrap: [app_component_1.AppComponent],
             providers: [
                 http_2.PlatoHttp,
-                user_service_1.UserService,
+                users_service_1.UsersService,
                 { provide: common_1.LocationStrategy, useClass: common_1.HashLocationStrategy }
             ]
         }), 

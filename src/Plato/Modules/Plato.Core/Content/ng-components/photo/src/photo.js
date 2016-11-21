@@ -14,10 +14,32 @@ var PhotoComponent = (function () {
         this.element = element;
         this.zone = zone;
     }
+    PhotoComponent.prototype.ngOnInit = function () {
+        switch (this.size) {
+            case 1:
+                this.imageClass = "p-photo p-photo-1x";
+                break;
+            case 2:
+                this.imageClass = "p-photo p-photo-2x";
+                break;
+        }
+        this.initials = "RH";
+    };
+    PhotoComponent.prototype.ngOnDestroy = function () {
+    };
+    PhotoComponent.prototype.ngOnChanges = function (changes) {
+        if (this.user)
+            this.init();
+    };
     PhotoComponent.prototype.init = function () {
         if (this.user) {
+            this.imageUrl = 'users/photo/serve?id=' + this.user.id.toString();
         }
     };
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Number)
+    ], PhotoComponent.prototype, "size", void 0);
     __decorate([
         core_1.Input(), 
         __metadata('design:type', Object)

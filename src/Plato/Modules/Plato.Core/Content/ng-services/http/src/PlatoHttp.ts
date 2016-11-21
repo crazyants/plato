@@ -7,19 +7,16 @@ import 'rxjs/add/observable/throw';
 
 import { IRequest } from './IRequest';
 
-
 @Injectable()
 export class PlatoHttp {
-    
 
     constructor(private http: Http) {
-        console.log('PlatoHttp Service Ready.');
         this.http = http;
     }
 
     get(request: IRequest): Observable<any> {
   
-        let params = new URLSearchParams();
+        const params = new URLSearchParams();
         params.set('page', request.params.page.toString()); 
         params.set('pageSize', request.params.pageSize.toString());
         params.set('sortBy', request.params.sortBy);
@@ -32,7 +29,7 @@ export class PlatoHttp {
             .catch(this.handleError);
 
     }
-
+    
     private handleError(error: any) {
 
         if (error.status === 401) {

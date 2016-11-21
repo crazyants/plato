@@ -3,6 +3,11 @@
 /* BootStrap CSS */
 /* ------------------------------------ */
 
+body, html {
+    height: 100%;
+    width: 100%;
+}
+
 .navbar-default, a {
     -webkit-transition: all .35s;
     -moz-transition: all .35s;
@@ -14,17 +19,9 @@ header, header .header-content {
     text-align: center;
 }
 
-body, html {
-    height: 100%;
-    width: 100%;
-}
 
 aside {
     padding: 50px 0;
-}
-
-.no-padding {
-    padding: 0;
 }
 
 .navbar {
@@ -38,6 +35,15 @@ aside {
     transition: all .35s;
 }
 
+.btn {
+    border: none;
+    border-radius: 4px;
+}
+
+.btn-xl {
+    padding: 15px 30px;
+}
+
 .btn-default {
     color: #222;
     background-color: #fff;
@@ -48,21 +54,21 @@ aside {
     transition: all .35s;
 }
 
-    .btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open > .dropdown-toggle.btn-default {
-        color: #222;
-        background-color: #f2f2f2;
-        border-color: #ededed;
-    }
+.btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open > .dropdown-toggle.btn-default {
+    color: #222;
+    background-color: #f2f2f2;
+    border-color: #ededed;
+}
 
-    .btn-default.disabled, .btn-default.disabled.active, .btn-default.disabled.focus, .btn-default.disabled:active, .btn-default.disabled:focus, .btn-default.disabled:hover, .btn-default[disabled], .btn-default[disabled].active, .btn-default[disabled].focus, .btn-default[disabled]:active, .btn-default[disabled]:focus, .btn-default[disabled]:hover, fieldset[disabled] .btn-default, fieldset[disabled] .btn-default.active, fieldset[disabled] .btn-default.focus, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:hover {
-        background-color: #fff;
-        border-color: #fff;
-    }
+.btn-default.disabled, .btn-default.disabled.active, .btn-default.disabled.focus, .btn-default.disabled:active, .btn-default.disabled:focus, .btn-default.disabled:hover, .btn-default[disabled], .btn-default[disabled].active, .btn-default[disabled].focus, .btn-default[disabled]:active, .btn-default[disabled]:focus, .btn-default[disabled]:hover, fieldset[disabled] .btn-default, fieldset[disabled] .btn-default.active, fieldset[disabled] .btn-default.focus, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:hover {
+    background-color: #fff;
+    border-color: #fff;
+}
 
-    .btn-default .badge {
-        color: #fff;
-        background-color: #222;
-    }
+.btn-default .badge {
+    color: #fff;
+    background-color: #222;
+}
 
 .btn-primary {
     -webkit-transition: all .35s;
@@ -71,14 +77,6 @@ aside {
     transition: all .35s;
 }
 
-.btn {
-    border: none;
-    border-radius: 4px;
-}
-
-.btn-xl {
-    padding: 15px 30px;
-}
 
 ::-moz-selection {
     color: #fff;
@@ -238,16 +236,14 @@ img::-moz-selection {
 }
 
 /* ------------------------------------ */
-/* Magnific CSS */
+/* Magnific CSS - modal pop-us / dialogs */
 /* ------------------------------------ */
 
-.dialog { background: white; padding: 20px 30px; text-align: left; max-width: 800px; margin: 40px auto; position: relative; }
-
-
-.dialog iframe { border: 0; }
+.p-dialog { padding: 20px 30px; text-align: left; max-width: 800px; margin: 40px auto; position: relative; }
+.p-dialog iframe { border: 0; }
 
 /* start state */
-.plato-mfp-zoom-in .dialog-zoom {
+.p-mfp-zoom-in .p-dialog-zoom {
     opacity: 0;
     -webkit-transition: all 0.2s ease-in-out;
     -moz-transition: all 0.2s ease-in-out;
@@ -261,7 +257,7 @@ img::-moz-selection {
 }
 
 /* animate in */
-.plato-mfp-zoom-in.mfp-ready .dialog-zoom {
+.p-mfp-zoom-in.mfp-ready .p-dialog-zoom {
     opacity: 1;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -271,7 +267,7 @@ img::-moz-selection {
 }
 
 /* animate out */
-.plato-mfp-zoom-in.mfp-removing .dialog-zoom {
+.p-mfp-zoom-in.mfp-removing .p-dialog-zoom {
     -webkit-transform: scale(0.8);
     -moz-transform: scale(0.8);
     -ms-transform: scale(0.8);
@@ -281,7 +277,7 @@ img::-moz-selection {
 }
 
 /* Dark overlay, start state */
-.plato-mfp-zoom-in.mfp-bg {
+.p-mfp-zoom-in.mfp-bg {
     opacity: 0;
     -webkit-transition: opacity 0.3s ease-out;
     -moz-transition: opacity 0.3s ease-out;
@@ -290,12 +286,27 @@ img::-moz-selection {
 }
 
 /* animate in */
-.plato-mfp-zoom-in.mfp-ready.mfp-bg {
+.p-mfp-zoom-in.mfp-ready.mfp-bg {
     -ms-opacity: 0.8;
     opacity: 0.8;
 }
 
 /* animate out */
-.plato-mfp-zoom-in.mfp-removing.mfp-bg {
+.p-mfp-zoom-in.mfp-removing.mfp-bg { 
     opacity: 0;
 }
+
+/* ------------------- */
+/* user photos */
+/* ------------------- */
+
+.p-photo { position: relative; display: inline-block; }
+.p-photo .initials { position: absolute; }
+.p-photo img { position: absolute;}
+
+
+.p-photo-1x { width: 24px; height: 24px; }
+.p-photo-1x img { width: 24px; height: 24px; }
+
+.p-photo-2x { width: 42px; height: 42px; }
+.p-photo-2x img { width: 42px; height: 42px; }

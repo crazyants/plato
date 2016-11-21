@@ -10,7 +10,8 @@ import { IPageClickEvent } from '../../../../../../plato.core/content/ng-compone
 
 // module specific 
 import * as models from "../../../models/User";
-import { UserService } from "../../../services/user.service";
+
+import { UsersService } from "../../../../../../plato.core/content/app-services/users.service";
 
 @Component({
     selector: 'user-list',
@@ -41,7 +42,7 @@ export class UserListComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private userService: UserService) {
+        private usersService: UsersService) {
         
 
     }
@@ -76,7 +77,11 @@ export class UserListComponent implements OnInit {
     
     refreshData() {
 
-        this.userService.get(this._pageIndex, this.pageSize, "Id", this._sortDesc)
+        this.usersService.get(
+            this._pageIndex,
+            this.pageSize,
+            "Id",
+            this._sortDesc)
             .subscribe(result => {
 
                     this.viewModel = result;

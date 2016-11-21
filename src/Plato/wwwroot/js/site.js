@@ -66,7 +66,7 @@ $(function() {
 
     // initialize magnific popup 
     $(o.MagnificSelector).magnificPopup({
-          type: 'inline',
+          type: "inline",
           fixedContentPos: false,
           fixedBgPos: true,
           overflowY: 'auto',
@@ -74,7 +74,7 @@ $(function() {
           preloader: false,
           midClick: true,
           removalDelay: 300,
-          mainClass: 'plato-mfp-zoom-in'
+          mainClass: "p-mfp-zoom-in"
      });
 
 

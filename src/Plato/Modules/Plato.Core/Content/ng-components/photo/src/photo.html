@@ -1,7 +1,6 @@
 ﻿
-<div class="p-photo">
-    
-    <img src="users/photo/serve"/>
 
-
-</div>
+<span *ngIf="imageClass" class="{{imageClass}}">
+    <span class="initials">{{initials}}</span>
+    <img *ngIf="imageUrl" src="{{imageUrl}}"/>
+</span>

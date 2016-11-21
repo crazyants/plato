@@ -8,6 +8,7 @@ import { UsersRouterModule } from './app.routes';
 
 // shared components
 import { PagerModule } from '../../../../../plato.core/content/ng-components/pager/pager';
+import { PhotoModule } from '../../../../../plato.core/content/ng-components/photo/photo';
 
 // shared services
 import { PlatoHttpModule, PlatoHttp } from '../../../../../plato.core/content/ng-services/http/http';
@@ -18,7 +19,7 @@ import { LoginFormComponent } from '../public/login-form/login-form';
 import { UserListComponent } from '../public/user-list/user-list';
 
 // services
-import { UserService } from '../../services/user.service';
+import { UsersService } from "../../../../../plato.core/content/app-services/users.service";
 
 @NgModule({ 
     imports: [
@@ -27,6 +28,7 @@ import { UserService } from '../../services/user.service';
         PlatoHttpModule,
         FormsModule,
         PagerModule,
+        PhotoModule,
         UsersRouterModule
     ],
     declarations: [
@@ -37,7 +39,7 @@ import { UserService } from '../../services/user.service';
     bootstrap: [AppComponent],
     providers: [
         PlatoHttp,
-        UserService,
+        UsersService,
         { provide: LocationStrategy, useClass: HashLocationStrategy }
     ]
     

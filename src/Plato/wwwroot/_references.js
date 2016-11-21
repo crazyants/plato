@@ -9,6 +9,7 @@
 /// <reference path="../Modules/Plato.Core/Content/ng-components/plato.components.js" />
 /// <reference path="../modules/plato.core/content/ng-services/http/http.js" />
 /// <reference path="../modules/plato.core/content/ng-services/http/src/index.js" />
+/// <reference path="../modules/plato.core/content/ng-services/http/src/platohttp.js" />
 /// <reference path="../Modules/Plato.Core/Content/ng-services/http/src/PlatoRequestOptions.js" />
 /// <reference path="../Modules/Plato.Core/Content/ng-services/plato.services.js" />
 /// <reference path="../modules/plato.users/content/ng-app/components/app/app.component.js" />

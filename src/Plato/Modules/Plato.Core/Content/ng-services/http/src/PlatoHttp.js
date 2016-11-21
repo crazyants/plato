@@ -17,7 +17,6 @@ require('rxjs/add/observable/throw');
 var PlatoHttp = (function () {
     function PlatoHttp(http) {
         this.http = http;
-        console.log('PlatoHttp Service Ready.');
         this.http = http;
     }
     PlatoHttp.prototype.get = function (request) {

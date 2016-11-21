@@ -5,7 +5,7 @@ function __export(m) {
 }
 var photo_1 = require('./src/photo');
 __export(require('./src/photo'));
-__export(require('./src/photo'));
+__export(require('./src/index'));
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     directives: [

@@ -4,7 +4,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import "rxjs/add/operator/map";
 
 import * as models from "../../../models/User";
-import { UserService } from "../../../services/user.service";
 
 @Component({
     selector: 'login-form',
@@ -13,7 +12,7 @@ import { UserService } from "../../../services/user.service";
 
 export class LoginFormComponent {
 
-    constructor(private userService: UserService) {
+    constructor() {
 
      
     }

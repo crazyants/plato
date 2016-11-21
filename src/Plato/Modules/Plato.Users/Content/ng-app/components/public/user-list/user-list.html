@@ -11,10 +11,16 @@
 <div *ngIf="viewModel && viewModel.users && viewModel.users.data">
     <div class="list-group">
         <a *ngFor="let user of viewModel.users.data" href="#" target="_blank" class="list-group-item list-group-item-action">
+            
             <span class="tag tag-info float-md-right mx-1">{{user.id}}</span>
             <span class="tag tag-success float-md-right">{{user.id}} Forks</span>
-            <h6 class="list-group-item-heading">{{user.userName}}</h6>
+            
+            <h6 class="list-group-item-heading">
+                <photo class="float-md-left mr-1" [size]="2" [user]="user"></photo>
+                {{user.userName}}
+            </h6>
             <p class="list-group-item-text">{{user.displayName}}</p>
+          
         </a>
     </div>
 </div>

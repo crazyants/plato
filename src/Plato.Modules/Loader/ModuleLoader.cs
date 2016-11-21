@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Plato.FileSystem;
 using Plato.Modules.Abstractions;
 
-namespace Plato.Modules
+namespace Plato.Modules.Loader
 {
     public class ModuleLoader : IModuleLoader
     {
@@ -41,7 +41,7 @@ namespace Plato.Modules
         #region "Constructor"
 
         private readonly IPlatoFileSystem _fileSystem;
-        private readonly ILogger _logger;
+        private readonly ILogger<ModuleLoader> _logger;
 
         public ModuleLoader(
             IPlatoFileSystem fileSystem,

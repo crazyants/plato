@@ -24,6 +24,7 @@ using Plato.Shell.Extensions;
 using Plato.Stores.Extensions;
 using Plato.Cache.Extensions;
 using Plato.Hosting.Web.Routing;
+using Plato.Modules.Expanders;
 
 namespace Plato.Hosting.Web.Extensions
 

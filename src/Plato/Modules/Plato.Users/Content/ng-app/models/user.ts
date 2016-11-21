@@ -1,10 +1,4 @@
 ﻿
-export interface IUser {
-    id: number;
-    userName: string;
-    displayName: string;
-}
-
 
 export class UserListViewModel {
     constructor(

@@ -11,17 +11,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 require("rxjs/add/operator/map");
-var user_service_1 = require("../../../services/user.service");
 var LoginFormComponent = (function () {
-    function LoginFormComponent(userService) {
-        this.userService = userService;
+    function LoginFormComponent() {
     }
     LoginFormComponent = __decorate([
         core_1.Component({
             selector: 'login-form',
             templateUrl: './plato.users/content/ng-app/components/public/login-form/login-form.html'
         }), 
-        __metadata('design:paramtypes', [user_service_1.UserService])
+        __metadata('design:paramtypes', [])
     ], LoginFormComponent);
     return LoginFormComponent;
 }());

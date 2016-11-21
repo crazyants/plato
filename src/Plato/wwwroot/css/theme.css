@@ -1,0 +1,21 @@
+﻿
+/* 
+   overrides the default Bootstrap 4 styles 
+   making it easy to change the color scheme 
+   used by plato by modifying this single file 
+*/
+
+/* ----------------------- */
+/* bootstrap overides */
+/* ----------------------- */
+
+.list-group-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+/* ----------------------- */
+/* plato overides */
+/* ----------------------- */
+
+ .p-dialog { background: white; }
