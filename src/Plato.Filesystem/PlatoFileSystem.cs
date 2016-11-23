@@ -37,7 +37,7 @@ namespace Plato.FileSystem
         private void MakeDestinationFileNameAvailable(IFileInfo fileInfo)
         {
             var destinationFileName = fileInfo.PhysicalPath;
-            bool isDirectory = Directory.Exists(destinationFileName);
+            var isDirectory = Directory.Exists(destinationFileName);
          
             try
             {
@@ -70,8 +70,6 @@ namespace Plato.FileSystem
                 {
                     File.Delete(newFileName);
                     File.Move(destinationFileName, newFileName);
-
-                    // If successful, we are done...
                     return;
                 }
                 catch
@@ -92,9 +90,7 @@ namespace Plato.FileSystem
             }
         }
 
-        /// <summary>
-        /// Combine a set of paths in to a single path
-        /// </summary>
+  
         public string Combine(params string[] paths)
         {
             return Path.Combine(paths).Replace(RootPath, string.Empty).Replace(Path.DirectorySeparatorChar, '/').TrimStart('/');
@@ -126,12 +122,8 @@ namespace Plato.FileSystem
         public async Task<string> ReadFileAsync(string path)
         {
             var file = _fileProvider.GetFileInfo(path);
-
             if (!file.Exists)
-            {
                 return null;
-            }
-
             using (var reader = File.OpenText(file.PhysicalPath))
             {
                 return await reader.ReadToEndAsync();
@@ -145,11 +137,6 @@ namespace Plato.FileSystem
 
         public void StoreFile(string sourceFileName, string destinationPath)
         {
-            //if (_logger.IsEnabled(LogLevel.Information))
-            //{
-            //    _logger.LogInformation("Storing file \"{0}\" as \"{1}\" in \"App_Data\" folder", sourceFileName, destinationPath);
-            //}
-
             var destinationFileName = GetFileInfo(destinationPath);
             MakeDestinationFileNameAvailable(destinationFileName);
             File.Copy(sourceFileName, destinationFileName.PhysicalPath, true);
@@ -157,10 +144,6 @@ namespace Plato.FileSystem
 
         public void DeleteFile(string path)
         {
-            //if (_logger.IsEnabled(LogLevel.Information))
-            //{
-            //    _logger.LogInformation("Deleting file \"{0}\" from \"App_Data\" folder", path);
-            //}
 
             MakeDestinationFileNameAvailable(GetFileInfo(path));
         }
@@ -227,5 +210,9 @@ namespace Plato.FileSystem
             return directory.EnumerateDirectories();
         }
 
+        public bool FileExists(string path)
+        {
+            return GetFileInfo(path).Exists;
+        }
     }
 }

@@ -229,8 +229,6 @@ CREATE TABLE Plato_UserPhoto
 Id								INT IDENTITY(1,1) NOT NULL,
 UserId							INT DEFAULT (0) NOT NULL,
 Name							NVARCHAR(255) DEFAULT('') NOT NULL,
-BackColor						NVARCHAR(20) DEFAULT('') NOT NULL,
-ForeColor						NVARCHAR(20) DEFAULT('') NOT NULL,
 ContentBlob						IMAGE NOT NULL,
 ContentType						NVARCHAR(75) DEFAULT('') NOT NULL,
 ContentLength					FLOAT DEFAULT(0) NOT NULL,
@@ -243,6 +241,24 @@ CONSTRAINT PK_Plato_UserPhoto_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
+
+
+CREATE TABLE Plato_UserBanner
+(
+Id								INT IDENTITY(1,1) NOT NULL,
+UserId							INT DEFAULT (0) NOT NULL,
+Name							NVARCHAR(255) DEFAULT('') NOT NULL,
+ContentBlob						IMAGE NOT NULL,
+ContentType						NVARCHAR(75) DEFAULT('') NOT NULL,
+ContentLength					FLOAT DEFAULT(0) NOT NULL,
+CreatedDate						DATETIME2 NULL,
+CreatedUserId					INT DEFAULT (0) NOT NULL,
+ModifiedDate					DATETIME2 NULL,
+ModifiedUserId					INT DEFAULT (0) NOT NULL,
+CONSTRAINT PK_Plato_UserBanner_Id PRIMARY KEY CLUSTERED ( Id )
+)
+
+GO
 
 
 
@@ -282,7 +298,8 @@ Follows							INT DEFAULT (0) NOT NULL,
 Badges							INT DEFAULT (0) NOT NULL,
 ReputationRank					INT DEFAULT (0) NOT NULL,
 ReputationPoints				INT DEFAULT (0) NOT NULL,
-Banner							IMAGE NULL,
+PhotoId							TINYINT DEFAULT(0) NOT NULL,
+BannerId						TINYINT DEFAULT(0) NOT NULL,
 ClientIpAddress					NVARCHAR(255) DEFAULT('') NOT NULL,
 ClientName						NVARCHAR(255) DEFAULT('') NOT NULL,
 EmailConfirmationCode			NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -1073,6 +1090,23 @@ GO
 
 GO
 
+CREATE PROCEDURE [plato_sp_SelectUserBanner] (
+@Id int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_UserBanner WITH (nolock)
+WHERE (Id = @Id)
+	
+RETURN
+
+GO
+
+------------------------
+
+GO
+
 CREATE PROCEDURE [plato_sp_SelectUserPhotoByUserId] (
 @UserId int
 ) AS
@@ -1086,6 +1120,27 @@ RETURN
 
 
 GO
+
+-----------------------
+
+GO
+
+
+CREATE PROCEDURE [plato_sp_SelectUserBannerByUserId] (
+@UserId int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_UserBanner WITH (nolock)
+WHERE (UserId = @UserId)
+	
+RETURN
+
+
+GO
+
+
 
 ------------------------
 
@@ -1259,12 +1314,90 @@ GO
 
 GO
 
+CREATE PROCEDURE [plato_sp_InsertUpdateUserBanner] (
+	@Id int,
+	@UserId int,
+	@Name nvarchar(255),
+	@ContentBlob image,
+	@ContentType nvarchar(75),
+	@ContentLength float,
+	@CreatedDate DateTime2,
+	@CreatedUserId int,
+	@ModifiedDate DateTime2,
+	@ModifiedUserId int
+) AS
+
+SET NOCOUNT ON 
+
+DECLARE @intIdentity int;
+
+IF EXISTS( 
+	SELECT Id 
+	FROM Plato_UserBanner
+	WHERE (Id = @Id)
+	)
+BEGIN
+
+	-- UPDATE
+	UPDATE Plato_UserBanner SET
+		UserId = @UserId,
+		Name = @Name,
+		ContentBlob = @ContentBlob,
+		ContentType = @ContentType,
+		ContentLength = @ContentLength,
+		CreatedDate = @CreatedDate,
+		CreatedUserId = @CreatedUserId,
+		ModifiedDate = @ModifiedDate,
+		ModifiedUserId = @ModifiedUserId
+	WHERE (Id = @Id);
+
+	SET @intIdentity = @Id;
+
+END
+ELSE
+BEGIN
+
+	-- INSERT
+	INSERT INTO Plato_UserBanner (
+		UserId,
+		Name,
+		ContentBlob,
+		ContentType,
+		ContentLength,
+		CreatedDate,
+		CreatedUserId,
+		ModifiedDate,
+		ModifiedUserId
+	) VALUES (
+		@UserId,
+		@Name,		
+		@ContentBlob,
+		@ContentType,
+		@ContentLength,
+		@CreatedDate,
+		@CreatedUserId,
+		@ModifiedDate,
+		@ModifiedUserId
+	);
+
+	SET @intIdentity = SCOPE_IDENTITY();
+
+END
+
+SELECT @intIdentity;
+
+RETURN
+
+GO
+
+-------------------
+
+GO
+
 CREATE PROCEDURE [plato_sp_InsertUpdateUserPhoto] (
 	@Id int,
 	@UserId int,
 	@Name nvarchar(255),
-	@BackColor nvarchar(20),
-	@ForeColor nvarchar(20),
 	@ContentBlob image,
 	@ContentType nvarchar(75),
 	@ContentLength float,
@@ -1289,8 +1422,6 @@ BEGIN
 	UPDATE Plato_UserPhoto SET
 		UserId = @UserId,
 		Name = @Name,
-		BackColor = @BackColor,
-		ForeColor = ForeColor,
 		ContentBlob = @ContentBlob,
 		ContentType = @ContentType,
 		ContentLength = @ContentLength,
@@ -1310,8 +1441,6 @@ BEGIN
 	INSERT INTO Plato_UserPhoto (
 		UserId,
 		Name,
-		BackColor,
-		ForeColor,
 		ContentBlob,
 		ContentType,
 		ContentLength,
@@ -1321,9 +1450,7 @@ BEGIN
 		ModifiedUserId
 	) VALUES (
 		@UserId,
-		@Name,
-		@BackColor,
-		@ForeColor,
+		@Name,		
 		@ContentBlob,
 		@ContentType,
 		@ContentLength,
@@ -1572,7 +1699,8 @@ CREATE PROCEDURE [plato_sp_InsertUpdateUserDetail] (
 	@Badges int,
 	@ReputationRank int,
 	@ReputationPoints int,
-	@Banner image,
+	@PhotoId tinyint,
+	@BannerId tinyint,	
 	@ClientIpAddress  nvarchar(255),
 	@ClientName  nvarchar(255),
 	@EmailConfirmationCode  nvarchar(255),
@@ -1632,7 +1760,8 @@ BEGIN
 		Badges = @Badges,
 		ReputationRank = @ReputationRank,
 		ReputationPoints = @ReputationPoints,
-		Banner = @Banner,
+		PhotoId = @PhotoId,
+		BannerId = @BannerId,
 		ClientIpAddress = @ClientIpAddress,
 		ClientName = @ClientName,
 		EmailConfirmationCode = @EmailConfirmationCode,
@@ -1687,7 +1816,8 @@ BEGIN
 		Badges,
 		ReputationRank,
 		ReputationPoints,
-		Banner,
+		PhotoId,
+		BannerId,
 		ClientIpAddress,
 		ClientName,
 		EmailConfirmationCode,
@@ -1733,7 +1863,8 @@ BEGIN
 		@Badges,
 		@ReputationRank,
 		@ReputationPoints,
-		@Banner,
+		@PhotoId,
+		@BannerId,
 		@ClientIpAddress,
 		@ClientName,
 		@EmailConfirmationCode,

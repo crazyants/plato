@@ -3,14 +3,14 @@ using Plato.Models.Annotations;
 
 namespace Plato.Models.Users
 {
-    [TableName("Plato_UserPhoto")]
-    public class UserPhoto : UserImage
+    [TableName("Plato_UserBanner")]
+    public class UserBanner : UserImage
     {
-        public UserPhoto()
+        public UserBanner()
         {
         }
 
-        public UserPhoto(IDataReader reader)
+        public UserBanner(IDataReader reader)
             : base(reader)
         {
         }

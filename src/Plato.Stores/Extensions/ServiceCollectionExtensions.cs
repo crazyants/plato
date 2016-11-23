@@ -32,6 +32,7 @@ namespace Plato.Stores.Extensions
 
             services.AddScoped<IPlatoUserStore<User>, PlatoUserStore>();
             services.AddScoped<IUserPhotoStore<UserPhoto>, UserPhotoStore>();
+            services.AddScoped<IUserBannerStore<UserBanner>, UserBannerStore>();
 
             return services;
 

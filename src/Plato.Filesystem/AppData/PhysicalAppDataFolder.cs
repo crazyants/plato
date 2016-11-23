@@ -10,7 +10,7 @@ namespace Plato.FileSystem.AppData
     public class PhysicalAppDataFolder : IAppDataFolder
     {
         private readonly IPlatoFileSystem _fileSystem;
-        private readonly ILogger _logger;
+        private readonly ILogger<PhysicalAppDataFolder> _logger;
 
         private static string InternalRootPath = "App_Data";
 
@@ -83,6 +83,10 @@ namespace Plato.FileSystem.AppData
         public bool DirectoryExists(string path)
         {
             return _fileSystem.DirectoryExists(path);
+        }
+        public bool FileExists(string path)
+        {
+            return _fileSystem.FileExists(path);
         }
 
         public DateTimeOffset GetFileLastWriteTimeUtc(string path)

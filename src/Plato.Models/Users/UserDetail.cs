@@ -62,7 +62,9 @@ namespace Plato.Models.Users
 
         public int ReputationPoints { get; set; }
 
-        public byte[] Banner { get; set; }
+        public short PhotoId { get; set; }
+
+        public short BannerId { get; set; }
 
         public string ClientIpAddress { get; set; }
 
@@ -206,8 +208,11 @@ namespace Plato.Models.Users
             if (dr.ColumnIsNotNull("ReputationPoints"))
                 this.ReputationPoints = Convert.ToInt32(dr["ReputationPoints"]);
 
-            if (dr.ColumnIsNotNull("Banner"))
-                this.Banner = (byte[])(dr["Banner"]);
+            if (dr.ColumnIsNotNull("PhotoId"))
+                this.PhotoId = Convert.ToInt16(dr["PhotoId"]);
+
+            if (dr.ColumnIsNotNull("BannerId"))
+                this.BannerId = System.Convert.ToInt16(dr["BannerId"]);
 
             if (dr.ColumnIsNotNull("ClientIpAddress"))
                 this.ClientIpAddress = Convert.ToString(dr["ClientIpAddress"]);

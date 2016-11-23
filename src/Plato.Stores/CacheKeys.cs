@@ -10,6 +10,7 @@ namespace Plato.Stores
         SiteSettings,
         Roles,
         Users,
-        UserPhotos
+        UserPhotos,
+        UserBanners
     }
 }

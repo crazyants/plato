@@ -196,8 +196,7 @@ namespace Plato.Controllers
 
             //var roles = _roleStore.GetAsync(1, 20,
             //    Username = "Ryan");
-
-
+            
             var rand = new Random();
 
             var newUser = await _userStore.CreateAsync(
