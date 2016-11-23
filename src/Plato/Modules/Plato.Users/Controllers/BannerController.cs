@@ -8,29 +8,35 @@ using Plato.Abstractions.Extensions;
 using Plato.Hosting.Web;
 using Plato.Models.Users;
 using Plato.Stores.Users;
+using Plato.Stores.Files;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Plato.Users.Controllers
 {
     public class BannerController : Controller
     {
-        // byte array to represent a transparent 1x1 png image
-        private static readonly byte[] _emptyImage =
-            Encoding.ASCII.GetBytes(
-                "137807871131026100001373726882000100018600031211961370004103657765001752005551382330002511669881168311110211611997114101065100111981013273109971031018210197100121113201101600001673686584120218982542552556336412810911317110578550000736978681746696130");
+
+        private static string _pathToEmptyImage;
 
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IUserBannerStore<UserBanner> _userBannerStore;
+        private readonly IHostingEnvironment _hostEnvironment;
+        private readonly IFileStore _fileStore;
 
         public BannerController(
             IContextFacade contextFacade,
             IPlatoUserStore<User> platoUserStore,
-            IUserBannerStore<UserBanner> userBannerStore
+            IUserBannerStore<UserBanner> userBannerStore,
+             IHostingEnvironment hostEnvironment,
+            IFileStore fileStore
         )
         {
             _contextFacade = contextFacade;
             _platoUserStore = platoUserStore;
             _userBannerStore = userBannerStore;
+            _hostEnvironment = hostEnvironment;
+            _fileStore = fileStore;
         }
 
         [HttpGet]
@@ -107,9 +113,15 @@ namespace Plato.Users.Controllers
             }
             else
             {
-                r.ContentType = "image/png";
-                r.Headers.Add("content-disposition", "filename=\"empty.png\"");
-                r.Body.Write(_emptyImage, 0, _emptyImage.Length);
+                if (string.IsNullOrEmpty(_pathToEmptyImage))
+                    _pathToEmptyImage = _fileStore.Combine(_hostEnvironment.ContentRootPath, "wwwroot", "images", "empty.png");
+                var fileBytes = await _fileStore.GetFileBytesAsync(_pathToEmptyImage);
+                if (fileBytes != null)
+                {
+                    r.ContentType = "image/png";
+                    r.Headers.Add("content-disposition", "filename=\"empty.png\"");
+                    r.Body.Write(fileBytes, 0, fileBytes.Length);
+                }
             }
             return View();
         }

@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 
 namespace Plato.FileSystem
 {
@@ -89,8 +91,7 @@ namespace Plato.FileSystem
                 throw new Exception(string.Format("Unable to make room for file \"{0}\" in \"App_Data\" folder. {1}", destinationFileName, ex.Message ));
             }
         }
-
-  
+        
         public string Combine(params string[] paths)
         {
             return Path.Combine(paths).Replace(RootPath, string.Empty).Replace(Path.DirectorySeparatorChar, '/').TrimStart('/');
@@ -128,6 +129,27 @@ namespace Plato.FileSystem
             {
                 return await reader.ReadToEndAsync();
             }
+        }
+
+        public async Task<byte[]> ReadFileBytesAsync(string path)
+        {
+            var file = _fileProvider.GetFileInfo(path);
+            if (!file.Exists)
+                return null;
+            byte[] output = null;
+            using (var stream = File.Open(path, FileMode.Open))
+            {
+                output = new byte[stream.Length];
+                await stream.ReadAsync(output, 0, (int)stream.Length);
+            }
+            return output;
+
+        }
+        
+
+        public IChangeToken Watch(string path)
+        {
+            return _fileProvider.Watch(path);
         }
 
         public Stream OpenFile(string path)

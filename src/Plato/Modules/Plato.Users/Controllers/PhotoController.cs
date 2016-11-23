@@ -12,68 +12,52 @@ using Plato.Models.Users;
 using Plato.Stores.Users;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.CodeAnalysis.CSharp;
+using Plato.Stores.Files;
 
 namespace Plato.Users.Controllers
 {
     public class PhotoController : Controller
     {
-        // byte array to represent a transparent 1x1 png image
-        private static readonly byte[] _emptyImage =
-            Encoding.UTF8.GetBytes(
-                "137807871131026100001373726882000100018600031211961370004103657765001752005551382330002511669881168311110211611997114101065100111981013273109971031018210197100121113201101600001673686584120218982542552556336412810911317110578550000736978681746696130");
+
+        private static string _pathToEmptyImage;
 
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-
         private readonly IHostingEnvironment _hostEnvironment;
-        private readonly IPlatoFileSystem _platoFileSystem;
+        private readonly IFileStore _fileStore;
 
         public PhotoController(
             IContextFacade contextFacade,
             IPlatoUserStore<User> platoUserStore,
             IUserPhotoStore<UserPhoto> userPhotoStore,
             IHostingEnvironment hostEnvironment,
-            IPlatoFileSystem platoFileSystem
+            IFileStore fileStore
         )
         {
             _contextFacade = contextFacade;
             _platoUserStore = platoUserStore;
             _userPhotoStore = userPhotoStore;
-
             _hostEnvironment = hostEnvironment;
-            _platoFileSystem = platoFileSystem;
-
+            _fileStore = fileStore;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Upload(string returnUrl = null)
+        public async Task<IActionResult> Upload(string returnUrl = null)
         {
-
-
-            var path = _platoFileSystem.Combine(
-                  _hostEnvironment.ContentRootPath,
-                  "wwwroot",
-                  "images",
-                  "empty.png");
-
-
+            
             var sb = new StringBuilder();
 
-            var bytes = new byte[0];
-            if (_platoFileSystem.FileExists(path))
+            var fileBytes = await _fileStore.GetFileBytesAsync(_pathToEmptyImage);
+     
+            foreach (var b in fileBytes)
             {
-                var file = _platoFileSystem.OpenFile(path);
-                bytes = file.StreamToByteArray();
-                foreach (var b in bytes)
-                {
-                    sb.Append(b);
-                }
+                sb.Append(b);
             }
-
+         
             sb.Append(System.Environment.NewLine);
-            sb.Append(path);
+            sb.Append(_pathToEmptyImage);
 
             ViewData["test"] = sb.ToString();
 
@@ -136,20 +120,7 @@ namespace Plato.Users.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Serve(int id)
         {
-
-            var path = _platoFileSystem.Combine(
-                _hostEnvironment.ContentRootPath,
-                "wwwroot",
-                "images",
-                "empty.png");
-
-            var btyes = new byte[0];
-            if (_platoFileSystem.FileExists(path))
-            {
-                var file = _platoFileSystem.OpenFile(path);
-                btyes = file.StreamToByteArray();
-            }
-
+            
             var userPhoto = await _userPhotoStore.GetByUserIdAsync(id);
             var r = Response;
             r.Clear();
@@ -161,9 +132,15 @@ namespace Plato.Users.Controllers
             }
             else
             {
-                r.ContentType = "image/png";
-                r.Headers.Add("content-disposition", "filename=\"empty.png\"");
-                r.Body.Write(btyes, 0, btyes.Length);
+                if (string.IsNullOrEmpty(_pathToEmptyImage))
+                    _pathToEmptyImage = _fileStore.Combine(_hostEnvironment.ContentRootPath, "wwwroot", "images", "empty.png");
+                var fileBytes = await _fileStore.GetFileBytesAsync(_pathToEmptyImage);
+                if (fileBytes != null)
+                {
+                    r.ContentType = "image/png";
+                    r.Headers.Add("content-disposition", "filename=\"empty.png\"");
+                    r.Body.Write(fileBytes, 0, fileBytes.Length);
+                }
             }
             return View();
         }

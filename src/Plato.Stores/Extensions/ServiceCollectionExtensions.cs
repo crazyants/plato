@@ -9,6 +9,7 @@ using Plato.Stores.Settings;
 using Plato.Stores.Roles;
 using Plato.Stores.Users;
 using Plato.Models.Users;
+using Plato.Stores.Files;
 
 namespace Plato.Stores.Extensions
 {
@@ -18,6 +19,10 @@ namespace Plato.Stores.Extensions
         public static IServiceCollection AddStores(
          this IServiceCollection services)
         {
+
+            // files
+
+            services.AddScoped<IFileStore, FileStore>();
 
             // settings
 

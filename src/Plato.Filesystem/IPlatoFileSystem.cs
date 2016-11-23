@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileSystemGlobbing;
+using Microsoft.Extensions.Primitives;
 
 namespace Plato.FileSystem
 {
@@ -28,6 +29,10 @@ namespace Plato.FileSystem
         Stream CreateFile(string path);
 
         Task<string> ReadFileAsync(string path);
+
+        Task<byte[]> ReadFileBytesAsync(string path);
+
+        IChangeToken Watch(string path);
 
         Stream OpenFile(string path);
 
