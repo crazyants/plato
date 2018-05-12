@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Plato.Users</AssemblyName>
+    <PackageId>Plato.Users</PackageId>
+    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Plato.Hosting\Plato.Hosting.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Hosting.Web\Plato.Hosting.Web.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Layout\Plato.Layout.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Models\Plato.Models.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Repositories\Plato.Repositories.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Stores\Plato.Stores.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.4" />
+  </ItemGroup>
+
+</Project>

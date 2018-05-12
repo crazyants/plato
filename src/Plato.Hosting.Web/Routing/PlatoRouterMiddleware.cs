@@ -28,7 +28,7 @@ namespace Plato.Hosting.Web.Routing
             _next = next;
             _logger = logger;
         }
-
+        
         public async Task Invoke(HttpContext httpContext)
         {
             if (_logger.IsEnabled(LogLevel.Information))
@@ -100,7 +100,8 @@ namespace Plato.Hosting.Web.Routing
             if (siteService != null)
             {
                 // Add home page route
-                routeBuilder.Routes.Add(new HomePageRoute(shellSettings.RequestedUrlPrefix, siteService, routeBuilder, inlineConstraintResolver));
+                routeBuilder.Routes.Add(new HomePageRoute(shellSettings.RequestedUrlPrefix, siteService, routeBuilder,
+                    inlineConstraintResolver));
             }
 
             var router = prefixedRouteBuilder.Build();

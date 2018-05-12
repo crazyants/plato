@@ -28,7 +28,7 @@ namespace Plato.Users.Controllers
             IContextFacade contextFacade,
             IPlatoUserStore<User> platoUserStore,
             IUserBannerStore<UserBanner> userBannerStore,
-             IHostingEnvironment hostEnvironment,
+            IHostingEnvironment hostEnvironment,
             IFileStore fileStore
         )
         {

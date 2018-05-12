@@ -60,9 +60,7 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddPlatoDbContext();
                 internalServices.AddRepositories();
                 internalServices.AddStores();
-
-    
-
+                
             });
         }
 
@@ -116,7 +114,6 @@ namespace Plato.Hosting.Web.Extensions
 
             services.AddPlatoMvc();
         
-
             // Save the list of service definitions
             services.AddSingleton(_ => services);
 

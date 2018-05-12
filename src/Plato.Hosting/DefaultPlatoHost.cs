@@ -124,7 +124,9 @@ namespace Plato.Hosting
             // Load all tenants, and activate their shell.
             if (allSettings.Any())
             {
-                Parallel.ForEach(allSettings, settings =>
+                //Parallel.ForEach(allSettings, settings =>
+                //{
+                foreach (var settings in allSettings)
                 {
                     try
                     {
@@ -132,9 +134,12 @@ namespace Plato.Hosting
                     }
                     catch (Exception ex)
                     {
-                       _logger.LogError(string.Format("A tenant could not be started: {0}", settings.Name), ex);
+                        _logger.LogError($"A tenant could not be started: {settings.Name}", ex);
                     }
-                });
+                }
+
+                   
+                //});
             } 
             else
             {

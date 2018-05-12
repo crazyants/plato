@@ -112,7 +112,7 @@ namespace Plato.Stores.Users
 
         public string BuildSqlStartId()
         {
-            var whereClause = BuildWhereClause(false);
+            var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
             sb.Append("SELECT @start_id_out = Id FROM Plato_Users");
@@ -125,7 +125,7 @@ namespace Plato.Stores.Users
 
         public string BuildSqlPopulate()
         {
-            var whereClause = BuildWhereClause();
+            var whereClause = BuildWhereClauseForStartId();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
             sb.Append("SELECT * FROM Plato_Users");
@@ -138,7 +138,7 @@ namespace Plato.Stores.Users
 
         public string BuildSqlCount()
         {
-            var whereClause = BuildWhereClause(false);
+            var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
             sb.Append("SELECT COUNT(Id) FROM Plato_Users");
             if (!string.IsNullOrEmpty(whereClause))
@@ -150,11 +150,34 @@ namespace Plato.Stores.Users
 
         #region "Private Methods"
 
-        private string BuildWhereClause(bool includeStartId = true)
+        private string BuildWhereClauseForStartId()
         {
             var sb = new StringBuilder();
-            if (includeStartId)
+            // default to ascending
+            if (!_query.SortColumns.Any())
                 sb.Append("Id >= @start_id_in");
+            // set start operator based on first order by
+            foreach (var sortColumn in _query.SortColumns)
+            {
+                sb.Append(sortColumn.Value != OrderBy.Asc
+                    ? "Id <= @start_id_in"
+                    : "Id >= @start_id_in");
+                break;
+            }
+
+            var where = BuildWhereClause();
+            if (!string.IsNullOrEmpty(where))
+                sb.Append(" AND ").Append(where);
+
+            return sb.ToString();
+
+        }
+
+
+        private string BuildWhereClause()
+        {
+            var sb = new StringBuilder();
+         
 
             if (_query.Params.Id.Value > 0)
             {

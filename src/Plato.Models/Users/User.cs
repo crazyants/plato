@@ -6,6 +6,7 @@ using Plato.Abstractions.Extensions;
 using Plato.Models.Annotations;
 using Plato.Models.Roles;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace Plato.Models.Users
 {

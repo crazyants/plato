@@ -27,8 +27,7 @@ namespace Plato.Stores.Settings
 
         public async Task<ISiteSettings> GetAsync()
         {
-            ISiteSettings siteSettings;
-            if (!_memoryCache.TryGetValue(_key, out siteSettings))
+            if (!_memoryCache.TryGetValue(_key, out ISiteSettings siteSettings))
             {
                 siteSettings = await _settingsFactory.GetSettingsAsync<SiteSettings>(_key);
                 _memoryCache.Set(_key, siteSettings);

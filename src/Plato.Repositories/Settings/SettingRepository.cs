@@ -88,10 +88,10 @@ namespace Plato.Repositories.Settings
         public async Task<IEnumerable<Setting>> SelectSettings()
         {
 
-            List<Setting> settings = new List<Setting>();
+            var settings = new List<Setting>();
             using (var context = _dbContext)
             {
-                DbDataReader reader = await context.ExecuteReaderAsync(
+                var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectSettings");
 
@@ -113,10 +113,10 @@ namespace Plato.Repositories.Settings
 
         public async Task<IEnumerable<Setting>> SelectBySpaceId(int spaceId)
         {
-            List<Setting> settings = new List<Setting>();
+            var settings = new List<Setting>();
             using (var context = _dbContext)
             {
-                IDataReader reader = await context.ExecuteReaderAsync(
+                var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectSettingsBySpaceId", spaceId);
 
@@ -167,9 +167,7 @@ namespace Plato.Repositories.Settings
                     modifiedDate,
                     modifiedUserId);
             }
-
-      
-
+            
         }
 
         public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class

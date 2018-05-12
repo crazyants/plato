@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Plato.Modules</AssemblyName>
+    <PackageId>Plato.Modules</PackageId>
+    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Plato.Abstractions\Plato.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.FileSystem\Plato.FileSystem.csproj" />
+    <ProjectReference Include="..\Plato.Modules.Abstractions\Plato.Modules.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.4" />
+    <PackageReference Include="Microsoft.DotNet.Compiler.Common" Version="1.0.0-preview2-003121" />
+    <PackageReference Include="Microsoft.DotNet.ProjectModel" Version="1.0.0-rc4-003206" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
+  </ItemGroup>
+
+</Project>

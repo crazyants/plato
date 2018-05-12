@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Plato.Hosting.Web</AssemblyName>
+    <PackageId>Plato.Hosting.Web</PackageId>
+    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Plato.Cache\Plato.Cache.csproj" />
+    <ProjectReference Include="..\Plato.Data\Plato.Data.csproj" />
+    <ProjectReference Include="..\Plato.Hosting\Plato.Hosting.csproj" />
+    <ProjectReference Include="..\Plato.Layout\Plato.Layout.csproj" />
+    <ProjectReference Include="..\Plato.Modules\Plato.Modules.csproj" />
+    <ProjectReference Include="..\Plato.Repositories\Plato.Repositories.csproj" />
+    <ProjectReference Include="..\Plato.Shell\Plato.Shell.csproj" />
+    <ProjectReference Include="..\Plato.Stores\Plato.Stores.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Localization" Version="2.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.3" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Composite" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.3" />
+  </ItemGroup>
+
+</Project>

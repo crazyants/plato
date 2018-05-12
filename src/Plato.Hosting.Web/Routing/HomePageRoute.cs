@@ -29,7 +29,6 @@ namespace Plato.Hosting.Web.Routing
         {
 
             var siteSettings = await _settingsStore.GetAsync();
-            
             foreach (var entry in siteSettings.HomeRoute)
             {
                 context.RouteData.Values[entry.Key] = entry.Value;

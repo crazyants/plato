@@ -41,9 +41,7 @@ namespace Plato
             IApplicationBuilder app,
             IHostingEnvironment env, 
             ILoggerFactory loggerFactory)
-        {            
-
-     
+        {      
             app.UsePlato(env, loggerFactory);
         }
         
