@@ -83,8 +83,7 @@ namespace Plato.Stores.Users
 
             return IdentityResult.Success;
         }
-
-
+        
         public async Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -270,7 +269,7 @@ namespace Plato.Stores.Users
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
 
-            return Task.FromResult(user.Detail.IsEmailConfirmed);
+            return Task.FromResult(user.EmailConfirmed);
         }
 
         public Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
@@ -388,5 +387,6 @@ namespace Plato.Stores.Users
         }
 
         #endregion
+
     }
 }

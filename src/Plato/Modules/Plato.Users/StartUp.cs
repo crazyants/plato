@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -35,14 +37,7 @@ namespace Plato.Users
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-            new IdentityBuilder(
-                typeof(User), 
-                typeof(Role), 
-                services).AddDefaultTokenProviders();
-
-            // Identity services
-            //services.TryAddSingleton<IdentityMarkerService>();
+            
             services.TryAddScoped<IUserValidator<User>, UserValidator<User>>();
             services.TryAddScoped<IPasswordValidator<User>, PasswordValidator<User>>();
             services.TryAddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
@@ -52,7 +47,7 @@ namespace Plato.Users
             services.TryAddScoped<IdentityErrorDescriber>();
             services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<User>>();
             services.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
-
+          
             services.TryAddScoped<IUserStore<User>, UserStore>();
             services.TryAddScoped<IRoleStore<Role>, RoleStore>();
             services.TryAddScoped<UserManager<User>>();
@@ -67,17 +62,11 @@ namespace Plato.Users
                 options.AccessDeniedPath = new PathString("/Plato.Users/Account/Login/");
                 options.Cookie.Name = "platoauth_" + _tenantName;
                 options.Cookie.Path = _tenantPrefix;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = true;
+                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+           
             });
-
-            // .net core 1.x implementation
-            //services.Configure<IdentityOptions>(options =>
-            //{
-            //    options.Cookies.ApplicationCookie.CookieName = "platoauth_" + _tenantName;
-            //    options.Cookies.ApplicationCookie.CookiePath = _tenantPrefix;
-            //    options.Cookies.ApplicationCookie.LoginPath = new PathString("/Plato.Users/Account/Login/");
-            //    options.Cookies.ApplicationCookie.AutomaticChallenge = true;
-            //    options.Cookies.ApplicationCookie.AccessDeniedPath = new PathString("/Plato.Users/Account/Login/");
-            //});
 
         }
 
@@ -86,15 +75,7 @@ namespace Plato.Users
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-
-            app.UseAuthentication();
-
-            //app.UseIdentity();
-            //app.UseCookieAuthentication(_options.Cookies.ApplicationCookie)
-            //    .UseCookieAuthentication(_options.Cookies.ExternalCookie)
-            //    .UseCookieAuthentication(_options.Cookies.TwoFactorRememberMeCookie)
-            //    .UseCookieAuthentication(_options.Cookies.TwoFactorUserIdCookie);
-
+            
             routes.MapAreaRoute(
                 name: "Login",
                 area: "Plato.Users",

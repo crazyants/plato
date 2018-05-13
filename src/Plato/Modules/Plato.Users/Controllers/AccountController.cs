@@ -58,15 +58,24 @@ namespace Plato.Users.Controllers
                     //_logger.LogInformation(1, "User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
-                //if (result.RequiresTwoFactor)
-                //{
-                //    return RedirectToAction(nameof(SendCode), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                //}
-                //if (result.IsLockedOut)
-                //{
-                //    //_logger.LogWarning(2, "User account locked out.");
-                //    return View("Lockout");
-                //}
+                if (result.RequiresTwoFactor)
+                {
+                    //return RedirectToAction(nameof(LoginWith2fa), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+
+
+                    ModelState.AddModelError(string.Empty, "Account Required Two Factor Authentication.");
+                    return View(model);
+
+                }
+                if (result.IsLockedOut)
+                {
+                    //_logger.LogWarning(2, "User account locked out.");
+                    //return View("Lockout");
+
+                    ModelState.AddModelError(string.Empty, "Account Locked out.");
+                    return View(model);
+
+                }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");

@@ -72,11 +72,10 @@ namespace Plato.Data
 
             var providerFactory = new DataProviderFactory(cfg);
             if (providerFactory.Provider == null)
-                throw new Exception(string.Format("The specified data provider \"{0}\" is not supported!",
-                    cfg.DatabaseProvider));
+                throw new Exception($"The specified data provider \"{cfg.DatabaseProvider}\" is not supported!");
 
             _provider = providerFactory.Provider;
-            _provider.OnException += (sender, args) => { throw args.Exception; };
+            _provider.OnException += (sender, args) => throw args.Exception;
 
             Configuration = cfg;
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.CodeAnalysis;
@@ -24,6 +25,8 @@ using Plato.Shell.Extensions;
 using Plato.Stores.Extensions;
 using Plato.Cache.Extensions;
 using Plato.Hosting.Web.Routing;
+using Plato.Models.Roles;
+using Plato.Models.Users;
 using Plato.Modules.Expanders;
 
 namespace Plato.Hosting.Web.Extensions
@@ -68,8 +71,16 @@ namespace Plato.Hosting.Web.Extensions
         public static IServiceCollection AddPlatoMvc(
             this IServiceCollection services)
         {
-            
-            // add mvc core
+
+
+            services.AddIdentity<User, Role>(options =>
+                {
+                    options.SignIn.RequireConfirmedEmail = true;
+                    options.User.RequireUniqueEmail = true;
+                })
+                .AddDefaultTokenProviders();
+
+            // add mvc core services
             services.AddMvcCore()
                 .AddViews()
                 .AddViewLocalization()
@@ -137,9 +148,12 @@ namespace Plato.Hosting.Web.Extensions
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            // load static files
+            
+            // load static file middleware
             app.UseStaticFiles();
+
+            // add authentication middleware
+            app.UseAuthentication();
             
             // load module controllers
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();

@@ -259,32 +259,50 @@ namespace Plato.Repositories.Users
             User user = null;
             if ((reader != null) && (reader.HasRows))
             {
+                // user
 
                 user = new User();
                 await reader.ReadAsync();
-                user.PopulateModel(reader);
+                if (reader.HasRows)
+                {
+                    user.PopulateModel(reader);
+                }
 
-                // user
+                // secret
 
                 if (await reader.NextResultAsync())
                 {
-                    await reader.ReadAsync();
-                    user.Secret = new UserSecret(reader);
+                    if (reader.HasRows)
+                    {
+                        await reader.ReadAsync();
+                        user.Secret = new UserSecret(reader);
+                    }
                 }
 
                 // detail
 
                 if (await reader.NextResultAsync())
                 {
-                    await reader.ReadAsync();
-                    user.Detail = new UserDetail(reader);
+                    if (reader.HasRows)
+                    {
+                        await reader.ReadAsync();
+                        user.Detail = new UserDetail(reader);
+                    }
                 }
-                
+
                 // roles
 
                 if (await reader.NextResultAsync())
-                    while (await reader.ReadAsync())
-                        user.UserRoles.Add(new Role(reader));
+                {
+                    if (reader.HasRows)
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            user.UserRoles.Add(new Role(reader));
+                        }
+                    }
+                }
+
             }
 
             return user;
