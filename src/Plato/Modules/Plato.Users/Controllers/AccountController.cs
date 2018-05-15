@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Plato.Users.Models;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Plato.Models.Users;
 
@@ -12,20 +16,25 @@ namespace Plato.Users.Controllers
 
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AccountController(
             UserManager<User> userManager,
-            SignInManager<User> signInManage)
+            SignInManager<User> signInManage,
+            IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _signInManager = signInManage;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string returnUrl = null)
         {
-            
+
+            var user = _httpContextAccessor.HttpContext.User;
+            var claims = user.Claims;
 
             var model = new LoginViewModel();
             model.Email = "";
@@ -43,7 +52,11 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
 
-            ViewData["ReturnUrl"] = returnUrl;
+
+         
+             // ----------
+
+             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -55,6 +68,16 @@ namespace Plato.Users.Controllers
                     lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+
+                    //var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                    //identity.AddClaim(new Claim(ClaimTypes.Name, model.UserName));
+
+                    ////context.Authenticate | Challenge | SignInAsync("scheme"); // Calls 2.0 auth stack
+
+                    //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    //    new ClaimsPrincipal(identity));
+                    
+
                     //_logger.LogInformation(1, "User logged in.");
                     return RedirectToLocal(returnUrl);
                 }

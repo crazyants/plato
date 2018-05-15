@@ -73,7 +73,7 @@ namespace Plato.Modules.Loader
 
             var folder = _fileSystem.GetDirectoryInfo(path);
             foreach (var file in folder.GetFiles())
-                if ((file.Extension != null) && (file.Extension.ToLower() == AssemblyExtension))
+                if (file.Extension.ToLower() == AssemblyExtension)
                     if (!IsAssemblyLoaded(Path.GetFileNameWithoutExtension(file.FullName)))
                     {
                         var assembly = LoadFromAssemblyPath(file.FullName);

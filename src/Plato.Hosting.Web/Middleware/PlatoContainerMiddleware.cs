@@ -32,28 +32,30 @@ namespace Plato.Hosting.Web.Middleware
             // Ensure all ShellContext are loaded and available.
             _platoHost.Initialize();
 
-            var shellSetting = _runningShellTable.Match(httpContext);
-
+            // Get sShellSettings for current tennet
+            var shellSettings = _runningShellTable.Match(httpContext);
+            
             // register shell settings as a custom feature
-            httpContext.Features[typeof(ShellSettings)] = shellSetting;
+            httpContext.Features[typeof(ShellSettings)] = shellSettings;
 
             // only serve the next request if the tenant has been resolved.
-            if (shellSetting != null)
+            if (shellSettings != null)
             {
 
-                var shellContext = _platoHost.GetOrCreateShellContext(shellSetting);
+                var shellContext = _platoHost.GetOrCreateShellContext(shellSettings);
                 using (var scope = shellContext.CreateServiceScope())
                 {
                     httpContext.RequestServices = scope.ServiceProvider;
-
+                    
                     if (!shellContext.IsActivated)
                     {
-                        lock (shellSetting)
+                        lock (shellSettings)
                         {
                             // activate the tanant
                             if (!shellContext.IsActivated)
                                 shellContext.IsActivated = true;
                         }
+                        
                     }
 
                     await _next.Invoke(httpContext);

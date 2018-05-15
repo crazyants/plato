@@ -128,14 +128,14 @@ namespace Plato.Hosting
                 //{
                 foreach (var settings in allSettings)
                 {
-                    try
-                    {
+                    //try
+                    //{
                         GetOrCreateShellContext(settings);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError($"A tenant could not be started: {settings.Name}", ex);
-                    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    _logger.LogError($"A tenant could not be started: {settings.Name}", ex);
+                    //}
                 }
 
                    

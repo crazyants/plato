@@ -108,7 +108,6 @@ namespace Plato.Hosting.Web.Routing
             appBuilder.UseRouter(router);
 
             var pipeline = appBuilder.Build();
-
             return pipeline;
         }
     }

@@ -1,12 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -36,14 +40,21 @@ namespace Plato.Hosting.Web.Extensions
     {
         public static IServiceCollection AddHost(
             this IServiceCollection services,
-            Action<IServiceCollection> additionalDependencies)
+            Action<IServiceCollection> configure)
         {
             services.AddFileSystem();
-            additionalDependencies(services);
+
+            configure(services);
+
+            // Let the app change the default tenant behavior and set of features
+            configure?.Invoke(services);
+
+            // Register the list of services to be resolved later on
+            services.AddSingleton(_ => services);
 
             return services;
-        }
 
+        }
 
         public static IServiceCollection AddWebHost(this IServiceCollection services)
         {
@@ -65,70 +76,106 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddStores();
                 
             });
+
+         
+
+
         }
 
-
-        public static IServiceCollection AddPlatoMvc(
+        public static IServiceCollection AddPlato(
             this IServiceCollection services)
         {
 
+            // add shell services
 
-            services.AddIdentity<User, Role>(options =>
+            services.AddWebHost();
+            
+            // configure shell
+
+            services.ConfigureShell("sites");
+            
+            // add auth
+            
+            services.AddAuthentication(options =>
                 {
-                    options.SignIn.RequireConfirmedEmail = true;
-                    options.User.RequireUniqueEmail = true;
+                    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
                 })
-                .AddDefaultTokenProviders();
+                .AddCookie(IdentityConstants.ApplicationScheme, options =>
+                {
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.Events = new CookieAuthenticationEvents
+                    {
+                        OnValidatePrincipal = async context =>
+                        {
+                            await SecurityStampValidator.ValidatePrincipalAsync(context);
+                        }
+                    };
+                })
+                .AddCookie(IdentityConstants.ExternalScheme, options =>
+                {
+                    options.Cookie.Name = IdentityConstants.ExternalScheme;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                })
+                .AddCookie(IdentityConstants.TwoFactorRememberMeScheme, options =>
+                {
+                    options.Cookie.Name = IdentityConstants.TwoFactorRememberMeScheme;
+                })
+                .AddCookie(IdentityConstants.TwoFactorUserIdScheme, IdentityConstants.TwoFactorUserIdScheme, options =>
+                {
+                    options.Cookie.Name = IdentityConstants.TwoFactorUserIdScheme;
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                });
+            
+            // add mvc
 
-            // add mvc core services
-            services.AddMvcCore()
-                .AddViews()
-                .AddViewLocalization()
-                .AddRazorViewEngine()
-                .AddJsonFormatters();
+            services.AddPlatoMvc();
+            
+            return services;
+        }
+        
+        public static IServiceCollection AddPlatoMvc(
+            this IServiceCollection services)
+        {
 
             var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
 
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 // view location expanders for modules
+
                 foreach (var moduleEntry in moduleManager.AvailableModules)
                     options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.ID));
 
                 // theme
-                options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
 
+                options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
+                
                 // ensure loaded modules are aware of current context
-                var moduleAssemblies = moduleManager.AllAvailableAssemblies.Select(x => MetadataReference.CreateFromFile(x.Location)).ToList();
+
+                var moduleAssemblies = moduleManager.AllAvailableAssemblies
+                    .Where(x => !x.IsDynamic)
+                    .Select(x => MetadataReference.CreateFromFile(x.Location)).ToList();
                 var previous = options.CompilationCallback;
                 options.CompilationCallback = context =>
                 {
                     previous?.Invoke(context);
                     context.Compilation = context.Compilation.AddReferences(moduleAssemblies);
                 };
-
+                
             });
+
+       
+            // add mvc core services
+            services.AddMvcCore()
+                .AddViews()
+                .AddViewLocalization()
+                .AddRazorViewEngine()
+                .AddJsonFormatters();
             
             return services;
-        }
 
-        public static IServiceCollection AddPlato(
-            this IServiceCollection services)
-        {
-            services.AddWebHost();
-
-            // configure tenants
-
-            services.ConfigureShell("sites");
-            
-            services.AddSingleton<ILayoutManager, LayoutManager>();
-
-            services.AddPlatoMvc();
-        
-            // Save the list of service definitions
-            services.AddSingleton(_ => services);
-
-            return services;
         }
         
         public static IApplicationBuilder UsePlato(
@@ -148,13 +195,13 @@ namespace Plato.Hosting.Web.Extensions
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            
-            // load static file middleware
-            app.UseStaticFiles();
 
             // add authentication middleware
             app.UseAuthentication();
-            
+
+            // load static file middleware
+            app.UseStaticFiles();
+
             // load module controllers
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
             var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
@@ -173,32 +220,22 @@ namespace Plato.Hosting.Web.Extensions
                         FileProvider = new PhysicalFileProvider(contentPath)
                     });
                 }
+
                 // add modules as application parts
                 foreach (var assembly in moduleEntry.Assmeblies)
+                {
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
+                }
+                    
+           
             }
-
+            
             // create services container for each shell
             app.UseMiddleware<PlatoContainerMiddleware>();
 
             // create uniuqe pipeline for each shell
             app.UseMiddleware<PlatoRouterMiddleware>();
-
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        "default",
-            //        "{site=Default}/{controller=Home}/{action=Index}/{id?}");
-            //});
-
-            // configure routes
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        "default",
-            //        "{controller=Home}/{action=Index}/{id?}");
-            //});
-
+        
             return app;
         }
     }

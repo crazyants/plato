@@ -3,13 +3,12 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Shell.Models;
 using Plato.Shell.Extensions;
 using Plato.Data;
-using System.Reflection;
 using Plato.Abstractions;
-using Microsoft.Extensions.Options;
 using Plato.Modules.Abstractions;
 
 namespace Plato.Shell
@@ -36,72 +35,67 @@ namespace Plato.Shell
             _logger = logger;
             _moduleManager = moduleManager;
         }
-        
+
         public IServiceProvider CreateContainer(ShellSettings settings)
         {
-
-            //try
-            //{
-
-                // clone services
-                // ---------------
-
-                IServiceCollection tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
-
-                // add tenant settings
-                // ---------------
-
-                tenantServiceCollection.AddSingleton(settings);
-                           
-                // add tenant specific DbContext
-                tenantServiceCollection.AddScoped<IDbContext>(sp => new DbContext(cfg =>
-                {
-                    cfg.ConnectionString = settings.ConnectionString;
-                    cfg.DatabaseProvider = settings.DatabaseProvider;
-                    cfg.TablePrefix = settings.TablePrefix;
-                }));
-                
-                // add service descriptors from modules to the tenant
-                // ---------------
-                           
-                var types = new List<Type>();
-                foreach (var assmebly in _moduleManager.AllAvailableAssemblies)                
-                    types.AddRange(assmebly.GetTypes());
-
-                IServiceCollection moduleServiceCollection = 
-                    _serviceProvider.CreateChildContainer(_applicationServices);
-                foreach (var type in types.Where(t => typeof(IStartup).IsAssignableFrom(t)))
-                {
-                    moduleServiceCollection.AddSingleton(typeof(IStartup), type);
-                    tenantServiceCollection.AddSingleton(typeof(IStartup), type);
-                }
-
-                // make shell settings available to the modules
-                moduleServiceCollection.AddSingleton(settings);
-
-                var moduleServiceProvider = moduleServiceCollection.BuildServiceProvider();                            
-                foreach (var service in moduleServiceProvider.GetServices<IStartup>())
-                {
-                    service.ConfigureServices(tenantServiceCollection);
-                }
-
-                (moduleServiceProvider as IDisposable).Dispose();
-                
-                // return
-                // ---------------
-                
-                var shellServiceProvider = tenantServiceCollection.BuildServiceProvider();
-                return shellServiceProvider;
-
-            //}
-            //catch (Exception e)
-            //{
-            //    if (_logger.IsEnabled(LogLevel.Debug))                
-            //        _logger.LogDebug("Error creating container for tenant {0} - {1}", settings.Name, e.Message);                
-            //}
-
-            return null;
             
+            // clone services
+            // ---------------
+
+            var tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
+
+            // add tenant settings
+            // ---------------
+            
+            tenantServiceCollection.AddSingleton(settings);
+
+            // add tenant specific DbContext
+            tenantServiceCollection.AddScoped<IDbContext>(sp => new DbContext(cfg =>
+            {
+                cfg.ConnectionString = settings.ConnectionString;
+                cfg.DatabaseProvider = settings.DatabaseProvider;
+                cfg.TablePrefix = settings.TablePrefix;
+            }));
+            
+            // add service descriptors from modules to the tenant
+            // ---------------
+
+            var types = new List<Type>();
+            foreach (var assmebly in _moduleManager.AllAvailableAssemblies)
+                types.AddRange(assmebly.GetTypes());
+
+            var moduleServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
+            foreach (var type in types.Where(t => typeof(IStartup).IsAssignableFrom(t)))
+            {
+                moduleServiceCollection.AddSingleton(typeof(IStartup), type);
+                tenantServiceCollection.AddSingleton(typeof(IStartup), type);
+            }
+
+            // Add a default configuration if none has been provided
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
+            moduleServiceCollection.TryAddSingleton(configuration);
+            tenantServiceCollection.TryAddSingleton(configuration);
+
+            // make shell settings available to the modules
+            moduleServiceCollection.AddSingleton(settings);
+
+            var moduleServiceProvider = moduleServiceCollection.BuildServiceProvider();
+            var startups = moduleServiceProvider.GetServices<IStartup>();
+            foreach (var startup in startups)
+            {
+                startup.ConfigureServices(tenantServiceCollection);
+            }
+            
+            (moduleServiceProvider as IDisposable).Dispose();
+
+            // return
+            // ---------------
+
+            var shellServiceProvider = tenantServiceCollection.BuildServiceProvider();
+            
+
+            return shellServiceProvider;
+
         }
 
     }

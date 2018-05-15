@@ -15,13 +15,6 @@
 <!--
 <img src="/users/photo/serve?id=550"/>
 
-
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Home</a></li>
-    <li class="breadcrumb-item"><a href="#">Library</a></li>
-    <li class="breadcrumb-item active">Data</li>
-</ol>
-
 <a class="popup-with-zoom-anim" data-toggle="dialog" href="#uploadPhotoDialog">Upload Photo</a>
 
 <div id="uploadPhotoDialog"  class="p-dialog p-dialog-zoom mfp-hide">
@@ -38,10 +31,6 @@
     <iframe style="width: 100%; height: 200px;" scrolling="no" src="/users/banner/upload"></iframe>
 </div>
 
-<my-app></my-app>
-
-<hr/>
-
 -->
 
 <h2>@ViewData["Title"]</h2>
@@ -56,7 +45,6 @@
                 <label asp-for="@Model.Email" class="form-control-label font-weight-bold"></label>
                 <span asp-validation-for="@Model.Email" class="text-danger float-xl-right"></span>
                 <input asp-for="@Model.Email" value="@Model.Email" placeholder="@T["email@address.com"]" class="form-control d-block" />
-
             </div>
             <div class="form-group">
                 <label asp-for="@Model.UserName" class="form-control-label font-weight-bold"></label>

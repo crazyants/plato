@@ -21,23 +21,48 @@ namespace Plato.Users
 {
     public class Startup : StartupBase
     {
-        private readonly IdentityOptions _options;
+        //private readonly IdentityOptions _options;
 
         private readonly string _tenantName;
+        private readonly string _cookieSuffix;
         private readonly string _tenantPrefix;
-        
+      
+
         public Startup(
-            ShellSettings shellSettings,
-            IOptions<IdentityOptions> options)
+            ShellSettings shellSettings)
         {
-            _options = options.Value;
+            //_options = options;
             _tenantName = shellSettings.Name;
+            _cookieSuffix = shellSettings.AuthCookieName;
             _tenantPrefix = shellSettings.RequestedUrlPrefix;
+      
         }
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            
+
+            services.AddAuthorization();
+
+            // Adds the default token providers used to generate tokens for reset passwords, change email
+            // and change telephone number operations, and for two factor authentication token generation.
+            new IdentityBuilder(typeof(User), typeof(Role), services).AddDefaultTokenProviders();
+        
+            //services.AddIdentity<User, Role>()
+            //    .AddDefaultTokenProviders();
+
+
+            // Note: IAuthenticationSchemeProvider is already registered at the host level.
+            // We need to register it again so it is taken into account at the tenant level.
+            //services.AddSingleton<IAuthenticationSchemeProvider, AuthenticationSchemeProvider>();
+
+            // Adds the default token providers used to generate tokens for reset passwords, change email
+            // and change telephone number operations, and for two factor authentication token generation.
+            new IdentityBuilder(typeof(User), typeof(Role), services).AddDefaultTokenProviders();
+
+
+
+            // --------
+
             services.TryAddScoped<IUserValidator<User>, UserValidator<User>>();
             services.TryAddScoped<IPasswordValidator<User>, PasswordValidator<User>>();
             services.TryAddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
@@ -47,7 +72,7 @@ namespace Plato.Users
             services.TryAddScoped<IdentityErrorDescriber>();
             services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<User>>();
             services.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
-          
+
             services.TryAddScoped<IUserStore<User>, UserStore>();
             services.TryAddScoped<IRoleStore<Role>, RoleStore>();
             services.TryAddScoped<UserManager<User>>();
@@ -56,17 +81,28 @@ namespace Plato.Users
 
             services.AddSingleton<IContextFacade, ContextFacade>();
 
+
             services.ConfigureApplicationCookie(options =>
             {
+                options.Cookie.Name = "auth_" + _cookieSuffix;
+                options.Cookie.Path = _tenantPrefix;
                 options.LoginPath = new PathString("/Plato.Users/Account/Login/");
                 options.AccessDeniedPath = new PathString("/Plato.Users/Account/Login/");
-                options.Cookie.Name = "platoauth_" + _tenantName;
-                options.Cookie.Path = _tenantPrefix;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-                options.SlidingExpiration = true;
-                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-           
+                options.AccessDeniedPath = options.LoginPath;
             });
+
+
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.LoginPath = new PathString("/Plato.Users/Account/Login/");
+            //    options.AccessDeniedPath = new PathString("/Plato.Users/Account/Login/");
+            //    options.Cookie.Name = "platoauth_" + _tenantName;
+            //    options.Cookie.Path = _tenantPrefix;
+            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+            //    options.SlidingExpiration = true;
+            //    options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+
+            //});
 
         }
 
@@ -75,7 +111,10 @@ namespace Plato.Users
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-            
+
+            // add authentication middleware
+            app.UseAuthentication();
+
             routes.MapAreaRoute(
                 name: "Login",
                 area: "Plato.Users",
@@ -91,7 +130,7 @@ namespace Plato.Users
                 controller: "Account",
                 action: "Register"
             );
-            
+
             routes.MapAreaRoute(
                 name: "Users",
                 area: "Plato.Users",

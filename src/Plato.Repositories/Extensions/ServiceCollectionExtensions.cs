@@ -29,7 +29,6 @@ namespace Plato.Repositories.Extensions
             services.AddScoped<IUserPhotoRepository<UserPhoto>, UserPhotoRepository>();
             services.AddScoped<IUserBannerRepository<UserBanner>, UserBannerRepository>();
             services.AddScoped<IUserRolesRepository<UserRole>, UserRolesRepository>();
-
             services.AddScoped<IRoleRepository<Role>, RoleRepository>();
 
             return services;

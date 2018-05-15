@@ -76,7 +76,7 @@ namespace Plato.Modules
                       
             foreach (var descriptor in _moduleDescriptors)
             {
-                List<Assembly> assemblies = _moduleLoader.LoadModule(descriptor);
+                var assemblies = _moduleLoader.LoadModule(descriptor);
                 _moduleEntries.Add(new ModuleEntry()
                 {
                     Descriptor = descriptor,

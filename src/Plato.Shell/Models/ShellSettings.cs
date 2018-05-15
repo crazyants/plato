@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Plato.Shell.Models
 {
@@ -42,20 +43,20 @@ namespace Plato.Shell.Models
 
         public string Name
         {
-            get { return this["Name"] ?? ""; }
-            set { this["Name"] = value; }
+            get => this["Name"] ?? "";
+            set => this["Name"] = value;
         }
 
         public string Location
         {
-            get { return this["Location"] ?? ""; }
-            set { this["Location"] = value; }
+            get => this["Location"] ?? "";
+            set => this["Location"] = value;
         }
 
         public string RequestedUrlHost
         {
-            get { return this["RequestedUrlHost"]; }
-            set { this["RequestedUrlHost"] = value; }
+            get => this["RequestedUrlHost"];
+            set => this["RequestedUrlHost"] = value;
         }
 
         public string RequestedUrlPrefix
@@ -66,28 +67,43 @@ namespace Plato.Shell.Models
 
         public string ConnectionString
         {
-            get { return this["ConnectionString"]; }
-            set { _values["ConnectionString"] = value; }
+            get => this["ConnectionString"];
+            set => _values["ConnectionString"] = value;
         }
 
         public string TablePrefix
         {
-            get { return this["TablePrefix"]; }
-            set { _values["TablePrefix"] = value; }
+            get => this["TablePrefix"];
+            set => _values["TablePrefix"] = value;
         }
 
         public string DatabaseProvider
         {
-            get { return this["DatabaseProvider"]; }
-            set { _values["DatabaseProvider"] = value; }
+            get => this["DatabaseProvider"];
+            set => _values["DatabaseProvider"] = value;
         }
 
         public string Theme
         {
-            get { return this["Theme"]; }
-            set { _values["Theme"] = value; }
+            get => this["Theme"];
+            set => _values["Theme"] = value;
         }
 
+        public string AuthCookieName
+        {
+            get
+            {
+                var sb = new StringBuilder();
+                foreach (var c in this.Name)
+                {
+                    if ((char.IsLetter(c)) || ((char.IsNumber(c))))
+                        sb.Append(c);
+                }
+                return !string.IsNullOrEmpty(sb.ToString()) 
+                    ? sb.ToString() 
+                    : this.Name;
+            }
+        }
 
         TenantState _tenantState;
 

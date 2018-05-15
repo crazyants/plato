@@ -44,6 +44,9 @@ namespace Plato.Hosting.Web.Routing
         {
             object value;
 
+            if (_tokens == null)
+                return null;
+
             // Return null if it doesn't match the home route values
             foreach (var entry in _tokens)
             {
