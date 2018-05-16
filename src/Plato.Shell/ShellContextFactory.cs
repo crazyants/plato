@@ -55,9 +55,9 @@ namespace Plato.Shell
             {
                 SerialNumber = -1,
                 Modules = new[] {
-                    new ShellModule { Name = "Orchard.Logging.Console" },
-                    new ShellModule { Name = "Orchard.Setup" },
-                    new ShellModule { Name = "Orchard.Recipes" }
+                    new ShellModule { Name = "Plato.Logging.Console" },
+                    new ShellModule { Name = "Plato.Setup" },
+                    new ShellModule { Name = "Plato.Recipes" }
                 }
             };
 
@@ -71,13 +71,13 @@ namespace Plato.Shell
                 SerialNumber = -1,
                 Modules = new[]
                 {
-                    new ShellModule { Name = "Orchard.Logging.Console" },
-                    new ShellModule { Name = "Orchard.Hosting" },
-                    new ShellModule { Name = "Orchard.Admin" },
-                    new ShellModule { Name = "Orchard.Themes" },
+                    new ShellModule { Name = "Plato.Logging.Console" },
+                    new ShellModule { Name = "Plato.Hosting" },
+                    new ShellModule { Name = "Plato.Admin" },
+                    new ShellModule { Name = "Plato.Themes" },
                     new ShellModule { Name = "TheAdmin" },
                     new ShellModule { Name = "SafeMode" },
-                    new ShellModule { Name = "Orchard.Recipes" }
+                    new ShellModule { Name = "Plato.Recipes" }
                 }
             };
         }

@@ -41,26 +41,12 @@ namespace Plato.Users
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddAuthorization();
+            //services.AddAuthorization();
 
             // Adds the default token providers used to generate tokens for reset passwords, change email
             // and change telephone number operations, and for two factor authentication token generation.
             new IdentityBuilder(typeof(User), typeof(Role), services).AddDefaultTokenProviders();
         
-            //services.AddIdentity<User, Role>()
-            //    .AddDefaultTokenProviders();
-
-
-            // Note: IAuthenticationSchemeProvider is already registered at the host level.
-            // We need to register it again so it is taken into account at the tenant level.
-            //services.AddSingleton<IAuthenticationSchemeProvider, AuthenticationSchemeProvider>();
-
-            // Adds the default token providers used to generate tokens for reset passwords, change email
-            // and change telephone number operations, and for two factor authentication token generation.
-            new IdentityBuilder(typeof(User), typeof(Role), services).AddDefaultTokenProviders();
-
-
-
             // --------
 
             services.TryAddScoped<IUserValidator<User>, UserValidator<User>>();
@@ -80,29 +66,18 @@ namespace Plato.Users
             services.TryAddScoped<SignInManager<User>>();
 
             services.AddSingleton<IContextFacade, ContextFacade>();
-
-
+            
             services.ConfigureApplicationCookie(options =>
             {
-                options.Cookie.Name = "auth_" + _cookieSuffix;
+                options.Cookie.Name = "plato_" + _cookieSuffix.ToLower();
                 options.Cookie.Path = _tenantPrefix;
                 options.LoginPath = new PathString("/Plato.Users/Account/Login/");
                 options.AccessDeniedPath = new PathString("/Plato.Users/Account/Login/");
                 options.AccessDeniedPath = options.LoginPath;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = true;
             });
 
-
-            //services.ConfigureApplicationCookie(options =>
-            //{
-            //    options.LoginPath = new PathString("/Plato.Users/Account/Login/");
-            //    options.AccessDeniedPath = new PathString("/Plato.Users/Account/Login/");
-            //    options.Cookie.Name = "platoauth_" + _tenantName;
-            //    options.Cookie.Path = _tenantPrefix;
-            //    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-            //    options.SlidingExpiration = true;
-            //    options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-
-            //});
 
         }
 

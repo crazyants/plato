@@ -24,7 +24,6 @@ namespace Plato.Stores.Settings
             _memoryCache = memoryCache;
         }
         
-
         public async Task<ISiteSettings> GetAsync()
         {
             if (!_memoryCache.TryGetValue(_key, out ISiteSettings siteSettings))

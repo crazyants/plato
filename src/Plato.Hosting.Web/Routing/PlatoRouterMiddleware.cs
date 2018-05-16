@@ -100,7 +100,10 @@ namespace Plato.Hosting.Web.Routing
             if (siteService != null)
             {
                 // Add home page route
-                routeBuilder.Routes.Add(new HomePageRoute(shellSettings.RequestedUrlPrefix, siteService, routeBuilder,
+                routeBuilder.Routes.Add(new HomePageRoute(
+                    shellSettings.RequestedUrlPrefix,
+                    siteService,
+                    routeBuilder,
                     inlineConstraintResolver));
             }
 

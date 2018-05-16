@@ -76,10 +76,7 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddStores();
                 
             });
-
-         
-
-
+            
         }
 
         public static IServiceCollection AddPlato(
@@ -104,7 +101,7 @@ namespace Plato.Hosting.Web.Extensions
                 })
                 .AddCookie(IdentityConstants.ApplicationScheme, options =>
                 {
-                    options.LoginPath = new PathString("/Account/Login");
+                    options.LoginPath = new PathString("/Users/Account/Login");
                     options.Events = new CookieAuthenticationEvents
                     {
                         OnValidatePrincipal = async context =>
@@ -139,8 +136,9 @@ namespace Plato.Hosting.Web.Extensions
             this IServiceCollection services)
         {
 
-            var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
+            // add modules
 
+            var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 // view location expanders for modules
@@ -165,9 +163,9 @@ namespace Plato.Hosting.Web.Extensions
                 };
                 
             });
-
-       
+            
             // add mvc core services
+
             services.AddMvcCore()
                 .AddViews()
                 .AddViewLocalization()
@@ -183,7 +181,7 @@ namespace Plato.Hosting.Web.Extensions
             IHostingEnvironment env,
             ILoggerFactory loggerFactory)
         {
-            //loggerFactory.AddConsole(IConfiguration.GetSection("Logging"));
+
             loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
@@ -197,12 +195,15 @@ namespace Plato.Hosting.Web.Extensions
             }
 
             // add authentication middleware
+
             app.UseAuthentication();
 
             // load static file middleware
+
             app.UseStaticFiles();
 
             // load module controllers
+
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
             var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
             foreach (var moduleEntry in moduleManager.AvailableModules)
@@ -227,7 +228,6 @@ namespace Plato.Hosting.Web.Extensions
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
                 }
                     
-           
             }
             
             // create services container for each shell

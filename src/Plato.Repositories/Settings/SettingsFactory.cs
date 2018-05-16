@@ -70,8 +70,7 @@ namespace Plato.Repositories.Settings
         #endregion
 
         #region "Private Methods"
-
-
+        
         private async Task<Setting> GetSettingFromRepository(string key)
         {
                      
@@ -85,22 +84,17 @@ namespace Plato.Repositories.Settings
 
         private async Task<IEnumerable<Setting>> GetSettingsAsync()
         {
-            
             var output = new List<Setting>();
-            IEnumerable<Setting> settings = await _settingRepository.SelectSettings();
+            var settings = await _settingRepository.SelectSettings();
             if (settings != null)
             {
                 foreach (var setting in settings)                
                    output.Add(setting);  
             }
-
             return output;
-
-
         }
+
         #endregion
-
-
-
+        
     }
 }

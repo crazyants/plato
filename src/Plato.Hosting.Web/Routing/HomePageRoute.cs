@@ -29,27 +29,28 @@ namespace Plato.Hosting.Web.Routing
         {
 
             var siteSettings = await _settingsStore.GetAsync();
-            foreach (var entry in siteSettings.HomeRoute)
+            if (siteSettings != null)
             {
-                context.RouteData.Values[entry.Key] = entry.Value;
+                foreach (var entry in siteSettings.HomeRoute)
+                {
+                    context.RouteData.Values[entry.Key] = entry.Value;
+                }
+                _tokens = siteSettings.HomeRoute;
             }
 
-            _tokens = siteSettings.HomeRoute;
-            
             await base.OnRouteMatched(context);
 
         }
 
         public override VirtualPathData GetVirtualPath(VirtualPathContext context)
         {
-            object value;
-
             if (_tokens == null)
                 return null;
 
             // Return null if it doesn't match the home route values
             foreach (var entry in _tokens)
             {
+                object value;
                 if (String.Equals(entry.Key, "area", StringComparison.OrdinalIgnoreCase))
                 {
                     if (!context.AmbientValues.TryGetValue("area", out value) || !String.Equals(value.ToString(), _tokens["area"].ToString(), StringComparison.OrdinalIgnoreCase))
@@ -73,8 +74,8 @@ namespace Plato.Hosting.Web.Routing
             }
 
             var result = base.GetVirtualPath(context);
-
             return result;
+
         }
     }
 }

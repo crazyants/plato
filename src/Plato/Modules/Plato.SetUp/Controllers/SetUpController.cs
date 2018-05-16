@@ -4,19 +4,19 @@ using Plato.Abstractions.Settings;
 using System.Threading.Tasks;
 using Plato.Abstractions.Stores;
 
-namespace Plato.Discussions
+namespace Plato.SetUp
 {
-    public class DiscussionsController : Controller
+    public class SetUpController : Controller
     {
 
         private readonly ISiteSettingsStore _settingsStore;
-        
-        public DiscussionsController(
+
+        public SetUpController(
             ISiteSettingsStore settingsStore)
         {
             _settingsStore = settingsStore;
         }
-        
+
         public async Task<IActionResult> Index()
         {
 
@@ -45,15 +45,15 @@ namespace Plato.Discussions
 
             if (settings != null)
             {
+                
                 list.Add(new TextObject(settings.SiteName));
                 list.Add(new TextObject(settings.BaseUrl));
             }
-        
-
+            
             return View(list);
         }
 
-        
+
 
         public IActionResult About()
         {

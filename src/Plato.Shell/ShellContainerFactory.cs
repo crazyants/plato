@@ -48,7 +48,7 @@ namespace Plato.Shell
             // ---------------
             
             tenantServiceCollection.AddSingleton(settings);
-
+            
             // add tenant specific DbContext
             tenantServiceCollection.AddScoped<IDbContext>(sp => new DbContext(cfg =>
             {
@@ -56,10 +56,11 @@ namespace Plato.Shell
                 cfg.DatabaseProvider = settings.DatabaseProvider;
                 cfg.TablePrefix = settings.TablePrefix;
             }));
+      
+       
             
             // add service descriptors from modules to the tenant
-            // ---------------
-
+          
             var types = new List<Type>();
             foreach (var assmebly in _moduleManager.AllAvailableAssemblies)
                 types.AddRange(assmebly.GetTypes());
@@ -72,12 +73,15 @@ namespace Plato.Shell
             }
 
             // Add a default configuration if none has been provided
+
             var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
             moduleServiceCollection.TryAddSingleton(configuration);
             tenantServiceCollection.TryAddSingleton(configuration);
 
-            // make shell settings available to the modules
+            // Make shell settings available to the modules
             moduleServiceCollection.AddSingleton(settings);
+
+            // Configure StartUps
 
             var moduleServiceProvider = moduleServiceCollection.BuildServiceProvider();
             var startups = moduleServiceProvider.GetServices<IStartup>();
@@ -89,11 +93,8 @@ namespace Plato.Shell
             (moduleServiceProvider as IDisposable).Dispose();
 
             // return
-            // ---------------
-
+    
             var shellServiceProvider = tenantServiceCollection.BuildServiceProvider();
-            
-
             return shellServiceProvider;
 
         }

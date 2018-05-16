@@ -169,8 +169,7 @@ namespace Plato.Data
             return reader;
 
         }
-
-
+        
         public T ExecuteScalar<T>(string sql, params object[] args)
         {
             object output = null;
@@ -219,7 +218,6 @@ namespace Plato.Data
             
         }
                 
-
         public int Execute(string sql, params object[] args)
         {
             try
@@ -245,9 +243,7 @@ namespace Plato.Data
                 throw;
             }
         }
-
-
-
+        
         public void Dispose()
         {
             Close();
@@ -264,7 +260,7 @@ namespace Plato.Data
         {
 
             // Create the command and add parameters
-            SqlCommand cmd = connection.CreateCommand();
+            var cmd = connection.CreateCommand();
             cmd.Connection = connection;
             cmd.CommandText = sql;
           
@@ -362,9 +358,9 @@ namespace Plato.Data
         public event DbEventHandlers.DbExceptionEventHandler OnException;  
 
         public virtual void HandleException(Exception x)
-        {                     
-            System.Diagnostics.Debug.WriteLine(x.ToString());           
-            OnException(this, new DbExceptionEventArgs(x));           
+        {
+            System.Diagnostics.Debug.WriteLine(x.ToString());
+            OnException?.Invoke(this, new DbExceptionEventArgs(x));
         }
                   
 

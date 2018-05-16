@@ -114,13 +114,8 @@ namespace Plato.Hosting
                 _logger.LogInformation("Start creation of shells");
             
             // Is there any tenant right now?
-            var allSettings = _shellSettingsManager.LoadSettings()
-                .Where(settings =>
-                    settings.State == TenantState.Running ||
-                    settings.State == TenantState.Uninitialized ||
-                    settings.State == TenantState.Initializing)
-                .ToArray();
-
+            var allSettings = _shellSettingsManager.LoadSettings().Where(CanCreateShell).ToArray();
+            
             // Load all tenants, and activate their shell.
             if (allSettings.Any())
             {
@@ -128,17 +123,8 @@ namespace Plato.Hosting
                 //{
                 foreach (var settings in allSettings)
                 {
-                    //try
-                    //{
-                        GetOrCreateShellContext(settings);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    _logger.LogError($"A tenant could not be started: {settings.Name}", ex);
-                    //}
+                    GetOrCreateShellContext(settings);
                 }
-
-                   
                 //});
             } 
             else
@@ -170,9 +156,22 @@ namespace Plato.Hosting
                 _logger.LogDebug("Creating shell context for root setup.");
             return _shellContextFactory.CreateSetupContext(ShellHelper.BuildDefaultUninitializedShell);
         }
-            
+
+        /// <summary>
+        /// Whether or not a shell can be added to the list of available shells.
+        /// </summary>
+        private bool CanCreateShell(ShellSettings shellSettings)
+        {
+            return
+                shellSettings.State == TenantState.Running ||
+                shellSettings.State == TenantState.Uninitialized ||
+                shellSettings.State == TenantState.Initializing ||
+                shellSettings.State == TenantState.Disabled;
+        }
+
+
         #endregion
-        
+
 
     }
 }
