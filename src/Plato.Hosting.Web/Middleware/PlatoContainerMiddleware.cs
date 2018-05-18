@@ -32,7 +32,7 @@ namespace Plato.Hosting.Web.Middleware
             // Ensure all ShellContext are loaded and available.
             _platoHost.Initialize();
 
-            // Get sShellSettings for current tennet
+            // Get ShellSettings for current tennet
             var shellSettings = _runningShellTable.Match(httpContext);
             
             // register shell settings as a custom feature

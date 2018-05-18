@@ -57,8 +57,6 @@ namespace Plato.Shell
                 cfg.TablePrefix = settings.TablePrefix;
             }));
       
-       
-            
             // add service descriptors from modules to the tenant
           
             var types = new List<Type>();

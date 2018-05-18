@@ -69,7 +69,6 @@ namespace Plato.Hosting.Web.Routing
         {
             var startups = serviceProvider.GetServices<IStartup>();
             var inlineConstraintResolver = serviceProvider.GetService<IInlineConstraintResolver>();
-
             var appBuilder = new ApplicationBuilder(serviceProvider);
 
             var routePrefix = "";
@@ -95,7 +94,9 @@ namespace Plato.Hosting.Web.Routing
                 null,
                 inlineConstraintResolver)
             );
-            
+
+            // Attempt to get homepage route for tennet from site settings store
+            // If the tennet has not been created yet siteService will return null
             var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();
             if (siteService != null)
             {
@@ -107,9 +108,13 @@ namespace Plato.Hosting.Web.Routing
                     inlineConstraintResolver));
             }
 
+            // Build router
             var router = prefixedRouteBuilder.Build();
+
+            // Use router
             appBuilder.UseRouter(router);
 
+            // Return new pipline
             var pipeline = appBuilder.Build();
             return pipeline;
         }

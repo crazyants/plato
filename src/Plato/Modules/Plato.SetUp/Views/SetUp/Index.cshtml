@@ -1,14 +1,31 @@
-﻿@model List<Plato.SetUp.TextObject>
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer T
+@model Plato.SetUp.ViewModels.SetUpViewModel
 @{
     ViewData["Title"] = "Discussions";
 }
 
-<h2>SetUp</h2>
+<form asp-controller="SetUp" asp-action="Index">
 
-<br /><br />
+    <div class="jumbotron mt-5">
+        <h1>@T["Setup"]</h1>
+        <p class="lead">@T["Please answer a few questions to configure your site."]</p>
+    </div>
 
-@foreach (var test in @Model)
-    {
-        @test.Name
-        <br />
-    }
+    <div class="row">
+        <fieldset class="form-group col-md-6" asp-validation-class-for="SiteName">
+            <div>
+        
+                <a asp-controller="SetUp" asp-action="Index">Tag Helper Link</a>
+
+                <label asp-for="SiteName">@T["What is the name of your site?"]</label>
+           
+                <input asp-for="@Model.SiteName" class="form-control" autofocus required />
+                
+
+            </div>
+        </fieldset>
+    </div>
+
+    <br /><br />
+
+</form>

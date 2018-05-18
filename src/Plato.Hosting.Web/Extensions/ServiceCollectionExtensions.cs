@@ -21,8 +21,6 @@ using Plato.FileSystem;
 using Plato.Hosting.Extensions;
 using Plato.Hosting.Web.Expanders;
 using Plato.Hosting.Web.Middleware;
-using Plato.Layout;
-using Plato.Modules;
 using Plato.Modules.Abstractions;
 using Plato.Modules.Extensions;
 using Plato.Repositories.Extensions;
@@ -48,7 +46,7 @@ namespace Plato.Hosting.Web.Extensions
         {
             services.AddFileSystem();
 
-            configure(services);
+            //configure(services);
 
             // Let the app change the default tenant behavior and set of features
             configure?.Invoke(services);
@@ -91,7 +89,7 @@ namespace Plato.Hosting.Web.Extensions
 
             services.AddWebHost();
             
-            // configure shell
+            // configure shell & add file system
 
             services.ConfigureShell("sites");
             
@@ -156,11 +154,10 @@ namespace Plato.Hosting.Web.Extensions
                 // theme
 
                 options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
-                
+
                 // ensure loaded modules are aware of current context
 
                 var moduleAssemblies = moduleManager.AllAvailableAssemblies
-                    .Where(x => !x.IsDynamic)
                     .Select(x => MetadataReference.CreateFromFile(x.Location)).ToList();
                 var previous = options.CompilationCallback;
                 options.CompilationCallback = context =>
@@ -168,17 +165,26 @@ namespace Plato.Hosting.Web.Extensions
                     previous?.Invoke(context);
                     context.Compilation = context.Compilation.AddReferences(moduleAssemblies);
                 };
-                
+
             });
-            
+
             // add mvc core services
 
-            services.AddMvcCore()
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            var builder = services.AddMvcCore()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddViews()
-                .AddViewLocalization()
-                .AddRazorViewEngine()
-                .AddJsonFormatters();
-            
+                .AddRazorViewEngine();
+
+            // add default framework parts
+
+            AddDefaultFrameworkParts(builder.PartManager);
+
+            // add json formatter
+
+            builder.AddJsonFormatters();
+
             return services;
 
         }
@@ -246,6 +252,22 @@ namespace Plato.Hosting.Web.Extensions
         
             return app;
         }
+
+        private static void AddDefaultFrameworkParts(ApplicationPartManager partManager)
+        {
+            var mvcTagHelpersAssembly = typeof(InputTagHelper).Assembly;
+            if (!partManager.ApplicationParts.OfType<AssemblyPart>().Any(p => p.Assembly == mvcTagHelpersAssembly))
+            {
+                partManager.ApplicationParts.Add(new AssemblyPart(mvcTagHelpersAssembly));
+            }
+
+            var mvcRazorAssembly = typeof(UrlResolutionTagHelper).Assembly;
+            if (!partManager.ApplicationParts.OfType<AssemblyPart>().Any(p => p.Assembly == mvcRazorAssembly))
+            {
+                partManager.ApplicationParts.Add(new AssemblyPart(mvcRazorAssembly));
+            }
+        }
+
 
         private static void ListAllRegisteredServices(IApplicationBuilder app)
         {

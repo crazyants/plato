@@ -29,13 +29,7 @@ namespace Plato.FileSystem.AppData
             _fileSystem = new PlatoFileSystem(root, new PhysicalFileProvider(root), _logger);
         }
 
-        public string RootPath
-        {
-            get
-            {
-                return _fileSystem.RootPath;
-            }
-        }
+        public string RootPath => _fileSystem.RootPath;
 
         /// <summary>
         /// Combine a set of virtual paths into a virtual path relative to "~/App_Data"

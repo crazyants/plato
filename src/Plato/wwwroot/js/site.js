@@ -14,7 +14,6 @@ if (typeof jQuery === "undefined") {
  */
 $.Plato = {};
 
-
 /* ------------------
  * - Options -
  * ------------------
@@ -30,7 +29,6 @@ $.Plato.options = {
     MagnificSelector: "[data-toggle='dialog']",
 
 };
-
 
 /* ------------------
  * - Implementation -
@@ -62,20 +60,6 @@ $(function() {
             $('.tooltip').not(this).tooltip('hide');
         });
     }
-
-
-    // initialize magnific popup 
-    $(o.MagnificSelector).magnificPopup({
-          type: "inline",
-          fixedContentPos: false,
-          fixedBgPos: true,
-          overflowY: 'auto',
-          closeBtnInside: true,
-          preloader: false,
-          midClick: true,
-          removalDelay: 300,
-          mainClass: "p-mfp-zoom-in"
-     });
-
+    
 
 });

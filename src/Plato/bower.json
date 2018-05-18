@@ -2,12 +2,10 @@
   "name": "asp.net",
   "private": true,
   "dependencies": {
-    "bootstrap": "4.0",
-    "jquery": "2.2.0",
-    "jquery-validation": "1.14.0",
-    "jquery-validation-unobtrusive": "3.2.6",
-    "scrollreveal": "3.1.4",
-    "magnific-popup": "1.1.0",
-    "font-awesome": "4.6.1"
+    "bootstrap": "4.1.1",
+    "jquery": "3.3",
+    "jquery-validation": "1.17",
+    "jquery-validation-unobtrusive": "3.2",
+    "font-awesome": "5.0.13"
   }
 }

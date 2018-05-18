@@ -39,7 +39,6 @@ namespace Plato.Data
         public SqlProvider(string connectionString, string tablePrefix)
       : this(connectionString, tablePrefix, 120)
         {
-
         }
 
         public SqlProvider(
@@ -104,8 +103,7 @@ namespace Plato.Data
             }
             _sharedConnectionDepth++;
         }
-
-
+        
         public void Close()
         {
             if (_sharedConnectionDepth > 0)

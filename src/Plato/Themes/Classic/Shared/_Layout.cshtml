@@ -7,22 +7,17 @@
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
-    <!--
-    <link rel="stylesheet" href="~/lib/magnific-popup/dist/magnific-popup.css" />
-    <link rel="stylesheet" href="~/lib/tether/dist/css/tether.css" />
-    -->
+        <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/vendors/font-awesome.css" />
         <link rel="stylesheet" href="~/css/core.css" />
         <link rel="stylesheet" href="~/css/theme.css" />
-    
     </environment>
     <environment names="Staging,Production">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+              asp-fallback-href="~/css/vendors/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
-              asp-fallback-href="~/lib/font-awesome/css/font-awesome.min.css"
+              asp-fallback-href="~/css/vendors/font-awesome.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/dist/css/app.min.css" asp-append-version="true" />
     </environment>
@@ -100,24 +95,14 @@
 </div>
 
 <environment names="Development">
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/tether/dist/js/tether.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="~/lib/magnific-popup/dist/jquery.magnific-popup.js"></script>
+    <script src="~/js/vendors/jquery.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 </environment>
 <environment names="Staging,Production">
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
-        asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+        asp-fallback-src="~/js/vendors/jquery.min.js"
         asp-fallback-test="window.jQuery">
     </script>
-    <script src="~/lib/tether/dist/js/tether.min.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.0/bootstrap.min.js"
-        asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-        asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-    </script>
-    <script src="~/lib/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
-    <script src="~/lib/scrollreveal/dist/scrollreveal.min.js"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
 </environment>
     
