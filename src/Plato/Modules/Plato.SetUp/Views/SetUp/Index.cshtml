@@ -1,11 +1,8 @@
 ﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer T
 @model Plato.SetUp.ViewModels.SetUpViewModel
-@{
-    ViewData["Title"] = "Discussions";
-}
 
 <form asp-controller="SetUp" asp-action="Index">
-
+    
     <div class="jumbotron mt-5">
         <h1>@T["Setup"]</h1>
         <p class="lead">@T["Please answer a few questions to configure your site."]</p>
@@ -16,10 +13,14 @@
             <div>
         
                 <a asp-controller="SetUp" asp-action="Index">Tag Helper Link</a>
+                <br/><br/>
 
-                <label asp-for="SiteName">@T["What is the name of your site?"]</label>
-           
-                <input asp-for="@Model.SiteName" class="form-control" autofocus required />
+                Tag Helper <br/>
+                <input asp-for="SiteName" class="form-control" />
+                <br/><br/>
+
+                Model Binding<br/>
+                <input asp-for="@Model.SiteName" class="form-control" />
                 
 
             </div>

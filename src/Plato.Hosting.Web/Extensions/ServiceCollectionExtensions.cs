@@ -73,7 +73,7 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 
-                internalServices.AddPlatoDbContext();
+                //internalServices.AddPlatoDbContext();
                 internalServices.AddRepositories();
                 internalServices.AddStores();
                 
@@ -156,18 +156,29 @@ namespace Plato.Hosting.Web.Extensions
                 options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
 
                 // ensure loaded modules are aware of current context
+                
+                var moduleReferences = moduleManager.AllAvailableAssemblies
+                    .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
+                    .Select(x => MetadataReference.CreateFromFile(x.Location))
+                    .ToList();
 
-                var moduleAssemblies = moduleManager.AllAvailableAssemblies
-                    .Select(x => MetadataReference.CreateFromFile(x.Location)).ToList();
-                var previous = options.CompilationCallback;
-                options.CompilationCallback = context =>
+                // https://github.com/aspnet/Mvc/issues/4497
+                // https://github.com/aspnet/Razor/issues/834
+                foreach (var moduleReference in moduleReferences)
                 {
-                    previous?.Invoke(context);
-                    context.Compilation = context.Compilation.AddReferences(moduleAssemblies);
-                };
+                    options.AdditionalCompilationReferences.Add(moduleReference);
+                }
+
+                // replaced by AdditionalCompilationReferences above
+                //var previous = options.CompilationCallback;
+                //options.CompilationCallback = context =>
+                //{
+                //    previous?.Invoke(context);
+                //    context.Compilation = context.Compilation.AddReferences(moduleReferences);
+                //};
 
             });
-
+            
             // add mvc core services
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -178,6 +189,15 @@ namespace Plato.Hosting.Web.Extensions
                 .AddRazorViewEngine();
 
             // add default framework parts
+            var applicationPartManager = services.BuildServiceProvider().GetRequiredService<ApplicationPartManager>();
+            foreach (var moduleEntry in moduleManager.AvailableModules)
+            {
+                // add modules as application parts
+                foreach (var assembly in moduleEntry.Assmeblies)
+                {
+                    applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
+                }
+            }
 
             AddDefaultFrameworkParts(builder.PartManager);
 
@@ -236,11 +256,11 @@ namespace Plato.Hosting.Web.Extensions
                     });
                 }
 
-                // add modules as application parts
-                foreach (var assembly in moduleEntry.Assmeblies)
-                {
-                    applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
-                }
+                //// add modules as application parts
+                //foreach (var assembly in moduleEntry.Assmeblies)
+                //{
+                //    applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
+                //}
                     
             }
             
@@ -252,6 +272,12 @@ namespace Plato.Hosting.Web.Extensions
         
             return app;
         }
+
+        //internal static void AddModularFrameworkParts(IServiceProvider services, ApplicationPartManager manager)
+        //{
+        //    var httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
+        //    manager.ApplicationParts.Add(new ShellFeatureApplicationPart(httpContextAccessor));
+        //}
 
         private static void AddDefaultFrameworkParts(ApplicationPartManager partManager)
         {

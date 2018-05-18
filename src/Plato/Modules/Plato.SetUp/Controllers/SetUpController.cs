@@ -21,14 +21,20 @@ namespace Plato.SetUp
 
         public IStringLocalizer T { get; set; }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
 
             var model = new SetUpViewModel();
-            model.SiteName = "Example Site Name";
-
+            model.SiteName = "ExampleSiteName";
+            
             return View(model);
 
+        }
+
+        [HttpPost]
+        public IActionResult Index(SetUpViewModel model)
+        {
+            return View(model);
         }
 
     }
