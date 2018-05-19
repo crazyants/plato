@@ -21,10 +21,7 @@ namespace Plato.Shell.Models
 
         #region IDisposable Support
 
-        private bool disposedValue = false; // To detect redundant calls
-
-           
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -39,7 +36,8 @@ namespace Plato.Shell.Models
                 }
 
                 Settings = null;
-        
+                ServiceProvider = null;
+
                 // Disposes all the services registered for this shell
                 (ServiceProvider as IDisposable).Dispose();
                 IsActivated = false;

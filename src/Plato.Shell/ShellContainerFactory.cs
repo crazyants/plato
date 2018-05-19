@@ -49,16 +49,22 @@ namespace Plato.Shell
             
             tenantServiceCollection.AddSingleton(settings);
             
-            // add tenant specific DbContext
-            tenantServiceCollection.AddScoped<IDbContext>(sp => new DbContext(cfg =>
+            // add tenant specific data context
+            tenantServiceCollection.AddScoped<IDbContext>(sp =>
             {
-                cfg.ConnectionString = settings.ConnectionString;
-                cfg.DatabaseProvider = settings.DatabaseProvider;
-                cfg.TablePrefix = settings.TablePrefix;
-            }));
-      
+                var shellSettings = sp.GetService<ShellSettings>();
+                if (shellSettings.DatabaseProvider == null)
+                    return null;
+                return new DbContext(options =>
+                {
+                    options.ConnectionString = settings.ConnectionString;
+                    options.DatabaseProvider = settings.DatabaseProvider;
+                    options.TablePrefix = settings.TablePrefix;
+                });
+            });
+         
             // add service descriptors from modules to the tenant
-          
+
             var types = new List<Type>();
             foreach (var assmebly in _moduleManager.AllAvailableAssemblies)
                 types.AddRange(assmebly.GetTypes());

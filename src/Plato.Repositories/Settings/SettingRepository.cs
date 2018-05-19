@@ -17,8 +17,8 @@ namespace Plato.Repositories.Settings
 
         #region Private Variables"
 
-        private IDbContext _dbContext;
-        ILogger<SettingRepository> _logger;
+        private readonly IDbContext _dbContext;
+        private readonly ILogger<SettingRepository> _logger;
      
         #endregion
 
@@ -28,26 +28,22 @@ namespace Plato.Repositories.Settings
             IDbContext dbContext,
             ILogger<SettingRepository> logger)
         {
-
             _dbContext = dbContext;
             _logger = logger;
-
         }
-
 
         #endregion
         
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int Id)
+        public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
         public async Task<Setting> InsertUpdateAsync(Setting setting)
         {
-
-            int id = await InsertUpdateInternal(
+            var id = await InsertUpdateInternal(
                 setting.Id,          
                 setting.SpaceId,
                 setting.Key,
@@ -64,16 +60,14 @@ namespace Plato.Repositories.Settings
 
         }
 
-        public async Task<Setting> SelectByIdAsync(int Id)
+        public async Task<Setting> SelectByIdAsync(int id)
         {
-
-            Setting setting = new Setting();
+            var setting = new Setting();
             using (var context = _dbContext)
             {
-                DbDataReader reader = await context.ExecuteReaderAsync(
+                var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                  "plato_sp_SelectSetting", Id);
-               
+                  "plato_sp_SelectSetting", id);
                 if (reader != null)
                 {
                     await reader.ReadAsync();
@@ -91,10 +85,11 @@ namespace Plato.Repositories.Settings
             var settings = new List<Setting>();
             using (var context = _dbContext)
             {
+                if (context == null)
+                    return null;
                 var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                   "plato_sp_SelectSettings");
-
                 if (reader != null)
                 {
                     while (await reader.ReadAsync())
@@ -103,7 +98,6 @@ namespace Plato.Repositories.Settings
                         setting.PopulateModel(reader);
                         settings.Add(setting);
                     }
-
                 }
             }
 
@@ -152,7 +146,8 @@ namespace Plato.Repositories.Settings
             int modifiedUserId
             )
         {
-            
+            if (_dbContext == null)
+                return default(int);
             using (var context = _dbContext)
             {
                 return await context.ExecuteScalarAsync<int>(
@@ -174,8 +169,7 @@ namespace Plato.Repositories.Settings
         {
             throw new NotImplementedException();
         }
-
-
+        
         #endregion
 
     }

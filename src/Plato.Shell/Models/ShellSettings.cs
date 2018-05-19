@@ -9,9 +9,16 @@ namespace Plato.Shell.Models
         
         private readonly IDictionary<string, string> _values;
 
-        public ShellSettings()
+        public ShellSettings() : this(new Dictionary<string, string>()) { }
+
+        public ShellSettings(IDictionary<string, string> configuration)
         {
-            _values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);         
+            _values = new Dictionary<string, string>(configuration);
+
+            if (!configuration.ContainsKey("State") || !Enum.TryParse(configuration["State"], true, out _tenantState))
+            {
+                _tenantState = TenantState.Invalid;
+            }
         }
 
         public ShellSettings(ShellSettings settings)
@@ -28,6 +35,9 @@ namespace Plato.Shell.Models
             State = settings.State;
 
         }
+
+        public IDictionary<string, string> Configuration => _values;
+
 
         public string this[string key]
         {

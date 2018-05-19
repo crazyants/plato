@@ -11,17 +11,16 @@
     <div class="row">
         <fieldset class="form-group col-md-6" asp-validation-class-for="SiteName">
             <div>
-        
+
                 <a asp-controller="SetUp" asp-action="Index">Tag Helper Link</a>
-                <br/><br/>
+                <br /><br />
 
-                Tag Helper <br/>
+                <label asp-for="SiteName">@T["What is the name of your site?"]</label>
                 <input asp-for="SiteName" class="form-control" />
-                <br/><br/>
+                <span asp-validation-for="SiteName" class="text-danger">@T["The site name is required."]</span>
+                <span class="text-muted form-text small">@T["This is used as the default title of your pages."]</span>
 
-                Model Binding<br/>
-                <input asp-for="@Model.SiteName" class="form-control" />
-                
+                <button class="btn btn-primary" type="submit" id="SubmitButton">@T["Finish Setup"]</button>
 
             </div>
         </fieldset>

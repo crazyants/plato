@@ -89,7 +89,9 @@ namespace Plato.Data
             return _provider.ExecuteReader(sql, commandParams);
         }
 
-        public async Task<DbDataReader> ExecuteReaderAsync(CommandType commandType, string sql,
+        public async Task<DbDataReader> ExecuteReaderAsync(
+            CommandType commandType,
+            string sql,
             params object[] commandParams)
         {
             if (_provider == null)

@@ -7,6 +7,7 @@ namespace Plato.SetUp.ViewModels
     public class SetUpViewModel
     {
      
+        [Required]
         public string SiteName { get; set; }
 
         //[Required]

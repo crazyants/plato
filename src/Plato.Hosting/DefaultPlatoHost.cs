@@ -65,7 +65,7 @@ namespace Plato.Hosting
             _runningShellTable.Remove(settings);
             if (_shellContexts.TryRemove(settings.Name, out context))
             {
-                //context.Dispose();
+                context.Dispose();
             }
             GetOrCreateShellContext(settings);
         }
@@ -168,10 +168,8 @@ namespace Plato.Hosting
                 shellSettings.State == TenantState.Initializing ||
                 shellSettings.State == TenantState.Disabled;
         }
-
-
+        
         #endregion
-
-
+        
     }
 }

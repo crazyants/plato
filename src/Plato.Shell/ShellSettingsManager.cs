@@ -85,11 +85,12 @@ namespace Plato.Shell
                 _logger.LogInformation("Saving ShellSettings for tenant '{0}'", shellSettings.Name);
             }
 
+            var fileName = string.Format(SettingsFileNameFormat, "txt");
             var tenantPath = _appDataFolder.MapPath(
                 _appDataFolder.Combine(
                     _optionsAccessor.Value.Location,
                     shellSettings.Location,
-                    string.Format(SettingsFileNameFormat, "txt")));
+                    fileName));
 
             var configurationProvider = new YamlConfigurationProvider(new YamlConfigurationSource
             {

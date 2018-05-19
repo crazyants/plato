@@ -5,8 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Hosting;
 using Plato.Hosting.Extensions;
 using Plato.Shell.Models;
+using Plato.SetUp.Services;
 
-namespace Plato.Discussions
+namespace Plato.SetUp
 {
     public class Startup : StartupBase
     {
@@ -19,7 +20,7 @@ namespace Plato.Discussions
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddScoped<ISetUpService, SetUpService>();
         }
 
         public override void Configure(
