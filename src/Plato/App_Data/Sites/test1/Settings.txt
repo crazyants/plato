@@ -1,0 +1,5 @@
+Name: Default
+State: Running
+DatabaseProvider: SqlClient
+ConnectionString: server=localhost;trusted_connection=true;database=plato_2
+Location: test1

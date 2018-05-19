@@ -39,7 +39,7 @@ namespace Plato.Shell.Models
                 ServiceProvider = null;
 
                 // Disposes all the services registered for this shell
-                (ServiceProvider as IDisposable).Dispose();
+                (ServiceProvider as IDisposable)?.Dispose();
                 IsActivated = false;
 
                 _disposed = true;

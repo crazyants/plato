@@ -29,17 +29,17 @@ namespace Plato.Stores.Settings
             if (!_memoryCache.TryGetValue(_key, out ISiteSettings siteSettings))
             {
                 siteSettings = await _settingsFactory.GetSettingsAsync<SiteSettings>(_key);
-                _memoryCache.Set(_key, siteSettings);
+                if (siteSettings != default(SiteSettings))
+                    _memoryCache.Set(_key, siteSettings);
             }
-
             return siteSettings;
-
         }
 
         public async Task<ISiteSettings> SaveAsync(ISiteSettings siteSettings)
         {
             var settings = await _settingsFactory.UpdateSettingsAsync<SiteSettings>(_key, siteSettings);
-            _memoryCache.Set(_key, settings);
+            if (siteSettings != default(SiteSettings))
+                _memoryCache.Set(_key, settings);
             return settings;
         }
 

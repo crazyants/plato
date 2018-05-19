@@ -1,5 +1,4 @@
-﻿using Plato.Data.Migrations;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Plato.Data.Extensions

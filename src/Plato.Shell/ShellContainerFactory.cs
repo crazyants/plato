@@ -85,7 +85,7 @@ namespace Plato.Shell
             // Make shell settings available to the modules
             moduleServiceCollection.AddSingleton(settings);
 
-            // Configure StartUps
+            // Configure module StartUps
 
             var moduleServiceProvider = moduleServiceCollection.BuildServiceProvider();
             var startups = moduleServiceProvider.GetServices<IStartup>();

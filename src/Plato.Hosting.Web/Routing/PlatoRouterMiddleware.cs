@@ -35,10 +35,24 @@ namespace Plato.Hosting.Web.Routing
                 _logger.LogInformation("Begin Routing Request");
             
             var shellSettings = (ShellSettings)httpContext.Features[typeof(ShellSettings)];
+            
+            // Define a PathBase for the current request that is the RequestUrlPrefix.
+            // This will allow any view to reference ~/ as the tenant's base url.
+            // Because IIS or another middleware might have already set it, we just append the tenant prefix value.
+            if (!string.IsNullOrEmpty(shellSettings.RequestedUrlPrefix))
+            {
+                httpContext.Request.PathBase += ("/" + shellSettings.RequestedUrlPrefix);
+                httpContext.Request.Path = httpContext.Request.Path.ToString().Substring(httpContext.Request.PathBase.Value.Length);
+            }
+            
+            // Do we need to rebuild the pipeline ?
+            var rebuildPipeline = httpContext.Items["BuildPipeline"] != null;
+            if (rebuildPipeline && _pipelines.ContainsKey(shellSettings.Name))
+            {
+                _pipelines.Remove(shellSettings.Name);
+            }
 
-            RequestDelegate pipeline;
-
-            if (!_pipelines.TryGetValue(shellSettings.Name, out pipeline))
+            if (!_pipelines.TryGetValue(shellSettings.Name, out var pipeline))
             {
                 // Building a pipeline can't be done by two requests
                 lock (_pipelines)
@@ -49,10 +63,7 @@ namespace Plato.Hosting.Web.Routing
 
                         //if (shellSettings.State == Shell.Models.TenantState.Running)
                         //{
-                            // TODO: Invalidate the pipeline automatically when the shell context is changed
-                            // such that we can reload the middlewares and the routes. Implement something similar
-                            // to IRunningShellTable but for the pipelines.
-
+                       
                             _pipelines.Add(shellSettings.Name, pipeline);
                         //}
                     }
@@ -97,6 +108,7 @@ namespace Plato.Hosting.Web.Routing
 
             // Attempt to get homepage route for tennet from site settings store
             // If the tennet has not been created yet siteService will return null
+            // typically if siteService returns null users will be presented with the SetUp module
             var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();
             if (siteService != null)
             {

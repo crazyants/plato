@@ -26,7 +26,6 @@ namespace Plato.Shell
         ShellContext IShellContextFactory.CreateShellContext(ShellSettings settings)
         {
             return CreateDescribedContext(settings, MinimumShellDescriptor());
-            
         }
 
         public ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor shellDescriptor)

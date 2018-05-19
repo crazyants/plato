@@ -12,24 +12,24 @@ namespace Plato.Hosting.Web.Routing
         private readonly IRouteBuilder _routeBuilder;
 
         private RouteValueDictionary _tokens;
-        private readonly ISiteSettingsStore _settingsStore;
+        private readonly ISiteSettingsStore _siteSettings;
 
         public HomePageRoute(
             string prefix, 
-            ISiteSettingsStore settingsStore, 
+            ISiteSettingsStore siteSettings, 
             IRouteBuilder routeBuilder, 
             IInlineConstraintResolver inlineConstraintResolver)
             : base(routeBuilder.DefaultHandler, prefix ?? "", inlineConstraintResolver)
         {
-            _settingsStore = settingsStore;
+            _siteSettings = siteSettings;
             _routeBuilder = routeBuilder;
         }
 
         protected override async Task OnRouteMatched(RouteContext context)
         {
 
-            var siteSettings = await _settingsStore.GetAsync();
-            if (siteSettings != null)
+            var siteSettings = await _siteSettings.GetAsync();
+            if (siteSettings?.HomeRoute != null)
             {
                 foreach (var entry in siteSettings.HomeRoute)
                 {

@@ -53,9 +53,12 @@ namespace Plato.Hosting.Web.Middleware
                         {
                             // activate the tanant
                             if (!shellContext.IsActivated)
+                            {
+                                // BuildPipeline ensures we always rebuild routes for new tennets
+                                httpContext.Items["BuildPipeline"] = true;
                                 shellContext.IsActivated = true;
+                            }
                         }
-                        
                     }
 
                     await _next.Invoke(httpContext);
