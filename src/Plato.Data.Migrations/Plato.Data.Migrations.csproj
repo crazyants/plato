@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\" />
+    <ProjectReference Include="..\Plato.Data.Schemas\Plato.Data.Schemas.csproj" />
+    <ProjectReference Include="..\Plato.Data\Plato.Data.csproj" />
+    <ProjectReference Include="..\Plato.FileSystem\Plato.FileSystem.csproj" />
   </ItemGroup>
 
 </Project>

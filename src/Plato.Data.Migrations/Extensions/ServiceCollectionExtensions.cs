@@ -1,29 +1,23 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Plato.Data.Abstractions.Schemas;
-using Plato.Data.Migrations;
 
-namespace Plato.Data.Extensions
+namespace Plato.Data.Migrations.Extensions
 {
     public static class ServiceCollectionExtensions
     {
 
-        public static IServiceCollection AddPlatoDbContext(
+        public static IServiceCollection AddDataMigrations(
             this IServiceCollection services)
         {
-
-            //services.AddDataMigrations();
 
             //services.AddSingleton<IConfigureOptions<DbContextOptions>, DbContextOptionsConfigure>();         
             //services.AddTransient<IDbContext, DbContext>();
 
-
-        
             services.AddTransient<IDataMigrationManager, DataMigrationManager>();
             services.AddTransient<AutomaticDataMigrations>();
 
             return services;
-                    }
+        }
 
 
     }

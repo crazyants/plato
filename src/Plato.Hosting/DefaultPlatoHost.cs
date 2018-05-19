@@ -59,11 +59,9 @@ namespace Plato.Hosting
 
         public void UpdateShellSettings(ShellSettings settings)
         {
-
-            ShellContext context;
             _shellSettingsManager.SaveSettings(settings);
             _runningShellTable.Remove(settings);
-            if (_shellContexts.TryRemove(settings.Name, out context))
+            if (_shellContexts.TryRemove(settings.Name, out var context))
             {
                 if (_shellContexts.Count == 0)
                     _shellContexts = null;

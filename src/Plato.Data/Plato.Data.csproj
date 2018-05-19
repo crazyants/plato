@@ -12,7 +12,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Schemas\**" />
+    <EmbeddedResource Remove="Schemas\**" />
+    <None Remove="Schemas\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Plato.Abstractions\Plato.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Data.Abstractions\Plato.Data.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.FileSystem\Plato.FileSystem.csproj" />
   </ItemGroup>
 
   <ItemGroup>

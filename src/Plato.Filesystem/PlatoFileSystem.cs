@@ -9,6 +9,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using Plato.FileSystem.Abstractions;
 
 namespace Plato.FileSystem
 {

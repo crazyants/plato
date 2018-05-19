@@ -18,4 +18,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Plato.FileSystem.Abstractions\Plato.FileSystem.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>

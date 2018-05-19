@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders;
 
-namespace Plato.FileSystem.AppData
+namespace Plato.FileSystem.Abstractions
 {
     public interface IAppDataFolder
     {

@@ -6,6 +6,8 @@ using Plato.FileSystem.AppData;
 using Plato.Yaml;
 using Plato.Shell.Models;
 using System;
+using Plato.FileSystem.Abstractions;
+using Plato.Shell.Abstractions;
 using Plato.Yaml.Extensions;
 
 namespace Plato.Shell
@@ -25,7 +27,8 @@ namespace Plato.Shell
 
         #region "Constrcutor"
         
-        public ShellSettingsManager(IAppDataFolder appDataFolder,        
+        public ShellSettingsManager(
+            IAppDataFolder appDataFolder,        
             IOptions<ShellOptions> optionsAccessor,
             ILogger<ShellSettingsManager> logger)
         {
