@@ -91,7 +91,7 @@ namespace Plato.Hosting.Web.Extensions
             
             // configure shell & add file system
 
-            services.ConfigureShell("sites", "schemas");
+            services.ConfigureShell("Sites", "Schemas");
             
             // add auth
             

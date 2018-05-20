@@ -10,6 +10,8 @@ namespace Plato.Data.Abstractions.Schemas
         
         public string Version { get; set; }
 
+        public Version TypedVersion { get; set;  }
+
         public string InstallSql { get; set; }
 
         public string UpgradeSql { get; set; }

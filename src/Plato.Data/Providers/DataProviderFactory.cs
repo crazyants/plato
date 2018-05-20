@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using Plato.Data.Abstractions;
 
 namespace Plato.Data
 {

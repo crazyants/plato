@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Data;
+using Plato.Data.Abstractions;
 using Plato.Hosting;
 using Plato.Shell;
 using Plato.Shell.Models;

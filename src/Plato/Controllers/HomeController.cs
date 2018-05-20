@@ -9,6 +9,7 @@ using Plato.Abstractions.Query;
 using Plato.Abstractions.Settings;
 using Plato.Abstractions.Stores;
 using Plato.Data;
+using Plato.Data.Abstractions;
 using Plato.Models.Roles;
 using Plato.Models.Settings;
 using Plato.Models.Users;

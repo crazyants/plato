@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Plato.Data.Migrations.Extensions
 {
@@ -10,9 +9,7 @@ namespace Plato.Data.Migrations.Extensions
             this IServiceCollection services)
         {
 
-            //services.AddSingleton<IConfigureOptions<DbContextOptions>, DbContextOptionsConfigure>();         
-            //services.AddTransient<IDbContext, DbContext>();
-
+            services.AddTransient<IDataMigrationBuilder, DataMigrationBuilder>();
             services.AddTransient<IDataMigrationManager, DataMigrationManager>();
             services.AddTransient<AutomaticDataMigrations>();
 

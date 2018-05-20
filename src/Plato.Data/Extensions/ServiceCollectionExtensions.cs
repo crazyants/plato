@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Plato.Data.Abstractions.Schemas;
-using Plato.Data.Migrations;
+using Plato.Data.Migrations.Extensions;
 using Plato.Data.Schemas.Extensions;
 
 namespace Plato.Data.Extensions
@@ -15,12 +13,11 @@ namespace Plato.Data.Extensions
 
             // add schemas
 
-            services.AddSchemas();
+            services.AddDataSchemas();
 
             // add migrations 
 
-            services.AddTransient<IDataMigrationManager, DataMigrationManager>();
-            services.AddTransient<AutomaticDataMigrations>();
+            services.AddDataMigrations();
 
             return services;
 

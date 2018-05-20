@@ -114,6 +114,5 @@ namespace Plato.FileSystem.AppData
             return _fileSystem.GetFileInfo(path).PhysicalPath;
         }
 
-
     }
 }

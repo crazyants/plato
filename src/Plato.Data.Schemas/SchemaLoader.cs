@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace Plato.Data.Schemas
         private readonly IOptions<ShellOptions> _optionsAccessor;
         private readonly ILogger<SchemaLoader> _logger;
         
-        public List<SchemaDescriptor> LoadedSchemas => (List<SchemaDescriptor>)_loadedSchemas?.Values ?? null;
+        public List<SchemaDescriptor> LoadedSchemas => (List<SchemaDescriptor>)_loadedSchemas.Values.ToList() ?? null;
         
         public SchemaLoader(
             IAppDataFolder appDataFolder,
@@ -78,9 +79,9 @@ namespace Plato.Data.Schemas
         async Task<SchemaDescriptor> LoadSchema(DirectoryInfo schemaFolder)
         {
 
-            var installSql = "";
-            var upgradeSql = "";
-            var rollbackSql = "";
+            string installSql = null,
+                upgradeSql = null,
+                rollbackSql = null;
 
             /* Each schema folder contains 3 child folders.
              
@@ -98,30 +99,31 @@ namespace Plato.Data.Schemas
                 {
                     if (file.Extension.ToLower() == SchemaExtension)
                     {
+                        var path = _appDataFolder.Combine(
+                            _optionsAccessor.Value.SchemaLocation,
+                            schemaFolder.Name,
+                            folder.Name,
+                            file.Name);
                         switch (folder.Name.ToLower())
                         {
                             case InstallDirectory:
                             {
-
-                                installSql = await ReadFileAsync(file.FullName);
+                                installSql = await ReadFileAsync(path);
                                 break;
                             }
                             case UpgradeDirectory:
                             {
-                                upgradeSql = await ReadFileAsync(file.FullName);
+                                upgradeSql = await ReadFileAsync(path);
                                 break;
                             }
                             case RollbackDirectory:
                             {
-                                rollbackSql = await ReadFileAsync(file.FullName);
+                                rollbackSql = await ReadFileAsync(path);
                                 break;
                             }
                         }
-
                     }
-
                 }
-
             }
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -136,8 +138,9 @@ namespace Plato.Data.Schemas
                 UpgradeSql = upgradeSql,
                 RollbackSql = rollbackSql
             };
-
+            
         }
+
 
         async Task<string> ReadFileAsync(string path)
         {

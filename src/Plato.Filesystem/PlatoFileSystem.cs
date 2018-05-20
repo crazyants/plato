@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Microsoft.Extensions.FileProviders;
@@ -26,7 +27,6 @@ namespace Plato.FileSystem
             _fileProvider = fileProvider;
             _logger = logger;
             RootPath = rootPath;
-
             //T = NullLocalizer.Instance;
         }
 
@@ -127,7 +127,19 @@ namespace Plato.FileSystem
                 return null;
             using (var reader = File.OpenText(file.PhysicalPath))
             {
+
                 return await reader.ReadToEndAsync();
+
+                //var sb = new StringBuilder();
+                //var line = " ";
+                //while (line != null)
+                //{
+                //    line = reader.ReadLine();
+                //    sb.Append(line)
+                //        .Append(Environment.NewLine);
+                //}
+                //return sb.ToString();
+
             }
         }
 

@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Plato.Abstractions\Plato.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Data.Abstractions\Plato.Data.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Data.Migrations\Plato.Data.Migrations.csproj" />
     <ProjectReference Include="..\Plato.Data.Schemas\Plato.Data.Schemas.csproj" />
     <ProjectReference Include="..\Plato.FileSystem\Plato.FileSystem.csproj" />
   </ItemGroup>

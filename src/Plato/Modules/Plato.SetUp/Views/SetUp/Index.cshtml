@@ -4,7 +4,7 @@
 <form asp-controller="SetUp" asp-action="Index">
 
     <hr />
-    @ViewData["Schema"]
+    @Html.Raw(ViewData["Schema"])
     <hr />
 
     <div class="jumbotron mt-5">

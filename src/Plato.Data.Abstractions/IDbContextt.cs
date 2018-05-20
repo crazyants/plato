@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace Plato.Data
+namespace Plato.Data.Abstractions
 {
     public interface IDbContext : IDisposable
     {

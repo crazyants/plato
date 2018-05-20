@@ -7,6 +7,7 @@ using Plato.Abstractions.Extensions;
 using Plato.Data;
 using Plato.Models.Users;
 using Plato.Abstractions.Collections;
+using Plato.Data.Abstractions;
 
 namespace Plato.Repositories.Users
 {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using Plato.Abstractions.Stores;
 using Plato.Data.Abstractions.Schemas;
+using Plato.Data.Migrations;
 using Plato.SetUp.ViewModels;
 using Plato.SetUp.Services;
 
@@ -16,30 +17,68 @@ namespace Plato.SetUp.Controllers
         private readonly ISetUpService _setUpService;
 
         private readonly ISchemaLoader _schemaLoader;
+        private readonly IDataMigrationBuilder _dataMigrationBuilder;
 
         public SetUpController(
             ISiteSettingsStore settingsStore,
             ISetUpService setUpService,
             ISchemaLoader schemaLoader,
+            IDataMigrationBuilder dataMigrationBuilder,
             IStringLocalizer<SetUpController> t)
         {
             _settingsStore = settingsStore;
             _setUpService = setUpService;
+
             _schemaLoader = schemaLoader;
+            _dataMigrationBuilder = dataMigrationBuilder;
 
             T = t;
         }
 
         public IStringLocalizer T { get; set; }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
 
-            _schemaLoader.LoadSchemas(new List<string> {"1.0.0"});
+            //_schemaLoader.LoadSchemas(new List<string> {"1.0.0"});
+            
+            //ViewData["Schema"] = _schemaLoader.LoadedSchemas.Count;
+            //ViewData["Schema"] = _schemaLoader.LoadedSchemas[0].InstallSql;
 
-            ViewData["Schema"] = _schemaLoader.LoadedSchemas.Count;
 
+            _dataMigrationBuilder.BuildMigrations(new List<string>() {"1.0.0"});
 
+            _dataMigrationBuilder.BuildMigrations(new List<string>() { "1.0.0", "1.0.1" });
+
+            _dataMigrationBuilder.BuildMigrations(new List<string>() { "1.0.1", "1.0.0" });
+
+            _dataMigrationBuilder.BuildMigrations(new List<string>()
+            {
+                "1.0.1",
+                "1.0.2",
+                "1.0.3",
+                "1.0.4"
+            });
+
+            _dataMigrationBuilder.BuildMigrations(new List<string>()
+            {
+                "1.0.4",
+                "1.0.3",
+                "1.0.2",
+                "1.0.1"
+            });
+
+            _dataMigrationBuilder.BuildMigrations(new List<string>()
+            {
+                "1.0.0",
+                "2.0."
+            });
+
+            _dataMigrationBuilder.BuildMigrations(new List<string>()
+            {
+                "2.0.0",
+                "1.0.0"
+            });
 
             return View();
 

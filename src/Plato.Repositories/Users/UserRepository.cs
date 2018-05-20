@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Collections;
 using Plato.Abstractions.Extensions;
 using Plato.Data;
+using Plato.Data.Abstractions;
 using Plato.Models.Roles;
 using Plato.Models.Users;
 

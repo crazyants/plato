@@ -1,4 +1,5 @@
-﻿namespace Plato.Data
+﻿
+namespace Plato.Data.Abstractions
 {
 
     public class DbContextOptions 

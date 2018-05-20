@@ -9,6 +9,7 @@ using Plato.Abstractions.Extensions;
 using System.Data.Common;
 using Plato.Abstractions.Settings;
 using Plato.Abstractions.Collections;
+using Plato.Data.Abstractions;
 
 namespace Plato.Repositories.Settings
 {
