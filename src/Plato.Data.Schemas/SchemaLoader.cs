@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Plato.Abstractions.Extensions;
@@ -28,7 +29,9 @@ namespace Plato.Data.Schemas
         private readonly IAppDataFolder _appDataFolder;
         private readonly IOptions<ShellOptions> _optionsAccessor;
         private readonly ILogger<SchemaLoader> _logger;
-
+        
+        public List<SchemaDescriptor> LoadedSchemas => (List<SchemaDescriptor>)_loadedSchemas?.Values ?? null;
+        
         public SchemaLoader(
             IAppDataFolder appDataFolder,
             IOptions<ShellOptions> optionsAccessor,
@@ -38,8 +41,6 @@ namespace Plato.Data.Schemas
             _optionsAccessor = optionsAccessor;
             _logger = logger;
         }
-
-        public List<SchemaDescriptor> LoadedSchemas => (List<SchemaDescriptor>) _loadedSchemas.Values;
 
         public void LoadSchemas()
         {
@@ -59,7 +60,7 @@ namespace Plato.Data.Schemas
 
         #region "Private Methods"
 
-        private void LoadSchemasInternal()
+        async void LoadSchemasInternal()
         {
             foreach (var schemaFolder in _appDataFolder.ListDirectories(_optionsAccessor.Value.SchemaLocation))
             {
@@ -69,12 +70,12 @@ namespace Plato.Data.Schemas
                 {
                     if (_logger.IsEnabled(LogLevel.Information))
                         _logger.LogInformation("Schema folder found '{0}'.", schemaFolder.Name);
-                    _loadedSchemas.TryAdd(schemaFolder.Name, LoadSchema(schemaFolder));
+                    _loadedSchemas.TryAdd(schemaFolder.Name, await LoadSchema(schemaFolder));
                 }
             }
         }
 
-        private SchemaDescriptor LoadSchema(DirectoryInfo schemaFolder)
+        async Task<SchemaDescriptor> LoadSchema(DirectoryInfo schemaFolder)
         {
 
             var installSql = "";
@@ -102,21 +103,21 @@ namespace Plato.Data.Schemas
                             case InstallDirectory:
                             {
 
-                                installSql = ReadFile(file.FullName);
+                                installSql = await ReadFileAsync(file.FullName);
                                 break;
                             }
                             case UpgradeDirectory:
                             {
-                                upgradeSql = ReadFile(file.FullName);
-                                    break;
+                                upgradeSql = await ReadFileAsync(file.FullName);
+                                break;
                             }
                             case RollbackDirectory:
                             {
-                                rollbackSql = ReadFile(file.FullName);
+                                rollbackSql = await ReadFileAsync(file.FullName);
                                 break;
                             }
                         }
-                     
+
                     }
 
                 }
@@ -138,26 +139,22 @@ namespace Plato.Data.Schemas
 
         }
 
-        private string ReadFile(string path)
+        async Task<string> ReadFileAsync(string path)
         {
-            var fs = new FileStream(path, FileMode.Open);
-            using (var reader = new StreamReader(fs))
-            {
-                return reader.ReadToEnd();
-            }
+            return await _appDataFolder.ReadFileAsync(path);
         }
 
-        private bool IsSchemaLoaded(string version)
+        bool IsSchemaLoaded(string version)
         {
             return _loadedSchemas.ContainsKey(version);
         }
 
-        private bool IsSchemaSpecified(string version)
+        bool IsSchemaSpecified(string version)
         {
+            // no explict versions - allow all schemas
             if (_versions.Count == 0)
-            {
-                return false;
-            }
+                return true;
+            // check if version if specified 
             return _versions.Contains(version);
             
         }

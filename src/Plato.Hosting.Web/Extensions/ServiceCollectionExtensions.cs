@@ -73,7 +73,7 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 
-                //internalServices.AddPlatoDbContext();
+                internalServices.AddPlatoDbContext();
                 internalServices.AddRepositories();
                 internalServices.AddStores();
                 
@@ -91,7 +91,7 @@ namespace Plato.Hosting.Web.Extensions
             
             // configure shell & add file system
 
-            services.ConfigureShell("sites");
+            services.ConfigureShell("sites", "schemas");
             
             // add auth
             

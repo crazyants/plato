@@ -7,7 +7,7 @@ namespace Plato.Data.Schemas.Extensions
     public static class ServiceCollectionExtensions
     {
 
-        public static IServiceCollection AddPlatoDbContext(
+        public static IServiceCollection AddSchemas(
             this IServiceCollection services)
         {
 

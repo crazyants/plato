@@ -2,7 +2,11 @@
 @model Plato.SetUp.ViewModels.SetUpViewModel
 
 <form asp-controller="SetUp" asp-action="Index">
-    
+
+    <hr />
+    @ViewData["Schema"]
+    <hr />
+
     <div class="jumbotron mt-5">
         <h1>@T["Setup"]</h1>
         <p class="lead">@T["Please answer a few questions to configure your site."]</p>

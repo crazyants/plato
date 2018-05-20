@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Plato.Data.Abstractions.Schemas;
 using Plato.Data.Migrations;
+using Plato.Data.Schemas.Extensions;
 
 namespace Plato.Data.Extensions
 {
@@ -12,18 +13,18 @@ namespace Plato.Data.Extensions
             this IServiceCollection services)
         {
 
-            //services.AddDataMigrations();
+            // add schemas
 
-            //services.AddSingleton<IConfigureOptions<DbContextOptions>, DbContextOptionsConfigure>();         
-            //services.AddTransient<IDbContext, DbContext>();
+            services.AddSchemas();
 
+            // add migrations 
 
-        
             services.AddTransient<IDataMigrationManager, DataMigrationManager>();
             services.AddTransient<AutomaticDataMigrations>();
 
             return services;
-                    }
+
+        }
 
 
     }
