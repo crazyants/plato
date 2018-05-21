@@ -15,7 +15,7 @@ namespace Plato.SetUp.ViewModels
 
         //public bool DatabaseProviderPreset { get; set; }
 
-        //public string ConnectionString { get; set; }
+        public string ConnectionString { get; set; }
 
         //public bool ConnectionStringPreset { get; set; }
 

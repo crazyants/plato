@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Plato.Data.Abstractions;
 
 namespace Plato.Data.Migrations
@@ -32,6 +30,11 @@ namespace Plato.Data.Migrations
         public IEnumerable<DataMigration> ApplyMigrations(DataMigrationRecord dataMigrationRecord)
         {
 
+            if (_successfulMigrations == null)
+                _successfulMigrations = new List<DataMigration>();
+            if (_failedMigrations == null)
+                _failedMigrations = new List<DataMigration>();
+
             var completedMigrations = new List<DataMigration>();
             foreach (var migration in dataMigrationRecord.Migrations)
             {
@@ -42,7 +45,11 @@ namespace Plato.Data.Migrations
                     _failedMigrations.Add(migration);
             }
 
+            if (_successfulMigrations.Count > 0)
+                completedMigrations.AddRange(_successfulMigrations);
+            
             return completedMigrations;
+
         }
 
         #endregion
@@ -55,18 +62,19 @@ namespace Plato.Data.Migrations
             var migrationId = 0;
             using (var context = _dbContext)
             {
-                try
+                foreach (var statement in migration.Statements)
                 {
-
-                    migrationId = context.ExecuteScalar<int>(
-                        System.Data.CommandType.Text, migration.UpgradeSql);
-
+                    try
+                    {
+                        //migrationId = context.ExecuteScalar<int>(
+                        //    System.Data.CommandType.Text, statement);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-                
+              
             }
 
             return migrationId;

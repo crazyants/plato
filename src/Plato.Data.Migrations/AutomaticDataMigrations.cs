@@ -9,14 +9,14 @@ namespace Plato.Data.Migrations
     public class AutomaticDataMigrations
     {
 
-        private IDataMigrationManager _migrationManager;
+        private readonly IDataMigrationBuilder _migrationBuilder;
 
         #region "Constructor"
 
         public AutomaticDataMigrations(
-            IDataMigrationManager migrationManager)
+            IDataMigrationBuilder migrationBuilder)
         {
-            _migrationManager = migrationManager;
+            _migrationBuilder = migrationBuilder;
         }
 
         #endregion
@@ -25,29 +25,11 @@ namespace Plato.Data.Migrations
 
         private void InitialMigration()
         {
-
-
-
-            var initialMigration = new DataMigration()
-            {
-                Version = "1.0.0",
-                InstallSql = @"
-
-                    CREATE TABLE 
-                
-                ",
-                UpgradeSql = @"
-
-                    CREATE TABLE 
-                
-                ",
-                RollBackSql = @""
-            };
-
-            var migrations = new DataMigrationRecord();
-            migrations.Migrations.Add(initialMigration);
-            _migrationManager.ApplyMigrations(migrations);
-            
+            _migrationBuilder.BuildMigrations(
+                new List<string>()
+                {
+                    "1.0.0"
+                });
         }
 
         #endregion

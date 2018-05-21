@@ -22,8 +22,8 @@ namespace Plato.Data.Schemas
         private const string RollbackDirectory = "rollback";
         private const string SchemaExtension = ".sql";
 
-        private static readonly ConcurrentDictionary<string, SchemaDescriptor> _loadedSchemas =
-            new ConcurrentDictionary<string, SchemaDescriptor>(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, Schema> _loadedSchemas =
+            new ConcurrentDictionary<string, Schema>(StringComparer.OrdinalIgnoreCase);
 
         private List<string> _versions;
         
@@ -31,7 +31,7 @@ namespace Plato.Data.Schemas
         private readonly IOptions<ShellOptions> _optionsAccessor;
         private readonly ILogger<SchemaLoader> _logger;
         
-        public List<SchemaDescriptor> LoadedSchemas => (List<SchemaDescriptor>)_loadedSchemas.Values.ToList() ?? null;
+        public List<Schema> Schemas => (List<Schema>)_loadedSchemas.Values.ToList() ?? null;
         
         public SchemaLoader(
             IAppDataFolder appDataFolder,
@@ -43,25 +43,21 @@ namespace Plato.Data.Schemas
             _logger = logger;
         }
 
-        public void LoadSchemas()
-        {
-            LoadSchemas(new List<string>());
-        }
-
-        public void LoadSchemas(List<string> versions)
+        public async Task<ISchemaLoader> LoadAsync(List<string> versions)
         {
             _versions = versions;
-            if (_loadedSchemas.Count == 0)
+            if (_loadedSchemas?.Count == 0)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                     _logger.LogInformation("Loading schemas from '{0}'.", _optionsAccessor.Value.SchemaLocation);
-                LoadSchemasInternal();
+                await LoadSchemasInternal();
             }
+            return await Task.FromResult(this);
         }
 
         #region "Private Methods"
 
-        async void LoadSchemasInternal()
+        async Task LoadSchemasInternal()
         {
             foreach (var schemaFolder in _appDataFolder.ListDirectories(_optionsAccessor.Value.SchemaLocation))
             {
@@ -71,12 +67,14 @@ namespace Plato.Data.Schemas
                 {
                     if (_logger.IsEnabled(LogLevel.Information))
                         _logger.LogInformation("Schema folder found '{0}'.", schemaFolder.Name);
-                    _loadedSchemas.TryAdd(schemaFolder.Name, await LoadSchema(schemaFolder));
+
+                    var schema = await LoadSchema(schemaFolder);
+                    _loadedSchemas.TryAdd(schemaFolder.Name, schema);
                 }
             }
         }
 
-        async Task<SchemaDescriptor> LoadSchema(DirectoryInfo schemaFolder)
+        async Task<Schema> LoadSchema(DirectoryInfo schemaFolder)
         {
 
             string installSql = null,
@@ -85,7 +83,7 @@ namespace Plato.Data.Schemas
 
             /* Each schema folder contains 3 child folders.
              
-                - SchemaFolder
+                - SchemaFolder - 1.0.0, 2.1.4 etc
                     - install
                     - upgrade
                     - rollback
@@ -131,7 +129,7 @@ namespace Plato.Data.Schemas
                 _logger.LogInformation("Schema loaded successfully '{0}'.", schemaFolder.Name);
             }
 
-            return new SchemaDescriptor()
+            return new Schema()
             {
                 Version = schemaFolder.Name,
                 InstallSql = installSql,
@@ -140,7 +138,6 @@ namespace Plato.Data.Schemas
             };
             
         }
-
 
         async Task<string> ReadFileAsync(string path)
         {

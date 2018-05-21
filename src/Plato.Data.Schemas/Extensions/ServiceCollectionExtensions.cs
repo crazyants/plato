@@ -12,6 +12,7 @@ namespace Plato.Data.Schemas.Extensions
         {
 
             services.AddTransient<ISchemaLoader, SchemaLoader>();
+            services.AddTransient<ISchemaProvider, SchemaProvider>();
             
             return services;
         }

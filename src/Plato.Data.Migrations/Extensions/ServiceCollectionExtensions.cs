@@ -9,8 +9,8 @@ namespace Plato.Data.Migrations.Extensions
             this IServiceCollection services)
         {
 
-            services.AddTransient<IDataMigrationBuilder, DataMigrationBuilder>();
             services.AddTransient<IDataMigrationManager, DataMigrationManager>();
+            services.AddTransient<IDataMigrationBuilder, DataMigrationBuilder>();
             services.AddTransient<AutomaticDataMigrations>();
 
             return services;

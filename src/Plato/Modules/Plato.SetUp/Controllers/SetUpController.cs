@@ -46,39 +46,40 @@ namespace Plato.SetUp.Controllers
             //ViewData["Schema"] = _schemaLoader.LoadedSchemas[0].InstallSql;
 
 
-            _dataMigrationBuilder.BuildMigrations(new List<string>() {"1.0.0"});
+            //_dataMigrationBuilder.BuildMigrations(new List<string>() {"1.0.0"});
 
-            _dataMigrationBuilder.BuildMigrations(new List<string>() { "1.0.0", "1.0.1" });
+            _dataMigrationBuilder.BuildMigrations(new List<string>() { "1.0.0" });
+            ViewData["Schema"] = _dataMigrationBuilder.DataMigrationType.ToString();
 
-            _dataMigrationBuilder.BuildMigrations(new List<string>() { "1.0.1", "1.0.0" });
+            //_dataMigrationBuilder.BuildMigrations(new List<string>() { "1.0.1", "1.0.0" });
 
-            _dataMigrationBuilder.BuildMigrations(new List<string>()
-            {
-                "1.0.1",
-                "1.0.2",
-                "1.0.3",
-                "1.0.4"
-            });
+            //_dataMigrationBuilder.BuildMigrations(new List<string>()
+            //{
+            //    "1.0.1",
+            //    "1.0.2",
+            //    "1.0.3",
+            //    "1.0.4"
+            //});
 
-            _dataMigrationBuilder.BuildMigrations(new List<string>()
-            {
-                "1.0.4",
-                "1.0.3",
-                "1.0.2",
-                "1.0.1"
-            });
+            //_dataMigrationBuilder.BuildMigrations(new List<string>()
+            //{
+            //    "1.0.4",
+            //    "1.0.3",
+            //    "1.0.2",
+            //    "1.0.1"
+            //});
 
-            _dataMigrationBuilder.BuildMigrations(new List<string>()
-            {
-                "1.0.0",
-                "2.0."
-            });
+            //_dataMigrationBuilder.BuildMigrations(new List<string>()
+            //{
+            //    "1.0.0",
+            //    "2.0."
+            //});
 
-            _dataMigrationBuilder.BuildMigrations(new List<string>()
-            {
-                "2.0.0",
-                "1.0.0"
-            });
+            //_dataMigrationBuilder.BuildMigrations(new List<string>()
+            //{
+            //    "2.0.0",
+            //    "1.0.0"
+            //});
 
             return View();
 

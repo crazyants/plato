@@ -2,121 +2,111 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Plato.Data.Abstractions.Schemas;
 
 namespace Plato.Data.Migrations
 {
     public class DataMigrationBuilder : IDataMigrationBuilder
     {
-        public enum MigrationType
-        {
-            Install,
-            Upgrade,
-            Rollback
-        }
-
-        private List<string> _versions;
-        private List<SchemaDescriptor> _loadedSchemas;
-        private List<SchemaDescriptor> _internalSchemas;
-
+    
+        private List<PreparedSchema> _parsedSchemas;
         private MigrationType _migrationType;
 
-        private readonly ISchemaLoader _schemaLoader;
+        private readonly ISchemaProvider _schemaProvider;
+        private readonly IDataMigrationManager _dataMigrationManager;
+
+        public MigrationType DataMigrationType => _migrationType;
 
         public DataMigrationBuilder(
-            ISchemaLoader schemaLoader)
+            ISchemaProvider schemaProvider,
+            IDataMigrationManager dataMigrationManager)
         {
-            _schemaLoader = schemaLoader;
+            _schemaProvider = schemaProvider;
+            _dataMigrationManager = dataMigrationManager;
         }
 
+        #region "Implementation"
 
         public void BuildMigrations(List<string> versions)
         {
-
-            _versions = versions;
-
-            _schemaLoader.LoadSchemas(_versions);
-            _loadedSchemas = _schemaLoader.LoadedSchemas;
-
-            PrepareInternalSchemas();
-
-            if (_internalSchemas?.Count > 0)
+            _parsedSchemas = _schemaProvider.LoadSchemas(versions).Schemas;
+            if (_parsedSchemas?.Count > 0)
             {
-                SetInternalMigrationType();
-                foreach (var schema in _loadedSchemas)
-                {
-
-                }
-            }
-            
-        }
-
-        private void PrepareInternalSchemas()
-        {
-            _internalSchemas = new List<SchemaDescriptor>();
-            if (_loadedSchemas?.Count > 0)
-            {
-                foreach (var veraion in _versions)
-                {
-                    var foundVersion = _loadedSchemas.FirstOrDefault(s => s.Version == veraion);
-                    AddToInternalSchema(foundVersion ?? new SchemaDescriptor() { Version = veraion });
-                }
+                DetectMigrationType();
+                _dataMigrationManager.ApplyMigrations(BuildDataMigration());
             }
         }
 
-        void AddToInternalSchema(SchemaDescriptor schema)
+        #endregion
+
+        #region "Private Methods"
+
+        DataMigrationRecord BuildDataMigration()
         {
-            schema.TypedVersion = GetTypedVersion(schema.Version);
-            _internalSchemas.Add(schema);
+            if (_parsedSchemas == null)
+                return null;
+            var migrations = new DataMigrationRecord();
+            foreach (var schema in _parsedSchemas)
+            {
+                migrations.Migrations.Add(new DataMigration()
+                {
+                    Version = schema.Version,
+                    Statements = PrepareStatements(schema)
+                });
+            }
+            return migrations;
         }
 
-        void SetInternalMigrationType()
+        List<string> PrepareStatements(PreparedSchema schema)
         {
-            
-            var first = _internalSchemas[0];
-            var last = _internalSchemas[_internalSchemas.Count - 1];
+            var statements = new List<string>();
+            switch (this.DataMigrationType)
+            {
+                case MigrationType.Install:
+                    statements = schema.InstallStatements;
+                    break;
+                case MigrationType.Upgrade:
+                    statements = schema.UpgradeStatements;
+                    break;
+                case MigrationType.Rollback:
+                    statements = schema.RollbackStatements;
+                    break;
+            }
+            return statements;
+        }
 
+        void DetectMigrationType()
+        {
+            var first = _parsedSchemas[0];
+            var last = _parsedSchemas[_parsedSchemas.Count - 1];
             if (first.Version != last.Version)
             {
                 // get higer versions
                 var higherVersions =
-                    (from s in _internalSchemas
+                    (from s in _parsedSchemas
                      where s.TypedVersion > first.TypedVersion
                         select s).ToList();
                 // get lower versins
                 var lowerVersions =
-                    (from s in _internalSchemas
-                     where s.TypedVersion < last.TypedVersion
+                    (from s in _parsedSchemas
+                     where s.TypedVersion < first.TypedVersion
                         select s).ToList();
-
                 if (higherVersions.Count > 0)
                 {
                     _migrationType = MigrationType.Upgrade;
+                    return;
                 }
                 if (lowerVersions.Count > 0)
                 {
                     _migrationType = MigrationType.Rollback;
+                    return;
                 }
             }
-            
             _migrationType = MigrationType.Install;
-
         }
 
-        Version GetTypedVersion(string input)
-        {
-            if (!Version.TryParse(input, out var version))
-            {
-                // Is is a single number?
-                if (int.TryParse(input, out var major))
-                    return new Version(major + 1, 0, 0);
-            }
-            if (version.Build != -1)
-                return new Version(version.Major, version.Minor, version.Build + 1);
-            if (version.Minor != -1)
-                return new Version(version.Major, version.Minor + 1, 0);
-            return version;
-        }
+        #endregion
 
 
     }

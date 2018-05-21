@@ -8,11 +8,7 @@ namespace Plato.Data.Migrations
     public class DataMigration
     {
 
-        public string InstallSql { get; set; }
-
-        public string UpgradeSql { get; set; }
-
-        public string RollBackSql { get; set; }
+        public IEnumerable<string> Statements { get; set; }
 
         public string Version { get; set; }
 

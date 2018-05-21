@@ -12,22 +12,49 @@
         <p class="lead">@T["Please answer a few questions to configure your site."]</p>
     </div>
 
+    <a asp-controller="SetUp" asp-action="Index">Tag Helper Link</a>
+    <br /><br />
+
     <div class="row">
-        <fieldset class="form-group col-md-6" asp-validation-class-for="SiteName">
+        <fieldset class="form-group row" asp-validation-class-for="SiteName">
             <div>
-
-                <a asp-controller="SetUp" asp-action="Index">Tag Helper Link</a>
-                <br /><br />
-
+                
+                <h5>@T["Site Name"]</h5>
                 <label asp-for="SiteName">@T["What is the name of your site?"]</label>
-                <input asp-for="SiteName" class="form-control" />
+                <input asp-for="SiteName" class="form-control" style="width: 100%;" />
                 <span asp-validation-for="SiteName" class="text-danger">@T["The site name is required."]</span>
                 <span class="text-muted form-text small">@T["This is used as the default title of your pages."]</span>
+
+            </div>
+        </fieldset>
+    </div>
+    <div class="row">
+
+        <fieldset class="form-group row" asp-validation-class-for="ConnectionString">
+            <div>
+
+                <h5>@T["Connection String"]</h5>
+                <label asp-for="ConnectionString">@T["Specify the connection string to your database..."]</label>
+                <input asp-for="ConnectionString" class="form-control" />
+                <span asp-validation-for="ConnectionString" class="text-danger">@T["The site name is required."]</span>
+                <span class="text-muted form-text small">@T["All your plato data will be stored in this database."]</span>
+
+
+            </div>
+        </fieldset>
+
+    </div>
+    <div class="row">
+
+        <fieldset class="form-group">
+            <div>
 
                 <button class="btn btn-primary" type="submit" id="SubmitButton">@T["Finish Setup"]</button>
 
             </div>
         </fieldset>
+
+
     </div>
 
     <br /><br />
