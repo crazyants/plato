@@ -17,6 +17,7 @@ namespace Plato.Data.Migrations
 
         #region "constructor"
 
+
         public DataMigrationManager(
             IDbContext dbContext)
         {
