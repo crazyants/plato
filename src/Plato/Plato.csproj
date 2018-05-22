@@ -60,4 +60,8 @@
     <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.2.301" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="App_Data\Sites\" />
+  </ItemGroup>
+
 </Project>

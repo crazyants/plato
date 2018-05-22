@@ -48,15 +48,14 @@ namespace Plato.SetUp.Services
 
             // Set shell state to "Initializing" so that subsequent HTTP requests are responded to with "Service Unavailable" while Orchard is setting up.
             _shellSettings.State = TenantState.Initializing;
-
-
+            
             var shellSettings = new ShellSettings(_shellSettings.Configuration);
             
             if (string.IsNullOrEmpty(shellSettings.DatabaseProvider))
             {
                 shellSettings.DatabaseProvider = context.DatabaseProvider;
                 shellSettings.ConnectionString = context.DatabaseConnectionString;
-                //shellSettings.TablePrefix = context.DatabaseTablePrefix;
+                shellSettings.TablePrefix = context.DatabaseTablePrefix;
             }
 
             var executionId = Guid.NewGuid().ToString("n");
@@ -70,6 +69,14 @@ namespace Plato.SetUp.Services
                     //var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext>();
                     using (var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext>())
                     {
+                       dbContext.Configure(options =>
+                       {
+                           options.ConnectionString = shellSettings.ConnectionString;
+                           options.DatabaseProvider = shellSettings.DatabaseProvider;
+                           options.TablePrefix = shellSettings.TablePrefix;
+                       });
+
+
 
                     }
 

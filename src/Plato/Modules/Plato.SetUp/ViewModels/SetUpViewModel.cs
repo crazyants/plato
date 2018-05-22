@@ -17,11 +17,11 @@ namespace Plato.SetUp.ViewModels
 
         public string ConnectionString { get; set; }
 
-        //public bool ConnectionStringPreset { get; set; }
+        public bool ConnectionStringPreset { get; set; }
 
-        //public string TablePrefix { get; set; }
+        public string TablePrefix { get; set; }
 
-        //public bool TablePrefixPreset { get; set; }
+        public bool TablePrefixPreset { get; set; }
 
         //[Required]
         //public string UserName { get; set; }

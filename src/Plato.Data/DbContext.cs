@@ -55,17 +55,25 @@ namespace Plato.Data
         public DbContext(
             IOptions<DbContextOptions> dbContextOptions)
         {
-            Configure(dbContextOptions.Value);
+            ConfigureInternal(dbContextOptions.Value);
         }
 
-        public DbContext(Action<DbContextOptions> action)
+        public DbContext(Action<DbContextOptions> options)
         {
             var cfg = new DbContextOptions();
-            action(cfg);
-            Configure(cfg);
+            options(cfg);
+            Configure(options);
         }
 
-        public void Configure(DbContextOptions cfg)
+        public void Configure(Action<DbContextOptions> options)
+        {
+            var cfg = new DbContextOptions();
+            options(cfg);
+            ConfigureInternal(cfg);
+        }
+
+
+        private void ConfigureInternal(DbContextOptions cfg)
         {
             var providerFactory = new DataProviderFactory(cfg);
             _provider = providerFactory.Provider;

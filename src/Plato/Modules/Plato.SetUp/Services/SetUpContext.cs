@@ -13,5 +13,9 @@ namespace Plato.SetUp.Services
 
         public string DatabaseConnectionString { get; set; }
 
+        public string DatabaseTablePrefix { get; set; }
+
+        public IDictionary<string, string> Errors { get; set; }
+
     }
 }

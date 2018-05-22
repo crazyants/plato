@@ -8,6 +8,8 @@ namespace Plato.Data.Abstractions
     public interface IDbContext : IDisposable
     {
 
+        void Configure(Action<DbContextOptions> options);
+
         DbContextOptions Configuration { get; set; }
 
         Task<DbDataReader> ExecuteReaderAsync(CommandType commandType, string sql, params object[] commandParams);

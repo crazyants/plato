@@ -3,59 +3,91 @@
 
 <form asp-controller="SetUp" asp-action="Index">
 
-    <hr />
-    @Html.Raw(ViewData["Schema"])
-    <hr />
 
     <div class="jumbotron mt-5">
         <h1>@T["Setup"]</h1>
         <p class="lead">@T["Please answer a few questions to configure your site."]</p>
     </div>
 
+    <!--
+        
+    <hr />
+    @@Html.Raw(ViewData["Schema"])
+    <hr />
     <a asp-controller="SetUp" asp-action="Index">Tag Helper Link</a>
     <br /><br />
+    -->
 
-    <div class="row">
-        <fieldset class="form-group row" asp-validation-class-for="SiteName">
-            <div>
-                
-                <h5>@T["Site Name"]</h5>
-                <label asp-for="SiteName">@T["What is the name of your site?"]</label>
-                <input asp-for="SiteName" class="form-control" style="width: 100%;" />
-                <span asp-validation-for="SiteName" class="text-danger">@T["The site name is required."]</span>
-                <span class="text-muted form-text small">@T["This is used as the default title of your pages."]</span>
+    <fieldset class="row" asp-validation-class-for="SiteName">
+        <div class="form-group col-md-12">
 
+            <h5>@T["Site Name"]</h5>
+            <label asp-for="SiteName">@T["What is the name of your site?"]</label>
+            <input asp-for="SiteName" class="form-control" style="width: 100%;" />
+            <span asp-validation-for="SiteName" class="text-danger"></span>
+            <span class="text-muted form-text small">@T["This is used as the default title of your pages."]</span>
+
+        </div>
+    </fieldset>
+
+
+    @if (!Model.TablePrefixPreset || !Model.ConnectionStringPreset)
+    {
+        <h6>
+            @T["Database"]
+            <span class="text-muted form-text small">@T["The database is used to store the site's configuration and its contents."]</span>
+        </h6>
+    }
+
+    @if (Model.ConnectionStringPreset)
+    {
+        <input asp-for="ConnectionString" type="hidden" />
+    }
+    else
+    {
+        <fieldset class="row" asp-validation-class-for="ConnectionString">
+            <div class="form-group col-md-12">
+
+                <label asp-for="ConnectionString">@T["Connection string"]</label>
+                <div class="input-group mb-2 mb-sm-0">
+                    <input asp-for="ConnectionString" class="form-control" type="password" required />
+                    <div class="input-group-append reveal" title="@T["Show/hide connection string"]">
+                        <button type="button" class="btn btn-secondary" tabindex="-1" aria-hidden="true"><i class="fa fa-check"></i></button>
+                    </div>
+                </div>
+
+                <span asp-validation-for="ConnectionString" class="text-danger"></span>
+                <span class="text-muted form-text small">@T["The connection string to your database instance. e.g., server=localhost;trusted_connection=true;database=plato"]</span>
             </div>
         </fieldset>
-    </div>
-    <div class="row">
+    }
 
-        <fieldset class="form-group row" asp-validation-class-for="ConnectionString">
-            <div>
+    @if (Model.TablePrefixPreset)
+    {
+        <input asp-for="TablePrefix" type="hidden" />
+    }
+    else
+    {
 
-                <h5>@T["Connection String"]</h5>
-                <label asp-for="ConnectionString">@T["Specify the connection string to your database..."]</label>
-                <input asp-for="ConnectionString" class="form-control" />
-                <span asp-validation-for="ConnectionString" class="text-danger">@T["The site name is required."]</span>
-                <span class="text-muted form-text small">@T["All your plato data will be stored in this database."]</span>
-
-
+        <fieldset class="row" asp-validation-class-for="TablePrefix">
+            <div class="form-group col-md-12">
+                <label asp-for="TablePrefix">@T["Table Prefix"]</label>
+                <input asp-for="TablePrefix" class="form-control" />
+                <span asp-validation-for="TablePrefix" class="text-danger"></span>
+                <span class="text-muted form-text small">@T["You can specify a custom table prefix if you intend to reuse the same database for multiple sites."]</span>
             </div>
         </fieldset>
-
-    </div>
-    <div class="row">
-
-        <fieldset class="form-group">
-            <div>
-
-                <button class="btn btn-primary" type="submit" id="SubmitButton">@T["Finish Setup"]</button>
-
-            </div>
-        </fieldset>
+    }
 
 
-    </div>
+    <fieldset class="form-group">
+        <div>
+            <button class="btn btn-primary" type="submit" id="SubmitButton">@T["Finish Setup"]</button>
+        </div>
+    </fieldset>
+
+
+
 
     <br /><br />
 

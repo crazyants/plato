@@ -44,14 +44,19 @@
     ],
     "outputFileName": "wwwroot/css/vendors/font-awesome.css",
     "minify": {
-      "enabled": false
+      "enabled": false,
+      "adjustRelativePaths": false
     }
   },
   {
     "inputFiles": [
       "bower_components/font-awesome/web-fonts-with-css/css/fontawesome-all.css"
     ],
-    "outputFileName": "wwwroot/css/vendors/font-awesome.min.css"
+    "outputFileName": "wwwroot/css/vendors/font-awesome.min.css",
+    "minify": {
+      "enabled": true,
+      "adjustRelativePaths": false
+    }
   },
   /* jquery */
   {

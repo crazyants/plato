@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
@@ -7,25 +8,28 @@ using Plato.Data.Abstractions.Schemas;
 using Plato.Data.Migrations;
 using Plato.SetUp.ViewModels;
 using Plato.SetUp.Services;
+using Plato.Shell.Models;
 
 namespace Plato.SetUp.Controllers
 {
     public class SetUpController : Controller
     {
 
+        private readonly ShellSettings _shellSettings;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly ISetUpService _setUpService;
-
         private readonly ISchemaLoader _schemaLoader;
         private readonly IDataMigrationBuilder _dataMigrationBuilder;
 
         public SetUpController(
+            ShellSettings shellSettings,
             ISiteSettingsStore settingsStore,
             ISetUpService setUpService,
             ISchemaLoader schemaLoader,
             IDataMigrationBuilder dataMigrationBuilder,
             IStringLocalizer<SetUpController> t)
         {
+            _shellSettings = shellSettings;
             _settingsStore = settingsStore;
             _setUpService = setUpService;
 
@@ -81,7 +85,15 @@ namespace Plato.SetUp.Controllers
             //    "1.0.0"
             //});
 
-            return View();
+
+            var setUpViewModel = new SetUpViewModel()
+            {
+                SiteName = "",
+                ConnectionString = ""
+            };
+
+            return View(setUpViewModel);
+
 
         }
 
@@ -93,15 +105,44 @@ namespace Plato.SetUp.Controllers
             {
                 return View(model);
             }
+            
+            if (!string.IsNullOrEmpty(_shellSettings.ConnectionString))
+            {
+                model.ConnectionStringPreset = true;
+                model.ConnectionString = _shellSettings.ConnectionString;
+            }
 
-            var context = new SetUpContext()
+            if (!string.IsNullOrEmpty(_shellSettings.TablePrefix))
+            {
+                model.TablePrefixPreset = true;
+                model.TablePrefix = _shellSettings.TablePrefix;
+            }
+
+            var setupContext = new SetUpContext()
             {
                 SiteName = model.SiteName,
                 DatabaseProvider = "SqlClient",
-                DatabaseConnectionString = "server=localhost;trusted_connection=true;database=plato_2"
+                DatabaseConnectionString = model.ConnectionString
             };
 
-            _setUpService.SetupAsync(context);
+
+            if (!model.TablePrefixPreset)
+            {
+                setupContext.DatabaseTablePrefix = model.TablePrefix;
+            }
+
+
+            var executionId = _setUpService.SetupAsync(setupContext);
+            // Check if a component in the Setup failed
+            if (setupContext.Errors.Any())
+            {
+                foreach (var error in setupContext.Errors)
+                {
+                    ModelState.AddModelError(error.Key, error.Value);
+                }
+
+                return View(model);
+            }
 
             return Redirect("~/");
         }
