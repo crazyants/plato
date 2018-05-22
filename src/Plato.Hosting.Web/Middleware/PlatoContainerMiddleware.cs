@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Shell;
 using Plato.Shell.Models;
@@ -54,6 +55,10 @@ namespace Plato.Hosting.Web.Middleware
                             // activate the tanant
                             if (!shellContext.IsActivated)
                             {
+
+                                //var tenantEvents = httpContext.RequestServices.GetServices<IModularTenantEvents>();
+
+
                                 // BuildPipeline ensures we always rebuild routes for new tennets
                                 httpContext.Items["BuildPipeline"] = true;
                                 shellContext.IsActivated = true;

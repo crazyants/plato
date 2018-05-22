@@ -1,53 +1,39 @@
 
+IF NOT EXISTS(SELECT 1 FROM sys.Objects WHERE  Object_id = OBJECT_ID(N'Plato_AuditLog') AND Type = N'U')
+BEGIN
 
-CREATE TABLE Plato_AuditLog
-(
-Id								INT IDENTITY(1,1) NOT NULL,
-EntityId						INT NOT NULL,
-TableName						NVARCHAR(75) DEFAULT('') NOT NULL,
-ColumnName						NVARCHAR(75) DEFAULT('') NOT NULL,
-[Values]						NVARCHAR(75) DEFAULT('') NOT NULL,
-CreatedDate						DATETIME2 NULL,
-CreatedUserId					INT DEFAULT (0) NOT NULL,
-CONSTRAINT PK_Plato_AuditLog_Id PRIMARY KEY CLUSTERED ( Id )
-)
+	CREATE TABLE Plato_AuditLog
+	(
+	Id								INT IDENTITY(1,1) NOT NULL,
+	EntityId						INT NOT NULL,
+	TableName						NVARCHAR(75) DEFAULT('') NOT NULL,
+	ColumnName						NVARCHAR(75) DEFAULT('') NOT NULL,
+	[Values]						NVARCHAR(75) DEFAULT('') NOT NULL,
+	CreatedDate						DATETIME2 NULL,
+	CreatedUserId					INT DEFAULT (0) NOT NULL,
+	CONSTRAINT PK_Plato_AuditLog_Id PRIMARY KEY CLUSTERED ( Id )
+	)
 
-GO
-
-
-CREATE TABLE Plato_Editions
-(
-Id								INT IDENTITY(1,1) NOT NULL,
-Name							NVARCHAR(255) DEFAULT('') NOT NULL,
-Discriminators					NVARCHAR(255) DEFAULT('') NOT NULL,
-CreatedDate						DATETIME2 NULL,
-CreatedUserId					INT DEFAULT (0) NOT NULL,
-ModifiedDate					DATETIME2 NULL,
-ModifiedUserId					INT DEFAULT (0) NOT NULL,
-IsDisabled						BIT DEFAULT(0) NOT NULL,
-DisabledDate					DATETIME2 NULL,
-DisabledUserId					INT DEFAULT (0) NOT NULL,
-IsDeleted						BIT DEFAULT(0) NOT NULL,
-DeletedDate						DATETIME2 NULL,
-DeletedUserId					INT DEFAULT (0) NOT NULL,
-CONSTRAINT PK_Plato_Editions_Id PRIMARY KEY CLUSTERED ( Id )
-)
+END
 
 GO
 
+IF NOT EXISTS(SELECT 1 FROM sys.Objects WHERE  Object_id = OBJECT_ID(N'Plato_SiteMigrations') AND Type = N'U')
+BEGIN
 
-CREATE TABLE Plato_SiteMigrations
-(
-Id								INT IDENTITY(1,1) NOT NULL,
-AppVersion						NVARCHAR(10) DEFAULT ('') NOT NULL,
-SchemaUpdates					NVARCHAR(MAX) DEFAULT('') NOT NULL,
-CreatedDate						DATETIME2 NULL,
-CreatedUserId					INT DEFAULT (0) NOT NULL,
-CONSTRAINT PK_Plato_SiteMigrations_Id PRIMARY KEY CLUSTERED ( Id )
-)
+	CREATE TABLE Plato_SiteMigrations
+	(
+	Id								INT IDENTITY(1,1) NOT NULL,
+	AppVersion						NVARCHAR(10) DEFAULT ('') NOT NULL,
+	SchemaUpdates					NVARCHAR(MAX) DEFAULT('') NOT NULL,
+	CreatedDate						DATETIME2 NULL,
+	CreatedUserId					INT DEFAULT (0) NOT NULL,
+	CONSTRAINT PK_Plato_SiteMigrations_Id PRIMARY KEY CLUSTERED ( Id )
+	)
+
+END
 
 GO
-
 
 CREATE TABLE Plato_LoginAttempts
 (
@@ -112,6 +98,7 @@ OptOutCode						NVARCHAR(255) DEFAULT('') NOT NULL,
 CONSTRAINT PK_Plato_SpaceFollows_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
+GO
 
 CREATE TABLE Plato_Teams
 (
@@ -156,7 +143,6 @@ CONSTRAINT PK_Plato_Products_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_TeamProducts
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -170,7 +156,6 @@ CONSTRAINT PK_Plato_TeamProducts_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
-
 
 CREATE TABLE Plato_UserTeams
 (
@@ -199,7 +184,6 @@ CONSTRAINT PK_Plato_Settings_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_Users
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -223,7 +207,6 @@ CONSTRAINT PK_Plato_Users_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_UserPhoto
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -241,8 +224,6 @@ CONSTRAINT PK_Plato_UserPhoto_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
-
 CREATE TABLE Plato_UserBanner
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -259,8 +240,6 @@ CONSTRAINT PK_Plato_UserBanner_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
-
-
 
 CREATE TABLE Plato_UserSecret
 (
@@ -390,7 +369,6 @@ CONSTRAINT PK_Plato_UserFields_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_UserFieldValues
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -476,7 +454,6 @@ CONSTRAINT PK_Plato_UserFavourites_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_Entities
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -512,7 +489,6 @@ CONSTRAINT PK_Plato_Entities_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_EntityDetails
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -531,7 +507,6 @@ CONSTRAINT PK_Plato_EntityDetails_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_EntityFollows
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -543,7 +518,6 @@ CONSTRAINT PK_Plato_EntityFollows_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
-
 
 CREATE TABLE Plato_EntityAssignees
 (
@@ -593,7 +567,6 @@ CONSTRAINT PK_Plato_EntityFieldValues_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_EntityMentions
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -618,7 +591,6 @@ CONSTRAINT PK_Plato_EntityParticipants_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
-
 
 CREATE TABLE Plato_Labels
 (
@@ -649,7 +621,6 @@ CONSTRAINT PK_Plato_Labels_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_LabelFollows
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -662,7 +633,6 @@ CONSTRAINT PK_Plato_LabelFollows_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_EntityLabels
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -673,9 +643,7 @@ CreatedUserId					INT DEFAULT (0) NOT NULL,
 CONSTRAINT PK_Plato_EntityLabels_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
-
 GO
-
 
 CREATE TABLE Plato_EntityProducts
 (
@@ -743,7 +711,6 @@ CONSTRAINT PK_Plato_EntityReactions_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_EntityNotes
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -763,8 +730,6 @@ CONSTRAINT PK_Plato_EntityNotes_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
-
 CREATE TABLE Plato_Permissions
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -783,7 +748,6 @@ CONSTRAINT PK_Plato_Permissions_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
-
 
 CREATE TABLE Plato_Attachments
 (
@@ -806,7 +770,6 @@ CONSTRAINT PK_Plato_Attachments_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_EntityAttachments
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -818,7 +781,6 @@ CONSTRAINT PK_Plato_EntityAttachments_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
-
 
 CREATE TABLE Plato_WorkFlows
 (
@@ -881,7 +843,6 @@ CONSTRAINT PK_Plato_WorkFlowSteps_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_WorkFlowNextSteps
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -895,8 +856,6 @@ CONSTRAINT PK_Plato_WorkFlowNextSteps_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
-
-
 
 CREATE TABLE Plato_Badges
 (
@@ -923,7 +882,6 @@ CONSTRAINT PK_Plato_Badges_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_UserBadges
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -934,7 +892,6 @@ CONSTRAINT PK_Plato_UserBadges_Id PRIMARY KEY CLUSTERED ( Id )
 )
 
 GO
-
 
 CREATE TABLE Plato_Reputations
 (
@@ -955,7 +912,6 @@ CONSTRAINT PK_Plato_Reputations_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
-
 CREATE TABLE Plato_UserReputations
 (
 Id								INT IDENTITY(1,1) NOT NULL,
@@ -973,7 +929,9 @@ CONSTRAINT PK_Plato_UserReputations_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
----------------
+-- ************************************
+-- Stored Procedures
+-- ************************************
 
 GO
 
@@ -996,10 +954,6 @@ RETURN
 
 GO
 
-------------------------
-
-GO
-
 CREATE PROCEDURE [plato_sp_SelectUserSecret] (
 @Id int
 ) AS
@@ -1013,11 +967,6 @@ RETURN
 
 GO
 
------------------------
-
-GO
-
-
 CREATE PROCEDURE [plato_sp_SelectUserSecretByUserId] (
 @UserId int
 ) AS
@@ -1029,13 +978,7 @@ WHERE (UserId = @UserId)
 	
 RETURN
 
-
 GO
-
-------------------------
-
-GO
-
 
 CREATE PROCEDURE [plato_sp_SelectUserDetail] (
 @Id int
@@ -1050,11 +993,6 @@ RETURN
 
 GO
 
-------------------------
-
-GO
-
-
 CREATE PROCEDURE [plato_sp_SelectUserDetailByUserId] (
 @UserId int
 ) AS
@@ -1065,11 +1003,6 @@ Plato_UserDetail WITH (nolock)
 WHERE (UserId = @UserId)
 	
 RETURN
-
-
-GO
-
---------------------------
 
 GO
 
@@ -1086,9 +1019,6 @@ RETURN
 
 GO
 
-------------------------
-
-GO
 
 CREATE PROCEDURE [plato_sp_SelectUserBanner] (
 @Id int
@@ -1103,10 +1033,6 @@ RETURN
 
 GO
 
-------------------------
-
-GO
-
 CREATE PROCEDURE [plato_sp_SelectUserPhotoByUserId] (
 @UserId int
 ) AS
@@ -1118,13 +1044,7 @@ WHERE (UserId = @UserId)
 	
 RETURN
 
-
 GO
-
------------------------
-
-GO
-
 
 CREATE PROCEDURE [plato_sp_SelectUserBannerByUserId] (
 @UserId int
@@ -1136,13 +1056,6 @@ Plato_UserBanner WITH (nolock)
 WHERE (UserId = @UserId)
 	
 RETURN
-
-
-GO
-
-
-
-------------------------
 
 GO
 
@@ -1244,14 +1157,7 @@ SELECT @intIdentity
 
 RETURN
 
-
 GO
-
-------------------------
-
-GO
-
-
 
 CREATE PROCEDURE [plato_sp_InsertUpdateUserSecret] (
 	@Id int,
@@ -1306,11 +1212,6 @@ END
 SELECT @intIdentity;
 
 RETURN
-
-
-GO
-
--------------------
 
 GO
 
@@ -1390,10 +1291,6 @@ RETURN
 
 GO
 
--------------------
-
-GO
-
 CREATE PROCEDURE [plato_sp_InsertUpdateUserPhoto] (
 	@Id int,
 	@UserId int,
@@ -1468,11 +1365,6 @@ SELECT @intIdentity;
 
 RETURN
 
-
-GO
-
---------------------
-
 GO
 
 CREATE PROCEDURE [plato_sp_SelectUserByUserName] (
@@ -1490,11 +1382,6 @@ EXEC plato_sp_SelectUser @Id;
 RETURN
 
 GO
-
--------------------------
-
-GO
-
 
 CREATE PROCEDURE [plato_sp_DeleteUserRole] (
 @Id int
@@ -1523,11 +1410,6 @@ RETURN
 
 GO
 
-------------------------
-
-GO
-
-
 CREATE PROCEDURE [plato_sp_DeleteUserRoles] (
 @UserId int
 ) AS
@@ -1554,10 +1436,6 @@ RETURN
 
 GO
 
-------------------------
-
-GO
-
 CREATE PROCEDURE [plato_sp_SelectUserByUserNameNormalized] (
 @NormalizedUserName nvarchar(255)
 ) AS
@@ -1571,11 +1449,6 @@ WHERE (NormalizedUserName = @NormalizedUserName)
 EXEC plato_sp_SelectUser @Id;
 
 RETURN
-
-
-GO
-
-----------------------
 
 GO
 
@@ -1593,11 +1466,6 @@ WHERE (ud.ApiKey = @ApiKey)
 EXEC plato_sp_SelectUser @Id;
 
 RETURN
-
-
-GO
-
-----------------------
 
 GO
 
@@ -1622,10 +1490,6 @@ RETURN
 
 GO
 
--------------------
-
-GO
-
 
 CREATE PROCEDURE [plato_sp_SelectUserByEmailAndPassword] (
 @Email nvarchar(255),
@@ -1642,11 +1506,6 @@ WHERE (u.Email = @Email AND us.PasswordHash = @PasswordHash)
 EXEC plato_sp_SelectUser @Id;
 
 RETURN
-
-
-GO
-
---------------------
 
 GO
 
@@ -1668,10 +1527,6 @@ BEGIN
 END
 
 RETURN
-
-GO
-
-------------------------------
 
 GO
 
@@ -1898,13 +1753,7 @@ SELECT @intIdentity;
 
 RETURN
 
-
 GO
-
---------------------------
-
-GO
-
 
 
 CREATE PROCEDURE [plato_sp_InsertUpdateSetting] (
@@ -1973,15 +1822,7 @@ SELECT @intIdentity;
 
 RETURN
 
-
-
-
 GO
-
-------------------
-
-GO
-
 
 CREATE PROCEDURE [dbo].[plato_sp_SelectSetting] (
 @Id int
@@ -1994,9 +1835,6 @@ WHERE (Id = @Id)
 	
 RETURN
 
-GO
-
----------------------
 
 GO
 
@@ -2008,10 +1846,6 @@ SELECT * FROM
 Plato_Settings WITH (nolock)
 	
 RETURN
-
-GO
-
----------------------
 
 GO
 
@@ -2139,10 +1973,6 @@ RETURN
 
 GO
 
-----------------------
-
-GO
-
 CREATE PROCEDURE [plato_sp_SelectRoleByNameNormalized] (
 @NormalizedName nvarchar(255)
 ) AS
@@ -2157,13 +1987,7 @@ EXEC plato_sp_SelectRole @id;
 	
 RETURN
 
-
 GO
-
--------------------
-
-GO
-
 
 CREATE PROCEDURE [plato_sp_InsertUpdateUserRole] (
 	@Id int,
@@ -2233,10 +2057,6 @@ RETURN
 
 GO
 
----------------------
-
-GO
-
 CREATE PROCEDURE [plato_sp_SelectRole] (
 @Id int
 ) AS
@@ -2247,13 +2067,6 @@ Plato_Roles WITH (nolock)
 WHERE (Id = @Id)
 	
 RETURN
-
-GO
-
-----------------------
-
-
----------------------
 
 GO
 
@@ -2273,10 +2086,6 @@ RETURN
 
 GO
 
----------------------
-
-GO
-
 CREATE PROCEDURE [plato_sp_SelectRolesByUserId] (
 @UserId int
 ) AS
@@ -2290,14 +2099,7 @@ WHERE (ur.UserId = @UserId)
 	
 RETURN
 
-
 GO
-
----------------------
-
-GO
-
-
 
 CREATE PROCEDURE [plato_sp_SelectUsersPaged] (
 @PageIndex int,
@@ -2360,12 +2162,6 @@ END
 
 GO
 
-------------------------------
-
-GP
-
-
-
 CREATE  PROCEDURE plato_sp_SelectUsersPaged
 (    
 	@PageIndex int = 1,
@@ -2426,17 +2222,29 @@ IF (@SqlCount <> '')
 		@Id = 1,
 		@UserName = '',
 		@Email = ''
-		
 
 GO
 
+CREATE PROCEDURE [plato_sp_SelectUserRole] (
+@Id int
+) AS
+SET NOCOUNT ON 
+
+SELECT * FROM 
+Plato_UserRoles WITH (nolock)
+WHERE (Id = @Id)
+	
+RETURN
+
 GO
 
--------------------------------
+-- ************************************
+-- Functions
+-- ************************************
 
 GO
 
-ALTER FUNCTION plato_fn_ListToTable
+CREATE FUNCTION plato_fn_ListToTable
 (
 	@Delimiter              char(1),          
 	@String                 varchar(8000)    
@@ -2476,33 +2284,11 @@ END
 
 GO
 
-----------------------------
-
-GP
-
-
-CREATE PROCEDURE [plato_sp_SelectUserRole] (
-@Id int
-) AS
-SET NOCOUNT ON 
-
-SELECT * FROM 
-Plato_UserRoles WITH (nolock)
-WHERE (Id = @Id)
-	
-RETURN
-
-GO
-
---------------------------
-
-GO
-
-
-
 -- ************************************
 -- INSERT DEFAULT DATA
 -- ************************************
+
+GO
 
 DECLARE	@UserId int;
 

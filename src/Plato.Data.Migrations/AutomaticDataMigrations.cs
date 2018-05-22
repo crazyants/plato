@@ -23,13 +23,14 @@ namespace Plato.Data.Migrations
 
         #region "Private Methods"
 
-        private void InitialMigration()
+        public DataMigrationResult InitialMigration()
         {
-            _migrationBuilder.BuildMigrations(
+            return _migrationBuilder.BuildMigrations(
                 new List<string>()
                 {
                     "1.0.0"
-                });
+                }).ApplyMigrations();
+
         }
 
         #endregion

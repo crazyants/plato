@@ -10,7 +10,7 @@ namespace Plato.Data.Migrations
     public class DataMigrationBuilder : IDataMigrationBuilder
     {
     
-        private List<PreparedSchema> _parsedSchemas;
+        private List<PreparedSchema> _schemas;
         private MigrationType _migrationType;
 
         private readonly ISchemaProvider _schemaProvider;
@@ -28,26 +28,37 @@ namespace Plato.Data.Migrations
 
         #region "Implementation"
 
-        public void BuildMigrations(List<string> versions)
+        public IDataMigrationBuilder BuildMigrations(List<string> versions)
         {
-            _parsedSchemas = _schemaProvider.LoadSchemas(versions).Schemas;
-            if (_parsedSchemas?.Count > 0)
+            _schemas = _schemaProvider.LoadSchemas(versions).Schemas;
+            if (_schemas?.Count > 0)
             {
                 DetectMigrationType();
-                _dataMigrationManager.ApplyMigrations(BuildDataMigration());
             }
+            return this;
+        }
+
+        public DataMigrationResult ApplyMigrations()
+        {
+            if (_schemas?.Count > 0)
+            {
+                var dataMigrationRecord = BuildDataMigrationRecord();
+                return _dataMigrationManager.ApplyMigrations(dataMigrationRecord);
+
+            }
+            return default(DataMigrationResult);
         }
 
         #endregion
 
         #region "Private Methods"
 
-        DataMigrationRecord BuildDataMigration()
+        DataMigrationRecord BuildDataMigrationRecord()
         {
-            if (_parsedSchemas == null)
+            if (_schemas == null)
                 return null;
             var migrations = new DataMigrationRecord();
-            foreach (var schema in _parsedSchemas)
+            foreach (var schema in _schemas)
             {
                 migrations.Migrations.Add(new DataMigration()
                 {
@@ -78,18 +89,20 @@ namespace Plato.Data.Migrations
 
         void DetectMigrationType()
         {
-            var first = _parsedSchemas[0];
-            var last = _parsedSchemas[_parsedSchemas.Count - 1];
+            var first = _schemas[0];
+            var last = _schemas[_schemas.Count - 1];
+
+            // we have more than one version
             if (first.Version != last.Version)
             {
                 // get higer versions
                 var higherVersions =
-                    (from s in _parsedSchemas
+                    (from s in _schemas
                      where s.TypedVersion > first.TypedVersion
                         select s).ToList();
                 // get lower versins
                 var lowerVersions =
-                    (from s in _parsedSchemas
+                    (from s in _schemas
                      where s.TypedVersion < first.TypedVersion
                         select s).ToList();
                 if (higherVersions.Count > 0)

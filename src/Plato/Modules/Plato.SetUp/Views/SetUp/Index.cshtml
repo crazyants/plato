@@ -9,8 +9,26 @@
         <p class="lead">@T["Please answer a few questions to configure your site."]</p>
     </div>
 
+
+    <table class="model-state">
+        @foreach (var item in ViewContext.ViewData.ModelState)
+        {
+            if (item.Value.Errors.Any())
+            {
+                <tr>
+                    <td><b>@item.Key</b></td>
+                </tr>
+                <tr>
+
+                    <td>@(string.Join("; ", item.Value.Errors.Select(x => x.ErrorMessage)))</td>
+                </tr>
+            }
+        }
+    </table>
+
+
     <!--
-        
+
     <hr />
     @@Html.Raw(ViewData["Schema"])
     <hr />
@@ -50,7 +68,7 @@
 
                 <label asp-for="ConnectionString">@T["Connection string"]</label>
                 <div class="input-group mb-2 mb-sm-0">
-                    <input asp-for="ConnectionString" class="form-control" type="password" required />
+                    <input asp-for="ConnectionString" class="form-control" type="text" required />
                     <div class="input-group-append reveal" title="@T["Show/hide connection string"]">
                         <button type="button" class="btn btn-secondary" tabindex="-1" aria-hidden="true"><i class="fa fa-check"></i></button>
                     </div>

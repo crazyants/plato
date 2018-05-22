@@ -15,7 +15,7 @@ namespace Plato.SetUp.Services
 
         public string DatabaseTablePrefix { get; set; }
 
-        public IDictionary<string, string> Errors { get; set; }
+        public List<Exception> Errors { get; set; }
 
     }
 }

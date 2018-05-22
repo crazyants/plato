@@ -61,6 +61,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="App_Data\Schemas\1.0.0\rollback\" />
+    <Folder Include="App_Data\Schemas\1.0.0\upgrade\" />
     <Folder Include="App_Data\Sites\" />
   </ItemGroup>
 

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Data;
 using Plato.Data.Abstractions;
@@ -36,8 +39,9 @@ namespace Plato.SetUp.Services
             {
                 return await SetupInternalAsync(context);
             }
-            catch
+            catch (Exception ex)
             {
+                context.Errors.Add(ex);
                 _shellSettings.State = initialState;
                 throw;
             }
@@ -66,21 +70,36 @@ namespace Plato.SetUp.Services
             {
                 using (var scope = shellContext.ServiceProvider.CreateScope())
                 {
-                    //var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext>();
+                    
                     using (var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext>())
                     {
+
+                        // update dbContext confirmation
                        dbContext.Configure(options =>
                        {
                            options.ConnectionString = shellSettings.ConnectionString;
                            options.DatabaseProvider = shellSettings.DatabaseProvider;
                            options.TablePrefix = shellSettings.TablePrefix;
                        });
+                        
+                        // perform inistal migrations
+                        var automaticMigrations = scope.ServiceProvider.GetService<AutomaticDataMigrations>();
+                        var initialMigration = automaticMigrations.InitialMigration();
 
-
-
+                        // handle exceptions
+                        if (initialMigration.Errors.Any())
+                        {
+                            foreach (var error in initialMigration.Errors)
+                                context.Errors.Add(error);
+                        }
                     }
 
                 }
+            }
+
+            if (context.Errors.Count > 0)
+            {
+                return executionId;
             }
 
             shellSettings.State = TenantState.Running;

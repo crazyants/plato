@@ -10,9 +10,9 @@ namespace Plato.Data.Migrations
         #region "Private Variables"
               
         private readonly IDbContext _dbContext;
-        private List<DataMigration> _successfulMigrations;
-        private List<DataMigration> _failedMigrations;
 
+        private List<Exception> _errors;
+        
         #endregion
 
         #region "constructor"
@@ -27,29 +27,19 @@ namespace Plato.Data.Migrations
 
         #region "Implementation"
         
-        public IEnumerable<DataMigration> ApplyMigrations(DataMigrationRecord dataMigrationRecord)
+        public DataMigrationResult ApplyMigrations(DataMigrationRecord dataMigrationRecord)
         {
-
-            if (_successfulMigrations == null)
-                _successfulMigrations = new List<DataMigration>();
-            if (_failedMigrations == null)
-                _failedMigrations = new List<DataMigration>();
-
-            var completedMigrations = new List<DataMigration>();
+            var result = new DataMigrationResult();
             foreach (var migration in dataMigrationRecord.Migrations)
             {
                 var commit = CommitMigration(migration);
                 if (commit > 0)
-                    _successfulMigrations.Add(migration);
+                    result.SuccessfulMigrations.Add(migration);
                 else
-                    _failedMigrations.Add(migration);
+                    result.FailedMigrations.Add(migration);
             }
-
-            if (_successfulMigrations.Count > 0)
-                completedMigrations.AddRange(_successfulMigrations);
-            
-            return completedMigrations;
-
+            result.Errors = _errors;
+            return result;
         }
 
         #endregion
@@ -66,12 +56,14 @@ namespace Plato.Data.Migrations
                 {
                     try
                     {
-                        //migrationId = context.ExecuteScalar<int>(
-                        //    System.Data.CommandType.Text, statement);
+                        migrationId = context.ExecuteScalar<int>(
+                            System.Data.CommandType.Text, statement);
                     }
                     catch (Exception ex)
                     {
-                        throw ex;
+                        if (_errors == null)
+                            _errors = new List<Exception>();;
+                        _errors.Add(ex);
                     }
                 }
               

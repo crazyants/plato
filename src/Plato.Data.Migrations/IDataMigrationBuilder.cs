@@ -17,6 +17,9 @@ namespace Plato.Data.Migrations
 
         MigrationType DataMigrationType { get;  }
 
-        void BuildMigrations(List<string> versions);
+        IDataMigrationBuilder BuildMigrations(List<string> versions);
+
+        DataMigrationResult ApplyMigrations();
+
     }
 }

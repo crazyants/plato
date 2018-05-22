@@ -8,8 +8,8 @@ namespace Plato.Data.Migrations
     public interface IDataMigrationManager
     {
 
-        IEnumerable<DataMigration> ApplyMigrations(DataMigrationRecord dataMigrationRecord); 
-        
+        DataMigrationResult ApplyMigrations(DataMigrationRecord dataMigrationRecord);
+
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -52,8 +53,8 @@ namespace Plato.SetUp.Controllers
 
             //_dataMigrationBuilder.BuildMigrations(new List<string>() {"1.0.0"});
 
-            _dataMigrationBuilder.BuildMigrations(new List<string>() { "1.0.0" });
-            ViewData["Schema"] = _dataMigrationBuilder.DataMigrationType.ToString();
+            //_dataMigrationBuilder.BuildMigrations(new List<string>() { "1.0.0" });
+            //ViewData["Schema"] = _dataMigrationBuilder.DataMigrationType.ToString();
 
             //_dataMigrationBuilder.BuildMigrations(new List<string>() { "1.0.1", "1.0.0" });
 
@@ -122,23 +123,22 @@ namespace Plato.SetUp.Controllers
             {
                 SiteName = model.SiteName,
                 DatabaseProvider = "SqlClient",
-                DatabaseConnectionString = model.ConnectionString
+                DatabaseConnectionString = model.ConnectionString,
+                Errors = new List<Exception>()
             };
-
-
+            
             if (!model.TablePrefixPreset)
             {
                 setupContext.DatabaseTablePrefix = model.TablePrefix;
             }
-
-
+            
             var executionId = _setUpService.SetupAsync(setupContext);
             // Check if a component in the Setup failed
             if (setupContext.Errors.Any())
             {
                 foreach (var error in setupContext.Errors)
                 {
-                    ModelState.AddModelError(error.Key, error.Value);
+                    ModelState.AddModelError(error.Message, error.StackTrace);
                 }
 
                 return View(model);
