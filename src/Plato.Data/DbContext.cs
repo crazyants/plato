@@ -31,25 +31,6 @@ namespace Plato.Data
 
         #endregion
 
-        #region "Private Methods"
-
-        private static string GenerateExecuteStoredProcedureSql(string procedureName, params object[] args)
-        {
-            var sb = new StringBuilder(";EXEC ");
-            sb.Append(procedureName);
-            for (var i = 0; i < args.Length; i++)
-            {
-                // TODO: Hot code path, look at String.Format allos & perf impact
-                sb.Append(string.Format(" @{0}", i));
-                if (i < args.Length - 1)
-                    sb.Append(",");
-            }
-            
-            return sb.ToString();
-        }
-
-        #endregion
-
         #region "Constructos"
 
         public DbContext(
@@ -137,5 +118,35 @@ namespace Plato.Data
         }
 
         #endregion
+
+
+        #region "Private Methods"
+
+        private string GenerateExecuteStoredProcedureSql(string procedureName, params object[] args)
+        {
+         
+            var sb = new StringBuilder(";EXEC ");
+            sb.Append(GetProcedureName(procedureName));
+            for (var i = 0; i < args.Length; i++)
+            {
+                sb.Append($" @{i}");
+                if (i < args.Length - 1)
+                    sb.Append(",");
+            }
+            
+            return sb.ToString();
+        }
+
+        private string GetProcedureName(string procedureName)
+        {
+            return !string.IsNullOrEmpty(this.Configuration.TablePrefix)
+                ? this.Configuration.TablePrefix + "_" + procedureName
+                : procedureName;
+        }
+
+        #endregion
+
+
+
     }
 }

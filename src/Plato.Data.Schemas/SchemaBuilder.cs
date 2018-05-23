@@ -165,7 +165,7 @@ namespace Plato.Data.Schemas
 
         public ISchemaBuilder CreateStoredProcedure(SchemaStoredProcedure storedProcedure)
         {
-            var name = GetStoredProcedureName(storedProcedure.Name);
+            var name = GetProcedureName(storedProcedure.Name);
             var tableName = GetTableName(storedProcedure.Table.Name);
 
             var statement = string.Empty;
@@ -233,11 +233,11 @@ namespace Plato.Data.Schemas
                 : tableName;
         }
 
-        private string GetStoredProcedureName(string storedProcedureName)
+        private string GetProcedureName(string procedureName)
         {
             return !string.IsNullOrEmpty(_tablePrefix)
-                ? _tablePrefix + "_" + storedProcedureName
-                : storedProcedureName;
+                ? _tablePrefix + "_" + procedureName
+                : procedureName;
         }
 
         private string DescribeTableColumn(
@@ -245,8 +245,17 @@ namespace Plato.Data.Schemas
         {
             var sb = new StringBuilder();
             sb.Append(column.Name).Append(" ").Append(column.DbTypeNormalized);
-            if (!string.IsNullOrEmpty(column.DefaultValueNormalizsed) && !column.Nullable)
-                sb.Append(" DEFAULT (").Append(column.DefaultValueNormalizsed).Append(")");
+
+            if (column.PrimaryKey)
+            {
+                sb.Append(" IDENTITY(1,1)");
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(column.DefaultValueNormalizsed) && !column.Nullable)
+                    sb.Append(" DEFAULT (").Append(column.DefaultValueNormalizsed).Append(")");
+            }
+             
             sb.Append(column.Nullable ? " NULL" : " NOT NULL");
             return sb.ToString();
         }

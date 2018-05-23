@@ -68,7 +68,7 @@ namespace Plato.Repositories.Settings
             {
                 var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                  "plato_sp_SelectSetting", id);
+                    "SelectSetting", id);
                 if (reader != null)
                 {
                     await reader.ReadAsync();
@@ -90,7 +90,7 @@ namespace Plato.Repositories.Settings
                     return null;
                 var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                  "plato_sp_SelectSettings");
+                  "SelectSettings");
                 if (reader != null)
                 {
                     while (await reader.ReadAsync())
@@ -105,33 +105,7 @@ namespace Plato.Repositories.Settings
             return settings;
 
         }
-
-        public async Task<IEnumerable<Setting>> SelectBySpaceId(int spaceId)
-        {
-            var settings = new List<Setting>();
-            using (var context = _dbContext)
-            {
-                var reader = await context.ExecuteReaderAsync(
-                  CommandType.StoredProcedure,
-                  "plato_sp_SelectSettingsBySpaceId", spaceId);
-
-                if (reader != null)
-                {
-                    while (reader.Read())
-                    {
-                        var setting = new Setting();
-                        setting.PopulateModel(reader);
-                        settings.Add(setting);
-                    }
-
-                }
-            }
-
-            return settings;
-        }
         
-        
-
         #endregion
 
         #region "Private Methods"
@@ -153,7 +127,7 @@ namespace Plato.Repositories.Settings
             {
                 return await context.ExecuteScalarAsync<int>(
                   CommandType.StoredProcedure,
-                  "plato_sp_InsertUpdateSetting",
+                  "InsertUpdateSetting",
                     id,               
                     spaceId,
                     key.ToEmptyIfNull().TrimToSize(255),
