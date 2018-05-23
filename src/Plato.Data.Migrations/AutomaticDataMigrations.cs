@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Xml.Schema;
 using Plato.Data.Abstractions.Schemas;
 
 namespace Plato.Data.Migrations
@@ -25,6 +22,7 @@ namespace Plato.Data.Migrations
         {
             _migrationBuilder = migrationBuilder;
             _schemaBuilder = schemaBuilder;
+            _migrationManager = migrationManager;
         }
 
         #endregion
@@ -34,60 +32,77 @@ namespace Plato.Data.Migrations
         public DataMigrationResult InitialMigration()
         {
 
-            _schemaBuilder.CreateTable("Settings", new List<SchemaColumn>()
+            using (var builder = _schemaBuilder)
             {
-                new SchemaColumn()
-                {
-                    PrimaryKey = true,
-                    Name = "Id",
-                    DbType = DbType.Int32
-                },
-                new SchemaColumn()
-                {
-                    Name = "[Key]",
-                    Length = "255",
-                    DbType = DbType.String,
+                // Settings
 
-                },
-                new SchemaColumn()
+                var settingsTable = new SchemaTable()
                 {
-                    Name = "[Value]",
-                    Length = "max",
-                    DbType = DbType.String,
+                    Name = "Settings",
+                    Columns = new List<SchemaColumn>()
+                    {
+                        new SchemaColumn()
+                        {
+                            PrimaryKey = true,
+                            Name = "Id",
+                            DbType = DbType.Int32
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "[Key]",
+                            Length = "255",
+                            DbType = DbType.String,
 
-                },
-                new SchemaColumn()
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "[Value]",
+                            Length = "max",
+                            DbType = DbType.String,
+
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "CreatedDate",
+                            DbType = DbType.DateTime2
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "CreatedUserId",
+                            DbType = DbType.Int32
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "ModifiedDate",
+                            DbType = DbType.DateTime2
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "ModifiedUserId",
+                            DbType = DbType.Int32
+                        }
+                    }
+                };
+
+                builder
+                    .Configure(options => options.Version = "1.0.0")
+                    .CreateTable(settingsTable)
+                    .CreateStoredProcedure(new SchemaStoredProcedure("SelectSettings", settingsTable, StoredProcedureType.Select));
+
+
+                var result = builder.Apply();
+
+                return new DataMigrationResult()
                 {
-                    Name = "CreatedDate",
-                    DbType = DbType.DateTime2
-                },
-                new SchemaColumn()
-                {
-                    Name = "CreatedUserId",
-                    DbType = DbType.Int32
-                },
-                new SchemaColumn()
-                {
-                    Name = "ModifiedDate",
-                    DbType = DbType.DateTime2
-                },
-                new SchemaColumn()
-                {
-                    Name = "ModifiedUserId",
-                    DbType = DbType.Int32
-                }
-            });
-
-            _schemaBuilder.Execute();
-
-
-
-
-            return _migrationBuilder.BuildMigrations(
-                new List<string>()
-                {
-                    "1.0.0"
-                }).ApplyMigrations();
+                    Errors = result.Errors
+                };
+            }
+            
+            //return _migrationBuilder.BuildMigrations(
+            //    new List<string>()
+            //    {
+            //        "1.0.0"
+            //    }).ApplyMigrations();
 
         }
 

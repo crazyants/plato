@@ -67,9 +67,7 @@ namespace Plato.Data.Migrations
                         _errors.Add(ex);
                     }
                 }
-              
             }
-
             return migrationId;
 
         }

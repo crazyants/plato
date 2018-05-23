@@ -28,7 +28,7 @@ namespace Plato.Data.Abstractions.Schemas
             get
             {
                 if (!string.IsNullOrEmpty(DefaultValue))
-                    return DefaultValue;
+                    return DefaultValue.ToUpper();
                 switch (this.DbType)
                 {
                     case DbType.Int16:
@@ -40,7 +40,7 @@ namespace Plato.Data.Abstractions.Schemas
                     case DbType.Boolean:
                         return "0";
                     case DbType.String:
-                        return "\n''";
+                        return "''";
                     case DbType.Date:
                         return "GetDate()";
                     case DbType.DateTime2:
@@ -73,8 +73,7 @@ namespace Plato.Data.Abstractions.Schemas
                     case DbType.Date:
                         return "DATETIME";
                     case DbType.DateTime2:
-                        return "DATETIME?";
-
+                        return "DATETIME2";
                 }
 
                 throw new Exception($"Type not returned for column '{this.Name}' within table '{_tableName}' whilst building shema");
