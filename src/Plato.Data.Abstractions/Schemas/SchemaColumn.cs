@@ -14,6 +14,8 @@ namespace Plato.Data.Abstractions.Schemas
 
         public string Name { get; set; }
 
+        public string ParameterizedName => this.Name.Replace("[", "").Replace("]", "");
+
         public DbType DbType { get; set; }
 
         public string Length { get; set; }
@@ -61,19 +63,19 @@ namespace Plato.Data.Abstractions.Schemas
                 switch (this.DbType)
                 {
                     case DbType.Int16:
-                        return "SHORT";
+                        return "short";
                     case DbType.Int64:
-                        return "FLOAT?";
+                        return "float";
                     case DbType.Int32:
-                        return "INT";
+                        return "int";
                     case DbType.Boolean:
-                        return "BIT";
+                        return "bit";
                     case DbType.String:
-                        return "NVARCHAR(" + this.Length + ")";
+                        return "nvarchar(" + this.Length + ")";
                     case DbType.Date:
-                        return "DATETIME";
+                        return "datetime";
                     case DbType.DateTime2:
-                        return "DATETIME2";
+                        return "datetime2";
                 }
 
                 throw new Exception($"Type not returned for column '{this.Name}' within table '{_tableName}' whilst building shema");

@@ -163,18 +163,17 @@ namespace Plato.Data.Schemas
             return this;
         }
 
-        public ISchemaBuilder CreateStoredProcedure(SchemaStoredProcedure storedProcedure)
+        public ISchemaBuilder CreateStoredProcedure(SchemaStoredProcedure procedure)
         {
-            var name = GetProcedureName(storedProcedure.Name);
-            var tableName = GetTableName(storedProcedure.Table.Name);
-
+          
             var statement = string.Empty;
-            switch (storedProcedure.ProcedureType)
+            switch (procedure.ProcedureType)
             {
                 case StoredProcedureType.InsertUpdate:
+                    statement = BuildInsertUpdateProcedure(procedure);
                     break;
                 case StoredProcedureType.Select:
-                    statement = $"CREATE PROCEDURE [{name}] AS SET NOCOUNT ON SELECT * FROM {tableName} WITH (nolock)";
+                    statement = BuildSelectProcedure(procedure);
                     break;
             }
 
@@ -226,6 +225,189 @@ namespace Plato.Data.Schemas
 
         #region "Private Methods"
 
+        private string BuildSelectProcedure(SchemaStoredProcedure procedure)
+        {
+            return $"CREATE PROCEDURE [{GetProcedureName(procedure.Name)}] AS SET NOCOUNT ON SELECT * FROM {GetTableName(procedure.Table.Name)} WITH (nolock)";
+        }
+
+
+        private string BuildInsertUpdateProcedure(SchemaStoredProcedure procedure)
+        {
+
+            var tableName = GetTableName(procedure.Table.Name);
+            var columns = procedure.Table.Columns;
+            if (procedure.Table.PrimaryKeyColumn == null)
+                throw new Exception($"A primary key column is required for table '{procedure.Table.Name}' when creating procedure of type '{procedure.ProcedureType}'");
+
+            var sb = new StringBuilder();
+
+            sb.Append("CREATE PROCEDURE [")
+                .Append(GetProcedureName(procedure.Name))
+                .Append("]");
+
+            if (columns.Any())
+            {
+                sb.Append("(")
+                    .Append(Environment.NewLine);
+
+                foreach (var column in columns)
+                {
+                    sb
+                        .Append("     ")
+                        .Append("@")
+                        .Append(column.ParameterizedName)
+                        .Append(" ")
+                        .Append(column.DbTypeNormalized)
+                        .Append(",")
+                        .Append(Environment.NewLine);
+                }
+
+                sb
+                    .Append("     ")
+                    .Append("@unique_id int output")
+                    .Append(Environment.NewLine)
+                    .Append(")")
+                    .Append(Environment.NewLine);
+
+            }
+
+            sb.Append("AS")
+                .Append(Environment.NewLine)
+                .Append(Environment.NewLine)
+                .Append("SET NOCOUNT ON ")
+                .Append(Environment.NewLine);
+             
+            sb.Append("IF EXISTS (SELECT ")
+                .Append(procedure.Table.PrimaryKeyColumn.Name)
+                .Append(" FROM ")
+                .Append(tableName)
+                .Append(" WHERE ")
+                .Append("(")
+                .Append(procedure.Table.PrimaryKeyColumn.Name)
+                .Append(" = ")
+                .Append("@")
+                .Append(procedure.Table.PrimaryKeyColumn?.ParameterizedName)
+                .Append("))")
+                .Append(Environment.NewLine);
+
+            // update
+
+            sb.Append("BEGIN")
+                .Append(Environment.NewLine);
+            
+            if (columns.Any())
+            {
+                sb
+                    .Append("   ")
+                    .Append("UPDATE ")
+                    .Append(tableName)
+                    .Append(" SET ")
+                    .Append(Environment.NewLine);
+                var i = 0;
+                foreach (var column in columns)
+                {
+                    if (!column.PrimaryKey)
+                    {
+                        sb
+                            .Append("       ")
+                            .Append(column.Name)
+                            .Append(" = ")
+                            .Append("@")
+                            .Append(column.ParameterizedName)
+                            .Append(i < columns.Count - 1 ? "," : "")
+                            .Append(Environment.NewLine);
+                    }
+                    i += 1;
+                }
+
+                sb
+                    .Append("       ")
+                    .Append("WHERE ")
+                    .Append(procedure.Table.PrimaryKeyColumn.Name)
+                    .Append(" = ")
+                    .Append("@")
+                    .Append(procedure.Table.PrimaryKeyColumn.ParameterizedName)
+                    .Append(Environment.NewLine);
+            }
+
+            sb
+                .Append(Environment.NewLine)
+                .Append("     ")
+                .Append("SET @unique_id = @")
+                .Append(procedure.Table.PrimaryKeyColumn.Name)
+                .Append(";")
+                .Append(Environment.NewLine)
+                .Append(Environment.NewLine);
+
+            sb
+                .Append("END")
+                .Append(Environment.NewLine)
+                .Append("ELSE")
+                .Append(Environment.NewLine)
+                .Append("BEGIN")
+                .Append(Environment.NewLine);
+
+            if (columns.Any())
+            {
+                sb
+                    .Append("   ")
+                    .Append("INSERT INTO ")
+                    .Append(tableName)
+                    .Append(" ( ")
+                    .Append(Environment.NewLine);
+                var i = 0;
+                foreach (var column in columns)
+                {
+                    if (!column.PrimaryKey)
+                    {
+                        sb
+                            .Append("       ")
+                            .Append(column.Name)
+                            .Append(i < columns.Count - 1 ? "," : "")
+                            .Append(Environment.NewLine);
+                    }
+                    i += 1;
+                }
+
+                sb
+                    .Append("   ")
+                    .Append(") VALUES (")
+                    .Append(Environment.NewLine);
+                i = 0;
+                foreach (var column in columns)
+                {
+                    if (!column.PrimaryKey)
+                    {
+                        sb
+                            .Append("       ")
+                            .Append("@")
+                            .Append(column.ParameterizedName)
+                            .Append(i < columns.Count - 1 ? "," : "")
+                            .Append(Environment.NewLine);
+                    }
+                    i += 1;
+                }
+
+                sb
+                    .Append("     ")
+                    .Append(")");
+
+                sb
+                    .Append(Environment.NewLine)
+                    .Append(Environment.NewLine)
+                    .Append("     ")
+                    .Append("SET @unique_id = SCOPE_IDENTITY();")
+                    .Append(Environment.NewLine);
+
+            }
+            
+            sb.Append("END")
+                .Append(Environment.NewLine);
+            
+            return sb.ToString();
+
+        }
+        
         private string GetTableName(string tableName)
         {
             return !string.IsNullOrEmpty(_tablePrefix)
@@ -252,7 +434,7 @@ namespace Plato.Data.Schemas
             }
             else
             {
-                if (!string.IsNullOrEmpty(column.DefaultValueNormalizsed) && !column.Nullable)
+                if (!string.IsNullOrEmpty(column.DefaultValueNormalizsed))
                     sb.Append(" DEFAULT (").Append(column.DefaultValueNormalizsed).Append(")");
             }
              

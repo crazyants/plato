@@ -87,7 +87,8 @@ namespace Plato.Data.Migrations
                 builder
                     .Configure(options => options.Version = "1.0.0")
                     .CreateTable(settingsTable)
-                    .CreateStoredProcedure(new SchemaStoredProcedure("SelectSettings", settingsTable, StoredProcedureType.Select));
+                    .CreateStoredProcedure(new SchemaStoredProcedure("SelectSettings", settingsTable, StoredProcedureType.Select))
+                    .CreateStoredProcedure(new SchemaStoredProcedure("InsertUpdateSetting", settingsTable, StoredProcedureType.InsertUpdate));
 
 
                 var result = builder.Apply();
