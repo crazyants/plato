@@ -29,7 +29,7 @@ namespace Plato.Data.Abstractions.Schemas
         
         public SchemaTable Table { get; private set; }
         
-        public SchemaColumn Key { get; private set; }
+        public List<SchemaColumn> Parameters { get; private set; }
 
         public SchemaProcedure ForTable(SchemaTable table)
         {
@@ -37,11 +37,20 @@ namespace Plato.Data.Abstractions.Schemas
             return this;
         }
         
-        public SchemaProcedure WithKey(SchemaColumn key)
+        public SchemaProcedure WithParameter(SchemaColumn parameter)
         {
-            this.Key = key;
+            if (this.Parameters == null)
+                this.Parameters = new List<SchemaColumn>();
+            this.Parameters.Add(parameter);
             return this;
         }
+
+        public SchemaProcedure WithRarameters(List<SchemaColumn> parameters)
+        {
+            this.Parameters = parameters;
+            return this;
+        }
+
 
     }
 }

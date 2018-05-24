@@ -58,7 +58,7 @@ namespace Plato.Data.Schemas
             sb.Append("CREATE TABLE ")
                 .Append(tableName);
             
-            if (table.Columns.Any())
+            if (table.Columns.Count > 0)
             {
                 sb.Append("(");
                 sb.Append(System.Environment.NewLine);
@@ -121,7 +121,7 @@ namespace Plato.Data.Schemas
 
             var tableName = GetTableName(table.Name);
             var sb = new StringBuilder();
-            if (table.Columns.Any())
+            if (table.Columns.Count > 0)
             {
                 foreach (var column in table.Columns)
                 {
@@ -145,7 +145,7 @@ namespace Plato.Data.Schemas
         {
             var tableName = GetTableName(table.Name);
             var sb = new StringBuilder();
-            if (table.Columns.Any())
+            if (table.Columns.Count > 0)
             {
                 foreach (var column in table.Columns)
                 {
@@ -293,16 +293,29 @@ namespace Plato.Data.Schemas
 
         private string BuildSelectByKeyProcedure(SchemaProcedure procedure)
         {
+
+            if (procedure.Keys == null)
+                throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no keys have been specified.");
+            
             var sb = new StringBuilder();
             sb.Append("CREATE PROCEDURE ")
                 .Append(GetProcedureName(procedure.Name))
                 .Append(" (")
-                .Append(_newLine)
-                .Append("@")
-                .Append(procedure.Key.NameNormalized)
-                .Append(" ")
-                .Append(procedure.Key.DbTypeNormalized)
-                .Append(_newLine)
+                .Append(_newLine);
+
+            var i = 0;
+            foreach (var parameter in procedure.Keys)
+            {
+                sb.Append("@")
+                    .Append(parameter.NameNormalized)
+                    .Append(" ")
+                    .Append(parameter.DbTypeNormalized)
+                    .Append(i < procedure.Keys.Count - 1 ? "," : "")
+                    .Append(_newLine);
+                i += 1;
+            }
+
+            sb
                 .Append(") AS")
                 .Append(_newLine)
                 .Append("SET NOCOUNT ON")
@@ -318,10 +331,21 @@ namespace Plato.Data.Schemas
                 .Append(" WITH (nolock) ")
                 .Append(_newLine)
                 .Append("WHERE (")
-                .Append(procedure.Key.Name)
-                .Append(" = @")
-                .Append(procedure.Key.NameNormalized)
-                .Append(")");
+                .Append(_newLine);
+
+            i = 0;
+            foreach (var parameter in procedure.Keys)
+            {
+                sb
+                    .Append(parameter.Name)
+                    .Append(" = @")
+                    .Append(parameter.NameNormalized)
+                    .Append(i < procedure.Keys.Count - 1 ? " AND " : "")
+                    .Append(_newLine);
+                i += 1;
+            }
+            
+            sb.Append(")");
 
             return sb.ToString();
 
@@ -330,25 +354,35 @@ namespace Plato.Data.Schemas
         private string BuildDeleteByKeyProcedure(SchemaProcedure procedure)
         {
 
-            if (procedure.Key == null)
-                throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no key was specified.");
+            if (procedure.Keys == null)
+                throw new Exception(
+                    $"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no keys have been specified.");
 
             var sb = new StringBuilder();
             sb.Append("CREATE PROCEDURE ")
                 .Append(GetProcedureName(procedure.Name))
                 .Append(" (")
-                .Append(_newLine)
-                .Append("@")
-                .Append(procedure.Key.NameNormalized)
-                .Append(" ")
-                .Append(procedure.Key.DbTypeNormalized)
-                .Append(_newLine)
+                .Append(_newLine);
+
+            var i = 0;
+            foreach (var parameter in procedure.Keys)
+            {
+                sb.Append("@")
+                    .Append(parameter.NameNormalized)
+                    .Append(" ")
+                    .Append(parameter.DbTypeNormalized)
+                    .Append(i < procedure.Keys.Count - 1 ? "," : "")
+                    .Append(_newLine);
+                i += 1;
+            }
+
+            sb
                 .Append(") AS")
                 .Append(_newLine)
                 .Append("SET NOCOUNT ON")
                 .Append(_newLine)
                 .Append(_newLine);
-            
+
             sb.Append(GetProcedurePlaceHolderComment())
                 .Append(_newLine)
                 .Append(_newLine);
@@ -357,13 +391,24 @@ namespace Plato.Data.Schemas
                 .Append(GetTableName(procedure.Table.Name))
                 .Append(_newLine)
                 .Append("WHERE (")
-                .Append(procedure.Key.Name)
-                .Append(" = @")
-                .Append(procedure.Key.NameNormalized)
-                .Append(")");
+                .Append(_newLine);
+
+            i = 0;
+            foreach (var parameter in procedure.Keys)
+            {
+                sb
+                    .Append(parameter.Name)
+                    .Append(" = @")
+                    .Append(parameter.NameNormalized)
+                    .Append(i < procedure.Keys.Count - 1 ? " AND " : "")
+                    .Append(_newLine);
+                i += 1;
+            }
+
+            sb.Append(")");
 
             return sb.ToString();
-            
+
         }
 
         private string BuildInsertUpdateProcedure(SchemaProcedure procedure)
@@ -380,7 +425,7 @@ namespace Plato.Data.Schemas
                 .Append(GetProcedureName(procedure.Name))
                 .Append("]");
 
-            if (columns.Any())
+            if (columns.Count > 0)
             {
                 sb.Append("(")
                     .Append(_newLine);
@@ -435,7 +480,7 @@ namespace Plato.Data.Schemas
             sb.Append("BEGIN")
                 .Append(_newLine);
             
-            if (columns.Any())
+            if (columns.Count > 0)
             {
                 sb
                     .Append("   ")
@@ -487,7 +532,7 @@ namespace Plato.Data.Schemas
                 .Append("BEGIN")
                 .Append(_newLine);
 
-            if (columns.Any())
+            if (columns.Count > 0)
             {
                 sb
                     .Append("   ")

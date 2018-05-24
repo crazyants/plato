@@ -86,7 +86,7 @@ namespace Plato.SetUp.Services
                         var initialMigration = automaticMigrations.InitialMigration();
 
                         // handle exceptions
-                        if (initialMigration.Errors.Any())
+                        if (initialMigration.Errors.Count > 0)
                         {
                             foreach (var error in initialMigration.Errors)
                                 context.Errors.Add(error);
