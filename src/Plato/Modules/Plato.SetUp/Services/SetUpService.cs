@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Plato.Abstractions.Extensions;
+using Plato.Abstractions.SetUp;
 using Plato.Data;
 using Plato.Data.Abstractions;
 using Plato.Hosting;
@@ -32,22 +35,22 @@ namespace Plato.SetUp.Services
             _platoHost = platoHost;
         }
 
-        public async Task<string> SetupAsync(SetUpContext context)
+        public async Task<string> SetUpAsync(SetUpContext context)
         {
             var initialState = _shellSettings.State;
             try
             {
-                return await SetupInternalAsync(context);
+                return await SetUpInternalAsync(context);
             }
             catch (Exception ex)
             {
-                context.Errors.Add(ex);
+                context.Errors.Add(ex.Message, ex.Message);
                 _shellSettings.State = initialState;
                 throw;
             }
         }
         
-        async Task<string> SetupInternalAsync(SetUpContext context)
+        async Task<string> SetUpInternalAsync(SetUpContext context)
         {
 
             // Set shell state to "Initializing" so that subsequent HTTP requests are responded to with "Service Unavailable" while Orchard is setting up.
@@ -80,17 +83,38 @@ namespace Plato.SetUp.Services
                            options.DatabaseProvider = shellSettings.DatabaseProvider;
                            options.TablePrefix = shellSettings.TablePrefix;
                        });
-                        
-                        // perform inistal migrations
-                        var automaticMigrations = scope.ServiceProvider.GetService<AutomaticDataMigrations>();
-                        var initialMigration = automaticMigrations.InitialMigration();
 
-                        // handle exceptions
-                        if (initialMigration.Errors.Count > 0)
+                        var hasErrors = false;
+
+                        void reportError(string key, string message)
                         {
-                            foreach (var error in initialMigration.Errors)
-                                context.Errors.Add(error);
+                            hasErrors = true;
+                            context.Errors[key] = message;
                         }
+
+                        // Invoke modules to react to the setup event
+                        var setupEventHandlers = scope.ServiceProvider.GetServices<ISetUpEventHandler>();
+                        var logger = scope.ServiceProvider.GetRequiredService<ILogger<SetUpService>>();
+
+                        await setupEventHandlers.InvokeAsync(x => x.SetUp(context,
+                            reportError
+                        ), logger);
+
+                        if (hasErrors)
+                        {
+                            return executionId;
+                        }
+
+                        //// perform inistal migrations
+                        //var automaticMigrations = scope.ServiceProvider.GetService<AutomaticDataMigrations>();
+                        //var initialMigration = automaticMigrations.InitialMigration();
+
+                        //// handle exceptions
+                        //if (initialMigration.Errors.Count > 0)
+                        //{
+                        //    foreach (var error in initialMigration.Errors)
+                        //        context.Errors.Add(error);
+                        //}
                     }
 
                 }

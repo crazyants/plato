@@ -31,6 +31,7 @@ using Plato.Hosting.Web.Routing;
 using Plato.Models.Roles;
 using Plato.Models.Users;
 using Plato.Modules.Expanders;
+using Plato.Security.Extensions;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -93,8 +94,12 @@ namespace Plato.Hosting.Web.Extensions
 
             services.ConfigureShell("Sites", "Schemas");
             
+            // add security
+
+            services.AddSecurity();
+
             // add auth
-            
+
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;

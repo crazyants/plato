@@ -4,6 +4,8 @@ using System.Text;
 
 namespace Plato.Data.Abstractions.Schemas
 {
+
+    // TODO: Split enum into seperate more extensible classes
     public enum StoredProcedureType
     {
         InsertUpdate,
@@ -45,12 +47,11 @@ namespace Plato.Data.Abstractions.Schemas
             return this;
         }
 
-        public SchemaProcedure WithRarameters(List<SchemaColumn> parameters)
+        public SchemaProcedure WithParameters(List<SchemaColumn> parameters)
         {
             this.Parameters = parameters;
             return this;
         }
-
-
+        
     }
 }

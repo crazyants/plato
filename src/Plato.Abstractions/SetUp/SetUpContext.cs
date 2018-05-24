@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.SetUp.Services
+namespace Plato.Abstractions.SetUp
 {
     public class SetUpContext
     {
@@ -15,7 +15,12 @@ namespace Plato.SetUp.Services
 
         public string DatabaseTablePrefix { get; set; }
 
-        public List<Exception> Errors { get; set; }
+        public string AdminUsername { get; set; }
+
+        public string AdminPassword { get; set; }
+        
+        public IDictionary<string, string> Errors { get; set; }
+
 
     }
 }

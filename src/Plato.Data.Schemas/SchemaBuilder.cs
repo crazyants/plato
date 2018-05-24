@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Plato.Data.Abstractions;
 using Plato.Data.Abstractions.Schemas;
+using Plato.Text;
 
 namespace Plato.Data.Schemas
 {
@@ -25,7 +26,9 @@ namespace Plato.Data.Schemas
         }
 
         private readonly IDbContext _dbContext;
-        
+
+        private readonly Pluralizer _pluralizer;
+
         public SchemaBuilder(IDbContext dbContext)
         {
             _tablePrefix = dbContext.Configuration.TablePrefix;
@@ -33,6 +36,7 @@ namespace Plato.Data.Schemas
 
             _statements = new List<string>();
             _errors = new List<Exception>();
+            _pluralizer = new Pluralizer();
 
         }
 
@@ -165,30 +169,30 @@ namespace Plato.Data.Schemas
         public ISchemaBuilder CreateDefaultProcedures(SchemaTable table)
         {
 
+            
             // select * from table
             CreateProcedure(new SchemaProcedure($"Select{table.NameNormalized}", StoredProcedureType.Select)
                 .ForTable(table));
 
             // select * from table where primaryKey = @primaryKey
-            CreateProcedure(new SchemaProcedure($"Select{table.Name}By{table.PrimaryKeyColumn.NameNormalized}", StoredProcedureType.SelectByKey)
+            CreateProcedure(new SchemaProcedure($"Select{_pluralizer.Singularize(table.Name)}By{table.PrimaryKeyColumn.NameNormalized}", StoredProcedureType.SelectByKey)
                 .ForTable(table)
-                .WithKey(table.PrimaryKeyColumn));
+                .WithParameter(table.PrimaryKeyColumn));
 
             // delete from table where primaryKey = @primaryKey
-            CreateProcedure(new SchemaProcedure($"Delete{table.Name}By{table.PrimaryKeyColumn.NameNormalized}", StoredProcedureType.DeleteByKey)
+            CreateProcedure(new SchemaProcedure($"Delete{_pluralizer.Singularize(table.Name)}By{table.PrimaryKeyColumn.NameNormalized}", StoredProcedureType.DeleteByKey)
                 .ForTable(table)
-                .WithKey(table.PrimaryKeyColumn));
+                .WithParameter(table.PrimaryKeyColumn));
 
             // insert / update by primary key
             CreateProcedure(
-                new SchemaProcedure($"InsertUpdate{table.Name}", StoredProcedureType.InsertUpdate)
+                new SchemaProcedure($"InsertUpdate{_pluralizer.Singularize(table.Name)}", StoredProcedureType.InsertUpdate)
                     .ForTable(table));
             
             return this;
 
         }
-
-
+        
         public ISchemaBuilder CreateProcedure(SchemaProcedure procedure)
         {
 
@@ -208,7 +212,7 @@ namespace Plato.Data.Schemas
                     statement = BuildSelectProcedure(procedure);
                     break;
                 case StoredProcedureType.SelectByKey:
-                    statement = BuildSelectByKeyProcedure(procedure);
+                    statement = BuildSelectByProcedure(procedure);
                     break;
                 case StoredProcedureType.DeleteByKey:
                     statement = BuildDeleteByKeyProcedure(procedure);
@@ -291,12 +295,12 @@ namespace Plato.Data.Schemas
 
         }
 
-        private string BuildSelectByKeyProcedure(SchemaProcedure procedure)
+        private string BuildSelectByProcedure(SchemaProcedure procedure)
         {
 
-            if (procedure.Keys == null)
-                throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no keys have been specified.");
-            
+            if (procedure.Parameters == null)
+                throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
+
             var sb = new StringBuilder();
             sb.Append("CREATE PROCEDURE ")
                 .Append(GetProcedureName(procedure.Name))
@@ -304,13 +308,15 @@ namespace Plato.Data.Schemas
                 .Append(_newLine);
 
             var i = 0;
-            foreach (var parameter in procedure.Keys)
+            foreach (var parameter in procedure.Parameters)
             {
-                sb.Append("@")
+                sb
+                    .Append("   ")
+                    .Append("@")
                     .Append(parameter.NameNormalized)
                     .Append(" ")
                     .Append(parameter.DbTypeNormalized)
-                    .Append(i < procedure.Keys.Count - 1 ? "," : "")
+                    .Append(i < procedure.Parameters.Count - 1 ? "," : "")
                     .Append(_newLine);
                 i += 1;
             }
@@ -334,13 +340,14 @@ namespace Plato.Data.Schemas
                 .Append(_newLine);
 
             i = 0;
-            foreach (var parameter in procedure.Keys)
+            foreach (var parameter in procedure.Parameters)
             {
                 sb
+                    .Append("   ")
                     .Append(parameter.Name)
                     .Append(" = @")
                     .Append(parameter.NameNormalized)
-                    .Append(i < procedure.Keys.Count - 1 ? " AND " : "")
+                    .Append(i < procedure.Parameters.Count - 1 ? " AND " : "")
                     .Append(_newLine);
                 i += 1;
             }
@@ -354,9 +361,8 @@ namespace Plato.Data.Schemas
         private string BuildDeleteByKeyProcedure(SchemaProcedure procedure)
         {
 
-            if (procedure.Keys == null)
-                throw new Exception(
-                    $"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no keys have been specified.");
+            if (procedure.Parameters == null)
+                throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
 
             var sb = new StringBuilder();
             sb.Append("CREATE PROCEDURE ")
@@ -365,13 +371,15 @@ namespace Plato.Data.Schemas
                 .Append(_newLine);
 
             var i = 0;
-            foreach (var parameter in procedure.Keys)
+            foreach (var parameter in procedure.Parameters)
             {
-                sb.Append("@")
+                sb
+                    .Append("   ")
+                    .Append("@")
                     .Append(parameter.NameNormalized)
                     .Append(" ")
                     .Append(parameter.DbTypeNormalized)
-                    .Append(i < procedure.Keys.Count - 1 ? "," : "")
+                    .Append(i < procedure.Parameters.Count - 1 ? "," : "")
                     .Append(_newLine);
                 i += 1;
             }
@@ -394,13 +402,14 @@ namespace Plato.Data.Schemas
                 .Append(_newLine);
 
             i = 0;
-            foreach (var parameter in procedure.Keys)
+            foreach (var parameter in procedure.Parameters)
             {
                 sb
+                    .Append("   ")
                     .Append(parameter.Name)
                     .Append(" = @")
                     .Append(parameter.NameNormalized)
-                    .Append(i < procedure.Keys.Count - 1 ? " AND " : "")
+                    .Append(i < procedure.Parameters.Count - 1 ? " AND " : "")
                     .Append(_newLine);
                 i += 1;
             }
@@ -629,11 +638,14 @@ namespace Plato.Data.Schemas
 
         private string GetProcedurePlaceHolderComment()
         {
-            return $"/****** This stored procedure was programmatically generated by Plato on {System.DateTime.Now}. Changes made by hand may be lost. ******/";
+            var moduleName = !string.IsNullOrEmpty(this._options.ModuleName) ?
+                this._options.ModuleName :
+                "N/A";
+            return $"/******{_newLine}Module: {moduleName}{_newLine}Version: {this._options.Version}{_newLine}This stored procedure was generated programmatically by Plato on {DateTime.Now}. Changes made by hand may be lost.{_newLine}******/";
         }
 
         #endregion
-        
+
 
     }
 }

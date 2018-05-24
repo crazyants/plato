@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Plato.Abstractions.SetUp;
 
 namespace Plato.SetUp.Services
 {
     public interface ISetUpService
     {
-        Task<string> SetupAsync(SetUpContext context);
+        Task<string> SetUpAsync(SetUpContext context);
     }
 }

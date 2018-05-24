@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Localization;
+using Plato.Abstractions.SetUp;
 using Plato.Abstractions.Stores;
 using Plato.Data.Abstractions.Schemas;
 using Plato.Data.Migrations;
@@ -124,7 +126,7 @@ namespace Plato.SetUp.Controllers
                 SiteName = model.SiteName,
                 DatabaseProvider = "SqlClient",
                 DatabaseConnectionString = model.ConnectionString,
-                Errors = new List<Exception>()
+                Errors = new Dictionary<string, string>()
             };
             
             if (!model.TablePrefixPreset)
@@ -132,13 +134,13 @@ namespace Plato.SetUp.Controllers
                 setupContext.DatabaseTablePrefix = model.TablePrefix;
             }
             
-            var executionId = _setUpService.SetupAsync(setupContext);
+            var executionId = _setUpService.SetUpAsync(setupContext);
             // Check if a component in the Setup failed
             if (setupContext.Errors.Any())
             {
                 foreach (var error in setupContext.Errors)
                 {
-                    ModelState.AddModelError(error.Message, error.StackTrace);
+                    ModelState.AddModelError(error.Key, error.Value);
                 }
 
                 return View(model);

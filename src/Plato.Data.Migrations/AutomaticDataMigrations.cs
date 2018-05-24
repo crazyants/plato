@@ -115,8 +115,8 @@ namespace Plato.Data.Migrations
             builder
                 .CreateTable(table)
                 .CreateDefaultProcedures(table)
-                .CreateProcedure(new SchemaProcedure("SelectSettingsByKey", StoredProcedureType.SelectByKey)
-                    .ForTable(table).WithKey(new SchemaColumn() {Name = "[Key]", DbType = DbType.Int32}));
+                .CreateProcedure(new SchemaProcedure("SelectSettingByKey", StoredProcedureType.SelectByKey)
+                    .ForTable(table).WithParameter(new SchemaColumn() {Name = "[Key]", DbType = DbType.Int32}));
 
         }
 
@@ -221,21 +221,51 @@ namespace Plato.Data.Migrations
                     },
                 }
             };
-            
+
             builder
+                // Create table
                 .CreateTable(table)
+                // Create basic default CRUD procedures
                 .CreateDefaultProcedures(table)
+                // SelectUserByEmail
                 .CreateProcedure(new SchemaProcedure("SelectUserByEmail", StoredProcedureType.SelectByKey)
-                    .ForTable(table).WithKey(new SchemaColumn() { Name = "Email", DbType = DbType.String, Length = "255" }))
+                    .ForTable(table)
+                    .WithParameter(new SchemaColumn() {Name = "Email", DbType = DbType.String, Length = "255"}))
+                // SelectUserByUserName
                 .CreateProcedure(new SchemaProcedure("SelectUserByUserName", StoredProcedureType.SelectByKey)
-                    .ForTable(table).WithKey(new SchemaColumn() { Name = "Username", DbType = DbType.String, Length = "255" }))
+                    .ForTable(table)
+                    .WithParameter(new SchemaColumn() {Name = "Username", DbType = DbType.String, Length = "255"}))
+                // SelectUserByUserNameNormalized
                 .CreateProcedure(new SchemaProcedure("SelectUserByUserNameNormalized", StoredProcedureType.SelectByKey)
-                    .ForTable(table).WithKey(new SchemaColumn() { Name = "NormalizedUserName", DbType = DbType.String, Length = "255" }))
-                .CreateProcedure(new SchemaProcedure("SelectUserByEmailAndPassword", StoredProcedureType.SelectByKey)
-                    .ForTable(table).WithKey(new SchemaColumn() { Name = "NormalizedUserName", DbType = DbType.String, Length = "255" }));
+                    .ForTable(table)
+                    .WithParameter(new SchemaColumn()
+                    {
+                        Name = "NormalizedUserName",
+                        DbType = DbType.String,
+                        Length = "255"
+                    }))
+                // SelectUserByEmailAndPassword
+                .CreateProcedure(
+                    new SchemaProcedure("SelectUserByEmailAndPassword", StoredProcedureType.SelectByKey)
+                        .ForTable(table)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "Email",
+                                DbType = DbType.String,
+                                Length = "255"
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "PasswordHash",
+                                DbType = DbType.String,
+                                Length = "255"
+                            }
+                        }));
 
 
-            
+
 
 
 
