@@ -87,10 +87,10 @@ namespace Plato.Data.Migrations
                 builder
                     .Configure(options => options.Version = "1.0.0")
                     .CreateTable(settingsTable)
-                    .CreateStoredProcedure(new SchemaStoredProcedure("SelectSettings", settingsTable, StoredProcedureType.Select))
-                    .CreateStoredProcedure(new SchemaStoredProcedure("InsertUpdateSetting", settingsTable, StoredProcedureType.InsertUpdate));
-
-
+                    .CreateDefaultProcedures(settingsTable)
+                    .CreateProcedure(new SchemaProcedure("SelectSettingByKey", StoredProcedureType.SelectByKey).ForTable(settingsTable).WithKey(new SchemaColumn() {Name = "[Key]", DbType = DbType.Int32}));
+                    
+                
                 var result = builder.Apply();
 
                 return new DataMigrationResult()

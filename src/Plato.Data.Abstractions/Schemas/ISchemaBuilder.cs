@@ -8,6 +8,9 @@ namespace Plato.Data.Abstractions.Schemas
     public class SchemaBuilderOptions
     {
         public string Version = "1.0.0";
+
+        public string ModuleName { get; set; }
+
     }
     
     public interface ISchemaBuilder : IDisposable
@@ -29,7 +32,9 @@ namespace Plato.Data.Abstractions.Schemas
 
         ISchemaBuilder CreateStatement(string statement);
 
-        ISchemaBuilder CreateStoredProcedure(SchemaStoredProcedure storedProecedure);
+        ISchemaBuilder CreateProcedure(SchemaProcedure proecedure);
+
+        ISchemaBuilder CreateDefaultProcedures(SchemaTable table);
 
         ISchemaBuilder Apply();
 

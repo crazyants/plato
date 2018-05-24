@@ -49,6 +49,8 @@ namespace Plato.Hosting
   
         public ShellContext GetOrCreateShellContext(ShellSettings settings)
         {
+            if (_shellContexts == null)
+                _shellContexts = new ConcurrentDictionary<string, ShellContext>();
             return _shellContexts.GetOrAdd(settings.Name, tenant =>
             {
                 var shellContext = CreateShellContext(settings);

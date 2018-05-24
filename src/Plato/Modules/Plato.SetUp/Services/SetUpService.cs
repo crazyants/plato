@@ -70,7 +70,6 @@ namespace Plato.SetUp.Services
             {
                 using (var scope = shellContext.ServiceProvider.CreateScope())
                 {
-                    
                     using (var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext>())
                     {
 

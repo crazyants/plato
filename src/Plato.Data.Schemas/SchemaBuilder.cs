@@ -26,9 +26,7 @@ namespace Plato.Data.Schemas
 
         private readonly IDbContext _dbContext;
         
-        public SchemaBuilder(
-            IDbContext dbContext
-        )
+        public SchemaBuilder(IDbContext dbContext)
         {
             _tablePrefix = dbContext.Configuration.TablePrefix;
             _dbContext = dbContext;
@@ -37,6 +35,8 @@ namespace Plato.Data.Schemas
             _errors = new List<Exception>();
 
         }
+
+        private readonly string _newLine = Environment.NewLine;
 
         #region "Implementation"
 
@@ -105,8 +105,7 @@ namespace Plato.Data.Schemas
 
             return this;
         }
-
-
+        
         public ISchemaBuilder DropTable(SchemaTable table)
         {
             var tableName = GetTableName(table.Name);
@@ -163,9 +162,42 @@ namespace Plato.Data.Schemas
             return this;
         }
 
-        public ISchemaBuilder CreateStoredProcedure(SchemaStoredProcedure procedure)
+        public ISchemaBuilder CreateDefaultProcedures(SchemaTable table)
         {
-          
+
+            // select * from table
+            CreateProcedure(new SchemaProcedure($"Select{table.NameNormalized}", StoredProcedureType.Select)
+                .ForTable(table));
+
+            // select * from table where primaryKey = @primaryKey
+            CreateProcedure(new SchemaProcedure($"Select{table.Name}By{table.PrimaryKeyColumn.NameNormalized}", StoredProcedureType.SelectByKey)
+                .ForTable(table)
+                .WithKey(table.PrimaryKeyColumn));
+
+            // delete from table where primaryKey = @primaryKey
+            CreateProcedure(new SchemaProcedure($"Delete{table.Name}By{table.PrimaryKeyColumn.NameNormalized}", StoredProcedureType.DeleteByKey)
+                .ForTable(table)
+                .WithKey(table.PrimaryKeyColumn));
+
+            // insert / update by primary key
+            CreateProcedure(
+                new SchemaProcedure($"InsertUpdate{table.Name}", StoredProcedureType.InsertUpdate)
+                    .ForTable(table));
+            
+            return this;
+
+        }
+
+
+        public ISchemaBuilder CreateProcedure(SchemaProcedure procedure)
+        {
+
+            // TODO: Refactor to avoid switch statement 
+            // Create common command classes to represent each procedure type
+            // Avoids enum and makes it more extensible for future additins
+            // InsertUpdateProcedure : IProcedureCommand,
+            // SelectByKeyProcedure : IProcedureCommand
+            // DeleteByKey : IProcedureCommand etc
             var statement = string.Empty;
             switch (procedure.ProcedureType)
             {
@@ -174,6 +206,12 @@ namespace Plato.Data.Schemas
                     break;
                 case StoredProcedureType.Select:
                     statement = BuildSelectProcedure(procedure);
+                    break;
+                case StoredProcedureType.SelectByKey:
+                    statement = BuildSelectByKeyProcedure(procedure);
+                    break;
+                case StoredProcedureType.DeleteByKey:
+                    statement = BuildDeleteByKeyProcedure(procedure);
                     break;
             }
 
@@ -225,13 +263,110 @@ namespace Plato.Data.Schemas
 
         #region "Private Methods"
 
-        private string BuildSelectProcedure(SchemaStoredProcedure procedure)
+        private string BuildSelectProcedure(SchemaProcedure procedure)
         {
-            return $"CREATE PROCEDURE [{GetProcedureName(procedure.Name)}] AS SET NOCOUNT ON SELECT * FROM {GetTableName(procedure.Table.Name)} WITH (nolock)";
+
+            var sb = new StringBuilder();
+
+            sb.Append("CREATE PROCEDURE ")
+                .Append(GetProcedureName(procedure.Name))
+                .Append(_newLine)
+                .Append("AS")
+                .Append(_newLine)
+                .Append(_newLine);
+
+            sb.Append("SET NOCOUNT ON")
+                .Append(_newLine)
+                .Append(_newLine);
+            
+            sb.Append(GetProcedurePlaceHolderComment())
+                .Append(_newLine)
+                .Append(_newLine);
+
+            sb.Append("SELECT * FROM ")
+                .Append(GetTableName(procedure.Table.Name))
+                .Append(" WITH (nolock)");
+
+            return sb.ToString();
+
         }
 
+        private string BuildSelectByKeyProcedure(SchemaProcedure procedure)
+        {
+            var sb = new StringBuilder();
+            sb.Append("CREATE PROCEDURE ")
+                .Append(GetProcedureName(procedure.Name))
+                .Append(" (")
+                .Append(_newLine)
+                .Append("@")
+                .Append(procedure.Key.NameNormalized)
+                .Append(" ")
+                .Append(procedure.Key.DbTypeNormalized)
+                .Append(_newLine)
+                .Append(") AS")
+                .Append(_newLine)
+                .Append("SET NOCOUNT ON")
+                .Append(_newLine)
+                .Append(_newLine);
+            
+            sb.Append(GetProcedurePlaceHolderComment())
+                .Append(_newLine)
+                .Append(_newLine);
 
-        private string BuildInsertUpdateProcedure(SchemaStoredProcedure procedure)
+            sb.Append("SELECT * FROM ")
+                .Append(GetTableName(procedure.Table.Name))
+                .Append(" WITH (nolock) ")
+                .Append(_newLine)
+                .Append("WHERE (")
+                .Append(procedure.Key)
+                .Append(" = @")
+                .Append(procedure.Key.NameNormalized)
+                .Append(")");
+
+            return sb.ToString();
+
+        }
+
+        private string BuildDeleteByKeyProcedure(SchemaProcedure procedure)
+        {
+
+            if (procedure.Key == null)
+                throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no key was specified.");
+
+            var sb = new StringBuilder();
+            sb.Append("CREATE PROCEDURE ")
+                .Append(GetProcedureName(procedure.Name))
+                .Append(" (")
+                .Append(_newLine)
+                .Append("@")
+                .Append(procedure.Key.NameNormalized)
+                .Append(" ")
+                .Append(procedure.Key.DbTypeNormalized)
+                .Append(_newLine)
+                .Append(") AS")
+                .Append(_newLine)
+                .Append("SET NOCOUNT ON")
+                .Append(_newLine)
+                .Append(_newLine);
+            
+            sb.Append(GetProcedurePlaceHolderComment())
+                .Append(_newLine)
+                .Append(_newLine);
+
+            sb.Append("DELETE FROM ")
+                .Append(GetTableName(procedure.Table.Name))
+                .Append(_newLine)
+                .Append("WHERE (")
+                .Append(procedure.Key)
+                .Append(" = @")
+                .Append(procedure.Key.NameNormalized)
+                .Append(")");
+
+            return sb.ToString();
+            
+        }
+
+        private string BuildInsertUpdateProcedure(SchemaProcedure procedure)
         {
 
             var tableName = GetTableName(procedure.Table.Name);
@@ -248,35 +383,40 @@ namespace Plato.Data.Schemas
             if (columns.Any())
             {
                 sb.Append("(")
-                    .Append(Environment.NewLine);
+                    .Append(_newLine);
 
                 foreach (var column in columns)
                 {
                     sb
                         .Append("     ")
                         .Append("@")
-                        .Append(column.ParameterizedName)
+                        .Append(column.NameNormalized)
                         .Append(" ")
                         .Append(column.DbTypeNormalized)
                         .Append(",")
-                        .Append(Environment.NewLine);
+                        .Append(_newLine);
                 }
 
                 sb
                     .Append("     ")
                     .Append("@unique_id int output")
-                    .Append(Environment.NewLine)
+                    .Append(_newLine)
                     .Append(")")
-                    .Append(Environment.NewLine);
+                    .Append(_newLine);
 
             }
 
             sb.Append("AS")
-                .Append(Environment.NewLine)
-                .Append(Environment.NewLine)
+                .Append(_newLine)
+                .Append(_newLine)
                 .Append("SET NOCOUNT ON ")
-                .Append(Environment.NewLine);
-             
+                .Append(_newLine)
+                .Append(_newLine);
+
+            sb.Append(GetProcedurePlaceHolderComment())
+                .Append(_newLine)
+                .Append(_newLine);
+
             sb.Append("IF EXISTS (SELECT ")
                 .Append(procedure.Table.PrimaryKeyColumn.Name)
                 .Append(" FROM ")
@@ -286,14 +426,14 @@ namespace Plato.Data.Schemas
                 .Append(procedure.Table.PrimaryKeyColumn.Name)
                 .Append(" = ")
                 .Append("@")
-                .Append(procedure.Table.PrimaryKeyColumn?.ParameterizedName)
+                .Append(procedure.Table.PrimaryKeyColumn?.NameNormalized)
                 .Append("))")
-                .Append(Environment.NewLine);
+                .Append(_newLine);
 
             // update
 
             sb.Append("BEGIN")
-                .Append(Environment.NewLine);
+                .Append(_newLine);
             
             if (columns.Any())
             {
@@ -302,7 +442,7 @@ namespace Plato.Data.Schemas
                     .Append("UPDATE ")
                     .Append(tableName)
                     .Append(" SET ")
-                    .Append(Environment.NewLine);
+                    .Append(_newLine);
                 var i = 0;
                 foreach (var column in columns)
                 {
@@ -313,9 +453,9 @@ namespace Plato.Data.Schemas
                             .Append(column.Name)
                             .Append(" = ")
                             .Append("@")
-                            .Append(column.ParameterizedName)
+                            .Append(column.NameNormalized)
                             .Append(i < columns.Count - 1 ? "," : "")
-                            .Append(Environment.NewLine);
+                            .Append(_newLine);
                     }
                     i += 1;
                 }
@@ -326,26 +466,26 @@ namespace Plato.Data.Schemas
                     .Append(procedure.Table.PrimaryKeyColumn.Name)
                     .Append(" = ")
                     .Append("@")
-                    .Append(procedure.Table.PrimaryKeyColumn.ParameterizedName)
-                    .Append(Environment.NewLine);
+                    .Append(procedure.Table.PrimaryKeyColumn.NameNormalized)
+                    .Append(_newLine);
             }
 
             sb
-                .Append(Environment.NewLine)
+                .Append(_newLine)
                 .Append("     ")
                 .Append("SET @unique_id = @")
                 .Append(procedure.Table.PrimaryKeyColumn.Name)
                 .Append(";")
-                .Append(Environment.NewLine)
-                .Append(Environment.NewLine);
+                .Append(_newLine)
+                .Append(_newLine);
 
             sb
                 .Append("END")
-                .Append(Environment.NewLine)
+                .Append(_newLine)
                 .Append("ELSE")
-                .Append(Environment.NewLine)
+                .Append(_newLine)
                 .Append("BEGIN")
-                .Append(Environment.NewLine);
+                .Append(_newLine);
 
             if (columns.Any())
             {
@@ -354,7 +494,7 @@ namespace Plato.Data.Schemas
                     .Append("INSERT INTO ")
                     .Append(tableName)
                     .Append(" ( ")
-                    .Append(Environment.NewLine);
+                    .Append(_newLine);
                 var i = 0;
                 foreach (var column in columns)
                 {
@@ -364,7 +504,7 @@ namespace Plato.Data.Schemas
                             .Append("       ")
                             .Append(column.Name)
                             .Append(i < columns.Count - 1 ? "," : "")
-                            .Append(Environment.NewLine);
+                            .Append(_newLine);
                     }
                     i += 1;
                 }
@@ -372,7 +512,7 @@ namespace Plato.Data.Schemas
                 sb
                     .Append("   ")
                     .Append(") VALUES (")
-                    .Append(Environment.NewLine);
+                    .Append(_newLine);
                 i = 0;
                 foreach (var column in columns)
                 {
@@ -381,9 +521,9 @@ namespace Plato.Data.Schemas
                         sb
                             .Append("       ")
                             .Append("@")
-                            .Append(column.ParameterizedName)
+                            .Append(column.NameNormalized)
                             .Append(i < columns.Count - 1 ? "," : "")
-                            .Append(Environment.NewLine);
+                            .Append(_newLine);
                     }
                     i += 1;
                 }
@@ -393,16 +533,16 @@ namespace Plato.Data.Schemas
                     .Append(")");
 
                 sb
-                    .Append(Environment.NewLine)
-                    .Append(Environment.NewLine)
+                    .Append(_newLine)
+                    .Append(_newLine)
                     .Append("     ")
                     .Append("SET @unique_id = SCOPE_IDENTITY();")
-                    .Append(Environment.NewLine);
+                    .Append(_newLine);
 
             }
             
             sb.Append("END")
-                .Append(Environment.NewLine);
+                .Append(_newLine);
             
             return sb.ToString();
 
@@ -440,6 +580,11 @@ namespace Plato.Data.Schemas
              
             sb.Append(column.Nullable ? " NULL" : " NOT NULL");
             return sb.ToString();
+        }
+
+        private string GetProcedurePlaceHolderComment()
+        {
+            return $"/****** This stored procedure was generated programmatically by the Plato framwrok on {System.DateTime.Now}. Changes made by hand may be lost. ******/";
         }
 
         #endregion

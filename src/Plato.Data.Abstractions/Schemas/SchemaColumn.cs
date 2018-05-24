@@ -9,12 +9,15 @@ namespace Plato.Data.Abstractions.Schemas
     {
 
         private string _tableName;
-
+        
         public bool PrimaryKey { get; set; }
 
         public string Name { get; set; }
 
-        public string ParameterizedName => this.Name.Replace("[", "").Replace("]", "");
+        /// <summary>
+        /// Returns a version of the column Name safe for inclusion within @paramter arguments. 
+        /// </summary>
+        public string NameNormalized => this.Name.Replace("[", "").Replace("]", "");
 
         public DbType DbType { get; set; }
 
@@ -25,6 +28,9 @@ namespace Plato.Data.Abstractions.Schemas
 
         public string DefaultValue { get; set; }
 
+        /// <summary>
+        /// Sets a default value for the column based on the columns data type. 
+        /// </summary>
         public string DefaultValueNormalizsed
         {
             get
@@ -51,11 +57,14 @@ namespace Plato.Data.Abstractions.Schemas
                 }
 
                 throw new Exception($"Type not returned for column '{this.Name}' within table '{_tableName}' whilst building shema");
-
-
+                
             }
-        }
 
+        }
+        
+        /// <summary>
+        /// Returns a version of the column type safe for inclusion within @paramter arguments. 
+        /// </summary>
         public string DbTypeNormalized
         {
             get

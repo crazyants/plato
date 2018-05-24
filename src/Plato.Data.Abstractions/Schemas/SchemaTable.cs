@@ -10,6 +10,11 @@ namespace Plato.Data.Abstractions.Schemas
 
         public string Name { get; set; }
 
+        /// <summary>
+        /// Returns a version of the column Name safe for inclusion within @paramter arguments. 
+        /// </summary>
+        public string NameNormalized => this.Name.Replace("[", "").Replace("]", "");
+        
         public List<SchemaColumn> Columns { get; set; }
 
         public SchemaColumn PrimaryKeyColumn
