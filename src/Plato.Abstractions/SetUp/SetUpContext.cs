@@ -15,6 +15,9 @@ namespace Plato.Abstractions.SetUp
 
         public string DatabaseTablePrefix { get; set; }
 
+        public string AdminEmail { get; set; }
+
+
         public string AdminUsername { get; set; }
 
         public string AdminPassword { get; set; }

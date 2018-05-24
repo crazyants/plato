@@ -22,6 +22,7 @@ namespace Plato.Settings
         {
 
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
+
             
         }
 

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Plato.Abstractions.SetUp;
 using Plato.Hosting;
 using Plato.Hosting.Extensions;
 using Plato.Models.Roles;
@@ -16,6 +17,7 @@ using Plato.Shell.Models;
 using Plato.Stores.Roles;
 using Plato.Stores.Users;
 using Plato.Hosting.Web;
+using Plato.Users.Services;
 
 namespace Plato.Users
 {
@@ -41,7 +43,8 @@ namespace Plato.Users
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            //services.AddAuthorization();
+            // register set-up event
+            services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
 
             // Adds the default token providers used to generate tokens for reset passwords, change email
             // and change telephone number operations, and for two factor authentication token generation.

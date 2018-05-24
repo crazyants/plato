@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +10,6 @@ using Plato.Data.Abstractions;
 using Plato.Hosting;
 using Plato.Shell;
 using Plato.Shell.Models;
-using Plato.Data.Migrations;
 
 namespace Plato.SetUp.Services
 {
@@ -85,7 +80,6 @@ namespace Plato.SetUp.Services
                        });
 
                         var hasErrors = false;
-
                         void reportError(string key, string message)
                         {
                             hasErrors = true;
@@ -96,9 +90,7 @@ namespace Plato.SetUp.Services
                         var setupEventHandlers = scope.ServiceProvider.GetServices<ISetUpEventHandler>();
                         var logger = scope.ServiceProvider.GetRequiredService<ILogger<SetUpService>>();
 
-                        await setupEventHandlers.InvokeAsync(x => x.SetUp(context,
-                            reportError
-                        ), logger);
+                        await setupEventHandlers.InvokeAsync(x => x.SetUp(context, reportError), logger);
 
                         if (hasErrors)
                         {
