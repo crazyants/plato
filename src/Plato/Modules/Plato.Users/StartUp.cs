@@ -43,7 +43,7 @@ namespace Plato.Users
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            // register set-up event
+            // register set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
 
             // Adds the default token providers used to generate tokens for reset passwords, change email
@@ -70,6 +70,8 @@ namespace Plato.Users
 
             services.AddSingleton<IContextFacade, ContextFacade>();
             
+            // configurate authentication cookie
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.Name = "plato_" + _cookieSuffix.ToLower();

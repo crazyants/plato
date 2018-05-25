@@ -34,19 +34,25 @@ namespace Plato.Repositories.Settings
         }
 
         #endregion
-        
+
         #region "Implementation"
 
         public Task<bool> DeleteAsync(int id)
         {
+
+
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation($"Deleting setting with id: {id}");
+
+
             throw new NotImplementedException();
         }
 
         public async Task<Setting> InsertUpdateAsync(Setting setting)
         {
+            
             var id = await InsertUpdateInternal(
-                setting.Id,          
-                setting.SpaceId,
+                setting.Id,    
                 setting.Key,
                 setting.Value,
                 setting.CreatedDate,
@@ -56,33 +62,46 @@ namespace Plato.Repositories.Settings
 
             if (id > 0)
                 return await SelectByIdAsync(id);
-
             return null;
 
         }
 
         public async Task<Setting> SelectByIdAsync(int id)
         {
-            var setting = new Setting();
+
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation($"Selecting setting with id: {id}");
+            
             using (var context = _dbContext)
             {
+                var setting = new Setting();
                 var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                    "SelectSetting", id);
+                    "SelectSettingById", id);
                 if (reader != null)
                 {
-                    await reader.ReadAsync();
-                    setting.PopulateModel(reader);
+                    if (reader.HasRows)
+                    {
+                        await reader.ReadAsync();
+                        setting.PopulateModel(reader);
+                        return setting;
+                    }
                 }
+          
             }
 
-            return setting;            
+            return null;
+
+
 
         }
 
         public async Task<IEnumerable<Setting>> SelectSettings()
         {
 
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation("Selecting all settings");
+            
             var settings = new List<Setting>();
             using (var context = _dbContext)
             {
@@ -111,8 +130,7 @@ namespace Plato.Repositories.Settings
         #region "Private Methods"
 
         private async Task<int> InsertUpdateInternal(
-            int id,    
-            int spaceId,
+            int id,   
             string key,
             string value,
             DateTime? createdDate,
@@ -121,20 +139,27 @@ namespace Plato.Repositories.Settings
             int modifiedUserId
             )
         {
-            if (_dbContext == null)
-                return default(int);
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation(id == 0
+                    ? $"Inserting settings with key: {key}"
+                    : $"Updating settings with id: {id}");
+            }
+              
             using (var context = _dbContext)
             {
+                if (context == null)
+                    return 0;
                 return await context.ExecuteScalarAsync<int>(
-                  CommandType.StoredProcedure,
-                  "InsertUpdateSetting",
-                    id,               
-                    spaceId,
+                    CommandType.StoredProcedure,
+                    "InsertUpdateSetting",
+                    id,
                     key.ToEmptyIfNull().TrimToSize(255),
                     value.ToEmptyIfNull(),
-                    createdDate,
+                    createdDate.ToDateIfNull(),
                     createdUserId,
-                    modifiedDate,
+                    modifiedDate.ToDateIfNull(),
                     modifiedUserId);
             }
             

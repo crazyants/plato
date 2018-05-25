@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
+using Plato.Abstractions.Settings;
 using Plato.Abstractions.SetUp;
 using Plato.Abstractions.Stores;
 using Plato.Data.Abstractions.Schemas;
@@ -108,20 +109,29 @@ namespace Plato.Settings.Services
             // Add default data
             // --------------------------
 
-            var siteSettings = await _siteSettingsService.GetAsync();
-            siteSettings.SiteName = context.SiteName;
-            siteSettings.SuperUser = context.AdminUsername;
-
-            // add default route for set-up site
-            siteSettings.HomeRoute = new RouteValueDictionary()
+            try
             {
-                { "Area", "Plato.Users" },
-                { "Controller", "Account" },
-                { "Action", "Login" }
 
-            };
+                var siteSettings = await _siteSettingsService.GetAsync() ?? new SiteSettings();
+                siteSettings.SiteName = context.SiteName;
+                siteSettings.SuperUser = context.AdminUsername;
 
-            await _siteSettingsService.SaveAsync(siteSettings);
+                // add default route for set-up site
+                siteSettings.HomeRoute = new RouteValueDictionary()
+                {
+                    { "Area", "Plato.Users" },
+                    { "Controller", "Account" },
+                    { "Action", "Login" }
+
+                };
+
+                await _siteSettingsService.SaveAsync(siteSettings);
+            }
+            catch (Exception ex)
+            {
+                reportError(ex.Message, ex.StackTrace);
+            }
+          
         
          
         }

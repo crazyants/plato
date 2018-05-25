@@ -62,7 +62,6 @@ namespace Plato.Repositories.Settings
             var updatedSetting = await _settingRepository.InsertUpdateAsync(existingSetting);
             if (updatedSetting != null)            
                 return await GetSettingsAsync<T>(updatedSetting.Key);
-               
             return await Task.FromResult<T>(default(T));
 
         }

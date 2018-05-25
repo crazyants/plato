@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using Plato.Data.Abstractions;
+using Plato.Data.Abstractions.Providers;
 
-namespace Plato.Data
+namespace Plato.Data.Providers
 {
     public class DataProviderFactory
     {
@@ -28,7 +28,7 @@ namespace Plato.Data
 
         #region "Private Variables"
 
-        private DbContextOptions _cfg;
+        private readonly DbContextOptions _cfg;
         private IDataProvider _provider;
 
         #endregion

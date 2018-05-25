@@ -3,12 +3,11 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Data.SqlClient;
-using System.Linq.Expressions;
-using Plato.Abstractions.Extensions;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Plato.Data.Abstractions.Exceptions;
+using Plato.Data.Abstractions.Providers;
 
-namespace Plato.Data
+namespace Plato.Data.Providers
 {
     public class SqlProvider : IDataProvider, IDisposable
     {
@@ -36,6 +35,7 @@ namespace Plato.Data
         {
                   
         }
+
         public SqlProvider(string connectionString, string tablePrefix)
       : this(connectionString, tablePrefix, 120)
         {
@@ -79,7 +79,6 @@ namespace Plato.Data
         {
             if (_sharedConnectionDepth == 0)
             {
-
                 _dbConnection = new SqlConnection
                 {
                     ConnectionString = _connectionString
@@ -361,7 +360,6 @@ namespace Plato.Data
             OnException?.Invoke(this, new DbExceptionEventArgs(x));
         }
                   
-
         public virtual void OnConnectionClosing(IDbConnection conn) { }
 
         public virtual void OnExecutingCommand(IDbCommand cmd) { }

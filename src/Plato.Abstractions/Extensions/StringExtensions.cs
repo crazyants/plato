@@ -41,6 +41,7 @@ namespace Plato.Abstractions.Extensions
             return input ?? string.Empty;
         }
 
+
         public static string TrimToSize(this string input, int maxLength)
         {
             if (string.IsNullOrEmpty(input))

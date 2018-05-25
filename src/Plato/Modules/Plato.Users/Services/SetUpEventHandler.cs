@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
@@ -14,8 +13,6 @@ namespace Plato.Users.Services
     public class SetUpEventHandler : ISetUpEventHandler
     {
         private readonly ISchemaBuilder _schemaBuilder;
-
-        private readonly IUserStore<User> _userStoree;
         private readonly UserManager<User> _userManager;
 
         public SetUpEventHandler(
@@ -26,14 +23,11 @@ namespace Plato.Users.Services
             _userManager = userManager;
         }
 
-        public async Task SetUp(SetUpContext context, Action<string, string> reportError
-        )
+        public async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
-
-            // --------------------------
-            // Build schema
-            // --------------------------
-
+            
+            // build schema
+        
             var table = new SchemaTable()
             {
                 Name = "Users",
@@ -132,6 +126,7 @@ namespace Plato.Users.Services
                     },
                 }
             };
+
             using (var builder = _schemaBuilder)
             {
 
@@ -196,10 +191,8 @@ namespace Plato.Users.Services
 
             }
             
-            // --------------------------
-            // Add default data
-            // --------------------------
-            
+            // create super user
+        
             await _userManager.CreateAsync(new User()
             {
                 Email = context.AdminEmail,

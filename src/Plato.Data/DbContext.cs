@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Plato.Data.Abstractions;
+using Plato.Data.Abstractions.Exceptions;
+using Plato.Data.Abstractions.Providers;
+using Plato.Data.Providers;
 
 namespace Plato.Data
 {
@@ -13,6 +18,7 @@ namespace Plato.Data
         #region "Private Variables"
 
         private IDataProvider _provider;
+        private readonly ILogger<DbContext> _logger;
 
         #endregion
 
@@ -20,6 +26,12 @@ namespace Plato.Data
 
         public DbContextOptions Configuration { get; set; }
 
+        #endregion
+
+        #region "Events"
+        
+        public event DbEventHandlers.DbExceptionEventHandler OnException;
+        
         #endregion
 
         #region "Dispose"
@@ -34,8 +46,10 @@ namespace Plato.Data
         #region "Constructos"
 
         public DbContext(
-            IOptions<DbContextOptions> dbContextOptions)
+            IOptions<DbContextOptions> dbContextOptions,
+            ILogger<DbContext> logger)
         {
+            _logger = logger;
             ConfigureInternal(dbContextOptions.Value);
         }
 
@@ -53,14 +67,27 @@ namespace Plato.Data
             ConfigureInternal(cfg);
         }
 
-
+     
         private void ConfigureInternal(DbContextOptions cfg)
         {
             var providerFactory = new DataProviderFactory(cfg);
             _provider = providerFactory.Provider;
             if (_provider != null)
             {
-                _provider.OnException += (sender, args) => throw args.Exception;
+                // handle exceptions within the provider
+                if (this.OnException == null)
+                {
+                    _provider.OnException += (sender, args) =>
+                    {
+                        throw args.Exception;
+                    };
+                }
+                else
+                {
+                    // dbContext has a explict exception handler
+                    _provider.OnException += this.OnException;
+                }
+                    
             }
             Configuration = cfg;
         }
@@ -142,6 +169,11 @@ namespace Plato.Data
             return !string.IsNullOrEmpty(this.Configuration.TablePrefix)
                 ? this.Configuration.TablePrefix + "_" + procedureName
                 : procedureName;
+        }
+
+        public void HandleException(Exception x)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

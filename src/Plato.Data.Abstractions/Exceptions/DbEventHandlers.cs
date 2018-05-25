@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plato.Data
+namespace Plato.Data.Abstractions.Exceptions
 {
     public class DbEventHandlers
     {
 
-        public delegate void DbExceptionEventHandler(
-            object sender, DbExceptionEventArgs e);
+        public delegate void DbExceptionEventHandler(object sender, DbExceptionEventArgs e);
 
     }
 }

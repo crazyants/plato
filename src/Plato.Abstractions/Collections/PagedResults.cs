@@ -12,8 +12,8 @@ namespace Plato.Abstractions.Collections
 
         public IList<T> Data
         {
-            get { return _data ?? (_data = new List<T>()); }
-            set { _data = value; }
+            get => _data ?? (_data = new List<T>());
+            set => _data = value;
         }
 
         public int Total { get; set; }

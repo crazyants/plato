@@ -23,12 +23,13 @@ namespace Plato.Abstractions.Extensions
           int columnIndex)
         {
 
-            if ((!object.ReferenceEquals((object)dr[columnIndex], System.DBNull.Value)) &&
-                ((object)dr[columnIndex] != null))
+            if (columnIndex > dr.Depth)
             {
-                return true;
+
             }
-            return false;
+
+            return (!object.ReferenceEquals((object)dr[columnIndex], System.DBNull.Value)) &&
+                   ((object)dr[columnIndex] != null);
         }
 
         public static IEnumerable<T> Select<T>(

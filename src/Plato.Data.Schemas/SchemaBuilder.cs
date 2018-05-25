@@ -430,10 +430,17 @@ namespace Plato.Data.Schemas
         private string BuildInsertUpdateProcedure(SchemaProcedure procedure)
         {
 
-            var tableName = GetTableName(procedure.Table.Name);
-            var columns = procedure.Table.Columns;
+            if (procedure == null)
+                throw new ArgumentNullException(nameof(procedure));
+
+            if (procedure.Table == null)
+                throw new ArgumentNullException(nameof(procedure.Table));
+
             if (procedure.Table.PrimaryKeyColumn == null)
                 throw new Exception($"A primary key column is required for table '{procedure.Table.Name}' when creating procedure of type '{procedure.ProcedureType}'");
+            
+            var tableName = GetTableName(procedure.Table.Name);
+            var columns = procedure.Table.Columns;
 
             var sb = new StringBuilder();
 
@@ -446,6 +453,7 @@ namespace Plato.Data.Schemas
                 sb.Append("(")
                     .Append(_newLine);
 
+                var i = 0;
                 foreach (var column in columns)
                 {
                     sb
@@ -454,16 +462,12 @@ namespace Plato.Data.Schemas
                         .Append(column.NameNormalized)
                         .Append(" ")
                         .Append(column.DbTypeNormalized)
-                        .Append(",")
+                        .Append(i < columns.Count - 1 ? "," : "")
                         .Append(_newLine);
+                    i += 1;
                 }
 
-                sb
-                    .Append("     ")
-                    .Append("@unique_id int output")
-                    .Append(_newLine)
-                    .Append(")")
-                    .Append(_newLine);
+                sb.Append(") ");
 
             }
 
@@ -478,6 +482,12 @@ namespace Plato.Data.Schemas
                 .Append(_newLine)
                 .Append(_newLine);
 
+            sb.Append("DECLARE @unique_id ")
+                .Append(procedure.Table.PrimaryKeyColumn.DbTypeNormalized)
+                .Append(";")
+                .Append(_newLine)
+                .Append(_newLine);
+
             sb.Append("IF EXISTS (SELECT ")
                 .Append(procedure.Table.PrimaryKeyColumn.Name)
                 .Append(" FROM ")
@@ -487,13 +497,14 @@ namespace Plato.Data.Schemas
                 .Append(procedure.Table.PrimaryKeyColumn.Name)
                 .Append(" = ")
                 .Append("@")
-                .Append(procedure.Table.PrimaryKeyColumn?.NameNormalized)
+                .Append(procedure.Table.PrimaryKeyColumn.NameNormalized)
                 .Append("))")
                 .Append(_newLine);
 
             // update
 
             sb.Append("BEGIN")
+                .Append(_newLine)
                 .Append(_newLine);
             
             if (columns.Count > 0)
@@ -546,6 +557,7 @@ namespace Plato.Data.Schemas
                 .Append("ELSE")
                 .Append(_newLine)
                 .Append("BEGIN")
+                .Append(_newLine)
                 .Append(_newLine);
 
             if (columns.Count > 0)
@@ -598,12 +610,15 @@ namespace Plato.Data.Schemas
                     .Append(_newLine)
                     .Append("     ")
                     .Append("SET @unique_id = SCOPE_IDENTITY();")
+                    .Append(_newLine)
                     .Append(_newLine);
 
             }
             
             sb.Append("END")
-                .Append(_newLine);
+                .Append(_newLine)
+                .Append(_newLine)
+                .Append("SELECT @unique_id;");
             
             return sb.ToString();
 

@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Plato.Data.Abstractions.Exceptions;
 
-namespace Plato.Data
+namespace Plato.Data.Abstractions.Providers
 {
     public interface IDataProvider : IDisposable
     {
