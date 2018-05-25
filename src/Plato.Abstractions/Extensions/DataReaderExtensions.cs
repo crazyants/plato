@@ -9,25 +9,15 @@ namespace Plato.Abstractions.Extensions
 
         public static bool ColumnIsNotNull(
             this IDataReader dr,
-            string columnNAme)
+            string columnName)
         {
-
-            if ((!object.ReferenceEquals((object)dr[columnNAme], System.DBNull.Value)) &&
-                ((object)dr[columnNAme] != null)) {
-                return true;
-            }
-            return false;
+            return (!object.ReferenceEquals((object)dr[columnName], System.DBNull.Value)) &&
+                   ((object)dr[columnName] != null);
         }
         public static bool ColumnIsNotNull(
           this IDataReader dr,
           int columnIndex)
         {
-
-            if (columnIndex > dr.Depth)
-            {
-
-            }
-
             return (!object.ReferenceEquals((object)dr[columnIndex], System.DBNull.Value)) &&
                    ((object)dr[columnIndex] != null);
         }
@@ -35,7 +25,6 @@ namespace Plato.Abstractions.Extensions
         public static IEnumerable<T> Select<T>(
         this IDataReader reader, Func<IDataReader, T> projection)
         {
-
             while (reader.Read())
             {
                 yield return projection(reader);

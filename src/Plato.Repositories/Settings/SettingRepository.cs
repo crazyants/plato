@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Models.Settings;
-using Plato.Data;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using Plato.Abstractions.Extensions;
-using System.Data.Common;
-using Plato.Abstractions.Settings;
 using Plato.Abstractions.Collections;
 using Plato.Data.Abstractions;
 
@@ -50,7 +47,6 @@ namespace Plato.Repositories.Settings
 
         public async Task<Setting> InsertUpdateAsync(Setting setting)
         {
-            
             var id = await InsertUpdateInternal(
                 setting.Id,    
                 setting.Key,
@@ -59,11 +55,9 @@ namespace Plato.Repositories.Settings
                 setting.CreatedUserId,
                 setting.ModifiedDate,
                 setting.ModifiedUserId);
-
             if (id > 0)
                 return await SelectByIdAsync(id);
             return null;
-
         }
 
         public async Task<Setting> SelectByIdAsync(int id)
@@ -74,7 +68,6 @@ namespace Plato.Repositories.Settings
             
             using (var context = _dbContext)
             {
-                var setting = new Setting();
                 var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
                     "SelectSettingById", id);
@@ -82,6 +75,7 @@ namespace Plato.Repositories.Settings
                 {
                     if (reader.HasRows)
                     {
+                        var setting = new Setting();
                         await reader.ReadAsync();
                         setting.PopulateModel(reader);
                         return setting;
@@ -91,9 +85,7 @@ namespace Plato.Repositories.Settings
             }
 
             return null;
-
-
-
+            
         }
 
         public async Task<IEnumerable<Setting>> SelectSettings()
@@ -101,27 +93,32 @@ namespace Plato.Repositories.Settings
 
             if (_logger.IsEnabled(LogLevel.Information))
                 _logger.LogInformation("Selecting all settings");
-            
-            var settings = new List<Setting>();
+
+
             using (var context = _dbContext)
             {
                 if (context == null)
                     return null;
                 var reader = await context.ExecuteReaderAsync(
-                  CommandType.StoredProcedure,
-                  "SelectSettings");
+                    CommandType.StoredProcedure,
+                    "SelectSettings");
                 if (reader != null)
                 {
-                    while (await reader.ReadAsync())
+                    if (reader.HasRows)
                     {
-                        var setting = new Setting();
-                        setting.PopulateModel(reader);
-                        settings.Add(setting);
+                        var settings = new List<Setting>();
+                        while (await reader.ReadAsync())
+                        {
+                            var setting = new Setting();
+                            setting.PopulateModel(reader);
+                            settings.Add(setting);
+                        }
                     }
+
                 }
             }
 
-            return settings;
+            return null;
 
         }
         

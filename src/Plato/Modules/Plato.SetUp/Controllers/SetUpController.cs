@@ -46,49 +46,7 @@ namespace Plato.SetUp.Controllers
 
         public async Task<IActionResult> Index()
         {
-
-            //_schemaLoader.LoadSchemas(new List<string> {"1.0.0"});
             
-            //ViewData["Schema"] = _schemaLoader.LoadedSchemas.Count;
-            //ViewData["Schema"] = _schemaLoader.LoadedSchemas[0].InstallSql;
-
-
-            //_dataMigrationBuilder.BuildMigrations(new List<string>() {"1.0.0"});
-
-            //_dataMigrationBuilder.BuildMigrations(new List<string>() { "1.0.0" });
-            //ViewData["Schema"] = _dataMigrationBuilder.DataMigrationType.ToString();
-
-            //_dataMigrationBuilder.BuildMigrations(new List<string>() { "1.0.1", "1.0.0" });
-
-            //_dataMigrationBuilder.BuildMigrations(new List<string>()
-            //{
-            //    "1.0.1",
-            //    "1.0.2",
-            //    "1.0.3",
-            //    "1.0.4"
-            //});
-
-            //_dataMigrationBuilder.BuildMigrations(new List<string>()
-            //{
-            //    "1.0.4",
-            //    "1.0.3",
-            //    "1.0.2",
-            //    "1.0.1"
-            //});
-
-            //_dataMigrationBuilder.BuildMigrations(new List<string>()
-            //{
-            //    "1.0.0",
-            //    "2.0."
-            //});
-
-            //_dataMigrationBuilder.BuildMigrations(new List<string>()
-            //{
-            //    "2.0.0",
-            //    "1.0.0"
-            //});
-
-
             var setUpViewModel = new SetUpViewModel()
             {
                 SiteName = "",
@@ -135,14 +93,14 @@ namespace Plato.SetUp.Controllers
             }
             
             var executionId = _setUpService.SetUpAsync(setupContext);
+
             // Check if a component in the Setup failed
-            if (setupContext.Errors.Any())
+            if (setupContext.Errors.Count > 0)
             {
                 foreach (var error in setupContext.Errors)
                 {
                     ModelState.AddModelError(error.Key, error.Value);
                 }
-
                 return View(model);
             }
 

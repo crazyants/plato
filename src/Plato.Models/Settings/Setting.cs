@@ -35,7 +35,7 @@ namespace Plato.Models.Settings
                    
             if (dr.ColumnIsNotNull("Key"))
                 this.Key = Convert.ToString(dr["Key"]);
-
+            
             if (dr.ColumnIsNotNull("Value"))
                 this.Value = Convert.ToString((dr["Value"]));
        

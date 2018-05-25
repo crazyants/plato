@@ -31,13 +31,10 @@ namespace Plato.Repositories.Settings
 
         public async Task<T> GetSettingsAsync<T>(string key)
         {
-     
             var setting = await GetSettingFromRepository(key);
             if (setting != null)            
-                return await setting.Value.DeserializeAsync<T>();                                 
-        
-            return await Task.FromResult<T>(default(T));
-
+                return await setting.Value.DeserializeAsync<T>();
+            return default(T);
         }
         
         public async Task<T> UpdateSettingsAsync<T>(string key, ISettingValue value)
@@ -60,9 +57,12 @@ namespace Plato.Repositories.Settings
 
             // update setting & return deserialized setting value
             var updatedSetting = await _settingRepository.InsertUpdateAsync(existingSetting);
-            if (updatedSetting != null)            
+            if (updatedSetting != null)
+            {
                 return await GetSettingsAsync<T>(updatedSetting.Key);
-            return await Task.FromResult<T>(default(T));
+            }         
+                
+            return default(T);
 
         }
 
@@ -72,13 +72,8 @@ namespace Plato.Repositories.Settings
         
         private async Task<Setting> GetSettingFromRepository(string key)
         {
-                     
             var availableSettings = await GetSettingsAsync();
-            if (availableSettings != null)
-                return availableSettings.Where(s => s.Key == key).FirstOrDefault();
-        
-            return await Task.FromResult<Setting>(default(Setting));
-
+            return availableSettings?.FirstOrDefault(s => s.Key == key);
         }
 
         private async Task<IEnumerable<Setting>> GetSettingsAsync()

@@ -20,23 +20,22 @@ namespace Plato.Stores.Settings
             _settingsFactory = settingsFactory;
             _memoryCache = memoryCache;
         }
-        
+
         public async Task<ISiteSettings> GetAsync()
         {
             if (!_memoryCache.TryGetValue(_key, out ISiteSettings siteSettings))
             {
                 siteSettings = await _settingsFactory.GetSettingsAsync<SiteSettings>(_key);
-                if (siteSettings != default(SiteSettings))
-                    _memoryCache.Set(_key, siteSettings);
+                _memoryCache.Set(_key, siteSettings);
             }
+
             return siteSettings;
         }
 
         public async Task<ISiteSettings> SaveAsync(ISiteSettings siteSettings)
         {
             var settings = await _settingsFactory.UpdateSettingsAsync<SiteSettings>(_key, siteSettings);
-            if (siteSettings != default(SiteSettings))
-                _memoryCache.Set(_key, settings);
+            _memoryCache.Set(_key, settings);
             return settings;
         }
 
@@ -47,7 +46,7 @@ namespace Plato.Stores.Settings
             return Task.FromResult(true);
         }
 
-   
+
 
     }
 }

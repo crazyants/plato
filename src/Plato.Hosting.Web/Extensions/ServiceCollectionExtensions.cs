@@ -28,8 +28,6 @@ using Plato.Shell.Extensions;
 using Plato.Stores.Extensions;
 using Plato.Cache.Extensions;
 using Plato.Hosting.Web.Routing;
-using Plato.Models.Roles;
-using Plato.Models.Users;
 using Plato.Modules.Expanders;
 using Plato.Security.Extensions;
 
@@ -173,15 +171,7 @@ namespace Plato.Hosting.Web.Extensions
                 {
                     options.AdditionalCompilationReferences.Add(moduleReference);
                 }
-
-                // replaced by AdditionalCompilationReferences above
-                //var previous = options.CompilationCallback;
-                //options.CompilationCallback = context =>
-                //{
-                //    previous?.Invoke(context);
-                //    context.Compilation = context.Compilation.AddReferences(moduleReferences);
-                //};
-
+                
             });
             
             // add mvc core services
@@ -217,13 +207,13 @@ namespace Plato.Hosting.Web.Extensions
         public static IApplicationBuilder UsePlato(
             this IApplicationBuilder app,
             IHostingEnvironment env,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory logger)
         {
-
-            loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
             {
+                logger.AddConsole();
+                logger.AddDebug();
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 ListAllRegisteredServices(app);
@@ -298,8 +288,7 @@ namespace Plato.Hosting.Web.Extensions
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcRazorAssembly));
             }
         }
-
-
+        
         private static void ListAllRegisteredServices(IApplicationBuilder app)
         {
             app.Map("/allservices", builder => builder.Run(async context =>

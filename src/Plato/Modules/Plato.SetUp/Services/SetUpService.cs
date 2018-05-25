@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
@@ -97,16 +98,6 @@ namespace Plato.SetUp.Services
                             return executionId;
                         }
 
-                        //// perform inistal migrations
-                        //var automaticMigrations = scope.ServiceProvider.GetService<AutomaticDataMigrations>();
-                        //var initialMigration = automaticMigrations.InitialMigration();
-
-                        //// handle exceptions
-                        //if (initialMigration.Errors.Count > 0)
-                        //{
-                        //    foreach (var error in initialMigration.Errors)
-                        //        context.Errors.Add(error);
-                        //}
                     }
 
                 }
