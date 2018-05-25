@@ -80,7 +80,7 @@ namespace Plato.SetUp.Services
                        });
 
                         var hasErrors = false;
-                        void reportError(string key, string message)
+                        void ReportError(string key, string message)
                         {
                             hasErrors = true;
                             context.Errors[key] = message;
@@ -90,7 +90,7 @@ namespace Plato.SetUp.Services
                         var setupEventHandlers = scope.ServiceProvider.GetServices<ISetUpEventHandler>();
                         var logger = scope.ServiceProvider.GetRequiredService<ILogger<SetUpService>>();
 
-                        await setupEventHandlers.InvokeAsync(x => x.SetUp(context, reportError), logger);
+                        await setupEventHandlers.InvokeAsync(x => x.SetUp(context, ReportError), logger);
 
                         if (hasErrors)
                         {

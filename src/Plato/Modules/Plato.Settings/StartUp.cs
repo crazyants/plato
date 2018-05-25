@@ -22,8 +22,9 @@ namespace Plato.Settings
         {
 
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
+            //services.AddScoped<ISettingsService, SettingsService>();
 
-            
+
         }
 
         public override void Configure(

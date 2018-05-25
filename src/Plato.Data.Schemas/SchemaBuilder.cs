@@ -169,30 +169,37 @@ namespace Plato.Data.Schemas
         public ISchemaBuilder CreateDefaultProcedures(SchemaTable table)
         {
 
-            
+
             // select * from table
             CreateProcedure(new SchemaProcedure($"Select{table.NameNormalized}", StoredProcedureType.Select)
                 .ForTable(table));
 
             // select * from table where primaryKey = @primaryKey
-            CreateProcedure(new SchemaProcedure($"Select{_pluralizer.Singularize(table.Name)}By{table.PrimaryKeyColumn.NameNormalized}", StoredProcedureType.SelectByKey)
-                .ForTable(table)
-                .WithParameter(table.PrimaryKeyColumn));
+            CreateProcedure(
+                new SchemaProcedure(
+                        $"Select{_pluralizer.Singularize(table.Name)}By{table.PrimaryKeyColumn.NameNormalized}",
+                        StoredProcedureType.SelectByKey)
+                    .ForTable(table)
+                    .WithParameter(table.PrimaryKeyColumn));
 
             // delete from table where primaryKey = @primaryKey
-            CreateProcedure(new SchemaProcedure($"Delete{_pluralizer.Singularize(table.Name)}By{table.PrimaryKeyColumn.NameNormalized}", StoredProcedureType.DeleteByKey)
-                .ForTable(table)
-                .WithParameter(table.PrimaryKeyColumn));
+            CreateProcedure(
+                new SchemaProcedure(
+                        $"Delete{_pluralizer.Singularize(table.Name)}By{table.PrimaryKeyColumn.NameNormalized}",
+                        StoredProcedureType.DeleteByKey)
+                    .ForTable(table)
+                    .WithParameter(table.PrimaryKeyColumn));
 
             // insert / update by primary key
             CreateProcedure(
-                new SchemaProcedure($"InsertUpdate{_pluralizer.Singularize(table.Name)}", StoredProcedureType.InsertUpdate)
+                new SchemaProcedure($"InsertUpdate{_pluralizer.Singularize(table.Name)}",
+                        StoredProcedureType.InsertUpdate)
                     .ForTable(table));
-            
+
             return this;
 
         }
-        
+
         public ISchemaBuilder CreateProcedure(SchemaProcedure procedure)
         {
 
@@ -252,9 +259,9 @@ namespace Plato.Data.Schemas
                 }
 
             }
-
-
+            
             return this;
+
         }
 
         public void Dispose()

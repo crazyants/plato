@@ -4,8 +4,9 @@ using System.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Plato.Abstractions.SetUp;
-using Plato.Data.Abstractions;
+using Plato.Abstractions.Stores;
 using Plato.Data.Abstractions.Schemas;
+using Plato.Models.Settings;
 
 namespace Plato.Settings.Services
 {
@@ -13,12 +14,11 @@ namespace Plato.Settings.Services
     {
 
         private readonly ISchemaBuilder _schemaBuilder;
-        private readonly ISettingsService _siteSettingsService;
+        private readonly ISiteSettingsStore _siteSettingsService;
     
-
         public SetUpEventHandler(
             ISchemaBuilder schemaBuilder,
-            ISettingsService siteSettingsService)
+            ISiteSettingsStore siteSettingsService)
         {
             _schemaBuilder = schemaBuilder;
             _siteSettingsService = siteSettingsService;
@@ -31,7 +31,7 @@ namespace Plato.Settings.Services
         {
             
             // --------------------------
-            // Build settings tables & stored procedures
+            // Build schema
             // --------------------------
 
             var table = new SchemaTable()
@@ -105,7 +105,7 @@ namespace Plato.Settings.Services
             }
 
             // --------------------------
-            // Update default settings from set-up context
+            // Add default data
             // --------------------------
 
             var siteSettings = await _siteSettingsService.GetAsync();
