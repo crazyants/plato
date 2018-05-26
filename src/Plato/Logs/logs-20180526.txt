@@ -1,0 +1,12 @@
+2018-05-26 01:51:45.300 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-05-26 01:51:45.798 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-05-26 01:51:45.798 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 DEBUG http://localhost:50439/  0
+2018-05-26 01:51:45.880 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 84.0609ms 200 
+2018-05-26 01:51:45.904 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-05-26 01:51:46.058 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-05-26 01:51:46.062 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-26 01:51:46.082 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-26 01:51:46.174 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) with arguments ((null)) - ModelState is Valid
+2018-05-26 01:51:48.632 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.SetUp/Views/SetUp/Index.cshtml.
+2018-05-26 01:51:48.911 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) in 2743.2907ms
+2018-05-26 01:51:48.918 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3121.7722ms 200 text/html; charset=utf-8

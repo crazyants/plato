@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Plato.Data\Plato.Data.csproj" />
     <ProjectReference Include="..\Plato.Hosting\Plato.Hosting.csproj" />
     <ProjectReference Include="..\Plato.Layout\Plato.Layout.csproj" />
+    <ProjectReference Include="..\Plato.Logging\Plato.Logging.csproj" />
     <ProjectReference Include="..\Plato.Modules\Plato.Modules.csproj" />
     <ProjectReference Include="..\Plato.Repositories\Plato.Repositories.csproj" />
     <ProjectReference Include="..\Plato.Security\Plato.Security.csproj" />

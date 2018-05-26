@@ -30,6 +30,7 @@ using Plato.Cache.Extensions;
 using Plato.Hosting.Web.Routing;
 using Plato.Modules.Expanders;
 using Plato.Security.Extensions;
+using Plato.Logging.Extensions;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -94,7 +95,7 @@ namespace Plato.Hosting.Web.Extensions
             
             // add security
 
-            services.AddSecurity();
+            services.AddPlatoSecurity();
 
             // add auth
 
@@ -130,6 +131,10 @@ namespace Plato.Hosting.Web.Extensions
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 });
             
+            // add logging
+
+            services.AddPlatoLogging();
+
             // add mvc
 
             services.AddPlatoMvc();
@@ -214,6 +219,7 @@ namespace Plato.Hosting.Web.Extensions
             {
                 logger.AddConsole();
                 logger.AddDebug();
+                
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 ListAllRegisteredServices(app);

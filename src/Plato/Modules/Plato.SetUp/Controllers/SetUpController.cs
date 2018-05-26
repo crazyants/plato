@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Plato.Abstractions.SetUp;
 using Plato.Abstractions.Stores;
 using Plato.Data.Abstractions.Schemas;
@@ -22,6 +23,7 @@ namespace Plato.SetUp.Controllers
         private readonly ISiteSettingsStore _settingsStore;
         private readonly ISetUpService _setUpService;
         private readonly ISchemaLoader _schemaLoader;
+        private readonly ILogger<SetUpController> _logger;
         private readonly IDataMigrationBuilder _dataMigrationBuilder;
 
         public SetUpController(
@@ -30,15 +32,15 @@ namespace Plato.SetUp.Controllers
             ISetUpService setUpService,
             ISchemaLoader schemaLoader,
             IDataMigrationBuilder dataMigrationBuilder,
+            ILogger<SetUpController> logger,
             IStringLocalizer<SetUpController> t)
         {
             _shellSettings = shellSettings;
             _settingsStore = settingsStore;
             _setUpService = setUpService;
-
             _schemaLoader = schemaLoader;
             _dataMigrationBuilder = dataMigrationBuilder;
-
+            _logger = logger;
             T = t;
         }
 
@@ -46,7 +48,10 @@ namespace Plato.SetUp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            
+
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation($"Index action on SetUp controller invoked!");
+
             var setUpViewModel = new SetUpViewModel()
             {
                 SiteName = "",
@@ -66,6 +71,9 @@ namespace Plato.SetUp.Controllers
             {
                 return View(model);
             }
+
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation($"Index POST action on SetUp controller invoked!");
             
             if (!string.IsNullOrEmpty(_shellSettings.ConnectionString))
             {
@@ -91,19 +99,32 @@ namespace Plato.SetUp.Controllers
             {
                 setupContext.DatabaseTablePrefix = model.TablePrefix;
             }
-            
+
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation($"Beginning tennet set-up process");
+
             var executionId = _setUpService.SetUpAsync(setupContext);
 
             // Check if a component in the Setup failed
             if (setupContext.Errors.Count > 0)
             {
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                    _logger.LogInformation($"Set-up of tennet '{setupContext.SiteName}' failed with the following errors...");
+
                 foreach (var error in setupContext.Errors)
                 {
+                    if (_logger.IsEnabled(LogLevel.Information))
+                        _logger.LogInformation(error.Key + " " + error.Value);
+
                     ModelState.AddModelError(error.Key, error.Value);
                 }
                 return View(model);
             }
 
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation($"Tennet with site name '{setupContext.SiteName}' created successfully");
+            
             return Redirect("~/");
         }
 

@@ -5,7 +5,7 @@ namespace Plato.Security.Extensions
     public static class ServiceCollectionExtensions
     {
 
-        public static IServiceCollection AddSecurity(
+        public static IServiceCollection AddPlatoSecurity(
             this IServiceCollection services)
         {
        
