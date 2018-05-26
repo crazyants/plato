@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Plato.Data.Abstractions;
 using Plato.Data.Abstractions.Schemas;
 using Plato.Text;
@@ -241,7 +242,7 @@ namespace Plato.Data.Schemas
             return this;
         }
         
-        public ISchemaBuilder Apply()
+        public ISchemaBuilder ApplySchema()
         {
 
             using (var context = _dbContext)
@@ -257,11 +258,32 @@ namespace Plato.Data.Schemas
                         _errors.Add(ex);
                     }
                 }
-
             }
             
             return this;
 
+        }
+
+        public async Task<ISchemaBuilder> ApplySchemaAsync()
+        {
+
+            using (var context = _dbContext)
+            {
+                foreach (var statement in _statements)
+                {
+                    try
+                    {
+                        await context.ExecuteAsync(CommandType.Text, statement);
+                    }
+                    catch (Exception ex)
+                    {
+                        _errors.Add(ex);
+                    }
+                }
+
+            }
+
+            return this;
         }
 
         public void Dispose()

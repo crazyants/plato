@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -108,6 +109,13 @@ namespace Plato.Repositories.Users
         {
             using (var context = _dbContext)
             {
+                _dbContext.OnException += (sender, args) =>
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                        _logger.LogInformation(
+                            $"SelectUser for Id {id} failed with the following error {args.Exception.Message}");
+                };
+
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUser", id);
@@ -174,6 +182,13 @@ namespace Plato.Repositories.Users
 
             using (var context = _dbContext)
             {
+
+                _dbContext.OnException += (sender, args) =>
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                        _logger.LogInformation($"SelectUserByUserNameAndPassword failed with the following error {args.Exception.Message}");
+                };
+                
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUserByUserNameAndPassword",
@@ -193,6 +208,13 @@ namespace Plato.Repositories.Users
 
             using (var context = _dbContext)
             {
+
+                _dbContext.OnException += (sender, args) =>
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                        _logger.LogInformation($"plato_sp_SelectUserByEmailAndPassword failed with the following error {args.Exception.Message}");
+                };
+
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUserByEmailAndPassword",
@@ -210,6 +232,7 @@ namespace Plato.Repositories.Users
 
             using (var context = _dbContext)
             {
+
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "plato_sp_SelectUserByApiKey",
@@ -224,9 +247,16 @@ namespace Plato.Repositories.Users
             PagedResults<T> output = null;
             using (var context = _dbContext)
             {
+
+                _dbContext.OnException += (sender, args) =>
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                        _logger.LogInformation($"SelectUsersPaged failed with the following error {args.Exception.Message}");
+                };
+
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUsersPaged",
+                    "SelectUsersPaged",
                     inputParameters
                 );
 
@@ -331,6 +361,16 @@ namespace Plato.Repositories.Users
         {
             using (var context = _dbContext)
             {
+
+                _dbContext.OnException += (sender, args) =>
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                        _logger.LogInformation(
+                            id == 0
+                                ? $"Insert for user with email address '{email}' failed with the following error '{args.Exception.Message}'"
+                                : $"Update for user with Id {id} failed with the following error {args.Exception.Message}");
+                };
+
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "plato_sp_InsertUpdateUser",

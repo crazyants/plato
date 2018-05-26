@@ -54,8 +54,13 @@ namespace Plato.SetUp.Controllers
 
             var setUpViewModel = new SetUpViewModel()
             {
-                SiteName = "",
-                ConnectionString = ""
+                SiteName = "Plato",
+                ConnectionString = "server=localhost;trusted_connection=true;database=Plato_Test2",
+                TablePrefix = "plato",
+                UserName = "admin",
+                Email = "admin@admin.com",
+                Password = "admin",
+                PasswordConfirmation =  "admin"
             };
 
             return View(setUpViewModel);
@@ -64,7 +69,7 @@ namespace Plato.SetUp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(SetUpViewModel model)
+        public async Task<IActionResult> Index(SetUpViewModel model)
         {
 
             if (!ModelState.IsValid)
@@ -92,6 +97,9 @@ namespace Plato.SetUp.Controllers
                 SiteName = model.SiteName,
                 DatabaseProvider = "SqlClient",
                 DatabaseConnectionString = model.ConnectionString,
+                AdminUsername = model.UserName,
+                AdminEmail = model.Email,
+                AdminPassword = model.Password,
                 Errors = new Dictionary<string, string>()
             };
             
@@ -101,20 +109,20 @@ namespace Plato.SetUp.Controllers
             }
 
             if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Beginning tennet set-up process");
+                _logger.LogInformation($"Beginning call to SetUpAsync");
 
-            var executionId = _setUpService.SetUpAsync(setupContext);
+            var executionId = await _setUpService.SetUpAsync(setupContext);
 
             // Check if a component in the Setup failed
             if (setupContext.Errors.Count > 0)
             {
 
-                if (_logger.IsEnabled(LogLevel.Information))
+                if (_logger.IsEnabled(LogLevel.Error))
                     _logger.LogInformation($"Set-up of tennet '{setupContext.SiteName}' failed with the following errors...");
 
                 foreach (var error in setupContext.Errors)
                 {
-                    if (_logger.IsEnabled(LogLevel.Information))
+                    if (_logger.IsEnabled(LogLevel.Error))
                         _logger.LogInformation(error.Key + " " + error.Value);
 
                     ModelState.AddModelError(error.Key, error.Value);

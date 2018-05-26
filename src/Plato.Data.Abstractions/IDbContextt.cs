@@ -22,8 +22,10 @@ namespace Plato.Data.Abstractions
 
         Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] commandParams);
         
-        void Execute(CommandType commandType, string sql, params object[] commandParams);
+        int Execute(CommandType commandType, string sql, params object[] commandParams);
 
+        Task<int> ExecuteAsync(CommandType commandType, string sql, params object[] commandParams);
+        
         void HandleException(Exception x);
 
         event DbEventHandlers.DbExceptionEventHandler OnException;

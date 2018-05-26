@@ -94,31 +94,33 @@ namespace Plato.Repositories.Settings
             if (_logger.IsEnabled(LogLevel.Information))
                 _logger.LogInformation("Selecting all settings");
 
-
-            using (var context = _dbContext)
+            List<Setting> settings = null;
+            // database context may not be configured.
+            // For example during set-up
+            if (_dbContext != null)
             {
-                if (context == null)
-                    return null;
-                var reader = await context.ExecuteReaderAsync(
-                    CommandType.StoredProcedure,
-                    "SelectSettings");
-                if (reader != null)
+                using (var context = _dbContext)
                 {
-                    if (reader.HasRows)
+                    var reader = await context.ExecuteReaderAsync(
+                        CommandType.StoredProcedure,
+                        "SelectSettings");
+                    if (reader != null)
                     {
-                        var settings = new List<Setting>();
-                        while (await reader.ReadAsync())
+                        if (reader.HasRows)
                         {
-                            var setting = new Setting();
-                            setting.PopulateModel(reader);
-                            settings.Add(setting);
+                            settings = new List<Setting>();
+                            while (await reader.ReadAsync())
+                            {
+                                var setting = new Setting();
+                                setting.PopulateModel(reader);
+                                settings.Add(setting);
+                            }
                         }
                     }
-
                 }
             }
 
-            return null;
+            return settings;
 
         }
         

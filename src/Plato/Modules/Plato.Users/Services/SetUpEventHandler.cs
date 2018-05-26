@@ -25,9 +25,9 @@ namespace Plato.Users.Services
 
         public async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
-            
+
             // build schema
-        
+
             var table = new SchemaTable()
             {
                 Name = "Users",
@@ -177,9 +177,8 @@ namespace Plato.Users.Services
                                     Length = "255"
                                 }
                             }));
-
                 
-                var result = builder.Apply();
+                var result = await builder.ApplySchemaAsync();
                 if (result.Errors.Count > 0)
                 {
                     foreach (var error in result.Errors)
@@ -190,15 +189,30 @@ namespace Plato.Users.Services
                 }
 
             }
-            
+
             // create super user
-        
-            await _userManager.CreateAsync(new User()
+            try
             {
-                Email = context.AdminEmail,
-                UserName = context.AdminUsername
-            }, context.AdminPassword);
-            
+
+                var result =  await _userManager.CreateAsync(new User()
+                {
+                    Email = context.AdminEmail,
+                    UserName = context.AdminUsername
+                }, context.AdminPassword);
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        reportError(error.Code, error.Description);
+                    }
+                   
+                }
+            }
+            catch (Exception ex)
+            {
+                reportError(ex.Message, ex.StackTrace);
+            }
+
         }
 
     }

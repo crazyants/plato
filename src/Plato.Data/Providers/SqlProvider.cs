@@ -240,7 +240,34 @@ namespace Plato.Data.Providers
                 throw;
             }
         }
-        
+
+        public async Task<int> ExecuteAsync(string sql, params object[] args)
+        {
+            try
+            {
+                Open();
+                try
+                {
+                    using (var cmd = CreateCommand(_dbConnection, sql, args))
+                    {
+                       var retv = await cmd.ExecuteNonQueryAsync();
+                        OnExecutedCommand(cmd);
+                        return retv;
+                    }
+                }
+                finally
+                {
+                    Close();
+                }
+            }
+            catch (Exception x)
+            {
+                HandleException(x);
+                throw;
+            }
+        }
+
+
         public void Dispose()
         {
             Close();

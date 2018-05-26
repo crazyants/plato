@@ -94,7 +94,7 @@ namespace Plato.Settings.Services
                     .CreateProcedure(new SchemaProcedure("SelectSettingByKey", StoredProcedureType.SelectByKey)
                         .ForTable(table).WithParameter(new SchemaColumn() {Name = "[Key]", DbType = DbType.Int32}));
 
-                var result = builder.Apply();
+                var result = await builder.ApplySchemaAsync();
                 if (result.Errors.Count > 0)
                 {
                     foreach (var error in result.Errors)

@@ -135,15 +135,24 @@ namespace Plato.Data
             return await _provider.ExecuteScalarAsync<T>(sql, args);
         }
 
-        public void Execute(CommandType commandType, string sql, params object[] args)
+        public int Execute(CommandType commandType, string sql, params object[] args)
         {
             if (_provider == null)
-                return;
+                return default(int);
             if (commandType == CommandType.StoredProcedure)
                 sql = GenerateExecuteStoredProcedureSql(sql, args);
-            _provider.Execute(sql, args);
+           return _provider.Execute(sql, args);
         }
 
+        public async Task<int> ExecuteAsync(CommandType commandType, string sql, params object[] args)
+        {
+            if (_provider == null)
+                return default(int);
+            if (commandType == CommandType.StoredProcedure)
+                sql = GenerateExecuteStoredProcedureSql(sql, args);
+            return await _provider.ExecuteAsync(sql, args);
+        }
+        
         #endregion
 
 

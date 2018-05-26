@@ -58,7 +58,7 @@ namespace Plato.Hosting.Web.Extensions
 
         }
 
-        public static IServiceCollection AddWebHost(this IServiceCollection services)
+        public static IServiceCollection AddPlatoHost(this IServiceCollection services)
         {
             return services.AddHost(internalServices =>
             {
@@ -68,11 +68,12 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddHostCore();
                 internalServices.AddModules();
                 internalServices.AddCaching();
-                
+             
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-                
+                internalServices.AddPlatoLogging();
+
                 internalServices.AddPlatoDbContext();
                 internalServices.AddRepositories();
                 internalServices.AddStores();
@@ -85,11 +86,11 @@ namespace Plato.Hosting.Web.Extensions
             this IServiceCollection services)
         {
 
-            // add shell services
+            // add host services
 
-            services.AddWebHost();
+            services.AddPlatoHost();
             
-            // configure shell & add file system
+            // configure host 
 
             services.ConfigureShell("Sites", "Schemas");
             
@@ -131,10 +132,6 @@ namespace Plato.Hosting.Web.Extensions
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 });
             
-            // add logging
-
-            services.AddPlatoLogging();
-
             // add mvc
 
             services.AddPlatoMvc();

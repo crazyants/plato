@@ -20,6 +20,8 @@ namespace Plato.Data.Abstractions.Providers
 
         int Execute(string sql, params object[] args);
 
+        Task<int> ExecuteAsync(string sql, params object[] args);
+
         void HandleException(Exception x);
 
         event DbEventHandlers.DbExceptionEventHandler OnException;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Plato.Data.Abstractions.Schemas
 {
@@ -36,8 +37,10 @@ namespace Plato.Data.Abstractions.Schemas
 
         ISchemaBuilder CreateDefaultProcedures(SchemaTable table);
 
-        ISchemaBuilder Apply();
+        ISchemaBuilder ApplySchema();
 
+        Task<ISchemaBuilder> ApplySchemaAsync();
+        
         string ToString();
 
     }
