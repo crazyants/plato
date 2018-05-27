@@ -26,9 +26,9 @@ namespace Plato.Users.Services
         public async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
 
-            // build schema
+            // build schemas
 
-            var table = new SchemaTable()
+            var users = new SchemaTable()
             {
                 Name = "Users",
                 Columns = new List<SchemaColumn>()
@@ -127,41 +127,141 @@ namespace Plato.Users.Services
                 }
             };
 
+            var roles = new SchemaTable()
+            {
+                Name = "Roles",
+                Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Name]",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "NormalizedName",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Description",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Claims",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTime2
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTime2
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ConcurrencyStamp",
+                        Length = "255",
+                        DbType = DbType.String
+                    }
+                }
+            };
+
+
+            var userRoles = new SchemaTable()
+            {
+                Name = "UserRoles",
+                Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Name]",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "UserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "RoleId",
+                        DbType = DbType.Int32
+                    }
+                }
+            };
+            
+
             using (var builder = _schemaBuilder)
             {
 
+                // create tables and default procedures
                 builder
                     .Configure(options =>
                     {
                         options.ModuleName = "Plato.Users";
                         options.Version = "1.0.0";
                     })
-                    // Create table
-                    .CreateTable(table)
+                    // Create tables
+                    .CreateTable(users)
+                    .CreateTable(roles)
+                    .CreateTable(userRoles)
                     // Create basic default CRUD procedures
-                    .CreateDefaultProcedures(table)
-                    // SelectUserByEmail
-                    .CreateProcedure(new SchemaProcedure("SelectUserByEmail", StoredProcedureType.SelectByKey)
-                        .ForTable(table)
+                    .CreateDefaultProcedures(users)
+                    .CreateDefaultProcedures(roles)
+                    .CreateDefaultProcedures(userRoles);
+
+                // create unique user stored procedures
+
+                builder.CreateProcedure(new SchemaProcedure("SelectUserByEmail", StoredProcedureType.SelectByKey)
+                        .ForTable(users)
                         .WithParameter(new SchemaColumn() {Name = "Email", DbType = DbType.String, Length = "255"}))
-                    // SelectUserByUserName
                     .CreateProcedure(new SchemaProcedure("SelectUserByUserName", StoredProcedureType.SelectByKey)
-                        .ForTable(table)
+                        .ForTable(users)
                         .WithParameter(new SchemaColumn() {Name = "Username", DbType = DbType.String, Length = "255"}))
-                    // SelectUserByUserNameNormalized
                     .CreateProcedure(
                         new SchemaProcedure("SelectUserByUserNameNormalized", StoredProcedureType.SelectByKey)
-                            .ForTable(table)
+                            .ForTable(users)
                             .WithParameter(new SchemaColumn()
                             {
                                 Name = "NormalizedUserName",
                                 DbType = DbType.String,
                                 Length = "255"
                             }))
-                    // SelectUserByEmailAndPassword
                     .CreateProcedure(
                         new SchemaProcedure("SelectUserByEmailAndPassword", StoredProcedureType.SelectByKey)
-                            .ForTable(table)
+                            .ForTable(users)
                             .WithParameters(new List<SchemaColumn>()
                             {
                                 new SchemaColumn()
@@ -177,7 +277,27 @@ namespace Plato.Users.Services
                                     Length = "255"
                                 }
                             }));
-                
+
+                // create unique role stored procedures
+
+                builder.CreateProcedure(
+                    new SchemaProcedure("SelectRolesByUserId", StoredProcedureType.SelectByKey)
+                        .ForTable(userRoles)
+                        .WithParameter(new SchemaColumn()
+                        {
+                            Name = "UserId",
+                            DbType = DbType.Int32
+                        }))
+                .CreateProcedure(
+                    new SchemaProcedure("DeleteRolesByUserId", StoredProcedureType.DeleteByKey)
+                        .ForTable(userRoles)
+                        .WithParameter(new SchemaColumn()
+                        {
+                            Name = "UserId",
+                            DbType = DbType.Int32
+                        }));
+
+
                 var result = await builder.ApplySchemaAsync();
                 if (result.Errors.Count > 0)
                 {

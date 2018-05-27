@@ -11,7 +11,7 @@ using Plato.Repositories.Settings;
 
 namespace Plato.Repositories.Users
 {
-    public class UserSettingsRepository : IRepository<UserSetting>
+    public class UserSettingsRepository : IUserSettingsRepository<UserSetting>
     {
 
         #region Private Variables"
@@ -37,12 +37,9 @@ namespace Plato.Repositories.Users
 
         public Task<bool> DeleteAsync(int id)
         {
-
-
             if (_logger.IsEnabled(LogLevel.Information))
                 _logger.LogInformation($"Deleting setting with id: {id}");
-
-
+            
             throw new NotImplementedException();
         }
 

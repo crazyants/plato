@@ -81,21 +81,21 @@ namespace Plato.Repositories.Users
 
             if (id > 0)
             {
-                // secerts
+                //// secerts
 
-                if (user.Secret == null)
-                    user.Secret = new UserSecret();
-                if ((user.Id == 0) || (user.Secret.UserId == 0))
-                    user.Secret.UserId = id;
-                await _userSecretRepository.InsertUpdateAsync(user.Secret);
+                //if (user.Secret == null)
+                //    user.Secret = new UserSecret();
+                //if ((user.Id == 0) || (user.Secret.UserId == 0))
+                //    user.Secret.UserId = id;
+                //await _userSecretRepository.InsertUpdateAsync(user.Secret);
 
-                // detail
+                //// detail
 
-                if (user.Detail == null)
-                    user.Detail = new UserDetail();
-                if ((user.Id == 0) || (user.Detail.UserId == 0))
-                    user.Detail.UserId = id;
-                await _userDetailRepository.InsertUpdateAsync(user.Detail);
+                //if (user.Detail == null)
+                //    user.Detail = new UserDetail();
+                //if ((user.Id == 0) || (user.Detail.UserId == 0))
+                //    user.Detail.UserId = id;
+                //await _userDetailRepository.InsertUpdateAsync(user.Detail);
                 
                 // return
 
@@ -360,7 +360,7 @@ namespace Plato.Repositories.Users
             using (var context = _dbContext)
             {
 
-                _dbContext.OnException += (sender, args) =>
+                context.OnException += (sender, args) =>
                 {
                     if (_logger.IsEnabled(LogLevel.Error))
                         _logger.LogInformation(

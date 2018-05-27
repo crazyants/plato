@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -6,7 +9,7 @@ using Plato.Models.Roles;
 
 namespace Plato.Stores.Roles
 {
-    public class RoleStore : IRoleStore<Role>
+    public class RoleStore : IRoleStore<Role>, IRoleClaimStore<Role>
     {
         private readonly IPlatoRoleStore _platoRoleStore;
 
@@ -14,6 +17,8 @@ namespace Plato.Stores.Roles
         {
             _platoRoleStore = platoRoleStore;
         }
+
+        #region "IRoleStore"
 
         public async Task<IdentityResult> CreateAsync(Role role, CancellationToken cancellationToken)
         {
@@ -48,8 +53,7 @@ namespace Plato.Stores.Roles
 
         public async Task<Role> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
-            var id = 0;
-            if (!int.TryParse(roleId, out id))
+            if (!int.TryParse(roleId, out var id))
                 throw new ArgumentException("roleId must be of type int");
             return await _platoRoleStore.GetByIdAsync(id);
         }
@@ -126,5 +130,59 @@ namespace Plato.Stores.Roles
 
             return IdentityResult.Failed();
         }
+
+        #endregion
+
+        #region "IRoleClaimStore"
+
+        public Task AddClaimAsync(Role role, Claim claim, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (role == null)
+            {
+                throw new ArgumentNullException(nameof(role));
+            }
+
+            if (claim == null)
+            {
+                throw new ArgumentNullException(nameof(claim));
+            }
+
+            ((Role)role).RoleClaims.Add(new RoleClaim { ClaimType = claim.Type, ClaimValue = claim.Value });
+
+            return Task.CompletedTask;
+        }
+
+        public Task<IList<Claim>> GetClaimsAsync(Role role, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (role == null)
+            {
+                throw new ArgumentNullException(nameof(role));
+            }
+
+            return Task.FromResult<IList<Claim>>(((Role)role).RoleClaims.Select(x => x.ToClaim()).ToList());
+        }
+
+        public Task RemoveClaimAsync(Role role, Claim claim, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (role == null)
+            {
+                throw new ArgumentNullException(nameof(role));
+            }
+
+            if (claim == null)
+            {
+                throw new ArgumentNullException(nameof(claim));
+            }
+
+            ((Role)role).RoleClaims.RemoveAll(x => x.ClaimType == claim.Type && x.ClaimValue == claim.Value);
+
+            return Task.CompletedTask;
+        }
+        
+        #endregion
+
     }
+
+
+
 }

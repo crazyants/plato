@@ -48,7 +48,7 @@ namespace Plato.Models.Users
         public void PopulateModel(IDataReader dr)
         {
 
-            if (dr.ColumnIsNotNull("id"))
+            if (dr.ColumnIsNotNull("Id"))
                 this.Id = Convert.ToInt32(dr["Id"]);
 
             if (dr.ColumnIsNotNull("UserName"))

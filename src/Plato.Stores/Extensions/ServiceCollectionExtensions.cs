@@ -3,8 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Abstractions.Settings;
 using Plato.Abstractions.Stores;
+using Plato.Models.Roles;
 using Plato.Stores.Settings;
 using Plato.Stores.Roles;
 using Plato.Stores.Users;
@@ -31,7 +34,7 @@ namespace Plato.Stores.Extensions
             // roles
 
             services.AddScoped<IPlatoRoleStore, PlatoRoleStore>();
-
+         
             // users
 
             services.AddScoped<IPlatoUserStore<User>, PlatoUserStore>();

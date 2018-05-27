@@ -64,6 +64,8 @@ namespace Plato.Users
 
             services.TryAddScoped<IUserStore<User>, UserStore>();
             services.TryAddScoped<IRoleStore<Role>, RoleStore>();
+            services.TryAddScoped<IRoleClaimStore<Role>, RoleStore>();
+
             services.TryAddScoped<UserManager<User>>();
             services.TryAddScoped<RoleManager<Role>>();
             services.TryAddScoped<SignInManager<User>>();

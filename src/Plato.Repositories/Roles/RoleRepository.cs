@@ -8,7 +8,6 @@ using Plato.Abstractions.Extensions;
 using Plato.Data;
 using Plato.Data.Abstractions;
 using Plato.Models.Roles;
-using Plato.Models.Users;
 
 namespace Plato.Repositories.Roles
 {
@@ -30,26 +29,14 @@ namespace Plato.Repositories.Roles
 
         private async Task<int> InsertUpdateInternal(
             int id,
-            int permissionId,
             string name,
             string nameNormalized,
             string description,
-            string htmlPrefix,
-            string htmlSuffix,
-            bool isAdministrator,
-            bool isEmployee,
-            bool isAnonymous,
-            bool isMember,
-            bool isWaitingConfirmation,
-            bool isBanned,
-            int sortOrder,
+            string claims,
             DateTime? createdDate,
             int createdUserId,
             DateTime? modifiedDate,
             int modifiedUserId,
-            bool isDeleted,
-            DateTime? deletedDate,
-            int deletedUserId,
             string concurrencyStamp)
         {
             if (string.IsNullOrEmpty(name))
@@ -59,28 +46,16 @@ namespace Plato.Repositories.Roles
             {
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "plato_sp_InsertUpdateRole",
+                    "InsertUpdateRole",
                     id,
-                    permissionId,
                     name.TrimToSize(255),
                     nameNormalized.ToEmptyIfNull().TrimToSize(255),
                     description.ToEmptyIfNull().TrimToSize(255),
-                    htmlPrefix.ToEmptyIfNull().TrimToSize(100),
-                    htmlSuffix.ToEmptyIfNull().TrimToSize(100),
-                    isAdministrator,
-                    isEmployee,
-                    isAnonymous,
-                    isMember,
-                    isWaitingConfirmation,
-                    isBanned,
-                    sortOrder,
-                    createdDate,
+                    claims.ToEmptyIfNull(),
+                    createdDate.ToDateIfNull(),
                     createdUserId,
-                    modifiedDate,
+                    modifiedDate.ToDateIfNull(),
                     modifiedUserId,
-                    isDeleted,
-                    deletedDate,
-                    deletedUserId,
                     concurrencyStamp.ToEmptyIfNull().TrimToSize(255)
                 );
             }
@@ -109,26 +84,14 @@ namespace Plato.Repositories.Roles
 
             var id = await InsertUpdateInternal(
                 role.Id,
-                role.PermissionId,
                 role.Name,
                 role.NormalizedName,
                 role.Description,
-                role.HtmlPrefix,
-                role.HtmlSuffix,
-                role.IsAdministrator,
-                role.IsEmployee,
-                role.IsAnonymous,
-                role.IsMember,
-                role.IsWaitingConfirmation,
-                role.IsBanned,
-                role.SortOrder,
+                role.RoleClaims.Serialize(),
                 role.CreatedDate,
                 role.CreatedUserId,
                 role.ModifiedDate,
                 role.ModifiedUserId,
-                role.IsDeleted,
-                role.DeletedDate,
-                role.DeletedUserId,
                 role.ConcurrencyStamp);
 
             if (id > 0)
@@ -144,7 +107,7 @@ namespace Plato.Repositories.Roles
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectRole", id);
+                    "SelectRole", id);
 
                 if ((reader != null) && (reader.HasRows))
                 {
@@ -164,7 +127,7 @@ namespace Plato.Repositories.Roles
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectRoleByName", name);
+                    "SelectRoleByName", name);
 
                 if ((reader != null) && (reader.HasRows))
                 {
@@ -184,7 +147,7 @@ namespace Plato.Repositories.Roles
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectRoleByNameNormalized", normalizedName);
+                    "SelectRoleByNameNormalized", normalizedName);
 
                 if ((reader != null) && (reader.HasRows))
                 {
@@ -204,7 +167,7 @@ namespace Plato.Repositories.Roles
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectRolesByUserId",
+                    "SelectRolesByUserId",
                     userId
                 );
 
@@ -234,7 +197,7 @@ namespace Plato.Repositories.Roles
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectRolesPaged",
+                    "SelectRolesPaged",
                     inputParams
                 );
 

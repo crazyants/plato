@@ -1,0 +1,353 @@
+2018-05-27 12:47:28.025 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-05-27 12:47:28.427 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-05-27 12:47:28.427 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 DEBUG http://localhost:50439/  0
+2018-05-27 12:47:28.515 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 89.3137ms 200 
+2018-05-27 12:47:28.544 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-05-27 12:47:28.769 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-05-27 12:47:28.775 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 12:47:28.801 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 12:47:28.923 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) with arguments ((null)) - ModelState is Valid
+2018-05-27 12:47:28.929 +01:00 [Information] Plato.SetUp.Controllers.SetUpController: Index action on SetUp controller invoked!
+2018-05-27 12:47:31.787 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.SetUp/Views/SetUp/Index.cshtml.
+2018-05-27 12:47:32.193 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) in 3279.089ms
+2018-05-27 12:47:32.200 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3775.2425ms 200 text/html; charset=utf-8
+2018-05-27 12:47:32.220 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-27 12:47:32.228 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=zq0NlhUHKtMY2E1W9e5UI9cskgmLDUvPT-z0N7PylLg  
+2018-05-27 12:47:32.294 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-27 12:47:32.294 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-27 12:47:32.322 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /js/vendors/jquery.js was not modified
+2018-05-27 12:47:32.322 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /js/site.js was not modified
+2018-05-27 12:47:32.323 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /css/vendors/font-awesome.css was not modified
+2018-05-27 12:47:32.323 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /css/vendors/bootstrap.css was not modified
+2018-05-27 12:47:32.390 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 162.6169ms 304 application/javascript
+2018-05-27 12:47:32.391 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 96.3453ms 304 text/css
+2018-05-27 12:47:32.391 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 96.343ms 304 application/javascript
+2018-05-27 12:47:32.421 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 201.8695ms 304 text/css
+2018-05-27 12:47:32.468 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/webfonts/fa-solid-900.woff2  
+2018-05-27 12:47:32.472 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /css/webfonts/fa-solid-900.woff2 was not modified
+2018-05-27 12:47:32.475 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 6.124ms 304 font/woff2
+2018-05-27 12:47:53.737 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:50439/ application/x-www-form-urlencoded 407
+2018-05-27 12:47:53.743 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 12:47:53.747 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 12:47:53.813 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) with arguments (Plato.SetUp.ViewModels.SetUpViewModel) - ModelState is Valid
+2018-05-27 12:47:53.818 +01:00 [Information] Plato.SetUp.Controllers.SetUpController: Index POST action on SetUp controller invoked!
+2018-05-27 12:47:53.822 +01:00 [Information] Plato.SetUp.Controllers.SetUpController: Beginning call to SetUpAsync
+2018-05-27 12:47:54.134 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 12:47:54.151 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 12:47:54.329 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Inserting settings with key: SiteSettings
+2018-05-27 12:47:54.363 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting setting with id: 1
+2018-05-27 12:47:54.373 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 12:49:07.345 +01:00 [Information] Plato.Shell.ShellSettingsManager: Saving ShellSettings for tenant 'Default'
+2018-05-27 12:49:07.361 +01:00 [Information] Plato.Shell.ShellSettingsManager: Saved ShellSettings for tenant 'Default'
+2018-05-27 12:49:07.369 +01:00 [Information] Plato.SetUp.Controllers.SetUpController: Tennet with site name 'PlatoA' created successfully
+2018-05-27 12:49:07.372 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.RedirectResultExecutor: Executing RedirectResult, redirecting to /.
+2018-05-27 12:49:07.375 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) in 73605.1366ms
+2018-05-27 12:49:07.378 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 73641.6551ms 302 
+2018-05-27 12:49:07.384 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-05-27 12:49:07.387 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 12:49:07.412 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-05-27 12:49:07.651 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-05-27 12:49:08.148 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 737.803ms
+2018-05-27 12:49:08.151 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 767.241ms 200 text/html; charset=utf-8
+2018-05-27 12:49:08.175 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation/dist/jquery.validate.js  
+2018-05-27 12:49:08.177 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js  
+2018-05-27 12:49:08.177 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.users/content/systemjs.config.js  
+2018-05-27 12:49:08.247 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 12:49:08.251 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 12:49:08.253 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 12:49:08.279 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 103.0747ms 404 
+2018-05-27 12:49:08.279 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 104.7959ms 404 
+2018-05-27 12:49:08.279 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 103.1127ms 404 
+2018-05-27 12:49:08.317 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.users/content/systemjs.config.js  
+2018-05-27 12:49:08.320 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 12:49:08.323 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.6632ms 404 
+2018-05-27 13:07:13.992 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:50439/ application/x-www-form-urlencoded 246
+2018-05-27 13:07:13.994 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 13:07:14.036 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments (Plato.Users.Models.LoginViewModel, ) - ModelState is Valid
+2018-05-27 13:07:16.121 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2111.4583ms
+2018-05-27 13:07:16.301 +01:00 [Error] Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware: An unhandled exception has occurred while executing the request
+System.Data.SqlClient.SqlException (0x80131904): Could not find stored procedure 'platoA_plato_sp_SelectRolesByUserId'.
+   at Plato.Data.DbContext.<>c.<ConfigureInternal>b__13_0(Object sender, DbExceptionEventArgs args) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Data\DbContext.cs:line 81
+   at Plato.Data.Providers.SqlProvider.HandleException(Exception x) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Data\Providers\SqlProvider.cs:line 387
+   at Plato.Data.Providers.SqlProvider.<ExecuteReaderAsync>d__32.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Data\Providers\SqlProvider.cs:line 162
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Data.DbContext.<ExecuteReaderAsync>d__15.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Data\DbContext.cs:line 116
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Repositories.Roles.RoleRepository.<SelectByUserIdAsync>d__9.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Repositories\Roles\RoleRepository.cs:line 205
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Stores.Roles.PlatoRoleStore.<GetRolesByUserId>d__14.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Stores\Roles\PlatoRoleStore.cs:line 141
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Stores.Users.UserStore.<GetRolesAsync>d__30.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Stores\Users\UserStore.cs:line 349
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Identity.UserManager`1.<GetRolesAsync>d__110.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Identity.UserClaimsPrincipalFactory`2.<GenerateClaimsAsync>d__5.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Identity.UserClaimsPrincipalFactory`1.<CreateAsync>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Identity.SignInManager`1.<CreateUserPrincipalAsync>d__25.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Identity.SignInManager`1.<SignInAsync>d__30.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Identity.SignInManager`1.<SignInOrTwoFactorAsync>d__52.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Identity.SignInManager`1.<PasswordSignInAsync>d__33.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Identity.SignInManager`1.<PasswordSignInAsync>d__34.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Users.Controllers.AccountController.<Login>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Users\Controllers\AccountController.cs:line 64
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__14.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeFilterPipelineAsync>d__17.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeAsync>d__15.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Hosting.Web.Routing.PlatoRouterMiddleware.<Invoke>d__4.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Hosting.Web\Routing\PlatoRouterMiddleware.cs:line 73
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Hosting.Web.Middleware.PlatoContainerMiddleware.<Invoke>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Hosting.Web\Middleware\PlatoContainerMiddleware.cs:line 69
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.Extensions.MapMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__7.MoveNext()
+ClientConnectionId:5947726f-0381-42f4-8cf5-f7a0eef41bb5
+Error Number:2812,State:62,Class:16
+2018-05-27 13:07:16.543 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2551.5897ms 500 text/html; charset=utf-8
+2018-05-27 14:50:26.211 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-05-27 14:50:26.574 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-05-27 14:50:26.610 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-05-27 14:50:26.613 +01:00 [Information] Plato.Shell.ShellSettingsManager: ShellSettings found in 'PlatoA', attempting to load.
+2018-05-27 14:50:26.662 +01:00 [Information] Plato.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-05-27 14:50:26.747 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-05-27 14:50:26.750 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:50:26.771 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 14:50:27.083 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-05-27 14:50:28.950 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-05-27 14:50:29.416 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2346.8205ms
+2018-05-27 14:50:29.422 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2848.6694ms 200 text/html; charset=utf-8
+2018-05-27 14:50:29.446 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation/dist/jquery.validate.js  
+2018-05-27 14:50:29.448 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:50:29.452 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 6.0073ms 404 
+2018-05-27 14:50:29.458 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.users/content/systemjs.config.js  
+2018-05-27 14:50:29.459 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:50:29.460 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.9672ms 404 
+2018-05-27 14:50:29.460 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js  
+2018-05-27 14:50:29.460 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:50:29.461 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.4985ms 404 
+2018-05-27 14:50:29.567 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation/dist/jquery.validate.js  
+2018-05-27 14:50:29.568 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:50:29.568 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6436ms 404 
+2018-05-27 14:50:29.576 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js  
+2018-05-27 14:50:29.576 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:50:29.576 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.4853ms 404 
+2018-05-27 14:50:29.585 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.users/content/systemjs.config.js  
+2018-05-27 14:50:29.585 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:50:29.585 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.5608ms 404 
+2018-05-27 14:50:51.800 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-05-27 14:50:52.097 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-05-27 14:50:52.097 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 DEBUG http://localhost:50439/  0
+2018-05-27 14:50:52.181 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 84.9223ms 200 
+2018-05-27 14:50:52.209 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-05-27 14:50:52.372 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-05-27 14:50:52.377 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:50:52.396 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 14:50:52.505 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) with arguments ((null)) - ModelState is Valid
+2018-05-27 14:50:52.510 +01:00 [Information] Plato.SetUp.Controllers.SetUpController: Index action on SetUp controller invoked!
+2018-05-27 14:50:54.916 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.SetUp/Views/SetUp/Index.cshtml.
+2018-05-27 14:50:55.259 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) in 2760.7278ms
+2018-05-27 14:50:55.266 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3169.9238ms 200 text/html; charset=utf-8
+2018-05-27 14:51:34.707 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-05-27 14:51:35.095 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-05-27 14:51:35.095 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 DEBUG http://localhost:50439/  0
+2018-05-27 14:51:35.178 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 84.3111ms 200 
+2018-05-27 14:51:35.209 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-05-27 14:51:35.379 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-05-27 14:51:35.385 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:51:35.406 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 14:51:35.505 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) with arguments ((null)) - ModelState is Valid
+2018-05-27 14:51:35.510 +01:00 [Information] Plato.SetUp.Controllers.SetUpController: Index action on SetUp controller invoked!
+2018-05-27 14:51:37.813 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.SetUp/Views/SetUp/Index.cshtml.
+2018-05-27 14:51:38.143 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) in 2646.1545ms
+2018-05-27 14:51:38.150 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3056.4515ms 200 text/html; charset=utf-8
+2018-05-27 14:51:50.876 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:50439/ application/x-www-form-urlencoded 405
+2018-05-27 14:51:50.879 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:51:50.882 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 14:51:50.925 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) with arguments (Plato.SetUp.ViewModels.SetUpViewModel) - ModelState is Valid
+2018-05-27 14:51:50.931 +01:00 [Information] Plato.SetUp.Controllers.SetUpController: Index POST action on SetUp controller invoked!
+2018-05-27 14:51:50.935 +01:00 [Information] Plato.SetUp.Controllers.SetUpController: Beginning call to SetUpAsync
+2018-05-27 14:51:51.131 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 14:51:51.146 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 14:51:51.285 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Inserting settings with key: SiteSettings
+2018-05-27 14:51:51.313 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting setting with id: 1
+2018-05-27 14:51:51.321 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 14:52:05.072 +01:00 [Information] Plato.Shell.ShellSettingsManager: Saving ShellSettings for tenant 'Default'
+2018-05-27 14:52:05.090 +01:00 [Information] Plato.Shell.ShellSettingsManager: Saved ShellSettings for tenant 'Default'
+2018-05-27 14:52:05.094 +01:00 [Information] Plato.SetUp.Controllers.SetUpController: Tennet with site name 'Plato' created successfully
+2018-05-27 14:52:05.097 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.RedirectResultExecutor: Executing RedirectResult, redirecting to /.
+2018-05-27 14:52:05.101 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.SetUp.Controllers.SetUpController.Index (Plato.SetUp) in 14201.5839ms
+2018-05-27 14:52:05.104 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 14227.5363ms 302 
+2018-05-27 14:52:05.110 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-05-27 14:52:05.113 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:52:05.120 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-05-27 14:52:05.368 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-05-27 14:52:05.842 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 723.3933ms
+2018-05-27 14:52:05.845 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 735.2351ms 200 text/html; charset=utf-8
+2018-05-27 14:52:05.868 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation/dist/jquery.validate.js  
+2018-05-27 14:52:05.876 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.users/content/systemjs.config.js  
+2018-05-27 14:52:05.880 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:52:05.880 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js  
+2018-05-27 14:52:05.882 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:52:05.914 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 46.3356ms 404 
+2018-05-27 14:52:05.914 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 38.7499ms 404 
+2018-05-27 14:52:05.917 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:52:05.975 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 94.8392ms 404 
+2018-05-27 14:52:05.982 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.users/content/systemjs.config.js  
+2018-05-27 14:52:05.985 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 14:52:05.988 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.8039ms 404 
+2018-05-27 15:00:07.938 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-05-27 15:00:08.316 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-05-27 15:00:08.348 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-05-27 15:00:08.351 +01:00 [Information] Plato.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-05-27 15:00:08.393 +01:00 [Information] Plato.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-05-27 15:00:08.473 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-05-27 15:00:08.476 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:08.498 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-27 15:00:08.762 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-05-27 15:00:10.568 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-05-27 15:00:11.069 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2324.573ms
+2018-05-27 15:00:11.074 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2758.6511ms 200 text/html; charset=utf-8
+2018-05-27 15:00:11.097 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.users/content/systemjs.config.js  
+2018-05-27 15:00:11.097 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation/dist/jquery.validate.js  
+2018-05-27 15:00:11.097 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js  
+2018-05-27 15:00:11.098 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:11.098 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:11.098 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:11.100 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.3265ms 404 
+2018-05-27 15:00:11.100 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.4874ms 404 
+2018-05-27 15:00:11.101 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.7486ms 404 
+2018-05-27 15:00:11.195 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation/dist/jquery.validate.js  
+2018-05-27 15:00:11.195 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:11.196 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6085ms 404 
+2018-05-27 15:00:11.202 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js  
+2018-05-27 15:00:11.202 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:11.202 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.452ms 404 
+2018-05-27 15:00:11.207 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.users/content/systemjs.config.js  
+2018-05-27 15:00:11.208 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:11.208 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.5476ms 404 
+2018-05-27 15:00:19.612 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:50439/ application/x-www-form-urlencoded 246
+2018-05-27 15:00:19.612 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:19.640 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments (Plato.Users.Models.LoginViewModel, ) - ModelState is Valid
+2018-05-27 15:00:19.703 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application signed in.
+2018-05-27 15:00:19.703 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.RedirectResultExecutor: Executing RedirectResult, redirecting to /.
+2018-05-27 15:00:19.704 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 83.9623ms
+2018-05-27 15:00:19.704 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 92.333ms 302 
+2018-05-27 15:00:19.709 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-05-27 15:00:19.709 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:19.710 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-05-27 15:00:19.711 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-05-27 15:00:19.711 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-05-27 15:00:19.728 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 17.8449ms
+2018-05-27 15:00:19.728 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 19.1132ms 200 text/html; charset=utf-8
+2018-05-27 15:00:19.747 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js  
+2018-05-27 15:00:19.747 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.users/content/systemjs.config.js  
+2018-05-27 15:00:19.747 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation/dist/jquery.validate.js  
+2018-05-27 15:00:19.747 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:19.747 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:19.747 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:19.747 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-05-27 15:00:19.747 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-05-27 15:00:19.747 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-05-27 15:00:19.748 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.9616ms 404 
+2018-05-27 15:00:19.748 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.9318ms 404 
+2018-05-27 15:00:19.748 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8899ms 404 
+2018-05-27 15:00:19.791 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation/dist/jquery.validate.js  
+2018-05-27 15:00:19.791 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:19.792 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-05-27 15:00:19.792 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6351ms 404 
+2018-05-27 15:00:19.798 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js  
+2018-05-27 15:00:19.799 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:19.799 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-05-27 15:00:19.800 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.5693ms 404 
+2018-05-27 15:00:19.805 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.users/content/systemjs.config.js  
+2018-05-27 15:00:19.806 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-27 15:00:19.806 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-05-27 15:00:19.806 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6231ms 404 

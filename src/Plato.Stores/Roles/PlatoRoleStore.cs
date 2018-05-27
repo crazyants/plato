@@ -62,8 +62,7 @@ namespace Plato.Stores.Roles
 
         public async Task<Role> GetByIdAsync(int id)
         {
-            Role role;
-            if (!_memoryCache.TryGetValue(_key, out role))
+            if (!_memoryCache.TryGetValue(_key, out Role role))
             {
                 role = await _roleRepository.SelectByIdAsync(id);
                 if (role != null)
@@ -79,8 +78,7 @@ namespace Plato.Stores.Roles
 
         public async Task<Role> GetByName(string name)
         {
-            Role role;
-            if (!_memoryCache.TryGetValue(_key, out role))
+            if (!_memoryCache.TryGetValue(_key, out Role role))
             {
                 role = await _roleRepository.SelectByNameAsync(name);
                 if (role != null)
@@ -96,8 +94,7 @@ namespace Plato.Stores.Roles
 
         public async Task<Role> GetByNormalizedName(string nameNormalized)
         {
-            Role role;
-            if (!_memoryCache.TryGetValue(_key, out role))
+            if (!_memoryCache.TryGetValue(_key, out Role role))
             {
                 role = await _roleRepository.SelectByNormalizedNameAsync(nameNormalized);
                 if (role != null)
@@ -118,8 +115,7 @@ namespace Plato.Stores.Roles
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
         {
-            IPagedResults<T> roles;
-            if (!_memoryCache.TryGetValue(_key, out roles))
+            if (!_memoryCache.TryGetValue(_key, out IPagedResults<T> roles))
             {
                 roles = await _roleRepository.SelectAsync<T>(args);
                 if (roles != null)
@@ -135,8 +131,7 @@ namespace Plato.Stores.Roles
 
         public async Task<IList<Role>> GetRolesByUserId(int userId)
         {
-            IList<Role> roles;
-            if (!_memoryCache.TryGetValue(_key, out roles))
+            if (!_memoryCache.TryGetValue(_key, out IList<Role> roles))
             {
                 roles = await _roleRepository.SelectByUserIdAsync(userId);
                 if (roles != null)

@@ -10,7 +10,7 @@ using Plato.Models.Users;
 
 namespace Plato.Repositories.Users
 {
-    public class UserSecretRepository : IUserSettingsRepository<UserSecret>
+    public class UserSecretRepository : IUserSecretRepository<UserSecret>
     {
         #region "Constructor"
 

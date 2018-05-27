@@ -50,8 +50,8 @@ namespace Plato.Stores.Users
         }
 
         #endregion
-        
-        #region "Implementation"
+
+        #region "IPlatoUserStore"
 
         public async Task<User> CreateAsync(User user)
         {
@@ -79,9 +79,8 @@ namespace Plato.Stores.Users
 
         public async Task<User> GetByIdAsync(int id)
         {
-            User user;
             var key = GetCacheKey(LocalCacheKeys.ById, id);
-            if (!_memoryCache.TryGetValue(key, out user))
+            if (!_memoryCache.TryGetValue(key, out User user))
             {
                 user = await _userRepository.SelectByIdAsync(id);
                 if (user != null)
