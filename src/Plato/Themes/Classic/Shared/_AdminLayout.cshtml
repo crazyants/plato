@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Plato</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <environment names="Development">
+        <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/vendors/font-awesome.css" />
+        <link rel="stylesheet" href="~/css/core.css" />
+        <link rel="stylesheet" href="~/css/theme.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+              asp-fallback-href="~/css/vendors/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
+              asp-fallback-href="~/css/vendors/font-awesome.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/dist/css/app.min.css" asp-append-version="true" />
+    </environment>
+    @RenderSection("ModuleCSS", required: false)
+</head>
+<body>
+    
+<div class="collapse" id="navbar-header">
+    <div class="container-fluid bg-inverse p-1">
+        <h3>Collapsed content</h3>
+        <p>Toggleable via the navbar brand.</p>
+    </div>
+</div>
+
+<nav class="navbar navbar-light navbar-full nav-tabs mb-3">
+    <div class="container-fluid">
+
+        <ul class="nav nav-pills float-xs-right">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="navbar-divider hidden-sm-down"></li>
+            <li class="nav-item hidden-sm-down">
+                <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="navbar-divider hidden-sm-down"></li>
+            <li class="nav-item hidden-sm-down">
+                <a class="nav-link" href="#">Contact</a>
+            </li>
+            <li class="navbar-divider hidden-sm-down"></li>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li class="nav-item hidden-sm-down dropdown">
+                    <form asp-route-area="Plato.Users" asp-controller="Account" asp-action="LogOff" method="post">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">@User.Identity.Name<b class="caret"></b></a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Profile"]</a>
+                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Account"]</a>
+                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Messages"]</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Dashboard"]</a>
+                            <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
+                        </div>
+                    </form>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item hidden-sm-down">
+                    <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                </li>
+                <li class="navbar-divider hidden-sm-down"></li>
+                <li class="nav-item hidden-sm-down">
+                    <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
+                </li>
+
+            }
+            <li class="nav-item">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="@T["Toggle navigation"]"></button>
+            </li>
+        </ul>
+
+        <h3 class="navbar-brand text-muted">@T["Plato"]</h3>
+    </div>
+</nav>
+
+<div class="container">
+
+    @RenderBody()
+
+    <hr/>
+    <footer>
+        <p>&copy; 2016 - Plato</p>
+    </footer>
+</div>
+
+<environment names="Development">
+    <script src="~/js/vendors/jquery.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</environment>
+<environment names="Staging,Production">
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+        asp-fallback-src="~/js/vendors/jquery.min.js"
+        asp-fallback-test="window.jQuery">
+    </script>
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
+</environment>
+    
+<script type="text/javascript">
+    var plato = {
+        baseUrl: 'http://localhost:50439/',
+        ApiKey: '1234567'
+    };
+</script>
+
+@RenderSection("scripts", required: false)
+
+</body>
+</html>

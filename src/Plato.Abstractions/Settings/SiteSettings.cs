@@ -32,6 +32,8 @@ namespace Plato.Abstractions.Settings
 
         public RouteValueDictionary HomeRoute { get; set; }
 
+        public string ThemeName { get; set; } = "Classic";
+
         public string Serialize()
         {
             return JsonConvert.SerializeObject(this);

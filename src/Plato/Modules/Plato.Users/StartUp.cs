@@ -1,6 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -63,11 +61,11 @@ namespace Plato.Users
             services.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
 
             services.TryAddScoped<IUserStore<User>, UserStore>();
-            services.TryAddScoped<IRoleStore<Role>, RoleStore>();
-            services.TryAddScoped<IRoleClaimStore<Role>, RoleStore>();
+            //services.TryAddScoped<IRoleStore<Role>, RoleStore>();
+            //services.TryAddScoped<IRoleClaimStore<Role>, RoleStore>();
 
             services.TryAddScoped<UserManager<User>>();
-            services.TryAddScoped<RoleManager<Role>>();
+            //services.TryAddScoped<RoleManager<Role>>();
             services.TryAddScoped<SignInManager<User>>();
 
             services.AddSingleton<IContextFacade, ContextFacade>();
