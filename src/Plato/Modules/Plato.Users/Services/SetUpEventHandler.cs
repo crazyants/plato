@@ -191,9 +191,9 @@ namespace Plato.Users.Services
             }
 
             // create super user
+
             try
             {
-
                 var result =  await _userManager.CreateAsync(new User()
                 {
                     Email = context.AdminEmail,
@@ -205,7 +205,6 @@ namespace Plato.Users.Services
                     {
                         reportError(error.Code, error.Description);
                     }
-                   
                 }
             }
             catch (Exception ex)

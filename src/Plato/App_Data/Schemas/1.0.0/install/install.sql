@@ -147,13 +147,26 @@ CONSTRAINT PK_Plato_UserSecret_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
+
+CREATE TABLE Plato_UserSettings
+(
+Id								INT IDENTITY(1,1) NOT NULL,
+UserId							INT DEFAULT (0) NOT NULL,
+[Key]							nvarchar(255) DEFAULT ('') NOT NULL,
+[Value]							nvarchar(max) DEFAULT ('') NOT NULL,
+CreatedDate						DATETIME2 NULL,
+CreatedUserId					INT DEFAULT (0) NOT NULL,
+ModifiedDate					DATETIME2 NULL,
+ModifiedUserId					INT DEFAULT (0) NOT NULL,
+CONSTRAINT PK_Plato_UserDetail_Id PRIMARY KEY CLUSTERED ( Id )
+)
+
+
 CREATE TABLE Plato_UserDetail
 (
 Id								INT IDENTITY(1,1) NOT NULL,
 UserId							INT DEFAULT (0) NOT NULL,
-EditionId						INT DEFAULT (0) NOT NULL,
 RoleId							INT DEFAULT (0) NOT NULL,
-TeamId							INT DEFAULT (0) NOT NULL,
 TimeZoneOffset					FLOAT DEFAULT (0) NOT NULL,
 ObserveDST						BIT DEFAULT (0) NOT NULL,
 Culture							NVARCHAR(50) DEFAULT('') NOT NULL,

@@ -124,7 +124,6 @@ namespace Plato.SetUp.Controllers
                 {
                     if (_logger.IsEnabled(LogLevel.Error))
                         _logger.LogInformation(error.Key + " " + error.Value);
-
                     ModelState.AddModelError(error.Key, error.Value);
                 }
                 return View(model);

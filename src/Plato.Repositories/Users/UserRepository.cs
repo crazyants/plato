@@ -118,7 +118,7 @@ namespace Plato.Repositories.Users
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUser", id);
+                    "SelectUserById", id);
 
                 return await BuildUserFromResultSets(reader);
             }
@@ -134,7 +134,7 @@ namespace Plato.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserByUserNameNormalized",
+                    "SelectUserByUserNameNormalized",
                     userNameNormalized.TrimToSize(255));
 
                 return await BuildUserFromResultSets(reader);
@@ -150,7 +150,7 @@ namespace Plato.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserByEmail", 
+                    "SelectUserByEmail", 
                     email.TrimToSize(255));
 
                 return await BuildUserFromResultSets(reader);
@@ -166,9 +166,8 @@ namespace Plato.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserByUserName", 
+                    "SelectUserByUserName", 
                     userName.TrimToSize(255));
-
                 return await BuildUserFromResultSets(reader);
             }
         }
@@ -191,7 +190,7 @@ namespace Plato.Repositories.Users
                 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserByUserNameAndPassword",
+                    "SelectUserByUserNameAndPassword",
                     userName.TrimToSize(255),
                     password.TrimToSize(255));
 
@@ -212,12 +211,12 @@ namespace Plato.Repositories.Users
                 _dbContext.OnException += (sender, args) =>
                 {
                     if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"plato_sp_SelectUserByEmailAndPassword failed with the following error {args.Exception.Message}");
+                        _logger.LogInformation($"SelectUserByEmailAndPassword failed with the following error {args.Exception.Message}");
                 };
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserByEmailAndPassword",
+                    "SelectUserByEmailAndPassword",
                     email.TrimToSize(255),
                     password.TrimToSize(255));
 
@@ -235,7 +234,7 @@ namespace Plato.Repositories.Users
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserByApiKey",
+                    "SelectUserByApiKey",
                     apiKey.TrimToSize(255));
 
                 return await BuildUserFromResultSets(reader);
@@ -299,43 +298,42 @@ namespace Plato.Repositories.Users
                     user.PopulateModel(reader);
                 }
 
-                // secret
+                //// secret
 
-                if (await reader.NextResultAsync())
-                {
-                    if (reader.HasRows)
-                    {
-                        await reader.ReadAsync();
-                        user.Secret = new UserSecret(reader);
-                    }
-                }
+                //if (await reader.NextResultAsync())
+                //{
+                //    if (reader.HasRows)
+                //    {
+                //        await reader.ReadAsync();
+                //        user.Secret = new UserSecret(reader);
+                //    }
+                //}
 
-                // detail
+                //// detail
 
-                if (await reader.NextResultAsync())
-                {
-                    if (reader.HasRows)
-                    {
-                        await reader.ReadAsync();
-                        user.Detail = new UserDetail(reader);
-                    }
-                }
+                //if (await reader.NextResultAsync())
+                //{
+                //    if (reader.HasRows)
+                //    {
+                //        await reader.ReadAsync();
+                //        user.Detail = new UserDetail(reader);
+                //    }
+                //}
 
-                // roles
+                //// roles
 
-                if (await reader.NextResultAsync())
-                {
-                    if (reader.HasRows)
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            user.UserRoles.Add(new Role(reader));
-                        }
-                    }
-                }
+                //if (await reader.NextResultAsync())
+                //{
+                //    if (reader.HasRows)
+                //    {
+                //        while (await reader.ReadAsync())
+                //        {
+                //            user.UserRoles.Add(new Role(reader));
+                //        }
+                //    }
+                //}
 
             }
-
             return user;
         }
 
@@ -369,11 +367,12 @@ namespace Plato.Repositories.Users
                             id == 0
                                 ? $"Insert for user with email address '{email}' failed with the following error '{args.Exception.Message}'"
                                 : $"Update for user with Id {id} failed with the following error {args.Exception.Message}");
+                    throw args.Exception;
                 };
 
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "plato_sp_InsertUpdateUser",
+                    "InsertUpdateUser",
                     id,
                     userName.ToEmptyIfNull().TrimToSize(255),
                     normalizedUserName.ToEmptyIfNull().TrimToSize(255),
