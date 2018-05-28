@@ -25,94 +25,59 @@
 </head>
 <body>
     
-<div class="collapse" id="navbar-header">
-    <div class="container-fluid bg-inverse p-1">
-        <h3>Collapsed content</h3>
-        <p>Toggleable via the navbar brand.</p>
-    </div>
-</div>
-
-<nav class="navbar navbar-light navbar-full nav-tabs mb-3">
-    <div class="container-fluid">
-
-        <ul class="nav nav-pills float-xs-right">
-            <li class="nav-item">
-                <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="navbar-divider hidden-sm-down"></li>
-            <li class="nav-item hidden-sm-down">
-                <a class="nav-link" href="#">About</a>
-            </li>
-            <li class="navbar-divider hidden-sm-down"></li>
-            <li class="nav-item hidden-sm-down">
-                <a class="nav-link" href="#">Contact</a>
-            </li>
-            <li class="navbar-divider hidden-sm-down"></li>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <li class="nav-item hidden-sm-down dropdown">
-                    <form asp-route-area="Plato.Users" asp-controller="Account" asp-action="LogOff" method="post">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">@User.Identity.Name<b class="caret"></b></a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Profile"]</a>
-                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Account"]</a>
-                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Messages"]</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Dashboard"]</a>
-                            <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
-                        </div>
-                    </form>
-                </li>
-            }
-            else
-            {
-                <li class="nav-item hidden-sm-down">
-                    <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
-                </li>
-                <li class="navbar-divider hidden-sm-down"></li>
-                <li class="nav-item hidden-sm-down">
-                    <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
-                </li>
-
-            }
-            <li class="nav-item">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="@T["Toggle navigation"]"></button>
-            </li>
-        </ul>
-
-        <h3 class="navbar-brand text-muted">@T["Plato"]</h3>
-    </div>
-</nav>
-
-<div class="container">
-    
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-2" style="background: #242424; color: #fff;">
-            
-            <navigation name="admin"/>
+
+            <div class="navbar" role="navigation">
+                <navigation id="AdminMenu" name="admin"
+                            class="nav"
+                            ul-class="nav nav-pills float-xs-right"/>
+            </div>
 
         </div>
         <div class="col-md-10">
+         
+            <div id="AppNav" class="nav nav-tabs row">
+                <div class="navbar navbar-light nav-tabs" role="navigation">
+                    <a class="navbar-brand" href="#">
+                        <i class="fa fal fa-home"> </i>
+                        Plato
+                    </a>
+                    <navigation id="AppMenu" name="site"
+                                class="nav"
+                                ul-class="nav nav-pills float-xs-right" />
+                </div>
 
-            @RenderBody()
-
-            <hr/>
+            </div>
+     
+            <div class="mt-3">
+                @RenderBody()
+            </div>
+            
+            <hr />
             <footer>
-                <p>&copy; 2016 - Plato</p>
+                <p>&copy; @System.DateTime.Now.Year - Plato</p>
             </footer>
-        
+           
+
         </div>
     </div>
 </div>
 
 <environment names="Development">
     <script src="~/js/vendors/jquery.js"></script>
+    <script src="~/js/vendors/bootstrap.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 </environment>
 <environment names="Staging,Production">
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
-        asp-fallback-src="~/js/vendors/jquery.min.js"
-        asp-fallback-test="window.jQuery">
+            asp-fallback-src="~/js/vendors/jquery.min.js"
+            asp-fallback-test="window.jQuery">
+    </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.0.0/bootstrap.js"
+            asp-fallback-src="~/js/vendors/bootstrap.min.js"
+            asp-fallback-test="window.BS">
     </script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
 </environment>
