@@ -14,7 +14,7 @@ namespace Plato.Hosting.Extensions
     public static class ServiceCollectionExtensions
     {
  
-        public static IServiceCollection AddHostCore(
+        public static IServiceCollection AddPlatoHostCore(
             this IServiceCollection services)
         {
             

@@ -8,6 +8,7 @@ using Plato.Abstractions.SetUp;
 using Plato.Hosting;
 using Plato.Hosting.Extensions;
 using Plato.Models.Roles;
+using Plato.Navigation;
 using Plato.Roles.Services;
 using Plato.Shell.Models;
 
@@ -34,7 +35,10 @@ namespace Plato.Roles
 
             // register role manager
             services.TryAddScoped<RoleManager<Role>>();
-            
+
+            // register navigation provider
+            services.AddScoped<INavigationProvider, AdminMenu>();
+
         }
 
         public override void Configure(

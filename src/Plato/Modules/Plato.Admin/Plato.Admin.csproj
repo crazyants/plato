@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <Folder Include="Content\" />
+    <Folder Include="TagHelpers\" />
   </ItemGroup>
 
 </Project>

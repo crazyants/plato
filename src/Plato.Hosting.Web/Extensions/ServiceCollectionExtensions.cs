@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
@@ -31,6 +32,7 @@ using Plato.Hosting.Web.Routing;
 using Plato.Modules.Expanders;
 using Plato.Security.Extensions;
 using Plato.Logging.Extensions;
+using Plato.Navigation.Extensions;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -65,13 +67,16 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddLogging();
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
-                internalServices.AddHostCore();
-                internalServices.AddModules();
+                internalServices.AddPlatoHostCore();
+                internalServices.AddPlatoModules();
                 internalServices.AddCaching();
-             
+                internalServices.AddPlatoNavigation();
+
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+                internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
                 internalServices.AddPlatoLogging();
 
                 internalServices.AddPlatoDbContext();
@@ -254,12 +259,6 @@ namespace Plato.Hosting.Web.Extensions
                     });
                 }
 
-                //// add modules as application parts
-                //foreach (var assembly in moduleEntry.Assmeblies)
-                //{
-                //    applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
-                //}
-                    
             }
             
             // create services container for each shell

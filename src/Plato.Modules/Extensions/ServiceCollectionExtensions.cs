@@ -12,7 +12,7 @@ namespace Plato.Modules.Extensions
     public static class ServiceCollectionExtensions
     {
 
-        public static IServiceCollection AddModules(
+        public static IServiceCollection AddPlatoModules(
             this IServiceCollection services)
         {
 
