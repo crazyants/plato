@@ -22,6 +22,7 @@ $.Plato = {};
  * PlatoOptions object on the window object
  */
 $.Plato.options = {
+    debug: true,
     // bootstrap tooltips
     BSToolTipEnabled: true,
     BSToolTipSelector: "[data-toggle='tooltip']",
@@ -37,13 +38,10 @@ $.Plato.options = {
  * functions and plugins as specified by the
  * options above.
  */
-$(function() {
+$(function(win, doc, $) {
 
     "use strict";
 
-    // fix for IE page transitions
-    $("body").removeClass("hold-transition");
-    
     //Extend options if external options exist
     if (typeof window.PlatoOptions !== "undefined") {
         $.extend(true, $.Plato.options, window.PlatoOptions);
@@ -51,15 +49,34 @@ $(function() {
 
     // access to options
     var o = $.Plato.options;
-    
-    // initialize bootstrap tooltips
-    if (o.BSToolTipEnabled) {
-        var tips = $("body").tooltip({ selector: o.BSToolTipSelector });
-        tips.on('show.bs.tooltip', function () {
-            // only one tooltip should ever be open at a time
-            $('.tooltip').not(this).tooltip('hide');
-        });
-    }
-    
 
-});
+
+    $(doc).ready(function() {
+
+        if (o.debug) {
+            console.log("jQuery $(doc).ready() event fited");
+        }
+        
+        $("ul.dropdown-menu [data-toggle='dropdown']").on("click", function (event) {
+
+            if (o.debug) {
+                console.log(($(this).text()) + " menu item clicked");
+            }
+           
+            // Avoid following the href location when clicking
+            event.preventDefault();
+            // Avoid having the menu to close when clicking
+            event.stopPropagation();
+            // If a menu is already open we close it
+            $("ul.dropdown-menu [data-toggle='dropdown']").parent().removeClass('show');
+            // opening the one you clicked on
+            $(this).parent().addClass('show');
+            
+        });
+
+
+
+    });
+
+
+}(window, document, jQuery));

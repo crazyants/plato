@@ -82,8 +82,7 @@ namespace Plato.Layout.TagHelpers
                     ulClass += " ";
                 ulClass = "dropdown-menu";
             }
-
-          
+            
             sb.Append(_newLine);
             AddTabs(_level, sb);
             
@@ -102,10 +101,28 @@ namespace Plato.Layout.TagHelpers
 
                 sb.Append("<li class=\"")
                     .Append(liClass)
-                    .Append("\">")
-                    .Append(item.Text.Value);
+                    .Append("\">");
 
-            
+
+                var linkClass = _level == 0 
+                    ? "nav-link" 
+                    : "dropdown-item";
+
+                if (item.Items.Count > 0)
+                {
+                    if (!string.IsNullOrEmpty(linkClass))
+                        linkClass += " ";
+                    linkClass += "dropdown-toggle";
+                }
+                
+                sb.Append("<a class=\"")
+                    .Append(linkClass)
+                    .Append("\" href=\"")
+                    .Append(item.Href)
+                    .Append("\" data-toggle=\"dropdown\">")
+                    .Append(item.Text.Value)
+                    .Append("</a>");
+                
                 if (item.Items.Count > 0)
                 {
                     _level++;
@@ -125,9 +142,7 @@ namespace Plato.Layout.TagHelpers
                 .Append(_newLine);
             
             return sb.ToString();
-
-
-
+            
         }
 
         private string GetListItemClass(
@@ -137,14 +152,20 @@ namespace Plato.Layout.TagHelpers
         {
 
             var sb = new StringBuilder();
-            sb.Append("menu-item");
+            sb.Append("nav-item");
 
             if (item.Items.Count > 0)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(" ");
                 sb.Append("dropdown");
-              
+            }
+
+            if (_level > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(" ");
+                sb.Append("dropdown-submenu");
             }
             
             if (index == 0)
