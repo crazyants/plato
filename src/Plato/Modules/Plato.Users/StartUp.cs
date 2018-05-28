@@ -15,6 +15,7 @@ using Plato.Shell.Models;
 using Plato.Stores.Roles;
 using Plato.Stores.Users;
 using Plato.Hosting.Web;
+using Plato.Navigation;
 using Plato.Users.Services;
 
 namespace Plato.Users
@@ -83,6 +84,9 @@ namespace Plato.Users
                 options.SlidingExpiration = true;
             });
 
+            // register navigation providers
+            services.AddScoped<INavigationProvider, AdminMenu>();
+            services.AddScoped<INavigationProvider, SiteMenu>();
 
         }
 

@@ -45,6 +45,8 @@ namespace Plato.Navigation
 
             // Processes all navigation builders to create a flat list of menu items.
             // If a navigation builder fails, it is ignored.
+
+
             foreach (var navigationProvider in _navigationProviders)
             {
                 try
@@ -63,7 +65,7 @@ namespace Plato.Navigation
             Merge(menuItems);
 
             // Remove unauthorized menu items
-            menuItems = Authorize(menuItems, actionContext.HttpContext.User);
+            //menuItems = Authorize(menuItems, actionContext.HttpContext.User);
 
             // Compute Url and RouteValues properties to Href
             menuItems = ComputeHref(menuItems, actionContext);

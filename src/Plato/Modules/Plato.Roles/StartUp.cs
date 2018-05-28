@@ -38,7 +38,7 @@ namespace Plato.Roles
 
             // register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
-
+            services.AddScoped<INavigationProvider, SiteMenu>();
         }
 
         public override void Configure(

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +7,7 @@ namespace Plato.Navigation
 {
     public class MenuItem
     {
+
         public MenuItem()
         {
             //Permissions = new List<Permission>();
@@ -82,6 +82,7 @@ namespace Plato.Navigation
         /// The css classes to render with the menu item.
         /// </summary>
         public List<string> Classes { get; }
+
     }
 
 }
