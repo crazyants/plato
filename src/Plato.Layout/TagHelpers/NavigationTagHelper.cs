@@ -46,7 +46,7 @@ namespace Plato.Layout.TagHelpers
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             
-            output.TagName = "nav";
+            output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
 
             var sb = new StringBuilder();
