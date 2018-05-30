@@ -155,25 +155,55 @@ namespace Plato.Hosting.Web.Extensions
             this IServiceCollection services)
         {
 
-            // add modules
+            // add mvc core services
+
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            var builder = services.AddMvcCore()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddViews()
+                .AddRazorViewEngine();
+            
+            // add module mvc
+
+            services.AddPlatoModuleMvc();
+
+            // add default framework parts
+
+            AddDefaultFrameworkParts(builder.PartManager);
+
+            // add json formatter
+            
+            builder.AddJsonFormatters();
+
+            return services;
+
+        }
+
+        public static IServiceCollection AddPlatoModuleMvc(
+            this IServiceCollection services)
+        {
 
             var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
+            
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 // view location expanders for modules
 
-                foreach (var moduleEntry in moduleManager.AvailableModules)
-                {
-                    options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.ID));
-                }
-                    
+                options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
+
+                //foreach (var moduleEntry in moduleManager.AvailableModules.Reverse())
+                //{
+                //    options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.ID));
+                //}
+
 
                 // view location expanders for theme
 
                 options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
 
                 // ensure loaded modules are aware of current context
-                
+
                 var moduleReferences = moduleManager.AllAvailableAssemblies
                     .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
                     .Select(x => MetadataReference.CreateFromFile(x.Location))
@@ -185,18 +215,9 @@ namespace Plato.Hosting.Web.Extensions
                 {
                     options.AdditionalCompilationReferences.Add(moduleReference);
                 }
-                
+
             });
             
-            // add mvc core services
-
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
-
-            var builder = services.AddMvcCore()
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddViews()
-                .AddRazorViewEngine();
-
             // add default framework parts
             var applicationPartManager = services.BuildServiceProvider().GetRequiredService<ApplicationPartManager>();
             foreach (var moduleEntry in moduleManager.AvailableModules)
@@ -208,20 +229,16 @@ namespace Plato.Hosting.Web.Extensions
                 }
             }
 
-            AddDefaultFrameworkParts(builder.PartManager);
-
-            // add json formatter
-
+            // --------------
 
             services.TryAddEnumerable(
                 ServiceDescriptor.Transient<IApplicationModelProvider, ModularApplicationModelProvider>());
 
-            builder.AddJsonFormatters();
 
             return services;
 
         }
-        
+
         public static IApplicationBuilder UsePlato(
             this IApplicationBuilder app,
             IHostingEnvironment env,
@@ -320,10 +337,9 @@ namespace Plato.Hosting.Web.Extensions
         }
 
     }
-
-
+    
     // TODO: Refactor below code into individual classes within Plato.Hosting
-    #region "Add Area Atrribute to Module Controllers"
+    #region "Add [Area=Module.Id] Atrribute to Module Controllers"
 
     public class ModuleEntryType
     {
@@ -339,8 +355,7 @@ namespace Plato.Hosting.Web.Extensions
         public Type EntryType { get; set; }
 
     }
-
-
+    
     public class ModularApplicationModelProvider : IApplicationModelProvider
     {
         private readonly IModuleManager _moduleManager;
@@ -371,8 +386,8 @@ namespace Plato.Hosting.Web.Extensions
             // Get all modules
             var moduleEntries = _moduleManager.AvailableModules.ToList();
             
+            // Build list of typed modules
             var moduleEntriesAndTypes = new List<ModuleEntryType>();
-
             foreach (var moduleEntry in moduleEntries)
             {
                 // Get all valid types from any module
@@ -381,12 +396,7 @@ namespace Plato.Hosting.Web.Extensions
                         .Select(type => new ModuleEntryType(moduleEntry, type))
                 ).ToArray();
                 moduleEntriesAndTypes.AddRange(moduleEntryTyped);
-
             }
-
-
-            // Combine all module assemblies
-            var assemblies = moduleEntries.SelectMany(a => a.Assmeblies).Distinct();
             
             // This code is called only once per tenant during the construction of routes
             foreach (var controller in context.Result.Controllers)
@@ -400,12 +410,6 @@ namespace Plato.Hosting.Web.Extensions
                     controller.RouteValues.Add("area", moduleForType.ModuleEntry.Descriptor.ID);
                 }
 
-               
-                ////var blueprint = _provider.GetFeatureForDependency(controllerType);
-                //if (blueprint != null)
-                //{
-                // 
-                //}
             }
         }
 

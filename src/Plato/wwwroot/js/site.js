@@ -57,22 +57,22 @@ $(function(win, doc, $) {
             console.log("jQuery $(doc).ready() event fited");
         }
         
-        $("ul.dropdown-menu [data-toggle='dropdown']").on("click", function (event) {
+        //$("ul.dropdown-menu [data-toggle='dropdown']").on("click", function (event) {
 
-            if (o.debug) {
-                console.log(($(this).text()) + " menu item clicked");
-            }
+        //    if (o.debug) {
+        //        console.log(($(this).text()) + " menu item clicked");
+        //    }
            
-            // Avoid following the href location when clicking
-            event.preventDefault();
-            // Avoid having the menu to close when clicking
-            event.stopPropagation();
-            // If a menu is already open we close it
-            $("ul.dropdown-menu [data-toggle='dropdown']").parent().removeClass('show');
-            // opening the one you clicked on
-            $(this).parent().addClass('show');
+        //    // Avoid following the href location when clicking
+        //    event.preventDefault();
+        //    // Avoid having the menu to close when clicking
+        //    event.stopPropagation();
+        //    // If a menu is already open we close it
+        //    $("ul.dropdown-menu [data-toggle='dropdown']").parent().removeClass('show');
+        //    // opening the one you clicked on
+        //    $(this).parent().addClass('show');
             
-        });
+        //});
 
 
 

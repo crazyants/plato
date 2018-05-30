@@ -10,13 +10,10 @@ namespace Plato.Roles.Controllers
 
         public AdminController()
         {
-
         }
-
-       
+        
         public async Task<ActionResult> Index()
         {
-
             return View();
         }
 
