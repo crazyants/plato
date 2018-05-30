@@ -46,27 +46,27 @@ namespace Plato.Hosting.Web.Extensions
 
         private static IServiceCollection _services;
 
-        public static IServiceCollection AddHost(
-            this IServiceCollection services,
-            Action<IServiceCollection> configure)
+        // services
+
+        public static IServiceCollection AddPlato(
+            this IServiceCollection services)
         {
-            services.AddFileSystem();
-
-            //configure(services);
-
-            // Let the app change the default tenant behavior and set of features
-            configure?.Invoke(services);
-
-            // Register the list of services to be resolved later on
-            services.AddSingleton(_ => services);
+            
+            services.AddPlatoHost();
+            services.ConfigureShell("Sites", "Schemas");
+            services.AddPlatoSecurity();
+            services.AddPlatoAuth();
+            services.AddPlatoMvc();
+            
+            // allows us to display all registered services in development mode
+            _services = services;
 
             return services;
-
         }
 
         public static IServiceCollection AddPlatoHost(this IServiceCollection services)
         {
-            return services.AddHost(internalServices =>
+            return services.AddHPlatoTennetHost(internalServices =>
             {
                 internalServices.AddLogging();
                 internalServices.AddOptions();
@@ -86,28 +86,35 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddPlatoDbContext();
                 internalServices.AddRepositories();
                 internalServices.AddStores();
-                
-            });
-            
-        }
 
-        public static IServiceCollection AddPlato(
-            this IServiceCollection services)
+            });
+
+        }
+        
+        public static IServiceCollection AddHPlatoTennetHost(
+            this IServiceCollection services,
+            Action<IServiceCollection> configure)
         {
 
-            // add host services
+            // add file system
 
-            services.AddPlatoHost();
-            
-            // configure host 
+            services.AddFileSystem();
 
-            services.ConfigureShell("Sites", "Schemas");
-            
-            // add security
+            //configure(services);
 
-            services.AddPlatoSecurity();
+            // Let the app change the default tenant behavior and set of features
+            configure?.Invoke(services);
 
-            // add auth
+            // Register the list of services to be resolved later on
+            services.AddSingleton(_ => services);
+
+            return services;
+
+        }
+        
+        public static IServiceCollection AddPlatoAuth(
+            this IServiceCollection services)
+        {
 
             services.AddAuthentication(options =>
                 {
@@ -131,26 +138,18 @@ namespace Plato.Hosting.Web.Extensions
                     options.Cookie.Name = IdentityConstants.ExternalScheme;
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 })
-                .AddCookie(IdentityConstants.TwoFactorRememberMeScheme, options =>
-                {
-                    options.Cookie.Name = IdentityConstants.TwoFactorRememberMeScheme;
-                })
+                .AddCookie(IdentityConstants.TwoFactorRememberMeScheme,
+                    options => { options.Cookie.Name = IdentityConstants.TwoFactorRememberMeScheme; })
                 .AddCookie(IdentityConstants.TwoFactorUserIdScheme, IdentityConstants.TwoFactorUserIdScheme, options =>
                 {
                     options.Cookie.Name = IdentityConstants.TwoFactorUserIdScheme;
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
                 });
-            
-            // add mvc
-
-            services.AddPlatoMvc();
-            
-            // allows us to display all registered services in development mode
-            _services = services;
 
             return services;
+
         }
-        
+
         public static IServiceCollection AddPlatoMvc(
             this IServiceCollection services)
         {
@@ -231,13 +230,16 @@ namespace Plato.Hosting.Web.Extensions
 
             // --------------
 
-            services.TryAddEnumerable(
-                ServiceDescriptor.Transient<IApplicationModelProvider, ModularApplicationModelProvider>());
+            // implement our own conventions to automatically add [areas] routes to loaded module controllers
+            // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-2.1
 
-
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, ModularApplicationModelProvider>());
+            
             return services;
 
         }
+
+        // app
 
         public static IApplicationBuilder UsePlato(
             this IApplicationBuilder app,
