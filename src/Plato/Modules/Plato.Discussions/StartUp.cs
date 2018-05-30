@@ -30,10 +30,9 @@ namespace Plato.Discussions
 
             routes.MapAreaRoute(
                 name: "Discussions",
-                area: "Plato.Discussions",
+                areaName: "Plato.Discussions",
                 template: "discussions/{controller}/{action}/{id?}",
-                controller: "Discussions",
-                action: "Index"
+                defaults: new { controller = "Discussions", action = "Index" }
             );
 
         }

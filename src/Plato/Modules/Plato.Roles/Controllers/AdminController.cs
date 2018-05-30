@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Plato.Roles.Controllers
 {
+    
     public class AdminController : Controller
     {
 
@@ -12,7 +13,7 @@ namespace Plato.Roles.Controllers
 
         }
 
-      
+       
         public async Task<ActionResult> Index()
         {
 

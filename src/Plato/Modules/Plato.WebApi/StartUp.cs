@@ -34,10 +34,9 @@ namespace Plato.WebApi
         
             routes.MapAreaRoute(
                 name: "WebAPI",
-                area: "Plato.WebApi",
+                areaName: "Plato.WebApi",
                 template: "api/{controller}/{action}/{id?}",
-                controller: "Users",
-                action: "Get"
+                defaults: new { controller = "Users", action = "Get" }
             );
 
         }

@@ -62,11 +62,8 @@ namespace Plato.Users
             services.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
 
             services.TryAddScoped<IUserStore<User>, UserStore>();
-            //services.TryAddScoped<IRoleStore<Role>, RoleStore>();
-            //services.TryAddScoped<IRoleClaimStore<Role>, RoleStore>();
-
+     
             services.TryAddScoped<UserManager<User>>();
-            //services.TryAddScoped<RoleManager<Role>>();
             services.TryAddScoped<SignInManager<User>>();
 
             services.AddSingleton<IContextFacade, ContextFacade>();
@@ -101,27 +98,25 @@ namespace Plato.Users
 
             routes.MapAreaRoute(
                 name: "Login",
-                area: "Plato.Users",
+                areaName: "Plato.Users",
                 template: "login",
-                controller: "Account",
-                action: "Login"
+                defaults: new { controller = "Account", action = "Login" }
             );
 
             routes.MapAreaRoute(
                 name: "Register",
-                area: "Plato.Users",
+                areaName: "Plato.Users",
                 template: "register",
-                controller: "Account",
-                action: "Register"
+                defaults: new { controller = "Account", action = "Register" }
             );
 
-            routes.MapAreaRoute(
-                name: "Users",
-                area: "Plato.Users",
-                template: "users/{controller}/{action}/{id?}",
-                controller: "Account",
-                action: "Login"
-            );
+            //routes.MapAreaRoute(
+            //    name: "Users",
+            //    area: "Plato.Users",
+            //    template: "users/{controller}/{action}/{id?}",
+            //    controller: "Account",
+            //    action: "Login"
+            //);
 
 
         }

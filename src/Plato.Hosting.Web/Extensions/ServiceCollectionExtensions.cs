@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -15,6 +17,8 @@ using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.DependencyModel.Resolution;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Plato.Data.Extensions;
@@ -158,7 +162,7 @@ namespace Plato.Hosting.Web.Extensions
             {
                 // view location expanders for modules
 
-                foreach (var moduleEntry in moduleManager.AvailableModules.Reverse())
+                foreach (var moduleEntry in moduleManager.AvailableModules)
                 {
                     options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.ID));
                 }
@@ -190,7 +194,7 @@ namespace Plato.Hosting.Web.Extensions
 
             var builder = services.AddMvcCore()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                //.AddViews()
+                .AddViews()
                 .AddRazorViewEngine();
 
             // add default framework parts
@@ -207,6 +211,10 @@ namespace Plato.Hosting.Web.Extensions
             AddDefaultFrameworkParts(builder.PartManager);
 
             // add json formatter
+
+
+            services.TryAddEnumerable(
+                ServiceDescriptor.Transient<IApplicationModelProvider, ModularApplicationModelProvider>());
 
             builder.AddJsonFormatters();
 
@@ -312,4 +320,101 @@ namespace Plato.Hosting.Web.Extensions
         }
 
     }
+
+
+    // TODO: Refactor below code into individual classes within Plato.Hosting
+    #region "Add Area Atrribute to Module Controllers"
+
+    public class ModuleEntryType
+    {
+
+        public ModuleEntryType(IModuleEntry entry, Type type)
+        {
+            this.ModuleEntry = entry;
+            this.EntryType = type;
+        }
+
+        public IModuleEntry ModuleEntry { get; set; }
+
+        public Type EntryType { get; set; }
+
+    }
+
+
+    public class ModularApplicationModelProvider : IApplicationModelProvider
+    {
+        private readonly IModuleManager _moduleManager;
+
+        public ModularApplicationModelProvider(IModuleManager moduleManager)
+        {
+            _moduleManager = moduleManager;
+        }
+
+        public int Order
+        {
+            get
+            {
+                return 1000;
+            }
+        }
+        private bool IsComponentType(Type type)
+        {
+            if (type == null)
+                return false;
+            return type.IsClass && !type.IsAbstract && type.IsPublic;
+        }
+
+
+        public void OnProvidersExecuted(ApplicationModelProviderContext context)
+        {
+
+            // Get all modules
+            var moduleEntries = _moduleManager.AvailableModules.ToList();
+            
+            var moduleEntriesAndTypes = new List<ModuleEntryType>();
+
+            foreach (var moduleEntry in moduleEntries)
+            {
+                // Get all valid types from any module
+                var moduleEntryTyped = moduleEntry.Assmeblies.SelectMany(assembly =>
+                    assembly.ExportedTypes.Where(IsComponentType)
+                        .Select(type => new ModuleEntryType(moduleEntry, type))
+                ).ToArray();
+                moduleEntriesAndTypes.AddRange(moduleEntryTyped);
+
+            }
+
+
+            // Combine all module assemblies
+            var assemblies = moduleEntries.SelectMany(a => a.Assmeblies).Distinct();
+            
+            // This code is called only once per tenant during the construction of routes
+            foreach (var controller in context.Result.Controllers)
+            {
+                var controllerType = controller.ControllerType.AsType();
+
+                // get module for controller type
+                var moduleForType = moduleEntriesAndTypes.FirstOrDefault(module => module.EntryType == controllerType);
+                if (moduleForType != null)
+                {
+                    controller.RouteValues.Add("area", moduleForType.ModuleEntry.Descriptor.ID);
+                }
+
+               
+                ////var blueprint = _provider.GetFeatureForDependency(controllerType);
+                //if (blueprint != null)
+                //{
+                // 
+                //}
+            }
+        }
+
+        public void OnProvidersExecuting(ApplicationModelProviderContext context)
+        {
+        }
+    }
+
+    #endregion
+
+
 }

@@ -31,10 +31,9 @@ namespace Plato.SetUp
 
             routes.MapAreaRoute(
                 name: "SetUp",
-                area: "Plato.SetUp",
+                areaName: "Plato.SetUp",
                 template: "",
-                controller: "SetUp",
-                action: "Index"
+                defaults: new { controller = "SetUp", action = "Index" }
             );
 
         }

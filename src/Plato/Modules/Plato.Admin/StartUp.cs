@@ -39,6 +39,7 @@ namespace Plato.Admin
                 defaults: new { controller = "Admin", action = "Index" }
             );
 
+
         }
     }
 }

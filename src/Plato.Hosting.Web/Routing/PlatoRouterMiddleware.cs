@@ -92,7 +92,8 @@ namespace Plato.Hosting.Web.Routing
             };
 
             var prefixedRouteBuilder = new PrefixedRouteBuilder(
-                routePrefix, routeBuilder,
+                routePrefix, 
+                routeBuilder,
                 inlineConstraintResolver);
 
             foreach (var startup in startups)
@@ -103,7 +104,7 @@ namespace Plato.Hosting.Web.Routing
             //// The default route is added to each tenant as a template route, with a prefix
             prefixedRouteBuilder.Routes.Add(new Route(
                 prefixedRouteBuilder.DefaultHandler,
-                "Default",
+                "areaRoute",
                 "{area:exists}/{controller}/{action}/{id?}",
                 null,
                 null,
@@ -111,9 +112,10 @@ namespace Plato.Hosting.Web.Routing
                 inlineConstraintResolver)
             );
 
+
             // Attempt to get homepage route for tennet from site settings store
             // If the tennet has not been created yet siteService will return null
-            // typically if siteService returns null users will be presented with the SetUp module
+            // if siteService returns null users will be presented with the SetUp module
             var siteService = routeBuilder.ServiceProvider.GetService<ISiteSettingsStore>();
             if (siteService != null)
             {
@@ -124,7 +126,7 @@ namespace Plato.Hosting.Web.Routing
                     routeBuilder,
                     inlineConstraintResolver));
             }
-
+            
             // Build router
             var router = prefixedRouteBuilder.Build();
 
