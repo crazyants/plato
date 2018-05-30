@@ -12,7 +12,7 @@ namespace Plato.Roles.Controllers
 
         }
 
-        [Route("{area:exists}/{controller}/{action}/{id?}")]
+      
         public async Task<ActionResult> Index()
         {
 

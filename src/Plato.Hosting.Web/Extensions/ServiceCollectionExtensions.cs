@@ -190,7 +190,7 @@ namespace Plato.Hosting.Web.Extensions
 
             var builder = services.AddMvcCore()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddViews()
+                //.AddViews()
                 .AddRazorViewEngine();
 
             // add default framework parts

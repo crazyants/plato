@@ -25,11 +25,18 @@ namespace Plato.Roles
             builder
                 .Add(T["Configuration"], configuration => configuration
                     .Add(T["Security"], "5", security => security
-                        .Add(T["Roles"], "10", installed => installed
+                        .Add(T["Roles"], "10", roles => roles
                             .Action("Index", "Admin", "Plato.Roles")
                             //.Permission(Permissions.ManageRoles)
                             .LocalNav()
-                        )));
+                        )
+                        .Add(T["Users"], "11", users => users
+                            .Action("Index", "Admin", "Plato.Users")
+                            //.Permission(Permissions.ManageRoles)
+                            .LocalNav()
+                        ))
+                
+                );
         }
     }
 
