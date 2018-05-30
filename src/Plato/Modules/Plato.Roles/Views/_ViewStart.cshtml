@@ -1,0 +1,20 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Plato.Abstractions.Stores.ISiteSettingsStore SiteSettingsStore
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var site = await SiteSettingsStore.GetAsync();
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+    switch (controllerName)
+    {
+        case "Admin":
+            Layout = "~/Themes/" + site.ThemeName
+                     + "/Shared/_AdminLayout.cshtml";
+            break;
+        default:
+            Layout = "~/Themes/" + site.ThemeName
+                     + "/Shared/_Layout.cshtml";
+            break;
+    }
+
+
+}

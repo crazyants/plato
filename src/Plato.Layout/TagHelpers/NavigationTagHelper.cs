@@ -125,7 +125,9 @@ namespace Plato.Layout.TagHelpers
                     .Append(linkClass)
                     .Append("\" href=\"")
                     .Append(item.Href)
-                    .Append("\" data-toggle=\"dropdown\">")
+                    .Append("\"")
+                    .Append(item.Items.Count > 0 ? " data-toggle=\"dropdown\"" : "")
+                    .Append(">")
                     .Append(item.Text.Value)
                     .Append("</a>");
                 
