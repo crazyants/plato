@@ -1,23 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Plato.Admin.Controllers
+namespace Plato.Roles.Controllers
 {
-
-  
     public class AdminController : Controller
     {
+
         public AdminController()
         {
 
         }
-        
-        public IActionResult Index()
+
+        [Route("{area:exists}/{controller}/{action}/{id?}")]
+        public async Task<ActionResult> Index()
         {
+
             return View();
         }
+
     }
 }

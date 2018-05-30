@@ -30,32 +30,13 @@ namespace Plato.Hosting.Web.Routing
 
         public IRouter DefaultHandler
         {
-            get
-            {
-                return _baseRouteBuilder.DefaultHandler;
-            }
-
-            set
-            {
-                _baseRouteBuilder.DefaultHandler = value;
-            }
+            get => _baseRouteBuilder.DefaultHandler;
+            set => _baseRouteBuilder.DefaultHandler = value;
         }
 
-        public IList<IRouter> Routes
-        {
-            get
-            {
-                return _routes;
-            }
-        }
+        public IList<IRouter> Routes => _routes;
 
-        public IServiceProvider ServiceProvider
-        {
-            get
-            {
-                return _baseRouteBuilder.ServiceProvider;
-            }
-        }
+        public IServiceProvider ServiceProvider => _baseRouteBuilder.ServiceProvider;
 
         public IRouter Build()
         {

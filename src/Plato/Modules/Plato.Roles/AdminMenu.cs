@@ -26,7 +26,7 @@ namespace Plato.Roles
                 .Add(T["Configuration"], configuration => configuration
                     .Add(T["Security"], "5", security => security
                         .Add(T["Roles"], "10", installed => installed
-                            .Action("Index", "Admin", "OrchardCore.Roles")
+                            .Action("Index", "Admin", "Plato.Roles")
                             //.Permission(Permissions.ManageRoles)
                             .LocalNav()
                         )));

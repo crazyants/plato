@@ -47,13 +47,13 @@ namespace Plato.Roles
             IServiceProvider serviceProvider)
         {
             
-            routes.MapAreaRoute(
-                name: "Roles",
-                area: "Plato.Users",
-                template: "roles",
-                controller: "Roles",
-                action: "Index"
-            );
+            //routes.MapAreaRoute(
+            //    name: "Roles",
+            //    area: "Plato.Users",
+            //    template: "roles",
+            //    controller: "Roles",
+            //    action: "Index"
+            //);
 
         }
     }

@@ -22,14 +22,14 @@ namespace Plato.Roles
                 return;
             }
 
-            builder
-                .Add(T["Roles 1"], configuration => configuration
-                    .Add(T["Roles 2"], "5", security => security
-                        .Add(T["Roles 3"], "10", installed => installed
-                            .Action("Index", "Admin", "OrchardCore.Roles")
-                            //.Permission(Permissions.ManageRoles)
-                            .LocalNav()
-                        )));
+        //    builder
+        //        .Add(T["Roles 1"], configuration => configuration
+        //            .Add(T["Roles 2"], "5", security => security
+        //                .Add(T["Roles 3"], "10", installed => installed
+        //                    .Action("Index", "Admin", "Plato.Roles")
+        //                    //.Permission(Permissions.ManageRoles)
+        //                    .LocalNav()
+        //                )));
         }
     }
 

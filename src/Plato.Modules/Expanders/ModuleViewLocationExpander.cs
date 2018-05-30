@@ -25,8 +25,8 @@ namespace Plato.Modules.Expanders
         {
             var result = new List<string>
             {
-                "Modules/" + _moduleId + "/Views/{1}/{0}.cshtml",
-                "Modules/" + _moduleId + "/Views/Shared/{0}.cshtml"
+                "Modules/" + _moduleId + "/Views/{1}/{0}" +  RazorViewEngine.ViewExtension,
+                "Modules/" + _moduleId + "/Views/Shared/{0}" + RazorViewEngine.ViewExtension
             };
             result.AddRange(viewLocations);
             return result;

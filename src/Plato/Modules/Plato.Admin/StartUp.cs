@@ -31,7 +31,7 @@ namespace Plato.Admin
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-
+       
             routes.MapAreaRoute(
                 name: "Admin",
                 areaName: "Plato.Admin",

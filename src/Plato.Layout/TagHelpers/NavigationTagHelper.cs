@@ -113,6 +113,12 @@ namespace Plato.Layout.TagHelpers
                     if (!string.IsNullOrEmpty(linkClass))
                         linkClass += " ";
                     linkClass += "dropdown-toggle";
+                    foreach (var className in item.Classes)
+                    {
+                        if (!string.IsNullOrEmpty(linkClass))
+                            linkClass += " ";
+                        linkClass += className;
+                    }
                 }
                 
                 sb.Append("<a class=\"")

@@ -158,10 +158,13 @@ namespace Plato.Hosting.Web.Extensions
             {
                 // view location expanders for modules
 
-                foreach (var moduleEntry in moduleManager.AvailableModules)
+                foreach (var moduleEntry in moduleManager.AvailableModules.Reverse())
+                {
                     options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.ID));
+                }
+                    
 
-                // theme
+                // view location expanders for theme
 
                 options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
 
@@ -269,12 +272,6 @@ namespace Plato.Hosting.Web.Extensions
         
             return app;
         }
-
-        //internal static void AddModularFrameworkParts(IServiceProvider services, ApplicationPartManager manager)
-        //{
-        //    var httpContextAccessor = services.GetRequiredService<IHttpContextAccessor>();
-        //    manager.ApplicationParts.Add(new ShellFeatureApplicationPart(httpContextAccessor));
-        //}
 
         private static void AddDefaultFrameworkParts(ApplicationPartManager partManager)
         {

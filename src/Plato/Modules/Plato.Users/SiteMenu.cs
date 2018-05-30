@@ -22,14 +22,14 @@ namespace Plato.Users
                 return;
             }
 
-            builder
-                .Add(T["Users 1"], configuration => configuration
-                    .Add(T["Users 2"], "5", security => security
-                        .Add(T["Users 3"], "10", installed => installed
-                            .Action("Index", "Admin", "OrchardCore.Roles")
-                            //.Permission(Permissions.ManageRoles)
-                            .LocalNav()
-                        )));
+            //builder
+            //    .Add(T["Users 1"], configuration => configuration
+            //        .Add(T["Users 2"], "5", security => security
+            //            .Add(T["Users 3"], "10", installed => installed
+            //                .Action("Index", "Admin", "Plato.Users")
+            //                //.Permission(Permissions.ManageRoles)
+            //                .LocalNav()
+            //            )));
         }
     }
 

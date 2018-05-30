@@ -91,10 +91,15 @@ namespace Plato.Hosting.Web.Routing
                 DefaultHandler = serviceProvider.GetRequiredService<MvcRouteHandler>()
             };
 
-            var prefixedRouteBuilder = new PrefixedRouteBuilder(routePrefix, routeBuilder, inlineConstraintResolver);
+            var prefixedRouteBuilder = new PrefixedRouteBuilder(
+                routePrefix, routeBuilder,
+                inlineConstraintResolver);
+
             foreach (var startup in startups)
+            {
                 startup.Configure(appBuilder, prefixedRouteBuilder, serviceProvider);
-            
+            }
+                 
             //// The default route is added to each tenant as a template route, with a prefix
             prefixedRouteBuilder.Routes.Add(new Route(
                 prefixedRouteBuilder.DefaultHandler,

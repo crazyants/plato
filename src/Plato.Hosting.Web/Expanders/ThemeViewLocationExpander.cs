@@ -26,9 +26,11 @@ namespace Plato.Hosting.Web.Expanders
             IEnumerable<string> viewLocations)
         {
 
-            var result = new List<string>();
-            result.Add("/Themes/" + _theme  + "/{1}/{0}.cshtml");
-            result.Add("/Themes/" + _theme + "/Shared/{0}.cshtml");
+            var result = new List<string>
+            {
+                "/Themes/" + _theme + "/{1}/{0}.cshtml",
+                "/Themes/" + _theme + "/Shared/{0}.cshtml"
+            };
             result.AddRange(viewLocations);
             return result;
         }
