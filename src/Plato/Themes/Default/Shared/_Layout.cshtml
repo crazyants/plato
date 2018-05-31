@@ -53,7 +53,7 @@
                                         <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Account"]</a>
                                         <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Messages"]</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Dashboard"]</a>
+                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">@T["Dashboard"]</a>
                                         <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
                                     </div>
                                 </form>
@@ -134,13 +134,13 @@
 -->
     
 <div class="container">
-
-    @RenderBody()
-
-    <hr/>
-    <footer>
-        <p>&copy; @System.DateTime.Now.Year - Plato</p>
-    </footer>
+    <div class="pt-5">
+        @RenderBody()
+        <hr/>
+        <footer>
+            <p>&copy; @System.DateTime.Now.Year - Plato</p>
+        </footer>
+    </div>
 </div>
 
 <environment names="Development">

@@ -1,8 +1,8 @@
-﻿@inject Plato.Abstractions.Stores.ISiteSettingsStore SiteSettingsStore
+﻿@*@inject Plato.Abstractions.Stores.ISiteSettingsStore SiteSettingsStore
 @{
     var site = await SiteSettingsStore.GetAsync();
 }
 @{
     Layout = "~/Themes/" + site.ThemeName
              + "/Shared/_AdminLayout.cshtml";
-}
+}*@

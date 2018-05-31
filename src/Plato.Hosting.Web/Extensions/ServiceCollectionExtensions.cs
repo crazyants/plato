@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.CodeAnalysis;
@@ -33,6 +34,8 @@ using Plato.Shell.Extensions;
 using Plato.Stores.Extensions;
 using Plato.Cache.Extensions;
 using Plato.Hosting.Web.Routing;
+using Plato.Layout.Extensions;
+using Plato.Layout.Theming;
 using Plato.Modules.Expanders;
 using Plato.Security.Extensions;
 using Plato.Logging.Extensions;
@@ -57,7 +60,8 @@ namespace Plato.Hosting.Web.Extensions
             services.AddPlatoSecurity();
             services.AddPlatoAuth();
             services.AddPlatoMvc();
-            
+      
+
             // allows us to display all registered services in development mode
             _services = services;
 
@@ -75,6 +79,7 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddPlatoModules();
                 internalServices.AddCaching();
                 internalServices.AddPlatoNavigation();
+                internalServices.AddPlatoTheming();
 
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
@@ -195,7 +200,7 @@ namespace Plato.Hosting.Web.Extensions
                 //{
                 //    options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.ID));
                 //}
-
+                
 
                 // view location expanders for theme
 
@@ -228,6 +233,7 @@ namespace Plato.Hosting.Web.Extensions
                 }
             }
 
+          
             // --------------
 
             // implement our own conventions to automatically add [areas] routes to loaded module controllers
@@ -265,19 +271,50 @@ namespace Plato.Hosting.Web.Extensions
 
             app.UseAuthentication();
 
-            // load static file middleware
+            // load static files
 
             app.UseStaticFiles();
 
-            // load module controllers
+            // allow static files within modules
+            
+            app.UseModuleStaticFiles(env);
 
+            // add custom feature application parts
+
+            app.AddThemingApplicationParts();
+
+            // create services container for each shell
+
+            app.UseMiddleware<PlatoContainerMiddleware>();
+
+            // create uniuqe pipeline for each shell
+
+            app.UseMiddleware<PlatoRouterMiddleware>();
+        
+            return app;
+        }
+
+        public static void AddThemingApplicationParts(
+            this IApplicationBuilder app)
+        {
+
+            // add ThemingViewsFeatureProvider application part
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
+            var themingViewsFeatureProvider = app.ApplicationServices.GetRequiredService<IApplicationFeatureProvider<ViewsFeature>>();
+            applicationPartManager.FeatureProviders.Add(themingViewsFeatureProvider);
+
+        }
+
+
+        public static void UseModuleStaticFiles(
+            this IApplicationBuilder app,
+                IHostingEnvironment env)
+        {
             var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
             foreach (var moduleEntry in moduleManager.AvailableModules)
             {
-
                 // serve static files within module folders
-                var contentPath = Path.Combine(env.ContentRootPath, 
+                var contentPath = Path.Combine(env.ContentRootPath,
                     moduleEntry.Descriptor.Location,
                     moduleEntry.Descriptor.ID, "Content");
                 if (Directory.Exists(contentPath))
@@ -288,16 +325,8 @@ namespace Plato.Hosting.Web.Extensions
                         FileProvider = new PhysicalFileProvider(contentPath)
                     });
                 }
-
             }
             
-            // create services container for each shell
-            app.UseMiddleware<PlatoContainerMiddleware>();
-
-            // create uniuqe pipeline for each shell
-            app.UseMiddleware<PlatoRouterMiddleware>();
-        
-            return app;
         }
 
         private static void AddDefaultFrameworkParts(ApplicationPartManager partManager)

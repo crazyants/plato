@@ -32,7 +32,7 @@ namespace Plato.Abstractions.Settings
 
         public RouteValueDictionary HomeRoute { get; set; }
 
-        public string ThemeName { get; set; } = "Classic";
+        public string ThemeName { get; set; } = "Default";
 
         public string Serialize()
         {
