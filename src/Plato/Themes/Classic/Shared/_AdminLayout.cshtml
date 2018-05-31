@@ -32,29 +32,36 @@
             <h5 class="text-center pt-4 pb-2">@T["Plato"]</h5>
             <hr/>
             <div class="row" role="navigation">
-                <navigation id="AdminMenu" name="admin"
-                            class="navbar navbar-light"
-                            ul-class="nav nav-v nav-pills" />
+                <nav class=" navbar">
+                    <navigation id="AdminMenu" name="admin"
+                                class="nav nav-v nav-pills"/>
+                </nav>
             </div>
 
         </div>
         <div class="col-md-10">
          
             <div id="AppNav" class="nav nav-tabs row">
-                <div class="navbar nav-tabs  col-md-12" role="navigation">
-         
-                    <navigation id="AppMenu" name="site"
-                                class="nav nav-h"
-                                ul-class="nav nav-pills" />
-           
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="navbar nav-tabs col-12" role="navigation">
+                            <a class="navbar-brand text-muted" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">
+                                @T["Plato"]
+                            </a>
+                            <navigation id="AppMenu" name="site"
+                                        class="nav nav-h"
+                                        ul-class="nav nav-pills float-right"/>
+                        </div>
+                    </div>
                 </div>
+
             </div>
      
             <div class="m-4">
                 @RenderBody()
                 <hr />
                 <footer>
-                    <p>&copy; @System.DateTime.Now.Year - Plato</p>
+                    <p class="text-muted">&copy; @System.DateTime.Now.Year - Plato</p>
                 </footer>
             </div>
 

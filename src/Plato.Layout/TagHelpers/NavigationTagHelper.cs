@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Security;
@@ -19,17 +20,15 @@ namespace Plato.Layout.TagHelpers
 
         public string Name { get; set; } = "Site";
 
-        public string UlClass { get; set; }
-
         public string EmailDomain { get; set; } = "instantasp.co.uk";
-
-
+        
         private readonly INavigationManager _navigationManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IActionContextAccessor _actionContextAccesor;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        
-        private static string _newLine = Environment.NewLine;
+
+        private static readonly string NewLine = Environment.NewLine;
+        int _level = 0;
 
         public NavigationTagHelper(
             INavigationManager navigationManager,
@@ -43,22 +42,30 @@ namespace Plato.Layout.TagHelpers
             _httpContextAccessor = httpContextAccessor;
         }
 
+        private object _cssClasses; 
+
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            
-            output.TagName = "div";
+
+            // Get default CSS classes
+            _cssClasses = output.Attributes.FirstOrDefault(a => a.Name == "class")?.Value;
+
+            // Ensure no surrounding element
+            output.TagName = "";
             output.TagMode = TagMode.StartTagAndEndTag;
 
+            // Build navigation
             var sb = new StringBuilder();
-            var items = _navigationManager.BuildMenu(this.Name, _actionContextAccesor.ActionContext);
+            var items = _navigationManager.BuildMenu(
+                this.Name,
+                _actionContextAccesor.ActionContext);
             if (items != null)
             {
                 BuildNavigationRecursivly(items.ToList(), sb);
             }
-
+            
             output.PreContent.SetHtmlContent(sb.ToString());
-
-
+            
             //// Replaces <email> with <a> tag
             //var content = await output.GetChildContentAsync();
             //var target = content.GetContent() + "@" + EmailDomain;
@@ -67,43 +74,33 @@ namespace Plato.Layout.TagHelpers
 
         }
 
-        private int _level = 0;
-
-        private string BuildNavigationRecursivly(
+        string BuildNavigationRecursivly(
             List<MenuItem> items, 
             StringBuilder sb)
         {
-
-            var ulClass = UlClass;
-         
+          
+            var ulClass = $"{_cssClasses}";
             if (_level > 0)
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    ulClass += " ";
                 ulClass = "dropdown-menu";
-            }
             
-            sb.Append(_newLine);
+            sb.Append(NewLine);
             AddTabs(_level, sb);
             
             sb.Append("<ul class=\"")
                 .Append(ulClass)
                 .Append("\">")
-                .Append(_newLine);
+                .Append(NewLine);
 
             var index = 0;
             foreach (var item in items)
             {
-
-                var liClass = GetListItemClass(items, item, index);
-
+                
                 AddTabs(_level + 1, sb);
 
                 sb.Append("<li class=\"")
-                    .Append(liClass)
+                    .Append(GetListItemClass(items, item, index))
                     .Append("\">");
-
-
+                
                 var linkClass = _level == 0 
                     ? "nav-link" 
                     : "dropdown-item";
@@ -140,21 +137,21 @@ namespace Plato.Layout.TagHelpers
                 }
 
                 sb.Append("</li>")
-                    .Append(_newLine);
+                    .Append(NewLine);
 
                 index += 1;
             }
 
             AddTabs(_level, sb);
             sb.Append("</ul>")
-                .Append(_newLine);
+                .Append(NewLine);
             
             return sb.ToString();
             
         }
 
-        private string GetListItemClass(
-            List<MenuItem> items,
+        string GetListItemClass(
+            ICollection items,
             MenuItem item,
             int index)
         {
@@ -194,7 +191,7 @@ namespace Plato.Layout.TagHelpers
 
         }
 
-        public StringBuilder AddTabs(int level, StringBuilder sb)
+        StringBuilder AddTabs(int level, StringBuilder sb)
         {
             for (var i = 0; i < level; i++)
             {

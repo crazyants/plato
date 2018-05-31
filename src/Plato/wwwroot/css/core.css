@@ -87,11 +87,6 @@
     border-left: 0.3em solid transparent;
 }
 
-    /*
-.nav-v .dropdown:hover > a.dropdown-toggle:after {
-    border-left-color: #000;
-}*/
-
 .nav-v .dropdown-submenu.pull-left {
     float: none;
 }
@@ -117,7 +112,8 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.admin-nav .navbar {
+.admin-nav .navbar,
+.admin-nav .nav {
     padding: 0;
     display: block;
     width: 100%;

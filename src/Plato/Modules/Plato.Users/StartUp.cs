@@ -5,14 +5,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using Plato.Abstractions.SetUp;
 using Plato.Hosting;
-using Plato.Hosting.Extensions;
 using Plato.Models.Roles;
 using Plato.Models.Users;
 using Plato.Shell.Models;
-using Plato.Stores.Roles;
 using Plato.Stores.Users;
 using Plato.Hosting.Web;
 using Plato.Navigation;
@@ -27,7 +24,6 @@ namespace Plato.Users
         private readonly string _tenantName;
         private readonly string _cookieSuffix;
         private readonly string _tenantPrefix;
-      
 
         public Startup(
             ShellSettings shellSettings)
@@ -108,6 +104,13 @@ namespace Plato.Users
                 areaName: "Plato.Users",
                 template: "register",
                 defaults: new { controller = "Account", action = "Register" }
+            );
+
+            routes.MapAreaRoute(
+                name: "ManageUsers",
+                areaName: "Plato.Users",
+                template: "admin/users",
+                defaults: new { controller = "Admin", action = "Index" }
             );
 
             //routes.MapAreaRoute(
