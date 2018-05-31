@@ -27,9 +27,8 @@
     
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 admin-nav" style="background: #242424; color: #fff;">
+        <div class="col-md-2 admin-nav">
             
-         
             <h5 class="text-center pt-4 pb-2">@T["Plato"]</h5>
             <hr/>
             <div class="row" role="navigation">
@@ -51,15 +50,13 @@
                 </div>
             </div>
      
-            <div class="m-3">
+            <div class="m-4">
                 @RenderBody()
+                <hr />
+                <footer>
+                    <p>&copy; @System.DateTime.Now.Year - Plato</p>
+                </footer>
             </div>
-            
-            <hr />
-            <footer>
-                <p>&copy; @System.DateTime.Now.Year - Plato</p>
-            </footer>
-           
 
         </div>
     </div>

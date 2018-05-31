@@ -76,10 +76,10 @@
     border-right: 0;
     border-bottom: 0.3em solid transparent;
     border-left: 0.3em solid;
-    margin-top: 6px;
+    margin-top: 3px;
 }
 
-.nav-v .dropdown-submenu.show a.dropdown-toggle:after {
+.nav-v .dropdown.show > a.dropdown-toggle:after {
     float: right;
     border-top: 0.3em solid;
     border-right: 0.3em solid transparent;
@@ -87,9 +87,10 @@
     border-left: 0.3em solid transparent;
 }
 
-.nav-v .dropdown-submenu:hover > a.dropdown-toggle:after {
+    /*
+.nav-v .dropdown:hover > a.dropdown-toggle:after {
     border-left-color: #000;
-}
+}*/
 
 .nav-v .dropdown-submenu.pull-left {
     float: none;
@@ -106,6 +107,11 @@
 /* --------------------------- */
 /* admin navigation */
 /* --------------------------- */
+
+.admin-nav {
+    background: #242424;
+    color: #fff;
+}
 
 .admin-nav hr {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -127,7 +133,6 @@
     background-color: transparent;
     border: 0;
     border-radius: 0;
-    display: block;
 }
 
 .admin-nav a.nav-link,
@@ -135,12 +140,15 @@
     color: #ddd;
 }
 
-.admin-nav .nav-pills .nav-link,
-.admin-nav.nav-pills .show > .nav-link {
-    color: #fff;
-    background-color: #444;
+.admin-nav .nav-v .dropdown:hover a.dropdown-toggle:after {
+    border-top-color: transparent;
+    border-left-color: #fff;
 }
 
+.admin-nav .nav-v .dropdown.show > a.dropdown-toggle:after {
+    border-top-color: #fff;
+    border-left-color: transparent;
+}
 
 .admin-nav a.dropdown-item:hover,
 .admin-nav a.dropdown-item:focus {

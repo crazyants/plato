@@ -1982,3 +1982,736 @@ System.InvalidOperationException: No service for type 'Microsoft.AspNetCore.Mvc.
 2018-05-30 19:07:35.091 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
 2018-05-30 19:07:35.094 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
 2018-05-30 19:07:35.099 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 8.2176ms 200 image/x-icon
+2018-05-30 23:32:19.220 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-05-30 23:32:19.590 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/admin  
+2018-05-30 23:32:19.622 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-05-30 23:32:19.626 +01:00 [Information] Plato.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-05-30 23:32:19.667 +01:00 [Information] Plato.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-05-30 23:32:19.745 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-05-30 23:32:19.748 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:32:19.760 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:32:19.806 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Admin.Controllers.AdminController.Index (Plato.Admin) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:32:21.324 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Admin/Views/Admin/Index.cshtml.
+2018-05-30 23:32:21.337 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-30 23:32:21.883 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Admin.Controllers.AdminController.Index (Plato.Admin) in 2080.7286ms
+2018-05-30 23:32:21.887 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2297.3553ms 200 text/html; charset=utf-8
+2018-05-30 23:32:21.908 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=cdX3Y_2JdAmLodP1Cd8nfHchx2ZemfIZwyL_vDmCnwM  
+2018-05-30 23:32:21.908 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:32:21.912 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /js/site.js was not modified
+2018-05-30 23:32:21.912 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /css/core.css was not modified
+2018-05-30 23:32:21.914 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 6.1158ms 304 application/javascript
+2018-05-30 23:32:21.914 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.9107ms 304 text/css
+2018-05-30 23:32:21.990 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-05-30 23:32:21.991 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-05-30 23:32:21.994 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.9695ms 200 image/x-icon
+2018-05-30 23:32:28.761 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:32:28.761 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:32:28.762 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:32:28.767 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:32:28.962 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:32:28.968 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 201.0067ms
+2018-05-30 23:32:28.968 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 207.1521ms 200 text/html; charset=utf-8
+2018-05-30 23:36:25.980 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-05-30 23:36:26.259 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:36:26.289 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-05-30 23:36:26.291 +01:00 [Information] Plato.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-05-30 23:36:26.331 +01:00 [Information] Plato.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-05-30 23:36:26.405 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-05-30 23:36:26.408 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:36:26.421 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:36:26.468 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:36:28.009 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:36:28.024 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-30 23:36:28.557 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 2093.0381ms
+2018-05-30 23:36:28.561 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2303.3687ms 200 text/html; charset=utf-8
+2018-05-30 23:36:28.634 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-05-30 23:36:28.636 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-05-30 23:36:28.638 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.0131ms 200 image/x-icon
+2018-05-30 23:43:48.404 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:43:48.405 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:43:48.406 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:43:48.408 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:43:48.474 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:43:48.478 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 70.9091ms
+2018-05-30 23:43:48.479 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 74.2043ms 200 text/html; charset=utf-8
+2018-05-30 23:43:48.558 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-05-30 23:43:48.559 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-05-30 23:43:48.561 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.1714ms 200 image/x-icon
+2018-05-30 23:44:19.582 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:44:19.582 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:44:19.582 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:44:19.582 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:44:19.583 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:44:19.584 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 1.318ms
+2018-05-30 23:44:19.584 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.9944ms 200 text/html; charset=utf-8
+2018-05-30 23:44:19.604 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:44:19.607 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:44:19.607 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.7864ms 200 application/javascript
+2018-05-30 23:44:19.662 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-05-30 23:44:19.663 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-05-30 23:44:19.663 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.9245ms 200 image/x-icon
+2018-05-30 23:44:29.016 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:44:29.017 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:44:29.017 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:44:29.018 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.7483ms 404 
+2018-05-30 23:44:29.067 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:44:29.068 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:44:29.068 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:44:29.068 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6524ms 404 
+2018-05-30 23:45:02.625 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-05-30 23:45:02.626 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:45:02.626 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:45:02.652 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-05-30 23:45:02.926 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-05-30 23:45:03.214 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 572.0842ms
+2018-05-30 23:45:03.214 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 588.7867ms 200 text/html; charset=utf-8
+2018-05-30 23:45:03.239 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:45:03.240 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:45:03.241 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:45:03.241 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:45:03.241 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:45:03.241 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:45:03.243 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:45:03.243 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:45:03.244 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.961ms 200 text/css
+2018-05-30 23:45:03.244 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:45:03.245 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:45:03.245 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.5582ms 200 text/css
+2018-05-30 23:45:03.247 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.users/content/css/module.css  
+2018-05-30 23:45:03.247 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/module.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Users\Content\css\module.css'
+2018-05-30 23:45:03.247 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.129ms 200 text/css
+2018-05-30 23:45:03.256 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 9.9221ms 200 text/css
+2018-05-30 23:45:03.258 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:45:03.259 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:45:03.259 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:45:03.259 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 17.7136ms 200 text/css
+2018-05-30 23:45:03.259 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:45:03.259 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6392ms 200 application/javascript
+2018-05-30 23:45:03.260 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 18.9198ms 200 application/javascript
+2018-05-30 23:45:03.266 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 8.0699ms 200 application/javascript
+2018-05-30 23:45:03.316 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/webfonts/fa-solid-900.woff2  
+2018-05-30 23:45:03.317 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/webfonts/fa-solid-900.woff2'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\webfonts\fa-solid-900.woff2'
+2018-05-30 23:45:03.317 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.0983ms 200 font/woff2
+2018-05-30 23:45:03.346 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:45:03.347 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:45:03.347 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:45:03.348 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.7249ms 404 
+2018-05-30 23:45:03.396 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:45:03.396 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:45:03.397 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:45:03.397 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7873ms 404 
+2018-05-30 23:45:05.569 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:45:05.570 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:45:05.570 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:45:05.570 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:45:05.570 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:45:05.571 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 0.8355ms
+2018-05-30 23:45:05.571 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.5272ms 200 text/html; charset=utf-8
+2018-05-30 23:45:05.595 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:45:05.595 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:45:05.595 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:45:05.596 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:45:05.596 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:45:05.596 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:45:05.596 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:45:05.596 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:45:05.596 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6029ms 200 text/css
+2018-05-30 23:45:05.599 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:45:05.600 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:45:05.601 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.6179ms 200 text/css
+2018-05-30 23:45:05.601 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.9853ms 200 application/javascript
+2018-05-30 23:45:05.602 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 7.0959ms 200 text/css
+2018-05-30 23:45:05.603 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:45:05.605 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:45:05.606 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 10.0319ms 200 application/javascript
+2018-05-30 23:45:05.606 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.6576ms 200 text/css
+2018-05-30 23:45:05.633 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:45:05.634 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:45:05.634 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.6056ms 200 application/javascript
+2018-05-30 23:45:05.696 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:45:05.696 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:45:05.697 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:45:05.697 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8036ms 404 
+2018-05-30 23:45:05.739 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:45:05.740 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:45:05.740 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:45:05.740 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8098ms 404 
+2018-05-30 23:45:09.973 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:45:09.973 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:45:09.973 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:45:09.974 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:45:09.974 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:45:09.975 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 0.8744ms
+2018-05-30 23:45:09.975 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.5842ms 200 text/html; charset=utf-8
+2018-05-30 23:45:10.003 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:45:10.003 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:45:10.003 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:45:10.003 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:45:10.003 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:45:10.004 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:45:10.004 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:45:10.004 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:45:10.004 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:45:10.004 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:45:10.004 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6875ms 200 text/css
+2018-05-30 23:45:10.004 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7115ms 200 text/css
+2018-05-30 23:45:10.004 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.863ms 200 text/css
+2018-05-30 23:45:10.005 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.1614ms 200 application/javascript
+2018-05-30 23:45:10.006 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.4534ms 200 text/css
+2018-05-30 23:45:10.007 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:45:10.007 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:45:10.018 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:45:10.019 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:45:10.019 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 12.6574ms 200 application/javascript
+2018-05-30 23:45:10.020 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.4701ms 200 application/javascript
+2018-05-30 23:45:10.107 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:45:10.108 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:45:10.108 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:45:10.108 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7712ms 404 
+2018-05-30 23:45:10.158 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:45:10.158 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:45:10.158 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:45:10.158 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7097ms 404 
+2018-05-30 23:46:00.731 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:46:00.732 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:46:00.732 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:46:00.732 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:46:00.732 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:46:00.733 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 1.1515ms
+2018-05-30 23:46:00.733 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.0318ms 200 text/html; charset=utf-8
+2018-05-30 23:46:00.757 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:46:00.758 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:46:00.759 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:46:00.759 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:46:00.760 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:46:00.760 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:46:00.760 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:46:00.760 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.9479ms 200 text/css
+2018-05-30 23:46:00.760 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:46:00.761 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:46:00.761 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:46:00.761 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:46:00.761 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7881ms 200 text/css
+2018-05-30 23:46:00.763 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.2963ms 200 application/javascript
+2018-05-30 23:46:00.768 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 10.7504ms 200 text/css
+2018-05-30 23:46:00.768 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:46:00.768 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 7.7987ms 200 application/javascript
+2018-05-30 23:46:00.768 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 8.933ms 200 text/css
+2018-05-30 23:46:00.769 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:46:00.770 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:46:00.771 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.9432ms 200 application/javascript
+2018-05-30 23:46:00.858 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:46:00.858 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:46:00.858 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:46:00.858 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7697ms 404 
+2018-05-30 23:46:00.909 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:46:00.910 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:46:00.910 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:46:00.910 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7302ms 404 
+2018-05-30 23:46:12.439 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:46:12.439 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:46:12.439 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:46:12.440 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:46:12.440 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:46:12.440 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 0.8844ms
+2018-05-30 23:46:12.441 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.7653ms 200 text/html; charset=utf-8
+2018-05-30 23:46:12.462 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:46:12.462 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:46:12.464 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.6249ms 200 text/css
+2018-05-30 23:46:12.465 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:46:12.465 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:46:12.465 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:46:12.465 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:46:12.466 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:46:12.466 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:46:12.467 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.4868ms 200 text/css
+2018-05-30 23:46:12.467 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:46:12.468 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.6325ms 200 text/css
+2018-05-30 23:46:12.468 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.6457ms 200 text/css
+2018-05-30 23:46:12.468 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:46:12.468 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:46:12.468 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:46:12.469 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.2208ms 200 application/javascript
+2018-05-30 23:46:12.470 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.9473ms 200 application/javascript
+2018-05-30 23:46:12.477 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:46:12.477 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:46:12.477 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7887ms 200 application/javascript
+2018-05-30 23:46:12.559 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:46:12.560 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:46:12.560 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:46:12.560 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7633ms 404 
+2018-05-30 23:46:12.606 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:46:12.606 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:46:12.606 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:46:12.606 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6837ms 404 
+2018-05-30 23:49:03.234 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-05-30 23:49:03.399 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:49:03.429 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-05-30 23:49:03.431 +01:00 [Information] Plato.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-05-30 23:49:03.471 +01:00 [Information] Plato.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-05-30 23:49:03.544 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-05-30 23:49:03.546 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:49:03.559 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:49:03.607 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:49:05.144 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:49:05.158 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-30 23:49:05.589 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 1986.4862ms
+2018-05-30 23:49:05.594 +01:00 [Error] Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware: An unhandled exception has occurred while executing the request
+Microsoft.AspNetCore.Mvc.Razor.Compilation.CompilationFailedException: One or more compilation failures occurred:
+kifd1ynh.gpu(20,18): error CS7036: There is no argument given that corresponds to the required formal parameter 'siteSettingsStore' of 'RazorPage<dynamic>.RazorPage(ISiteSettingsStore)'
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.RazorViewCompiler.CompileAndEmit(RazorCodeDocument codeDocument, String generatedCode)
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.RazorViewCompiler.CompileAndEmit(String relativePath)
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.RazorViewCompiler.CreateCacheEntry(String normalizedPath)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.DefaultRazorPageFactoryProvider.CreateFactory(String relativePath)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.CreateCacheResult(HashSet`1 expirationTokens, String relativePath, Boolean isMainPage)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.LocatePageFromPath(String executingFilePath, String pagePath, Boolean isMainPage)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.GetPage(String executingFilePath, String pagePath)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorView.GetLayoutPage(ViewContext context, String executingFilePath, String layoutPath)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorView.<RenderLayoutAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorView.<RenderAsync>d__14.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ViewFeatures.ViewExecutor.<ExecuteAsync>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ViewFeatures.ViewExecutor.<ExecuteAsync>d__21.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ViewResult.<ExecuteResultAsync>d__26.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeResultAsync>d__19.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextResultFilterAsync>d__24.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResultExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeFilterPipelineAsync>d__17.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeAsync>d__15.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Hosting.Web.Routing.PlatoRouterMiddleware.<Invoke>d__4.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Hosting.Web\Routing\PlatoRouterMiddleware.cs:line 73
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Hosting.Web.Middleware.PlatoContainerMiddleware.<Invoke>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Hosting.Web\Middleware\PlatoContainerMiddleware.cs:line 69
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.Extensions.MapMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__7.MoveNext()
+2018-05-30 23:49:05.663 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2264.9802ms 500 text/html; charset=utf-8
+2018-05-30 23:50:05.286 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-05-30 23:50:05.620 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:50:05.649 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-05-30 23:50:05.652 +01:00 [Information] Plato.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-05-30 23:50:05.691 +01:00 [Information] Plato.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-05-30 23:50:05.763 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-05-30 23:50:05.766 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:50:05.779 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:50:05.826 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:50:07.327 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:50:07.343 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-30 23:50:07.856 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 2033.2671ms
+2018-05-30 23:50:07.860 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2240.9032ms 200 text/html; charset=utf-8
+2018-05-30 23:50:07.881 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:50:07.882 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:50:07.883 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:50:07.883 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:50:07.886 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:50:07.887 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:50:07.889 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:50:07.889 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:50:07.889 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:50:07.890 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:50:07.890 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.2141ms 200 text/css
+2018-05-30 23:50:07.890 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.8642ms 200 text/css
+2018-05-30 23:50:07.894 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:50:07.895 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:50:07.895 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.0596ms 200 text/css
+2018-05-30 23:50:07.896 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 14.8215ms 200 application/javascript
+2018-05-30 23:50:07.902 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 12.9716ms 200 application/javascript
+2018-05-30 23:50:07.902 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 21.9184ms 200 text/css
+2018-05-30 23:50:07.915 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:50:07.917 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:50:07.917 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.5301ms 200 application/javascript
+2018-05-30 23:50:08.004 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:50:08.004 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:50:08.004 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:50:08.005 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.9095ms 404 
+2018-05-30 23:50:08.050 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:50:08.051 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:50:08.051 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:50:08.051 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.9075ms 404 
+2018-05-30 23:51:50.912 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-05-30 23:51:51.068 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:51:51.097 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-05-30 23:51:51.100 +01:00 [Information] Plato.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-05-30 23:51:51.140 +01:00 [Information] Plato.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-05-30 23:51:51.218 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-05-30 23:51:51.220 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:51:51.234 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:51:51.282 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:51:52.798 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:51:52.813 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-05-30 23:51:53.364 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 2086.0156ms
+2018-05-30 23:51:53.367 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2300.8655ms 200 text/html; charset=utf-8
+2018-05-30 23:51:53.391 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:51:53.392 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:51:53.392 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:51:53.392 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:51:53.392 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:51:53.394 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:51:53.394 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:51:53.394 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:51:53.394 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:51:53.394 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:51:53.394 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:51:53.394 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:51:53.397 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.7457ms 200 text/css
+2018-05-30 23:51:53.399 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.9903ms 200 text/css
+2018-05-30 23:51:53.405 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 13.4336ms 200 text/css
+2018-05-30 23:51:53.412 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 19.938ms 200 application/javascript
+2018-05-30 23:51:53.412 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 20.0936ms 200 text/css
+2018-05-30 23:51:53.413 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 21.6451ms 200 application/javascript
+2018-05-30 23:51:53.424 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:51:53.425 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:51:53.425 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.949ms 200 application/javascript
+2018-05-30 23:51:53.491 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:51:53.491 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:51:53.491 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:51:53.493 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.9795ms 404 
+2018-05-30 23:51:53.538 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:51:53.538 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:51:53.538 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:51:53.538 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8657ms 404 
+2018-05-30 23:54:29.660 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:54:29.661 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:54:29.661 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:54:29.662 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:54:29.662 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:54:29.665 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 3.4403ms
+2018-05-30 23:54:29.665 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.8765ms 200 text/html; charset=utf-8
+2018-05-30 23:54:29.705 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:54:29.705 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:54:29.708 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.5225ms 200 application/javascript
+2018-05-30 23:54:29.710 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:54:29.710 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:54:29.711 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.5901ms 200 text/css
+2018-05-30 23:54:29.712 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:54:29.716 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:54:29.717 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:54:29.717 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:54:29.718 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:54:29.720 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:54:29.717 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:54:29.720 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:54:29.720 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.4368ms 200 text/css
+2018-05-30 23:54:29.722 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 10.0278ms 200 text/css
+2018-05-30 23:54:29.722 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.0061ms 200 text/css
+2018-05-30 23:54:29.725 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 7.7299ms 200 application/javascript
+2018-05-30 23:54:29.737 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:54:29.738 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:54:29.742 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.1111ms 200 application/javascript
+2018-05-30 23:54:29.838 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:54:29.838 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:54:29.838 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:54:29.839 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8051ms 404 
+2018-05-30 23:54:29.894 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:54:29.896 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:54:29.896 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:54:29.896 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.2928ms 404 
+2018-05-30 23:54:32.594 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:54:32.594 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:54:32.595 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:54:32.595 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:54:32.595 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:54:32.596 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 1.2697ms
+2018-05-30 23:54:32.596 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.2445ms 200 text/html; charset=utf-8
+2018-05-30 23:54:32.635 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:54:32.636 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:54:32.640 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:54:32.640 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.8633ms 200 text/css
+2018-05-30 23:54:32.640 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:54:32.640 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:54:32.640 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:54:32.640 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6641ms 200 text/css
+2018-05-30 23:54:32.642 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.9046ms 200 text/css
+2018-05-30 23:54:32.646 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:54:32.647 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:54:32.647 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:54:32.648 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:54:32.650 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.8227ms 200 application/javascript
+2018-05-30 23:54:32.650 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:54:32.651 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.7536ms 200 text/css
+2018-05-30 23:54:32.651 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:54:32.655 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:54:32.655 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:54:32.656 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.3136ms 200 application/javascript
+2018-05-30 23:54:32.656 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.741ms 200 application/javascript
+2018-05-30 23:54:32.781 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:54:32.782 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:54:32.782 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:54:32.782 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.1369ms 404 
+2018-05-30 23:54:32.933 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:54:32.934 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:54:32.934 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:54:32.934 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.684ms 404 
+2018-05-30 23:54:38.080 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:54:38.081 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:54:38.081 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:54:38.081 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:54:38.081 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:54:38.082 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 1.1629ms
+2018-05-30 23:54:38.082 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.1781ms 200 text/html; charset=utf-8
+2018-05-30 23:54:38.111 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:54:38.112 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:54:38.112 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:54:38.112 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:54:38.112 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:54:38.112 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:54:38.112 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:54:38.112 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:54:38.113 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8364ms 200 text/css
+2018-05-30 23:54:38.113 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.7656ms 200 application/javascript
+2018-05-30 23:54:38.114 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:54:38.114 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.0749ms 200 text/css
+2018-05-30 23:54:38.114 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:54:38.115 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.2156ms 200 text/css
+2018-05-30 23:54:38.115 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.1954ms 200 application/javascript
+2018-05-30 23:54:38.116 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:54:38.116 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:54:38.116 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7975ms 200 text/css
+2018-05-30 23:54:38.129 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:54:38.130 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:54:38.131 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.1378ms 200 application/javascript
+2018-05-30 23:54:38.227 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:54:38.227 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:54:38.228 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:54:38.228 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.748ms 404 
+2018-05-30 23:54:38.290 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:54:38.291 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:54:38.291 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:54:38.291 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8186ms 404 
+2018-05-30 23:55:37.187 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:55:37.188 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:37.188 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:37.188 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:55:37.188 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:55:37.189 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 1.0585ms
+2018-05-30 23:55:37.189 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.8022ms 200 text/html; charset=utf-8
+2018-05-30 23:55:37.216 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:55:37.217 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:55:37.217 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:55:37.217 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:55:37.218 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:55:37.218 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:55:37.218 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.6316ms 200 application/javascript
+2018-05-30 23:55:37.220 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:55:37.220 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.3797ms 200 text/css
+2018-05-30 23:55:37.220 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.9078ms 200 text/css
+2018-05-30 23:55:37.221 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:55:37.222 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.3712ms 200 text/css
+2018-05-30 23:55:37.223 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:55:37.223 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:55:37.240 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:55:37.241 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:55:37.241 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:55:37.241 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:55:37.241 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.9192ms 200 application/javascript
+2018-05-30 23:55:37.242 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.9163ms 200 text/css
+2018-05-30 23:55:37.242 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 19.0898ms 200 application/javascript
+2018-05-30 23:55:37.311 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:55:37.311 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:37.312 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:37.312 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7589ms 404 
+2018-05-30 23:55:37.380 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:55:37.380 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:37.381 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:37.381 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8004ms 404 
+2018-05-30 23:55:42.995 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:55:42.995 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:42.995 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:42.995 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:55:42.995 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:55:42.996 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 1.0356ms
+2018-05-30 23:55:42.996 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.8165ms 200 text/html; charset=utf-8
+2018-05-30 23:55:43.020 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:55:43.021 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:55:43.021 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:55:43.021 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:55:43.021 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:55:43.021 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:55:43.022 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:55:43.022 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6875ms 200 text/css
+2018-05-30 23:55:43.022 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:55:43.022 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8449ms 200 text/css
+2018-05-30 23:55:43.023 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.5871ms 200 text/css
+2018-05-30 23:55:43.023 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.0465ms 200 text/css
+2018-05-30 23:55:43.032 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:55:43.032 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:55:43.033 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:55:43.035 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:55:43.042 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 9.3209ms 200 application/javascript
+2018-05-30 23:55:43.046 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 13.5872ms 200 application/javascript
+2018-05-30 23:55:43.047 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:55:43.047 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:55:43.050 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.2106ms 200 application/javascript
+2018-05-30 23:55:43.117 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:55:43.118 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:43.118 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:43.118 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.636ms 404 
+2018-05-30 23:55:43.261 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:55:43.261 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:43.262 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:43.262 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8399ms 404 
+2018-05-30 23:55:45.577 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/CreateRole  
+2018-05-30 23:55:45.578 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:45.578 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:45.579 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.1056ms 404 
+2018-05-30 23:55:47.541 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:55:47.541 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:47.541 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:47.542 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:55:47.542 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:55:47.542 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 0.9303ms
+2018-05-30 23:55:47.543 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.5746ms 200 text/html; charset=utf-8
+2018-05-30 23:55:47.569 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:55:47.569 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:55:47.569 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:55:47.569 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:55:47.569 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:55:47.569 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:55:47.570 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:55:47.570 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:55:47.570 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.0257ms 200 text/css
+2018-05-30 23:55:47.570 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:55:47.571 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.638ms 200 application/javascript
+2018-05-30 23:55:47.571 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:55:47.572 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.1559ms 200 text/css
+2018-05-30 23:55:47.572 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.0877ms 200 text/css
+2018-05-30 23:55:47.573 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:55:47.574 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.2773ms 200 application/javascript
+2018-05-30 23:55:47.575 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:55:47.578 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.7562ms 200 text/css
+2018-05-30 23:55:47.596 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:55:47.597 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:55:47.598 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.5187ms 200 application/javascript
+2018-05-30 23:55:47.691 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:55:47.691 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:47.692 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:47.692 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6849ms 404 
+2018-05-30 23:55:47.843 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:55:47.843 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:47.843 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:47.843 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6372ms 404 
+2018-05-30 23:55:54.383 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:55:54.384 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:54.384 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:54.384 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:55:54.384 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:55:54.385 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 1.1571ms
+2018-05-30 23:55:54.385 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.8935ms 200 text/html; charset=utf-8
+2018-05-30 23:55:54.411 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:55:54.411 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:55:54.411 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:55:54.412 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:55:54.412 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:55:54.412 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:55:54.412 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.1644ms 200 text/css
+2018-05-30 23:55:54.414 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.9713ms 200 text/css
+2018-05-30 23:55:54.415 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:55:54.417 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:55:54.418 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 6.3935ms 200 application/javascript
+2018-05-30 23:55:54.418 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.9774ms 200 application/javascript
+2018-05-30 23:55:54.420 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:55:54.420 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:55:54.423 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.2788ms 200 text/css
+2018-05-30 23:55:54.423 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:55:54.424 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:55:54.424 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.1764ms 200 text/css
+2018-05-30 23:55:54.449 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:55:54.451 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:55:54.452 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.1126ms 200 application/javascript
+2018-05-30 23:55:54.525 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:55:54.525 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:54.526 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:54.526 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.6705ms 404 
+2018-05-30 23:55:54.652 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:55:54.653 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:54.653 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:54.653 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7437ms 404 
+2018-05-30 23:55:57.350 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Roles/Admin/Index  
+2018-05-30 23:55:57.350 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:57.350 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:57.350 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Roles.Controllers.AdminController.Index (Plato.Roles) with arguments ((null)) - ModelState is Valid
+2018-05-30 23:55:57.350 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Roles/Views/Admin/Index.cshtml.
+2018-05-30 23:55:57.351 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Roles.Controllers.AdminController.Index (Plato.Roles) in 1.1778ms
+2018-05-30 23:55:57.352 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.9517ms 200 text/html; charset=utf-8
+2018-05-30 23:55:57.376 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/theme.css  
+2018-05-30 23:55:57.376 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-05-30 23:55:57.376 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/jquery.js  
+2018-05-30 23:55:57.376 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/jquery.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\jquery.js'
+2018-05-30 23:55:57.376 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/theme.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\theme.css'
+2018-05-30 23:55:57.376 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7249ms 200 text/css
+2018-05-30 23:55:57.377 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/core.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\core.css'
+2018-05-30 23:55:57.377 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.6398ms 200 text/css
+2018-05-30 23:55:57.380 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js  
+2018-05-30 23:55:57.380 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css  
+2018-05-30 23:55:57.380 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/bootstrap.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\bootstrap.css'
+2018-05-30 23:55:57.380 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/vendors/bootstrap.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\vendors\bootstrap.js'
+2018-05-30 23:55:57.381 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.583ms 200 application/javascript
+2018-05-30 23:55:57.382 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.3139ms 200 text/css
+2018-05-30 23:55:57.384 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-05-30 23:55:57.384 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/css/vendors/font-awesome.css'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\css\vendors\font-awesome.css'
+2018-05-30 23:55:57.384 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7328ms 200 text/css
+2018-05-30 23:55:57.385 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.0658ms 200 application/javascript
+2018-05-30 23:55:57.389 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/site.js?v=_pdXv9quMZ00akrfItVpXuWH4gpzJbFhloN5nNciwkk  
+2018-05-30 23:55:57.389 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/js/site.js'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\js\site.js'
+2018-05-30 23:55:57.390 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.045ms 200 application/javascript
+2018-05-30 23:55:57.471 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/bootstrap.css.map  
+2018-05-30 23:55:57.471 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:57.471 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:57.471 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7478ms 404 
+2018-05-30 23:55:57.518 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/vendors/bootstrap.js.map  
+2018-05-30 23:55:57.519 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-05-30 23:55:57.519 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-05-30 23:55:57.519 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7984ms 404 

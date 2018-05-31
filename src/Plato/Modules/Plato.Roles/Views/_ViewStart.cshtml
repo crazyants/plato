@@ -1,6 +1,4 @@
-﻿@using Microsoft.AspNetCore.Http
-@inject Plato.Abstractions.Stores.ISiteSettingsStore SiteSettingsStore
-@inject IHttpContextAccessor HttpContextAccessor
+﻿@inject Plato.Abstractions.Stores.ISiteSettingsStore SiteSettingsStore
 @{
     var site = await SiteSettingsStore.GetAsync();
     var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
@@ -15,6 +13,4 @@
                      + "/Shared/_Layout.cshtml";
             break;
     }
-
-
 }
