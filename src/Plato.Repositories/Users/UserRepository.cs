@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -15,6 +14,19 @@ namespace Plato.Repositories.Users
 {
     public class UserRepository : IUserRepository<User>
     {
+
+
+        #region "Private Variables"
+
+        private readonly IDbContext _dbContext;
+        private readonly IUserSecretRepository<UserSecret> _userSecretRepository;
+        private readonly IUserDetailRepository<UserDetail> _userDetailRepository;
+        //private readonly IUserPhotoRepository<UserPhoto> _userPhotoRepository;
+
+        private readonly ILogger<UserSecretRepository> _logger;
+
+        #endregion
+
         #region "Constructor"
 
         public UserRepository(
@@ -31,16 +43,6 @@ namespace Plato.Repositories.Users
 
         #endregion
 
-        #region "Private Variables"
-
-        private readonly IDbContext _dbContext;
-        private readonly IUserSecretRepository<UserSecret> _userSecretRepository;
-        private readonly IUserDetailRepository<UserDetail> _userDetailRepository;
-        private readonly IUserPhotoRepository<UserPhoto> _userPhotoRepository;
-     
-        private readonly ILogger<UserSecretRepository> _logger;
-
-        #endregion
 
         #region "Implementation"
 

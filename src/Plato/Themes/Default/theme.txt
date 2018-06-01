@@ -1,4 +1,4 @@
-﻿Name: Default
+﻿Name: Default Theme
 Author: InstantASP
 WebSite: http://www.instantasp.co.uk/
 Version: 1.0.0

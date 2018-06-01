@@ -7,6 +7,9 @@ namespace Plato.Abstractions.Query
 {
     public interface IQuery
     {
+
+        string TablePrefix { get; }
+
         IQuery Page(int pageIndex, int pageSize);
 
         IQuery Select<T>(Action<T> configure) where T : new();

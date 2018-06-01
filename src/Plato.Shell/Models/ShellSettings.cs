@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Plato.Abstractions.Shell;
 
 namespace Plato.Shell.Models
 {
-    public class ShellSettings
+    public class ShellSettings : IShellSettings
     {
         
         private readonly IDictionary<string, string> _values;
@@ -24,7 +25,6 @@ namespace Plato.Shell.Models
         public ShellSettings(ShellSettings settings)
         {
             _values = new Dictionary<string, string>(settings._values, StringComparer.OrdinalIgnoreCase);
-
             Name = settings.Name;
             RequestedUrlHost = settings.RequestedUrlHost;
             RequestedUrlPrefix = settings.RequestedUrlPrefix;      
@@ -37,19 +37,14 @@ namespace Plato.Shell.Models
         }
 
         public IDictionary<string, string> Configuration => _values;
-
-
+        
         public string this[string key]
         {
-            get
-            {
-                string retVal;
-                return _values.TryGetValue(key, out retVal) ? retVal : null;
-            }
-            set { _values[key] = value; }
+            get => _values.TryGetValue(key, out var retVal) ? retVal : null;
+            set => _values[key] = value;
         }
 
-        public IEnumerable<string> Keys { get { return _values.Keys; } }
+        public IEnumerable<string> Keys => _values.Keys;
 
         public string Name
         {
@@ -71,8 +66,8 @@ namespace Plato.Shell.Models
 
         public string RequestedUrlPrefix
         {
-            get { return this["RequestedUrlPrefix"]; }
-            set { _values["RequestedUrlPrefix"] = value; }
+            get => this["RequestedUrlPrefix"];
+            set => _values["RequestedUrlPrefix"] = value;
         }
 
         public string ConnectionString
@@ -119,7 +114,7 @@ namespace Plato.Shell.Models
 
         public TenantState State
         {
-            get { return _tenantState; }
+            get => _tenantState;
             set
             {
                 _tenantState = value;

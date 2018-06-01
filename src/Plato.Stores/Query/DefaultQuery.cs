@@ -4,11 +4,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Plato.Abstractions.Query;
 using Plato.Abstractions.Collections;
+using Plato.Abstractions.Stores;
+using Plato.Data.Abstractions;
 
 namespace Plato.Stores.Query
 {
     public abstract class DefaultQuery : IQuery
     {
+
         private readonly Dictionary<string, OrderBy> _sortColumns;
 
         public IDictionary<string, OrderBy> SortColumns => _sortColumns;
@@ -16,11 +19,6 @@ namespace Plato.Stores.Query
         public int PageIndex { get; private set; }
 
         public int PageSize { get; private set; }
-
-        protected DefaultQuery()
-        {
-            _sortColumns = new Dictionary<string, OrderBy>();
-        }
 
         public IQuery Page(int pageIndex, int pageSize)
         {
@@ -32,13 +30,20 @@ namespace Plato.Stores.Query
         public abstract IQuery Select<T>(Action<T> configure) where T : new();
 
         public abstract Task<IPagedResults<T>> ToList<T>() where T : class;
-        
+
         public IQuery OrderBy(string columnName, OrderBy sortOrder = Abstractions.Query.OrderBy.Asc)
         {
             _sortColumns.Add(columnName, sortOrder);
             return this;
         }
+        
+        public string TablePrefix { get; set; }
+        
 
+        protected DefaultQuery()
+        {
+            _sortColumns = new Dictionary<string, OrderBy>();
+        }
 
     }
 

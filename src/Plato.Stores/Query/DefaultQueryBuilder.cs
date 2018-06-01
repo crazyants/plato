@@ -3,6 +3,9 @@ using Plato.Abstractions.Extensions;
 
 namespace Plato.Stores.Query
 {
+
+    #region "IQueryBuilder"
+
     public interface IQueryBuilder
     {
         string BuildSqlStartId();
@@ -11,6 +14,10 @@ namespace Plato.Stores.Query
 
         string BuildSqlCount();
     }
+
+    #endregion
+
+    #region "WhereString"
 
     public class WhereString
     {
@@ -92,6 +99,10 @@ namespace Plato.Stores.Query
         }
     }
 
+    #endregion
+
+    #region "WhereInt"
+
     public class WhereInt
     {
         private readonly StringBuilder _builder;
@@ -162,8 +173,7 @@ namespace Plato.Stores.Query
             _builder.Append("{0} >= @{0}");
             return this;
         }
-
-
+        
         public WhereInt Between(int min, int max)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
@@ -198,9 +208,16 @@ namespace Plato.Stores.Query
         }
     }
 
+    #endregion
+
+    #region "QueryOperator"
+
     public enum QueryOperator
     {
         And,
         Or
     }
+
+    #endregion
+    
 }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Data;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Plato.Abstractions.Extensions;
 using Plato.Models.Annotations;
 using Plato.Models.Roles;
@@ -11,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Plato.Models.Users
 {
 
-    [TableName("Plato_Users")]
+    [TableName("Users")]
     public class User : IdentityUser<int>, IModel<User>
     {
 

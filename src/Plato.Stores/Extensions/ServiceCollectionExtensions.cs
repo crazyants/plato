@@ -5,14 +5,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
+using Plato.Abstractions.Query;
 using Plato.Abstractions.Settings;
 using Plato.Abstractions.Stores;
+using Plato.Data;
+using Plato.Data.Abstractions;
 using Plato.Models.Roles;
 using Plato.Stores.Settings;
 using Plato.Stores.Roles;
 using Plato.Stores.Users;
 using Plato.Models.Users;
 using Plato.Stores.Files;
+using Plato.Stores.Query;
 
 namespace Plato.Stores.Extensions
 {
@@ -23,9 +28,19 @@ namespace Plato.Stores.Extensions
          this IServiceCollection services)
         {
 
-            // files
 
-            services.AddScoped<IFileStore, FileStore>();
+            // register default configuration, these are overriden by tennet configuration
+            //services.AddSingleton<IConfigureOptions<DbContextOptions>, DbContextOptionsConfigure>();
+            
+            services.Configure<DefaultQuery>(options =>
+            {
+                var dbContext = services.BuildServiceProvider().GetService<DbContextOptions>();
+                options.TablePrefix = dbContext.TablePrefix;
+            });
+
+           // files
+
+           services.AddScoped<IFileStore, FileStore>();
 
             // settings
 

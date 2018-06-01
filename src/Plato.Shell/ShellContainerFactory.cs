@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Plato.Shell.Models;
 using Plato.Shell.Extensions;
 using Plato.Data;
@@ -40,36 +41,28 @@ namespace Plato.Shell
         public IServiceProvider CreateContainer(ShellSettings settings)
         {
             
-            // clone services
-            // ---------------
-
+            // Clone services
             var tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
 
-            // add tenant settings
-            // ---------------
-            
+            // Add tenant specific settings
             tenantServiceCollection.AddSingleton(settings);
             
-            // add tenant specific data context
-            tenantServiceCollection.AddScoped<IDbContext>(sp =>
+            // Add tenant specific data context options
+            tenantServiceCollection.Configure<DbContextOptions>(options =>
             {
-                var shellSettings = sp.GetService<ShellSettings>();
-                if (shellSettings.DatabaseProvider == null)
-                    return null;
-                return new DbContext(options =>
-                {
-                    options.ConnectionString = settings.ConnectionString;
-                    options.DatabaseProvider = settings.DatabaseProvider;
-                    options.TablePrefix = settings.TablePrefix;
-                });
+                options.ConnectionString = settings.ConnectionString;
+                options.DatabaseProvider = settings.DatabaseProvider;
+                options.TablePrefix = settings.TablePrefix;
             });
-         
-            // add service descriptors from modules to the tenant
-
+            
+            // Add service descriptors from modules to the tenant
             var types = new List<Type>();
             foreach (var assmebly in _moduleManager.AllAvailableAssemblies)
+            {
                 types.AddRange(assmebly.GetTypes());
-
+            }
+                
+            // Add StartUps from modules as services
             var moduleServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
             foreach (var type in types.Where(t => typeof(IStartup).IsAssignableFrom(t)))
             {
@@ -78,7 +71,6 @@ namespace Plato.Shell
             }
 
             // Add a default configuration if none has been provided
-
             var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
             moduleServiceCollection.TryAddSingleton(configuration);
             tenantServiceCollection.TryAddSingleton(configuration);
@@ -87,7 +79,6 @@ namespace Plato.Shell
             moduleServiceCollection.AddSingleton(settings);
 
             // Configure module StartUps
-
             var moduleServiceProvider = moduleServiceCollection.BuildServiceProvider();
             var startups = moduleServiceProvider.GetServices<IStartup>();
             foreach (var startup in startups)

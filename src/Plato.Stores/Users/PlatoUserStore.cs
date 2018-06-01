@@ -42,7 +42,6 @@ namespace Plato.Stores.Users
             _memoryCache = memoryCache;
             _distributedCache = distributedCache;
             _logger = logger;
-
             _cacheEntryOptions = new MemoryCacheEntryOptions
             {
                 SlidingExpiration = TimeSpan.FromSeconds(10)
@@ -116,9 +115,8 @@ namespace Plato.Stores.Users
 
         public async Task<User> GetByUserNameAsync(string userName)
         {
-            User user;
             var key = GetCacheKey(LocalCacheKeys.ByUserName, userName);
-            if (!_memoryCache.TryGetValue(key, out user))
+            if (!_memoryCache.TryGetValue(key, out User user))
             {
                 user = await _userRepository.SelectByUserNameAsync(userName);
                 if (user != null)
@@ -135,9 +133,8 @@ namespace Plato.Stores.Users
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            User user = null;
             var key = GetCacheKey(LocalCacheKeys.ByEmail, email);
-            if (!_memoryCache.TryGetValue(key, out user))
+            if (!_memoryCache.TryGetValue(key, out User user))
             {
                 user = await _userRepository.SelectByEmailAsync(email);
                 if (user != null)
@@ -154,9 +151,8 @@ namespace Plato.Stores.Users
 
         public async Task<User> GetByApiKeyAsync(string apiKey)
         {
-            User user;
             var key = GetCacheKey(LocalCacheKeys.ByApiKey, apiKey);
-            if (!_memoryCache.TryGetValue(key, out user))
+            if (!_memoryCache.TryGetValue(key, out User user))
             {
                 user = await _userRepository.SelectByApiKeyAsync(apiKey);
                 if (user != null)
@@ -196,8 +192,7 @@ namespace Plato.Stores.Users
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
         {
-            IPagedResults<T> users;
-            if (!_memoryCache.TryGetValue(_key, out users))
+            if (!_memoryCache.TryGetValue(_key, out IPagedResults<T> users))
             {
                 users = await _userRepository.SelectAsync<T>(args);
                 if (users != null)

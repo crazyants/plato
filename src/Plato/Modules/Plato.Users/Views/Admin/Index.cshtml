@@ -1,6 +1,21 @@
-﻿@{
+﻿@Model UsersPaged
+@{
     ViewData["Title"] = "Manage Users";
 }
 
 <h4>@T["Manage Users"]</h4>
 <span class="text-muted">@T["Manage your registered users"]</span>
+
+@using (Html.BeginForm())
+{
+    <ul class="list-group">
+        @foreach (var user in Model.Users)
+        {
+            <li class="list-group-item">
+               @user.DisplayName;
+            </li>
+        }
+    </ul>
+}
+
+

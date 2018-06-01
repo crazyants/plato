@@ -5,61 +5,29 @@ using System.Threading.Tasks;
 using Plato.Abstractions.Collections;
 using Plato.Abstractions.Query;
 using Plato.Abstractions.Stores;
+using Plato.Data.Abstractions;
 using Plato.Models.Users;
 using Plato.Stores.Query;
 
 namespace Plato.Stores.Users
 {
-    public class UserQueryParams
-    {
-        private WhereString _email;
 
-        public WhereInt _id;
-
-        private WhereString _userName;
-
-        public WhereInt _roleId;
-        private WhereString _roleName;
-
-        public WhereInt Id
-        {
-            get { return _id ?? (_id = new WhereInt()); }
-            set { _id = value; }
-        }
-
-        public WhereString UserName
-        {
-            get { return _userName ?? (_userName = new WhereString()); }
-            set { _userName = value; }
-        }
-
-        public WhereString Email
-        {
-            get { return _email ?? (_email = new WhereString()); }
-            set { _email = value; }
-        }
-
-        public WhereInt RoleId
-        {
-            get { return _roleId ?? (_roleId = new WhereInt()); }
-            set { _roleId = value; }
-        }
-
-        public WhereString RoleName
-        {
-            get { return _roleName ?? (_roleName = new WhereString()); }
-            set { _roleName = value; }
-        }
-        
-    }
+ 
+    #region "UserQuery"
 
     public class UserQuery : DefaultQuery
     {
-        private readonly IStore<User> _store;
 
-        public UserQuery(IStore<User> store)
+        private readonly IStore<User> _store;
+        private readonly DbContextOptions _dbContextOptions;
+
+        public UserQuery(
+            IStore<User> store,
+            DbContextOptions dbContextOptions) 
         {
             _store = store;
+            _dbContextOptions = dbContextOptions;
+            this.TablePrefix = _dbContextOptions.TablePrefix;
         }
 
         public UserQueryParams Params { get; set; }
@@ -89,11 +57,59 @@ namespace Plato.Stores.Users
                 Params.UserName.Value,
                 Params.Email.Value
             );
-
-
+            
             return users;
         }
     }
+
+    #endregion
+
+    #region "UserQueryParams"
+
+    public class UserQueryParams
+    {
+
+        private WhereString _email;
+        private WhereInt _id;
+        private WhereString _userName;
+        private WhereInt _roleId;
+        private WhereString _roleName;
+
+        public WhereInt Id
+        {
+            get => _id ?? (_id = new WhereInt());
+            set => _id = value;
+        }
+
+        public WhereString UserName
+        {
+            get => _userName ?? (_userName = new WhereString());
+            set => _userName = value;
+        }
+
+        public WhereString Email
+        {
+            get => _email ?? (_email = new WhereString());
+            set => _email = value;
+        }
+
+        public WhereInt RoleId
+        {
+            get => _roleId ?? (_roleId = new WhereInt());
+            set => _roleId = value;
+        }
+
+        public WhereString RoleName
+        {
+            get => _roleName ?? (_roleName = new WhereString());
+            set => _roleName = value;
+        }
+        
+    }
+
+    #endregion
+
+    #region "UserQueryBuilder"
 
     public class UserQueryBuilder : IQueryBuilder
     {
@@ -125,6 +141,9 @@ namespace Plato.Stores.Users
 
         public string BuildSqlPopulate()
         {
+
+            var tablePrefix = _query.TablePrefix;
+
             var whereClause = BuildWhereClauseForStartId();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
@@ -172,8 +191,7 @@ namespace Plato.Stores.Users
             return sb.ToString();
 
         }
-
-
+        
         private string BuildWhereClause()
         {
             var sb = new StringBuilder();
@@ -222,4 +240,7 @@ namespace Plato.Stores.Users
 
         #endregion
     }
+
+    #endregion
+
 }

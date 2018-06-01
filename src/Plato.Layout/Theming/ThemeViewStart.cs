@@ -14,6 +14,8 @@ namespace Plato.Layout.Theming
             // else compute layout based on controller type
             var store = this.Context.RequestServices.GetService<ISiteSettingsStore>();
             var siteSettings = await store.GetAsync();
+
+            // we don't have any site settings during set-p
             if (siteSettings != null)
             {
                 var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();

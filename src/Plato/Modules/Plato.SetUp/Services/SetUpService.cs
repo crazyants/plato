@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Data;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Extensions;
 using Plato.Abstractions.SetUp;
+using Plato.Abstractions.Shell;
 using Plato.Data;
 using Plato.Data.Abstractions;
 using Plato.Hosting;

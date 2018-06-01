@@ -6,6 +6,7 @@ using Plato.Shell;
 using Plato.Shell.Models;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using Plato.Abstractions.Shell;
 
 namespace Plato.Hosting
 {

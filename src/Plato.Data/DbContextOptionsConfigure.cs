@@ -23,11 +23,16 @@ namespace Plato.Data
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
+
                 var configuration = scope.ServiceProvider.GetRequiredService<IConfigurationRoot>();
+
+                // default configuration
                 options.ConnectionString = configuration.GetConnectionString("DefaultConnection");
-                options.DatabaseProvider = configuration.GetConnectionString("ProviderName");
-                options.TablePrefix = configuration.GetConnectionString("TablePrefix");
+                options.DatabaseProvider = "SqlProvider";
+                options.TablePrefix = "";
+
             }
+
         }
     }
 }
