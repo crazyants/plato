@@ -40,6 +40,7 @@ using Plato.Modules.Expanders;
 using Plato.Security.Extensions;
 using Plato.Logging.Extensions;
 using Plato.Navigation.Extensions;
+using Plato.Theming.Extensions;
 
 namespace Plato.Hosting.Web.Extensions
 
@@ -61,7 +62,6 @@ namespace Plato.Hosting.Web.Extensions
             services.AddPlatoAuth();
             services.AddPlatoMvc();
       
-
             // allows us to display all registered services in development mode
             _services = services;
 
@@ -72,14 +72,16 @@ namespace Plato.Hosting.Web.Extensions
         {
             return services.AddHPlatoTennetHost(internalServices =>
             {
+
                 internalServices.AddLogging();
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
+                internalServices.AddPlatoCaching();
                 internalServices.AddPlatoHostCore();
                 internalServices.AddPlatoModules();
-                internalServices.AddCaching();
-                internalServices.AddPlatoNavigation();
                 internalServices.AddPlatoTheming();
+                internalServices.AddPlatoNavigation();
+                internalServices.AddPlatoViewFeature();
 
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
@@ -101,11 +103,8 @@ namespace Plato.Hosting.Web.Extensions
             Action<IServiceCollection> configure)
         {
 
-            // add file system
-
+            // Add file system
             services.AddFileSystem();
-
-            //configure(services);
 
             // Let the app change the default tenant behavior and set of features
             configure?.Invoke(services);

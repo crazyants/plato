@@ -8,7 +8,7 @@ namespace Plato.Layout.Extensions
     public static class ServiceCollectionExtensions
     {
     
-        public static IServiceCollection AddPlatoTheming(
+        public static IServiceCollection AddPlatoViewFeature(
             this IServiceCollection services)
         {
             

@@ -10,23 +10,25 @@ namespace Plato.Layout.Theming
  
         public override async Task ExecuteAsync()
         {
-
+            
+            // else compute layout based on controller type
             var store = this.Context.RequestServices.GetService<ISiteSettingsStore>();
             var siteSettings = await store.GetAsync();
-
-            var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
-            switch (controllerName)
+            if (siteSettings != null)
             {
-                case "Admin":
-                    Layout = "~/Themes/" + siteSettings.ThemeName
-                                         + "/Shared/_AdminLayout.cshtml";
-                    break;
-                default:
-                    Layout = "~/Themes/" + siteSettings.ThemeName
-                                         + "/Shared/_Layout.cshtml";
-                    break;
+                var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+                switch (controllerName)
+                {
+                    case "Admin":
+                        Layout = "~/Themes/" + siteSettings.ThemeName
+                                             + "/Shared/_AdminLayout.cshtml";
+                        break;
+                    default:
+                        Layout = "~/Themes/" + siteSettings.ThemeName
+                                             + "/Shared/_Layout.cshtml";
+                        break;
+                }
             }
-
 
         }
 

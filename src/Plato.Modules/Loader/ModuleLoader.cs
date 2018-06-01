@@ -53,7 +53,10 @@ namespace Plato.Modules.Loader
 
             // ensure referenced assemblies are not loaded
             foreach (var name in ApplicationAssemblyNames)
+            {
                 _loadedAssemblies.TryAdd(name, null);
+            }
+                
 
         }
 
