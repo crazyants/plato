@@ -4,6 +4,7 @@ using System.IO;
 using Plato.Abstractions.Extensions;
 using Plato.FileSystem;
 using Plato.Modules.Abstractions;
+using Plato.Modules.Models;
 
 namespace Plato.Modules.Locator
 {
@@ -30,6 +31,7 @@ namespace Plato.Modules.Locator
         private const string PrioritySection = "priority";
         private const string FeaturesSection = "features";
         private const string SessionStateSection = "sessionstate";
+
         private readonly IPlatoFileSystem _fileSystem;
 
         #endregion
@@ -56,7 +58,7 @@ namespace Plato.Modules.Locator
                 throw new ArgumentNullException(nameof(paths));
             
             var descriptors = new List<ModuleDescriptor>();
-            foreach (string path in paths)
+            foreach (var path in paths)
             {
                 descriptors.AddRange(
                     AvailableModules(
@@ -127,7 +129,7 @@ namespace Plato.Modules.Locator
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    throw;
                 }
 
             }
@@ -148,7 +150,7 @@ namespace Plato.Modules.Locator
             {
 
                 if (manifestIsOptional)                
-                    manifestText = string.Format("Id: {0}", moduleId);                
+                    manifestText = $"Id: {moduleId}";                
                 else                
                     return null;                
             }
@@ -168,8 +170,8 @@ namespace Plato.Modules.Locator
             string manifestText)
         {
 
-            Dictionary<string, string> manifest = ParseManifest(manifestText);            
-            string virtualPathToBin = _fileSystem.Combine(rootPath, moduleId, "Bin");
+            var manifest = ParseManifest(manifestText);            
+            var virtualPathToBin = _fileSystem.Combine(rootPath, moduleId, "Bin");
       
             var moduleDescriptor = new ModuleDescriptor
             {
@@ -199,24 +201,23 @@ namespace Plato.Modules.Locator
 
         private static string GetValue(IDictionary<string, string> fields, string key)
         {
-            string value;
-            return fields.TryGetValue(key, out value) ? value : null;
+            return fields.TryGetValue(key, out var value) ? value : null;
         }
 
         private static Dictionary<string, string> ParseManifest(string manifestText)
         {
             var manifest = new Dictionary<string, string>();
 
-            using (StringReader reader = new StringReader(manifestText))
+            using (var reader = new StringReader(manifestText))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    string[] field = line.Split(new[] { ":" }, 2, StringSplitOptions.None);
-                    int fieldLength = field.Length;
+                    var field = line.Split(new[] { ":" }, 2, StringSplitOptions.None);
+                    var fieldLength = field.Length;
                     if (fieldLength != 2)
                         continue;
-                    for (int i = 0; i < fieldLength; i++)
+                    for (var i = 0; i < fieldLength; i++)
                     {
                         field[i] = field[i].Trim();
                     }

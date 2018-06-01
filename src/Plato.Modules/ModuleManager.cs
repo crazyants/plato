@@ -44,7 +44,6 @@ namespace Plato.Modules
             }
         }
 
-
         #endregion
 
         #region "Constructor"
@@ -55,13 +54,11 @@ namespace Plato.Modules
             IModuleLocator moduleLocator,
             IModuleLoader moduleLoader)
         {
-
             _moduleLocator = moduleLocator;
             _moduleLoader = moduleLoader;
             _contentRootPath = hostingEnvironment.ContentRootPath;
-            _virtualPathToModules = moduleOptions.Value.VirtualPathToModules;            
+            _virtualPathToModules = moduleOptions.Value.VirtualPathToModulesFolder;            
             InitializeModules();
-
         }
 
         #endregion

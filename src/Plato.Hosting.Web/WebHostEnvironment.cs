@@ -9,10 +9,10 @@ namespace Plato.Hosting.Web
         IHostingEnvironment hostingEnvironment) : 
             base(hostingEnvironment)
         {
-            //T = null; // NullLocalizer.Instance;
+            T = null; 
         }
 
-       // public Localizer T { get; set; }
+       public IStringLocalizer T { get; set; }
 
     }
 }

@@ -24,8 +24,8 @@ namespace Plato.Users
 
 
             builder
-                .Add(T["Users"], configuration => configuration
-                    .Add(T["Manage Users"], "15", roles => roles
+                .Add(T["Users"], users => users
+                    .Add(T["Manage Users"], "15", manageusers => manageusers
                         .Action("Index", "Admin", "Plato.Users")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

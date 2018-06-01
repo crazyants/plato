@@ -1,41 +1,44 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Plato.Modules
+namespace Plato.Theming
 {
-    public class ModuleOptionsConfigure : IConfigureOptions<ModuleOptions>    
+    public class ThemeOptionsConfigure : IConfigureOptions<ThemeOptions>
     {
 
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public ModuleOptionsConfigure(
+        public ThemeOptionsConfigure(
             IServiceScopeFactory serivceScopeFactory)
         {
             _serviceScopeFactory = serivceScopeFactory;
         }
-        
-        public void Configure(ModuleOptions options)
+
+        public void Configure(ThemeOptions options)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var configuration = scope.ServiceProvider.GetRequiredService<IConfigurationRoot>();
-                
+
                 var modulesSection = configuration.GetSection("Plato");
                 if (modulesSection != null)
                 {
                     var children = modulesSection.GetChildren();
                     foreach (var child in children)
                     {
-                        if (child.Key.Contains("VirtualPathToModulesFolder"))
-                            options.VirtualPathToModulesFolder = child.Value;
+                        if (child.Key.Contains("VirtualPathToThemesFolder"))
+                            options.VirtualPathToThemesFolder = child.Value;
                     }
 
                 }
-                
+
             }
 
         }
-        
+
     }
 }

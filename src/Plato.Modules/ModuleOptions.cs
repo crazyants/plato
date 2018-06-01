@@ -8,7 +8,7 @@ namespace Plato.Modules
     public class ModuleOptions
     {
 
-        public string VirtualPathToModules { get; set;  }
+        public string VirtualPathToModulesFolder { get; set;  }
 
     }
 }

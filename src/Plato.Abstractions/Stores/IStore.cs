@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Plato.Abstractions.Query;
 using Plato.Abstractions.Collections;
 
@@ -21,7 +19,6 @@ namespace Plato.Abstractions.Stores
         IQuery QueryAsync();
 
         Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class;
-
-
+        
     }
 }

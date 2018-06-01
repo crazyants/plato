@@ -73,6 +73,7 @@ namespace Plato.Modules.Loader
 
             var folder = _fileSystem.GetDirectoryInfo(path);
             foreach (var file in folder.GetFiles())
+            {
                 if (file.Extension.ToLower() == AssemblyExtension)
                     if (!IsAssemblyLoaded(Path.GetFileNameWithoutExtension(file.FullName)))
                     {
@@ -80,12 +81,15 @@ namespace Plato.Modules.Loader
                         if (assembly != null)
                             localList.Add(assembly);
                     }
+            }
 
             // recursive lookup
             var subFolders = Directory.GetDirectories(path);
             for (var i = 0; i <= subFolders.Length - 1; i++)
+            {
                 LoadAssembliesInFolder(subFolders.GetValue(i).ToString(), localList);
-
+            }
+                
             return localList;
         }
 

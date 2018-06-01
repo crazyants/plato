@@ -12,7 +12,7 @@ namespace Plato.Layout.Extensions
             this IServiceCollection services)
         {
             
-            // add theming features
+            // add theming features - configures theme layout based on controller type
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
 
             return services;

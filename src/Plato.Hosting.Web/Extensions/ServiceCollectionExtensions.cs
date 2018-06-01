@@ -116,7 +116,7 @@ namespace Plato.Hosting.Web.Extensions
             return services;
 
         }
-        
+
         public static IServiceCollection AddPlatoAuth(
             this IServiceCollection services)
         {
@@ -196,12 +196,12 @@ namespace Plato.Hosting.Web.Extensions
 
                 options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
 
+                // TODO: Do we need this? We can just expand on current area name
                 //foreach (var moduleEntry in moduleManager.AvailableModules.Reverse())
                 //{
                 //    options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.ID));
                 //}
                 
-
                 // view location expanders for theme
 
                 options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
@@ -222,7 +222,7 @@ namespace Plato.Hosting.Web.Extensions
 
             });
             
-            // add default framework parts
+            // add modules as application parts
             var applicationPartManager = services.BuildServiceProvider().GetRequiredService<ApplicationPartManager>();
             foreach (var moduleEntry in moduleManager.AvailableModules)
             {
@@ -232,11 +232,9 @@ namespace Plato.Hosting.Web.Extensions
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
                 }
             }
+            
+            // implement our own conventions to automatically add [areas] route attributes to loaded module controllers
 
-          
-            // --------------
-
-            // implement our own conventions to automatically add [areas] routes to loaded module controllers
             // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-2.1
 
             services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, ModularApplicationModelProvider>());
@@ -279,7 +277,7 @@ namespace Plato.Hosting.Web.Extensions
             
             app.UseModuleStaticFiles(env);
 
-            // add custom feature application parts
+            // add custom features
 
             app.AddThemingApplicationParts();
 
@@ -298,14 +296,13 @@ namespace Plato.Hosting.Web.Extensions
             this IApplicationBuilder app)
         {
 
-            // add ThemingViewsFeatureProvider application part
+            // adds ThemingViewsFeatureProvider application part
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
             var themingViewsFeatureProvider = app.ApplicationServices.GetRequiredService<IApplicationFeatureProvider<ViewsFeature>>();
             applicationPartManager.FeatureProviders.Add(themingViewsFeatureProvider);
 
         }
-
-
+        
         public static void UseModuleStaticFiles(
             this IApplicationBuilder app,
                 IHostingEnvironment env)
