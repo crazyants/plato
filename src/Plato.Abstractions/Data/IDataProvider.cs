@@ -2,9 +2,8 @@
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
-using Plato.Data.Abstractions.Exceptions;
 
-namespace Plato.Data.Abstractions.Providers
+namespace Plato.Abstractions.Data
 {
     public interface IDataProvider : IDisposable
     {

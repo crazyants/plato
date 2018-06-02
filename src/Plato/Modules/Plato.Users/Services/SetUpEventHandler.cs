@@ -126,8 +126,7 @@ namespace Plato.Users.Services
                     },
                 }
             };
-
-      
+            
             using (var builder = _schemaBuilder)
             {
 
@@ -143,7 +142,6 @@ namespace Plato.Users.Services
                     // Create basic default CRUD procedures
                     .CreateDefaultProcedures(users);
              
-
                 // create unique user stored procedures
 
                 builder.CreateProcedure(new SchemaProcedure("SelectUserByEmail", StoredProcedureType.SelectByKey)
@@ -178,8 +176,31 @@ namespace Plato.Users.Services
                                     DbType = DbType.String,
                                     Length = "255"
                                 }
-                            }));
-                
+                            }))
+                    .CreateProcedure(new SchemaProcedure("SelectUsersPaged", StoredProcedureType.SelectPaged)
+                        .ForTable(users)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "Id",
+                                DbType = DbType.Int32
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "UserName",
+                                DbType = DbType.String,
+                                Length = "255"
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "Email",
+                                DbType = DbType.String,
+                                Length = "255"
+                            }
+                        }));
+
+
                 var result = await builder.ApplySchemaAsync();
                 if (result.Errors.Count > 0)
                 {

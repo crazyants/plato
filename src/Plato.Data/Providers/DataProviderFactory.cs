@@ -1,6 +1,5 @@
 ﻿using System;
-using Plato.Data.Abstractions;
-using Plato.Data.Abstractions.Providers;
+using Plato.Abstractions.Data;
 
 namespace Plato.Data.Providers
 {

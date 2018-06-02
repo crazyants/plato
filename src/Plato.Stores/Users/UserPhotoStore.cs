@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Abstractions.Collections;
 using Plato.Abstractions.Query;
 using Plato.Models.Users;
 using Plato.Repositories.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using Plato.Abstractions.Data;
 
 
 namespace Plato.Stores.Users
@@ -94,9 +92,8 @@ namespace Plato.Stores.Users
 
         public async Task<UserPhoto> GetByUserIdAsync(int userId)
         {
-            UserPhoto userPhoto;
             var key = GetCacheKey(LocalCacheKeys.ByUserId, userId);
-            if (!_memoryCache.TryGetValue(key, out userPhoto))
+            if (!_memoryCache.TryGetValue(key, out UserPhoto userPhoto))
             {
                 userPhoto = await _userPhotoRepository.SelectByUserIdAsync(userId);
                 if (userPhoto != null)

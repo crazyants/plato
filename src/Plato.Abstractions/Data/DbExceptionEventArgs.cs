@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plato.Data.Abstractions.Exceptions
+namespace Plato.Abstractions.Data
 {
     public class DbExceptionEventArgs : EventArgs
     {

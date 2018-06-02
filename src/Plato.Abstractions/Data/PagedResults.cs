@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using Plato.Abstractions.Extensions;
 
-namespace Plato.Abstractions.Collections
+namespace Plato.Abstractions.Data
 {
     public class PagedResults<T> : IPagedResults<T> where T : class
     {

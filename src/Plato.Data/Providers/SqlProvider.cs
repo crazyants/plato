@@ -4,8 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using Plato.Data.Abstractions.Exceptions;
-using Plato.Data.Abstractions.Providers;
+using Plato.Abstractions.Data;
 
 namespace Plato.Data.Providers
 {

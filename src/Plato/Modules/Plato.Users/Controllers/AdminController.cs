@@ -21,27 +21,26 @@ namespace Plato.Users.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var model = await GetModel();
-            return View(model);
+            return View(await GetModel());
         }
 
         private async Task<UsersPaged> GetModel()
         {
 
             var users = await _ploatUserStore.QueryAsync()
-                .Page(1, 10)
+                .Page(1, 20)
                 .Select<UserQueryParams>(q =>
                 {
                     // q.UserName.IsIn("Admin,Mark").Or();
                     // q.Email.IsIn("email440@address.com,email420@address.com");
                     // q.Id.Between(1, 5);
                 })
-                .OrderBy("Username", OrderBy.Asc)
+                .OrderBy("Id", OrderBy.Asc)
                 .ToList<User>();
             
             return new UsersPaged()
             {
-                Users = users
+                PagedResults = users
             };
 
         }

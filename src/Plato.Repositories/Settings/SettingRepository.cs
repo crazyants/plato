@@ -5,8 +5,7 @@ using Plato.Models.Settings;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using Plato.Abstractions.Extensions;
-using Plato.Abstractions.Collections;
-using Plato.Data.Abstractions;
+using Plato.Abstractions.Data;
 
 namespace Plato.Repositories.Settings
 {

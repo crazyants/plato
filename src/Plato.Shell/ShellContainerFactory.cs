@@ -5,15 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using Plato.Shell.Models;
 using Plato.Shell.Extensions;
 using Plato.Data;
 using Plato.Abstractions;
+using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
 using Plato.Data.Abstractions;
 using Plato.Modules.Abstractions;
-using IQueryProvider = System.Linq.IQueryProvider;
 
 namespace Plato.Shell
 {
@@ -57,12 +56,6 @@ namespace Plato.Shell
                 options.TablePrefix = settings.TablePrefix;
             });
 
-            // Ensure QueryBuilders are aware of tennet table prefix
-            tenantServiceCollection.Configure<DbQueryOptions>(options =>
-            {
-                options.TablePrefix = settings.TablePrefix;
-            });
-            
             // Add service descriptors from modules to the tenant
             var types = new List<Type>();
             foreach (var assmebly in _moduleManager.AllAvailableAssemblies)

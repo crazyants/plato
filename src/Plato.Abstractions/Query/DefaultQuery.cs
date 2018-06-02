@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using Plato.Abstractions.Query;
-using Plato.Abstractions.Collections;
-using Plato.Abstractions.Stores;
+using Plato.Abstractions.Data;
 
 namespace Plato.Abstractions.Query
 {
@@ -42,8 +39,7 @@ namespace Plato.Abstractions.Query
         {
             _sortColumns = new Dictionary<string, OrderBy>();
         }
-
-
+        
     }
 
 }

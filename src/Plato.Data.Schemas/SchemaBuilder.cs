@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Data.Abstractions;
+using Plato.Abstractions.Data;
 using Plato.Data.Abstractions.Schemas;
 using Plato.Text;
 
@@ -222,6 +221,9 @@ namespace Plato.Data.Schemas
                 case StoredProcedureType.SelectByKey:
                     statement = BuildSelectByProcedure(procedure);
                     break;
+                case StoredProcedureType.SelectPaged:
+                    statement = BuildSelectPagedProcedure(procedure);
+                    break;
                 case StoredProcedureType.DeleteByKey:
                     statement = BuildDeleteByKeyProcedure(procedure);
                     break;
@@ -383,6 +385,265 @@ namespace Plato.Data.Schemas
             
             sb.Append(")");
 
+            return sb.ToString();
+
+        }
+
+        public string BuildSelectPagedProcedure(SchemaProcedure procedure)
+        {
+
+            /* Generates a stored procedure similar to...
+             
+                CREATE  PROCEDURE SelectUsersPaged
+                (    
+	                @PageIndex int = 1,
+                    @PageSize int = 10,
+	                @SqlStartId nvarchar(max) = 'SELECT @start_id_out = Id FROM Plato_Users ORDER BY Id',
+	                @SqlPopulate nvarchar(max) = 'SELECT * FROM Plato_Users WHERE Id >= @start_id_in ORDER BY Id',
+	                @SqlCount nvarchar(max) = 'SELECT COUNT(Id) FROM Plato_Users',	                
+	                @Id int = 0,
+	                @UserName nvarchar(255) = '',
+	                @Email nvarchar(255) = ''
+                )
+                AS
+
+                DECLARE @first_id int, 
+	                @start_row int
+
+                DECLARE @SqlParams nvarchar(max) = '@Id int, @UserName nvarchar(255), @Email nvarchar(255)';
+
+                -- set start row pageSize * pageIndex - pageSize - 1
+                -- 1 * 5  = 1, 2 * 5 = 6, 3 * 5 = 11
+                -- 1 * 10  = 1, 2 * 10 = 11, 3 * 10 = 21
+                SET @start_row = 1;
+                IF (@PageIndex > 1)
+	                SET @start_row = (
+		                (@PageIndex * @PageSize) - ( @PageSize - 1 )
+	                )
+
+                -- Get the first row for our page of records
+                SET ROWCOUNT @start_row
+                DECLARE @parms nvarchar(100);
+
+                -- get the first Id
+                SET @parms = '@start_id_out int OUTPUT,' + + @SqlParams;  
+                EXECUTE sp_executesql  @SqlStartId, @parms, 
+	                @start_id_out = @first_id OUTPUT,
+	                @Id = 1,
+	                @UserName = '',
+	                @Email = ''
+
+                -- set to our page size
+                SET ROWCOUNT @PageSize
+
+                -- add our start parameter to the start
+                SET @SqlParams = '@start_id_in int,' + @SqlParams;
+
+                -- get all records >= @first_id
+                EXECUTE sp_executesql @SqlPopulate, @SqlParams, 
+	                @start_id_in = @first_id,
+	                @Id = 1,
+	                @UserName = '',
+	                @Email = ''
+
+                SET ROWCOUNT 0;
+
+                -- total count
+                IF (@SqlCount <> '')
+	                EXECUTE sp_executesql @SqlCount, @SqlParams, 
+		                @start_id_in = @first_id,
+		                @Id = 1,
+		                @UserName = '',
+		                @Email = ''
+
+
+             */
+
+            if (procedure.Parameters == null)
+                throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
+
+            var sb = new StringBuilder();
+            sb.Append("CREATE PROCEDURE ")
+                .Append(GetProcedureName(procedure.Name))
+                .Append(" (")
+                .Append(_newLine);
+
+            sb.Append("   ")
+                .Append("@PageIndex int = 1,")
+                .Append(_newLine);
+            sb.Append("   ")
+                .Append("@PageSize int = 10,")
+                .Append(_newLine);
+            sb.Append("   ")
+                .Append("@SqlStartId nvarchar(max),")
+                .Append(_newLine);
+            sb.Append("   ")
+                .Append("@SqlPopulate nvarchar(max),")
+                .Append(_newLine);
+            sb.Append("   ")
+                .Append("@SqlCount nvarchar(max),")
+                .Append(_newLine);
+            var i = 0;
+            foreach (var parameter in procedure.Parameters)
+            {
+                sb
+                    .Append("   ")
+                    .Append("@")
+                    .Append(parameter.NameNormalized)
+                    .Append(" ")
+                    .Append(parameter.DbTypeNormalized)
+                    .Append(i < procedure.Parameters.Count - 1 ? "," : "")
+                    .Append(_newLine);
+                i += 1;
+            }
+
+            sb
+                .Append(") AS")
+                .Append(_newLine)
+                .Append("SET NOCOUNT ON")
+                .Append(_newLine)
+                .Append(_newLine);
+            
+            sb.Append(GetProcedurePlaceHolderComment())
+                .Append(_newLine)
+                .Append(_newLine);
+
+            sb.Append("DECLARE @first_id int, ")
+                .Append("@start_row int")
+                .Append(_newLine)
+                .Append(_newLine);
+            
+            sb.Append("DECLARE @SqlParams nvarchar(max) = '");
+            i = 0;
+            foreach (var parameter in procedure.Parameters)
+            {
+                sb.Append("@")
+                    .Append(parameter.NameNormalized)
+                    .Append(" ")
+                    .Append(parameter.DbTypeNormalized)
+                    .Append(i < procedure.Parameters.Count - 1 ? ", " : "");
+                i += 1;
+            }
+            sb.Append("';")
+                .Append(_newLine)
+                .Append(_newLine);
+            
+
+            sb.Append("-- set start row pageSize * pageIndex - pageSize - 1")
+                .Append(_newLine)
+                .Append("-- 1 * 5 = 1, 2 * 5 = 6, 3 * 5 = 11")
+                .Append(_newLine)
+                .Append("-- 1 * 10 = 1, 2 * 10 = 11, 3 * 10 = 21")
+                .Append(_newLine);
+
+            sb.Append("SET @start_row = 1;")
+                .Append(_newLine)
+                .Append("IF (@PageIndex > 1)")
+                .Append(_newLine)
+                .Append("   ")
+                .Append("SET @start_row = (")
+                .Append(_newLine)
+                .Append("       ")
+                .Append("(@PageIndex * @PageSize) - (@PageSize - 1)")
+                .Append(_newLine)
+                .Append("   ")
+                .Append(")")
+                .Append(_newLine)
+                .Append(_newLine);
+
+            sb.Append("-- Get the first row for our page of records")
+                .Append(_newLine)
+                .Append("SET ROWCOUNT @start_row;")
+                .Append(_newLine)
+                .Append("DECLARE @parms nvarchar(100);")
+                .Append(_newLine)
+                .Append(_newLine);
+            
+            sb.Append("-- get the first Id")
+                .Append(_newLine)
+                .Append("SET @parms = '@start_id_out int OUTPUT,' + @SqlParams;")
+                .Append(_newLine)
+                .Append("EXECUTE sp_executesql  @SqlStartId, @parms, ")
+                .Append(_newLine)
+                .Append("   ")
+                .Append("@start_id_out = @first_id OUTPUT,")
+                .Append(_newLine);
+            i = 0;
+            foreach (var parameter in procedure.Parameters)
+            {
+                sb
+                    .Append("   ")
+                    .Append("@")
+                    .Append(parameter.NameNormalized)
+                    .Append(" = ")
+                    .Append(parameter.DefaultValueNormalizsed)
+                    .Append(i < procedure.Parameters.Count - 1 ? "," : ";")
+                    .Append(_newLine);
+                i += 1;
+            }
+            
+            sb.Append(_newLine)
+                .Append("-- set to our page size")
+                .Append(_newLine)
+                .Append("SET ROWCOUNT @PageSize;")
+                .Append(_newLine)
+                .Append(_newLine);
+
+            sb.Append("-- add our start parameter to the start")
+                .Append(_newLine)
+                .Append("SET @SqlParams = '@start_id_in int,' + @SqlParams;")
+                .Append(_newLine)
+                .Append(_newLine);
+
+            sb.Append("-- get all records >= @first_id")
+                .Append(_newLine)
+                .Append("EXECUTE sp_executesql @SqlPopulate, @SqlParams,")
+                .Append(_newLine)
+                .Append("   ")
+                .Append("@start_id_in = @first_id,")
+                .Append(_newLine);
+            i = 0;
+            foreach (var parameter in procedure.Parameters)
+            {
+                sb
+                    .Append("   ")
+                    .Append("@")
+                    .Append(parameter.NameNormalized)
+                    .Append(" = ")
+                    .Append(parameter.DefaultValueNormalizsed)
+                    .Append(i < procedure.Parameters.Count - 1 ? "," : ";")
+                    .Append(_newLine);
+                i += 1;
+            }
+
+            sb.Append(_newLine)
+                .Append("SET ROWCOUNT 0;")
+                .Append(_newLine)
+                .Append(_newLine);
+
+            sb.Append("-- total count")
+                .Append(_newLine)
+                .Append("IF(@SqlCount <> '')")
+                .Append(_newLine)
+                .Append("EXECUTE sp_executesql @SqlCount, @SqlParams,")
+                .Append(_newLine)
+                .Append("   ")
+                .Append("@start_id_in = @first_id,")
+                .Append(_newLine);
+            i = 0;
+            foreach (var parameter in procedure.Parameters)
+            {
+                sb
+                    .Append("   ")
+                    .Append("@")
+                    .Append(parameter.NameNormalized)
+                    .Append(" = ")
+                    .Append(parameter.DefaultValueNormalizsed)
+                    .Append(i < procedure.Parameters.Count - 1 ? "," : ";")
+                    .Append(_newLine);
+                i += 1;
+            }
+            
             return sb.ToString();
 
         }
@@ -649,7 +910,7 @@ namespace Plato.Data.Schemas
         private string GetTableName(string tableName)
         {
             return !string.IsNullOrEmpty(_tablePrefix)
-                ? _tablePrefix + "_" + tableName
+                ? _tablePrefix + tableName
                 : tableName;
         }
 

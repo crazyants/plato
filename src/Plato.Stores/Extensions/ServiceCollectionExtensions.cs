@@ -30,8 +30,8 @@ namespace Plato.Stores.Extensions
          this IServiceCollection services)
         {
             
-            services.AddSingleton<IDbQueryOptions, DbQueryOptions>();
-            services.AddScoped<IQueryFacade, QueryFacade>();
+         
+            services.AddScoped<IDbQuery, DbQuery>();
 
             // files
 

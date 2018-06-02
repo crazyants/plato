@@ -2,10 +2,9 @@
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Abstractions.Collections;
+using Plato.Abstractions.Data;
 using Plato.Abstractions.Extensions;
 using Plato.Data;
-using Plato.Data.Abstractions;
 using Plato.Models.Users;
 
 namespace Plato.Repositories.Users

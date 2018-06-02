@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Plato.Abstractions.Collections;
+using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
 using Plato.Models.Roles;
 using Plato.Repositories.Roles;

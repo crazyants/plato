@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Plato.Abstractions.Data;
 using Plato.Abstractions.Extensions;
 using Plato.Abstractions.SetUp;
 using Plato.Abstractions.Shell;
-using Plato.Data;
-using Plato.Data.Abstractions;
 using Plato.Hosting;
 using Plato.Shell;
 using Plato.Shell.Models;
@@ -15,6 +14,8 @@ namespace Plato.SetUp.Services
 {
     public class SetUpService :ISetUpService
     {
+
+        private const string TablePrefixSeparator = "_";
 
         private readonly ShellSettings _shellSettings;
         private readonly IShellContextFactory _shellContextFactory;
@@ -55,9 +56,12 @@ namespace Plato.SetUp.Services
             
             if (string.IsNullOrEmpty(shellSettings.DatabaseProvider))
             {
+                var tablePrefix = context.DatabaseTablePrefix;
+                if (!tablePrefix.EndsWith(TablePrefixSeparator))
+                    tablePrefix += TablePrefixSeparator;
                 shellSettings.DatabaseProvider = context.DatabaseProvider;
                 shellSettings.ConnectionString = context.DatabaseConnectionString;
-                shellSettings.TablePrefix = context.DatabaseTablePrefix;
+                shellSettings.TablePrefix = tablePrefix;
             }
 
             var executionId = Guid.NewGuid().ToString("n");
@@ -113,23 +117,6 @@ namespace Plato.SetUp.Services
             return executionId;
 
         }
-
-        private void InitializeDatabaseAsync()
-        {
-            
-            //var builder = new DataMigrationBuilder();
-            //builder.BuildMigrations(new List<string>() { "1.0.0" });
-            
-        }
-
-        private void Upgrade()
-        {
-
-            //var builder = new DataMigrationBuilder();
-            //builder.BuildMigrations(new List<string>() { "1.0.0", "1.0.1" });
-
-        }
-
-
+        
     }
 }

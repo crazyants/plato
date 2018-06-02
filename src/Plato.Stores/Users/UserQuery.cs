@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Abstractions.Collections;
+using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
 using Plato.Abstractions.Stores;
 using Plato.Data.Abstractions;
@@ -11,8 +11,7 @@ using Plato.Stores.Query;
 
 namespace Plato.Stores.Users
 {
-
- 
+    
     #region "UserQuery"
 
     public class UserQuery : DefaultQuery
@@ -37,17 +36,18 @@ namespace Plato.Stores.Users
 
         public override async Task<IPagedResults<T>> ToList<T>()
         {
-            var builder = new UserQueryBuilder(this);
 
-            // define all searchable input parameters 
+            var builder = new UserQueryBuilder(this);
+            var startSql = builder.BuildSqlStartId();
+            var populateSql = builder.BuildSqlPopulate();
+            var countSql = builder.BuildSqlCount();
 
             var users = await _store.SelectAsync<T>(
                 PageIndex,
                 PageSize,
-                builder.BuildSqlStartId(),
-                builder.BuildSqlPopulate(),
-                builder.BuildSqlCount(),
-                "@id int, @UserName nvarchar(255), @Email nvarchar(255)",
+                startSql,
+                populateSql,
+                countSql,
                 Params.Id.Value,
                 Params.UserName.Value,
                 Params.Email.Value
@@ -110,11 +110,17 @@ namespace Plato.Stores.Users
     {
         #region "Constructor"
 
+        private readonly string _tableName;
+        private const string TableName = "Users";
+
         private readonly UserQuery _query;
 
         public UserQueryBuilder(UserQuery query)
         {
             _query = query;
+            _tableName = !string.IsNullOrEmpty(_query.TablePrefix)
+                ? _query.TablePrefix + TableName
+                : TableName;
         }
 
         #endregion
@@ -126,7 +132,7 @@ namespace Plato.Stores.Users
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = Id FROM Plato_Users");
+            sb.Append("SELECT @start_id_out = Id FROM ").Append(_tableName);
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             if (!string.IsNullOrEmpty(orderBy))
@@ -142,7 +148,7 @@ namespace Plato.Stores.Users
             var whereClause = BuildWhereClauseForStartId();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT * FROM Plato_Users");
+            sb.Append("SELECT * FROM ").Append(_tableName);
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             if (!string.IsNullOrEmpty(orderBy))
@@ -154,7 +160,7 @@ namespace Plato.Stores.Users
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(Id) FROM Plato_Users");
+            sb.Append("SELECT COUNT(Id) FROM ").Append(_tableName);
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             return sb.ToString();
@@ -168,7 +174,7 @@ namespace Plato.Stores.Users
         {
             var sb = new StringBuilder();
             // default to ascending
-            if (!_query.SortColumns.Any())
+            if (_query.SortColumns.Count == 0)
                 sb.Append("Id >= @start_id_in");
             // set start operator based on first order by
             foreach (var sortColumn in _query.SortColumns)
@@ -218,7 +224,7 @@ namespace Plato.Stores.Users
 
         private string BuildOrderBy()
         {
-            if (!_query.SortColumns.Any()) return null;
+            if (_query.SortColumns.Count == 0) return null;
             var sb = new StringBuilder();
             var i = 0;
             foreach (var sortColumn in _query.SortColumns)

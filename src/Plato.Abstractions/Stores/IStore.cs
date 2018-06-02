@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Plato.Abstractions.Query;
-using Plato.Abstractions.Collections;
+using Plato.Abstractions.Data;
 
 namespace Plato.Abstractions.Stores
 {

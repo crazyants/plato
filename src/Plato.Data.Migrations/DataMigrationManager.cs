@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plato.Data.Abstractions;
+using Plato.Abstractions.Data;
 
 namespace Plato.Data.Migrations
 {

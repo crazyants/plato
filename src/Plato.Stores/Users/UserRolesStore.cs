@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Abstractions.Collections;
+using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
 using Plato.Models.Users;
 using Plato.Repositories.Users;

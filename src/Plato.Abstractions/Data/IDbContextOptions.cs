@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Plato.Data.Abstractions
+﻿
+namespace Plato.Abstractions.Data
 {
     public interface IDbContextOptions
     {
@@ -13,6 +10,6 @@ namespace Plato.Data.Abstractions
 
         string TablePrefix { get; set; }
 
-
     }
+
 }

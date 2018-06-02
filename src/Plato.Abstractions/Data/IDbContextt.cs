@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
-using Plato.Data.Abstractions.Exceptions;
-using Plato.Data.Abstractions.Providers;
 
-namespace Plato.Data.Abstractions
+namespace Plato.Abstractions.Data
 {
     public interface IDbContext : IDisposable
     {

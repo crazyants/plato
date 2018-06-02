@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Extensions;
-using Plato.Data;
 using Plato.Models.Users;
-using Plato.Abstractions.Collections;
-using Plato.Data.Abstractions;
+using Plato.Abstractions.Data;
 
 namespace Plato.Repositories.Users
 {

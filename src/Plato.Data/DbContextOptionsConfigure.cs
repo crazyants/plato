@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Plato.Data.Abstractions;
+using Plato.Abstractions.Data;
 
 namespace Plato.Data
 {
@@ -28,7 +28,7 @@ namespace Plato.Data
 
                 // default configuration
                 options.ConnectionString = configuration.GetConnectionString("DefaultConnection");
-                options.DatabaseProvider = "SqlProvider";
+                options.DatabaseProvider = "SqlClient";
                 options.TablePrefix = "";
 
             }

@@ -4,12 +4,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Plato.Abstractions.Collections;
+using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
-using Plato.Data.Abstractions;
 using Plato.Models.Users;
 using Plato.Repositories.Users;
-using Plato.Stores.Query;
 
 namespace Plato.Stores.Users
 {
@@ -21,7 +19,7 @@ namespace Plato.Stores.Users
         private readonly string _key = CacheKeys.Users.ToString();
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
-        private readonly IQueryFacade _queryFacade;
+        private readonly IDbQuery _dbQuery;
         private readonly IUserRepository<User> _userRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _memoryCache;
@@ -33,7 +31,7 @@ namespace Plato.Stores.Users
         #region "constructor"
 
         public PlatoUserStore(
-            IQueryFacade queryFacade,
+            IDbQuery dbQuery,
             IUserRepository<User> userRepository,
             IHttpContextAccessor httpContextAccessor,
             IMemoryCache memoryCache,
@@ -41,7 +39,7 @@ namespace Plato.Stores.Users
             ILogger<PlatoUserStore> logger
         )
         {
-            _queryFacade = queryFacade;
+            _dbQuery = dbQuery;
             _userRepository = userRepository;
             _httpContextAccessor = httpContextAccessor;
             _memoryCache = memoryCache;
@@ -175,7 +173,7 @@ namespace Plato.Stores.Users
         public IQuery QueryAsync()
         {
             var query = new UserQuery(this);
-            return _queryFacade.ConfigureQuery(query); ;
+            return _dbQuery.ConfigureQuery(query); ;
         }
 
         public async Task<User> UpdateAsync(User user)

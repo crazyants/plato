@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Plato.Abstractions.Data;
 using Plato.Data.Abstractions;
-using Plato.Data.Abstractions.Exceptions;
-using Plato.Data.Abstractions.Providers;
 using Plato.Data.Providers;
 
 namespace Plato.Data

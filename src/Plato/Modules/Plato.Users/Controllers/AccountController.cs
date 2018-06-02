@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.Models;
 using System.Threading.Tasks;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Plato.Data.Abstractions.Schemas;
 using Plato.Models.Users;
 
 namespace Plato.Users.Controllers
@@ -17,21 +20,174 @@ namespace Plato.Users.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ISchemaBuilder _schemaBuilder;
 
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManage,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, ISchemaBuilder schemaBuilder)
         {
             _userManager = userManager;
             _signInManager = signInManage;
             _httpContextAccessor = httpContextAccessor;
+            _schemaBuilder = schemaBuilder;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl = null)
+        public async Task<IActionResult> Login(string returnUrl = null)
         {
+
+
+            //for (var i = 0; i < 500; i++)
+            //{
+            //    var password = "pAs5word#" + i;
+            //    var result = await _userManager.CreateAsync(new User()
+            //    {
+            //        UserName = "Username" + i,
+            //        Email = "email" + i + "@address.com"
+
+            //    }, password);
+            //}
+
+
+            //var users = new SchemaTable()
+            //{
+            //    Name = "Users",
+            //    Columns = new List<SchemaColumn>()
+            //    {
+            //        new SchemaColumn()
+            //        {
+            //            PrimaryKey = true,
+            //            Name = "Id",
+            //            DbType = DbType.Int32
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "UserName",
+            //            Length = "255",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "NormalizedUserName",
+            //            Length = "255",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "Email",
+            //            Length = "255",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "NormalizedEmail",
+            //            Length = "255",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "EmailConfirmed",
+            //            DbType = DbType.Boolean
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "DisplayName",
+            //            Length = "255",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "SamAccountName",
+            //            Length = "255",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "PasswordHash",
+            //            Length = "255",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "SecurityStamp",
+            //            Length = "255",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "PhoneNumber",
+            //            Length = "255",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "PhoneNumberConfirmed",
+            //            DbType = DbType.Boolean
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "TwoFactorEnabled",
+            //            DbType = DbType.Boolean
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "LockoutEnd",
+            //            Nullable = true,
+            //            DbType = DbType.DateTime2
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "LockoutEnabled",
+            //            DbType = DbType.Boolean
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "AccessFailedCount",
+            //            DbType = DbType.Int32
+            //        },
+            //    }
+            //};
+
+            //using (var builder = _schemaBuilder)
+            //{
+
+            //    // create tables and default procedures
+            //    builder
+            //        .Configure(options =>
+            //        {
+            //            options.ModuleName = "Plato.Users";
+            //            options.Version = "1.0.0";
+            //        })
+            //        .CreateProcedure(new SchemaProcedure("SelectUsersPaged", StoredProcedureType.SelectPaged)
+            //            .ForTable(users)
+            //            .WithParameters(new List<SchemaColumn>()
+            //            {
+            //                new SchemaColumn()
+            //                {
+            //                    Name = "Id",
+            //                    DbType = DbType.Int32
+            //                },
+            //                new SchemaColumn()
+            //                {
+            //                    Name = "UserName",
+            //                    DbType = DbType.String,
+            //                    Length = "255"
+            //                },
+            //                new SchemaColumn()
+            //                {
+            //                    Name = "Email",
+            //                    DbType = DbType.String,
+            //                    Length = "255"
+            //                }
+            //            }));
+
+
+            //    var result = await builder.ApplySchemaAsync();
+
+
+            //}
 
             var user = _httpContextAccessor.HttpContext.User;
             var claims = user.Claims;

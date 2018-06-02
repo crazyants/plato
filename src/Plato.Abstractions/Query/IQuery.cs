@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Abstractions.Collections;
+using Plato.Abstractions.Data;
 
 namespace Plato.Abstractions.Query
 {

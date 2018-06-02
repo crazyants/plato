@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 
-namespace Plato.Abstractions.Collections
+namespace Plato.Abstractions.Data
 {
     public interface IPagedResults<T> where T : class
     {
