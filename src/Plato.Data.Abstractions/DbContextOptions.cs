@@ -2,7 +2,7 @@
 namespace Plato.Data.Abstractions
 {
 
-    public class DbContextOptions 
+    public class DbContextOptions  : IDbContextOptions
     {
 
         public string DatabaseProvider { get; set; }
@@ -10,11 +10,6 @@ namespace Plato.Data.Abstractions
         public string ConnectionString { get; set; }
 
         public string TablePrefix { get; set; }
-
-        public DbContextOptions()
-        {
-
-        }
 
     }
 }

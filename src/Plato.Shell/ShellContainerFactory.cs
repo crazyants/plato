@@ -10,8 +10,10 @@ using Plato.Shell.Models;
 using Plato.Shell.Extensions;
 using Plato.Data;
 using Plato.Abstractions;
+using Plato.Abstractions.Query;
 using Plato.Data.Abstractions;
 using Plato.Modules.Abstractions;
+using IQueryProvider = System.Linq.IQueryProvider;
 
 namespace Plato.Shell
 {
@@ -52,6 +54,12 @@ namespace Plato.Shell
             {
                 options.ConnectionString = settings.ConnectionString;
                 options.DatabaseProvider = settings.DatabaseProvider;
+                options.TablePrefix = settings.TablePrefix;
+            });
+
+            // Ensure QueryBuilders are aware of tennet table prefix
+            tenantServiceCollection.Configure<DbQueryOptions>(options =>
+            {
                 options.TablePrefix = settings.TablePrefix;
             });
             

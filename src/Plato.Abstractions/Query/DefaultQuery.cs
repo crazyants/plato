@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using Plato.Abstractions.Query;
 using Plato.Abstractions.Collections;
 using Plato.Abstractions.Stores;
-using Plato.Data.Abstractions;
 
-namespace Plato.Stores.Query
+namespace Plato.Abstractions.Query
 {
     public abstract class DefaultQuery : IQuery
     {
@@ -19,6 +18,8 @@ namespace Plato.Stores.Query
         public int PageIndex { get; private set; }
 
         public int PageSize { get; private set; }
+
+        public string TablePrefix { get; set; }
 
         public IQuery Page(int pageIndex, int pageSize)
         {
@@ -36,14 +37,12 @@ namespace Plato.Stores.Query
             _sortColumns.Add(columnName, sortOrder);
             return this;
         }
-        
-        public string TablePrefix { get; set; }
-        
 
         protected DefaultQuery()
         {
             _sortColumns = new Dictionary<string, OrderBy>();
         }
+
 
     }
 

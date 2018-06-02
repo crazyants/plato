@@ -8,7 +8,7 @@ namespace Plato.Abstractions.Query
     public interface IQuery
     {
 
-        string TablePrefix { get; }
+        string TablePrefix { get; set; }
 
         IQuery Page(int pageIndex, int pageSize);
 

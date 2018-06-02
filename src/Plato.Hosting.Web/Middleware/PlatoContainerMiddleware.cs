@@ -57,8 +57,7 @@ namespace Plato.Hosting.Web.Middleware
                             {
 
                                 //var tenantEvents = httpContext.RequestServices.GetServices<IModularTenantEvents>();
-
-
+                                
                                 // BuildPipeline ensures we always rebuild routes for new tennets
                                 httpContext.Items["BuildPipeline"] = true;
                                 shellContext.IsActivated = true;

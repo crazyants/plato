@@ -19,15 +19,10 @@ namespace Plato.Stores.Users
     {
 
         private readonly IStore<User> _store;
-        private readonly DbContextOptions _dbContextOptions;
-
-        public UserQuery(
-            IStore<User> store,
-            DbContextOptions dbContextOptions) 
+        
+        public UserQuery(IStore<User> store) 
         {
             _store = store;
-            _dbContextOptions = dbContextOptions;
-            this.TablePrefix = _dbContextOptions.TablePrefix;
         }
 
         public UserQueryParams Params { get; set; }

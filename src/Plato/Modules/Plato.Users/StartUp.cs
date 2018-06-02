@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Plato.Abstractions.Query;
 using Plato.Abstractions.SetUp;
 using Plato.Hosting;
 using Plato.Models.Roles;
@@ -37,7 +38,7 @@ namespace Plato.Users
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
+            
             // register set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
 
