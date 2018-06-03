@@ -18,7 +18,7 @@ namespace Plato.Navigation
 
         private readonly IEnumerable<INavigationProvider> _navigationProviders;
         private readonly ILogger _logger;
-        protected readonly ShellSettings _shellSettings;
+        private readonly ShellSettings _shellSettings;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IAuthorizationService _authorizationService;
 
@@ -45,8 +45,7 @@ namespace Plato.Navigation
 
             // Processes all navigation builders to create a flat list of menu items.
             // If a navigation builder fails, it is ignored.
-
-
+            
             foreach (var navigationProvider in _navigationProviders)
             {
                 try

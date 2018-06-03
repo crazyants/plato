@@ -8,7 +8,26 @@ namespace Plato.Users.ViewModels
         
         public IPagedResults<User> PagedResults { get; set; }
 
+        public UsersPagedOptions Options { get; set; }
+
         public dynamic Pager { get; set; }
 
     }
+
+    public class UsersPagedOptions
+    {
+        public string Search { get; set; }
+
+        public UsersOrder Order { get; set; }
+
+    }
+
+    public enum UsersOrder
+    {
+        Username,
+        Email
+    }
+
+
+
 }
