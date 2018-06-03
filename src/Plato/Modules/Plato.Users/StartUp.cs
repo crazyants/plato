@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Plato.Abstractions.Query;
 using Plato.Abstractions.SetUp;
 using Plato.Hosting;
 using Plato.Models.Roles;
@@ -13,6 +12,9 @@ using Plato.Models.Users;
 using Plato.Shell.Models;
 using Plato.Stores.Users;
 using Plato.Hosting.Web;
+using Plato.Hosting.Web.Extensions;
+using Plato.Layout.Extensions;
+using Plato.Layout.TagHelpers;
 using Plato.Navigation;
 using Plato.Users.Services;
 
@@ -38,7 +40,8 @@ namespace Plato.Users
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            
+          
+        
             // register set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
 
@@ -89,6 +92,10 @@ namespace Plato.Users
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            // load tag helpers
+            serviceProvider.AddTagHelpers(typeof(PagerTagHelper).Assembly);
+
 
             // add authentication middleware
             app.UseAuthentication();

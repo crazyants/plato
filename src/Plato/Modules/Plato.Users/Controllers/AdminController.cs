@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
+using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
+using Plato.Layout.TagHelpers;
 using Plato.Models.Users;
 using Plato.Stores.Users;
 using Plato.Users.ViewModels;
@@ -15,30 +20,35 @@ namespace Plato.Users.Controllers
     {
         private readonly IPlatoUserStore<User> _ploatUserStore;
 
+        private readonly IHtmlGenerator _htmlGenertor;
+
         public AdminController(
-            IPlatoUserStore<User> platoUserStore)
+            IPlatoUserStore<User> platoUserStore, 
+            IHtmlGenerator htmlGenertor)
         {
             _ploatUserStore = platoUserStore;
+            _htmlGenertor = htmlGenertor;
+         
         }
 
         public async Task<ActionResult> Index(
-            UsersPagedOptions options,
+            FilterOptions filterOptions,
             PagerOptions pagerOptions
             )
         {
 
             // default options
-            if (options == null)
+            if (filterOptions == null)
             {
-                options = new UsersPagedOptions();
+                filterOptions = new FilterOptions();
             }
 
-            if (!string.IsNullOrWhiteSpace(options.Search))
+            if (!string.IsNullOrWhiteSpace(filterOptions.Search))
             {
                 //users = users.Where(u => u.NormalizedUserName.Contains(options.Search) || u.NormalizedEmail.Contains(options.Search));
             }
 
-            switch (options.Order)
+            switch (filterOptions.Order)
             {
                 case UsersOrder.Username:
                     //users = users.OrderBy(u => u.NormalizedUserName);
@@ -47,23 +57,32 @@ namespace Plato.Users.Controllers
                     //users = users.OrderBy(u => u.NormalizedEmail);
                     break;
             }
-
-
+            
             // Maintain previous route data when generating page links
             var routeData = new RouteData();
             //routeData.Values.Add("Options.Filter", options.Filter);
-            routeData.Values.Add("Options.Search", options.Search);
-            routeData.Values.Add("Options.Order", options.Order);
-
-
-
-            return View(await GetModel());
+            routeData.Values.Add("Options.Search", filterOptions.Search);
+            routeData.Values.Add("Options.Order", filterOptions.Order);
+            
+            return View(await GetModel(filterOptions, pagerOptions));
         }
 
-        private async Task<UsersPaged> GetModel()
+        private async Task<UsersPaged> GetModel(
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
         {
+            var results = await GetUsers();
+            return new UsersPaged()
+            {
+                Results = results,
+                FilterOpts = filterOptions,
+                PagerOpts = pagerOptions
+            };
+        }
 
-            var users = await _ploatUserStore.QueryAsync()
+        public async Task<IPagedResults<User>> GetUsers()
+        {
+            return await _ploatUserStore.QueryAsync()
                 .Page(1, 20)
                 .Select<UserQueryParams>(q =>
                 {
@@ -73,14 +92,8 @@ namespace Plato.Users.Controllers
                 })
                 .OrderBy("Id", OrderBy.Asc)
                 .ToList<User>();
-            
-            return new UsersPaged()
-            {
-                PagedResults = users
-            };
-
         }
-        
+
 
     }
 }

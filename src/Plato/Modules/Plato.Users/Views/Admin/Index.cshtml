@@ -7,7 +7,7 @@
 <span class="text-muted">@T["Manage your registered users"]</span>
 
 <ul class="list-group">
-    @foreach (var user in Model.PagedResults.Data)
+    @foreach (var user in Model.Results.Data)
     {
         <li class="list-group-item">
            @user.UserName
@@ -15,5 +15,9 @@
     }
 </ul>
 
-<pager></pager>
+here<Br />
+
+<pager page-size="@Model.PagerOpts.PageSize"
+       total="@Model.Results.Total"></pager>
+
 

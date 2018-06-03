@@ -6,14 +6,10 @@ namespace Plato.Navigation
 {
     public class PagerOptions
     {
-        /// <summary>
-        /// Gets or sets the current page number or null if none specified.
-        /// </summary>
-        public int? PageIndex { get; set; }
 
-        /// <summary>
-        /// Gets or sets the current page size or null if none specified.
-        /// </summary>
-        public int? PageSize { get; set; }
+        public int Page { get; set; } = 1;
+
+        public int PageSize { get; set; } = 20;
+
     }
 }

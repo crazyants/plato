@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace Plato.Abstractions.Extensions
 {
 
-    public static class IEnumerableExtensions
+    public static class EnumerableExtensions
     {
 
         public static string Serialize<T>(this IEnumerable<T> iterator) 

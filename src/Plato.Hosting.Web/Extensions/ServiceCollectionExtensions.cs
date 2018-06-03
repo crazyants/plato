@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Mvc.Razor.TagHelpers;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -33,6 +35,7 @@ using Plato.Stores.Extensions;
 using Plato.Cache.Extensions;
 using Plato.Hosting.Web.Routing;
 using Plato.Layout.Extensions;
+using Plato.Layout.TagHelpers;
 using Plato.Layout.Theming;
 using Plato.Modules.Expanders;
 using Plato.Security.Extensions;
@@ -79,12 +82,13 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddPlatoModules();
                 internalServices.AddPlatoTheming();
                 internalServices.AddPlatoNavigation();
-                internalServices.AddPlatoViewFeature();
-
+            
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+                internalServices.AddPlatoViewFeature();
+                internalServices.AddPlatoTagHelpers();
 
                 internalServices.AddPlatoLogging();
 
@@ -164,7 +168,7 @@ namespace Plato.Hosting.Web.Extensions
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddViews()
                 .AddRazorViewEngine();
-            
+
             // add module mvc
 
             services.AddPlatoModuleMvc();
@@ -172,9 +176,9 @@ namespace Plato.Hosting.Web.Extensions
             // add default framework parts
 
             AddDefaultFrameworkParts(builder.PartManager);
-
-            // add json formatter
             
+            // add json formatter
+
             builder.AddJsonFormatters();
 
             return services;
@@ -229,7 +233,11 @@ namespace Plato.Hosting.Web.Extensions
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
                 }
             }
+
+            // add plato tag helper helpers
+
             
+
             // implement our own conventions to automatically add [areas] route attributes to loaded module controllers
 
             // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-2.1
@@ -239,6 +247,13 @@ namespace Plato.Hosting.Web.Extensions
             return services;
 
         }
+
+        public static void AddTagHelpers(this IServiceProvider serviceProvider, Assembly assembly)
+        {
+            serviceProvider.GetRequiredService<ApplicationPartManager>()
+                .ApplicationParts.Add(new AssemblyPart(assembly));
+        }
+
 
         // app
 
@@ -292,12 +307,10 @@ namespace Plato.Hosting.Web.Extensions
         public static void AddThemingApplicationParts(
             this IApplicationBuilder app)
         {
-
             // adds ThemingViewsFeatureProvider application part
             var applicationPartManager = app.ApplicationServices.GetRequiredService<ApplicationPartManager>();
             var themingViewsFeatureProvider = app.ApplicationServices.GetRequiredService<IApplicationFeatureProvider<ViewsFeature>>();
             applicationPartManager.FeatureProviders.Add(themingViewsFeatureProvider);
-
         }
         
         public static void UseModuleStaticFiles(
@@ -336,6 +349,7 @@ namespace Plato.Hosting.Web.Extensions
             {
                 partManager.ApplicationParts.Add(new AssemblyPart(mvcRazorAssembly));
             }
+            
         }
         
         private static void ListAllRegisteredServices(IApplicationBuilder app)

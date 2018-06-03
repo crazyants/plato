@@ -1,20 +1,22 @@
-﻿using Plato.Abstractions.Data;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Plato.Abstractions.Data;
 using Plato.Models.Users;
+using Plato.Navigation;
 
 namespace Plato.Users.ViewModels
 {
     public class UsersPaged
     {
         
-        public IPagedResults<User> PagedResults { get; set; }
+        public IPagedResults<User> Results { get; set; }
 
-        public UsersPagedOptions Options { get; set; }
+        public PagerOptions PagerOpts { get; set; }
 
-        public dynamic Pager { get; set; }
-
+        public FilterOptions FilterOpts { get; set; }
+        
     }
 
-    public class UsersPagedOptions
+    public class FilterOptions
     {
         public string Search { get; set; }
 
@@ -27,7 +29,5 @@ namespace Plato.Users.ViewModels
         Username,
         Email
     }
-
-
-
+    
 }

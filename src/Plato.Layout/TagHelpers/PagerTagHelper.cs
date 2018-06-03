@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
@@ -20,9 +22,9 @@ namespace Plato.Layout.TagHelpers
         
         public int PageIndex { get; set; } = 1;
 
-        public int PageSize { get; set; }
+        public int? PageSize { get; set; }
 
-        public double TotalResults { get; set; }
+        public double Total { get; set; }
         
         public IStringLocalizer T { get; set; }
         
@@ -34,16 +36,16 @@ namespace Plato.Layout.TagHelpers
 
         public string LastText { get; set; }
         
-        public RouteData RouteData { get; set; }
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionContextAccesor;
         private readonly IUrlHelperFactory _urlHelperFactory;
-
-        private IUrlHelper _urlHelper;
+        private  IUrlHelper _urlHelper;
 
         private string pageKey = "page";
-      
+
+        private readonly IHtmlGenerator _generator;
+
         public PagerTagHelper(
             IStringLocalizer<PagerTagHelper> localizer,
             IHttpContextAccessor httpContextAccessor, 
@@ -53,6 +55,7 @@ namespace Plato.Layout.TagHelpers
             _httpContextAccessor = httpContextAccessor;
             _actionContextAccesor = actionContextAccesor;
             _urlHelperFactory = urlHelperFactory;
+            _urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
             T = localizer;
         }
 
@@ -60,23 +63,23 @@ namespace Plato.Layout.TagHelpers
         {
             output.TagName = "nav";
             output.Attributes.Add("aria-label", "Page navigation");
-
+            
             output.TagMode = TagMode.StartTagAndEndTag;
-            output.PreContent.SetHtmlContent(BuildControl());
+            output.Content.SetHtmlContent(await BuildControl());
         }
-
-
-        private string BuildControl()
+        
+        private async Task<string> BuildControl()
         {
-
-            TotalResults = 500;
-            PageSize = 20;
-
+            
+            if (PageSize == null)
+                throw new ArgumentNullException(nameof(PageSize));
+            
             var currentPage = PageIndex;
             if (currentPage < 1)
                 currentPage = 1;
+            var pageSize = (int)PageSize;
             var numberOfPagesToShow = 7;
-            var totalPageCount = PageSize > 0 ? (int)Math.Ceiling(TotalResults / PageSize) : 1;
+            var totalPageCount = PageSize > 0 ? (int)Math.Ceiling(Total / pageSize) : 1;
             var firstPage = Math.Max(1, PageIndex - (numberOfPagesToShow / 2));
             var lastPage = Math.Min(totalPageCount, PageIndex + (int)(numberOfPagesToShow / 2));
 
@@ -120,41 +123,22 @@ namespace Plato.Layout.TagHelpers
                         routeData.Remove(pageKey);
                     else
                         routeData[pageKey] = i;
-
-
-                    if (_urlHelper == null)
-                    {
-                        _urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
-                    }
-
+                
                     var url = _urlHelper.RouteUrl(new UrlRouteContext { Values = routeData });
 
                     sb
                         .Append("<li class=\"page-item")
                         .Append(i == PageIndex ? " active" : "")
                         .Append("\">")
-                        .Append("<a class=\"page-link\" href=\"#\">")
+                        .Append("<a class=\"page-link\" href=\"")
+                        .Append(url)
+                        .Append("\">")
                         .Append(i)
                         .Append("</a>")
                         .Append("</li>");
                 }
             }
-
-
-            // page X of X
-                    for (var i = 1; i <= 5; i++)
-            {
-                
-                sb
-                    .Append("<li class=\"page-item")
-                    .Append(i == PageIndex ? " active" : "")
-                    .Append("\">")
-                    .Append("<a class=\"page-link\" href=\"#\">")
-                    .Append(i)
-                    .Append("</a>")
-                    .Append("</li>");
-            }
-
+            
             // next
             sb
                 .Append("<li class=\"page-item\">")
@@ -178,7 +162,8 @@ namespace Plato.Layout.TagHelpers
 
             sb.Append("</ul>");
 
-            return sb.ToString();
+            return await Task.FromResult(sb.ToString());
+          
 
         }
 

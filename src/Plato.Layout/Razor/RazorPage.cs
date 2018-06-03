@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using Plato.Layout.TagHelpers;
 
 namespace Plato.Layout.Razor
 {
@@ -26,7 +28,7 @@ namespace Plato.Layout.Razor
                 return _t;
             }
         }
-
+        
 
     }
 
