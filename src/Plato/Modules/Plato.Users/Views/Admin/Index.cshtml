@@ -6,20 +6,21 @@
 <h4>@T["Manage Users"]</h4>
 <span class="text-muted">@T["Manage your registered users"]</span>
 
+<hr />
+
 <ul class="list-group">
     @foreach (var user in Model.Results.Data)
     {
         <li class="list-group-item">
-           @user.UserName
+            @user.UserName
         </li>
     }
 </ul>
 
-here<Br />
+@Model.Results.Total
 
-<pager 
-    page="@Model.PagerOpts.Page"
-    page-size="@Model.PagerOpts.PageSize"
-    total="@Model.Results.Total"></pager>
+<pager page="@Model.PagerOpts.Page"
+       page-size="@Model.PagerOpts.PageSize"
+       total="@Model.Results.Total"></pager>
 
 

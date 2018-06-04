@@ -20,8 +20,8 @@ namespace Plato.Abstractions.Query
 
         public IQuery Page(int pageIndex, int pageSize)
         {
-            PageIndex = pageIndex;
-            PageSize = pageSize;
+            this.PageIndex = pageIndex;
+            this.PageSize = pageSize;
             return this;
         }
 

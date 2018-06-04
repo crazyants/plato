@@ -71,21 +71,28 @@ namespace Plato.Users.Controllers
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
-            var results = await GetUsers();
             return new UsersPaged()
             {
-                Results = results,
+                Results = await GetUsers(filterOptions, pagerOptions),
                 FilterOpts = filterOptions,
                 PagerOpts = pagerOptions
             };
         }
 
-        public async Task<IPagedResults<User>> GetUsers()
+        public async Task<IPagedResults<User>> GetUsers(
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
         {
             return await _ploatUserStore.QueryAsync()
-                .Page(1, 20)
+                .Page(pagerOptions.Page, pagerOptions.PageSize)
                 .Select<UserQueryParams>(q =>
                 {
+                    if (!string.IsNullOrEmpty(filterOptions.Search))
+                    {
+                        q.UserName.IsIn(filterOptions.Search).Or();
+                        q.Email.IsIn(filterOptions.Search);
+                    }
+
                     // q.UserName.IsIn("Admin,Mark").Or();
                     // q.Email.IsIn("email440@address.com,email420@address.com");
                     // q.Id.Between(1, 5);
