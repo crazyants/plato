@@ -7,11 +7,9 @@ namespace Plato.Modules.Abstractions
     public interface IModuleManager
     {
         
-        IEnumerable<Assembly> AllAvailableAssemblies { get;  }
+        Task<IEnumerable<Assembly>> LoadModuleAssembliesAsync();
 
-        IEnumerable<IModuleEntry> AvailableModules { get; }
-
-        Task LoadModulesAsync();
+        Task<IEnumerable<IModuleEntry>> LoadModulesAsync();
 
         Task<IEnumerable<IModuleEntry>> LoadModulesAsync(string[] moduleIds);
 

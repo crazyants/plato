@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 using Plato.Modules.Abstractions;
 
 namespace Plato.Modules
@@ -20,11 +19,14 @@ namespace Plato.Modules
             IModuleManager moduleManager)
         {
             _moduleManager = moduleManager;
-            BuildTypedProvider();
+          
         }
         
-        public IModuleEntry GetModuleForDependency(Type dependency)
+        public async Task<IModuleEntry> GetModuleForDependency(Type dependency)
         {
+
+            await BuildTypedProvider();
+
             if (_modules.TryGetValue(dependency, out var module))
             {
                 return module;
@@ -33,9 +35,9 @@ namespace Plato.Modules
             throw new InvalidOperationException($"Could not resolve module for type {dependency.Name}");
         }
 
-        private void BuildTypedProvider()
+        private async Task BuildTypedProvider()
         {
-            var moduleEntries = _moduleManager.AvailableModules.ToList();
+            var moduleEntries = await _moduleManager.LoadModulesAsync();
             foreach (var moduleEntry in moduleEntries)
             {
                 // Get all valid types from module

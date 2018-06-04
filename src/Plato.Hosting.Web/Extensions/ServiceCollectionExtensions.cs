@@ -210,7 +210,8 @@ namespace Plato.Hosting.Web.Extensions
 
                 // ensure loaded modules are aware of current context
 
-                var moduleReferences = moduleManager.AllAvailableAssemblies
+                var assemblies = moduleManager.LoadModuleAssembliesAsync().Result;
+                var moduleReferences = assemblies
                     .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
                     .Select(x => MetadataReference.CreateFromFile(x.Location))
                     .ToList();
@@ -226,10 +227,11 @@ namespace Plato.Hosting.Web.Extensions
             
             // add modules as application parts
             var applicationPartManager = services.BuildServiceProvider().GetRequiredService<ApplicationPartManager>();
-            foreach (var moduleEntry in moduleManager.AvailableModules)
+            var modules = moduleManager.LoadModulesAsync().Result;
+            foreach (var mpdule in modules)
             {
                 // add modules as application parts
-                foreach (var assembly in moduleEntry.Assmeblies)
+                foreach (var assembly in mpdule.Assmeblies)
                 {
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
                 }
@@ -316,7 +318,8 @@ namespace Plato.Hosting.Web.Extensions
                 IHostingEnvironment env)
         {
             var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
-            foreach (var moduleEntry in moduleManager.AvailableModules)
+            var modules = moduleManager.LoadModulesAsync().Result;
+            foreach (var moduleEntry in modules)
             {
                 // serve static files within module folders
                 var contentPath = Path.Combine(env.ContentRootPath,
@@ -400,7 +403,7 @@ namespace Plato.Hosting.Web.Extensions
             foreach (var controller in context.Result.Controllers)
             {
                 var controllerType = controller.ControllerType.AsType();
-                var module = _typedModuleProvider.GetModuleForDependency(controllerType);
+                var module = _typedModuleProvider.GetModuleForDependency(controllerType).Result;
                 if (module != null)
                 {
                     controller.RouteValues.Add("area", module.Descriptor.Id);

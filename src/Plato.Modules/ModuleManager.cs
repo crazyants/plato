@@ -28,23 +28,11 @@ namespace Plato.Modules
 
         #region "Public ReadOnly Propertoes"
 
-        public IEnumerable<IModuleEntry> AvailableModules
-        {
-            get
-            {
-                InitializeModules();
-                return _moduleEntries;
-            }
-        }
+   
 
-        public IEnumerable<Assembly> AllAvailableAssemblies
-        {
-            get
-            {
-                InitializeModules();
-                return _loadedAssemblies;
-            }
-        }
+        public IEnumerable<IModuleEntry> AvailableModules => _moduleEntries;
+
+        public IEnumerable<Assembly> AllAvailableAssemblies => _loadedAssemblies;
 
         #endregion
 
@@ -59,44 +47,34 @@ namespace Plato.Modules
             _moduleLocator = moduleLocator;
             _moduleLoader = moduleLoader;
             _contentRootPath = hostingEnvironment.ContentRootPath;
-            _virtualPathToModules = moduleOptions.Value.VirtualPathToModulesFolder;            
-            InitializeModules();
+            _virtualPathToModules = moduleOptions.Value.VirtualPathToModulesFolder;
         }
 
         #endregion
 
         #region "Implementation"
 
-        public async Task LoadModulesAsync()
+        public async Task<IEnumerable<IModuleEntry>> LoadModulesAsync()
         {
-
-            if (_moduleDescriptors == null)
-                throw new NullReferenceException(nameof(_moduleDescriptors));
-                      
-            foreach (var descriptor in _moduleDescriptors)
-            {
-                var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
-                _moduleEntries.Add(new ModuleEntry()
-                {
-                    Descriptor = descriptor,
-                    Assmeblies = assemblies                                  
-                });
-                _loadedAssemblies.AddRange(assemblies);
-                
-            }
-
+            await InitializeModules();
+            return _moduleEntries;
         }
 
-        public Task<IEnumerable<IModuleEntry>> LoadModulesAsync(string[] moduleIds)
+        public async Task<IEnumerable<Assembly>> LoadModuleAssembliesAsync()
         {
-            InitializeModules();
-            
-            var moduless = _moduleEntries.Select(m => m.Descriptor.Id).ToList();
+            await InitializeModules();
+            return _loadedAssemblies;
+        }
 
+        public async Task<IEnumerable<IModuleEntry>> LoadModulesAsync(string[] moduleIds)
+        {
+            await InitializeModules();
+
+            var moduless = _moduleEntries.Select(m => m.Descriptor.Id).ToList();
             var loadedModules = _moduleEntries
                 .Where(m => moduless.Contains(m.Descriptor.Id));
 
-            return Task.FromResult(loadedModules);
+            return loadedModules;
         }
 
         #endregion
@@ -109,17 +87,38 @@ namespace Plato.Modules
             {
                 _moduleEntries = new List<IModuleEntry>();
                 _loadedAssemblies = new List<Assembly>();
-                await LoadModuleDescriptors();
-                await LoadModulesAsync();
+                await LocateModuleDescriptors();
+                await LoadModulesInternalAsync();
             }
         }
-
-        async Task LoadModuleDescriptors()
+        
+        async Task LocateModuleDescriptors()
         {
             _moduleDescriptors = await _moduleLocator.LocateModulesAsync(
-             new string[] { _contentRootPath + "\\" + _virtualPathToModules },
-             "Module", "module.txt", false);
+                new string[] { _contentRootPath + "\\" + _virtualPathToModules },
+                "Module", "module.txt", false);
         }
+
+        async Task LoadModulesInternalAsync()
+        {
+
+            if (_moduleDescriptors == null)
+                throw new NullReferenceException(nameof(_moduleDescriptors));
+
+            foreach (var descriptor in _moduleDescriptors)
+            {
+                var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
+                _moduleEntries.Add(new ModuleEntry()
+                {
+                    Descriptor = descriptor,
+                    Assmeblies = assemblies
+                });
+                _loadedAssemblies.AddRange(assemblies);
+
+            }
+
+        }
+
 
         #endregion
 

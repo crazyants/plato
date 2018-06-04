@@ -58,7 +58,7 @@ namespace Plato.Shell
 
             // Add service descriptors from modules to the tenant
             var types = new List<Type>();
-            foreach (var assmebly in _moduleManager.AllAvailableAssemblies)
+            foreach (var assmebly in _moduleManager.LoadModuleAssembliesAsync().Result)
             {
                 types.AddRange(assmebly.GetTypes());
             }
