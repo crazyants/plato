@@ -9,7 +9,7 @@ namespace Plato.Modules.Models
     public class ModuleDescriptor : IModuleDescriptor
     {
 
-        public string ID { get; set;  }
+        public string Id { get; set;  }
 
         public string ModuleType { get; set;  }
 

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Plato.Modules.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Plato.Modules
 {
@@ -65,7 +67,7 @@ namespace Plato.Modules
 
         #region "Implementation"
 
-        public void LoadModules()
+        public async Task LoadModulesAsync()
         {
 
             if (_moduleDescriptors == null)
@@ -73,7 +75,7 @@ namespace Plato.Modules
                       
             foreach (var descriptor in _moduleDescriptors)
             {
-                var assemblies = _moduleLoader.LoadModule(descriptor);
+                var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
                 _moduleEntries.Add(new ModuleEntry()
                 {
                     Descriptor = descriptor,
@@ -85,24 +87,36 @@ namespace Plato.Modules
 
         }
 
+        public Task<IEnumerable<IModuleEntry>> LoadModulesAsync(string[] moduleIds)
+        {
+            InitializeModules();
+            
+            var moduless = _moduleEntries.Select(m => m.Descriptor.Id).ToList();
+
+            var loadedModules = _moduleEntries
+                .Where(m => moduless.Contains(m.Descriptor.Id));
+
+            return Task.FromResult(loadedModules);
+        }
+
         #endregion
 
         #region "Private Methods"
-        
-        void InitializeModules()
+
+        async Task InitializeModules()
         {
             if (_moduleEntries == null)
             {
                 _moduleEntries = new List<IModuleEntry>();
                 _loadedAssemblies = new List<Assembly>();
-                LoadModuleDescriptors();
-                LoadModules();
+                await LoadModuleDescriptors();
+                await LoadModulesAsync();
             }
         }
 
-        void LoadModuleDescriptors()
+        async Task LoadModuleDescriptors()
         {
-            _moduleDescriptors = _moduleLocator.LocateModules(
+            _moduleDescriptors = await _moduleLocator.LocateModulesAsync(
              new string[] { _contentRootPath + "\\" + _virtualPathToModules },
              "Module", "module.txt", false);
         }

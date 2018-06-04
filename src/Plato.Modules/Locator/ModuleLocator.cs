@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Plato.Abstractions.Extensions;
 using Plato.FileSystem;
 using Plato.Modules.Abstractions;
@@ -47,7 +48,7 @@ namespace Plato.Modules.Locator
 
         #region "Implementation"
 
-        public IEnumerable<IModuleDescriptor> LocateModules(
+        public async Task<IEnumerable<IModuleDescriptor>> LocateModulesAsync(
             IEnumerable<string> paths, 
             string extensionType, 
             string manifestName, 
@@ -61,7 +62,7 @@ namespace Plato.Modules.Locator
             foreach (var path in paths)
             {
                 descriptors.AddRange(
-                    AvailableModules(
+                    await AvailableModules(
                         path,
                         extensionType,
                         manifestName, 
@@ -77,17 +78,18 @@ namespace Plato.Modules.Locator
 
         #region "Private Methods"
 
-        private IEnumerable<ModuleDescriptor> AvailableModules(string path, string extensionType, string manifestName, bool manifestIsOptional)
+        private async Task<IEnumerable<ModuleDescriptor>> AvailableModules(string path, string extensionType, string manifestName, bool manifestIsOptional)
         {
-            return AvailableModulesInFolder(
-                path, 
-                extensionType, 
-                manifestName, 
-                manifestIsOptional).ToReadOnlyCollection();
+            var modules = await AvailableModulesInFolder(
+                path,
+                extensionType,
+                manifestName,
+                manifestIsOptional);
+            return modules.ToReadOnlyCollection();
 
         }
            
-        private List<ModuleDescriptor> AvailableModulesInFolder(
+        private async Task<IList<ModuleDescriptor>> AvailableModulesInFolder(
             string path, 
             string moduleType, 
             string manifestName, 
@@ -108,7 +110,7 @@ namespace Plato.Modules.Locator
                 var manifestPath = _fileSystem.Combine(path, moduleId, manifestName);
                 try
                 {
-                    var descriptor = GetModuleDescriptor(
+                    var descriptor = await GetModuleDescriptorAsync(
                         path,
                         moduleId,
                         moduleType,
@@ -122,7 +124,7 @@ namespace Plato.Modules.Locator
                     {
                         descriptor.Location = descriptor.Name.IsValidUrlSegment()
                                               ? descriptor.Name
-                                              : descriptor.ID;
+                                              : descriptor.Id;
                     }
 
                     localList.Add(descriptor);
@@ -138,14 +140,14 @@ namespace Plato.Modules.Locator
 
         }
 
-        private ModuleDescriptor GetModuleDescriptor(
+        private async Task<ModuleDescriptor> GetModuleDescriptorAsync(
             string locationPath, 
             string moduleId, 
             string moduleType, 
             string manifestPath, 
             bool manifestIsOptional)
         {
-            var manifestText = _fileSystem.ReadFileAsync(manifestPath).Result;
+            var manifestText = await _fileSystem.ReadFileAsync(manifestPath);
             if (manifestText == null)
             {
 
@@ -177,7 +179,7 @@ namespace Plato.Modules.Locator
             {
                 Location = rootPath,
                 VirtualPathToBin = virtualPathToBin.Replace("/", "\\"),
-                ID = moduleId,
+                Id = moduleId,
                 ModuleType = moduleType,
                 Name = GetValue(manifest, NameSection) ?? moduleId,
                 //Path = GetValue(manifest, PathSection),

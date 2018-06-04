@@ -8,7 +8,7 @@ namespace Plato.Modules.Abstractions
 {
     public interface IModuleLoader
     {
-        List<Assembly> LoadModule(IModuleDescriptor descriptor);      
+        Task<List<Assembly>> LoadModuleAsync(IModuleDescriptor descriptor);      
         
     }
 }

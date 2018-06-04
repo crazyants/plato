@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
 using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
-using Plato.Layout.TagHelpers;
 using Plato.Models.Users;
 using Plato.Stores.Users;
 using Plato.Users.ViewModels;
@@ -19,22 +15,16 @@ namespace Plato.Users.Controllers
     public class AdminController : Controller
     {
         private readonly IPlatoUserStore<User> _ploatUserStore;
-
-        private readonly IHtmlGenerator _htmlGenertor;
-
+        
         public AdminController(
-            IPlatoUserStore<User> platoUserStore, 
-            IHtmlGenerator htmlGenertor)
+            IPlatoUserStore<User> platoUserStore)
         {
             _ploatUserStore = platoUserStore;
-            _htmlGenertor = htmlGenertor;
-         
         }
 
-        public async Task<ActionResult> Index(
+        public async Task<IActionResult> Index(
             FilterOptions filterOptions,
-            PagerOptions pagerOptions
-            )
+            PagerOptions pagerOptions)
         {
 
             // default options
@@ -92,7 +82,6 @@ namespace Plato.Users.Controllers
                         q.UserName.IsIn(filterOptions.Search).Or();
                         q.Email.IsIn(filterOptions.Search);
                     }
-
                     // q.UserName.IsIn("Admin,Mark").Or();
                     // q.Email.IsIn("email440@address.com,email420@address.com");
                     // q.Id.Between(1, 5);

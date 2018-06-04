@@ -34,11 +34,14 @@ namespace Plato.Shell
             if (_logger.IsEnabled(LogLevel.Debug))            
                 _logger.LogDebug("Creating described context for tenant {0}", settings.Name);
             
+
+
             var serviceProvider = _shellContainerFactory.CreateContainer(settings);
                                     
             return new ShellContext
             {
                 Settings = settings,
+                Descriptor = shellDescriptor,
                 ServiceProvider = serviceProvider              
             };
 
@@ -52,7 +55,6 @@ namespace Plato.Shell
             }
             var descriptor = new ShellDescriptor
             {
-                SerialNumber = -1,
                 Modules = new[] {
                     new ShellModule { Name = "Plato.Logging.Console" },
                     new ShellModule { Name = "Plato.Setup" },
@@ -67,7 +69,6 @@ namespace Plato.Shell
         {
             return new ShellDescriptor
             {
-                SerialNumber = -1,
                 Modules = new[]
                 {
                     new ShellModule { Name = "Plato.Logging.Console" },

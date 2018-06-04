@@ -127,19 +127,7 @@ namespace Plato.FileSystem
                 return null;
             using (var reader = File.OpenText(file.PhysicalPath))
             {
-
                 return await reader.ReadToEndAsync();
-
-                //var sb = new StringBuilder();
-                //var line = " ";
-                //while (line != null)
-                //{
-                //    line = reader.ReadLine();
-                //    sb.Append(line)
-                //        .Append(Environment.NewLine);
-                //}
-                //return sb.ToString();
-
             }
         }
 

@@ -40,6 +40,7 @@ using Plato.Layout.Theming;
 using Plato.Modules.Expanders;
 using Plato.Security.Extensions;
 using Plato.Logging.Extensions;
+using Plato.Modules;
 using Plato.Navigation.Extensions;
 using Plato.Theming.Extensions;
 
@@ -233,9 +234,6 @@ namespace Plato.Hosting.Web.Extensions
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
                 }
             }
-
-            // add plato tag helper helpers
-
             
 
             // implement our own conventions to automatically add [areas] route attributes to loaded module controllers
@@ -323,12 +321,12 @@ namespace Plato.Hosting.Web.Extensions
                 // serve static files within module folders
                 var contentPath = Path.Combine(env.ContentRootPath,
                     moduleEntry.Descriptor.Location,
-                    moduleEntry.Descriptor.ID, "Content");
+                    moduleEntry.Descriptor.Id, "Content");
                 if (Directory.Exists(contentPath))
                 {
                     app.UseStaticFiles(new StaticFileOptions
                     {
-                        RequestPath = "/" + moduleEntry.Descriptor.ID.ToLower() + "/content",
+                        RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
                         FileProvider = new PhysicalFileProvider(contentPath)
                     });
                 }
@@ -380,73 +378,32 @@ namespace Plato.Hosting.Web.Extensions
     // TODO: Refactor below code into individual classes within Plato.Hosting
     #region "Add [Area=Module.Id] Atrribute to Module Controllers"
 
-    public class ModuleEntryType
-    {
-
-        public ModuleEntryType(IModuleEntry entry, Type type)
-        {
-            this.ModuleEntry = entry;
-            this.EntryType = type;
-        }
-
-        public IModuleEntry ModuleEntry { get; set; }
-
-        public Type EntryType { get; set; }
-
-    }
-    
+ 
     public class ModularApplicationModelProvider : IApplicationModelProvider
     {
-        private readonly IModuleManager _moduleManager;
+   
+        private readonly ITypedModuleProvider _typedModuleProvider;
 
-        public ModularApplicationModelProvider(IModuleManager moduleManager)
+        public ModularApplicationModelProvider(
+            ITypedModuleProvider typedModuleProvider)
         {
-            _moduleManager = moduleManager;
+            _typedModuleProvider = typedModuleProvider;
         }
 
-        public int Order
-        {
-            get
-            {
-                return 1000;
-            }
-        }
-        private bool IsComponentType(Type type)
-        {
-            if (type == null)
-                return false;
-            return type.IsClass && !type.IsAbstract && type.IsPublic;
-        }
+        public int Order => 1000;
 
 
         public void OnProvidersExecuted(ApplicationModelProviderContext context)
         {
-
-            // Get all modules
-            var moduleEntries = _moduleManager.AvailableModules.ToList();
-            
-            // Build list of typed modules
-            var moduleEntriesAndTypes = new List<ModuleEntryType>();
-            foreach (var moduleEntry in moduleEntries)
-            {
-                // Get all valid types from any module
-                var moduleEntryTyped = moduleEntry.Assmeblies.SelectMany(assembly =>
-                    assembly.ExportedTypes.Where(IsComponentType)
-                        .Select(type => new ModuleEntryType(moduleEntry, type))
-                ).ToArray();
-                moduleEntriesAndTypes.AddRange(moduleEntryTyped);
-            }
             
             // This code is called only once per tenant during the construction of routes
             foreach (var controller in context.Result.Controllers)
             {
                 var controllerType = controller.ControllerType.AsType();
-
-                // get module for controller type
-                var moduleForType = moduleEntriesAndTypes.FirstOrDefault(module => module.EntryType == controllerType);
-                if (moduleForType != null)
+                var module = _typedModuleProvider.GetModuleForDependency(controllerType);
+                if (module != null)
                 {
-                    controller.RouteValues.Add("area", moduleForType.ModuleEntry.Descriptor.ID);
+                    controller.RouteValues.Add("area", module.Descriptor.Id);
                 }
 
             }
@@ -455,6 +412,7 @@ namespace Plato.Hosting.Web.Extensions
         public void OnProvidersExecuting(ApplicationModelProviderContext context)
         {
         }
+
     }
 
     #endregion

@@ -7,7 +7,7 @@ namespace Plato.Modules.Abstractions
 {
     public interface IModuleDescriptor
     {
-        string ID { get; set; }
+        string Id { get; set; }
 
         string ModuleType { get; set; }
 

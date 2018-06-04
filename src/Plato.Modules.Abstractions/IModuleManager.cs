@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Plato.Modules.Abstractions
 {
@@ -10,7 +11,9 @@ namespace Plato.Modules.Abstractions
 
         IEnumerable<IModuleEntry> AvailableModules { get; }
 
-        void LoadModules();
+        Task LoadModulesAsync();
+
+        Task<IEnumerable<IModuleEntry>> LoadModulesAsync(string[] moduleIds);
 
     }
 }

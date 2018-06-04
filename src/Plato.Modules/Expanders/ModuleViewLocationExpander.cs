@@ -5,8 +5,7 @@ namespace Plato.Modules.Expanders
 {
     public class ModuleViewLocationExpander : IViewLocationExpander
     {
-
- 
+        
         public ModuleViewLocationExpander()
         {
         }

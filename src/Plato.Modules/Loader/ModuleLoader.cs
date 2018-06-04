@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Logging;
 using Plato.FileSystem;
@@ -16,9 +17,9 @@ namespace Plato.Modules.Loader
     {
         #region "Implementation"
 
-        public List<Assembly> LoadModule(IModuleDescriptor descriptor)
+        public async Task<List<Assembly>> LoadModuleAsync(IModuleDescriptor descriptor)
         {
-            return LoadAssembliesInFolder(descriptor.VirtualPathToBin, new List<Assembly>());
+            return await LoadAssembliesInFolder(descriptor.VirtualPathToBin, new List<Assembly>());
         }
 
         #endregion
@@ -64,7 +65,7 @@ namespace Plato.Modules.Loader
 
         #region "Private Methods"
 
-        private List<Assembly> LoadAssembliesInFolder(
+        private async Task<List<Assembly>> LoadAssembliesInFolder(
             string path, List<Assembly> localList)
         {
             if (string.IsNullOrEmpty(path))
@@ -90,7 +91,7 @@ namespace Plato.Modules.Loader
             var subFolders = Directory.GetDirectories(path);
             for (var i = 0; i <= subFolders.Length - 1; i++)
             {
-                LoadAssembliesInFolder(subFolders.GetValue(i).ToString(), localList);
+                await LoadAssembliesInFolder(subFolders.GetValue(i).ToString(), localList);
             }
                 
             return localList;

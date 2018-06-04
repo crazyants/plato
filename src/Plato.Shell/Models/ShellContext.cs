@@ -14,6 +14,8 @@ namespace Plato.Shell.Models
 
         public IServiceProvider ServiceProvider { get; set; }
 
+        public ShellDescriptor Descriptor { get; set; }
+
         public IServiceScope CreateServiceScope()
         {
             return ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
