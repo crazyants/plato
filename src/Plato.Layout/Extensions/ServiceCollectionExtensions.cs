@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Layout.TagHelpers;
 using Plato.Layout.Theming;
+using Plato.Layout.Views;
 
 
 namespace Plato.Layout.Extensions
@@ -22,7 +23,11 @@ namespace Plato.Layout.Extensions
             this IServiceCollection services)
         {
 
-            // add theming features - configures theme layout based on controller type
+            services.AddSingleton<IViewHelperFactory, ViewHelperFactory>();
+            services.AddSingleton<IViewResultFactory, ViewResultFactory>();
+            services.AddSingleton<IHtmlDisplay, DefaultHtmlDisplay>();
+            
+            // add theming convension - configures theme layout based on controller type
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
 
             return services;

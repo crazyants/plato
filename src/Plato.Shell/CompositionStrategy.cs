@@ -36,6 +36,15 @@ namespace Plato.Shell
 
             var entries = new Dictionary<Type, IModuleEntry>();
 
+            foreach (var module in modules)
+            {
+                foreach (var exportedType in module.ExportedTypes)
+
+                {
+                    entries.Add(exportedType, module);
+                }
+            }
+
             //foreach (var feature in features)
             //{
             //    foreach (var exportedType in feature.ExportedTypes)

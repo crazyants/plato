@@ -79,7 +79,7 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
                 internalServices.AddPlatoCaching();
-                internalServices.AddPlatoHostCore();
+               
                 internalServices.AddPlatoModules();
                 internalServices.AddPlatoTheming();
                 internalServices.AddPlatoNavigation();
@@ -106,8 +106,11 @@ namespace Plato.Hosting.Web.Extensions
             Action<IServiceCollection> configure)
         {
 
-            // Add file system
-            services.AddFileSystem();
+            // Add host
+            services.AddPlatoDefaultHost();
+
+            // Add shell
+            services.AddPlatoShell();
 
             // Let the app change the default tenant behavior and set of features
             configure?.Invoke(services);
@@ -394,8 +397,7 @@ namespace Plato.Hosting.Web.Extensions
         }
 
         public int Order => 1000;
-
-
+        
         public void OnProvidersExecuted(ApplicationModelProviderContext context)
         {
             

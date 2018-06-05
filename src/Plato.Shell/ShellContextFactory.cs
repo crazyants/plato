@@ -2,6 +2,7 @@
 using Plato.Shell.Models;
 using Plato.Data;
 using System;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 
@@ -11,15 +12,18 @@ namespace Plato.Shell
     {
 
 
+        private readonly ICompositionStrategy _compositionStrategy;
+
         private readonly IShellContainerFactory _shellContainerFactory;
         private readonly ILogger _logger;
 
         public ShellContextFactory(
             IShellContainerFactory shellContainerFactory,
+            ICompositionStrategy compositionStrategy,
             ILogger<ShellContextFactory> logger)
         {
-
             _shellContainerFactory = shellContainerFactory;
+            _compositionStrategy = compositionStrategy;
             _logger = logger;
         }
 
@@ -28,20 +32,20 @@ namespace Plato.Shell
             return CreateDescribedContext(settings, MinimumShellDescriptor());
         }
 
-        public ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor shellDescriptor)
+        public ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor descriptor)
         {
 
             if (_logger.IsEnabled(LogLevel.Debug))            
                 _logger.LogDebug("Creating described context for tenant {0}", settings.Name);
-            
 
 
+            var blueprint = _compositionStrategy.ComposeAsync(settings, descriptor);
             var serviceProvider = _shellContainerFactory.CreateContainer(settings);
                                     
             return new ShellContext
             {
                 Settings = settings,
-                Descriptor = shellDescriptor,
+                Descriptor = descriptor,
                 ServiceProvider = serviceProvider              
             };
 

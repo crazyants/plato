@@ -26,11 +26,23 @@ namespace Plato.Shell.Extensions
             });
         }
 
-        public static IServiceCollection AddFileSystem(
+        public static IServiceCollection AddPlatoShell(
             this IServiceCollection services)
         {
                     
             services.AddSingleton<IAppDataFolder, PhysicalAppDataFolder>();
+            
+            // shell / tenant context
+
+            services.AddSingleton<IShellSettingsManager, ShellSettingsManager>();
+            services.AddSingleton<IShellContextFactory, ShellContextFactory>();
+            {
+                services.AddSingleton<ICompositionStrategy, CompositionStrategy>();
+                services.AddSingleton<IShellContainerFactory, ShellContainerFactory>();
+            }
+
+            services.AddSingleton<IRunningShellTable, RunningShellTable>();
+
 
             return services;
         }

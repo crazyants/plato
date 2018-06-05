@@ -17,6 +17,7 @@ namespace Plato.Modules.Loader
     {
         #region "Implementation"
 
+        /// <inheritdoc />
         public async Task<List<Assembly>> LoadModuleAsync(IModuleDescriptor descriptor)
         {
             return await LoadAssembliesInFolder(descriptor.VirtualPathToBin, new List<Assembly>());

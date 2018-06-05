@@ -1,15 +1,6 @@
 ﻿@model UsersPaged
-@{
-    ViewData["Title"] = "Manage Users";
-}
 
-@await DisplayAsync(Model.View)
-
-@await Html.PartialAsync("UserList", @Model)
-
-<h4>@T["Manage Users"]</h4>
-<span class="text-muted">@T["Manage your registered users"]</span>
-<hr />
+<h1>User List Partial View</h1>
 
 <ul class="list-group">
     @foreach (var user in Model.Results.Data)

@@ -1,4 +1,6 @@
-﻿using Plato.Abstractions.Data;
+﻿using Microsoft.AspNetCore.Html;
+using Plato.Abstractions.Data;
+using Plato.Layout.Views;
 using Plato.Models.Users;
 using Plato.Navigation;
 
@@ -13,6 +15,9 @@ namespace Plato.Users.ViewModels
 
         public FilterOptions FilterOpts { get; set; }
         
+
+        public View View { get; set; }
+
     }
 
     public class FilterOptions

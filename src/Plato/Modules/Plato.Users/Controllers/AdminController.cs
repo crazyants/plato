@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
+using Plato.Layout.Views;
 using Plato.Models.Users;
 using Plato.Stores.Users;
 using Plato.Users.ViewModels;
@@ -26,6 +27,9 @@ namespace Plato.Users.Controllers
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
+
+
+
 
             // default options
             if (filterOptions == null)
@@ -53,8 +57,12 @@ namespace Plato.Users.Controllers
             //routeData.Values.Add("Options.Filter", options.Filter);
             routeData.Values.Add("Options.Search", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
-            
-            return View(await GetModel(filterOptions, pagerOptions));
+
+
+            var model = await GetModel(filterOptions, pagerOptions);
+            model.View = new View("UserList", model);
+
+            return View(model);
         }
 
         private async Task<UsersPaged> GetModel(
@@ -65,7 +73,7 @@ namespace Plato.Users.Controllers
             {
                 Results = await GetUsers(filterOptions, pagerOptions),
                 FilterOpts = filterOptions,
-                PagerOpts = pagerOptions
+                PagerOpts = pagerOptions,
             };
         }
 
