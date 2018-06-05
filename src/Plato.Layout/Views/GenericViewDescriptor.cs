@@ -8,9 +8,12 @@ namespace Plato.Layout.Views
     public class GenericViewDescriptor
     {
 
-        public IGenericView View { get; set; }
+        public string Name { get; set; }
 
-        public ViewContext Viewcontext { get; set; }
+        public object Value { get; set; }
+
+        public int Priority { get; set; }
         
     }
+
 }

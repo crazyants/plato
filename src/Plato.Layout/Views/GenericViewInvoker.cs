@@ -18,9 +18,9 @@ namespace Plato.Layout.Views
     {
         ViewContext ViewContext { get; set; }
 
-        void Contextualize(ViewContext viewContext);
+        void Contextualize(GenericViewDisplayContext viewContext);
 
-        Task<IHtmlContent> InvokeAsync(IGenericView view);
+        Task<IHtmlContent> InvokeAsync(GenericViewDescriptor view);
 
     }
 
@@ -45,30 +45,36 @@ namespace Plato.Layout.Views
 
         // implementation
 
-        public void Contextualize(ViewContext viewContext)
+        public void Contextualize(GenericViewDisplayContext context)
         {
-            this.ViewContext = viewContext;
+            this.ViewContext = context.ViewContext;
         }
 
-        public async Task<IHtmlContent> InvokeAsync(IGenericView view)
+        public async Task<IHtmlContent> InvokeAsync(GenericViewDescriptor view)
         {
             if (this.ViewContext == null)
             {
                 throw new Exception("ViewContext must be set via the Contextualize method before calling the InvokeAsync method");
             }
-         
-            // view components use an anonymous type for the parameters argument
-            // this anonymous type is emitted as an actual type by the compiler but
-            // marked with the CompilerGeneratedAttribute. If we find this attribute
-            // on the model we'll treat this view as a ViewComponent and invoke accordingly
-            if (IsViewModelAnonymousType(view))
+
+            // are we displaying a generic view?
+            if (view.Value is IGenericView genericView)
             {
-                return await InvokeViewComponentAsync(view);
+                // view components use an anonymous type for the parameters argument
+                // this anonymous type is emitted as an actual type by the compiler but
+                // marked with the CompilerGeneratedAttribute. If we find this attribute
+                // on the model we'll treat this view as a ViewComponent and invoke accordingly
+                if (IsViewModelAnonymousType(genericView))
+                {
+                    return await InvokeViewComponentAsync(genericView);
+                }
+
+                return await InvokePartialAsync(genericView);
+
             }
 
-            return await InvokePartialAsync(view);
 
-            //return HtmlString.Empty;
+            return HtmlString.Empty;
 
         }
         

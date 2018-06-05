@@ -35,21 +35,21 @@ namespace Plato.Layout.Razor
             }
         }
 
-        private IViewHelper _viewHelper;
+        private IViewDisplayHelper _viewDisplayHelper;
 
         private void EnsureViewHelper()
         {
-            if (_viewHelper == null)
+            if (_viewDisplayHelper == null)
             {
                 var factory = Context.RequestServices.GetService<IViewHelperFactory>();
-                _viewHelper = factory.CreateHelper(ViewContext);
+                _viewDisplayHelper = factory.CreateHelper(ViewContext);
             }
         }
 
         public Task<IHtmlContent> DisplayAsync(dynamic shape)
         {
             EnsureViewHelper();
-            return _viewHelper.DisplayAsync(shape);
+            return _viewDisplayHelper.DisplayAsync(shape);
         }
 
 

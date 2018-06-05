@@ -14,20 +14,18 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Plato.Layout.Views
 {
-    public interface IViewHelper
+    public interface IViewDisplayHelper
     {
         Task<IHtmlContent> DisplayAsync(IGenericView view);
     }
 
-    public class ViewDisplayHelper : DynamicObject, IViewHelper
-    {
-
-
+    public class ViewDisplayHelper : IViewDisplayHelper
+    { 
 
         private readonly IGenericViewInvoker _generaticViewInvoker;
 
         private readonly IHtmlDisplay _htmlDisplay;
-        private readonly IViewResultFactory _shapeFactory;
+        private readonly IGenericViewFactory _genericViewFactory;
         private readonly IServiceProvider _serviceProvider;
 
         public ViewContext ViewContext { get; set; }
@@ -35,13 +33,13 @@ namespace Plato.Layout.Views
         public ViewDisplayHelper(
             IGenericViewInvoker generaticViewInvoker,
             IHtmlDisplay htmlDisplay,
-            IViewResultFactory viewResultFactory,
+            IGenericViewFactory genericViewFactory,
             ViewContext viewContext,
             IServiceProvider serviceProvider)
         {
             _generaticViewInvoker = generaticViewInvoker;
             _htmlDisplay = htmlDisplay;
-            _shapeFactory = viewResultFactory;
+            _genericViewFactory = genericViewFactory;
             ViewContext = viewContext;
             _serviceProvider = serviceProvider;
         }
@@ -53,9 +51,20 @@ namespace Plato.Layout.Views
             {
                 return HtmlString.Empty;
             }
+            
+            var viewDescriptor = await _genericViewFactory.CreateAsync(view.Name, view);
+            
 
-            _generaticViewInvoker.Contextualize(this.ViewContext);
-            var output = await _generaticViewInvoker.InvokeAsync(view);
+            var displayContext = new GenericViewDisplayContext()
+            {
+                ViewDescriptor = viewDescriptor,
+                ViewContext = this.ViewContext
+            };
+
+            var output = await _genericViewFactory.InvokeAsync(displayContext);
+
+            //_generaticViewInvoker.Contextualize(this.ViewContext);
+            //var output = await _generaticViewInvoker.InvokeAsync(view);
             
             return output;
 

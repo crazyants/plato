@@ -8,7 +8,7 @@ namespace Plato.Layout.Views
 {
     public class DefaultHtmlDisplay : IHtmlDisplay
     {
-        public Task<IHtmlContent> ExecuteAsync(ViewDisplayContext context)
+        public Task<IHtmlContent> ExecuteAsync(GenericViewDisplayContext context)
         {
             throw new NotImplementedException();
         }

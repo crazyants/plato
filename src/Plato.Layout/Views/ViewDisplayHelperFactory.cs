@@ -10,7 +10,7 @@ namespace Plato.Layout.Views
 
     public interface IViewHelperFactory
     {
-        IViewHelper CreateHelper(ViewContext context);
+        IViewDisplayHelper CreateHelper(ViewContext context);
     }
 
     public class ViewDisplayHelperFactory : IViewHelperFactory
@@ -18,27 +18,27 @@ namespace Plato.Layout.Views
 
         private readonly IGenericViewInvoker _genericViewInvoker;
         private readonly IHtmlDisplay _displayManager;
-        private readonly IViewResultFactory _viewResultFactory;
+        private readonly IGenericViewFactory _genericViewFactory;
         private readonly IServiceProvider _serviceProvider;
         
         public ViewDisplayHelperFactory(
             IGenericViewInvoker genericViewInvoker,
             IHtmlDisplay displayManager,
-            IViewResultFactory viewResultFactory,
+            IGenericViewFactory genericViewFactory,
             IServiceProvider serviceProvider)
         {
             _genericViewInvoker = genericViewInvoker;
             _displayManager = displayManager;
-            _viewResultFactory = viewResultFactory;
+            _genericViewFactory = genericViewFactory;
             _serviceProvider = serviceProvider;
         }
 
-        public IViewHelper CreateHelper(ViewContext viewContext)
+        public IViewDisplayHelper CreateHelper(ViewContext viewContext)
         {
             return new ViewDisplayHelper(
                 _genericViewInvoker,
                 _displayManager,
-                _viewResultFactory,
+                _genericViewFactory,
                 viewContext,
                 _serviceProvider);
         }

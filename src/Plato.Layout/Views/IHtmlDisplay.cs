@@ -9,12 +9,12 @@ namespace Plato.Layout.Views
 
     public interface IHtmlDisplay
     {
-        Task<IHtmlContent> ExecuteAsync(ViewDisplayContext context);
+        Task<IHtmlContent> ExecuteAsync(GenericViewDisplayContext context);
     }
 
     public class HtmlDisplay : IHtmlDisplay
     {
-        public Task<IHtmlContent> ExecuteAsync(ViewDisplayContext context)
+        public Task<IHtmlContent> ExecuteAsync(GenericViewDisplayContext context)
         {
 
           throw new NotImplementedException();

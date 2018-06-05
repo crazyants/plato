@@ -2,26 +2,48 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Plato.Layout.Views
 {
 
-    public interface IViewResultFactory
+    public interface IGenericViewFactory
     {
-        Task<ViewResult> CreateAsync(string view, object model);
+        Task<GenericViewDescriptor> CreateAsync(string key, object view);
+
+        Task<IHtmlContent> InvokeAsync(GenericViewDisplayContext displayContext);
 
         dynamic New { get; }
     }
 
 
-    public class ViewResultFactory  : IViewResultFactory
+    public class GenericViewFactory  : IGenericViewFactory
     {
-        public Task<ViewResult> CreateAsync(string view, object model)
+
+        private readonly IGenericViewTableManager _genericViewTableManager;
+        private readonly IGenericViewInvoker _genericViewInvoker;
+
+        public GenericViewFactory(
+            IGenericViewTableManager genericViewTableManager,
+            IGenericViewInvoker genericViewInvoker)
         {
-            throw new NotImplementedException();
+            _genericViewTableManager = genericViewTableManager;
+            _genericViewInvoker = genericViewInvoker;
+        }
+
+        public async Task<GenericViewDescriptor> CreateAsync(string name, object model)
+        {
+            return await _genericViewTableManager.TryGetOrAdd(name, model);
+        }
+
+        public async Task<IHtmlContent> InvokeAsync(GenericViewDisplayContext displayContext)
+        {
+            _genericViewInvoker.Contextualize(displayContext);
+            return await _genericViewInvoker.InvokeAsync(displayContext.ViewDescriptor);
         }
 
         public dynamic New { get; }
+
     }
 }
