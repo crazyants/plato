@@ -22,8 +22,10 @@ namespace Plato.Layout.Views
     public class ViewDisplayHelper : DynamicObject, IViewHelper
     {
 
-        private readonly IHtmlHelper _htmlHelper;
-        private readonly IViewComponentHelper _viewComponentHelper;
+
+
+        private readonly IGenericViewInvoker _generaticViewInvoker;
+
         private readonly IHtmlDisplay _htmlDisplay;
         private readonly IViewResultFactory _shapeFactory;
         private readonly IServiceProvider _serviceProvider;
@@ -31,15 +33,13 @@ namespace Plato.Layout.Views
         public ViewContext ViewContext { get; set; }
         
         public ViewDisplayHelper(
-            IHtmlHelper htmlHelper,
-            IViewComponentHelper viewComponentHelper,
+            IGenericViewInvoker generaticViewInvoker,
             IHtmlDisplay htmlDisplay,
             IViewResultFactory viewResultFactory,
             ViewContext viewContext,
             IServiceProvider serviceProvider)
         {
-            _htmlHelper = htmlHelper;
-            _viewComponentHelper = viewComponentHelper;
+            _generaticViewInvoker = generaticViewInvoker;
             _htmlDisplay = htmlDisplay;
             _shapeFactory = viewResultFactory;
             ViewContext = viewContext;
@@ -54,49 +54,12 @@ namespace Plato.Layout.Views
                 return HtmlString.Empty;
             }
 
-            // view components use an anonymous type for the parameters argument
-            // this anonymous type is emitted as an actual type by the compiler but
-            // marked with the CompilerGeneratedAttribute. If we find this attribute
-            // on the model we'll treat this view as a ViewComponent and invoke accordingly
-            if (IsViewModelAnonymousType(view))
-            {
-
-                // view component
-                var helper = _viewComponentHelper as DefaultViewComponentHelper;
-                if (helper == null)
-                {
-                    throw new ArgumentNullException(
-                        $"{_viewComponentHelper.GetType()} cannot be converted to DefaultViewComponentHelper");
-                }
-
-                helper.Contextualize(this.ViewContext);
-                return await _viewComponentHelper.InvokeAsync(view.Name, view.Model);
-
-            }
-            else
-            {
-
-                // partial view
-
-                var helper = _htmlHelper as HtmlHelper;
-                if (helper == null)
-                {
-                    throw new ArgumentNullException($"{_htmlHelper.GetType()} cannot be converted to HtmlHelper");
-                }
-                helper.Contextualize(this.ViewContext);
-                return await _htmlHelper.PartialAsync(view.Name, view.Model, ViewContext.ViewData);
-
-            }
+            _generaticViewInvoker.Contextualize(this.ViewContext);
+            var output = await _generaticViewInvoker.InvokeAsync(view);
             
-            return HtmlString.Empty;
+            return output;
 
         }
 
-        public bool IsViewModelAnonymousType(IGenericView view)
-        {
-            return view.Model
-                .GetType()
-                .GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any();
-        }
     }
 }

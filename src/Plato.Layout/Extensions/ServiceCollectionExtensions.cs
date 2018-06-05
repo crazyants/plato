@@ -26,7 +26,14 @@ namespace Plato.Layout.Extensions
             services.AddSingleton<IViewHelperFactory, ViewDisplayHelperFactory>();
             services.AddSingleton<IViewResultFactory, ViewResultFactory>();
             services.AddSingleton<IHtmlDisplay, DefaultHtmlDisplay>();
+
+            services.AddSingleton<IGenericViewTableManager, GenericViewTableManager>();
+            services.AddSingleton<IGenericViewInvoker, GenericViewInvoker>();
+
             
+
+
+
             // add theming convension - configures theme layout based on controller type
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
 
