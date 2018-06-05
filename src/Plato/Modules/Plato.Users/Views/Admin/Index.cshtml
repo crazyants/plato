@@ -1,42 +1,10 @@
-﻿@model UsersPaged
+﻿@model GenericView
 @{
     ViewData["Title"] = "Manage Users";
 }
-
-@await DisplayAsync(Model.PartialView)
-
-@await DisplayAsync(Model.ViewComponent)
-
-@*await Html.PartialAsync("UserList", @Model)*@
-
-<br /><br />
------------------------------
-<br /><br />
-
-
-<br /><br />
------------------------------
-<br /><br />
-
-
 
 <h4>@T["Manage Users"]</h4>
 <span class="text-muted">@T["Manage your registered users"]</span>
 <hr />
 
-<ul class="list-group">
-    @foreach (var user in Model.Results.Data)
-    {
-        <li class="list-group-item">
-            @user.UserName
-        </li>
-    }
-</ul>
-
-@Model.Results.Total
-
-<pager page="@Model.PagerOpts.Page"
-       page-size="@Model.PagerOpts.PageSize"
-       total="@Model.Results.Total"></pager>
-
-
+@await DisplayAsync(Model)

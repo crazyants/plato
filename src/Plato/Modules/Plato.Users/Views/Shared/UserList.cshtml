@@ -5,16 +5,10 @@
 <ul class="list-group">
     @foreach (var user in Model.Results.Data)
     {
-        <li class="list-group-item">
-            @user.UserName
-        </li>
+        @await DisplayAsync(new GenericView("UserListItem", user))
     }
 </ul>
 
-@Model.Results.Total
-
-<pager page="@Model.PagerOpts.Page"
-       page-size="@Model.PagerOpts.PageSize"
-       total="@Model.Results.Total"></pager>
+<pager model="@Model.PagerOpts"></pager>
 
 

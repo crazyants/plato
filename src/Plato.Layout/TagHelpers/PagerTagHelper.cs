@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Navigation;
 
 namespace Plato.Layout.TagHelpers
 {
@@ -18,11 +19,7 @@ namespace Plato.Layout.TagHelpers
     public class PagerTagHelper : TagHelper
     {
 
-        public int Page { get; set; } = 1;
-
-        public int? PageSize { get; set; }
-
-        public double? Total { get; set; }
+        public PagerOptions Model { get; set; }
 
         public IStringLocalizer T { get; set; }
 
@@ -117,21 +114,21 @@ namespace Plato.Layout.TagHelpers
         private StringBuilder BuildLinks(StringBuilder builder)
         {
 
-            if (Total == null)
-                throw new ArgumentNullException(nameof(Total));
+            if (Model == null)
+                throw new ArgumentNullException(nameof(Model));
+            
+            if (Model.PageSize == 0)
+                throw new ArgumentNullException(nameof(Model.PageSize));
 
-            if (PageSize == null)
-                throw new ArgumentNullException(nameof(PageSize));
-
-            var currentPage = Page;
+            var currentPage = Model.Page;
             if (currentPage < 1)
                 currentPage = 1;
-            var pageSize = (int) PageSize;
-            var total = (double) Total;;
+            var pageSize = (int)Model.PageSize;
+            var total = (double)Model.Total;;
             var numberOfPagesToShow = 7;
-            var totalPageCount = PageSize > 0 ? (int) Math.Ceiling(total / pageSize) : 1;
-            var firstPage = Math.Max(1, Page - (numberOfPagesToShow / 2));
-            var lastPage = Math.Min(totalPageCount, Page + (int) (numberOfPagesToShow / 2));
+            var totalPageCount = Model.PageSize > 0 ? (int) Math.Ceiling(total / pageSize) : 1;
+            var firstPage = Math.Max(1, Model.Page - (numberOfPagesToShow / 2));
+            var lastPage = Math.Min(totalPageCount, Model.Page + (int) (numberOfPagesToShow / 2));
 
             if (numberOfPagesToShow > 0 && lastPage > 1)
             {
@@ -147,7 +144,7 @@ namespace Plato.Layout.TagHelpers
 
                     builder
                         .Append("<li class=\"page-item")
-                        .Append(i == Page ? " active" : "")
+                        .Append(i == Model.Page ? " active" : "")
                         .Append("\">")
                         .Append("<a class=\"page-link\" href=\"")
                         .Append(url)

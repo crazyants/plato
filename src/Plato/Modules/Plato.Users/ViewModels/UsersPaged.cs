@@ -8,7 +8,18 @@ namespace Plato.Users.ViewModels
 {
     public class UsersPaged
     {
-        
+
+        public UsersPaged(
+            IPagedResults<User> results,
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
+        {
+            this.Results = results;
+            this.FilterOpts = filterOptions;
+            this.PagerOpts = pagerOptions;
+            this.PagerOpts.SetTotal(results.Total);
+        }
+
         public IPagedResults<User> Results { get; set; }
 
         public PagerOptions PagerOpts { get; set; }

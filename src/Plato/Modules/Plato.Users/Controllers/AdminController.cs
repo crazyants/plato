@@ -28,9 +28,6 @@ namespace Plato.Users.Controllers
             PagerOptions pagerOptions)
         {
 
-
-
-
             // default options
             if (filterOptions == null)
             {
@@ -57,26 +54,22 @@ namespace Plato.Users.Controllers
             //routeData.Values.Add("Options.Filter", options.Filter);
             routeData.Values.Add("Options.Search", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
-
-
+            
             var model = await GetModel(filterOptions, pagerOptions);
+            var view = new GenericView("UserList", model);
 
-            model.PartialView = new GenericView("UserList", model);
-            model.ViewComponent = new GenericView("UserList", new { maxPriority = 4, isDone = true });
-
-            return View(model);
+            return View(view);
         }
 
         private async Task<UsersPaged> GetModel(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
-            return new UsersPaged()
-            {
-                Results = await GetUsers(filterOptions, pagerOptions),
-                FilterOpts = filterOptions,
-                PagerOpts = pagerOptions,
-            };
+            var users = await GetUsers(filterOptions, pagerOptions);
+            return new UsersPaged(
+                users,
+                filterOptions,
+                pagerOptions);
         }
 
         public async Task<IPagedResults<User>> GetUsers(

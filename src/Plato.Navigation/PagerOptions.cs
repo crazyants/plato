@@ -11,5 +11,13 @@ namespace Plato.Navigation
 
         public int PageSize { get; set; } = 20;
 
+        private int _total;
+
+        public int Total => _total;
+
+        public void SetTotal(int total)
+        {
+            _total = total;
+        }
     }
 }
