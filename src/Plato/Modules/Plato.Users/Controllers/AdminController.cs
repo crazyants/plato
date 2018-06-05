@@ -60,7 +60,9 @@ namespace Plato.Users.Controllers
 
 
             var model = await GetModel(filterOptions, pagerOptions);
-            model.View = new View("UserList", model);
+
+            model.PartialView = new GenericView("UserList", model);
+            model.ViewComponent = new GenericView("UserList", new { maxPriority = 4, isDone = true });
 
             return View(model);
         }

@@ -23,7 +23,7 @@ namespace Plato.Layout.Extensions
             this IServiceCollection services)
         {
 
-            services.AddSingleton<IViewHelperFactory, ViewHelperFactory>();
+            services.AddSingleton<IViewHelperFactory, ViewDisplayHelperFactory>();
             services.AddSingleton<IViewResultFactory, ViewResultFactory>();
             services.AddSingleton<IHtmlDisplay, DefaultHtmlDisplay>();
             

@@ -15,9 +15,9 @@ namespace Plato.Users.ViewModels
 
         public FilterOptions FilterOpts { get; set; }
         
+        public object PartialView { get; set; }
 
-        public View View { get; set; }
-
+        public object ViewComponent { get; set; }
     }
 
     public class FilterOptions

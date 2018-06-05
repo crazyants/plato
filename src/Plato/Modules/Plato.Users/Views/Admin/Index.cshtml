@@ -3,9 +3,22 @@
     ViewData["Title"] = "Manage Users";
 }
 
-@await DisplayAsync(Model.View)
+@await DisplayAsync(Model.PartialView)
 
-@await Html.PartialAsync("UserList", @Model)
+@await DisplayAsync(Model.ViewComponent)
+
+@*await Html.PartialAsync("UserList", @Model)*@
+
+<br /><br />
+-----------------------------
+<br /><br />
+
+
+<br /><br />
+-----------------------------
+<br /><br />
+
+
 
 <h4>@T["Manage Users"]</h4>
 <span class="text-muted">@T["Manage your registered users"]</span>
