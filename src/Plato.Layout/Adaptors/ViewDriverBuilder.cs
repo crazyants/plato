@@ -15,9 +15,7 @@ namespace Plato.Layout.Adaptors
 
         void UpdateModel(object model);
 
-        Task<IViewAdaptorBuilder> OnDisplay(Action<IViewAdaptorBuilder> context);
-        
-        void AlterContent(Func<IHtmlContent, IHtmlContent> action);
+        void AdaptOutput(Func<IHtmlContent, IHtmlContent> action);
 
         IEnumerable<Func<IHtmlContent, IHtmlContent>> CotentAlterations { get; }
 
@@ -36,16 +34,11 @@ namespace Plato.Layout.Adaptors
             _model = model;
         }
 
-        public Task<IViewAdaptorBuilder> OnDisplay(Action<IViewAdaptorBuilder> context)
-        {
-            throw new NotImplementedException();
-        }
-
         private List<Func<IHtmlContent, IHtmlContent>> _cotentAlteratins;
 
         public IEnumerable<Func<IHtmlContent, IHtmlContent>> CotentAlterations => _cotentAlteratins;
 
-        public void AlterContent(Func<IHtmlContent, IHtmlContent> alteration)
+        public void AdaptOutput(Func<IHtmlContent, IHtmlContent> alteration)
         {
             if (_cotentAlteratins == null)
             {

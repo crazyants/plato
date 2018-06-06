@@ -51,23 +51,24 @@ namespace Plato.Layout.Views
                 return HtmlString.Empty;
             }
             
+            // Build view descriptor
             var viewDescriptor = await _genericViewFactory.CreateAsync(view.Name, view);
-            
 
-            var adaptorViewManager = ViewContext.HttpContext.RequestServices.GetService<IViewAdaptorManager>();
-            var adaptors = await adaptorViewManager.GetAdaptos(view.Name);
+            // Get registered view adaptor providers
+            var viewAdaptorManager = ViewContext.HttpContext.RequestServices.GetService<IViewAdaptorManager>();
+            var adaptors = await viewAdaptorManager.GetViewAdaptors(view.Name);
 
-       
+            // Build display context
             var displayContext = new GenericViewDisplayContext()
             {
                 ViewDescriptor = viewDescriptor,
+                ViewAdaptors = adaptors,
                 ViewContext = this.ViewContext,
                 ServiceProvider = _serviceProvider
             };
 
-            var output = await _genericViewFactory.InvokeAsync(displayContext);
-
-            return output;
+            // Invoke the view
+            return await _genericViewFactory.InvokeAsync(displayContext);
 
         }
 

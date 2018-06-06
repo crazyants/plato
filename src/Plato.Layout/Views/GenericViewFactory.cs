@@ -48,7 +48,7 @@ namespace Plato.Layout.Views
 
             var htmlContent = await _genericViewInvoker.InvokeAsync(displayContext.ViewDescriptor);
             
-
+            // Apply adaptor alterations
 
             if (displayContext.ViewAdaptors != null)
             {
@@ -59,11 +59,9 @@ namespace Plato.Layout.Views
                     {
                         htmlContent = alteration(htmlContent);
                     }
-
                 }
             }
           
-
             return htmlContent;
 
         }

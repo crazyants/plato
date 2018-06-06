@@ -14,19 +14,21 @@ namespace Plato.Layout.Adaptors
 
         public abstract Task<IViewAdaptorResult> ConfigureAsync();
 
-        public async Task<IViewAdaptorResult> Adapt(
+        public Task<IViewAdaptorResult> Adapt(
             string name,
-            Action<IViewAdaptorBuilder> configure
-        )
+            Action<IViewAdaptorBuilder> configure)
         {
 
-            var builder = new ViewAdaptorBuilder(); ;
+            // Apply adaptor builder
+            var builder = new ViewAdaptorBuilder();
             configure(builder);
-
-            return new ViewAdaptorResult()
+            
+            // Return adapted result
+            return Task.FromResult((IViewAdaptorResult)new ViewAdaptorResult()
             {
+                ViewName = name,
                 AdaptorBuilder = builder
-            };
+            });
 
         }
 

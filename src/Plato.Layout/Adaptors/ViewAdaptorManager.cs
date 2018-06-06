@@ -11,7 +11,7 @@ namespace Plato.Layout.Adaptors
 
     public interface IViewAdaptorManager
     {
-        Task<IEnumerable<IViewAdaptorResult>> GetAdaptos(string name);
+        Task<IEnumerable<IViewAdaptorResult>> GetViewAdaptors(string name);
 
     }
 
@@ -19,32 +19,41 @@ namespace Plato.Layout.Adaptors
     {
         private readonly IList<IViewAdaptorProvider> _adaptorProviders;
 
-        private static ConcurrentDictionary<string, IViewAdaptorResult> _adaptors;
-
-
+        private static ConcurrentDictionary<string, IViewAdaptorResult> _adaptors
+            = new ConcurrentDictionary<string, IViewAdaptorResult>();
+        
         public ViewAdaptorManager(
             IEnumerable<IViewAdaptorProvider> adaptorProviders)
         {
             _adaptorProviders = adaptorProviders.ToList();
         }
 
-        public async Task<IEnumerable<IViewAdaptorResult>> GetAdaptos(string name)
+        public async Task<IEnumerable<IViewAdaptorResult>> GetViewAdaptors(string viewName)
         {
 
             await ConfigureAdaptors();
 
-            return _adaptors?.Values;
+            var matchingAdapatorResults = new List<IViewAdaptorResult>();
+            foreach (var viewAdaptorResult in _adaptors)
+            {
+                if (viewAdaptorResult.Key.Equals(viewName))
+                {
+                    matchingAdapatorResults.Add(viewAdaptorResult.Value);
+                }
+            }
 
+            return matchingAdapatorResults;
+            
         }
         
         public async Task ConfigureAdaptors()
         {
 
-            if (_adaptors == null)
+            if (_adaptors.Count == 0)
             {
                 if (_adaptorProviders.Count > 0)
                 {
-                    _adaptors = new ConcurrentDictionary<string, IViewAdaptorResult>();
+                   
                     foreach (var adaptor in _adaptorProviders)
                     {
                         try
