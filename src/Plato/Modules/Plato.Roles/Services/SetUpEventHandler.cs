@@ -41,7 +41,7 @@ namespace Plato.Roles.Services
                     },
                     new SchemaColumn()
                     {
-                        Name = "[Name]",
+                        Name = "[ViewName]",
                         Length = "255",
                         DbType = DbType.String
                     },
@@ -106,7 +106,7 @@ namespace Plato.Roles.Services
                     },
                     new SchemaColumn()
                     {
-                        Name = "[Name]",
+                        Name = "[ViewName]",
                         Length = "255",
                         DbType = DbType.String
                     },

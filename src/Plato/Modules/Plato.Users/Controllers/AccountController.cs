@@ -53,98 +53,98 @@ namespace Plato.Users.Controllers
 
             //var users = new SchemaTable()
             //{
-            //    Name = "Users",
+            //    ViewName = "Users",
             //    Columns = new List<SchemaColumn>()
             //    {
             //        new SchemaColumn()
             //        {
             //            PrimaryKey = true,
-            //            Name = "Id",
+            //            ViewName = "Id",
             //            DbType = DbType.Int32
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "UserName",
+            //            ViewName = "UserName",
             //            Length = "255",
             //            DbType = DbType.String
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "NormalizedUserName",
+            //            ViewName = "NormalizedUserName",
             //            Length = "255",
             //            DbType = DbType.String
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "Email",
+            //            ViewName = "Email",
             //            Length = "255",
             //            DbType = DbType.String
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "NormalizedEmail",
+            //            ViewName = "NormalizedEmail",
             //            Length = "255",
             //            DbType = DbType.String
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "EmailConfirmed",
+            //            ViewName = "EmailConfirmed",
             //            DbType = DbType.Boolean
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "DisplayName",
+            //            ViewName = "DisplayName",
             //            Length = "255",
             //            DbType = DbType.String
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "SamAccountName",
+            //            ViewName = "SamAccountName",
             //            Length = "255",
             //            DbType = DbType.String
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "PasswordHash",
+            //            ViewName = "PasswordHash",
             //            Length = "255",
             //            DbType = DbType.String
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "SecurityStamp",
+            //            ViewName = "SecurityStamp",
             //            Length = "255",
             //            DbType = DbType.String
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "PhoneNumber",
+            //            ViewName = "PhoneNumber",
             //            Length = "255",
             //            DbType = DbType.String
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "PhoneNumberConfirmed",
+            //            ViewName = "PhoneNumberConfirmed",
             //            DbType = DbType.Boolean
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "TwoFactorEnabled",
+            //            ViewName = "TwoFactorEnabled",
             //            DbType = DbType.Boolean
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "LockoutEnd",
+            //            ViewName = "LockoutEnd",
             //            Nullable = true,
             //            DbType = DbType.DateTime2
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "LockoutEnabled",
+            //            ViewName = "LockoutEnabled",
             //            DbType = DbType.Boolean
             //        },
             //        new SchemaColumn()
             //        {
-            //            Name = "AccessFailedCount",
+            //            ViewName = "AccessFailedCount",
             //            DbType = DbType.Int32
             //        },
             //    }
@@ -166,18 +166,18 @@ namespace Plato.Users.Controllers
             //            {
             //                new SchemaColumn()
             //                {
-            //                    Name = "Id",
+            //                    ViewName = "Id",
             //                    DbType = DbType.Int32
             //                },
             //                new SchemaColumn()
             //                {
-            //                    Name = "UserName",
+            //                    ViewName = "UserName",
             //                    DbType = DbType.String,
             //                    Length = "255"
             //                },
             //                new SchemaColumn()
             //                {
-            //                    Name = "Email",
+            //                    ViewName = "Email",
             //                    DbType = DbType.String,
             //                    Length = "255"
             //                }
@@ -226,7 +226,7 @@ namespace Plato.Users.Controllers
                 {
 
                     //var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                    //identity.AddClaim(new Claim(ClaimTypes.Name, model.UserName));
+                    //identity.AddClaim(new Claim(ClaimTypes.ViewName, model.UserName));
 
                     ////context.Authenticate | Challenge | SignInAsync("scheme"); // Calls 2.0 auth stack
 

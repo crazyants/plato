@@ -23,12 +23,8 @@ namespace Plato.Users.Adaptors
             return await Adapt("UserList",
                 builder =>
                 {
-                    builder.AdaptOutput(output =>
-                    {
-                        return new HtmlString("hello");
-                    });
-                    //builder.UpdateModel(new object());
-                    //builder.OnDisplay(b => { });
+                    builder.AdaptView("UserList2");
+                    builder.AdaptOutput(output => output);
                 });
 
         }

@@ -127,7 +127,7 @@ namespace Plato.Users
             );
 
             //routes.MapAreaRoute(
-            //    name: "Users",
+            //    viewName: "Users",
             //    area: "Plato.Users",
             //    template: "users/{controller}/{action}/{id?}",
             //    controller: "Account",

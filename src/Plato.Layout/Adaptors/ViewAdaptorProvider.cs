@@ -18,18 +18,10 @@ namespace Plato.Layout.Adaptors
             string name,
             Action<IViewAdaptorBuilder> configure)
         {
-
-            // Apply adaptor builder
+            // Apply adaptor builder & return compiled results
             var builder = new ViewAdaptorBuilder();
             configure(builder);
-            
-            // Return adapted result
-            return Task.FromResult((IViewAdaptorResult)new ViewAdaptorResult()
-            {
-                ViewName = name,
-                AdaptorBuilder = builder
-            });
-
+            return Task.FromResult(builder.ViewAdaptorResult.For(name));
         }
 
     }

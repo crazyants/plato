@@ -5,7 +5,7 @@ namespace Plato.Layout.Views
     
     public interface IGenericView
     {
-        string Name { get; set; }
+        string ViewName { get; set; }
 
         object Model { get; set; }
         
@@ -15,15 +15,15 @@ namespace Plato.Layout.Views
 
     public class GenericView : IGenericView
     {
-        public string Name { get; set; }
+        public string ViewName { get; set; }
         
         public object Model { get; set; }
 
         public string[] AlternateViews { get; set; }
 
-        public GenericView(string name, object model)
+        public GenericView(string viewName, object model)
         {
-            this.Name = name;
+            this.ViewName = viewName;
             this.Model = model;
         }
 

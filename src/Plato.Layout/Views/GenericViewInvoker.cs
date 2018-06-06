@@ -89,7 +89,7 @@ namespace Plato.Layout.Views
                 throw new ArgumentNullException($"{_htmlHelper.GetType()} cannot be converted to HtmlHelper");
             }
             helper.Contextualize(this.ViewContext);
-            return await _htmlHelper.PartialAsync(view.Name, view.Model, ViewContext.ViewData);
+            return await _htmlHelper.PartialAsync(view.ViewName, view.Model, ViewContext.ViewData);
         }
 
         async Task<IHtmlContent> InvokeViewComponentAsync(IGenericView view)
@@ -101,7 +101,7 @@ namespace Plato.Layout.Views
                     $"{_viewComponentHelper.GetType()} cannot be converted to DefaultViewComponentHelper");
             }
             helper.Contextualize(this.ViewContext);
-            return await _viewComponentHelper.InvokeAsync(view.Name, view.Model);
+            return await _viewComponentHelper.InvokeAsync(view.ViewName, view.Model);
         }
         
         bool IsViewModelAnonymousType(IGenericView view)

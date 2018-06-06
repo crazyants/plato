@@ -14,10 +14,8 @@ namespace Plato.Layout.Views
 
         Task<IHtmlContent> InvokeAsync(GenericViewDisplayContext displayContext);
 
-        dynamic New { get; }
     }
-
-
+    
     public class GenericViewFactory  : IGenericViewFactory
     {
 
@@ -43,35 +41,52 @@ namespace Plato.Layout.Views
             // Contextulize generic view invoker
 
             _genericViewInvoker.Contextualize(displayContext);
+            
+            // Apply view & model alterations
+
+            if (displayContext.viewAdaptorResults != null)
+            {
+                foreach (var viewAdaptorResult in displayContext.viewAdaptorResults)
+                {
+                    var alterations = viewAdaptorResult.ViewAlterations;
+                    if (alterations.Count > 0)
+                    {
+                            //if (displayContext.ViewDescriptor.Value is IGenericView genericView)
+                            //{
+                            //    foreach (var alteration in alterations)
+                            //    {
+                            //        //genericView.ViewName = alteration;
+                            //        //displayContext.ViewDescriptor.Value = genericView;
+                            //    }
+                            //}
+                    }
+                }
+            }
 
             // Invoke generic view
 
             var htmlContent = await _genericViewInvoker.InvokeAsync(displayContext.ViewDescriptor);
             
-            // Apply adaptor alterations
+            // Apply adaptor output alterations
 
-            if (displayContext.ViewAdaptors != null)
+            if (displayContext.viewAdaptorResults != null)
             {
-                foreach (var adaptorResult in displayContext.ViewAdaptors)
+                foreach (var viewAdaptorResult in displayContext.viewAdaptorResults)
                 {
-                    var alterations = adaptorResult.AdaptorBuilder.CotentAlterations;
-                    foreach (var alteration in alterations)
+                    var alterations = viewAdaptorResult.OutputAlterations;
+                    if (alterations.Count > 0)
                     {
-                        htmlContent = alteration(htmlContent);
+                        foreach (var alteration in alterations)
+                        {
+                            htmlContent = alteration(htmlContent);
+                        }
                     }
+                
                 }
             }
           
             return htmlContent;
 
         }
-
-        public dynamic New { get; }
-
-        public IHtmlContent AlterInternal(IHtmlContent input, Func<IHtmlContent, IHtmlContent> action)
-        {
-            return action(input);
         }
-
-    }
 }
