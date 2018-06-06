@@ -8,13 +8,14 @@ namespace Plato.Users
 {
     public class AdminMenu : INavigationProvider
     {
+
+        public IStringLocalizer T { get; set; }
+        
         public AdminMenu(IStringLocalizer<AdminMenu> localizer)
         {
             T = localizer;
         }
-
-        public IStringLocalizer T { get; set; }
-
+        
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
             if (!String.Equals(name, "admin", StringComparison.OrdinalIgnoreCase))

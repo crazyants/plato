@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Plato.Layout.Adaptors;
 
 namespace Plato.Layout.Views
 {
@@ -15,12 +16,15 @@ namespace Plato.Layout.Views
     public class GenericViewTableManager : IGenericViewTableManager
     {
 
+      
+
         private static readonly ConcurrentDictionary<string, GenericViewDescriptor> _views =
             new ConcurrentDictionary<string, GenericViewDescriptor>();
 
-        public Task<GenericViewDescriptor> TryAdd(string name, object value)
+        public async Task<GenericViewDescriptor> TryAdd(string name, object value)
         {
 
+          
             var descriptor = new GenericViewDescriptor()
             {
                 Name = name,
@@ -29,7 +33,7 @@ namespace Plato.Layout.Views
 
             _views.TryAdd(name, descriptor);
 
-            return Task.FromResult(descriptor);
+            return descriptor;
 
         }
 

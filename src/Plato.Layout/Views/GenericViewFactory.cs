@@ -39,11 +39,41 @@ namespace Plato.Layout.Views
 
         public async Task<IHtmlContent> InvokeAsync(GenericViewDisplayContext displayContext)
         {
+
+            // Contextulize generic view invoker
+
             _genericViewInvoker.Contextualize(displayContext);
-            return await _genericViewInvoker.InvokeAsync(displayContext.ViewDescriptor);
+
+            // Invoke generic view
+
+            var htmlContent = await _genericViewInvoker.InvokeAsync(displayContext.ViewDescriptor);
+            
+
+
+            if (displayContext.ViewAdaptors != null)
+            {
+                foreach (var adaptorResult in displayContext.ViewAdaptors)
+                {
+                    var alterations = adaptorResult.AdaptorBuilder.CotentAlterations;
+                    foreach (var alteration in alterations)
+                    {
+                        htmlContent = alteration(htmlContent);
+                    }
+
+                }
+            }
+          
+
+            return htmlContent;
+
         }
 
         public dynamic New { get; }
+
+        public IHtmlContent AlterInternal(IHtmlContent input, Func<IHtmlContent, IHtmlContent> action)
+        {
+            return action(input);
+        }
 
     }
 }

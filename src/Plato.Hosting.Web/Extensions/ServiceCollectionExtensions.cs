@@ -63,7 +63,9 @@ namespace Plato.Hosting.Web.Extensions
             services.AddPlatoSecurity();
             services.AddPlatoAuth();
             services.AddPlatoMvc();
-      
+
+            services.AddPlatoViewAdaptors();
+
             // allows us to display all registered services in development mode
             _services = services;
 
@@ -83,7 +85,8 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddPlatoModules();
                 internalServices.AddPlatoTheming();
                 internalServices.AddPlatoNavigation();
-            
+             
+
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

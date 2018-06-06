@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
+using Plato.Layout.Adaptors;
 
 namespace Plato.Layout.Views
 {
@@ -29,6 +29,7 @@ namespace Plato.Layout.Views
 
         private readonly IHtmlHelper _htmlHelper;
         private readonly IViewComponentHelper _viewComponentHelper;
+        private readonly IViewAdaptorManager _viewAdaptorManager;
         private readonly ILogger<GenericViewInvoker> _logger;
 
         public ViewContext ViewContext { get; set; }

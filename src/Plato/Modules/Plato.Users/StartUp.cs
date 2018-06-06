@@ -13,11 +13,11 @@ using Plato.Shell.Models;
 using Plato.Stores.Users;
 using Plato.Hosting.Web;
 using Plato.Hosting.Web.Extensions;
-using Plato.Layout.Drivers;
+using Plato.Layout.Adaptors;
 using Plato.Layout.Extensions;
 using Plato.Layout.TagHelpers;
 using Plato.Navigation;
-using Plato.Users.Drivers;
+using Plato.Users.Adaptors;
 using Plato.Users.Services;
 
 namespace Plato.Users
@@ -88,7 +88,7 @@ namespace Plato.Users
             services.AddScoped<INavigationProvider, SiteMenu>();
 
             // register view drivers
-            services.AddScoped<IViewDriverProvider, UserListDriver>();
+            services.AddScoped<IViewAdaptorProvider, UserListAdaptor>();
 
         }
 

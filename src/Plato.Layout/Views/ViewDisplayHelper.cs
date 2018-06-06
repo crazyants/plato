@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.DependencyInjection;
+using Plato.Layout.Adaptors;
 
 namespace Plato.Layout.Views
 {
@@ -20,10 +22,10 @@ namespace Plato.Layout.Views
     }
 
     public class ViewDisplayHelper : IViewDisplayHelper
-    { 
+    {
 
+        private readonly IViewAdaptorManager _viewAdaptorManager;
         private readonly IGenericViewInvoker _generaticViewInvoker;
-        
         private readonly IGenericViewFactory _genericViewFactory;
         private readonly IServiceProvider _serviceProvider;
 
@@ -50,11 +52,17 @@ namespace Plato.Layout.Views
             }
             
             var viewDescriptor = await _genericViewFactory.CreateAsync(view.Name, view);
+            
 
+            var adaptorViewManager = ViewContext.HttpContext.RequestServices.GetService<IViewAdaptorManager>();
+            var adaptors = await adaptorViewManager.GetAdaptos(view.Name);
+
+       
             var displayContext = new GenericViewDisplayContext()
             {
                 ViewDescriptor = viewDescriptor,
-                ViewContext = this.ViewContext
+                ViewContext = this.ViewContext,
+                ServiceProvider = _serviceProvider
             };
 
             var output = await _genericViewFactory.InvokeAsync(displayContext);

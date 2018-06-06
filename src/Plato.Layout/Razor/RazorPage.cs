@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Plato.Layout.Adaptors;
 using Plato.Layout.TagHelpers;
 using Plato.Layout.Views;
 

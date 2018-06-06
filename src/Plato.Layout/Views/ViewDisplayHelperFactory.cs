@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Plato.Layout.Adaptors;
 
 namespace Plato.Layout.Views
 {
@@ -16,6 +17,7 @@ namespace Plato.Layout.Views
     public class ViewDisplayHelperFactory : IViewHelperFactory
     {
 
+        private readonly IViewAdaptorManager _viewAdaptorManager;
         private readonly IGenericViewInvoker _genericViewInvoker;
         private readonly IGenericViewFactory _genericViewFactory;
         private readonly IServiceProvider _serviceProvider;

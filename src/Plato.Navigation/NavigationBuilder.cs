@@ -8,8 +8,7 @@ namespace Plato.Navigation
 {
     public class NavigationBuilder
     {
-
-
+        
         List<MenuItem> Contained { get; set; }
 
         public NavigationBuilder()
