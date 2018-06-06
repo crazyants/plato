@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 namespace Plato.Layout.Drivers
 {
 
-    public interface IViewDriverContext
+    public interface IViewDriverBuilder
     {
 
         object Model { get; }
 
         void UpdateModel(object model);
 
-        Task<ViewDriverContext> OnDisplay(Action<ViewDriverContext> context);
+        Task<ViewDriverBuilder> OnDisplay(Action<ViewDriverBuilder> context);
     }
 
 
-    public class ViewDriverContext : IViewDriverContext
+    public class ViewDriverBuilder : IViewDriverBuilder
     {
 
         private object _model;
@@ -29,7 +29,7 @@ namespace Plato.Layout.Drivers
             _model = model;
         }
 
-        public Task<ViewDriverContext> OnDisplay(Action<ViewDriverContext> context)
+        public Task<ViewDriverBuilder> OnDisplay(Action<ViewDriverBuilder> context)
         {
             throw new NotImplementedException();
         }

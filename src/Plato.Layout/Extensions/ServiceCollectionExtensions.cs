@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Plato.Layout.Drivers;
 using Plato.Layout.TagHelpers;
 using Plato.Layout.Theming;
 using Plato.Layout.Views;
@@ -23,14 +24,17 @@ namespace Plato.Layout.Extensions
             this IServiceCollection services)
         {
 
+            // gneric views
             services.AddSingleton<IViewHelperFactory, ViewDisplayHelperFactory>();
             services.AddSingleton<IGenericViewFactory, GenericViewFactory>();
-            services.AddSingleton<IHtmlDisplay, DefaultHtmlDisplay>();
-
             services.AddSingleton<IGenericViewTableManager, GenericViewTableManager>();
             services.AddSingleton<IGenericViewInvoker, GenericViewInvoker>();
 
-            
+            // view drivers
+
+            services.TryAddScoped<IViewDriverManager, ViewDriverManager>();
+
+
 
 
 

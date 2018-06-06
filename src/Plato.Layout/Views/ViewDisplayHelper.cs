@@ -23,8 +23,7 @@ namespace Plato.Layout.Views
     { 
 
         private readonly IGenericViewInvoker _generaticViewInvoker;
-
-        private readonly IHtmlDisplay _htmlDisplay;
+        
         private readonly IGenericViewFactory _genericViewFactory;
         private readonly IServiceProvider _serviceProvider;
 
@@ -32,13 +31,11 @@ namespace Plato.Layout.Views
         
         public ViewDisplayHelper(
             IGenericViewInvoker generaticViewInvoker,
-            IHtmlDisplay htmlDisplay,
             IGenericViewFactory genericViewFactory,
             ViewContext viewContext,
             IServiceProvider serviceProvider)
         {
             _generaticViewInvoker = generaticViewInvoker;
-            _htmlDisplay = htmlDisplay;
             _genericViewFactory = genericViewFactory;
             ViewContext = viewContext;
             _serviceProvider = serviceProvider;

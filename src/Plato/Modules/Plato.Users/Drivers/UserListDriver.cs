@@ -8,7 +8,7 @@ using Plato.Users.ViewModels;
 
 namespace Plato.Users.Drivers
 {
-    public class UserListDriver : BaseDriver, IViewDriver
+    public class UserListDriver : BaseDriver, IViewDriverProvider
     {
         public async Task<IViewDriverResult> Configure()
         { 

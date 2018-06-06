@@ -87,9 +87,8 @@ namespace Plato.Users
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
-
-
-            services.AddScoped<IViewDriver, UserListDriver>();
+            // register view drivers
+            services.AddScoped<IViewDriverProvider, UserListDriver>();
 
         }
 

@@ -19,11 +19,12 @@ namespace Plato.Layout.Drivers
 
         public async Task<IViewDriverResult> Initialize(
             string name,
-            Action<IViewDriverContext> viewBuilder
+            Action<IViewDriverBuilder> builder
             ) 
         {
-            var driverContext = new ViewDriverContext();;
-            viewBuilder(driverContext);
+            var driverContext = new ViewDriverBuilder();;
+
+            builder(driverContext);
 
             return new ViewDriverResult()
             {
