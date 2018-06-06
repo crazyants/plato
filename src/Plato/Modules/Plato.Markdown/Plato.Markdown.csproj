@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Plato.Hosting\Plato.Hosting.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Layout\Plato.Layout.csproj" />
+  </ItemGroup>
+
+</Project>

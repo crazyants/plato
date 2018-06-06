@@ -53,7 +53,6 @@ namespace Plato.Layout.Views
             }
             
             var viewDescriptor = await _genericViewFactory.CreateAsync(view.Name, view);
-            
 
             var displayContext = new GenericViewDisplayContext()
             {
@@ -63,9 +62,6 @@ namespace Plato.Layout.Views
 
             var output = await _genericViewFactory.InvokeAsync(displayContext);
 
-            //_generaticViewInvoker.Contextualize(this.ViewContext);
-            //var output = await _generaticViewInvoker.InvokeAsync(view);
-            
             return output;
 
         }

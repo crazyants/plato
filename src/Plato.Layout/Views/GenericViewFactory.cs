@@ -34,7 +34,7 @@ namespace Plato.Layout.Views
 
         public async Task<GenericViewDescriptor> CreateAsync(string name, object model)
         {
-            return await _genericViewTableManager.TryGetOrAdd(name, model);
+            return await _genericViewTableManager.TryAdd(name, model);
         }
 
         public async Task<IHtmlContent> InvokeAsync(GenericViewDisplayContext displayContext)
