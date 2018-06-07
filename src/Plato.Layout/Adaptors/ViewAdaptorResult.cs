@@ -1,10 +1,28 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 namespace Plato.Layout.Adaptors
 {
+
+    public class TypedModelAlterations<TModel> where TModel : class
+    {
+
+        private IList<Func<TModel, TModel>> _modelAlterations;
+
+        public IList<Func<TModel, TModel>> ModelAlterations
+        {
+            get => _modelAlterations ?? (_modelAlterations = new List<Func<TModel, TModel>>());
+            set => _modelAlterations = value;
+        }
+
+        public void AddMode(TModel model)
+        {
+
+        }
+
+    }
 
     public interface IViewAdaptorResult
     {
@@ -14,17 +32,17 @@ namespace Plato.Layout.Adaptors
         
         IList<string> ViewAlterations { get; set; }
 
-        IList<object> ModelAlterations { get; set; }
+        IList<Func<object, object>> ModelAlterations { get; set; }
 
         IViewAdaptorResult For(string viewName);
     }
 
-    public class ViewAdaptorResult : IViewAdaptorResult
+    public class ViewAdaptorResult : IViewAdaptorResult 
     {
 
         private IList<Func<IHtmlContent, IHtmlContent>> _outputAlterations;
         private IList<string> _viewAlterations;
-        private IList<object> _modelAlterations;
+        private IList<Func<object, object>> _modelAlterations;
 
         public string ViewName { get; set; }
 
@@ -42,16 +60,17 @@ namespace Plato.Layout.Adaptors
             set => _viewAlterations = value;
         }
 
-        public IList<object> ModelAlterations
+        public IList<Func<object, object>> ModelAlterations
         {
-            get => _modelAlterations ?? (_modelAlterations = new List<object>());
+            get => _modelAlterations ?? (_modelAlterations = new List<Func<object, object>>());
             set => _modelAlterations = value;
         }
-
-        public IViewAdaptorResult For(string viewName)
+   
+        public IViewAdaptorResult For(string viewName) 
         {
             this.ViewName = viewName;
             return this;
         }
+
     }
 }
