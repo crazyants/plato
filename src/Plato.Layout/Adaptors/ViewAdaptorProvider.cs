@@ -12,31 +12,5 @@ namespace Plato.Layout.Adaptors
 
         Task<IViewAdaptorResult> ConfigureAsync();
     }
-
-    public abstract class BaseAdaptorProvider : IViewAdaptorProvider
-    {
-
-        private string _viewName;
-
-        public string ViewName => _viewName;
-
-        public abstract Task<IViewAdaptorResult> ConfigureAsync();
-
-        public Task<IViewAdaptorResult> Adapt(
-            string viewName,
-            Action<IViewAdaptorBuilder> configure)
-        {
-
-            // Set viewname - not important but helpful for logging purposes
-            _viewName = viewName;
-
-            // Apply adaptor builder & return compiled results
-            var builder = new ViewAdaptorBuilder();
-            configure(builder);
-            return Task.FromResult(builder.ViewAdaptorResult.For(viewName));
-
-        }
-
-    }
-
+    
 }

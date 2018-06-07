@@ -62,7 +62,7 @@ namespace Plato.Layout.Adaptors
                         try
                         {
                             var result = await adaptor.ConfigureAsync();
-                            _adaptors.TryAdd(result.ViewName, result);
+                            _adaptors.TryAdd(result.Builder.ViewName, result);
                         }
                         catch (Exception e)
                         {

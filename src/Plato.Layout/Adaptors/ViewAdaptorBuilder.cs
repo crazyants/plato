@@ -6,7 +6,9 @@ namespace Plato.Layout.Adaptors
 
     public interface IViewAdaptorBuilder
     {
-        
+   
+        string ViewName { get; }
+
         IViewAdaptorBuilder AdaptOutput(Func<IHtmlContent, IHtmlContent> action);
         
         IViewAdaptorBuilder AdaptView(string viewName);
@@ -17,16 +19,18 @@ namespace Plato.Layout.Adaptors
 
     }
     
-    public class ViewAdaptorBuilder : IViewAdaptorBuilder 
+    public class ViewAdaptorBuilder : IViewAdaptorBuilder
     {
+        public string ViewName { get; }
 
         private readonly IViewAdaptorResult _viewAdaptorResult;
 
         public IViewAdaptorResult ViewAdaptorResult => _viewAdaptorResult;
 
-        public ViewAdaptorBuilder() 
+        public ViewAdaptorBuilder(string viewName) 
         {
             _viewAdaptorResult = new ViewAdaptorResult();
+            ViewName = viewName;
         }
         
         public IViewAdaptorBuilder AdaptOutput(Func<IHtmlContent, IHtmlContent> alteration)

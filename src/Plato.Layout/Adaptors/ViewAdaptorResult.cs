@@ -1,40 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 namespace Plato.Layout.Adaptors
 {
-
-    public class TypedModelAlterations<TModel> where TModel : class
-    {
-
-        private IList<Func<TModel, TModel>> _modelAlterations;
-
-        public IList<Func<TModel, TModel>> ModelAlterations
-        {
-            get => _modelAlterations ?? (_modelAlterations = new List<Func<TModel, TModel>>());
-            set => _modelAlterations = value;
-        }
-
-        public void AddMode(TModel model)
-        {
-
-        }
-
-    }
-
+    
     public interface IViewAdaptorResult
     {
-        string ViewName { get; set; }
-        
+
+        IViewAdaptorBuilder Builder { get; set; }
+
         IList<Func<IHtmlContent, IHtmlContent>> OutputAlterations { get; set; }
         
         IList<string> ViewAlterations { get; set; }
 
         IList<Func<object, object>> ModelAlterations { get; set; }
 
-        IViewAdaptorResult For(string viewName);
     }
 
     public class ViewAdaptorResult : IViewAdaptorResult 
@@ -44,9 +25,9 @@ namespace Plato.Layout.Adaptors
         private IList<string> _viewAlterations;
         private IList<Func<object, object>> _modelAlterations;
 
-        public string ViewName { get; set; }
-
         public IViewAdaptorBuilder AdaptorBuilder { get; set; }
+
+        public IViewAdaptorBuilder Builder { get; set; }
 
         public IList<Func<IHtmlContent, IHtmlContent>> OutputAlterations
         {
@@ -66,11 +47,6 @@ namespace Plato.Layout.Adaptors
             set => _modelAlterations = value;
         }
    
-        public IViewAdaptorResult For(string viewName) 
-        {
-            this.ViewName = viewName;
-            return this;
-        }
 
     }
 }
