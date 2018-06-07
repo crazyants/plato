@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
@@ -52,7 +51,7 @@ namespace Plato.Layout.Views
             }
             
             // Build view descriptor
-            var viewDescriptor = await _genericViewFactory.CreateAsync(view.ViewName, view);
+            var viewDescriptor = await _genericViewFactory.CreateAsync(view);
 
             // Get registered view adaptor providers for the view
             var viewAdaptorManager = ViewContext.HttpContext.RequestServices.GetService<IViewAdaptorManager>();
@@ -62,7 +61,7 @@ namespace Plato.Layout.Views
             var displayContext = new GenericViewDisplayContext()
             {
                 ViewDescriptor = viewDescriptor,
-                viewAdaptorResults = viewAdaptorResults,
+                ViewAdaptorResults = viewAdaptorResults,
                 ViewContext = this.ViewContext,
                 ServiceProvider = _serviceProvider
             };

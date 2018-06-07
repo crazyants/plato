@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
@@ -47,13 +48,24 @@ namespace Plato.Layout.Razor
             }
         }
 
-        public Task<IHtmlContent> DisplayAsync(dynamic shape)
+        public async Task<IHtmlContent> DisplayAsync(IGenericView view)
         {
             EnsureViewHelper();
-            return _viewDisplayHelper.DisplayAsync(shape);
+            return await _viewDisplayHelper.DisplayAsync(view);
         }
 
+        public async Task<IHtmlContent> DisplayAsync(IEnumerable<IGenericView> views)
+        {
 
+            var builder = new HtmlContentBuilder();
+            foreach (var view in views)
+            {
+                var viewResult = await DisplayAsync(view);
+                builder.AppendHtml(viewResult);
+            }
+
+            return builder;
+        }
 
     }
 

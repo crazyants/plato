@@ -20,7 +20,7 @@ namespace Plato.Layout.Views
 
         void Contextualize(GenericViewDisplayContext viewContext);
 
-        Task<IHtmlContent> InvokeAsync(GenericViewDescriptor view);
+        Task<IHtmlContent> InvokeAsync(string viewName, object model);
 
     }
 
@@ -50,38 +50,33 @@ namespace Plato.Layout.Views
             this.ViewContext = context.ViewContext;
         }
 
-        public async Task<IHtmlContent> InvokeAsync(GenericViewDescriptor view)
+        public async Task<IHtmlContent> InvokeAsync(string viewName, object model)
         {
             if (this.ViewContext == null)
             {
-                throw new Exception("ViewContext must be set via the Contextualize method before calling the InvokeAsync method");
+                throw new Exception(
+                    "ViewContext must be set via the Contextualize method before calling the InvokeAsync method");
             }
 
-            // are we displaying a generic view?
-            if (view.Value is IGenericView genericView)
+
+            // view components use an anonymous type for the parameters argument
+            // this anonymous type is emitted as an actual type by the compiler but
+            // marked with the CompilerGeneratedAttribute. If we find this attribute
+            // on the model we'll treat this view as a ViewComponent and invoke accordingly
+            if (IsViewModelAnonymousType(model))
             {
-                // view components use an anonymous type for the parameters argument
-                // this anonymous type is emitted as an actual type by the compiler but
-                // marked with the CompilerGeneratedAttribute. If we find this attribute
-                // on the model we'll treat this view as a ViewComponent and invoke accordingly
-                if (IsViewModelAnonymousType(genericView))
-                {
-                    return await InvokeViewComponentAsync(genericView);
-                }
-
-                // else we have a partial view
-                return await InvokePartialAsync(genericView);
-
+                return await InvokeViewComponentAsync(viewName, model);
             }
 
+            // else we have a partial view
+            return await InvokePartialAsync(viewName, model);
 
-            return HtmlString.Empty;
 
         }
-        
+
         // privates
 
-        async Task<IHtmlContent> InvokePartialAsync(IGenericView view)
+        async Task<IHtmlContent> InvokePartialAsync(string viewName, object model)
         {
             var helper = _htmlHelper as HtmlHelper;
             if (helper == null)
@@ -89,10 +84,10 @@ namespace Plato.Layout.Views
                 throw new ArgumentNullException($"{_htmlHelper.GetType()} cannot be converted to HtmlHelper");
             }
             helper.Contextualize(this.ViewContext);
-            return await _htmlHelper.PartialAsync(view.ViewName, view.Model, ViewContext.ViewData);
+            return await _htmlHelper.PartialAsync(viewName, model, ViewContext.ViewData);
         }
 
-        async Task<IHtmlContent> InvokeViewComponentAsync(IGenericView view)
+        async Task<IHtmlContent> InvokeViewComponentAsync(string viewName, object model)
         {
             var helper = _viewComponentHelper as DefaultViewComponentHelper;
             if (helper == null)
@@ -101,12 +96,12 @@ namespace Plato.Layout.Views
                     $"{_viewComponentHelper.GetType()} cannot be converted to DefaultViewComponentHelper");
             }
             helper.Contextualize(this.ViewContext);
-            return await _viewComponentHelper.InvokeAsync(view.ViewName, view.Model);
+            return await _viewComponentHelper.InvokeAsync(viewName, model);
         }
         
-        bool IsViewModelAnonymousType(IGenericView view)
+        bool IsViewModelAnonymousType(object model)
         {
-            return view.Model
+            return model
                 .GetType()
                 .GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any();
         }

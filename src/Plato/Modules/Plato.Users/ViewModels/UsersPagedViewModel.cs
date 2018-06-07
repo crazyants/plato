@@ -6,10 +6,18 @@ using Plato.Navigation;
 
 namespace Plato.Users.ViewModels
 {
-    public class UsersPaged
+
+    public class UserViewModel
     {
 
-        public UsersPaged(
+        public User User { get; set; }
+
+    }
+
+    public class UsersPagedViewModel
+    {
+
+        public UsersPagedViewModel(
             IPagedResults<User> results,
             FilterOptions filterOptions,
             PagerOptions pagerOptions)

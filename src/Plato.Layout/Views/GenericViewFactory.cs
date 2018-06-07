@@ -4,19 +4,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 namespace Plato.Layout.Views
 {
 
     public interface IGenericViewFactory
     {
-        Task<GenericViewDescriptor> CreateAsync(string key, object view);
+        Task<GenericViewDescriptor> CreateAsync(IGenericView view);
 
         Task<IHtmlContent> InvokeAsync(GenericViewDisplayContext displayContext);
 
     }
-    
-    public class GenericViewFactory  : IGenericViewFactory
+
+    public class GenericViewFactory : IGenericViewFactory
     {
 
         private readonly IGenericViewTableManager _genericViewTableManager;
@@ -30,9 +31,9 @@ namespace Plato.Layout.Views
             _genericViewInvoker = genericViewInvoker;
         }
 
-        public async Task<GenericViewDescriptor> CreateAsync(string name, object model)
+        public async Task<GenericViewDescriptor> CreateAsync(IGenericView view)
         {
-            return await _genericViewTableManager.TryAdd(name, model);
+            return await _genericViewTableManager.TryAdd(view);
         }
 
         public async Task<IHtmlContent> InvokeAsync(GenericViewDisplayContext displayContext)
@@ -41,26 +42,25 @@ namespace Plato.Layout.Views
             // Contextulize generic view invoker
 
             _genericViewInvoker.Contextualize(displayContext);
-            
+
             // Apply view & model alterations
 
-            if (displayContext.viewAdaptorResults != null)
+            if (displayContext.ViewAdaptorResults != null)
             {
-                foreach (var viewAdaptorResult in displayContext.viewAdaptorResults)
+                foreach (var viewAdaptorResult in displayContext.ViewAdaptorResults)
                 {
 
-                    // ensure type is generic view
-                    if (displayContext.ViewDescriptor.Value is IGenericView genericView)
-                    {
+
+                    var updatedView = displayContext.ViewDescriptor.View;
 
                         // Apply view alterations
 
-                        var viewAlterations = viewAdaptorResult.ViewAlterations;
+                    var viewAlterations = viewAdaptorResult.ViewAlterations;
                         if (viewAlterations.Count > 0)
                         {
                             foreach (var alteration in viewAlterations)
                             {
-                                genericView.ViewName = alteration;
+                                updatedView.ViewName = alteration;
                             }
                         }
 
@@ -71,28 +71,27 @@ namespace Plato.Layout.Views
                         {
                             foreach (var alteration in modelAlterations)
                             {
-                                genericView.Model = alteration(genericView.Model);
+                                updatedView.Model = alteration(updatedView.Model);
                             }
                         }
 
-                        displayContext.ViewDescriptor.Value = genericView;
-
-                    }
-
-
+                        displayContext.ViewDescriptor.View = updatedView;
+                    
                 }
 
             }
 
             // Invoke generic view
 
-            var htmlContent = await _genericViewInvoker.InvokeAsync(displayContext.ViewDescriptor);
-            
+            var htmlContent = await _genericViewInvoker.InvokeAsync(
+                displayContext.ViewDescriptor.View.ViewName,
+                displayContext.ViewDescriptor.View.Model);
+
             // Apply adaptor output alterations
 
-            if (displayContext.viewAdaptorResults != null)
+            if (displayContext.ViewAdaptorResults != null)
             {
-                foreach (var viewAdaptorResult in displayContext.viewAdaptorResults)
+                foreach (var viewAdaptorResult in displayContext.ViewAdaptorResults)
                 {
                     var alterations = viewAdaptorResult.OutputAlterations;
                     if (alterations.Count > 0)
@@ -102,12 +101,15 @@ namespace Plato.Layout.Views
                             htmlContent = alteration(htmlContent);
                         }
                     }
-                
+
                 }
             }
-          
+
             return htmlContent;
 
         }
-        }
+
+
+    }
+
 }

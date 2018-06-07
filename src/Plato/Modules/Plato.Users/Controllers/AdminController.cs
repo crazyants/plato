@@ -1,25 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
+using Plato.Layout.Drivers;
 using Plato.Layout.Views;
 using Plato.Models.Users;
 using Plato.Stores.Users;
 using Plato.Users.ViewModels;
 using Plato.Navigation;
+using Plato.Layout.ModelBinding;
 
 namespace Plato.Users.Controllers
 {
-
-    public class AdminController : Controller
+    
+    public class AdminController : Controller, IUpdateModel
     {
+
+        private readonly IViewProvider<User> _usersPagedViewProvider;
         private readonly IPlatoUserStore<User> _ploatUserStore;
         
         public AdminController(
+            IViewProvider<User> usersPagedViewProvider,
             IPlatoUserStore<User> platoUserStore)
         {
+            _usersPagedViewProvider = usersPagedViewProvider;
             _ploatUserStore = platoUserStore;
         }
 
@@ -57,16 +64,31 @@ namespace Plato.Users.Controllers
             
             var model = await GetModel(filterOptions, pagerOptions);
             var view = new GenericView("UserList", model);
+            
+            
+            var views = new List<GenericView>
+            {
+                new GenericView("UserTest1", model),
+                new GenericView("UserTest2", model)
+            };
 
-            return View(view);
+            var user = new User();
+            user.UserName = "Ryan Healey";
+            user.Email = "sales@instantasp.co.uk";
+
+       
+            var providedView = _usersPagedViewProvider.BuildDisplayAsync(user, this);
+
+            return View(views);
+
         }
 
-        private async Task<UsersPaged> GetModel(
+        private async Task<UsersPagedViewModel> GetModel(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
             var users = await GetUsers(filterOptions, pagerOptions);
-            return new UsersPaged(
+            return new UsersPagedViewModel(
                 users,
                 filterOptions,
                 pagerOptions);

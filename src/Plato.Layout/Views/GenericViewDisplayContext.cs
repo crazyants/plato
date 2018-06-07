@@ -13,7 +13,7 @@ namespace Plato.Layout.Views
 
         public ViewContext ViewContext { get; set; }
 
-        public IEnumerable<IViewAdaptorResult> viewAdaptorResults { get; set; }
+        public IEnumerable<IViewAdaptorResult> ViewAdaptorResults { get; set; }
 
         public object Value { get; set; }
         

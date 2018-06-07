@@ -11,7 +11,7 @@ namespace Plato.Layout.Views
 
         public string Name { get; set; }
 
-        public object Value { get; set; }
+        public IGenericView View { get; set; }
         
         public IEnumerable<IViewAdaptorResult> ViewAdaptorResults { get; set; }
 

@@ -29,7 +29,7 @@ namespace Plato.Users.Adaptors
                 {
                     builder
                         .AdaptView("UserList2") // here we can change the default view file
-                        .AdaptModel<UsersPaged>(model =>
+                        .AdaptModel<UsersPagedViewModel>(model =>
                         {
                             // here we can alter the model if needed
                             model.PagerOpts.Page = 10;

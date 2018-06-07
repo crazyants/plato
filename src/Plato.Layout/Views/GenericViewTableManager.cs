@@ -10,7 +10,7 @@ namespace Plato.Layout.Views
 
     public interface IGenericViewTableManager
     {
-        Task<GenericViewDescriptor> TryAdd(string key, object model);
+        Task<GenericViewDescriptor> TryAdd(IGenericView view);
     }
 
     public class GenericViewTableManager : IGenericViewTableManager
@@ -21,17 +21,16 @@ namespace Plato.Layout.Views
         private static readonly ConcurrentDictionary<string, GenericViewDescriptor> _views =
             new ConcurrentDictionary<string, GenericViewDescriptor>();
 
-        public async Task<GenericViewDescriptor> TryAdd(string name, object value)
+        public async Task<GenericViewDescriptor> TryAdd(IGenericView view)
         {
-
-          
+            
             var descriptor = new GenericViewDescriptor()
             {
-                Name = name,
-                Value = value
+                Name = view.ViewName,
+                View = view
             };
 
-            _views.TryAdd(name, descriptor);
+            _views.TryAdd(view.ViewName, descriptor);
 
             return descriptor;
 
