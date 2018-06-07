@@ -49,10 +49,12 @@ namespace Plato.Layout.Views
                 foreach (var viewAdaptorResult in displayContext.viewAdaptorResults)
                 {
 
-                    // ensure generic view
+                    // ensure type is generic view
                     if (displayContext.ViewDescriptor.Value is IGenericView genericView)
                     {
-                        // view alterations
+
+                        // Apply view alterations
+
                         var viewAlterations = viewAdaptorResult.ViewAlterations;
                         if (viewAlterations.Count > 0)
                         {
@@ -62,7 +64,8 @@ namespace Plato.Layout.Views
                             }
                         }
 
-                        // model alterations
+                        // Apply model alterations
+
                         var modelAlterations = viewAdaptorResult.ModelAlterations;
                         if (modelAlterations.Count > 0)
                         {
@@ -73,7 +76,9 @@ namespace Plato.Layout.Views
                         }
 
                         displayContext.ViewDescriptor.Value = genericView;
+
                     }
+
 
                 }
 

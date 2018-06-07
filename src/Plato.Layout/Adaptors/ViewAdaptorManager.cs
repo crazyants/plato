@@ -2,10 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Layout.Views;
 
 namespace Plato.Layout.Adaptors
 {
@@ -13,32 +11,35 @@ namespace Plato.Layout.Adaptors
     public interface IViewAdaptorManager
     {
         Task<IEnumerable<IViewAdaptorResult>> GetViewAdaptors(string name);
-
     }
 
     public class ViewAdaptorManager : IViewAdaptorManager
     {
-        private readonly IList<IViewAdaptorProvider> _adaptorProviders;
+
+        private static readonly ConcurrentDictionary<string, IViewAdaptorResult> _viewAdaptorResults
+            = new ConcurrentDictionary<string, IViewAdaptorResult>();
+
+        private readonly IList<IViewAdaptorProvider> _viewAdaptorProviders;
         private readonly ILogger<ViewAdaptorManager> _logger;
    
-        private static ConcurrentDictionary<string, IViewAdaptorResult> _adaptors
-            = new ConcurrentDictionary<string, IViewAdaptorResult>();
-        
         public ViewAdaptorManager(
-            IEnumerable<IViewAdaptorProvider> adaptorProviders, 
+            IEnumerable<IViewAdaptorProvider> viewAdaptorProviders, 
             ILogger<ViewAdaptorManager> logger)
         {
-            _adaptorProviders = adaptorProviders.ToList();
+            _viewAdaptorProviders = viewAdaptorProviders.ToList();
             _logger = logger;
         }
 
         public async Task<IEnumerable<IViewAdaptorResult>> GetViewAdaptors(string viewName)
         {
 
-            await ConfigureAdaptors();
+            // Populate all providers
+            await EnsureConfiguredAProviders();
 
+            // Find providers matching our view name
+            // Hot code path - avoid linq
             var matchingAdapatorResults = new List<IViewAdaptorResult>();
-            foreach (var viewAdaptorResult in _adaptors)
+            foreach (var viewAdaptorResult in _viewAdaptorResults)
             {
                 if (viewAdaptorResult.Key.Equals(viewName))
                 {
@@ -50,23 +51,23 @@ namespace Plato.Layout.Adaptors
             
         }
         
-        public async Task ConfigureAdaptors()
+        async Task EnsureConfiguredAProviders()
         {
 
-            if (_adaptors.Count == 0)
+            if (_viewAdaptorResults.Count == 0)
             {
-                if (_adaptorProviders.Count > 0)
+                if (_viewAdaptorProviders.Count > 0)
                 {
-                    foreach (var adaptor in _adaptorProviders)
+                    foreach (var provider in _viewAdaptorProviders)
                     {
                         try
                         {
-                            var result = await adaptor.ConfigureAsync();
-                            _adaptors.TryAdd(result.Builder.ViewName, result);
+                            var viewAdaptorResult = await provider.ConfigureAsync();
+                            _viewAdaptorResults.TryAdd(viewAdaptorResult.Builder.ViewName, viewAdaptorResult);
                         }
                         catch (Exception e)
                         {
-                            _logger.LogError(e, $"An exception occurred whilst attempting to adapt the view: {adaptor.ViewName}");
+                            _logger.LogError(e, $"An exception occurred whilst attempting to adapt the view: {provider.ViewName}");
                         }
                     }
                 }

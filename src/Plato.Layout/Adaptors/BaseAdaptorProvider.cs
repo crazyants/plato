@@ -18,6 +18,7 @@ namespace Plato.Layout.Adaptors
         {
 
             // Which view is our adaptor modifying
+            // Not important mainly used for logging purposes
             _viewName = viewName;
 
             // Apply adaptor builder & return compiled results

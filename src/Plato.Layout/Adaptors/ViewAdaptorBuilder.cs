@@ -71,7 +71,7 @@ namespace Plato.Layout.Adaptors
                 throw new NullReferenceException(nameof(alteration));
             }
 
-            // wrapper to convert delegates generic argument types
+            // wrapper to convert delegates generic argument type
             // to concrete type (object) for storage within adaptor result
             var typedDelegate = new Func<object, object>((object input) => alteration((TModel)input));
 

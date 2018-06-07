@@ -27,12 +27,11 @@ namespace Plato.Layout.Views
     public class GenericViewInvoker : IGenericViewInvoker
     {
 
+        public ViewContext ViewContext { get; set; }
+
         private readonly IHtmlHelper _htmlHelper;
         private readonly IViewComponentHelper _viewComponentHelper;
-        private readonly IViewAdaptorManager _viewAdaptorManager;
         private readonly ILogger<GenericViewInvoker> _logger;
-
-        public ViewContext ViewContext { get; set; }
 
         public GenericViewInvoker(
             IHtmlHelper htmlHelper,
@@ -70,6 +69,7 @@ namespace Plato.Layout.Views
                     return await InvokeViewComponentAsync(genericView);
                 }
 
+                // else we have a partial view
                 return await InvokePartialAsync(genericView);
 
             }

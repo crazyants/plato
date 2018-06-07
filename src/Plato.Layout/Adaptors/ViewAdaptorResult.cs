@@ -24,9 +24,7 @@ namespace Plato.Layout.Adaptors
         private IList<Func<IHtmlContent, IHtmlContent>> _outputAlterations;
         private IList<string> _viewAlterations;
         private IList<Func<object, object>> _modelAlterations;
-
-        public IViewAdaptorBuilder AdaptorBuilder { get; set; }
-
+        
         public IViewAdaptorBuilder Builder { get; set; }
 
         public IList<Func<IHtmlContent, IHtmlContent>> OutputAlterations

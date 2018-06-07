@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Localization;
+﻿using System.Threading.Tasks;
 
 namespace Plato.Layout.Adaptors
 {
