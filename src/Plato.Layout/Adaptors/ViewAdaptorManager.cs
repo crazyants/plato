@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Plato.Layout.Views;
 
 namespace Plato.Layout.Adaptors
@@ -18,14 +19,17 @@ namespace Plato.Layout.Adaptors
     public class ViewAdaptorManager : IViewAdaptorManager
     {
         private readonly IList<IViewAdaptorProvider> _adaptorProviders;
-
+        private readonly ILogger<ViewAdaptorManager> _logger;
+   
         private static ConcurrentDictionary<string, IViewAdaptorResult> _adaptors
             = new ConcurrentDictionary<string, IViewAdaptorResult>();
         
         public ViewAdaptorManager(
-            IEnumerable<IViewAdaptorProvider> adaptorProviders)
+            IEnumerable<IViewAdaptorProvider> adaptorProviders, 
+            ILogger<ViewAdaptorManager> logger)
         {
             _adaptorProviders = adaptorProviders.ToList();
+            _logger = logger;
         }
 
         public async Task<IEnumerable<IViewAdaptorResult>> GetViewAdaptors(string viewName)
@@ -53,7 +57,6 @@ namespace Plato.Layout.Adaptors
             {
                 if (_adaptorProviders.Count > 0)
                 {
-                   
                     foreach (var adaptor in _adaptorProviders)
                     {
                         try
@@ -63,7 +66,7 @@ namespace Plato.Layout.Adaptors
                         }
                         catch (Exception e)
                         {
-                            //_logger.LogError(e, $"An exception occurred while building the menu: {name}");
+                            _logger.LogError(e, $"An exception occurred whilst attempting to adapt the view: {adaptor.ViewName}");
                         }
                     }
                 }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Reflection;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace Plato.Layout.Adaptors
 {
@@ -13,6 +11,8 @@ namespace Plato.Layout.Adaptors
         
         IViewAdaptorBuilder AdaptView(string viewName);
 
+        IViewAdaptorBuilder AdaptView(string[] viewNames);
+        
         IViewAdaptorBuilder AdaptModel<TModel>(Func<TModel, object> alteration) where TModel : class;
 
     }
@@ -50,7 +50,16 @@ namespace Plato.Layout.Adaptors
             _viewAdaptorResult.ViewAlterations.Add(viewName);
             return this;
         }
-        
+
+        public IViewAdaptorBuilder AdaptView(string[] viewNames)
+        {
+            foreach (var viewName in viewNames)
+            {
+                AdaptView(viewName);
+            }
+            return this;
+        }
+
         public IViewAdaptorBuilder AdaptModel<TModel>(Func<TModel, object> alteration) where TModel : class
         {
             if (alteration == null)
@@ -58,12 +67,11 @@ namespace Plato.Layout.Adaptors
                 throw new NullReferenceException(nameof(alteration));
             }
 
-            var typedDeleate = new Func<object, object>((object input) =>
-            {
-                return alteration((TModel)input);
-            });
+            // wrapper to convert delegates generic argument types
+            // to concrete type (object) for storage within adaptor result
+            var typedDelegate = new Func<object, object>((object input) => alteration((TModel)input));
 
-            _viewAdaptorResult.ModelAlterations.Add(typedDeleate);
+            _viewAdaptorResult.ModelAlterations.Add(typedDelegate);
             return this;
         }
 
