@@ -1,0 +1,12 @@
+﻿@model EditUserViewModel
+
+<h2>Edit 2 for @Model.UserName</h2>
+
+<div class="form-group" asp-validation-class-for="Email">
+    <label for="Email">@T["Email"]</label>
+    <span asp-validation-for="Email" class="text-danger">@T["The email is invalid."]</span>
+    <input asp-for="Email" class="form-control" type="email" />
+</div>
+
+
+

@@ -86,7 +86,6 @@ namespace Plato.Hosting.Web.Extensions
                 internalServices.AddPlatoTheming();
                 internalServices.AddPlatoNavigation();
              
-
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

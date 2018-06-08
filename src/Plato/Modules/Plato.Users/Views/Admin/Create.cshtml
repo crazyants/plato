@@ -1,0 +1,10 @@
+﻿@model IEnumerable<IGenericView>
+    @{
+        ViewData["Title"] = "Edit User";
+    }
+
+    <h4>@T["Create User"]</h4>
+    <span class="text-muted">@T["Manage your registered users"]</span>
+    <hr />
+
+    @await DisplayAsync(Model)

@@ -138,6 +138,21 @@ namespace Plato.Users
                 defaults: new { controller = "Admin", action = "Index" }
             );
 
+            routes.MapAreaRoute(
+                name: "CreateUser",
+                areaName: "Plato.Users",
+                template: "admin/users/create",
+                defaults: new { controller = "Admin", action = "Create" }
+            );
+            
+            routes.MapAreaRoute(
+                name: "EditUser",
+                areaName: "Plato.Users",
+                template: "admin/users/edit",
+                defaults: new { controller = "Admin", action = "Edit" }
+            );
+
+
             //routes.MapAreaRoute(
             //    viewName: "Users",
             //    area: "Plato.Users",

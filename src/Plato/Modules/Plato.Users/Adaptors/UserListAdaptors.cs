@@ -23,25 +23,27 @@ namespace Plato.Users.Adaptors
         public override async Task<IViewAdaptorResult> ConfigureAsync()
         {
 
-            // Adapt the default UserList view
-            return await Adapt("UserList",
-                builder =>
-                {
-                    builder
-                        .AdaptView("UserList2") // here we can change the default view file
-                        .AdaptModel<UsersPagedViewModel>(model =>
-                        {
-                            // here we can alter the model if needed
-                            model.PagerOpts.Page = 10;
-                            return model;
-                        })
-                        .AdaptOutput(output =>
-                        {
-                            // here we can modify the compiled view output directly
-                            return output;
+            return null;
 
-                        });
-                });
+            // Adapt the default UserList view
+            //return await Adapt("UserList",
+            //    builder =>
+            //    {
+            //        builder
+            //            .AdaptView("UserList2") // here we can change the default view file
+            //            .AdaptModel<UsersPagedViewModel>(model =>
+            //            {
+            //                // here we can alter the model if needed
+            //                model.PagerOpts.Page = 10;
+            //                return model;
+            //            })
+            //            .AdaptOutput(output =>
+            //            {
+            //                // here we can modify the compiled view output directly
+            //                return output;
+
+            //            });
+            //    });
         }
 
     }

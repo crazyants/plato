@@ -30,8 +30,8 @@ namespace Plato.Users
                         .Action("Index", "Admin", "Plato.Users")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ).Add(T["Add User"], "16", roles => roles
-                        .Action("CreateRole", "Admin", "Plato.Users")
+                    ).Add(T["Create User"], "16", roles => roles
+                        .Action("Create", "Admin", "Plato.Users")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));

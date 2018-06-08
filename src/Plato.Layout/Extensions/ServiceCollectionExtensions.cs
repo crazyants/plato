@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Layout.Adaptors;
+using Plato.Layout.ModelBinding;
 using Plato.Layout.Theming;
 using Plato.Layout.Views;
 
@@ -41,6 +43,15 @@ namespace Plato.Layout.Extensions
             
             // add theming convension - configures theme layout based on controller type
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
+
+            services.Configure<MvcOptions>((options) =>
+            {
+                options.Filters.Add(typeof(ModelBinderAccessorFilter));
+                //options.Filters.Add(typeof(NotifyFilter));
+            });
+
+            services.AddScoped<IUpdateModelAccessor, LocalModelBinderAccessor>();
+            
 
             return services;
 

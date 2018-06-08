@@ -1,10 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Plato.Layout.ModelBinding
 {
     public interface IUpdateModel
     {
+
+        Task<bool> TryUpdateModelAsync<TModel>(TModel model) where TModel : class;
+
+        bool TryValidateModel(object model);
+
+        bool TryValidateModel(object model, string prefix);
+
+        ModelStateDictionary ModelState { get; }
+
     }
 }

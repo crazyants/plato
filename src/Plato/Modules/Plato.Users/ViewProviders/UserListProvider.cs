@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Plato.Layout.Drivers;
 using Plato.Layout.ModelBinding;
@@ -11,29 +9,17 @@ namespace Plato.Users.ViewProviders
 {
     public class UserViewProvider : BaseViewProvider<User>
     {
-        public override async Task<IViewProviderResult> Display(User usersPaged, IUpdateModel updater)
+        public override async Task<IViewProviderResult> Display(User user, IUpdateModel updater)
         {
 
-            var user = new User();
-            user.UserName = "Ryan Healey 123 (From View Provider)";
-            user.Email = "sales@instantasp.co.uk";
-            
             return Combine(
-                await Initialize<UserViewModel>("DisplayUser", model =>
-                {
-                    model.User = user;
-                    return model;
-                }),
-                await Initialize<UserViewModel>("DisplayUser2", model =>
-                {
-                    model.User = user;
-                    return model;
-                })
+                await View<User>("User-Display", async model => user),
+                await View<User>("User-Display-2", async model => user)
             );
-
-
-            //return await Initialize<UserViewModel>("DisplayUser", model =>
+            
+            //return await View<UserViewModel>("DisplayUser", model =>
             //{
+            //    model.User = user;
             //    return model;
             //});
 
@@ -41,14 +27,40 @@ namespace Plato.Users.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> Edit(User usersPaged, IUpdateModel updater)
+        public override async Task<IViewProviderResult> Edit(User user, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+            
+            return Combine(
+                await View<EditUserViewModel>("User-Edit", async model =>
+                {
+                    model.Id = user.Id.ToString();
+                    model.UserName = user.UserName;
+                    model.Email = user.Email;
+                    return model;
+                }),
+                await View<EditUserViewModel>("User-Edit-2", async model =>
+                {
+                    model.Id = user.Id.ToString();
+                    model.UserName = user.UserName;
+                    model.Email = user.Email;
+                    return model;
+                })
+            );
+
         }
 
-        public override Task<IViewProviderResult> Update(User usersPaged, IUpdateModel updater)
+        public override async Task<IViewProviderResult> Update(User user, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+
+            var model = new EditUserViewModel();
+
+            if (!await updater.TryUpdateModelAsync(model))
+            {
+                return await Edit(user, updater);
+            }
+
+            return await Edit(user, updater);
+
         }
     }
 }

@@ -17,23 +17,25 @@ namespace Plato.Layout.Drivers
         public abstract Task<IViewProviderResult> Edit(TModel model, IUpdateModel updater);
         
         public abstract Task<IViewProviderResult> Update(TModel model, IUpdateModel updater);
-        
-        public async Task<IViewProviderResult> Initialize<TViewModel>(string viewName, Func<TViewModel, TViewModel> configure) where TViewModel : new()
-        {
-          
-            var activator = Activator.CreateInstance(typeof(TViewModel));
-            var model = configure((TViewModel)activator);
 
-            var viewResult = new ViewProviderResult()
+        public async Task<IViewProviderResult> View<TViewModel>(string viewName,
+            Func<TViewModel, Task<TViewModel>> configure) where TViewModel : new()
+        {
+
+            // Create dummy model type
+            var activator = Activator.CreateInstance(typeof(TViewModel));
+
+            // Configure model
+            var model = await configure((TViewModel) activator);
+
+            // Return view provider result
+            return new ViewProviderResult()
             {
                 Views =
                 {
                     new GenericView(viewName, model)
                 }
             };
-           
-          
-            return viewResult;
 
         }
 

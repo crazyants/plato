@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Plato.Abstractions.Data;
@@ -21,13 +22,17 @@ namespace Plato.Users.Controllers
 
         private readonly IViewProviderManager<User> _viewProviderManager;
         private readonly IPlatoUserStore<User> _ploatUserStore;
-        
+        private readonly UserManager<User> _userManager;
+
         public AdminController(
         
-            IPlatoUserStore<User> platoUserStore, IViewProviderManager<User> viewProviderManager)
+            IPlatoUserStore<User> platoUserStore, 
+            IViewProviderManager<User> viewProviderManager, 
+            UserManager<User> userManager)
         {
             _ploatUserStore = platoUserStore;
             _viewProviderManager = viewProviderManager;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(
@@ -62,28 +67,59 @@ namespace Plato.Users.Controllers
             routeData.Values.Add("Options.Search", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
             
-            var model = await GetModel(filterOptions, pagerOptions);
-            var view = new GenericView("UserList", model);
-            
-            
-            var views = new List<GenericView>
-            {
-                new GenericView("UserTest1", model),
-                new GenericView("UserTest2", model)
-            };
+            var model = await GetPagedModel(filterOptions, pagerOptions);
+     
+            //var providedView = await _viewProviderManager.BuildDisplayAsync(user, this);
 
-            var user = new User();
-            user.UserName = "Ryan Healey";
-            user.Email = "sales@instantasp.co.uk";
-
-       
-            var providedView = await _viewProviderManager.BuildDisplayAsync(user, this);
-
-            return View(providedView.Views);
+            return View(new GenericView("UserList", model));
 
         }
 
-        private async Task<UsersPagedViewModel> GetModel(
+
+        public async Task<IActionResult> Create()
+        {
+            var result = await _viewProviderManager.BuildEditAsync(new User(), this);
+            return View(result.Views);
+        }
+
+
+        public async Task<IActionResult> Edit()
+        {
+
+            var user = new User();
+            user.Id = 1;
+            user.UserName = "Ryan Healey from edit action";
+            user.Email = "sales@instantasp.co.uk";
+
+            var result = await _viewProviderManager.BuildEditAsync(user, this);
+            return View(result.Views);
+
+        }
+
+
+        [HttpPost]
+        [ActionName(nameof(Edit))]
+        public async Task<IActionResult> EditPost(string id)
+        {
+        
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _viewProviderManager.BuildUpdateAsync((User)user, this);
+
+            if (!ModelState.IsValid)
+            {
+                return View(result.Views);
+            }
+            
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        private async Task<UsersPagedViewModel> GetPagedModel(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {

@@ -37,20 +37,36 @@ namespace Plato.Layout.Drivers
             foreach (var provider in _providers)
             {
                 results.Add(await provider.Display(model, updater));
-                
             }
 
             return new CombinedViewProviderResult(results);
+
         }
 
-        public Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater)
+        public async Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+
+            var results = new List<IViewProviderResult>();
+            foreach (var provider in _providers)
+            {
+                results.Add(await provider.Edit(model, updater));
+            }
+
+            return new CombinedViewProviderResult(results);
+
         }
 
-        public Task<IViewProviderResult> BuildUpdateAsync(TModel model, IUpdateModel updater)
+        public async Task<IViewProviderResult> BuildUpdateAsync(TModel model, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+
+            var results = new List<IViewProviderResult>();
+            foreach (var provider in _providers)
+            {
+                results.Add(await provider.Update(model, updater));
+            }
+
+            return new CombinedViewProviderResult(results);
+
         }
     }
 }
