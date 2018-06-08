@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 
 namespace Plato.Layout.ModelBinding
 {
@@ -11,8 +8,8 @@ namespace Plato.Layout.ModelBinding
 
         public IUpdateModel ModelUpdater
         {
-            get { return _storage.Value; }
-            set { _storage.Value = value; }
+            get => _storage.Value;
+            set => _storage.Value = value;
         }
     }
 

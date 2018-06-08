@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace Plato.Layout.ModelBinding
 {
 
@@ -9,9 +6,5 @@ namespace Plato.Layout.ModelBinding
     {
         IUpdateModel ModelUpdater { get; set; }
     }
-
-    public class UpdateModelAccessor
-    {
-    }
-
+    
 }

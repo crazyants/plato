@@ -23,13 +23,11 @@ namespace Plato.Layout.Drivers
 
         private readonly IEnumerable<IViewProvider<TModel>> _providers;
 
-        public ViewProviderManager(
-            IEnumerable<IViewProvider<TModel>> providers)
+        public ViewProviderManager(IEnumerable<IViewProvider<TModel>> providers)
         {
             _providers = providers;
         }
-
-
+        
         public async Task<IViewProviderResult> BuildDisplayAsync(TModel model, IUpdateModel updater)
         {
 

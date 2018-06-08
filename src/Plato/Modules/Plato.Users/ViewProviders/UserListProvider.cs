@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Plato.Layout.Drivers;
 using Plato.Layout.ModelBinding;
 using Plato.Models.Users;
@@ -9,14 +10,24 @@ namespace Plato.Users.ViewProviders
 {
     public class UserViewProvider : BaseViewProvider<User>
     {
+
+        private readonly UserManager<User> _userManager;
+
+        public UserViewProvider(UserManager<User> userManager)
+        {
+            _userManager = userManager;
+        }
+
+
         public override async Task<IViewProviderResult> Display(User user, IUpdateModel updater)
         {
 
             return Combine(
-                await View<User>("User-Display", async model => user),
-                await View<User>("User-Display-2", async model => user)
+                await View<User>("User-Display", model => Task.FromResult(user)),
+                await View<User>("User-Display", model => Task.FromResult(user)),
+                await View<User>("User-Display-2", model => Task.FromResult(user))
             );
-            
+
             //return await View<UserViewModel>("DisplayUser", model =>
             //{
             //    model.User = user;
@@ -58,6 +69,25 @@ namespace Plato.Users.ViewProviders
             {
                 return await Edit(user, updater);
             }
+
+            model.UserName = model.UserName?.Trim();
+            model.Email = model.Email?.Trim();
+
+            if (updater.ModelState.IsValid)
+            {
+
+                await _userManager.SetUserNameAsync(user, model.UserName);
+                await _userManager.SetEmailAsync(user, model.Email);
+
+                var result = await _userManager.UpdateAsync(user);
+
+                foreach (var error in result.Errors)
+                {
+                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+            }
+
 
             return await Edit(user, updater);
 

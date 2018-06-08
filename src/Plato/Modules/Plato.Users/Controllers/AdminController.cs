@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -25,7 +23,6 @@ namespace Plato.Users.Controllers
         private readonly UserManager<User> _userManager;
 
         public AdminController(
-        
             IPlatoUserStore<User> platoUserStore, 
             IViewProviderManager<User> viewProviderManager, 
             UserManager<User> userManager)
@@ -34,6 +31,8 @@ namespace Plato.Users.Controllers
             _viewProviderManager = viewProviderManager;
             _userManager = userManager;
         }
+
+        #region "Action Methods"
 
         public async Task<IActionResult> Index(
             FilterOptions filterOptions,
@@ -74,50 +73,53 @@ namespace Plato.Users.Controllers
             return View(new GenericView("UserList", model));
 
         }
-
-
+        
         public async Task<IActionResult> Create()
         {
             var result = await _viewProviderManager.BuildEditAsync(new User(), this);
             return View(result.Views);
         }
-
-
-        public async Task<IActionResult> Edit()
+        
+        public async Task<IActionResult> Edit(string id)
         {
 
-            var user = new User();
-            user.Id = 1;
-            user.UserName = "Ryan Healey from edit action";
-            user.Email = "sales@instantasp.co.uk";
-
-            var result = await _viewProviderManager.BuildEditAsync(user, this);
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (!(currentUser is User))
+            {
+                return NotFound();
+            }
+            
+            var result = await _viewProviderManager.BuildEditAsync(currentUser, this);
             return View(result.Views);
 
         }
-
-
+        
         [HttpPost]
         [ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(string id)
         {
-        
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
             {
                 return NotFound();
             }
-
-            var result = await _viewProviderManager.BuildUpdateAsync((User)user, this);
+            
+            var result = await _viewProviderManager.BuildUpdateAsync((User)currentUser, this);
 
             if (!ModelState.IsValid)
             {
                 return View(result.Views);
             }
-            
-            return RedirectToAction(nameof(Index));
 
+            //_notifier.Success(TH["User updated successfully"]);
+
+            return RedirectToAction(nameof(Index));
+            
         }
+
+        #endregion
+
+        #region "Private Methods"
 
         private async Task<UsersPagedViewModel> GetPagedModel(
             FilterOptions filterOptions,
@@ -151,6 +153,8 @@ namespace Plato.Users.Controllers
                 .ToList<User>();
         }
 
+
+        #endregion
 
     }
 }

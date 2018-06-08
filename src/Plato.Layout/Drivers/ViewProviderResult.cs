@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Plato.Layout.Views;
 
 namespace Plato.Layout.Drivers
@@ -19,9 +16,7 @@ namespace Plato.Layout.Drivers
     
     public interface IViewProviderResult
     {
-
         IList<IGenericView> Views { get; set; }
-
     }
 
     public class ViewProviderResult : IViewProviderResult
@@ -31,22 +26,16 @@ namespace Plato.Layout.Drivers
 
         public IList<IGenericView> Views
         {
-            get
-            {
-                if (_views == null)
-                    _views = new List<IGenericView>();
-                return _views;
-            }
-            set { _views = value; }
+            get => _views ?? (_views = new List<IGenericView>());
+            set => _views = value;
         }
+
     }
-
-
+    
     public class CombinedViewProviderResult : IViewProviderResult
     {
         private readonly IList<IViewProviderResult> _results;
-
-
+        
         public CombinedViewProviderResult(params IViewProviderResult[] results)
         {
             _results = results;
@@ -79,8 +68,7 @@ namespace Plato.Layout.Drivers
 
                 return views;
             }
-            set { _views = value; }
-
+            set => _views = value;
         }
 
         
