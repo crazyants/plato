@@ -19,15 +19,15 @@ namespace Plato.Users.Controllers
     public class AdminController : Controller, IUpdateModel
     {
 
-        private readonly IViewProvider<User> _usersPagedViewProvider;
+        private readonly IViewProviderManager<User> _viewProviderManager;
         private readonly IPlatoUserStore<User> _ploatUserStore;
         
         public AdminController(
-            IViewProvider<User> usersPagedViewProvider,
-            IPlatoUserStore<User> platoUserStore)
+        
+            IPlatoUserStore<User> platoUserStore, IViewProviderManager<User> viewProviderManager)
         {
-            _usersPagedViewProvider = usersPagedViewProvider;
             _ploatUserStore = platoUserStore;
+            _viewProviderManager = viewProviderManager;
         }
 
         public async Task<IActionResult> Index(
@@ -77,7 +77,7 @@ namespace Plato.Users.Controllers
             user.Email = "sales@instantasp.co.uk";
 
        
-            var providedView = _usersPagedViewProvider.BuildDisplayAsync(user, this);
+            var providedView = _viewProviderManager.BuildDisplayAsync(user, this);
 
             return View(views);
 

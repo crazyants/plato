@@ -9,24 +9,24 @@ using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
 {
-    public class UserListProvider : BaseViewProvider<User>
+    public class UserViewProvider : BaseViewProvider<User>
     {
-        public override async Task<IViewResult> BuildDisplayAsync(User usersPaged, IUpdateModel updater)
+        public override async Task<IViewProviderResult> Display(User usersPaged, IUpdateModel updater)
         {
 
-            return await Initialize<UserViewModel>("UserList2", model =>
+            return await Initialize<UserViewModel>("DisplayUser", model =>
             {
                 return model;
             });
 
         }
 
-        public override Task<IViewResult> BuildEditAsync(User usersPaged, IUpdateModel updater)
+        public override Task<IViewProviderResult> Edit(User usersPaged, IUpdateModel updater)
         {
             throw new NotImplementedException();
         }
 
-        public override Task<IViewResult> BuildUpdateAsync(User usersPaged, IUpdateModel updater)
+        public override Task<IViewProviderResult> Update(User usersPaged, IUpdateModel updater)
         {
             throw new NotImplementedException();
         }
