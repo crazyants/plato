@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Html;
 
-namespace Plato.Layout.Adaptors
+namespace Plato.Layout.ViewAdaptors
 {
 
     public interface IViewAdaptorBuilder

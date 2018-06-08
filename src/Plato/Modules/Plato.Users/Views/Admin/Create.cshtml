@@ -1,10 +1,10 @@
-﻿@model IEnumerable<IGenericView>
-    @{
-        ViewData["Title"] = "Edit User";
-    }
+﻿@model IEnumerable<IView>
+@{
+    ViewData["Title"] = "EditAsync User";
+}
 
-    <h4>@T["Create User"]</h4>
-    <span class="text-muted">@T["Manage your registered users"]</span>
-    <hr />
+<h4>@T["Create User"]</h4>
+<span class="text-muted">@T["Manage your registered users"]</span>
+<hr />
 
-    @await DisplayAsync(Model)
+@await DisplayAsync(Model)

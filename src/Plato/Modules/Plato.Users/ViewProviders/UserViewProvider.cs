@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Plato.Layout.Drivers;
+using Plato.Layout.ViewProviders;
 using Plato.Layout.ModelBinding;
 using Plato.Models.Users;
 using Plato.Users.ViewModels;
@@ -19,13 +19,13 @@ namespace Plato.Users.ViewProviders
         }
 
 
-        public override async Task<IViewProviderResult> Display(User user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> DisplayAsync(User user, IUpdateModel updater)
         {
 
             return Combine(
-                await View<User>("User-Display", model => Task.FromResult(user)),
-                await View<User>("User-Display", model => Task.FromResult(user)),
-                await View<User>("User-Display-2", model => Task.FromResult(user))
+                await View<User>("User.Display", model => Task.FromResult(user)),
+                await View<User>("User.Display", model => Task.FromResult(user)),
+                await View<User>("User.Display-2", model => Task.FromResult(user))
             );
 
             //return await View<UserViewModel>("DisplayUser", model =>
@@ -33,23 +33,21 @@ namespace Plato.Users.ViewProviders
             //    model.User = user;
             //    return model;
             //});
-
-
-
+            
         }
 
-        public override async Task<IViewProviderResult> Edit(User user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> EditAsync(User user, IUpdateModel updater)
         {
             
             return Combine(
-                await View<EditUserViewModel>("User-Edit", async model =>
+                await View<EditUserViewModel>("User.Edit", async model =>
                 {
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;
                     model.Email = user.Email;
                     return model;
                 }),
-                await View<EditUserViewModel>("User-Edit-2", async model =>
+                await View<EditUserViewModel>("User.Edit-2", async model =>
                 {
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;
@@ -60,14 +58,14 @@ namespace Plato.Users.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> Update(User user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> UpdateAsync(User user, IUpdateModel updater)
         {
 
             var model = new EditUserViewModel();
 
             if (!await updater.TryUpdateModelAsync(model))
             {
-                return await Edit(user, updater);
+                return await EditAsync(user, updater);
             }
 
             model.UserName = model.UserName?.Trim();
@@ -87,9 +85,8 @@ namespace Plato.Users.ViewProviders
                 }
 
             }
-
-
-            return await Edit(user, updater);
+            
+            return await EditAsync(user, updater);
 
         }
     }

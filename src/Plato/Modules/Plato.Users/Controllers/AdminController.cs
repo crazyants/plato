@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
-using Plato.Layout.Drivers;
+using Plato.Layout.ViewProviders;
 using Plato.Layout.Views;
 using Plato.Models.Users;
 using Plato.Stores.Users;
@@ -70,7 +70,7 @@ namespace Plato.Users.Controllers
      
             //var providedView = await _viewProviderManager.BuildDisplayAsync(user, this);
 
-            return View(new GenericView("UserList", model));
+            return View(new View("User.List", model));
 
         }
         

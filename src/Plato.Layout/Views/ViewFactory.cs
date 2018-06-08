@@ -11,19 +11,19 @@ namespace Plato.Layout.Views
 
     public interface IGenericViewFactory
     {
-        Task<GenericViewDescriptor> CreateAsync(IGenericView view);
+        Task<ViewDescriptor> CreateAsync(IView view);
 
-        Task<IHtmlContent> InvokeAsync(GenericViewDisplayContext displayContext);
+        Task<IHtmlContent> InvokeAsync(ViewDisplayContext displayContext);
 
     }
 
-    public class GenericViewFactory : IGenericViewFactory
+    public class ViewFactory : IGenericViewFactory
     {
 
         private readonly IGenericViewTableManager _genericViewTableManager;
         private readonly IGenericViewInvoker _genericViewInvoker;
 
-        public GenericViewFactory(
+        public ViewFactory(
             IGenericViewTableManager genericViewTableManager,
             IGenericViewInvoker genericViewInvoker)
         {
@@ -31,12 +31,12 @@ namespace Plato.Layout.Views
             _genericViewInvoker = genericViewInvoker;
         }
 
-        public async Task<GenericViewDescriptor> CreateAsync(IGenericView view)
+        public async Task<ViewDescriptor> CreateAsync(IView view)
         {
             return await _genericViewTableManager.TryAdd(view);
         }
 
-        public async Task<IHtmlContent> InvokeAsync(GenericViewDisplayContext displayContext)
+        public async Task<IHtmlContent> InvokeAsync(ViewDisplayContext displayContext)
         {
 
             // Contextulize generic view invoker

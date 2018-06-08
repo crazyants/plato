@@ -1,41 +1,14 @@
 ﻿using System.Collections.Generic;
 using Plato.Layout.Views;
 
-namespace Plato.Layout.Drivers
+namespace Plato.Layout.ViewProviders
 {
 
-    public class ProviderDisplayContext
-    {
-        public IGenericView View { get; set; }
-    }
-
-    public class ProviderEditContext
-    {
-        public IGenericView View { get; set; }
-    }
-    
-    public interface IViewProviderResult
-    {
-        IList<IGenericView> Views { get; set; }
-    }
-
-    public class ViewProviderResult : IViewProviderResult
-    {
- 
-        private IList<IGenericView> _views;
-
-        public IList<IGenericView> Views
-        {
-            get => _views ?? (_views = new List<IGenericView>());
-            set => _views = value;
-        }
-
-    }
-    
     public class CombinedViewProviderResult : IViewProviderResult
     {
         private readonly IList<IViewProviderResult> _results;
-        
+        private IList<IView> _views;
+
         public CombinedViewProviderResult(params IViewProviderResult[] results)
         {
             _results = results;
@@ -45,19 +18,17 @@ namespace Plato.Layout.Drivers
         {
             _results = results;
         }
-        
+
         public IList<IViewProviderResult> GetResults()
         {
             return _results;
         }
 
-        private IList<IGenericView> _views;
-
-        public IList<IGenericView> Views
+        public IList<IView> Views
         {
             get
             {
-                var views = new List<IGenericView>();
+                var views = new List<IView>();
                 if (_results != null)
                 {
                     foreach (var result in _results)
@@ -71,6 +42,6 @@ namespace Plato.Layout.Drivers
             set => _views = value;
         }
 
-        
+
     }
 }

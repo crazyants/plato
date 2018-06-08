@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
-using Plato.Layout.Adaptors;
+using Plato.Layout.ViewAdaptors;
 
 namespace Plato.Layout.Views
 {
@@ -18,25 +18,25 @@ namespace Plato.Layout.Views
     {
         ViewContext ViewContext { get; set; }
 
-        void Contextualize(GenericViewDisplayContext viewContext);
+        void Contextualize(ViewDisplayContext viewContext);
 
         Task<IHtmlContent> InvokeAsync(string viewName, object model);
 
     }
 
-    public class GenericViewInvoker : IGenericViewInvoker
+    public class ViewInvoker : IGenericViewInvoker
     {
 
         public ViewContext ViewContext { get; set; }
 
         private readonly IHtmlHelper _htmlHelper;
         private readonly IViewComponentHelper _viewComponentHelper;
-        private readonly ILogger<GenericViewInvoker> _logger;
+        private readonly ILogger<ViewInvoker> _logger;
 
-        public GenericViewInvoker(
+        public ViewInvoker(
             IHtmlHelper htmlHelper,
             IViewComponentHelper viewComponentHelper,
-            ILogger<GenericViewInvoker> logger)
+            ILogger<ViewInvoker> logger)
         {
             _htmlHelper = htmlHelper;
             _viewComponentHelper = viewComponentHelper;
@@ -45,7 +45,7 @@ namespace Plato.Layout.Views
 
         // implementation
 
-        public void Contextualize(GenericViewDisplayContext context)
+        public void Contextualize(ViewDisplayContext context)
         {
             this.ViewContext = context.ViewContext;
         }

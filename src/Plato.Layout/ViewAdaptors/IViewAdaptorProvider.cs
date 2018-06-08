@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Plato.Layout.Adaptors
+namespace Plato.Layout.ViewAdaptors
 {
 
     public interface IViewAdaptorProvider

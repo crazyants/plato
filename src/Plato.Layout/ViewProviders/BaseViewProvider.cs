@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 using Plato.Layout.ModelBinding;
 using Plato.Layout.Views;
 
-namespace Plato.Layout.Drivers
+namespace Plato.Layout.ViewProviders
 {
     public abstract class BaseViewProvider<TModel> 
     : IViewProvider<TModel>
         where TModel : class
     {
-        public abstract Task<IViewProviderResult> Display(TModel model, IUpdateModel updater);
+        public abstract Task<IViewProviderResult> DisplayAsync(TModel model, IUpdateModel updater);
         
-        public abstract Task<IViewProviderResult> Edit(TModel model, IUpdateModel updater);
+        public abstract Task<IViewProviderResult> EditAsync(TModel model, IUpdateModel updater);
         
-        public abstract Task<IViewProviderResult> Update(TModel model, IUpdateModel updater);
+        public abstract Task<IViewProviderResult> UpdateAsync(TModel model, IUpdateModel updater);
 
         public async Task<IViewProviderResult> View<TViewModel>(string viewName,
             Func<TViewModel, Task<TViewModel>> configure) where TViewModel : new()
         {
 
-            // Create dummy model type
+            // Create proxy model 
             var activator = Activator.CreateInstance(typeof(TViewModel));
 
             // Configure model
@@ -33,7 +33,7 @@ namespace Plato.Layout.Drivers
             {
                 Views =
                 {
-                    new GenericView(viewName, model)
+                    new View(viewName, model)
                 }
             };
 

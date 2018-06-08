@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Plato.Layout.Adaptors;
+using Plato.Layout.ViewAdaptors;
 using Plato.Layout.TagHelpers;
 using Plato.Layout.Views;
 
@@ -48,13 +48,13 @@ namespace Plato.Layout.Razor
             }
         }
 
-        public async Task<IHtmlContent> DisplayAsync(IGenericView view)
+        public async Task<IHtmlContent> DisplayAsync(IView view)
         {
             EnsureViewHelper();
             return await _viewDisplayHelper.DisplayAsync(view);
         }
 
-        public async Task<IHtmlContent> DisplayAsync(IEnumerable<IGenericView> views)
+        public async Task<IHtmlContent> DisplayAsync(IEnumerable<IView> views)
         {
 
             var builder = new HtmlContentBuilder();

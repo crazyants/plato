@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Plato.Layout.Adaptors;
+using Plato.Layout.ViewAdaptors;
 
 namespace Plato.Layout.Views
 {
-    public class GenericViewDisplayContext
+    public class ViewDisplayContext
     {
         public IServiceProvider ServiceProvider { get; set; }
 
@@ -17,6 +17,6 @@ namespace Plato.Layout.Views
 
         public object Value { get; set; }
         
-        public GenericViewDescriptor ViewDescriptor { get; set; }
+        public ViewDescriptor ViewDescriptor { get; set; }
     }
 }

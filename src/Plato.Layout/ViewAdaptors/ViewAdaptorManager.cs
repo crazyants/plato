@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace Plato.Layout.Adaptors
+namespace Plato.Layout.ViewAdaptors
 {
 
     public interface IViewAdaptorManager

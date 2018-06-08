@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Layout.ModelBinding;
-using Plato.Layout.Views;
 
-namespace Plato.Layout.Drivers
+namespace Plato.Layout.ViewProviders
 {
 
     public interface IViewProviderManager<in TModel> where TModel : class
@@ -34,7 +31,7 @@ namespace Plato.Layout.Drivers
             var results = new List<IViewProviderResult>();
             foreach (var provider in _providers)
             {
-                results.Add(await provider.Display(model, updater));
+                results.Add(await provider.DisplayAsync(model, updater));
             }
 
             return new CombinedViewProviderResult(results);
@@ -47,7 +44,7 @@ namespace Plato.Layout.Drivers
             var results = new List<IViewProviderResult>();
             foreach (var provider in _providers)
             {
-                results.Add(await provider.Edit(model, updater));
+                results.Add(await provider.EditAsync(model, updater));
             }
 
             return new CombinedViewProviderResult(results);
@@ -60,7 +57,7 @@ namespace Plato.Layout.Drivers
             var results = new List<IViewProviderResult>();
             foreach (var provider in _providers)
             {
-                results.Add(await provider.Update(model, updater));
+                results.Add(await provider.UpdateAsync(model, updater));
             }
 
             return new CombinedViewProviderResult(results);

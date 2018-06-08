@@ -5,7 +5,7 @@
 <ul class="list-group">
     @foreach (var user in Model.Results.Data)
     {
-        @await DisplayAsync(new GenericView("UserListItem", user))
+        @await DisplayAsync(new View("User.ListItem", user))
     }
 </ul>
 

@@ -11,13 +11,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Layout.Adaptors;
+using Plato.Layout.ViewAdaptors;
 
 namespace Plato.Layout.Views
 {
     public interface IViewDisplayHelper
     {
-        Task<IHtmlContent> DisplayAsync(IGenericView view);
+        Task<IHtmlContent> DisplayAsync(IView view);
     }
 
     public class ViewDisplayHelper : IViewDisplayHelper
@@ -42,7 +42,7 @@ namespace Plato.Layout.Views
             _serviceProvider = serviceProvider;
         }
         
-        public async Task<IHtmlContent> DisplayAsync(IGenericView view)
+        public async Task<IHtmlContent> DisplayAsync(IView view)
         {
 
             if (view == null)
@@ -58,7 +58,7 @@ namespace Plato.Layout.Views
             var viewAdaptorResults = await viewAdaptorManager.GetViewAdaptors(view.ViewName);
 
             // Build display context
-            var displayContext = new GenericViewDisplayContext()
+            var displayContext = new ViewDisplayContext()
             {
                 ViewDescriptor = viewDescriptor,
                 ViewAdaptorResults = viewAdaptorResults,

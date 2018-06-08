@@ -13,8 +13,8 @@ using Plato.Shell.Models;
 using Plato.Stores.Users;
 using Plato.Hosting.Web;
 using Plato.Hosting.Web.Extensions;
-using Plato.Layout.Adaptors;
-using Plato.Layout.Drivers;
+using Plato.Layout.ViewAdaptors;
+using Plato.Layout.ViewProviders;
 using Plato.Layout.Extensions;
 using Plato.Layout.TagHelpers;
 using Plato.Navigation;
@@ -149,7 +149,7 @@ namespace Plato.Users
                 name: "EditUser",
                 areaName: "Plato.Users",
                 template: "admin/users/edit",
-                defaults: new { controller = "Admin", action = "Edit" }
+                defaults: new { controller = "Admin", action = "EditAsync" }
             );
 
 

@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Plato.Layout.Adaptors;
+using Plato.Layout.ViewAdaptors;
 
 namespace Plato.Layout.Views
 {

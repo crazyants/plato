@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Plato.Layout.Adaptors
+namespace Plato.Layout.ViewAdaptors
 {
     public abstract class BaseAdaptorProvider : IViewAdaptorProvider
     {

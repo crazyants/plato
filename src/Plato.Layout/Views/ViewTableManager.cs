@@ -3,28 +3,28 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Layout.Adaptors;
+using Plato.Layout.ViewAdaptors;
 
 namespace Plato.Layout.Views
 {
 
     public interface IGenericViewTableManager
     {
-        Task<GenericViewDescriptor> TryAdd(IGenericView view);
+        Task<ViewDescriptor> TryAdd(IView view);
     }
 
-    public class GenericViewTableManager : IGenericViewTableManager
+    public class ViewTableManager : IGenericViewTableManager
     {
 
       
 
-        private static readonly ConcurrentDictionary<string, GenericViewDescriptor> _views =
-            new ConcurrentDictionary<string, GenericViewDescriptor>();
+        private static readonly ConcurrentDictionary<string, ViewDescriptor> _views =
+            new ConcurrentDictionary<string, ViewDescriptor>();
 
-        public async Task<GenericViewDescriptor> TryAdd(IGenericView view)
+        public async Task<ViewDescriptor> TryAdd(IView view)
         {
             
-            var descriptor = new GenericViewDescriptor()
+            var descriptor = new ViewDescriptor()
             {
                 Name = view.ViewName,
                 View = view
