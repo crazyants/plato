@@ -17,21 +17,47 @@ namespace Plato.Layout.Drivers
         public abstract Task<IViewProviderResult> Edit(TModel model, IUpdateModel updater);
         
         public abstract Task<IViewProviderResult> Update(TModel model, IUpdateModel updater);
-
-
-
-        public async Task<IViewProviderResult> Initialize<TViewModel>(string viewName, Func<TViewModel, TViewModel> configure) where TViewModel : class
+        
+        public async Task<IViewProviderResult> Initialize<TViewModel>(string viewName, Func<TViewModel, TViewModel> configure) where TViewModel : new()
         {
+          
+            var activator = Activator.CreateInstance(typeof(TViewModel));
+            var model = configure((TViewModel)activator);
 
-            var model = configure(default(TViewModel));
-
-            var viewResult = new ViewProviderResult();
-            viewResult.Views.Add(new GenericView(viewName, model));
+            var viewResult = new ViewProviderResult()
+            {
+                Views =
+                {
+                    new GenericView(viewName, model)
+                }
+            };
+           
           
             return viewResult;
 
-
         }
+
+        public CombinedViewProviderResult Combine(params IViewProviderResult[] results)
+        {
+            return new CombinedViewProviderResult(results);
+        }
+
+
+        //private static IShape CreateShape(Type baseType)
+        //{
+        //    // Don't generate a proxy for shape types
+        //    if (typeof(IShape).IsAssignableFrom(baseType))
+        //    {
+        //        var shape = Activator.CreateInstance(baseType) as IShape;
+        //        return shape;
+        //    }
+        //    else
+        //    {
+        //        var options = new ProxyGenerationOptions();
+        //        options.AddMixinInstance(new ShapeViewModel());
+        //        return (IShape)ProxyGenerator.CreateClassProxy(baseType, options);
+        //    }
+        //}
 
     }
 }

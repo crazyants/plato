@@ -14,10 +14,30 @@ namespace Plato.Users.ViewProviders
         public override async Task<IViewProviderResult> Display(User usersPaged, IUpdateModel updater)
         {
 
-            return await Initialize<UserViewModel>("DisplayUser", model =>
-            {
-                return model;
-            });
+            var user = new User();
+            user.UserName = "Ryan Healey 123 (From View Provider)";
+            user.Email = "sales@instantasp.co.uk";
+            
+            return Combine(
+                await Initialize<UserViewModel>("DisplayUser", model =>
+                {
+                    model.User = user;
+                    return model;
+                }),
+                await Initialize<UserViewModel>("DisplayUser2", model =>
+                {
+                    model.User = user;
+                    return model;
+                })
+            );
+
+
+            //return await Initialize<UserViewModel>("DisplayUser", model =>
+            //{
+            //    return model;
+            //});
+
+
 
         }
 

@@ -6,7 +6,7 @@ using Plato.Layout.ModelBinding;
 
 namespace Plato.Layout.Drivers
 {
-
+    
     public interface IViewProvider<in TModel> where TModel : class
     {
 

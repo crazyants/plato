@@ -89,9 +89,12 @@ namespace Plato.Users
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
+            // register view proviers
+
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
-            services.AddScoped<IViewProvider<User>, UserViewProvider>();
+
+            //services.AddScoped<IViewProvider<User>, UserViewProvider>();
 
 
 

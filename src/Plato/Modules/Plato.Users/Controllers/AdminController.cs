@@ -77,9 +77,9 @@ namespace Plato.Users.Controllers
             user.Email = "sales@instantasp.co.uk";
 
        
-            var providedView = _viewProviderManager.BuildDisplayAsync(user, this);
+            var providedView = await _viewProviderManager.BuildDisplayAsync(user, this);
 
-            return View(views);
+            return View(providedView.Views);
 
         }
 

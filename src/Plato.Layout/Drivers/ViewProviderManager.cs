@@ -10,11 +10,11 @@ namespace Plato.Layout.Drivers
 
     public interface IViewProviderManager<in TModel> where TModel : class
     {
-        Task<CompiledViewProvider> BuildDisplayAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> BuildDisplayAsync(TModel model, IUpdateModel updater);
 
-        Task<CompiledViewProvider> BuildEditAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater);
 
-        Task<CompiledViewProvider> BuildUpdateAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> BuildUpdateAsync(TModel model, IUpdateModel updater);
 
     }
 
@@ -30,32 +30,25 @@ namespace Plato.Layout.Drivers
         }
 
 
-        public async Task<CompiledViewProvider> BuildDisplayAsync(TModel model, IUpdateModel updater)
+        public async Task<IViewProviderResult> BuildDisplayAsync(TModel model, IUpdateModel updater)
         {
 
-            var output = new CompiledViewProvider();
-            var views = new List<IGenericView>();
-
+            var results = new List<IViewProviderResult>();
             foreach (var provider in _providers)
             {
-                var viewProviderResult = await provider.Display(model, updater);
-
-              
-                //if (result != null)
-                //{
-                //    //await result.ApplyAsync(context);
-                //}
+                results.Add(await provider.Display(model, updater));
+                
             }
 
-            return null;
+            return new CombinedViewProviderResult(results);
         }
 
-        public Task<CompiledViewProvider> BuildEditAsync(TModel model, IUpdateModel updater)
+        public Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CompiledViewProvider> BuildUpdateAsync(TModel model, IUpdateModel updater)
+        public Task<IViewProviderResult> BuildUpdateAsync(TModel model, IUpdateModel updater)
         {
             throw new NotImplementedException();
         }
