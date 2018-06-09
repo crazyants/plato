@@ -21,11 +21,9 @@ namespace Plato.Users.ViewProviders
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
         {
-
+            
             return Views(
-                await View<User>("User.Display", model => Task.FromResult(user)),
-                await View<User>("User.Display", model => Task.FromResult(user)),
-                await View<User>("User.Display-2", model => Task.FromResult(user))
+                View<User>("User.Display", model => user)
             );
 
             //return await View<UserViewModel>("DisplayUser", model =>
@@ -33,29 +31,29 @@ namespace Plato.Users.ViewProviders
             //    model.User = user;
             //    return model;
             //});
-            
+
         }
 
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
             
             return Views(
-                await View<User>("User.Display", model => Task.FromResult(user)),
-                await View<User>("User.Display", model => Task.FromResult(user)),
-                await View<User>("User.Display-2", model => Task.FromResult(user)),
-                await View<EditUserViewModel>("User.Edit", model =>
+                View<User>("User.Display", model => user),
+                View<User>("User.Display", model => user),
+                View<User>("User.Display-2", model => user),
+                View<EditUserViewModel>("User.Edit", model =>
                 {
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;
                     model.Email = user.Email;
-                    return Task.FromResult(model);
+                    return model;
                 }),
-                await View<EditUserViewModel>("User.Edit-2", model =>
+                View<EditUserViewModel>("User.Edit-2", model =>
                 {
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;
                     model.Email = user.Email;
-                    return Task.FromResult(model);
+                    return model;
                 })
             );
 

@@ -21,26 +21,28 @@ namespace Plato.Layout.ViewProviders
 
         #region "Helper Methods"
 
-        public async Task<IViewProviderResult> View<TViewModel>(string viewName,
-            Func<TViewModel, Task<TViewModel>> configure) where TViewModel : new()
+        public IPositionedView View<TViewModel>(
+            string viewName,
+            Func<TViewModel, TViewModel> configure) where TViewModel : new()
         {
             
             // Create proxy model 
             var proxyModel = Activator.CreateInstance(typeof(TViewModel));
 
             // Configure model
-            var model = await configure((TViewModel)proxyModel);
+            var model = configure((TViewModel)proxyModel);
 
-            // Return view provider result
-            return new ViewProviderResult(
-                new PositionedView(viewName, model)
-            );
+            // Return a view we can optionally position
+            return new PositionedView(viewName, model);
 
         }
 
-        public CombinedViewProviderResult Views(params IViewProviderResult[] results)
+        public CombinedViewProviderResult Views(params IView[] views)
         {
-            return new CombinedViewProviderResult(results);
+            return new CombinedViewProviderResult(
+                new ViewProviderResult(views)
+            );
+
         }
 
         //private static IView CreateModel(Type baseType)

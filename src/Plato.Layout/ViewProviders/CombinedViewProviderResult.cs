@@ -33,7 +33,10 @@ namespace Plato.Layout.ViewProviders
                 {
                     foreach (var result in _results)
                     {
-                        views.AddRange(result.Views);
+                        if (result.Views != null)
+                        {
+                            views.AddRange(result.Views);
+                        }
                     }
                 }
 
