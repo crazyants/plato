@@ -22,7 +22,7 @@ namespace Plato.Users.ViewProviders
         public override async Task<IViewProviderResult> DisplayAsync(User user, IUpdateModel updater)
         {
 
-            return Combine(
+            return Views(
                 await View<User>("User.Display", model => Task.FromResult(user)),
                 await View<User>("User.Display", model => Task.FromResult(user)),
                 await View<User>("User.Display-2", model => Task.FromResult(user))
@@ -39,20 +39,23 @@ namespace Plato.Users.ViewProviders
         public override async Task<IViewProviderResult> EditAsync(User user, IUpdateModel updater)
         {
             
-            return Combine(
-                await View<EditUserViewModel>("User.Edit", async model =>
+            return Views(
+                await View<User>("User.Display", model => Task.FromResult(user)),
+                await View<User>("User.Display", model => Task.FromResult(user)),
+                await View<User>("User.Display-2", model => Task.FromResult(user)),
+                await View<EditUserViewModel>("User.Edit", model =>
                 {
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;
                     model.Email = user.Email;
-                    return model;
+                    return Task.FromResult(model);
                 }),
-                await View<EditUserViewModel>("User.Edit-2", async model =>
+                await View<EditUserViewModel>("User.Edit-2", model =>
                 {
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;
                     model.Email = user.Email;
-                    return model;
+                    return Task.FromResult(model);
                 })
             );
 

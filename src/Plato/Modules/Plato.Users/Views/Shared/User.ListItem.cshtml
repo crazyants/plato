@@ -1,9 +1,9 @@
 ﻿@model Plato.Models.Users.User
 
 <li class="list-group-item">
-    @Model.UserName
     
-    <a asp-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.Id">Edit User</a>
+    <a asp-area="Plato.Users" asp-controller="Admin" asp-action="Display" asp-route-id="@Model.Id"> @Model.UserName</a>
+    <a asp-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary float-right">@T["Edit"]</a>
 
 </li>
 

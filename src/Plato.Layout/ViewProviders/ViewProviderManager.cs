@@ -24,7 +24,7 @@ namespace Plato.Layout.ViewProviders
         {
             _providers = providers;
         }
-        
+
         public async Task<IViewProviderResult> BuildDisplayAsync(TModel model, IUpdateModel updater)
         {
 

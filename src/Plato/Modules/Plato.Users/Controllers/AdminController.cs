@@ -73,11 +73,24 @@ namespace Plato.Users.Controllers
             return View(new View("User.List", model));
 
         }
-        
+
+        public async Task<IActionResult> Display(string id)
+        {
+
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (!(currentUser is User))
+            {
+                return NotFound();
+            }
+
+            var result = await _viewProviderManager.BuildDisplayAsync(currentUser, this);
+            return View(result);
+        }
+
         public async Task<IActionResult> Create()
         {
             var result = await _viewProviderManager.BuildEditAsync(new User(), this);
-            return View(result.Views);
+            return View(result);
         }
         
         public async Task<IActionResult> Edit(string id)
@@ -90,7 +103,7 @@ namespace Plato.Users.Controllers
             }
             
             var result = await _viewProviderManager.BuildEditAsync(currentUser, this);
-            return View(result.Views);
+            return View(result);
 
         }
         
@@ -108,7 +121,7 @@ namespace Plato.Users.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(result.Views);
+                return View(result);
             }
 
             //_notifier.Success(TH["User updated successfully"]);

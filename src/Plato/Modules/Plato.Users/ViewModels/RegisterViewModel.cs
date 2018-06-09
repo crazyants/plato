@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Plato.Users.Models
+namespace Plato.Users.ViewModels
 {
     public class RegisterViewModel
     {

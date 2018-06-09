@@ -39,7 +39,7 @@ namespace Plato.Layout.ViewProviders
 
                 return views;
             }
-            set => _views = value;
+           
         }
 
 

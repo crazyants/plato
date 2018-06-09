@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -31,9 +31,11 @@ namespace Plato.Layout.TagHelpers
 
         public string LastText { get; set; }
 
+        [ViewContext] // inform razor to inject
+        public ViewContext ViewContext { get; set; }
+        
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionContextAccesor;
-        private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IUrlHelper _urlHelper;
         private string pageKey = "page";
 
@@ -47,71 +49,77 @@ namespace Plato.Layout.TagHelpers
         {
             _httpContextAccessor = httpContextAccessor;
             _actionContextAccesor = actionContextAccesor;
-            _urlHelperFactory = urlHelperFactory;
-            _urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
+            _urlHelper = urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
             T = localizer;
         }
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
+
+            _routeData = new RouteValueDictionary(_actionContextAccesor.ActionContext.RouteData.Values);
+
             output.TagName = "nav";
             output.Attributes.Add("aria-label", "Page navigation");
-
+            
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Content.SetHtmlContent(await Build());
         }
 
-        private async Task<string> Build()
+        private async Task<IHtmlContent> Build()
         {
-            _routeData = new RouteValueDictionary(_actionContextAccesor.ActionContext.RouteData.Values);
-            
-            var builder = new StringBuilder();
-            builder.Append("<ul class=\"pagination\">");
+
+            var builder = new HtmlContentBuilder();
+            BuildHtml(builder, "<ul class=\"pagination\">");
             BuildFirst(builder);
             BuildPrevious(builder);
             BuildLinks(builder);
             BuildNext(builder);
             BuildLast(builder);
-            builder.Append("</ul>");
+            BuildHtml(builder, "</ul>");
 
-            return await Task.FromResult(builder.ToString());
+            return await Task.FromResult(builder);
 
         }
 
-
-        private StringBuilder BuildFirst(StringBuilder builder)
+        HtmlContentBuilder BuildHtml(HtmlContentBuilder builder, string html)
+        {
+            builder.AppendHtml(html);
+            return builder;
+        }
+        
+        HtmlContentBuilder BuildFirst(HtmlContentBuilder builder)
         {
 
             var text = FirstText ?? T["First"];
             builder
-                .Append("<li class=\"page-item\">")
-                .Append("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
-                .Append("<span aria-hidden=\"true\">")
-                .Append(text)
-                .Append("</span>")
-                .Append("</a>")
-                .Append("</li>");
+                .AppendHtml("<li class=\"page-item\">")
+                .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
+                .AppendHtml("<span aria-hidden=\"true\">")
+                .AppendHtml(text)
+                .AppendHtml("</span>")
+                .AppendHtml("</a>")
+                .AppendHtml("</li>");
 
             return builder;
 
         }
 
-        private StringBuilder BuildPrevious(StringBuilder builder)
+        HtmlContentBuilder BuildPrevious(HtmlContentBuilder builder)
         {
             var text = PreviousText ?? T["&laquo;"];
             builder
-                .Append("<li class=\"page-item\">")
-                .Append("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
-                .Append("<span aria-hidden=\"true\">")
-                .Append(text)
-                .Append("</span>")
-                .Append("</a>")
-                .Append("</li>");
+                .AppendHtml("<li class=\"page-item\">")
+                .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
+                .AppendHtml("<span aria-hidden=\"true\">")
+                .AppendHtml(text)
+                .AppendHtml("</span>")
+                .AppendHtml("</a>")
+                .AppendHtml("</li>");
 
             return builder;
         }
         
-        private StringBuilder BuildLinks(StringBuilder builder)
+        HtmlContentBuilder BuildLinks(HtmlContentBuilder builder)
         {
 
             if (Model == null)
@@ -143,15 +151,15 @@ namespace Plato.Layout.TagHelpers
                     var url = _urlHelper.RouteUrl(new UrlRouteContext {Values = _routeData});
 
                     builder
-                        .Append("<li class=\"page-item")
-                        .Append(i == Model.Page ? " active" : "")
-                        .Append("\">")
-                        .Append("<a class=\"page-link\" href=\"")
-                        .Append(url)
-                        .Append("\">")
-                        .Append(i)
-                        .Append("</a>")
-                        .Append("</li>");
+                        .AppendHtml("<li class=\"page-item")
+                        .AppendHtml(i == Model.Page ? " active" : "")
+                        .AppendHtml("\">")
+                        .AppendHtml("<a class=\"page-link\" href=\"")
+                        .AppendHtml(url)
+                        .AppendHtml("\">")
+                        .AppendHtml(i.ToString())
+                        .AppendHtml("</a>")
+                        .AppendHtml("</li>");
                 }
             }
 
@@ -159,34 +167,34 @@ namespace Plato.Layout.TagHelpers
 
         }
 
-        private StringBuilder BuildNext(StringBuilder builder)
+        HtmlContentBuilder BuildNext(HtmlContentBuilder builder)
         {
 
             var text = NextText ?? T["&raquo;"];
             builder
-                .Append("<li class=\"page-item\">")
-                .Append("<a class=\"page-link\" href=\"#\" aria-label=\"Next\" >")
-                .Append("<span aria-hidden=\"true\">")
-                .Append(text)
-                .Append("</span>")
-                .Append("</a>")
-                .Append("</li>");
+                .AppendHtml("<li class=\"page-item\">")
+                .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Next\" >")
+                .AppendHtml("<span aria-hidden=\"true\">")
+                .AppendHtml(text)
+                .AppendHtml("</span>")
+                .AppendHtml("</a>")
+                .AppendHtml("</li>");
 
             return builder;
 
         }
 
-        private StringBuilder BuildLast(StringBuilder builder)
+        HtmlContentBuilder BuildLast(HtmlContentBuilder builder)
         {
             var text = LastText ?? T["Last"];
             builder
-                .Append("<li class=\"page-item\">")
-                .Append("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
-                .Append("<span aria-hidden=\"true\">")
-                .Append(text)
-                .Append("</span>")
-                .Append("</a>")
-                .Append("</li>");
+                .AppendHtml("<li class=\"page-item\">")
+                .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
+                .AppendHtml("<span aria-hidden=\"true\">")
+                .AppendHtml(text)
+                .AppendHtml("</span>")
+                .AppendHtml("</a>")
+                .AppendHtml("</li>");
             return builder;
         }
 

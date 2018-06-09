@@ -18,7 +18,7 @@ using Plato.Layout.ViewProviders;
 using Plato.Layout.Extensions;
 using Plato.Layout.TagHelpers;
 using Plato.Navigation;
-using Plato.Users.Adaptors;
+using Plato.Users.ViewAdaptors;
 using Plato.Users.Services;
 using Plato.Users.ViewProviders;
 
@@ -95,9 +95,7 @@ namespace Plato.Users
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
 
             //services.AddScoped<IViewProvider<User>, UserViewProvider>();
-
-
-
+            
 
             // register view drivers
             services.AddScoped<IViewAdaptorProvider, UserListAdaptor>();
@@ -132,21 +130,29 @@ namespace Plato.Users
             );
 
             routes.MapAreaRoute(
-                name: "ManageUsers",
+                name: "Admin-ManageUsers",
                 areaName: "Plato.Users",
                 template: "admin/users",
                 defaults: new { controller = "Admin", action = "Index" }
             );
 
             routes.MapAreaRoute(
-                name: "CreateUser",
+                name: "Admin-DisplayUser",
+                areaName: "Plato.Users",
+                template: "admin/users/display",
+                defaults: new { controller = "Admin", action = "Display" }
+            );
+
+
+            routes.MapAreaRoute(
+                name: "Admin-CreateUser",
                 areaName: "Plato.Users",
                 template: "admin/users/create",
                 defaults: new { controller = "Admin", action = "Create" }
             );
             
             routes.MapAreaRoute(
-                name: "EditUser",
+                name: "Admin-EditUser",
                 areaName: "Plato.Users",
                 template: "admin/users/edit",
                 defaults: new { controller = "Admin", action = "EditAsync" }

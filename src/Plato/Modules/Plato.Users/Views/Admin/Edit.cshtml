@@ -1,16 +1,16 @@
-﻿@model IEnumerable<IView>
+﻿
 @{
-    ViewData["Title"] = "Manage Users";
+    ViewData["Title"] = "Edit User";
 }
 
-<h4>@T["EditAsync User"]</h4>
-<span class="text-muted">@T["Manage your registered users"]</span>
+<h4>@T["Edit User"]</h4>
+<span class="text-muted">@T["Edit an existing user account."]</span>
 <hr />
 
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
     
     @Html.ValidationSummary()
-    @await DisplayAsync(Model)
+    <view model="@Model.Views"/>
 
     <fieldset>
         <div class="form-group">

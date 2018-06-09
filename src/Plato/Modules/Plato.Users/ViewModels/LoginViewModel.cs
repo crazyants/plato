@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Plato.Users.Models
+namespace Plato.Users.ViewModels
 {
     public class LoginViewModel
     {
-
-   
+        
         [EmailAddress]
         public string Email { get; set; }
 
