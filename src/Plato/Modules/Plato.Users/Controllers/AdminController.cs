@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
+using Plato.Layout;
 using Plato.Layout.ViewProviders;
 using Plato.Layout.Views;
 using Plato.Models.Users;
@@ -74,6 +75,17 @@ namespace Plato.Users.Controllers
 
         }
 
+
+        public async Task<IActionResult> LayoutTest(string id)
+        {
+
+            var model = new LayoutViewModel();
+
+            return View(model);
+        }
+
+
+        
         public async Task<IActionResult> Display(string id)
         {
 
@@ -83,13 +95,13 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
 
-            var result = await _viewProviderManager.BuildDisplayAsync(currentUser, this);
+            var result = await _viewProviderManager.ProvideDisplayAsync(currentUser, this);
             return View(result);
         }
 
         public async Task<IActionResult> Create()
         {
-            var result = await _viewProviderManager.BuildEditAsync(new User(), this);
+            var result = await _viewProviderManager.ProvideEditAsync(new User(), this);
             return View(result);
         }
         
@@ -102,7 +114,7 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
             
-            var result = await _viewProviderManager.BuildEditAsync(currentUser, this);
+            var result = await _viewProviderManager.ProvideEditAsync(currentUser, this);
             return View(result);
 
         }
@@ -117,7 +129,7 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
             
-            var result = await _viewProviderManager.BuildUpdateAsync((User)currentUser, this);
+            var result = await _viewProviderManager.ProvideUpdateAsync((User)currentUser, this);
 
             if (!ModelState.IsValid)
             {

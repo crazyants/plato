@@ -19,7 +19,7 @@ namespace Plato.Users.ViewProviders
         }
 
 
-        public override async Task<IViewProviderResult> DisplayAsync(User user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
         {
 
             return Views(
@@ -36,7 +36,7 @@ namespace Plato.Users.ViewProviders
             
         }
 
-        public override async Task<IViewProviderResult> EditAsync(User user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
             
             return Views(
@@ -68,7 +68,7 @@ namespace Plato.Users.ViewProviders
 
             if (!await updater.TryUpdateModelAsync(model))
             {
-                return await EditAsync(user, updater);
+                return await BuildEditAsync(user, updater);
             }
 
             model.UserName = model.UserName?.Trim();
@@ -89,7 +89,7 @@ namespace Plato.Users.ViewProviders
 
             }
             
-            return await EditAsync(user, updater);
+            return await BuildEditAsync(user, updater);
 
         }
     }

@@ -45,7 +45,7 @@ namespace Plato.Layout.TagHelpers
             var builder = await Build();
             if (builder == null)
             {
-                throw new Exception("An error occurred whilst attempting to activate a view. The supplied model is not a valid type. The supplied model must derive from the IView interface.");
+                throw new Exception($"An error occurred whilst attempting to activate a view. The supplied model of type {Model} is not a valid type. The supplied model must implement the IView interface.");
             }
 
             output.TagName = "";

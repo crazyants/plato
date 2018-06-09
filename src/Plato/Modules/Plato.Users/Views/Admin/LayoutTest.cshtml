@@ -1,0 +1,36 @@
+﻿@model Plato.Layout.LayoutViewModel
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="row">
+    <h4>Header</h4>
+    @if (Model.Header != null)
+    {
+        @Model.Header
+    }
+</div>
+<div class="row">
+    <div class="col-9">
+        <h4>Content</h4>
+        @if (Model.Content != null)
+        {
+            @Model.Content
+        }
+    </div>
+    <div class="col-3">
+        <h4>SideBar</h4>
+        @if (Model.SideBar != null)
+        {
+            @Model.SideBar
+        }
+    </div>
+</div>
+<div class="row">
+    <h4>Footer</h4>
+    @if (Model.Footer != null)
+    {
+        @Model.Footer
+    }
+</div>
+

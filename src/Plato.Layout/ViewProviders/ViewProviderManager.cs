@@ -7,11 +7,11 @@ namespace Plato.Layout.ViewProviders
 
     public interface IViewProviderManager<in TModel> where TModel : class
     {
-        Task<IViewProviderResult> BuildDisplayAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> ProvideDisplayAsync(TModel model, IUpdateModel updater);
 
-        Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> ProvideEditAsync(TModel model, IUpdateModel updater);
 
-        Task<IViewProviderResult> BuildUpdateAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> ProvideUpdateAsync(TModel model, IUpdateModel updater);
 
     }
 
@@ -25,33 +25,33 @@ namespace Plato.Layout.ViewProviders
             _providers = providers;
         }
 
-        public async Task<IViewProviderResult> BuildDisplayAsync(TModel model, IUpdateModel updater)
+        public async Task<IViewProviderResult> ProvideDisplayAsync(TModel model, IUpdateModel updater)
         {
 
             var results = new List<IViewProviderResult>();
             foreach (var provider in _providers)
             {
-                results.Add(await provider.DisplayAsync(model, updater));
+                results.Add(await provider.BuildDisplayAsync(model, updater));
             }
 
             return new CombinedViewProviderResult(results);
 
         }
 
-        public async Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater)
+        public async Task<IViewProviderResult> ProvideEditAsync(TModel model, IUpdateModel updater)
         {
 
             var results = new List<IViewProviderResult>();
             foreach (var provider in _providers)
             {
-                results.Add(await provider.EditAsync(model, updater));
+                results.Add(await provider.BuildEditAsync(model, updater));
             }
 
             return new CombinedViewProviderResult(results);
 
         }
 
-        public async Task<IViewProviderResult> BuildUpdateAsync(TModel model, IUpdateModel updater)
+        public async Task<IViewProviderResult> ProvideUpdateAsync(TModel model, IUpdateModel updater)
         {
 
             var results = new List<IViewProviderResult>();

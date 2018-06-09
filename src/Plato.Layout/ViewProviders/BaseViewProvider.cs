@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Plato.Layout.ModelBinding;
 using Plato.Layout.Views;
@@ -9,14 +6,20 @@ using Plato.Layout.Views;
 namespace Plato.Layout.ViewProviders
 {
     public abstract class BaseViewProvider<TModel>
-    : IViewProvider<TModel>
-        where TModel : class
+        : IViewProvider<TModel> where TModel : class
     {
-        public abstract Task<IViewProviderResult> DisplayAsync(TModel model, IUpdateModel updater);
 
-        public abstract Task<IViewProviderResult> EditAsync(TModel model, IUpdateModel updater);
+        #region "Abstract Medthods"
+
+        public abstract Task<IViewProviderResult> BuildDisplayAsync(TModel model, IUpdateModel updater);
+
+        public abstract Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater);
 
         public abstract Task<IViewProviderResult> UpdateAsync(TModel model, IUpdateModel updater);
+
+        #endregion
+
+        #region "Helper Methods"
 
         public async Task<IViewProviderResult> View<TViewModel>(string viewName,
             Func<TViewModel, Task<TViewModel>> configure) where TViewModel : new()
@@ -30,7 +33,7 @@ namespace Plato.Layout.ViewProviders
 
             // Return view provider result
             return new ViewProviderResult(
-                new View(viewName, model)
+                new PositionedView(viewName, model)
             );
 
         }
@@ -40,24 +43,25 @@ namespace Plato.Layout.ViewProviders
             return new CombinedViewProviderResult(results);
         }
 
+        //private static IView CreateModel(Type baseType)
+        //{
+        //    // Don't generate a proxy for shape types
+        //    if (typeof(IView).IsAssignableFrom(baseType))
+        //    {
+        //        var shape = Activator.CreateInstance(baseType) as IView;
+        //        return shape;
+        //    }
+        //    else
+        //    {
+        //        //var options = new ProxyGenerationOptions();
+        //        //options.AddMixinInstance(new ShapeViewModel());
+        //        //return (IShape)ProxyGenerator.CreateClassProxy(baseType, options);
+        //    }
 
-        private static IView CreateModel(Type baseType)
-        {
-            // Don't generate a proxy for shape types
-            if (typeof(IView).IsAssignableFrom(baseType))
-            {
-                var shape = Activator.CreateInstance(baseType) as IView;
-                return shape;
-            }
-            else
-            {
-                //var options = new ProxyGenerationOptions();
-                //options.AddMixinInstance(new ShapeViewModel());
-                //return (IShape)ProxyGenerator.CreateClassProxy(baseType, options);
-            }
+        //    return null;
+        //}
 
-            return null;
-        }
+        #endregion
 
     }
 }
