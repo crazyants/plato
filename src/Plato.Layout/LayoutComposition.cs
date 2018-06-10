@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Win32.SafeHandles;
 using Plato.Layout.ViewProviders;
 using Plato.Layout.Views;
@@ -25,24 +26,24 @@ namespace Plato.Layout
             
             return new LayoutViewModel()
             {
-                Header = GetZoneViews(LayoutZones.HeaderZoneName),
-                Tools = GetZoneViews(LayoutZones.ToolsZoneName),
-                Meta = GetZoneViews(LayoutZones.MetaZoneName),
-                Content = GetZoneViews(LayoutZones.ContentZoneName),
-                SideBar = GetZoneViews(LayoutZones.SideBarZoneName),
-                Footer = GetZoneViews(LayoutZones.FooterZoneName),
-                Actions = GetZoneViews(LayoutZones.ActionsZoneName),
-                Asides = GetZoneViews(LayoutZones.AsidesZoneName)
+                Header = GetPositionedViews(LayoutZones.HeaderZoneName),
+                Tools = GetPositionedViews(LayoutZones.ToolsZoneName),
+                Meta = GetPositionedViews(LayoutZones.MetaZoneName),
+                Content = GetPositionedViews(LayoutZones.ContentZoneName),
+                SideBar = GetPositionedViews(LayoutZones.SideBarZoneName),
+                Footer = GetPositionedViews(LayoutZones.FooterZoneName),
+                Actions = GetPositionedViews(LayoutZones.ActionsZoneName),
+                Asides = GetPositionedViews(LayoutZones.AsidesZoneName)
             };
 
         }
 
-        IEnumerable<IView> GetZoneViews(string zoneName)
+        IEnumerable<IView> GetPositionedViews(string zoneName)
         {
 
             if (_zonedViews.ContainsKey(zoneName))
             {
-                return _zonedViews[zoneName];
+                return _zonedViews[zoneName].OrderBy(v => v.Position.Order);
             }
 
             return null;

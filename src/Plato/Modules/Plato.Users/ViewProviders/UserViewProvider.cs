@@ -37,11 +37,11 @@ namespace Plato.Users.ViewProviders
         public override async Task<IViewProviderResult> BuildLayoutAsync(User user, IUpdateModel updater)
         {
             return Layout(
-                View<User>("User.Display", model => user).Zone("header").Order(1),
+                View<User>("User.Display", model => user).Zone("header").Order(3),
                 View<User>("User.Display.2", model => user).Zone("header").Order(2),
-                View<User>("User.Display.3", model => user).Zone("header").Order(3),
-                View<User>("User.Display", model => user).Zone("meta").Order(1),
-                View<User>("User.Display", model => user).Zone("meta").Order(2),
+                View<User>("User.Display.3", model => user).Zone("header").Order(1),
+                View<User>("User.Meta", model => user).Zone("meta").Order(1),
+                View<User>("User.Meta", model => user).Zone("meta").Order(2),
                 View<User>("User.Display.2", model => user).Zone("meta").Order(3),
                 View<User>("User.Display", model => user).Zone("content").Order(1),
                 View<User>("User.Display.2", model => user).Zone("content").Order(2),
@@ -52,7 +52,7 @@ namespace Plato.Users.ViewProviders
                 View<User>("User.Display", model => user).Zone("footer").Order(1),
                 View<User>("User.Display", model => user).Zone("footer").Order(2),
                 View<User>("User.Actions", model => user).Zone("actions").Order(2),
-                View<User>("User.Actions", model => user).Zone("tools").Order(2)
+                View<User>("User.Tools", model => user).Zone("tools").Order(2)
             );
 
         }
