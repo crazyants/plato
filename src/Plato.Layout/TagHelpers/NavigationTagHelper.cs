@@ -65,12 +65,7 @@ namespace Plato.Layout.TagHelpers
             }
             
             output.PreContent.SetHtmlContent(sb.ToString());
-            
-            //// Replaces <email> with <a> tag
-            //var content = await output.GetChildContentAsync();
-            //var target = content.GetContent() + "@" + EmailDomain;
-            //output.Attributes.SetAttribute("href", "mailto:" + target);
-            //output.Content.SetContent(target);
+           
 
         }
 

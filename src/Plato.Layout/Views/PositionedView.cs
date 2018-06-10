@@ -19,16 +19,7 @@ namespace Plato.Layout.Views
 
     public class PositionedView : View, IPositionedView
     {
-
-        readonly string[] _supportedZoneNames = new string[]
-        {
-            "header",
-            "meta",
-            "content",
-            "sidebar",
-            "footer"
-        };
-
+     
         private string _zone;
         private int _order;
         
@@ -50,10 +41,11 @@ namespace Plato.Layout.Views
             }
             
             // Is the zone supported?
-            if (!_supportedZoneNames.Contains(zone.ToLower()))
+            var supprtedZones = LayoutZones.SupportedZones;
+            if (!supprtedZones.Contains(zone.ToLower()))
             {
                 throw new Exception(
-                    $"The zone name '{zone}' is not supported. Supported zones include {String.Join(",", _supportedZoneNames)}. Please update the zone naame.");
+                    $"The zone name '{zone}' is not supported. Supported zones include {String.Join(",", supprtedZones)}. Please update the zone naame.");
             }
 
             _zone = zone;

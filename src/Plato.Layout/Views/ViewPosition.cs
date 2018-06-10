@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Plato.Layout
+namespace Plato.Layout.Views
 {
     public class ViewPosition
     {
