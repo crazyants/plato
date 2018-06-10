@@ -12,7 +12,7 @@ namespace Plato.Layout.ViewProviders
     {
         Task<IViewProviderResult> ProvideDisplayAsync(TModel model, IUpdateModel updater);
 
-        Task<IViewProviderResult> ProvideLayoutAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> ProvideIndexAsync(TModel model, IUpdateModel updater);
         
         Task<IViewProviderResult> ProvideEditAsync(TModel model, IUpdateModel updater);
 
@@ -50,18 +50,18 @@ namespace Plato.Layout.ViewProviders
                 }
             }
 
-            return new CombinedViewProviderResult(results.ToArray());
+            return new LayoutViewModel(results.ToArray()).BuildLayout();
 
         }
 
-        public async Task<IViewProviderResult> ProvideLayoutAsync(TModel model, IUpdateModel updater)
+        public async Task<IViewProviderResult> ProvideIndexAsync(TModel model, IUpdateModel updater)
         {
             var results = new ConcurrentBag<IViewProviderResult>();
             foreach (var provider in _providers)
             {
                 try
                 {
-                    results.Add(await provider.BuildLayoutAsync(model, updater));
+                    results.Add(await provider.BuildIndexAsync(model, updater));
                 }
                 catch (Exception e)
                 {
@@ -89,7 +89,7 @@ namespace Plato.Layout.ViewProviders
                 }
             }
 
-            return new CombinedViewProviderResult(results.ToArray());
+            return new LayoutViewModel(results.ToArray()).BuildLayout();
 
         }
 
@@ -109,7 +109,7 @@ namespace Plato.Layout.ViewProviders
                 }
             }
 
-            return new CombinedViewProviderResult(results.ToArray());
+            return new LayoutViewModel(results.ToArray()).BuildLayout();
 
         }
     }

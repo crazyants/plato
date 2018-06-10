@@ -9,7 +9,7 @@ namespace Plato.Layout.ViewProviders
 
         Task<IViewProviderResult> BuildDisplayAsync(TModel model, IUpdateModel updater);
 
-        Task<IViewProviderResult> BuildLayoutAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> BuildIndexAsync(TModel model, IUpdateModel updater);
         
         Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater);
 

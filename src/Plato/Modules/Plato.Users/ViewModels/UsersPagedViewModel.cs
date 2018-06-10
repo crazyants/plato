@@ -17,6 +17,11 @@ namespace Plato.Users.ViewModels
     public class UsersPagedViewModel
     {
 
+        public UsersPagedViewModel()
+        {
+
+        }
+
         public UsersPagedViewModel(
             IPagedResults<User> results,
             FilterOptions filterOptions,

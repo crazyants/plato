@@ -26,6 +26,8 @@ namespace Plato.Layout.Views
         public PositionedView(string viewName, object model) : 
             base(viewName, model)
         {
+            _zone = LayoutZones.ContentZoneName;
+            _order = 1;
         }
         
         public ViewPosition Position => new ViewPosition(_zone, _order);

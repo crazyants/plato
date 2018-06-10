@@ -14,7 +14,7 @@ namespace Plato.Layout.ViewProviders
 
         public abstract Task<IViewProviderResult> BuildDisplayAsync(TModel model, IUpdateModel updater);
 
-        public abstract Task<IViewProviderResult> BuildLayoutAsync(TModel model, IUpdateModel updater);
+        public abstract Task<IViewProviderResult> BuildIndexAsync(TModel model, IUpdateModel updater);
         
         public abstract Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater);
 
@@ -23,6 +23,14 @@ namespace Plato.Layout.ViewProviders
         #endregion
 
         #region "Helper Methods"
+        
+        public LayoutViewModel Views(params IView[] views)
+        {
+            // TODO: // Implement a context object allowing uss to pass the service provider along
+            return new LayoutViewModel(
+                new ViewProviderResult(views)
+            );
+        }
 
         public IPositionedView View<TViewModel>(
             string viewName,
@@ -39,21 +47,7 @@ namespace Plato.Layout.ViewProviders
             return new PositionedView(viewName, model);
 
         }
-        
-        public LayoutViewModel Layout(params IView[] views)
-        {
-            // Return the layout view provider result and build the model
-            return new LayoutViewModel(
-                new ViewProviderResult(views)
-            );
-        }
-
-        public CombinedViewProviderResult Views(params IView[] views)
-        {
-            return new CombinedViewProviderResult(
-                new ViewProviderResult(views)
-            );
-        }
+  
         
         #endregion
 

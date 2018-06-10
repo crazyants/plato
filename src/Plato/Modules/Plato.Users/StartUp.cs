@@ -20,6 +20,7 @@ using Plato.Layout.TagHelpers;
 using Plato.Navigation;
 using Plato.Users.ViewAdaptors;
 using Plato.Users.Services;
+using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
 
 namespace Plato.Users
@@ -94,8 +95,11 @@ namespace Plato.Users
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
 
+            services.AddScoped<IViewProviderManager<UsersPagedViewModel>, ViewProviderManager<UsersPagedViewModel>>();
+            services.AddScoped<IViewProvider<UsersPagedViewModel>, UserListViewProvider>();
+
             //services.AddScoped<IViewProvider<User>, UserViewProvider>();
-            
+
 
             // register view drivers
             services.AddScoped<IViewAdaptorProvider, UserListAdaptor>();

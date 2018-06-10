@@ -19,17 +19,20 @@ namespace Plato.Users.Controllers
     public class AdminController : Controller, IUpdateModel
     {
 
-        private readonly IViewProviderManager<User> _viewProviderManager;
+        private readonly IViewProviderManager<User> _userViewProviderManager;
+        private readonly IViewProviderManager<UsersPagedViewModel> _userListViewProviderManager;
         private readonly IPlatoUserStore<User> _ploatUserStore;
         private readonly UserManager<User> _userManager;
 
         public AdminController(
             IPlatoUserStore<User> platoUserStore, 
-            IViewProviderManager<User> viewProviderManager, 
+            IViewProviderManager<User> userViewProviderManager,
+            IViewProviderManager<UsersPagedViewModel> userListViewProviderManager,
             UserManager<User> userManager)
         {
             _ploatUserStore = platoUserStore;
-            _viewProviderManager = viewProviderManager;
+            _userViewProviderManager = userViewProviderManager;
+            _userListViewProviderManager = userListViewProviderManager;
             _userManager = userManager;
         }
 
@@ -68,10 +71,14 @@ namespace Plato.Users.Controllers
             routeData.Values.Add("Options.Order", filterOptions.Order);
             
             var model = await GetPagedModel(filterOptions, pagerOptions);
-     
+
+
+            var result = await _userListViewProviderManager.ProvideIndexAsync(model, this);
+            return View(result);
+
             //var providedView = await _viewProviderManager.BuildDisplayAsync(user, this);
 
-            return View(new View("User.List", model));
+            //return View(new View("User.List", model));
 
         }
 
@@ -79,7 +86,8 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> LayoutTest(string id)
         {
 
-            var result = await _viewProviderManager.ProvideLayoutAsync(new User(), this);
+            var result = await _userViewProviderManager.ProvideIndexAsync(new User(), this);
+
             return View(result);
 
         }
@@ -95,13 +103,13 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
 
-            var result = await _viewProviderManager.ProvideDisplayAsync(currentUser, this);
+            var result = await _userViewProviderManager.ProvideDisplayAsync(currentUser, this);
             return View(result);
         }
 
         public async Task<IActionResult> Create()
         {
-            var result = await _viewProviderManager.ProvideEditAsync(new User(), this);
+            var result = await _userViewProviderManager.ProvideEditAsync(new User(), this);
             return View(result);
         }
         
@@ -114,7 +122,7 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
             
-            var result = await _viewProviderManager.ProvideEditAsync(currentUser, this);
+            var result = await _userViewProviderManager.ProvideEditAsync(currentUser, this);
             return View(result);
 
         }
@@ -129,7 +137,7 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
             
-            var result = await _viewProviderManager.ProvideUpdateAsync((User)currentUser, this);
+            var result = await _userViewProviderManager.ProvideUpdateAsync((User)currentUser, this);
 
             if (!ModelState.IsValid)
             {

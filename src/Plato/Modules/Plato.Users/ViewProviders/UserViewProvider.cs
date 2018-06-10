@@ -21,22 +21,8 @@ namespace Plato.Users.ViewProviders
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
         {
-            
+
             return Views(
-                View<User>("User.Display", model => user)
-            );
-
-            //return View<UserViewModel>("DisplayUser", model =>
-            //{
-            //    model.User = user;
-            //    return model;
-            //});
-
-        }
-
-        public override async Task<IViewProviderResult> BuildLayoutAsync(User user, IUpdateModel updater)
-        {
-            return Layout(
                 View<User>("User.Display", model => user).Zone("header").Order(3),
                 View<User>("User.Display.2", model => user).Zone("header").Order(2),
                 View<User>("User.Display.3", model => user).Zone("header").Order(1),
@@ -55,6 +41,15 @@ namespace Plato.Users.ViewProviders
                 View<User>("User.Tools", model => user).Zone("tools").Order(2)
             );
 
+
+        }
+
+        public override async Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
+        {
+            return Views(
+                View<User>("User.List", model => user).Zone("header").Order(3)
+            );
+
         }
 
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
@@ -63,7 +58,7 @@ namespace Plato.Users.ViewProviders
             return Views(
                 View<User>("User.Display", model => user),
                 View<User>("User.Display", model => user),
-                View<User>("User.Display-2", model => user),
+                View<User>("User.Display.2", model => user),
                 View<EditUserViewModel>("User.Edit", model =>
                 {
                     model.Id = user.Id.ToString();
@@ -71,7 +66,7 @@ namespace Plato.Users.ViewProviders
                     model.Email = user.Email;
                     return model;
                 }),
-                View<EditUserViewModel>("User.Edit-2", model =>
+                View<EditUserViewModel>("User.Edit.2", model =>
                 {
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;

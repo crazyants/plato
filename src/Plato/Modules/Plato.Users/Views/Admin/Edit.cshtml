@@ -1,4 +1,4 @@
-﻿
+﻿@model Plato.Layout.LayoutViewModel
 @{
     ViewData["Title"] = "Edit User";
 }
@@ -8,9 +8,9 @@
 <hr />
 
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
-    
+
     @Html.ValidationSummary()
-    <view model="@Model.Views"/>
+    <view model="@Model.Content" />
 
     <fieldset>
         <div class="form-group">
