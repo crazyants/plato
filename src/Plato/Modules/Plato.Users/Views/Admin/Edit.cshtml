@@ -3,23 +3,79 @@
     ViewData["Title"] = "Edit User";
 }
 
-<h4>@T["Edit User"]</h4>
-<span class="text-muted">@T["Edit an existing user account."]</span>
-<hr />
-
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
 
-    @Html.ValidationSummary()
-    <view model="@Model.Content" />
+    <div class="layout">
 
-    <fieldset>
-        <div class="form-group">
-            <button class="btn btn-primary" type="submit">@T["Save"]</button>
-            <!--
-            <a class="btn btn-secondary" asp-route-action="Index">@T["Cancel"]</a>
-            -->
+        <div class="layout-header">
+            @if (Model.Tools != null)
+            {
+                <div class="float-right layout-tools">
+                    <view model="@Model.Tools"/>
+                </div>
+            }
+            @if (Model.Header != null)
+            {
+                <div class="layout-header-item">
+                    <view model="@Model.Header"/>
+                </div>
+            }
+            @if (Model.Meta != null)
+            {
+                <div class="layout-meta">
+                    <view model="@Model.Meta"></view>
+                </div>
+            }
         </div>
-    </fieldset>
 
+        @if (Model.SideBar != null)
+        {
+            <div class="row layout-content">
+                <div class="col-md-9">
+                    <h4>Content</h4>
+                    <br/>
+                    @if (Model.Content != null)
+                    {
+                        @Html.ValidationSummary()
+                        <view model="@Model.Content"></view>
+                    }
+                </div>
+                <div class="col-md-3">
+                    <h4>SideBar</h4>
+                    <br/>
+                    @if (Model.SideBar != null)
+                    {
+                        <view model="@Model.SideBar"></view>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            @if (Model.Content != null)
+             {
+                 @Html.ValidationSummary()
+                 <view model="@Model.Content"></view>
+             }
+        }
 
+        <div class="layout-footer">
+            @if (Model.Actions != null)
+            {
+                <div class="float-right layout-actions">
+                    <view model="@Model.Actions"/>
+                </div>
+            }
+            @if (Model.Footer != null)
+            {
+                <div class="layout-footer-item">
+                    <view model="@Model.Footer"></view>
+                </div>
+            }
+        </div>
+
+    </div>
+    
+   
+  
 </form>

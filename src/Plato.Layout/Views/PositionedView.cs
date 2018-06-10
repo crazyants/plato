@@ -47,7 +47,7 @@ namespace Plato.Layout.Views
             if (!supprtedZones.Contains(zone.ToLower()))
             {
                 throw new Exception(
-                    $"The zone name '{zone}' is not supported. Supported zones include {String.Join(",", supprtedZones)}. Please update the zone naame.");
+                    $"The zone name '{zone}' is not supported. Supported zones include {String.Join(", ", supprtedZones)}. Please update the zone name within your view provider and try again.");
             }
 
             _zone = zone;

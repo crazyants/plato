@@ -46,7 +46,8 @@ namespace Plato.Layout.ViewProviders
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred within the view providers BuildDisplayAsync method. Please review the BuildDisplayAsync method within your view provider and try again.");
+                    _logger.LogError(e, $"An exception occurred within the view providers BuildDisplayAsync method. Please review the BuildDisplayAsync method within your view provider and try again. {e.Message}");
+                    throw;
                 }
             }
 
@@ -65,7 +66,8 @@ namespace Plato.Layout.ViewProviders
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred within the view providers BuildLayoutAsync method. Please review the BuildLayoutAsync method within your view provider and try again.");
+                    _logger.LogError(e, $"An exception occurred within the view providers BuildLayoutAsync method. Please review the BuildLayoutAsync method within your view provider and try again. {e.Message}");
+                    throw;
                 }
             }
 
@@ -85,7 +87,8 @@ namespace Plato.Layout.ViewProviders
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred within the view providers BuildEditAsync method. Please review the BuildEditAsync method within your view provider and try again.");
+                    _logger.LogError(e, $"An exception occurred within the view providers BuildEditAsync method. Please review the BuildEditAsync method within your view provider and try again. {e.Message}");
+                    throw;
                 }
             }
 
@@ -105,7 +108,8 @@ namespace Plato.Layout.ViewProviders
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred within the view providers BuildUpdateAsync method. Please review the UpdateAsync method within your view provider and try again.");
+                    _logger.LogError(e, $"An exception occurred within the view providers BuildUpdateAsync method. Please review the UpdateAsync method within your view provider and try again. {e.Message}");
+                    throw;
                 }
             }
 

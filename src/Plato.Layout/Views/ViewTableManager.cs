@@ -15,9 +15,7 @@ namespace Plato.Layout.Views
 
     public class ViewTableManager : IGenericViewTableManager
     {
-
-      
-
+        
         private static readonly ConcurrentDictionary<string, ViewDescriptor> _views =
             new ConcurrentDictionary<string, ViewDescriptor>();
 

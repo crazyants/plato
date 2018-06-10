@@ -3,10 +3,6 @@
     ViewData["Title"] = "Manage Users";
 }
 
-<h4>@T["Manage Users"]</h4>
-<span class="text-muted">@T["Manage your registered users"]</span>
-<hr />
-
 <div class="layout">
 
     <div class="layout-header">
@@ -33,17 +29,13 @@
     @if (Model.SideBar != null)
     {
         <div class="row layout-content">
-        <div class="col-md-9">
-            <h4>Content</h4>
-            <br/>
-            @if (Model.Content != null)
-            {
-                <view model="@Model.Content"></view>
-            }
-        </div>
+            <div class="col-md-9">
+                @if (Model.Content != null)
+                {
+                    <view model="@Model.Content"></view>
+                }
+            </div>
             <div class="col-md-3">
-                <h4>SideBar</h4>
-                <br/>
                 @if (Model.SideBar != null)
                 {
                     <view model="@Model.SideBar"></view>
@@ -53,8 +45,6 @@
     }
     else
     {
-        <h4>Content</h4>
-        <br/>
         @if (Model.Content != null)
          {
              <view model="@Model.Content"></view>

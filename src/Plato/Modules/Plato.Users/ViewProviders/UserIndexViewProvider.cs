@@ -9,7 +9,7 @@ using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
 {
-    public class UserListViewProvider : BaseViewProvider<UsersPagedViewModel>
+    public class UserIndexViewProvider : BaseViewProvider<UsersPagedViewModel>
     {
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(UsersPagedViewModel model, IUpdateModel updater)
@@ -21,7 +21,9 @@ namespace Plato.Users.ViewProviders
         {
 
             return Views(
-                View<UsersPagedViewModel>("User.List", model => viewModel).Zone("content").Order(1)
+                View<UsersPagedViewModel>("User.Index.Header", model => viewModel).Zone("header"),
+                View<UsersPagedViewModel>("User.Index.Tools", model => viewModel).Zone("tools"),
+                View<UsersPagedViewModel>("User.Index.Content", model => viewModel).Zone("content")
             );
 
 

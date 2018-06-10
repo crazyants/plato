@@ -23,24 +23,11 @@ namespace Plato.Users.ViewProviders
         {
 
             return Views(
-                View<User>("User.Display", model => user).Zone("header").Order(3),
-                View<User>("User.Display.2", model => user).Zone("header").Order(2),
-                View<User>("User.Display.3", model => user).Zone("header").Order(1),
-                View<User>("User.Meta", model => user).Zone("meta").Order(1),
-                View<User>("User.Meta", model => user).Zone("meta").Order(2),
-                View<User>("User.Display.2", model => user).Zone("meta").Order(3),
-                View<User>("User.Display", model => user).Zone("content").Order(1),
-                View<User>("User.Display.2", model => user).Zone("content").Order(2),
-                View<User>("User.Display.3", model => user).Zone("content").Order(3),
-                View<User>("User.Display", model => user).Zone("sidebar").Order(1),
-                View<User>("User.Display.2", model => user).Zone("sidebar").Order(2),
-                View<User>("User.Display.3", model => user).Zone("sidebar").Order(3),
-                View<User>("User.Display", model => user).Zone("footer").Order(1),
-                View<User>("User.Display", model => user).Zone("footer").Order(2),
-                View<User>("User.Actions", model => user).Zone("actions").Order(2),
-                View<User>("User.Tools", model => user).Zone("tools").Order(2)
+                View<User>("User.Display.Header", model => user).Zone("header"),
+                View<User>("User.Display.Meta", model => user).Zone("meta"),
+                View<User>("User.Display.Content", model => user).Zone("content"),
+                View<User>("User.Display.Footer", model => user).Zone("footer")
             );
-
 
         }
 
@@ -56,23 +43,29 @@ namespace Plato.Users.ViewProviders
         {
             
             return Views(
-                View<User>("User.Display", model => user),
-                View<User>("User.Display", model => user),
-                View<User>("User.Display.2", model => user),
-                View<EditUserViewModel>("User.Edit", model =>
+                View<User>("User.Edit.Header", model => user).Zone("header"),
+                View<User>("User.Edit.Meta", model => user).Zone("meta"),
+                View<EditUserViewModel>("User.Edit.Content", model =>
                 {
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;
                     model.Email = user.Email;
                     return model;
-                }),
-                View<EditUserViewModel>("User.Edit.2", model =>
+                }).Zone("content"),
+                View<EditUserViewModel>("User.Edit.Footer", model =>
                 {
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;
                     model.Email = user.Email;
                     return model;
-                })
+                }).Zone("footer"),
+                View<EditUserViewModel>("User.Edit.Actions", model =>
+                {
+                    model.Id = user.Id.ToString();
+                    model.UserName = user.UserName;
+                    model.Email = user.Email;
+                    return model;
+                }).Zone("actions")
             );
 
         }
@@ -108,5 +101,6 @@ namespace Plato.Users.ViewProviders
             return await BuildEditAsync(user, updater);
 
         }
+
     }
 }

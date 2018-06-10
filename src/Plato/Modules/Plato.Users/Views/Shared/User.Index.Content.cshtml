@@ -1,7 +1,5 @@
 ﻿@model UsersPagedViewModel
 
-<h1>User List 2</h1>
-
 <ul class="list-group">
     @foreach (var user in Model.Results.Data)
     {
@@ -9,6 +7,8 @@
     }
 </ul>
 
-<pager model="@Model.PagerOpts"></pager>
+<div class="mt-4 mb-4">
+    <pager model="@Model.PagerOpts"></pager>
+</div>
 
 
