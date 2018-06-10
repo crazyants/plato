@@ -18,7 +18,7 @@ namespace Plato.Layout.ViewProviders
             _results = results;
         }
 
-        public IList<IViewProviderResult> GetResults()
+        public IEnumerable<IViewProviderResult> GetResults()
         {
             return _results;
         }

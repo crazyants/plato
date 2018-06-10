@@ -42,6 +42,7 @@ namespace Plato.Layout.ViewProviders
         
         public LayoutViewProviderResult Layout(params IView[] views)
         {
+            // Return the layout view provider result and build the model
             return new LayoutViewProviderResult(
                 new ViewProviderResult(views)
             );

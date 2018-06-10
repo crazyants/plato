@@ -4,14 +4,14 @@ using System.Text;
 
 namespace Plato.Layout
 {
-    public class Position
+    public class ViewPosition
     {
 
-        public string Zone { get; set; }
+        public string Zone { get; set; } 
 
         public int Order { get; set; }
 
-        public Position(string zoneName, int order)
+        public ViewPosition(string zoneName, int order)
         {
             this.Zone = zoneName;
             this.Order = order;

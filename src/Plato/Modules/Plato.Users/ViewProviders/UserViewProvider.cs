@@ -38,10 +38,12 @@ namespace Plato.Users.ViewProviders
         {
             return Layout(
                 View<User>("User.Display", model => user).Zone("header").Order(1),
-                View<User>("User.Display2", model => user).Zone("header").Order(2),
-                View<User>("User.Display", model => user).Zone("header").Order(3),
-                View<User>("User.Display2", model => user).Zone("header").Order(4),
-                View<User>("User.Display", model => user).Zone("header").Order(5)
+                View<User>("User.Display", model => user).Zone("header").Order(2),
+                View<User>("User.Display2", model => user).Zone("meta").Order(1),
+                View<User>("User.Display", model => user).Zone("content").Order(1),
+                View<User>("User.Display2", model => user).Zone("sidebar").Order(1),
+                View<User>("User.Display", model => user).Zone("footer").Order(1),
+                View<User>("User.Display", model => user).Zone("footer").Order(2)
             );
 
         }

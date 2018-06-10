@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Plato.Layout.ViewProviders;
 using Plato.Layout.Views;
 
@@ -9,49 +10,63 @@ namespace Plato.Layout
     public class LayoutViewProviderResult : CombinedViewProviderResult
     {
         private readonly IEnumerable<IViewProviderResult> _results;
+        private readonly ConcurrentDictionary<string, IList<IPositionedView>> _zonedViews =
+            new ConcurrentDictionary<string, IList<IPositionedView>>();
+        
+        public IEnumerable<IView> Header { get; set; }
 
-        private IEnumerable<IView> _header;
-        private IEnumerable<IView> _meta;
-        private IEnumerable<IView> _content;
-        private IEnumerable<IView> _sidebar;
-        private IEnumerable<IView> _footer;
-   
-        public LayoutViewProviderResult(params IViewProviderResult[] results)
+        public IEnumerable<IView> Meta { get; set; }
+
+        public IEnumerable<IView> Content { get; set; }
+        
+        public IEnumerable<IView> SideBar { get; set; }
+
+        public IEnumerable<IView> Footer { get; set; }
+        
+        public LayoutViewProviderResult(params IViewProviderResult[] results) : base(results)
         {
-            _results = results;
         }
         
-        public IEnumerable<IView> Header
+        public LayoutViewProviderResult BuildLayout()
         {
-            get => _header ?? (_header = new List<IView>());
-            set => _header = value;
+            EnsureZonedDictionary(base.GetResults());
+            PrepareModel();
+            return this;
         }
 
-        public IEnumerable<IView> Meta
+        void EnsureZonedDictionary(IEnumerable<IViewProviderResult> providerResults)
         {
-            get => _meta ?? (_meta = new List<IView>());
-            set => _meta = value;
+            foreach (var result in providerResults)
+            {
+                foreach (var view in result.Views)
+                {
+                    if (view is IPositionedView positionedView)
+                    {
+                        var key = positionedView.Position.Zone;
+                        _zonedViews.AddOrUpdate(key.ToLower(), new List<IPositionedView>()
+                        {
+                            positionedView
+                        }, (k, v) =>
+                        {
+                            v.Add(positionedView);
+                            return v;
+                        });
+
+                    }
+                }
+            }
+
         }
 
-        public IEnumerable<IView> Content
+        void PrepareModel()
         {
-            get => _content ?? (_content = new List<IView>());
-            set => _content = value;
+            this.Header = _zonedViews["header"];
+            this.Meta = _zonedViews["meta"];
+            this.Content = _zonedViews["content"];
+            this.SideBar = _zonedViews["sidebar"];
+            this.Footer = _zonedViews["footer"];
         }
         
-        public IEnumerable<IView> SideBar
-        {
-            get => _sidebar ?? (_sidebar = new List<IView>());
-            set => _sidebar = value;
-        }
-        
-        public IEnumerable<IView> Footer
-        {
-            get => _footer ?? (_footer = new List<IView>());
-            set => _footer = value;
-        }
-
-
     }
 
 }

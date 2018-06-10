@@ -69,7 +69,7 @@ namespace Plato.Layout.ViewProviders
                 }
             }
 
-            return new LayoutViewProviderResult(results.ToArray());
+            return new LayoutViewProviderResult(results.ToArray()).BuildLayout();
 
         }
 

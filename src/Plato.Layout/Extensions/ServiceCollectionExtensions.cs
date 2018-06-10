@@ -53,9 +53,6 @@ namespace Plato.Layout.Extensions
             // model binding model accessor
             services.AddScoped<IUpdateModelAccessor, LocalModelBinderAccessor>();
 
-            // layout manager
-            services.AddSingleton<ILayoutManager, LayoutManager>();
-            
             return services;
 
         }
