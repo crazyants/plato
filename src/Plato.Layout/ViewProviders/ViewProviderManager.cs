@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Plato.Layout.ModelBinding;
 
 namespace Plato.Layout.ViewProviders
@@ -9,6 +12,8 @@ namespace Plato.Layout.ViewProviders
     {
         Task<IViewProviderResult> ProvideDisplayAsync(TModel model, IUpdateModel updater);
 
+        Task<IViewProviderResult> ProvideLayoutAsync(TModel model, IUpdateModel updater);
+        
         Task<IViewProviderResult> ProvideEditAsync(TModel model, IUpdateModel updater);
 
         Task<IViewProviderResult> ProvideUpdateAsync(TModel model, IUpdateModel updater);
@@ -19,48 +24,92 @@ namespace Plato.Layout.ViewProviders
     {
 
         private readonly IEnumerable<IViewProvider<TModel>> _providers;
+        private readonly ILogger<ViewProviderManager<TModel>> _logger;
 
-        public ViewProviderManager(IEnumerable<IViewProvider<TModel>> providers)
+        public ViewProviderManager(
+            IEnumerable<IViewProvider<TModel>> providers,
+            ILogger<ViewProviderManager<TModel>> logger)
         {
             _providers = providers;
+            _logger = logger;
         }
 
         public async Task<IViewProviderResult> ProvideDisplayAsync(TModel model, IUpdateModel updater)
         {
 
-            var results = new List<IViewProviderResult>();
+            var results = new ConcurrentBag<IViewProviderResult>();
             foreach (var provider in _providers)
             {
-                results.Add(await provider.BuildDisplayAsync(model, updater));
+                try
+                {
+                    results.Add(await provider.BuildDisplayAsync(model, updater));
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"An exception occurred within the view providers BuildDisplayAsync method. Please review the BuildDisplayAsync method within your view provider and try again.");
+                }
             }
 
-            return new CombinedViewProviderResult(results);
+            return new CombinedViewProviderResult(results.ToArray());
+
+        }
+
+        public async Task<IViewProviderResult> ProvideLayoutAsync(TModel model, IUpdateModel updater)
+        {
+            var results = new ConcurrentBag<IViewProviderResult>();
+            foreach (var provider in _providers)
+            {
+                try
+                {
+                    results.Add(await provider.BuildLayoutAsync(model, updater));
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"An exception occurred within the view providers BuildLayoutAsync method. Please review the BuildLayoutAsync method within your view provider and try again.");
+                }
+            }
+
+            return new LayoutViewProviderResult(results.ToArray());
 
         }
 
         public async Task<IViewProviderResult> ProvideEditAsync(TModel model, IUpdateModel updater)
         {
 
-            var results = new List<IViewProviderResult>();
+            var results = new ConcurrentBag<IViewProviderResult>();
             foreach (var provider in _providers)
             {
-                results.Add(await provider.BuildEditAsync(model, updater));
+                try
+                {
+                    results.Add(await provider.BuildEditAsync(model, updater));
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"An exception occurred within the view providers BuildEditAsync method. Please review the BuildEditAsync method within your view provider and try again.");
+                }
             }
 
-            return new CombinedViewProviderResult(results);
+            return new CombinedViewProviderResult(results.ToArray());
 
         }
 
         public async Task<IViewProviderResult> ProvideUpdateAsync(TModel model, IUpdateModel updater)
         {
 
-            var results = new List<IViewProviderResult>();
+            var results = new ConcurrentBag<IViewProviderResult>();
             foreach (var provider in _providers)
             {
-                results.Add(await provider.UpdateAsync(model, updater));
+                try
+                {
+                    results.Add(await provider.BuildUpdateAsync(model, updater));
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"An exception occurred within the view providers BuildUpdateAsync method. Please review the UpdateAsync method within your view provider and try again.");
+                }
             }
 
-            return new CombinedViewProviderResult(results);
+            return new CombinedViewProviderResult(results.ToArray());
 
         }
     }

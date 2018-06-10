@@ -7,8 +7,7 @@ namespace Plato.Layout.ViewProviders
     public class CombinedViewProviderResult : IViewProviderResult
     {
         private readonly IList<IViewProviderResult> _results;
-        private IList<IView> _views;
-
+   
         public CombinedViewProviderResult(params IViewProviderResult[] results)
         {
             _results = results;
@@ -24,7 +23,7 @@ namespace Plato.Layout.ViewProviders
             return _results;
         }
 
-        public IList<IView> Views
+        public IEnumerable<IView> Views
         {
             get
             {

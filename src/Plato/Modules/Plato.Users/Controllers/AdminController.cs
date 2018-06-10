@@ -79,9 +79,9 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> LayoutTest(string id)
         {
 
-            var model = new LayoutViewModel();
+            var result = await _viewProviderManager.ProvideLayoutAsync(new User(), this);
+            return View(result);
 
-            return View(model);
         }
 
 

@@ -1,4 +1,4 @@
-﻿@model Plato.Layout.LayoutViewModel
+﻿@model Plato.Layout.LayoutViewProviderResult
 @{
     ViewData["Title"] = "User Profile";
 }
@@ -7,7 +7,14 @@
     <h4>Header</h4>
     @if (Model.Header != null)
     {
-        @Model.Header
+        <view model="@Model.Header"></view>
+    }
+</div>
+<div class="row">
+    <h4>Meta</h4>
+    @if (Model.Meta != null)
+    {
+    <view model="@Model.Meta"></view>
     }
 </div>
 <div class="row">
@@ -15,14 +22,14 @@
         <h4>Content</h4>
         @if (Model.Content != null)
         {
-            @Model.Content
+        <view model="@Model.Content"></view>
         }
     </div>
     <div class="col-3">
         <h4>SideBar</h4>
         @if (Model.SideBar != null)
         {
-            @Model.SideBar
+        <view model="@Model.SideBar"></view>
         }
     </div>
 </div>
@@ -30,7 +37,7 @@
     <h4>Footer</h4>
     @if (Model.Footer != null)
     {
-        @Model.Footer
+    <view model="@Model.Footer"></view>
     }
 </div>
 

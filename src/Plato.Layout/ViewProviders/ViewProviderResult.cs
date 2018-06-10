@@ -5,13 +5,13 @@ namespace Plato.Layout.ViewProviders
 {
     public interface IViewProviderResult
     {
-        IList<IView> Views { get; }
+        IEnumerable<IView> Views { get; }
     }
 
     public class ViewProviderResult : IViewProviderResult
     {
 
-        private IList<IView> _views;
+        private IEnumerable<IView> _views;
 
         public ViewProviderResult(params IView[] views)
         {
@@ -23,7 +23,7 @@ namespace Plato.Layout.ViewProviders
             _views = views;
         }
 
-        public IList<IView> Views
+        public IEnumerable<IView> Views
         {
             get => _views ?? (_views = new List<IView>());
         }

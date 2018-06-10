@@ -26,11 +26,23 @@ namespace Plato.Users.ViewProviders
                 View<User>("User.Display", model => user)
             );
 
-            //return await View<UserViewModel>("DisplayUser", model =>
+            //return View<UserViewModel>("DisplayUser", model =>
             //{
             //    model.User = user;
             //    return model;
             //});
+
+        }
+
+        public override async Task<IViewProviderResult> BuildLayoutAsync(User user, IUpdateModel updater)
+        {
+            return Layout(
+                View<User>("User.Display", model => user).Zone("header").Order(1),
+                View<User>("User.Display2", model => user).Zone("header").Order(2),
+                View<User>("User.Display", model => user).Zone("header").Order(3),
+                View<User>("User.Display2", model => user).Zone("header").Order(4),
+                View<User>("User.Display", model => user).Zone("header").Order(5)
+            );
 
         }
 
@@ -59,7 +71,7 @@ namespace Plato.Users.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> UpdateAsync(User user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IUpdateModel updater)
         {
 
             var model = new EditUserViewModel();

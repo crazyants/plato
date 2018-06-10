@@ -44,15 +44,18 @@ namespace Plato.Layout.Extensions
             // add theming convension - configures theme layout based on controller type
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
 
+            // model binding filters
             services.Configure<MvcOptions>((options) =>
             {
                 options.Filters.Add(typeof(ModelBinderAccessorFilter));
-                //options.Filters.Add(typeof(NotifyFilter));
             });
 
+            // model binding model accessor
             services.AddScoped<IUpdateModelAccessor, LocalModelBinderAccessor>();
-            
 
+            // layout manager
+            services.AddSingleton<ILayoutManager, LayoutManager>();
+            
             return services;
 
         }
