@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Razor;
 
-namespace Plato.Hosting.Web.Expanders
+namespace Plato.Internal.Hosting.Web.Expanders
 {
     public class ThemeViewLocationExpander : IViewLocationExpander
     {

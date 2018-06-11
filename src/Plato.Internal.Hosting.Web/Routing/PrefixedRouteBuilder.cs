@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plato.Hosting.Web.Routing
+namespace Plato.Internal.Hosting.Web.Routing
 {
     public class PrefixedRouteBuilder : IRouteBuilder
     {

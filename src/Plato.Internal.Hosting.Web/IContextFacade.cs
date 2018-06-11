@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Hosting.Web
+namespace Plato.Internal.Hosting.Web
 {
     public interface IContextFacade
     {

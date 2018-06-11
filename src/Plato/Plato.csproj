@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Plato.Hosting.Web\Plato.Hosting.Web.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.0.3" />
@@ -64,6 +60,10 @@
     <Folder Include="App_Data\Schemas\1.0.0\rollback\" />
     <Folder Include="App_Data\Schemas\1.0.0\upgrade\" />
     <Folder Include="App_Data\Sites\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Plato.Internal.Hosting.Web\Plato.Internal.Hosting.Web.csproj" />
   </ItemGroup>
 
 </Project>

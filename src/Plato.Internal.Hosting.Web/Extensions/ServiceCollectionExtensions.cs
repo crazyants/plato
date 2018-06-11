@@ -25,15 +25,15 @@ using Plato.Internal.Data.Extensions;
 using Plato.Internal.FileSystem;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Hosting.Extensions;
-using Plato.Hosting.Web.Expanders;
-using Plato.Hosting.Web.Middleware;
+using Plato.Internal.Hosting.Web.Expanders;
+using Plato.Internal.Hosting.Web.Middleware;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Modules.Extensions;
 using Plato.Internal.Repositories.Extensions;
 using Plato.Internal.Shell.Extensions;
 using Plato.Internal.Stores.Extensions;
 using Plato.Internal.Cache.Extensions;
-using Plato.Hosting.Web.Routing;
+using Plato.Internal.Hosting.Web.Routing;
 using Plato.Internal.Hosting;
 using Plato.Layout.Extensions;
 using Plato.Internal.Modules.Expanders;
@@ -42,7 +42,7 @@ using Plato.Internal.Logging.Extensions;
 using Plato.Internal.Navigation.Extensions;
 using Plato.Internal.Theming.Extensions;
 
-namespace Plato.Hosting.Web.Extensions
+namespace Plato.Internal.Hosting.Web.Extensions
 
 {
     public static class ServiceCollectionExtensions

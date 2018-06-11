@@ -13,7 +13,7 @@ using Plato.Internal.Shell.Models;
 using Plato.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Hosting.Web.Routing
+namespace Plato.Internal.Hosting.Web.Routing
 {
     public class PlatoRouterMiddleware
     {

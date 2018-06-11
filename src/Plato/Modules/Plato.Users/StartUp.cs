@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Abstractions.SetUp;
-using Plato.Hosting;
+using Plato.Internal.Hosting;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Shell.Models;
 using Plato.Internal.Stores.Users;
-using Plato.Hosting.Web;
-using Plato.Hosting.Web.Extensions;
+using Plato.Internal.Hosting.Web;
+using Plato.Internal.Hosting.Web.Extensions;
 using Plato.Layout.ViewAdaptors;
 using Plato.Layout.ViewProviders;
 using Plato.Layout.Extensions;
@@ -22,7 +22,6 @@ using Plato.Users.ViewAdaptors;
 using Plato.Users.Services;
 using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
-using Plato.Internal.Hosting;
 
 namespace Plato.Users
 {

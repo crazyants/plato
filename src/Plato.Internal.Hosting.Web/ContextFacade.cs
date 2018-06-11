@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Hosting.Web
+namespace Plato.Internal.Hosting.Web
 {
     public class ContextFacade : IContextFacade
     {

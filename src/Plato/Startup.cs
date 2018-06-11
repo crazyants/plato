@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Plato.Hosting.Web.Extensions;
+using Plato.Internal.Hosting.Web.Extensions;
 using System;
 
 namespace Plato

@@ -3,7 +3,7 @@ using Plato.Internal.Shell;
 using System;
 using Plato.Internal.Shell.Models;
 
-namespace Plato.Hosting.Web.Extensions
+namespace Plato.Internal.Hosting.Web.Extensions
 {
     public static class RunningShellTableExtensions
     {

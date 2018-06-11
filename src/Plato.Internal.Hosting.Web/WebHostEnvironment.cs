@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting;
 
-namespace Plato.Hosting.Web
+namespace Plato.Internal.Hosting.Web
 {
     public class WebHostEnvironment : HostEnvironment
     {

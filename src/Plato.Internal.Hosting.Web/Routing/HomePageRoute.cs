@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Stores.Abstractions;
 
 
-namespace Plato.Hosting.Web.Routing
+namespace Plato.Internal.Hosting.Web.Routing
 {
     public class HomePageRoute : Route
     {

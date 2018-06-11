@@ -4,10 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Shell;
 using Plato.Internal.Shell.Models;
-using Plato.Hosting.Web.Extensions;
+using Plato.Internal.Hosting.Web.Extensions;
 using Plato.Internal.Hosting;
 
-namespace Plato.Hosting.Web.Middleware
+namespace Plato.Internal.Hosting.Web.Middleware
 {
     public class PlatoContainerMiddleware
     {
