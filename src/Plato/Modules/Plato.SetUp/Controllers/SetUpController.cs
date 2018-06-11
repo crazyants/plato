@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Plato.Abstractions.SetUp;
-using Plato.Abstractions.Stores;
-using Plato.Data.Abstractions.Schemas;
+using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Data.Schemas.Abstractions;
 
 using Plato.SetUp.ViewModels;
 using Plato.SetUp.Services;

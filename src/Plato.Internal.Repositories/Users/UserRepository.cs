@@ -3,8 +3,8 @@ using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Abstractions.Data;
 using Plato.Abstractions.Extensions;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Internal.Repositories.Users

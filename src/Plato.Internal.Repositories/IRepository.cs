@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Plato.Abstractions.Data;
+using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Repositories
 {

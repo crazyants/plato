@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using Plato.Abstractions.Extensions;
-using Plato.Abstractions.Data;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Settings;
 

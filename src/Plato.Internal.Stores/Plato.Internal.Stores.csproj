@@ -14,8 +14,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Plato.Abstractions\Plato.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.FileSystem.Abstractions\Plato.Internal.FileSystem.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Models\Plato.Internal.Models.csproj" />
     <ProjectReference Include="..\Plato.Internal.Repositories\Plato.Internal.Repositories.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Stores.Abstractions\Plato.Internal.Stores.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

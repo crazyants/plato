@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Plato.Data.Abstractions.Schemas;
+using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Internal.Data.Schemas.Extensions
 {

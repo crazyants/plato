@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using Plato.Data.Abstractions.Schemas;
 
 namespace Plato.Internal.Data.Migrations
 {
@@ -10,18 +9,15 @@ namespace Plato.Internal.Data.Migrations
     {
 
         private readonly IDataMigrationBuilder _migrationBuilder;
-        private readonly ISchemaBuilder _schemaBuilder;
         private readonly IDataMigrationManager _migrationManager;
 
         #region "Constructor"
 
         public AutomaticDataMigrations(
             IDataMigrationBuilder migrationBuilder,
-            IDataMigrationManager migrationManager,
-            ISchemaBuilder schemaBuilder)
+            IDataMigrationManager migrationManager)
         {
             _migrationBuilder = migrationBuilder;
-            _schemaBuilder = schemaBuilder;
             _migrationManager = migrationManager;
         }
 

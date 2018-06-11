@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Plato.Abstractions.Settings;
 using Plato.Abstractions.SetUp;
-using Plato.Abstractions.Stores;
-using Plato.Data.Abstractions.Schemas;
+using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models.Settings;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Settings.Services
 {

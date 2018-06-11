@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Plato.Abstractions.Settings;
 using System.Threading.Tasks;
-using Plato.Abstractions.Stores;
+using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Discussions
+namespace Plato.Discussions.Controllers
 {
     public class DiscussionsController : Controller
     {

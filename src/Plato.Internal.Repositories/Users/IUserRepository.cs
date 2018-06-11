@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Plato.Abstractions.Query;
 
 namespace Plato.Internal.Repositories.Users
 {

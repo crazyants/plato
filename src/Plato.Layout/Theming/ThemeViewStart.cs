@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Abstractions.Stores;
+using Plato.Internal.Stores.Abstractions;
 using Plato.Layout.Razor;
 
 namespace Plato.Layout.Theming

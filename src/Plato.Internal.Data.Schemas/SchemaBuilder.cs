@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Abstractions.Data;
-using Plato.Data.Abstractions.Schemas;
+using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Text;
 
 namespace Plato.Internal.Data.Schemas

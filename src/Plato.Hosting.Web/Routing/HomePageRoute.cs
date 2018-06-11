@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using System;
 using System.Threading.Tasks;
-using Plato.Abstractions.Stores;
+using Plato.Internal.Stores.Abstractions;
 
 
 namespace Plato.Hosting.Web.Routing

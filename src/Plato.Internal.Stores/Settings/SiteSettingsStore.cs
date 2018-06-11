@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Plato.Abstractions.Settings;
-using Plato.Abstractions.Stores;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Internal.Stores.Settings
 {

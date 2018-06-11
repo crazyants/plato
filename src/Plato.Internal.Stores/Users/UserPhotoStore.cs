@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Abstractions.Query;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
-using Plato.Abstractions.Data;
+using Plato.Internal.Data.Abstractions;
 
 
 namespace Plato.Internal.Stores.Users

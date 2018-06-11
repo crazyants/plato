@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Abstractions.Stores;
 using Plato.Internal.Models.Roles;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Internal.Stores.Roles
 {

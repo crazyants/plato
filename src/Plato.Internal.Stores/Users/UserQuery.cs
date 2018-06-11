@@ -2,10 +2,8 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Abstractions.Data;
-using Plato.Abstractions.Query;
-using Plato.Abstractions.Stores;
-using Plato.Data.Abstractions;
+using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Query;
 

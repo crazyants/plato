@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Plato.Abstractions.Data;
-using Plato.Abstractions.Query;
+using Plato.Internal.Data.Abstractions;
 using Plato.Layout;
 using Plato.Layout.ViewProviders;
 using Plato.Layout.Views;

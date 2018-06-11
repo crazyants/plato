@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Plato.Abstractions.Data;
 using Plato.Abstractions.Extensions;
 using Plato.Abstractions.SetUp;
 using Plato.Abstractions.Shell;
 using Plato.Hosting;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Shell;
 using Plato.Internal.Shell.Models;
 

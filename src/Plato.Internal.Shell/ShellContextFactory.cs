@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Plato.Internal.Shell.Models;
-using Plato.Data;
+using Plato.Internal.Data;
 using System;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;

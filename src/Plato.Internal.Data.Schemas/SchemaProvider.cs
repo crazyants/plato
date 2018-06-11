@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Plato.Data.Abstractions.Schemas;
+using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Internal.Data.Schemas
 {

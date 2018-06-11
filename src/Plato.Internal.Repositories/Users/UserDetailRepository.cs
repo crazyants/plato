@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
-using Plato.Abstractions.Data;
+using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Repositories.Users
 {

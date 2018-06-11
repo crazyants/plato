@@ -21,7 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using Plato.Data.Extensions;
+using Plato.Internal.Data.Extensions;
 using Plato.Internal.FileSystem;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Hosting.Extensions;

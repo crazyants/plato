@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 using Plato.Abstractions.Extensions;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Shell.Abstractions;
-using Plato.Data.Abstractions.Schemas;
+using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Internal.Data.Schemas
 {

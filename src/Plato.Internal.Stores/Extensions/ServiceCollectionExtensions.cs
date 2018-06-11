@@ -7,17 +7,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Plato.Abstractions.Query;
+
 using Plato.Abstractions.Settings;
-using Plato.Abstractions.Shell;
-using Plato.Abstractions.Stores;
-using Plato.Data;
-using Plato.Data.Abstractions;
+
+using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Data;
+using Plato.Internal.Data.Abstractions;
+
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Stores.Settings;
 using Plato.Internal.Stores.Roles;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Models.Users;
+
 using Plato.Internal.Stores.Files;
 using Plato.Internal.Stores.Query;
 

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Plato.Abstractions.Settings;
 using Plato.Internal.Shell.Models;
 using Plato.Abstractions;
-using Plato.Abstractions.Stores;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Hosting.Web.Routing
 {
