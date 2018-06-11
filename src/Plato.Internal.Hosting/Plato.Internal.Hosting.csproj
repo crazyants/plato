@@ -18,6 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plato.Internal.Abstractions\Plato.Internal.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Shell.Abstractions\Plato.Internal.Shell.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Shell\Plato.Internal.Shell.csproj" />
   </ItemGroup>
 

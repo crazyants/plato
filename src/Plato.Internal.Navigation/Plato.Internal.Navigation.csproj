@@ -6,28 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Plato.Internal.Shell\Plato.Internal.Shell.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.AspNetCore.Authorization">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.authorization\2.0.4\lib\netstandard2.0\Microsoft.AspNetCore.Authorization.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNetCore.Mvc.Abstractions">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.mvc.abstractions\2.0.4\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNetCore.Mvc.Core">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.mvc.core\2.0.4\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNetCore.Routing.Abstractions">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.routing.abstractions\2.0.3\lib\netstandard2.0\Microsoft.AspNetCore.Routing.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Localization.Abstractions">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.localization.abstractions\2.0.3\lib\netstandard2.0\Microsoft.Extensions.Localization.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.logging.abstractions\2.0.2\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-    </Reference>
+     <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Localization" Version="2.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Plato.Internal.Shell\Plato.Internal.Shell.csproj" />
   </ItemGroup>
 
 </Project>

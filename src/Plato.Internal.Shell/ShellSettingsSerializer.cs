@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Plato.Internal.Shell.Models;
 using System;
-using Plato.Abstractions.Shell;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Shell
 {

@@ -36,3 +36,300 @@
 2018-06-12 00:04:55.820 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
 2018-06-12 00:04:55.822 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
 2018-06-12 00:04:55.824 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.7349ms 200 image/x-icon
+2018-06-12 00:40:43.240 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-12 00:40:43.556 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-12 00:40:43.586 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-12 00:40:43.588 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'plato106', attempting to load.
+2018-06-12 00:40:43.629 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-12 00:40:43.712 +01:00 [Error] Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware: An unhandled exception has occurred while executing the request
+System.InvalidOperationException: Unable to resolve service for type 'Plato.Internal.Shell.Abstractions.IShellSettings' while attempting to activate 'Plato.Roles.Startup'.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateArgumentCallSites(Type serviceType, Type implementationType, CallSiteChain callSiteChain, ParameterInfo[] parameters, Boolean throwIfCallSiteNotFound)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateConstructorCallSite(Type serviceType, Type implementationType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(ServiceDescriptor descriptor, Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateEnumerable(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateCallSite(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.CreateServiceAccessor(Type serviceType)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Plato.Internal.Shell.ShellContainerFactory.CreateContainer(ShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Shell\ShellContainerFactory.cs:line 81
+   at Plato.Internal.Shell.ShellContextFactory.CreateDescribedContext(ShellSettings settings, ShellDescriptor descriptor) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Shell\ShellContextFactory.cs:line 43
+   at Plato.Internal.Shell.ShellContextFactory.Plato.Internal.Shell.IShellContextFactory.CreateShellContext(ShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Shell\ShellContextFactory.cs:line 32
+   at Plato.Internal.Hosting.DefaultPlatoHost.CreateShellContext(ShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 86
+   at Plato.Internal.Hosting.DefaultPlatoHost.<>c__DisplayClass8_0.<GetOrCreateShellContext>b__0(String tenant) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 55
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Plato.Internal.Hosting.DefaultPlatoHost.GetOrCreateShellContext(ShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 53
+   at Plato.Internal.Hosting.DefaultPlatoHost.CreateAndActivateShells() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 127
+   at Plato.Internal.Hosting.DefaultPlatoHost.BuildCurrent() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 103
+   at Plato.Internal.Hosting.DefaultPlatoHost.Initialize() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 46
+   at Plato.Internal.Hosting.Web.Middleware.PlatoContainerMiddleware.<Invoke>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Middleware\PlatoContainerMiddleware.cs:line 35
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.Extensions.MapMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__7.MoveNext()
+2018-06-12 00:40:43.793 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 238.4677ms 500 text/html; charset=utf-8
+2018-06-12 00:41:58.668 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-12 00:41:59.060 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-12 00:41:59.089 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-12 00:41:59.092 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'plato106', attempting to load.
+2018-06-12 00:41:59.132 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-12 00:41:59.219 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-12 00:41:59.221 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-12 00:41:59.238 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-12 00:41:59.248 +01:00 [Information] Plato.Internal.Repositories.Settings.SettingRepository: Selecting all settings
+2018-06-12 00:41:59.495 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-06-12 00:42:01.162 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-06-12 00:42:01.485 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2014.2656ms
+2018-06-12 00:42:01.489 +01:00 [Error] Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware: An unhandled exception has occurred while executing the request
+System.InvalidOperationException: Unable to resolve service for type 'Plato.Internal.Shell.Abstractions.IShellSettings' while attempting to activate 'Plato.Internal.Navigation.NavigationManager'.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateArgumentCallSites(Type serviceType, Type implementationType, CallSiteChain callSiteChain, ParameterInfo[] parameters, Boolean throwIfCallSiteNotFound)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateConstructorCallSite(Type serviceType, Type implementationType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(ServiceDescriptor descriptor, Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateCallSite(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.CreateServiceAccessor(Type serviceType)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.GetService(IServiceProvider sp, Type type, Type requiredBy, Boolean isDefaultParameterRequired)
+   at lambda_method(Closure , IServiceProvider , Object[] )
+   at Microsoft.AspNetCore.Mvc.Internal.TypeActivatorCache.CreateInstance[TInstance](IServiceProvider serviceProvider, Type implementationType)
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.DefaultTagHelperActivator.Create[TTagHelper](ViewContext context)
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.DefaultTagHelperFactory.CreateTagHelper[TTagHelper](ViewContext context)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorPageBase.CreateTagHelper[TTagHelper]()
+   at AspNetCore._Themes_Default_Shared__Layout_cshtml.<<ExecuteAsync>b__55_10>d.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Themes\Default\Shared\_Layout.cshtml:line 40
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext.<SetOutputContentAsync>d__30.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at AspNetCore._Themes_Default_Shared__Layout_cshtml.<ExecuteAsync>d__55.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorView.<RenderPageCoreAsync>d__16.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorView.<RenderPageAsync>d__15.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Razor.RazorView.<RenderLayoutAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorView.<RenderAsync>d__14.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ViewFeatures.ViewExecutor.<ExecuteAsync>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ViewFeatures.ViewExecutor.<ExecuteAsync>d__21.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ViewResult.<ExecuteResultAsync>d__26.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeResultAsync>d__19.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextResultFilterAsync>d__24.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResultExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeFilterPipelineAsync>d__17.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeAsync>d__15.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware.<Invoke>d__4.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Routing\PlatoRouterMiddleware.cs:line 73
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Middleware.PlatoContainerMiddleware.<Invoke>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Middleware\PlatoContainerMiddleware.cs:line 69
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.Extensions.MapMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__7.MoveNext()
+2018-06-12 00:42:01.625 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2565.2605ms 500 text/html; charset=utf-8
+2018-06-12 00:42:01.666 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-06-12 00:42:01.669 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-06-12 00:42:01.672 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 6.1738ms 200 image/x-icon
+2018-06-12 00:45:17.291 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-12 00:45:17.665 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-12 00:45:17.694 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-12 00:45:17.696 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'plato106', attempting to load.
+2018-06-12 00:45:17.736 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-12 00:45:17.822 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-12 00:45:17.824 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-12 00:45:17.839 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-12 00:45:17.847 +01:00 [Information] Plato.Internal.Repositories.Settings.SettingRepository: Selecting all settings
+2018-06-12 00:45:18.097 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-06-12 00:45:19.781 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-06-12 00:45:20.141 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2067.3249ms
+2018-06-12 00:45:20.145 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2481.6696ms 200 text/html; charset=utf-8
+2018-06-12 00:45:20.160 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-06-12 00:45:20.163 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /css/core.css was not modified
+2018-06-12 00:45:20.165 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.7846ms 304 text/css
+2018-06-12 00:45:20.262 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-06-12 00:45:20.263 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-06-12 00:45:20.265 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.9201ms 200 image/x-icon
+2018-06-12 00:45:28.540 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/admin  
+2018-06-12 00:45:28.541 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-12 00:45:28.541 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-12 00:45:28.544 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Admin.Controllers.AdminController.Index (Plato.Admin) with arguments ((null)) - ModelState is Valid
+2018-06-12 00:45:28.604 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Admin/Views/Admin/Index.cshtml.
+2018-06-12 00:45:28.776 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Admin.Controllers.AdminController.Index (Plato.Admin) in 232.0154ms
+2018-06-12 00:45:28.776 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 235.8314ms 200 text/html; charset=utf-8
+2018-06-12 00:45:28.799 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-12 00:45:28.800 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-12 00:45:28.800 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-12 00:45:28.801 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.1424ms 404 
+2018-06-12 00:45:31.565 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/admin/users  
+2018-06-12 00:45:31.566 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-12 00:45:31.566 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-12 00:45:31.584 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AdminController.Index (Plato.Users) with arguments (Plato.Users.ViewModels.FilterOptions, Plato.Internal.Navigation.PagerOptions) - ModelState is Valid
+2018-06-12 00:45:31.752 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Admin/Index.cshtml.
+2018-06-12 00:45:31.828 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:31.914 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:31.974 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.092 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.168 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.170 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.171 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.173 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.174 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.176 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.177 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.179 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.180 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.181 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.183 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.184 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.186 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.188 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.189 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.191 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.192 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.194 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.195 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:32.208 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AdminController.Index (Plato.Users) in 634.5927ms
+2018-06-12 00:45:32.208 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 643.0632ms 200 text/html; charset=utf-8
+2018-06-12 00:45:32.229 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-12 00:45:32.230 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-12 00:45:32.230 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-12 00:45:32.231 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.067ms 404 
+2018-06-12 00:45:34.433 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Users/Admin/Edit/1  
+2018-06-12 00:45:34.433 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-12 00:45:34.433 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-12 00:45:34.439 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AdminController.Edit (Plato.Users) with arguments (1) - ModelState is Valid
+2018-06-12 00:45:34.546 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Admin/Edit.cshtml.
+2018-06-12 00:45:34.560 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:34.621 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:34.684 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:34.838 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:34.908 +01:00 [Error] Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Internal.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-12 00:45:34.976 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AdminController.Edit (Plato.Users) in 537.9412ms
+2018-06-12 00:45:34.976 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 543.8274ms 200 text/html; charset=utf-8
+2018-06-12 00:45:34.996 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-12 00:45:34.997 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-12 00:45:34.997 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-12 00:45:34.997 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8946ms 404 

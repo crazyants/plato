@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Plato.Abstractions.Shell;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Shell.Models
 {
