@@ -55,7 +55,7 @@ namespace Plato.Layout
             {
                 foreach (var view in result.Views)
                 {
-                    // We can only handle positioned views
+                    // We can only handle views that implement IPositionedView
                     if (view is IPositionedView positionedView)
                     {
                         var key = positionedView.Position.Zone;
