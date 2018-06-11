@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace Plato.Yaml
+namespace Plato.Internal.Yaml
 {
     public class YamlConfigurationProvider : FileConfigurationProvider
     {

@@ -3,7 +3,7 @@ using Microsoft.Extensions.FileProviders;
 using System;
 using System.IO;
 
-namespace Plato.Yaml.Extensions
+namespace Plato.Internal.Yaml.Extensions
 {
     public static class YamlConfigurationExtensions
     {

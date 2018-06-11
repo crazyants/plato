@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plato.Yaml
+namespace Plato.Internal.Yaml
 {
     public class YamlConfigurationSource : FileConfigurationSource
     {

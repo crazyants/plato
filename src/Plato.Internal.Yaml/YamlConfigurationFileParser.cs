@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using YamlDotNet.RepresentationModel;
 
-namespace Plato.Yaml
+namespace Plato.Internal.Yaml
 {
     public class YamlConfigurationFileParser
     {
