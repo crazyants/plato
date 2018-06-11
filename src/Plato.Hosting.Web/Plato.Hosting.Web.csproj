@@ -18,8 +18,8 @@
     <ProjectReference Include="..\Plato.Internal.Logging\Plato.Internal.Logging.csproj" />
     <ProjectReference Include="..\Plato.Internal.Modules.Abstractions\Plato.Internal.Modules.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Modules\Plato.Internal.Modules.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Navigation\Plato.Internal.Navigation.csproj" />
     <ProjectReference Include="..\Plato.Layout\Plato.Layout.csproj" />
-    <ProjectReference Include="..\Plato.Navigation\Plato.Navigation.csproj" />
     <ProjectReference Include="..\Plato.Repositories\Plato.Repositories.csproj" />
     <ProjectReference Include="..\Plato.Security\Plato.Security.csproj" />
     <ProjectReference Include="..\Plato.Shell\Plato.Shell.csproj" />

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Plato.Navigation;
+using Plato.Internal.Navigation;
 
 namespace Plato.Users
 {

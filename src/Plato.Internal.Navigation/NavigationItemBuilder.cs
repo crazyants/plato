@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 
-namespace Plato.Navigation
+namespace Plato.Internal.Navigation
 {
     public class NavigationItemBuilder : NavigationBuilder
     {

@@ -10,7 +10,7 @@ using Plato.Layout.Views;
 using Plato.Models.Users;
 using Plato.Stores.Users;
 using Plato.Users.ViewModels;
-using Plato.Navigation;
+using Plato.Internal.Navigation;
 using Plato.Layout.ModelBinding;
 
 namespace Plato.Users.Controllers

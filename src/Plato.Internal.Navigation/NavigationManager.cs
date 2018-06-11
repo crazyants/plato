@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Plato.Shell.Models;
 
-namespace Plato.Navigation
+namespace Plato.Internal.Navigation
 {
     public class NavigationManager : INavigationManager
     {

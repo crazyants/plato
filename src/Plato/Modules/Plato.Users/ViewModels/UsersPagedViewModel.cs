@@ -2,7 +2,7 @@
 using Plato.Abstractions.Data;
 using Plato.Layout.Views;
 using Plato.Models.Users;
-using Plato.Navigation;
+using Plato.Internal.Navigation;
 
 namespace Plato.Users.ViewModels
 {

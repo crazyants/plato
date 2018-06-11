@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Localization;
 
-namespace Plato.Navigation
+namespace Plato.Internal.Navigation
 {
     public class NavigationBuilder
     {

@@ -8,7 +8,7 @@ using Plato.Abstractions.SetUp;
 using Plato.Hosting;
 using Plato.Hosting.Extensions;
 using Plato.Models.Roles;
-using Plato.Navigation;
+using Plato.Internal.Navigation;
 using Plato.Roles.Services;
 using Plato.Shell.Models;
 

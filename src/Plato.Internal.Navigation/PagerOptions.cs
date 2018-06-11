@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.Navigation
+namespace Plato.Internal.Navigation
 {
     public class PagerOptions
     {

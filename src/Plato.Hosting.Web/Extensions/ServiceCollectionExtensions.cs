@@ -38,7 +38,7 @@ using Plato.Layout.Extensions;
 using Plato.Internal.Modules.Expanders;
 using Plato.Security.Extensions;
 using Plato.Internal.Logging.Extensions;
-using Plato.Navigation.Extensions;
+using Plato.Internal.Navigation.Extensions;
 using Plato.Theming.Extensions;
 
 namespace Plato.Hosting.Web.Extensions

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Navigation;
+using Plato.Internal.Navigation;
 
 namespace Plato.Layout.TagHelpers
 {
