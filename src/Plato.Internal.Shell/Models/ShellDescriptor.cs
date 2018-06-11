@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Plato.Shell.Models
+namespace Plato.Internal.Shell.Models
 {
     public class ShellDescriptor
     {

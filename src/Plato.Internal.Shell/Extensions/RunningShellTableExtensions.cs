@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 
-namespace Plato.Shell.Extensions
+namespace Plato.Internal.Shell.Extensions
 {
     public static class RunningShellTableExtensions
     {

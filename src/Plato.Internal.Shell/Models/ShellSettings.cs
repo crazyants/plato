@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Plato.Abstractions.Shell;
 
-namespace Plato.Shell.Models
+namespace Plato.Internal.Shell.Models
 {
     public class ShellSettings : IShellSettings
     {

@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Plato.Shell;
-using Plato.Shell.Models;
+using Plato.Internal.Shell;
+using Plato.Internal.Shell.Models;
 using Plato.Hosting.Web.Extensions;
 
 namespace Plato.Hosting.Web.Middleware

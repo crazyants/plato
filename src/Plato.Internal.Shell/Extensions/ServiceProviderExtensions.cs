@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace Plato.Shell.Extensions
+namespace Plato.Internal.Shell.Extensions
 {
     public static class ServiceProviderExtensions
     {

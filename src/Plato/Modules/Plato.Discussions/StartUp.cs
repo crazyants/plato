@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Hosting;
 using Plato.Hosting.Extensions;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 
 namespace Plato.Discussions
 {

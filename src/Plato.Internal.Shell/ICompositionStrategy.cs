@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 
-namespace Plato.Shell
+namespace Plato.Internal.Shell
 {
     public interface ICompositionStrategy
     {

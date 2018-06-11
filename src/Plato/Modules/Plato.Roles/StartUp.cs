@@ -10,7 +10,7 @@ using Plato.Hosting.Extensions;
 using Plato.Models.Roles;
 using Plato.Internal.Navigation;
 using Plato.Roles.Services;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 
 namespace Plato.Roles
 {

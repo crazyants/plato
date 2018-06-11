@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 using System;
 using Plato.Abstractions.Shell;
 
-namespace Plato.Shell
+namespace Plato.Internal.Shell
 {
 
     public static class ShellSettingsSerializer

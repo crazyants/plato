@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Plato.Shell;
+using Plato.Internal.Shell;
 using System;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 
 namespace Plato.Hosting.Web.Extensions
 {

@@ -4,12 +4,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using Plato.Internal.Yaml;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 using Plato.Internal.FileSystem.Abstractions;
-using Plato.Shell.Abstractions;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Yaml.Extensions;
 
-namespace Plato.Shell
+namespace Plato.Internal.Shell
 {
     public class ShellSettingsManager : IShellSettingsManager
     {

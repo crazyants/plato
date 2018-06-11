@@ -30,7 +30,7 @@ using Plato.Hosting.Web.Middleware;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Modules.Extensions;
 using Plato.Repositories.Extensions;
-using Plato.Shell.Extensions;
+using Plato.Internal.Shell.Extensions;
 using Plato.Stores.Extensions;
 using Plato.Internal.Cache.Extensions;
 using Plato.Hosting.Web.Routing;

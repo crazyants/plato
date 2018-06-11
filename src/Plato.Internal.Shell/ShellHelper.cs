@@ -1,7 +1,7 @@
 ﻿using Plato.Abstractions.Shell;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 
-namespace Plato.Shell
+namespace Plato.Internal.Shell
 {
     public static class ShellHelper
     {

@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 using Plato.Data;
 using System;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 
-namespace Plato.Shell
+namespace Plato.Internal.Shell
 {
     public class ShellContextFactory : IShellContextFactory
     {

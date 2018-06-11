@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 
-namespace Plato.Shell
+namespace Plato.Internal.Shell
 {
     public class RunningShellTable : IRunningShellTable
     {

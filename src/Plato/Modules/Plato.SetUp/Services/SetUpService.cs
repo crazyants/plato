@@ -7,8 +7,8 @@ using Plato.Abstractions.Extensions;
 using Plato.Abstractions.SetUp;
 using Plato.Abstractions.Shell;
 using Plato.Hosting;
-using Plato.Shell;
-using Plato.Shell.Models;
+using Plato.Internal.Shell;
+using Plato.Internal.Shell.Models;
 
 namespace Plato.SetUp.Services
 {

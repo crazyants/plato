@@ -10,7 +10,7 @@ using Plato.Data.Abstractions.Schemas;
 
 using Plato.SetUp.ViewModels;
 using Plato.SetUp.Services;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 
 namespace Plato.SetUp.Controllers
 {

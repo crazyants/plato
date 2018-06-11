@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Abstractions.Settings;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 using Plato.Abstractions;
 using Plato.Abstractions.Stores;
 

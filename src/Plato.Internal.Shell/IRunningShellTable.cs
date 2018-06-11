@@ -1,7 +1,7 @@
-﻿using Plato.Shell.Models;
+﻿using Plato.Internal.Shell.Models;
 using System.Collections.Generic;
 
-namespace Plato.Shell
+namespace Plato.Internal.Shell
 {
     public interface IRunningShellTable
     {

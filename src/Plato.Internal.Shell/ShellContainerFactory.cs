@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Plato.Shell.Models;
-using Plato.Shell.Extensions;
+using Plato.Internal.Shell.Models;
+using Plato.Internal.Shell.Extensions;
 using Plato.Data;
 using Plato.Abstractions;
 using Plato.Abstractions.Data;
 using Plato.Internal.Modules.Abstractions;
 
-namespace Plato.Shell
+namespace Plato.Internal.Shell
 {
     public class ShellContainerFactory : IShellContainerFactory
     {

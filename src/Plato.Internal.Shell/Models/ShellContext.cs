@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Plato.Shell.Models
+namespace Plato.Internal.Shell.Models
 {
     public class ShellContext : IDisposable
     {

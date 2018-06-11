@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using Plato.Shell.Models;
+using Plato.Internal.Shell.Models;
 
 namespace Plato.Internal.Navigation
 {

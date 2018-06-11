@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Plato.Shell;
-using Plato.Shell.Models;
+using Plato.Internal.Shell;
+using Plato.Internal.Shell.Models;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using Plato.Abstractions.Shell;
