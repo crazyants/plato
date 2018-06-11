@@ -17025,3 +17025,136 @@ System.NullReferenceException: Object reference not set to an instance of an obj
 2018-06-11 17:54:22.764 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
 2018-06-11 17:54:22.765 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
 2018-06-11 17:54:22.765 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7747ms 404 
+2018-06-11 18:11:54.565 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-11 18:11:54.942 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-11 18:11:54.975 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-11 18:11:54.978 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'plato106', attempting to load.
+2018-06-11 18:11:55.021 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-11 18:11:55.111 +01:00 [Information] Plato.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-11 18:11:55.114 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-11 18:11:55.128 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-11 18:11:55.137 +01:00 [Information] Plato.Repositories.Settings.SettingRepository: Selecting all settings
+2018-06-11 18:11:55.376 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-06-11 18:11:57.054 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-06-11 18:11:57.439 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2086.2913ms
+2018-06-11 18:11:57.443 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2502.2911ms 200 text/html; charset=utf-8
+2018-06-11 18:11:57.461 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/core.css  
+2018-06-11 18:11:57.464 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /css/core.css was not modified
+2018-06-11 18:11:57.467 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.7238ms 304 text/css
+2018-06-11 18:12:01.015 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/admin  
+2018-06-11 18:12:01.015 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-11 18:12:01.015 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-11 18:12:01.018 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Admin.Controllers.AdminController.Index (Plato.Admin) with arguments ((null)) - ModelState is Valid
+2018-06-11 18:12:01.073 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Admin/Views/Admin/Index.cshtml.
+2018-06-11 18:12:01.216 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Admin.Controllers.AdminController.Index (Plato.Admin) in 198.5586ms
+2018-06-11 18:12:01.217 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 201.8334ms 200 text/html; charset=utf-8
+2018-06-11 18:12:01.235 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-11 18:12:01.235 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-11 18:12:01.236 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-11 18:12:01.236 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.4195ms 404 
+2018-06-11 18:12:03.550 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/admin/users  
+2018-06-11 18:12:03.550 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-11 18:12:03.551 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-11 18:12:03.566 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AdminController.Index (Plato.Users) with arguments (Plato.Users.ViewModels.FilterOptions, Plato.Internal.Navigation.PagerOptions) - ModelState is Valid
+2018-06-11 18:12:03.762 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Admin/Index.cshtml.
+2018-06-11 18:12:03.839 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:03.925 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:03.989 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.126 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.223 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.225 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.227 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.228 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.230 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.231 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.233 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.235 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.236 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.237 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.239 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.241 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.242 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.244 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.245 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.247 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.248 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.250 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.251 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:04.264 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AdminController.Index (Plato.Users) in 706.0894ms
+2018-06-11 18:12:04.264 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 714.2228ms 200 text/html; charset=utf-8
+2018-06-11 18:12:04.286 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-11 18:12:04.287 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-11 18:12:04.287 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-11 18:12:04.287 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.9093ms 404 
+2018-06-11 18:12:06.340 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Users/Admin/Edit/1  
+2018-06-11 18:12:06.340 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-11 18:12:06.341 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-11 18:12:06.345 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AdminController.Edit (Plato.Users) with arguments (1) - ModelState is Valid
+2018-06-11 18:12:06.461 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Admin/Edit.cshtml.
+2018-06-11 18:12:06.479 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:06.568 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:06.630 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:06.804 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:06.874 +01:00 [Error] Plato.Layout.ViewAdaptors.ViewAdaptorManager: An exception occurred whilst attempting to adapt the view: 
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Plato.Layout.ViewAdaptors.ViewAdaptorManager.<EnsureConfiguredAProviders>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Layout\ViewAdaptors\ViewAdaptorManager.cs:line 66
+2018-06-11 18:12:06.943 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AdminController.Edit (Plato.Users) in 598.9329ms
+2018-06-11 18:12:06.944 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 603.4891ms 200 text/html; charset=utf-8
+2018-06-11 18:12:06.962 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-11 18:12:06.962 +01:00 [Information] Plato.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-11 18:12:06.962 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-11 18:12:06.963 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8148ms 404 

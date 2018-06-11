@@ -10,36 +10,36 @@ using Microsoft.Extensions.Caching.Memory;
 using Plato.Abstractions.Data;
 
 
-namespace Plato.Stores.Users
+namespace Plato.Internal.Stores.Users
 {
-    public class UserPhotoStore : IUserPhotoStore<UserPhoto>
+    public class UserBannerStore : IUserBannerStore<UserBanner>
     {
 
-        private readonly string _key = CacheKeys.UserPhotos.ToString();
+        private readonly string _key = CacheKeys.UserBanners.ToString();
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
-        
-        private readonly IUserPhotoRepository<UserPhoto> _userPhotoRepository;
+
+        private readonly IUserBannerRepository<UserBanner> _userBannerRepository;
         private readonly IDistributedCache _distributedCache;
         private readonly IMemoryCache _memoryCache;
-        private readonly ILogger<UserPhotoStore> _logger;
+        private readonly ILogger<UserBannerStore> _logger;
 
         #region "Constrcutor"
 
-        public UserPhotoStore(
-            IUserPhotoRepository<UserPhoto> userPhotoRepository,
+        public UserBannerStore(
+            IUserBannerRepository<UserBanner> userBannerRepository,
             IMemoryCache memoryCache,
             IDistributedCache distributedCache,
-            ILogger<UserPhotoStore> logger
+            ILogger<UserBannerStore> logger
             )
         {
-            _userPhotoRepository = userPhotoRepository;
+            _userBannerRepository = userBannerRepository;
             _memoryCache = memoryCache;
             _distributedCache = distributedCache;
             _logger = logger;
 
             _cacheEntryOptions = new MemoryCacheEntryOptions
             {
-                SlidingExpiration = TimeSpan.FromSeconds(10)
+                SlidingExpiration = TimeSpan.FromSeconds(12000)
             };
 
         }
@@ -48,64 +48,65 @@ namespace Plato.Stores.Users
 
         #region "Implementation"
 
-        public async Task<UserPhoto> CreateAsync(UserPhoto userPhoto)
+        public async Task<UserBanner> CreateAsync(UserBanner userBanner)
         {
-            if (userPhoto == null)
-                throw new ArgumentNullException(nameof(userPhoto));
-            if (userPhoto.Id > 0)
-                throw new ArgumentOutOfRangeException(nameof(userPhoto.Id));
-            var newUserPhoto = await _userPhotoRepository.InsertUpdateAsync(userPhoto);
+            if (userBanner == null)
+                throw new ArgumentNullException(nameof(userBanner));
+            if (userBanner.Id > 0)
+                throw new ArgumentOutOfRangeException(nameof(userBanner.Id));
+            var newUserPhoto = await _userBannerRepository.InsertUpdateAsync(userBanner);
             if (newUserPhoto != null)
             {
                 if (_logger.IsEnabled(LogLevel.Debug))
                     _logger.LogDebug("Entry removed from cache of type {0}. Entry key: {1}.",
                         _memoryCache.GetType().Name, _key);
-                ClearCache(userPhoto);
+                ClearCache(userBanner);
             }
 
             return newUserPhoto;
         }
 
-        public Task<bool> DeleteAsync(UserPhoto model)
+        public Task<bool> DeleteAsync(UserBanner model)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<UserPhoto> GetByIdAsync(int id)
+        public async Task<UserBanner> GetByIdAsync(int id)
         {
-            UserPhoto userPhoto;
+            UserBanner userBanner;
             var key = GetCacheKey(LocalCacheKeys.ById, id);
-            if (!_memoryCache.TryGetValue(key, out userPhoto))
+            if (!_memoryCache.TryGetValue(key, out userBanner))
             {
-                userPhoto = await _userPhotoRepository.SelectByIdAsync(id);
-                if (userPhoto != null)
+                userBanner = await _userBannerRepository.SelectByIdAsync(id);
+                if (userBanner != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Debug))
                         _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
                             _memoryCache.GetType().Name, key);
-                    _memoryCache.Set(key, userPhoto, _cacheEntryOptions);
+                    _memoryCache.Set(key, userBanner, _cacheEntryOptions);
                 }
             }
 
-            return userPhoto;
+            return userBanner;
         }
 
-        public async Task<UserPhoto> GetByUserIdAsync(int userId)
+        public async Task<UserBanner> GetByUserIdAsync(int userId)
         {
+            UserBanner userBanner;
             var key = GetCacheKey(LocalCacheKeys.ByUserId, userId);
-            if (!_memoryCache.TryGetValue(key, out UserPhoto userPhoto))
+            if (!_memoryCache.TryGetValue(key, out userBanner))
             {
-                userPhoto = await _userPhotoRepository.SelectByUserIdAsync(userId);
-                if (userPhoto != null)
+                userBanner = await _userBannerRepository.SelectByUserIdAsync(userId);
+                if (userBanner != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Debug))
                         _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
                             _memoryCache.GetType().Name, key);
-                    _memoryCache.Set(key, userPhoto, _cacheEntryOptions);
+                    _memoryCache.Set(key, userBanner, _cacheEntryOptions);
                 }
             }
 
-            return userPhoto;
+            return userBanner;
         }
 
         public IQuery QueryAsync()
@@ -118,13 +119,13 @@ namespace Plato.Stores.Users
             throw new NotImplementedException();
         }
 
-        public async Task<UserPhoto> UpdateAsync(UserPhoto userPhoto)
+        public async Task<UserBanner> UpdateAsync(UserBanner userBanner)
         {
-            if (userPhoto == null)
-                throw new ArgumentNullException(nameof(userPhoto));
-            if (userPhoto.Id == 0)
-                throw new ArgumentOutOfRangeException(nameof(userPhoto.Id));
-            var updatedUserPhoto = await _userPhotoRepository.InsertUpdateAsync(userPhoto);
+            if (userBanner == null)
+                throw new ArgumentNullException(nameof(userBanner));
+            if (userBanner.Id == 0)
+                throw new ArgumentOutOfRangeException(nameof(userBanner.Id));
+            var updatedUserPhoto = await _userBannerRepository.InsertUpdateAsync(userBanner);
             if (updatedUserPhoto != null)
             {
                 if (_logger.IsEnabled(LogLevel.Debug))
@@ -145,10 +146,10 @@ namespace Plato.Stores.Users
         {
             return _key + "_" + cacheKey + "_" + vaule;
         }
-        private void ClearCache(UserPhoto userPhoto)
+        private void ClearCache(UserBanner userBanner)
         {
-            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ById, userPhoto.Id));
-            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByUserId, userPhoto.UserId));
+            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ById, userBanner.Id));
+            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByUserId, userBanner.UserId));
         }
 
         private enum LocalCacheKeys

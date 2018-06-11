@@ -14,14 +14,14 @@ using Plato.Abstractions.Stores;
 using Plato.Data;
 using Plato.Data.Abstractions;
 using Plato.Models.Roles;
-using Plato.Stores.Settings;
-using Plato.Stores.Roles;
-using Plato.Stores.Users;
+using Plato.Internal.Stores.Settings;
+using Plato.Internal.Stores.Roles;
+using Plato.Internal.Stores.Users;
 using Plato.Models.Users;
-using Plato.Stores.Files;
-using Plato.Stores.Query;
+using Plato.Internal.Stores.Files;
+using Plato.Internal.Stores.Query;
 
-namespace Plato.Stores.Extensions
+namespace Plato.Internal.Stores.Extensions
 {
     public static class ServiceCollectionExtensions
     {

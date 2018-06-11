@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Plato.Abstractions.Extensions;
 
-namespace Plato.Stores.Query
+namespace Plato.Internal.Stores.Query
 {
 
     #region "IQueryBuilder"

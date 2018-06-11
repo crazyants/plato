@@ -22,10 +22,10 @@
     <ProjectReference Include="..\Plato.Internal.Modules\Plato.Internal.Modules.csproj" />
     <ProjectReference Include="..\Plato.Internal.Navigation\Plato.Internal.Navigation.csproj" />
     <ProjectReference Include="..\Plato.Internal.Security\Plato.Internal.Security.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
     <ProjectReference Include="..\Plato.Internal.Theming\Plato.Internal.Theming.csproj" />
     <ProjectReference Include="..\Plato.Layout\Plato.Layout.csproj" />
     <ProjectReference Include="..\Plato.Repositories\Plato.Repositories.csproj" />
-    <ProjectReference Include="..\Plato.Stores\Plato.Stores.csproj" />
   </ItemGroup>
 
   <ItemGroup>

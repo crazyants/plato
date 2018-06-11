@@ -8,9 +8,9 @@ using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
 using Plato.Models.Users;
 using Plato.Repositories.Users;
-using Plato.Stores.Roles;
+using Plato.Internal.Stores.Roles;
 
-namespace Plato.Stores.Users
+namespace Plato.Internal.Stores.Users
 {
     public class UserStore :
         IUserStore<User>,

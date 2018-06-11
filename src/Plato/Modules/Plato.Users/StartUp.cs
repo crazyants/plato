@@ -10,7 +10,7 @@ using Plato.Hosting;
 using Plato.Models.Roles;
 using Plato.Models.Users;
 using Plato.Internal.Shell.Models;
-using Plato.Stores.Users;
+using Plato.Internal.Stores.Users;
 using Plato.Hosting.Web;
 using Plato.Hosting.Web.Extensions;
 using Plato.Layout.ViewAdaptors;

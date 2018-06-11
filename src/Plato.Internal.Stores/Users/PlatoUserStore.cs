@@ -9,7 +9,7 @@ using Plato.Abstractions.Query;
 using Plato.Models.Users;
 using Plato.Repositories.Users;
 
-namespace Plato.Stores.Users
+namespace Plato.Internal.Stores.Users
 {
     public class PlatoUserStore : IPlatoUserStore<User>
     {

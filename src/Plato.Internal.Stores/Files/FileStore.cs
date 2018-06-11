@@ -5,7 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
 
-namespace Plato.Stores.Files
+namespace Plato.Internal.Stores.Files
 {
     
     public class FileStore : IFileStore

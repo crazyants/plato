@@ -3,7 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Plato.Abstractions.Settings;
 using Plato.Abstractions.Stores;
 
-namespace Plato.Stores.Settings
+namespace Plato.Internal.Stores.Settings
 {
     public class SiteSettingsStore : ISiteSettingsStore
     {

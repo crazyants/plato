@@ -9,10 +9,10 @@ using Plato.Internal.FileSystem;
 using Plato.Hosting;
 using Plato.Hosting.Web;
 using Plato.Models.Users;
-using Plato.Stores.Users;
+using Plato.Internal.Stores.Users;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.CodeAnalysis.CSharp;
-using Plato.Stores.Files;
+using Plato.Internal.Stores.Files;
 
 namespace Plato.Users.Controllers
 {

@@ -7,9 +7,9 @@ using Plato.Abstractions.Query;
 using Plato.Abstractions.Stores;
 using Plato.Data.Abstractions;
 using Plato.Models.Users;
-using Plato.Stores.Query;
+using Plato.Internal.Stores.Query;
 
-namespace Plato.Stores.Users
+namespace Plato.Internal.Stores.Users
 {
     
     #region "UserQuery"

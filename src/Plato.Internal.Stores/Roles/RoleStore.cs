@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Models.Roles;
 
-namespace Plato.Stores.Roles
+namespace Plato.Internal.Stores.Roles
 {
     public class RoleStore : IRoleStore<Role>, IRoleClaimStore<Role>
     {

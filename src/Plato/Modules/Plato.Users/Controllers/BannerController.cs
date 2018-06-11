@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Abstractions.Extensions;
 using Plato.Hosting.Web;
 using Plato.Models.Users;
-using Plato.Stores.Users;
-using Plato.Stores.Files;
+using Plato.Internal.Stores.Users;
+using Plato.Internal.Stores.Files;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Plato.Users.Controllers

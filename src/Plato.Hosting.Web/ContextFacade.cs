@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Plato.Stores.Users;
+using Plato.Internal.Stores.Users;
 using Plato.Models.Users;
 
 namespace Plato.Hosting.Web

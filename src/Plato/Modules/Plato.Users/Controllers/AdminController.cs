@@ -8,7 +8,7 @@ using Plato.Layout;
 using Plato.Layout.ViewProviders;
 using Plato.Layout.Views;
 using Plato.Models.Users;
-using Plato.Stores.Users;
+using Plato.Internal.Stores.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Layout.ModelBinding;

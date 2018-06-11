@@ -2,7 +2,7 @@
 using Plato.Models.Users;
 using System.Threading.Tasks;
 
-namespace Plato.Stores.Users
+namespace Plato.Internal.Stores.Users
 {
     public interface IPlatoUserStore<T> : IStore<T> where T : class
     {

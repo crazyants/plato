@@ -10,7 +10,7 @@ using Plato.Abstractions.Query;
 using Plato.Models.Roles;
 using Plato.Repositories.Roles;
 
-namespace Plato.Stores.Roles
+namespace Plato.Internal.Stores.Roles
 {
     public class PlatoRoleStore : IPlatoRoleStore
     {
