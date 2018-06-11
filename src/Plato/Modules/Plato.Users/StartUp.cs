@@ -22,6 +22,7 @@ using Plato.Users.ViewAdaptors;
 using Plato.Users.Services;
 using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
+using Plato.Internal.Hosting;
 
 namespace Plato.Users
 {

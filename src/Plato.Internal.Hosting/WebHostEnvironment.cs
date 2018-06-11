@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 
-namespace Plato.Hosting
+namespace Plato.Internal.Hosting
 {
     public class WebHostEnvironment : HostEnvironment
     {

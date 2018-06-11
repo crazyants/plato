@@ -1,4 +1,4 @@
-﻿namespace Plato.Hosting
+﻿namespace Plato.Internal.Hosting
 {
     public interface IHostEnvironment 
     {

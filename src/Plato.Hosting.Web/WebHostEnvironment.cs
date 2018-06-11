@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Hosting;
 
 namespace Plato.Hosting.Web
 {

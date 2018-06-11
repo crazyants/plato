@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Plato.Abstractions;
 
-namespace Plato.Hosting
+namespace Plato.Internal.Hosting
 {
     public abstract class StartupBase : IStartup
     {

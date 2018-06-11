@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Plato.Hosting.Extensions
+namespace Plato.Internal.Hosting.Extensions
 {
     public static class ServiceCollectionExtensions
     {

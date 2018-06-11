@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Extensions;
 using Plato.Abstractions.SetUp;
 using Plato.Abstractions.Shell;
-using Plato.Hosting;
+using Plato.Internal.Hosting;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Shell;
 using Plato.Internal.Shell.Models;

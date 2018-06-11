@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using Plato.Abstractions.Shell;
 
-namespace Plato.Hosting
+namespace Plato.Internal.Hosting
 {
     public class DefaultPlatoHost : IPlatoHost
     {

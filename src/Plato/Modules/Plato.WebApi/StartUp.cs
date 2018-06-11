@@ -1,11 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Plato.Hosting;
-using Plato.Hosting.Extensions;
+using Plato.Internal.Hosting;
 using Plato.Internal.Shell.Models;
 
 namespace Plato.WebApi

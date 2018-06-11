@@ -4,7 +4,7 @@ using System;
 using Microsoft.AspNetCore.Http;
 using System.Globalization;
 
-namespace Plato.Hosting.Extensions
+namespace Plato.Internal.Hosting.Extensions
 {
     public static class RouteBuilderExtensions
     {

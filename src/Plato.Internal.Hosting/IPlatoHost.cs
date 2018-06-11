@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Shell.Models;
 using Plato.Internal.Shell;
 
-namespace Plato.Hosting
+namespace Plato.Internal.Hosting
 {
     public interface IPlatoHost
     {

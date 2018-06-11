@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Hosting;
+using Plato.Internal.Hosting;
 using Plato.Internal.Navigation;
 
 namespace Plato.Admin
