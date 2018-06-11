@@ -28,16 +28,18 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 admin-nav">
-            
-            <h5 class="text-center pt-4 pb-2">@T["Plato"]</h5>
-            <hr/>
-            <div class="row" role="navigation">
-                <nav class=" navbar">
-                    <navigation id="AdminMenu" name="admin"
-                                class="nav nav-v nav-pills"/>
-                </nav>
-            </div>
 
+            <h5 class="text-center pt-4 pb-2">@T["Plato"]</h5>
+            <hr />
+            
+            <nav class="navbar-collapse flex-column"  role="navigation">
+                <navigation 
+                    name="admin"
+                    collaspsable="true" 
+                    id="AdminMenu" 
+                    class="navbar-nav d-lg-block" />
+            </nav>
+      
         </div>
         <div class="col-md-10">
          

@@ -20,15 +20,16 @@ namespace Plato.Layout.TagHelpers
 
         public string Name { get; set; } = "Site";
 
-        public string EmailDomain { get; set; } = "instantasp.co.uk";
-        
+        public bool Collaspsable { get; set; }
+     
         private readonly INavigationManager _navigationManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IActionContextAccessor _actionContextAccesor;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         private static readonly string NewLine = Environment.NewLine;
-        int _level = 0;
+        private int _level = 0;
+        private int _index = 0;
 
         public NavigationTagHelper(
             INavigationManager navigationManager,
@@ -68,19 +69,35 @@ namespace Plato.Layout.TagHelpers
            
 
         }
-
+        
         string BuildNavigationRecursivly(
             List<MenuItem> items, 
             StringBuilder sb)
         {
-          
-            var ulClass = $"{_cssClasses}";
+
+            // reset index
+            if (_level == 0)
+                _index = 0;
+
+            var ulClass = _cssClasses;
             if (_level > 0)
-                ulClass = "dropdown-menu";
-            
+            {
+                ulClass = this.Collaspsable
+                    ? "nav nav-small flex-column "
+                    : "dropdown-menu";
+            }
+               
             sb.Append(NewLine);
             AddTabs(_level, sb);
-            
+
+            if (_level > 0 && this.Collaspsable)
+            {
+                sb.Append("<div class=\"collapse\" id=\"")
+                    .Append("menu-")
+                    .Append(_level > 0 ? (_index - 1).ToString() : "root")
+                    .Append("\">");
+            }
+
             sb.Append("<ul class=\"")
                 .Append(ulClass)
                 .Append("\">")
@@ -96,15 +113,20 @@ namespace Plato.Layout.TagHelpers
                     .Append(GetListItemClass(items, item, index))
                     .Append("\">");
                 
-                var linkClass = _level == 0 
+                var linkClass = _level == 0  | this.Collaspsable
                     ? "nav-link" 
                     : "dropdown-item";
 
                 if (item.Items.Count > 0)
                 {
-                    if (!string.IsNullOrEmpty(linkClass))
-                        linkClass += " ";
-                    linkClass += "dropdown-toggle";
+
+                    if (!this.Collaspsable)
+                    {
+                        if (!string.IsNullOrEmpty(linkClass))
+                            linkClass += " ";
+                        linkClass += "dropdown-toggle";
+                    }
+                    
                     foreach (var className in item.Classes)
                     {
                         if (!string.IsNullOrEmpty(linkClass))
@@ -112,17 +134,28 @@ namespace Plato.Layout.TagHelpers
                         linkClass += className;
                     }
                 }
+
+                var targetEvent = "";
+                var targetCss = " data-toggle=\"dropdown\"";
+                if (this.Collaspsable)
+                {
+                    targetCss = " data-toggle=\"collapse\"";
+                    targetEvent = $" data-target=\"#menu-{_index}\" aria-controls=\"#menu-{_index}\"";
+                }
                 
                 sb.Append("<a class=\"")
                     .Append(linkClass)
                     .Append("\" href=\"")
                     .Append(item.Href)
                     .Append("\"")
-                    .Append(item.Items.Count > 0 ? " data-toggle=\"dropdown\"" : "")
-                    .Append(">")
+                    .Append(item.Items.Count > 0 ? targetEvent : "")
+                    .Append(item.Items.Count > 0 ? targetCss : "")
+                    .Append(" aria-expanded=\"false\">")
                     .Append(item.Text.Value)
                     .Append("</a>");
-                
+
+                _index++;
+
                 if (item.Items.Count > 0)
                 {
                     _level++;
@@ -140,7 +173,13 @@ namespace Plato.Layout.TagHelpers
             AddTabs(_level, sb);
             sb.Append("</ul>")
                 .Append(NewLine);
-            
+
+            if (_level > 0 && this.Collaspsable)
+            {
+                sb.Append("</div>");
+            }
+
+
             return sb.ToString();
             
         }
@@ -158,14 +197,21 @@ namespace Plato.Layout.TagHelpers
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(" ");
-                sb.Append("dropdown");
+                if (!this.Collaspsable)
+                {
+                    sb.Append("dropdown");
+                }
+                
             }
 
             if (_level > 0)
             {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(" ");
-                sb.Append("dropdown-submenu");
+                if (!this.Collaspsable)
+                {
+                    if (!string.IsNullOrEmpty(sb.ToString()))
+                        sb.Append(" ");
+                    sb.Append("dropdown-submenu");
+                }
             }
             
             if (index == 0)
