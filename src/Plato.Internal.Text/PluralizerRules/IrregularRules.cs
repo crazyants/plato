@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Plato.Text.PluralizerRules
+namespace Plato.Internal.Text.PluralizerRules
 {
     internal static class IrregularRules
     {

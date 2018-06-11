@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Plato.Abstractions.Data;
 using Plato.Data.Abstractions.Schemas;
-using Plato.Text;
+using Plato.Internal.Text;
 
 namespace Plato.Internal.Data.Schemas
 {

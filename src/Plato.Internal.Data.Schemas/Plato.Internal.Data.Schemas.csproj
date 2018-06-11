@@ -9,8 +9,8 @@
     <ProjectReference Include="..\Plato.Abstractions\Plato.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Data.Abstractions\Plato.Data.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.FileSystem.Abstractions\Plato.FileSystem.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Text\Plato.Internal.Text.csproj" />
     <ProjectReference Include="..\Plato.Shell.Abstractions\Plato.Shell.Abstractions.csproj" />
-    <ProjectReference Include="..\Plato.Text\Plato.Text.csproj" />
   </ItemGroup>
 
 </Project>

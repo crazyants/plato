@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Plato.Text.PluralizerRules;
+using Plato.Internal.Text.PluralizerRules;
 
-namespace Plato.Text
+namespace Plato.Internal.Text
 {
     public class Pluralizer
     {

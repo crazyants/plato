@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Plato.Text.PluralizerRules
+namespace Plato.Internal.Text.PluralizerRules
 {
     internal static class SingularRules
     {
