@@ -10,9 +10,7 @@ using Plato.Shell.Extensions;
 using Plato.Data;
 using Plato.Abstractions;
 using Plato.Abstractions.Data;
-using Plato.Abstractions.Query;
-using Plato.Data.Abstractions;
-using Plato.Modules.Abstractions;
+using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Shell
 {

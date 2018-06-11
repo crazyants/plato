@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plato.Modules.Abstractions
+namespace Plato.Internal.Modules.Abstractions
 {
     public interface IModuleDescriptor
     {

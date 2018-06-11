@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Linq;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
-using Plato.Modules.Abstractions;
+using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Internal.Modules
 {

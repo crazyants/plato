@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Modules.Abstractions;
+using Plato.Internal.Modules.Abstractions;
 using Plato.Modules.Loader;
 using Plato.Internal.Modules.Locator;
 

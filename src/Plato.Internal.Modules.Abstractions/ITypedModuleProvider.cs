@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Plato.Modules.Abstractions;
 
-namespace Plato.Internal.Modules
+namespace Plato.Internal.Modules.Abstractions
 {
     public interface ITypedModuleProvider
     {

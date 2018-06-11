@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Plato.Modules.Abstractions;
+using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Internal.Modules.Models
 {

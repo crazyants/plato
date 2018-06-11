@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
-using Plato.Modules.Abstractions;
+using Plato.Internal.Modules.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using System.Threading.Tasks;

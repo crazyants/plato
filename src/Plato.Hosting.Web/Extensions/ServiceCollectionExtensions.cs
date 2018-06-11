@@ -26,7 +26,7 @@ using Plato.FileSystem;
 using Plato.Hosting.Extensions;
 using Plato.Hosting.Web.Expanders;
 using Plato.Hosting.Web.Middleware;
-using Plato.Modules.Abstractions;
+using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Modules.Extensions;
 using Plato.Repositories.Extensions;
 using Plato.Shell.Extensions;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Plato.Modules.Abstractions
+namespace Plato.Internal.Modules.Abstractions
 {
     public interface IModuleLocator
     {

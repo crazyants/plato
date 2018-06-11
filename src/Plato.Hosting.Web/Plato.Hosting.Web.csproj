@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Plato.Hosting\Plato.Hosting.csproj" />
     <ProjectReference Include="..\Plato.Internal.Cache\Plato.Internal.Cache.csproj" />
     <ProjectReference Include="..\Plato.Internal.Logging\Plato.Internal.Logging.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Modules.Abstractions\Plato.Internal.Modules.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Modules\Plato.Internal.Modules.csproj" />
     <ProjectReference Include="..\Plato.Layout\Plato.Layout.csproj" />
     <ProjectReference Include="..\Plato.Navigation\Plato.Navigation.csproj" />
