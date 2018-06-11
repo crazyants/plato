@@ -3,14 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Data.Abstractions;
-using Plato.Layout;
-using Plato.Layout.ViewProviders;
-using Plato.Layout.Views;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
-using Plato.Layout.ModelBinding;
+using Plato.Internal.Layout.ModelBinding;
 
 namespace Plato.Users.Controllers
 {

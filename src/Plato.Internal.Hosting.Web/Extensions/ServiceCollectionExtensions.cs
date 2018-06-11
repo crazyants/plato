@@ -33,11 +33,10 @@ using Plato.Internal.Shell.Extensions;
 using Plato.Internal.Stores.Extensions;
 using Plato.Internal.Cache.Extensions;
 using Plato.Internal.Hosting.Web.Routing;
-using Plato.Layout.Extensions;
+using Plato.Internal.Layout.Extensions;
 using Plato.Internal.Modules.Expanders;
 using Plato.Internal.Security.Extensions;
 using Plato.Internal.Logging.Extensions;
-using Plato.Internal.Navigation.Extensions;
 using Plato.Internal.Theming.Extensions;
 
 namespace Plato.Internal.Hosting.Web.Extensions
@@ -80,7 +79,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                
                 internalServices.AddPlatoModules();
                 internalServices.AddPlatoTheming();
-                internalServices.AddPlatoNavigation();
+               
              
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();

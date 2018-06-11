@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Hosting.Web</AssemblyName>
+    <AssemblyName>Plato.Internal.Hosting.Web</AssemblyName>
     <PackageId>Plato.Hosting.Web</PackageId>
     <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
@@ -18,15 +18,14 @@
     <ProjectReference Include="..\Plato.Internal.FileSystem.Abstractions\Plato.Internal.FileSystem.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.FileSystem\Plato.Internal.FileSystem.csproj" />
     <ProjectReference Include="..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\Plato.Internal.Logging\Plato.Internal.Logging.csproj" />
     <ProjectReference Include="..\Plato.Internal.Models\Plato.Internal.Models.csproj" />
     <ProjectReference Include="..\Plato.Internal.Modules.Abstractions\Plato.Internal.Modules.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Modules\Plato.Internal.Modules.csproj" />
-    <ProjectReference Include="..\Plato.Internal.Navigation\Plato.Internal.Navigation.csproj" />
     <ProjectReference Include="..\Plato.Internal.Security\Plato.Internal.Security.csproj" />
     <ProjectReference Include="..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
     <ProjectReference Include="..\Plato.Internal.Theming\Plato.Internal.Theming.csproj" />
-    <ProjectReference Include="..\Plato.Layout\Plato.Layout.csproj" />
   </ItemGroup>
 
   <ItemGroup>

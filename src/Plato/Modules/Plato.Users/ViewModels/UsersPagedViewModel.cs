@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Plato.Internal.Data.Abstractions;
-using Plato.Layout.Views;
+using Plato.Internal.Layout.Views;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 

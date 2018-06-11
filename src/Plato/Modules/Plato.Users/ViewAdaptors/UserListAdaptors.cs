@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
-using Plato.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewAdaptors

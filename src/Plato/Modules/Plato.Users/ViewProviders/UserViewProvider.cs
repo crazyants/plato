@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Plato.Layout.ViewProviders;
-using Plato.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Users;
 using Plato.Users.ViewModels;
 

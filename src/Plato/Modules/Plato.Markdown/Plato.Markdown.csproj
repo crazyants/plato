@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
-    <ProjectReference Include="..\..\..\Plato.Layout\Plato.Layout.csproj" />
   </ItemGroup>
 
 </Project>
