@@ -25,51 +25,78 @@
 </head>
 <body>
     
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-2 admin-nav">
+<div class="layout-nav-side">
 
-            <h5 class="text-center pt-4 pb-2">@T["Plato"]</h5>
-            <hr />
-            
-            <nav class="navbar-collapse flex-column"  role="navigation">
-                <navigation 
-                    name="admin"
-                    collaspsable="true" 
-                    id="AdminMenu" 
-                    class="navbar-nav d-lg-block" />
-            </nav>
-      
-        </div>
-        <div class="col-md-10">
-         
-            <div id="AppNav" class="nav nav-tabs row">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="navbar nav-tabs col-12" role="navigation">
-                            <a class="navbar-brand text-muted" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">
-                                @T["Plato"]
-                            </a>
-                            <navigation id="AppMenu" name="site"
-                                        class="nav nav-h"
-                                        ul-class="nav nav-pills float-right"/>
-                        </div>
+    <div class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top">
+
+        <a class="navbar-brand" href="index.html">
+           Plato
+        </a>
+
+        <div class="d-flex align-items-center">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="d-block d-lg-none ml-2">
+                <div class="dropdown">
+                    <a href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img alt="Image" src="assets/img/avatar-male-4.jpg" class="avatar">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="nav-side-user.html" class="dropdown-item">Profile</a>
+                        <a href="utility-account-settings.html" class="dropdown-item">Account Settings</a>
+                        <a href="#" class="dropdown-item">Log Out</a>
                     </div>
                 </div>
-
             </div>
-     
-            <div class="m-4">
+        </div>
+        
+        <hr/>
+
+        <div class="collapse navbar-collapse flex-column" role="navigation">
+            <navigation
+                name="admin"
+                collaspsable="true"
+                id="AdminMenu"
+                class="navbar-nav d-lg-block"/>
+        </div>
+
+    </div>
+
+    <div class="main-container">
+        
+        <div class="container-fluid">
+            <div class="row">
+                
+                <div class="navbar nav-tabs col-12" role="navigation">
+                    <a class="navbar-brand text-muted" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">
+                        @T["Plato"]
+                    </a>
+                    <navigation id="AppMenu" name="site"
+                                class="nav nav-h"
+                                ul-class="nav nav-pills float-right"/>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row d-block p-4">
+                
                 @RenderBody()
                 <hr/>
                 <footer>
                     <p class="text-muted">&copy; @System.DateTime.Now.Year - Plato</p>
                 </footer>
+
             </div>
 
+
         </div>
+
     </div>
 </div>
+
+
+
 
 <environment names="Development">
     <script src="~/js/vendors/jquery.js"></script>
