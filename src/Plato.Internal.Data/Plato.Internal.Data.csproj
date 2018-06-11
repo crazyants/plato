@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Plato.Abstractions\Plato.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Data.Abstractions\Plato.Internal.Data.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Data.Migrations\Plato.Internal.Data.Migrations.csproj" />
     <ProjectReference Include="..\Plato.Internal.Data.Schemas\Plato.Internal.Data.Schemas.csproj" />

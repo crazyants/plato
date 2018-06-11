@@ -1,7 +1,7 @@
-﻿using Plato.Abstractions.Settings;
+﻿using Plato.Internal.Abstractions.Settings;
 using System.Threading.Tasks;
 
-namespace Plato.Abstractions.Settings
+namespace Plato.Internal.Abstractions.Settings
 {
     public interface ISettingsFactory
     {

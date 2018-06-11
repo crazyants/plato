@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Microsoft.AspNetCore.Routing;
 
-namespace Plato.Abstractions
+namespace Plato.Internal.Abstractions
 {
     public interface IStartup
     {

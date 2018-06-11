@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Abstractions.Extensions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Web;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;

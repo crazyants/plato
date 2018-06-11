@@ -4,7 +4,7 @@ using Plato.Internal.Repositories.Settings;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Settings;
-using Plato.Abstractions.Settings;
+using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Repositories.Roles;
 
 namespace Plato.Internal.Repositories.Extensions

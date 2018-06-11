@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using Plato.Abstractions.Extensions;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Models.Settings
 {

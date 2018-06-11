@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 
-namespace Plato.Abstractions.Settings
+namespace Plato.Internal.Abstractions.Settings
 {
     public sealed class SiteSettings : ISiteSettings
     {

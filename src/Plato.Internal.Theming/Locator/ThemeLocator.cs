@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Plato.Abstractions.Extensions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Theming.Models;
 

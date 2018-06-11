@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.Abstractions.SetUp
+namespace Plato.Internal.Abstractions.SetUp
 {
     public class SetUpContext
     {

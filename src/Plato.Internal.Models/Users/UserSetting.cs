@@ -2,7 +2,7 @@
 using System.Data;
 using System.Collections.Generic;
 using Plato.Internal.Models.Annotations;
-using Plato.Abstractions.Extensions;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Models.Users
 {

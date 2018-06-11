@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using Plato.Abstractions.Settings;
+using Plato.Internal.Abstractions.Settings;
 using System.Threading.Tasks;
 using Plato.Internal.Stores.Abstractions;
 

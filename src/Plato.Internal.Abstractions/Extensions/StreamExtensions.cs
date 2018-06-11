@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Text;
 
-namespace Plato.Abstractions.Extensions
+namespace Plato.Internal.Abstractions.Extensions
 {
     public static class StreamExtensions
     {

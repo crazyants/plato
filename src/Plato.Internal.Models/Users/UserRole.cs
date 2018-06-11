@@ -2,7 +2,7 @@
 using System.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Plato.Abstractions.Extensions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Roles;
 
 namespace Plato.Internal.Models.Users

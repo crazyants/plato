@@ -17,8 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2B695E2A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato", "src\Plato\Plato.csproj", "{1CFC5674-32C1-4401-9406-58EC65ADB07F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Abstractions", "src\Plato.Abstractions\Plato.Abstractions.csproj", "{AD0019FB-463E-4DCC-BB31-5EAD86B0B507}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Layout", "src\Plato.Layout\Plato.Layout.csproj", "{04A486C5-F56B-49F1-B599-A946168DE2B9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Discussions", "src\Plato\Modules\Plato.Discussions\Plato.Discussions.csproj", "{8BE8CD40-BC3F-46FD-BDD8-CABE1F63E1BE}"
@@ -81,13 +79,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Data.Abstrac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Data", "src\Plato.Internal.Data\Plato.Internal.Data.csproj", "{34A986F1-A9AB-4433-9861-ADB0E10A9690}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Data.Schemas.Abstractions", "src\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj", "{5436439B-E65B-4439-8DD7-BEE395D9FBC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Data.Schemas.Abstractions", "src\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj", "{5436439B-E65B-4439-8DD7-BEE395D9FBC1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Stores.Abstractions", "src\Plato.Internal.Stores.Abstractions\Plato.Internal.Stores.Abstractions.csproj", "{5F45E50F-CABB-4638-AC1A-331DF2436821}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Hosting", "src\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj", "{3B12018F-3305-448E-A852-992FBA2A57CF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Hosting.Web", "src\Plato.Internal.Hosting.Web\Plato.Internal.Hosting.Web.csproj", "{B4AF025E-956F-4DDD-8FC7-4D39DA237570}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Abstractions", "src\Plato.Internal.Abstractions\Plato.Internal.Abstractions.csproj", "{745B4253-6EB3-4ECA-AD18-E7027A96320E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,10 +99,6 @@ Global
 		{1CFC5674-32C1-4401-9406-58EC65ADB07F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CFC5674-32C1-4401-9406-58EC65ADB07F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CFC5674-32C1-4401-9406-58EC65ADB07F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AD0019FB-463E-4DCC-BB31-5EAD86B0B507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD0019FB-463E-4DCC-BB31-5EAD86B0B507}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD0019FB-463E-4DCC-BB31-5EAD86B0B507}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD0019FB-463E-4DCC-BB31-5EAD86B0B507}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04A486C5-F56B-49F1-B599-A946168DE2B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{04A486C5-F56B-49F1-B599-A946168DE2B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04A486C5-F56B-49F1-B599-A946168DE2B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -243,6 +239,10 @@ Global
 		{B4AF025E-956F-4DDD-8FC7-4D39DA237570}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4AF025E-956F-4DDD-8FC7-4D39DA237570}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4AF025E-956F-4DDD-8FC7-4D39DA237570}.Release|Any CPU.Build.0 = Release|Any CPU
+		{745B4253-6EB3-4ECA-AD18-E7027A96320E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{745B4253-6EB3-4ECA-AD18-E7027A96320E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{745B4253-6EB3-4ECA-AD18-E7027A96320E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{745B4253-6EB3-4ECA-AD18-E7027A96320E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -250,7 +250,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{50AD54AC-F186-4287-9E27-C5C221BA60C4} = {1D6B1202-2498-4A69-9F42-EA74F177E779}
 		{1CFC5674-32C1-4401-9406-58EC65ADB07F} = {50AD54AC-F186-4287-9E27-C5C221BA60C4}
-		{AD0019FB-463E-4DCC-BB31-5EAD86B0B507} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{04A486C5-F56B-49F1-B599-A946168DE2B9} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{8BE8CD40-BC3F-46FD-BDD8-CABE1F63E1BE} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{2E3FD24A-A1EC-4D45-89B8-F367CC28D797} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
@@ -286,6 +285,7 @@ Global
 		{5F45E50F-CABB-4638-AC1A-331DF2436821} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{3B12018F-3305-448E-A852-992FBA2A57CF} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{B4AF025E-956F-4DDD-8FC7-4D39DA237570} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
+		{745B4253-6EB3-4ECA-AD18-E7027A96320E} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

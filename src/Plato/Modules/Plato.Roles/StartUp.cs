@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Plato.Abstractions.SetUp;
+using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Hosting;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Navigation;
-using Plato.Roles.Services;
 using Plato.Internal.Shell.Models;
+using Plato.Roles.Services;
 
 namespace Plato.Roles
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using Plato.Abstractions.Extensions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Annotations;
 using Plato.Internal.Models.Roles;
 using System.Collections.Generic;

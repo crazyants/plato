@@ -8,9 +8,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Abstractions.Settings;
+using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Shell.Models;
-using Plato.Abstractions;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Internal.Hosting.Web.Routing

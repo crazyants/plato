@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using Plato.Abstractions.Extensions;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Data.Abstractions
 {

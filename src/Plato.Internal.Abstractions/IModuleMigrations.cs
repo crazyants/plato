@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.Abstractions
+namespace Plato.Internal.Abstractions
 {
     public interface IModuleMigrations
     {

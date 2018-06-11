@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Plato.Abstractions\Plato.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Abstractions\Plato.Internal.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting.Web\Plato.Internal.Hosting.Web.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />

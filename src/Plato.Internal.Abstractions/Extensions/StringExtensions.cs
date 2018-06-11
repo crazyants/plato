@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Plato.Abstractions.Extensions
+namespace Plato.Internal.Abstractions.Extensions
 {
     public static class StringExtensions
     {

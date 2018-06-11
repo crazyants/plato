@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Plato.Abstractions\Plato.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Abstractions\Plato.Internal.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.FileSystem.Abstractions\Plato.Internal.FileSystem.Abstractions.csproj" />
   </ItemGroup>
 

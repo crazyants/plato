@@ -1,4 +1,4 @@
-﻿namespace Plato.Abstractions.Settings
+﻿namespace Plato.Internal.Abstractions.Settings
 {
     public interface ISettingValue
     {

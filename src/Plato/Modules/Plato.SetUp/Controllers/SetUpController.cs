@@ -4,13 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Plato.Abstractions.SetUp;
+using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions;
-
+using Plato.Internal.Shell.Models;
 using Plato.SetUp.ViewModels;
 using Plato.SetUp.Services;
-using Plato.Internal.Shell.Models;
 
 namespace Plato.SetUp.Controllers
 {

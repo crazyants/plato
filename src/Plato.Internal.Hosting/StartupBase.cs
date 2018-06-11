@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Plato.Abstractions;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Hosting
 {
     public abstract class StartupBase : IStartup
     {
-        /// <inheritdoc />
+     
         public virtual void ConfigureServices(IServiceCollection services)
         {
 

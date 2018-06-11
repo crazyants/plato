@@ -5,7 +5,7 @@ using Newtonsoft.Json.Converters;
 using System.IO;
 using System.Text;
 
-namespace Plato.Abstractions.Extensions
+namespace Plato.Internal.Abstractions.Extensions
 {
 
     public static class CollectionExtensions

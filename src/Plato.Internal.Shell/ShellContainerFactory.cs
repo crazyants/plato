@@ -9,7 +9,7 @@ using Plato.Internal.Shell.Models;
 using Plato.Internal.Shell.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Modules.Abstractions;
-using Plato.Abstractions;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Shell
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text;
 
-namespace Plato.Abstractions.Extensions
+namespace Plato.Internal.Abstractions.Extensions
 {
     public static class ArrayExtensions
     {

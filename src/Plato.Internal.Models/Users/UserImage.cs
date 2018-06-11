@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Plato.Abstractions.Extensions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Annotations;
 
 namespace Plato.Internal.Models.Users

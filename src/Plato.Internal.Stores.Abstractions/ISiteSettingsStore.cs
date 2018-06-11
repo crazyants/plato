@@ -1,4 +1,4 @@
-﻿using Plato.Abstractions.Settings;
+﻿using Plato.Internal.Abstractions.Settings;
 
 namespace Plato.Internal.Stores.Abstractions
 { 

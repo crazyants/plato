@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Plato.Abstractions.SetUp
+namespace Plato.Internal.Abstractions.SetUp
 {
     public interface ISetUpEventHandler
     {

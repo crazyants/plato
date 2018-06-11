@@ -4,7 +4,7 @@ using System.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Plato.Internal.Models.Annotations;
-using Plato.Abstractions.Extensions;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Models.Roles
 {

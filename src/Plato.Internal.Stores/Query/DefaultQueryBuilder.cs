@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Plato.Abstractions.Extensions;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Stores.Query
 {

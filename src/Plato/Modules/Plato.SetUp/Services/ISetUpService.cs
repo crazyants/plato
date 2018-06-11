@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Abstractions.SetUp;
+using Plato.Internal.Abstractions.SetUp;
 
 namespace Plato.SetUp.Services
 {

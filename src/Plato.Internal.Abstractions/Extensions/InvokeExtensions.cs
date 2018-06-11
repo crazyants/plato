@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace Plato.Abstractions.Extensions
+namespace Plato.Internal.Abstractions.Extensions
 {
     public static class InvokeExtensions
     {
