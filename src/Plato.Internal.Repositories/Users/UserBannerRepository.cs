@@ -4,18 +4,17 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Data;
 using Plato.Abstractions.Extensions;
-using Plato.Data;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Repositories.Users
+namespace Plato.Internal.Repositories.Users
 {
-    public class UserPhotoRepository : IUserPhotoRepository<UserPhoto>
+    public class UserBannerRepository : IUserBannerRepository<UserBanner>
     {
         #region "Constructor"
 
-        public UserPhotoRepository(
+        public UserBannerRepository(
             IDbContext dbContext,
-            ILogger<UserPhotoRepository> logger)
+            ILogger<UserBannerRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -41,7 +40,7 @@ namespace Plato.Repositories.Users
             {
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "plato_sp_InsertUpdateUserPhoto",
+                    "plato_sp_InsertUpdateUserBanner",
                     id,
                     userId,
                     name.ToEmptyIfNull().TrimToSize(255),
@@ -60,7 +59,7 @@ namespace Plato.Repositories.Users
         #region "Private Variables"
 
         private readonly IDbContext _dbContext;
-        private readonly ILogger<UserPhotoRepository> _logger;
+        private readonly ILogger<UserBannerRepository> _logger;
 
         #endregion
 
@@ -71,19 +70,19 @@ namespace Plato.Repositories.Users
             throw new NotImplementedException();
         }
 
-        public async Task<UserPhoto> InsertUpdateAsync(UserPhoto photo)
+        public async Task<UserBanner> InsertUpdateAsync(UserBanner banner)
         {
             var id = await InsertUpdateInternal(
-                photo.Id,
-                photo.UserId,
-                photo.Name,
-                photo.ContentBlob,
-                photo.ContentType,
-                photo.ContentLength,
-                photo.CreatedDate,
-                photo.CreatedUserId,
-                photo.ModifiedDate,
-                photo.ModifiedUserId);
+                banner.Id,
+                banner.UserId,
+                banner.Name,
+                banner.ContentBlob,
+                banner.ContentType,
+                banner.ContentLength,
+                banner.CreatedDate,
+                banner.CreatedUserId,
+                banner.ModifiedDate,
+                banner.ModifiedUserId);
 
             if (id > 0)
                 return await SelectByIdAsync(id);
@@ -97,42 +96,42 @@ namespace Plato.Repositories.Users
             throw new NotImplementedException();
         }
 
-        public async Task<UserPhoto> SelectByIdAsync(int id)
+        public async Task<UserBanner> SelectByIdAsync(int id)
         {
-            UserPhoto photo = null;
+            UserBanner banner = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserPhoto", id);
+                    "plato_sp_SelectUserBanner", id);
 
                 if ((reader != null) && reader.HasRows)
                 {
                     await reader.ReadAsync();
-                    photo = new UserPhoto(reader);
+                    banner = new UserBanner(reader);
                 }
             }
 
-            return photo;
+            return banner;
         }
 
-        public async Task<UserPhoto> SelectByUserIdAsync(int userId)
+        public async Task<UserBanner> SelectByUserIdAsync(int userId)
         {
-            UserPhoto photo = null;
+            UserBanner banner = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserPhotoByUserId", userId);
+                    "plato_sp_SelectUserBannerByUserId", userId);
 
                 if ((reader != null) && reader.HasRows)
                 {
                     await reader.ReadAsync();
-                    photo = new UserPhoto(reader);
+                    banner = new UserBanner(reader);
                 }
             }
 
-            return photo;
+            return banner;
         }
 
         #endregion

@@ -29,7 +29,7 @@ using Plato.Hosting.Web.Expanders;
 using Plato.Hosting.Web.Middleware;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Modules.Extensions;
-using Plato.Repositories.Extensions;
+using Plato.Internal.Repositories.Extensions;
 using Plato.Internal.Shell.Extensions;
 using Plato.Internal.Stores.Extensions;
 using Plato.Internal.Cache.Extensions;

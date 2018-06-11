@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Plato.Abstractions.Query;
 
-namespace Plato.Repositories.Users
+namespace Plato.Internal.Repositories.Users
 {
     public interface IUserRepository<T> : IRepository<T> where T : class
     {

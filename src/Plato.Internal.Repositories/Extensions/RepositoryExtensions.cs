@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plato.Repositories.Extensions
+namespace Plato.Internal.Repositories.Extensions
 {
     public static class RepositoryExtensions
     {

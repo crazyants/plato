@@ -7,9 +7,9 @@ using Plato.Abstractions.Data;
 using Plato.Abstractions.Extensions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
-using Plato.Repositories.Roles;
+using Plato.Internal.Repositories.Roles;
 
-namespace Plato.Repositories.Users
+namespace Plato.Internal.Repositories.Users
 {
     public class UserRolesRepository : IUserRolesRepository<UserRole>
     {

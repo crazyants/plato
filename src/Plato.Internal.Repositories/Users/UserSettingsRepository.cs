@@ -6,9 +6,9 @@ using System.Data;
 using Plato.Abstractions.Extensions;
 using Plato.Abstractions.Data;
 using Plato.Internal.Models.Users;
-using Plato.Repositories.Settings;
+using Plato.Internal.Repositories.Settings;
 
-namespace Plato.Repositories.Users
+namespace Plato.Internal.Repositories.Users
 {
     public class UserSettingsRepository : IUserSettingsRepository<UserSetting>
     {

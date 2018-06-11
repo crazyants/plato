@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Plato.Repositories.Users;
-using Plato.Repositories.Settings;
+using Plato.Internal.Repositories.Users;
+using Plato.Internal.Repositories.Settings;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Settings;
 using Plato.Abstractions.Settings;
-using Plato.Repositories.Roles;
+using Plato.Internal.Repositories.Roles;
 
-namespace Plato.Repositories.Extensions
+namespace Plato.Internal.Repositories.Extensions
 {
     public static class ServiceCollectionExtensions
     {

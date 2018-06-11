@@ -7,7 +7,7 @@ using System.Data;
 using Plato.Abstractions.Extensions;
 using Plato.Abstractions.Data;
 
-namespace Plato.Repositories.Settings
+namespace Plato.Internal.Repositories.Settings
 {
     public class SettingRepository : ISettingRepository<Setting>
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Plato.Repositories.Roles
+namespace Plato.Internal.Repositories.Roles
 {
     public interface IRoleRepository<T> : IRepository<T> where T : class
     {

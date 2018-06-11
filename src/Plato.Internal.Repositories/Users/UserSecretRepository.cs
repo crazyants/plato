@@ -6,7 +6,7 @@ using Plato.Abstractions.Data;
 using Plato.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Repositories.Users
+namespace Plato.Internal.Repositories.Users
 {
     public class UserSecretRepository : IUserSecretRepository<UserSecret>
     {

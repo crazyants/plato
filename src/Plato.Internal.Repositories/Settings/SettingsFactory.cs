@@ -6,7 +6,7 @@ using Plato.Internal.Models.Settings;
 using Plato.Abstractions.Extensions;
 using Plato.Abstractions.Settings;
 
-namespace Plato.Repositories.Settings
+namespace Plato.Internal.Repositories.Settings
 {
     public class SettingsFactory : ISettingsFactory
     {
