@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Abstractions.Extensions;
-using Plato.FileSystem;
+using Plato.Internal.FileSystem;
 using Plato.Hosting;
 using Plato.Hosting.Web;
 using Plato.Models.Users;

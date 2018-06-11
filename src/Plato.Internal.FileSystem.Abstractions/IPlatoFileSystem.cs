@@ -6,7 +6,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Microsoft.Extensions.Primitives;
 
-namespace Plato.FileSystem
+namespace Plato.Internal.FileSystem.Abstractions
 {
     public interface IPlatoFileSystem
     {

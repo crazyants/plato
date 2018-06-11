@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Plato.FileSystem.Abstractions;
+using Plato.Internal.FileSystem.Abstractions;
 
-namespace Plato.FileSystem.AppData
+namespace Plato.Internal.FileSystem.AppData
 {
     public class PhysicalAppDataFolder : IAppDataFolder
     {

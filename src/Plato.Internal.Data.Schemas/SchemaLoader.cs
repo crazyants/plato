@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Plato.Abstractions.Extensions;
-using Plato.FileSystem.Abstractions;
+using Plato.Internal.FileSystem.Abstractions;
 using Plato.Shell.Abstractions;
 using Plato.Data.Abstractions.Schemas;
 

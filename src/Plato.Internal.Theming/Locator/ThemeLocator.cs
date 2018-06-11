@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Plato.Abstractions.Extensions;
-using Plato.FileSystem;
+using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Theming.Models;
 
 namespace Plato.Internal.Theming.Locator

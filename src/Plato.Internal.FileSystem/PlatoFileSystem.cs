@@ -9,9 +9,9 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
-using Plato.FileSystem.Abstractions;
+using Plato.Internal.FileSystem.Abstractions;
 
-namespace Plato.FileSystem
+namespace Plato.Internal.FileSystem
 {
     public class PlatoFileSystem : IPlatoFileSystem
     {

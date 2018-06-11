@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.FileSystem;
+using Plato.Internal.FileSystem;
 using Microsoft.Extensions.FileProviders;
-using Plato.FileSystem.Abstractions;
+using Plato.Internal.FileSystem.Abstractions;
 using Plato.Shell.Models;
-using Plato.FileSystem.AppData;
+using Plato.Internal.FileSystem.AppData;
 using Plato.Shell.Abstractions;
 
 namespace Plato.Shell.Extensions

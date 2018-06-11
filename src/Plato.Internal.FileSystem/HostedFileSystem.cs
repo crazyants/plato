@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Plato.FileSystem
+namespace Plato.Internal.FileSystem
 {
     public class HostedFileSystem : PlatoFileSystem
     {

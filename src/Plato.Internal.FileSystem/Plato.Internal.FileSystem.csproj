@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Plato.FileSystem.Abstractions\Plato.FileSystem.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.FileSystem.Abstractions\Plato.Internal.FileSystem.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

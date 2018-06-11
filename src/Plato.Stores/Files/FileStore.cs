@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Plato.FileSystem;
+using Plato.Internal.FileSystem.Abstractions;
 
 namespace Plato.Stores.Files
 {
