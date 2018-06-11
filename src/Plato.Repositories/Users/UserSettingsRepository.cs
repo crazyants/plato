@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using System.Data;
 using Plato.Abstractions.Extensions;
 using Plato.Abstractions.Data;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Repositories.Settings;
 
 namespace Plato.Repositories.Users

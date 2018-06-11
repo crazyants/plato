@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Models.Settings;
+using Plato.Internal.Models.Settings;
 
 namespace Plato.Repositories.Settings
 {

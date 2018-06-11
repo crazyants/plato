@@ -1,7 +1,7 @@
 ﻿using System.Data;
-using Plato.Models.Annotations;
+using Plato.Internal.Models.Annotations;
 
-namespace Plato.Models.Users
+namespace Plato.Internal.Models.Users
 {
     [TableName("Plato_UserBanner")]
     public class UserBanner : UserImage

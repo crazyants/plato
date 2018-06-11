@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plato.Models.Annotations
+namespace Plato.Internal.Models.Annotations
 {
     public class TableNameAttribute : Attribute
     {

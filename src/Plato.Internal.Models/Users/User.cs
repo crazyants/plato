@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Data;
 using Plato.Abstractions.Extensions;
-using Plato.Models.Annotations;
-using Plato.Models.Roles;
+using Plato.Internal.Models.Annotations;
+using Plato.Internal.Models.Roles;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
-namespace Plato.Models.Users
+namespace Plato.Internal.Models.Users
 {
 
     [TableName("Users")]

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Layout.ViewProviders;
 using Plato.Layout.ModelBinding;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders

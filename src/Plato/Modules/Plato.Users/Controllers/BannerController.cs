@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Abstractions.Extensions;
 using Plato.Hosting.Web;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Stores.Files;
 using Microsoft.AspNetCore.Hosting;

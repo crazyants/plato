@@ -1,5 +1,5 @@
 ﻿using Plato.Abstractions.Stores;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using System.Threading.Tasks;
 
 namespace Plato.Internal.Stores.Users

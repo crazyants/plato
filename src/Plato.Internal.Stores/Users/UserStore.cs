@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Repositories.Users;
 using Plato.Internal.Stores.Roles;
 

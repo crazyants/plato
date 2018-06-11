@@ -7,7 +7,7 @@ using Plato.Abstractions.Settings;
 using Plato.Abstractions.SetUp;
 using Plato.Abstractions.Stores;
 using Plato.Data.Abstractions.Schemas;
-using Plato.Models.Settings;
+using Plato.Internal.Models.Settings;
 
 namespace Plato.Settings.Services
 {

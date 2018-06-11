@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Plato.Models.Roles;
+using Plato.Internal.Models.Roles;
 using Plato.Internal.Stores.Roles;
 
 namespace Plato.Roles.Services

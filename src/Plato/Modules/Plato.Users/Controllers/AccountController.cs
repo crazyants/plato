@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Plato.Data.Abstractions.Schemas;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Users.Controllers
 {

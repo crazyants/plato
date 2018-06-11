@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Models.Settings;
+using Plato.Internal.Models.Settings;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using Plato.Abstractions.Extensions;

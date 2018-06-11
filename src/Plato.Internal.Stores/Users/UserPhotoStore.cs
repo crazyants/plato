@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Query;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Repositories.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;

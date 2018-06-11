@@ -8,7 +8,7 @@ using Plato.Abstractions.Extensions;
 using Plato.Internal.FileSystem;
 using Plato.Hosting;
 using Plato.Hosting.Web;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.CodeAnalysis.CSharp;

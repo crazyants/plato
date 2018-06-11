@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 
-namespace Plato.Models
+namespace Plato.Internal.Models
 {
     public interface IModel<T> where T : class
     {

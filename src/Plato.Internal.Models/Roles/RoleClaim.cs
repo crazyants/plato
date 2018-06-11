@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Plato.Models.Roles
+namespace Plato.Internal.Models.Roles
 {
     public class RoleClaim
     {

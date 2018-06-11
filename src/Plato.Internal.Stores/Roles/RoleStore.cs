@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Plato.Models.Roles;
+using Plato.Internal.Models.Roles;
 
 namespace Plato.Internal.Stores.Roles
 {

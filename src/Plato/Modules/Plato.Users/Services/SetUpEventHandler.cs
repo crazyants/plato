@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Plato.Abstractions.SetUp;
 using Plato.Data.Abstractions.Schemas;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Users.Services
 {

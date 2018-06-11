@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Plato.Layout.ModelBinding;
 using Plato.Layout.ViewProviders;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders

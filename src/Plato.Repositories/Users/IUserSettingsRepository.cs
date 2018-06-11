@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Repositories.Users
 {

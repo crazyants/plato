@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Plato.Data\Plato.Data.csproj" />
-    <ProjectReference Include="..\Plato.Models\Plato.Models.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Models\Plato.Internal.Models.csproj" />
   </ItemGroup>
 
 </Project>

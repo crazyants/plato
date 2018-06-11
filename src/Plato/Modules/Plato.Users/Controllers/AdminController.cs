@@ -7,7 +7,7 @@ using Plato.Abstractions.Query;
 using Plato.Layout;
 using Plato.Layout.ViewProviders;
 using Plato.Layout.Views;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;

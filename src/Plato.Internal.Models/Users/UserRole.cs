@@ -3,9 +3,9 @@ using System.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Plato.Abstractions.Extensions;
-using Plato.Models.Roles;
+using Plato.Internal.Models.Roles;
 
-namespace Plato.Models.Users
+namespace Plato.Internal.Models.Users
 {
     public class UserRole : IdentityUserRole<int>, IModel<UserRole>
     {

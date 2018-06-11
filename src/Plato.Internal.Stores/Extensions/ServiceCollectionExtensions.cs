@@ -13,11 +13,11 @@ using Plato.Abstractions.Shell;
 using Plato.Abstractions.Stores;
 using Plato.Data;
 using Plato.Data.Abstractions;
-using Plato.Models.Roles;
+using Plato.Internal.Models.Roles;
 using Plato.Internal.Stores.Settings;
 using Plato.Internal.Stores.Roles;
 using Plato.Internal.Stores.Users;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Files;
 using Plato.Internal.Stores.Query;
 

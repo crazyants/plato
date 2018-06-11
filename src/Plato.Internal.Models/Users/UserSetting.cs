@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Data;
 using System.Collections.Generic;
-using Plato.Models.Annotations;
+using Plato.Internal.Models.Annotations;
 using Plato.Abstractions.Extensions;
 
-namespace Plato.Models.Users
+namespace Plato.Internal.Models.Users
 {
     
     public class UserSetting : IModel<UserSetting>

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Data;
 using Plato.Abstractions.Extensions;
-using Plato.Models.Roles;
-using Plato.Models.Users;
+using Plato.Internal.Models.Roles;
+using Plato.Internal.Models.Users;
 using Plato.Repositories.Roles;
 
 namespace Plato.Repositories.Users

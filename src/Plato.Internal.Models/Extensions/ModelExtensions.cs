@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Plato.Models.Extensions
+namespace Plato.Internal.Models.Extensions
 {
     public static class ModelExtensions 
     {

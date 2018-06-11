@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Plato.Models.Annotations;
+using Plato.Internal.Models.Annotations;
 using Plato.Abstractions.Extensions;
 
-namespace Plato.Models.Roles
+namespace Plato.Internal.Models.Roles
 {
 
     [TableName("Plato_Roles")]

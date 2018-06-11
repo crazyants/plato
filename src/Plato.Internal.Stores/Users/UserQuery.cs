@@ -6,7 +6,7 @@ using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
 using Plato.Abstractions.Stores;
 using Plato.Data.Abstractions;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Query;
 
 namespace Plato.Internal.Stores.Users

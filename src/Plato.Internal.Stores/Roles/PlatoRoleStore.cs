@@ -7,7 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
-using Plato.Models.Roles;
+using Plato.Internal.Models.Roles;
 using Plato.Repositories.Roles;
 
 namespace Plato.Internal.Stores.Roles

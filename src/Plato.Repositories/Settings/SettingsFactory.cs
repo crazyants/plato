@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Plato.Models.Settings;
+using Plato.Internal.Models.Settings;
 using Plato.Abstractions.Extensions;
 using Plato.Abstractions.Settings;
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Abstractions.Data;
 using Plato.Abstractions.Query;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Users;
 using Plato.Users.ViewModels;

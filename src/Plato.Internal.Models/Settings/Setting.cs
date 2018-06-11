@@ -2,7 +2,7 @@
 using System.Data;
 using Plato.Abstractions.Extensions;
 
-namespace Plato.Models.Settings
+namespace Plato.Internal.Models.Settings
 {
     public class Setting : IModel<Setting>
     {

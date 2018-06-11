@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Plato.Abstractions.Data;
 using Plato.Layout.Views;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 
 namespace Plato.Users.ViewModels

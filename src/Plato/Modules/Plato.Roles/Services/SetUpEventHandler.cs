@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Abstractions.SetUp;
 using Plato.Data.Abstractions.Schemas;
-using Plato.Models.Users;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Roles.Services
 {

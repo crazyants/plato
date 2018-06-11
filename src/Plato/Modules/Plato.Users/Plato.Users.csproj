@@ -15,9 +15,9 @@
     <ProjectReference Include="..\..\..\Plato.Abstractions\Plato.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Hosting\Plato.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Hosting.Web\Plato.Hosting.Web.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Models\Plato.Internal.Models.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
     <ProjectReference Include="..\..\..\Plato.Layout\Plato.Layout.csproj" />
-    <ProjectReference Include="..\..\..\Plato.Models\Plato.Models.csproj" />
     <ProjectReference Include="..\..\..\Plato.Repositories\Plato.Repositories.csproj" />
   </ItemGroup>
 
