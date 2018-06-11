@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Plato.Modules.Abstractions;
 
-namespace Plato.Modules
+namespace Plato.Internal.Modules
 {
     public interface ITypedModuleProvider
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Plato.Modules.Abstractions;
 
-namespace Plato.Modules
+namespace Plato.Internal.Modules.Models
 {
     public class ModuleEntry : IModuleEntry
     {

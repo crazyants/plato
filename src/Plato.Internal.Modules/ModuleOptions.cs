@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plato.Modules
+namespace Plato.Internal.Modules
 {
     public class ModuleOptions
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Razor;
 
-namespace Plato.Modules.Expanders
+namespace Plato.Internal.Modules.Expanders
 {
     public class ModuleViewLocationExpander : IViewLocationExpander
     {

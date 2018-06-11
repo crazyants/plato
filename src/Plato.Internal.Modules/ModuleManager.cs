@@ -6,8 +6,9 @@ using Plato.Modules.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using System.Threading.Tasks;
+using Plato.Internal.Modules.Models;
 
-namespace Plato.Modules
+namespace Plato.Internal.Modules
 {
     public class ModuleManager : IModuleManager
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Plato.Modules.Abstractions;
 
-namespace Plato.Modules
+namespace Plato.Internal.Modules
 {
 
     public class TypedModuleProvider : ITypedModuleProvider

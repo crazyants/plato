@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -28,19 +27,17 @@ using Plato.Hosting.Extensions;
 using Plato.Hosting.Web.Expanders;
 using Plato.Hosting.Web.Middleware;
 using Plato.Modules.Abstractions;
-using Plato.Modules.Extensions;
+using Plato.Internal.Modules.Extensions;
 using Plato.Repositories.Extensions;
 using Plato.Shell.Extensions;
 using Plato.Stores.Extensions;
 using Plato.Cache.Extensions;
 using Plato.Hosting.Web.Routing;
+using Plato.Internal.Modules;
 using Plato.Layout.Extensions;
-using Plato.Layout.TagHelpers;
-using Plato.Layout.Theming;
-using Plato.Modules.Expanders;
+using Plato.Internal.Modules.Expanders;
 using Plato.Security.Extensions;
 using Plato.Logging.Extensions;
-using Plato.Modules;
 using Plato.Navigation.Extensions;
 using Plato.Theming.Extensions;
 

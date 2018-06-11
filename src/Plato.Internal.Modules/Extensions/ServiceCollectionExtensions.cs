@@ -5,9 +5,9 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Plato.Modules.Abstractions;
 using Plato.Modules.Loader;
-using Plato.Modules.Locator;
+using Plato.Internal.Modules.Locator;
 
-namespace Plato.Modules.Extensions
+namespace Plato.Internal.Modules.Extensions
 {
     public static class ServiceCollectionExtensions
     {
