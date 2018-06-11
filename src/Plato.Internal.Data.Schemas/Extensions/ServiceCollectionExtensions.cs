@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using Plato.Data.Abstractions.Schemas;
 
-namespace Plato.Data.Schemas.Extensions
+namespace Plato.Internal.Data.Schemas.Extensions
 {
     public static class ServiceCollectionExtensions
     {

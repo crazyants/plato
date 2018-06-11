@@ -3,7 +3,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Abstractions;
 
-namespace Plato.Cache
+namespace Plato.Internal.Cache
 {
  
 

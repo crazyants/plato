@@ -13,7 +13,7 @@ using Plato.FileSystem.Abstractions;
 using Plato.Shell.Abstractions;
 using Plato.Data.Abstractions.Schemas;
 
-namespace Plato.Data.Schemas
+namespace Plato.Internal.Data.Schemas
 {
     public class SchemaLoader : ISchemaLoader
     {

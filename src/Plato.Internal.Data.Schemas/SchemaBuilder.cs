@@ -7,7 +7,7 @@ using Plato.Abstractions.Data;
 using Plato.Data.Abstractions.Schemas;
 using Plato.Text;
 
-namespace Plato.Data.Schemas
+namespace Plato.Internal.Data.Schemas
 {
 
     public class SchemaBuilder : ISchemaBuilder, IDisposable

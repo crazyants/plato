@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Plato.Data.Abstractions.Schemas;
 
-namespace Plato.Data.Schemas
+namespace Plato.Internal.Data.Schemas
 {
     public class SchemaProvider : ISchemaProvider
     {

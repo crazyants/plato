@@ -1,11 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Plato.Abstractions.Data;
-using Plato.Abstractions.Query;
-using Plato.Abstractions.Shell;
-using Plato.Data.Abstractions;
 using Plato.Data.Migrations.Extensions;
-using Plato.Data.Schemas.Extensions;
+using Plato.Internal.Data.Schemas.Extensions;
 
 namespace Plato.Data.Extensions
 {
