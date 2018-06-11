@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Plato.Logging.BatchingLogger
+namespace Plato.Internal.Logging.BatchingLogger
 {
     public abstract class BatchingLoggerProvider : ILoggerProvider
     {

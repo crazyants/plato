@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Abstractions.SetUp;
 using Plato.Abstractions.Stores;
 using Plato.Data.Abstractions.Schemas;
-using Plato.Data.Migrations;
+
 using Plato.SetUp.ViewModels;
 using Plato.SetUp.Services;
 using Plato.Shell.Models;
@@ -22,14 +22,12 @@ namespace Plato.SetUp.Controllers
         private readonly ISetUpService _setUpService;
         private readonly ISchemaLoader _schemaLoader;
         private readonly ILogger<SetUpController> _logger;
-        private readonly IDataMigrationBuilder _dataMigrationBuilder;
-
+     
         public SetUpController(
             ShellSettings shellSettings,
             ISiteSettingsStore settingsStore,
             ISetUpService setUpService,
             ISchemaLoader schemaLoader,
-            IDataMigrationBuilder dataMigrationBuilder,
             ILogger<SetUpController> logger,
             IStringLocalizer<SetUpController> t)
         {
@@ -37,7 +35,6 @@ namespace Plato.SetUp.Controllers
             _settingsStore = settingsStore;
             _setUpService = setUpService;
             _schemaLoader = schemaLoader;
-            _dataMigrationBuilder = dataMigrationBuilder;
             _logger = logger;
             T = t;
         }

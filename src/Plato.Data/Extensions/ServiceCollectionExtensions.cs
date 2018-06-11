@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Plato.Abstractions.Data;
-using Plato.Data.Migrations.Extensions;
+using Plato.Internal.Data.Migrations.Extensions;
 using Plato.Internal.Data.Schemas.Extensions;
 
 namespace Plato.Data.Extensions

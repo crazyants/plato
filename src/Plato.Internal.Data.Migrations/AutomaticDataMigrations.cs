@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using Plato.Data.Abstractions.Schemas;
 
-namespace Plato.Data.Migrations
+namespace Plato.Internal.Data.Migrations
 {
 
     public class AutomaticDataMigrations

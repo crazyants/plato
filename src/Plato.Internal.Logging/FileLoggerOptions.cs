@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Plato.Logging.BatchingLogger;
+using Plato.Internal.Logging.BatchingLogger;
 
-namespace Plato.Logging
+namespace Plato.Internal.Logging
 {
     public class FileLoggerOptions : BatchingLoggerOptions
     {

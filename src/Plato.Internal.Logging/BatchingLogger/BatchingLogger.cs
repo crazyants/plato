@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
 
-namespace Plato.Logging.BatchingLogger
+namespace Plato.Internal.Logging.BatchingLogger
 {
     public class BatchingLogger : ILogger
     {

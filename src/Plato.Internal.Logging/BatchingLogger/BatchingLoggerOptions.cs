@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.Logging.BatchingLogger
+namespace Plato.Internal.Logging.BatchingLogger
 {
     public class BatchingLoggerOptions
     {

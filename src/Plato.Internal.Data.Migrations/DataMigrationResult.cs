@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.Data.Migrations
+namespace Plato.Internal.Data.Migrations
 {
     public class DataMigrationResult
     {

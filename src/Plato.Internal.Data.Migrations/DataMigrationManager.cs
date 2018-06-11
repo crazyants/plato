@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Plato.Abstractions.Data;
 
-namespace Plato.Data.Migrations
+namespace Plato.Internal.Data.Migrations
 {
     public class DataMigrationManager : IDataMigrationManager
     {

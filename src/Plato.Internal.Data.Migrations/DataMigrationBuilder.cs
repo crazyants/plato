@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Plato.Data.Abstractions.Schemas;
 
-namespace Plato.Data.Migrations
+namespace Plato.Internal.Data.Migrations
 {
     public class DataMigrationBuilder : IDataMigrationBuilder
     {

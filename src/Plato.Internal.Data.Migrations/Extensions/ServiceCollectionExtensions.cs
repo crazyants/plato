@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Plato.Data.Migrations.Extensions
+namespace Plato.Internal.Data.Migrations.Extensions
 {
     public static class ServiceCollectionExtensions
     {

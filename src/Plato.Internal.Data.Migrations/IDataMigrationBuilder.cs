@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace Plato.Data.Migrations
+namespace Plato.Internal.Data.Migrations
 {
 
     public enum MigrationType

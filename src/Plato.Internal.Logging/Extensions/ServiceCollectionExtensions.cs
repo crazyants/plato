@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Plato.Logging.Extensions
+namespace Plato.Internal.Logging.Extensions
 {
     public static class ServiceCollectionExtensions
     {
