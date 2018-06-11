@@ -33,13 +33,12 @@ using Plato.Shell.Extensions;
 using Plato.Stores.Extensions;
 using Plato.Internal.Cache.Extensions;
 using Plato.Hosting.Web.Routing;
-using Plato.Internal.Modules;
 using Plato.Layout.Extensions;
 using Plato.Internal.Modules.Expanders;
-using Plato.Security.Extensions;
+using Plato.Internal.Security.Extensions;
 using Plato.Internal.Logging.Extensions;
 using Plato.Internal.Navigation.Extensions;
-using Plato.Theming.Extensions;
+using Plato.Internal.Theming.Extensions;
 
 namespace Plato.Hosting.Web.Extensions
 

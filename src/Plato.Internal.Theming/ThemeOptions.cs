@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.Theming
+namespace Plato.Internal.Theming
 {
     public class ThemeOptions
     {

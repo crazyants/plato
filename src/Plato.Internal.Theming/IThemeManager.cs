@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plato.Theming.Models;
+using Plato.Internal.Theming.Models;
 
-namespace Plato.Theming
+namespace Plato.Internal.Theming
 {
     public interface IThemeManager
     {

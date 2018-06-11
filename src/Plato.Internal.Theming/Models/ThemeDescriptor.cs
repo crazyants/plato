@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plato.Theming.Models
+namespace Plato.Internal.Theming.Models
 {
    public class ThemeDescriptor : IThemeDescriptor
     {

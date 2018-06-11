@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Plato.Theming.Locator;
+using Plato.Internal.Theming.Locator;
 
-namespace Plato.Theming.Extensions
+namespace Plato.Internal.Theming.Extensions
 {
     public static class ServiceCollectionExtensions
     {

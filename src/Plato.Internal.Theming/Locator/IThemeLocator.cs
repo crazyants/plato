@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plato.Theming.Models;
+using Plato.Internal.Theming.Models;
 
-namespace Plato.Theming.Locator
+namespace Plato.Internal.Theming.Locator
 {
     public interface IThemeLocator
     {

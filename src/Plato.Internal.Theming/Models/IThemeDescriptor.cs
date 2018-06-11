@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.Theming.Models
+namespace Plato.Internal.Theming.Models
 {
     public interface IThemeDescriptor
     {

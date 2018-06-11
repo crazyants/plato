@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using Plato.Abstractions.Extensions;
 using Plato.FileSystem;
-using Plato.Theming.Models;
+using Plato.Internal.Theming.Models;
 
-namespace Plato.Theming.Locator
+namespace Plato.Internal.Theming.Locator
 {
     public class ThemeLocator : IThemeLocator
     {

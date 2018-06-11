@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
-using Plato.Theming.Locator;
-using Plato.Theming.Models;
+using Plato.Internal.Theming.Locator;
+using Plato.Internal.Theming.Models;
 
-namespace Plato.Theming
+namespace Plato.Internal.Theming
 {
     public class ThemeManager : IThemeManager
     {
