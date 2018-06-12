@@ -1,12 +1,27 @@
 ﻿
-/* 
-   overrides the default Bootstrap 4 styles 
-   making it easy to change the color scheme 
-   used by plato by modifying this single file 
-*/
 
 
 
+/* animation effect for bootstratp dropdowns */
 
+.dropdown-menu.show {
+    animation: showDropdown 0.1s ease-out;
+}
+
+@keyframes showDropdown {
+    0% {
+        top: 100%;
+        opacity: 0;
+        -webkit-transform: scale(.8);
+        transform: scale(.8)
+    }
+
+    to {
+        top: 100%;
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1)
+    }
+}
 
 

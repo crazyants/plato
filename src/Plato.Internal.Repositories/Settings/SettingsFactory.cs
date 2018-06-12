@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Settings;
@@ -13,7 +12,7 @@ namespace Plato.Internal.Repositories.Settings
 
         #region "Private Variables"
 
-        private ISettingRepository<Setting> _settingRepository;
+        private readonly ISettingRepository<Setting> _settingRepository;
          
         #endregion
         
@@ -40,22 +39,17 @@ namespace Plato.Internal.Repositories.Settings
         public async Task<T> UpdateSettingsAsync<T>(string key, ISettingValue value)
         {
 
-            // get existing setting
-            var existingSetting = await GetSettingFromRepository(key);
+            // Get or create setting
+            var existingSetting = await GetSettingFromRepository(key)
+                                  ?? new Setting()
+                                  {
+                                      Key = key
+                                  };
 
-            // create new setting if not found
-            if (existingSetting == null)
-            {
-                existingSetting = new Setting()
-                {
-                    Key = key
-                };
-            }
-
-            // serilize object
+            // Serilize value
             existingSetting.Value = value.Serialize();
 
-            // update setting & return deserialized setting value
+            // update setting & return updated typed settings 
             var updatedSetting = await _settingRepository.InsertUpdateAsync(existingSetting);
             if (updatedSetting != null)
             {

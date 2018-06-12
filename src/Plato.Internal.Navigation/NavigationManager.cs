@@ -28,8 +28,7 @@ namespace Plato.Internal.Navigation
             ILogger<NavigationManager> logger,
             ShellSettings shellSettings,
             IUrlHelperFactory urlHelperFactory,
-            IAuthorizationService authorizationService
-            )
+            IAuthorizationService authorizationService)
         {
             _navigationProviders = navigationProviders;
             _logger = logger;
@@ -73,10 +72,7 @@ namespace Plato.Internal.Navigation
 
             return menuItems;
         }
-
-        /// <summary>
-        /// Mutates a list of <see cref="MenuItem"/> into a hierarchy
-        /// </summary>
+        
         private static void Merge(List<MenuItem> items)
         {
             // Use two cursors to find all similar captions. If the same caption is represented
@@ -130,11 +126,7 @@ namespace Plato.Internal.Navigation
                 }
             }
         }
-
-        /// <summary>
-        /// Computes the <see cref="MenuItem.Href"/> properties based on <see cref="MenuItem.Url"/>
-        /// and <see cref="MenuItem.RouteValues"/> values.
-        /// </summary>
+        
         private List<MenuItem> ComputeHref(List<MenuItem> menuItems, ActionContext actionContext)
         {
             foreach (var menuItem in menuItems)
@@ -145,14 +137,7 @@ namespace Plato.Internal.Navigation
 
             return menuItems;
         }
-
-        /// <summary>
-        /// Gets the url.from a menu item url a routeValueDictionary and an actionContext.
-        /// </summary>
-        /// <param name="menuItemUrl">The </param>
-        /// <param name="routeValueDictionary"></param>
-        /// <param name="actionContext"></param>
-        /// <returns></returns>
+        
         private string GetUrl(string menuItemUrl, RouteValueDictionary routeValueDictionary, ActionContext actionContext)
         {
             string url;
@@ -205,10 +190,7 @@ namespace Plato.Internal.Navigation
 
             return url;
         }
-
-        /// <summary>
-        /// Updates the items by checking for permissions
-        /// </summary>
+        
         private List<MenuItem> Authorize(IEnumerable<MenuItem> items, ClaimsPrincipal user)
         {
             var filtered = new List<MenuItem>();
@@ -244,9 +226,6 @@ namespace Plato.Internal.Navigation
             return filtered;
         }
 
-        /// <summary>
-        /// Retains only menu items with an Href, or that have child items with an Href
-        /// </summary>
         private List<MenuItem> Reduce(IEnumerable<MenuItem> items)
         {
             var filtered = items.ToList();

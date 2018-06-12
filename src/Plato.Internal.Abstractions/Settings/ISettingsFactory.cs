@@ -1,5 +1,4 @@
-﻿using Plato.Internal.Abstractions.Settings;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Plato.Internal.Abstractions.Settings
 {

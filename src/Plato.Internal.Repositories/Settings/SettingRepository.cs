@@ -36,12 +36,11 @@ namespace Plato.Internal.Repositories.Settings
         public Task<bool> DeleteAsync(int id)
         {
 
-
             if (_logger.IsEnabled(LogLevel.Information))
                 _logger.LogInformation($"Deleting setting with id: {id}");
-
-
+            
             throw new NotImplementedException();
+
         }
 
         public async Task<Setting> InsertUpdateAsync(Setting setting)
