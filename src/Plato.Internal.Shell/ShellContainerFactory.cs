@@ -36,7 +36,7 @@ namespace Plato.Internal.Shell
             _moduleManager = moduleManager;
         }
 
-        public IServiceProvider CreateContainer(ShellSettings settings)
+        public IServiceProvider CreateContainer(ShellSettings settings, ShellBlueprint blueprint)
         {
             
             // Clone services
@@ -44,7 +44,9 @@ namespace Plato.Internal.Shell
 
             // Add tenant specific settings
             tenantServiceCollection.AddSingleton(settings);
-            
+            tenantServiceCollection.AddSingleton(blueprint.Descriptor);
+            tenantServiceCollection.AddSingleton(blueprint);
+
             // Add tenant specific data context options
             tenantServiceCollection.Configure<DbContextOptions>(options =>
             {
@@ -52,6 +54,9 @@ namespace Plato.Internal.Shell
                 options.DatabaseProvider = settings.DatabaseProvider;
                 options.TablePrefix = settings.TablePrefix;
             });
+            
+            // get all modules defined within our blueprint
+            string[] moduleNames = blueprint.Descriptor.Modules.Select(m => m.Name).ToArray();
 
             // Add service descriptors from modules to the tenant
             var types = new List<Type>();

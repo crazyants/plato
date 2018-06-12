@@ -27,36 +27,31 @@ namespace Plato.Internal.Shell
         {
             if (_logger.IsEnabled(LogLevel.Debug))
             {
-                _logger.LogDebug("Composing blueprint");
+                _logger.LogDebug($"Composing blueprint for tennet {settings.Name} ");
             }
 
+            // Get all module names registered with the current shell
             var moduleNames = descriptor.Modules.Select(x => x.Name).ToArray();
 
+            // Get modules from names
             var modules = await _moduleManager.LoadModulesAsync(moduleNames);
 
+            // Get exported types for loaded modules
             var entries = new Dictionary<Type, IModuleEntry>();
-
-            foreach (var module in modules)
+            if (modules != null)
             {
-                foreach (var exportedType in module.ExportedTypes)
-
+                foreach (var module in modules)
                 {
-                    entries.Add(exportedType, module);
+                    if (module.ExportedTypes != null)
+                    {
+                        foreach (var exportedType in module.ExportedTypes)
+                        {
+                            entries.Add(exportedType, module);
+                        }
+                    }
                 }
+
             }
-
-            //foreach (var feature in features)
-            //{
-            //    foreach (var exportedType in feature.ExportedTypes)
-            //    {
-            //        var requiredFeatures = RequireFeaturesAttribute.GetRequiredFeatureNamesForType(exportedType);
-
-            //        if (requiredFeatures.All(x => featureNames.Contains(x)))
-            //        {
-            //            entries.Add(exportedType, feature);
-            //        }
-            //    }
-            //}
 
             var result = new ShellBlueprint
             {

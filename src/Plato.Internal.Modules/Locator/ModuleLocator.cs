@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Modules.Abstractions;
@@ -18,7 +19,7 @@ namespace Plato.Internal.Modules.Locator
         private const string PathSection = "path";
         private const string DescriptionSection = "description";
         private const string VersionSection = "version";
-        private const string OrchardVersionSection = "orchardversion";
+        private const string PlatoVersionSection = "platoversion";
         private const string AuthorSection = "author";
         private const string WebsiteSection = "website";
         private const string TagsSection = "tags";
@@ -26,22 +27,20 @@ namespace Plato.Internal.Modules.Locator
         private const string ZonesSection = "zones";
         private const string BaseThemeSection = "basetheme";
         private const string DependenciesSection = "dependencies";
-        private const string CategorySection = "category";
-        private const string FeatureDescriptionSection = "featuredescription";
-        private const string FeatureNameSection = "featurename";
-        private const string PrioritySection = "priority";
-        private const string FeaturesSection = "features";
-        private const string SessionStateSection = "sessionstate";
+   
+
 
         private readonly IPlatoFileSystem _fileSystem;
+        private readonly ILogger<ModuleLocator> _logger;
 
         #endregion
 
         #region "Constructor"
 
-        public ModuleLocator(IPlatoFileSystem fileSystem)
+        public ModuleLocator(IPlatoFileSystem fileSystem, ILogger<ModuleLocator> logger)
         {
             _fileSystem = fileSystem;
+            _logger = logger;
         }
 
         #endregion
@@ -129,9 +128,9 @@ namespace Plato.Internal.Modules.Locator
 
                     localList.Add(descriptor);
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    throw;
+                    _logger.LogError(e, $"An exception occurred whilst parsing the manifest file at {path}");
                 }
 
             }
@@ -150,7 +149,6 @@ namespace Plato.Internal.Modules.Locator
             var manifestText = await _fileSystem.ReadFileAsync(manifestPath);
             if (manifestText == null)
             {
-
                 if (manifestIsOptional)                
                     manifestText = $"Id: {moduleId}";                
                 else                
@@ -182,31 +180,48 @@ namespace Plato.Internal.Modules.Locator
                 Id = moduleId,
                 ModuleType = moduleType,
                 Name = GetValue(manifest, NameSection) ?? moduleId,
-                //Path = GetValue(manifest, PathSection),
-                //Description = GetValue(manifest, DescriptionSection),
-                //Version = GetValue(manifest, VersionSection),
-                //OrchardVersion = GetValue(manifest, OrchardVersionSection),
-                //Author = GetValue(manifest, AuthorSection),
-                //WebSite = GetValue(manifest, WebsiteSection),
-                //Tags = GetValue(manifest, TagsSection),
-                //AntiForgery = GetValue(manifest, AntiForgerySection),
-                //Zones = GetValue(manifest, ZonesSection),
-                //BaseTheme = GetValue(manifest, BaseThemeSection),
-                //SessionState = GetValue(manifest, SessionStateSection)
+                Path = GetValue(manifest, PathSection),
+                Description = GetValue(manifest, DescriptionSection),
+                Version = GetValue(manifest, VersionSection),
+                PlatoVersion = GetValue(manifest, PlatoVersionSection),
+                Author = GetValue(manifest, AuthorSection),
+                WebSite = GetValue(manifest, WebsiteSection),
+                Tags = GetValue(manifest, TagsSection),
             };
 
-            //moduleDescriptor.Features = GetFeaturesForExtension(manifest, extensionDescriptor);
+            moduleDescriptor.Dependencies = GetModuleDependencies(manifest, DependenciesSection);
 
             return moduleDescriptor;
 
         }
 
-        private static string GetValue(IDictionary<string, string> fields, string key)
+        public IEnumerable<ModuleDependency> GetModuleDependencies(IDictionary<string, string> fields, string key)
+        {
+
+            List<ModuleDependency> output = null;
+            var dependencies =  fields.TryGetValue(key, out var value) ? value : null;
+            if (value != null)
+            {
+                try
+                {
+                    output = value.Deserialize<List<ModuleDependency>>();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"An exception occurred parsing the dependency JSON string within your manifest.text file at { GetValue(fields, PathSection)}");
+                }
+            }
+
+            return output ?? new List<ModuleDependency>();
+
+        }
+
+        static string GetValue(IDictionary<string, string> fields, string key)
         {
             return fields.TryGetValue(key, out var value) ? value : null;
         }
 
-        private static Dictionary<string, string> ParseManifest(string manifestText)
+        static Dictionary<string, string> ParseManifest(string manifestText)
         {
             var manifest = new Dictionary<string, string>();
 
@@ -237,8 +252,8 @@ namespace Plato.Internal.Modules.Locator
                         case VersionSection:
                             manifest.Add(VersionSection, field[1]);
                             break;
-                        case OrchardVersionSection:
-                            manifest.Add(OrchardVersionSection, field[1]);
+                        case PlatoVersionSection:
+                            manifest.Add(PlatoVersionSection, field[1]);
                             break;
                         case AuthorSection:
                             manifest.Add(AuthorSection, field[1]);
@@ -259,25 +274,7 @@ namespace Plato.Internal.Modules.Locator
                             manifest.Add(BaseThemeSection, field[1]);
                             break;
                         case DependenciesSection:
-                            manifest.Add(DependenciesSection, field[1]);
-                            break;
-                        case CategorySection:
-                            manifest.Add(CategorySection, field[1]);
-                            break;
-                        case FeatureDescriptionSection:
-                            manifest.Add(FeatureDescriptionSection, field[1]);
-                            break;
-                        case FeatureNameSection:
-                            manifest.Add(FeatureNameSection, field[1]);
-                            break;
-                        case PrioritySection:
-                            manifest.Add(PrioritySection, field[1]);
-                            break;
-                        case SessionStateSection:
-                            manifest.Add(SessionStateSection, field[1]);
-                            break;
-                        case FeaturesSection:
-                            manifest.Add(FeaturesSection, reader.ReadToEnd());
+                            manifest.Add(DependenciesSection, reader.ReadToEnd());
                             break;
                     }
                 }

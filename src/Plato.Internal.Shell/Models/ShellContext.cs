@@ -10,12 +10,12 @@ namespace Plato.Internal.Shell.Models
 
         public bool IsActivated;
 
+        public ShellBlueprint Blueprint { get; set; }
+
         public ShellSettings Settings { get; set; }
 
         public IServiceProvider ServiceProvider { get; set; }
-
-        public ShellDescriptor Descriptor { get; set; }
-
+        
         public IServiceScope CreateServiceScope()
         {
             return ServiceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();

@@ -1,0 +1,25 @@
+﻿@model ModulesViewModel
+@{
+    ViewData["Title"] = "Plato Modules";
+}
+<h4>@T["Modules"]</h4>
+<span class="text-muted">@T["Modules allow you to add additional functionality to your site."]</span>
+
+<hr/>
+
+<ul class="list-group">
+    @foreach (var module in Model.Modules)
+    {
+    <li class="list-group-item">
+        <strong>@module.Descriptor.Id</strong><br />
+        @module.Descriptor.Description<br />
+
+        @foreach (var dependency in module.Descriptor.Dependencies)
+        {
+            @dependency.Name<br />
+        }
+
+
+    </li>
+    }
+</ul>

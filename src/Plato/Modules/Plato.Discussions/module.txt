@@ -1,3 +1,21 @@
-Name: Simple Component Test
+Name: Plato.Discussions
+Description: Add public discussions to Plato.
+Category: Discussions
 Author: InstantASP
-Content Type: Discussion
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Name: "Plato.Admin",
+		Version: "1.0.0"
+	},
+	{
+		Name: "Plato.Roles",
+		Version: "1.0.0"
+	},
+	{
+		Name: "Plato.Users",
+		Version: "1.0.0"
+	}
+]

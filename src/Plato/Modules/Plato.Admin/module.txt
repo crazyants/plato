@@ -1,2 +1,14 @@
 Name: Plato Admin
+Description: Provides the admin dashboard for Plato.
 Author: InstantASP
+Dependencies: 
+[
+	{
+		Name: "Plato.Roles",
+		Version: "1.0.0"
+	},
+	{
+		Name: "Plato.Users",
+		Version: "1.0.0"
+	}
+]

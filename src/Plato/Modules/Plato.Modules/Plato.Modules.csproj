@@ -2,14 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Admin</AssemblyName>
-    <PackageId>Plato.Admin</PackageId>
+    <AssemblyName>Plato.Modules</AssemblyName>
+    <PackageId>Plato.Modules</PackageId>
     <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="TagHelpers\**" />
+    <EmbeddedResource Remove="TagHelpers\**" />
+    <None Remove="TagHelpers\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />

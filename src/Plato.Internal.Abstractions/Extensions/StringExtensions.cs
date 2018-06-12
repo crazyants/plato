@@ -34,14 +34,12 @@ namespace Plato.Internal.Abstractions.Extensions
 
             return false;
         }
-
-
+        
         public static string ToEmptyIfNull(this string input)
         {
             return input ?? string.Empty;
         }
-
-
+        
         public static string TrimToSize(this string input, int maxLength)
         {
             if (string.IsNullOrEmpty(input))
