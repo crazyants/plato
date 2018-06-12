@@ -87,7 +87,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Data", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Layout", "src\Plato.Internal.Layout\Plato.Internal.Layout.csproj", "{ABEEAFDD-DFB0-4752-99C2-D8CE873279DF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Shell", "src\Plato.Internal.Shell\Plato.Internal.Shell.csproj", "{122A234C-6C67-4AFB-9E90-E606D70F9D51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Shell", "src\Plato.Internal.Shell\Plato.Internal.Shell.csproj", "{3CD2806D-BEAC-46C0-BDD4-1630B24711B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -239,10 +239,10 @@ Global
 		{ABEEAFDD-DFB0-4752-99C2-D8CE873279DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABEEAFDD-DFB0-4752-99C2-D8CE873279DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABEEAFDD-DFB0-4752-99C2-D8CE873279DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{122A234C-6C67-4AFB-9E90-E606D70F9D51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{122A234C-6C67-4AFB-9E90-E606D70F9D51}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{122A234C-6C67-4AFB-9E90-E606D70F9D51}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{122A234C-6C67-4AFB-9E90-E606D70F9D51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CD2806D-BEAC-46C0-BDD4-1630B24711B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CD2806D-BEAC-46C0-BDD4-1630B24711B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CD2806D-BEAC-46C0-BDD4-1630B24711B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CD2806D-BEAC-46C0-BDD4-1630B24711B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -285,7 +285,7 @@ Global
 		{617FF198-2347-4D20-AB81-99B0C140BA57} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{59605598-2D55-4B2E-A3E8-4E4067E295B8} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{ABEEAFDD-DFB0-4752-99C2-D8CE873279DF} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
-		{122A234C-6C67-4AFB-9E90-E606D70F9D51} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
+		{3CD2806D-BEAC-46C0-BDD4-1630B24711B4} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}
