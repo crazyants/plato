@@ -56,27 +56,27 @@ namespace Plato.Internal.Shell
             });
             
             // get all modules defined within our blueprint
-            string[] moduleNames = blueprint.Descriptor.Modules.Select(m => m.Name).ToArray();
+            // var moduleNames = blueprint.Descriptor.Modules.Select(m => m.Name).ToArray();
 
-            // Add service descriptors from modules to the tenant
-            var types = new List<Type>();
-            foreach (var assmebly in _moduleManager.LoadModuleAssembliesAsync().Result)
-            {
-                types.AddRange(assmebly.GetTypes());
-            }
+            //// Add service descriptors from modules to the tenant
+            //var types = new List<Type>();
+            //foreach (var assmebly in _moduleManager.LoadModuleAssembliesAsync().Result)
+            //{
+            //    types.AddRange(assmebly.GetTypes());
+            //}
                 
             // Add StartUps from modules as services
             var moduleServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
-            foreach (var type in types.Where(t => typeof(IStartup).IsAssignableFrom(t)))
+            foreach (var type in blueprint.Dependencies.Where(t => typeof(IStartup).IsAssignableFrom(t.Key)))
             {
-                moduleServiceCollection.AddSingleton(typeof(IStartup), type);
-                tenantServiceCollection.AddSingleton(typeof(IStartup), type);
+                moduleServiceCollection.AddSingleton(typeof(IStartup), type.Key);
+                tenantServiceCollection.AddSingleton(typeof(IStartup), type.Key);
             }
 
-            // Add a default configuration if none has been provided
-            var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
-            moduleServiceCollection.TryAddSingleton(configuration);
-            tenantServiceCollection.TryAddSingleton(configuration);
+            //// Add a default configuration if none has been provided
+            //var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
+            //moduleServiceCollection.TryAddSingleton(configuration);
+            //tenantServiceCollection.TryAddSingleton(configuration);
 
             // Make shell settings available to the modules
             moduleServiceCollection.AddSingleton(settings);

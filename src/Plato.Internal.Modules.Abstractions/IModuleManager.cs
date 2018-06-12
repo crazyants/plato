@@ -9,6 +9,8 @@ namespace Plato.Internal.Modules.Abstractions
         
         Task<IEnumerable<Assembly>> LoadModuleAssembliesAsync();
 
+        Task<IEnumerable<Assembly>> LoadModuleAssembliesAsync(string[] moduleIds);
+        
         Task<IEnumerable<IModuleEntry>> LoadModulesAsync();
 
         Task<IEnumerable<IModuleEntry>> LoadModulesAsync(string[] moduleIds);

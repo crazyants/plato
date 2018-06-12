@@ -67,13 +67,43 @@ namespace Plato.Internal.Modules
             return _loadedAssemblies;
         }
 
+        public async Task<IEnumerable<Assembly>> LoadModuleAssembliesAsync(string[] moduleIds)
+        {
+
+            await InitializeModules();
+     
+            // Get descriptors for supplied moduleIds
+            var descriptors = _moduleEntries
+                .Where(e => moduleIds.Any(moduleId => moduleId.Equals(e.Descriptor.Id, StringComparison.OrdinalIgnoreCase)))
+                .Select(d => d.Descriptor)
+                .ToList();
+          
+            // Build all dependencies
+            var loadedAssemblies = new List<Assembly>();
+            foreach (var descriptor in descriptors)
+            {
+                var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
+                _moduleEntries.Add(new ModuleEntry()
+                {
+                    Descriptor = descriptor,
+                    Assmeblies = assemblies
+                });
+                loadedAssemblies.AddRange(assemblies);
+
+            }
+
+            return loadedAssemblies;
+
+        }
+
+
         public async Task<IEnumerable<IModuleEntry>> LoadModulesAsync(string[] moduleIds)
         {
             await InitializeModules();
 
             var moduless = _moduleEntries.Select(m => m.Descriptor.Id).ToList();
             var loadedModules = _moduleEntries
-                .Where(m => moduless.Contains(m.Descriptor.Id));
+                .Where(m => moduleIds.Contains(m.Descriptor.Id)).ToList();
 
             return loadedModules;
         }
