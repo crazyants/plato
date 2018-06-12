@@ -52,7 +52,7 @@ namespace Plato.Internal.Shell
             var descriptor = new ShellDescriptor
             {
                 Modules = new[] {
-                    new ShellModule { Name = "Plato.SetUp" }
+                    new ShellFeature { Name = "Plato.SetUp" }
                 }
             };
 
@@ -65,10 +65,10 @@ namespace Plato.Internal.Shell
             {
                 Modules = new[]
                 {
-                    new ShellModule { Name = "Plato.Admin" },
-                    new ShellModule { Name = "Plato.Users" },
-                    new ShellModule { Name = "Plato.Roles" },
-                    new ShellModule { Name = "Plato.Modules" }
+                    new ShellFeature { Name = "Plato.Admin" },
+                    new ShellFeature { Name = "Plato.Users" },
+                    new ShellFeature { Name = "Plato.Roles" },
+                    new ShellFeature { Name = "Plato.Modules" }
                 }
             };
         }

@@ -1,10 +1,9 @@
 ﻿namespace Plato.Internal.Shell.Models
 {
-    public class ShellModule
+    public class ShellFeature
     {
         public string Name { get; set; }
-
-
+        
     }
 
 }

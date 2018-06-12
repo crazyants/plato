@@ -3858,3 +3858,16 @@ System.NullReferenceException: Object reference not set to an instance of an obj
 2018-06-12 21:41:22.290 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
 2018-06-12 21:41:22.611 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2151.1015ms
 2018-06-12 21:41:22.615 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2462.2336ms 200 text/html; charset=utf-8
+2018-06-12 22:44:17.578 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-12 22:44:17.958 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-12 22:44:17.988 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-12 22:44:17.991 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'plato106', attempting to load.
+2018-06-12 22:44:18.030 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-12 22:44:18.105 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-12 22:44:18.107 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-12 22:44:18.120 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-12 22:44:18.129 +01:00 [Information] Plato.Internal.Repositories.Settings.SettingRepository: Selecting all settings
+2018-06-12 22:44:18.309 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-06-12 22:44:20.117 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-06-12 22:44:20.438 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2171.6256ms
+2018-06-12 22:44:20.443 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2485.3694ms 200 text/html; charset=utf-8

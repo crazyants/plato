@@ -20,20 +20,18 @@ namespace Plato.Internal.Shell
         private readonly ILogger _logger;
         private readonly ILoggerFactory _loggerFactory;
         private readonly IServiceCollection _applicationServices;
-        private readonly IModuleManager _moduleManager;
-
+     
         public ShellContainerFactory(
             IServiceProvider serviceProvider,
             ILoggerFactory loggerFactory,
             ILogger<ShellContainerFactory> logger,
-            IServiceCollection applicationServices,
-            IModuleManager moduleManager)
+            IServiceCollection applicationServices)
         {
             _applicationServices = applicationServices;
             _serviceProvider = serviceProvider;
             _loggerFactory = loggerFactory;
             _logger = logger;
-            _moduleManager = moduleManager;
+       
         }
 
         public IServiceProvider CreateContainer(ShellSettings settings, ShellBlueprint blueprint)
@@ -55,17 +53,7 @@ namespace Plato.Internal.Shell
                 options.TablePrefix = settings.TablePrefix;
             });
             
-            // get all modules defined within our blueprint
-            // var moduleNames = blueprint.Descriptor.Modules.Select(m => m.Name).ToArray();
-
-            //// Add service descriptors from modules to the tenant
-            //var types = new List<Type>();
-            //foreach (var assmebly in _moduleManager.LoadModuleAssembliesAsync().Result)
-            //{
-            //    types.AddRange(assmebly.GetTypes());
-            //}
-                
-            // Add StartUps from modules as services
+            // Add StartUps from modules defined in blueprint descriptor as services
             var moduleServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
             foreach (var type in blueprint.Dependencies.Where(t => typeof(IStartup).IsAssignableFrom(t.Key)))
             {
@@ -73,10 +61,10 @@ namespace Plato.Internal.Shell
                 tenantServiceCollection.AddSingleton(typeof(IStartup), type.Key);
             }
 
-            //// Add a default configuration if none has been provided
-            //var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
-            //moduleServiceCollection.TryAddSingleton(configuration);
-            //tenantServiceCollection.TryAddSingleton(configuration);
+            // Add a default configuration if none has been provided
+            var configuration = new ConfigurationBuilder().AddInMemoryCollection().Build();
+            moduleServiceCollection.TryAddSingleton(configuration);
+            tenantServiceCollection.TryAddSingleton(configuration);
 
             // Make shell settings available to the modules
             moduleServiceCollection.AddSingleton(settings);
