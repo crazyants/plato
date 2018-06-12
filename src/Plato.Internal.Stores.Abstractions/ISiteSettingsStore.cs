@@ -2,7 +2,7 @@
 
 namespace Plato.Internal.Stores.Abstractions
 { 
-    public interface ISiteSettingsStore : ISettingsStore<ISiteSettings>
+    public interface ISiteSettingsStore : IDictionaryStore<ISiteSettings>
     {
     }
 }

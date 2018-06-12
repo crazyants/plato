@@ -1,6 +1,6 @@
 ﻿namespace Plato.Internal.Abstractions.Settings
 {
-    public interface ISettingValue
+    public interface ISerializable
     {
 
         string Serialize();

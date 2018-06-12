@@ -4,7 +4,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Models.Settings
 {
-    public class Setting : IModel<Setting>
+    public class DictionaryEntry : IModel<DictionaryEntry>
     {
          
         #region "Public Properties"
@@ -53,7 +53,7 @@ namespace Plato.Internal.Models.Settings
           
         }
 
-        public void PopulateModel(Action<Setting> model)
+        public void PopulateModel(Action<DictionaryEntry> model)
         {
             model(this);
         }

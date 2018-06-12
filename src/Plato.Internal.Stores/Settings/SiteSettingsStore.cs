@@ -10,14 +10,14 @@ namespace Plato.Internal.Stores.Settings
 
         private readonly string _key = CacheKeys.SiteSettings.ToString();
 
-        private readonly ISettingsFactory _settingsFactory;
+        private readonly IDictionaryFactory _dictionaryFactory;
         private readonly IMemoryCache _memoryCache;
 
         public SiteSettingsStore(
-           ISettingsFactory settingsFactory,
-           IMemoryCache memoryCache)
+            IDictionaryFactory dictionaryFactory,
+            IMemoryCache memoryCache)
         {
-            _settingsFactory = settingsFactory;
+            _dictionaryFactory = dictionaryFactory;
             _memoryCache = memoryCache;
         }
 
@@ -25,32 +25,32 @@ namespace Plato.Internal.Stores.Settings
         {
             if (!_memoryCache.TryGetValue(_key, out SiteSettings siteSettings))
             {
-                siteSettings = await _settingsFactory.GetSettingsAsync<SiteSettings>(_key);
+                siteSettings = await _dictionaryFactory.GetAsync<SiteSettings>(_key);
                 if (siteSettings != null)
                     _memoryCache.Set(_key, siteSettings);
             }
+
             return siteSettings;
         }
 
         public async Task<ISiteSettings> SaveAsync(ISiteSettings siteSettings)
         {
-            var settings = await _settingsFactory.UpdateSettingsAsync<SiteSettings>(_key, siteSettings);
+            var settings = await _dictionaryFactory.UpdateAsync<SiteSettings>(_key, siteSettings);
             if (settings != null)
             {
                 // Update cache
                 _memoryCache.Set(_key, settings);
             }
+
             return settings;
         }
 
-        public Task<bool> DeleteAsync()
+        public async Task<bool> DeleteAsync()
         {
-            //var settings = await _settingsFactory<SiteSettings>(_key, siteSettings);
+            var result =  await _dictionaryFactory.DeleteByKeyAsync(_key);
             _memoryCache.Remove(_key);
-            return Task.FromResult(true);
+            return result;
         }
-
-
 
     }
 }

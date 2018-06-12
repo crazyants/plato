@@ -2,7 +2,7 @@
 
 namespace Plato.Internal.Stores.Abstractions
 {
-    public interface ISettingsStore<T> where T : class
+    public interface IDictionaryStore<T> where T : class
     {
 
         Task<T> GetAsync();

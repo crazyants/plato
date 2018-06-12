@@ -7,23 +7,23 @@ using System.Data;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 
-namespace Plato.Internal.Repositories.Settings
+namespace Plato.Internal.Repositories.Abstract
 {
-    public class SettingRepository : ISettingRepository<Setting>
+    public class DictionaryRepository : IDictionaryRepository<DictionaryEntry>
     {
 
         #region Private Variables"
 
         private readonly IDbContext _dbContext;
-        private readonly ILogger<SettingRepository> _logger;
+        private readonly ILogger<DictionaryRepository> _logger;
      
         #endregion
 
         #region "Constructor"
 
-        public SettingRepository(
+        public DictionaryRepository(
             IDbContext dbContext,
-            ILogger<SettingRepository> logger)
+            ILogger<DictionaryRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -43,22 +43,22 @@ namespace Plato.Internal.Repositories.Settings
 
         }
 
-        public async Task<Setting> InsertUpdateAsync(Setting setting)
+        public async Task<DictionaryEntry> InsertUpdateAsync(DictionaryEntry dictionaryEntry)
         {
             var id = await InsertUpdateInternal(
-                setting.Id,    
-                setting.Key,
-                setting.Value,
-                setting.CreatedDate,
-                setting.CreatedUserId,
-                setting.ModifiedDate,
-                setting.ModifiedUserId);
+                dictionaryEntry.Id,    
+                dictionaryEntry.Key,
+                dictionaryEntry.Value,
+                dictionaryEntry.CreatedDate,
+                dictionaryEntry.CreatedUserId,
+                dictionaryEntry.ModifiedDate,
+                dictionaryEntry.ModifiedUserId);
             if (id > 0)
                 return await SelectByIdAsync(id);
             return null;
         }
 
-        public async Task<Setting> SelectByIdAsync(int id)
+        public async Task<DictionaryEntry> SelectByIdAsync(int id)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -73,7 +73,7 @@ namespace Plato.Internal.Repositories.Settings
                 {
                     if (reader.HasRows)
                     {
-                        var setting = new Setting();
+                        var setting = new DictionaryEntry();
                         await reader.ReadAsync();
                         setting.PopulateModel(reader);
                         return setting;
@@ -86,13 +86,13 @@ namespace Plato.Internal.Repositories.Settings
             
         }
 
-        public async Task<IEnumerable<Setting>> SelectSettings()
+        public async Task<IEnumerable<DictionaryEntry>> SelectEntries()
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
                 _logger.LogInformation("Selecting all settings");
 
-            List<Setting> settings = null;
+            List<DictionaryEntry> entry = null;
             // database context may not be configured.
             // For example during set-up
             if (_dbContext != null)
@@ -106,22 +106,63 @@ namespace Plato.Internal.Repositories.Settings
                     {
                         if (reader.HasRows)
                         {
-                            settings = new List<Setting>();
+                            entry = new List<DictionaryEntry>();
                             while (await reader.ReadAsync())
                             {
-                                var setting = new Setting();
+                                var setting = new DictionaryEntry();
                                 setting.PopulateModel(reader);
-                                settings.Add(setting);
+                                entry.Add(setting);
                             }
                         }
                     }
                 }
             }
 
-            return settings;
+            return entry;
 
         }
         
+
+        public async Task<DictionaryEntry> SelectEntryByKey(string key)
+        {
+
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation($"Selecting dictionary entry {key}");
+
+            DictionaryEntry entry = null;
+            // database context may not be configured.
+            // For example during set-up
+            if (_dbContext != null)
+            {
+                using (var context = _dbContext)
+                {
+                    var reader = await context.ExecuteReaderAsync(
+                        CommandType.StoredProcedure,
+                        "SelectSettingByKey",
+                        key);
+                    if (reader != null)
+                    {
+                        if (reader.HasRows)
+                        {
+
+                            entry = new DictionaryEntry();
+                            entry.PopulateModel(reader);
+
+                        }
+                    }
+                }
+            }
+
+            return entry;
+
+        }
+
+
+        public Task<bool> DeleteByKeyAsync(string key)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region "Private Methods"
@@ -166,7 +207,8 @@ namespace Plato.Internal.Repositories.Settings
         {
             throw new NotImplementedException();
         }
-        
+
+
         #endregion
 
     }

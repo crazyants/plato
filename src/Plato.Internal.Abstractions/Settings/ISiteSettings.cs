@@ -2,7 +2,7 @@
 
 namespace Plato.Internal.Abstractions.Settings
 {
-    public interface ISiteSettings : ISettingValue
+    public interface ISiteSettings : ISerializable
     {
 
         string SiteName { get; set; }

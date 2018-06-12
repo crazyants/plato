@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Repositories.Users;
-using Plato.Internal.Repositories.Settings;
+using Plato.Internal.Repositories.Abstract;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Settings;
@@ -16,8 +16,9 @@ namespace Plato.Internal.Repositories.Extensions
             this IServiceCollection services)
         {
 
-            services.AddScoped<ISettingRepository<Setting>, SettingRepository>();
-            services.AddScoped<ISettingsFactory, SettingsFactory>();
+            // dictionary storage (used for unique key value paris - i.e. global settings
+            services.AddScoped<IDictionaryRepository<DictionaryEntry>, DictionaryRepository>();
+            services.AddScoped<IDictionaryFactory, DictionaryFactory>();
 
             // roles
             services.AddScoped<IRoleRepository<Role>, RoleRepository>();

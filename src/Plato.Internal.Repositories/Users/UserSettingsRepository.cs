@@ -6,7 +6,7 @@ using System.Data;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Repositories.Settings;
+using Plato.Internal.Repositories.Abstract;
 
 namespace Plato.Internal.Repositories.Users
 {
@@ -16,7 +16,7 @@ namespace Plato.Internal.Repositories.Users
         #region Private Variables"
 
         private readonly IDbContext _dbContext;
-        private readonly ILogger<SettingRepository> _logger;
+        private readonly ILogger<DictionaryRepository> _logger;
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace Plato.Internal.Repositories.Users
 
         public UserSettingsRepository(
             IDbContext dbContext,
-            ILogger<SettingRepository> logger)
+            ILogger<DictionaryRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
