@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
-using Plato.Internal.Models.Settings;
+using Plato.Internal.Models.Abstract;
 using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Settings.Services
@@ -15,14 +15,14 @@ namespace Plato.Settings.Services
     {
 
         private readonly ISchemaBuilder _schemaBuilder;
-        private readonly ISiteSettingsStore _siteSettingsService;
+        private readonly ISiteSettingsStore _siteSettingsStore;
     
         public SetUpEventHandler(
             ISchemaBuilder schemaBuilder,
             ISiteSettingsStore siteSettingsService)
         {
             _schemaBuilder = schemaBuilder;
-            _siteSettingsService = siteSettingsService;
+            _siteSettingsStore = siteSettingsService;
         }
 
         public async Task SetUp(
@@ -105,14 +105,15 @@ namespace Plato.Settings.Services
                 }
             }
 
+
             // --------------------------
-            // Add default data
+            // Add default settings to dictionary store
             // --------------------------
 
             try
             {
 
-                var siteSettings = await _siteSettingsService.GetAsync() ?? new SiteSettings();
+                var siteSettings = await _siteSettingsStore.GetAsync() ?? new SiteSettings();
                 siteSettings.SiteName = context.SiteName;
                 siteSettings.SuperUser = context.AdminUsername;
 
@@ -125,7 +126,7 @@ namespace Plato.Settings.Services
 
                 };
 
-                await _siteSettingsService.SaveAsync(siteSettings);
+                await _siteSettingsStore.SaveAsync(siteSettings);
             }
             catch (Exception ex)
             {

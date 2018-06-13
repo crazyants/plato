@@ -5,6 +5,7 @@ using Plato.Internal.Stores.Settings;
 using Plato.Internal.Stores.Roles;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Stores.Abstract;
 using Plato.Internal.Stores.Files;
 
 namespace Plato.Internal.Stores.Extensions
@@ -15,24 +16,23 @@ namespace Plato.Internal.Stores.Extensions
         public static IServiceCollection AddStores(
          this IServiceCollection services)
         {
+
+            // Abstract dictionaty store (settings etc)
+            services.AddScoped<IDictionaryStore, DictionaryStore>();
             
-         
+            // Ensure query is aware of current db context
             services.AddScoped<IDbQuery, DbQuery>();
 
-            // files
-
+            // Files
             services.AddScoped<IFileStore, FileStore>();
 
-            // settings
-
+            // Site Settings
             services.AddScoped<ISiteSettingsStore, SiteSettingsStore>();
             
-            // roles
-
+            // Roles
             services.AddScoped<IPlatoRoleStore, PlatoRoleStore>();
          
-            // users
-
+            // Users
             services.AddScoped<IPlatoUserStore<User>, PlatoUserStore>();
             services.AddScoped<IUserPhotoStore<UserPhoto>, UserPhotoStore>();
             services.AddScoped<IUserBannerStore<UserBanner>, UserBannerStore>();

@@ -1,4 +1,5 @@
-﻿namespace Plato.Internal.Abstractions.Settings
+﻿
+namespace Plato.Internal.Abstractions
 {
     public interface ISerializable
     {

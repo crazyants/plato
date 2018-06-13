@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Plato.Internal.Abstractions.Settings;
+using Plato.Internal.Repositories.Abstract;
+using Plato.Internal.Stores.Abstract;
 using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Internal.Stores.Settings
@@ -10,11 +12,11 @@ namespace Plato.Internal.Stores.Settings
 
         private readonly string _key = CacheKeys.SiteSettings.ToString();
 
-        private readonly IDictionaryFactory _dictionaryFactory;
+        private readonly IDictionaryStore _dictionaryFactory;
         private readonly IMemoryCache _memoryCache;
 
         public SiteSettingsStore(
-            IDictionaryFactory dictionaryFactory,
+            IDictionaryStore dictionaryFactory,
             IMemoryCache memoryCache)
         {
             _dictionaryFactory = dictionaryFactory;

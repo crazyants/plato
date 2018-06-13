@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Plato.Internal.Models.Settings;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Abstractions.Settings;
+using Plato.Internal.Models.Abstract;
+using Plato.Internal.Repositories.Abstract;
 
-namespace Plato.Internal.Repositories.Abstract
+namespace Plato.Internal.Stores.Abstract
 {
-    public class DictionaryFactory : IDictionaryFactory
+
+    public class DictionaryStore : IDictionaryStore
     {
 
         #region "Private Variables"
@@ -18,7 +20,7 @@ namespace Plato.Internal.Repositories.Abstract
         
         #region ""Constructor"
 
-        public DictionaryFactory(
+        public DictionaryStore(
             IDictionaryRepository<DictionaryEntry> dictionaryRepository)
         {
             _dictionaryRepository = dictionaryRepository;

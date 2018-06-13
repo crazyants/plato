@@ -3,8 +3,7 @@ using Plato.Internal.Repositories.Users;
 using Plato.Internal.Repositories.Abstract;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Models.Roles;
-using Plato.Internal.Models.Settings;
-using Plato.Internal.Abstractions.Settings;
+using Plato.Internal.Models.Abstract;
 using Plato.Internal.Repositories.Roles;
 
 namespace Plato.Internal.Repositories.Extensions
@@ -18,8 +17,7 @@ namespace Plato.Internal.Repositories.Extensions
 
             // dictionary storage (used for unique key value paris - i.e. global settings
             services.AddScoped<IDictionaryRepository<DictionaryEntry>, DictionaryRepository>();
-            services.AddScoped<IDictionaryFactory, DictionaryFactory>();
-
+ 
             // roles
             services.AddScoped<IRoleRepository<Role>, RoleRepository>();
 
