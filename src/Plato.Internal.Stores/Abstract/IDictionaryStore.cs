@@ -9,7 +9,7 @@ namespace Plato.Internal.Stores.Abstract
 
         Task<T> UpdateAsync<T>(string key, ISerializable value);
 
-        Task<bool> DeleteByKeyAsync(string key);
+        Task<bool> DeleteAsync(string key);
 
     }
 }

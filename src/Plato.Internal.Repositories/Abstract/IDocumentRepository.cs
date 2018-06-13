@@ -6,9 +6,14 @@ using Plato.Internal.Models.Abstract;
 
 namespace Plato.Internal.Repositories.Abstract
 {
-    public interface IDocumentRepository<T> : IRepository<T> where T : class
+    public interface IDocumentRepository
     {
-    
+
+        Task<DocumentEntry> UpdateAsync(DocumentEntry document);
+
+        Task<DocumentEntry> GetAsync(int id);
+
+        Task<bool> DeleteAsync(DocumentEntry document);
     }
 
 }

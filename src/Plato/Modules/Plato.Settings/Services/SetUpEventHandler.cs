@@ -27,17 +27,16 @@ namespace Plato.Settings.Services
 
         public async Task SetUp(
             SetUpContext context,
-            Action<string, string> reportError
-        )
+            Action<string, string> reportError)
         {
             
             // --------------------------
             // Build schema
             // --------------------------
 
-            var table = new SchemaTable()
+            var dictionaryTable = new SchemaTable()
             {
-                Name = "Settings",
+                Name = "DictionaryStore",
                 Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -80,19 +79,75 @@ namespace Plato.Settings.Services
                     }
                 }
             };
+
+            var documentTable = new SchemaTable()
+            {
+                Name = "DocumentStore",
+                Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Value]",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTime2
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTime2
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedUserId",
+                        DbType = DbType.Int32
+                    }
+                }
+            };
             
             using (var builder = _schemaBuilder)
             {
+
+                // build dictionary store
+
                 builder
                     .Configure(options =>
                     {
                         options.ModuleName = "Plato.Settings";
                         options.Version = "1.0.0";
                     })
-                    .CreateTable(table)
-                    .CreateDefaultProcedures(table)
-                    .CreateProcedure(new SchemaProcedure("SelectSettingByKey", StoredProcedureType.SelectByKey)
-                        .ForTable(table).WithParameter(new SchemaColumn() {Name = "[Key]", DbType = DbType.Int32}));
+                    .CreateTable(dictionaryTable)
+                    .CreateDefaultProcedures(dictionaryTable)
+                    .CreateProcedure(new SchemaProcedure("SelectDictionaryByKey", StoredProcedureType.SelectByKey)
+                        .ForTable(dictionaryTable).WithParameter(new SchemaColumn() {Name = "[Key]", DbType = DbType.Int32}));
+
+                // build document store
+
+                builder
+                    .Configure(options =>
+                    {
+                        options.ModuleName = "Plato.Settings";
+                        options.Version = "1.0.0";
+                    })
+                    .CreateTable(documentTable)
+                    .CreateDefaultProcedures(documentTable);
+
+                // Did any errors occur?
 
                 var result = await builder.ApplySchemaAsync();
                 if (result.Errors.Count > 0)
@@ -133,9 +188,9 @@ namespace Plato.Settings.Services
                 reportError(ex.Message, ex.StackTrace);
             }
           
-        
          
         }
+
     }
 
 }

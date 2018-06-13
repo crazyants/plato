@@ -62,7 +62,7 @@ namespace Plato.Internal.Stores.Abstract
 
         }
 
-        public async Task<bool> DeleteByKeyAsync(string key)
+        public async Task<bool> DeleteAsync(string key)
         {
             return await _dictionaryRepository.DeleteByKeyAsync(key);
         }

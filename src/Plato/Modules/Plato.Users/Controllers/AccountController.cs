@@ -1,14 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Data.Schemas.Abstractions;
+using Plato.Internal.Models;
+using Plato.Internal.Models.Abstract;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Stores.Abstract;
 
 namespace Plato.Users.Controllers
 {
+
+    public class TestDocument : Document
+    {
+        public string Title { get; set; }
+
+        public string Body { get; set; }
+
+    }
+
+
     public class AccountController : Controller
     {
 
@@ -17,21 +31,36 @@ namespace Plato.Users.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISchemaBuilder _schemaBuilder;
 
+        public readonly IDocumentStore _documentStore;
+
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManage,
-            IHttpContextAccessor httpContextAccessor, ISchemaBuilder schemaBuilder)
+            IHttpContextAccessor httpContextAccessor, 
+            ISchemaBuilder schemaBuilder,
+            IDocumentStore documentStore)
         {
             _userManager = userManager;
             _signInManager = signInManage;
             _httpContextAccessor = httpContextAccessor;
             _schemaBuilder = schemaBuilder;
+            _documentStore = documentStore;
         }
 
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
+
+            var doc = new TestDocument()
+            {
+                Title = "test",
+                Body = "testing 123"
+            };
+
+
+            var newDoc = _documentStore.UpdateAsync<TestDocument>(doc);
+
 
 
             //for (var i = 0; i < 500; i++)

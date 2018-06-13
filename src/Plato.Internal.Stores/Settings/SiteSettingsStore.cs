@@ -12,14 +12,14 @@ namespace Plato.Internal.Stores.Settings
 
         private readonly string _key = CacheKeys.SiteSettings.ToString();
 
-        private readonly IDictionaryStore _dictionaryFactory;
+        private readonly IDictionaryStore _dictionaryStore;
         private readonly IMemoryCache _memoryCache;
 
         public SiteSettingsStore(
-            IDictionaryStore dictionaryFactory,
+            IDictionaryStore dictionaryStore,
             IMemoryCache memoryCache)
         {
-            _dictionaryFactory = dictionaryFactory;
+            _dictionaryStore = dictionaryStore;
             _memoryCache = memoryCache;
         }
 
@@ -27,7 +27,7 @@ namespace Plato.Internal.Stores.Settings
         {
             if (!_memoryCache.TryGetValue(_key, out SiteSettings siteSettings))
             {
-                siteSettings = await _dictionaryFactory.GetAsync<SiteSettings>(_key);
+                siteSettings = await _dictionaryStore.GetAsync<SiteSettings>(_key);
                 if (siteSettings != null)
                     _memoryCache.Set(_key, siteSettings);
             }
@@ -37,7 +37,7 @@ namespace Plato.Internal.Stores.Settings
 
         public async Task<ISiteSettings> SaveAsync(ISiteSettings siteSettings)
         {
-            var settings = await _dictionaryFactory.UpdateAsync<SiteSettings>(_key, siteSettings);
+            var settings = await _dictionaryStore.UpdateAsync<SiteSettings>(_key, siteSettings);
             if (settings != null)
             {
                 // Update cache
@@ -49,7 +49,7 @@ namespace Plato.Internal.Stores.Settings
 
         public async Task<bool> DeleteAsync()
         {
-            var result =  await _dictionaryFactory.DeleteByKeyAsync(_key);
+            var result =  await _dictionaryStore.DeleteAsync(_key);
             _memoryCache.Remove(_key);
             return result;
         }

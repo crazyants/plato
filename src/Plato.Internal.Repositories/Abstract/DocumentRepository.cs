@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models;
 using Plato.Internal.Models.Abstract;
 
 namespace Plato.Internal.Repositories.Abstract
 {
-    public class DocumentRepository : IDocumentRepository<DocumentEntry>
+    public class DocumentRepository : IDocumentRepository
     {
 
         #region Private Variables"
@@ -35,41 +36,35 @@ namespace Plato.Internal.Repositories.Abstract
 
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<DocumentEntry> InsertUpdateAsync(DocumentEntry entity)
+        public async Task<DocumentEntry> UpdateAsync(DocumentEntry document)
         {
             var id = await InsertUpdateInternal(
-                entity.Id,
-                entity.Value,
-                entity.CreatedDate,
-                entity.CreatedUserId,
-                entity.ModifiedDate,
-                entity.ModifiedUserId);
+                document.Id,
+                document.Value,
+                document.CreatedDate,
+                document.CreatedUserId,
+                document.ModifiedDate,
+                document.ModifiedUserId);
             if (id > 0)
-                return await SelectByIdAsync(id);
+                return await GetAsync(id);
             return null;
         }
 
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        public async Task<DocumentEntry> GetAsync(int id)
+        {
+            return await SelectByIdAsync(id);
+        }
+
+        public Task<bool> DeleteAsync(DocumentEntry document)
         {
             throw new NotImplementedException();
         }
-
-        public Task<DocumentEntry> SelectByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-
+        
         #endregion
 
         #region "Private Methods"
 
-        private async Task<int> InsertUpdateInternal(
+        async Task<int> InsertUpdateInternal(
             int id,
             string value,
             DateTime? createdDate,
@@ -103,8 +98,45 @@ namespace Plato.Internal.Repositories.Abstract
 
         }
 
+        async Task<DocumentEntry> SelectByIdAsync(int id)
+        {
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation($"Selecting document entry {id}");
+
+            DocumentEntry entry = null;
+            // database context may not be configured.
+            // For example during set-up
+            if (_dbContext != null)
+            {
+                using (var context = _dbContext)
+                {
+                    var reader = await context.ExecuteReaderAsync(
+                        CommandType.StoredProcedure,
+                        "SelectDocumentById",
+                        id);
+                    if (reader != null)
+                    {
+                        if (reader.HasRows)
+                        {
+                            entry = new DocumentEntry();
+                            entry.PopulateModel(reader);
+                        }
+                    }
+                }
+            }
+
+            return entry;
+        }
+
 
         #endregion
+
+
+
+
+
+
+
 
     }
 

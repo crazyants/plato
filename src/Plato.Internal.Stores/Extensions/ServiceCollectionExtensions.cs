@@ -17,9 +17,10 @@ namespace Plato.Internal.Stores.Extensions
          this IServiceCollection services)
         {
 
-            // Abstract dictionaty store (settings etc)
+            // Abstract stores 
             services.AddScoped<IDictionaryStore, DictionaryStore>();
-            
+            services.AddScoped<IDocumentStore, DocumentStore>();
+
             // Ensure query is aware of current db context
             services.AddScoped<IDbQuery, DbQuery>();
 
