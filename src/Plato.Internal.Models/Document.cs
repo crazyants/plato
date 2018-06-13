@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Plato.Internal.Models
 {
-    public class Document : IDocument
+    public class BaseDocument : IDocument
     {
 
         public int Id { get; set; }

@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Plato.Internal.Abstractions.Settings;
-using Plato.Internal.Repositories.Abstract;
 using Plato.Internal.Stores.Abstract;
 using Plato.Internal.Stores.Abstractions;
 

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Models.Roles;
+using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Internal.Stores.Roles
 {

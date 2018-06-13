@@ -2,12 +2,12 @@
 
 namespace Plato.Internal.Stores.Abstractions
 {
-    public interface IDictionaryStore<T> where T : class
+    public interface IDictionaryStore<TModel> where TModel : class
     {
 
-        Task<T> GetAsync();
+        Task<TModel> GetAsync();
 
-        Task<T> SaveAsync(T model);
+        Task<TModel> SaveAsync(TModel model);
 
         Task<bool> DeleteAsync();
 

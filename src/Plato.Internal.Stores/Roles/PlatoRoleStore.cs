@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Repositories.Roles;
+using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Internal.Stores.Roles
 {

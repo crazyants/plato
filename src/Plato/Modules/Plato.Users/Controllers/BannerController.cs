@@ -10,6 +10,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Stores.Files;
 using Microsoft.AspNetCore.Hosting;
+using Plato.Internal.Stores.Abstractions.Files;
 
 namespace Plato.Users.Controllers
 {
@@ -29,8 +30,7 @@ namespace Plato.Users.Controllers
             IPlatoUserStore<User> platoUserStore,
             IUserBannerStore<UserBanner> userBannerStore,
             IHostingEnvironment hostEnvironment,
-            IFileStore fileStore
-        )
+            IFileStore fileStore)
         {
             _contextFacade = contextFacade;
             _platoUserStore = platoUserStore;

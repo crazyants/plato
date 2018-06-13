@@ -6,7 +6,11 @@ using Plato.Internal.Stores.Roles;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstract;
+using Plato.Internal.Stores.Abstractions.Files;
+using Plato.Internal.Stores.Abstractions.Roles;
+using Plato.Internal.Stores.Abstractions.Shell;
 using Plato.Internal.Stores.Files;
+using Plato.Internal.Stores.Shell;
 
 namespace Plato.Internal.Stores.Extensions
 {
@@ -26,6 +30,9 @@ namespace Plato.Internal.Stores.Extensions
 
             // Files
             services.AddScoped<IFileStore, FileStore>();
+
+            // Shell features
+            services.AddScoped<IShellFeaturesStore, ShellFeaturesStore>();
 
             // Site Settings
             services.AddScoped<ISiteSettingsStore, SiteSettingsStore>();

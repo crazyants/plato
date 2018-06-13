@@ -15,7 +15,7 @@ namespace Plato.Internal.Repositories.Abstract
 
         Task<DocumentEntry> GetByType(string type);
 
-        Task<bool> DeleteAsync(DocumentEntry document);
+        Task<bool> DeleteAsync(int id);
     }
 
 }

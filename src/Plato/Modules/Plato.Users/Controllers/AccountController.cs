@@ -15,11 +15,13 @@ using Plato.Internal.Stores.Abstract;
 namespace Plato.Users.Controllers
 {
 
-    public class TestDocument : Document
+    public class TestDocument2 : BaseDocument
     {
+
         public string Title { get; set; }
 
         public string Body { get; set; }
+
 
     }
 
@@ -53,14 +55,16 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Login(string returnUrl = null)
         {
 
-            var doc = new TestDocument()
+            var doc = new TestDocument2()
             {
-                Title = "test",
-                Body = "testing 123"
+                Title = "test 123 123 ",
+                Body = "testing 123 123 123 "
             };
 
 
-            var newDoc = await _documentStore.UpdateAsync<TestDocument>(doc);
+            var existingDoc = await _documentStore.GetAsync<TestDocument2>();
+
+            var newDoc = await _documentStore.SaveAsync<TestDocument2>(existingDoc);
 
             var sb = new StringBuilder();
             

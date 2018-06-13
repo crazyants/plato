@@ -63,9 +63,18 @@ namespace Plato.Internal.Repositories.Abstract
             return await SelectByTypeAsync(type);
         }
 
-        public Task<bool> DeleteAsync(DocumentEntry document)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            using (var context = _dbContext)
+            {
+                await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteDocumentEntryById",
+                    id);
+            }
+
+            return true;
+
         }
         
         #endregion

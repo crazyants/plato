@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plato.Internal.Stores.Files
+namespace Plato.Internal.Stores.Abstractions.Files
 {
     public interface IFileStore
     {

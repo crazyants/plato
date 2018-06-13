@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Models.Roles;
-using Plato.Internal.Stores.Roles;
+using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Roles.Services
 {

@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Authentication.Internal;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models;
 using Plato.Internal.Models.Abstract;
 using Plato.Internal.Repositories.Abstract;
@@ -32,28 +27,27 @@ namespace Plato.Internal.Stores.Abstract
         #endregion
 
         #region "Implemention"
-
-        #endregion
-
-        public async Task<TModel> GetAsync<TModel>(IDocument document)
+        
+        public async Task<TModel> GetAsync<TModel>()
         {
-            var entry = await GetEntryByDocumentType(document.GetType());
+            var entry = await GetEntryByDocumentType(typeof(TModel));
             return await GetDocumentFromEntryAsync<TModel>(entry);
         }
 
-        public async Task<TModel> UpdateAsync<TModel>(IDocument document)
+        public async Task<TModel> SaveAsync<TModel>(IDocument document)
         {
 
-            // Attempt to get existing document entry by type
+            // Attempt to get existing document entry or create a new one
             var entry = await GetEntryByDocumentType(document.GetType())
                         ?? new DocumentEntry()
                         {
                             Type = typeof(TModel).ToString()
                         };
 
-            // update entry with serilaized document
+            // Update entry with latest document
             entry.Value = document.Serialize();
 
+            // Set meta data
             entry.CreatedDate = entry.Id == 0 ? System.DateTime.Now : entry.CreatedDate;
             entry.ModifiedDate = System.DateTime.Now;
 
@@ -62,10 +56,10 @@ namespace Plato.Internal.Stores.Abstract
             if (addedEntry != null)
             {
 
-                // Get document from entry
-                var entryDocument = (IDocument) await GetDocumentFromEntryAsync<TModel>(addedEntry);
-
                 // Ensure the document has the same unique Id as the entry
+                // This ensures the document has a unique Id to work with if needed
+                // This is only executed the first time a type is added
+                var entryDocument = (IDocument) await GetDocumentFromEntryAsync<TModel>(addedEntry);
                 if (entryDocument.Id == 0)
                 {
                     entryDocument.Id = addedEntry.Id;
@@ -82,15 +76,26 @@ namespace Plato.Internal.Stores.Abstract
 
             return default(TModel);
 
-
         }
 
-        public Task<TModel> DeleteAsync<TModel>(IDocument document)
+        public async Task<bool> DeleteAsync<TModel>()
         {
-            throw new NotImplementedException();
+            var success = false;
+            // Ensure we have an entry for the type
+            var entry = await GetEntryByDocumentType(typeof(TModel));
+            if (entry != null)
+            {
+                success = await _documentRepository.DeleteAsync(entry.Id);
+
+            }
+
+            return success;
         }
 
+        #endregion
 
+        #region "Private Methods"
+        
         async Task<DocumentEntry> GetEntryByDocumentType(Type type)
         {
             return await _documentRepository.GetByType(type.ToString());
@@ -100,7 +105,8 @@ namespace Plato.Internal.Stores.Abstract
         {
             return await entry.Value.DeserializeAsync<TModel>();
         }
-
+        
+        #endregion
 
     }
 }

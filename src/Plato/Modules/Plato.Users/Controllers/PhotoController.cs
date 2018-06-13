@@ -9,7 +9,7 @@ using Plato.Internal.Hosting.Web;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
 using Microsoft.AspNetCore.Hosting;
-using Plato.Internal.Stores.Files;
+using Plato.Internal.Stores.Abstractions.Files;
 
 namespace Plato.Users.Controllers
 {

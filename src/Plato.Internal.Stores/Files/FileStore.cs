@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
+using Plato.Internal.Stores.Abstractions.Files;
 
 namespace Plato.Internal.Stores.Files
 {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Internal.Stores.Roles
+namespace Plato.Internal.Stores.Abstractions.Roles
 {
     public interface IPlatoRoleStore : IStore<Role>
     {
