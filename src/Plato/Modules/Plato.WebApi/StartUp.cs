@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Hosting;
-using Plato.Internal.Shell.Models;
+using Plato.Internal.Shell.Abstractions.Models;
 
 namespace Plato.WebApi
 {

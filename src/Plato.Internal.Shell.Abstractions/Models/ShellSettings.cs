@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Plato.Internal.Shell.Abstractions;
 
-namespace Plato.Internal.Shell.Models
+namespace Plato.Internal.Shell.Abstractions.Models
 {
     public class ShellSettings : IShellSettings
     {

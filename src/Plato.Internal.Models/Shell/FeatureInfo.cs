@@ -5,9 +5,14 @@ using System.Text;
 namespace Plato.Internal.Models.Shell
 {
 
-    public class ActiveFeature
+    public class FeatureInfo
     {
+
+        public string Id { get; set; }
+        
         public string Name { get; set; }
+
+
 
     }
 }

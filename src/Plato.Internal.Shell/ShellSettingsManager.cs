@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using Plato.Internal.Yaml;
-using Plato.Internal.Shell.Models;
+using Plato.Internal.Shell.Abstractions.Models;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Yaml.Extensions;

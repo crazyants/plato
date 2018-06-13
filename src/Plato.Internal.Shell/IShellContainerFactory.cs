@@ -1,8 +1,5 @@
-﻿using Plato.Internal.Shell.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using Plato.Internal.Shell.Abstractions.Models;
 
 namespace Plato.Internal.Shell
 {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Plato.Internal.Shell.Models;
+using Plato.Internal.Shell.Abstractions.Models;
 
 namespace Plato.Internal.Shell
 {

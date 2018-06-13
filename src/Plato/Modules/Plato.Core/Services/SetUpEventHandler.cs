@@ -13,14 +13,11 @@ namespace Plato.Core.Services
     {
 
         private readonly ISchemaBuilder _schemaBuilder;
-        private readonly ISiteSettingsStore _siteSettingsStore;
     
         public SetUpEventHandler(
-            ISchemaBuilder schemaBuilder,
-            ISiteSettingsStore siteSettingsService)
+            ISchemaBuilder schemaBuilder)
         {
             _schemaBuilder = schemaBuilder;
-            _siteSettingsStore = siteSettingsService;
         }
 
         public async Task SetUp(

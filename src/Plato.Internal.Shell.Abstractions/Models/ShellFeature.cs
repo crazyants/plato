@@ -1,4 +1,4 @@
-﻿namespace Plato.Internal.Shell.Models
+﻿namespace Plato.Internal.Shell.Abstractions.Models
 {
     public class ShellFeature
     {

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting;
-using Plato.Internal.Shell.Models;
+using Plato.Internal.Shell.Abstractions.Models;
 
 namespace Plato.Markdown
 {

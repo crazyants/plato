@@ -7,7 +7,7 @@ namespace Plato.Internal.Models.Shell
 {
     public interface IShellFeatures : ISerializable
     {
-        IEnumerable<ActiveFeature> Features { get; set; }
+        IEnumerable<FeatureInfo> Features { get; set; }
 
     }
 }

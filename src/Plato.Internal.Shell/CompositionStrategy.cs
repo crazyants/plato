@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Modules.Abstractions;
-using Plato.Internal.Shell.Models;
+using Plato.Internal.Shell.Abstractions.Models;
 
 namespace Plato.Internal.Shell
 {

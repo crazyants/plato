@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Core.Services;
-using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Hosting;
-using Plato.Internal.Shell.Models;
+using Plato.Internal.Abstractions.SetUp;
+using Plato.Internal.Shell.Abstractions.Models;
+using Plato.Core.Services;
 
 namespace Plato.Core
 {

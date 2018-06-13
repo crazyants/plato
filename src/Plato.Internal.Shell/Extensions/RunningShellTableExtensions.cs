@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
-using Plato.Internal.Shell.Models;
+using Plato.Internal.Shell.Abstractions.Models;
 
 namespace Plato.Internal.Shell.Extensions
 {

@@ -9,7 +9,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Hosting;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Shell.Models;
+using Plato.Internal.Shell.Abstractions.Models;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Hosting.Web;
 using Plato.Internal.Hosting.Web.Extensions;

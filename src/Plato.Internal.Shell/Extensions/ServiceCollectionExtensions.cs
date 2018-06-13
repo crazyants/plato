@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.FileSystem;
-using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.FileSystem.Abstractions;
-using Plato.Internal.Shell.Models;
 using Plato.Internal.FileSystem.AppData;
 using Plato.Internal.Shell.Abstractions;
 
@@ -29,7 +22,11 @@ namespace Plato.Internal.Shell.Extensions
         public static IServiceCollection AddPlatoShell(
             this IServiceCollection services)
         {
-                    
+
+            // ----------------
+            // core module management
+            // ----------------
+
             services.AddSingleton<IAppDataFolder, PhysicalAppDataFolder>();
             
             // shell / tenant context
@@ -42,7 +39,6 @@ namespace Plato.Internal.Shell.Extensions
             }
 
             services.AddSingleton<IRunningShellTable, RunningShellTable>();
-
 
             return services;
         }
