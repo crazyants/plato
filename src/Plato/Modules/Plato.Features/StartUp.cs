@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting;
 using Plato.Internal.Navigation;
 
-namespace Plato.Modules
+namespace Plato.Features
 {
     public class Startup : StartupBase
     {
@@ -24,9 +24,9 @@ namespace Plato.Modules
         {
        
             routes.MapAreaRoute(
-                name: "AdminManageModules",
-                areaName: "Plato.Modules",
-                template: "admin/modules",
+                name: "AdminManageFEatures",
+                areaName: "Plato.Features",
+                template: "admin/features",
                 defaults: new { controller = "Admin", action = "Index" }
             );
 

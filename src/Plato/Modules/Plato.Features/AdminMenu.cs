@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.Modules
+namespace Plato.Features
 {
     public class AdminMenu : INavigationProvider
     {
@@ -22,12 +22,12 @@ namespace Plato.Modules
 
             builder
                 .Add(T["Modules"], users => users
-                    .Add(T["Manage Modules"], "15", manageusers => manageusers
-                        .Action("Index", "Admin", "Plato.Modules")
+                    .Add(T["Manage Features"], "15", manageusers => manageusers
+                        .Action("Index", "Admin", "Plato.Features")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ).Add(T["Module Gallary"], "16", roles => roles
-                        .Action("Create", "Admin", "Plato.Modules")
+                    ).Add(T["Feature Gallary"], "16", roles => roles
+                        .Action("Create", "Admin", "Plato.Features")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));

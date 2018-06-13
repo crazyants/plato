@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Dicsussions;
 using Plato.Internal.Hosting;
+using Plato.Internal.Navigation;
 using Plato.Internal.Shell.Abstractions.Models;
 
 namespace Plato.Discussions
@@ -18,6 +20,9 @@ namespace Plato.Discussions
 
         public override void ConfigureServices(IServiceCollection services)
         {
+
+            // register navigation provider
+            services.AddScoped<INavigationProvider, AdminMenu>();
 
         }
 

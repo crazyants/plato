@@ -1,6 +1,0 @@
-Name: Plato Modules
-Description: Provides functionality to manage and install modules.
-Author: InstantASP
-Version: 1.0.0
-PlatoVersion: 1.0.0
-Dependencies: Plato.Admin

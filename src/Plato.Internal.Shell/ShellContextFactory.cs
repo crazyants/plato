@@ -70,7 +70,7 @@ namespace Plato.Internal.Shell
                     new ShellFeature { Name = "Plato.Users" },
                     new ShellFeature { Name = "Plato.Roles" },
                     new ShellFeature { Name = "Plato.Settings" },
-                    new ShellFeature { Name = "Plato.Modules" }
+                    new ShellFeature { Name = "Plato.Features" }
                 }
             };
         }

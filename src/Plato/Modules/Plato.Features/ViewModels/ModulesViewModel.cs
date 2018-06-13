@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Plato.Internal.Modules.Abstractions;
 
-namespace Plato.Modules.ViewModels
+namespace Plato.Features.ViewModels
 {
-    public class ModulesViewModel
+    public class FEaturesViewModel
     {
         public IEnumerable<IModuleEntry> Modules { get; set; }
 

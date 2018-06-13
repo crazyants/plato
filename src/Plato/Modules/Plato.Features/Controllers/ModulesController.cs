@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Plato.Modules.Controllers
+namespace Plato.Features.Controllers
 {
 
     public class ModulesController : Controller

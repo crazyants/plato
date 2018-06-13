@@ -1,0 +1,6 @@
+Name: Plato Features
+Description: Provides functionality to allow site administrators to enable or disabe modules.
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: Plato.Admin
