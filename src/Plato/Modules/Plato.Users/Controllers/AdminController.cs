@@ -9,6 +9,7 @@ using Plato.Internal.Stores.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Users.Controllers
 {

@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Internal.Stores.Users
+namespace Plato.Internal.Stores.Abstractions.Users
 {
     public interface IUserBannerStore<T> : IStore<T> where T : class
     {

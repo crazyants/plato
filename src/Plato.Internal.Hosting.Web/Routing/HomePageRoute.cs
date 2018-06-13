@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.Settings;
 
 
 namespace Plato.Internal.Hosting.Web.Routing

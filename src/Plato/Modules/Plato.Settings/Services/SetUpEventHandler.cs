@@ -8,6 +8,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models.Abstract;
 using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.Settings;
 
 namespace Plato.Settings.Services
 {

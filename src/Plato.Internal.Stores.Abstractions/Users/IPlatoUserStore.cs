@@ -1,8 +1,6 @@
-﻿using Plato.Internal.Models.Users;
-using System.Threading.Tasks;
-using Plato.Internal.Stores.Abstractions;
+﻿using System.Threading.Tasks;
 
-namespace Plato.Internal.Stores.Users
+namespace Plato.Internal.Stores.Abstractions.Users
 {
     public interface IPlatoUserStore<T> : IStore<T> where T : class
     {

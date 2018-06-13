@@ -8,6 +8,7 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Users;
 using Plato.Internal.Stores.Abstractions.Roles;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Roles;
 
 namespace Plato.Internal.Stores.Users

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Stores.Abstract;
-using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.Settings;
 
 namespace Plato.Internal.Stores.Settings
 {

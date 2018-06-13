@@ -11,6 +11,7 @@ using Plato.Internal.Stores.Users;
 using Plato.Internal.Stores.Files;
 using Microsoft.AspNetCore.Hosting;
 using Plato.Internal.Stores.Abstractions.Files;
+using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Users.Controllers
 {

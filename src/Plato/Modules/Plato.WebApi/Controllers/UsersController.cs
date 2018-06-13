@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 
 namespace Plato.WebApi.Controllers

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Internal.Stores.Users
 {

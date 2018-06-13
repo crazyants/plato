@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Plato.Internal.Abstractions.Settings;
 using System.Threading.Tasks;
 using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Stores.Abstractions.Settings;
 
 namespace Plato.Discussions.Controllers
 {

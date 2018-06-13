@@ -8,7 +8,9 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstract;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Roles;
+using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Stores.Abstractions.Shell;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Files;
 using Plato.Internal.Stores.Shell;
 

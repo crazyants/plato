@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Users;
+using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Internal.Stores.Users
 {
