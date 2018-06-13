@@ -65,9 +65,11 @@ namespace Plato.Internal.Shell
             {
                 Modules = new[]
                 {
+                    new ShellFeature { Name = "Plato.Core" },
                     new ShellFeature { Name = "Plato.Admin" },
                     new ShellFeature { Name = "Plato.Users" },
                     new ShellFeature { Name = "Plato.Roles" },
+                    new ShellFeature { Name = "Plato.Settings" },
                     new ShellFeature { Name = "Plato.Modules" }
                 }
             };

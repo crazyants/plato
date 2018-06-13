@@ -40,19 +40,27 @@ namespace Plato.Internal.Repositories.Abstract
         {
             var id = await InsertUpdateInternal(
                 document.Id,
+                document.Type,
                 document.Value,
                 document.CreatedDate,
                 document.CreatedUserId,
                 document.ModifiedDate,
                 document.ModifiedUserId);
             if (id > 0)
+            {
                 return await GetAsync(id);
+            }
             return null;
         }
 
         public async Task<DocumentEntry> GetAsync(int id)
         {
             return await SelectByIdAsync(id);
+        }
+
+        public async Task<DocumentEntry> GetByType(string type)
+        {
+            return await SelectByTypeAsync(type);
         }
 
         public Task<bool> DeleteAsync(DocumentEntry document)
@@ -66,6 +74,7 @@ namespace Plato.Internal.Repositories.Abstract
 
         async Task<int> InsertUpdateInternal(
             int id,
+            string type,
             string value,
             DateTime? createdDate,
             int createdUserId,
@@ -87,8 +96,9 @@ namespace Plato.Internal.Repositories.Abstract
                     return 0;
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "InsertUpdateDocument",
+                    "InsertUpdateDocumentEntry",
                     id,
+                    type.ToEmptyIfNull().TrimToSize(500),
                     value.ToEmptyIfNull(),
                     createdDate.ToDateIfNull(),
                     createdUserId,
@@ -112,12 +122,44 @@ namespace Plato.Internal.Repositories.Abstract
                 {
                     var reader = await context.ExecuteReaderAsync(
                         CommandType.StoredProcedure,
-                        "SelectDocumentById",
+                        "SelectDocumentEntryById",
                         id);
                     if (reader != null)
                     {
                         if (reader.HasRows)
                         {
+                            await reader.ReadAsync();
+                            entry = new DocumentEntry();
+                            entry.PopulateModel(reader);
+                        }
+                    }
+                }
+            }
+
+            return entry;
+        }
+
+        async Task<DocumentEntry> SelectByTypeAsync(string type)
+        {
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation($"Selecting document entry for type: {type}");
+
+            DocumentEntry entry = null;
+            // database context may not be configured.
+            // For example during set-up
+            if (_dbContext != null)
+            {
+                using (var context = _dbContext)
+                {
+                    var reader = await context.ExecuteReaderAsync(
+                        CommandType.StoredProcedure,
+                        "SelectDocumentEntryByType",
+                        type);
+                    if (reader != null)
+                    {
+                        if (reader.HasRows)
+                        {
+                            await reader.ReadAsync();
                             entry = new DocumentEntry();
                             entry.PopulateModel(reader);
                         }

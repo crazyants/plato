@@ -11,6 +11,8 @@ namespace Plato.Internal.Models.Abstract
 
         public int Id { get; set; }
 
+        public string Type { get; set; }
+
         public string Value { get; set; }
 
         public DateTime? CreatedDate { get; set; }
@@ -28,9 +30,12 @@ namespace Plato.Internal.Models.Abstract
         public void PopulateModel(IDataReader dr)
         {
 
-            if (dr.ColumnIsNotNull("id"))
+            if (dr.ColumnIsNotNull("Id"))
                 this.Id = Convert.ToInt32(dr["Id"]);
-            
+
+            if (dr.ColumnIsNotNull("Type"))
+                this.Type = Convert.ToString((dr["Type"]));
+
             if (dr.ColumnIsNotNull("Value"))
                 this.Value = Convert.ToString((dr["Value"]));
 

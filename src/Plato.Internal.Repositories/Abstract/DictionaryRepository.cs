@@ -37,7 +37,7 @@ namespace Plato.Internal.Repositories.Abstract
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Deleting setting with id: {id}");
+                _logger.LogInformation($"Deleting dictionary entry with id: {id}");
             
             throw new NotImplementedException();
 
@@ -62,21 +62,21 @@ namespace Plato.Internal.Repositories.Abstract
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Selecting setting with id: {id}");
+                _logger.LogInformation($"Selecting dictionary entry with id: {id}");
             
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                    "SelectSettingById", id);
+                    "SelectDictionaryEntryById", id);
                 if (reader != null)
                 {
                     if (reader.HasRows)
                     {
-                        var setting = new DictionaryEntry();
+                        var entry = new DictionaryEntry();
                         await reader.ReadAsync();
-                        setting.PopulateModel(reader);
-                        return setting;
+                        entry.PopulateModel(reader);
+                        return entry;
                     }
                 }
           
@@ -90,9 +90,9 @@ namespace Plato.Internal.Repositories.Abstract
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation("Selecting all settings");
+                _logger.LogInformation("Selecting all dictionary entries");
 
-            List<DictionaryEntry> entry = null;
+            List<DictionaryEntry> entries = null;
             // database context may not be configured.
             // For example during set-up
             if (_dbContext != null)
@@ -101,24 +101,24 @@ namespace Plato.Internal.Repositories.Abstract
                 {
                     var reader = await context.ExecuteReaderAsync(
                         CommandType.StoredProcedure,
-                        "SelectSettings");
+                        "SelectDictionaryEntries");
                     if (reader != null)
                     {
                         if (reader.HasRows)
                         {
-                            entry = new List<DictionaryEntry>();
+                            entries = new List<DictionaryEntry>();
                             while (await reader.ReadAsync())
                             {
-                                var setting = new DictionaryEntry();
-                                setting.PopulateModel(reader);
-                                entry.Add(setting);
+                                var entry = new DictionaryEntry();
+                                entry.PopulateModel(reader);
+                                entries.Add(entry);
                             }
                         }
                     }
                 }
             }
 
-            return entry;
+            return entries;
 
         }
         
@@ -138,7 +138,7 @@ namespace Plato.Internal.Repositories.Abstract
                 {
                     var reader = await context.ExecuteReaderAsync(
                         CommandType.StoredProcedure,
-                        "SelectSettingByKey",
+                        "SelectDictionaryEntryByKey",
                         key);
                     if (reader != null)
                     {
@@ -181,8 +181,8 @@ namespace Plato.Internal.Repositories.Abstract
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation(id == 0
-                    ? $"Inserting settings with key: {key}"
-                    : $"Updating settings with id: {id}");
+                    ? $"Inserting dictionary entry with key: {key}"
+                    : $"Updating dictionary entry with id: {id}");
             }
               
             using (var context = _dbContext)
@@ -191,7 +191,7 @@ namespace Plato.Internal.Repositories.Abstract
                     return 0;
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "InsertUpdateSetting",
+                    "InsertUpdateDictionaryEntry",
                     id,
                     key.ToEmptyIfNull().TrimToSize(255),
                     value.ToEmptyIfNull(),

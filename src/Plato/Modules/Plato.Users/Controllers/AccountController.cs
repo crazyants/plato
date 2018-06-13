@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
 using System.Threading.Tasks;
@@ -59,9 +60,18 @@ namespace Plato.Users.Controllers
             };
 
 
-            var newDoc = _documentStore.UpdateAsync<TestDocument>(doc);
+            var newDoc = await _documentStore.UpdateAsync<TestDocument>(doc);
+
+            var sb = new StringBuilder();
+            
+            sb.Append("Id: " + newDoc.Id);
+            sb.Append("<br>");
+            sb.Append("Title: " + newDoc.Title);
+            sb.Append("<br>");
+            sb.Append("Body: " + newDoc.Body);
 
 
+            ViewBag.docs = sb.ToString();
 
             //for (var i = 0; i < 500; i++)
             //{

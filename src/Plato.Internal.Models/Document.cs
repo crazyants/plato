@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Plato.Internal.Models
 {
@@ -11,7 +12,8 @@ namespace Plato.Internal.Models
 
         public string Serialize()
         {
-            throw new NotImplementedException();
+            return JsonConvert.SerializeObject(this);
         }
+
     }
 }

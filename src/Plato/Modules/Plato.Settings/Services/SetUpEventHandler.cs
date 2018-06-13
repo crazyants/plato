@@ -34,131 +34,131 @@ namespace Plato.Settings.Services
             // Build schema
             // --------------------------
 
-            var dictionaryTable = new SchemaTable()
-            {
-                Name = "DictionaryStore",
-                Columns = new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        PrimaryKey = true,
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Key]",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Value]",
-                        Length = "max",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTime2
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedDate",
-                        DbType = DbType.DateTime2
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedUserId",
-                        DbType = DbType.Int32
-                    }
-                }
-            };
+            //var dictionaryTable = new SchemaTable()
+            //{
+            //    Name = "DictionaryStore",
+            //    Columns = new List<SchemaColumn>()
+            //    {
+            //        new SchemaColumn()
+            //        {
+            //            PrimaryKey = true,
+            //            Name = "Id",
+            //            DbType = DbType.Int32
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "[Key]",
+            //            Length = "255",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "[Value]",
+            //            Length = "max",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "CreatedDate",
+            //            DbType = DbType.DateTime2
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "CreatedUserId",
+            //            DbType = DbType.Int32
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "ModifiedDate",
+            //            DbType = DbType.DateTime2
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "ModifiedUserId",
+            //            DbType = DbType.Int32
+            //        }
+            //    }
+            //};
 
-            var documentTable = new SchemaTable()
-            {
-                Name = "DocumentStore",
-                Columns = new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        PrimaryKey = true,
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Value]",
-                        Length = "max",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTime2
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedDate",
-                        DbType = DbType.DateTime2
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedUserId",
-                        DbType = DbType.Int32
-                    }
-                }
-            };
+            //var documentTable = new SchemaTable()
+            //{
+            //    Name = "DocumentStore",
+            //    Columns = new List<SchemaColumn>()
+            //    {
+            //        new SchemaColumn()
+            //        {
+            //            PrimaryKey = true,
+            //            Name = "Id",
+            //            DbType = DbType.Int32
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "[Value]",
+            //            Length = "max",
+            //            DbType = DbType.String
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "CreatedDate",
+            //            DbType = DbType.DateTime2
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "CreatedUserId",
+            //            DbType = DbType.Int32
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "ModifiedDate",
+            //            DbType = DbType.DateTime2
+            //        },
+            //        new SchemaColumn()
+            //        {
+            //            Name = "ModifiedUserId",
+            //            DbType = DbType.Int32
+            //        }
+            //    }
+            //};
             
-            using (var builder = _schemaBuilder)
-            {
+            //using (var builder = _schemaBuilder)
+            //{
 
-                // build dictionary store
+            //    // build dictionary store
 
-                builder
-                    .Configure(options =>
-                    {
-                        options.ModuleName = "Plato.Settings";
-                        options.Version = "1.0.0";
-                    })
-                    .CreateTable(dictionaryTable)
-                    .CreateDefaultProcedures(dictionaryTable)
-                    .CreateProcedure(new SchemaProcedure("SelectDictionaryByKey", StoredProcedureType.SelectByKey)
-                        .ForTable(dictionaryTable).WithParameter(new SchemaColumn() {Name = "[Key]", DbType = DbType.Int32}));
+            //    builder
+            //        .Configure(options =>
+            //        {
+            //            options.ModuleName = "Plato.Settings";
+            //            options.Version = "1.0.0";
+            //        })
+            //        .CreateTable(dictionaryTable)
+            //        .CreateDefaultProcedures(dictionaryTable)
+            //        .CreateProcedure(new SchemaProcedure("SelectDictionaryByKey", StoredProcedureType.SelectByKey)
+            //            .ForTable(dictionaryTable).WithParameter(new SchemaColumn() {Name = "[Key]", DbType = DbType.Int32}));
 
-                // build document store
+            //    // build document store
 
-                builder
-                    .Configure(options =>
-                    {
-                        options.ModuleName = "Plato.Settings";
-                        options.Version = "1.0.0";
-                    })
-                    .CreateTable(documentTable)
-                    .CreateDefaultProcedures(documentTable);
+            //    builder
+            //        .Configure(options =>
+            //        {
+            //            options.ModuleName = "Plato.Settings";
+            //            options.Version = "1.0.0";
+            //        })
+            //        .CreateTable(documentTable)
+            //        .CreateDefaultProcedures(documentTable);
 
-                // Did any errors occur?
+            //    // Did any errors occur?
 
-                var result = await builder.ApplySchemaAsync();
-                if (result.Errors.Count > 0)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        reportError(error.Message, error.StackTrace);
-                    }
+            //    var result = await builder.ApplySchemaAsync();
+            //    if (result.Errors.Count > 0)
+            //    {
+            //        foreach (var error in result.Errors)
+            //        {
+            //            reportError(error.Message, error.StackTrace);
+            //        }
                  
-                }
-            }
+            //    }
+            //}
 
 
             // --------------------------
