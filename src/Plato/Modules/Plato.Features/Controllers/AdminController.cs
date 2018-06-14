@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Features;
 using Plato.Internal.Modules.Abstractions;
@@ -38,9 +35,21 @@ namespace Plato.Features.Controllers
             };
             
             return View(model);
-
-
-
+            
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> Index(FeaturesBulkAction bulkAction, IList<string> featureIds, bool? force)
+        {
+            var sample = "test";
+
+
+            return View();
+            
+        }
+
+
+
+
     }
 }

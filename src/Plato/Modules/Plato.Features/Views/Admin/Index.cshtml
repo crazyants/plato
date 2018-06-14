@@ -5,21 +5,69 @@
 <h4>@T["Modules"]</h4>
 <span class="text-muted">@T["Modules allow you to add additional functionality to your site."]</span>
 
-<hr/>
+<hr />
+
+<nav class="navbar navbar-light bg-light justify-content-between">
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">Active</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+    </ul>
+    
+    <form class="form-inline">
+        <input class="form-control mx-1" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-primary mx-1" type="submit">Search</button>
+    </form>
+
+    <form asp-controller="Admin" asp-action="Index" class="form-inline">
+        
+    
+        <input id="featureIds" type="text"/>
+     
+        <select id="bulkAction" name="bulkAction" class="form-control mx-1">
+            <option value="@FeaturesBulkAction.None">@T["Choose action..."]</option>
+            <option value="@FeaturesBulkAction.Enable">@T["Enable"]</option>
+            <option value="@FeaturesBulkAction.Disable">@T["Disable"]</option>
+            <option value="@FeaturesBulkAction.Toggle">@T["Toggle"]</option>
+        </select>
+        <button type="submit" name="btnBulkActions" class="btn btn-primary mx-1" value="yes">@T["GO"]</button>
+
+    </form>
+
+</nav>
 
 <ul class="list-group">
     @foreach (var module in Model.Modules)
     {
-    <li class="list-group-item">
-        <strong>@module.Descriptor.Id</strong><br />
-        @module.Descriptor.Description<br />
+        <li class="list-group-item">
 
-        @foreach (var dependency in module.Descriptor.Dependencies)
-        {
-            @dependency.Name<br />
-        }
+            <div class="form-check">
+                <h5>
+                    <label for="@module.Descriptor.Id" class="form-check-label">
+                        <input type="checkbox" name="featureIds" id="@module.Descriptor.Id" value="@module.Descriptor.Id" class="form-check-input" />
+                        @module.Descriptor.Name
+                    </label>
+                </h5>
+            </div>
+
+            @module.Descriptor.Description<br />
+
+            @*@foreach (var dependency in module.Descriptor.Dependencies)
+            {
+                @dependency.Name<br />
+            }*@
 
 
-    </li>
+        </li>
     }
 </ul>

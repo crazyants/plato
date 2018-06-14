@@ -9,5 +9,15 @@ namespace Plato.Features.ViewModels
     {
         public IEnumerable<IModuleEntry> Modules { get; set; }
 
+        public FeaturesBulkAction BulkAction { get; set; }
+    }
+
+    public enum FeaturesBulkAction
+    {
+        None,
+        Enable,
+        Disable,
+        Update,
+        Toggle
     }
 }
