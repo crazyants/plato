@@ -34,7 +34,7 @@ namespace Plato.Internal.Stores.Extensions
             services.AddScoped<IFileStore, FileStore>();
 
             // Shell features
-            services.AddScoped<IShellFeaturesStore, ShellFeaturesStore>();
+            services.AddScoped<IShellDescriptorStore, ShellDescriptorStore>();
 
             // Site Settings
             services.AddScoped<ISiteSettingsStore, SiteSettingsStore>();

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell;
-using Plato.Internal.Shell.Abstractions.Models;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Hosting
 {

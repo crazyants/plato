@@ -1,16 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Plato.Internal.Shell.Abstractions.Models;
 using Plato.Internal.Shell.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Features;
 
 namespace Plato.Internal.Shell
 {
@@ -37,7 +35,7 @@ namespace Plato.Internal.Shell
 
         public IServiceProvider CreateContainer(ShellSettings settings, ShellBlueprint blueprint)
         {
-            
+
             // Clone services
             var tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
 
@@ -53,6 +51,9 @@ namespace Plato.Internal.Shell
                 options.DatabaseProvider = settings.DatabaseProvider;
                 options.TablePrefix = settings.TablePrefix;
             });
+
+            // Add core tennet services
+            AddCoreServices(tenantServiceCollection);
             
             // Add StartUps from modules defined in blueprint descriptor as services
             var moduleServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
@@ -77,13 +78,21 @@ namespace Plato.Internal.Shell
             {
                 startup.ConfigureServices(tenantServiceCollection);
             }
-            
+
             (moduleServiceProvider as IDisposable).Dispose();
 
             // return
-    
+
             var shellServiceProvider = tenantServiceCollection.BuildServiceProvider();
             return shellServiceProvider;
+
+        }
+
+
+        private static void AddCoreServices(IServiceCollection tenantServiceCollection)
+        {
+
+            tenantServiceCollection.AddSingleton<IShellFeatureManager, ShellFeatureManager>();
 
         }
 

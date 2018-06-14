@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting;
 using Plato.Internal.Abstractions.SetUp;
-using Plato.Internal.Shell.Abstractions.Models;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Core.Services;
 using Plato.Internal.Models.Shell;
 

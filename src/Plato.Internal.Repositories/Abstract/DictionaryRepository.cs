@@ -93,8 +93,6 @@ namespace Plato.Internal.Repositories.Abstract
                 _logger.LogInformation("Selecting all dictionary entries");
 
             List<DictionaryEntry> entries = null;
-            // database context may not be configured.
-            // For example during set-up
             if (_dbContext != null)
             {
                 using (var context = _dbContext)
@@ -122,7 +120,6 @@ namespace Plato.Internal.Repositories.Abstract
 
         }
         
-
         public async Task<DictionaryEntry> SelectEntryByKey(string key)
         {
 

@@ -6,15 +6,15 @@ using Plato.Internal.Stores.Abstractions.Shell;
 
 namespace Plato.Internal.Stores.Shell
 {
-    public class ShellFeaturesStore : IShellFeaturesStore
+    public class ShellDescriptorStore : IShellDescriptorStore
     {
 
-        private readonly string _key = CacheKeys.ShellFeatures.ToString();
+        private readonly string _key = CacheKeys.ShellDescriptor.ToString();
 
         private readonly IDictionaryStore _dictionaryStore;
         private readonly IMemoryCache _memoryCache;
 
-        public ShellFeaturesStore(
+        public ShellDescriptorStore(
             IDictionaryStore dictionaryStore,
             IMemoryCache memoryCache)
         {
@@ -22,9 +22,9 @@ namespace Plato.Internal.Stores.Shell
             _memoryCache = memoryCache;
         }
 
-        public async Task<ShellDescriptor> GetAsync()
+        public async Task<IShellDescriptor> GetAsync()
         {
-            if (!_memoryCache.TryGetValue(_key, out ShellDescriptor shellDescriptor))
+            if (!_memoryCache.TryGetValue(_key, out IShellDescriptor shellDescriptor))
             {
                 shellDescriptor = await _dictionaryStore.GetAsync<ShellDescriptor>(_key);
                 if (shellDescriptor != null)
@@ -34,7 +34,7 @@ namespace Plato.Internal.Stores.Shell
             return shellDescriptor;
         }
 
-        public async Task<ShellDescriptor> SaveAsync(ShellDescriptor shellDescriptor)
+        public async Task<IShellDescriptor> SaveAsync(IShellDescriptor shellDescriptor)
         {
             var features = await _dictionaryStore.UpdateAsync<ShellDescriptor>(_key, shellDescriptor);
             if (features != null)

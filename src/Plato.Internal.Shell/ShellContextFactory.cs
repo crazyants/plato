@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Shell.Abstractions.Models;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Shell
 {

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Shell.Abstractions.Models;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.SetUp.ViewModels;
 using Plato.SetUp.Services;

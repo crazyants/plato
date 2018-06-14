@@ -1,4 +1,4 @@
-﻿using Plato.Internal.Shell.Abstractions.Models;
+﻿using Plato.Internal.Shell.Abstractions;
 using System.Collections.Generic;
 using Plato.Internal.Models.Shell;
 

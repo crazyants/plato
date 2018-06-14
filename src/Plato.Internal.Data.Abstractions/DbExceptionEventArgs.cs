@@ -8,7 +8,6 @@ namespace Plato.Internal.Data.Abstractions
 
         protected DbExceptionEventArgs()
         {
-
         }
 
         public DbExceptionEventArgs(Exception e)

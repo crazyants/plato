@@ -60,15 +60,7 @@ namespace Plato.Internal.Data.Providers
 
         public int CommandTimeout { get; set; }
 
-        public DbTransaction Transaction { get; }
-
-        public IDbConnection Connection
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public IDbConnection Connection => _dbConnection;
 
         #endregion
 
@@ -93,6 +85,11 @@ namespace Plato.Internal.Data.Providers
         {
             if (_sharedConnectionDepth == 0)
             {
+
+                if (String.IsNullOrEmpty(_connectionString))
+                {
+                    throw new Exception("The connection string has not been initialized.");;
+                }
 
                 _dbConnection = new SqlConnection {ConnectionString = _connectionString};
                 await _dbConnection.OpenAsync();

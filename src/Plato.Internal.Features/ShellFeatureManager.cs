@@ -10,13 +10,6 @@ using Plato.Internal.Stores.Abstractions.Shell;
 namespace Plato.Internal.Features
 {
 
-    public class ShellDescriptorDocument : BaseDocument
-    {
-
-        private ShellDescriptor ShellDescriptor { get; set; }
-
-    }
-
     public interface IShellFeatureManager
     {
 
@@ -31,14 +24,14 @@ namespace Plato.Internal.Features
     public class ShellFeatureManager : IShellFeatureManager
     {
 
-        private readonly IShellFeaturesStore _shellFeatureStore;
+        private readonly IShellDescriptorStore _shellDescriptorStore;
         private readonly ILogger<ShellFeatureManager> _logger;
 
         public ShellFeatureManager(
-            IShellFeaturesStore shellFeatureStore,
+            IShellDescriptorStore shellDescriptorStore,
             ILogger<ShellFeatureManager> logger)
         {
-            _shellFeatureStore = shellFeatureStore;
+            _shellDescriptorStore = shellDescriptorStore;
             _logger = logger;
         }
 
@@ -51,9 +44,8 @@ namespace Plato.Internal.Features
             {
                 descriptor.Modules.Add(new ShellFeature(featureId));
             }
-
-
-            var features = await _shellFeatureStore.SaveAsync(descriptor);
+            
+            var features = await _shellDescriptorStore.SaveAsync(descriptor);
 
 
             return null;

@@ -44,7 +44,7 @@ namespace Plato.Features.Controllers
 
             var test = "test";
 
-            _shellFEatureManager.EnableFeaturesAsync(new string[] {id});
+            var results = await _shellFEatureManager.EnableFeaturesAsync(new string[] {id});
 
             return RedirectToAction(nameof(Index));
 

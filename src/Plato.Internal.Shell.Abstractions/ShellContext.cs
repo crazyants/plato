@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Models.Shell;
 
-namespace Plato.Internal.Shell.Abstractions.Models
+namespace Plato.Internal.Shell.Abstractions
 {
     public class ShellContext : IDisposable
     {

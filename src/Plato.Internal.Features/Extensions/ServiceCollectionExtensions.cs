@@ -13,8 +13,7 @@ namespace Plato.Internal.Features.Extensions
             this IServiceCollection services)
         {
 
-            services.AddSingleton<IShellFeatureManager, ShellFeatureManager>();
-
+       
             return services;
         }
 

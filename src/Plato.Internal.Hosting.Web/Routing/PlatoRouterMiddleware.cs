@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Internal.Shell.Abstractions.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstractions.Settings;

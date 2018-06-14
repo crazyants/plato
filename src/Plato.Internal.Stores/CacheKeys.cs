@@ -7,7 +7,7 @@ namespace Plato.Internal.Stores
 {
     public enum CacheKeys
     {
-        ShellFeatures,
+        ShellDescriptor,
         SiteSettings,
         Roles,
         Users,

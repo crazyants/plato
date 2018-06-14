@@ -4,7 +4,14 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Models.Shell
 {
-    public class ShellDescriptor : ISerializable
+
+    public interface IShellDescriptor : ISerializable
+    {
+        IList<ShellFeature> Modules { get; set; }
+
+    }
+
+    public class ShellDescriptor : IShellDescriptor
     {
 
         public IList<ShellFeature> Modules { get; set; } = new List<ShellFeature>();
