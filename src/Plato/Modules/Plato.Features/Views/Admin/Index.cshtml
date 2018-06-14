@@ -50,15 +50,16 @@
     @foreach (var module in Model.Modules)
     {
         <li class="list-group-item">
-
-            <div class="form-check">
+            
+            <div class="form-check custom-control custom-checkbox">
                 <h5>
-                    <label for="@module.Descriptor.Id" class="form-check-label">
-                        <input type="checkbox" name="featureIds" id="@module.Descriptor.Id" value="@module.Descriptor.Id" class="form-check-input" />
+                    <input type="checkbox" class="custom-control-input" name="featureIds" value="@module.Descriptor.Id" id="@module.Descriptor.Id">
+                    <label class="custom-control-label pr-4" for="@module.Descriptor.Id">
                         @module.Descriptor.Name
                     </label>
                 </h5>
             </div>
+          
 
             @module.Descriptor.Description<br />
 
