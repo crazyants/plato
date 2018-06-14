@@ -22,13 +22,20 @@ namespace Plato.Features
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-       
-            routes.MapAreaRoute(
-                name: "AdminManageFEatures",
-                areaName: "Plato.Features",
-                template: "admin/features",
-                defaults: new { controller = "Admin", action = "Index" }
-            );
+
+            //routes.MapAreaRoute(
+            //    name: "AdminFeatures",
+            //    areaName: "Plato.Features",
+            //    template: "admin/features/{action}/{id?}",
+            //    defaults: new { controller = "Admin", action = "Index" }
+            //);
+
+            //routes.MapAreaRoute(
+            //    name: "AdminEnableFeatures",
+            //    areaName: "Plato.Features",
+            //    template: "admin/features/{action}/{id?}",
+            //    defaults: new { controller = "Admin", action = "Enable" }
+            //);
 
         }
     }

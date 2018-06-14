@@ -9,6 +9,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Plato.Internal.Models\Plato.Internal.Models.csproj" />
       <ProjectReference Include="..\Plato.Internal.Modules.Abstractions\Plato.Internal.Modules.Abstractions.csproj" />
     </ItemGroup>
 	

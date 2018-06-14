@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using Plato.Internal.Models.Modules;
 
 namespace Plato.Internal.Modules.Abstractions
 {

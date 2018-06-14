@@ -6,6 +6,7 @@ using Plato.Internal.Modules.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using System.Threading.Tasks;
+using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Models;
 
 namespace Plato.Internal.Modules

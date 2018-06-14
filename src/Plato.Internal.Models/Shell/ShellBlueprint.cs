@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Plato.Internal.Modules.Abstractions;
+using Plato.Internal.Models.Modules;
 
-namespace Plato.Internal.Shell.Abstractions.Models
+namespace Plato.Internal.Models.Shell
 {
     public class ShellBlueprint
     {

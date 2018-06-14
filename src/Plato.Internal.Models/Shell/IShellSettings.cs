@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plato.Internal.Shell.Abstractions
+namespace Plato.Internal.Models.Shell
 {
     public interface IShellSettings
     {

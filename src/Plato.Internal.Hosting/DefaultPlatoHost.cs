@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Shell.Abstractions.Models;
 
 namespace Plato.Internal.Hosting

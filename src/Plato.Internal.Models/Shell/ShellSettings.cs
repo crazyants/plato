@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.Internal.Shell.Abstractions.Models
+namespace Plato.Internal.Models.Shell
 {
     public class ShellSettings : IShellSettings
     {

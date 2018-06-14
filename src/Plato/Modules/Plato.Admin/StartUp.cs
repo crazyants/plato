@@ -23,12 +23,12 @@ namespace Plato.Admin
             IServiceProvider serviceProvider)
         {
        
-            routes.MapAreaRoute(
-                name: "Admin",
-                areaName: "Plato.Admin",
-                template: "admin",
-                defaults: new { controller = "Admin", action = "Index" }
-            );
+            //routes.MapAreaRoute(
+            //    name: "Admin",
+            //    areaName: "Plato.Admin",
+            //    template: "admin",
+            //    defaults: new { controller = "Admin", action = "Index" }
+            //);
 
         }
     }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Internal.Modules

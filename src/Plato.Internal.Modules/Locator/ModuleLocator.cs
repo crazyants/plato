@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.FileSystem.Abstractions;
+using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Modules.Models;
 

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Shell.Abstractions.Models;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstractions.Settings;
 
 namespace Plato.Internal.Hosting.Web.Routing
@@ -90,20 +91,22 @@ namespace Plato.Internal.Hosting.Web.Routing
                 DefaultHandler = serviceProvider.GetRequiredService<MvcRouteHandler>()
             };
 
+            // Build prefixed route builder
             var prefixedRouteBuilder = new PrefixedRouteBuilder(
                 routePrefix, 
                 routeBuilder,
                 inlineConstraintResolver);
 
+            // Configure modules
             foreach (var startup in startups)
             {
                 startup.Configure(appBuilder, prefixedRouteBuilder, serviceProvider);
             }
                  
-            //// The default route is added to each tenant as a template route, with a prefix
+            //// Add the default templated route to each shell 
             prefixedRouteBuilder.Routes.Add(new Route(
                 prefixedRouteBuilder.DefaultHandler,
-                "areaRoute",
+                "Default",
                 "{area:exists}/{controller}/{action}/{id?}",
                 null,
                 null,
@@ -111,6 +114,7 @@ namespace Plato.Internal.Hosting.Web.Routing
                 inlineConstraintResolver)
             );
 
+            routeBuilder.Routes.Insert(0, AttributeRouting.CreateAttributeMegaRoute(serviceProvider));
 
             // Attempt to get homepage route for tennet from site settings store
             // If the tennet has not been created yet siteService will return null

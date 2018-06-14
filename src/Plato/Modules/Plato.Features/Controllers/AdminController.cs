@@ -37,15 +37,17 @@ namespace Plato.Features.Controllers
             return View(model);
             
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult> Index(FeaturesBulkAction bulkAction, IList<string> featureIds, bool? force)
+        public async Task<IActionResult> Enable(string id)
         {
-            var sample = "test";
 
+            var test = "test";
 
-            return View();
-            
+            _shellFEatureManager.EnableFeaturesAsync(new string[] {id});
+
+            return RedirectToAction(nameof(Index));
+
         }
 
 

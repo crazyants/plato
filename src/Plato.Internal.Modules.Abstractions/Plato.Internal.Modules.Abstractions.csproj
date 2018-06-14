@@ -11,4 +11,8 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Plato.Internal.Models\Plato.Internal.Models.csproj" />
+  </ItemGroup>
+
 </Project>

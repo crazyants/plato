@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Models.Modules;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Shell.Abstractions.Models;
 
@@ -30,7 +32,7 @@ namespace Plato.Internal.Shell
             }
 
             // Get all module names registered with the current tennet
-            var moduleNames = descriptor.Modules.Select(x => x.Name).ToArray();
+            var moduleNames = descriptor.Modules.Select(x => x.Id).ToArray();
 
             // Get module entires from names
             var modules = await _moduleManager.LoadModulesAsync(moduleNames);

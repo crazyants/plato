@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Hosting;
 using Plato.Internal.Models.Roles;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Shell.Abstractions.Models;
 using Plato.Roles.Services;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Plato.Internal.Modules.Abstractions
+namespace Plato.Internal.Models.Modules
 {
     public interface IModuleEntry
     {

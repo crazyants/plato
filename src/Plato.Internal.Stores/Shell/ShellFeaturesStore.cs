@@ -22,21 +22,21 @@ namespace Plato.Internal.Stores.Shell
             _memoryCache = memoryCache;
         }
 
-        public async Task<IShellFeatures> GetAsync()
+        public async Task<ShellDescriptor> GetAsync()
         {
-            if (!_memoryCache.TryGetValue(_key, out ShellFeatures shellFeatures))
+            if (!_memoryCache.TryGetValue(_key, out ShellDescriptor shellDescriptor))
             {
-                shellFeatures = await _dictionaryStore.GetAsync<ShellFeatures>(_key);
-                if (shellFeatures != null)
-                    _memoryCache.Set(_key, shellFeatures);
+                shellDescriptor = await _dictionaryStore.GetAsync<ShellDescriptor>(_key);
+                if (shellDescriptor != null)
+                    _memoryCache.Set(_key, shellDescriptor);
             }
 
-            return shellFeatures;
+            return shellDescriptor;
         }
 
-        public async Task<IShellFeatures> SaveAsync(IShellFeatures shellFeatures)
+        public async Task<ShellDescriptor> SaveAsync(ShellDescriptor shellDescriptor)
         {
-            var features = await _dictionaryStore.UpdateAsync<IShellFeatures>(_key, shellFeatures);
+            var features = await _dictionaryStore.UpdateAsync<ShellDescriptor>(_key, shellDescriptor);
             if (features != null)
             {
                 // Update cache

@@ -1,4 +1,5 @@
-﻿using Plato.Internal.Shell.Abstractions.Models;
+﻿using Plato.Internal.Models.Shell;
+using Plato.Internal.Shell.Abstractions.Models;
 
 namespace Plato.Internal.Hosting
 {

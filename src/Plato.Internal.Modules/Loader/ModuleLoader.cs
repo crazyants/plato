@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
+using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Modules.Loader

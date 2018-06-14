@@ -21,7 +21,7 @@ namespace Plato.Features
             }
 
             builder
-                .Add(T["Modules"], users => users
+                .Add(T["Features"], users => users
                     .Add(T["Manage Features"], "15", manageusers => manageusers
                         .Action("Index", "Admin", "Plato.Features")
                         //.Permission(Permissions.ManageRoles)

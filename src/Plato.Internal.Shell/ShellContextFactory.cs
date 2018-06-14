@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell.Abstractions.Models;
 
 namespace Plato.Internal.Shell
@@ -52,7 +53,7 @@ namespace Plato.Internal.Shell
             var descriptor = new ShellDescriptor
             {
                 Modules = new[] {
-                    new ShellFeature { Name = "Plato.SetUp" }
+                    new ShellFeature { Id = "Plato.SetUp" }
                 }
             };
 
@@ -65,12 +66,12 @@ namespace Plato.Internal.Shell
             {
                 Modules = new[]
                 {
-                    new ShellFeature { Name = "Plato.Core" },
-                    new ShellFeature { Name = "Plato.Admin" },
-                    new ShellFeature { Name = "Plato.Users" },
-                    new ShellFeature { Name = "Plato.Roles" },
-                    new ShellFeature { Name = "Plato.Settings" },
-                    new ShellFeature { Name = "Plato.Features" }
+                    new ShellFeature { Id = "Plato.Core" },
+                    new ShellFeature { Id = "Plato.Admin" },
+                    new ShellFeature { Id = "Plato.Users" },
+                    new ShellFeature { Id = "Plato.Roles" },
+                    new ShellFeature { Id = "Plato.Settings" },
+                    new ShellFeature { Id = "Plato.Features" }
                 }
             };
         }

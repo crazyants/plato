@@ -14,8 +14,8 @@ namespace Plato.Internal.Hosting.Web.Routing
         private readonly string _routePrefix;
         private readonly IInlineConstraintResolver _constraintResolver;
 
-        public PrefixedRouteBuilder
-            (string routePrefix, 
+        public PrefixedRouteBuilder(
+            string routePrefix, 
             IRouteBuilder baseRouteBuilder,
             IInlineConstraintResolver constraintResolver)
         {
@@ -23,13 +23,8 @@ namespace Plato.Internal.Hosting.Web.Routing
             _routePrefix = routePrefix;
             _baseRouteBuilder = baseRouteBuilder;
         }
-        public IApplicationBuilder ApplicationBuilder
-        {
-            get
-            {
-                return _baseRouteBuilder.ApplicationBuilder;
-            }
-        }
+
+        public IApplicationBuilder ApplicationBuilder => _baseRouteBuilder.ApplicationBuilder;
 
         public IRouter DefaultHandler
         {

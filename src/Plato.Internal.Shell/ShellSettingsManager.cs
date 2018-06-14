@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Plato.Internal.Yaml;
 using Plato.Internal.Shell.Abstractions.Models;
 using Plato.Internal.FileSystem.Abstractions;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Yaml.Extensions;
 

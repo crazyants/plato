@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
+using Plato.Internal.Models.Shell;
 
 namespace Plato.Internal.Shell.Abstractions.Models
 {
