@@ -8,6 +8,6 @@ namespace Plato.Internal.Shell
 {
     public interface ICompositionStrategy
     {
-        Task<ShellBlueprint> ComposeAsync(ShellSettings settings, ShellDescriptor descriptor);
+        Task<ShellBlueprint> ComposeAsync(ShellSettings settings, IShellDescriptor descriptor);
     }
 }

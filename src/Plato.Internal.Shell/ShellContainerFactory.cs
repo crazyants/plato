@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -9,6 +10,7 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Features;
+using Plato.Internal.Stores.Abstractions.Shell;
 
 namespace Plato.Internal.Shell
 {
@@ -89,12 +91,13 @@ namespace Plato.Internal.Shell
         }
 
 
-        private static void AddCoreServices(IServiceCollection tenantServiceCollection)
+        private void AddCoreServices(IServiceCollection tenantServiceCollection)
         {
 
             tenantServiceCollection.AddSingleton<IShellFeatureManager, ShellFeatureManager>();
-
+        
         }
+
 
     }
 

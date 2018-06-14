@@ -39,12 +39,17 @@ namespace Plato.Internal.Features
         public async Task<IEnumerable<IFeatureInfo>> EnableFeaturesAsync(string[] featureIds)
         {
 
-            var descriptor = new ShellDescriptor();
+            var descriptor =
+                await _shellDescriptorStore.GetAsync()
+                ?? new ShellDescriptor();
+
             foreach (var featureId in featureIds)
             {
                 descriptor.Modules.Add(new ShellFeature(featureId));
             }
+
             
+
             var features = await _shellDescriptorStore.SaveAsync(descriptor);
 
 

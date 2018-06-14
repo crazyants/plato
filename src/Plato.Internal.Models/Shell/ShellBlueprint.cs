@@ -9,7 +9,7 @@ namespace Plato.Internal.Models.Shell
     {
         public ShellSettings Settings { get; set; }
 
-        public ShellDescriptor Descriptor { get; set; }
+        public IShellDescriptor Descriptor { get; set; }
 
         public IDictionary<Type, IModuleEntry> Dependencies { get; set; }
 

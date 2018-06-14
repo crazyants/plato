@@ -54,7 +54,6 @@ namespace Plato.Internal.Hosting.Web.Middleware
                             // activate the tanant
                             if (!shellContext.IsActivated)
                             {
-
                                 //var tenantEvents = httpContext.RequestServices.GetServices<IModularTenantEvents>();
                                 
                                 // BuildPipeline ensures we always rebuild routes for new tennets

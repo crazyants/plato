@@ -24,26 +24,25 @@ namespace Plato.Internal.Stores.Shell
 
         public async Task<IShellDescriptor> GetAsync()
         {
-            if (!_memoryCache.TryGetValue(_key, out IShellDescriptor shellDescriptor))
+            if (!_memoryCache.TryGetValue(_key, out IShellDescriptor descriptor))
             {
-                shellDescriptor = await _dictionaryStore.GetAsync<ShellDescriptor>(_key);
-                if (shellDescriptor != null)
-                    _memoryCache.Set(_key, shellDescriptor);
+                descriptor = await _dictionaryStore.GetAsync<ShellDescriptor>(_key);
+                if (descriptor != null)
+                    _memoryCache.Set(_key, descriptor);
             }
 
-            return shellDescriptor;
+            return descriptor;
         }
 
         public async Task<IShellDescriptor> SaveAsync(IShellDescriptor shellDescriptor)
         {
-            var features = await _dictionaryStore.UpdateAsync<ShellDescriptor>(_key, shellDescriptor);
-            if (features != null)
+            var descriptor = await _dictionaryStore.UpdateAsync<ShellDescriptor>(_key, shellDescriptor);
+            if (descriptor != null)
             {
-                // Update cache
-                _memoryCache.Set(_key, features);
+                _memoryCache.Set(_key, descriptor);
             }
 
-            return features;
+            return descriptor;
         }
 
         public async Task<bool> DeleteAsync()

@@ -88,14 +88,12 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddPlatoViewFeature();
                 internalServices.AddPlatoTagHelpers();
 
-                internalServices.AddPlatoShellFeatures();
-
                 internalServices.AddPlatoLogging();
 
                 internalServices.AddPlatoDbContext();
                 internalServices.AddRepositories();
                 internalServices.AddStores();
-
+                
             });
 
         }

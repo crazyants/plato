@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.FileSystem.AppData;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell.Abstractions;
+using Plato.Internal.Stores.Abstractions.Shell;
 
 namespace Plato.Internal.Shell.Extensions
 {
@@ -42,7 +45,16 @@ namespace Plato.Internal.Shell.Extensions
 
             return services;
         }
+        
+        public static IServiceCollection AddSetFeaturesDescriptor(
+            this IServiceCollection services,
+            IEnumerable<ShellFeature> shellFeatures)
+        {
+            services.AddSingleton<IShellDescriptorStore>(new SetShellDescriptorManager(shellFeatures));
 
-
+            return services;
+        }
+        
     }
+
 }

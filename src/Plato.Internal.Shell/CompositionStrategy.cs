@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Modules;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Modules.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Shell
 {
@@ -24,7 +22,7 @@ namespace Plato.Internal.Shell
             _logger = logger;
         }
 
-        public async Task<ShellBlueprint> ComposeAsync(ShellSettings settings, ShellDescriptor descriptor)
+        public async Task<ShellBlueprint> ComposeAsync(ShellSettings settings, IShellDescriptor descriptor)
         {
             if (_logger.IsEnabled(LogLevel.Debug))
             {
@@ -34,7 +32,7 @@ namespace Plato.Internal.Shell
             // Get all module names registered with the current tennet
             var moduleNames = descriptor.Modules.Select(x => x.Id).ToArray();
 
-            // Get module entires from names
+            // Get module entires for active modules
             var modules = await _moduleManager.LoadModulesAsync(moduleNames);
 
             // TODO: Take advantage of ITypedModuleProvider

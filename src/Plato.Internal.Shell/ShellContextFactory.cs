@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell.Abstractions;
+using Plato.Internal.Stores.Abstractions.Shell;
 
 namespace Plato.Internal.Shell
 {
@@ -9,24 +12,50 @@ namespace Plato.Internal.Shell
         
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IShellContainerFactory _shellContainerFactory;
+        private readonly IEnumerable<ShellFeature> _shellFeatures;
+
         private readonly ILogger _logger;
 
         public ShellContextFactory(
             IShellContainerFactory shellContainerFactory,
             ICompositionStrategy compositionStrategy,
+            IEnumerable<ShellFeature> shellFeatures,
             ILogger<ShellContextFactory> logger)
         {
             _shellContainerFactory = shellContainerFactory;
             _compositionStrategy = compositionStrategy;
+            _shellFeatures = shellFeatures;
             _logger = logger;
         }
 
         ShellContext IShellContextFactory.CreateShellContext(ShellSettings settings)
         {
-            return CreateDescribedContext(settings, MinimumShellDescriptor());
+
+            // Build minimal shell descriptor
+            var describedContext = CreateDescribedContext(settings, MinimumShellDescriptor());
+            
+            // Do we have a descriptor within the database
+            IShellDescriptor currentDescriptor = null;
+            using (var scope = describedContext.CreateServiceScope())
+            {
+                var shellDescriptorStore = scope.ServiceProvider.GetService<IShellDescriptorStore>();
+                var descriptor = shellDescriptorStore.GetAsync().Result;
+                if (descriptor != null)
+                {
+                    currentDescriptor = descriptor;
+                }
+            }
+
+            if (currentDescriptor != null)
+            {
+                return CreateDescribedContext(settings, currentDescriptor);
+            }
+
+            return describedContext;
+
         }
 
-        public ShellContext CreateDescribedContext(ShellSettings settings, ShellDescriptor descriptor)
+        public ShellContext CreateDescribedContext(ShellSettings settings, IShellDescriptor descriptor)
         {
 
             if (_logger.IsEnabled(LogLevel.Debug))            
@@ -60,7 +89,7 @@ namespace Plato.Internal.Shell
             return CreateDescribedContext(settings, descriptor);
         }
         
-        private static ShellDescriptor MinimumShellDescriptor()
+        private ShellDescriptor MinimumShellDescriptor()
         {
             return new ShellDescriptor
             {

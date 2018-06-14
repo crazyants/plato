@@ -1,2 +1,13 @@
-Name: Plato Users Module
+Name: Plato Users
 Author: InstantASP
+Category: Core
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Name: "Plato.Admin",
+		Version: "1.0.0"
+	}
+]
