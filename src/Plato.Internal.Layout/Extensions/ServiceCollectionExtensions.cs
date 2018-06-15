@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Notifications;
 using Plato.Internal.Layout.Theming;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Navigation.Extensions;
@@ -31,17 +32,22 @@ namespace Plato.Internal.Layout.Extensions
 
         }
 
-
         public static IServiceCollection AddPlatoViewFeature(
             this IServiceCollection services)
         {
-          
+
+            // layout accessor
+            services.AddSingleton<ILayoutAccessor, LayoutAccessor>();
+            
             // gneric views
             services.AddSingleton<IViewHelperFactory, ViewDisplayHelperFactory>();
             services.AddSingleton<IGenericViewFactory, ViewFactory>();
             services.AddSingleton<IViewTableManager, ViewTableManager>();
             services.AddSingleton<IViewInvoker, ViewInvoker>();
-            
+
+            // notifications
+            services.AddSingleton<INotify, Notify>();
+
             // add theming convension - configures theme layout based on controller type
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
 
@@ -49,6 +55,7 @@ namespace Plato.Internal.Layout.Extensions
             services.Configure<MvcOptions>((options) =>
             {
                 options.Filters.Add(typeof(ModelBinderAccessorFilter));
+                options.Filters.Add(typeof(NotificationFilter));
             });
 
             // model binding model accessor

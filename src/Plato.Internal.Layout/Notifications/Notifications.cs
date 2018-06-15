@@ -10,20 +10,22 @@ namespace Plato.Internal.Layout.Notifications
 
         void Add(NotificationType type, string message);
 
-        IList<Notification> Notifications { get; }
+        ICollection<Notification> Notifications { get; }
 
     }
 
     public class Notify : INotify
     {
 
-        private readonly IList<Notification> _notifications;
-        
-        public IList<Notification> Notifications => _notifications;
+        public ICollection<Notification> Notifications { get; set; }
 
         public void Add(NotificationType type, string message)
         {
-            _notifications.Add(new Notification(type, message));
+            if (Notifications == null)
+            {
+                Notifications = new List<Notification>();
+            }
+            Notifications.Add(new Notification(type, message));
         }
 
     }
