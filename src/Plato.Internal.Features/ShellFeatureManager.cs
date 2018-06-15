@@ -60,8 +60,7 @@ namespace Plato.Internal.Features
 
         public async Task<IEnumerable<IShellFeature>> EnableFeaturesAsync(string[] featureIds)
         {
-
-
+            
             var descriptor =
                 await _shellDescriptorStore.GetAsync()
                 ?? new ShellDescriptor();
@@ -70,8 +69,7 @@ namespace Plato.Internal.Features
             {
                 descriptor.Modules.Add(new ShellModule(featureId));
             }
-
-
+            
             // Update features within data store
             var features = await _shellDescriptorStore.SaveAsync(descriptor);
             
@@ -85,8 +83,10 @@ namespace Plato.Internal.Features
         public async Task<IEnumerable<IShellFeature>> DisableFeaturesAsync(string[] featureIds)
         {
 
+            // First get all existing enabled features
             var enabledFeatures = await _shellDescriptorFeatureManager.GetEnabledFeaturesAsync();
 
+            // Add features minus our features to disable
             var descriptor = new ShellDescriptor();
             foreach (var feature in enabledFeatures)
             {

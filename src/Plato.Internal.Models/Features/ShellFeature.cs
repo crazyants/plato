@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Plato.Internal.Models.Modules;
 
 namespace Plato.Internal.Models.Features
 {
@@ -24,7 +25,27 @@ namespace Plato.Internal.Models.Features
         public IEnumerable<ShellFeature> FeatureDependencies { get; set; } = new List<ShellFeature>();
 
         public IEnumerable<ShellFeature> DependentFeatures { get; set; } = new List<ShellFeature>();
-        
+
+
+        public ShellFeature()
+        {
+
+        }
+
+        public ShellFeature(string id)
+        {
+            this.Id = id;
+        }
+
+        public ShellFeature(IModuleEntry entry)
+        {
+            this.Id = entry.Descriptor.Id;
+            this.Name = entry.Descriptor.Name;
+            this.Description = entry.Descriptor.Description;
+
+        }
+
+
     }
 
 }

@@ -32,7 +32,6 @@ using Plato.Internal.Repositories.Extensions;
 using Plato.Internal.Shell.Extensions;
 using Plato.Internal.Stores.Extensions;
 using Plato.Internal.Cache.Extensions;
-using Plato.Internal.Features.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Hosting.Web.Routing;
 using Plato.Internal.Layout.Extensions;

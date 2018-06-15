@@ -96,13 +96,11 @@ namespace Plato.Internal.Modules
             return loadedAssemblies;
 
         }
-
-
+        
         public async Task<IEnumerable<IModuleEntry>> LoadModulesAsync(string[] moduleIds)
         {
             await InitializeModules();
-
-            var moduless = _moduleEntries.Select(m => m.Descriptor.Id).ToList();
+            
             var loadedModules = _moduleEntries
                 .Where(m => moduleIds.Contains(m.Descriptor.Id)).ToList();
 

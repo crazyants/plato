@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Modules.Abstractions;
+using Plato.Internal.Stores.Abstractions.Shell;
 
 namespace Plato.Internal.Features
 {
@@ -22,50 +25,61 @@ namespace Plato.Internal.Features
 
         private readonly IModuleManager _moduleManager;
         private readonly IShellDescriptor _shellDescriptor;
+        private readonly IShellDescriptorStore _shellDescriptorStore;
 
         public ShellDescriptorFeatureManager(
             IModuleManager moduleManager,
-            IShellDescriptor shellDescriptor)
+            IShellDescriptor shellDescriptor, 
+            IShellDescriptorStore shellDescriptorStore)
         {
             _moduleManager = moduleManager;
             _shellDescriptor = shellDescriptor;
-        }
-
-
-        public async Task<IEnumerable<ShellFeature>> GetEnabledFeaturesAsync()
-        {
-            var results = await GetFeaturesAsync();
-            return results.Where(f => f.IsEnabled = true);
+            _shellDescriptorStore = shellDescriptorStore;
         }
         
+        
+        public async Task<IEnumerable<ShellFeature>> GetEnabledFeaturesAsync()
+        {
+
+            // Get all features enabled within the database
+            var descriptor = await _shellDescriptorStore.GetAsync();
+            var features = new List<ShellFeature>();
+            if (descriptor != null)
+            {
+                foreach (var module in descriptor.Modules)
+                {
+                    features.Add(new ShellFeature(module.Id));
+                }
+            }
+            return features;
+
+        }
+
         public async Task<IEnumerable<ShellFeature>> GetFeaturesAsync()
         {
 
-            // Get all availablke modules
-            var modules = await _moduleManager.LoadModulesAsync();
-
-            // Get enmabled modules registered within DI
-            var enabledFeatures = _shellDescriptor.Modules;
-            
             // Build described features
-            var describedFeatures = new List<ShellFeature>();
-
+            var describedFeatures = new ConcurrentDictionary<string, ShellFeature>();
+            
+            // Get all availablke modules and convert to features
+            var modules = await _moduleManager.LoadModulesAsync();
             foreach (var module in modules)
             {
-                var isEnabled = enabledFeatures.FirstOrDefault(f => f.Id == module.Descriptor.Id) != null
-                    ? true
-                    : false;
-
-                describedFeatures.Add(new ShellFeature()
+                describedFeatures.AddOrUpdate(module.Descriptor.Id, new ShellFeature(module), (k, v) => v);
+            }
+            
+          // Get explicitly enabled features and update dictionary to reflect enabled
+            var enabledFeatures = await GetEnabledFeaturesAsync();
+            foreach (var feature in enabledFeatures)
+            {
+                describedFeatures.AddOrUpdate(feature.Id, feature, (k, v) =>
                 {
-                    Id = module.Descriptor.Id,
-                    Name = module.Descriptor.Name,
-                    Description = module.Descriptor.Description,
-                    IsEnabled = isEnabled
+                    v.IsEnabled = true;
+                    return v;
                 });
             }
             
-            return describedFeatures;
+            return describedFeatures.Values;
 
         }
         

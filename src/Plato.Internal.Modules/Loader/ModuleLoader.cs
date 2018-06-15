@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
@@ -101,8 +101,14 @@ namespace Plato.Modules.Loader
 
         private Assembly LoadFromAssemblyPath(string assemblyPath)
         {
-            return _loadedAssemblies.GetOrAdd(
-                    Path.GetFileNameWithoutExtension(assemblyPath),
+            var assemblyName = Path.GetFileNameWithoutExtension(assemblyPath);
+
+            if (String.IsNullOrEmpty(assemblyName))
+            {
+                throw new ArgumentNullException(nameof(assemblyName));
+            }
+
+            return _loadedAssemblies.GetOrAdd(assemblyName,
                     new Lazy<Assembly>(() => AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath)))
                 .Value;
         }

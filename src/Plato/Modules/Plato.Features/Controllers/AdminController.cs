@@ -26,10 +26,10 @@ namespace Plato.Features.Controllers
         public async Task<IActionResult> Index()
         {
 
+
             var features = await _shellDescriptorFeatureManager.GetFeaturesAsync();
-
-
-              //var enabledFeatures = _shellFEatureManager.
+            
+            //var enabledFeatures = _shellFEatureManager.
 
             var model = new FeaturesViewModel()
             {
