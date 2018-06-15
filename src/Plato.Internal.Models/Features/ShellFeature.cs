@@ -5,7 +5,12 @@ using System.Text;
 namespace Plato.Internal.Models.Features
 {
 
-    public class ShellFeature
+    public interface IShellFeature
+    {
+
+    }
+
+    public class ShellFeature : IShellFeature
     {
 
         public string Id { get; set; }

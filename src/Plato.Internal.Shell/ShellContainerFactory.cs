@@ -87,12 +87,12 @@ namespace Plato.Internal.Shell
             return shellServiceProvider;
 
         }
-        
+
         private void AddCoreServices(IServiceCollection tenantServiceCollection)
         {
 
-            tenantServiceCollection.AddScoped<IShellFeatureManager, ShellFeatureManager>();
-            tenantServiceCollection.AddScoped<IShellDescriptorFeatureManager, ShellDescriptorFeatureManager>();
+            tenantServiceCollection.AddTransient<IShellFeatureManager, ShellFeatureManager>();
+            tenantServiceCollection.AddTransient<IShellDescriptorFeatureManager, ShellDescriptorFeatureManager>();
 
         }
 

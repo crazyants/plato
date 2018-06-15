@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Shell
 {

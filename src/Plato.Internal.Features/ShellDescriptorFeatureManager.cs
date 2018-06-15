@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
@@ -12,6 +10,9 @@ namespace Plato.Internal.Features
 
     public interface IShellDescriptorFeatureManager
     {
+
+        Task<IEnumerable<ShellFeature>> GetEnabledFeaturesAsync();
+
         Task<IEnumerable<ShellFeature>> GetFeaturesAsync();
 
     }
@@ -28,6 +29,13 @@ namespace Plato.Internal.Features
         {
             _moduleManager = moduleManager;
             _shellDescriptor = shellDescriptor;
+        }
+
+
+        public async Task<IEnumerable<ShellFeature>> GetEnabledFeaturesAsync()
+        {
+            var results = await GetFeaturesAsync();
+            return results.Where(f => f.IsEnabled = true);
         }
         
         public async Task<IEnumerable<ShellFeature>> GetFeaturesAsync()
@@ -60,5 +68,6 @@ namespace Plato.Internal.Features
             return describedFeatures;
 
         }
+        
     }
 }

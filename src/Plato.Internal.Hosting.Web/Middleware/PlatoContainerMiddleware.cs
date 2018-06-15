@@ -1,9 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Shell;
 using Plato.Internal.Hosting.Web.Extensions;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Shell.Abstractions;
+using Plato.Internal.Shell.Extensions;
 
 namespace Plato.Internal.Hosting.Web.Middleware
 {

@@ -12,19 +12,15 @@ namespace Plato.Internal.Shell
         
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IShellContainerFactory _shellContainerFactory;
-        private readonly IEnumerable<ShellModule> _shellFeatures;
-
         private readonly ILogger _logger;
 
         public ShellContextFactory(
             IShellContainerFactory shellContainerFactory,
             ICompositionStrategy compositionStrategy,
-            IEnumerable<ShellModule> shellFeatures,
             ILogger<ShellContextFactory> logger)
         {
             _shellContainerFactory = shellContainerFactory;
             _compositionStrategy = compositionStrategy;
-            _shellFeatures = shellFeatures;
             _logger = logger;
         }
 
@@ -104,6 +100,7 @@ namespace Plato.Internal.Shell
                 }
             };
         }
-
+        
     }
+
 }

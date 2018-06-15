@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Internal.Hosting.Extensions
 {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell;
 using Plato.Internal.Shell.Abstractions;
@@ -13,13 +14,13 @@ namespace Plato.Internal.Hosting
 
         #region "Private Variables"
 
-        private readonly IShellSettingsManager _shellSettingsManager;
-        private readonly IShellContextFactory _shellContextFactory;
-        private readonly IRunningShellTable _runningShellTable;
-        private readonly ILogger _logger;
+        readonly IShellSettingsManager _shellSettingsManager;
+        readonly IShellContextFactory _shellContextFactory;
+        readonly IRunningShellTable _runningShellTable;
+        readonly ILogger _logger;
    
-        private static readonly object _syncLock = new object();
-        private ConcurrentDictionary<string, ShellContext> _shellContexts;
+        static readonly object _syncLock = new object();
+        ConcurrentDictionary<string, ShellContext> _shellContexts;
 
         #endregion
 
@@ -56,6 +57,24 @@ namespace Plato.Internal.Hosting
                 ActivateShell(shellContext);
                 return shellContext;
             });
+        }
+        public void RecycleShellContext(ShellSettings settings)
+        {
+            _runningShellTable.Remove(settings);
+            if (_shellContexts.TryRemove(settings.Name, out var context))
+            {
+                if (_shellContexts.Count == 0)
+                    _shellContexts = null;
+                context.Dispose();
+            }
+            GetOrCreateShellContext(settings);
+        }
+
+
+        public void DisposeShellContext(ShellSettings settings)
+        {
+            var shellContext = CreateShellContext(settings);
+            DeactivateShell(shellContext);
         }
 
         public void UpdateShellSettings(ShellSettings settings)
@@ -146,9 +165,37 @@ namespace Plato.Internal.Hosting
         {
             if (_logger.IsEnabled(LogLevel.Debug))
                 _logger.LogDebug("Activating context for tenant {0}", context.Settings.Name);
-            
+
             if (_shellContexts.TryAdd(context.Settings.Name, context))
+            {
                 _runningShellTable.Add(context.Settings);
+            }
+
+        }
+
+
+        void UpdateShell(ShellContext context)
+        {
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug("Deactivating context for tenant {0}", context.Settings.Name);
+
+            if (_shellContexts.TryUpdate(context.Settings.Name, context, context))
+            {
+                _runningShellTable.Add(context.Settings);
+            }
+
+
+        }
+
+        void DeactivateShell(ShellContext context)
+        {
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug("Deactivating context for tenant {0}", context.Settings.Name);
+
+            if (_shellContexts.TryRemove(context.Settings.Name, out context))
+            {
+                _runningShellTable.Remove(context.Settings);
+            }
         }
         
         ShellContext CreateSetupContext()

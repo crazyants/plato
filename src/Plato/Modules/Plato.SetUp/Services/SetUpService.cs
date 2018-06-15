@@ -6,6 +6,7 @@ using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Hosting;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell;
 

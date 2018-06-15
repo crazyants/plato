@@ -1,8 +1,7 @@
-﻿using Plato.Internal.Shell.Abstractions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Plato.Internal.Models.Shell;
 
-namespace Plato.Internal.Shell
+namespace Plato.Internal.Shell.Abstractions
 {
     public interface IRunningShellTable
     {
