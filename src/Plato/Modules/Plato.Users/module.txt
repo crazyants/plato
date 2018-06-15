@@ -1,7 +1,8 @@
 Name: Plato Users
+Description: Provides core functionality to manage and authenticate users.
 Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
 Category: Core
-Author: InstantASP
 Version: 1.0.0
 PlatoVersion: 1.0.0
 Dependencies: 

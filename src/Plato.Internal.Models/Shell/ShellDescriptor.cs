@@ -7,14 +7,14 @@ namespace Plato.Internal.Models.Shell
 
     public interface IShellDescriptor : ISerializable
     {
-        IList<ShellFeature> Modules { get; set; }
+        IList<ShellModule> Modules { get; set; }
 
     }
 
     public class ShellDescriptor : IShellDescriptor
     {
 
-        public IList<ShellFeature> Modules { get; set; } = new List<ShellFeature>();
+        public IList<ShellModule> Modules { get; set; } = new List<ShellModule>();
 
         public string Serialize()
         {

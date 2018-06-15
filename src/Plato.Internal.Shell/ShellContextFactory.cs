@@ -12,14 +12,14 @@ namespace Plato.Internal.Shell
         
         private readonly ICompositionStrategy _compositionStrategy;
         private readonly IShellContainerFactory _shellContainerFactory;
-        private readonly IEnumerable<ShellFeature> _shellFeatures;
+        private readonly IEnumerable<ShellModule> _shellFeatures;
 
         private readonly ILogger _logger;
 
         public ShellContextFactory(
             IShellContainerFactory shellContainerFactory,
             ICompositionStrategy compositionStrategy,
-            IEnumerable<ShellFeature> shellFeatures,
+            IEnumerable<ShellModule> shellFeatures,
             ILogger<ShellContextFactory> logger)
         {
             _shellContainerFactory = shellContainerFactory;
@@ -82,7 +82,7 @@ namespace Plato.Internal.Shell
             var descriptor = new ShellDescriptor
             {
                 Modules = new[] {
-                    new ShellFeature { Id = "Plato.SetUp" }
+                    new ShellModule { Id = "Plato.SetUp" }
                 }
             };
 
@@ -95,12 +95,12 @@ namespace Plato.Internal.Shell
             {
                 Modules = new[]
                 {
-                    new ShellFeature { Id = "Plato.Core" },
-                    new ShellFeature { Id = "Plato.Admin" },
-                    new ShellFeature { Id = "Plato.Users" },
-                    new ShellFeature { Id = "Plato.Roles" },
-                    new ShellFeature { Id = "Plato.Settings" },
-                    new ShellFeature { Id = "Plato.Features" }
+                    new ShellModule { Id = "Plato.Core" },
+                    new ShellModule { Id = "Plato.Admin" },
+                    new ShellModule { Id = "Plato.Users" },
+                    new ShellModule { Id = "Plato.Roles" },
+                    new ShellModule { Id = "Plato.Settings" },
+                    new ShellModule { Id = "Plato.Features" }
                 }
             };
         }

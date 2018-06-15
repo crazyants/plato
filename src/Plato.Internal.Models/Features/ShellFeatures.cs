@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using Plato.Internal.Models.Features;
 
-namespace Plato.Internal.Models.Shell
+namespace Plato.Internal.Models.Features
 {
     public class ShellFeatures : IShellFeatures
     {
-        public IEnumerable<FeatureInfo> Features { get; set; }
+        public IEnumerable<ShellFeature> Features { get; set; } = new List<ShellFeature>();
 
         public string Serialize()
         {

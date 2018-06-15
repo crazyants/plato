@@ -4,34 +4,36 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Features;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Features.ViewModels;
+using Plato.Internal.Models.Shell;
 
 namespace Plato.Features.Controllers
 {
 
     public class AdminController : Controller
     {
-
-        private readonly IModuleManager _moduleManager;
-        private readonly IShellFeatureManager _shellFEatureManager;
+        
+        private readonly IShellFeatureManager _shellFeatureManager;
+        private readonly IShellDescriptorFeatureManager _shellDescriptorFeatureManager;
 
         public AdminController(
-            IModuleManager moduleManager, 
-            IShellFeatureManager shellFEatureManager)
+            IShellFeatureManager shellFeatureManager,
+            IShellDescriptorFeatureManager shellDescriptorFeatureManager)
         {
-            _moduleManager = moduleManager;
-            _shellFEatureManager = shellFEatureManager;
+            _shellFeatureManager = shellFeatureManager;
+            _shellDescriptorFeatureManager = shellDescriptorFeatureManager;
         }
         
         public async Task<IActionResult> Index()
         {
 
-            var modules = await _moduleManager.LoadModulesAsync();
-            
-            //var enabledFeatures = _shellFEatureManager.
+            var features = await _shellDescriptorFeatureManager.GetFeaturesAsync();
 
-            var model = new FEaturesViewModel()
+
+              //var enabledFeatures = _shellFEatureManager.
+
+            var model = new FeaturesViewModel()
             {
-                Modules = modules
+                Features = features
             };
             
             return View(model);
@@ -44,7 +46,7 @@ namespace Plato.Features.Controllers
 
             var test = "test";
 
-            var results = await _shellFEatureManager.EnableFeaturesAsync(new string[] {id});
+            var results = await _shellFeatureManager.EnableFeaturesAsync(new string[] {id});
 
             return RedirectToAction(nameof(Index));
 

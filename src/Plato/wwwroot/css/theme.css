@@ -1,6 +1,9 @@
 ﻿
+/* hover state for lists */
 
-
+.list-group-hover .list-group-item:hover {
+    background-color: #f5f5f5;
+}
 
 /* animation effect for bootstratp dropdowns */
 

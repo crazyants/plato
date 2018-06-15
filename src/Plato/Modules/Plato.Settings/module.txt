@@ -1,2 +1,16 @@
-Name: Plato Core
+Name: Plato Settings
+Description: Provides core settings functionality.
 Author: InstantASP
+Category: Core
+WebSite: https://www.instantasp.co.uk/
+Dependencies: 
+[
+	{
+		Name: "Plato.Core",
+		Version: "1.0.0"
+	},
+	{
+		Name: "Plato.Admin",
+		Version: "1.0.0"
+	}
+]

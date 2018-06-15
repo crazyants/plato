@@ -48,7 +48,7 @@ namespace Plato.Internal.Shell.Extensions
         
         public static IServiceCollection AddSetFeaturesDescriptor(
             this IServiceCollection services,
-            IEnumerable<ShellFeature> shellFeatures)
+            IEnumerable<ShellModule> shellFeatures)
         {
             services.AddSingleton<IShellDescriptorStore>(new SetShellDescriptorManager(shellFeatures));
 

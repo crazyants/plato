@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Plato.Internal.Models.Modules;
+﻿using System.Collections.Generic;
+using Plato.Internal.Models.Features;
 
 namespace Plato.Features.ViewModels
 {
-    public class FEaturesViewModel
+    public class FeaturesViewModel
     {
-        public IEnumerable<IModuleEntry> Modules { get; set; }
+        public IEnumerable<ShellFeature> Features { get; set; }
 
         public FeaturesBulkAction BulkAction { get; set; }
     }

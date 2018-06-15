@@ -131,7 +131,7 @@ namespace Plato.Internal.Modules.Locator
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred whilst parsing the manifest file at {path}");
+                    _logger.LogError(e, $"An exception occurred whilst parsing the manifest file for module '{moduleId}' at '{manifestPath}'.");
                 }
 
             }

@@ -45,14 +45,11 @@ namespace Plato.Internal.Features
 
             foreach (var featureId in featureIds)
             {
-                descriptor.Modules.Add(new ShellFeature(featureId));
+                descriptor.Modules.Add(new ShellModule(featureId));
             }
-
             
-
             var features = await _shellDescriptorStore.SaveAsync(descriptor);
-
-
+            
             return null;
 
         }

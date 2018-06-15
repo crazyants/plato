@@ -1,4 +1,5 @@
-﻿@model FEaturesViewModel
+﻿@using Microsoft.EntityFrameworkCore.Internal
+@model FeaturesViewModel
 @{
     ViewData["Title"] = "Plato Modules";
 }
@@ -46,30 +47,53 @@
 </nav>
 
 <form asp-action="Index">
-    <ul class="list-group">
-        @foreach (var module in Model.Modules)
+    <ul class="list-group list-group-hover">
+        @foreach (var feature in Model.Features)
         {
             <li class="list-group-item">
-
-                <div class="form-check custom-control custom-checkbox">
-                    <h5>
-                        <input type="checkbox" class="custom-control-input" name="featureIds" value="@module.Descriptor.Id" id="@module.Descriptor.Id">
-                        <label class="custom-control-label pr-4" for="@module.Descriptor.Id">
-                            @module.Descriptor.Name
-                        </label>
-                    </h5>
-                </div>
-
-
-                @module.Descriptor.Description<br />
                 
-                <input type="submit" asp-controller="Admin" asp-action="Enable" asp-route-action="enable" asp-route-id="@module.Descriptor.Id" class="btn btn-primary btn-sm" itemprop="UnsafeUrl"/>
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="form-check custom-control custom-checkbox">
+                            <h5>
+                                <input type="checkbox" class="custom-control-input" name="featureIds" value="@feature.Id" id="@feature.Id">
+                                <label class="custom-control-label pr-4" for="@feature.Id">
+                                    @feature.Name
+                                </label>
+                            </h5>
+                        </div>
 
-                @*@foreach (var dependency in module.Descriptor.Dependencies)
-                    {
-                        @dependency.Name<br />
-                    }*@
+                        @if (!String.IsNullOrEmpty(feature.Description))
+                        {
+                            @feature.Description<br />
+                        }
+                        
 
+                        @{
+                            var dependencyNames = feature.FeatureDependencies
+                                .Select(d => d.Name).ToArray();
+                        }
+                        <span class="text-muted">
+                            @if (dependencyNames.Length > 0)
+                            {
+                                @T["Dependencies: "]
+                                @dependencyNames.Join(", ")
+                            }
+                            else
+                            {
+                                @T["No dependencies"]
+                            }
+                        </span>
+
+                    </div>
+                
+                    <div class="col-md-3 text-right">
+                        
+                        @feature.IsEnabled
+                        <input type="submit" asp-controller="Admin" asp-action="Enable" asp-route-action="enable" asp-route-id="@feature.Id" class="btn btn-primary btn-sm" itemprop="UnsafeUrl"/>
+
+                    </div>
+                </div>
 
             </li>
         }
