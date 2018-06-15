@@ -33,11 +33,14 @@ namespace Plato.Internal.Features
         public async Task<IEnumerable<ShellFeature>> GetFeaturesAsync()
         {
 
+            // Get all availablke modules
             var modules = await _moduleManager.LoadModulesAsync();
 
+            // Get enmabled modules registered within DI
             var enabledFeatures = _shellDescriptor.Modules;
             
-            var features = new List<ShellFeature>();
+            // Build described features
+            var describedFeatures = new List<ShellFeature>();
 
             foreach (var module in modules)
             {
@@ -45,7 +48,7 @@ namespace Plato.Internal.Features
                     ? true
                     : false;
 
-                features.Add(new ShellFeature()
+                describedFeatures.Add(new ShellFeature()
                 {
                     Id = module.Descriptor.Id,
                     Name = module.Descriptor.Name,
@@ -54,7 +57,7 @@ namespace Plato.Internal.Features
                 });
             }
             
-            return features;
+            return describedFeatures;
 
         }
     }

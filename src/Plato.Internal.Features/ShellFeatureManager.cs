@@ -14,7 +14,10 @@ namespace Plato.Internal.Features
     {
 
         Task<IEnumerable<IFeatureInfo>> EnableFeaturesAsync(string[] featureIds);
-            
+
+        Task<IEnumerable<IFeatureInfo>> DisableFeaturesAsync(string[] featureIds);
+
+
         Task<IEnumerable<IFeatureInfo>> EnableFeaturesAsync(ShellDescriptor shellDescriptor,
             IEnumerable<IFeatureInfo> features);
         

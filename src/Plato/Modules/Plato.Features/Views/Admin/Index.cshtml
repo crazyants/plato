@@ -88,9 +88,16 @@
                     </div>
                 
                     <div class="col-md-3 text-right">
-                        
-                        @feature.IsEnabled
-                        <input type="submit" asp-controller="Admin" asp-action="Enable" asp-route-action="enable" asp-route-id="@feature.Id" class="btn btn-primary btn-sm" itemprop="UnsafeUrl"/>
+
+                        @if (!feature.IsEnabled)
+                        {
+                            <input type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.Id" class="btn btn-primary btn-sm" itemprop="UnsafeUrl" />
+                        }
+                        else
+                        {
+                            <input type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.Id" class="btn btn-primary btn-sm" itemprop="UnsafeUrl" />
+                        }
+
 
                     </div>
                 </div>

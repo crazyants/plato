@@ -52,6 +52,18 @@ namespace Plato.Features.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Disable(string id)
+        {
+
+            var test = "test";
+
+            var results = await _shellFeatureManager.EnableFeaturesAsync(new string[] { id });
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
 
 
 
