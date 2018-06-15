@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Internal.Hosting.Extensions
@@ -10,10 +9,8 @@ namespace Plato.Internal.Hosting.Extensions
         public static IServiceCollection AddPlatoDefaultHost(
             this IServiceCollection services)
         {
-            
             services.AddSingleton<DefaultPlatoHost>();
             services.AddSingleton<IPlatoHost>(sp => sp.GetRequiredService<DefaultPlatoHost>());
-            
             return services;
         }
 

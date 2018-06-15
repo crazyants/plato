@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell;
@@ -50,44 +51,23 @@ namespace Plato.Internal.Hosting
         public ShellContext GetOrCreateShellContext(ShellSettings settings)
         {
             if (_shellContexts == null)
+            {
                 _shellContexts = new ConcurrentDictionary<string, ShellContext>();
+            }
+                
             return _shellContexts.GetOrAdd(settings.Name, tenant =>
             {
                 var shellContext = CreateShellContext(settings);
                 ActivateShell(shellContext);
                 return shellContext;
             });
-        }
-        public void RecycleShellContext(ShellSettings settings)
-        {
-            _runningShellTable.Remove(settings);
-            if (_shellContexts.TryRemove(settings.Name, out var context))
-            {
-                if (_shellContexts.Count == 0)
-                    _shellContexts = null;
-                context.Dispose();
-            }
-            GetOrCreateShellContext(settings);
-        }
 
-
-        public void DisposeShellContext(ShellSettings settings)
-        {
-            var shellContext = CreateShellContext(settings);
-            DeactivateShell(shellContext);
         }
 
         public void UpdateShellSettings(ShellSettings settings)
         {
             _shellSettingsManager.SaveSettings(settings);
-            _runningShellTable.Remove(settings);
-            if (_shellContexts.TryRemove(settings.Name, out var context))
-            {
-                if (_shellContexts.Count == 0)
-                    _shellContexts = null;
-                context.Dispose();
-            }
-            GetOrCreateShellContext(settings);
+            RecycleShellContext(settings);
         }
         
         public ShellContext CreateShellContext(ShellSettings settings)
@@ -103,6 +83,34 @@ namespace Plato.Internal.Hosting
 
             _logger.LogDebug("Creating shell context for tenant {0}", settings.Name);
             return _shellContextFactory.CreateShellContext(settings);
+        }
+
+
+        public void RecycleShellContext(ShellSettings settings)
+        {
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug("Recycling shell context for tenant {0}", settings.Name);
+            }
+
+            // Dispose
+            _runningShellTable.Remove(settings);
+            if (_shellContexts.TryRemove(settings.Name, out var context))
+            {
+                if (_shellContexts.Count == 0)
+                    _shellContexts = null;
+                context.Dispose();
+            }
+
+            // Recreate
+            GetOrCreateShellContext(settings);
+
+        }
+
+        public void DisposeShellContext(ShellSettings settings)
+        {
+            var shellContext = CreateShellContext(settings);
+            DeactivateShell(shellContext);
         }
         
         #endregion
@@ -139,13 +147,13 @@ namespace Plato.Internal.Hosting
             // Load all tenants, and activate their shell.
             if (allSettings.Any())
             {
-                //Parallel.ForEach(allSettings, settings =>
-                //{
-                foreach (var settings in allSettings)
+                Parallel.ForEach(allSettings, settings =>
                 {
+                //foreach (var settings in allSettings)
+                //{
                     GetOrCreateShellContext(settings);
-                }
-                //});
+                //}
+                });
             } 
             else
             {
@@ -159,8 +167,7 @@ namespace Plato.Internal.Hosting
                 _logger.LogInformation("Done creating shells");
             }
         }
-
-
+        
         void ActivateShell(ShellContext context)
         {
             if (_logger.IsEnabled(LogLevel.Debug))
@@ -172,21 +179,7 @@ namespace Plato.Internal.Hosting
             }
 
         }
-
-
-        void UpdateShell(ShellContext context)
-        {
-            if (_logger.IsEnabled(LogLevel.Debug))
-                _logger.LogDebug("Deactivating context for tenant {0}", context.Settings.Name);
-
-            if (_shellContexts.TryUpdate(context.Settings.Name, context, context))
-            {
-                _runningShellTable.Add(context.Settings);
-            }
-
-
-        }
-
+      
         void DeactivateShell(ShellContext context)
         {
             if (_logger.IsEnabled(LogLevel.Debug))
@@ -204,11 +197,8 @@ namespace Plato.Internal.Hosting
                 _logger.LogDebug("Creating shell context for root setup.");
             return _shellContextFactory.CreateSetupContext(ShellHelper.BuildDefaultUninitializedShell);
         }
-
-        /// <summary>
-        /// Whether or not a shell can be added to the list of available shells.
-        /// </summary>
-        private bool CanCreateShell(ShellSettings shellSettings)
+        
+        bool CanCreateShell(ShellSettings shellSettings)
         {
             return
                 shellSettings.State == TenantState.Running ||

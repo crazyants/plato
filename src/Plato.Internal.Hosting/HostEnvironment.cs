@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Internal.Hosting
 {
