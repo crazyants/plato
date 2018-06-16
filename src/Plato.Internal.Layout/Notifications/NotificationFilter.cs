@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewHelpers;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Models.Shell;
 
@@ -116,7 +117,7 @@ namespace Plato.Internal.Layout.Notifications
 
         public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
-            
+
 
             if (_deleteCookie)
             {
@@ -136,12 +137,8 @@ namespace Plato.Internal.Layout.Notifications
                 await next();
                 return;
             }
-            
-            var keys = context.ModelState.Keys;
-            var modelBinderAccessor = context.HttpContext.RequestServices.GetRequiredService<IUpdateModelAccessor>();
 
-            var layout = await _layoutAccessor.GetLayoutAsync();
-            
+     
             var result = context.Result as ViewResult;
             if (result == null)
             {
@@ -159,13 +156,27 @@ namespace Plato.Internal.Layout.Notifications
                 await next();
                 return;
             }
-
-            // modify some property value
-            var header = model.Header;
-
-            //model.Header.Append(new View(""))
+            
+            var layout = await _layoutAccessor.GetLayoutAsync();
 
 
+            foreach (var messageEntry in _existingEntries)
+            {
+
+                var views = new List<IPositionedView>();
+                var notification = new HtmlViewHelper($"<h1>{messageEntry.Message}</h1>");
+                var positionedView = new PositionedView(notification);
+                views.Add(positionedView);
+
+                model.Header = views;
+            }
+            
+            var controller = context.Controller as Controller;
+            if (controller != null)
+            {
+                await controller.TryUpdateModelAsync(model);
+            }
+            
             //dynamic layout = await _layoutAccessor.GetLayoutAsync();
             //var messagesZone = layout.Zones["Messages"];
 

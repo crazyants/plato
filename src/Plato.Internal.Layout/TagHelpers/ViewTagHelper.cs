@@ -63,8 +63,7 @@ namespace Plato.Internal.Layout.TagHelpers
             EnsureViewHelper();
 
             HtmlContentBuilder builder = null;
-
-
+            
             if (this.Model is IEnumerable<IView>)
             {
                 builder = new HtmlContentBuilder();

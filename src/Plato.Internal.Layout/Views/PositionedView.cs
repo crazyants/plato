@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Plato.Internal.Layout.EmbeddedViews;
 
 namespace Plato.Internal.Layout.Views
 {
@@ -20,8 +21,9 @@ namespace Plato.Internal.Layout.Views
      
         private string _zone;
         private int _order;
-
-        public PositionedView()
+        
+        public PositionedView(IEmbeddedView embeddedView) :
+            base(embeddedView)
         {
             _zone = LayoutZones.ContentZoneName;
             _order = 1;

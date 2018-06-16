@@ -1,14 +1,12 @@
-﻿
-using System;
-using Microsoft.AspNetCore.Html;
-using Plato.Internal.Layout.CustomViews;
+﻿using System;
+using Plato.Internal.Layout.EmbeddedViews;
 
 namespace Plato.Internal.Layout.Views
 {
     
     public interface IView
     {
-        IViewContent ViewContent { get; set; }
+        IEmbeddedView EmbeddedView { get; set; }
 
         string ViewName { get; set; }
 
@@ -19,22 +17,16 @@ namespace Plato.Internal.Layout.Views
     public class View : IView
     {
 
-        public IViewContent ViewContent { get; set; }
+        public IEmbeddedView EmbeddedView { get; set; }
         
         public string ViewName { get; set; }
         
         public object Model { get; set; }
-
-        public View()
+        
+        public View(IEmbeddedView view)
         {
-
-        }
-
-        public View(IViewContent content, object model = null)
-        {
-            this.ViewName = GetViewNameForContentType(content.GetType());
-            this.ViewContent = content;
-            this.Model = model;
+            this.ViewName = view.GetType().Name;
+            this.EmbeddedView = view;
         }
         
         public View(string viewName, object model = null)
@@ -42,14 +34,7 @@ namespace Plato.Internal.Layout.Views
             this.ViewName = viewName;
             this.Model = model;
         }
-
-
-        private string GetViewNameForContentType(Type type)
-        {
-
-            return type.ToString();
-        }
-
+        
     }
 
 }

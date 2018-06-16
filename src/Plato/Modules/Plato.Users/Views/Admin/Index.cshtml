@@ -1,13 +1,12 @@
-﻿@using Plato.Internal.Layout.CustomViews
+﻿@using Plato.Internal.Layout.ViewHelpers
 @model Plato.Internal.Layout.LayoutViewModel
 @{
     ViewData["Title"] = "Manage Users";
 }
 
 @{
-    var notification = new NotificationView("<strong>TEST</strong>");
-    var customView = new View(notification);
-    @await DisplayAsync(customView);
+    var embeddedView = new View(new HtmlViewHelper("<h1>Hello Word from Embedded View</h1>"));
+    @await DisplayAsync(embeddedView);
 }
 
 

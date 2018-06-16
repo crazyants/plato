@@ -56,12 +56,18 @@ namespace Plato.Internal.Layout.Views
                     "ViewContext must be set via the Contextualize method before calling the InvokeAsync method");
             }
 
-            if (view.ViewContent != null)
+            // Embedded views simply return the output generated within the view
+            // It's the embedded views responsibility to perform model binding
+            // Embedded views can leverage the current context within the Build method
+            if (view.EmbeddedView != null)
             {
-                return view.ViewContent.Output;
+                
+                return await view.EmbeddedView
+                    .Contextualize(this.ViewContext)
+                    .Build();
             }
             
-            // view components use an anonymous type for the parameters argument
+            // View components use an anonymous type for the parameters argument
             // this anonymous type is emitted as an actual type by the compiler but
             // marked with the CompilerGeneratedAttribute. If we find this attribute
             // on the model we'll treat this view as a ViewComponent and invoke accordingly
