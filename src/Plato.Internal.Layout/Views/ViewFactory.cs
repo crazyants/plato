@@ -35,11 +35,9 @@ namespace Plato.Internal.Layout.Views
         {
 
             // Contextulize generic view invoker
-
             _viewInvoker.Contextualize(displayContext);
 
             // Apply view & model alterations
-
             if (displayContext.ViewAdaptorResults != null)
             {
                 foreach (var viewAdaptorResult in displayContext.ViewAdaptorResults)
@@ -76,13 +74,9 @@ namespace Plato.Internal.Layout.Views
             }
 
             // Invoke generic view
-
-            var htmlContent = await _viewInvoker.InvokeAsync(
-                displayContext.ViewDescriptor.View.ViewName,
-                displayContext.ViewDescriptor.View.Model);
+            var htmlContent = await _viewInvoker.InvokeAsync(displayContext.ViewDescriptor.View);
 
             // Apply adaptor output alterations
-
             if (displayContext.ViewAdaptorResults != null)
             {
                 foreach (var viewAdaptorResult in displayContext.ViewAdaptorResults)

@@ -18,7 +18,7 @@ namespace Plato.Users.ViewProviders
         {
 
             return Views(
-                View<UsersPagedViewModel>("<strong>CUSTOM HTML</strong>", model => viewModel).Zone("header"),
+                //View<UsersPagedViewModel>("<strong>CUSTOM HTML</strong>", model => viewModel).Zone("header"),
                 View<UsersPagedViewModel>("User.Index.Header", model => viewModel).Zone("header"),
                 View<UsersPagedViewModel>("User.Index.Tools", model => viewModel).Zone("tools"),
                 View<UsersPagedViewModel>("User.Index.Content", model => viewModel).Zone("content")

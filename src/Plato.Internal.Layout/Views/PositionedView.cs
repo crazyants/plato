@@ -20,7 +20,13 @@ namespace Plato.Internal.Layout.Views
      
         private string _zone;
         private int _order;
-        
+
+        public PositionedView()
+        {
+            _zone = LayoutZones.ContentZoneName;
+            _order = 1;
+        }
+
         public PositionedView(string viewName, object model) : 
             base(viewName, model)
         {

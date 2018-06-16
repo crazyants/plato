@@ -1,7 +1,15 @@
-﻿@model Plato.Internal.Layout.LayoutViewModel
+﻿@using Plato.Internal.Layout.CustomViews
+@model Plato.Internal.Layout.LayoutViewModel
 @{
     ViewData["Title"] = "Manage Users";
 }
+
+@{
+    var notification = new NotificationView("<strong>TEST</strong>");
+    var customView = new View(notification);
+    @await DisplayAsync(customView);
+}
+
 
 <div class="layout">
 

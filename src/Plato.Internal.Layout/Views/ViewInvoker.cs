@@ -18,7 +18,7 @@ namespace Plato.Internal.Layout.Views
 
         void Contextualize(ViewDisplayContext viewContext);
 
-        Task<IHtmlContent> InvokeAsync(string viewName, object model);
+        Task<IHtmlContent> InvokeAsync(IView view);
 
     }
 
@@ -48,7 +48,7 @@ namespace Plato.Internal.Layout.Views
             this.ViewContext = context.ViewContext;
         }
 
-        public async Task<IHtmlContent> InvokeAsync(string viewName, object model)
+        public async Task<IHtmlContent> InvokeAsync(IView view)
         {
             if (this.ViewContext == null)
             {
@@ -56,18 +56,22 @@ namespace Plato.Internal.Layout.Views
                     "ViewContext must be set via the Contextualize method before calling the InvokeAsync method");
             }
 
-
+            if (view.ViewContent != null)
+            {
+                return view.ViewContent.Output;
+            }
+            
             // view components use an anonymous type for the parameters argument
             // this anonymous type is emitted as an actual type by the compiler but
             // marked with the CompilerGeneratedAttribute. If we find this attribute
             // on the model we'll treat this view as a ViewComponent and invoke accordingly
-            if (IsViewModelAnonymousType(model))
+            if (IsViewModelAnonymousType(view.Model))
             {
-                return await InvokeViewComponentAsync(viewName, model);
+                return await InvokeViewComponentAsync(view.ViewName, view.Model);
             }
 
             // else we have a partial view
-            return await InvokePartialAsync(viewName, model);
+            return await InvokePartialAsync(view.ViewName, view.Model);
 
 
         }
@@ -99,9 +103,17 @@ namespace Plato.Internal.Layout.Views
         
         bool IsViewModelAnonymousType(object model)
         {
+
+            // We need a model to inspect
+            if (model == null)
+            {
+                return false;
+            }
+
             return model
                 .GetType()
                 .GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any();
+
         }
 
     }
