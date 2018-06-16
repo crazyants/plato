@@ -14,22 +14,19 @@ namespace Plato.Internal.Layout.Views
 
     public class ViewDisplayHelper : IViewDisplayHelper
     {
-
-        private readonly IViewAdaptorManager _viewAdaptorManager;
-        private readonly IViewInvoker _generaticViewInvoker;
-        private readonly IGenericViewFactory _genericViewFactory;
+        
+        private readonly IViewFactory _viewFactory;
         private readonly IServiceProvider _serviceProvider;
 
         public ViewContext ViewContext { get; set; }
         
         public ViewDisplayHelper(
-            IViewInvoker generaticViewInvoker,
-            IGenericViewFactory genericViewFactory,
+            IViewInvoker viewInvoker,
+            IViewFactory viewFactory,
             ViewContext viewContext,
             IServiceProvider serviceProvider)
         {
-            _generaticViewInvoker = generaticViewInvoker;
-            _genericViewFactory = genericViewFactory;
+            _viewFactory = viewFactory;
             ViewContext = viewContext;
             _serviceProvider = serviceProvider;
         }
@@ -43,7 +40,7 @@ namespace Plato.Internal.Layout.Views
             }
             
             // Build view descriptor
-            var viewDescriptor = await _genericViewFactory.CreateAsync(view);
+            var viewDescriptor = await _viewFactory.CreateAsync(view);
 
             // Get registered view adaptor providers for the view
             var viewAdaptorManager = ViewContext.HttpContext.RequestServices.GetService<IViewAdaptorManager>();
@@ -59,7 +56,7 @@ namespace Plato.Internal.Layout.Views
             };
 
             // Invoke the view
-            return await _genericViewFactory.InvokeAsync(displayContext);
+            return await _viewFactory.InvokeAsync(displayContext);
 
         }
 

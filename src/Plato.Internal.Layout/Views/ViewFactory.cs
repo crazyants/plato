@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Html;
 namespace Plato.Internal.Layout.Views
 {
 
-    public interface IGenericViewFactory
+    public interface IViewFactory
     {
         Task<ViewDescriptor> CreateAsync(IView view);
 
@@ -12,18 +12,18 @@ namespace Plato.Internal.Layout.Views
 
     }
 
-    public class ViewFactory : IGenericViewFactory
+    public class ViewFactory : IViewFactory
     {
 
         private readonly IViewTableManager _viewTableManager;
-        private readonly IViewInvoker _ViewInvoker;
+        private readonly IViewInvoker _viewInvoker;
 
         public ViewFactory(
             IViewTableManager viewTableManager,
             IViewInvoker viewInvoker)
         {
             _viewTableManager = viewTableManager;
-            _ViewInvoker = viewInvoker;
+            _viewInvoker = viewInvoker;
         }
 
         public async Task<ViewDescriptor> CreateAsync(IView view)
@@ -36,7 +36,7 @@ namespace Plato.Internal.Layout.Views
 
             // Contextulize generic view invoker
 
-            _ViewInvoker.Contextualize(displayContext);
+            _viewInvoker.Contextualize(displayContext);
 
             // Apply view & model alterations
 
@@ -44,7 +44,6 @@ namespace Plato.Internal.Layout.Views
             {
                 foreach (var viewAdaptorResult in displayContext.ViewAdaptorResults)
                 {
-
 
                     var updatedView = displayContext.ViewDescriptor.View;
 
@@ -78,7 +77,7 @@ namespace Plato.Internal.Layout.Views
 
             // Invoke generic view
 
-            var htmlContent = await _ViewInvoker.InvokeAsync(
+            var htmlContent = await _viewInvoker.InvokeAsync(
                 displayContext.ViewDescriptor.View.ViewName,
                 displayContext.ViewDescriptor.View.Model);
 

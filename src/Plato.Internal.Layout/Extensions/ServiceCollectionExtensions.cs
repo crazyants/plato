@@ -41,7 +41,7 @@ namespace Plato.Internal.Layout.Extensions
             
             // gneric views
             services.AddSingleton<IViewHelperFactory, ViewDisplayHelperFactory>();
-            services.AddSingleton<IGenericViewFactory, ViewFactory>();
+            services.AddSingleton<IViewFactory, ViewFactory>();
             services.AddSingleton<IViewTableManager, ViewTableManager>();
             services.AddSingleton<IViewInvoker, ViewInvoker>();
 

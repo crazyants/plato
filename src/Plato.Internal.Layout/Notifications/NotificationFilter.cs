@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Views;
 using Plato.Internal.Models.Shell;
 
 namespace Plato.Internal.Layout.Notifications
@@ -95,7 +98,7 @@ namespace Plato.Internal.Layout.Notifications
             }
 
             _existingEntries = messageEntries;
-
+            
 
             // Result is not a view, so assume a redirect and assign values to TemData.
             // String data type used instead of complex array to be session-friendly.
@@ -113,6 +116,8 @@ namespace Plato.Internal.Layout.Notifications
 
         public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
+            
+
             if (_deleteCookie)
             {
                 DeleteCookies(context);
@@ -133,10 +138,33 @@ namespace Plato.Internal.Layout.Notifications
             }
             
             var keys = context.ModelState.Keys;
+            var modelBinderAccessor = context.HttpContext.RequestServices.GetRequiredService<IUpdateModelAccessor>();
 
             var layout = await _layoutAccessor.GetLayoutAsync();
+            
+            var result = context.Result as ViewResult;
+            if (result == null)
+            {
+                // The controller action didn't return a view result 
+                // => no need to continue any further
+                await next();
+                return;
+            }
 
-         
+            var model = result.Model as LayoutViewModel;
+            if (model == null)
+            {
+                // there's no model or the model was not of the expected type 
+                // => no need to continue any further
+                await next();
+                return;
+            }
+
+            // modify some property value
+            var header = model.Header;
+
+            //model.Header.Append(new View(""))
+
 
             //dynamic layout = await _layoutAccessor.GetLayoutAsync();
             //var messagesZone = layout.Zones["Messages"];

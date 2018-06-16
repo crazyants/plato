@@ -9,6 +9,7 @@ using Plato.Internal.Stores.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.Notifications;
 using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Users.Controllers
@@ -17,21 +18,25 @@ namespace Plato.Users.Controllers
     public class AdminController : Controller, IUpdateModel
     {
 
-        private readonly IViewProviderManager<User> _userViewProviderManager;
-        private readonly IViewProviderManager<UsersPagedViewModel> _userListViewProviderManager;
+        private readonly IViewProviderManager<User> _userViewProvider;
+        private readonly IViewProviderManager<UsersPagedViewModel> _userListViewProvider;
         private readonly IPlatoUserStore<User> _ploatUserStore;
+        private readonly INotify _notify;
+
         private readonly UserManager<User> _userManager;
 
         public AdminController(
             IPlatoUserStore<User> platoUserStore, 
-            IViewProviderManager<User> userViewProviderManager,
-            IViewProviderManager<UsersPagedViewModel> userListViewProviderManager,
-            UserManager<User> userManager)
+            IViewProviderManager<User> userViewProvider,
+            IViewProviderManager<UsersPagedViewModel> userListViewProvider,
+            UserManager<User> userManager,
+            INotify notify)
         {
             _ploatUserStore = platoUserStore;
-            _userViewProviderManager = userViewProviderManager;
-            _userListViewProviderManager = userListViewProviderManager;
+            _userViewProvider = userViewProvider;
+            _userListViewProvider = userListViewProvider;
             _userManager = userManager;
+            _notify = notify;
         }
 
         #region "Action Methods"
@@ -71,7 +76,7 @@ namespace Plato.Users.Controllers
             var model = await GetPagedModel(filterOptions, pagerOptions);
 
 
-            var result = await _userListViewProviderManager.ProvideIndexAsync(model, this);
+            var result = await _userListViewProvider.ProvideIndexAsync(model, this);
             return View(result);
 
             //var providedView = await _viewProviderManager.BuildDisplayAsync(user, this);
@@ -84,13 +89,12 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> LayoutTest(string id)
         {
 
-            var result = await _userViewProviderManager.ProvideIndexAsync(new User(), this);
+            var result = await _userViewProvider.ProvideIndexAsync(new User(), this);
 
             return View(result);
 
         }
-
-
+        
         
         public async Task<IActionResult> Display(string id)
         {
@@ -101,13 +105,13 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
 
-            var result = await _userViewProviderManager.ProvideDisplayAsync(currentUser, this);
+            var result = await _userViewProvider.ProvideDisplayAsync(currentUser, this);
             return View(result);
         }
 
         public async Task<IActionResult> Create()
         {
-            var result = await _userViewProviderManager.ProvideEditAsync(new User(), this);
+            var result = await _userViewProvider.ProvideEditAsync(new User(), this);
             return View(result);
         }
         
@@ -120,7 +124,7 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
             
-            var result = await _userViewProviderManager.ProvideEditAsync(currentUser, this);
+            var result = await _userViewProvider.ProvideEditAsync(currentUser, this);
             return View(result);
 
         }
@@ -135,12 +139,14 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
             
-            var result = await _userViewProviderManager.ProvideUpdateAsync((User)currentUser, this);
+            var result = await _userViewProvider.ProvideUpdateAsync((User)currentUser, this);
 
             if (!ModelState.IsValid)
             {
                 return View(result);
             }
+
+            _notify.Add(NotificationType.Success, "User Updated Successfully!");
 
             //_notifier.Success(TH["User updated successfully"]);
 
