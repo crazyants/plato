@@ -24,22 +24,20 @@ namespace Plato.Internal.Layout.Notifications
         readonly string _tenantPath;
 
         readonly ShellSettings _shellSettings;
-        readonly ILayoutAccessor _layoutAccessor;
+        readonly ILayoutUpdater _layoutUpdater;
         readonly ILogger<NotificationFilter> _logger;
         readonly INotify _notify;
 
         public NotificationFilter(
             ShellSettings shellSettings,
-            ILogger<NotificationFilter> logger, 
-            ILayoutAccessor layoutAccessor,
+            ILogger<NotificationFilter> logger,
+            ILayoutUpdater layoutUpdater,
             INotify notify)
         {
-         
             _shellSettings = shellSettings;
             _logger = logger;
-            _layoutAccessor = layoutAccessor;
+            _layoutUpdater = layoutUpdater;
             _notify = notify;
-
             _tenantPath = "/" + _shellSettings.RequestedUrlPrefix;
         }
 
@@ -157,24 +155,38 @@ namespace Plato.Internal.Layout.Notifications
                 return;
             }
             
-            var layout = await _layoutAccessor.GetLayoutAsync();
-
-
-            foreach (var messageEntry in _existingEntries)
-            {
-
-                var views = new List<IPositionedView>();
-                var notification = new HtmlViewHelper($"<h1>{messageEntry.Message}</h1>");
-                var positionedView = new PositionedView(notification);
-                views.Add(positionedView);
-
-                model.Header = views;
-            }
-            
+         
             var controller = context.Controller as Controller;
             if (controller != null)
             {
-                await controller.TryUpdateModelAsync(model);
+
+                var updater = await _layoutUpdater.GetLayoutAsync(controller);
+                await updater.UpdateLayoutAsync(async layout =>
+                {
+
+                    layout.Header = await updater.UpdateZoneAsync(layout.Header, zone =>
+                    {
+                        zone.Add(new PositionedView(
+                            new HtmlViewHelper($"<h1>1</h1>")
+                        ).Order(3));
+                        zone.Add(new PositionedView(
+                            new HtmlViewHelper($"<h1>2</h1>")
+                        ).Order(2));
+                        zone.Add(new PositionedView(
+                            new HtmlViewHelper($"<h1>3</h1>")
+                        ).Order(1));
+
+                        foreach (var messageEntry in _existingEntries)
+                        {
+                            zone.Add(new PositionedView(
+                                new HtmlViewHelper($"<h1>{messageEntry.Message}</h1>")
+                            ).Order(1));
+                        }
+                    });
+                    
+                    return layout;
+                });
+
             }
             
             //dynamic layout = await _layoutAccessor.GetLayoutAsync();

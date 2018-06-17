@@ -12,6 +12,7 @@ namespace Plato.Internal.Layout
         public const string FooterZoneName = "footer";
         public const string ActionsZoneName = "actions";
         public const string AsidesZoneName = "asides";
+        public const string NotificationsZoneName = "notifications";
 
         public static string[] SupportedZones => new string[]
         {
@@ -22,7 +23,8 @@ namespace Plato.Internal.Layout
             SideBarZoneName,
             FooterZoneName,
             ActionsZoneName,
-            AsidesZoneName
+            AsidesZoneName,
+            NotificationsZoneName
         };
     }
 }

@@ -32,12 +32,13 @@ namespace Plato.Internal.Layout
                 SideBar = GetPositionedViews(LayoutZones.SideBarZoneName),
                 Footer = GetPositionedViews(LayoutZones.FooterZoneName),
                 Actions = GetPositionedViews(LayoutZones.ActionsZoneName),
-                Asides = GetPositionedViews(LayoutZones.AsidesZoneName)
+                Asides = GetPositionedViews(LayoutZones.AsidesZoneName),
+                Notifications = GetPositionedViews(LayoutZones.AsidesZoneName),
             };
 
         }
 
-        IEnumerable<IView> GetPositionedViews(string zoneName)
+        IEnumerable<IPositionedView> GetPositionedViews(string zoneName)
         {
 
             if (_zonedViews.ContainsKey(zoneName))

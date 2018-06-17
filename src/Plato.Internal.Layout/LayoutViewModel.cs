@@ -7,22 +7,25 @@ namespace Plato.Internal.Layout
     public class LayoutViewModel : CombinedViewProviderResult
     {
     
-        public IEnumerable<IView> Header { get; set; }
+        public IEnumerable<IPositionedView> Header { get; set; }
 
-        public IEnumerable<IView> Tools { get; set; }
+        public IEnumerable<IPositionedView> Tools { get; set; }
         
-        public IEnumerable<IView> Meta { get; set; }
+        public IEnumerable<IPositionedView> Meta { get; set; }
 
-        public IEnumerable<IView> Content { get; set; }
+        public IEnumerable<IPositionedView> Content { get; set; }
         
-        public IEnumerable<IView> SideBar { get; set; }
+        public IEnumerable<IPositionedView> SideBar { get; set; }
 
-        public IEnumerable<IView> Footer { get; set; }
+        public IEnumerable<IPositionedView> Footer { get; set; }
 
-        public IEnumerable<IView> Actions { get; set; }
+        public IEnumerable<IPositionedView> Actions { get; set; }
 
-        public IEnumerable<IView> Asides { get; set; }
+        public IEnumerable<IPositionedView> Asides { get; set; }
+
+        public IEnumerable<IPositionedView> Notifications { get; set; }
         
+
         public LayoutViewModel(params IViewProviderResult[] results) : base(results)
         {
         }

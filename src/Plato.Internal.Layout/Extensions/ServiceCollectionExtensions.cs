@@ -36,8 +36,8 @@ namespace Plato.Internal.Layout.Extensions
             this IServiceCollection services)
         {
 
-            // layout accessor
-            services.AddSingleton<ILayoutAccessor, LayoutAccessor>();
+            // layout updater
+            services.AddSingleton<ILayoutUpdater, LayoutUpdater>();
             
             // gneric views
             services.AddSingleton<IViewHelperFactory, ViewDisplayHelperFactory>();
