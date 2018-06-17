@@ -113,15 +113,16 @@ namespace Plato.Internal.Layout
             Action<List<IPositionedView>> configure)
         {
 
+            // The zone may not have been initialized
             if (zone == null)
             {
                 zone = new List<IPositionedView>();
             }
 
-            // Convert existing views to list
+            // Ensures we can easily perform work within configure
             var list = zone.ToList();
 
-            // Configure our zone
+            // Configure the zone
             configure(list);
 
             // Order views in zone

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Plato.Internal.Layout.Notifications
 {
@@ -8,7 +6,7 @@ namespace Plato.Internal.Layout.Notifications
     public interface INotify
     {
 
-        void Add(NotificationType type, string message);
+        void Add(NotifyType type, string message);
 
         ICollection<Notification> Notifications { get; }
 
@@ -19,7 +17,7 @@ namespace Plato.Internal.Layout.Notifications
 
         public ICollection<Notification> Notifications { get; set; }
 
-        public void Add(NotificationType type, string message)
+        public void Add(NotifyType type, string message)
         {
             if (Notifications == null)
             {

@@ -146,7 +146,7 @@ namespace Plato.Users.Controllers
                 return View(result);
             }
 
-            _notify.Add(NotificationType.Success, "User Updated Successfully!");
+            _notify.Add(NotifyType.Success, "User Updated Successfully!");
 
             //_notifier.Success(TH["User updated successfully"]);
 

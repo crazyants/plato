@@ -44,7 +44,7 @@ namespace Plato.Internal.Layout.Notifications
 
         #region "Implementation"
 
-        private ICollection<Notification> _existingEntries = new List<Notification>();
+        private ICollection<Notification> _entries = new List<Notification>();
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
@@ -69,7 +69,7 @@ namespace Plato.Internal.Layout.Notifications
             }
 
             // Ensure notifications are available for the entire request
-            _existingEntries = notifications;
+            _entries = notifications;
 
         }
 
@@ -83,7 +83,7 @@ namespace Plato.Internal.Layout.Notifications
                 return;
             }
 
-            if (messageEntries.Count == 0 && _existingEntries.Count == 0)
+            if (messageEntries.Count == 0 && _entries.Count == 0)
             {
                 return;
             }
@@ -91,19 +91,19 @@ namespace Plato.Internal.Layout.Notifications
             // Assign values to the Items collection instead of TempData and
             // combine any existing entries added by the previous request with new ones.
 
-            foreach (var entry in _existingEntries)
+            foreach (var entry in _entries)
             {
                 messageEntries.Add(entry);
             }
 
-            _existingEntries = messageEntries;
+            _entries = messageEntries;
             
 
             // Result is not a view, so assume a redirect and assign values to TemData.
             // String data type used instead of complex array to be session-friendly.
-            if (!(context.Result is ViewResult) && _existingEntries.Count > 0)
+            if (!(context.Result is ViewResult) && _entries.Count > 0)
             {
-                context.HttpContext.Response.Cookies.Append(CookiePrefix, SerializeNotifications(_existingEntries),
+                context.HttpContext.Response.Cookies.Append(CookiePrefix, SerializeNotifications(_entries),
                     new CookieOptions
                     {
                         HttpOnly = true,
@@ -130,7 +130,7 @@ namespace Plato.Internal.Layout.Notifications
                 return;
             }
 
-            if (_existingEntries.Count == 0)
+            if (_entries.Count == 0)
             {
                 await next();
                 return;
@@ -154,49 +154,27 @@ namespace Plato.Internal.Layout.Notifications
                 await next();
                 return;
             }
-            
-         
-            var controller = context.Controller as Controller;
-            if (controller != null)
-            {
 
+
+            if (context.Controller is Controller controller)
+            {
                 var updater = await _layoutUpdater.GetLayoutAsync(controller);
                 await updater.UpdateLayoutAsync(async layout =>
                 {
-
                     layout.Header = await updater.UpdateZoneAsync(layout.Header, zone =>
                     {
-                        zone.Add(new PositionedView(
-                            new HtmlViewHelper($"<h1>1</h1>")
-                        ).Order(3));
-                        zone.Add(new PositionedView(
-                            new HtmlViewHelper($"<h1>2</h1>")
-                        ).Order(2));
-                        zone.Add(new PositionedView(
-                            new HtmlViewHelper($"<h1>3</h1>")
-                        ).Order(1));
-
-                        foreach (var messageEntry in _existingEntries)
+                        foreach (var entry in _entries)
                         {
                             zone.Add(new PositionedView(
-                                new HtmlViewHelper($"<h1>{messageEntry.Message}</h1>")
-                            ).Order(1));
+                                new NotifyViewHelper(entry)
+                            ));
                         }
                     });
                     
                     return layout;
                 });
-
             }
             
-            //dynamic layout = await _layoutAccessor.GetLayoutAsync();
-            //var messagesZone = layout.Zones["Messages"];
-
-            //foreach (var messageEntry in _existingEntries)
-            //{
-            //    messagesZone = messagesZone.Add(await _shapeFactory.Message(messageEntry));
-            //}
-
             DeleteCookies(context);
 
             await next();

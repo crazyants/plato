@@ -17,10 +17,7 @@ namespace Plato.Internal.Layout.ViewHelpers
         
         public override Task<IHtmlContent> Build()
         {
-            var output = new HtmlContentBuilder();
-            output.AppendHtml(_html);
-      
-            return Task.FromResult((IHtmlContent)output);
+            return Task.FromResult((IHtmlContent)new HtmlString(_html));
         }
 
     }

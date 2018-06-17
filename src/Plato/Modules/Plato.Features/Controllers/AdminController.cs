@@ -51,7 +51,7 @@ namespace Plato.Features.Controllers
 
             var results = await _shellFeatureManager.EnableFeaturesAsync(new string[] {id});
 
-            _notify.Add(NotificationType.Success, "Feature activated successfully!");
+            _notify.Add(NotifyType.Success, "Feature activated successfully!");
 
             return RedirectToAction(nameof(Index));
 
@@ -65,7 +65,7 @@ namespace Plato.Features.Controllers
 
             var results = await _shellFeatureManager.DisableFeaturesAsync(new string[] { id });
             
-            _notify.Add(NotificationType.Success, "Feature disabled successfully!");
+            _notify.Add(NotifyType.Success, "Feature disabled successfully!");
 
             return RedirectToAction(nameof(Index));
 

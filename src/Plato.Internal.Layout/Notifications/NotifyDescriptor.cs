@@ -5,25 +5,22 @@ using System.Text;
 namespace Plato.Internal.Layout.Notifications
 {
 
-    public enum NotificationType
+    public enum NotifyType
     {
-        Primary,
-        Default,
-        Info,
         Success,
+        Info,
         Warning,
         Danger
     }
-
-
+    
     public class Notification
     {
 
-        public NotificationType Type { get; set; }
+        public NotifyType Type { get; set; }
 
         public string Message { get; set; }
 
-        public Notification(NotificationType type, string message)
+        public Notification(NotifyType type, string message)
         {
             this.Type = type;
             this.Message = message;
