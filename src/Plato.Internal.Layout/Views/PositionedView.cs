@@ -8,7 +8,7 @@ namespace Plato.Internal.Layout.Views
     public interface IPositionedView : IView
     {
 
-        ViewPosition Position { get;  }
+        ViewPosition Position { get; }
 
         IPositionedView Zone(string zone);
         

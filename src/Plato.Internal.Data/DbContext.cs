@@ -64,8 +64,7 @@ namespace Plato.Internal.Data
             options(cfg);
             ConfigureInternal(cfg);
         }
-
-     
+        
         private void ConfigureInternal(DbContextOptions cfg)
         {
             var providerFactory = new DataProviderFactory(cfg);

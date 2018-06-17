@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Layout.Views;
 
@@ -125,10 +124,10 @@ namespace Plato.Internal.Layout
             // Configure the zone
             configure(list);
 
-            // Order views in zone
+            // Order configured zone
             var orderedViews = list.ToList().OrderBy(v => v.Position.Order);
 
-            // Return the configured zone
+            // Return the ordered zone
             return Task.FromResult(orderedViews.ToList());
 
         }

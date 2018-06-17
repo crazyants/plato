@@ -56,13 +56,13 @@ namespace Plato.Internal.Layout.Alerts
                 alertInfo.Message.WriteTo(stringWriter, _htmlEncoder);
             }
 
-            var o = new JObject
+            var jo = new JObject
             {
                 new JProperty(nameof(AlertInfo.Message), sb.ToString()),
                 new JProperty(nameof(AlertInfo.Type), alertInfo.Type.ToString())
             };
 
-            o.WriteTo(writer);
+            jo.WriteTo(writer);
 
         }
 

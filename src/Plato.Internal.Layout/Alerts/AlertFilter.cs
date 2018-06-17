@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Plato.Internal.Layout.ViewHelpers;
@@ -21,7 +19,7 @@ namespace Plato.Internal.Layout.Alerts
         internal const string CookiePrefix = "plato_alerts";
         private bool _deleteCookie = false;
         readonly string _tenantPath;
-        private IList<AlertInfo> _existingAlerts = new List<AlertInfo>();
+        private IList<AlertInfo> _alerts = new List<AlertInfo>();
 
         private readonly HtmlEncoder _htmlEncoder;
         readonly ILayoutUpdater _layoutUpdater;
@@ -71,7 +69,7 @@ namespace Plato.Internal.Layout.Alerts
             }
 
             // Ensure alerts are available for the entire request
-            _existingAlerts = alerts;
+            _alerts = alerts;
 
         }
 
@@ -86,7 +84,7 @@ namespace Plato.Internal.Layout.Alerts
                 return;
             }
 
-            if (alerts.Count == 0 && _existingAlerts.Count == 0)
+            if (alerts.Count == 0 && _alerts.Count == 0)
             {
                 return;
             }
@@ -95,15 +93,15 @@ namespace Plato.Internal.Layout.Alerts
             // for display within OnResultExecutionAsync below
             foreach (var alert in alerts)
             {
-                _existingAlerts.Add(alert);
+                _alerts.Add(alert);
             }
             
             // Result is not a view, so assume a redirect and assign values to persistance
-            if (!(context.Result is ViewResult) && _existingAlerts.Count > 0)
+            if (!(context.Result is ViewResult) && _alerts.Count > 0)
             {
                 context.HttpContext.Response.Cookies.Append(
                     CookiePrefix,
-                    SerializeAlerts(_existingAlerts),
+                    SerializeAlerts(_alerts),
                     new CookieOptions
                     {
                         HttpOnly = true,
@@ -125,7 +123,7 @@ namespace Plato.Internal.Layout.Alerts
             }
             
             // We don't have any alerts
-            if (_existingAlerts.Count == 0)
+            if (_alerts.Count == 0)
             {
                 await next();
                 return;
@@ -147,7 +145,7 @@ namespace Plato.Internal.Layout.Alerts
                 return;
             }
 
-            // Add alerts to layout view model
+            // Add alerts to alerts zone within layout view model
             if (context.Controller is Controller controller)
             {
                 var updater = await _layoutUpdater.GetLayoutAsync(controller);
@@ -155,12 +153,13 @@ namespace Plato.Internal.Layout.Alerts
                 {
                     layout.Alerts = await updater.UpdateZoneAsync(layout.Alerts, zone =>
                     {
-                        foreach (var alert in _existingAlerts)
+                        foreach (var alert in _alerts)
                         {
-                            zone.Add(new PositionedView(new AlertViewHelper(alert)));
+                            zone.Add(new PositionedView(
+                                new AlertViewHelper(alert))
+                            );
                         }
                     });
-                    
                     return layout;
                 });
             }

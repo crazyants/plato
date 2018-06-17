@@ -16,7 +16,7 @@ namespace Plato.Internal.Layout.EmbeddedViews
             {
                 if (_context == null)
                 {
-                    throw new Exception($"The view context has not been initialized within embedded view '{this.GetType().ToString()}'. The ViewContext is not accessible within the constructor and is only available once the Build() method within your embedded view has been called.");
+                    throw new Exception($"The view context has not been initialized within embedded view '{this.GetType().ToString()}'. The ViewContext is not accessible within the embedded views constructor and is only available once the Build() method has been called.");
                 }
                 return _context;
             }

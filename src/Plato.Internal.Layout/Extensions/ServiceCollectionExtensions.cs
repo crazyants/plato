@@ -58,7 +58,7 @@ namespace Plato.Internal.Layout.Extensions
             // model binding model accessor
             services.AddScoped<IUpdateModelAccessor, LocalModelBinderAccessor>();
 
-            // alerter
+            // alerter - scoped to ensure alerter is only alive for each request
             services.AddScoped<IAlerter, Alerter>();
             
             return services;
