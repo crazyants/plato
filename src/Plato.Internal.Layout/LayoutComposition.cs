@@ -1,6 +1,6 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Concurrent;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.Views;
 
@@ -21,8 +21,10 @@ namespace Plato.Internal.Layout
         public LayoutViewModel Compose()
         {
 
-            ZoneResults(_results);
+            // Create a zoned ditionary 
+            ZoneResults();
             
+            // Return composed model
             return new LayoutViewModel()
             {
                 Header = GetPositionedViews(LayoutZones.HeaderZoneName),
@@ -33,7 +35,7 @@ namespace Plato.Internal.Layout
                 Footer = GetPositionedViews(LayoutZones.FooterZoneName),
                 Actions = GetPositionedViews(LayoutZones.ActionsZoneName),
                 Asides = GetPositionedViews(LayoutZones.AsidesZoneName),
-                Notifications = GetPositionedViews(LayoutZones.AsidesZoneName),
+                Alerts = GetPositionedViews(LayoutZones.AlertsZoneName),
             };
 
         }
@@ -41,6 +43,7 @@ namespace Plato.Internal.Layout
         IEnumerable<IPositionedView> GetPositionedViews(string zoneName)
         {
 
+            // Returns an ordered list of all views within a zone. 
             if (_zonedViews.ContainsKey(zoneName))
             {
                 return _zonedViews[zoneName].OrderBy(v => v.Position.Order);
@@ -49,9 +52,9 @@ namespace Plato.Internal.Layout
             return null;
         }
 
-        void ZoneResults(IEnumerable<IViewProviderResult> providerResults)
+        void ZoneResults()
         {
-            foreach (var result in providerResults)
+            foreach (var result in _results)
             {
                 foreach (var view in result.Views)
                 {

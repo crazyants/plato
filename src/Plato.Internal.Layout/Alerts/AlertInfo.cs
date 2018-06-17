@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Localization;
+﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Localization;
 
 namespace Plato.Internal.Layout.Alerts
 {
@@ -16,7 +17,12 @@ namespace Plato.Internal.Layout.Alerts
 
         public AlertType Type { get; set; }
 
-        public LocalizedHtmlString Message { get; set; }
+        public IHtmlContent Message { get; set; }
+
+        public AlertInfo()
+        {
+
+        }
 
         public AlertInfo(AlertType type, LocalizedHtmlString message)
         {

@@ -45,13 +45,10 @@ namespace Plato.Internal.Layout.Extensions
             services.AddSingleton<IViewTableManager, ViewTableManager>();
             services.AddSingleton<IViewInvoker, ViewInvoker>();
 
-            // alerter
-            services.AddSingleton<IAlerter, Alerter>();
-
             // add theming convension - configures theme layout based on controller type
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
 
-            // model binding filters
+            // action filters
             services.Configure<MvcOptions>((options) =>
             {
                 options.Filters.Add(typeof(ModelBinderAccessorFilter));
@@ -61,6 +58,9 @@ namespace Plato.Internal.Layout.Extensions
             // model binding model accessor
             services.AddScoped<IUpdateModelAccessor, LocalModelBinderAccessor>();
 
+            // alerter
+            services.AddScoped<IAlerter, Alerter>();
+            
             return services;
 
         }

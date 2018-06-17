@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Localization;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace Plato.Internal.Layout.Alerts
 {
@@ -9,22 +10,32 @@ namespace Plato.Internal.Layout.Alerts
 
         void Add(AlertType type, LocalizedHtmlString message);
 
-        ICollection<AlertInfo> Alerts { get; }
+        IList<AlertInfo> Alerts();
 
     }
 
     public class Alerter : IAlerter
     {
 
-        public ICollection<AlertInfo> Alerts { get; set; }
+        private readonly IList<AlertInfo> _alerts;
+
+        public IList<AlertInfo> Alerts()
+        {
+            return _alerts;
+        }
+
+        private readonly ILogger<Alerter> _logger;
+
+        public Alerter(ILogger<Alerter> logger)
+        {
+            _logger = logger;
+            _alerts = new List<AlertInfo>();
+        }
 
         public void Add(AlertType type, LocalizedHtmlString message)
         {
-            if (Alerts == null)
-            {
-                Alerts = new List<AlertInfo>();
-            }
-            Alerts.Add(new AlertInfo(type, message));
+            _logger.LogInformation($"The alert of type '{type.ToString()}' was added for display. Message: '{message}'.");
+            _alerts.Add(new AlertInfo(type, message));
         }
 
     }

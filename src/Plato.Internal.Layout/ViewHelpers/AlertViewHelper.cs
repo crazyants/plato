@@ -5,12 +5,12 @@ using Plato.Internal.Layout.EmbeddedViews;
 
 namespace Plato.Internal.Layout.ViewHelpers
 {
-    public class NotifyViewHelper : EmbeddedView
+    public class AlertViewHelper : EmbeddedView
     {
 
         private readonly AlertInfo _alert;
 
-        public NotifyViewHelper(AlertInfo alert)
+        public AlertViewHelper(AlertInfo alert)
         {
             _alert = alert;
         }

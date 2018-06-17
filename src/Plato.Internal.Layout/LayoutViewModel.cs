@@ -23,9 +23,8 @@ namespace Plato.Internal.Layout
 
         public IEnumerable<IPositionedView> Asides { get; set; }
 
-        public IEnumerable<IPositionedView> Notifications { get; set; }
+        public IEnumerable<IPositionedView> Alerts { get; set; }
         
-
         public LayoutViewModel(params IViewProviderResult[] results) : base(results)
         {
         }

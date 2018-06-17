@@ -4,12 +4,6 @@
     ViewData["Title"] = "Manage Users";
 }
 
-@{
-    var embeddedView = new View(new HtmlViewHelper("<h1>Hello Word from Embedded View</h1>"));
-    @await DisplayAsync(embeddedView);
-}
-
-
 <div class="layout">
 
     <div class="layout-header">
@@ -17,6 +11,12 @@
         {
             <div class="float-right layout-tools">
                 <view model="@Model.Tools" />
+            </div>
+        }
+        @if (Model.Alerts != null)
+        {
+            <div class="layout-alerts">
+                <view model="@Model.Alerts"></view>
             </div>
         }
         @if (Model.Header != null)

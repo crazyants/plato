@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Plato.Internal.Layout.EmbeddedViews;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.Views;
 
 namespace Plato.Internal.Layout.ViewProviders
 {
-    
+
     public abstract class BaseViewProvider<TModel>
         : IViewProvider<TModel> where TModel : class
     {
-        
+
         #region "Abstract Medthods"
 
         public abstract Task<IViewProviderResult> BuildDisplayAsync(TModel model, IUpdateModel updater);
 
         public abstract Task<IViewProviderResult> BuildIndexAsync(TModel model, IUpdateModel updater);
-        
+
         public abstract Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater);
 
         public abstract Task<IViewProviderResult> BuildUpdateAsync(TModel model, IUpdateModel updater);
@@ -23,7 +24,7 @@ namespace Plato.Internal.Layout.ViewProviders
         #endregion
 
         #region "Helper Methods"
-        
+
         public LayoutViewModel Views(params IView[] views)
         {
             // TODO: // Implement a context object allowing uss to pass the service provider along
@@ -36,7 +37,7 @@ namespace Plato.Internal.Layout.ViewProviders
             string viewName,
             Func<TViewModel, TViewModel> configure) where TViewModel : new()
         {
-       
+
             // Create proxy model 
             var proxy = Activator.CreateInstance(typeof(TViewModel));
 
@@ -47,9 +48,15 @@ namespace Plato.Internal.Layout.ViewProviders
             return new PositionedView(viewName, model);
 
         }
-  
-        
+
+        public IPositionedView View(IEmbeddedView enbeddedView)
+        {
+            // Return a view we can optionally position
+            return new PositionedView(enbeddedView);
+        }
+
         #endregion
 
     }
+
 }
