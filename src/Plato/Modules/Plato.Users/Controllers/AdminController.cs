@@ -1,15 +1,16 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Layout.Notifications;
 using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Users.Controllers
@@ -21,22 +22,30 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<User> _userViewProvider;
         private readonly IViewProviderManager<UsersPagedViewModel> _userListViewProvider;
         private readonly IPlatoUserStore<User> _ploatUserStore;
-        private readonly INotify _notify;
+        private readonly IAlerter _alerter;
 
         private readonly UserManager<User> _userManager;
 
+        public IHtmlLocalizer T { get; }
+
+
         public AdminController(
+            IHtmlLocalizer<AdminController> localizer,
             IPlatoUserStore<User> platoUserStore, 
             IViewProviderManager<User> userViewProvider,
             IViewProviderManager<UsersPagedViewModel> userListViewProvider,
             UserManager<User> userManager,
-            INotify notify)
+            IAlerter alerter)
         {
+
             _ploatUserStore = platoUserStore;
             _userViewProvider = userViewProvider;
             _userListViewProvider = userListViewProvider;
             _userManager = userManager;
-            _notify = notify;
+            _alerter = alerter;
+
+            T = localizer;
+
         }
 
         #region "Action Methods"
@@ -74,8 +83,7 @@ namespace Plato.Users.Controllers
             routeData.Values.Add("Options.Order", filterOptions.Order);
             
             var model = await GetPagedModel(filterOptions, pagerOptions);
-
-
+            
             var result = await _userListViewProvider.ProvideIndexAsync(model, this);
             return View(result);
 
@@ -146,7 +154,7 @@ namespace Plato.Users.Controllers
                 return View(result);
             }
 
-            _notify.Add(NotifyType.Success, "User Updated Successfully!");
+            _alerter.Success(T["User Updated Successfully!"]);
 
             //_notifier.Success(TH["User updated successfully"]);
 

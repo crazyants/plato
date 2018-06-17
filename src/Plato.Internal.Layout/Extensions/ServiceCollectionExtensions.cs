@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Layout.Notifications;
 using Plato.Internal.Layout.Theming;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Navigation.Extensions;
@@ -45,8 +45,8 @@ namespace Plato.Internal.Layout.Extensions
             services.AddSingleton<IViewTableManager, ViewTableManager>();
             services.AddSingleton<IViewInvoker, ViewInvoker>();
 
-            // notifications
-            services.AddSingleton<INotify, Notify>();
+            // alerter
+            services.AddSingleton<IAlerter, Alerter>();
 
             // add theming convension - configures theme layout based on controller type
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
@@ -55,7 +55,7 @@ namespace Plato.Internal.Layout.Extensions
             services.Configure<MvcOptions>((options) =>
             {
                 options.Filters.Add(typeof(ModelBinderAccessorFilter));
-                options.Filters.Add(typeof(NotificationFilter));
+                options.Filters.Add(typeof(AlertFilter));
             });
 
             // model binding model accessor

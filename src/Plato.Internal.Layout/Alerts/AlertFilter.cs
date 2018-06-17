@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewHelpers;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Models.Shell;
 
-namespace Plato.Internal.Layout.Notifications
+namespace Plato.Internal.Layout.Alerts
 {
-    public class NotificationFilter : IActionFilter, IAsyncResultFilter
+    public class AlertFilter : IActionFilter, IAsyncResultFilter
     {
 
         public const string CookiePrefix = "plato_notify";
@@ -25,26 +21,26 @@ namespace Plato.Internal.Layout.Notifications
 
         readonly ShellSettings _shellSettings;
         readonly ILayoutUpdater _layoutUpdater;
-        readonly ILogger<NotificationFilter> _logger;
-        readonly INotify _notify;
+        readonly ILogger<AlertFilter> _logger;
+        readonly IAlerter _alerter;
 
-        public NotificationFilter(
+        public AlertFilter(
             ShellSettings shellSettings,
-            ILogger<NotificationFilter> logger,
+            ILogger<AlertFilter> logger,
             ILayoutUpdater layoutUpdater,
-            INotify notify)
+            IAlerter alerter)
         {
             _shellSettings = shellSettings;
             _logger = logger;
             _layoutUpdater = layoutUpdater;
-            _notify = notify;
+            _alerter = alerter;
             _tenantPath = "/" + _shellSettings.RequestedUrlPrefix;
         }
 
 
         #region "Implementation"
 
-        private ICollection<Notification> _entries = new List<Notification>();
+        private ICollection<AlertInfo> _entries = new List<AlertInfo>();
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
@@ -76,7 +72,7 @@ namespace Plato.Internal.Layout.Notifications
         public void OnActionExecuted(ActionExecutedContext context)
         {
             
-            var messageEntries = _notify.Notifications;
+            var messageEntries = _alerter.Alerts;
 
             if (messageEntries == null)
             {
@@ -185,13 +181,13 @@ namespace Plato.Internal.Layout.Notifications
 
         #region "Private Methods"
 
-        public IList<Notification> DeserializeNotifications(string messages)
+        public IList<AlertInfo> DeserializeNotifications(string messages)
         {
 
-            List<Notification> notifications;
+            List<AlertInfo> notifications;
             try
             {
-                notifications = JsonConvert.DeserializeObject<List<Notification>>(messages);
+                notifications = JsonConvert.DeserializeObject<List<AlertInfo>>(messages);
             }
             catch (Exception e)
             {
@@ -204,19 +200,18 @@ namespace Plato.Internal.Layout.Notifications
 
         }
 
-        public string SerializeNotifications(IEnumerable<Notification> notifications)
+        public string SerializeNotifications(IEnumerable<AlertInfo> alert)
         {
             
             var output = string.Empty;
             try
             {
-                output = JsonConvert.SerializeObject(notifications);
+                output = JsonConvert.SerializeObject(alert);
             }
             catch (Exception e)
             {
                 // A problem occurring deserializing the notifications
                 _logger.LogError(e, e.Message);
-                notifications = null;
             }
 
             return output;

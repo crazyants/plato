@@ -1,23 +1,23 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
+using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.EmbeddedViews;
-using Plato.Internal.Layout.Notifications;
 
 namespace Plato.Internal.Layout.ViewHelpers
 {
     public class NotifyViewHelper : EmbeddedView
     {
 
-        private readonly Notification _notification;
+        private readonly AlertInfo _alert;
 
-        public NotifyViewHelper(Notification notification)
+        public NotifyViewHelper(AlertInfo alert)
         {
-            _notification = notification;
+            _alert = alert;
         }
 
         public override Task<IHtmlContent> Build()
         {
-            if (_notification == null)
+            if (_alert == null)
             {
                 return Task.FromResult((IHtmlContent)HtmlString.Empty);
             }
@@ -28,7 +28,7 @@ namespace Plato.Internal.Layout.ViewHelpers
                 .AppendHtml("<div class=\"alert")
                 .AppendHtml(GetCssClass())
                 .AppendHtml("\" role=\"alert\">")
-                .AppendHtml(_notification.Message)
+                .AppendHtml(_alert.Message)
                 .AppendHtml("</div>");
 
             return Task.FromResult((IHtmlContent)builder);
@@ -37,15 +37,15 @@ namespace Plato.Internal.Layout.ViewHelpers
 
         private string GetCssClass()
         {
-            switch (_notification.Type)
+            switch (_alert.Type)
             {
-                case NotifyType.Success:
+                case AlertType.Success:
                     return " alert-success";
-                case NotifyType.Info:
+                case AlertType.Info:
                     return " alert-info";
-                case NotifyType.Warning:
+                case AlertType.Warning:
                     return " alert-warning";
-                case NotifyType.Danger:
+                case AlertType.Danger:
                     return " alert-danger";
             }
 
