@@ -1,11 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Features;
-using Plato.Internal.Models.Modules;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Stores.Abstractions.Shell;
@@ -20,11 +18,25 @@ namespace Plato.Internal.Features
 
         Task<IEnumerable<ShellFeature>> GetFeaturesAsync();
 
+        Task<IEnumerable<ShellFeature>> GetFeatureDependenciesAsync(string featureId);
+
+        Task<IEnumerable<ShellFeature>> GetDepdendentFeaturesAsync(string featureId);
+
     }
 
     public class ShellDescriptorFeatureManager : IShellDescriptorFeatureManager
     {
 
+
+        // Build described features
+        private ConcurrentDictionary<string, ShellFeature> _features;
+
+        private readonly ConcurrentDictionary<string, IEnumerable<ShellFeature>> _featureDependencies
+            = new ConcurrentDictionary<string, IEnumerable<ShellFeature>>();
+
+        private readonly ConcurrentDictionary<string, IEnumerable<ShellFeature>> _dependentFeatures
+            = new ConcurrentDictionary<string, IEnumerable<ShellFeature>>();
+        
         private readonly IModuleManager _moduleManager;
         private readonly IShellDescriptor _shellDescriptor;
         private readonly IShellDescriptorStore _shellDescriptorStore;
@@ -38,11 +50,11 @@ namespace Plato.Internal.Features
             _shellDescriptor = shellDescriptor;
             _shellDescriptorStore = shellDescriptorStore;
         }
-        
-        
+
+        #region "Implementation"
+
         public async Task<IEnumerable<ShellFeature>> GetEnabledFeaturesAsync()
         {
-
             // Get all features enabled within the database
             var descriptor = await _shellDescriptorStore.GetAsync();
             var features = new List<ShellFeature>();
@@ -56,93 +68,139 @@ namespace Plato.Internal.Features
             return features;
 
         }
-
-
-        // Build described features
-        private ConcurrentDictionary<string, ShellFeature> _allFeatures;
-        private IEnumerable<IModuleEntry> _modules;
-
+        
         public async Task<IEnumerable<ShellFeature>> GetFeaturesAsync()
         {
 
-            // Load all available modules
-            await EnsureAvailableModulesAsync();
+            // Load all features
+            await EnsureFeaturesLoadedAsync();
 
-            // Update feature dependencies
-            foreach (var feature in _allFeatures)
-            {
-                var newFeature = feature.Value;
-                newFeature.FeatureDependencies = await GetFeatureDependencies(newFeature.Id);
+            // Update dependencies
+            await EnsureDependenciesAreEstablished();
 
-                _allFeatures.TryUpdate(newFeature.Id, newFeature, feature.Value);
-            }
-
-            // Get explicitly enabled features and update dictionary to reflect enabled
+            // Get explicitly enabled features and update features to reflect enabled
             var enabledFeatures = await GetEnabledFeaturesAsync();
             foreach (var feature in enabledFeatures)
             {
-                _allFeatures.AddOrUpdate(feature.Id, feature, (k, v) =>
+                _features.AddOrUpdate(feature.Id, feature, (k, v) =>
                 {
                     v.IsEnabled = true;
                     return v;
                 });
             }
             
-            return _allFeatures.Values;
+            return _features.Values;
 
         }
- 
 
-        async Task<IList<ShellFeature>> GetFeatureDependencies(string featureId)
+
+        public async Task<IEnumerable<ShellFeature>> GetFeatureDependenciesAsync(string featureId)
+        {
+            // Load minimal features
+            await EnsureFeaturesLoadedAsync();
+            return _featureDependencies.GetOrAdd(featureId, key =>
+            {
+
+                if (!_features.ContainsKey(key))
+                {
+                    return Enumerable.Empty<ShellFeature>();
+                }
+
+                var feature = _features[key];
+                return QueryDependencies(
+                    feature,
+                    _features.Values.ToArray(),
+                    (currentFeature, fs) => fs
+                        .Where(f => currentFeature.Dependencies.Any(dep => dep.Id == f.Id))
+                        .ToArray());
+
+            });
+        }
+
+        public async Task<IEnumerable<ShellFeature>> GetDepdendentFeaturesAsync(string featureId)
+        {
+            // Load minimal features
+            await EnsureFeaturesLoadedAsync();
+            return _dependentFeatures.GetOrAdd(featureId, key =>
+            {
+
+                if (!_features.ContainsKey(key))
+                {
+                    return Enumerable.Empty<ShellFeature>();
+                }
+
+                var feature = _features[key];
+                return QueryDependencies(
+                    feature,
+                    _features.Values.ToArray(),
+                    (currentFeature, fs) => fs
+                        .Where(f => f.Dependencies.Any(dep => dep.Id == currentFeature.Id))
+                        .ToArray());
+
+            });
+        }
+
+        #endregion
+
+        #region "Private Methods"
+
+        async Task EnsureDependenciesAreEstablished()
         {
 
-            var dependencies = new ConcurrentDictionary<string, ShellFeature>();
-            RecurseDependencies(featureId);
-
-            void RecurseDependencies(string id)
+            foreach (var feature in _features.Values)
             {
-                // Get feature module
-                var module = _modules.FirstOrDefault(m => m.Descriptor.Id == id);
+                var f = feature;
+                f.FeatureDependencies = await GetFeatureDependenciesAsync(f.Id);
+                f.DependentFeatures = await GetDepdendentFeaturesAsync(f.Id);
+                _features.TryUpdate(f.Id, f, feature);
+            }
 
-                // Ensure we have dependencies
-                if (module != null && module.Descriptor.Dependencies.Any())
+        }
+
+        IEnumerable<ShellFeature> QueryDependencies(
+            ShellFeature feature,
+            ShellFeature[] features,
+            Func<ShellFeature, ShellFeature[], ShellFeature[]> query)
+        {
+
+            var dependencies = new HashSet<ShellFeature>() { feature };
+
+            var stack = new Stack<ShellFeature[]>();
+            stack.Push(query(feature, features));
+
+            while (stack.Count > 0)
+            {
+                var next = stack.Pop();
+                foreach (var dependency in next.Where(dependency => !dependencies.Contains(dependency)))
                 {
-                    // Recurse all dependencids
-                    foreach (var dependency in module.Descriptor.Dependencies)
+                    dependencies.Add(dependency);
+                    stack.Push(query(dependency, features));
+                }
+            }
+
+            return _features
+                .Where(f => dependencies.Any(d => d.Id == f.Value.Id))
+                .Select(f => f.Value);
+
+        }
+        
+        async Task EnsureFeaturesLoadedAsync()
+        {
+            if (_features == null)
+            {
+                _features = new ConcurrentDictionary<string, ShellFeature>();
+                var modules = await _moduleManager.LoadModulesAsync();
+                if (modules != null)
+                {
+                    foreach (var module in modules)
                     {
-                        var notInList = !dependencies.ContainsKey(dependency.Id);
-                        var notCurrent = dependency.Id != featureId;
-                        if (notInList && notCurrent)
-                        {
-                            dependencies.TryAdd(dependency.Id, new ShellFeature(dependency.Id, dependency.Version));
-                            RecurseDependencies(dependency.Id);
-                        }
-                     
+                        _features.TryAdd(module.Descriptor.Id, new ShellFeature(module));
                     }
                 }
             }
-
-            // Ensure distinct ordered results
-            return dependencies.Values.Distinct().ToList();
-
         }
 
+        #endregion
 
-        async Task EnsureAvailableModulesAsync()
-        {
-
-            // Ensure we only load modules once 
-            if (_allFeatures == null)
-            {
-                // Get all available modules and convert to features
-                _allFeatures = new ConcurrentDictionary<string, ShellFeature>();
-                _modules = await _moduleManager.LoadModulesAsync();
-                foreach (var module in _modules)
-                {
-                    _allFeatures.AddOrUpdate(module.Descriptor.Id, new ShellFeature(module), (k, v) => v);
-                }
-            }
-
-        }
     }
 }

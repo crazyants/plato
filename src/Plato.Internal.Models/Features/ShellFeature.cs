@@ -29,6 +29,8 @@ namespace Plato.Internal.Models.Features
         public IEnumerable<ShellFeature> DependentFeatures { get; set; } = new List<ShellFeature>();
 
 
+        public IEnumerable<ShellFeature> Dependencies { get; set; } = new List<ShellFeature>();
+
         public ShellFeature()
         {
 
@@ -51,6 +53,16 @@ namespace Plato.Internal.Models.Features
             this.Id = entry.Descriptor.Id;
             this.Name = entry.Descriptor.Name;
             this.Description = entry.Descriptor.Description;
+
+            // Add minimal set of dependencies
+            var dependencies = new List<ShellFeature>();
+            foreach (var dependency in entry.Descriptor.Dependencies)
+            {
+                dependencies.Add(new ShellFeature(dependency.Id, dependency.Version));
+            }
+
+            this.Dependencies = dependencies;
+            
         }
 
 

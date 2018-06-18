@@ -73,6 +73,9 @@
                             var dependencyNames = feature.FeatureDependencies
                                 .OrderBy(o => o.Id)
                                 .Select(d => d.Id).ToArray();
+                            var dependenyNames = feature.DependentFeatures
+                                .OrderBy(o => o.Id)
+                                .Select(d => d.Id).ToArray();
                         }
                         <span class="text-muted">
                             @if (dependencyNames.Length > 0)
@@ -83,6 +86,16 @@
                             else
                             {
                                 @T["No dependencies"]
+                            }
+                            <br />
+                            @if (dependenyNames.Length > 0)
+                            {
+                                @T["Dependent Features: "]
+                                @dependenyNames.Join(", ")
+                            }
+                            else
+                            {
+                                @T["No dependent features"]
                             }
                         </span>
 
