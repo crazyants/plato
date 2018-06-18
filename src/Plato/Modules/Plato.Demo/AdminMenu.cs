@@ -21,7 +21,7 @@ namespace Plato.Demo
             }
 
             builder
-                .Add(T["Demo Page"], "1", home => home
+                .Add(T["Demo Page"], "1", 1, home => home
                     .Action("Index", "Admin", "Plato.Discussions")
                     //.Permission(Permissions.ManageRoles)
                     .LocalNav()

@@ -13,7 +13,14 @@ namespace Plato.Internal.Navigation
 {
     public class NavigationManager : INavigationManager
     {
+
+        #region "Private Variables"
+
         private static readonly string[] Schemes = { "http", "https", "tel", "mailto" };
+
+        #endregion
+
+        #region "Constructor"
 
         private readonly IEnumerable<INavigationProvider> _navigationProviders;
         private readonly ILogger _logger;
@@ -36,6 +43,10 @@ namespace Plato.Internal.Navigation
             _urlHelperFactory = urlHelperFactory;
             _authorizationService = authorizationService;
         }
+
+        #endregion
+
+        #region "Implementation"
 
         public IEnumerable<MenuItem> BuildMenu(string name, ActionContext actionContext)
         {
@@ -70,20 +81,28 @@ namespace Plato.Internal.Navigation
             // Keep only menu items with an Href, or that have child items with an Href
             menuItems = Reduce(menuItems);
 
+            // Recursive sort
+            menuItems = RecursiveSort(menuItems);
+
             return menuItems;
         }
-        
-        private static void Merge(List<MenuItem> items)
+
+        #endregion
+
+        #region "Private Methods"
+
+        static void Merge(List<MenuItem> items)
         {
+            
             // Use two cursors to find all similar captions. If the same caption is represented
             // by multiple menu item, try to merge it recursively.
             for (var i = 0; i < items.Count; i++)
             {
                 var source = items[i];
                 var merged = false;
-                for (var j = items.Count - 1; j > i; j--)
+                for (var x = items.Count - 1; x > i; x--)
                 {
-                    var cursor = items[j];
+                    var cursor = items[x];
 
                     // A match is found, add all its items to the source
                     if (String.Equals(cursor.Text.Name, source.Text.Name, StringComparison.OrdinalIgnoreCase))
@@ -94,7 +113,7 @@ namespace Plato.Internal.Navigation
                             source.Items.Add(child);
                         }
 
-                        items.RemoveAt(j);
+                        items.RemoveAt(x);
 
                         // If the item to merge is more authoritative then use its values
                         if (cursor.Position != null && source.Position == null)
@@ -105,6 +124,7 @@ namespace Plato.Internal.Navigation
                             source.LinkToFirstChild = cursor.LinkToFirstChild;
                             source.LocalNav = cursor.LocalNav;
                             source.Position = cursor.Position;
+                            source.Order = cursor.Order;
                             source.Resource = cursor.Resource;
                             source.RouteValues = cursor.RouteValues;
                             source.Text = cursor.Text;
@@ -127,7 +147,7 @@ namespace Plato.Internal.Navigation
             }
         }
         
-        private List<MenuItem> ComputeHref(List<MenuItem> menuItems, ActionContext actionContext)
+        List<MenuItem> ComputeHref(List<MenuItem> menuItems, ActionContext actionContext)
         {
             foreach (var menuItem in menuItems)
             {
@@ -138,7 +158,7 @@ namespace Plato.Internal.Navigation
             return menuItems;
         }
         
-        private string GetUrl(string menuItemUrl, RouteValueDictionary routeValueDictionary, ActionContext actionContext)
+        string GetUrl(string menuItemUrl, RouteValueDictionary routeValueDictionary, ActionContext actionContext)
         {
             string url;
             if (routeValueDictionary == null || routeValueDictionary.Count == 0)
@@ -191,7 +211,7 @@ namespace Plato.Internal.Navigation
             return url;
         }
         
-        private List<MenuItem> Authorize(IEnumerable<MenuItem> items, ClaimsPrincipal user)
+        List<MenuItem> Authorize(IEnumerable<MenuItem> items, ClaimsPrincipal user)
         {
             var filtered = new List<MenuItem>();
 
@@ -226,7 +246,7 @@ namespace Plato.Internal.Navigation
             return filtered;
         }
 
-        private List<MenuItem> Reduce(IEnumerable<MenuItem> items)
+        List<MenuItem> Reduce(IEnumerable<MenuItem> items)
         {
             var filtered = items.ToList();
 
@@ -243,6 +263,25 @@ namespace Plato.Internal.Navigation
             return filtered;
         }
 
+        List<MenuItem> RecursiveSort(List<MenuItem> items)
+        {
+            if (items != null)
+            {
+                items = items.OrderBy(o => o.Order).ToList();
+                foreach (var item in items)
+                {
+                    if (item.Items.Count > 0)
+                    {
+                        item.Items = item.Items.OrderBy(o => o.Order).ToList();
+                        RecursiveSort(item.Items);
+                    }
+                }
+            }
+            
+            return items?.OrderBy(o => o.Order).ToList();
+
+        }
+
         private static bool HasHrefOrChildHref(MenuItem item)
         {
             if (item.Href != "#")
@@ -252,5 +291,8 @@ namespace Plato.Internal.Navigation
 
             return item.Items.Any(HasHrefOrChildHref);
         }
+
+        #endregion
+
     }
 }

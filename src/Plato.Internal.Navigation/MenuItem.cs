@@ -42,6 +42,8 @@ namespace Plato.Internal.Navigation
         /// </summary>
         public string Position { get; set; }
 
+        public int Order { get; set; }
+        
         /// <summary>
         /// Whether the menu item should link to the same url as its first child.
         /// </summary>

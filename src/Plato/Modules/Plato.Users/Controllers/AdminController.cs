@@ -85,11 +85,8 @@ namespace Plato.Users.Controllers
             var model = await GetPagedModel(filterOptions, pagerOptions);
             
             var result = await _userListViewProvider.ProvideIndexAsync(model, this);
+
             return View(result);
-
-            //var providedView = await _viewProviderManager.BuildDisplayAsync(user, this);
-
-            //return View(new View("User.List", model));
 
         }
         

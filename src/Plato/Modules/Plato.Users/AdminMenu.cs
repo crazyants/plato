@@ -24,12 +24,12 @@ namespace Plato.Users
             }
 
             builder
-                .Add(T["Users"], "5", users => users
-                    .Add(T["Manage Users"], "1", manage => manage
+                .Add(T["Users"], 9998, users => users
+                    .Add(T["Manage Users"], 1, manage => manage
                         .Action("Index", "Admin", "Plato.Users")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ).Add(T["Create User"], "2", create => create
+                    ).Add(T["Create User"], 2, create => create
                         .Action("Create", "Admin", "Plato.Users")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
@@ -37,8 +37,8 @@ namespace Plato.Users
 
 
             builder
-                .Add(T["Settings"], "9999", configuration => configuration
-                    .Add(T["Users"], "1", installed => installed
+                .Add(T["Settings"], 9999, configuration => configuration
+                    .Add(T["Users"], 1, installed => installed
                         .Action("Index", "Admin", "Plato.Users")
                         //.Permission(Permissions.ManageUsers)
                         .LocalNav()

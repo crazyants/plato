@@ -36,6 +36,12 @@ namespace Plato.Internal.Navigation
             return this;
         }
 
+        public NavigationItemBuilder Order(int order)
+        {
+            _item.Order = order;
+            return this;
+        }
+        
         public NavigationItemBuilder Url(string url)
         {
             _item.Url = url;

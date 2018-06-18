@@ -15,13 +15,29 @@ namespace Plato.Internal.Navigation
             Contained = new List<MenuItem>();
         }
 
-        public NavigationBuilder Add(LocalizedString caption, string position,
-            Action<NavigationItemBuilder> itemBuilder, IEnumerable<string> classes = null)
+
+        public NavigationBuilder Add(
+            LocalizedString caption,
+            string position,
+            Action<NavigationItemBuilder> itemBuilder,
+            IEnumerable<string> classes = null)
+        {
+            return Add(caption, position, 0, itemBuilder, classes);
+        }
+
+
+        public NavigationBuilder Add(
+            LocalizedString caption,
+            string position,
+            int order,
+            Action<NavigationItemBuilder> itemBuilder,
+            IEnumerable<string> classes = null)
         {
             var childBuilder = new NavigationItemBuilder();
 
             childBuilder.Caption(caption);
             childBuilder.Position(position);
+            childBuilder.Order(order);
             itemBuilder(childBuilder);
             Contained.AddRange(childBuilder.Build());
 
@@ -34,25 +50,41 @@ namespace Plato.Internal.Navigation
             return this;
         }
 
-        public NavigationBuilder Add(LocalizedString caption, Action<NavigationItemBuilder> itemBuilder,
+        public NavigationBuilder Add(
+            LocalizedString caption,
+            int order,
+            Action<NavigationItemBuilder> itemBuilder,
             IEnumerable<string> classes = null)
         {
-            return Add(caption, null, itemBuilder, classes);
+            return Add(caption, null,order, itemBuilder, classes);
+        }
+        
+        public NavigationBuilder Add(
+            LocalizedString caption, 
+            Action<NavigationItemBuilder> itemBuilder,
+            IEnumerable<string> classes = null)
+        {
+            return Add(caption, null, 0, itemBuilder, classes);
         }
 
-        public NavigationBuilder Add(Action<NavigationItemBuilder> itemBuilder, IEnumerable<string> classes = null)
+        public NavigationBuilder Add(
+            Action<NavigationItemBuilder> itemBuilder, 
+            IEnumerable<string> classes = null)
         {
-            return Add(new LocalizedString(null, null), null, itemBuilder, classes);
+            return Add(new LocalizedString(null, null), null, 0, itemBuilder, classes);
         }
 
-        public NavigationBuilder Add(LocalizedString caption, string position, IEnumerable<string> classes = null)
+        public NavigationBuilder Add(
+            LocalizedString caption, 
+            string position, 
+            IEnumerable<string> classes = null)
         {
-            return Add(caption, position, x => { }, classes);
+            return Add(caption, position, 0, x => { }, classes);
         }
 
         public NavigationBuilder Add(LocalizedString caption, IEnumerable<string> classes = null)
         {
-            return Add(caption, null, x => { }, classes);
+            return Add(caption, null, 0, x => { }, classes);
         }
 
         public NavigationBuilder Remove(MenuItem item)

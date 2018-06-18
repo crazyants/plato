@@ -12,14 +12,8 @@
 
             <div class="row">
                 <div class="col-md-9">
-                    <div class="form-check custom-control custom-checkbox">
-                        <h5>
-                            <input type="checkbox" class="custom-control-input" name="featureIds" value="@feature.Id" id="@feature.Id">
-                            <label class="custom-control-label pr-4" for="@feature.Id">
-                                @feature.Name
-                            </label>
-                        </h5>
-                    </div>
+                    
+                    <h6>@feature.Name</h6>
 
                     @if (!String.IsNullOrEmpty(feature.Description))
                     {

@@ -22,12 +22,12 @@ namespace Plato.Roles
 
 
             builder
-                .Add(T["Roles"], "10", roles => roles
-                    .Add(T["Manage Roles"], "1", manage => manage
+                .Add(T["Users"], 9998, roles => roles
+                    .Add(T["Manage Roles"], 3, manage => manage
                         .Action("Index", "Admin", "Plato.Roles")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ).Add(T["Create Role"], "2", create => create
+                    ).Add(T["Create Role"], 4, create => create
                         .Action("CreateRole", "Admin", "Plato.Roles")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
@@ -35,8 +35,8 @@ namespace Plato.Roles
 
 
             builder
-                .Add(T["Settings"], "9999", settings => settings
-                    .Add(T["Roles"], "2", roles => roles
+                .Add(T["Settings"], 9999, settings => settings
+                    .Add(T["Roles"], 2, roles => roles
                         .Action("Index", "Admin", "Plato.Roles")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
