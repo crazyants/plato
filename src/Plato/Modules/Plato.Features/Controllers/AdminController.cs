@@ -4,13 +4,16 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Internal.Features;
 using Plato.Features.ViewModels;
 using Plato.Internal.Layout.Alerts;
+using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
 
 namespace Plato.Features.Controllers
 {
 
-    public class AdminController : Controller
+    public class AdminController : Controller, IUpdateModel
     {
-        
+
+        private readonly IViewProviderManager<FeaturesViewModel> _featuresIndexViewProvider;
         private readonly IShellFeatureManager _shellFeatureManager;
         private readonly IShellDescriptorFeatureManager _shellDescriptorFeatureManager;
         private readonly IAlerter _alerter;
@@ -21,11 +24,12 @@ namespace Plato.Features.Controllers
             IHtmlLocalizer<AdminController> localizer,
             IShellFeatureManager shellFeatureManager,
             IShellDescriptorFeatureManager shellDescriptorFeatureManager,
-            IAlerter alerter)
+            IAlerter alerter, IViewProviderManager<FeaturesViewModel> featuresIndexViewProvider)
         {
             _shellFeatureManager = shellFeatureManager;
             _shellDescriptorFeatureManager = shellDescriptorFeatureManager;
             _alerter = alerter;
+            _featuresIndexViewProvider = featuresIndexViewProvider;
 
             T = localizer;
         }
@@ -42,7 +46,10 @@ namespace Plato.Features.Controllers
                 Features = features
             };
             
-            return View(model);
+
+            var result = await _featuresIndexViewProvider.ProvideIndexAsync(model, this);
+            return View(result);
+
             
         }
 

@@ -57,8 +57,7 @@ namespace Plato.Internal.Models.Features
             this.Dependencies = dependencies;
             
         }
-
-
+        
     }
 
 }

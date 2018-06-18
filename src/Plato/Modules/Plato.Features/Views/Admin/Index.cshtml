@@ -1,122 +1,84 @@
-﻿@using Microsoft.EntityFrameworkCore.Internal
-@model FeaturesViewModel
+﻿@using Plato.Internal.Layout.ViewHelpers
+@model Plato.Internal.Layout.LayoutViewModel
 @{
-    ViewData["Title"] = "Plato Modules";
+    ViewData["Title"] = T["Manage Features"];
 }
-<h4>@T["Modules"]</h4>
-<span class="text-muted">@T["Modules allow you to add additional functionality to your site."]</span>
 
-<hr />
+<div class="layout">
 
-<nav class="navbar navbar-light bg-light justify-content-between">
-
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active" href="#">Active</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
-        </li>
-    </ul>
-    
-    <form class="form-inline">
-        <input class="form-control mx-1" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-primary mx-1" type="submit">Search</button>
-    </form>
-
-    <form asp-action="Index" class="form-inline"  method="post" enctype="multipart/form-data">
-        
-        <input id="featureIds" name="featureIds" type="text"/>
-     
-        <select id="bulkAction" name="bulkAction" class="form-control mx-1">
-            <option value="@FeaturesBulkAction.None">@T["Choose action..."]</option>
-            <option value="@FeaturesBulkAction.Enable">@T["Enable"]</option>
-            <option value="@FeaturesBulkAction.Disable">@T["Disable"]</option>
-            <option value="@FeaturesBulkAction.Toggle">@T["Toggle"]</option>
-        </select>
-        <button type="submit" name="btnBulkActions" class="btn btn-primary mx-1" value="yes">@T["GO"]</button>
-
-    </form>
-
-</nav>
-
-<form asp-action="Index">
-    <ul class="list-group list-group-hover">
-        @foreach (var feature in Model.Features)
+    <div class="layout-header">
+        @if (Model.Tools != null)
         {
-            <li class="list-group-item">
-                
-                <div class="row">
-                    <div class="col-md-9">
-                        <div class="form-check custom-control custom-checkbox">
-                            <h5>
-                                <input type="checkbox" class="custom-control-input" name="featureIds" value="@feature.Id" id="@feature.Id">
-                                <label class="custom-control-label pr-4" for="@feature.Id">
-                                    @feature.Name
-                                </label>
-                            </h5>
-                        </div>
-
-                        @if (!String.IsNullOrEmpty(feature.Description))
-                        {
-                            @feature.Description<br />
-                        }
-                        
-
-                        @{
-                            var dependencyNames = feature.FeatureDependencies
-                                .OrderBy(o => o.Id)
-                                .Select(d => d.Id).ToArray();
-                            var dependenyNames = feature.DependentFeatures
-                                .OrderBy(o => o.Id)
-                                .Select(d => d.Id).ToArray();
-                        }
-                        <span class="text-muted">
-                            @if (dependencyNames.Length > 0)
-                            {
-                                @T["Dependencies: "]
-                                @dependencyNames.Join(", ")
-                            }
-                            else
-                            {
-                                @T["No dependencies"]
-                            }
-                            <br />
-                            @if (dependenyNames.Length > 0)
-                            {
-                                @T["Dependent Features: "]
-                                @dependenyNames.Join(", ")
-                            }
-                            else
-                            {
-                                @T["No dependent features"]
-                            }
-                        </span>
-
-                    </div>
-                
-                    <div class="col-md-3 text-right">
-
-                        @if (!feature.IsEnabled)
-                        {
-                            <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.Id" class="btn btn-primary btn-sm" itemprop="UnsafeUrl">@T["Enable"]</button>
-                        }
-                        else
-                        {
-                            <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.Id" class="btn btn-default btn-sm" itemprop="UnsafeUrl">@T["Disable"]</button>
-                        }
-
-
-                    </div>
-                </div>
-
-            </li>
+            <div class="float-right layout-tools">
+                <view model="@Model.Tools" />
+            </div>
         }
-    </ul>
-</form>
+        @if (Model.Alerts != null)
+        {
+            <div class="layout-alerts">
+                <view model="@Model.Alerts"></view>
+            </div>
+        }
+        @if (Model.Header != null)
+        {
+            <div class="layout-header-item">
+                <view model="@Model.Header" />
+            </div>
+        }
+        @if (Model.Meta != null)
+        {
+            <div class="layout-meta">
+                <view model="@Model.Meta"></view>
+            </div>
+        }
+    </div>
+
+    @if (Model.SideBar != null)
+    {
+        <div class="row layout-content">
+            <div class="col-md-9">
+                111111111111111111111111
+                @if (Model.Content != null)
+                {
+
+                    <form asp-action="Index">
+                        <view model="@Model.Content"></view>
+                    </form>
+
+                }
+                222222222222222222222222222
+            </div>
+            <div class="col-md-3">
+                @if (Model.SideBar != null)
+                {
+                    <view model="@Model.SideBar"></view>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (Model.Content != null)
+         {
+             <form asp-action="Index">
+                 <view model="@Model.Content"></view>
+             </form>
+         }
+    }
+
+    <div class="layout-footer">
+        @if (Model.Actions != null)
+        {
+            <div class="float-right layout-actions">
+                <view model="@Model.Actions" />
+            </div>
+        }
+        @if (Model.Footer != null)
+        {
+            <div class="layout-footer-item">
+                <view model="@Model.Footer"></view>
+            </div>
+        }
+    </div>
+
+</div>

@@ -15,8 +15,6 @@ namespace Plato.Internal.Features
         Task<IEnumerable<IShellFeature>> EnableFeaturesAsync(
             ShellDescriptor shellDescriptor,
             IEnumerable<IShellFeature> features);
-
-
     }
 
 }

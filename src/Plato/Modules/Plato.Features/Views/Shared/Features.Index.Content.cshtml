@@ -1,0 +1,80 @@
+﻿@model FeaturesViewModel
+
+<h4>@T["Features"]</h4>
+<span class="text-muted">@T["Customize the features available within your Plato installation."]</span>
+
+<hr />
+
+
+<ul class="list-group list-group-hover">
+    @foreach (var feature in Model.Features)
+    {
+        <li class="list-group-item">
+
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-check custom-control custom-checkbox">
+                        <h5>
+                            <input type="checkbox" class="custom-control-input" name="featureIds" value="@feature.Id" id="@feature.Id">
+                            <label class="custom-control-label pr-4" for="@feature.Id">
+                                @feature.Name
+                            </label>
+                        </h5>
+                    </div>
+
+                    @if (!String.IsNullOrEmpty(feature.Description))
+                    {
+                        @feature.Description<br />
+                    }
+
+
+                    @{
+                        var dependencyNames = feature.FeatureDependencies
+                            .OrderBy(o => o.Id)
+                            .Select(d => d.Id).ToArray();
+                        var dependentNames = feature.DependentFeatures
+                            .OrderBy(o => o.Id)
+                            .Select(d => d.Id).ToArray();
+                    }
+                    <span class="text-muted">
+                        @if (dependencyNames.Length > 0)
+                        {
+                            @T["Dependencies: "]
+                            @String.Join(", ", dependencyNames)
+                        }
+                        else
+                        {
+                            @T["No dependencies"]
+                        }
+                        <br />
+                        @if (dependentNames.Length > 0)
+                        {
+                            @T["Dependent Features: "]
+                            @String.Join(", ", dependentNames)
+                        }
+                        else
+                        {
+                            @T["No dependent features"]
+                        }
+                    </span>
+
+                </div>
+
+                <div class="col-md-3 text-right">
+
+                    @if (!feature.IsEnabled)
+                    {
+                        <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.Id" class="btn btn-primary btn-sm" itemprop="UnsafeUrl">@T["Enable"]</button>
+                    }
+                    else
+                    {
+                        <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.Id" class="btn btn-default btn-sm" itemprop="UnsafeUrl">@T["Disable"]</button>
+                    }
+
+
+                </div>
+            </div>
+
+        </li>
+    }
+</ul>

@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Features.ViewModels;
+using Plato.Features.ViewProviders;
 using Plato.Internal.Hosting;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
 
 namespace Plato.Features
@@ -12,8 +15,12 @@ namespace Plato.Features
     
         public override void ConfigureServices(IServiceCollection services)
         {
-            // register navigation provider
+            // navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
+
+            // view providers
+            services.AddScoped<IViewProviderManager<FeaturesViewModel>, ViewProviderManager<FeaturesViewModel>>();
+            services.AddScoped<IViewProvider<FeaturesViewModel>, FeaturesIndexViewProvider>();
 
         }
 
