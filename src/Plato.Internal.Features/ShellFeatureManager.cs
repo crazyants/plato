@@ -14,21 +14,7 @@ using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Features
 {
-
-    public interface IShellFeatureManager
-    {
-
-        Task<IEnumerable<IShellFeature>> EnableFeaturesAsync(string[] featureIds);
-
-        Task<IEnumerable<IShellFeature>> DisableFeaturesAsync(string[] featureIds);
-        
-        Task<IEnumerable<IShellFeature>> EnableFeaturesAsync(
-            ShellDescriptor shellDescriptor,
-            IEnumerable<IShellFeature> features);
-        
-
-    }
-
+    
     public class ShellFeatureManager : IShellFeatureManager
     {
 
@@ -56,8 +42,7 @@ namespace Plato.Internal.Features
             _httpContextAccessor = httpContextAccessor;
             _platoHost = platoHost;
         }
-
-
+        
         public async Task<IEnumerable<IShellFeature>> EnableFeaturesAsync(string[] featureIds)
         {
             
@@ -95,7 +80,6 @@ namespace Plato.Internal.Features
                 {
                     descriptor.Modules.Add(new ShellModule(feature.Id));
                 }
-
             }
 
             // Update features within data store

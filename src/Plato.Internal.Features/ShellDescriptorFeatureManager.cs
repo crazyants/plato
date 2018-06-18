@@ -10,33 +10,25 @@ using Plato.Internal.Stores.Abstractions.Shell;
 
 namespace Plato.Internal.Features
 {
-
-    public interface IShellDescriptorFeatureManager
-    {
-
-        Task<IEnumerable<ShellFeature>> GetEnabledFeaturesAsync();
-
-        Task<IEnumerable<ShellFeature>> GetFeaturesAsync();
-
-        Task<IEnumerable<ShellFeature>> GetFeatureDependenciesAsync(string featureId);
-
-        Task<IEnumerable<ShellFeature>> GetDepdendentFeaturesAsync(string featureId);
-
-    }
-
+    
     public class ShellDescriptorFeatureManager : IShellDescriptorFeatureManager
     {
 
+        #region "Private Variables"
 
         // Build described features
-        private ConcurrentDictionary<string, ShellFeature> _features;
+        private ConcurrentDictionary<string, IShellFeature> _features;
 
-        private readonly ConcurrentDictionary<string, IEnumerable<ShellFeature>> _featureDependencies
-            = new ConcurrentDictionary<string, IEnumerable<ShellFeature>>();
+        private readonly ConcurrentDictionary<string, IEnumerable<IShellFeature>> _featureDependencies
+            = new ConcurrentDictionary<string, IEnumerable<IShellFeature>>();
 
-        private readonly ConcurrentDictionary<string, IEnumerable<ShellFeature>> _dependentFeatures
-            = new ConcurrentDictionary<string, IEnumerable<ShellFeature>>();
-        
+        private readonly ConcurrentDictionary<string, IEnumerable<IShellFeature>> _dependentFeatures
+            = new ConcurrentDictionary<string, IEnumerable<IShellFeature>>();
+
+        #endregion
+
+        #region "Constructor"
+
         private readonly IModuleManager _moduleManager;
         private readonly IShellDescriptor _shellDescriptor;
         private readonly IShellDescriptorStore _shellDescriptorStore;
@@ -51,9 +43,11 @@ namespace Plato.Internal.Features
             _shellDescriptorStore = shellDescriptorStore;
         }
 
+        #endregion
+
         #region "Implementation"
 
-        public async Task<IEnumerable<ShellFeature>> GetEnabledFeaturesAsync()
+        public async Task<IEnumerable<IShellFeature>> GetEnabledFeaturesAsync()
         {
             // Get all features enabled within the database
             var descriptor = await _shellDescriptorStore.GetAsync();
@@ -69,7 +63,7 @@ namespace Plato.Internal.Features
 
         }
         
-        public async Task<IEnumerable<ShellFeature>> GetFeaturesAsync()
+        public async Task<IEnumerable<IShellFeature>> GetFeaturesAsync()
         {
 
             // Load all features
@@ -94,7 +88,7 @@ namespace Plato.Internal.Features
         }
 
 
-        public async Task<IEnumerable<ShellFeature>> GetFeatureDependenciesAsync(string featureId)
+        public async Task<IEnumerable<IShellFeature>> GetFeatureDependenciesAsync(string featureId)
         {
             // Load minimal features
             await EnsureFeaturesLoadedAsync();
@@ -117,7 +111,7 @@ namespace Plato.Internal.Features
             });
         }
 
-        public async Task<IEnumerable<ShellFeature>> GetDepdendentFeaturesAsync(string featureId)
+        public async Task<IEnumerable<IShellFeature>> GetDepdendentFeaturesAsync(string featureId)
         {
             // Load minimal features
             await EnsureFeaturesLoadedAsync();
@@ -146,7 +140,6 @@ namespace Plato.Internal.Features
 
         async Task EnsureDependenciesAreEstablished()
         {
-
             foreach (var feature in _features.Values)
             {
                 var f = feature;
@@ -154,18 +147,31 @@ namespace Plato.Internal.Features
                 f.DependentFeatures = await GetDepdendentFeaturesAsync(f.Id);
                 _features.TryUpdate(f.Id, f, feature);
             }
-
         }
+        
+        /* General Idea...
+             public static IEnumerable<T> Traverse<T>(T item, Func<T, IEnumerable<T>> childSelector)
+            {
+                var stack = new Stack<T>();
+                stack.Push(item);
+                while (stack.Any())
+                {
+                    var next = stack.Pop();
+                    yield return next;
+                    foreach (var child in childSelector(next))
+                        stack.Push(child);
+                }
+            } */
 
-        IEnumerable<ShellFeature> QueryDependencies(
-            ShellFeature feature,
-            ShellFeature[] features,
-            Func<ShellFeature, ShellFeature[], ShellFeature[]> query)
+        IEnumerable<IShellFeature> QueryDependencies(
+            IShellFeature feature,
+            IShellFeature[] features,
+            Func<IShellFeature, IShellFeature[], IShellFeature[]> query)
         {
 
-            var dependencies = new HashSet<ShellFeature>() { feature };
+            var dependencies = new HashSet<IShellFeature>() { feature };
 
-            var stack = new Stack<ShellFeature[]>();
+            var stack = new Stack<IShellFeature[]>();
             stack.Push(query(feature, features));
 
             while (stack.Count > 0)
@@ -188,7 +194,7 @@ namespace Plato.Internal.Features
         {
             if (_features == null)
             {
-                _features = new ConcurrentDictionary<string, ShellFeature>();
+                _features = new ConcurrentDictionary<string, IShellFeature>();
                 var modules = await _moduleManager.LoadModulesAsync();
                 if (modules != null)
                 {

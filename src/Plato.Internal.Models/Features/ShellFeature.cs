@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Plato.Internal.Models.Modules;
 
 namespace Plato.Internal.Models.Features
 {
-
-    public interface IShellFeature
-    {
-
-    }
+  
 
     public class ShellFeature : IShellFeature
     {
@@ -24,12 +18,11 @@ namespace Plato.Internal.Models.Features
         
         public string Version { get; set; }
 
-        public IEnumerable<ShellFeature> FeatureDependencies { get; set; } = new List<ShellFeature>();
+        public IEnumerable<IShellFeature> FeatureDependencies { get; set; } = new List<ShellFeature>();
 
-        public IEnumerable<ShellFeature> DependentFeatures { get; set; } = new List<ShellFeature>();
-
-
-        public IEnumerable<ShellFeature> Dependencies { get; set; } = new List<ShellFeature>();
+        public IEnumerable<IShellFeature> DependentFeatures { get; set; } = new List<ShellFeature>();
+        
+        public IEnumerable<IShellFeature> Dependencies { get; set; } = new List<ShellFeature>();
 
         public ShellFeature()
         {
@@ -46,13 +39,13 @@ namespace Plato.Internal.Models.Features
             this.Id = id;
             this.Version = version;
         }
-
-
+        
         public ShellFeature(IModuleEntry entry)
         {
             this.Id = entry.Descriptor.Id;
             this.Name = entry.Descriptor.Name;
             this.Description = entry.Descriptor.Description;
+            this.Version = entry.Descriptor.Version;
 
             // Add minimal set of dependencies
             var dependencies = new List<ShellFeature>();

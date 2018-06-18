@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Internal.Features;
-using Plato.Internal.Modules.Abstractions;
 using Plato.Features.ViewModels;
 using Plato.Internal.Layout.Alerts;
-using Plato.Internal.Models.Shell;
 
 namespace Plato.Features.Controllers
 {

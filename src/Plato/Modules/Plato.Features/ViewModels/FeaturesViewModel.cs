@@ -5,7 +5,7 @@ namespace Plato.Features.ViewModels
 {
     public class FeaturesViewModel
     {
-        public IEnumerable<ShellFeature> Features { get; set; }
+        public IEnumerable<IShellFeature> Features { get; set; }
 
         public FeaturesBulkAction BulkAction { get; set; }
     }
