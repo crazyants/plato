@@ -92,8 +92,7 @@ namespace Plato.Users.Controllers
             //return View(new View("User.List", model));
 
         }
-
-
+        
         public async Task<IActionResult> LayoutTest(string id)
         {
 
@@ -102,7 +101,6 @@ namespace Plato.Users.Controllers
             return View(result);
 
         }
-        
         
         public async Task<IActionResult> Display(string id)
         {
@@ -155,8 +153,6 @@ namespace Plato.Users.Controllers
             }
 
             _alerter.Success(T["User Updated Successfully!"]);
-
-            //_notifier.Success(TH["User updated successfully"]);
 
             return RedirectToAction(nameof(Index));
             

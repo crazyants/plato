@@ -6,7 +6,15 @@ WebSite: https://www.instantasp.co.uk/
 Dependencies: 
 [
 	{
-		Name: "Plato.Users",
+		Id: "Plato.Core",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Admin",
+		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Users",
 		Version: "1.0.0"
 	}
 ]

@@ -37,13 +37,12 @@ namespace Plato.Internal.Models.Modules
         IEnumerable<ModuleDependency> Dependencies { get; set; }
         
     }
-
-
+    
 
     public class ModuleDependency
     {
 
-        public string Name { get; set; }
+        public string Id { get; set; }
 
         public string Version { get; set; }
 

@@ -5,11 +5,11 @@ Version: 1.0.0
 Dependencies: 
 [
 	{
-		Name: "Plato.Core",
+		Id: "Plato.Core",
 		Version: "1.0.0"
 	},
 	{
-		Name: "Plato.Admin",
+		Id: "Plato.Admin",
 		Version: "1.0.0"
 	}
 ]

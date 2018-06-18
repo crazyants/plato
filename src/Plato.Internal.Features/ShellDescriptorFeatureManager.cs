@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Features;
+using Plato.Internal.Models.Modules;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Stores.Abstractions.Shell;
@@ -55,33 +57,92 @@ namespace Plato.Internal.Features
 
         }
 
+
+        // Build described features
+        private ConcurrentDictionary<string, ShellFeature> _allFeatures;
+        private IEnumerable<IModuleEntry> _modules;
+
         public async Task<IEnumerable<ShellFeature>> GetFeaturesAsync()
         {
 
-            // Build described features
-            var describedFeatures = new ConcurrentDictionary<string, ShellFeature>();
-            
-            // Get all availablke modules and convert to features
-            var modules = await _moduleManager.LoadModulesAsync();
-            foreach (var module in modules)
+            // Load all available modules
+            await EnsureAvailableModulesAsync();
+
+            // Update feature dependencies
+            foreach (var feature in _allFeatures)
             {
-                describedFeatures.AddOrUpdate(module.Descriptor.Id, new ShellFeature(module), (k, v) => v);
+                var newFeature = feature.Value;
+                newFeature.FeatureDependencies = await GetFeatureDependencies(newFeature.Id);
+
+                _allFeatures.TryUpdate(newFeature.Id, newFeature, feature.Value);
             }
-            
-          // Get explicitly enabled features and update dictionary to reflect enabled
+
+            // Get explicitly enabled features and update dictionary to reflect enabled
             var enabledFeatures = await GetEnabledFeaturesAsync();
             foreach (var feature in enabledFeatures)
             {
-                describedFeatures.AddOrUpdate(feature.Id, feature, (k, v) =>
+                _allFeatures.AddOrUpdate(feature.Id, feature, (k, v) =>
                 {
                     v.IsEnabled = true;
                     return v;
                 });
             }
             
-            return describedFeatures.Values;
+            return _allFeatures.Values;
 
         }
-        
+ 
+
+        async Task<IList<ShellFeature>> GetFeatureDependencies(string featureId)
+        {
+
+            var dependencies = new ConcurrentDictionary<string, ShellFeature>();
+            RecurseDependencies(featureId);
+
+            void RecurseDependencies(string id)
+            {
+                // Get feature module
+                var module = _modules.FirstOrDefault(m => m.Descriptor.Id == id);
+
+                // Ensure we have dependencies
+                if (module != null && module.Descriptor.Dependencies.Any())
+                {
+                    // Recurse all dependencids
+                    foreach (var dependency in module.Descriptor.Dependencies)
+                    {
+                        var notInList = !dependencies.ContainsKey(dependency.Id);
+                        var notCurrent = dependency.Id != featureId;
+                        if (notInList && notCurrent)
+                        {
+                            dependencies.TryAdd(dependency.Id, new ShellFeature(dependency.Id, dependency.Version));
+                            RecurseDependencies(dependency.Id);
+                        }
+                     
+                    }
+                }
+            }
+
+            // Ensure distinct ordered results
+            return dependencies.Values.Distinct().ToList();
+
+        }
+
+
+        async Task EnsureAvailableModulesAsync()
+        {
+
+            // Ensure we only load modules once 
+            if (_allFeatures == null)
+            {
+                // Get all available modules and convert to features
+                _allFeatures = new ConcurrentDictionary<string, ShellFeature>();
+                _modules = await _moduleManager.LoadModulesAsync();
+                foreach (var module in _modules)
+                {
+                    _allFeatures.AddOrUpdate(module.Descriptor.Id, new ShellFeature(module), (k, v) => v);
+                }
+            }
+
+        }
     }
 }

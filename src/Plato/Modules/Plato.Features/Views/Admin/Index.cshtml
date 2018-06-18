@@ -71,7 +71,8 @@
 
                         @{
                             var dependencyNames = feature.FeatureDependencies
-                                .Select(d => d.Name).ToArray();
+                                .OrderBy(o => o.Id)
+                                .Select(d => d.Id).ToArray();
                         }
                         <span class="text-muted">
                             @if (dependencyNames.Length > 0)

@@ -4,11 +4,11 @@ Author: InstantASP
 Dependencies: 
 [
 	{
-		Name: "Plato.Roles",
+		Id: "Plato.Core",
 		Version: "1.0.0"
 	},
 	{
-		Name: "Plato.Users",
+		Id: "Plato.Users",
 		Version: "1.0.0"
 	}
 ]

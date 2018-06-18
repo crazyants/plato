@@ -7,15 +7,15 @@ PlatoVersion: 1.0.0
 Dependencies: 
 [
 	{
-		Name: "Plato.Admin",
+		Id: "Plato.Admin",
 		Version: "1.0.0"
 	},
 	{
-		Name: "Plato.Roles",
+		Id: "Plato.Roles",
 		Version: "1.0.0"
 	},
 	{
-		Name: "Plato.Users",
+		Id: "Plato.Users",
 		Version: "1.0.0"
 	}
 ]

@@ -22,6 +22,8 @@ namespace Plato.Internal.Models.Features
 
         public bool IsEnabled { get; set; }
         
+        public string Version { get; set; }
+
         public IEnumerable<ShellFeature> FeatureDependencies { get; set; } = new List<ShellFeature>();
 
         public IEnumerable<ShellFeature> DependentFeatures { get; set; } = new List<ShellFeature>();
@@ -37,12 +39,18 @@ namespace Plato.Internal.Models.Features
             this.Id = id;
         }
 
+        public ShellFeature(string id, string version)
+        {
+            this.Id = id;
+            this.Version = version;
+        }
+
+
         public ShellFeature(IModuleEntry entry)
         {
             this.Id = entry.Descriptor.Id;
             this.Name = entry.Descriptor.Name;
             this.Description = entry.Descriptor.Description;
-
         }
 
 
