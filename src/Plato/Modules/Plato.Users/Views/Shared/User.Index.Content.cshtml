@@ -1,6 +1,6 @@
 ﻿@model UsersPagedViewModel
 
-<ul class="list-group">
+<ul class="list-group list-group-hover">
     @foreach (var user in Model.Results.Data)
     {
         @await DisplayAsync(new View("User.ListItem", user))

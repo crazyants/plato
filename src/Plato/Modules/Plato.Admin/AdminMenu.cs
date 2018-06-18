@@ -21,7 +21,7 @@ namespace Plato.Admin
             }
 
             builder
-                .Add(T["Home"], "1", home => home
+                .Add(T["Home"], "0", home => home
                     .Action("Index", "Admin", "Plato.Admin")
                     //.Permission(Permissions.ManageRoles)
                     .LocalNav()

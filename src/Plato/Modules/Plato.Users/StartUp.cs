@@ -45,7 +45,6 @@ namespace Plato.Users
         public override void ConfigureServices(IServiceCollection services)
         {
           
-        
             // register set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
 

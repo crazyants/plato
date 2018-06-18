@@ -21,12 +21,12 @@ namespace Plato.Features
             }
 
             builder
-                .Add(T["Features"], users => users
-                    .Add(T["Manage Features"], "15", manageusers => manageusers
+                .Add(T["Features"], "1", features => features
+                    .Add(T["Manage Features"], "15", manage => manage
                         .Action("Index", "Admin", "Plato.Features")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ).Add(T["Feature Gallary"], "16", roles => roles
+                    ).Add(T["Feature Gallary"], "16", gallary => gallary
                         .Action("Create", "Admin", "Plato.Features")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

@@ -1,13 +1,12 @@
 ﻿@model FeaturesViewModel
 
-<h4>@T["Features"]</h4>
-<span class="text-muted">@T["Customize the features available within your Plato installation."]</span>
-
-<hr />
-
-
 <ul class="list-group list-group-hover">
-    @foreach (var feature in Model.Features)
+    
+    @{
+        var features = Model.Features.OrderBy(o => o.Name);
+    }
+
+    @foreach (var feature in features)
     {
         <li class="list-group-item">
 
@@ -24,7 +23,7 @@
 
                     @if (!String.IsNullOrEmpty(feature.Description))
                     {
-                        @feature.Description<br />
+                        @feature.Description<br/>
                     }
 
 
@@ -36,31 +35,33 @@
                             .OrderBy(o => o.Id)
                             .Select(d => d.Id).ToArray();
                     }
-                    <span class="text-muted">
+
+               
+
+                </div>
+
+                <div class="col-md-3 text-right">
+
+                    <span data-toggle="tooltip" title="@T["Feature dependencies:"] @String.Join(", ", dependencyNames)" class="text-muted mx-2">
                         @if (dependencyNames.Length > 0)
                         {
-                            @T["Dependencies: "]
-                            @String.Join(", ", dependencyNames)
+                            <i class="fa fa-code-branch fa-flip-vertical"></i>
                         }
                         else
                         {
                             @T["No dependencies"]
                         }
-                        <br />
+                    </span>
+                    <span data-toggle="tooltip" title="@T["Dependentt feature:"] @String.Join(", ", dependentNames)" class="text-muted mx-2">
                         @if (dependentNames.Length > 0)
                         {
-                            @T["Dependent Features: "]
-                            @String.Join(", ", dependentNames)
+                            <i class="fa fa-code-branch"></i>
                         }
                         else
                         {
                             @T["No dependent features"]
                         }
                     </span>
-
-                </div>
-
-                <div class="col-md-3 text-right">
 
                     @if (!feature.IsEnabled)
                     {

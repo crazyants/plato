@@ -18,7 +18,7 @@
   /* bootstrap js */
   {
     "inputFiles": [
-      "bower_components/Bootstrap/dist/js/bootstrap.js"
+      "bower_components/Bootstrap/dist/js/bootstrap.bundle.js"
     ],
     "outputFileName": "wwwroot/js/vendors/bootstrap.js",
     "minify": {

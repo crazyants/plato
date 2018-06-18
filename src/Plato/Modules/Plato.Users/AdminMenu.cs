@@ -23,14 +23,13 @@ namespace Plato.Users
                 return;
             }
 
-
             builder
-                .Add(T["Users"], users => users
-                    .Add(T["Manage Users"], "15", manageusers => manageusers
+                .Add(T["Users"], "5", users => users
+                    .Add(T["Manage Users"], "1", manage => manage
                         .Action("Index", "Admin", "Plato.Users")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ).Add(T["Create User"], "16", roles => roles
+                    ).Add(T["Create User"], "2", create => create
                         .Action("Create", "Admin", "Plato.Users")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
@@ -38,19 +37,13 @@ namespace Plato.Users
 
 
             builder
-                .Add(T["Configuration"], configuration => configuration
-                    .Add(T["Security"], "5", security => security
-                        .Add(T["Users"], "5", installed => installed
-                            .Action("Index", "Admin", "Plato.Users")
-                            //.Permission(Permissions.ManageUsers)
-                            .LocalNav()
-                        ))
-                    .Add(T["Settings"], settings => settings
-                        .Add(T["Users"], users => users
-                            //.Permission(Permissions.ManageUsers)
-                            .Action("Index", "Admin", new {area = "Plato.Settings"})
-                            .LocalNav()
-                        )));
+                .Add(T["Settings"], "9999", configuration => configuration
+                    .Add(T["Users"], "1", installed => installed
+                        .Action("Index", "Admin", "Plato.Users")
+                        //.Permission(Permissions.ManageUsers)
+                        .LocalNav()
+                    ));
+
         }
     }
 

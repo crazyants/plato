@@ -21,6 +21,7 @@ namespace Plato.Features.ViewProviders
         {
 
             return Views(
+                View<FeaturesViewModel>("Features.Index.Header", model => viewModel).Zone("header"),
                 View<FeaturesViewModel>("Features.Index.Content", model => viewModel).Zone("content")
             );
 

@@ -37,16 +37,12 @@
     {
         <div class="row layout-content">
             <div class="col-md-9">
-                111111111111111111111111
                 @if (Model.Content != null)
                 {
-
                     <form asp-action="Index">
                         <view model="@Model.Content"></view>
                     </form>
-
                 }
-                222222222222222222222222222
             </div>
             <div class="col-md-3">
                 @if (Model.SideBar != null)

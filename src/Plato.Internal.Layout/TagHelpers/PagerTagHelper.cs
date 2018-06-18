@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Navigation;
 
 namespace Plato.Internal.Layout.TagHelpers
@@ -18,6 +19,9 @@ namespace Plato.Internal.Layout.TagHelpers
     [HtmlTargetElement("pager")]
     public class PagerTagHelper : TagHelper
     {
+
+        private const int NumberOfPagesToShow = 7;
+        private int _totalPageCount;
 
         public PagerOptions Model { get; set; }
 
@@ -55,43 +59,51 @@ namespace Plato.Internal.Layout.TagHelpers
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-
+         
+            // Calculate total pages
+            _totalPageCount = Model.PageSize > 0 ? (int)Math.Ceiling((double)Model.Total / Model.PageSize) : 1;
+            
+            // Get route data
             _routeData = new RouteValueDictionary(_actionContextAccesor.ActionContext.RouteData.Values);
 
+            // Define taghelper
             output.TagName = "nav";
             output.Attributes.Add("aria-label", "Page navigation");
             
             output.TagMode = TagMode.StartTagAndEndTag;
-            output.Content.SetHtmlContent(await Build());
+
+            // No need to display if we only have a single page
+            if (_totalPageCount > 1)
+            {
+                output.Content.SetHtmlContent(await Build());
+            }
+            
         }
 
-        private async Task<IHtmlContent> Build()
+        async Task<IHtmlContent> Build()
         {
-
+            
             var builder = new HtmlContentBuilder();
-            BuildHtml(builder, "<ul class=\"pagination\">");
-            BuildFirst(builder);
-            BuildPrevious(builder);
-            BuildLinks(builder);
-            BuildNext(builder);
-            BuildLast(builder);
-            BuildHtml(builder, "</ul>");
+            var htmlContentBuilder = builder
+                .AppendHtml("<ul class=\"pagination\">")
+                .AppendHtml(BuildFirst())
+                .AppendHtml(BuildPrevious())
+                .AppendHtml(BuildLinks())
+                .AppendHtml(BuildNext())
+                .AppendHtml(BuildLast())
+                .AppendHtml("</ul>");
 
-            return await Task.FromResult(builder);
+            return await Task.FromResult(htmlContentBuilder);
 
-        }
-
-        HtmlContentBuilder BuildHtml(HtmlContentBuilder builder, string html)
-        {
-            builder.AppendHtml(html);
-            return builder;
         }
         
-        HtmlContentBuilder BuildFirst(HtmlContentBuilder builder)
+        HtmlString BuildFirst()
         {
 
             var text = FirstText ?? T["First"];
-            builder
+
+            var builder = new HtmlContentBuilder();
+            var htmlContentBuilder = builder
                 .AppendHtml("<li class=\"page-item\">")
                 .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
                 .AppendHtml("<span aria-hidden=\"true\">")
@@ -100,14 +112,16 @@ namespace Plato.Internal.Layout.TagHelpers
                 .AppendHtml("</a>")
                 .AppendHtml("</li>");
 
-            return builder;
+            return htmlContentBuilder.ToHtmlString();
 
         }
 
-        HtmlContentBuilder BuildPrevious(HtmlContentBuilder builder)
+        HtmlString BuildPrevious()
         {
             var text = PreviousText ?? T["&laquo;"];
-            builder
+
+            var builder = new HtmlContentBuilder();
+            var htmlContentBuilder = builder
                 .AppendHtml("<li class=\"page-item\">")
                 .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
                 .AppendHtml("<span aria-hidden=\"true\">")
@@ -116,10 +130,10 @@ namespace Plato.Internal.Layout.TagHelpers
                 .AppendHtml("</a>")
                 .AppendHtml("</li>");
 
-            return builder;
+            return htmlContentBuilder.ToHtmlString();
         }
-        
-        HtmlContentBuilder BuildLinks(HtmlContentBuilder builder)
+
+        HtmlString BuildLinks()
         {
 
             if (Model == null)
@@ -131,15 +145,17 @@ namespace Plato.Internal.Layout.TagHelpers
             var currentPage = Model.Page;
             if (currentPage < 1)
                 currentPage = 1;
-            var pageSize = (int)Model.PageSize;
-            var total = (double)Model.Total;;
-            var numberOfPagesToShow = 7;
-            var totalPageCount = Model.PageSize > 0 ? (int) Math.Ceiling(total / pageSize) : 1;
-            var firstPage = Math.Max(1, Model.Page - (numberOfPagesToShow / 2));
-            var lastPage = Math.Min(totalPageCount, Model.Page + (int) (numberOfPagesToShow / 2));
+            
+            var firstPage = Math.Max(1, Model.Page - (NumberOfPagesToShow / 2));
+            var lastPage = Math.Min(_totalPageCount, Model.Page + (int) (NumberOfPagesToShow / 2));
+            
+            IHtmlContentBuilder output = null;
 
-            if (numberOfPagesToShow > 0 && lastPage > 1)
+            if (NumberOfPagesToShow > 0 && lastPage > 1)
             {
+
+                output = new HtmlContentBuilder();
+
                 for (var i = firstPage; i <= lastPage; i++)
                 {
 
@@ -150,7 +166,8 @@ namespace Plato.Internal.Layout.TagHelpers
 
                     var url = _urlHelper.RouteUrl(new UrlRouteContext {Values = _routeData});
 
-                    builder
+                    var builder = new HtmlContentBuilder();
+                    output = builder
                         .AppendHtml("<li class=\"page-item")
                         .AppendHtml(i == Model.Page ? " active" : "")
                         .AppendHtml("\">")
@@ -163,15 +180,22 @@ namespace Plato.Internal.Layout.TagHelpers
                 }
             }
 
-            return builder;
+            if (output != null)
+            {
+                return output.ToHtmlString();
+            }
+
+            return HtmlString.Empty;
 
         }
 
-        HtmlContentBuilder BuildNext(HtmlContentBuilder builder)
+        HtmlString BuildNext()
         {
 
             var text = NextText ?? T["&raquo;"];
-            builder
+
+            var builder = new HtmlContentBuilder();
+            var htmlContentBuilder = builder
                 .AppendHtml("<li class=\"page-item\">")
                 .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Next\" >")
                 .AppendHtml("<span aria-hidden=\"true\">")
@@ -180,14 +204,16 @@ namespace Plato.Internal.Layout.TagHelpers
                 .AppendHtml("</a>")
                 .AppendHtml("</li>");
 
-            return builder;
+            return htmlContentBuilder.ToHtmlString();
 
         }
 
-        HtmlContentBuilder BuildLast(HtmlContentBuilder builder)
+        HtmlString BuildLast()
         {
             var text = LastText ?? T["Last"];
-            builder
+
+            var builder = new HtmlContentBuilder();
+            var htmlContentBuilder = builder
                 .AppendHtml("<li class=\"page-item\">")
                 .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
                 .AppendHtml("<span aria-hidden=\"true\">")
@@ -195,10 +221,10 @@ namespace Plato.Internal.Layout.TagHelpers
                 .AppendHtml("</span>")
                 .AppendHtml("</a>")
                 .AppendHtml("</li>");
-            return builder;
+
+            return htmlContentBuilder.ToHtmlString();
         }
-
-
-
+        
     }
+
 }
