@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Plato.Internal.Features;
 
 namespace Plato.Internal.Navigation.Extensions
 {
@@ -14,7 +15,9 @@ namespace Plato.Internal.Navigation.Extensions
         {
 
             services.TryAddScoped<INavigationManager, NavigationManager>();
-            
+
+            services.TryAddScoped<IFeatureEventManager, FeatureEventManager>();
+
             return services;
 
         }

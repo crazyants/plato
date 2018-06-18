@@ -86,6 +86,20 @@ namespace Plato.Internal.Features
             return _features.Values;
 
         }
+        
+        public async Task<IShellFeature> GetFeatureAsync(string featureId)
+        {
+            var features = await GetFeaturesAsync();
+            return features.FirstOrDefault(f => f.Id == featureId);
+        }
+
+        public async Task<IEnumerable<IShellFeature>> GetFeaturesAsync(string[] featureIds)
+        {
+            var features = await GetFeaturesAsync();
+            return features
+                .Where(f => featureIds.Any(v => v.Equals(f.Id, StringComparison.InvariantCultureIgnoreCase)))
+                .ToList();
+        }
 
 
         public async Task<IEnumerable<IShellFeature>> GetFeatureDependenciesAsync(string featureId)

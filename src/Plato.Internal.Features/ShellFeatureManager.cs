@@ -8,13 +8,12 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstractions.Shell;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Features
 {
-    
+
     public class ShellFeatureManager : IShellFeatureManager
     {
 
@@ -24,6 +23,7 @@ namespace Plato.Internal.Features
         private readonly IServiceCollection _applicationServices;
         private readonly IRunningShellTable _runningShellTable;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IFeatureEventManager _featureEventManager;
         private readonly ILogger<ShellFeatureManager> _logger;
         
         public ShellFeatureManager(
@@ -32,7 +32,9 @@ namespace Plato.Internal.Features
             ILogger<ShellFeatureManager> logger,
             IServiceCollection applicationServices,
             IRunningShellTable runningShellTable, 
-            IHttpContextAccessor httpContextAccessor, IPlatoHost platoHost)
+            IHttpContextAccessor httpContextAccessor,
+            IFeatureEventManager featureEventManager,
+            IPlatoHost platoHost)
         {
             _shellDescriptorStore = shellDescriptorStore;
             _shellDescriptorFeatureManager = shellDescriptorFeatureManager;
@@ -40,23 +42,68 @@ namespace Plato.Internal.Features
             _applicationServices = applicationServices;
             _runningShellTable = runningShellTable;
             _httpContextAccessor = httpContextAccessor;
+            _featureEventManager = featureEventManager;
             _platoHost = platoHost;
         }
-        
+
+        #region "Implementation"
+
         public async Task<IEnumerable<IShellFeature>> EnableFeaturesAsync(string[] featureIds)
         {
-            
-            var descriptor =
-                await _shellDescriptorStore.GetAsync()
-                ?? new ShellDescriptor();
 
-            foreach (var featureId in featureIds)
+            // Get features to enable
+            var features = await _shellDescriptorFeatureManager.GetFeaturesAsync(featureIds);
+            
+            // Conver to IList to work with
+            var featureList = features.ToList();
+
+            // Raise installing events for features
+            await InvokeFeaturesRecursivly(featureList, async feature =>
             {
-                descriptor.Modules.Add(new ShellModule(featureId));
-            }
+                await _featureEventManager.InstallingAsync(feature);
+            });
+            
+            // Update descriptor within database
+            var descriptor = await GetOrUpdateDescriptor(featureIds);
+            var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
+
+            // Raise installed event for feature
+            await InvokeFeaturesRecursivly(featureList, async feature =>
+            {
+                await _featureEventManager.InstalledAsync(feature);
+            });
+       
+            // dispose current shell context
+            RecycleShell();
+
+            return null;
+
+        }
+        
+        public async Task<IEnumerable<IShellFeature>> DisableFeaturesAsync(string[] featureIds)
+        {
+            
+            // Get features to enable
+            var features = await _shellDescriptorFeatureManager.GetFeaturesAsync(featureIds);
+
+            // Conver to IList to work with
+            var featureList = features.ToList();
+
+            // Raise Uninstalling events for features
+            await InvokeFeaturesRecursivly(featureList, async feature =>
+            {
+                await _featureEventManager.UninstallingAsync(feature);
+            });
             
             // Update features within data store
-            var features = await _shellDescriptorStore.SaveAsync(descriptor);
+            var descriptor = await RemoveFeaturesFromCurrentDescriptor(featureIds);
+            var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
+
+            // Raise Uninstalled events for features
+            await InvokeFeaturesRecursivly(featureList, async feature =>
+            {
+                await _featureEventManager.UninstallingAsync(feature);
+            });
             
             // dispose current shell context
             RecycleShell();
@@ -65,9 +112,12 @@ namespace Plato.Internal.Features
 
         }
 
-        public async Task<IEnumerable<IShellFeature>> DisableFeaturesAsync(string[] featureIds)
-        {
+        #endregion
 
+        #region "Private Methods"
+
+        async Task<IShellDescriptor> RemoveFeaturesFromCurrentDescriptor(string[] featureIds)
+        {
             // First get all existing enabled features
             var enabledFeatures = await _shellDescriptorFeatureManager.GetEnabledFeaturesAsync();
 
@@ -82,24 +132,46 @@ namespace Plato.Internal.Features
                 }
             }
 
-            // Update features within data store
-            var features = await _shellDescriptorStore.SaveAsync(descriptor);
-            
-            // dispose current shell context
-            RecycleShell();
-
-            return null;
+            return descriptor;
 
         }
 
-        public Task<IEnumerable<IShellFeature>> EnableFeaturesAsync(
-            ShellDescriptor shellDescriptor,
-            IEnumerable<IShellFeature> features)
+        async Task<IShellDescriptor> GetOrUpdateDescriptor(string[] featureIds)
         {
-            throw new NotImplementedException();
+
+            // Get existing descriptor or create a new one
+            var descriptor =
+                await _shellDescriptorStore.GetAsync()
+                ?? new ShellDescriptor();
+
+            // Add features to our descriptor
+            foreach (var featureId in featureIds)
+            {
+                descriptor.Modules.Add(new ShellModule(featureId));
+            }
+
+            return descriptor;
         }
 
+        async Task InvokeFeaturesRecursivly(
+            IEnumerable<IShellFeature> features,
+            Action<IShellFeature> invoker)
+        {
 
+            foreach (var feature in features)
+            {
+                invoker(feature);
+                if (feature.FeatureDependencies.Any())
+                {
+                    await InvokeFeaturesRecursivly(feature.FeatureDependencies, async currentFeature =>
+                    {
+                        invoker(feature);
+                    });
+                }
+
+            }
+        }
+        
         void RecycleShell()
         {
             var httpContext = _httpContextAccessor.HttpContext;
@@ -107,7 +179,8 @@ namespace Plato.Internal.Features
             _platoHost.RecycleShellContext(shellSettings);
         }
 
-
+        #endregion
+        
 
     }
 }

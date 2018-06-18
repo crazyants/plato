@@ -13,6 +13,10 @@ namespace Plato.Internal.Features
 
         Task<IEnumerable<IShellFeature>> GetFeaturesAsync();
 
+        Task<IEnumerable<IShellFeature>> GetFeaturesAsync(string[] featureIds);
+            
+        Task<IShellFeature> GetFeatureAsync(string featureId);
+
         Task<IEnumerable<IShellFeature>> GetFeatureDependenciesAsync(string featureId);
 
         Task<IEnumerable<IShellFeature>> GetDepdendentFeaturesAsync(string featureId);
