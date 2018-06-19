@@ -13,7 +13,7 @@ namespace Plato.Internal.Shell.Abstractions
 
         public ShellBlueprint Blueprint { get; set; }
 
-        public ShellSettings Settings { get; set; }
+        public IShellSettings Settings { get; set; }
 
         public IServiceProvider ServiceProvider { get; set; }
         

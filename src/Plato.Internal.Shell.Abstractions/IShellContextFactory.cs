@@ -5,11 +5,14 @@ namespace Plato.Internal.Shell.Abstractions
     public interface IShellContextFactory
     {
  
-        ShellContext CreateShellContext(ShellSettings settings);
+        ShellContext CreateShellContext(IShellSettings settings);
 
-        ShellContext CreateSetupContext(ShellSettings settings);
+        ShellContext CreateSetupContext(IShellSettings settings);
 
-        
+        ShellContext CreateDescribedContext(IShellSettings settings, IShellDescriptor descriptor);
+
+
+
     }
 
 }

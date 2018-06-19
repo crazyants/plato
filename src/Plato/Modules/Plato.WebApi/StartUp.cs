@@ -10,9 +10,9 @@ namespace Plato.WebApi
     public class Startup : StartupBase
     {
 
-        private readonly ShellSettings _shellSettings;
+        private readonly IShellSettings _shellSettings;
 
-        public Startup(ShellSettings shellSettings)
+        public Startup(IShellSettings shellSettings)
         {
             _shellSettings = shellSettings;
         }

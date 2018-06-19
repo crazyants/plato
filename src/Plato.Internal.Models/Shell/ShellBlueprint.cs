@@ -7,7 +7,7 @@ namespace Plato.Internal.Models.Shell
 {
     public class ShellBlueprint
     {
-        public ShellSettings Settings { get; set; }
+        public IShellSettings Settings { get; set; }
 
         public IShellDescriptor Descriptor { get; set; }
 

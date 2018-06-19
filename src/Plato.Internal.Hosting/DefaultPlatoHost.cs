@@ -48,7 +48,7 @@ namespace Plato.Internal.Hosting
             BuildCurrent();
         }
   
-        public ShellContext GetOrCreateShellContext(ShellSettings settings)
+        public ShellContext GetOrCreateShellContext(IShellSettings settings)
         {
             if (_shellContexts == null)
             {
@@ -64,13 +64,13 @@ namespace Plato.Internal.Hosting
 
         }
 
-        public void UpdateShellSettings(ShellSettings settings)
+        public void UpdateShellSettings(IShellSettings settings)
         {
             _shellSettingsManager.SaveSettings(settings);
             RecycleShellContext(settings);
         }
         
-        public ShellContext CreateShellContext(ShellSettings settings)
+        public ShellContext CreateShellContext(IShellSettings settings)
         {
             if (settings.State == TenantState.Uninitialized)
             {
@@ -86,7 +86,7 @@ namespace Plato.Internal.Hosting
         }
 
 
-        public void RecycleShellContext(ShellSettings settings)
+        public void RecycleShellContext(IShellSettings settings)
         {
             if (_logger.IsEnabled(LogLevel.Debug))
             {
@@ -107,7 +107,7 @@ namespace Plato.Internal.Hosting
 
         }
 
-        public void DisposeShellContext(ShellSettings settings)
+        public void DisposeShellContext(IShellSettings settings)
         {
             var shellContext = CreateShellContext(settings);
             DeactivateShell(shellContext);
@@ -198,7 +198,7 @@ namespace Plato.Internal.Hosting
             return _shellContextFactory.CreateSetupContext(ShellHelper.BuildDefaultUninitializedShell);
         }
         
-        bool CanCreateShell(ShellSettings shellSettings)
+        bool CanCreateShell(IShellSettings shellSettings)
         {
             return
                 shellSettings.State == TenantState.Running ||

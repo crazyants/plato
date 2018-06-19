@@ -22,7 +22,7 @@ namespace Plato.Internal.Shell
             _logger = logger;
         }
 
-        public async Task<ShellBlueprint> ComposeAsync(ShellSettings settings, IShellDescriptor descriptor)
+        public async Task<ShellBlueprint> ComposeAsync(IShellSettings settings, IShellDescriptor descriptor)
         {
             if (_logger.IsEnabled(LogLevel.Debug))
             {

@@ -6,13 +6,13 @@ namespace Plato.Internal.Shell.Abstractions
     public interface IRunningShellTable
     {
 
-        void Add(ShellSettings settings);
+        void Add(IShellSettings settings);
 
-        void Remove(ShellSettings settings);
+        void Remove(IShellSettings settings);
 
-        ShellSettings Match(string host, string appRelativeCurrentExecutionFilePath);
+        IShellSettings Match(string host, string appRelativeCurrentExecutionFilePath);
 
-        IDictionary<string, ShellSettings> ShellsByHostAndPrefix { get; }
+        IDictionary<string, IShellSettings> ShellsByHostAndPrefix { get; }
 
     }
 

@@ -33,7 +33,7 @@ namespace Plato.Internal.Shell
        
         }
 
-        public IServiceProvider CreateContainer(ShellSettings settings, ShellBlueprint blueprint)
+        public IServiceProvider CreateContainer(IShellSettings settings, ShellBlueprint blueprint)
         {
 
             // Clone services

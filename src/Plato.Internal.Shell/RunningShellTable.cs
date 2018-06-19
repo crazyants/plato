@@ -8,15 +8,15 @@ namespace Plato.Internal.Shell
 {
     public class RunningShellTable : IRunningShellTable
     {
-        private readonly Dictionary<string, ShellSettings> _shellsByHostAndPrefix =
-            new Dictionary<string, ShellSettings>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, IShellSettings> _shellsByHostAndPrefix =
+            new Dictionary<string, IShellSettings>(StringComparer.OrdinalIgnoreCase);
 
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
-        private ShellSettings _single;
-        private ShellSettings _default;
+        private IShellSettings _single;
+        private IShellSettings _default;
 
-        public void Add(ShellSettings settings)
+        public void Add(IShellSettings settings)
         {
             _lock.EnterWriteLock();
             try
@@ -45,7 +45,7 @@ namespace Plato.Internal.Shell
             }
         }
 
-        public void Remove(ShellSettings settings)
+        public void Remove(IShellSettings settings)
         {
             _lock.EnterWriteLock();
             try
@@ -69,7 +69,7 @@ namespace Plato.Internal.Shell
             }
         }
 
-        public ShellSettings Match(string host, string appRelativePath)
+        public IShellSettings Match(string host, string appRelativePath)
         {
             _lock.EnterReadLock();
             try
@@ -80,7 +80,7 @@ namespace Plato.Internal.Shell
                 }
 
                 var hostAndPrefix = GetHostAndPrefix(host, appRelativePath);
-                ShellSettings result;
+                IShellSettings result;
                 if (!_shellsByHostAndPrefix.TryGetValue(hostAndPrefix, out result))
                 {
                     var noHostAndPrefix = GetHostAndPrefix("", appRelativePath);
@@ -98,7 +98,7 @@ namespace Plato.Internal.Shell
             }
         }
 
-        public IDictionary<string, ShellSettings> ShellsByHostAndPrefix
+        public IDictionary<string, IShellSettings> ShellsByHostAndPrefix
         {
             get
             {
@@ -123,7 +123,7 @@ namespace Plato.Internal.Shell
 
         }
 
-        private string GetHostAndPrefix(ShellSettings shellSettings)
+        private string GetHostAndPrefix(IShellSettings shellSettings)
         {
             return shellSettings.RequestedUrlHost + "/" + shellSettings.RequestedUrlPrefix;
         }

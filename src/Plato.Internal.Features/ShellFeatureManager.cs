@@ -79,33 +79,25 @@ namespace Plato.Internal.Features
             
             // Conver to IList to work with
             var featureList = features.ToList();
-            
-            // Holds the results of all our event executation contexts
+
             var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
             
             // Raise installing events for features
-            await InvokeFeaturesRecursivly(featureList,
-                async (feature, handler) =>
+            InvokeFeaturesRecursivly(featureList,
+                (context, handler) =>
                 {
                     // Ensure feature is not already enabled
-                    if (!feature.IsEnabled)
+                    if (!context.Feature.IsEnabled)
                     {
-                        var context = new FeatureEventContext()
-                        {
-                            Feature = feature
-                        };
-
-                        await handler.InstallingAsync(context);
-
-                        //var context = await _featureEventManager.InstallingAsync(new FeatureEventContext(feature));
-                        contexts.AddOrUpdate(feature.Id, context, (k, v) =>
+                        handler.InstallingAsync(context);
+                        contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
                         {
                             v.Errors = context.Errors;
                             return v;
                         });
                     }
-                    
-                });
+
+                }, contexts);
 
             // Did any event encounter errors?
             var hasErrors = contexts.Where(c => c.Value.Errors.Count > 0);
@@ -119,24 +111,20 @@ namespace Plato.Internal.Features
                 var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
 
                 // Raise Installed event
-                await InvokeFeaturesRecursivly(featureList,
-                    async (feature, handler) =>
+                InvokeFeaturesRecursivly(featureList,
+                    (context, handler) =>
                     { 
                         // Ensure feature is not already enabled
-                        if (!feature.IsEnabled)
+                        if (!context.Feature.IsEnabled)
                         {
-
-                            var context = new FeatureEventContext(feature);
-                            await handler.InstalledAsync(context);
-
-                            //var context = await _featureEventManager.InstalledAsync(new FeatureEventContext(feature));
-                            contexts.AddOrUpdate(feature.Id, context, (k, v) =>
+                            handler.InstalledAsync(context);
+                            contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
                             {
                                 v.Errors = context.Errors;
                                 return v;
                             });
                         }
-                    });
+                    }, contexts);
 
                 // dispose current shell context
                 RecycleShell();
@@ -176,27 +164,22 @@ namespace Plato.Internal.Features
 
             // Holds the results of all our event executation contexts
             var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
-
+            
             // Raise Uninstalling events
-            await InvokeFeaturesRecursivly(featureList,
-                async (feature, handler) =>
+            InvokeFeaturesRecursivly(featureList,
+                async (context, handler) =>
                 {
                     // Ensure feature is enabled
-                    if (feature.IsEnabled)
+                    if (context.Feature.IsEnabled)
                     {
-
-                        var context = new FeatureEventContext(feature);
-
                         await handler.UninstallingAsync(context);
-
-                        //var context = await _featureEventManager.UninstallingAsync(new FeatureEventContext(feature));
-                        contexts.AddOrUpdate(feature.Id, context, (k, v) =>
+                        contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
                         {
                             v.Errors = context.Errors;
                             return v;
                         });
                     }
-                });
+                }, contexts);
 
             // Did any event encounter errors?
             var hasErrors = contexts.Where(c => c.Value.Errors.Count > 0);
@@ -210,24 +193,20 @@ namespace Plato.Internal.Features
                 var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
 
                 // Raise Uninstalled events for features
-                await InvokeFeaturesRecursivly(featureList,
-                    async (feature, handler) =>
+                InvokeFeaturesRecursivly(featureList,
+                    async (context, handler) =>
                     {
                         // Ensure feature is enabled
-                        if (feature.IsEnabled)
+                        if (context.Feature.IsEnabled)
                         {
-
-                            await handler.UninstalledAsync(new FeatureEventContext(feature));
-
-
-                            //var context = await _featureEventManager.UninstalledAsync(new FeatureEventContext(feature));
-                            //contexts.AddOrUpdate(feature.Id, context, (k, v) =>
-                            //{
-                            //    v.Errors = context.Errors;
-                            //    return v;
-                            //});
+                            await handler.UninstalledAsync(context);
+                            contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                            {
+                                v.Errors = context.Errors;
+                                return v;
+                            });
                         }
-                    });
+                    }, contexts);
 
                 // Dispose current shell context
                 RecycleShell();
@@ -280,9 +259,10 @@ namespace Plato.Internal.Features
             return descriptor;
         }
 
-        async Task InvokeFeaturesRecursivly(
-            IEnumerable<IShellFeature> features,
-            Action<IShellFeature, IFeatureEventHandler> invoker)
+        void InvokeFeaturesRecursivly(
+            List<IShellFeature> features,
+            Action<IFeatureEventContext, IFeatureEventHandler> invoker,
+            ConcurrentDictionary<string, IFeatureEventContext> contexts)
         {
 
             var httpContext = _httpContextAccessor.HttpContext;
@@ -292,20 +272,34 @@ namespace Plato.Internal.Features
             {
                 using (var scope = shellContext.ServiceProvider.CreateScope())
                 {
-
-                    var featureEventHandlers = scope.ServiceProvider.GetServices<IFeatureEventHandler>();
+                    void ReportError(IFeatureEventContext context, Exception e)
+                    {
+                        contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                        {
+                            v.Errors.Add(context.Feature.Id, e.Message);
+                            return v;
+                        });
+                    }
+                    
+                    var handlers = scope.ServiceProvider.GetServices<IFeatureEventHandler>();
                     var logger = scope.ServiceProvider.GetRequiredService<ILogger<ShellFeatureManager>>();
 
-                    await featureEventHandlers.InvokeAsync(handler =>
+                    foreach (var handler in handlers)
                     {
                         foreach (var feature in features)
                         {
-                            invoker(feature, handler);
+                            var context = new FeatureEventContext(feature);
+                            try
+                            {
+                                invoker(context, handler);
+                            }
+                            catch (Exception e)
+                            {
+                                ReportError(context, e);
+                            }
+                          
                         }
-
-                        return Task.CompletedTask;
-
-                    }, logger);
+                    }
                     
                 }
 

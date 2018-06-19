@@ -33,7 +33,7 @@ namespace Plato.Users
         private readonly string _tenantPrefix;
 
         public Startup(
-            ShellSettings shellSettings)
+            IShellSettings shellSettings)
         {
             //_options = options;
             _tenantName = shellSettings.Name;

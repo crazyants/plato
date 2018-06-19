@@ -5,7 +5,7 @@ namespace Plato.Internal.Shell
 {
     public interface IShellContainerFactory
     {
-        IServiceProvider CreateContainer(ShellSettings settings, ShellBlueprint blueprint);
+        IServiceProvider CreateContainer(IShellSettings settings, ShellBlueprint blueprint);
         
     }
 }

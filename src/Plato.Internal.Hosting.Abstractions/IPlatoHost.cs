@@ -7,15 +7,15 @@ namespace Plato.Internal.Hosting.Abstractions
     {
         void Initialize();
 
-        ShellContext GetOrCreateShellContext(ShellSettings settings);
+        ShellContext GetOrCreateShellContext(IShellSettings settings);
 
-        void UpdateShellSettings(ShellSettings settings);
+        void UpdateShellSettings(IShellSettings settings);
 
-        ShellContext CreateShellContext(ShellSettings settings);
+        ShellContext CreateShellContext(IShellSettings settings);
 
-        void RecycleShellContext(ShellSettings settings);
+        void RecycleShellContext(IShellSettings settings);
 
-        void DisposeShellContext(ShellSettings settings);
+        void DisposeShellContext(IShellSettings settings);
 
     }
 }

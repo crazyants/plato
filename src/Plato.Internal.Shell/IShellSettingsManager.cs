@@ -8,7 +8,7 @@ namespace Plato.Internal.Shell
 
         IEnumerable<ShellSettings> LoadSettings();
              
-        void SaveSettings(ShellSettings settings);
+        void SaveSettings(IShellSettings settings);
 
     }
 

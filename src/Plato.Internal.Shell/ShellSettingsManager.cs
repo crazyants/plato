@@ -75,7 +75,7 @@ namespace Plato.Internal.Shell
             return shellSettings;
         }
 
-        void IShellSettingsManager.SaveSettings(ShellSettings shellSettings)
+        void IShellSettingsManager.SaveSettings(IShellSettings shellSettings)
         {
 
             if (shellSettings == null)

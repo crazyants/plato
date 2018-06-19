@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Plato.Internal.Models.Shell
 {
@@ -25,5 +26,10 @@ namespace Plato.Internal.Models.Shell
 
         TenantState State { get; set; }
 
+        string this[string key] { get; }
+
+        IEnumerable<string> Keys { get; }
+
     }
+
 }

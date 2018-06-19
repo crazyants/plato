@@ -8,7 +8,7 @@ namespace Plato.Internal.Shell.Abstractions
     public static class RunningShellTableExtensions
     {
 
-        public static ShellSettings Match(
+        public static IShellSettings Match(
         this IRunningShellTable table,
         HttpContext httpContext)
         {

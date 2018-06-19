@@ -27,7 +27,7 @@ namespace Plato.Internal.Layout.Alerts
         readonly IAlerter _alerter;
 
         public AlertFilter(
-            ShellSettings shellSettings,
+            IShellSettings shellSettings,
             HtmlEncoder htmlEncoder,
             ILogger<AlertFilter> logger,
             ILayoutUpdater layoutUpdater,

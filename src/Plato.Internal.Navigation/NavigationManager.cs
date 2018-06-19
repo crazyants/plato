@@ -24,7 +24,7 @@ namespace Plato.Internal.Navigation
 
         private readonly IEnumerable<INavigationProvider> _navigationProviders;
         private readonly ILogger _logger;
-        private readonly ShellSettings _shellSettings;
+        private readonly IShellSettings _shellSettings;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IAuthorizationService _authorizationService;
 
@@ -33,7 +33,7 @@ namespace Plato.Internal.Navigation
         public NavigationManager(
             IEnumerable<INavigationProvider> navigationProviders,
             ILogger<NavigationManager> logger,
-            ShellSettings shellSettings,
+            IShellSettings shellSettings,
             IUrlHelperFactory urlHelperFactory,
             IAuthorizationService authorizationService)
         {
