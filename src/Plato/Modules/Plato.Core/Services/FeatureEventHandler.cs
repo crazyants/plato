@@ -19,53 +19,53 @@ namespace Plato.Core.Services
             _logger = logger;
         }
       
-        public Task InstallingAsync(object sender, ShellFeatureEventArgs args)
+        public Task InstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(args.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
             
-            _logger.LogInformation(args.Feature.Id, $"Installing event raised within {args.Feature.Id}.");
+            _logger.LogInformation(context.Feature.Id, $"Installing event raised within {context.Feature.Id}.");
 
             return Task.CompletedTask;
 
         }
 
-        public Task InstalledAsync(object sender, ShellFeatureEventArgs args)
+        public Task InstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(args.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
 
-            _logger.LogInformation(args.Feature.Id, $"Installed event raised within {args.Feature.Id}." );
+            _logger.LogInformation(context.Feature.Id, $"Installed event raised within {context.Feature.Id}." );
 
             return Task.CompletedTask;
 
         }
 
-        public Task UninstallingAsync(object sender, ShellFeatureEventArgs args)
+        public Task UninstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(args.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
 
-            _logger.LogInformation(args.Feature.Id, $"Uninstalling event raised within {args.Feature.Id}.");
+            _logger.LogInformation(context.Feature.Id, $"Uninstalling event raised within {context.Feature.Id}.");
 
             return Task.CompletedTask;
 
         }
 
-        public Task UninstalledAsync(object sender, ShellFeatureEventArgs args)
+        public Task UninstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(args.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
 
-            _logger.LogInformation(args.Feature.Id, $"Uninstalled event raised within {args.Feature.Id}.");
+            _logger.LogInformation(context.Feature.Id, $"Uninstalled event raised within {context.Feature.Id}.");
 
             return Task.CompletedTask;
         }

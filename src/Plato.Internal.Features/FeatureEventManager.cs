@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Features;
@@ -22,64 +21,79 @@ namespace Plato.Internal.Features
             _logger = logger;
         }
         
-        public async Task InstallingAsync(IShellFeature feature)
+        public async Task<IFeatureEventContext> InstallingAsync(IFeatureEventContext context)
         {
             foreach (var eventProvider in _eventProviders)
             {
                 try
                 {
-                    await eventProvider.InstallingAsync(this, new ShellFeatureEventArgs() {Feature = feature});
+                    await eventProvider.InstallingAsync(context);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred while raising the 'Installing' event when activating feature: {feature.Id}");
+                    _logger.LogError(e, $"An exception occurred while raising the 'Installing' event within feature: {context.Feature.Id}");
+                    context.Errors.Add(context.Feature.Id, e.Message);
                 }
             }
+
+            return context;
         }
 
-        public async Task InstalledAsync(IShellFeature feature)
+        public async Task<IFeatureEventContext> InstalledAsync(IFeatureEventContext context)
         {
             foreach (var eventProvider in _eventProviders)
             {
                 try
                 {
-                    await eventProvider.InstalledAsync(this, new ShellFeatureEventArgs() { Feature = feature });
+                    await eventProvider.InstalledAsync(context);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred while raising the 'Installed' event when activating feature: {feature.Id}");
+                    _logger.LogError(e, $"An exception occurred while raising the 'Installed' event within feature: {context.Feature.Id}");
+                    context.Errors.Add(context.Feature.Id, e.Message);
                 }
             }
+
+            return context;
+
         }
 
-        public async Task UninstallingAsync(IShellFeature feature)
+        public async Task<IFeatureEventContext> UninstallingAsync(IFeatureEventContext context)
         {
             foreach (var eventProvider in _eventProviders)
             {
                 try
                 {
-                    await eventProvider.InstalledAsync(this, new ShellFeatureEventArgs() { Feature = feature });
+                    await eventProvider.InstalledAsync(context);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred while raising the 'Uninstalling' event when activating feature: {feature.Id}");
+                    _logger.LogError(e, $"An exception occurred while raising the 'Uninstalling' event within feature: {context.Feature.Id}");
+                    context.Errors.Add(context.Feature.Id, e.Message);
                 }
             }
+
+            return context;
+
         }
 
-        public async Task UninstalledAsync(IShellFeature feature)
+        public async Task<IFeatureEventContext> UninstalledAsync(IFeatureEventContext context)
         {
             foreach (var eventProvider in _eventProviders)
             {
                 try
                 {
-                    await eventProvider.UninstalledAsync(this, new ShellFeatureEventArgs() { Feature = feature });
+                    await eventProvider.UninstalledAsync(context);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred while raising the 'Uninstalled' event when activating feature: {feature.Id}");
+                    _logger.LogError(e, $"An exception occurred while raising the 'Uninstalled' event within feature: {context.Feature.Id}");
+                    context.Errors.Add(context.Feature.Id, e.Message);
                 }
             }
+
+            return context;
+
         }
     }
 }

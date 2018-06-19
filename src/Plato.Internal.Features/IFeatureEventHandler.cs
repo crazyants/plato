@@ -9,13 +9,13 @@ namespace Plato.Internal.Features
     public interface IFeatureEventHandler
     {
 
-        Task InstallingAsync(object sender, ShellFeatureEventArgs args);
+        Task InstallingAsync(IFeatureEventContext context);
 
-        Task InstalledAsync(object sender, ShellFeatureEventArgs args);
+        Task InstalledAsync(IFeatureEventContext context);
 
-        Task UninstallingAsync(object sender, ShellFeatureEventArgs args);
+        Task UninstallingAsync(IFeatureEventContext context);
 
-        Task UninstalledAsync(object sender, ShellFeatureEventArgs args);
+        Task UninstalledAsync(IFeatureEventContext context);
 
     }
 

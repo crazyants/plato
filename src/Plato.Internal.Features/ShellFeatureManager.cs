@@ -48,7 +48,7 @@ namespace Plato.Internal.Features
 
         #region "Implementation"
 
-        public async Task<IEnumerable<IShellFeature>> EnableFeaturesAsync(string[] featureIds)
+        public async Task<IEnumerable<IFeatureEventContext>> EnableFeaturesAsync(string[] featureIds)
         {
 
             // Get features to enable
@@ -56,31 +56,47 @@ namespace Plato.Internal.Features
             
             // Conver to IList to work with
             var featureList = features.ToList();
-
-            // Raise installing events for features
-            await InvokeFeaturesRecursivly(featureList, async feature =>
-            {
-                await _featureEventManager.InstallingAsync(feature);
-            });
             
-            // Update descriptor within database
-            var descriptor = await GetOrUpdateDescriptor(featureIds);
-            var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
+            // Holds the results of all our event executation contexts
+            var contexts = new List<IFeatureEventContext>();
+            
+            // Raise installing events for features
+            await InvokeFeaturesRecursivly(featureList,
+                async feature =>
+                {
+                    contexts.Add(await _featureEventManager.InstallingAsync(new FeatureEventContext(feature)));
+                });
 
-            // Raise installed event for feature
-            await InvokeFeaturesRecursivly(featureList, async feature =>
+            // Did any event encounter errors?
+            var hasErrors = contexts.Where(c => c.Errors.Count > 0);
+
+            // No errors update descriptor, raise InstalledAsync and recycle ShellContext
+            if (!hasErrors.Any())
             {
-                await _featureEventManager.InstalledAsync(feature);
-            });
-       
-            // dispose current shell context
-            RecycleShell();
 
-            return null;
+                // Update descriptor within database
+                var descriptor = await GetOrUpdateDescriptor(featureIds);
+                var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
+
+                // Raise Installed event
+                await InvokeFeaturesRecursivly(featureList,
+                    async feature =>
+                    {
+                        contexts.Add(
+                            await _featureEventManager.InstalledAsync(new FeatureEventContext(feature)));
+                    });
+
+                // dispose current shell context
+                RecycleShell();
+
+            }
+
+            // Return all execution contexts
+            return contexts;
 
         }
         
-        public async Task<IEnumerable<IShellFeature>> DisableFeaturesAsync(string[] featureIds)
+        public async Task<IEnumerable<IFeatureEventContext>> DisableFeaturesAsync(string[] featureIds)
         {
             
             // Get features to enable
@@ -89,26 +105,44 @@ namespace Plato.Internal.Features
             // Conver to IList to work with
             var featureList = features.ToList();
 
-            // Raise Uninstalling events for features
-            await InvokeFeaturesRecursivly(featureList, async feature =>
-            {
-                await _featureEventManager.UninstallingAsync(feature);
-            });
+            // Holds the results of all our event executation contexts
+            var contexts = new List<IFeatureEventContext>();
             
-            // Update features within data store
-            var descriptor = await RemoveFeaturesFromCurrentDescriptor(featureIds);
-            var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
+            // Raise Uninstalling events
+            await InvokeFeaturesRecursivly(featureList,
+                async feature =>
+                {
+                    contexts.Add(
+                        await _featureEventManager.UninstallingAsync(new FeatureEventContext(feature)));
+                });
 
-            // Raise Uninstalled events for features
-            await InvokeFeaturesRecursivly(featureList, async feature =>
+            // Did any event encounter errors?
+            var hasErrors = contexts.Where(c => c.Errors.Count > 0);
+
+            // No errors update descriptor, raise InstalledAsync and recycle ShellContext
+            if (!hasErrors.Any())
             {
-                await _featureEventManager.UninstallingAsync(feature);
-            });
-            
-            // dispose current shell context
-            RecycleShell();
 
-            return null;
+                // Update features within data store
+                var descriptor = await RemoveFeaturesFromCurrentDescriptor(featureIds);
+                var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
+
+                // Raise Uninstalled events for features
+                await InvokeFeaturesRecursivly(featureList,
+                    async feature =>
+                    {
+                        contexts.Add(
+                            await _featureEventManager.UninstallingAsync(new FeatureEventContext(feature)));
+                    });
+
+                // Dispose current shell context
+                RecycleShell();
+
+            }
+
+
+            // Return all execution contexts
+            return contexts;
 
         }
 
@@ -165,7 +199,7 @@ namespace Plato.Internal.Features
                 {
                     await InvokeFeaturesRecursivly(feature.FeatureDependencies, async currentFeature =>
                     {
-                        invoker(feature);
+                        invoker(currentFeature);
                     });
                 }
 
