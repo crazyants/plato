@@ -268,8 +268,8 @@ namespace Plato.Internal.Features
             var httpContext = _httpContextAccessor.HttpContext;
             var shellSettings = _runningShellTable.Match(httpContext);
 
-            // Dispose Shell
-            DisposeShell();
+            // Dispose shell
+            RecycleShell();
 
             // Build descriptor
             var descriptor = new ShellDescriptor();
@@ -314,10 +314,8 @@ namespace Plato.Internal.Features
 
         }
 
-        void DisposeShell()
+        void DisposeShell(IShellSettings shellSettings)
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-            var shellSettings = _runningShellTable.Match(httpContext);
             _platoHost.DisposeShellContext(shellSettings);
         }
 

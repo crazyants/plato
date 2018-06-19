@@ -26,7 +26,7 @@ namespace Plato.Demo.Services
                 return Task.CompletedTask;
             }
 
-            throw new Exception("This is a test exception from Plato.Demos");
+            //throw new Exception("This is a test exception from Plato.Demos");
 
             _logger.LogInformation(context.Feature.Id, $"Installing event raised within {context.Feature.Id}.");
 
@@ -54,7 +54,7 @@ namespace Plato.Demo.Services
                 return Task.CompletedTask;
             }
 
-            throw new Exception("This is a test exception from Plato.Demos");
+            //throw new Exception("This is a test exception from Plato.Demos");
 
             _logger.LogInformation(context.Feature.Id, $"Uninstalling event raised within {context.Feature.Id}.");
 

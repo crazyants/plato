@@ -16,7 +16,7 @@ namespace Plato.Internal.Layout.ViewAdaptors
     public class ViewAdaptorManager : IViewAdaptorManager
     {
 
-        private static readonly ConcurrentDictionary<string, IViewAdaptorResult> _viewAdaptorResults
+        private readonly ConcurrentDictionary<string, IViewAdaptorResult> _viewAdaptorResults
             = new ConcurrentDictionary<string, IViewAdaptorResult>();
 
         private readonly IList<IViewAdaptorProvider> _viewAdaptorProviders;
@@ -56,14 +56,17 @@ namespace Plato.Internal.Layout.ViewAdaptors
 
             if (_viewAdaptorResults.Count == 0)
             {
-                if (_viewAdaptorProviders.Count > 0)
+                if (_viewAdaptorProviders?.Count > 0)
                 {
                     foreach (var provider in _viewAdaptorProviders)
                     {
                         try
                         {
                             var viewAdaptorResult = await provider.ConfigureAsync();
-                            _viewAdaptorResults.TryAdd(viewAdaptorResult.Builder.ViewName, viewAdaptorResult);
+                            if (viewAdaptorResult != null)
+                            {
+                                _viewAdaptorResults.TryAdd(viewAdaptorResult.Builder.ViewName, viewAdaptorResult);
+                            }
                         }
                         catch (Exception e)
                         {
