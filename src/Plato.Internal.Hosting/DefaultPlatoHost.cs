@@ -109,10 +109,18 @@ namespace Plato.Internal.Hosting
 
         public void DisposeShellContext(IShellSettings settings)
         {
-            var shellContext = CreateShellContext(settings);
-            DeactivateShell(shellContext);
+
+            // Dispose
+            _runningShellTable.Remove(settings);
+            if (_shellContexts.TryRemove(settings.Name, out var context))
+            {
+                if (_shellContexts.Count == 0)
+                    _shellContexts = null;
+                context.Dispose();
+            }
+
         }
-        
+
         #endregion
 
         #region "Private Methods"
@@ -178,17 +186,6 @@ namespace Plato.Internal.Hosting
                 _runningShellTable.Add(context.Settings);
             }
 
-        }
-      
-        void DeactivateShell(ShellContext context)
-        {
-            if (_logger.IsEnabled(LogLevel.Debug))
-                _logger.LogDebug("Deactivating context for tenant {0}", context.Settings.Name);
-
-            if (_shellContexts.TryRemove(context.Settings.Name, out context))
-            {
-                _runningShellTable.Remove(context.Settings);
-            }
         }
         
         ShellContext CreateSetupContext()

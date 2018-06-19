@@ -187,7 +187,6 @@ namespace Plato.Internal.Features
             // No errors update descriptor, raise InstalledAsync and recycle ShellContext
             if (!hasErrors.Any())
             {
-
                 // Update features within data store
                 var descriptor = await RemoveFeaturesFromCurrentDescriptor(featureIds);
                 var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
@@ -260,27 +259,31 @@ namespace Plato.Internal.Features
         }
 
         void InvokeFeaturesRecursivly(
-            List<IShellFeature> features,
+            IList<IShellFeature> features,
             Action<IFeatureEventContext, IFeatureEventHandler> invoker,
             ConcurrentDictionary<string, IFeatureEventContext> contexts)
         {
 
+            // Get setting before dispose
             var httpContext = _httpContextAccessor.HttpContext;
             var shellSettings = _runningShellTable.Match(httpContext);
 
-            using (var shellContext = _shellContextFactory.CreateShellContext(shellSettings))
+            // Dispose Shell
+            DisposeShell();
+
+            // Build descriptor
+            var descriptor = new ShellDescriptor();
+            foreach (var feature in features)
+            {
+                descriptor.Modules.Add(new ShellModule(feature.Id));
+            }
+            
+            // Create a new shell
+            using (var shellContext = _shellContextFactory.CreateDescribedContext(shellSettings, descriptor))
             {
                 using (var scope = shellContext.ServiceProvider.CreateScope())
                 {
-                    void ReportError(IFeatureEventContext context, Exception e)
-                    {
-                        contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
-                        {
-                            v.Errors.Add(context.Feature.Id, e.Message);
-                            return v;
-                        });
-                    }
-                    
+                
                     var handlers = scope.ServiceProvider.GetServices<IFeatureEventHandler>();
                     var logger = scope.ServiceProvider.GetRequiredService<ILogger<ShellFeatureManager>>();
 
@@ -295,7 +298,11 @@ namespace Plato.Internal.Features
                             }
                             catch (Exception e)
                             {
-                                ReportError(context, e);
+                                contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                                {
+                                    v.Errors.Add(context.Feature.Id, e.Message);
+                                    return v;
+                                });
                             }
                           
                         }
@@ -305,6 +312,13 @@ namespace Plato.Internal.Features
 
             }
 
+        }
+
+        void DisposeShell()
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            var shellSettings = _runningShellTable.Match(httpContext);
+            _platoHost.DisposeShellContext(shellSettings);
         }
 
         void RecycleShell()
