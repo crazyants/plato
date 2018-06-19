@@ -22,6 +22,7 @@ namespace Plato.Internal.Features
         
         public async Task<IFeatureEventContext> InstallingAsync(IFeatureEventContext context)
         {
+
             foreach (var eventProvider in _eventProviders)
             {
                 try
@@ -31,7 +32,7 @@ namespace Plato.Internal.Features
                 catch (Exception e)
                 {
                     _logger.LogError(e, $"An exception occurred while raising the 'Installing' event within feature: {context.Feature.Id}");
-                    context.Errors.Add(context.Feature.Id, e.Message);
+                    context.Errors.Add($"{context.Feature.Id} threw an exception within the Installing event!", e.Message);
                 }
             }
 
@@ -40,6 +41,7 @@ namespace Plato.Internal.Features
 
         public async Task<IFeatureEventContext> InstalledAsync(IFeatureEventContext context)
         {
+
             foreach (var eventProvider in _eventProviders)
             {
                 try
@@ -49,7 +51,7 @@ namespace Plato.Internal.Features
                 catch (Exception e)
                 {
                     _logger.LogError(e, $"An exception occurred while raising the 'Installed' event within feature: {context.Feature.Id}");
-                    context.Errors.Add(context.Feature.Id, e.Message);
+                    context.Errors.Add($"{context.Feature.Id} threw an exception within the Installed event!", e.Message);
                 }
             }
 
@@ -59,6 +61,7 @@ namespace Plato.Internal.Features
 
         public async Task<IFeatureEventContext> UninstallingAsync(IFeatureEventContext context)
         {
+
             foreach (var eventProvider in _eventProviders)
             {
                 try
@@ -68,7 +71,7 @@ namespace Plato.Internal.Features
                 catch (Exception e)
                 {
                     _logger.LogError(e, $"An exception occurred while raising the 'Uninstalling' event within feature: {context.Feature.Id}");
-                    context.Errors.Add(context.Feature.Id, e.Message);
+                    context.Errors.Add($"{context.Feature.Id} threw an exception within the Uninstalling event!", e.Message);
                 }
             }
 
@@ -78,6 +81,7 @@ namespace Plato.Internal.Features
 
         public async Task<IFeatureEventContext> UninstalledAsync(IFeatureEventContext context)
         {
+
             foreach (var eventProvider in _eventProviders)
             {
                 try
@@ -87,7 +91,7 @@ namespace Plato.Internal.Features
                 catch (Exception e)
                 {
                     _logger.LogError(e, $"An exception occurred while raising the 'Uninstalled' event within feature: {context.Feature.Id}");
-                    context.Errors.Add(context.Feature.Id, e.Message);
+                    context.Errors.Add($"{context.Feature.Id} threw an exception within the Uninstalled event!", e.Message);
                 }
             }
 

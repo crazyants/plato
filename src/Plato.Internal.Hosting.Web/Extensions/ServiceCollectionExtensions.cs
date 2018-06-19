@@ -32,6 +32,7 @@ using Plato.Internal.Repositories.Extensions;
 using Plato.Internal.Shell.Extensions;
 using Plato.Internal.Stores.Extensions;
 using Plato.Internal.Cache.Extensions;
+using Plato.Internal.Features.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Hosting.Web.Routing;
 using Plato.Internal.Layout.Extensions;
@@ -87,6 +88,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
                 internalServices.AddPlatoViewFeature();
                 internalServices.AddPlatoTagHelpers();
+                internalServices.AddPlatoShellFeatures();
 
                 internalServices.AddPlatoLogging();
 

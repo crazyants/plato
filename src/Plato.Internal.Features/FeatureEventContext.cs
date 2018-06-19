@@ -20,6 +20,11 @@ namespace Plato.Internal.Features
 
         public IDictionary<string, string> Errors { get; set; } = new Dictionary<string, string>();
 
+        public FeatureEventContext()
+        {
+
+        }
+
         public FeatureEventContext(IShellFeature feature)
         {
             this.Feature = feature;

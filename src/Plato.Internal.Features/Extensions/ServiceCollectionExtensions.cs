@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Models.Shell;
-using Plato.Internal.Shell;
-using Plato.Internal.Stores.Abstractions.Shell;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Plato.Internal.Features.Extensions
 {
@@ -15,7 +9,9 @@ namespace Plato.Internal.Features.Extensions
         public static IServiceCollection AddPlatoShellFeatures(
             this IServiceCollection services)
         {
-         
+            
+            services.TryAddScoped<IFeatureEventManager, FeatureEventManager>();
+
             return services;
 
         }

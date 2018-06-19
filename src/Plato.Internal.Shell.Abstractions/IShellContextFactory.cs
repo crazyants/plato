@@ -1,7 +1,6 @@
 ﻿using Plato.Internal.Models.Shell;
-using Plato.Internal.Shell.Abstractions;
 
-namespace Plato.Internal.Shell
+namespace Plato.Internal.Shell.Abstractions
 {
     public interface IShellContextFactory
     {
