@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Models.Features;
 
 namespace Plato.Internal.Features
 {
@@ -95,5 +94,7 @@ namespace Plato.Internal.Features
             return context;
 
         }
+
     }
+
 }

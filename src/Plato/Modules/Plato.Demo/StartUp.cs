@@ -6,6 +6,7 @@ using Plato.Internal.Hosting;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Demo.Services;
+using Plato.Internal.Features;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 
@@ -23,9 +24,13 @@ namespace Plato.Demo
         public override void ConfigureServices(IServiceCollection services)
         {
 
+            // Set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
 
-            // register navigation provider
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
+            // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
 
         }

@@ -3,16 +3,17 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Features;
 
-namespace Plato.Core.Services
+namespace Plato.Demo.Services
 {
     public class FeatureEventHandler : IFeatureEventHandler
     {
 
-        private const string FeatureId = "Plato.Core";
+        private const string FeatureId = "Plato.Demo";
 
         private readonly ILogger<FeatureEventHandler> _logger;
 
-        public FeatureEventHandler(ILogger<FeatureEventHandler> logger)
+        public FeatureEventHandler(
+            ILogger<FeatureEventHandler> logger)
         {
             _logger = logger;
         }

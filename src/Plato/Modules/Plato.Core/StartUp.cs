@@ -23,10 +23,10 @@ namespace Plato.Core
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            // set-up event handler
+            // Set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
 
-            // feature installation event handler
+            // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
         }

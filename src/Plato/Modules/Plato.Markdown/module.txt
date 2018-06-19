@@ -1,2 +1,10 @@
 Name: Plato Markdown
 Author: InstantASP
+Description: Adds a markdown editor component.
+Dependencies: 
+[
+	{
+		Id: "Plato.Demo",
+		Version: "1.0.0"
+	}
+]

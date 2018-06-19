@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Internal.Features;
@@ -57,10 +58,24 @@ namespace Plato.Features.Controllers
         public async Task<IActionResult> Enable(string id)
         {
             
-            var results = await _shellFeatureManager.EnableFeaturesAsync(new string[] {id});
+            var contexts = await _shellFeatureManager.EnableFeatureAsync(id);
 
-            _alerter.Success(T["Feature enabled successfully!"]);
-
+            foreach (var context in contexts)
+            {
+                if (context.Errors.Any())
+                {
+                    foreach (var error in context.Errors)
+                    {
+                        _alerter.Danger(T[$"{error.Key} could not be enabled. The following error occurred: {error.Value}"]);
+                    }
+                }
+                else
+                {
+                    _alerter.Success(T[$"{context.Feature.Id} enabled successfully!"]);
+                }
+                
+            }
+            
             return RedirectToAction(nameof(Index));
 
         }
@@ -69,10 +84,24 @@ namespace Plato.Features.Controllers
         public async Task<IActionResult> Disable(string id)
         {
 
-            var results = await _shellFeatureManager.DisableFeaturesAsync(new string[] { id });
+            var contexts = await _shellFeatureManager.DisableFeatureAsync(id);
 
-            _alerter.Success(T["Feature disabled successfully!"]);
-
+            foreach (var context in contexts)
+            {
+                if (context.Errors.Any())
+                {
+                    foreach (var error in context.Errors)
+                    {
+                        _alerter.Danger(T[$"{error.Key} could not be disabled. The following error occurred: {error.Value}"]);
+                    }
+                }
+                else
+                {
+                    _alerter.Success(T[$"{context.Feature.Id} disabled successfully!"]);
+                }
+                
+            }
+            
             return RedirectToAction(nameof(Index));
 
         }
