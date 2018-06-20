@@ -1,0 +1,22 @@
+2018-06-20 01:13:43.812 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:50439/Plato.Features/Admin/Enable/Plato.Demo application/x-www-form-urlencoded 225
+2018-06-20 01:13:43.815 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-20 01:13:43.817 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-20 01:13:43.823 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Features.Controllers.AdminController.Enable (Plato.Features) with arguments (Plato.Demo) - ModelState is Valid
+2018-06-20 01:13:43.855 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: Plato.Demo InstallingAsync Event Raised
+2018-06-20 01:13:47.093 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: Plato.Demo InstallingAsync Event Raised
+2018-06-20 01:14:13.700 +01:00 [Error] Plato.Internal.Features.ShellFeatureManager: this is a test error
+2018-06-20 01:14:15.260 +01:00 [Information] Plato.Internal.Layout.Alerts.Alerter: The alert of type 'Danger' was added for display. Message: 'new error could not be enabled. The following error occurred: this is a test error'.
+2018-06-20 01:14:15.262 +01:00 [Information] Microsoft.AspNetCore.Mvc.RedirectToActionResult: Executing RedirectResult, redirecting to /Plato.Features/Admin/Index.
+2018-06-20 01:14:15.264 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Features.Controllers.AdminController.Enable (Plato.Features) in 31441.737ms
+2018-06-20 01:14:15.266 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 31453.6709ms 302 
+2018-06-20 01:14:15.272 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Features/Admin/Index  
+2018-06-20 01:14:15.275 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-20 01:14:15.278 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-20 01:14:15.281 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Features.Controllers.AdminController.Index (Plato.Features) with arguments ((null)) - ModelState is Valid
+2018-06-20 01:14:15.284 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Features/Views/Admin/Index.cshtml.
+2018-06-20 01:14:15.295 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Features.Controllers.AdminController.Index (Plato.Features) in 14.6887ms
+2018-06-20 01:14:15.298 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 25.8497ms 200 text/html; charset=utf-8
+2018-06-20 01:14:15.330 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-20 01:14:15.334 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-20 01:14:15.336 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-20 01:14:15.340 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 10.7241ms 404 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Localization;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Layout.Alerts
 {
@@ -34,7 +35,7 @@ namespace Plato.Internal.Layout.Alerts
 
         public void Add(AlertType type, LocalizedHtmlString message)
         {
-            _logger.LogInformation($"The alert of type '{type.ToString()}' was added for display. Message: '{message}'.");
+            _logger.LogInformation($"The alert of type '{type.ToString()}' was added for display. Message: '{message.ToHtmlString()}'.");
             _alerts.Add(new AlertInfo(type, message));
         }
 
