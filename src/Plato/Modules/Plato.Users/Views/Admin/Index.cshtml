@@ -7,16 +7,16 @@
 <div class="layout">
 
     <div class="layout-header">
-        @if (Model.Tools != null)
-        {
-            <div class="float-right layout-tools">
-                <view model="@Model.Tools" />
-            </div>
-        }
         @if (Model.Alerts != null)
         {
             <div class="layout-alerts">
                 <view model="@Model.Alerts"></view>
+            </div>
+        }
+        @if (Model.Tools != null)
+        {
+            <div class="float-right layout-tools">
+                <view model="@Model.Tools" />
             </div>
         }
         @if (Model.Header != null)
