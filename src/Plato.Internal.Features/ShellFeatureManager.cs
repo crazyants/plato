@@ -88,7 +88,7 @@ namespace Plato.Internal.Features
 
             // Raise installing events for features
             InvokeFeatures(featuresToInvoke,
-                (context, handler) =>
+                async (context, handler) =>
                 {
                     // Ensure feature is not already enabled
                     if (!context.Feature.IsEnabled)
@@ -97,10 +97,13 @@ namespace Plato.Internal.Features
                         {
                             _logger.LogInformation($"{context.Feature.Id} InstallingAsync Event Raised");
                         }
-                        handler.InstallingAsync(context);
+                        await handler.InstallingAsync(context);
                         contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
                         {
-                            v.Errors = context.Errors;
+                            foreach (var error in context.Errors)
+                            {
+                                v.Errors.Add(error.Key, error.Value);
+                            }
                             return v;
                         });
                     }
@@ -120,7 +123,7 @@ namespace Plato.Internal.Features
 
                 // Raise Installed event
                 InvokeFeatures(featuresToInvoke,
-                    (context, handler) =>
+                    async (context, handler) =>
                     { 
                         // Ensure feature is not already enabled
                         if (!context.Feature.IsEnabled)
@@ -129,10 +132,13 @@ namespace Plato.Internal.Features
                             {
                                 _logger.LogInformation($"{context.Feature.Id} InstalledAsync Event Raised");
                             }
-                            handler.InstalledAsync(context);
+                            await handler.InstalledAsync(context);
                             contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
                             {
-                                v.Errors = context.Errors;
+                                foreach (var error in context.Errors)
+                                {
+                                    v.Errors.Add(error.Key, error.Value);
+                                }
                                 return v;
                             });
                         }
@@ -191,7 +197,10 @@ namespace Plato.Internal.Features
                         await handler.UninstallingAsync(context);
                         contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
                         {
-                            v.Errors = context.Errors;
+                            foreach (var error in context.Errors)
+                            {
+                                v.Errors.Add(error.Key, error.Value);
+                            }
                             return v;
                         });
                     }
@@ -221,7 +230,10 @@ namespace Plato.Internal.Features
                             await handler.UninstalledAsync(context);
                             contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
                             {
-                                v.Errors = context.Errors;
+                                foreach (var error in context.Errors)
+                                {
+                                    v.Errors.Add(error.Key, error.Value);
+                                }
                                 return v;
                             });
                         }

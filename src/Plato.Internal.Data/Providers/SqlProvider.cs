@@ -133,7 +133,7 @@ namespace Plato.Internal.Data.Providers
             catch (Exception exception)
             {
                 HandleException(exception);
-                reader = null;
+                throw;
             }
         
             return reader;
@@ -156,7 +156,7 @@ namespace Plato.Internal.Data.Providers
             catch (Exception exception)
             {
                 HandleException(exception);
-                reader = null;
+                throw;
             }
 
             return reader;
@@ -174,12 +174,11 @@ namespace Plato.Internal.Data.Providers
                     output = cmd.ExecuteScalar();
                     OnExecutedCommand(cmd);
                 }
-
             }
             catch (Exception x)
             {
                 HandleException(x);
-                throw x;
+                throw;
             }
           
             return (T)Convert.ChangeType(output, typeof(T)); ;
@@ -198,36 +197,27 @@ namespace Plato.Internal.Data.Providers
                     output = cmd.ExecuteScalar();
                     OnExecutedCommand(cmd);
                 }
-
             }
             catch (Exception x)
             {
                 HandleException(x);
-                throw x;
+                throw;
             }
-
-        
+            
             return Task.FromResult((T)Convert.ChangeType(output, typeof(T)));
             
         }
-                
+
         public int Execute(string sql, params object[] args)
         {
             try
             {
                 Open();
-                try
+                using (var cmd = CreateCommand(_dbConnection, sql, args))
                 {
-                    using (var cmd = CreateCommand(_dbConnection, sql, args))
-                    {
-                        var retv = cmd.ExecuteNonQuery();
-                        OnExecutedCommand(cmd);
-                        return retv;
-                    }
-                }
-                finally
-                {
-                    Close();
+                    var retv = cmd.ExecuteNonQuery();
+                    OnExecutedCommand(cmd);
+                    return retv;
                 }
             }
             catch (Exception x)
@@ -242,18 +232,11 @@ namespace Plato.Internal.Data.Providers
             try
             {
                 Open();
-                try
+                using (var cmd = CreateCommand(_dbConnection, sql, args))
                 {
-                    using (var cmd = CreateCommand(_dbConnection, sql, args))
-                    {
-                       var retv = await cmd.ExecuteNonQueryAsync();
-                        OnExecutedCommand(cmd);
-                        return retv;
-                    }
-                }
-                finally
-                {
-                    Close();
+                    var retv = await cmd.ExecuteNonQueryAsync();
+                    OnExecutedCommand(cmd);
+                    return retv;
                 }
             }
             catch (Exception x)
@@ -261,9 +244,9 @@ namespace Plato.Internal.Data.Providers
                 HandleException(x);
                 throw;
             }
+
         }
-
-
+        
         public void Dispose()
         {
             Close();
@@ -379,7 +362,6 @@ namespace Plato.Internal.Data.Providers
 
         public virtual void HandleException(Exception x)
         {
-            System.Diagnostics.Debug.WriteLine(x.ToString());
             OnException?.Invoke(this, new DbExceptionEventArgs(x));
         }
                   

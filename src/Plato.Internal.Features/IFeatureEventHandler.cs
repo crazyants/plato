@@ -5,7 +5,7 @@ namespace Plato.Internal.Features
 
     public interface IFeatureEventHandler
     {
-
+        
         Task InstallingAsync(IFeatureEventContext context);
 
         Task InstalledAsync(IFeatureEventContext context);

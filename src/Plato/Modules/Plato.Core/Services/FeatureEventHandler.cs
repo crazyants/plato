@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Features;
 
@@ -26,10 +25,14 @@ namespace Plato.Core.Services
                 return Task.CompletedTask;
             }
 
-            //var logger = context.ServiceProvider.GetRequiredService<ILogger<FeatureEventHandler>>();
-            if (_logger.IsEnabled(LogLevel.Information))
+            try
             {
-                _logger.LogInformation(context.Feature.Id, $"Installing event raised within {context.Feature.Id}.");
+
+
+            }
+            catch (Exception e)
+            {
+                context.Errors.Add(context.Feature.Id, e.Message);
             }
 
             return Task.CompletedTask;
@@ -43,10 +46,14 @@ namespace Plato.Core.Services
                 return Task.CompletedTask;
             }
 
-            //var logger = context.ServiceProvider.GetRequiredService<ILogger<FeatureEventHandler>>();
-            if (_logger.IsEnabled(LogLevel.Information))
+            try
             {
-                _logger.LogInformation(context.Feature.Id, $"Installed event raised within {context.Feature.Id}.");
+
+
+            }
+            catch (Exception e)
+            {
+                context.Errors.Add(context.Feature.Id, e.Message);
             }
 
             return Task.CompletedTask;
@@ -60,10 +67,14 @@ namespace Plato.Core.Services
                 return Task.CompletedTask;
             }
 
-            //var logger = context.ServiceProvider.GetRequiredService<ILogger<FeatureEventHandler>>();
-            if (_logger.IsEnabled(LogLevel.Information))
+            try
             {
-                _logger.LogInformation(context.Feature.Id, $"Uninstalling event raised within {context.Feature.Id}.");
+
+
+            }
+            catch (Exception e)
+            {
+                context.Errors.Add(context.Feature.Id, e.Message);
             }
 
             return Task.CompletedTask;
@@ -77,12 +88,16 @@ namespace Plato.Core.Services
                 return Task.CompletedTask;
             }
 
-            //var logger = context.ServiceProvider.GetRequiredService<ILogger<FeatureEventHandler>>();
-            if (_logger.IsEnabled(LogLevel.Information))
+            try
             {
-                _logger.LogInformation(context.Feature.Id, $"Uninstalled event raised within {context.Feature.Id}.");
+
+
             }
-                
+            catch (Exception e)
+            {
+                context.Errors.Add(context.Feature.Id, e.Message);
+            }
+
 
             return Task.CompletedTask;
         }

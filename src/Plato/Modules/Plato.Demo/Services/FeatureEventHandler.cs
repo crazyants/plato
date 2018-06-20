@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features;
 
 namespace Plato.Demo.Services
@@ -21,18 +24,68 @@ namespace Plato.Demo.Services
     {
 
         private const string FeatureId = "Plato.Demo";
-        
-        public Task InstallingAsync(IFeatureEventContext context)
+
+
+        private readonly ISchemaBuilder _schemaBuilder;
+
+        public FeatureEventHandler(ISchemaBuilder schemaBuilder)
+        {
+            _schemaBuilder = schemaBuilder;
+        }
+
+
+        public async Task InstallingAsync(IFeatureEventContext context)
         {
             if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
             {
-                return Task.CompletedTask;
+                return;
             }
             
             try
             {
 
-                throw new Exception("This is a test exception from Plato.Demo XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                var demo = new SchemaTable()
+                {
+                    Name = "Demo",
+                    Columns = new List<SchemaColumn>()
+                    {
+                        new SchemaColumn()
+                        {
+                            PrimaryKey = true,
+                            Name = "Id",
+                            DbType = DbType.Int32
+                        }
+                    }
+                };
+
+                //var schemaBuilder = context.ServiceProvider.GetRequiredService<ISchemaBuilder>();
+                using (var builder = _schemaBuilder)
+                {
+
+                    // create tables and default procedures
+                    builder
+                        .Configure(options =>
+                        {
+                            options.ModuleName = "Plato.Demo";
+                            options.Version = "1.0.0";
+                        })
+                        // Create tables
+                        .CreateTable(demo)
+                        // Create basic default CRUD procedures
+                        .CreateDefaultProcedures(demo);
+
+                    var result = await builder.ApplySchemaAsync();
+                    if (result.Errors.Count > 0)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            context.Errors.Add(error.Message, error.StackTrace);
+                        }
+
+                    }
+
+                }
+
 
             }
             catch (Exception e)
@@ -40,8 +93,6 @@ namespace Plato.Demo.Services
                 context.Errors.Add(context.Feature.Id, e.Message);
             }
             
-            return Task.CompletedTask;
-
         }
 
         public Task InstalledAsync(IFeatureEventContext context)
@@ -51,8 +102,16 @@ namespace Plato.Demo.Services
                 return Task.CompletedTask;
             }
 
-            var logger = context.ServiceProvider.GetRequiredService<ILogger<FeatureEventHandler>>();
-            logger.LogInformation(context.Feature.Id, $"Installed event raised within {context.Feature.Id}." );
+            try
+            {
+                
+             
+                
+            }
+            catch (Exception e)
+            {
+                context.Errors.Add(context.Feature.Id, e.Message);
+            }
 
             return Task.CompletedTask;
 
@@ -67,8 +126,15 @@ namespace Plato.Demo.Services
 
             //throw new Exception("This is a test exception from Plato.Demos");
 
-            var logger = context.ServiceProvider.GetRequiredService<ILogger<FeatureEventHandler>>();
-            logger.LogInformation(context.Feature.Id, $"Uninstalling event raised within {context.Feature.Id}.");
+            try
+            {
+
+
+            }
+            catch (Exception e)
+            {
+                context.Errors.Add(context.Feature.Id, e.Message);
+            }
 
             return Task.CompletedTask;
 
@@ -81,8 +147,15 @@ namespace Plato.Demo.Services
                 return Task.CompletedTask;
             }
 
-            var logger = context.ServiceProvider.GetRequiredService<ILogger<FeatureEventHandler>>();
-            logger.LogInformation(context.Feature.Id, $"Uninstalled event raised within {context.Feature.Id}.");
+            try
+            {
+
+
+            }
+            catch (Exception e)
+            {
+                context.Errors.Add(context.Feature.Id, e.Message);
+            }
 
             return Task.CompletedTask;
         }

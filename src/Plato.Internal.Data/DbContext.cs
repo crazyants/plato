@@ -74,7 +74,10 @@ namespace Plato.Internal.Data
                 // handle exceptions within the provider
                 if (this.OnException == null)
                 {
-                    _provider.OnException += (sender, args) => { HandleException(args.Exception); };
+                    _provider.OnException += (sender, args) =>
+                    {
+                        HandleException(args.Exception);
+                    };
                 }
                 else
                 {
@@ -175,8 +178,7 @@ namespace Plato.Internal.Data
 
         public void HandleException(Exception x)
         {
-            _logger.LogCritical(x, x.Message);
-            throw x.InnerException ?? x;
+            //throw x;
         }
 
         #endregion
