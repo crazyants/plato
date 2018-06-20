@@ -1,5 +1,5 @@
 Name: Plato Core
-Description: Adds core services and data functionality to Plato.
+Description: Adds core services and data abstractions to Plato.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core

@@ -71,7 +71,21 @@ namespace Plato.Internal.Features
             return await EnableFeaturesAsync(featureIds);
 
         }
+        
+        public async Task<IEnumerable<IFeatureEventContext>> DisableFeatureAsync(string featureId)
+        {
 
+            // Get features to enable
+            var features = await _shellDescriptorFeatureManager.GetFeatureAsync(featureId);
+
+            // Ensure we also disable dependent features
+            var featureIds = features.DependentFeatures
+                .Select(d => d.Id).ToArray();
+
+            return await DisableFeaturesAsync(featureIds);
+
+        }
+        
         public async Task<IEnumerable<IFeatureEventContext>> EnableFeaturesAsync(string[] featureIds)
         {
 
@@ -133,7 +147,7 @@ namespace Plato.Internal.Features
 
                             // Update descriptor within database
                             var descriptor = await GetOrUpdateDescriptor(featureIds);
-                            var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
+                            await _shellDescriptorStore.SaveAsync(descriptor);
 
                             try
                             {
@@ -174,20 +188,6 @@ namespace Plato.Internal.Features
 
             // Return all execution contexts
             return results.Values;
-
-        }
-
-        public async Task<IEnumerable<IFeatureEventContext>> DisableFeatureAsync(string featureId)
-        {
-
-            // Get features to enable
-            var features = await _shellDescriptorFeatureManager.GetFeatureAsync(featureId);
-
-            // Ensure we also disable dependent features
-            var featureIds = features.DependentFeatures
-                .Select(d => d.Id).ToArray();
-
-            return await DisableFeaturesAsync(featureIds);
 
         }
         
@@ -257,7 +257,7 @@ namespace Plato.Internal.Features
 
                             // Update descriptor within database
                             var descriptor = await RemoveFeaturesFromCurrentDescriptor(featureIds);
-                            var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
+                            await _shellDescriptorStore.SaveAsync(descriptor);
 
                             try
                             {
@@ -330,7 +330,7 @@ namespace Plato.Internal.Features
         {
 
             // Get existing descriptor or create a new one
-            var descriptor = await _shellDescriptorFeatureManager.GetEnabledDescriptor();
+            var descriptor = await _shellDescriptorFeatureManager.GetEnabledDescriptorAsync();
 
             // Add features to our descriptor
             foreach (var featureId in featureIds)
@@ -349,11 +349,11 @@ namespace Plato.Internal.Features
             // Holds the results of all our event executation contexts
             var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
             
-            // Get setting before dispose
+            // Get setting before recycle
             var httpContext = _httpContextAccessor.HttpContext;
             var shellSettings = _runningShellTable.Match(httpContext);
 
-            // Dispose shell
+            // Recycle shell
             RecycleShell();
 
             // Build descriptor to ensure correct feature event handlers are available within DI
@@ -363,7 +363,7 @@ namespace Plato.Internal.Features
                 descriptor.Modules.Add(new ShellModule(feature.Id));
             }
             
-            // Create a new shell context
+            // Create a new shell context with features we need to enable / disable
             using (var shellContext = _shellContextFactory.CreateDescribedContext(shellSettings, descriptor))
             {
                 using (var scope = shellContext.ServiceProvider.CreateScope())
@@ -375,17 +375,38 @@ namespace Plato.Internal.Features
                     {
                         foreach (var feature in features)
                         {
-                            if (!feature.Id.Equals(handler.Id, StringComparison.OrdinalIgnoreCase))
+
+                            // Only invoke non required features
+                            if (feature.IsRequired)
                             {
                                 continue;
                             }
 
+                            // Context that will be passed around
                             var context = new FeatureEventContext()
                             {
                                 Feature = feature,
                                 ServiceProvider = scope.ServiceProvider
                             };
 
+                            // Add entry to indicate featrure was invoked
+                            contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                            {
+                                foreach (var error in context.Errors)
+                                {
+                                    v.Errors.Add(error.Key, error.Value);
+                                }
+
+                                return v;
+                            });
+
+                            // Only invoke handler for current feature
+                            if (!feature.Id.Equals(handler.Id, StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue;
+                            }
+
+                            // Invoke handler
                             contexts = await invoker(context, handler);
                         }
 
@@ -399,7 +420,6 @@ namespace Plato.Internal.Features
 
         }
         
-
         void DisposeShell(IShellSettings shellSettings)
         {
             _platoHost.DisposeShellContext(shellSettings);

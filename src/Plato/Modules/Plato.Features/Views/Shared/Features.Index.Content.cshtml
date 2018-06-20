@@ -13,7 +13,16 @@
             <div class="row">
                 <div class="col-md-9">
                     
-                    <h6>@feature.Name</h6>
+                    <h6>
+                        @feature.Name
+                        @if (!String.IsNullOrEmpty(feature.Version))
+                        {
+                            <span class="badge badge-secondary badge-pill">
+                                @feature.Version
+                            </span>
+                        }
+                    </h6>
+
 
                     @if (!String.IsNullOrEmpty(feature.Description))
                     {
@@ -35,7 +44,7 @@
                 </div>
 
                 <div class="col-md-3 text-right">
-
+                    
                     <span data-toggle="tooltip" title="@T["Feature dependencies:"] @String.Join(", ", dependencyNames)" class="text-muted mx-2">
                         @if (dependencyNames.Length > 0)
                         {
@@ -56,14 +65,17 @@
                             @T["No dependent features"]
                         }
                     </span>
-
-                    @if (!feature.IsEnabled)
+                    
+                    @if (!feature.IsRequired)
                     {
-                        <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.Id" class="btn btn-primary btn-sm" itemprop="UnsafeUrl">@T["Enable"]</button>
-                    }
-                    else
-                    {
-                        <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.Id" class="btn btn-default btn-sm" itemprop="UnsafeUrl">@T["Disable"]</button>
+                        @if (!feature.IsEnabled)
+                         {
+                             <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.Id" class="btn btn-primary btn-sm" itemprop="UnsafeUrl">@T["Enable"]</button>
+                         }
+                         else
+                         {
+                             <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.Id" class="btn btn-default btn-sm" itemprop="UnsafeUrl">@T["Disable"]</button>
+                         }
                     }
 
 

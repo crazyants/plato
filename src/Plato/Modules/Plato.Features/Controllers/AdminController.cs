@@ -40,6 +40,7 @@ namespace Plato.Features.Controllers
             
             var features = await _shellDescriptorFeatureManager.GetFeaturesAsync();
             
+
             //var enabledFeatures = _shellFEatureManager.
 
             var model = new FeaturesViewModel()

@@ -15,6 +15,8 @@ namespace Plato.Internal.Models.Features
 
         bool IsEnabled { get; set; }
 
+        bool IsRequired { get; set; }
+        
         string Version { get; set; }
 
         IEnumerable<IShellFeature> FeatureDependencies { get; set; }

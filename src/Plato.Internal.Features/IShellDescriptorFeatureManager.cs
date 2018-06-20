@@ -10,7 +10,7 @@ namespace Plato.Internal.Features
     public interface IShellDescriptorFeatureManager
     {
 
-        Task<IShellDescriptor> GetEnabledDescriptor();
+        Task<IShellDescriptor> GetEnabledDescriptorAsync();
 
         Task<IEnumerable<IShellFeature>> GetEnabledFeaturesAsync();
 

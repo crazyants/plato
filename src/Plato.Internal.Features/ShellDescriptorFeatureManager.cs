@@ -51,7 +51,7 @@ namespace Plato.Internal.Features
 
         #region "Implementation"
 
-        public async Task<IShellDescriptor> GetEnabledDescriptor()
+        public async Task<IShellDescriptor> GetEnabledDescriptorAsync()
         {
             return await _shellDescriptorStore.GetAsync() ??
                 _shellContextFactory.MinimumShellDescriptor();
@@ -62,7 +62,7 @@ namespace Plato.Internal.Features
         {
 
             // Get all enabled features
-            var descriptor = await GetEnabledDescriptor();
+            var descriptor = await GetEnabledDescriptorAsync();
             
             var features = new List<ShellFeature>();
             if (descriptor != null)
@@ -85,8 +85,10 @@ namespace Plato.Internal.Features
             // Update dependencies
             await EnsureDependenciesAreEstablished();
 
-            // Get explicitly enabled features and update features to reflect enabled
+            // Get explicitly enabled features
             var enabledFeatures = await GetEnabledFeaturesAsync();
+            
+            //  Update all found features to reflect enabled and required
             foreach (var feature in enabledFeatures)
             {
                 _features.AddOrUpdate(feature.Id, feature, (k, v) =>
@@ -113,8 +115,7 @@ namespace Plato.Internal.Features
                 .Where(f => featureIds.Any(v => v.Equals(f.Id, StringComparison.InvariantCultureIgnoreCase)))
                 .ToList();
         }
-
-
+        
         public async Task<IEnumerable<IShellFeature>> GetFeatureDependenciesAsync(string featureId)
         {
             // Load minimal features
@@ -227,10 +228,24 @@ namespace Plato.Internal.Features
                 {
                     foreach (var module in modules)
                     {
-                        _features.TryAdd(module.Descriptor.Id, new ShellFeature(module));
+                        var feature = new ShellFeature(module);
+                        feature.IsRequired = IsFeatureRequired(feature);
+                        _features.TryAdd(module.Descriptor.Id, feature);
                     }
                 }
             }
+        }
+        
+        bool IsFeatureRequired(ShellFeature feature)
+        {
+            // Mark SetUp as required
+            if (feature.Id.Equals("Plato.SetUp", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+            // Returns true if the supplied feature exists within our minimal shell descriptor
+            var minimalDescriptor = _shellContextFactory.MinimumShellDescriptor();
+            return minimalDescriptor.Modules.FirstOrDefault(m => m.Id.Equals(feature.Id, StringComparison.OrdinalIgnoreCase)) != null;
         }
 
         #endregion

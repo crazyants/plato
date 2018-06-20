@@ -33,17 +33,14 @@ namespace Plato.Demo.Services
         {
             _schemaBuilder = schemaBuilder;
         }
-
-
-
+        
 
         public async Task InstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return;
-            }
-
+            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    return;
+            //}
 
             var demo = new SchemaTable()
             {
@@ -95,10 +92,10 @@ namespace Plato.Demo.Services
 
         public Task InstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return Task.CompletedTask;
-            }
+            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    return Task.CompletedTask;
+            //}
 
             try
             {
@@ -117,10 +114,10 @@ namespace Plato.Demo.Services
 
         public Task UninstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return Task.CompletedTask;
-            }
+            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    return Task.CompletedTask;
+            //}
 
             //throw new Exception("This is a test exception from Plato.Demos");
 
@@ -140,10 +137,10 @@ namespace Plato.Demo.Services
 
         public Task UninstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return Task.CompletedTask;
-            }
+            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    return Task.CompletedTask;
+            //}
 
             try
             {
