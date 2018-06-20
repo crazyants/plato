@@ -8,7 +8,7 @@ namespace Plato.Core.Services
     public class FeatureEventHandler : IFeatureEventHandler
     {
 
-        private const string FeatureId = "Plato.Core";
+        public string Id { get; } = "Plato.Core";
 
 
         private readonly ILogger<FeatureEventHandler> _logger;
@@ -20,7 +20,7 @@ namespace Plato.Core.Services
 
         public Task InstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -41,7 +41,7 @@ namespace Plato.Core.Services
 
         public Task InstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -62,7 +62,7 @@ namespace Plato.Core.Services
 
         public Task UninstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -83,7 +83,7 @@ namespace Plato.Core.Services
 
         public Task UninstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }

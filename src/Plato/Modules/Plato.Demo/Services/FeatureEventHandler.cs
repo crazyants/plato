@@ -23,8 +23,8 @@ namespace Plato.Demo.Services
     public class FeatureEventHandler : IFeatureEventHandler
     {
 
-        private const string FeatureId = "Plato.Demo";
-
+        public string Id { get; } = "Plato.Demo";
+        
 
         private readonly ISchemaBuilder _schemaBuilder;
 
@@ -34,70 +34,65 @@ namespace Plato.Demo.Services
         }
 
 
+
+
         public async Task InstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return;
             }
-            
-            try
+
+
+            var demo = new SchemaTable()
+            {
+                Name = "Demo",
+                Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    }
+                }
+            };
+
+            //var schemaBuilder = context.ServiceProvider.GetRequiredService<ISchemaBuilder>();
+            using (var builder = _schemaBuilder)
             {
 
-                var demo = new SchemaTable()
-                {
-                    Name = "Demo",
-                    Columns = new List<SchemaColumn>()
+                // create tables and default procedures
+                builder
+                    .Configure(options =>
                     {
-                        new SchemaColumn()
-                        {
-                            PrimaryKey = true,
-                            Name = "Id",
-                            DbType = DbType.Int32
-                        }
-                    }
-                };
+                        options.ModuleName = "Plato.Demo";
+                        options.Version = "1.0.0";
+                    })
+                    // Create tables
+                    .CreateTable(demo)
+                    // Create basic default CRUD procedures
+                    .CreateDefaultProcedures(demo);
 
-                //var schemaBuilder = context.ServiceProvider.GetRequiredService<ISchemaBuilder>();
-                using (var builder = _schemaBuilder)
+                var result = await builder.ApplySchemaAsync();
+                if (result.Errors.Count > 0)
                 {
-
-                    // create tables and default procedures
-                    builder
-                        .Configure(options =>
-                        {
-                            options.ModuleName = "Plato.Demo";
-                            options.Version = "1.0.0";
-                        })
-                        // Create tables
-                        .CreateTable(demo)
-                        // Create basic default CRUD procedures
-                        .CreateDefaultProcedures(demo);
-
-                    var result = await builder.ApplySchemaAsync();
-                    if (result.Errors.Count > 0)
+                    foreach (var error in result.Errors)
                     {
-                        foreach (var error in result.Errors)
-                        {
-                            context.Errors.Add(error.Message, error.StackTrace);
-                        }
-
-                    }
+                        context.Errors.Add(error.Message, $"InstallingAsync within {this.GetType().FullName}");
+                    ;
+                }
 
                 }
 
-
-            }
-            catch (Exception e)
-            {
-                context.Errors.Add(context.Feature.Id, e.Message);
             }
             
+
         }
 
         public Task InstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -119,7 +114,7 @@ namespace Plato.Demo.Services
 
         public Task UninstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -142,7 +137,7 @@ namespace Plato.Demo.Services
 
         public Task UninstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, FeatureId, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }

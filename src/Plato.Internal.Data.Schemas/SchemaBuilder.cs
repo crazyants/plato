@@ -279,8 +279,10 @@ namespace Plato.Internal.Data.Schemas
                     }
                     catch (Exception ex)
                     {
-                        //_errors.Add(ex);
-                        throw;
+                        if (_errors == null)
+                            _errors = new List<Exception>();
+                        _errors.Add(ex);
+                        //throw;
                     }
                 }
 

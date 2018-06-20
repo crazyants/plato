@@ -66,7 +66,7 @@ namespace Plato.Features.Controllers
                 {
                     foreach (var error in context.Errors)
                     {
-                        _alerter.Danger(T[$"{error.Key} could not be enabled. The following error occurred: {error.Value}"]);
+                        _alerter.Danger(T[$"{context.Feature.Id} could not be enabled. {error.Key} - {error.Value}"]);
                     }
                 }
                 else

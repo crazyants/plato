@@ -71,89 +71,112 @@ namespace Plato.Internal.Features
             return await EnableFeaturesAsync(featureIds);
 
         }
-        
+
         public async Task<IEnumerable<IFeatureEventContext>> EnableFeaturesAsync(string[] featureIds)
         {
 
             // Get distinct Ids
             var ids = featureIds.Distinct().ToArray();
-            
+
             // Get features to enable
             var features = await _shellDescriptorFeatureManager.GetFeaturesAsync(ids);
-            
+
             // Conver to IList to work with
             var featuresToInvoke = features.ToList();
 
-            var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
 
             // Raise installing events for features
-            InvokeFeatures(featuresToInvoke,
+            var results = await InvokeFeatureEvents(featuresToInvoke,
                 async (context, handler) =>
                 {
+
+                    var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
+
                     // Ensure feature is not already enabled
                     if (!context.Feature.IsEnabled)
                     {
-                        if (_logger.IsEnabled(LogLevel.Information))
+
+                        try
                         {
-                            _logger.LogInformation($"{context.Feature.Id} InstallingAsync Event Raised");
-                        }
-                        await handler.InstallingAsync(context);
-                        contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
-                        {
-                            foreach (var error in context.Errors)
-                            {
-                                v.Errors.Add(error.Key, error.Value);
-                            }
-                            return v;
-                        });
-                    }
-
-                }, contexts);
-
-            // Did any event encounter errors?
-            var hasErrors = contexts.Where(c => c.Value.Errors.Count > 0);
-
-            // No errors update descriptor, raise InstalledAsync and recycle ShellContext
-            if (!hasErrors.Any())
-            {
-
-                // Update descriptor within database
-                var descriptor = await GetOrUpdateDescriptor(featureIds);
-                var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
-
-                // Raise Installed event
-                InvokeFeatures(featuresToInvoke,
-                    async (context, handler) =>
-                    { 
-                        // Ensure feature is not already enabled
-                        if (!context.Feature.IsEnabled)
-                        {
-                            if (_logger.IsEnabled(LogLevel.Information))
-                            {
-                                _logger.LogInformation($"{context.Feature.Id} InstalledAsync Event Raised");
-                            }
-                            await handler.InstalledAsync(context);
+                            await handler.InstallingAsync(context);
                             contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
                             {
                                 foreach (var error in context.Errors)
                                 {
                                     v.Errors.Add(error.Key, error.Value);
                                 }
+
+                                return v;
+                            });
+
+                        }
+                        catch (Exception e)
+                        {
+                            contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                            {
+                                foreach (var error in context.Errors)
+                                {
+                                    v.Errors.Add(context.Feature.Id, e.Message);
+                                }
+
                                 return v;
                             });
                         }
-                    }, contexts);
 
-                // dispose current shell context
-                RecycleShell();
+                        // Did any event encounter errors?
+                        var hasErrors = contexts
+                            .Where(c => c.Value.Errors.Any());
 
-            }
+                        // No errors update descriptor, raise InstalledAsync and recycle ShellContext
+                        if (!hasErrors.Any())
+                        {
+
+                            // Update descriptor within database
+                            var descriptor = await GetOrUpdateDescriptor(featureIds);
+                            var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
+
+                            try
+                            {
+                                await handler.InstalledAsync(context);
+                                contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                                {
+                                    foreach (var error in context.Errors)
+                                    {
+                                        v.Errors.Add(error.Key, error.Value);
+                                    }
+
+                                    return v;
+                                });
+                            }
+                            catch (Exception e)
+                            {
+                                contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                                {
+                                    foreach (var error in context.Errors)
+                                    {
+                                        v.Errors.Add(context.Feature.Id, e.Message);
+                                    }
+
+                                    return v;
+                                });
+                            }
+
+                        }
+
+                    }
+
+                    return contexts;
+
+                });
+
+            // dispose current shell context
+            RecycleShell();
 
             // Return all execution contexts
-            return contexts.Values;
+            return results.Values;
 
         }
-        
+
         public async Task<IEnumerable<IFeatureEventContext>> DisableFeatureAsync(string featureId)
         {
 
@@ -179,73 +202,103 @@ namespace Plato.Internal.Features
 
             // Conver to IList to work with
             var featuresToInvoke = features.ToList();
-
-            // Holds the results of all our event executation contexts
-            var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
-
+            
             // Raise Uninstalling events
-            InvokeFeatures(featuresToInvoke,
+            var results = await InvokeFeatureEvents(featuresToInvoke,
                 async (context, handler) =>
                 {
+
+                    var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
+
                     // Ensure feature is enabled
                     if (context.Feature.IsEnabled)
                     {
+
                         if (_logger.IsEnabled(LogLevel.Information))
                         {
-                            _logger.LogInformation($"{context.Feature.Id} UninstallingAsync Event Raised");
+                            _logger.LogInformation($"{context.Feature.Id} InstallingAsync Event Raised");
                         }
-                        await handler.UninstallingAsync(context);
-                        contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+
+                        try
                         {
-                            foreach (var error in context.Errors)
-                            {
-                                v.Errors.Add(error.Key, error.Value);
-                            }
-                            return v;
-                        });
-                    }
-                }, contexts);
-
-            // Did any event encounter errors?
-            var hasErrors = contexts.Where(c => c.Value.Errors.Count > 0);
-
-            // No errors update descriptor, raise InstalledAsync and recycle ShellContext
-            if (!hasErrors.Any())
-            {
-                // Update features within data store
-                var descriptor = await RemoveFeaturesFromCurrentDescriptor(featureIds);
-                var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
-
-                // Raise Uninstalled events for features
-                InvokeFeatures(featuresToInvoke,
-                    async (context, handler) =>
-                    {
-                        // Ensure feature is enabled
-                        if (context.Feature.IsEnabled)
-                        {
-                            if (_logger.IsEnabled(LogLevel.Information))
-                            {
-                                _logger.LogInformation($"{context.Feature.Id} UninstalledAsync Event Raised");
-                            }
-                            await handler.UninstalledAsync(context);
+                            await handler.UninstallingAsync(context);
                             contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
                             {
                                 foreach (var error in context.Errors)
                                 {
                                     v.Errors.Add(error.Key, error.Value);
                                 }
+
                                 return v;
                             });
                         }
-                    }, contexts);
+                        catch (Exception e)
+                        {
+                            contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                            {
+                                foreach (var error in context.Errors)
+                                {
+                                    v.Errors.Add(context.Feature.Id, e.Message);
+                                }
 
-                // Dispose current shell context
-                RecycleShell();
+                                return v;
+                            });
+                        }
+                     
 
-            }
-            
+                        // Did any event encounter errors?
+                        var hasErrors = contexts
+                            .Where(c => c.Value.Errors.Any())
+                            .ToList();
+
+                        // No errors update descriptor, raise InstalledAsync and recycle ShellContext
+                        if (!hasErrors.Any())
+                        {
+
+                            // Update descriptor within database
+                            var descriptor = await RemoveFeaturesFromCurrentDescriptor(featureIds);
+                            var updatedDescriptor = await _shellDescriptorStore.SaveAsync(descriptor);
+
+                            try
+                            {
+                                await handler.UninstalledAsync(context);
+                                contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                                {
+                                    foreach (var error in context.Errors)
+                                    {
+                                        v.Errors.Add(error.Key, error.Value);
+                                    }
+
+                                    return v;
+                                });
+
+                            }
+                            catch (Exception e)
+                            {
+                                contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                                {
+                                    foreach (var error in context.Errors)
+                                    {
+                                        v.Errors.Add(context.Feature.Id, e.Message);
+                                    }
+
+                                    return v;
+                                });
+                            }
+
+
+                        }
+                    }
+                    
+                    return contexts;
+
+                });
+
+            // Dispose current shell context
+            RecycleShell();
+
             // Return all execution contexts
-            return contexts.Values;
+            return results.Values;
 
         }
 
@@ -290,12 +343,14 @@ namespace Plato.Internal.Features
             return descriptor;
         }
 
-        void InvokeFeatures(
+        async Task<ConcurrentDictionary<string, IFeatureEventContext>> InvokeFeatureEvents(
             IList<IShellFeature> features,
-            Action<IFeatureEventContext, IFeatureEventHandler> invoker,
-            ConcurrentDictionary<string, IFeatureEventContext> contexts)
+            Func<IFeatureEventContext, IFeatureEventHandler, Task<ConcurrentDictionary<string, IFeatureEventContext>>> invoker)
         {
 
+            // Holds the results of all our event executation contexts
+            var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
+            
             // Get setting before dispose
             var httpContext = _httpContextAccessor.HttpContext;
             var shellSettings = _runningShellTable.Match(httpContext);
@@ -322,42 +377,30 @@ namespace Plato.Internal.Features
                     {
                         foreach (var feature in features)
                         {
+                            if (!feature.Id.Equals(handler.Id, StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue;
+                            }
 
                             var context = new FeatureEventContext()
                             {
                                 Feature = feature,
                                 ServiceProvider = scope.ServiceProvider
                             };
-                          
-                            try
-                            {
-                                invoker(context, handler);
-                                if (context.Errors.Count > 0)
-                                {
-                                    foreach (var error in context.Errors)
-                                    {
-                                        _logger.LogError(error.Value, $"{context.Feature.Id} event handler threw an exception");
-                                    }
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                _logger.LogError(e, $"{context.Feature.Id} event handler threw an exception");
-                                contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
-                                {
-                                    v.Errors.Add(context.Feature.Id, e.Message);
-                                    return v;
-                                });
-                            }
-                          
+
+                            contexts = await invoker(context, handler);
                         }
+
                     }
                     
                 }
 
             }
 
+            return contexts;
+
         }
+        
 
         void DisposeShell(IShellSettings shellSettings)
         {

@@ -106,9 +106,12 @@ namespace Plato.Internal.Data.Providers
                 _sharedConnectionDepth--;
                 if (_sharedConnectionDepth == 0)
                 {
-                    OnConnectionClosing(_dbConnection);
-                    _dbConnection.Dispose();
-                    _dbConnection = null;
+                    if (_dbConnection != null)
+                    {
+                        OnConnectionClosing(_dbConnection);
+                        _dbConnection.Dispose();
+                        _dbConnection = null;
+                    }
                 }
             }
         }
@@ -185,16 +188,16 @@ namespace Plato.Internal.Data.Providers
 
         }
 
-        public Task<T> ExecuteScalarAsync<T>(string sql, params object[] args)
+        public async Task<T> ExecuteScalarAsync<T>(string sql, params object[] args)
         {
 
             object output = null;
             try
             {
-                Open();
+                await OpenAsync();
                 using (var cmd = CreateCommand(_dbConnection, sql, args))
                 {
-                    output = cmd.ExecuteScalar();
+                    output = await cmd.ExecuteScalarAsync();
                     OnExecutedCommand(cmd);
                 }
             }
@@ -204,7 +207,7 @@ namespace Plato.Internal.Data.Providers
                 throw;
             }
             
-            return Task.FromResult((T)Convert.ChangeType(output, typeof(T)));
+            return (T)Convert.ChangeType(output, typeof(T));
             
         }
 
@@ -231,7 +234,7 @@ namespace Plato.Internal.Data.Providers
         {
             try
             {
-                Open();
+                await OpenAsync();
                 using (var cmd = CreateCommand(_dbConnection, sql, args))
                 {
                     var retv = await cmd.ExecuteNonQueryAsync();
