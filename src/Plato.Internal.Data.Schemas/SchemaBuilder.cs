@@ -123,7 +123,7 @@ namespace Plato.Internal.Data.Schemas
             var sb = new StringBuilder();
             sb.Append("IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'")
                 .Append(tableName)
-                .Append("'")
+                .Append("')")
                 .Append(_newLine)
                 .Append("BEGIN")
                 .Append(_newLine)
@@ -219,10 +219,19 @@ namespace Plato.Internal.Data.Schemas
         public ISchemaBuilder DropProcedure(SchemaProcedure procedure)
         {
             var sb = new StringBuilder();
-            sb.Append("DROP PROCEDURE ")
+
+            sb.Append("IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'")
+                .Append(GetProcedureName(procedure.Name))
+                .Append("') AND type in (N'P', N'PC'))")
+                .Append(_newLine)
+                .Append("BEGIN")
+                .Append(_newLine)
+                .Append("DROP PROCEDURE ")
                 .Append(GetProcedureName(procedure.Name))
                 .Append(";")
-                .Append(_newLine);
+                .Append(_newLine)
+                .Append("END");
+            
             CreateStatement(sb.ToString());
             return this;
 
@@ -756,9 +765,27 @@ namespace Plato.Internal.Data.Schemas
 
             if (procedure.Table.PrimaryKeyColumn == null)
                 throw new Exception($"A primary key column is required for table '{procedure.Table.Name}' when creating procedure of type '{procedure.ProcedureType}'");
-            
+
+
             var tableName = GetTableName(procedure.Table.Name);
             var columns = procedure.Table.Columns;
+
+            // Check to ensure we have more than just a primary key
+            var hasColumns = false;
+            foreach (var column in columns)
+            {
+                if (!column.PrimaryKey)
+                {
+                    hasColumns = true;
+                }
+            }
+
+            // We need columns to insert or update
+            if (!hasColumns)
+            {
+                return string.Empty;
+            }
+            
 
             var sb = new StringBuilder();
             

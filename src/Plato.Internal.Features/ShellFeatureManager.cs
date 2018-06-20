@@ -330,9 +330,7 @@ namespace Plato.Internal.Features
         {
 
             // Get existing descriptor or create a new one
-            var descriptor =
-                await _shellDescriptorStore.GetAsync()
-                ?? new ShellDescriptor();
+            var descriptor = await _shellDescriptorFeatureManager.GetEnabledDescriptor();
 
             // Add features to our descriptor
             foreach (var featureId in featureIds)

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Features;
+using Plato.Internal.Models.Shell;
 
 namespace Plato.Internal.Features
 {
     public interface IShellDescriptorFeatureManager
     {
+
+        Task<IShellDescriptor> GetEnabledDescriptor();
 
         Task<IEnumerable<IShellFeature>> GetEnabledFeaturesAsync();
 

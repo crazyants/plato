@@ -24,7 +24,7 @@ namespace Plato.Internal.Shell
             _logger = logger;
         }
 
-        ShellContext IShellContextFactory.CreateMinimalShellContext(IShellSettings settings)
+        public ShellContext CreateMinimalShellContext(IShellSettings settings)
         {
 
             if (_logger.IsEnabled(LogLevel.Debug))
@@ -100,18 +100,15 @@ namespace Plato.Internal.Shell
         
         public ShellDescriptor MinimumShellDescriptor()
         {
-            return new ShellDescriptor
-            {
-                Modules = new[]
-                {
-                    new ShellModule { Id = "Plato.Core" },
-                    new ShellModule { Id = "Plato.Admin" },
-                    new ShellModule { Id = "Plato.Users" },
-                    new ShellModule { Id = "Plato.Roles" },
-                    new ShellModule { Id = "Plato.Settings" },
-                    new ShellModule { Id = "Plato.Features" }
-                }
-            };
+            var descriptor = new ShellDescriptor();
+            descriptor.Modules.Add(new ShellModule {Id = "Plato.Core"});
+            descriptor.Modules.Add(new ShellModule {Id = "Plato.Admin"});
+            descriptor.Modules.Add(new ShellModule {Id = "Plato.Users"});
+            descriptor.Modules.Add(new ShellModule {Id = "Plato.Roles"});
+            descriptor.Modules.Add(new ShellModule {Id = "Plato.Settings"});
+            descriptor.Modules.Add(new ShellModule {Id = "Plato.Features"});
+            return descriptor;
+
         }
         
     }

@@ -51,18 +51,19 @@ namespace Plato.Internal.Features
 
         #region "Implementation"
 
+        public async Task<IShellDescriptor> GetEnabledDescriptor()
+        {
+            return await _shellDescriptorStore.GetAsync() ??
+                _shellContextFactory.MinimumShellDescriptor();
+
+        }
+
         public async Task<IEnumerable<IShellFeature>> GetEnabledFeaturesAsync()
         {
 
-            // Get all features enabled within the database
-            var descriptor = await _shellDescriptorStore.GetAsync();
-
-            // No descriptor within database use minimal
-            if (descriptor == null)
-            {
-                descriptor = _shellContextFactory.MinimumShellDescriptor();
-            }
-
+            // Get all enabled features
+            var descriptor = await GetEnabledDescriptor();
+            
             var features = new List<ShellFeature>();
             if (descriptor != null)
             {
