@@ -172,7 +172,7 @@ namespace Plato.Internal.Data
         private string GetProcedureName(string procedureName)
         {
             return !string.IsNullOrEmpty(this.Configuration.TablePrefix)
-                ? this.Configuration.TablePrefix + "_" + procedureName
+                ? this.Configuration.TablePrefix + procedureName
                 : procedureName;
         }
 

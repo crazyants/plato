@@ -30,6 +30,7 @@ namespace Plato.Internal.Models.Shell
 
         IEnumerable<string> Keys { get; }
 
+        IDictionary<string, string> Configuration { get; }
     }
 
 }

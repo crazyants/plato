@@ -17,12 +17,12 @@ namespace Plato.SetUp.Services
 
         private const string TablePrefixSeparator = "_";
 
-        private readonly ShellSettings _shellSettings;
+        private readonly IShellSettings _shellSettings;
         private readonly IShellContextFactory _shellContextFactory;
         private readonly IPlatoHost _platoHost;
 
         public SetUpService(
-            ShellSettings shellSettings,
+            IShellSettings shellSettings,
             IShellContextFactory shellContextFactory,
             IPlatoHost platoHost)
         {
@@ -68,7 +68,7 @@ namespace Plato.SetUp.Services
 
             shellSettings.Location = context.SiteName;
             
-            using (var shellContext = _shellContextFactory.CreateShellContext(shellSettings))
+            using (var shellContext = _shellContextFactory.CreateMinimalShellContext(shellSettings))
             {
                 using (var scope = shellContext.ServiceProvider.CreateScope())
                 {

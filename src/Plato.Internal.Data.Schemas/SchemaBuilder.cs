@@ -57,6 +57,11 @@ namespace Plato.Internal.Data.Schemas
         {
 
             var tableName = GetTableName(table.Name);
+            
+            if (_options.DropTablesBeforeCreate)
+            {
+                DropTable(table);
+            }
 
             var sb = new StringBuilder();
             sb.Append("CREATE TABLE ")
@@ -113,9 +118,20 @@ namespace Plato.Internal.Data.Schemas
         public ISchemaBuilder DropTable(SchemaTable table)
         {
             var tableName = GetTableName(table.Name);
+
+            // drop tabl;e ensuring it exists first
             var sb = new StringBuilder();
-            sb.Append("DROP TABLE ")
-                .Append(tableName);
+            sb.Append("IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'")
+                .Append(tableName)
+                .Append("'")
+                .Append(_newLine)
+                .Append("BEGIN")
+                .Append(_newLine)
+                .Append("DROP TABLE ")
+                .Append(tableName)
+                .Append(_newLine)
+                .Append("END");
+
             CreateStatement(sb.ToString());
             return this;
         }
@@ -200,9 +216,26 @@ namespace Plato.Internal.Data.Schemas
 
         }
 
+        public ISchemaBuilder DropProcedure(SchemaProcedure procedure)
+        {
+            var sb = new StringBuilder();
+            sb.Append("DROP PROCEDURE ")
+                .Append(GetProcedureName(procedure.Name))
+                .Append(";")
+                .Append(_newLine);
+            CreateStatement(sb.ToString());
+            return this;
+
+        }
+
         public ISchemaBuilder CreateProcedure(SchemaProcedure procedure)
         {
-
+            
+            if (_options.DropProceduresBeforeCreate)
+            {
+                DropProcedure(procedure);
+            }
+            
             // TODO: Refactor to avoid switch statement 
             // Create common command classes to represent each procedure type
             // Avoids enum and makes it more extensible for future additins
@@ -282,7 +315,6 @@ namespace Plato.Internal.Data.Schemas
                         if (_errors == null)
                             _errors = new List<Exception>();
                         _errors.Add(ex);
-                        //throw;
                     }
                 }
 
@@ -729,7 +761,7 @@ namespace Plato.Internal.Data.Schemas
             var columns = procedure.Table.Columns;
 
             var sb = new StringBuilder();
-
+            
             sb.Append("CREATE PROCEDURE [")
                 .Append(GetProcedureName(procedure.Name))
                 .Append("]");
@@ -920,7 +952,7 @@ namespace Plato.Internal.Data.Schemas
         private string GetProcedureName(string procedureName)
         {
             return !string.IsNullOrEmpty(_tablePrefix)
-                ? _tablePrefix + "_" + procedureName
+                ? _tablePrefix + procedureName
                 : procedureName;
         }
 

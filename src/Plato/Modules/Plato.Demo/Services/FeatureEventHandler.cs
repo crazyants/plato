@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Schemas.Abstractions;
@@ -68,6 +69,8 @@ namespace Plato.Demo.Services
                     {
                         options.ModuleName = "Plato.Demo";
                         options.Version = "1.0.0";
+                        options.DropTablesBeforeCreate = true;
+                        options.DropProceduresBeforeCreate = true;
                     })
                     // Create tables
                     .CreateTable(demo)

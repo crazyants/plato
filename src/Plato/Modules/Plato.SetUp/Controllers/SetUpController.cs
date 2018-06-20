@@ -16,14 +16,14 @@ namespace Plato.SetUp.Controllers
     public class SetUpController : Controller
     {
 
-        private readonly ShellSettings _shellSettings;
+        private readonly IShellSettings _shellSettings;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly ISetUpService _setUpService;
         private readonly ISchemaLoader _schemaLoader;
         private readonly ILogger<SetUpController> _logger;
      
         public SetUpController(
-            ShellSettings shellSettings,
+            IShellSettings shellSettings,
             ISiteSettingsStore settingsStore,
             ISetUpService setUpService,
             ISchemaLoader schemaLoader,

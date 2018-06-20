@@ -24,7 +24,20 @@ namespace Plato.Internal.Shell
             _logger = logger;
         }
 
-        ShellContext IShellContextFactory.CreateShellContext(IShellSettings settings)
+        ShellContext IShellContextFactory.CreateMinimalShellContext(IShellSettings settings)
+        {
+
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug("Creating minimal shell context for setup");
+            }
+
+            // Build minimal shell descriptor
+            return CreateDescribedContext(settings, MinimumShellDescriptor());
+
+        }
+
+        public ShellContext CreateShellContext(IShellSettings settings)
         {
 
             // Build minimal shell descriptor
@@ -69,7 +82,7 @@ namespace Plato.Internal.Shell
 
         }
 
-        ShellContext IShellContextFactory.CreateSetupContext(IShellSettings settings)
+        public ShellContext CreateSetupContext(IShellSettings settings)
         {
             if (_logger.IsEnabled(LogLevel.Debug))
             {
@@ -85,7 +98,7 @@ namespace Plato.Internal.Shell
             return CreateDescribedContext(settings, descriptor);
         }
         
-        private ShellDescriptor MinimumShellDescriptor()
+        public ShellDescriptor MinimumShellDescriptor()
         {
             return new ShellDescriptor
             {

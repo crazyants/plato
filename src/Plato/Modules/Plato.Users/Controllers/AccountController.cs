@@ -63,19 +63,22 @@ namespace Plato.Users.Controllers
 
 
             var existingDoc = await _documentStore.GetAsync<TestDocument2>();
+            if (existingDoc != null)
+            {
+                var newDoc = await _documentStore.SaveAsync<TestDocument2>(existingDoc);
 
-            var newDoc = await _documentStore.SaveAsync<TestDocument2>(existingDoc);
+                var sb = new StringBuilder();
 
-            var sb = new StringBuilder();
-            
-            sb.Append("Id: " + newDoc.Id);
-            sb.Append("<br>");
-            sb.Append("Title: " + newDoc.Title);
-            sb.Append("<br>");
-            sb.Append("Body: " + newDoc.Body);
+                sb.Append("Id: " + newDoc.Id);
+                sb.Append("<br>");
+                sb.Append("Title: " + newDoc.Title);
+                sb.Append("<br>");
+                sb.Append("Body: " + newDoc.Body);
 
 
-            ViewBag.docs = sb.ToString();
+                ViewBag.docs = sb.ToString();
+            }
+          
 
             //for (var i = 0; i < 500; i++)
             //{

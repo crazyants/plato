@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Modules.Abstractions;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Shell;
 
 namespace Plato.Internal.Features
@@ -29,6 +30,7 @@ namespace Plato.Internal.Features
 
         #region "Constructor"
 
+        private readonly IShellContextFactory _shellContextFactory;
         private readonly IModuleManager _moduleManager;
         private readonly IShellDescriptor _shellDescriptor;
         private readonly IShellDescriptorStore _shellDescriptorStore;
@@ -36,11 +38,13 @@ namespace Plato.Internal.Features
         public ShellDescriptorFeatureManager(
             IModuleManager moduleManager,
             IShellDescriptor shellDescriptor, 
-            IShellDescriptorStore shellDescriptorStore)
+            IShellDescriptorStore shellDescriptorStore,
+            IShellContextFactory shellContextFactory)
         {
             _moduleManager = moduleManager;
             _shellDescriptor = shellDescriptor;
             _shellDescriptorStore = shellDescriptorStore;
+            _shellContextFactory = shellContextFactory;
         }
 
         #endregion
@@ -49,8 +53,16 @@ namespace Plato.Internal.Features
 
         public async Task<IEnumerable<IShellFeature>> GetEnabledFeaturesAsync()
         {
+
             // Get all features enabled within the database
             var descriptor = await _shellDescriptorStore.GetAsync();
+
+            // No descriptor within database use minimal
+            if (descriptor == null)
+            {
+                descriptor = _shellContextFactory.MinimumShellDescriptor();
+            }
+
             var features = new List<ShellFeature>();
             if (descriptor != null)
             {

@@ -234,13 +234,24 @@ namespace Plato.Internal.Data.Providers
         {
             try
             {
-                await OpenAsync();
-                using (var cmd = CreateCommand(_dbConnection, sql, args))
+
+                try
                 {
-                    var retv = await cmd.ExecuteNonQueryAsync();
-                    OnExecutedCommand(cmd);
-                    return retv;
+                    await OpenAsync();
+                    using (var cmd = CreateCommand(_dbConnection, sql, args))
+                    {
+                        var retv = await cmd.ExecuteNonQueryAsync();
+                        OnExecutedCommand(cmd);
+                        return retv;
+                    }
+
                 }
+                finally
+                {
+                    Close();
+                }
+                
+
             }
             catch (Exception x)
             {

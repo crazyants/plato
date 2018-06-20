@@ -103,6 +103,17 @@ namespace Plato.Internal.Stores.Abstract
 
         async Task<TModel> GetDocumentFromEntryAsync<TModel>(DocumentEntry entry)
         {
+
+            if (entry == null)
+            {
+                return default(TModel);
+            }
+
+            if (String.IsNullOrEmpty(entry.Value))
+            {
+                return default(TModel);
+            }
+            
             return await entry.Value.DeserializeAsync<TModel>();
         }
         

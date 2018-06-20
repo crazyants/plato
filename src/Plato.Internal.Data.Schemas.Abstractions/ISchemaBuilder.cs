@@ -12,6 +12,10 @@ namespace Plato.Internal.Data.Schemas.Abstractions
 
         public string ModuleName { get; set; }
 
+        public bool DropTablesBeforeCreate { get; set; } = false;
+
+        public bool DropProceduresBeforeCreate { get; set; } = false;
+
     }
     
     public interface ISchemaBuilder : IDisposable
