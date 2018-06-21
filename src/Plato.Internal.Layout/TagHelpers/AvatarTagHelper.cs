@@ -44,8 +44,8 @@ namespace Plato.Internal.Layout.TagHelpers
                 }
             });
             
-            output.TagName = "div";
-            output.TagMode = TagMode.SelfClosing;
+            output.TagName = "span";
+            output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("style", $"background-image: url('{url}');");
             
             return Task.CompletedTask;

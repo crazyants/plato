@@ -62,17 +62,7 @@ namespace Plato.Users.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
-            
-            var photoUrl = _urlHelper.RouteUrl(new UrlRouteContext
-            {
-                Values = new RouteValueDictionary()
-                {
-                    {"Area", "Plato.Users"},
-                    {"Controller", "Photo"},
-                    {"Action", "Upload"}
-                }
-            });
-            
+        
             return Views(
                 View<User>("User.Edit.Header", model => user).Zone("header"),
                 View<User>("User.Edit.Meta", model => user).Zone("meta"),
@@ -81,7 +71,6 @@ namespace Plato.Users.ViewProviders
                     model.Id = user.Id;
                     model.UserName = user.UserName;
                     model.Email = user.Email;
-                    model.PhotoUrl = photoUrl;
                     return model;
                 }).Zone("content"),
                 View<EditUserViewModel>("User.Edit.Sidebar", model =>
@@ -89,7 +78,6 @@ namespace Plato.Users.ViewProviders
                     model.Id = user.Id;
                     model.UserName = user.UserName;
                     model.Email = user.Email;
-                    model.PhotoUrl = photoUrl;
                     return model;
                 }).Zone("sidebar"),
                 View<EditUserViewModel>("User.Edit.Footer", model =>
@@ -97,7 +85,6 @@ namespace Plato.Users.ViewProviders
                     model.Id = user.Id;
                     model.UserName = user.UserName;
                     model.Email = user.Email;
-                    model.PhotoUrl = photoUrl;
                     return model;
                 }).Zone("footer"),
                 View<EditUserViewModel>("User.Edit.Actions", model =>
@@ -105,7 +92,6 @@ namespace Plato.Users.ViewProviders
                     model.Id = user.Id;
                     model.UserName = user.UserName;
                     model.Email = user.Email;
-                    model.PhotoUrl = photoUrl;
                     return model;
                 }).Zone("actions")
             );

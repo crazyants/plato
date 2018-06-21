@@ -1,18 +1,31 @@
 ﻿@model EditUserViewModel
 
-<div class="avatar-upload">
-    <div class="avatar-edit">
-        <input type="file" id="imageUpload" 
-               asp-for="AvatarFile"
-               data-upload="avatar" 
-               data-upload-preview-selector="#imagePreview"
-               data-upload-accept=".png, .jpg, .jpeg" />
-        <label for="imageUpload">
-            <i class="fa fa-upload"></i>
-        </label>
-    </div>
-    <div class="avatar-preview">
-        <avatar id="imagePreview" user-id="@Model.Id" />
-    </div>
-</div>
+<card title="@T["Edit Profile Photo"]">
 
+    <div class="avatar-upload">
+        <div class="avatar-edit">
+            <input type="file" id="imageUpload"
+                   asp-for="AvatarFile"
+                   data-upload="avatar"
+                   data-upload-preview-selector="#avatarPreview"
+                   data-upload-accept=".png, .jpg, .jpeg" />
+            <label for="imageUpload">
+                <i class="fa fa-upload"></i>
+            </label>
+        </div>
+        <div class="avatar-preview">
+            <avatar id="avatarPreview" user-id="@Model.Id" />
+        </div>
+    </div>
+
+</card>
+
+
+
+<card title="@T["Test Panel"]">
+
+    <h5 class="card-title">Special title treatment</h5>
+    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+
+</card>

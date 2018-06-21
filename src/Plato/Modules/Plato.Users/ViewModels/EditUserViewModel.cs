@@ -27,8 +27,8 @@ namespace Plato.Users.ViewModels
 
         //public RoleViewModel[] Roles { get; set; }
 
-        public string PhotoUrl { get; set; }
-        
+      
+        [DataType(DataType.Upload)]
         public IFormFile AvatarFile { get; set; }
 
     }
