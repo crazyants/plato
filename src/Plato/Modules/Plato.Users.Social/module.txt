@@ -1,0 +1,14 @@
+Name: Socialize
+Description: Adds various social media features into Plato for user profiles.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Users
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Users",
+		Version: "1.0.0"
+	}
+]

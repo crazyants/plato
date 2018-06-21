@@ -182,9 +182,21 @@ namespace Plato.Internal.Features
                     return contexts;
 
                 });
+            
+            // Did any event encounter errors?
+            var errors = results
+                .Where(c => c.Value.Errors.Any());
 
+            // No errors update descriptor, raise InstalledAsync and recycle ShellContext
+            if (!errors.Any())
+            {
+                // Update descriptor within database
+                var descriptor = await GetOrUpdateDescriptor(featureIds);
+                await _shellDescriptorStore.SaveAsync(descriptor);
+            }
+            
             // dispose current shell context
-            RecycleShell();
+                RecycleShell();
 
             // Return all execution contexts
             return results.Values;
@@ -293,9 +305,24 @@ namespace Plato.Internal.Features
                     return contexts;
 
                 });
+            
+            // Did any event encounter errors?
+            var errors = results
+                .Where(c => c.Value.Errors.Any())
+                .ToList();
+
+            // No errors update descriptor, raise InstalledAsync and recycle ShellContext
+            if (!errors.Any())
+            {
+                // Update descriptor within database
+                var descriptor = await RemoveFeaturesFromCurrentDescriptor(featureIds);
+                await _shellDescriptorStore.SaveAsync(descriptor);
+
+            }
+
 
             // Dispose current shell context
-            RecycleShell();
+                RecycleShell();
 
             // Return all execution contexts
             return results.Values;
@@ -370,9 +397,12 @@ namespace Plato.Internal.Features
                 {
                 
                     var handlers = scope.ServiceProvider.GetServices<IFeatureEventHandler>();
-                
-                    foreach (var handler in handlers)
+
+                    var handlersList = handlers.ToList();
+
+                    foreach (var handler in handlersList)
                     {
+
                         foreach (var feature in features)
                         {
 
@@ -411,7 +441,7 @@ namespace Plato.Internal.Features
                         }
 
                     }
-                    
+
                 }
 
             }
