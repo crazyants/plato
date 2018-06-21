@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Text;
@@ -25,14 +26,19 @@ namespace Plato.Internal.Data.Schemas
             set => _statements = value;
         }
 
+
         private readonly IDbContext _dbContext;
+        private readonly ILogger<SchemaBuilder> _logger;
 
         private readonly Pluralizer _pluralizer;
 
-        public SchemaBuilder(IDbContext dbContext)
+        public SchemaBuilder(
+            IDbContext dbContext, 
+            ILogger<SchemaBuilder> logger)
         {
             _tablePrefix = dbContext.Configuration.TablePrefix;
             _dbContext = dbContext;
+            _logger = logger;
 
             _statements = new List<string>();
             _errors = new List<Exception>();
@@ -299,6 +305,7 @@ namespace Plato.Internal.Data.Schemas
                     }
                     catch (Exception ex)
                     {
+                        _logger.LogError(ex, $"An exception was encountered whilst building the schema. The supplied SQL statement that generated the exception was: {statement} ");
                         _errors.Add(ex);
                     }
                 }

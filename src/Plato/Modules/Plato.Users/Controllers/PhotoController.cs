@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Web;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Stores.Users;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
 
@@ -24,42 +25,39 @@ namespace Plato.Users.Controllers
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
         private readonly IHostingEnvironment _hostEnvironment;
         private readonly IFileStore _fileStore;
-
+    
         public PhotoController(
             IContextFacade contextFacade,
             IPlatoUserStore<User> platoUserStore,
             IUserPhotoStore<UserPhoto> userPhotoStore,
             IHostingEnvironment hostEnvironment,
-            IFileStore fileStore
-        )
+            IFileStore fileStore)
         {
             _contextFacade = contextFacade;
             _platoUserStore = platoUserStore;
             _userPhotoStore = userPhotoStore;
             _hostEnvironment = hostEnvironment;
             _fileStore = fileStore;
+
+            _pathToEmptyImage = _fileStore.Combine(hostEnvironment.ContentRootPath,
+                "wwwroot",
+                "images",
+                "photo.png");
         }
 
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Upload(string returnUrl = null)
         {
-            
-            var sb = new StringBuilder();
 
-            var fileBytes = await _fileStore.GetFileBytesAsync(_pathToEmptyImage);
-     
-            foreach (var b in fileBytes)
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
             {
-                sb.Append(b);
+                return NotFound();
             }
-         
-            sb.Append(System.Environment.NewLine);
-            sb.Append(_pathToEmptyImage);
+                
 
-            ViewData["test"] = sb.ToString();
-
-            return View();
+            return View(user.Id);
         }
 
         [HttpPost]
@@ -130,8 +128,6 @@ namespace Plato.Users.Controllers
             }
             else
             {
-                if (string.IsNullOrEmpty(_pathToEmptyImage))
-                    _pathToEmptyImage = _fileStore.Combine(_hostEnvironment.ContentRootPath, "wwwroot", "images", "empty.png");
                 var fileBytes = await _fileStore.GetFileBytesAsync(_pathToEmptyImage);
                 if (fileBytes != null)
                 {

@@ -1,14 +1,23 @@
-﻿@{
+﻿@model int
+@{
     Layout = "";
     ViewData["Title"] = "Login";
 }
-   
-@ViewData["test"] 
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
 
-<form asp-controller="Photo" asp-action="Upload" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal"  enctype="multipart/form-data">
+    <form asp-controller="Photo" asp-action="Upload" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" enctype="multipart/form-data">
+
+        <userphoto user-id="@Model" />
+
+        <input type="file" name="file" />
+        <br /><br />
+        <input type="submit" value="Upload" />
+    </form>
     
-    <input type="file" name="file" />
-    <br/><br/>
-    <input type="submit" value="Upload" />
-    
-</form>
+</body>
+</html>

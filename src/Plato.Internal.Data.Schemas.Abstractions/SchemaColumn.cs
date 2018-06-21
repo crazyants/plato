@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 
 namespace Plato.Internal.Data.Schemas.Abstractions
 {
     public class SchemaColumn
     {
 
-        private string _tableName;
-        
         public bool PrimaryKey { get; set; }
 
         public string Name { get; set; }
@@ -22,15 +18,9 @@ namespace Plato.Internal.Data.Schemas.Abstractions
         public DbType DbType { get; set; }
 
         public string Length { get; set; }
-
-
-        private string _defaultValue;
-
+        
         public string DefaultValue { get; set; }
 
-        /// <summary>
-        /// Sets a default value for the column based on the columns data type. 
-        /// </summary>
         public string DefaultValueNormalizsed
         {
             get
@@ -53,18 +43,26 @@ namespace Plato.Internal.Data.Schemas.Abstractions
                         return "GetDate()";
                     case DbType.DateTime2:
                         return "GetDate()";
-
+                    case DbType.DateTimeOffset:
+                        return "GetDate()";
+                    case DbType.Binary:
+                        return "NULL";
+                    case DbType.Decimal:
+                        return "0";
+                    case DbType.Double:
+                        return "0";
+                    case DbType.Guid:
+                        return "''";
+                    case DbType.Xml:
+                        return "''";
                 }
 
-                throw new Exception($"Type not returned for column '{this.Name}' within table '{_tableName}' whilst building shema");
+                throw new Exception($"Type not returned for column '{this.Name}' whilst building shema");
                 
             }
 
         }
         
-        /// <summary>
-        /// Returns a version of the column type safe for inclusion within @paramter arguments. 
-        /// </summary>
         public string DbTypeNormalized
         {
             get
@@ -83,13 +81,27 @@ namespace Plato.Internal.Data.Schemas.Abstractions
                         return "nvarchar(" + this.Length + ")";
                     case DbType.Date:
                         return "datetime";
+                    case DbType.DateTime:
+                        return "datetime";
                     case DbType.DateTime2:
                         return "datetime2";
+                    case DbType.Binary:
+                        return "varbinary(max)";
+                    case DbType.DateTimeOffset:
+                        return "datetimeoffset";
+                    case DbType.Decimal:
+                        return "decimal";
+                    case DbType.Double:
+                        return "float";
+                    case DbType.Guid:
+                        return "uniqueidentifier";
+                    case DbType.Xml:
+                        return "xml";
+
                 }
 
-                throw new Exception($"Type not returned for column '{this.Name}' within table '{_tableName}' whilst building shema");
-
-
+                throw new Exception($"Type not returned for column '{this.Name}' whilst building shema");
+                
             }
         }
 

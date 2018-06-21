@@ -25,5 +25,8 @@ namespace Plato.Users.ViewModels
         public bool DisplayPasswordFields { get; set; }
 
         //public RoleViewModel[] Roles { get; set; }
+
+        public string PhotoUrl { get; set; }
+
     }
 }

@@ -27,6 +27,72 @@ namespace Plato.Users.Services
         {
 
             // build schemas
+            
+            using (var builder = _schemaBuilder)
+            {
+
+                // configure
+                Configure(builder);
+
+                // user schema
+                Users(builder);
+
+                // userphoto schema
+                UserPhoto(builder);
+
+                // UserDetails schema
+                UserDetails(builder);
+
+                var result = await builder.ApplySchemaAsync();
+                if (result.Errors.Count > 0)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        reportError(error.Message, error.StackTrace);
+                    }
+
+                }
+
+            }
+
+            // create super user
+
+            try
+            {
+                var result =  await _userManager.CreateAsync(new User()
+                {
+                    Email = context.AdminEmail,
+                    UserName = context.AdminUsername
+                }, context.AdminPassword);
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        reportError(error.Code, error.Description);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                reportError(ex.Message, ex.StackTrace);
+            }
+
+        }
+
+        void Configure(ISchemaBuilder builder)
+        {
+
+            builder
+                .Configure(options =>
+                {
+                    options.ModuleName = "Plato.Users";
+                    options.Version = "1.0.0";
+                });
+
+        }
+
+        void Users(ISchemaBuilder builder)
+        {
 
             var users = new SchemaTable()
             {
@@ -126,114 +192,200 @@ namespace Plato.Users.Services
                     },
                 }
             };
-            
-            using (var builder = _schemaBuilder)
-            {
 
-                // create tables and default procedures
-                builder
-                    .Configure(options =>
-                    {
-                        options.ModuleName = "Plato.Users";
-                        options.Version = "1.0.0";
-                    })
-                    // Create tables
-                    .CreateTable(users)
-                    // Create basic default CRUD procedures
-                    .CreateDefaultProcedures(users);
-             
-                // create unique user stored procedures
-
-                builder.CreateProcedure(new SchemaProcedure("SelectUserByEmail", StoredProcedureType.SelectByKey)
+            builder
+                .CreateTable(users)
+                .CreateDefaultProcedures(users)
+                .CreateProcedure(new SchemaProcedure("SelectUserByEmail", StoredProcedureType.SelectByKey)
+                    .ForTable(users)
+                    .WithParameter(new SchemaColumn() {Name = "Email", DbType = DbType.String, Length = "255"}))
+                .CreateProcedure(new SchemaProcedure("SelectUserByUserName", StoredProcedureType.SelectByKey)
+                    .ForTable(users)
+                    .WithParameter(new SchemaColumn() {Name = "Username", DbType = DbType.String, Length = "255"}))
+                .CreateProcedure(
+                    new SchemaProcedure("SelectUserByUserNameNormalized", StoredProcedureType.SelectByKey)
                         .ForTable(users)
-                        .WithParameter(new SchemaColumn() {Name = "Email", DbType = DbType.String, Length = "255"}))
-                    .CreateProcedure(new SchemaProcedure("SelectUserByUserName", StoredProcedureType.SelectByKey)
-                        .ForTable(users)
-                        .WithParameter(new SchemaColumn() {Name = "Username", DbType = DbType.String, Length = "255"}))
-                    .CreateProcedure(
-                        new SchemaProcedure("SelectUserByUserNameNormalized", StoredProcedureType.SelectByKey)
-                            .ForTable(users)
-                            .WithParameter(new SchemaColumn()
-                            {
-                                Name = "NormalizedUserName",
-                                DbType = DbType.String,
-                                Length = "255"
-                            }))
-                    .CreateProcedure(
-                        new SchemaProcedure("SelectUserByEmailAndPassword", StoredProcedureType.SelectByKey)
-                            .ForTable(users)
-                            .WithParameters(new List<SchemaColumn>()
-                            {
-                                new SchemaColumn()
-                                {
-                                    Name = "Email",
-                                    DbType = DbType.String,
-                                    Length = "255"
-                                },
-                                new SchemaColumn()
-                                {
-                                    Name = "PasswordHash",
-                                    DbType = DbType.String,
-                                    Length = "255"
-                                }
-                            }))
-                    .CreateProcedure(new SchemaProcedure("SelectUsersPaged", StoredProcedureType.SelectPaged)
+                        .WithParameter(new SchemaColumn()
+                        {
+                            Name = "NormalizedUserName",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }))
+                .CreateProcedure(
+                    new SchemaProcedure("SelectUserByEmailAndPassword", StoredProcedureType.SelectByKey)
                         .ForTable(users)
                         .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn()
                             {
-                                Name = "Id",
-                                DbType = DbType.Int32
-                            },
-                            new SchemaColumn()
-                            {
-                                Name = "UserName",
-                                DbType = DbType.String,
-                                Length = "255"
-                            },
-                            new SchemaColumn()
-                            {
                                 Name = "Email",
                                 DbType = DbType.String,
                                 Length = "255"
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "PasswordHash",
+                                DbType = DbType.String,
+                                Length = "255"
                             }
-                        }));
-
-
-                var result = await builder.ApplySchemaAsync();
-                if (result.Errors.Count > 0)
-                {
-                    foreach (var error in result.Errors)
+                        }))
+                .CreateProcedure(new SchemaProcedure("SelectUsersPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(users)
+                    .WithParameters(new List<SchemaColumn>()
                     {
-                        reportError(error.Message, error.StackTrace);
-                    }
+                        new SchemaColumn()
+                        {
+                            Name = "Id",
+                            DbType = DbType.Int32
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "UserName",
+                            DbType = DbType.String,
+                            Length = "255"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "Email",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
 
-                }
+        }
 
-            }
+        void UserPhoto(ISchemaBuilder builder)
+        {
 
-            // create super user
-
-            try
+            var userPhoto = new SchemaTable()
             {
-                var result =  await _userManager.CreateAsync(new User()
+                Name = "UserPhoto",
+                Columns = new List<SchemaColumn>()
                 {
-                    Email = context.AdminEmail,
-                    UserName = context.AdminUsername
-                }, context.AdminPassword);
-                if (!result.Succeeded)
-                {
-                    foreach (var error in result.Errors)
+                    new SchemaColumn()
                     {
-                        reportError(error.Code, error.Description);
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "UserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Name]",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ContentBlob",
+                        Nullable = true,
+                        DbType = DbType.Binary
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ContentType",
+                        Length = "75",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ContentLength",
+                        DbType = DbType.Int64
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTime2
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTime2
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedUserId",
+                        DbType = DbType.Int32
                     }
                 }
-            }
-            catch (Exception ex)
+            };
+
+            builder
+                // Create tables
+                .CreateTable(userPhoto)
+                // Create basic default CRUD procedures
+                .CreateDefaultProcedures(userPhoto)
+                .CreateProcedure(new SchemaProcedure("SelectUserPhotoByUserId", StoredProcedureType.SelectByKey)
+                    .ForTable(userPhoto)
+                    .WithParameter(new SchemaColumn() {Name = "UserId", DbType = DbType.Int32}));
+
+        }
+
+        void UserDetails(ISchemaBuilder builder)
+        {
+
+            var userDetails = new SchemaTable()
             {
-                reportError(ex.Message, ex.StackTrace);
-            }
+                Name = "UserDetails",
+                Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "UserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Details",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTime2
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTime2
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedUserId",
+                        DbType = DbType.Int32
+                    }
+                }
+            };
+
+            builder
+                // Create tables
+                .CreateTable(userDetails)
+                // Create basic default CRUD procedures
+                .CreateDefaultProcedures(userDetails)
+                .CreateProcedure(new SchemaProcedure("SelectUserDetailsByUserId", StoredProcedureType.SelectByKey)
+                    .ForTable(userDetails)
+                    .WithParameter(new SchemaColumn() {Name = "UserId", DbType = DbType.Int32}));
 
         }
 

@@ -64,7 +64,7 @@ namespace Plato.Internal.FileSystem
 
             // Try renaming destination to a unique filename
             const string extension = "deleted";
-            for (int i = 0; i < 100; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var newExtension = (i == 0 ? extension : string.Format("{0}{1}", extension, i));
                 var newFileName = Path.ChangeExtension(destinationFileName, newExtension);
@@ -122,7 +122,7 @@ namespace Plato.Internal.FileSystem
 
         public async Task<string> ReadFileAsync(string path)
         {
-            var file = _fileProvider.GetFileInfo(path);
+            var file = _fileProvider.GetFileInfo(Combine(path));
             if (!file.Exists)
                 return null;
             using (var reader = File.OpenText(file.PhysicalPath))
@@ -133,7 +133,8 @@ namespace Plato.Internal.FileSystem
 
         public async Task<byte[]> ReadFileBytesAsync(string path)
         {
-            var file = _fileProvider.GetFileInfo(path);
+          
+            var file = _fileProvider.GetFileInfo(Combine(path));
             if (!file.Exists)
                 return null;
             byte[] output = null;

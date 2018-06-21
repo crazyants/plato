@@ -41,16 +41,16 @@ namespace Plato.Internal.Repositories.Users
             {
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "plato_sp_InsertUpdateUserPhoto",
+                    "InsertUpdateUserPhoto",
                     id,
                     userId,
                     name.ToEmptyIfNull().TrimToSize(255),
                     contentBlob ?? new byte[0], // don't allow nulls so we can determine parameter type
                     contentType.ToEmptyIfNull().TrimToSize(75),
                     contentLength,
-                    createdDate,
+                    createdDate.ToDateIfNull(),
                     createdUserId,
-                    modifiedDate,
+                    modifiedDate.ToDateIfNull(),
                     modifiedUserId);
             }
         }
@@ -90,8 +90,7 @@ namespace Plato.Internal.Repositories.Users
 
             return null;
         }
-
-
+        
         public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
         {
             throw new NotImplementedException();
@@ -104,7 +103,7 @@ namespace Plato.Internal.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserPhoto", id);
+                    "SelectUserPhotoById", id);
 
                 if ((reader != null) && reader.HasRows)
                 {
@@ -123,7 +122,7 @@ namespace Plato.Internal.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserPhotoByUserId", userId);
+                    "SelectUserPhotoByUserId", userId);
 
                 if ((reader != null) && reader.HasRows)
                 {

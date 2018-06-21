@@ -1,5 +1,10 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Users;
@@ -11,10 +16,20 @@ namespace Plato.Users.ViewProviders
     {
 
         private readonly UserManager<User> _userManager;
+        private readonly IActionContextAccessor _actionContextAccesor;
+        private readonly IHostingEnvironment _hostEnvironment;
+        private readonly IUrlHelper _urlHelper;
 
-        public UserViewProvider(UserManager<User> userManager)
+        public UserViewProvider(
+            UserManager<User> userManager,
+            IActionContextAccessor actionContextAccesor,
+            IHostingEnvironment hostEnvironment,
+            IUrlHelperFactory urlHelperFactory)
         {
             _userManager = userManager;
+            _hostEnvironment = hostEnvironment;
+            _actionContextAccesor = actionContextAccesor;
+            _urlHelper = urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
         }
 
 
@@ -41,6 +56,16 @@ namespace Plato.Users.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
             
+            var photoUrl = _urlHelper.RouteUrl(new UrlRouteContext
+            {
+                Values = new RouteValueDictionary()
+                {
+                    {"Area", "Plato.Users"},
+                    {"Controller", "Photo"},
+                    {"Action", "Upload"}
+                }
+            });
+            
             return Views(
                 View<User>("User.Edit.Header", model => user).Zone("header"),
                 View<User>("User.Edit.Meta", model => user).Zone("meta"),
@@ -49,6 +74,7 @@ namespace Plato.Users.ViewProviders
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;
                     model.Email = user.Email;
+                    model.PhotoUrl = photoUrl;
                     return model;
                 }).Zone("content"),
                 View<EditUserViewModel>("User.Edit.Footer", model =>
@@ -56,6 +82,7 @@ namespace Plato.Users.ViewProviders
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;
                     model.Email = user.Email;
+                    model.PhotoUrl = photoUrl;
                     return model;
                 }).Zone("footer"),
                 View<EditUserViewModel>("User.Edit.Actions", model =>
@@ -63,6 +90,7 @@ namespace Plato.Users.ViewProviders
                     model.Id = user.Id.ToString();
                     model.UserName = user.UserName;
                     model.Email = user.Email;
+                    model.PhotoUrl = photoUrl;
                     return model;
                 }).Zone("actions")
             );

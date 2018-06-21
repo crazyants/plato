@@ -316,11 +316,9 @@ namespace Plato.Internal.Data.Providers
         void AddParam(IDbCommand cmd, object item)
         {
 
-            var paramPrefix = "@";
-                       
+            
             var p = cmd.CreateParameter();
-            p.ParameterName = string.Format("{0}{1}", 
-                paramPrefix, cmd.Parameters.Count);
+            p.ParameterName = $"@{cmd.Parameters.Count}";
             
             if (item == null)
             {
@@ -342,7 +340,7 @@ namespace Plato.Internal.Data.Providers
                 }
                 else if (t == typeof(string))
                 {
-                    p.Size = Math.Max((item as string).Length + 1, 4000);		// Help query plan caching by using common size
+                    p.Size = Math.Max(((string) item).Length + 1, 4000);		// Help query plan caching by using common size
                     p.Value = item;
                 }
                 else if (t == typeof(bool))
@@ -362,8 +360,7 @@ namespace Plato.Internal.Data.Providers
             cmd.Parameters.Add(p);
 
         }
-
-      
+        
         #endregion
 
         #region "Virtual Methods"
