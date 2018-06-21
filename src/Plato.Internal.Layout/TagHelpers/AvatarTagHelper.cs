@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -12,18 +9,17 @@ using Microsoft.AspNetCore.Routing;
 namespace Plato.Internal.Layout.TagHelpers
 {
 
-    [HtmlTargetElement("userphoto")]
-    public class UserPhotoTagHelper : TagHelper
+    [HtmlTargetElement("avatar")]
+    public class AvatarTagHelper : TagHelper
     {
 
         public int UserId { get; set; }
-
-
+        
         private readonly IUrlHelper _urlHelper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionContextAccesor;
 
-        public UserPhotoTagHelper(
+        public AvatarTagHelper(
             IUrlHelperFactory urlHelperFactory,
             IHttpContextAccessor httpContextAccessor, 
             IActionContextAccessor actionContextAccesor)
@@ -47,12 +43,11 @@ namespace Plato.Internal.Layout.TagHelpers
                     {"Id", this.UserId}
                 }
             });
-
-            // Ensure no surrounding element
-            output.TagName = "img";
+            
+            output.TagName = "div";
             output.TagMode = TagMode.SelfClosing;
-            output.Attributes.Add("src", url);
-
+            output.Attributes.Add("style", $"background-image: url('{url}');");
+            
             return Task.CompletedTask;
 
         }

@@ -1,13 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
@@ -18,16 +22,19 @@ namespace Plato.Users.ViewProviders
         private readonly UserManager<User> _userManager;
         private readonly IActionContextAccessor _actionContextAccesor;
         private readonly IHostingEnvironment _hostEnvironment;
+        private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
         private readonly IUrlHelper _urlHelper;
 
         public UserViewProvider(
             UserManager<User> userManager,
             IActionContextAccessor actionContextAccesor,
             IHostingEnvironment hostEnvironment,
-            IUrlHelperFactory urlHelperFactory)
+            IUrlHelperFactory urlHelperFactory,
+            IUserPhotoStore<UserPhoto> userPhotoStore)
         {
             _userManager = userManager;
             _hostEnvironment = hostEnvironment;
+            _userPhotoStore = userPhotoStore;
             _actionContextAccesor = actionContextAccesor;
             _urlHelper = urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
         }
@@ -71,15 +78,23 @@ namespace Plato.Users.ViewProviders
                 View<User>("User.Edit.Meta", model => user).Zone("meta"),
                 View<EditUserViewModel>("User.Edit.Content", model =>
                 {
-                    model.Id = user.Id.ToString();
+                    model.Id = user.Id;
                     model.UserName = user.UserName;
                     model.Email = user.Email;
                     model.PhotoUrl = photoUrl;
                     return model;
                 }).Zone("content"),
+                View<EditUserViewModel>("User.Edit.Sidebar", model =>
+                {
+                    model.Id = user.Id;
+                    model.UserName = user.UserName;
+                    model.Email = user.Email;
+                    model.PhotoUrl = photoUrl;
+                    return model;
+                }).Zone("sidebar"),
                 View<EditUserViewModel>("User.Edit.Footer", model =>
                 {
-                    model.Id = user.Id.ToString();
+                    model.Id = user.Id;
                     model.UserName = user.UserName;
                     model.Email = user.Email;
                     model.PhotoUrl = photoUrl;
@@ -87,7 +102,7 @@ namespace Plato.Users.ViewProviders
                 }).Zone("footer"),
                 View<EditUserViewModel>("User.Edit.Actions", model =>
                 {
-                    model.Id = user.Id.ToString();
+                    model.Id = user.Id;
                     model.UserName = user.UserName;
                     model.Email = user.Email;
                     model.PhotoUrl = photoUrl;
@@ -113,6 +128,11 @@ namespace Plato.Users.ViewProviders
             if (updater.ModelState.IsValid)
             {
 
+                if (model.AvatarFile != null)
+                {
+                    await UpdateUserPhoto(user, model.AvatarFile);
+                }
+
                 await _userManager.SetUserNameAsync(user, model.UserName);
                 await _userManager.SetEmailAsync(user, model.Email);
 
@@ -128,6 +148,59 @@ namespace Plato.Users.ViewProviders
             return await BuildEditAsync(user, updater);
 
         }
+
+        private async Task UpdateUserPhoto(User user, IFormFile file)
+        {
+            
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+            
+            byte[] bytes = null;
+            var stream = file.OpenReadStream();
+            if (stream != null)
+            {
+                bytes = stream.StreamToByteArray();
+            }
+            if (bytes == null)
+            {
+                return;
+            }
+
+            var id = 0;
+            var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
+            if (existingPhoto != null)
+            {
+                id = existingPhoto.Id;
+            }
+
+            var userPhoto = new UserPhoto
+            {
+                Id = id,
+                UserId = user.Id,
+                Name = file.FileName,
+                ContentType = file.ContentType,
+                ContentLength = file.Length,
+                ContentBlob = bytes,
+                CreatedUserId = user.Id,
+                CreatedDate = DateTime.UtcNow
+            };
+
+            if (id > 0)
+                userPhoto = await _userPhotoStore.UpdateAsync(userPhoto);
+            else
+                userPhoto = await _userPhotoStore.CreateAsync(userPhoto);
+
+            // update user
+            user.Detail.ModifiedUserId = user.Id;
+            user.Detail.ModifiedDate = DateTime.UtcNow;
+
+            //await _platoUserStore.UpdateAsync(user);
+
+
+
+        }
+
+
 
     }
 }

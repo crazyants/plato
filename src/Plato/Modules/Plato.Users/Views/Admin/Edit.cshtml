@@ -4,6 +4,7 @@
 }
 
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
+
     <div class="layout">
 
         <div class="layout-header">
@@ -31,8 +32,6 @@
         {
             <div class="row layout-content">
                 <div class="col-md-9">
-                    <h4>Content</h4>
-                    <br/>
                     @if (Model.Content != null)
                     {
                         @Html.ValidationSummary()
@@ -40,8 +39,6 @@
                     }
                 </div>
                 <div class="col-md-3">
-                    <h4>SideBar</h4>
-                    <br/>
                     @if (Model.SideBar != null)
                     {
                         <view model="@Model.SideBar"></view>

@@ -12,11 +12,14 @@
 
     <form asp-controller="Photo" asp-action="Upload" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" enctype="multipart/form-data">
 
-        <userphoto user-id="@Model" />
+        <avatar user-id="@Model" />
 
-        <input type="file" name="file" />
-        <br /><br />
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" name="file" />
+        </div>
+
         <input type="submit" value="Upload" />
+            
     </form>
     
 </body>

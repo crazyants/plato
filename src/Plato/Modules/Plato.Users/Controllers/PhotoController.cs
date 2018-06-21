@@ -63,27 +63,34 @@ namespace Plato.Users.Controllers
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            var sb = new StringBuilder();
-
+       
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
-                return View();
-
+            {
+                return NotFound();
+            }
+                
             byte[] bytes = null;
             var stream = file.OpenReadStream();
             if (stream != null)
+            {
                 bytes = stream.StreamToByteArray();
+            }
             if (bytes == null)
-                return View();
-
+            {
+                return NotFound();
+            }
+                
             var id = 0;
             var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
             if (existingPhoto != null)
+            {
                 id = existingPhoto.Id;
-
+            }
+                
             var userPhoto = new UserPhoto
             {
                 Id = id,
@@ -107,14 +114,12 @@ namespace Plato.Users.Controllers
 
             await _platoUserStore.UpdateAsync(user);
 
-            ViewData["Test"] = sb.ToString();
-
             return View();
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Serve(int id)
+        public async Task Serve(int id)
         {
             
             var userPhoto = await _userPhotoStore.GetByUserIdAsync(id);
@@ -124,6 +129,7 @@ namespace Plato.Users.Controllers
             {
                 r.ContentType = userPhoto.ContentType;
                 r.Headers.Add("content-disposition", "filename=\"" + userPhoto.Name + "\"");
+                r.Headers.Add("content-length", Convert.ToString((int)userPhoto.ContentLength));
                 r.Body.Write(userPhoto.ContentBlob, 0, (int) userPhoto.ContentLength);
             }
             else
@@ -133,10 +139,11 @@ namespace Plato.Users.Controllers
                 {
                     r.ContentType = "image/png";
                     r.Headers.Add("content-disposition", "filename=\"empty.png\"");
+                    r.Headers.Add("content-length", Convert.ToString((int)fileBytes.Length));
                     r.Body.Write(fileBytes, 0, fileBytes.Length);
                 }
             }
-            return View();
+            
         }
     }
 }

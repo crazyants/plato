@@ -2,8 +2,6 @@
 
 <input asp-for="Id" type="hidden" />
 
-<div class="row">
-    <div class="col-md-8">
 
         <div class="form-group" asp-validation-class-for="UserName">
             <label asp-for="UserName"><strong>@T["Name"]</strong></label>
@@ -17,13 +15,18 @@
             <input asp-for="Email" class="form-control" type="email"/>
         </div>
 
-    </div>
+ 
+    <!--
     <div class="col-md-4">
 
         <h5>@T["Profile picture"]</h5>
         
         <iframe class="no-gutters no-padding border-0" scrolling="yes" src="@Model.PhotoUrl"></iframe>
         
-    </div>
+        
+        <userphoto user-id="@Model.Id"/>
+        
 
-</div>
+    </div>
+    -->
+

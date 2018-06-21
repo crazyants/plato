@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 
 namespace Plato.Users.ViewModels
 {
     public class EditUserViewModel
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string UserName { get; set; }
@@ -27,6 +28,8 @@ namespace Plato.Users.ViewModels
         //public RoleViewModel[] Roles { get; set; }
 
         public string PhotoUrl { get; set; }
+        
+        public IFormFile AvatarFile { get; set; }
 
     }
 }

@@ -23,6 +23,7 @@ $.Plato.Options = {
     BSToolTipEnabled: true,
     BSToolTipSelector: "[data-toggle='tooltip']",
     MagnificSelector: "[data-toggle='dialog']",
+    AvatarUploadSelector: "[data-upload='avatar']",
 };
 
 /* Simple logging */
@@ -64,11 +65,10 @@ $(function(win, doc, $) {
             $(o.BSToolTipSelector).tooltip();
             logger.log(logger.info, "Bootstratp tooltips initialized.");
         }
-        
 
+        // Enable nested dropdown support
         $("ul.dropdown-menu [data-toggle='dropdown']").on("click", function (event) {
-
-          
+            
             logger.log(logger.info, $(this).text() + " menu item clicked");
           
             // Avoid following the href location when clicking
@@ -82,6 +82,23 @@ $(function(win, doc, $) {
             
         });
         
+        // Avatar upload selector with preview
+        $(o.AvatarUploadSelector).change(function () {
+            function readUrl(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var previewSelector = $(input).attr("data-upload-preview-selector");
+                        $(previewSelector).css('background-image', ' url(' + e.target.result + ')');
+                        $(previewSelector).hide();
+                        $(previewSelector).fadeIn(650);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            readUrl(this);
+        });
+
 
     });
 
