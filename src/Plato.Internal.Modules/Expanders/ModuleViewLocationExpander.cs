@@ -5,9 +5,14 @@ namespace Plato.Internal.Modules.Expanders
 {
     public class ModuleViewLocationExpander : IViewLocationExpander
     {
-        
-        public ModuleViewLocationExpander()
+
+        private readonly string _id;
+
+
+
+        public ModuleViewLocationExpander(string id)
         {
+            _id = id;
         }
         
         public void PopulateValues(ViewLocationExpanderContext context)
@@ -20,8 +25,8 @@ namespace Plato.Internal.Modules.Expanders
         {
             var result = new List<string>
             {
-                "Modules/" + context.AreaName + "/Views/{1}/{0}" +  RazorViewEngine.ViewExtension,
-                "Modules/" + context.AreaName + "/Views/Shared/{0}" + RazorViewEngine.ViewExtension
+                "Modules/" + _id + "/Views/{1}/{0}" +  RazorViewEngine.ViewExtension,
+                "Modules/" + _id + "/Views/Shared/{0}" + RazorViewEngine.ViewExtension
             };
             result.AddRange(viewLocations);
             return result;

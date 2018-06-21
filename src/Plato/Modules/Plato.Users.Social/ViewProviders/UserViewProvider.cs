@@ -50,7 +50,7 @@ namespace Plato.Users.Social.ViewProviders
         {
         
             return Views(
-                View<EditSocialViewModel>("User.Edit.Content", model =>
+                View<EditSocialViewModel>("Social.Edit.Content", model =>
                 {
                     model.FacebookUrl = "";
                     return model;

@@ -197,14 +197,10 @@ namespace Plato.Internal.Hosting.Web.Extensions
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 // view location expanders for modules
-
-                options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
-
-                // TODO: Do we need this? We can just expand on current area name
-                //foreach (var moduleEntry in moduleManager.AvailableModules.Reverse())
-                //{
-                //    options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.ID));
-                //}
+                foreach (var moduleEntry in moduleManager.LoadModulesAsync().Result)
+                {
+                    options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.Id));
+                }
                 
                 // view location expanders for theme
 

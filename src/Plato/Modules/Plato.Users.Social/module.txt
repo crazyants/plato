@@ -1,5 +1,5 @@
-Name: Socialize
-Description: Adds various social media features into Plato for user profiles.
+Name: Users Social Media Fields
+Description: Adds popular social media features into user profiles.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Users
