@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Data;
+using Newtonsoft.Json;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Models.Annotations;
-using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Models.Users
 {
@@ -24,8 +22,10 @@ namespace Plato.Internal.Models.Users
 
         public string Serialize()
         {
-            throw new NotImplementedException();
+            return JsonConvert.SerializeObject(this);
         }
+
+
 
         #endregion#
 

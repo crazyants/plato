@@ -196,14 +196,14 @@ namespace Plato.Internal.Hosting.Web.Extensions
             
             services.Configure<RazorViewEngineOptions>(options =>
             {
-                // view location expanders for modules
+
+                // optionally load matching views from any module
                 foreach (var moduleEntry in moduleManager.LoadModulesAsync().Result)
                 {
                     options.ViewLocationExpanders.Add(new ModuleViewLocationExpander(moduleEntry.Descriptor.Id));
                 }
                 
                 // view location expanders for theme
-
                 options.ViewLocationExpanders.Add(new ThemeViewLocationExpander("classic"));
 
                 // ensure loaded modules are aware of current context

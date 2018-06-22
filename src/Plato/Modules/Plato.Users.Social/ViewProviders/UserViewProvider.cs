@@ -8,6 +8,8 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Users.Social.Models;
+using Plato.Users.Social.Services;
 using Plato.Users.Social.ViewModels;
 
 namespace Plato.Users.Social.ViewProviders
@@ -16,23 +18,18 @@ namespace Plato.Users.Social.ViewProviders
     {
 
         private readonly UserManager<User> _userManager;
-        private readonly IActionContextAccessor _actionContextAccesor;
-        private readonly IHostingEnvironment _hostEnvironment;
-        private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-        private readonly IUrlHelper _urlHelper;
+ 
+        private readonly ISocialLinksStore _socialLinksStore;
 
         public UserViewProvider(
             UserManager<User> userManager,
-            IActionContextAccessor actionContextAccesor,
-            IHostingEnvironment hostEnvironment,
-            IUrlHelperFactory urlHelperFactory,
-            IUserPhotoStore<UserPhoto> userPhotoStore)
+            ISocialLinksStore socialLinksStore)
         {
+
             _userManager = userManager;
-            _hostEnvironment = hostEnvironment;
-            _userPhotoStore = userPhotoStore;
-            _actionContextAccesor = actionContextAccesor;
-            _urlHelper = urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
+            _socialLinksStore = socialLinksStore;
+           
+            
         }
 
 
@@ -48,11 +45,14 @@ namespace Plato.Users.Social.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
-        
+
+            var socialLinks = await _socialLinksStore.GetAsync(user.Id);
+
+
             return Views(
                 View<EditSocialViewModel>("Social.Edit.Content", model =>
                 {
-                    model.FacebookUrl = "";
+                    model.FacebookUrl = socialLinks?.FacebookUrl;
                     return model;
                 }).Order(10)
             );
@@ -68,19 +68,17 @@ namespace Plato.Users.Social.ViewProviders
             {
                 return await BuildEditAsync(user, updater);
             }
-
+            
             //model.FacebookUrl = model.UserName?.Trim();
 
             if (updater.ModelState.IsValid)
             {
                 
-                var result = await _userManager.UpdateAsync(user);
-
-                foreach (var error in result.Errors)
+                var result = await _socialLinksStore.UpdateAsync(user.Id, new SocialLinks()
                 {
-                    updater.ModelState.AddModelError(string.Empty, error.Description);
-                }
-
+                    FacebookUrl = model.FacebookUrl
+                });
+                
             }
             
             return await BuildEditAsync(user, updater);

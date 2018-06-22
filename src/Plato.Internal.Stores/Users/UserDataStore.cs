@@ -32,7 +32,7 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<T> GetAsync<T>(int userId, string key)
         {
-            var result = await GetByKeyAsync(userId, key);
+            var result = await GetByUserIdAndKeyAsync(userId, key);
             if (result != null)
             {
                 return await result.Value.DeserializeAsync<T>();
@@ -45,16 +45,17 @@ namespace Plato.Internal.Stores.Users
         {
 
             // Get or create setting
-            var existingData = await GetAsync<UserData>(userId, key)
-                                  ?? new UserData()
-                                  {
-                                      Key = key
-                                  };
+            var data = await GetByUserIdAndKeyAsync(userId, key)
+                       ?? new UserData()
+                       {
+                           UserId = userId,
+                           Key = key
+                       };
 
             // Serilize value
-            existingData.Value = value.Serialize();
+            data.Value = value.Serialize();
 
-            var updatedData = await _userDataRepository.InsertUpdateAsync(existingData);
+            var updatedData = await _userDataRepository.InsertUpdateAsync(data);
             if (updatedData != null)
             {
                 return await GetAsync<T>(userId, updatedData.Key);
@@ -72,7 +73,7 @@ namespace Plato.Internal.Stores.Users
 
         #region "Private Methods"
 
-        private async Task<UserData> GetByKeyAsync(int userId, string key)
+        private async Task<UserData> GetByUserIdAndKeyAsync(int userId, string key)
         {
             var allKeys = await GetAllKeys(userId);
             return allKeys?.FirstOrDefault(s => s.Key == key);

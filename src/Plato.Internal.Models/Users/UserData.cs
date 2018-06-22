@@ -11,17 +11,12 @@ namespace Plato.Internal.Models.Users
 
         #region "Public Properties"
 
-        [PrimaryKey]
-        [ColumnName("Id", typeof(int))]
         public int Id { get; set; }
 
-        [ColumnName("UserId", typeof(int))]
         public int UserId { get; set; }
 
-        [ColumnName("Key", typeof(string), 255)]
         public string Key { get; set; }
 
-        [ColumnName("Value", typeof(string))]
         public string Value { get; set; }
 
         public DateTime? CreatedDate { get; set; }
@@ -63,7 +58,7 @@ namespace Plato.Internal.Models.Users
                 this.Key = Convert.ToString(dr["Key"]);
 
             if (dr.ColumnIsNotNull("Value"))
-                this.Value = Convert.ToString(dr["Values"]);
+                this.Value = Convert.ToString(dr["Value"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
                 this.CreatedDate = Convert.ToDateTime((dr["CreatedDate"]));

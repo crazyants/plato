@@ -44,7 +44,7 @@ namespace Plato.Internal.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                    "SelectUserDataById", id);
+                    "SelectUserDatumById", id);
                 if (reader != null)
                 {
                     if (reader.HasRows)
@@ -73,7 +73,8 @@ namespace Plato.Internal.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectUserDataByUserId");
+                    "SelectUserDatumByUserId",
+                    userId);
                 if (reader != null)
                 {
                     if (reader.HasRows)
@@ -81,9 +82,9 @@ namespace Plato.Internal.Repositories.Users
                         data = new List<UserData>();
                         while (await reader.ReadAsync())
                         {
-                            var setting = new UserData();
-                            setting.PopulateModel(reader);
-                            data.Add(setting);
+                            var userData = new UserData();
+                            userData.PopulateModel(reader);
+                            data.Add(userData);
                         }
                     }
                 }
@@ -144,7 +145,7 @@ namespace Plato.Internal.Repositories.Users
                     return 0;
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "InsertUpdateUserData",
+                    "InsertUpdateUserDatum",
                     id,
                     userId,
                     key.ToEmptyIfNull().TrimToSize(255),

@@ -389,7 +389,7 @@ namespace Plato.Users.Services
                 .CreateTable(userData)
                 // Create basic default CRUD procedures
                 .CreateDefaultProcedures(userData)
-                .CreateProcedure(new SchemaProcedure("SelectUserDataByUserId", StoredProcedureType.SelectByKey)
+                .CreateProcedure(new SchemaProcedure("SelectUserDatumByUserId", StoredProcedureType.SelectByKey)
                     .ForTable(userData)
                     .WithParameter(new SchemaColumn() {Name = "UserId", DbType = DbType.Int32}));
 

@@ -8,6 +8,7 @@ using Plato.Internal.Features;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
+using Plato.Users.Social.Services;
 using Plato.Users.Social.ViewProviders;
 
 namespace Plato.Users.Social
@@ -26,6 +27,8 @@ namespace Plato.Users.Social
 
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
+
+            services.AddScoped<ISocialLinksStore, SocialLinksStore>();
 
 
         }
