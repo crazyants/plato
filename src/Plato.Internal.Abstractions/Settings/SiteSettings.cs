@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Plato.Internal.Abstractions.Settings
 {
-    public sealed class SiteSettings : ISiteSettings
+    public sealed class SiteSettings : Serializable, ISiteSettings
     {
 
         public string SiteName { get; set; }

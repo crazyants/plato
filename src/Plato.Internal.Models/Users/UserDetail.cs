@@ -5,7 +5,7 @@ using Plato.Internal.Abstractions;
 namespace Plato.Internal.Models.Users
 {
     
-    public class UserDetail : ISerializable
+    public class UserDetail : Serializable
     {
 
         #region "Public Properties"
@@ -20,10 +20,10 @@ namespace Plato.Internal.Models.Users
 
         #region "Implementation"
 
-        public string Serialize()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
+        //public string Serialize()
+        //{
+        //    return JsonConvert.SerializeObject(this);
+        //}
 
 
 

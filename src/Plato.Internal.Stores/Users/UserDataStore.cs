@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
@@ -35,6 +36,11 @@ namespace Plato.Internal.Stores.Users
             var result = await GetByUserIdAndKeyAsync(userId, key);
             if (result != null)
             {
+                var serializable = typeof(T) as ISerializable;
+                if (serializable != null)
+                {
+                    return await serializable.DeserializeGenericTypeAsync<T>(result.Value);
+                }
                 return await result.Value.DeserializeAsync<T>();
             }
 

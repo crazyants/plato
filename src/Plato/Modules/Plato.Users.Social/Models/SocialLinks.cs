@@ -1,17 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Plato.Internal.Abstractions;
 
 namespace Plato.Users.Social.Models
 {
-    public class SocialLinks : ISerializable
+    public class SocialLinks : Serializable
     {
 
         public string FacebookUrl { get; set; }
-        
-        public string Serialize()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
 
     }
+
 }

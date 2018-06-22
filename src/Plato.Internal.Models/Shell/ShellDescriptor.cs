@@ -11,15 +11,11 @@ namespace Plato.Internal.Models.Shell
 
     }
 
-    public class ShellDescriptor : IShellDescriptor
+    public class ShellDescriptor : Serializable, IShellDescriptor
     {
 
         public IList<ShellModule> Modules { get; set; } = new List<ShellModule>();
-
-        public string Serialize()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
-
+        
     }
+
 }
