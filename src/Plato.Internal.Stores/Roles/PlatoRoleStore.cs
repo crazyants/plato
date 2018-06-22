@@ -8,39 +8,48 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Repositories.Roles;
+using Plato.Internal.Stores.Abstract;
 using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Internal.Stores.Roles
 {
     public class PlatoRoleStore : IPlatoRoleStore
     {
-        #region "Constructor"
-
-        public PlatoRoleStore(
-            IRoleRepository<Role> roleRepository,
-            IMemoryCache memoryCache,
-            IDistributedCache distributedCache,
-            ILogger<PlatoRoleStore> logger)
-        {
-            _roleRepository = roleRepository;
-            _memoryCache = memoryCache;
-            _distributedCache = distributedCache;
-            _logger = logger;
-        }
-
-        #endregion
 
         #region "Private Variables"
 
         private readonly string _key = CacheKeys.Roles.ToString();
 
+        #endregion
+
+        #region "Constructor"
+
+
+        private readonly IDbQuery _dbQuery;
         private readonly IRoleRepository<Role> _roleRepository;
         private readonly IMemoryCache _memoryCache;
         private readonly IDistributedCache _distributedCache;
         private readonly ILogger<PlatoRoleStore> _logger;
 
-        #endregion
+        private readonly IDocumentStore _documentStore;
 
+        public PlatoRoleStore(
+            IRoleRepository<Role> roleRepository,
+            IMemoryCache memoryCache,
+            IDistributedCache distributedCache,
+            ILogger<PlatoRoleStore> logger,
+            IDocumentStore documentStore, IDbQuery dbQuery)
+        {
+            _roleRepository = roleRepository;
+            _memoryCache = memoryCache;
+            _distributedCache = distributedCache;
+            _logger = logger;
+            _documentStore = documentStore;
+            _dbQuery = dbQuery;
+        }
+
+        #endregion
+        
         #region "Implementation"
 
         public async Task<Role> CreateAsync(Role model)
@@ -48,16 +57,16 @@ namespace Plato.Internal.Stores.Roles
             return await _roleRepository.InsertUpdateAsync(model);
         }
 
-        public async Task<Role> UpdateAsync(Role model)
+        public async Task<Role> UpdateAsync(Role role)
         {
             _memoryCache.Remove(_key);
-            return await _roleRepository.InsertUpdateAsync(model);
+            return await _roleRepository.InsertUpdateAsync(role);
         }
 
-        public async Task<bool> DeleteAsync(Role model)
+        public async Task<bool> DeleteAsync(Role role)
         {
             _memoryCache.Remove(_key);
-            return await _roleRepository.DeleteAsync(model.Id);
+            return await _roleRepository.DeleteAsync(role.Id);
         }
 
         public async Task<Role> GetByIdAsync(int id)
@@ -68,8 +77,10 @@ namespace Plato.Internal.Stores.Roles
                 if (role != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Debug))
+                    {
                         _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
                             _memoryCache.GetType().Name, _key);
+                    }
                     _memoryCache.Set(_key, role);
                 }
             }
@@ -84,8 +95,10 @@ namespace Plato.Internal.Stores.Roles
                 if (role != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Debug))
+                    {
                         _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
                             _memoryCache.GetType().Name, _key);
+                    }
                     _memoryCache.Set(_key, role);
                 }
             }
@@ -100,8 +113,10 @@ namespace Plato.Internal.Stores.Roles
                 if (role != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Debug))
+                    {
                         _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
                             _memoryCache.GetType().Name, _key);
+                    }
                     _memoryCache.Set(_key, role);
                 }
             }
@@ -110,7 +125,8 @@ namespace Plato.Internal.Stores.Roles
 
         public IQuery QueryAsync()
         {
-            throw new NotImplementedException();
+            var query = new RoleQuery(this);
+            return _dbQuery.ConfigureQuery(query); ;
         }
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
@@ -121,8 +137,10 @@ namespace Plato.Internal.Stores.Roles
                 if (roles != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Debug))
+                    {
                         _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
                             _memoryCache.GetType().Name, _key);
+                    }
                     _memoryCache.Set(_key, roles);
                 }
             }
@@ -146,5 +164,6 @@ namespace Plato.Internal.Stores.Roles
         }
 
         #endregion
+
     }
 }

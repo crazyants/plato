@@ -1,0 +1,10 @@
+﻿@model RolesIndexViewModel
+
+<card title="@T["Roles"]">
+    <ul class="list-group list-group-flush list-group-hover">
+        @foreach (var role in Model.Roles)
+        {
+            @role.Name
+        }
+    </ul>
+</card>

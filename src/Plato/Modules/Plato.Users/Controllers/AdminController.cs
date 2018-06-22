@@ -20,7 +20,7 @@ namespace Plato.Users.Controllers
     {
 
         private readonly IViewProviderManager<User> _userViewProvider;
-        private readonly IViewProviderManager<UsersPagedViewModel> _userListViewProvider;
+        private readonly IViewProviderManager<UsersIndexViewModel> _userListViewProvider;
         private readonly IPlatoUserStore<User> _ploatUserStore;
         private readonly IAlerter _alerter;
 
@@ -33,7 +33,7 @@ namespace Plato.Users.Controllers
             IHtmlLocalizer<AdminController> localizer,
             IPlatoUserStore<User> platoUserStore, 
             IViewProviderManager<User> userViewProvider,
-            IViewProviderManager<UsersPagedViewModel> userListViewProvider,
+            IViewProviderManager<UsersIndexViewModel> userListViewProvider,
             UserManager<User> userManager,
             IAlerter alerter)
         {
@@ -159,12 +159,12 @@ namespace Plato.Users.Controllers
 
         #region "Private Methods"
 
-        private async Task<UsersPagedViewModel> GetPagedModel(
+        private async Task<UsersIndexViewModel> GetPagedModel(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
             var users = await GetUsers(filterOptions, pagerOptions);
-            return new UsersPagedViewModel(
+            return new UsersIndexViewModel(
                 users,
                 filterOptions,
                 pagerOptions);
@@ -190,8 +190,7 @@ namespace Plato.Users.Controllers
                 .OrderBy("Id", OrderBy.Asc)
                 .ToList<User>();
         }
-
-
+        
         #endregion
 
     }

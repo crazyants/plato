@@ -80,12 +80,18 @@ namespace Plato.Internal.Repositories.Roles
             if (role == null)
                 throw new ArgumentNullException(nameof(role));
 
+            var claims = "";
+            if (role.RoleClaims != null)
+            {
+                claims = role.RoleClaims.Serialize();
+            }
+                
             var id = await InsertUpdateInternal(
                 role.Id,
                 role.Name,
                 role.NormalizedName,
                 role.Description,
-                role.RoleClaims.Serialize(),
+                claims,
                 role.CreatedDate,
                 role.CreatedUserId,
                 role.ModifiedDate,

@@ -7,34 +7,30 @@ using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
 {
-    public class UserIndexViewProvider : BaseViewProvider<UsersPagedViewModel>
+    public class UserIndexViewProvider : BaseViewProvider<UsersIndexViewModel>
     {
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(UsersPagedViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(UsersIndexViewModel model, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
-
-        public override async Task<IViewProviderResult> BuildIndexAsync(UsersPagedViewModel viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(UsersIndexViewModel viewModel, IUpdateModel updater)
         {
-
             return Views(
-                View<UsersPagedViewModel>("User.Index.Header", model => viewModel).Zone("header"),
-                View<UsersPagedViewModel>("User.Index.Tools", model => viewModel).Zone("tools"),
-                View<UsersPagedViewModel>("User.Index.Content", model => viewModel).Zone("content")
+                View<UsersIndexViewModel>("User.Index.Header", model => viewModel).Zone("header"),
+                View<UsersIndexViewModel>("User.Index.Tools", model => viewModel).Zone("tools"),
+                View<UsersIndexViewModel>("User.Index.Content", model => viewModel).Zone("content")
             );
-
-
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(UsersPagedViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(UsersIndexViewModel model, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(UsersPagedViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(UsersIndexViewModel model, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
     }
 }

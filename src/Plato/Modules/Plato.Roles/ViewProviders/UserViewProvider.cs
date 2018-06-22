@@ -14,47 +14,39 @@ namespace Plato.Roles.ViewProviders
     {
 
         private readonly UserManager<User> _userManager;
-
-     
+        
         public UserViewProvider(
             UserManager<User> userManager)
         {
-
             _userManager = userManager;
-         
-
-
         }
 
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
         {
-            return null;
+            return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
         {
-            return null;
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
-
-          
             return Views(
-                View<EditRolesViewModel>("Roles.Edit.Content", model =>
+                View<EditRoleViewModel>("Role.Edit.Content", model =>
                 {
                     
                     return model;
                 }).Order(2)
             );
-
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IUpdateModel updater)
         {
 
-            var model = new EditRolesViewModel();
+            var model = new EditRoleViewModel();
 
             if (!await updater.TryUpdateModelAsync(model))
             {

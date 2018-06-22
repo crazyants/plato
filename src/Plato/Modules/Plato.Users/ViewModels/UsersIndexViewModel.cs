@@ -14,15 +14,15 @@ namespace Plato.Users.ViewModels
 
     }
 
-    public class UsersPagedViewModel
+    public class UsersIndexViewModel
     {
 
-        public UsersPagedViewModel()
+        public UsersIndexViewModel()
         {
 
         }
 
-        public UsersPagedViewModel(
+        public UsersIndexViewModel(
             IPagedResults<User> results,
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
@@ -38,10 +38,7 @@ namespace Plato.Users.ViewModels
         public PagerOptions PagerOpts { get; set; }
 
         public FilterOptions FilterOpts { get; set; }
-        
-        public object PartialView { get; set; }
-
-        public object ViewComponent { get; set; }
+    
     }
 
     public class FilterOptions

@@ -157,6 +157,22 @@ namespace Plato.Roles.Services
                         {
                             Name = "UserId",
                             DbType = DbType.Int32
+                        }))
+                    .CreateProcedure(new SchemaProcedure("SelectRolesPaged", StoredProcedureType.SelectPaged)
+                        .ForTable(roles)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "Id",
+                                DbType = DbType.Int32
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "RoleName",
+                                DbType = DbType.String,
+                                Length = "255"
+                            }
                         }));
 
 
