@@ -26,7 +26,7 @@ namespace Plato.Internal.Repositories.Extensions
             // users
             services.AddScoped<IUserRepository<User>, UserRepository>();
             services.AddScoped<IUserSecretRepository<UserSecret>, UserSecretRepository>();
-            services.AddScoped<IUserDetailRepository<UserDetail>, UserDetailRepository>();
+            services.AddScoped<IUserDataRepository<UserData>, UserDataRepository>();
             services.AddScoped<IUserPhotoRepository<UserPhoto>, UserPhotoRepository>();
             services.AddScoped<IUserBannerRepository<UserBanner>, UserBannerRepository>();
             services.AddScoped<IUserRolesRepository<UserRole>, UserRolesRepository>();

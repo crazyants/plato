@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Data;
-using System.Collections.Generic;
 using Plato.Internal.Models.Annotations;
 using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Models.Users
 {
     
-    public class UserSetting : IModel<UserSetting>
+    public class UserData : IModel<UserData>
     {
 
         #region "Public Properties"
@@ -37,12 +36,12 @@ namespace Plato.Internal.Models.Users
 
         #region "Constructor"
 
-        public UserSetting()
+        public UserData()
         {
 
         }
 
-        public UserSetting(IDataReader reader)
+        public UserData(IDataReader reader)
         {
             PopulateModel(reader);
         }
@@ -80,7 +79,7 @@ namespace Plato.Internal.Models.Users
 
         }
 
-        public void PopulateModel(Action<UserSetting> model)
+        public void PopulateModel(Action<UserData> model)
         {
             model(this);
         }

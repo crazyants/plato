@@ -17,7 +17,7 @@ namespace Plato.Internal.Repositories.Users
 
         private readonly IDbContext _dbContext;
         private readonly IUserSecretRepository<UserSecret> _userSecretRepository;
-        private readonly IUserDetailRepository<UserDetail> _userDetailRepository;
+        //private readonly IUserDetailRepository<UserDetail> _userDetailRepository;
         //private readonly IUserPhotoRepository<UserPhoto> _userPhotoRepository;
 
         private readonly ILogger<UserSecretRepository> _logger;
@@ -29,12 +29,11 @@ namespace Plato.Internal.Repositories.Users
         public UserRepository(
             IDbContext dbContext,
             IUserSecretRepository<UserSecret> userSecretRepository,
-            IUserDetailRepository<UserDetail> userDetailRepository,
             ILogger<UserSecretRepository> logger)
         {
             _dbContext = dbContext;
             _userSecretRepository = userSecretRepository;
-            _userDetailRepository = userDetailRepository;
+            //_userDetailRepository = userDetailRepository;
             _logger = logger;
         }
 
@@ -57,8 +56,8 @@ namespace Plato.Internal.Repositories.Users
             if (_userSecretRepository == null)
                 throw new ArgumentNullException(nameof(_userSecretRepository));
 
-            if (_userDetailRepository == null)
-                throw new ArgumentNullException(nameof(_userDetailRepository));
+            //if (_userDetailRepository == null)
+            //    throw new ArgumentNullException(nameof(_userDetailRepository));
             
             var id = await InsertUpdateInternal(
                 user.Id,

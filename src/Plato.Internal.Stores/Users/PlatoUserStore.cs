@@ -217,7 +217,6 @@ namespace Plato.Internal.Stores.Users
             _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByEmail, user.Email));
             _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByUserName, user.UserName));
             _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByUserNameNormalzied, user.NormalizedUserName));
-            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByApiKey, user.Detail.ApiKey));
         }
 
         private string GetCacheKey(LocalCacheKeys cacheKey, object vaule)

@@ -11,6 +11,7 @@ using Plato.Internal.Models;
 using Plato.Internal.Models.Abstract;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstract;
+using Plato.Internal.Stores.Users;
 
 namespace Plato.Users.Controllers
 {
@@ -35,19 +36,22 @@ namespace Plato.Users.Controllers
         private readonly ISchemaBuilder _schemaBuilder;
 
         public readonly IDocumentStore _documentStore;
+        private readonly IUserDetailsStore _userDetailStore;
 
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManage,
             IHttpContextAccessor httpContextAccessor, 
             ISchemaBuilder schemaBuilder,
-            IDocumentStore documentStore)
+            IDocumentStore documentStore,
+            IUserDetailsStore userDetailStore)
         {
             _userManager = userManager;
             _signInManager = signInManage;
             _httpContextAccessor = httpContextAccessor;
             _schemaBuilder = schemaBuilder;
             _documentStore = documentStore;
+            _userDetailStore = userDetailStore;
         }
 
         [HttpGet]
@@ -55,13 +59,24 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Login(string returnUrl = null)
         {
 
+            var detail = new UserDetail()
+            {
+                IsEmailConfirmed = true
+            };
+
+            var newDetail = await _userDetailStore.UpdateAsync(1, detail);
+
+
+            var existingDetail = await _userDetailStore.GetAsync(1);
+
+
+
             var doc = new TestDocument2()
             {
                 Title = "test 123 123 ",
                 Body = "testing 123 123 123 "
             };
-
-
+            
             var existingDoc = await _documentStore.GetAsync<TestDocument2>();
             if (existingDoc != null)
             {
@@ -74,11 +89,9 @@ namespace Plato.Users.Controllers
                 sb.Append("Title: " + newDoc.Title);
                 sb.Append("<br>");
                 sb.Append("Body: " + newDoc.Body);
-
-
+                
                 ViewBag.docs = sb.ToString();
             }
-          
 
             //for (var i = 0; i < 500; i++)
             //{
@@ -92,143 +105,6 @@ namespace Plato.Users.Controllers
             //}
 
 
-            //var users = new SchemaTable()
-            //{
-            //    ViewName = "Users",
-            //    Columns = new List<SchemaColumn>()
-            //    {
-            //        new SchemaColumn()
-            //        {
-            //            PrimaryKey = true,
-            //            ViewName = "Id",
-            //            DbType = DbType.Int32
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "UserName",
-            //            Length = "255",
-            //            DbType = DbType.String
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "NormalizedUserName",
-            //            Length = "255",
-            //            DbType = DbType.String
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "Email",
-            //            Length = "255",
-            //            DbType = DbType.String
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "NormalizedEmail",
-            //            Length = "255",
-            //            DbType = DbType.String
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "EmailConfirmed",
-            //            DbType = DbType.Boolean
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "DisplayName",
-            //            Length = "255",
-            //            DbType = DbType.String
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "SamAccountName",
-            //            Length = "255",
-            //            DbType = DbType.String
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "PasswordHash",
-            //            Length = "255",
-            //            DbType = DbType.String
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "SecurityStamp",
-            //            Length = "255",
-            //            DbType = DbType.String
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "PhoneNumber",
-            //            Length = "255",
-            //            DbType = DbType.String
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "PhoneNumberConfirmed",
-            //            DbType = DbType.Boolean
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "TwoFactorEnabled",
-            //            DbType = DbType.Boolean
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "LockoutEnd",
-            //            Nullable = true,
-            //            DbType = DbType.DateTime2
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "LockoutEnabled",
-            //            DbType = DbType.Boolean
-            //        },
-            //        new SchemaColumn()
-            //        {
-            //            ViewName = "AccessFailedCount",
-            //            DbType = DbType.Int32
-            //        },
-            //    }
-            //};
-
-            //using (var builder = _schemaBuilder)
-            //{
-
-            //    // create tables and default procedures
-            //    builder
-            //        .Configure(options =>
-            //        {
-            //            options.ModuleName = "Plato.Users";
-            //            options.Version = "1.0.0";
-            //        })
-            //        .CreateProcedure(new SchemaProcedure("SelectUsersPaged", StoredProcedureType.SelectPaged)
-            //            .ForTable(users)
-            //            .WithParameters(new List<SchemaColumn>()
-            //            {
-            //                new SchemaColumn()
-            //                {
-            //                    ViewName = "Id",
-            //                    DbType = DbType.Int32
-            //                },
-            //                new SchemaColumn()
-            //                {
-            //                    ViewName = "UserName",
-            //                    DbType = DbType.String,
-            //                    Length = "255"
-            //                },
-            //                new SchemaColumn()
-            //                {
-            //                    ViewName = "Email",
-            //                    DbType = DbType.String,
-            //                    Length = "255"
-            //                }
-            //            }));
-
-
-            //    var result = await builder.ApplySchemaAsync();
-
-
-            //}
 
             var user = _httpContextAccessor.HttpContext.User;
             var claims = user.Claims;

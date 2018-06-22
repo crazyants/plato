@@ -40,8 +40,8 @@ namespace Plato.Users.Services
                 // userphoto schema
                 UserPhoto(builder);
 
-                // UserDetails schema
-                UserDetails(builder);
+                // UserData schema
+                UserData(builder);
 
                 var result = await builder.ApplySchemaAsync();
                 if (result.Errors.Count > 0)
@@ -330,12 +330,12 @@ namespace Plato.Users.Services
 
         }
 
-        void UserDetails(ISchemaBuilder builder)
+        void UserData(ISchemaBuilder builder)
         {
 
-            var userDetails = new SchemaTable()
+            var userData = new SchemaTable()
             {
-                Name = "UserDetails",
+                Name = "UserData",
                 Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -351,7 +351,13 @@ namespace Plato.Users.Services
                     },
                     new SchemaColumn()
                     {
-                        Name = "Details",
+                        Name = "[Key]",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Value]",
                         Length = "max",
                         DbType = DbType.String
                     },
@@ -380,11 +386,11 @@ namespace Plato.Users.Services
 
             builder
                 // Create tables
-                .CreateTable(userDetails)
+                .CreateTable(userData)
                 // Create basic default CRUD procedures
-                .CreateDefaultProcedures(userDetails)
-                .CreateProcedure(new SchemaProcedure("SelectUserDetailsByUserId", StoredProcedureType.SelectByKey)
-                    .ForTable(userDetails)
+                .CreateDefaultProcedures(userData)
+                .CreateProcedure(new SchemaProcedure("SelectUserDataByUserId", StoredProcedureType.SelectByKey)
+                    .ForTable(userData)
                     .WithParameter(new SchemaColumn() {Name = "UserId", DbType = DbType.Int32}));
 
         }

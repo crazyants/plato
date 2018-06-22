@@ -10,7 +10,7 @@ using Plato.Internal.Repositories.Abstract;
 
 namespace Plato.Internal.Repositories.Users
 {
-    public class UserSettingsRepository : IUserSettingsRepository<UserSetting>
+    public class UserDataRepository : IUserDataRepository<UserData>
     {
 
         #region Private Variables"
@@ -22,7 +22,7 @@ namespace Plato.Internal.Repositories.Users
 
         #region "Constructor"
 
-        public UserSettingsRepository(
+        public UserDataRepository(
             IDbContext dbContext,
             ILogger<DictionaryRepository> logger)
         {
@@ -34,31 +34,7 @@ namespace Plato.Internal.Repositories.Users
 
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int id)
-        {
-            if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Deleting setting with id: {id}");
-            
-            throw new NotImplementedException();
-        }
-
-        public async Task<UserSetting> InsertUpdateAsync(UserSetting setting)
-        {
-            var id = await InsertUpdateInternal(
-                setting.Id,
-                setting.UserId,
-                setting.Key.ToEmptyIfNull().TrimToSize(255),
-                setting.Value.ToEmptyIfNull(),
-                setting.CreatedDate.ToDateIfNull(),
-                setting.CreatedUserId,
-                setting.ModifiedDate.ToDateIfNull(),
-                setting.ModifiedUserId);
-            if (id > 0)
-                return await SelectByIdAsync(id);
-            return null;
-        }
-
-        public async Task<UserSetting> SelectByIdAsync(int id)
+        public async Task<UserData> SelectByIdAsync(int id)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -68,15 +44,15 @@ namespace Plato.Internal.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                    "SelectUserSettingById", id);
+                    "SelectUserDataById", id);
                 if (reader != null)
                 {
                     if (reader.HasRows)
                     {
-                        var setting = new UserSetting();
+                        var data = new UserData();
                         await reader.ReadAsync();
-                        setting.PopulateModel(reader);
-                        return setting;
+                        data.PopulateModel(reader);
+                        return data;
                     }
                 }
 
@@ -86,34 +62,58 @@ namespace Plato.Internal.Repositories.Users
 
         }
 
-        public async Task<IEnumerable<UserSetting>> SelectSettingsByUserId(int userId)
+        public async Task<IEnumerable<UserData>> SelectDataByUserId(int userId)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Selecting all user settings for userId {userId}");
+                _logger.LogInformation($"Selecting all user data for userId {userId}");
 
-            List<UserSetting> settings = null;
+            List<UserData> data = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectUserSettingsByUserId");
+                    "SelectUserDataByUserId");
                 if (reader != null)
                 {
                     if (reader.HasRows)
                     {
-                        settings = new List<UserSetting>();
+                        data = new List<UserData>();
                         while (await reader.ReadAsync())
                         {
-                            var setting = new UserSetting();
+                            var setting = new UserData();
                             setting.PopulateModel(reader);
-                            settings.Add(setting);
+                            data.Add(setting);
                         }
                     }
                 }
             }
-            return settings;
+            return data;
 
+        }
+
+        public async Task<UserData> InsertUpdateAsync(UserData data)
+        {
+            var id = await InsertUpdateInternal(
+                data.Id,
+                data.UserId,
+                data.Key.ToEmptyIfNull().TrimToSize(255),
+                data.Value.ToEmptyIfNull(),
+                data.CreatedDate.ToDateIfNull(),
+                data.CreatedUserId,
+                data.ModifiedDate.ToDateIfNull(),
+                data.ModifiedUserId);
+            if (id > 0)
+                return await SelectByIdAsync(id);
+            return null;
+        }
+
+        public Task<bool> DeleteAsync(int id)
+        {
+            if (_logger.IsEnabled(LogLevel.Information))
+                _logger.LogInformation($"Deleting user data with id: {id}");
+            
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -128,15 +128,14 @@ namespace Plato.Internal.Repositories.Users
             DateTime? createdDate,
             int createdUserId,
             DateTime? modifiedDate,
-            int modifiedUserId
-            )
+            int modifiedUserId)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation(id == 0
-                    ? $"Inserting user settings with key: {key}"
-                    : $"Updating user settings with id: {id}");
+                    ? $"Inserting user data with key: {key}"
+                    : $"Updating user data with id: {id}");
             }
 
             using (var context = _dbContext)
@@ -145,7 +144,7 @@ namespace Plato.Internal.Repositories.Users
                     return 0;
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "InsertUpdateUserSetting",
+                    "InsertUpdateUserData",
                     id,
                     userId,
                     key.ToEmptyIfNull().TrimToSize(255),
