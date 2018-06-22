@@ -9,6 +9,10 @@ namespace Plato.Users.Social.Models
 
         public string FacebookUrl { get; set; }
 
+        public string TwitterUrl { get; set; }
+
+        public string YouTubeUrl { get; set; }
+
     }
 
 }

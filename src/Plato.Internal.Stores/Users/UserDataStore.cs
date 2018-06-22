@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
@@ -10,7 +9,7 @@ using Plato.Internal.Repositories.Users;
 
 namespace Plato.Internal.Stores.Users
 {
-    public class UserDataStore : IUserDataStore<UserData>
+    public class UserDataStore : IUserDataStore
     {
 
         #region "Private Variables"
@@ -36,6 +35,11 @@ namespace Plato.Internal.Stores.Users
             var result = await GetByUserIdAndKeyAsync(userId, key);
             if (result != null)
             {
+                // If the generic type implements ISerializable use
+                // the the DeserializeAsync method on the generic type
+                // Allows us to implement our own Serialize and Deserialize
+                // methods on the type if we want to override the default
+                // Serializable base class virtual methods
                 var serializable = typeof(T) as ISerializable;
                 if (serializable != null)
                 {
@@ -59,7 +63,7 @@ namespace Plato.Internal.Stores.Users
                        };
 
             // Serilize value
-            data.Value = value.Serialize();
+            data.Value = await value.SerializeAsync();
 
             var updatedData = await _userDataRepository.InsertUpdateAsync(data);
             if (updatedData != null)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
 using Plato.Internal.Models.Abstract;
@@ -45,7 +46,7 @@ namespace Plato.Internal.Stores.Abstract
                         };
 
             // Update entry with latest document
-            entry.Value = document.Serialize();
+            entry.Value = await document.SerializeAsync();
 
             // Set meta data
             entry.CreatedDate = entry.Id == 0 ? System.DateTime.Now : entry.CreatedDate;
@@ -113,7 +114,13 @@ namespace Plato.Internal.Stores.Abstract
             {
                 return default(TModel);
             }
-            
+
+            var serializable = typeof(TModel) as ISerializable;
+            if (serializable != null)
+            {
+                return await serializable.DeserializeGenericTypeAsync<TModel>(entry.Value);
+            }
+
             return await entry.Value.DeserializeAsync<TModel>();
         }
         

@@ -44,11 +44,11 @@ namespace Plato.Internal.Stores.Extensions
          
             // Users
             services.AddScoped<IPlatoUserStore<User>, PlatoUserStore>();
-            services.AddScoped<IUserDataStore<UserData>, UserDataStore>();
             services.AddScoped<IUserPhotoStore<UserPhoto>, UserPhotoStore>();
 
             //services.AddScoped<IUserBannerStore<UserBanner>, UserBannerStore>();
 
+            services.AddScoped<IUserDataStore, UserDataStore>();
             services.AddScoped<IUserDetailsStore, UserDetailsStore>();
 
             return services;

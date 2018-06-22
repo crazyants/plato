@@ -9,7 +9,7 @@ namespace Plato.Internal.Abstractions.Extensions
         public static async Task<T> DeserializeGenericTypeAsync<T>(
             this ISerializable serializable, string data)
         {
-            return ((T)await ((ISerializable)
+            return ((T) await ((ISerializable)
                 Activator.CreateInstance(typeof(T))).DeserializeAsync<T>(data));
         }
 

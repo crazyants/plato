@@ -2,11 +2,42 @@
 
 <card class="mt-4" title="@T["Social Media"]">
     
-    <div class="form-group" asp-validation-class-for="UserName">
-        <label asp-for="FacebookUrl"><strong>@T["Facebook Url"]</strong></label>
-        <input asp-for="FacebookUrl" class="form-control" autofocus/>
+    <div class="form-group">
+        <label asp-for="FacebookUrl"><strong>@T["Facebook"]</strong></label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fab fa-facebook"></i>
+                </span>
+            </div>
+            <input asp-for="FacebookUrl" placeholder="https://www.facebook.com/" class="form-control" autofocus />
+        </div>
     </div>
     
+    <div class="form-group">
+        <label asp-for="TwitterUrl"><strong>@T["Twitter"]</strong></label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fab fa-twitter"></i>
+                </span>
+            </div>
+            <input asp-for="TwitterUrl" placeholder="https://www.twitter.com/" class="form-control" autofocus/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="YouTubeUrl"><strong>@T["YouTube"]</strong></label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fab fa-youtube"></i>
+                </span>
+            </div>
+            <input asp-for="YouTubeUrl" placeholder="https://www.youtube.com/" class="form-control" autofocus />
+        </div>
+    </div>
+
 </card>
 
 

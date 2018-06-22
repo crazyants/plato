@@ -3,7 +3,7 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Stores.Users
 {
-    public interface IUserDataStore<TModel> where TModel : class
+    public interface IUserDataStore
     {
 
         Task<T> GetAsync<T>(int userId, string key);

@@ -76,7 +76,9 @@ namespace Plato.Users.Social.ViewProviders
                 
                 var result = await _socialLinksStore.UpdateAsync(user.Id, new SocialLinks()
                 {
-                    FacebookUrl = model.FacebookUrl
+                    FacebookUrl = model.FacebookUrl,
+                    TwitterUrl  = model.TwitterUrl,
+                    YouTubeUrl = model.YouTubeUrl
                 });
                 
             }

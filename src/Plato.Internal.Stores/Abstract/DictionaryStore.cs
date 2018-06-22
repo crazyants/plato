@@ -33,8 +33,17 @@ namespace Plato.Internal.Stores.Abstract
         public async Task<T> GetAsync<T>(string key)
         {
             var result = await GetByKeyAsync(key);
-            if (result != null)            
+            if (result != null)
+            {
+                var serializable = typeof(T) as ISerializable;
+                if (serializable != null)
+                {
+                    return await serializable.DeserializeGenericTypeAsync<T>(result.Value);
+                }
                 return await result.Value.DeserializeAsync<T>();
+
+            }      
+           
             return default(T);
         }
         
@@ -49,7 +58,7 @@ namespace Plato.Internal.Stores.Abstract
                                   };
 
             // Serilize value
-            existingSetting.Value = value.Serialize();
+            existingSetting.Value = await value.SerializeAsync();
 
             // update setting & return updated typed settings 
             var updatedSetting = await _dictionaryRepository.InsertUpdateAsync(existingSetting);

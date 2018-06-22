@@ -20,10 +20,10 @@ namespace Plato.Internal.Stores.Users
 
         public const string Key = "Plato.Users.Details";
 
-        private readonly IUserDataStore<UserData> _userDataStore;
+        private readonly IUserDataStore _userDataStore;
 
         public UserDetailsStore(
-            IUserDataStore<UserData> userDataStore)
+            IUserDataStore userDataStore)
         {
             _userDataStore = userDataStore;
         }

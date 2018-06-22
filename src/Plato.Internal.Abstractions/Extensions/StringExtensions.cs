@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -86,7 +84,7 @@ namespace Plato.Internal.Abstractions.Extensions
 
         public static async Task<T> DeserializeAsync<T>(this string json)
         {
-            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json)); 
+            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json));
         }
 
 

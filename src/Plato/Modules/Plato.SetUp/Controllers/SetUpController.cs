@@ -40,7 +40,7 @@ namespace Plato.SetUp.Controllers
 
         public IStringLocalizer T { get; set; }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
