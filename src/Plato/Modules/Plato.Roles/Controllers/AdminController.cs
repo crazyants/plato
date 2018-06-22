@@ -38,10 +38,23 @@ namespace Plato.Roles.Controllers
             PagerOptions pagerOptions)
         {
 
+            // default options
+            if (filterOptions == null)
+            {
+                filterOptions = new FilterOptions();
+            }
+
+
+            // default pager
+            if (pagerOptions == null)
+            {
+                pagerOptions = new PagerOptions();
+            }
+
+
             // Maintain previous route data when generating page links
             var routeData = new RouteData();
-            //routeData.Values.Add("Options.Filter", options.Filter);
-            routeData.Values.Add("Options.RoleName", filterOptions.RoleName);
+            routeData.Values.Add("Options.RoleName", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
 
             var model = await GetPagedModel(filterOptions, pagerOptions);
@@ -80,9 +93,9 @@ namespace Plato.Roles.Controllers
                     {
                         q.Id.Equals(filterOptions.RoleId);
                     }
-                    if (!string.IsNullOrEmpty(filterOptions.RoleName))
+                    if (!string.IsNullOrEmpty(filterOptions.Search))
                     {
-                        q.RoleName.IsIn(filterOptions.RoleName);
+                        q.RoleName.IsIn(filterOptions.Search);
                     }
                 })
                 .OrderBy("Id", OrderBy.Asc)

@@ -1,10 +1,24 @@
 ﻿@model RolesIndexViewModel
 
 <card title="@T["Roles"]">
-    <ul class="list-group list-group-flush list-group-hover">
-        @foreach (var role in Model.Roles)
-        {
-            @role.Name
-        }
-    </ul>
+    
+    @if (Model.Results != null)
+    {
+        <ul class="list-group list-group-flush list-group-hover">
+            @foreach (var role in Model.Results.Data)
+            {
+                @role.Name
+            }
+        </ul>
+    }
+    else
+    {
+        <h6>@T["No roles found"]</h6>
+    }
+
 </card>
+
+<div class="mt-4 mb-4">
+    <pager model="@Model.PagerOpts"></pager>
+</div>
+

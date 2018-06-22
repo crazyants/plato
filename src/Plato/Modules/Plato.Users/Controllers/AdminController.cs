@@ -61,42 +61,48 @@ namespace Plato.Users.Controllers
                 filterOptions = new FilterOptions();
             }
 
-            if (!string.IsNullOrWhiteSpace(filterOptions.Search))
+            // default pager
+            if (pagerOptions == null)
             {
-                //users = users.Where(u => u.NormalizedUserName.Contains(options.Search) || u.NormalizedEmail.Contains(options.Search));
+                pagerOptions = new PagerOptions();
             }
 
-            switch (filterOptions.Order)
-            {
-                case UsersOrder.Username:
-                    //users = users.OrderBy(u => u.NormalizedUserName);
-                    break;
-                case UsersOrder.Email:
-                    //users = users.OrderBy(u => u.NormalizedEmail);
-                    break;
-            }
+
+            //if (!string.IsNullOrWhiteSpace(filterOptions.Search))
+            //{
+            //    //users = users.Where(u => u.NormalizedUserName.Contains(options.Search) || u.NormalizedEmail.Contains(options.Search));
+            //}
+
+            //switch (filterOptions.Order)
+            //{
+            //    case UsersOrder.Username:
+            //        //users = users.OrderBy(u => u.NormalizedUserName);
+            //        break;
+            //    case UsersOrder.Email:
+            //        //users = users.OrderBy(u => u.NormalizedEmail);
+            //        break;
+            //}
             
             // Maintain previous route data when generating page links
             var routeData = new RouteData();
-            //routeData.Values.Add("Options.Filter", options.Filter);
             routeData.Values.Add("Options.Search", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
             
+            // Get model
             var model = await GetPagedModel(filterOptions, pagerOptions);
-            
+
+            // Build view
             var result = await _userListViewProvider.ProvideIndexAsync(model, this);
 
+            // Return view
             return View(result);
 
         }
         
         public async Task<IActionResult> LayoutTest(string id)
         {
-
             var result = await _userViewProvider.ProvideIndexAsync(new User(), this);
-
             return View(result);
-
         }
         
         public async Task<IActionResult> Display(string id)

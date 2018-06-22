@@ -30,7 +30,7 @@ namespace Plato.Users.ViewModels
             this.Results = results;
             this.FilterOpts = filterOptions;
             this.PagerOpts = pagerOptions;
-            this.PagerOpts.SetTotal(results.Total);
+            this.PagerOpts.SetTotal(results?.Total ?? 0);
         }
 
         public IPagedResults<User> Results { get; set; }

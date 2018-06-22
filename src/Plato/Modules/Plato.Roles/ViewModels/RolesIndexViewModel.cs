@@ -21,7 +21,7 @@ namespace Plato.Roles.ViewModels
             this.Results = results;
             this.FilterOpts = filterOptions;
             this.PagerOpts = pagerOptions;
-            this.PagerOpts.SetTotal(results.Total);
+            this.PagerOpts.SetTotal(results?.Total ?? 0);
         }
 
 
@@ -38,7 +38,7 @@ namespace Plato.Roles.ViewModels
 
         public int RoleId { get; set; }
 
-        public string RoleName { get; set; }
+        public string Search { get; set; }
 
         public RolesOrder Order { get; set; }
 
