@@ -1,13 +1,14 @@
-﻿@model LayoutViewModel
+﻿@using Plato.Internal.Layout.ViewHelpers
+@model Plato.Internal.Layout.LayoutViewModel
 @{
-    ViewData["Title"] = "Edit User";
+    ViewData["Title"] = "Manage Roles";
 }
 
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
     <div class="layout">
 
         <div class="layout-header">
-            
+
             <div class="row">
                 @Html.ValidationSummary()
             </div>
@@ -15,13 +16,13 @@
             @if (Model.Tools != null)
             {
                 <div class="float-right layout-tools">
-                    <view model="@Model.Tools"/>
+                    <view model="@Model.Tools" />
                 </div>
             }
             @if (Model.Header != null)
             {
                 <div class="layout-header-item">
-                    <view model="@Model.Header"/>
+                    <view model="@Model.Header" />
                 </div>
             }
             @if (Model.Meta != null)
@@ -42,8 +43,8 @@
                     }
                     @if (Model.Actions != null || Model.Footer != null)
                     {
-                        <div class="layout-footer mt-4">
-                            <card>
+                        <div class="layout-footer">
+                            <card class="mt-4">
                                 @if (Model.Actions != null)
                                 {
                                     <div class="float-right layout-actions">
@@ -58,9 +59,9 @@
                                 }
                             </card>
                         </div>
-                        
+
                     }
-                    
+
                 </div>
                 <div class="col-md-4">
                     @if (Model.SideBar != null)
@@ -73,32 +74,33 @@
         else
         {
             @if (Model.Content != null)
-             {
-                 @Html.ValidationSummary()
-                 <view model="@Model.Content"></view>
-             }
+            {
+                @Html.ValidationSummary()
+                <view model="@Model.Content"></view>
+            }
             @if (Model.Actions != null || Model.Footer != null)
-             {
-                 <card>
-                     <div class="layout-footer">
-                         @if (Model.Actions != null)
-                         {
-                             <div class="float-right layout-actions">
-                                 <view model="@Model.Actions"/>
-                             </div>
-                         }
-                         @if (Model.Footer != null)
-                         {
-                             <div class="layout-footer-item">
-                                 <view model="@Model.Footer"></view>
-                             </div>
-                         }
-                     </div>
-                 </card>
-             }
+            {
+                <card>
+                    <div class="layout-footer">
+                        @if (Model.Actions != null)
+                        {
+                            <div class="float-right layout-actions">
+                                <view model="@Model.Actions" />
+                            </div>
+                        }
+                        @if (Model.Footer != null)
+                        {
+                            <div class="layout-footer-item">
+                                <view model="@Model.Footer"></view>
+                            </div>
+                        }
+                    </div>
+                </card>
+            }
         }
 
-       
+
 
     </div>
 </form>
+

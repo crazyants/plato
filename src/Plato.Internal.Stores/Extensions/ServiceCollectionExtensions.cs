@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models.Roles;
 using Plato.Internal.Stores.Settings;
 using Plato.Internal.Stores.Roles;
 using Plato.Internal.Stores.Users;
@@ -41,7 +42,7 @@ namespace Plato.Internal.Stores.Extensions
             
             // Roles
             services.AddScoped<IPlatoRoleStore, PlatoRoleStore>();
-         
+            
             // Users
             services.AddScoped<IPlatoUserStore<User>, PlatoUserStore>();
             services.AddScoped<IUserPhotoStore<UserPhoto>, UserPhotoStore>();

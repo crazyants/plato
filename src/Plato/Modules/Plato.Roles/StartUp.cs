@@ -48,6 +48,8 @@ namespace Plato.Roles
             services.AddScoped<IViewProviderManager<RolesIndexViewModel>, ViewProviderManager<RolesIndexViewModel>>();
             services.AddScoped<IViewProvider<RolesIndexViewModel>, RoleIndexViewProvider>();
 
+            services.AddScoped<IViewProviderManager<Role>, ViewProviderManager<Role>>();
+            services.AddScoped<IViewProvider<Role>, RoleViewProvider>();
 
 
             // register navigation provider

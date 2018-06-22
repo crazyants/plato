@@ -1,3 +1,12 @@
-﻿@model EditRolesViewModel
+﻿@model EditRoleViewModel
 
-<h1>Roles Edit </h1>
+
+<card title="@T["Role Details"]">
+
+    <div class="form-group" asp-validation-class-for="RoleName">
+        <label asp-for="RoleName"><strong>@T["Role Name"]</strong></label>
+        <span asp-validation-for="RoleName" class="d-none text-danger">@T["The role name is required."]</span>
+        <input asp-for="RoleName" class="form-control" autofocus />
+    </div>
+
+</card>

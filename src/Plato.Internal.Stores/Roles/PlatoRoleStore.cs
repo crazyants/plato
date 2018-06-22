@@ -155,8 +155,11 @@ namespace Plato.Internal.Stores.Roles
                 if (roles != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Debug))
+                    {
                         _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
                             _memoryCache.GetType().Name, _key);
+                    }
+                   
                     _memoryCache.Set(_key, roles);
                 }
             }

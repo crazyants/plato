@@ -1,10 +1,14 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Internal.Stores.Roles;
@@ -19,14 +23,29 @@ namespace Plato.Roles.Controllers
         #region "Constructor"
 
         private readonly IViewProviderManager<RolesIndexViewModel> _roleIndexViewProvider;
+        private readonly IViewProviderManager<Role> _roleViewProvider;
         private readonly IPlatoRoleStore _platoRoleStore;
+        private readonly RoleManager<Role> _roleManager;
+        private readonly IAlerter _alerter;
+
+        public IHtmlLocalizer T { get; }
+
 
         public AdminController(
+            IHtmlLocalizer<AdminController> localizer,
             IViewProviderManager<RolesIndexViewModel> roleIndexViewProvider,
-            IPlatoRoleStore platoRoleStore)
+            IPlatoRoleStore platoRoleStore, 
+            IViewProviderManager<Role> roleViewProvider,
+            RoleManager<Role> roleManager, IAlerter alerter)
         {
             _roleIndexViewProvider = roleIndexViewProvider;
             _platoRoleStore = platoRoleStore;
+            _roleViewProvider = roleViewProvider;
+            _roleManager = roleManager;
+            _alerter = alerter;
+
+            T = localizer;
+
         }
 
         #endregion
@@ -64,12 +83,39 @@ namespace Plato.Roles.Controllers
             return View(result);
 
         }
+        
+
+        public async Task<ActionResult> Create()
+        {
+            var result = await _roleViewProvider.ProvideEditAsync(new Role(), this);
+            return View(result);
+        }
+
+        [HttpPost]
+        [ActionName(nameof(Create))]
+        public async Task<IActionResult> CreatePost()
+        {
+            
+            var result = await _roleViewProvider.ProvideUpdateAsync(new Role(), this);
+
+            if (!ModelState.IsValid)
+            {
+                return View(result);
+            }
+
+            _alerter.Success(T["Role Created Successfully!"]);
+
+            return RedirectToAction(nameof(Index));
+
+
+        }
+
 
         #endregion
 
-        #region "Private Methods"
+            #region "Private Methods"
 
-        private async Task<RolesIndexViewModel> GetPagedModel(
+            private async Task<RolesIndexViewModel> GetPagedModel(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {

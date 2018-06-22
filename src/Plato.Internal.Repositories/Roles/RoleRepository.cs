@@ -111,7 +111,7 @@ namespace Plato.Internal.Repositories.Roles
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectRole", id);
+                    "SelectRoleById", id);
 
                 if ((reader != null) && (reader.HasRows))
                 {
