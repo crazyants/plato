@@ -6,11 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Hosting;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Roles.Services;
+using Plato.Roles.ViewProviders;
 
 namespace Plato.Roles
 {
@@ -36,6 +39,10 @@ namespace Plato.Roles
             // register role manager
             services.TryAddScoped<RoleManager<Role>>();
 
+            // view providers
+            services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
+            services.AddScoped<IViewProvider<User>, UserViewProvider>();
+            
             // register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();

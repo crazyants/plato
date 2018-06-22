@@ -4201,3 +4201,61 @@ System.MissingMethodException: Cannot create an instance of an interface.
 2018-06-22 20:13:57.205 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.PhotoController.Serve (Plato.Users) with arguments (1) - ModelState is Valid
 2018-06-22 20:13:57.206 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.PhotoController.Serve (Plato.Users) in 1.4613ms
 2018-06-22 20:13:57.206 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.2141ms 200 image/png
+2018-06-22 20:27:04.973 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-22 20:27:05.214 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Users/Admin/Edit/1  
+2018-06-22 20:27:05.244 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-22 20:27:05.247 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-06-22 20:27:05.286 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-22 20:27:05.371 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-22 20:27:05.426 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-22 20:27:05.428 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-22 20:27:05.441 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-22 20:27:05.556 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AdminController.Edit (Plato.Users) with arguments (1) - ModelState is Valid
+2018-06-22 20:27:05.597 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-22 20:27:07.347 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Admin/Edit.cshtml.
+2018-06-22 20:27:07.354 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-22 20:27:08.548 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AdminController.Edit (Plato.Users) in 3027.0896ms
+2018-06-22 20:27:08.552 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3339.8042ms 200 text/html; charset=utf-8
+2018-06-22 20:27:08.572 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-22 20:27:08.573 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-22 20:27:08.573 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-22 20:27:08.574 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.2837ms 404 
+2018-06-22 20:27:08.618 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Users/Photo/Serve/1  
+2018-06-22 20:27:08.618 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-22 20:27:08.618 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-22 20:27:08.625 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.PhotoController.Serve (Plato.Users) with arguments (1) - ModelState is Valid
+2018-06-22 20:27:08.643 +01:00 [Information] Plato.Internal.Stores.Files.FileStore: Adding entry to cache of type MemoryCache. Entry key: wwwroot/images/photo.png.
+2018-06-22 20:27:08.647 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.PhotoController.Serve (Plato.Users) in 23.2309ms
+2018-06-22 20:27:08.647 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 29.321ms 200 image/png
+2018-06-22 20:27:08.670 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-06-22 20:27:08.672 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-06-22 20:27:08.674 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.0339ms 200 image/x-icon
+2018-06-22 20:27:33.954 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-22 20:27:34.187 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Users/Admin/Edit/1  
+2018-06-22 20:27:34.217 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-22 20:27:34.220 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-06-22 20:27:34.259 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-22 20:27:34.345 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-22 20:27:34.398 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-22 20:27:34.401 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-22 20:27:34.410 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-22 20:27:34.510 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AdminController.Edit (Plato.Users) with arguments (1) - ModelState is Valid
+2018-06-22 20:27:34.550 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-22 20:27:36.254 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Admin/Edit.cshtml.
+2018-06-22 20:27:36.262 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-22 20:27:37.549 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AdminController.Edit (Plato.Users) in 3066.0681ms
+2018-06-22 20:27:37.554 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3367.5489ms 200 text/html; charset=utf-8
+2018-06-22 20:27:37.572 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-22 20:27:37.573 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-22 20:27:37.573 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-22 20:27:37.575 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2.4836ms 404 
+2018-06-22 20:27:37.608 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Users/Photo/Serve/1  
+2018-06-22 20:27:37.608 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-22 20:27:37.608 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-22 20:27:37.616 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.PhotoController.Serve (Plato.Users) with arguments (1) - ModelState is Valid
+2018-06-22 20:27:37.629 +01:00 [Information] Plato.Internal.Stores.Files.FileStore: Adding entry to cache of type MemoryCache. Entry key: wwwroot/images/photo.png.
+2018-06-22 20:27:37.631 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.PhotoController.Serve (Plato.Users) in 17.4137ms
+2018-06-22 20:27:37.631 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 23.4869ms 200 image/png
+2018-06-22 20:27:37.647 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-06-22 20:27:37.648 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-06-22 20:27:37.659 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 12.1246ms 200 image/x-icon
