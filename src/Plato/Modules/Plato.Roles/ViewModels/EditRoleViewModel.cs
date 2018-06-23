@@ -10,10 +10,8 @@ namespace Plato.Roles.ViewModels
         [Required]
         [StringLength(255)]
         [DataType(DataType.Text)]
-        [DisplayName("role name")]
         public string RoleName { get; set; }
-
-        [Required]
+        
         [StringLength(255)]
         [DataType(DataType.Text)]
         public string Description { get; set; }
