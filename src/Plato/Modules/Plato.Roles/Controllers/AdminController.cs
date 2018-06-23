@@ -152,6 +152,37 @@ namespace Plato.Roles.Controllers
             
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+      
+            var currentRole = await _roleManager.FindByIdAsync(id);
+
+            if (currentRole == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _roleManager.DeleteAsync(currentRole);
+
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Role Deleted Successfully"]);
+            }
+            else
+            {
+
+                _alerter.Danger(T["Could not delete the role"]);
+
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
 
         #endregion
 

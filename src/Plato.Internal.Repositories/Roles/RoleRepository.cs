@@ -70,9 +70,19 @@ namespace Plato.Internal.Repositories.Roles
 
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var success = 0;
+
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteRoleById", id);
+            }
+
+            return success > 0 ? true : false;
+
         }
 
         public async Task<Role> InsertUpdateAsync(Role role)
@@ -192,8 +202,7 @@ namespace Plato.Internal.Repositories.Roles
             return output;
 
         }
-
-
+        
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] inputParams) where T : class
         {
             PagedResults<T> output = null;

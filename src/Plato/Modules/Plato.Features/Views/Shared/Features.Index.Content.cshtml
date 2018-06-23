@@ -70,11 +70,11 @@
                     {
                         @if (!feature.IsEnabled)
                          {
-                             <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.Id" class="btn btn-primary btn-sm" itemprop="UnsafeUrl">@T["Enable"]</button>
+                             <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.Id" class="btn btn-primary" itemprop="UnsafeUrl">@T["Enable"]</button>
                          }
                          else
                          {
-                             <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.Id" class="btn btn-default btn-sm" itemprop="UnsafeUrl">@T["Disable"]</button>
+                             <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.Id" class="btn btn-default" itemprop="UnsafeUrl">@T["Disable"]</button>
                          }
                     }
 
