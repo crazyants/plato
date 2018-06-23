@@ -33,13 +33,23 @@ namespace Plato.Internal.Repositories.Abstract
 
         #region "Implementation"
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
+            {
                 _logger.LogInformation($"Deleting dictionary entry with id: {id}");
-            
-            throw new NotImplementedException();
+            }
+                
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteDictionaryEntryById", id);
+            }
+
+            return success > 0 ? true : false;
 
         }
 

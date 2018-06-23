@@ -22,32 +22,25 @@ namespace Plato.Internal.Stores.Roles
         #endregion
 
         #region "Constructor"
-
-
-        private readonly IDbQuery _dbQuery;
+        
         private readonly IRoleRepository<Role> _roleRepository;
-        private readonly IMemoryCache _memoryCache;
-        private readonly IDistributedCache _distributedCache;
-        private readonly ILogger<PlatoRoleStore> _logger;
         private readonly ICacheDependency _cacheDependency;
-
-        private readonly IDocumentStore _documentStore;
-
+        private readonly ILogger<PlatoRoleStore> _logger;
+        private readonly IMemoryCache _memoryCache;
+        private readonly IDbQuery _dbQuery;
+      
         public PlatoRoleStore(
             IRoleRepository<Role> roleRepository,
-            IMemoryCache memoryCache,
-            IDistributedCache distributedCache,
+            ICacheDependency cacheDependency,
             ILogger<PlatoRoleStore> logger,
-            IDocumentStore documentStore, IDbQuery dbQuery,
-            ICacheDependency cacheDependency)
+            IMemoryCache memoryCache,
+            IDbQuery dbQuery)
         {
             _roleRepository = roleRepository;
-            _memoryCache = memoryCache;
-            _distributedCache = distributedCache;
-            _logger = logger;
-            _documentStore = documentStore;
-            _dbQuery = dbQuery;
             _cacheDependency = cacheDependency;
+            _memoryCache = memoryCache;
+            _dbQuery = dbQuery;
+            _logger = logger;
         }
 
         #endregion
@@ -78,7 +71,7 @@ namespace Plato.Internal.Stores.Roles
 
         public async Task<bool> DeleteAsync(Role role)
         {
-         
+
             var result = await _roleRepository.DeleteAsync(role.Id);
 
             if (result)
@@ -133,21 +126,6 @@ namespace Plato.Internal.Stores.Roles
                 return role;
             });
 
-
-            //if (!_memoryCache.TryGetValue(_key, out Role role))
-            //{
-            //    role = await _roleRepository.SelectByNameAsync(name);
-            //    if (role != null)
-            //    {
-            //        if (_logger.IsEnabled(LogLevel.Debug))
-            //        {
-            //            _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-            //                _memoryCache.GetType().Name, _key);
-            //        }
-            //        _memoryCache.Set(_key, role);
-            //    }
-            //}
-            //return role;
         }
 
         public async Task<Role> GetByNormalizedName(string nameNormalized)
@@ -169,22 +147,7 @@ namespace Plato.Internal.Stores.Roles
                 }
                 return role;
             });
-
-
-            //if (!_memoryCache.TryGetValue(_key, out Role role))
-            //{
-            //    role = await _roleRepository.SelectByNormalizedNameAsync(nameNormalized);
-            //    if (role != null)
-            //    {
-            //        if (_logger.IsEnabled(LogLevel.Debug))
-            //        {
-            //            _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-            //                _memoryCache.GetType().Name, _key);
-            //        }
-            //        _memoryCache.Set(_key, role);
-            //    }
-            //}
-            //return role;
+            
         }
 
         public IQuery QueryAsync()
@@ -234,22 +197,7 @@ namespace Plato.Internal.Stores.Roles
                 }
                 return role;
             });
-            
-            //if (!_memoryCache.TryGetValue(_key, out IList<Role> roles))
-            //{
-            //    roles = await _roleRepository.SelectByUserIdAsync(userId);
-            //    if (roles != null)
-            //    {
-            //        if (_logger.IsEnabled(LogLevel.Debug))
-            //        {
-            //            _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-            //                _memoryCache.GetType().Name, _key);
-            //        }
-                   
-            //        _memoryCache.Set(_key, roles);
-            //    }
-            //}
-            //return roles;
+           
         }
         
         #endregion

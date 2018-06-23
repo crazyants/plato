@@ -736,9 +736,39 @@ namespace Plato.Internal.Data.Schemas
                 .Append(_newLine)
                 .Append(_newLine);
 
-            sb.Append("DELETE FROM ")
+            // ensure exists 
+
+            sb.Append("IF EXISTS (SELECT ")
+                .Append(procedure.Table.PrimaryKeyColumn.NameNormalized)
+                .Append(" FROM ")
+                .Append(GetTableName(procedure.Table.Name))
+                .Append(" WHERE (");
+
+            i = 0;
+            foreach (var parameter in procedure.Parameters)
+            {
+                sb
+                    .Append(parameter.Name)
+                    .Append(" = @")
+                    .Append(parameter.NameNormalized)
+                    .Append(i < procedure.Parameters.Count - 1 ? " AND " : "");
+                i += 1;
+            }
+
+            sb.Append("))")
+                .Append(_newLine)
+                .Append("BEGIN")
+                .Append(_newLine)
+                .Append(_newLine);
+
+            // perform delete
+
+            sb
+                .Append("   ")
+                .Append("DELETE FROM ")
                 .Append(GetTableName(procedure.Table.Name))
                 .Append(_newLine)
+                .Append("   ")
                 .Append("WHERE (")
                 .Append(_newLine);
 
@@ -746,7 +776,7 @@ namespace Plato.Internal.Data.Schemas
             foreach (var parameter in procedure.Parameters)
             {
                 sb
-                    .Append("   ")
+                    .Append("       ")
                     .Append(parameter.Name)
                     .Append(" = @")
                     .Append(parameter.NameNormalized)
@@ -754,8 +784,26 @@ namespace Plato.Internal.Data.Schemas
                     .Append(_newLine);
                 i += 1;
             }
+            
+            sb
+                .Append("   ")
+                .Append(")")
+                .Append(_newLine)
+                .Append(_newLine); // end DELETE where
 
-            sb.Append(")");
+            // We found the entry return success
+            sb
+                .Append("   ")
+                .Append("SELECT 1;")
+                .Append(_newLine)
+                .Append(_newLine);
+
+            sb.Append("END")
+                .Append(_newLine)
+                .Append(_newLine); // end EXISTS check
+
+            // The entry could not be found
+            sb.Append("SELECT 0;");
 
             return sb.ToString();
 

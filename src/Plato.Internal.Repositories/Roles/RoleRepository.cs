@@ -72,8 +72,12 @@ namespace Plato.Internal.Repositories.Roles
 
         public async Task<bool> DeleteAsync(int id)
         {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Deleting role with id: {id}");
+            }
+            
             var success = 0;
-
             using (var context = _dbContext)
             {
                 success = await context.ExecuteScalarAsync<int>(
