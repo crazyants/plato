@@ -23,8 +23,7 @@ namespace Plato.Roles.ViewModels
             this.PagerOpts = pagerOptions;
             this.PagerOpts.SetTotal(results?.Total ?? 0);
         }
-
-
+        
         public IPagedResults<Role> Results { get; set; }
 
         public PagerOptions PagerOpts { get; set; }

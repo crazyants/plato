@@ -1,5 +1,13 @@
 ﻿@model EditRoleViewModel
 
-<h4>@T["Edit Role"]</h4>
-<span class="text-muted">@T["Edit an existing role."]</span>
-<hr />
+@if (Model.IsNewRole)
+{
+    <h4>@T["Add Role"]</h4>
+    <span class="text-muted">@T["Add a new role."]</span>
+}
+else
+{
+    <h4>@T["Edit Role"]</h4>
+    <span class="text-muted">@T["Edit an existing role."]</span>
+}
+<hr/>

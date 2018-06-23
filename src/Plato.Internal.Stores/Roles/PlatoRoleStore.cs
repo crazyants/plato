@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Cache;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Repositories.Roles;
-using Plato.Internal.Stores.Abstract;
 using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Internal.Stores.Roles
@@ -49,8 +47,14 @@ namespace Plato.Internal.Stores.Roles
 
         public async Task<Role> CreateAsync(Role model)
         {
-            _cacheDependency.CancelToken(_key);
-            return await _roleRepository.InsertUpdateAsync(model);
+            
+            var newRole = await _roleRepository.InsertUpdateAsync(model);
+            if (newRole != null)
+            {
+                _cacheDependency.CancelToken(_key);
+            }
+
+            return newRole;
         }
 
         public async Task<Role> UpdateAsync(Role role)
@@ -169,10 +173,8 @@ namespace Plato.Internal.Stores.Roles
                         _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
                             _memoryCache.GetType().Name, _key);
                     }
-
-                    cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(_key));
                 }
-
+                cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(_key));
                 return roles;
             });
             

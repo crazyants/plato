@@ -65,15 +65,21 @@ namespace Plato.Internal.Repositories.Abstract
 
         public async Task<bool> DeleteAsync(int id)
         {
-            using (var context = _dbContext)
+
+            if (_logger.IsEnabled(LogLevel.Information))
             {
-                await context.ExecuteScalarAsync<int>(
-                    CommandType.StoredProcedure,
-                    "DeleteDocumentEntryById",
-                    id);
+                _logger.LogInformation($"Deleting document entry with id: {id}");
             }
 
-            return true;
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteDocumentEntryById", id);
+            }
+
+            return success > 0 ? true : false;
 
         }
         

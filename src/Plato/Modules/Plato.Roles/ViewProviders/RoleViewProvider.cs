@@ -1,14 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Roles;
-using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Roles.ViewModels;
 
 namespace Plato.Roles.ViewProviders
@@ -56,37 +52,42 @@ namespace Plato.Roles.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(Role role, IUpdateModel updater)
         {
 
-            var isNewRole = IsNewRole(role.Id);
+            var isNewRole =await  IsNewRole(role.Id);
 
             return Views(
                 View<EditRoleViewModel>("Role.Edit.Header", model =>
                 {
                     model.Id = role.Id;
                     model.RoleName = role.Name;
+                    model.IsNewRole = isNewRole;
                     return model;
                 }).Zone("header"),
                 View<EditRoleViewModel>("Role.Edit.Meta", model =>
                 {
                     model.Id = role.Id;
                     model.RoleName = role.Name;
+                    model.IsNewRole = isNewRole;
                     return model;
                 }).Zone("meta"),
                 View<EditRoleViewModel>("Role.Edit.Content", model =>
                 {
                     model.Id = role.Id;
                     model.RoleName = role.Name;
+                    model.IsNewRole = isNewRole;
                     return model;
                 }).Zone("content"),
                 View<EditRoleViewModel>("Role.Edit.Footer", model =>
                 {
                     model.Id = role.Id;
                     model.RoleName = role.Name;
+                    model.IsNewRole = isNewRole;
                     return model;
                 }).Zone("footer"),
                 View<EditRoleViewModel>("Role.Edit.Actions", model =>
                 {
                     model.Id = role.Id;
                     model.RoleName = role.Name;
+                    model.IsNewRole = isNewRole;
                     return model;
                 }).Zone("actions")
             );

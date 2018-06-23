@@ -9,10 +9,6 @@
 
         <div class="layout-header">
 
-            <div class="row">
-                @Html.ValidationSummary()
-            </div>
-
             @if (Model.Tools != null)
             {
                 <div class="float-right layout-tools">
@@ -75,7 +71,6 @@
         {
             @if (Model.Content != null)
             {
-                @Html.ValidationSummary()
                 <view model="@Model.Content"></view>
             }
             @if (Model.Actions != null || Model.Footer != null)

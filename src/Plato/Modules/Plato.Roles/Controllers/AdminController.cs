@@ -8,7 +8,6 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Internal.Stores.Roles;
@@ -52,7 +51,7 @@ namespace Plato.Roles.Controllers
 
         #region "Actions"
 
-        public async Task<ActionResult> Index(
+        public async Task<IActionResult> Index(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
@@ -76,7 +75,9 @@ namespace Plato.Roles.Controllers
             routeData.Values.Add("Options.RoleName", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
 
-            var model = await GetPagedModel(filterOptions, pagerOptions);
+            var model = await GetPagedModel(
+                filterOptions,
+                pagerOptions);
             
             var result = await _roleIndexViewProvider.ProvideIndexAsync(model, this);
 
@@ -85,7 +86,7 @@ namespace Plato.Roles.Controllers
         }
         
 
-        public async Task<ActionResult> Create()
+        public async Task<IActionResult> Create()
         {
             var result = await _roleViewProvider.ProvideEditAsync(new Role(), this);
             return View(result);
@@ -110,7 +111,7 @@ namespace Plato.Roles.Controllers
 
         }
 
-        public async Task<ActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
 
             var role = await _roleManager.FindByIdAsync(id);
@@ -217,7 +218,7 @@ namespace Plato.Roles.Controllers
                         q.RoleName.IsIn(filterOptions.Search);
                     }
                 })
-                .OrderBy("Id", OrderBy.Asc)
+                .OrderBy("Id", OrderBy.Desc)
                 .ToList<Role>();
         }
 

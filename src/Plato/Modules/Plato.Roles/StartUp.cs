@@ -31,28 +31,33 @@ namespace Plato.Roles
         {
 
             // register set-up event handler
+
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
 
             // register role stores
+
             services.TryAddScoped<IRoleStore<Role>, RoleStore>();
             services.TryAddScoped<IRoleClaimStore<Role>, RoleStore>();
 
             // register role manager
+
             services.TryAddScoped<RoleManager<Role>>();
 
             // user view providers
+
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
 
             // role view providers
+
             services.AddScoped<IViewProviderManager<RolesIndexViewModel>, ViewProviderManager<RolesIndexViewModel>>();
             services.AddScoped<IViewProvider<RolesIndexViewModel>, RoleIndexViewProvider>();
 
             services.AddScoped<IViewProviderManager<Role>, ViewProviderManager<Role>>();
             services.AddScoped<IViewProvider<Role>, RoleViewProvider>();
-
-
+            
             // register navigation provider
+
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
         }
