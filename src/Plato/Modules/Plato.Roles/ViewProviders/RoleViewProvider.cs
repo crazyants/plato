@@ -103,11 +103,11 @@ namespace Plato.Roles.ViewProviders
                 return await BuildEditAsync(role, updater);
             }
 
-            role.Name = model.RoleName?.Trim();
-         
             if (updater.ModelState.IsValid)
             {
-                
+
+                role.Name = model.RoleName?.Trim();
+         
                 //await _userManager.SetUserNameAsync(user, model.UserName);
                 //await _userManager.SetEmailAsync(user, model.Email);
 

@@ -7,7 +7,15 @@
         <ul class="list-group list-group-flush list-group-hover">
             @foreach (var role in Model.Results.Data)
             {
-                @role.Name
+                <li class="list-group-item">
+
+                    <h6 class="d-inline-block">
+                        @role.Name
+                    </h6>
+
+                    <a asp-controller="Admin" asp-action="Edit" asp-route-id="@role.Id" class="btn btn-primary float-right">@T["Edit"]</a>
+
+                </li>
             }
         </ul>
     }
@@ -18,7 +26,7 @@
 
 </card>
 
-<div class="mt-4 mb-4">
+<div class="my-4">
     <pager model="@Model.PagerOpts"></pager>
 </div>
 

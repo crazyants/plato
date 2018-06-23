@@ -110,12 +110,54 @@ namespace Plato.Roles.Controllers
 
         }
 
+        public async Task<ActionResult> Edit(string id)
+        {
+
+            var role = await _roleManager.FindByIdAsync(id);
+
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _roleViewProvider.ProvideEditAsync(role, this);
+            return View(result);
+
+        }
+
+
+        [HttpPost]
+        [ActionName(nameof(Edit))]
+        public async Task<IActionResult> EditPost(string id)
+        {
+
+
+            var currentRole = await _roleManager.FindByIdAsync(id);
+            if (currentRole == null)
+            {
+                return NotFound();
+            }
+            
+
+            var result = await _roleViewProvider.ProvideUpdateAsync(currentRole, this);
+
+            if (!ModelState.IsValid)
+            {
+                return View(result);
+            }
+
+            _alerter.Success(T["Role Updated Successfully!"]);
+
+            return RedirectToAction(nameof(Index));
+            
+        }
+
 
         #endregion
 
-            #region "Private Methods"
+        #region "Private Methods"
 
-            private async Task<RolesIndexViewModel> GetPagedModel(
+        private async Task<RolesIndexViewModel> GetPagedModel(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
