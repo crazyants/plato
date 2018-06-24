@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Models.Roles;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Security.Abstractions;
 
@@ -12,6 +15,7 @@ namespace Plato.Internal.Security
     public class PermissionsManager : IPermissionsManager
     {
 
+        private readonly IAuthorizationService _authorizationService;
         private readonly IEnumerable<IPermissionsProvider> _providers;
         private readonly ILogger<PermissionsManager> _logger;
         private readonly ITypedModuleProvider _typedModuleProvider;
@@ -19,34 +23,45 @@ namespace Plato.Internal.Security
         public PermissionsManager(
             IEnumerable<IPermissionsProvider> providers,
             ILogger<PermissionsManager> logger,
-            ITypedModuleProvider typedModuleProvider)
+            ITypedModuleProvider typedModuleProvider,
+            IAuthorizationService authorizationService)
         {
             _providers = providers;
-            _logger = logger;
             _typedModuleProvider = typedModuleProvider;
+            _authorizationService = authorizationService;
+            _logger = logger;
         }
-        
+
+        private IEnumerable<Permission> _permissions;
+
         public IEnumerable<Permission> GetPermissions()
         {
 
-            var permissions = new List<Permission>();
-            foreach (var provider in _providers)
+            // Ensure permissions are only loaded once per scope
+            if (_permissions == null)
             {
-                try
+                var permissions = new List<Permission>();
+                foreach (var provider in _providers)
                 {
-                    permissions.AddRange(provider.GetPermissions());
+                    try
+                    {
+                        permissions.AddRange(provider.GetPermissions());
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e,
+                            $"An exception occurred within the permissions provider. Please review your permission provider and try again. {e.Message}");
+                        throw;
+                    }
                 }
-                catch (Exception e)
-                {
-                    _logger.LogError(e, $"An exception occurred within the permissions provider. Please review your permission provider and try again. {e.Message}");
-                    throw;
-                }
+
+                _permissions = permissions;
             }
 
-            return permissions;
+            return _permissions;
 
         }
-        
+
         public async Task<IDictionary<string, IEnumerable<Permission>>> GetCategorizedPermissionsAsync()
         {
 
@@ -78,8 +93,38 @@ namespace Plato.Internal.Security
 
             return output;
         }
-        
 
+        public async Task<IEnumerable<string>> GetEnabledRolePermissionsAsync(Role role)
+        {
+            
+            // If the role is anonymous set the authtype to
+            // null to ensure IsAuthenticated is set to false
+            var authType = role.Name != "Anonymous"
+                ? "UserAuthType" 
+                : null;
+
+            var identity = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Role, role.Name)
+            }, authType);
+                
+            var principal = new ClaimsPrincipal(identity);
+            var result = new List<string>();
+            var permissions = GetPermissions();
+
+            foreach (var permission in permissions)
+            {
+                if (await _authorizationService.AuthorizeAsync(principal,  permission))
+                {
+                    result.Add(permission.Name);
+                }
+            }
+
+            return result;
+
+        }
     }
+    
+
 
 }

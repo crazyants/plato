@@ -11,6 +11,7 @@ using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Roles.Services;
 using Plato.Roles.ViewModels;
@@ -60,6 +61,10 @@ namespace Plato.Roles
 
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
+
+            // register permissions provider
+            services.AddScoped<IPermissionsProvider, PermissionsProvider>();
+
         }
 
         public override void Configure(

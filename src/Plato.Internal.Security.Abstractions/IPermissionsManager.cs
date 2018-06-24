@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Plato.Internal.Models.Roles;
 
 namespace Plato.Internal.Security.Abstractions
 {
@@ -9,6 +10,8 @@ namespace Plato.Internal.Security.Abstractions
         IEnumerable<Permission> GetPermissions();
 
         Task<IDictionary<string, IEnumerable<Permission>>> GetCategorizedPermissionsAsync();
+        
+        Task<IEnumerable<string>> GetEnabledRolePermissionsAsync(Role role);
 
     }
 

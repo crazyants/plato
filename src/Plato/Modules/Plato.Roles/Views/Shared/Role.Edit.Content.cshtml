@@ -12,14 +12,14 @@
     <fieldset>
         @foreach (var category in Model.CategorizedPermissions.Keys)
         {
-            <fieldset class="permissions-list">
+            <fieldset class="role-permissions">
                 <h6>@category</h6>
                 <table class="table">
                     <thead>
                     <tr>
                         <th class="col-10">@T["Permission"]</th>
                         <th class="col-1">@T["Allow"]</th>
-                        <th class="col-1">@T["Effective"]</th>
+                        <th class="col-1">@T["Enabled"]</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -28,10 +28,10 @@
                         <tr data-text="@permission.Description">
                             <td class="col-10">@permission.Description</td>
                             <td class="col-1">
-                          
+                                <input type="checkbox" value="true" name="Checkbox.@permission.Name" checked="@(Model.Role?.RoleClaims?.Any(x => x.ClaimValue == permission.Name))" />
                             </td>
                             <td class="col-1">
-                        
+                                <input type="checkbox" disabled="disabled" name="Effective.@permission.Name" checked="@(Model.EnabledPermissions.Contains(permission.Name))" />
                             </td>
                         </tr>
                     }

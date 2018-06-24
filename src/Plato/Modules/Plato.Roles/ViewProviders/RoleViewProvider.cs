@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -58,7 +59,9 @@ namespace Plato.Roles.ViewProviders
             {
                 Id = role.Id,
                 RoleName = role.Name,
+                Role = role,
                 IsNewRole = await IsNewRole(role.Id),
+                EnabledPermissions = await _permissionsManager.GetEnabledRolePermissionsAsync(role),
                 CategorizedPermissions = await _permissionsManager.GetCategorizedPermissionsAsync()
             };
 
@@ -86,7 +89,8 @@ namespace Plato.Roles.ViewProviders
             {
 
                 role.Name = model.RoleName?.Trim();
-         
+                
+
                 //await _userManager.SetUserNameAsync(user, model.UserName);
                 //await _userManager.SetEmailAsync(user, model.Email);
 

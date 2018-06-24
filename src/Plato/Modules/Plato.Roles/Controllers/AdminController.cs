@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -9,6 +11,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Navigation;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Internal.Stores.Roles;
 using Plato.Roles.ViewModels;
@@ -21,6 +24,7 @@ namespace Plato.Roles.Controllers
 
         #region "Constructor"
 
+        private readonly IAuthorizationService _authorizationService;
         private readonly IViewProviderManager<RolesIndexViewModel> _roleIndexViewProvider;
         private readonly IViewProviderManager<Role> _roleViewProvider;
         private readonly IPlatoRoleStore _platoRoleStore;
@@ -35,13 +39,15 @@ namespace Plato.Roles.Controllers
             IViewProviderManager<RolesIndexViewModel> roleIndexViewProvider,
             IPlatoRoleStore platoRoleStore, 
             IViewProviderManager<Role> roleViewProvider,
-            RoleManager<Role> roleManager, IAlerter alerter)
+            RoleManager<Role> roleManager, IAlerter alerter,
+            IAuthorizationService authorizationService)
         {
             _roleIndexViewProvider = roleIndexViewProvider;
             _platoRoleStore = platoRoleStore;
             _roleViewProvider = roleViewProvider;
             _roleManager = roleManager;
             _alerter = alerter;
+            _authorizationService = authorizationService;
 
             T = localizer;
 
@@ -55,6 +61,13 @@ namespace Plato.Roles.Controllers
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
+
+            if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
+            {
+                return Unauthorized();
+            }
+
+
 
             // default options
             if (filterOptions == null)
@@ -133,14 +146,26 @@ namespace Plato.Roles.Controllers
         {
 
 
-            var currentRole = await _roleManager.FindByIdAsync(id);
-            if (currentRole == null)
+            var role = await _roleManager.FindByIdAsync(id);
+            if (role == null)
             {
                 return NotFound();
             }
             
+            var roleClaims = new List<RoleClaim>();
+            foreach (string key in Request.Form.Keys)
+            {
+                if (key.StartsWith("Checkbox.") && Request.Form[key] == "true")
+                {
+                    var permissionName = key.Substring("Checkbox.".Length);
+                    roleClaims.Add(new RoleClaim { ClaimType = Permission.ClaimType, ClaimValue = permissionName });
+                }
+            }
 
-            var result = await _roleViewProvider.ProvideUpdateAsync(currentRole, this);
+            role.RoleClaims.RemoveAll(c => c.ClaimType == Permission.ClaimType);
+            role.RoleClaims.AddRange(roleClaims);
+            
+            var result = await _roleViewProvider.ProvideUpdateAsync(role, this);
 
             if (!ModelState.IsValid)
             {

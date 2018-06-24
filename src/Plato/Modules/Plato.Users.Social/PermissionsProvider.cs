@@ -5,12 +5,20 @@ namespace Plato.Users.Social
 {
     public class PermissionsProvider : IPermissionsProvider
     {
-        public static readonly Permission ContentPreview = 
-            new Permission("Demo", "Display the demo feature");
 
+        public static readonly Permission EditSocial = 
+            new Permission("EditSocialUserFields", "Can edit social user fields?");
+
+        public static readonly Permission ViewSocial =
+            new Permission("ViewSocialUserFields", "Can view social user fields?");
+        
         public IEnumerable<Permission> GetPermissions()
         {
-            return new[] { ContentPreview };
+            return new[]
+            {
+                EditSocial,
+                ViewSocial
+            };
         }
 
         public IEnumerable<DefaultPermissions> GetDefaultPermissions()
@@ -20,10 +28,24 @@ namespace Plato.Users.Social
                 new DefaultPermissions
                 {
                     Name = "Administrator",
-                    Permissions = new[] { ContentPreview }
+                    Permissions = new[]
+                    {
+                        EditSocial,
+                        ViewSocial
+                    }
+                },
+                new DefaultPermissions
+                {
+                    Name = "Members",
+                    Permissions = new[]
+                    {
+                        ViewSocial
+                    }
                 }
             };
+
         }
+
     }
 
 }
