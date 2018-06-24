@@ -99,6 +99,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Hosting.Abst
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Users.Social", "src\Plato\Modules\Plato.Users.Social\Plato.Users.Social.csproj", "{735BB258-3160-4282-8644-3CEC2C45E8DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Security.Abstractions", "src\Plato.Internal.Security.Abstractions\Plato.Internal.Security.Abstractions.csproj", "{8E69FF82-2075-44F4-9C13-59E0D7936F77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -273,6 +275,10 @@ Global
 		{735BB258-3160-4282-8644-3CEC2C45E8DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{735BB258-3160-4282-8644-3CEC2C45E8DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{735BB258-3160-4282-8644-3CEC2C45E8DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E69FF82-2075-44F4-9C13-59E0D7936F77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E69FF82-2075-44F4-9C13-59E0D7936F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E69FF82-2075-44F4-9C13-59E0D7936F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E69FF82-2075-44F4-9C13-59E0D7936F77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -321,6 +327,7 @@ Global
 		{CA7B3B5D-5823-47EC-B848-A49B72BE0591} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{E41B053D-F8D7-43D5-95BB-3E4174F9F69E} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{735BB258-3160-4282-8644-3CEC2C45E8DB} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{8E69FF82-2075-44F4-9C13-59E0D7936F77} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

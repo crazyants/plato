@@ -1,5 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Roles.ViewModels
 {
@@ -17,7 +18,8 @@ namespace Plato.Roles.ViewModels
         public string Description { get; set; }
         
         public bool IsNewRole { get; set; }
-
+        
+        public IDictionary<string, IEnumerable<Permission>> CategorizedPermissions { get; set; }
 
     }
 }
