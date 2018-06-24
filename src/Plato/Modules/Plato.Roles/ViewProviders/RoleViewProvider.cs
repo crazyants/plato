@@ -4,6 +4,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Roles.ViewModels;
 
@@ -15,20 +16,21 @@ namespace Plato.Roles.ViewProviders
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly IPlatoRoleStore _platoRoleStore;
-        
+        private readonly IPermissionsManager _permissionsManager;
+
         public RoleViewProvider(
             UserManager<User> userManager,
             IPlatoRoleStore platoRoleStore,
-            RoleManager<Role> roleManager)
+            RoleManager<Role> roleManager, 
+            IPermissionsManager permissionsManager)
         {
             _userManager = userManager;
             _platoRoleStore = platoRoleStore;
             _roleManager = roleManager;
-            ;
+            _permissionsManager = permissionsManager;
         
         }
-
-
+        
         public override async Task<IViewProviderResult> BuildDisplayAsync(Role role, IUpdateModel updater)
         {
 
@@ -51,45 +53,21 @@ namespace Plato.Roles.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(Role role, IUpdateModel updater)
         {
-
-            var isNewRole =await  IsNewRole(role.Id);
+            
+            var editRoleViewModel = new EditRoleViewModel()
+            {
+                Id = role.Id,
+                RoleName = role.Name,
+                IsNewRole = await IsNewRole(role.Id),
+                CategorizedPermissions = await _permissionsManager.GetCategorizedPermissionsAsync()
+            };
 
             return Views(
-                View<EditRoleViewModel>("Role.Edit.Header", model =>
-                {
-                    model.Id = role.Id;
-                    model.RoleName = role.Name;
-                    model.IsNewRole = isNewRole;
-                    return model;
-                }).Zone("header"),
-                View<EditRoleViewModel>("Role.Edit.Meta", model =>
-                {
-                    model.Id = role.Id;
-                    model.RoleName = role.Name;
-                    model.IsNewRole = isNewRole;
-                    return model;
-                }).Zone("meta"),
-                View<EditRoleViewModel>("Role.Edit.Content", model =>
-                {
-                    model.Id = role.Id;
-                    model.RoleName = role.Name;
-                    model.IsNewRole = isNewRole;
-                    return model;
-                }).Zone("content"),
-                View<EditRoleViewModel>("Role.Edit.Footer", model =>
-                {
-                    model.Id = role.Id;
-                    model.RoleName = role.Name;
-                    model.IsNewRole = isNewRole;
-                    return model;
-                }).Zone("footer"),
-                View<EditRoleViewModel>("Role.Edit.Actions", model =>
-                {
-                    model.Id = role.Id;
-                    model.RoleName = role.Name;
-                    model.IsNewRole = isNewRole;
-                    return model;
-                }).Zone("actions")
+                View<EditRoleViewModel>("Role.Edit.Header", model => editRoleViewModel).Zone("header"),
+                View<EditRoleViewModel>("Role.Edit.Meta", model => editRoleViewModel).Zone("meta"),
+                View<EditRoleViewModel>("Role.Edit.Content", model => editRoleViewModel).Zone("content"),
+                View<EditRoleViewModel>("Role.Edit.Footer", model => editRoleViewModel).Zone("footer"),
+                View<EditRoleViewModel>("Role.Edit.Actions", model => editRoleViewModel).Zone("actions")
             );
 
         }
