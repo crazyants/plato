@@ -62,12 +62,11 @@ namespace Plato.Roles.Controllers
             PagerOptions pagerOptions)
         {
 
-            if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            {
-                return Unauthorized();
-            }
-
-
+            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
+            //{
+            //    return Unauthorized();
+            //}
+            
 
             // default options
             if (filterOptions == null)
@@ -248,9 +247,7 @@ namespace Plato.Roles.Controllers
         }
 
         #endregion
-
-
-
+        
 
     }
 }

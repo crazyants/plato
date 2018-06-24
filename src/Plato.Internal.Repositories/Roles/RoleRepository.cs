@@ -201,8 +201,7 @@ namespace Plato.Internal.Repositories.Roles
 
                 }
             }
-
-
+            
             return output;
 
         }
@@ -237,6 +236,32 @@ namespace Plato.Internal.Repositories.Roles
             }
 
             return output;
+        }
+
+        public async Task<IEnumerable<Role>> SelectRoles()
+        {
+            List<Role> output = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectRoles");
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new List<Role>();
+                    while (await reader.ReadAsync())
+                    {
+                        var role = new Role();
+                        role.PopulateModel(reader);
+                        output.Add(role);
+                    }
+
+                }
+            }
+            
+            return output;
+
         }
 
         #endregion

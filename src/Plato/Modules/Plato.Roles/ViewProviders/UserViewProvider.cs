@@ -29,15 +29,11 @@ namespace Plato.Roles.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
-            return Views(
-                View<EditRoleViewModel>("Role.Edit.Content", model =>
-                {
-                    
-                    return model;
-                }).Order(2)
-            );
+            return Task.FromResult(Views(
+                View<EditRoleViewModel>("UserRoles.Edit.Content", model => { return model; }).Order(2)
+            ));
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IUpdateModel updater)

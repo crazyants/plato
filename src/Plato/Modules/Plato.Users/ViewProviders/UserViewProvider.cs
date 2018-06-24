@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
@@ -40,15 +39,16 @@ namespace Plato.Users.ViewProviders
         }
 
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
         {
 
-            return Views(
-                View<User>("User.Display.Header", model => user).Zone("header"),
-                View<User>("User.Display.Meta", model => user).Zone("meta"),
-                View<User>("User.Display.Content", model => user).Zone("content"),
-                View<User>("User.Display.Footer", model => user).Zone("footer")
-            );
+            return Task.FromResult(
+                Views(
+                    View<User>("User.Display.Header", model => user).Zone("header"),
+                    View<User>("User.Display.Meta", model => user).Zone("meta"),
+                    View<User>("User.Display.Content", model => user).Zone("content"),
+                    View<User>("User.Display.Footer", model => user).Zone("footer")
+                ));
 
         }
 
@@ -60,41 +60,42 @@ namespace Plato.Users.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
-        
-            return Views(
-                View<User>("User.Edit.Header", model => user).Zone("header"),
-                View<User>("User.Edit.Meta", model => user).Zone("meta"),
-                View<EditUserViewModel>("User.Edit.Content", model =>
-                {
-                    model.Id = user.Id;
-                    model.UserName = user.UserName;
-                    model.Email = user.Email;
-                    return model;
-                }).Zone("content"),
-                View<EditUserViewModel>("User.Edit.Sidebar", model =>
-                {
-                    model.Id = user.Id;
-                    model.UserName = user.UserName;
-                    model.Email = user.Email;
-                    return model;
-                }).Zone("sidebar"),
-                View<EditUserViewModel>("User.Edit.Footer", model =>
-                {
-                    model.Id = user.Id;
-                    model.UserName = user.UserName;
-                    model.Email = user.Email;
-                    return model;
-                }).Zone("footer"),
-                View<EditUserViewModel>("User.Edit.Actions", model =>
-                {
-                    model.Id = user.Id;
-                    model.UserName = user.UserName;
-                    model.Email = user.Email;
-                    return model;
-                }).Zone("actions")
-            );
+
+            return Task.FromResult(
+                Views(
+                    View<User>("User.Edit.Header", model => user).Zone("header"),
+                    View<User>("User.Edit.Meta", model => user).Zone("meta"),
+                    View<EditUserViewModel>("User.Edit.Content", model =>
+                    {
+                        model.Id = user.Id;
+                        model.UserName = user.UserName;
+                        model.Email = user.Email;
+                        return model;
+                    }).Zone("content"),
+                    View<EditUserViewModel>("User.Edit.Sidebar", model =>
+                    {
+                        model.Id = user.Id;
+                        model.UserName = user.UserName;
+                        model.Email = user.Email;
+                        return model;
+                    }).Zone("sidebar"),
+                    View<EditUserViewModel>("User.Edit.Footer", model =>
+                    {
+                        model.Id = user.Id;
+                        model.UserName = user.UserName;
+                        model.Email = user.Email;
+                        return model;
+                    }).Zone("footer"),
+                    View<EditUserViewModel>("User.Edit.Actions", model =>
+                    {
+                        model.Id = user.Id;
+                        model.UserName = user.UserName;
+                        model.Email = user.Email;
+                        return model;
+                    }).Zone("actions")
+                ));
 
         }
 

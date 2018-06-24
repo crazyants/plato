@@ -25,7 +25,7 @@ namespace Plato.Internal.Layout.ViewProviders
 
         #region "Helper Methods"
 
-        public LayoutViewModel Views(params IView[] views)
+        public IViewProviderResult Views(params IView[] views)
         {
             // TODO: // Implement a context object allowing uss to pass the service provider along
             return new LayoutViewModel(

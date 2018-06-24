@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Layout.ViewHelpers;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Users.ViewModels;
 
@@ -14,13 +12,14 @@ namespace Plato.Users.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
-        public override async Task<IViewProviderResult> BuildIndexAsync(UsersIndexViewModel viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(UsersIndexViewModel viewModel, IUpdateModel updater)
         {
-            return Views(
-                View<UsersIndexViewModel>("User.Index.Header", model => viewModel).Zone("header"),
-                View<UsersIndexViewModel>("User.Index.Tools", model => viewModel).Zone("tools"),
-                View<UsersIndexViewModel>("User.Index.Content", model => viewModel).Zone("content")
-            );
+            return Task.FromResult(
+                Views(
+                    View<UsersIndexViewModel>("User.Index.Header", model => viewModel).Zone("header"),
+                    View<UsersIndexViewModel>("User.Index.Tools", model => viewModel).Zone("tools"),
+                    View<UsersIndexViewModel>("User.Index.Content", model => viewModel).Zone("content")
+                ));
         }
 
         public override Task<IViewProviderResult> BuildEditAsync(UsersIndexViewModel model, IUpdateModel updater)

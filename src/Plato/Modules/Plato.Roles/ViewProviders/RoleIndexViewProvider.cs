@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Roles.ViewModels;
@@ -15,13 +12,14 @@ namespace Plato.Roles.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
-        public override async Task<IViewProviderResult> BuildIndexAsync(RolesIndexViewModel viewModel, IUpdateModel updater)
+        public override  Task<IViewProviderResult> BuildIndexAsync(RolesIndexViewModel viewModel, IUpdateModel updater)
         {
-            return Views(
-                View<RolesIndexViewModel>("Role.Index.Header", model => viewModel).Zone("header"),
-                View<RolesIndexViewModel>("Role.Index.Tools", model => viewModel).Zone("tools"),
-                View<RolesIndexViewModel>("Role.Index.Content", model => viewModel).Zone("content")
-            );
+            return Task.FromResult(
+                Views(
+                    View<RolesIndexViewModel>("Role.Index.Header", model => viewModel).Zone("header"),
+                    View<RolesIndexViewModel>("Role.Index.Tools", model => viewModel).Zone("tools"),
+                    View<RolesIndexViewModel>("Role.Index.Content", model => viewModel).Zone("content")
+                ));
         }
 
         public override Task<IViewProviderResult> BuildEditAsync(RolesIndexViewModel model, IUpdateModel updater)

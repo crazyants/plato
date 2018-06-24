@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -32,23 +31,25 @@ namespace Plato.Roles.ViewProviders
         
         }
         
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Role role, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Role role, IUpdateModel updater)
         {
 
-            return Views(
-                View<Role>("Role.Display.Header", model => role).Zone("header"),
-                View<Role>("Role.Display.Meta", model => role).Zone("meta"),
-                View<Role>("Role.Display.Content", model => role).Zone("content"),
-                View<Role>("Role.Display.Footer", model => role).Zone("footer")
-            );
+            return Task.FromResult(
+                Views(
+                    View<Role>("Role.Display.Header", model => role).Zone("header"),
+                    View<Role>("Role.Display.Meta", model => role).Zone("meta"),
+                    View<Role>("Role.Display.Content", model => role).Zone("content"),
+                    View<Role>("Role.Display.Footer", model => role).Zone("footer")
+                ));
 
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Role role, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Role role, IUpdateModel updater)
         {
-            return Views(
-                View<Role>("User.List", model => role).Zone("header").Order(3)
-            );
+            return Task.FromResult(
+                Views(
+                    View<Role>("User.List", model => role).Zone("header").Order(3)
+                ));
 
         }
 
@@ -90,10 +91,6 @@ namespace Plato.Roles.ViewProviders
 
                 role.Name = model.RoleName?.Trim();
                 
-
-                //await _userManager.SetUserNameAsync(user, model.UserName);
-                //await _userManager.SetEmailAsync(user, model.Email);
-
                 var result = await _roleManager.CreateAsync(role);
 
                 foreach (var error in result.Errors)

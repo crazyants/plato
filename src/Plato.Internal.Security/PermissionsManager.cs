@@ -96,6 +96,13 @@ namespace Plato.Internal.Security
 
         public async Task<IEnumerable<string>> GetEnabledRolePermissionsAsync(Role role)
         {
+
+            // We can only obtain enabled permissions for existing roles
+            // Return an empty list for new roles to avoid additional null checks
+            if (role.Id == 0)
+            {
+                return new List<string>();
+            }
             
             // If the role is anonymous set the authtype to
             // null to ensure IsAuthenticated is set to false

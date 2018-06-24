@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Cache;
+using System.Linq;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Repositories.Roles;
@@ -132,6 +133,11 @@ namespace Plato.Internal.Stores.Roles
 
         }
 
+        public async Task<IEnumerable<Role>> GetRolesAsync()
+        {
+            return await _roleRepository.SelectRoles();
+        }
+
         public async Task<Role> GetByNormalizedName(string nameNormalized)
         {
 
@@ -201,7 +207,14 @@ namespace Plato.Internal.Stores.Roles
             });
            
         }
-        
+
+        public async Task<IEnumerable<string>> GetRoleNamesAsync()
+        {
+            var roles = await GetRolesAsync();
+            return roles.Select(r => r.Name).OrderBy(r => r).ToList();
+        }
+
+
         #endregion
 
         #region "Private Methods"

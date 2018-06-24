@@ -9,6 +9,8 @@ namespace Plato.Internal.Repositories.Roles
 
         Task<IList<T>> SelectByUserIdAsync(int userId);
 
+        Task<IEnumerable<T>> SelectRoles();
+        
         Task<T> SelectByNormalizedNameAsync(string nameNormalized);
 
         
