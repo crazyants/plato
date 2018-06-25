@@ -160,6 +160,15 @@ namespace Plato.Roles.Services
                             DbType = DbType.String,
                             Length = "255"
                         }))
+                .CreateProcedure(
+                    new SchemaProcedure("SelectRoleByNameNormalized", StoredProcedureType.SelectByKey)
+                        .ForTable(roles)
+                        .WithParameter(new SchemaColumn()
+                        {
+                            Name = "NormalizedName",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }))
                 .CreateProcedure(new SchemaProcedure("SelectRolesPaged", StoredProcedureType.SelectPaged)
                     .ForTable(roles)
                     .WithParameters(new List<SchemaColumn>()

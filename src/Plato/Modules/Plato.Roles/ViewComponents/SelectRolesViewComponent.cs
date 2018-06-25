@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Stores.Abstractions.Roles;
-using Plato.Roles.ViewModels;
 
 namespace Plato.Roles.ViewComponents
 {
@@ -53,6 +52,23 @@ namespace Plato.Roles.ViewComponents
         }
     }
 
+    public class Selection<T>
+    {
+
+        public bool IsSelected { get; set; }
+
+        public T Value { get; set; }
+
+    }
+
+    public class SelectRolesViewModel
+    {
+
+        public IList<Selection<string>> SelectedRoles { get; set; }
+
+        public string HtmlName { get; set; }
+
+    }
 
 }
 

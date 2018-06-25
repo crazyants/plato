@@ -1,4 +1,4 @@
-Name: Users Social Media Fields
+Name: Plato Users Social
 Description: Adds popular social media features into user profiles.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/

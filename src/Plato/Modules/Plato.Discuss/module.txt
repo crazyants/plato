@@ -1,4 +1,4 @@
-Name: Plato.Discussions
+Name: Plato Discuss
 Description: Add public discussions to Plato.
 Category: Discussions
 Author: InstantASP
