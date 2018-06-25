@@ -1,8 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Stores.Abstractions.Roles;
+using Plato.Roles.ViewComponents;
 using Plato.Roles.ViewModels;
 
 namespace Plato.Roles.ViewProviders
@@ -11,11 +14,14 @@ namespace Plato.Roles.ViewProviders
     {
 
         private readonly UserManager<User> _userManager;
-        
+        private readonly IPlatoRoleStore _platoRoleStore;
+
         public UserViewProvider(
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            IPlatoRoleStore platoRoleStore)
         {
             _userManager = userManager;
+            _platoRoleStore = platoRoleStore;
         }
 
 
@@ -29,11 +35,20 @@ namespace Plato.Roles.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
-            return Task.FromResult(Views(
-                View<EditRoleViewModel>("UserRoles.Edit.Content", model => { return model; }).Order(2)
-            ));
+            var roleNames = await _platoRoleStore.GetRoleNamesAsync();
+
+            return Views(
+                View<EditRoleViewModel>("UserRoles.Edit.Content", model => { return model; }).Order(2),
+                View("SelectRoles",
+                    new
+                    {
+                        selectedRoles = roleNames,
+                        htmlName = ""
+                    }).Order(2)
+            );
+
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IUpdateModel updater)

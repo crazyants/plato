@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.Internal.Layout.EmbeddedViews;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.Views;
@@ -33,9 +34,7 @@ namespace Plato.Internal.Layout.ViewProviders
             );
         }
 
-        public IPositionedView View<TViewModel>(
-            string viewName,
-            Func<TViewModel, TViewModel> configure) where TViewModel : new()
+        public IPositionedView View<TViewModel>(string viewName, Func<TViewModel, TViewModel> configure) where TViewModel : new()
         {
 
             // Create proxy model 
@@ -48,7 +47,13 @@ namespace Plato.Internal.Layout.ViewProviders
             return new PositionedView(viewName, model);
 
         }
-
+        
+        public IPositionedView View(string viewName, dynamic arguments)
+        {
+            // Used to invoke view components
+            return new PositionedView(viewName, arguments);
+        }
+        
         public IPositionedView View(IEmbeddedView enbeddedView)
         {
             // Return a view we can optionally position

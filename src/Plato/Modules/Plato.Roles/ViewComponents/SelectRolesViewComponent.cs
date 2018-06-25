@@ -16,7 +16,9 @@ namespace Plato.Roles.ViewComponents
             _platoRoleStore = platoRoleStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(IEnumerable<string> selectedRoles, string htmlName)
+        public async Task<IViewComponentResult> InvokeAsync(
+            IEnumerable<string> selectedRoles, 
+            string htmlName)
         {
             if (selectedRoles == null)
             {

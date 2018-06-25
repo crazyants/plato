@@ -95,7 +95,7 @@ namespace Plato.Internal.Layout.Views
             return await _htmlHelper.PartialAsync(viewName, model, ViewContext.ViewData);
         }
 
-        async Task<IHtmlContent> InvokeViewComponentAsync(string viewName, object model)
+        async Task<IHtmlContent> InvokeViewComponentAsync(string viewName, object arguments)
         {
             var helper = _viewComponentHelper as DefaultViewComponentHelper;
             if (helper == null)
@@ -104,7 +104,7 @@ namespace Plato.Internal.Layout.Views
                     $"{_viewComponentHelper.GetType()} cannot be converted to DefaultViewComponentHelper");
             }
             helper.Contextualize(this.ViewContext);
-            return await _viewComponentHelper.InvokeAsync(viewName, model);
+            return await _viewComponentHelper.InvokeAsync(viewName, arguments);
         }
         
         bool IsViewModelAnonymousType(object model)
