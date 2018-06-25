@@ -15,9 +15,9 @@ namespace Plato.Internal.Models.Roles
 
         #region "Public Properties"
 
-        public override int Id { get; set; }
+        public sealed override int Id { get; set; }
 
-        public override string Name { get; set; }
+        public sealed override string Name { get; set; }
 
         public string Description { get; set;  }
 
@@ -47,8 +47,8 @@ namespace Plato.Internal.Models.Roles
 
         public Role(int id, string name)
         {
-            Id = id;
-            Name = name;
+            this.Id = id;
+            this.Name = name;
         }
 
         public Role(IDataReader reader)

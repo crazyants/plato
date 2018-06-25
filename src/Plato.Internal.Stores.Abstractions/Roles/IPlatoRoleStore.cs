@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Models.Roles;
-using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Internal.Stores.Abstractions.Roles
 {
@@ -18,6 +17,8 @@ namespace Plato.Internal.Stores.Abstractions.Roles
         Task<IEnumerable<string>> GetRoleNamesAsync();
 
         Task<IEnumerable<string>> GetRoleNamesByUserIdAsync(int userId);
+
+        Task<IEnumerable<int>> GetRoleIdsByUserIdAsync(int userId);
 
     }
 

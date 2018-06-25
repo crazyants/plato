@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Stores.Abstractions.Roles;
+using Plato.Roles.ViewModels;
 
 namespace Plato.Roles.ViewComponents
 {
@@ -30,43 +31,28 @@ namespace Plato.Roles.ViewComponents
             var model = new SelectRolesViewModel
             {
                 HtmlName = htmlName,
-                RoleSelections = roleSelections
+                SelectedRoles = roleSelections
             };
 
             return View(model);
         }
 
-        private async Task<IList<Selection<string>>> BuildRoleSelectionsAsync(IEnumerable<string> selectedRoles)
+        private async Task<IList<Selection<string>>> BuildRoleSelectionsAsync(
+            IEnumerable<string> selectedRoles)
         {
             var roleNames = await _platoRoleStore.GetRoleNamesAsync();
             var selections = roleNames.Select(r => new Selection<string>
                 {
-                    IsSelected = selectedRoles.Contains(r),
-                    Item = r
+                    IsSelected = selectedRoles.Any(v => v == r),
+                    Value = r
                 })
-                .OrderBy(r => r.Item)
+                .OrderBy(r => r.Value)
                 .ToList();
 
             return selections;
         }
     }
 
-    public class SelectRolesViewModel
-    {
 
-        public string HtmlName { get; set; }
-
-        public IList<Selection<string>> RoleSelections { get; set; }
-
-    }
-
-    public class Selection<T>
-    {
-
-        public bool IsSelected { get; set; }
-
-        public T Item { get; set; }
-
-    }
 }
 

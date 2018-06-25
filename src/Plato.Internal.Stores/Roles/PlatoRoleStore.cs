@@ -220,7 +220,11 @@ namespace Plato.Internal.Stores.Roles
             return roles.Select(r => r.Name).OrderBy(r => r).ToList();
         }
 
-
+        public async Task<IEnumerable<int>> GetRoleIdsByUserIdAsync(int userId)
+        {
+            var roles = await GetRolesByUserId(userId);
+            return roles.Select(r => r.Id).OrderBy(r => r).ToList();
+        }
         #endregion
 
         #region "Private Methods"

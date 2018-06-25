@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Roles;
-using Plato.Roles.ViewComponents;
 using Plato.Roles.ViewModels;
 
 namespace Plato.Roles.ViewProviders
@@ -13,15 +14,21 @@ namespace Plato.Roles.ViewProviders
     public class UserViewProvider : BaseViewProvider<User>
     {
 
+        private const string HtmlName = "UserRoles";
+
         private readonly UserManager<User> _userManager;
         private readonly IPlatoRoleStore _platoRoleStore;
 
+        private readonly HttpRequest _request;
+
         public UserViewProvider(
             UserManager<User> userManager,
-            IPlatoRoleStore platoRoleStore)
+            IPlatoRoleStore platoRoleStore,
+            IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _platoRoleStore = platoRoleStore;
+            _request = httpContextAccessor.HttpContext.Request;
         }
 
 
@@ -37,15 +44,15 @@ namespace Plato.Roles.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
+
             var selectedRoles = await _platoRoleStore.GetRoleNamesByUserIdAsync(user.Id);
 
             return Views(
-                
-                View("SelectRoles",
-                    new
+                View<EditUserRolesViewModel>("User.Roles.Edit.Content", model =>
                     {
-                        selectedRoles = selectedRoles,
-                        htmlName = ""
+                        model.SelectedRoles = selectedRoles;
+                        model.HtmlName = HtmlName;
+                        return model;
                     }).Order(2)
             );
 
@@ -54,24 +61,75 @@ namespace Plato.Roles.ViewProviders
         public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IUpdateModel updater)
         {
 
-            var model = new EditRoleViewModel();
+            // Get available role names
+            var roleNames = await _platoRoleStore.GetRoleNamesAsync();
+
+            // Convert to list to prevent multiple enumerations below
+            var roleNamesList = roleNames.ToList();
+            
+            // Build selected roles
+            var roles = new List<string>();
+            foreach (string key in _request.Form.Keys)
+            {
+                if (key.StartsWith(HtmlName))
+                {
+                    foreach (var roleName in roleNamesList)
+                    {
+                        if (_request.Form[key] == roleName)
+                        {
+                            if (!roles.Contains(_request.Form[key]))
+                            {
+                                roles.Add(_request.Form[key]);
+                            }
+                            
+                        }
+                    }
+                }
+            }
+            
+            // Update model
+            var model = new EditUserRolesViewModel();
+            model.SelectedRoles = roles;
 
             if (!await updater.TryUpdateModelAsync(model))
             {
                 return await BuildEditAsync(user, updater);
             }
 
-            //model.FacebookUrl = model.UserName?.Trim();
-
             if (updater.ModelState.IsValid)
             {
+                
+                // Remove roles in two steps to prevent an iteration on a modified collection
+                var rolesToRemove = new List<string>();
+                foreach (var role in await _userManager.GetRolesAsync(user))
+                {
+                    if (!roleNamesList.Contains(role))
+                    {
+                        rolesToRemove.Add(role);
+                    }
+                }
 
-                //var result = await _socialLinksStore.UpdateAsync(user.Id, new SocialLinks()
-                //{
-                //    FacebookUrl = model.FacebookUrl,
-                //    TwitterUrl = model.TwitterUrl,
-                //    YouTubeUrl = model.YouTubeUrl
-                //});
+                foreach (var role in rolesToRemove)
+                {
+                    await _userManager.RemoveFromRoleAsync(user, role);
+                }
+
+                // Add new roles
+                foreach (var role in roleNamesList)
+                {
+                    if (!await _userManager.IsInRoleAsync(user, role))
+                    {
+                        await _userManager.AddToRoleAsync(user, role);
+                    }
+                }
+
+                var result = await _userManager.UpdateAsync(user);
+                
+                foreach (var error in result.Errors)
+                {
+                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                }
+
 
             }
 

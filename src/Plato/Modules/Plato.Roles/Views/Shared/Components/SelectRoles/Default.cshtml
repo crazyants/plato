@@ -1,14 +1,14 @@
-﻿@model Plato.Roles.ViewComponents.SelectRolesViewModel
+﻿@model SelectRolesViewModel
 
 <div class="row">
-    @for (var i = 0; i < Model.RoleSelections.Count; i++)
+    @for (var i = 0; i < Model.SelectedRoles.Count; i++)
     {
-        var role = Model.RoleSelections[i];
+        var role = Model.SelectedRoles[i];
         <div class="col-12">
             <div class="form-check">
-                <label for="@Html.IdFor(m => m.RoleSelections[i])">
-                    <input id="@Html.IdFor(m => m.RoleSelections[i])" name="@Model.HtmlName" type="checkbox" checked="@role.IsSelected" value="@role.Item" />
-                    @role.Item
+                <label for="@Html.IdFor(m => m.SelectedRoles[i])">
+                    <input id="@Html.IdFor(m => m.SelectedRoles[i])" name="@Model.HtmlName" value="@role.Value" type="checkbox" checked="@role.IsSelected" />
+                    @role.Value
                 </label>
             </div>
         </div>

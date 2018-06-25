@@ -151,6 +151,15 @@ namespace Plato.Roles.Services
 
             // create unique stored procedures
 
+                .CreateProcedure(
+                    new SchemaProcedure("SelectRoleByName", StoredProcedureType.SelectByKey)
+                        .ForTable(roles)
+                        .WithParameter(new SchemaColumn()
+                        {
+                            Name = "[Name]",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }))
                 .CreateProcedure(new SchemaProcedure("SelectRolesPaged", StoredProcedureType.SelectPaged)
                     .ForTable(roles)
                     .WithParameters(new List<SchemaColumn>()

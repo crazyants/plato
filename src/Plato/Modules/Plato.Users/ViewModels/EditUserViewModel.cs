@@ -24,12 +24,11 @@ namespace Plato.Users.ViewModels
         public string PasswordConfirmation { get; set; }
 
         public bool DisplayPasswordFields { get; set; }
-
-        //public RoleViewModel[] Roles { get; set; }
-
-      
+        
         [DataType(DataType.Upload)]
         public IFormFile AvatarFile { get; set; }
+
+        public IEnumerable<string> RoleNames { get; set; }
 
     }
 }
