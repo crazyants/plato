@@ -78,6 +78,28 @@ namespace Plato.Internal.Repositories.Users
 
             return userRole;
         }
+
+        public async Task<IEnumerable<UserRole>> SelectUserRolesByUserId(int userId)
+        {
+            var userRoles = new List<UserRole>();
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectUserRolesByUserId", userId);
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    await reader.ReadAsync();
+                    var userRole = new UserRole();
+                    userRole.PopulateModel(reader);
+                    userRoles.Add(userRole);
+                }
+            }
+
+            return userRoles;
+        }
+
         
         public async Task<IEnumerable<UserRole>> InsertUserRolesAsync(
             int userId, IEnumerable<string> roleNames)
@@ -133,37 +155,26 @@ namespace Plato.Internal.Repositories.Users
             {
                 success = await context.ExecuteScalarAsync<bool>(
                     CommandType.StoredProcedure,
-                    "DeleteRolesByUserId", userId);
+                    "DeleteUserRolesByUserId", userId);
             }
             return success;
         }
-
-        public async Task<bool> DeletetUserRole(int userId, string roleName)
-        {
-            bool success;
-            using (var context = _dbContext)
-            {
-                success = await context.ExecuteScalarAsync<bool>(
-                    CommandType.StoredProcedure,
-                    "DeleteUserRoleByUserIdAndName",
-                    userId,
-                    roleName);
-            }
-            return success;
-        }
-
+        
         public async Task<bool> DeletetUserRole(int userId, int roleId)
         {
-            bool success;
+
+            var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<bool>(
+                success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteUserRoleByUserIdAndRoleId",
                     userId,
                     roleId);
             }
-            return success;
+
+            return success > 0 ? true : false;
+
         }
 
         #endregion

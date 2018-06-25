@@ -1,6 +1,6 @@
 Name: Default
 State: Running
 DatabaseProvider: SqlClient
-ConnectionString: server=localhost;trusted_connection=true;database=Plato_Test4
-TablePrefix: plato60_
+ConnectionString: server=localhost;trusted_connection=true;database=Plato_Test5
+TablePrefix: plato9_
 Location: Plato

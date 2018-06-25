@@ -40,7 +40,7 @@ namespace Plato.Roles.ViewProviders
             var selectedRoles = await _platoRoleStore.GetRoleNamesByUserIdAsync(user.Id);
 
             return Views(
-                View<EditRoleViewModel>("UserRoles.Edit.Content", model => { return model; }).Order(2),
+                
                 View("SelectRoles",
                     new
                     {

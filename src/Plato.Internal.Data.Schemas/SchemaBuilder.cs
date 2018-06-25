@@ -25,8 +25,7 @@ namespace Plato.Internal.Data.Schemas
             get => _statements ?? (_statements = new List<string>());
             set => _statements = value;
         }
-
-
+        
         private readonly IDbContext _dbContext;
         private readonly ILogger<SchemaBuilder> _logger;
 
@@ -190,8 +189,7 @@ namespace Plato.Internal.Data.Schemas
 
         public ISchemaBuilder CreateDefaultProcedures(SchemaTable table)
         {
-
-
+            
             // select * from table
             CreateProcedure(new SchemaProcedure($"Select{table.NameNormalized}", StoredProcedureType.Select)
                 .ForTable(table));
@@ -251,38 +249,17 @@ namespace Plato.Internal.Data.Schemas
                 DropProcedure(procedure);
             }
             
-            // TODO: Refactor to avoid switch statement 
-            // Create common command classes to represent each procedure type
-            // Avoids enum and makes it more extensible for future additins
-            // InsertUpdateProcedure : IProcedureCommand,
-            // SelectByKeyProcedure : IProcedureCommand
-            // DeleteByKey : IProcedureCommand etc
-            var statement = string.Empty;
-            switch (procedure.ProcedureType)
-            {
-                case StoredProcedureType.InsertUpdate:
-                    statement = BuildInsertUpdateProcedure(procedure);
-                    break;
-                case StoredProcedureType.Select:
-                    statement = BuildSelectProcedure(procedure);
-                    break;
-                case StoredProcedureType.SelectByKey:
-                    statement = BuildSelectByProcedure(procedure);
-                    break;
-                case StoredProcedureType.SelectPaged:
-                    statement = BuildSelectPagedProcedure(procedure);
-                    break;
-                case StoredProcedureType.DeleteByKey:
-                    statement = BuildDeleteByKeyProcedure(procedure);
-                    break;
-            }
-
-            CreateStatement(statement);
-
+            CreateStatement(GetProcedureStatement(procedure, false));
             return this;
 
         }
 
+        public ISchemaBuilder AlterProcedure(SchemaProcedure procedure)
+        {
+            CreateStatement(GetProcedureStatement(procedure, true));
+            return this;
+        }
+     
         public ISchemaBuilder CreateStatement(string statement)
         {
             var notNull = !string.IsNullOrEmpty(statement);
@@ -347,15 +324,52 @@ namespace Plato.Internal.Data.Schemas
 
         #endregion
 
-        #region "Private Methods"
+        #region "Builders"
 
-        private string BuildSelectProcedure(SchemaProcedure procedure)
+        string GetProcedureStatement(
+            SchemaProcedure procedure,
+            bool alter)
+        {
+
+            // Always return explicit SQL first
+            if (!String.IsNullOrEmpty(procedure.Sql))
+            {
+                return BuildExplicitProcedure(procedure, alter);
+            }
+
+            // TODO: Refactor to avoid switch statement 
+            // Create common command classes to represent each procedure type
+            // Avoids enum and makes it more extensible for future additins
+            // InsertUpdateProcedure : IProcedureCommand,
+            // SelectByKeyProcedure : IProcedureCommand
+            // DeleteByKey : IProcedureCommand etc
+
+            switch (procedure.ProcedureType)
+            {
+                case StoredProcedureType.InsertUpdate:
+                    return BuildInsertUpdateProcedure(procedure, alter);
+                case StoredProcedureType.Select:
+                    return BuildSelectProcedure(procedure, alter);
+                case StoredProcedureType.SelectByKey:
+                    return BuildSelectByProcedure(procedure, alter);
+                case StoredProcedureType.SelectPaged:
+                    return BuildSelectPagedProcedure(procedure, alter);
+                case StoredProcedureType.DeleteByKey:
+                    return BuildDeleteByKeyProcedure(procedure, alter);
+            }
+            
+            return string.Empty;
+
+        }
+
+        string BuildSelectProcedure(SchemaProcedure procedure, bool alter)
         {
 
             var sb = new StringBuilder();
 
-            sb.Append("CREATE PROCEDURE ")
-                .Append(GetProcedureName(procedure.Name))
+            sb.Append(alter == false ? "CREATE" : "ALTER")
+                .Append(" PROCEDURE ")
+               .Append(GetProcedureName(procedure.Name))
                 .Append(_newLine)
                 .Append("AS")
                 .Append(_newLine)
@@ -377,14 +391,15 @@ namespace Plato.Internal.Data.Schemas
 
         }
 
-        private string BuildSelectByProcedure(SchemaProcedure procedure)
+        string BuildSelectByProcedure(SchemaProcedure procedure, bool alter)
         {
 
             if (procedure.Parameters == null)
                 throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
 
             var sb = new StringBuilder();
-            sb.Append("CREATE PROCEDURE ")
+            sb.Append(alter == false ? "CREATE" : "ALTER")
+                .Append(" PROCEDURE ")
                 .Append(GetProcedureName(procedure.Name))
                 .Append(" (")
                 .Append(_newLine);
@@ -440,7 +455,7 @@ namespace Plato.Internal.Data.Schemas
 
         }
 
-        public string BuildSelectPagedProcedure(SchemaProcedure procedure)
+        string BuildSelectPagedProcedure(SchemaProcedure procedure, bool alter)
         {
 
             /* Generates a stored procedure similar to...
@@ -514,8 +529,9 @@ namespace Plato.Internal.Data.Schemas
                 throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
 
             var sb = new StringBuilder();
-            sb.Append("CREATE PROCEDURE ")
-                .Append(GetProcedureName(procedure.Name))
+            sb.Append(alter == false ? "CREATE" : "ALTER")
+                .Append(" PROCEDURE ")
+                  .Append(GetProcedureName(procedure.Name))
                 .Append(" (")
                 .Append(_newLine);
 
@@ -699,15 +715,16 @@ namespace Plato.Internal.Data.Schemas
 
         }
 
-        private string BuildDeleteByKeyProcedure(SchemaProcedure procedure)
+        string BuildDeleteByKeyProcedure(SchemaProcedure procedure, bool alter)
         {
 
             if (procedure.Parameters == null)
                 throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
 
             var sb = new StringBuilder();
-            sb.Append("CREATE PROCEDURE ")
-                .Append(GetProcedureName(procedure.Name))
+            sb.Append(alter == false ? "CREATE" : "ALTER")
+                .Append(" PROCEDURE ")
+               .Append(GetProcedureName(procedure.Name))
                 .Append(" (")
                 .Append(_newLine);
 
@@ -808,8 +825,63 @@ namespace Plato.Internal.Data.Schemas
             return sb.ToString();
 
         }
+        
+        string BuildExplicitProcedure(SchemaProcedure procedure, bool alter)
+        {
 
-        private string BuildInsertUpdateProcedure(SchemaProcedure procedure)
+            if (procedure == null)
+                throw new ArgumentNullException(nameof(procedure));
+
+            var parameters = procedure.Parameters;
+
+            var sb = new StringBuilder();
+
+            sb.Append(alter == false ? "CREATE" : "ALTER")
+                .Append(" PROCEDURE [")
+                 .Append(GetProcedureName(procedure.Name))
+                .Append("]");
+
+            if (parameters.Count > 0)
+            {
+                sb.Append("(")
+                    .Append(_newLine);
+
+                var i = 0;
+                foreach (var parameter in parameters)
+                {
+                    sb
+                        .Append("     ")
+                        .Append("@")
+                        .Append(parameter.NameNormalized)
+                        .Append(" ")
+                        .Append(parameter.DbTypeNormalized)
+                        .Append(i < parameters.Count - 1 ? "," : "")
+                        .Append(_newLine);
+                    i += 1;
+                }
+
+                sb.Append(") ");
+
+            }
+
+            sb.Append("AS")
+                .Append(_newLine)
+                .Append(_newLine)
+                .Append("SET NOCOUNT ON ")
+                .Append(_newLine)
+                .Append(_newLine);
+
+            sb.Append(GetProcedurePlaceHolderComment())
+                .Append(_newLine)
+                .Append(_newLine);
+            
+            sb.Append(ParseExplicitSql(procedure.Sql));
+
+            return sb.ToString();
+
+        }
+
+        string BuildInsertUpdateProcedure(SchemaProcedure procedure, bool alter)
         {
 
             if (procedure == null)
@@ -820,8 +892,7 @@ namespace Plato.Internal.Data.Schemas
 
             if (procedure.Table.PrimaryKeyColumn == null)
                 throw new Exception($"A primary key column is required for table '{procedure.Table.Name}' when creating procedure of type '{procedure.ProcedureType}'");
-
-
+            
             var tableName = GetTableName(procedure.Table.Name);
             var columns = procedure.Table.Columns;
 
@@ -844,7 +915,9 @@ namespace Plato.Internal.Data.Schemas
 
             var sb = new StringBuilder();
             
-            sb.Append("CREATE PROCEDURE [")
+
+            sb.Append(alter == false ? "CREATE" : "ALTER")
+                .Append(" PROCEDURE [")
                 .Append(GetProcedureName(procedure.Name))
                 .Append("]");
 
@@ -1023,22 +1096,26 @@ namespace Plato.Internal.Data.Schemas
             return sb.ToString();
 
         }
+
+        #endregion
+
+        #region "Helper"
         
-        private string GetTableName(string tableName)
+        string GetTableName(string tableName)
         {
             return !string.IsNullOrEmpty(_tablePrefix)
                 ? _tablePrefix + tableName
                 : tableName;
         }
 
-        private string GetProcedureName(string procedureName)
+        string GetProcedureName(string procedureName)
         {
             return !string.IsNullOrEmpty(_tablePrefix)
                 ? _tablePrefix + procedureName
                 : procedureName;
         }
 
-        private string DescribeTableColumn(
+        string DescribeTableColumn(
             SchemaColumn column)
         {
             var sb = new StringBuilder();
@@ -1053,12 +1130,12 @@ namespace Plato.Internal.Data.Schemas
                 if (!string.IsNullOrEmpty(column.DefaultValueNormalizsed))
                     sb.Append(" DEFAULT (").Append(column.DefaultValueNormalizsed).Append(")");
             }
-             
+
             sb.Append(column.Nullable ? " NULL" : " NOT NULL");
             return sb.ToString();
         }
 
-        private string GetProcedurePlaceHolderComment()
+        string GetProcedurePlaceHolderComment()
         {
             var moduleName = !string.IsNullOrEmpty(this._options.ModuleName) ?
                 this._options.ModuleName :
@@ -1066,7 +1143,16 @@ namespace Plato.Internal.Data.Schemas
             return $"/******{_newLine}Module: {moduleName}{_newLine}Version: {this._options.Version}{_newLine}This stored procedure was generated programmatically by Plato on {DateTime.Now}. Changes made by hand may be lost.{_newLine}******/";
         }
 
+        string ParseExplicitSql(string input)
+        {
+            return input
+                .Replace("{prefix}_", _tablePrefix)
+                .Replace("  ", "")
+                .Replace("      ", "");
+        }
+        
         #endregion
+
 
 
     }

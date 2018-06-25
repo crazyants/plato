@@ -144,11 +144,6 @@ namespace Plato.Roles.Services
 
             // create tables and default procedures
             builder
-                .Configure(options =>
-                {
-                    options.ModuleName = "Plato.Roles";
-                    options.Version = "1.0.0";
-                })
                 // Create tables
                 .CreateTable(roles)
                 // Create basic default CRUD procedures
@@ -167,7 +162,7 @@ namespace Plato.Roles.Services
                             },
                             new SchemaColumn()
                             {
-                                Name = "RoleName",
+                                Name = "[Name]",
                                 DbType = DbType.String,
                                 Length = "255"
                             }
@@ -191,12 +186,6 @@ namespace Plato.Roles.Services
                     },
                     new SchemaColumn()
                     {
-                        Name = "[ViewName]",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
                         Name = "UserId",
                         DbType = DbType.Int32
                     },
@@ -210,48 +199,44 @@ namespace Plato.Roles.Services
             
             // create tables and default procedures
             builder
-                .Configure(options =>
-                {
-                    options.ModuleName = "Plato.Roles";
-                    options.Version = "1.0.0";
-                })
                 // Create tables
                 .CreateTable(userRoles)
                 // Create basic default CRUD procedures
                 .CreateDefaultProcedures(userRoles);
 
-            builder.CreateProcedure(
-                    new SchemaProcedure("SelectRolesByUserId", StoredProcedureType.SelectByKey)
+            builder
+
+                .CreateProcedure(
+                    new SchemaProcedure("SelectRolesByUserId", @"
+                            SELECT * FROM {prefix}_Roles WITH (nolock) WHERE Id IN (
+	                            SELECT RoleId FROM {prefix}_UserRoles WITH (nolock) 
+	                            WHERE (
+	                               UserId = @UserId
+	                            )
+                            )
+                        ")
+                        .WithParameter(new SchemaColumn()
+                        {
+                            Name = "UserId",
+                            DbType = DbType.Int32
+                        }))
+                        
+                .CreateProcedure(
+                    new SchemaProcedure("SelectUserRolesByUserId", StoredProcedureType.SelectByKey)
                         .ForTable(userRoles)
                         .WithParameter(new SchemaColumn()
                         {
                             Name = "UserId",
                             DbType = DbType.Int32
                         }))
+
                 .CreateProcedure(
-                    new SchemaProcedure("DeleteRolesByUserId", StoredProcedureType.DeleteByKey)
+                    new SchemaProcedure("DeleteUserRolesByUserId", StoredProcedureType.DeleteByKey)
                         .ForTable(userRoles)
                         .WithParameter(new SchemaColumn()
                         {
                             Name = "UserId",
                             DbType = DbType.Int32
-                        }))
-                .CreateProcedure(
-                    new SchemaProcedure("DeleteUserRoleByUserIdAndName", StoredProcedureType.DeleteByKey)
-                        .ForTable(userRoles)
-                        .WithParameters(new List<SchemaColumn>()
-                        {
-                            new SchemaColumn()
-                            {
-                                Name = "UserId",
-                                DbType = DbType.Int32
-                            },
-                            new SchemaColumn()
-                            {
-                                Name = "RoleName",
-                                DbType = DbType.String,
-                                Length = "255"
-                            }
                         }))
                 .CreateProcedure(
                     new SchemaProcedure("DeleteUserRoleByUserIdAndRoleId", StoredProcedureType.DeleteByKey)

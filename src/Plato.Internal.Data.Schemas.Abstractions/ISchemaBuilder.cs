@@ -39,6 +39,8 @@ namespace Plato.Internal.Data.Schemas.Abstractions
 
         ISchemaBuilder CreateProcedure(SchemaProcedure proecedure);
 
+        ISchemaBuilder AlterProcedure(SchemaProcedure procedure);
+
         ISchemaBuilder CreateDefaultProcedures(SchemaTable table);
 
         ISchemaBuilder ApplySchema();

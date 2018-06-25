@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Plato.Internal.Cache;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Users;
@@ -13,13 +16,22 @@ namespace Plato.Internal.Stores.Users
     {
         private readonly IPlatoRoleStore _platoRoleStore;
         private readonly IUserRolesRepository<UserRole> _userRolesRepository;
+        private readonly ILogger<UserRolesStore> _logger;
+        private readonly ICacheDependency _cacheDependency;
+        private readonly IMemoryCache _memoryCache;
 
         public UserRolesStore(
             IPlatoRoleStore platoRoleStore,
-            IUserRolesRepository<UserRole> userRolesRepository)
+            IUserRolesRepository<UserRole> userRolesRepository,
+            ILogger<UserRolesStore> logger,
+            ICacheDependency cacheDependency,
+            IMemoryCache memoryCache)
         {
             _platoRoleStore = platoRoleStore;
             _userRolesRepository = userRolesRepository;
+            _logger = logger;
+            _cacheDependency = cacheDependency;
+            _memoryCache = memoryCache;
         }
 
         public async Task<IEnumerable<UserRole>> AddtUserRolesAsync(int userId, IEnumerable<string> roleNames)
@@ -44,35 +56,58 @@ namespace Plato.Internal.Stores.Users
             return userRole;
 
         }
-
-        public Task<bool> DeleteAsync(UserRole model)
+        
+        public async Task<UserRole> UpdateAsync(UserRole model)
         {
-            throw new NotImplementedException();
+            var userRole = await _userRolesRepository.InsertUpdateAsync(model);
+            if (userRole != null)
+            {
+
+            }
+
+            return userRole;
         }
 
-        public Task<bool> DeletetUserRole(int userId, int roleId)
+        public async Task<bool> DeleteAsync(UserRole model)
         {
-            throw new NotImplementedException();
+            return await _userRolesRepository.DeleteAsync(model.Id);
         }
 
-        public Task<bool> DeletetUserRole(int userId, string roleName)
+        public async Task<bool> DeletetUserRole(int userId, int roleId)
         {
-            throw new NotImplementedException();
+            return await _userRolesRepository.DeletetUserRole(userId, roleId);
+        }
+        
+        public async Task<bool> DeletetUserRolesAsync(int userId)
+        {
+            return await _userRolesRepository.DeletetUserRolesAsync(userId);
         }
 
-        public Task<bool> DeletetUserRolesAsync(int userId)
+        public async Task<UserRole> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+
+            var key = "";
+            return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
+            {
+                var userRole = await _userRolesRepository.SelectByIdAsync(id);
+                if (userRole != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Information))
+                    {
+                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
+                            _memoryCache.GetType().Name, key);
+                    }
+
+                    cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
+                }
+                return userRole;
+            });
+
         }
 
-        public Task<UserRole> GetByIdAsync(int id)
+        public async Task<IEnumerable<UserRole>> GetUserRoles(int userId)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<UserRole>> GetUserRoles(int ustId)
-        {
-            throw new NotImplementedException();
+            return await _userRolesRepository.SelectUserRolesByUserId(userId);
         }
 
         public IQuery QueryAsync()
@@ -85,9 +120,5 @@ namespace Plato.Internal.Stores.Users
             throw new NotImplementedException();
         }
 
-        public Task<UserRole> UpdateAsync(UserRole model)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

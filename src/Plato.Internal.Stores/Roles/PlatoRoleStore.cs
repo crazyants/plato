@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Cache;
-using System.Linq;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Repositories.Roles;
