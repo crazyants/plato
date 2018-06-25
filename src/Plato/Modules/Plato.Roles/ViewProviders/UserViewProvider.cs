@@ -68,28 +68,26 @@ namespace Plato.Roles.ViewProviders
             var roleNamesList = roleNames.ToList();
             
             // Build selected roles
-            var roles = new List<string>();
+            var rolesToAdd = new List<string>();
             foreach (string key in _request.Form.Keys)
             {
                 if (key.StartsWith(HtmlName))
                 {
-                    foreach (var roleName in roleNamesList)
+                    var values = _request.Form[key];
+                    foreach (var value in values)
                     {
-                        if (_request.Form[key] == roleName)
+                        if (!rolesToAdd.Contains(value))
                         {
-                            if (!roles.Contains(_request.Form[key]))
-                            {
-                                roles.Add(_request.Form[key]);
-                            }
-                            
+                            rolesToAdd.Add(value);
                         }
+                        
                     }
                 }
             }
             
             // Update model
             var model = new EditUserRolesViewModel();
-            model.SelectedRoles = roles;
+            model.SelectedRoles = rolesToAdd;
 
             if (!await updater.TryUpdateModelAsync(model))
             {
@@ -103,7 +101,7 @@ namespace Plato.Roles.ViewProviders
                 var rolesToRemove = new List<string>();
                 foreach (var role in await _userManager.GetRolesAsync(user))
                 {
-                    if (!roleNamesList.Contains(role))
+                    if (!rolesToAdd.Contains(role))
                     {
                         rolesToRemove.Add(role);
                     }
@@ -115,7 +113,7 @@ namespace Plato.Roles.ViewProviders
                 }
 
                 // Add new roles
-                foreach (var role in roleNamesList)
+                foreach (var role in rolesToAdd)
                 {
                     if (!await _userManager.IsInRoleAsync(user, role))
                     {

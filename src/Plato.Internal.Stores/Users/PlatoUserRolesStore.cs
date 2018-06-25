@@ -12,18 +12,21 @@ using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Internal.Stores.Users
 {
-    public class UserRolesStore : IPlatoUserRoleStore<UserRole>
+    public class PlatoUserRolesStore : IPlatoUserRoleStore<UserRole>
     {
+
+        private const string  Key = "UserRoles";
+
         private readonly IPlatoRoleStore _platoRoleStore;
         private readonly IUserRolesRepository<UserRole> _userRolesRepository;
-        private readonly ILogger<UserRolesStore> _logger;
+        private readonly ILogger<PlatoUserRolesStore> _logger;
         private readonly ICacheDependency _cacheDependency;
         private readonly IMemoryCache _memoryCache;
 
-        public UserRolesStore(
+        public PlatoUserRolesStore(
             IPlatoRoleStore platoRoleStore,
             IUserRolesRepository<UserRole> userRolesRepository,
-            ILogger<UserRolesStore> logger,
+            ILogger<PlatoUserRolesStore> logger,
             ICacheDependency cacheDependency,
             IMemoryCache memoryCache)
         {
@@ -50,7 +53,7 @@ namespace Plato.Internal.Stores.Users
             var userRole = await _userRolesRepository.InsertUpdateAsync(model);
             if (userRole != null)
             {
-
+                _cacheDependency.CancelToken(CacheKey.GetRolesByUserIdCacheKey(model.UserId));
             }
 
             return userRole;
@@ -62,7 +65,7 @@ namespace Plato.Internal.Stores.Users
             var userRole = await _userRolesRepository.InsertUpdateAsync(model);
             if (userRole != null)
             {
-
+                _cacheDependency.CancelToken(CacheKey.GetRolesByUserIdCacheKey(model.UserId));
             }
 
             return userRole;
@@ -70,23 +73,44 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<bool> DeleteAsync(UserRole model)
         {
-            return await _userRolesRepository.DeleteAsync(model.Id);
+
+            var success = await _userRolesRepository.DeleteAsync(model.Id);
+            if (success)
+            {
+                _cacheDependency.CancelToken(CacheKey.GetRolesByUserIdCacheKey(model.UserId));
+            }
+
+            return success;
+
         }
 
         public async Task<bool> DeletetUserRole(int userId, int roleId)
         {
-            return await _userRolesRepository.DeletetUserRole(userId, roleId);
+            var success = await _userRolesRepository.DeletetUserRole(userId, roleId);
+            if (success)
+            {
+                _cacheDependency.CancelToken(CacheKey.GetRolesByUserIdCacheKey(userId));
+            }
+
+            return success;
         }
         
         public async Task<bool> DeletetUserRolesAsync(int userId)
         {
-            return await _userRolesRepository.DeletetUserRolesAsync(userId);
+            var success = await _userRolesRepository.DeletetUserRolesAsync(userId);
+            if (success)
+            {
+                _cacheDependency.CancelToken(CacheKey.GetRolesByUserIdCacheKey(userId));
+            }
+
+            return success;
+
         }
 
         public async Task<UserRole> GetByIdAsync(int id)
         {
 
-            var key = "";
+            var key = GetCacheKey(id);
             return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
             {
                 var userRole = await _userRolesRepository.SelectByIdAsync(id);
@@ -120,5 +144,10 @@ namespace Plato.Internal.Stores.Users
             throw new NotImplementedException();
         }
 
+        private string GetCacheKey(int userId)
+        {
+            return $"{Key}_{userId.ToString()}";
+        }
+        
     }
 }

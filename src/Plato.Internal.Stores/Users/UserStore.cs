@@ -30,22 +30,23 @@ namespace Plato.Internal.Stores.Users
 
         #region "UserStore"
 
-        private readonly IUserRepository<User> _userRepository;
-        private readonly IUserRolesRepository<UserRole> _userRolesRepository;
+        private readonly IPlatoUserRoleStore<UserRole> _platoUserRoleStore;
 
+        private readonly IUserRepository<User> _userRepository;
+ 
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IPlatoRoleStore _platoRoleStore;
 
         public UserStore(
             IUserRepository<User> userRepository,
-            IUserRolesRepository<UserRole> userRolesRepository,
             IPlatoUserStore<User> platoUserStore,
-            IPlatoRoleStore platoRoleStore)
+            IPlatoRoleStore platoRoleStore,
+            IPlatoUserRoleStore<UserRole> platoUserRoleStore)
         {
             _userRepository = userRepository;
-            _userRolesRepository = userRolesRepository;
             _platoUserStore = platoUserStore;
             _platoRoleStore = platoRoleStore;
+            _platoUserRoleStore = platoUserRoleStore;
         }
 
         #endregion
@@ -324,11 +325,11 @@ namespace Plato.Internal.Stores.Users
             var role = await _platoRoleStore.GetByName(roleName);
             if (role != null)
             {
-               var userRole = await _userRolesRepository.InsertUpdateAsync(new UserRole()
+                var userRole = await _platoUserRoleStore.CreateAsync(new UserRole()
                 {
                     RoleId = role.Id,
                     UserId = user.Id
-               });
+                });
             }
          
         }
@@ -339,7 +340,10 @@ namespace Plato.Internal.Stores.Users
 
             var role = await _platoRoleStore.GetByName(roleName);
             if (role != null)
-                await _userRolesRepository.DeletetUserRole(user.Id, role.Id);
+            {
+                await _platoUserRoleStore.DeletetUserRole(user.Id, role.Id);
+            }
+               
         }
 
         public async Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
@@ -349,11 +353,16 @@ namespace Plato.Internal.Stores.Users
 
             var roles = await _platoRoleStore.GetRolesByUserId(user.Id);
             if (roles == null)
+            {
                 return new List<string>();
-
-            IList<string> output = new List<string>();
+            }
+                
+            var output = new List<string>();
             foreach (var role in roles)
+            {
                 output.Add(role.Name);
+            }
+                
             return output;
 
         }

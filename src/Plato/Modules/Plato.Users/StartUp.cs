@@ -97,8 +97,7 @@ namespace Plato.Users
             services.AddScoped<IViewProvider<UsersIndexViewModel>, UserIndexViewProvider>();
 
             //services.AddScoped<IViewProvider<User>, UserViewProvider>();
-
-
+            
             // register view drivers
             services.AddScoped<IViewAdaptorProvider, UserListAdaptor>();
 

@@ -42,7 +42,8 @@ namespace Plato.Internal.Stores.Extensions
             
             // Roles
             services.AddScoped<IPlatoRoleStore, PlatoRoleStore>();
-            
+            services.AddScoped<IPlatoUserRoleStore<UserRole>, PlatoUserRolesStore>();
+
             // Users
             services.AddScoped<IPlatoUserStore<User>, PlatoUserStore>();
             services.AddScoped<IUserPhotoStore<UserPhoto>, UserPhotoStore>();
