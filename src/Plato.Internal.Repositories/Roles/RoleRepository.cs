@@ -11,7 +11,11 @@ namespace Plato.Internal.Repositories.Roles
 {
     public class RoleRepository : IRoleRepository<Role>
     {
+
         #region "Constructor"
+
+        private readonly IDbContext _dbContext;
+        private readonly ILogger<RoleRepository> _logger;
 
         public RoleRepository(
             IDbContext dbContext,
@@ -60,14 +64,7 @@ namespace Plato.Internal.Repositories.Roles
         }
 
         #endregion
-
-        #region "Private Variables"
-
-        private readonly IDbContext _dbContext;
-        private readonly ILogger<RoleRepository> _logger;
-
-        #endregion
-
+        
         #region "Implementation"
 
         public async Task<bool> DeleteAsync(int id)
@@ -180,7 +177,7 @@ namespace Plato.Internal.Repositories.Roles
 
         public async Task<IList<Role>> SelectByUserIdAsync(int userId)
         {
-            List<Role> output = null;
+            var output = new List<Role>();
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -265,5 +262,6 @@ namespace Plato.Internal.Repositories.Roles
         }
 
         #endregion
+
     }
 }

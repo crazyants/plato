@@ -214,11 +214,17 @@ namespace Plato.Internal.Stores.Roles
             return roles.Select(r => r.Name).OrderBy(r => r).ToList();
         }
 
+        public async Task<IEnumerable<string>> GetRoleNamesByUserIdAsync(int userId)
+        {
+            var roles = await GetRolesByUserId(userId);
+            return roles.Select(r => r.Name).OrderBy(r => r).ToList();
+        }
+
 
         #endregion
 
         #region "Private Methods"
-        
+
         private string GetRoleEntryCacheKey(int roleId)
         {
             return $"{_key}_{roleId.ToString()}";

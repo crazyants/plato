@@ -16,5 +16,9 @@ namespace Plato.Internal.Stores.Abstractions.Roles
         Task<Role> GetByNormalizedName(string nameNormalized);
 
         Task<IEnumerable<string>> GetRoleNamesAsync();
+
+        Task<IEnumerable<string>> GetRoleNamesByUserIdAsync(int userId);
+
     }
+
 }

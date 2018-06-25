@@ -11,6 +11,7 @@ namespace Plato.Roles.Services
 {
     public class SetUpEventHandler : ISetUpEventHandler
     {
+
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly UserManager<User> _userManager;
 
@@ -25,7 +26,57 @@ namespace Plato.Roles.Services
         public async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
 
-            // build schemas
+            using (var builder = _schemaBuilder)
+            {
+
+                // configure
+                Configure(builder);
+
+                // roles 
+                Roles(builder);
+
+                // user roles 
+                UserRoles(builder);
+                
+                var result = await builder.ApplySchemaAsync();
+                if (result.Errors.Count > 0)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        reportError(error.Message, error.StackTrace);
+                    }
+
+                }
+
+            }
+
+            // create super user
+
+            try
+            {
+             
+            }
+            catch (Exception ex)
+            {
+                reportError(ex.Message, ex.StackTrace);
+            }
+
+        }
+        
+        void Configure(ISchemaBuilder builder)
+        {
+
+            builder
+                .Configure(options =>
+                {
+                    options.ModuleName = "Plato.Roles";
+                    options.Version = "1.0.0";
+                });
+
+        }
+
+        void Roles(ISchemaBuilder builder)
+        {
 
             var roles = new SchemaTable()
             {
@@ -91,6 +142,41 @@ namespace Plato.Roles.Services
                 }
             };
 
+            // create tables and default procedures
+            builder
+                .Configure(options =>
+                {
+                    options.ModuleName = "Plato.Roles";
+                    options.Version = "1.0.0";
+                })
+                // Create tables
+                .CreateTable(roles)
+                // Create basic default CRUD procedures
+                .CreateDefaultProcedures(roles)
+
+            // create unique stored procedures
+
+                .CreateProcedure(new SchemaProcedure("SelectRolesPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(roles)
+                    .WithParameters(new List<SchemaColumn>()
+                    {
+                            new SchemaColumn()
+                            {
+                                Name = "Id",
+                                DbType = DbType.Int32
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "RoleName",
+                                DbType = DbType.String,
+                                Length = "255"
+                            }
+                    }));
+            
+        }
+
+        void UserRoles(ISchemaBuilder builder)
+        {
 
             var userRoles = new SchemaTable()
             {
@@ -121,28 +207,20 @@ namespace Plato.Roles.Services
                     }
                 }
             };
+            
+            // create tables and default procedures
+            builder
+                .Configure(options =>
+                {
+                    options.ModuleName = "Plato.Roles";
+                    options.Version = "1.0.0";
+                })
+                // Create tables
+                .CreateTable(userRoles)
+                // Create basic default CRUD procedures
+                .CreateDefaultProcedures(userRoles);
 
-
-            using (var builder = _schemaBuilder)
-            {
-
-                // create tables and default procedures
-                builder
-                    .Configure(options =>
-                    {
-                        options.ModuleName = "Plato.Roles";
-                        options.Version = "1.0.0";
-                    })
-                    // Create tables
-                    .CreateTable(roles)
-                    .CreateTable(userRoles)
-                    // Create basic default CRUD procedures
-                    .CreateDefaultProcedures(roles)
-                    .CreateDefaultProcedures(userRoles);
-
-                // create unique role stored procedures
-
-                builder.CreateProcedure(
+            builder.CreateProcedure(
                     new SchemaProcedure("SelectRolesByUserId", StoredProcedureType.SelectByKey)
                         .ForTable(userRoles)
                         .WithParameter(new SchemaColumn()
@@ -158,13 +236,14 @@ namespace Plato.Roles.Services
                             Name = "UserId",
                             DbType = DbType.Int32
                         }))
-                    .CreateProcedure(new SchemaProcedure("SelectRolesPaged", StoredProcedureType.SelectPaged)
-                        .ForTable(roles)
+                .CreateProcedure(
+                    new SchemaProcedure("DeleteUserRoleByUserIdAndName", StoredProcedureType.DeleteByKey)
+                        .ForTable(userRoles)
                         .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn()
                             {
-                                Name = "Id",
+                                Name = "UserId",
                                 DbType = DbType.Int32
                             },
                             new SchemaColumn()
@@ -173,33 +252,25 @@ namespace Plato.Roles.Services
                                 DbType = DbType.String,
                                 Length = "255"
                             }
+                        }))
+                .CreateProcedure(
+                    new SchemaProcedure("DeleteUserRoleByUserIdAndRoleId", StoredProcedureType.DeleteByKey)
+                        .ForTable(userRoles)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "UserId",
+                                DbType = DbType.Int32
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "RoleId",
+                                DbType = DbType.Int32
+                            }
                         }));
-
-
-                var result = await builder.ApplySchemaAsync();
-                if (result.Errors.Count > 0)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        reportError(error.Message, error.StackTrace);
-                    }
-
-                }
-
-            }
-
-            // create super user
-
-            try
-            {
-             
-            }
-            catch (Exception ex)
-            {
-                reportError(ex.Message, ex.StackTrace);
-            }
-
+            
         }
-
+        
     }
 }

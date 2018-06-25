@@ -15,6 +15,10 @@ namespace Plato.Internal.Repositories.Users
     {
         #region "Constructor"
 
+        private readonly IDbContext _dbContext;
+        private readonly IRoleRepository<Role> _rolesRepository;
+        private readonly ILogger<UserSecretRepository> _logger;
+
         public UserRolesRepository(
             IDbContext dbContext,
             IRoleRepository<Role> rolesRepository,
@@ -26,15 +30,7 @@ namespace Plato.Internal.Repositories.Users
         }
 
         #endregion
-
-        #region "Private Variables"
-
-        private readonly IDbContext _dbContext;
-        private readonly IRoleRepository<Role> _rolesRepository;
-        private readonly ILogger<UserSecretRepository> _logger;
-
-        #endregion
-
+        
         #region "Implementation"
 
         public async Task<bool> DeleteAsync(int id)
@@ -44,7 +40,7 @@ namespace Plato.Internal.Repositories.Users
             {
                 success = await context.ExecuteScalarAsync<bool>(
                     CommandType.StoredProcedure,
-                    "plato_sp_DeleteUserRole", id);
+                    "DeleteUserRoleById", id);
             }
             return success;
         }
@@ -55,12 +51,7 @@ namespace Plato.Internal.Repositories.Users
             id = await InsertUpdateInternal(
                 userRole.Id,
                 userRole.UserId,
-                userRole.RoleId,
-                userRole.CreatedDate,
-                userRole.CreatedUserId,
-                userRole.ModifiedDate,
-                userRole.ModifiedUserId,
-                userRole.ConcurrencyStamp);
+                userRole.RoleId);
 
             if (id > 0)
                 return await SelectByIdAsync(id);
@@ -75,7 +66,7 @@ namespace Plato.Internal.Repositories.Users
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "plato_sp_SelectUserRole", id);
+                    "SelectUserRoleById", id);
 
                 if ((reader != null) && (reader.HasRows))
                 {
@@ -142,7 +133,7 @@ namespace Plato.Internal.Repositories.Users
             {
                 success = await context.ExecuteScalarAsync<bool>(
                     CommandType.StoredProcedure,
-                    "plato_sp_DeleteUserRoles", userId);
+                    "DeleteRolesByUserId", userId);
             }
             return success;
         }
@@ -154,14 +145,25 @@ namespace Plato.Internal.Repositories.Users
             {
                 success = await context.ExecuteScalarAsync<bool>(
                     CommandType.StoredProcedure,
-                    "plato_sp_DeleteUserRole", userId);
+                    "DeleteUserRoleByUserIdAndName",
+                    userId,
+                    roleName);
             }
             return success;
         }
 
-        public Task<bool> DeletetUserRole(int userId, int roleId)
+        public async Task<bool> DeletetUserRole(int userId, int roleId)
         {
-            throw new NotImplementedException();
+            bool success;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<bool>(
+                    CommandType.StoredProcedure,
+                    "DeleteUserRoleByUserIdAndRoleId",
+                    userId,
+                    roleId);
+            }
+            return success;
         }
 
         #endregion
@@ -171,26 +173,16 @@ namespace Plato.Internal.Repositories.Users
         private async Task<int> InsertUpdateInternal(
             int id,
             int userId,
-            int roleId,
-            DateTime? createdDate,
-            int createdUserId,
-            DateTime? modifiedDate,
-            int modifiedUserId,
-            string concurrencyStamp)
+            int roleId)
         {
             using (var context = _dbContext)
             {
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "plato_sp_InsertUpdateUserRole",
+                    "InsertUpdateUserRole",
                     id,
                     userId,
-                    roleId,
-                    createdDate,
-                    createdUserId,
-                    modifiedDate,
-                    modifiedUserId,
-                    concurrencyStamp.ToEmptyIfNull().TrimToSize(50));
+                    roleId);
             }
         }
 

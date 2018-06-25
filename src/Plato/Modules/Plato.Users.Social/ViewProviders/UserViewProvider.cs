@@ -20,30 +20,25 @@ namespace Plato.Users.Social.ViewProviders
             UserManager<User> userManager,
             ISocialLinksStore socialLinksStore)
         {
-
             _userManager = userManager;
             _socialLinksStore = socialLinksStore;
-           
-            
+        }
+        
+        public override Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
+        {
+            return Task.FromResult(default(IViewProviderResult));
         }
 
-
-        public override async Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
         {
-            return null;
-        }
-
-        public override async Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
-        {
-            return null;
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
 
             var socialLinks = await _socialLinksStore.GetAsync(user.Id);
-
-
+            
             return Views(
                 View<EditSocialViewModel>("Social.Edit.Content", model =>
                 {
@@ -68,14 +63,12 @@ namespace Plato.Users.Social.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-                
                 var result = await _socialLinksStore.UpdateAsync(user.Id, new SocialLinks()
                 {
                     FacebookUrl = model.FacebookUrl,
                     TwitterUrl  = model.TwitterUrl,
                     YouTubeUrl = model.YouTubeUrl
                 });
-                
             }
             
             return await BuildEditAsync(user, updater);

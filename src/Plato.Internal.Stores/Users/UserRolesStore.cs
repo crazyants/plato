@@ -32,9 +32,17 @@ namespace Plato.Internal.Stores.Users
             return await _userRolesRepository.InsertUserRolesAsync(userId, roleIds);
         }
 
-        public Task<UserRole> CreateAsync(UserRole model)
+        public async Task<UserRole> CreateAsync(UserRole model)
         {
-            throw new NotImplementedException();
+
+            var userRole = await _userRolesRepository.InsertUpdateAsync(model);
+            if (userRole != null)
+            {
+
+            }
+
+            return userRole;
+
         }
 
         public Task<bool> DeleteAsync(UserRole model)

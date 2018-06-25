@@ -37,14 +37,14 @@ namespace Plato.Roles.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
-            var roleNames = await _platoRoleStore.GetRoleNamesAsync();
+            var selectedRoles = await _platoRoleStore.GetRoleNamesByUserIdAsync(user.Id);
 
             return Views(
                 View<EditRoleViewModel>("UserRoles.Edit.Content", model => { return model; }).Order(2),
                 View("SelectRoles",
                     new
                     {
-                        selectedRoles = roleNames,
+                        selectedRoles = selectedRoles,
                         htmlName = ""
                     }).Order(2)
             );

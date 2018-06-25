@@ -12,6 +12,7 @@ namespace Plato.Internal.Stores.Roles
 {
     public class RoleStore : IRoleStore<Role>, IRoleClaimStore<Role>
     {
+
         private readonly IPlatoRoleStore _platoRoleStore;
 
         public RoleStore(IPlatoRoleStore platoRoleStore)
@@ -183,7 +184,5 @@ namespace Plato.Internal.Stores.Roles
         #endregion
 
     }
-
-
-
+    
 }
