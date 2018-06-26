@@ -90,7 +90,7 @@ namespace Plato.Internal.Shell
             var descriptor = new ShellDescriptor
             {
                 Modules = new[] {
-                    new ShellModule { Id = "Plato.SetUp" }
+                    new ShellModule { ModuleId = "Plato.SetUp" }
                 }
             };
 
@@ -100,12 +100,12 @@ namespace Plato.Internal.Shell
         public ShellDescriptor MinimumShellDescriptor()
         {
             var descriptor = new ShellDescriptor();
-            descriptor.Modules.Add(new ShellModule {Id = "Plato.Core"});
-            descriptor.Modules.Add(new ShellModule {Id = "Plato.Admin"});
-            descriptor.Modules.Add(new ShellModule {Id = "Plato.Users"});
-            descriptor.Modules.Add(new ShellModule {Id = "Plato.Roles"});
-            descriptor.Modules.Add(new ShellModule {Id = "Plato.Settings"});
-            descriptor.Modules.Add(new ShellModule {Id = "Plato.Features"});
+            descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Core"});
+            descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Admin"});
+            descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Users"});
+            descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Roles"});
+            descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Settings"});
+            descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Features"});
             return descriptor;
 
         }

@@ -61,10 +61,10 @@ namespace Plato.Internal.Features
         {
 
             // Get features to enable
-            var features = await _shellDescriptorFeatureManager.GetFeatureAsync(featureId);
+            var feature = await _shellDescriptorFeatureManager.GetFeatureAsync(featureId);
 
             // Ensure we also enable dependencies
-            var featureIds = features.FeatureDependencies
+            var featureIds = feature.FeatureDependencies
                 .Select(d => d.Id).ToArray();
             
             // Enable features
@@ -345,7 +345,7 @@ namespace Plato.Internal.Features
                 var diable = featureIds.Any(f => f.Equals(feature.Id, StringComparison.InvariantCultureIgnoreCase));
                 if (!diable)
                 {
-                    descriptor.Modules.Add(new ShellModule(feature.Id));
+                    descriptor.Modules.Add(new ShellModule(feature.Id, feature.Version));
                 }
             }
 
@@ -362,7 +362,8 @@ namespace Plato.Internal.Features
             // Add features to our descriptor
             foreach (var featureId in featureIds)
             {
-                descriptor.Modules.Add(new ShellModule(featureId));
+                var feature = await _shellDescriptorFeatureManager.GetFeatureAsync(featureId);
+                descriptor.Modules.Add(new ShellModule(featureId, feature.Version));
             }
 
             return descriptor;
@@ -387,7 +388,7 @@ namespace Plato.Internal.Features
             var descriptor = new ShellDescriptor();
             foreach (var feature in features)
             {
-                descriptor.Modules.Add(new ShellModule(feature.Id));
+                descriptor.Modules.Add(new ShellModule(feature.Id, feature.Version));
             }
             
             // Create a new shell context with features we need to enable / disable

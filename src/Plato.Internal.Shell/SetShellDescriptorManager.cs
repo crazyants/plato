@@ -11,15 +11,12 @@ namespace Plato.Internal.Shell
     {
         private readonly IEnumerable<ShellModule> _shellFeatures;
         private IShellDescriptor _shellDescriptor;
-
-
-
+        
         public SetShellDescriptorManager(IEnumerable<ShellModule> shellFeatures)
         {
             _shellFeatures = shellFeatures;
         }
-
-
+        
         public Task<IShellDescriptor> GetAsync()
         {
             if (_shellDescriptor == null)

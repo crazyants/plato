@@ -2,16 +2,19 @@
 {
     public class ShellModule
     {
+ 
+        public string ModuleId { get; set; }
 
-        public string Id { get; set; }
-
+        public string Version { get; set; } = "1.0.0";
+        
         public ShellModule()
         {
         }
 
-        public ShellModule(string id)
+        public ShellModule(string moduleId, string version)
         {
-            this.Id = id;
+            this.ModuleId = moduleId;
+            this.Version = version;
         }
 
         

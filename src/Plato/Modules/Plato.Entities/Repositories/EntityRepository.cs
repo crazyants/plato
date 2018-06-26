@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories;
 
 namespace Plato.Entities.Repositories
@@ -69,7 +68,6 @@ namespace Plato.Entities.Repositories
 
             var id = await InsertUpdateInternal(
                 entity.Id,
-                entity.ParentId,
                 entity.FeatureId,
                 entity.Title,
                 entity.TitleNormalized,
@@ -79,6 +77,7 @@ namespace Plato.Entities.Repositories
                 entity.IsPublic,
                 entity.IsSpam,
                 entity.IsPinned,
+                entity.IsDeleted,
                 entity.IsClosed,
                 entity.CreatedUserId,
                 entity.CreatedDate,
@@ -217,7 +216,6 @@ namespace Plato.Entities.Repositories
 
         private async Task<int> InsertUpdateInternal(
             int id,
-            int parentId,
             int featureId,
             string title,
             string titleNormalized,
@@ -227,11 +225,12 @@ namespace Plato.Entities.Repositories
             bool isPublic,
             bool isSpam,
             bool isPinned,
+            bool isDeleted,
             bool isClosed,
             int createdUserId,
-            DateTime createdDate,
+            DateTime? createdDate,
             int modifiedUserId,
-            DateTime modifiedDate)
+            DateTime? modifiedDate)
         {
             using (var context = _dbContext)
             {
@@ -250,21 +249,21 @@ namespace Plato.Entities.Repositories
                     CommandType.StoredProcedure,
                     "InsertUpdateEntity",
                     id,
-                    parentId,
                     featureId,
-                    title,
-                    titleNormalized,
-                    markdown,
-                    html,
-                    plainText,
+                    title.ToEmptyIfNull().TrimToSize(255),
+                    titleNormalized.ToEmptyIfNull().TrimToSize(255),
+                    markdown.ToEmptyIfNull(),
+                    html.ToEmptyIfNull(),
+                    plainText.ToEmptyIfNull(),
                     isPublic,
                     isSpam,
                     isPinned,
+                    isDeleted,
                     isClosed,
                     createdUserId,
-                    createdDate,
+                    createdDate.ToDateIfNull(),
                     modifiedUserId,
-                    modifiedDate);
+                    modifiedDate.ToDateIfNull());
 
 
             }

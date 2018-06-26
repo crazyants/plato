@@ -9,6 +9,7 @@ using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Internal.Features;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Navigation;
 using Plato.Internal.Repositories.Users;
 
 
@@ -37,6 +38,9 @@ namespace Plato.Entities
 
             // Data Stores
 
+
+            // Register navigation provider
+            services.AddScoped<INavigationProvider, AdminMenu>();
 
         }
 

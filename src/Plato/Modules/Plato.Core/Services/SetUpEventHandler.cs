@@ -4,8 +4,6 @@ using System.Data;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
-using Plato.Internal.Stores.Abstractions;
-using Plato.Internal.Stores.Abstractions.Settings;
 
 namespace Plato.Core.Services
 {

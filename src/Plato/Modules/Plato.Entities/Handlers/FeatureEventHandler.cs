@@ -155,11 +155,6 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "ParentId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
                         Name = "FeatureId",
                         DbType = DbType.Int32
                     },

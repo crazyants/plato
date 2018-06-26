@@ -99,13 +99,13 @@ namespace Plato.Internal.Repositories.Roles
                 
             var id = await InsertUpdateInternal(
                 role.Id,
-                role.Name,
-                role.NormalizedName,
-                role.Description,
+                role.Name.ToEmptyIfNull().TrimToSize(255),
+                role.NormalizedName.ToEmptyIfNull().TrimToSize(255),
+                role.Description.ToEmptyIfNull().TrimToSize(500),
                 claims,
-                role.CreatedDate,
+                role.CreatedDate.ToDateIfNull(),
                 role.CreatedUserId,
-                role.ModifiedDate,
+                role.ModifiedDate.ToDateIfNull(),
                 role.ModifiedUserId,
                 role.ConcurrencyStamp);
 

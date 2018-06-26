@@ -30,7 +30,7 @@ namespace Plato.Internal.Shell
             }
 
             // Get all module names registered with the current tennet
-            var moduleNames = descriptor.Modules.Select(x => x.Id).ToArray();
+            var moduleNames = descriptor.Modules.Select(x => x.ModuleId).ToArray();
 
             // Get module entires for active modules
             var modules = await _moduleManager.LoadModulesAsync(moduleNames);

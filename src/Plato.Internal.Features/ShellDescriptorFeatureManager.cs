@@ -69,7 +69,7 @@ namespace Plato.Internal.Features
             {
                 foreach (var module in descriptor.Modules)
                 {
-                    features.Add(new ShellFeature(module.Id));
+                    features.Add(new ShellFeature(module.ModuleId));
                 }
             }
             return features;
@@ -245,7 +245,7 @@ namespace Plato.Internal.Features
             }
             // Returns true if the supplied feature exists within our minimal shell descriptor
             var minimalDescriptor = _shellContextFactory.MinimumShellDescriptor();
-            return minimalDescriptor.Modules.FirstOrDefault(m => m.Id.Equals(feature.Id, StringComparison.OrdinalIgnoreCase)) != null;
+            return minimalDescriptor.Modules.FirstOrDefault(m => m.ModuleId.Equals(feature.Id, StringComparison.OrdinalIgnoreCase)) != null;
         }
 
         #endregion
