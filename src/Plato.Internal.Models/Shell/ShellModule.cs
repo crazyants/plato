@@ -1,4 +1,6 @@
-﻿namespace Plato.Internal.Models.Shell
+﻿using Plato.Internal.Models.Features;
+
+namespace Plato.Internal.Models.Shell
 {
     public class ShellModule
     {
@@ -12,7 +14,13 @@
         public ShellModule()
         {
         }
-
+        public ShellModule(IShellFeature feature)
+        {
+            this.Id = feature.Id;
+            this.ModuleId = feature.ModuleId;
+            this.Version = feature.Version;
+        }
+        
         public ShellModule(string moduleId, string version)
         {
             this.ModuleId = moduleId;

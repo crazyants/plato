@@ -37,8 +37,8 @@ namespace Plato.Features.Handlers
                 // configure
                 Configure(builder);
 
-                // entities schema
-                Entities(builder);
+                // features schema
+                Features(builder);
 
                 // Did any errors occur?
 
@@ -72,12 +72,12 @@ namespace Plato.Features.Handlers
 
         }
 
-        void Entities(ISchemaBuilder builder)
+        void Features(ISchemaBuilder builder)
         {
 
-            var features = new SchemaTable()
+            var shellFeatures = new SchemaTable()
             {
-                Name = "Features",
+                Name = "ShellFeatures",
                 Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -102,11 +102,28 @@ namespace Plato.Features.Handlers
             };
 
             builder
-                .CreateTable(features)
-                .CreateDefaultProcedures(features);
+                .CreateTable(shellFeatures)
+                .CreateDefaultProcedures(shellFeatures)
 
+                .CreateProcedure(new SchemaProcedure("SelectShellFeaturesPaged", StoredProcedureType.SelectPaged)
+                    .ForTable(shellFeatures)
+                    .WithParameters(new List<SchemaColumn>()
+                    {
+                        new SchemaColumn()
+                        {
+                            Name = "Id",
+                            DbType = DbType.Int32
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "ModuleId",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                    }));
+            
         }
-        
+
         #endregion
 
 

@@ -2,34 +2,35 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Features;
 
-namespace Plato.Internal.Repositories.Features
+namespace Plato.Internal.Repositories.Shell
 {
-    public interface IFeatureRepository<T> : IRepository<T> where T : class
+    public interface IShellFeatureRepository<T> : IRepository<T> where T : class
     {
+
+        Task<IEnumerable<T>> SelectFeatures();
     }
 
-    public class FeatureRepository : IFeatureRepository<ShellFeature>
+    public class ShellFeatureRepository : IShellFeatureRepository<ShellFeature>
     {
 
         #region "Private Variables"
 
         private readonly IDbContext _dbContext;
-        private readonly ILogger<FeatureRepository> _logger;
+        private readonly ILogger<ShellFeatureRepository> _logger;
 
         #endregion
 
         #region "Constructor"
 
-        public FeatureRepository(
+        public ShellFeatureRepository(
             IDbContext dbContext,
-            ILogger<FeatureRepository> logger)
+            ILogger<ShellFeatureRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -52,7 +53,7 @@ namespace Plato.Internal.Repositories.Features
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteFeatureById", id);
+                    "DeleteShellFeatureById", id);
             }
 
             return success > 0 ? true : false;
@@ -72,24 +73,7 @@ namespace Plato.Internal.Repositories.Features
 
             if (id > 0)
             {
-                //// secerts
-
-                //if (user.Secret == null)
-                //    user.Secret = new UserSecret();
-                //if ((user.Id == 0) || (user.Secret.UserId == 0))
-                //    user.Secret.UserId = id;
-                //await _userSecretRepository.InsertUpdateAsync(user.Secret);
-
-                //// detail
-
-                //if (user.Detail == null)
-                //    user.Detail = new UserDetail();
-                //if ((user.Id == 0) || (user.Detail.UserId == 0))
-                //    user.Detail.UserId = id;
-                //await _userDetailRepository.InsertUpdateAsync(user.Detail);
-
                 // return
-
                 return await SelectByIdAsync(id);
             }
 
@@ -104,14 +88,14 @@ namespace Plato.Internal.Repositories.Features
                 {
                     if (_logger.IsEnabled(LogLevel.Error))
                         _logger.LogInformation(
-                            $"SelectUser for Id {id} failed with the following error {args.Exception.Message}");
+                            $"Selecting feature for Id {id} failed with the following error {args.Exception.Message}");
                 };
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectFeatureById", id);
+                    "SelectShellFeatureById", id);
 
-                return await BuildEntityFromResultSets(reader);
+                return await BuildObjectFromResultSets(reader);
             }
         }
 
@@ -129,7 +113,7 @@ namespace Plato.Internal.Repositories.Features
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectFeaturesPaged",
+                    "SelectShellFeaturesPaged",
                     inputParameters
                 );
 
@@ -154,50 +138,50 @@ namespace Plato.Internal.Repositories.Features
             return output;
         }
 
+        public async Task<IEnumerable<ShellFeature>> SelectFeatures()
+        {
+
+            var data = new List<ShellFeature>();
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectShellFeatures");
+                if (reader != null)
+                {
+                    if (reader.HasRows)
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var userData = new ShellFeature();
+                            userData.PopulateModel(reader);
+                            data.Add(userData);
+                        }
+                    }
+                }
+            }
+
+            return data;
+
+        }
+
         #endregion
 
         #region "Private Methods"
 
-        private async Task<ShellFeature> BuildEntityFromResultSets(DbDataReader reader)
+        private async Task<ShellFeature> BuildObjectFromResultSets(DbDataReader reader)
         {
-            ShellFeature entity = null;
+            ShellFeature feature = null;
             if ((reader != null) && (reader.HasRows))
             {
-                // user
-
-                entity = new ShellFeature();
+                feature = new ShellFeature();
                 await reader.ReadAsync();
                 if (reader.HasRows)
                 {
-                    //entity.PopulateModel(reader);
+                    feature.PopulateModel(reader);
                 }
-
-                //// data
-
-                //if (await reader.NextResultAsync())
-                //{
-                //    if (reader.HasRows)
-                //    {
-                //        await reader.ReadAsync();
-                //        user.Detail = new UserDetail(reader);
-                //    }
-                //}
-
-                //// roles
-
-                //if (await reader.NextResultAsync())
-                //{
-                //    if (reader.HasRows)
-                //    {
-                //        while (await reader.ReadAsync())
-                //        {
-                //            user.UserRoles.Add(new Role(reader));
-                //        }
-                //    }
-                //}
-
             }
-            return entity;
+            return feature;
         }
 
         private async Task<int> InsertUpdateInternal(
@@ -213,14 +197,14 @@ namespace Plato.Internal.Repositories.Features
                     if (_logger.IsEnabled(LogLevel.Error))
                         _logger.LogInformation(
                             id == 0
-                                ? $"Insert for feature '{moduleId}' failed with the following error '{args.Exception.Message}'"
-                                : $"Update for feature with Id {moduleId} failed with the following error {args.Exception.Message}");
+                                ? $"Insert for shell feature '{moduleId}' failed with the following error '{args.Exception.Message}'"
+                                : $"Update for shell feature with Id {moduleId} failed with the following error {args.Exception.Message}");
                     throw args.Exception;
                 };
 
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "InsertUpdateFeature",
+                    "InsertUpdateShellFeature",
                     id,
                     moduleId.ToEmptyIfNull(),
                     version.ToEmptyIfNull());
@@ -229,6 +213,7 @@ namespace Plato.Internal.Repositories.Features
         }
 
         #endregion
+
     }
 
 }

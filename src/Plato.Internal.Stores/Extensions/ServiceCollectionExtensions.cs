@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Stores.Settings;
 using Plato.Internal.Stores.Roles;
@@ -36,6 +37,7 @@ namespace Plato.Internal.Stores.Extensions
 
             // Shell features
             services.AddScoped<IShellDescriptorStore, ShellDescriptorStore>();
+            services.AddScoped<IShellFeatureStore<ShellFeature>, ShellFeatureStore>();
 
             // Site Settings
             services.AddScoped<ISiteSettingsStore, SiteSettingsStore>();

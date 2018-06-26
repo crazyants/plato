@@ -97,9 +97,8 @@ namespace Plato.Internal.Features
             var features = await _shellDescriptorManager.GetFeaturesAsync(ids);
 
             // Conver to IList to work with
-            var featuresToInvoke = features.ToList();
-
-
+            var featuresToInvoke = features.Distinct().ToList();
+            
             // Raise installing events for features
             var results = await InvokeFeatureEvents(featuresToInvoke,
                 async (context, handler) =>
@@ -147,9 +146,8 @@ namespace Plato.Internal.Features
                         {
 
                             // Update descriptor within database
-                            var descriptor = await GetOrUpdateDescriptor(featureIds);
-                            await _shellDescriptorStore.SaveAsync(descriptor);
-
+                            var descriptor = await AddFeaturesAndSave(featureIds);
+                        
                             try
                             {
                                 await handler.InstalledAsync(context);
@@ -192,8 +190,7 @@ namespace Plato.Internal.Features
             if (!errors.Any())
             {
                 // Update descriptor within database
-                var descriptor = await GetOrUpdateDescriptor(featureIds);
-                await _shellDescriptorStore.SaveAsync(descriptor);
+                var descriptor = await AddFeaturesAndSave(featureIds);
             }
             
             // dispose current shell context
@@ -214,7 +211,7 @@ namespace Plato.Internal.Features
             var features = await _shellDescriptorManager.GetFeaturesAsync(ids);
 
             // Conver to IList to work with
-            var featuresToInvoke = features.ToList();
+            var featuresToInvoke = features.Distinct().ToList();
             
             // Raise Uninstalling events
             var results = await InvokeFeatureEvents(featuresToInvoke,
@@ -269,9 +266,8 @@ namespace Plato.Internal.Features
                         {
 
                             // Update descriptor within database
-                            var descriptor = await RemoveFeaturesFromCurrentDescriptor(featureIds);
-                            await _shellDescriptorStore.SaveAsync(descriptor);
-
+                            var descriptor = await RemoveFeaturesAndSave(featureIds);
+                           
                             try
                             {
                                 await handler.UninstalledAsync(context);
@@ -316,8 +312,8 @@ namespace Plato.Internal.Features
             if (!errors.Any())
             {
                 // Update descriptor within database
-                var descriptor = await RemoveFeaturesFromCurrentDescriptor(featureIds);
-                await _shellDescriptorStore.SaveAsync(descriptor);
+                var descriptor = await RemoveFeaturesAndSave(featureIds);
+                //await _shellDescriptorStore.SaveAsync(descriptor);
 
             }
 
@@ -334,7 +330,14 @@ namespace Plato.Internal.Features
 
         #region "Private Methods"
 
-        async Task<IShellDescriptor> RemoveFeaturesFromCurrentDescriptor(string[] featureIds)
+        async Task<IShellDescriptor> AddFeaturesAndSave(string[] featureIds)
+        {
+            var descriptor = await GetOrUpdateDescriptor(featureIds);
+            return await _shellDescriptorStore.SaveAsync(descriptor);
+
+        }
+
+        async Task<IShellDescriptor> RemoveFeaturesAndSave(string[] featureIds)
         {
             // First get all existing enabled features
             var enabledFeatures = await _shellDescriptorManager.GetEnabledFeaturesAsync();
@@ -344,14 +347,17 @@ namespace Plato.Internal.Features
             foreach (var feature in enabledFeatures)
             {
                 var diable = featureIds.Any(f => f.Equals(feature.ModuleId, StringComparison.InvariantCultureIgnoreCase));
-                if (!diable)
+                if (diable)
                 {
-                    descriptor.Modules.Add(new ShellModule(feature.ModuleId, feature.Version));
+                    
+                } else 
+                {
+                    descriptor.Modules.Add(new ShellModule(feature));
                 }
             }
-
-            return descriptor;
-
+            
+            return await _shellDescriptorStore.SaveAsync(descriptor);
+            
         }
 
         async Task<IShellDescriptor> GetOrUpdateDescriptor(string[] featureIds)
