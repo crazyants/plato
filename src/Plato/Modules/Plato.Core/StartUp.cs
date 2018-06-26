@@ -7,6 +7,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Core.Services;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Core
 {

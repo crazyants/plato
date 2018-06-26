@@ -6,16 +6,10 @@ using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Repositories;
 
 namespace Plato.Entities.Repositories
 {
-
-    public interface IEntityRepository<T> : IRepository<T> where T : class
-    {
-
-    }
-
+    
     public class EntityRepository : IEntityRepository<Entity>
     {
         
@@ -86,22 +80,10 @@ namespace Plato.Entities.Repositories
 
             if (id > 0)
             {
-                //// secerts
+           
 
-                //if (user.Secret == null)
-                //    user.Secret = new UserSecret();
-                //if ((user.Id == 0) || (user.Secret.UserId == 0))
-                //    user.Secret.UserId = id;
-                //await _userSecretRepository.InsertUpdateAsync(user.Secret);
 
-                //// detail
 
-                //if (user.Detail == null)
-                //    user.Detail = new UserDetail();
-                //if ((user.Id == 0) || (user.Detail.UserId == 0))
-                //    user.Detail.UserId = id;
-                //await _userDetailRepository.InsertUpdateAsync(user.Detail);
-                
                 // return
 
                 return await SelectByIdAsync(id);

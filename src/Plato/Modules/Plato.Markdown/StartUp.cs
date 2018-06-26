@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Markdown
 {

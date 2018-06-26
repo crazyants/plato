@@ -2,20 +2,28 @@
 using System.Collections.Generic;
 using Plato.Internal.Abstractions.Settings;
 using System.Threading.Tasks;
+using Plato.Entities.Models;
+using Plato.Entities.Repositories;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 
-namespace Plato.Discussions.Controllers
+namespace Plato.Discus.Controllers
 {
     public class HomeController : Controller
     {
-
+        private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
-        
+        private readonly IEntityRepository<Entity> _entityRepository;
+
         public HomeController(
-            ISiteSettingsStore settingsStore)
+            ISiteSettingsStore settingsStore,
+            IContextFacade contextFacade,
+            IEntityRepository<Entity> entityRepository)
         {
             _settingsStore = settingsStore;
+            _contextFacade = contextFacade;
+            _entityRepository = entityRepository;
         }
         
         public async Task<IActionResult> Index()
@@ -23,6 +31,21 @@ namespace Plato.Discussions.Controllers
 
             string path = Request.Path;
             ViewData["path"] = path;
+
+            var feature = await _contextFacade.GetCurrentFeatureAsync();
+
+            ViewBag.Feature = feature;
+
+            var entity = new Entity()
+            {
+                FeatureId = feature.Id,
+                Title = "test",
+                Markdown = "TExt"
+            };
+
+            await _entityRepository.InsertUpdateAsync(entity);
+
+
 
             //string rootDirectory = _fileSystem.GetDirectoryInfo("Modules").FullName;
 
@@ -49,7 +72,7 @@ namespace Plato.Discussions.Controllers
             //    list.Add(new TextObject(settings.SiteName));
             //    list.Add(new TextObject(settings.BaseUrl));
             //}
-        
+
 
             return View();
         }

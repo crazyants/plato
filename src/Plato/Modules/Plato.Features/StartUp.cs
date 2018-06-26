@@ -9,6 +9,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Hosting;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Features
 {

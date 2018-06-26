@@ -46,8 +46,9 @@ namespace Plato.Internal.Models.Features
 
         public ShellFeature(ModuleDependency dependency)
         {
-            this.Id = dependency.Id;
-            this.ModuleId = dependency.ModuleId;
+            // dependency.Id to  this.ModuleId is intended
+            // dependency.Id is the value deserialized from module.txt
+            this.ModuleId = dependency.Id;
             this.Version = dependency.Version;
         }
         

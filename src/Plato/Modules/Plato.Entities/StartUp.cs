@@ -8,9 +8,8 @@ using Plato.Entities.Handlers;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
-
 
 namespace Plato.Entities
 {
@@ -37,9 +36,6 @@ namespace Plato.Entities
 
             // Data Stores
 
-
-            // Register navigation provider
-            services.AddScoped<INavigationProvider, AdminMenu>();
 
         }
 

@@ -7,7 +7,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Discuss.Handlers;
 using Plato.Internal.Features.Abstractions;
-
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Discuss
 {

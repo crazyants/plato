@@ -38,9 +38,7 @@ namespace Plato.Internal.Models.Modules
     public class ModuleDependency
     {
 
-        public int Id { get; set; }
-
-        public string ModuleId { get; set; }
+        public string Id { get; set; }
 
         public string Version { get; set; }
 

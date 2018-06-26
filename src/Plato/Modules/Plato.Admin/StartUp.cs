@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting;
 using Plato.Internal.Navigation;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Admin
 {

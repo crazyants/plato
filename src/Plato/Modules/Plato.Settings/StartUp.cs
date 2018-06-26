@@ -6,6 +6,7 @@ using Plato.Internal.Hosting;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Models.Shell;
 using Plato.Settings.Services;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Settings
 {

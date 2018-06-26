@@ -9,6 +9,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
 using Plato.Users.Social.Services;
 using Plato.Users.Social.ViewProviders;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Users.Social
 {

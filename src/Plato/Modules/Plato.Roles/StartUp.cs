@@ -16,6 +16,7 @@ using Plato.Internal.Shell.Abstractions;
 using Plato.Roles.Services;
 using Plato.Roles.ViewModels;
 using Plato.Roles.ViewProviders;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Roles
 {
