@@ -7,7 +7,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Roles.Services
+namespace Plato.Roles.Handlers
 {
     public class SetUpEventHandler : ISetUpEventHandler
     {
@@ -48,17 +48,6 @@ namespace Plato.Roles.Services
 
                 }
 
-            }
-
-            // create super user
-
-            try
-            {
-             
-            }
-            catch (Exception ex)
-            {
-                reportError(ex.Message, ex.StackTrace);
             }
 
         }

@@ -21,12 +21,17 @@ namespace Plato.Discuss
             }
 
             builder
-                .Add(T["Discussions"], "1", home => home
-                    .Action("Index", "Admin", "Plato.Discussions")
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
-                );
-
+                .Add(T["Discuss"], 1, users => users
+                    .Add(T["Home"], 1, manage => manage
+                        .Action("Index", "Admin", "Plato.Discuss")
+                        //.Permission(Permissions.ManageRoles)
+                        .LocalNav()
+                    ).Add(T["Channels"], 2, create => create
+                        .Action("Channels", "Admin", "Plato.Discuss")
+                        //.Permission(Permissions.ManageRoles)
+                        .LocalNav()
+                    ));
+            
 
         }
     }

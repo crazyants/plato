@@ -5,18 +5,17 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Abstractions.SetUp;
-using Plato.Internal.Hosting;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Security.Abstractions;
-using Plato.Internal.Shell.Abstractions;
-using Plato.Roles.Services;
 using Plato.Roles.ViewModels;
 using Plato.Roles.ViewProviders;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Roles.Handlers;
+using Plato.Internal.Stores.Roles;
 
 namespace Plato.Roles
 {

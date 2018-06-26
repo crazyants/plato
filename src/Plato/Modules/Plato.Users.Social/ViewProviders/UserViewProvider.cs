@@ -4,7 +4,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Users;
 using Plato.Users.Social.Models;
-using Plato.Users.Social.Services;
+using Plato.Users.Social.Stores;
 using Plato.Users.Social.ViewModels;
 
 namespace Plato.Users.Social.ViewProviders

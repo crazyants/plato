@@ -3,19 +3,8 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Users.Social.Models;
 
-namespace Plato.Users.Social.Services
+namespace Plato.Users.Social.Stores
 {
-
-    public interface ISocialLinksStore
-    {
-
-        Task<SocialLinks> GetAsync(int userId);
-
-        Task<SocialLinks> UpdateAsync(int userId, SocialLinks value);
-
-        Task<bool> DeleteAsync(int userId);
-
-    }
 
     public class SocialLinksStore : ISocialLinksStore
     {

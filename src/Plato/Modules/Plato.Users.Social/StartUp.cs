@@ -2,14 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Hosting;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
-using Plato.Users.Social.Services;
 using Plato.Users.Social.ViewProviders;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Users.Social.Stores;
 
 namespace Plato.Users.Social
 {
@@ -29,7 +28,7 @@ namespace Plato.Users.Social
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
 
             services.AddScoped<ISocialLinksStore, SocialLinksStore>();
-
+            
             services.AddScoped<IPermissionsProvider, PermissionsProvider>();
             
 
