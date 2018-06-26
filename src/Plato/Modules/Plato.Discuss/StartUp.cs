@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Features;
 using Plato.Internal.Hosting;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
-using Plato.Internal.Shell.Abstractions;
+using Plato.Discuss.Handlers;
 
-namespace Plato.Discussions
+
+namespace Plato.Discuss
 {
     public class Startup : StartupBase
     {
@@ -20,6 +22,9 @@ namespace Plato.Discussions
 
         public override void ConfigureServices(IServiceCollection services)
         {
+
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();

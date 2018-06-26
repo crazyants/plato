@@ -43,6 +43,8 @@ namespace Plato.Internal.Data.Schemas.Abstractions
                         return "GetDate()";
                     case DbType.DateTime2:
                         return "GetDate()";
+                    case DbType.DateTime:
+                        return "GetDate()";
                     case DbType.DateTimeOffset:
                         return "GetDate()";
                     case DbType.Binary:
@@ -57,7 +59,7 @@ namespace Plato.Internal.Data.Schemas.Abstractions
                         return "''";
                 }
 
-                throw new Exception($"Type not returned for column '{this.Name}' whilst building shema");
+                throw new Exception($"Default value not returned for column '{this.Name}' whilst attempting to find default value for {this.DbType.ToString()}");
                 
             }
 

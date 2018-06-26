@@ -1,0 +1,5 @@
+Name: Plato Search
+Description: Provides indexing and search services for Plato.
+Category: Security
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/

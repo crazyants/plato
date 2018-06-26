@@ -348,13 +348,21 @@ CONSTRAINT PK_Plato_UserFavourites_Id PRIMARY KEY CLUSTERED ( Id )
 
 GO
 
+CREATE TABLE Plato_EntityTypes
+(
+Id								INT IDENTITY(1,1) NOT NULL,
+Title							NVARCHAR(255) DEFAULT('') NOT NULL,
+TitleNormalized					NVARCHAR(255) DEFAULT('') NOT NULL
+CONSTRAINT PK_Plato_EntityTypes_Id PRIMARY KEY CLUSTERED ( Id )
+)
+
 CREATE TABLE Plato_Entities
 (
 Id								INT IDENTITY(1,1) NOT NULL,
-ParentId						INT DEFAULT (0) NOT NULL,
-SpaceId							INT DEFAULT (0) NOT NULL,
+EntityTypeId					INT DEFAULT (0) NOT NULL,
 GroupId							INT DEFAULT (0) NOT NULL,
-WorkFlowId						INT DEFAULT (0) NOT NULL,
+ParentId						INT DEFAULT (0) NOT NULL,
+
 Title							NVARCHAR(255) DEFAULT('') NOT NULL,
 TitleNormalized					NVARCHAR(255) DEFAULT('') NOT NULL,
 Body							NVARCHAR(MAX) DEFAULT('') NOT NULL,
