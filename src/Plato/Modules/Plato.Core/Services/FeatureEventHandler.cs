@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Features;
+using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Core.Services
 {
@@ -20,7 +20,7 @@ namespace Plato.Core.Services
 
         public Task InstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.ModuleId, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -32,7 +32,7 @@ namespace Plato.Core.Services
             }
             catch (Exception e)
             {
-                context.Errors.Add(context.Feature.Id, e.Message);
+                context.Errors.Add(context.Feature.ModuleId, e.Message);
             }
 
             return Task.CompletedTask;
@@ -41,7 +41,7 @@ namespace Plato.Core.Services
 
         public Task InstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.ModuleId, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -53,7 +53,7 @@ namespace Plato.Core.Services
             }
             catch (Exception e)
             {
-                context.Errors.Add(context.Feature.Id, e.Message);
+                context.Errors.Add(context.Feature.ModuleId, e.Message);
             }
 
             return Task.CompletedTask;
@@ -62,7 +62,7 @@ namespace Plato.Core.Services
 
         public Task UninstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.ModuleId, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -74,7 +74,7 @@ namespace Plato.Core.Services
             }
             catch (Exception e)
             {
-                context.Errors.Add(context.Feature.Id, e.Message);
+                context.Errors.Add(context.Feature.ModuleId, e.Message);
             }
 
             return Task.CompletedTask;
@@ -83,7 +83,7 @@ namespace Plato.Core.Services
 
         public Task UninstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.ModuleId, Id, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -95,7 +95,7 @@ namespace Plato.Core.Services
             }
             catch (Exception e)
             {
-                context.Errors.Add(context.Feature.Id, e.Message);
+                context.Errors.Add(context.Feature.ModuleId, e.Message);
             }
 
 

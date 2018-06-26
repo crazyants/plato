@@ -7,10 +7,9 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Entities.Handlers;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
-using Plato.Internal.Features;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
-using Plato.Internal.Repositories.Users;
 
 
 namespace Plato.Entities

@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Core.Services;
-using Plato.Internal.Features;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 
 namespace Plato.Core

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Plato.Internal.Models.Features;
 
-namespace Plato.Internal.Features
+namespace Plato.Internal.Features.Abstractions
 {
     public interface IShellFeatureManager
     {

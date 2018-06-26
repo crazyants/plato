@@ -4,6 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features;
+using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Demo.Handlers
 {
@@ -93,7 +94,7 @@ namespace Plato.Demo.Handlers
             }
             catch (Exception e)
             {
-                context.Errors.Add(context.Feature.Id, e.Message);
+                context.Errors.Add(context.Feature.ModuleId, e.Message);
             }
 
             return Task.CompletedTask;
@@ -110,7 +111,7 @@ namespace Plato.Demo.Handlers
             }
             catch (Exception e)
             {
-                context.Errors.Add(context.Feature.Id, e.Message);
+                context.Errors.Add(context.Feature.ModuleId, e.Message);
             }
 
             return Task.CompletedTask;
@@ -127,7 +128,7 @@ namespace Plato.Demo.Handlers
             }
             catch (Exception e)
             {
-                context.Errors.Add(context.Feature.Id, e.Message);
+                context.Errors.Add(context.Feature.ModuleId, e.Message);
             }
 
             return Task.CompletedTask;

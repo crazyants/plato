@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstractions.Shell;
@@ -31,7 +32,7 @@ namespace Plato.Internal.Features
 
         private readonly IPlatoHost _platoHost;
         private readonly IShellDescriptorStore _shellDescriptorStore;
-        private readonly IShellDescriptorFeatureManager _shellDescriptorFeatureManager;
+        private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly IRunningShellTable _runningShellTable;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<ShellFeatureManager> _logger;
@@ -39,7 +40,7 @@ namespace Plato.Internal.Features
 
         public ShellFeatureManager(
             IShellDescriptorStore shellDescriptorStore,
-            IShellDescriptorFeatureManager shellDescriptorFeatureManager,
+            IShellDescriptorManager shellDescriptorManager,
             IRunningShellTable runningShellTable, 
             IHttpContextAccessor httpContextAccessor,
             IShellContextFactory shellContextFactory,
@@ -47,7 +48,7 @@ namespace Plato.Internal.Features
             IPlatoHost platoHost)
         {
             _shellDescriptorStore = shellDescriptorStore;
-            _shellDescriptorFeatureManager = shellDescriptorFeatureManager;
+            _shellDescriptorManager = shellDescriptorManager;
             _runningShellTable = runningShellTable;
             _httpContextAccessor = httpContextAccessor;
             _shellContextFactory = shellContextFactory;
@@ -61,11 +62,11 @@ namespace Plato.Internal.Features
         {
 
             // Get features to enable
-            var feature = await _shellDescriptorFeatureManager.GetFeatureAsync(featureId);
+            var feature = await _shellDescriptorManager.GetFeatureAsync(featureId);
 
             // Ensure we also enable dependencies
             var featureIds = feature.FeatureDependencies
-                .Select(d => d.Id).ToArray();
+                .Select(d => d.ModuleId).ToArray();
             
             // Enable features
             return await EnableFeaturesAsync(featureIds);
@@ -76,11 +77,11 @@ namespace Plato.Internal.Features
         {
 
             // Get features to enable
-            var features = await _shellDescriptorFeatureManager.GetFeatureAsync(featureId);
+            var features = await _shellDescriptorManager.GetFeatureAsync(featureId);
 
             // Ensure we also disable dependent features
             var featureIds = features.DependentFeatures
-                .Select(d => d.Id).ToArray();
+                .Select(d => d.ModuleId).ToArray();
 
             return await DisableFeaturesAsync(featureIds);
 
@@ -93,7 +94,7 @@ namespace Plato.Internal.Features
             var ids = featureIds.Distinct().ToArray();
 
             // Get features to enable
-            var features = await _shellDescriptorFeatureManager.GetFeaturesAsync(ids);
+            var features = await _shellDescriptorManager.GetFeaturesAsync(ids);
 
             // Conver to IList to work with
             var featuresToInvoke = features.ToList();
@@ -113,7 +114,7 @@ namespace Plato.Internal.Features
                         try
                         {
                             await handler.InstallingAsync(context);
-                            contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                            contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                             {
                                 foreach (var error in context.Errors)
                                 {
@@ -126,11 +127,11 @@ namespace Plato.Internal.Features
                         }
                         catch (Exception e)
                         {
-                            contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                            contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                             {
                                 foreach (var error in context.Errors)
                                 {
-                                    v.Errors.Add(context.Feature.Id, e.Message);
+                                    v.Errors.Add(context.Feature.ModuleId, e.Message);
                                 }
 
                                 return v;
@@ -152,7 +153,7 @@ namespace Plato.Internal.Features
                             try
                             {
                                 await handler.InstalledAsync(context);
-                                contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                                contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                                 {
                                     foreach (var error in context.Errors)
                                     {
@@ -164,11 +165,11 @@ namespace Plato.Internal.Features
                             }
                             catch (Exception e)
                             {
-                                contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                                contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                                 {
                                     foreach (var error in context.Errors)
                                     {
-                                        v.Errors.Add(context.Feature.Id, e.Message);
+                                        v.Errors.Add(context.Feature.ModuleId, e.Message);
                                     }
 
                                     return v;
@@ -210,7 +211,7 @@ namespace Plato.Internal.Features
             var ids = featureIds.Distinct().ToArray();
 
             // Get features to enable
-            var features = await _shellDescriptorFeatureManager.GetFeaturesAsync(ids);
+            var features = await _shellDescriptorManager.GetFeaturesAsync(ids);
 
             // Conver to IList to work with
             var featuresToInvoke = features.ToList();
@@ -228,13 +229,13 @@ namespace Plato.Internal.Features
 
                         if (_logger.IsEnabled(LogLevel.Information))
                         {
-                            _logger.LogInformation($"{context.Feature.Id} InstallingAsync Event Raised");
+                            _logger.LogInformation($"{context.Feature.ModuleId} InstallingAsync Event Raised");
                         }
 
                         try
                         {
                             await handler.UninstallingAsync(context);
-                            contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                            contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                             {
                                 foreach (var error in context.Errors)
                                 {
@@ -246,11 +247,11 @@ namespace Plato.Internal.Features
                         }
                         catch (Exception e)
                         {
-                            contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                            contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                             {
                                 foreach (var error in context.Errors)
                                 {
-                                    v.Errors.Add(context.Feature.Id, e.Message);
+                                    v.Errors.Add(context.Feature.ModuleId, e.Message);
                                 }
 
                                 return v;
@@ -274,7 +275,7 @@ namespace Plato.Internal.Features
                             try
                             {
                                 await handler.UninstalledAsync(context);
-                                contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                                contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                                 {
                                     foreach (var error in context.Errors)
                                     {
@@ -287,11 +288,11 @@ namespace Plato.Internal.Features
                             }
                             catch (Exception e)
                             {
-                                contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                                contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                                 {
                                     foreach (var error in context.Errors)
                                     {
-                                        v.Errors.Add(context.Feature.Id, e.Message);
+                                        v.Errors.Add(context.Feature.ModuleId, e.Message);
                                     }
 
                                     return v;
@@ -336,16 +337,16 @@ namespace Plato.Internal.Features
         async Task<IShellDescriptor> RemoveFeaturesFromCurrentDescriptor(string[] featureIds)
         {
             // First get all existing enabled features
-            var enabledFeatures = await _shellDescriptorFeatureManager.GetEnabledFeaturesAsync();
+            var enabledFeatures = await _shellDescriptorManager.GetEnabledFeaturesAsync();
 
             // Add features minus our features to disable
             var descriptor = new ShellDescriptor();
             foreach (var feature in enabledFeatures)
             {
-                var diable = featureIds.Any(f => f.Equals(feature.Id, StringComparison.InvariantCultureIgnoreCase));
+                var diable = featureIds.Any(f => f.Equals(feature.ModuleId, StringComparison.InvariantCultureIgnoreCase));
                 if (!diable)
                 {
-                    descriptor.Modules.Add(new ShellModule(feature.Id, feature.Version));
+                    descriptor.Modules.Add(new ShellModule(feature.ModuleId, feature.Version));
                 }
             }
 
@@ -357,12 +358,12 @@ namespace Plato.Internal.Features
         {
 
             // Get existing descriptor or create a new one
-            var descriptor = await _shellDescriptorFeatureManager.GetEnabledDescriptorAsync();
+            var descriptor = await _shellDescriptorManager.GetEnabledDescriptorAsync();
 
             // Add features to our descriptor
             foreach (var featureId in featureIds)
             {
-                var feature = await _shellDescriptorFeatureManager.GetFeatureAsync(featureId);
+                var feature = await _shellDescriptorManager.GetFeatureAsync(featureId);
                 descriptor.Modules.Add(new ShellModule(featureId, feature.Version));
             }
 
@@ -388,7 +389,7 @@ namespace Plato.Internal.Features
             var descriptor = new ShellDescriptor();
             foreach (var feature in features)
             {
-                descriptor.Modules.Add(new ShellModule(feature.Id, feature.Version));
+                descriptor.Modules.Add(new ShellModule(feature.ModuleId, feature.Version));
             }
             
             // Create a new shell context with features we need to enable / disable
@@ -421,7 +422,7 @@ namespace Plato.Internal.Features
                             };
 
                             // Add entry to indicate featrure was invoked
-                            contexts.AddOrUpdate(context.Feature.Id, context, (k, v) =>
+                            contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                             {
                                 foreach (var error in context.Errors)
                                 {
@@ -432,7 +433,7 @@ namespace Plato.Internal.Features
                             });
 
                             // Only invoke handler for current feature
-                            if (!feature.Id.Equals(handler.Id, StringComparison.OrdinalIgnoreCase))
+                            if (!feature.ModuleId.Equals(handler.Id, StringComparison.OrdinalIgnoreCase))
                             {
                                 continue;
                             }

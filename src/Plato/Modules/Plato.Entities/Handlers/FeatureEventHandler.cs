@@ -4,6 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features;
+using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Entities.Handlers
 {
@@ -58,11 +59,7 @@ namespace Plato.Entities.Handlers
 
         public Task InstalledAsync(IFeatureEventContext context)
         {
-            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return Task.CompletedTask;
-            //}
-
+         
             try
             {
                 
@@ -71,7 +68,7 @@ namespace Plato.Entities.Handlers
             }
             catch (Exception e)
             {
-                context.Errors.Add(context.Feature.Id, e.Message);
+                context.Errors.Add(context.Feature.ModuleId, e.Message);
             }
 
             return Task.CompletedTask;
@@ -80,12 +77,6 @@ namespace Plato.Entities.Handlers
 
         public Task UninstallingAsync(IFeatureEventContext context)
         {
-            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return Task.CompletedTask;
-            //}
-
-            //throw new Exception("This is a test exception from Plato.Demos");
 
             try
             {
@@ -94,7 +85,7 @@ namespace Plato.Entities.Handlers
             }
             catch (Exception e)
             {
-                context.Errors.Add(context.Feature.Id, e.Message);
+                context.Errors.Add(context.Feature.ModuleId, e.Message);
             }
 
             return Task.CompletedTask;
@@ -103,11 +94,7 @@ namespace Plato.Entities.Handlers
 
         public Task UninstalledAsync(IFeatureEventContext context)
         {
-            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return Task.CompletedTask;
-            //}
-
+      
             try
             {
 
@@ -115,7 +102,7 @@ namespace Plato.Entities.Handlers
             }
             catch (Exception e)
             {
-                context.Errors.Add(context.Feature.Id, e.Message);
+                context.Errors.Add(context.Feature.ModuleId, e.Message);
             }
 
             return Task.CompletedTask;

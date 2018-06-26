@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Modules.Abstractions;
@@ -12,7 +13,7 @@ using Plato.Internal.Stores.Abstractions.Shell;
 namespace Plato.Internal.Features
 {
     
-    public class ShellDescriptorFeatureManager : IShellDescriptorFeatureManager
+    public class ShellDescriptorManager : IShellDescriptorManager
     {
 
         #region "Private Variables"
@@ -35,7 +36,7 @@ namespace Plato.Internal.Features
         private readonly IShellDescriptor _shellDescriptor;
         private readonly IShellDescriptorStore _shellDescriptorStore;
 
-        public ShellDescriptorFeatureManager(
+        public ShellDescriptorManager(
             IModuleManager moduleManager,
             IShellDescriptor shellDescriptor, 
             IShellDescriptorStore shellDescriptorStore,
@@ -55,7 +56,6 @@ namespace Plato.Internal.Features
         {
             return await _shellDescriptorStore.GetAsync() ??
                 _shellContextFactory.MinimumShellDescriptor();
-
         }
 
         public async Task<IEnumerable<IShellFeature>> GetEnabledFeaturesAsync()
@@ -69,7 +69,7 @@ namespace Plato.Internal.Features
             {
                 foreach (var module in descriptor.Modules)
                 {
-                    features.Add(new ShellFeature(module.ModuleId));
+                    features.Add(new ShellFeature(module));
                 }
             }
             return features;
@@ -91,7 +91,7 @@ namespace Plato.Internal.Features
             //  Update all found features to reflect enabled and required
             foreach (var feature in enabledFeatures)
             {
-                _features.AddOrUpdate(feature.Id, feature, (k, v) =>
+                _features.AddOrUpdate(feature.ModuleId, feature, (k, v) =>
                 {
                     v.IsEnabled = true;
                     return v;
@@ -105,14 +105,14 @@ namespace Plato.Internal.Features
         public async Task<IShellFeature> GetFeatureAsync(string featureId)
         {
             var features = await GetFeaturesAsync();
-            return features.FirstOrDefault(f => f.Id == featureId);
+            return features.FirstOrDefault(f => f.ModuleId == featureId);
         }
 
         public async Task<IEnumerable<IShellFeature>> GetFeaturesAsync(string[] featureIds)
         {
             var features = await GetFeaturesAsync();
             return features
-                .Where(f => featureIds.Any(v => v.Equals(f.Id, StringComparison.InvariantCultureIgnoreCase)))
+                .Where(f => featureIds.Any(v => v.Equals(f.ModuleId, StringComparison.InvariantCultureIgnoreCase)))
                 .ToList();
         }
         
@@ -133,7 +133,7 @@ namespace Plato.Internal.Features
                     feature,
                     _features.Values.ToArray(),
                     (currentFeature, fs) => fs
-                        .Where(f => currentFeature.Dependencies.Any(dep => dep.Id == f.Id))
+                        .Where(f => currentFeature.Dependencies.Any(dep => dep.ModuleId == f.ModuleId))
                         .ToArray());
 
             });
@@ -156,7 +156,7 @@ namespace Plato.Internal.Features
                     feature,
                     _features.Values.ToArray(),
                     (currentFeature, fs) => fs
-                        .Where(f => f.Dependencies.Any(dep => dep.Id == currentFeature.Id))
+                        .Where(f => f.Dependencies.Any(dep => dep.ModuleId == currentFeature.ModuleId))
                         .ToArray());
 
             });
@@ -171,9 +171,9 @@ namespace Plato.Internal.Features
             foreach (var feature in _features.Values)
             {
                 var f = feature;
-                f.FeatureDependencies = await GetFeatureDependenciesAsync(f.Id);
-                f.DependentFeatures = await GetDepdendentFeaturesAsync(f.Id);
-                _features.TryUpdate(f.Id, f, feature);
+                f.FeatureDependencies = await GetFeatureDependenciesAsync(f.ModuleId);
+                f.DependentFeatures = await GetDepdendentFeaturesAsync(f.ModuleId);
+                _features.TryUpdate(f.ModuleId, f, feature);
             }
         }
         
@@ -213,7 +213,7 @@ namespace Plato.Internal.Features
             }
 
             return _features
-                .Where(f => dependencies.Any(d => d.Id == f.Value.Id))
+                .Where(f => dependencies.Any(d => d.ModuleId == f.Value.ModuleId))
                 .Select(f => f.Value);
 
         }
@@ -239,13 +239,13 @@ namespace Plato.Internal.Features
         bool IsFeatureRequired(ShellFeature feature)
         {
             // Mark SetUp as required
-            if (feature.Id.Equals("Plato.SetUp", StringComparison.InvariantCultureIgnoreCase))
+            if (feature.ModuleId.Equals("Plato.SetUp", StringComparison.InvariantCultureIgnoreCase))
             {
                 return true;
             }
             // Returns true if the supplied feature exists within our minimal shell descriptor
             var minimalDescriptor = _shellContextFactory.MinimumShellDescriptor();
-            return minimalDescriptor.Modules.FirstOrDefault(m => m.ModuleId.Equals(feature.Id, StringComparison.OrdinalIgnoreCase)) != null;
+            return minimalDescriptor.Modules.FirstOrDefault(m => m.ModuleId.Equals(feature.ModuleId, StringComparison.OrdinalIgnoreCase)) != null;
         }
 
         #endregion

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Plato.Internal.Models.Modules
 {
@@ -26,8 +23,7 @@ namespace Plato.Internal.Models.Modules
         string WebSite { get; set; }
 
         string Tags { get; set; }
-
-
+        
         string Location { get; set; }
            
         string Path { get; set; }
@@ -42,7 +38,9 @@ namespace Plato.Internal.Models.Modules
     public class ModuleDependency
     {
 
-        public string Id { get; set; }
+        public int Id { get; set; }
+
+        public string ModuleId { get; set; }
 
         public string Version { get; set; }
 

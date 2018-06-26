@@ -7,7 +7,7 @@ namespace Plato.Internal.Models.Features
     public interface IShellFeature
     {
 
-        string Id { get; set; }
+        string ModuleId { get; set; }
 
         string Name { get; set; }
 

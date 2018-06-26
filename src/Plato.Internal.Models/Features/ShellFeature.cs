@@ -1,14 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Modules;
+using Plato.Internal.Models.Shell;
 
 namespace Plato.Internal.Models.Features
 {
   
 
-    public class ShellFeature : IShellFeature
+    public class ShellFeature : IShellFeature, IModel<ShellFeature>
     {
 
-        public string Id { get; set; }
+        public int Id { get; set; }
+
+        public string ModuleId { get; set; }
 
         public string Name { get; set; }
         
@@ -31,20 +37,23 @@ namespace Plato.Internal.Models.Features
 
         }
 
-        public ShellFeature(string id)
+        public ShellFeature(ShellModule module)
         {
-            this.Id = id;
+            this.Id = module.Id;
+            this.ModuleId = module.ModuleId;
+            this.Version = module.Version;
         }
 
-        public ShellFeature(string id, string version)
+        public ShellFeature(ModuleDependency dependency)
         {
-            this.Id = id;
-            this.Version = version;
+            this.Id = dependency.Id;
+            this.ModuleId = dependency.ModuleId;
+            this.Version = dependency.Version;
         }
         
         public ShellFeature(IModuleEntry entry)
         {
-            this.Id = entry.Descriptor.Id;
+            this.ModuleId = entry.Descriptor.Id;
             this.Name = entry.Descriptor.Name;
             this.Description = entry.Descriptor.Description;
             this.Version = entry.Descriptor.Version;
@@ -53,13 +62,26 @@ namespace Plato.Internal.Models.Features
             var dependencies = new List<ShellFeature>();
             foreach (var dependency in entry.Descriptor.Dependencies)
             {
-                dependencies.Add(new ShellFeature(dependency.Id, dependency.Version));
+                dependencies.Add(new ShellFeature(dependency));
             }
 
             this.Dependencies = dependencies;
             
         }
-        
+
+        public void PopulateModel(IDataReader dr)
+        {
+
+            if (dr.ColumnIsNotNull("Id"))
+                Id = Convert.ToInt32(dr["Id"]);
+
+            if (dr.ColumnIsNotNull("ModuleId"))
+                ModuleId = Convert.ToString(dr["ModuleId"]);
+
+            if (dr.ColumnIsNotNull("Version"))
+                Version = Convert.ToString(dr["Version"]);
+
+        }
     }
 
 }

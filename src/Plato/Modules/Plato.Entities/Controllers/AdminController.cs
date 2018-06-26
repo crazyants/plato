@@ -4,6 +4,7 @@ using Plato.Internal.Abstractions.Settings;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 
@@ -12,6 +13,7 @@ namespace Plato.Entities.Controllers
     public class AdminController : Controller
     {
 
+        private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
 
         private readonly IEntityRepository<Entity> _entityRepository;
@@ -19,15 +21,19 @@ namespace Plato.Entities.Controllers
 
         public AdminController(
             ISiteSettingsStore settingsStore, 
-            IEntityRepository<Entity> entityRepository)
+            IEntityRepository<Entity> entityRepository, IContextFacade contextFacade)
         {
             _settingsStore = settingsStore;
             _entityRepository = entityRepository;
+            _contextFacade = contextFacade;
         }
         
         public async Task<IActionResult> Index()
         {
 
+            var feature = await _contextFacade.GetCurrentFeatureAsync();
+
+            ViewBag.Feature = feature;
 
             var entity = new Entity()
             {

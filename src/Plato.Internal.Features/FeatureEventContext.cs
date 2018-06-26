@@ -2,22 +2,12 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Features;
 
 namespace Plato.Internal.Features
 {
-
-    public interface IFeatureEventContext
-    {
-
-        IServiceProvider ServiceProvider { get; set; }
-
-        IShellFeature Feature { get; set; }
-
-        IDictionary<string, string> Errors { get; set; }
-
-    }
-
+    
     public class FeatureEventContext  : IFeatureEventContext
     {
         public IServiceProvider ServiceProvider { get; set; }

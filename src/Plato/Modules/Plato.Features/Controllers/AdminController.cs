@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Plato.Internal.Features;
 using Plato.Features.ViewModels;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -16,7 +16,7 @@ namespace Plato.Features.Controllers
 
         private readonly IViewProviderManager<FeaturesViewModel> _featuresIndexViewProvider;
         private readonly IShellFeatureManager _shellFeatureManager;
-        private readonly IShellDescriptorFeatureManager _shellDescriptorFeatureManager;
+        private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -24,11 +24,11 @@ namespace Plato.Features.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> localizer,
             IShellFeatureManager shellFeatureManager,
-            IShellDescriptorFeatureManager shellDescriptorFeatureManager,
+            IShellDescriptorManager shellDescriptorManager,
             IAlerter alerter, IViewProviderManager<FeaturesViewModel> featuresIndexViewProvider)
         {
             _shellFeatureManager = shellFeatureManager;
-            _shellDescriptorFeatureManager = shellDescriptorFeatureManager;
+            _shellDescriptorManager = shellDescriptorManager;
             _alerter = alerter;
             _featuresIndexViewProvider = featuresIndexViewProvider;
 
@@ -38,7 +38,7 @@ namespace Plato.Features.Controllers
         public async Task<IActionResult> Index()
         {
             
-            var features = await _shellDescriptorFeatureManager.GetFeaturesAsync();
+            var features = await _shellDescriptorManager.GetFeaturesAsync();
             
 
             //var enabledFeatures = _shellFEatureManager.
@@ -67,12 +67,12 @@ namespace Plato.Features.Controllers
                 {
                     foreach (var error in context.Errors)
                     {
-                        _alerter.Danger(T[$"{context.Feature.Id} could not be enabled. {error.Key} - {error.Value}"]);
+                        _alerter.Danger(T[$"{context.Feature.ModuleId} could not be enabled. {error.Key} - {error.Value}"]);
                     }
                 }
                 else
                 {
-                    _alerter.Success(T[$"{context.Feature.Id} enabled successfully!"]);
+                    _alerter.Success(T[$"{context.Feature.ModuleId} enabled successfully!"]);
                 }
                 
             }
@@ -98,7 +98,7 @@ namespace Plato.Features.Controllers
                 }
                 else
                 {
-                    _alerter.Success(T[$"{context.Feature.Id} disabled successfully!"]);
+                    _alerter.Success(T[$"{context.Feature.ModuleId} disabled successfully!"]);
                 }
                 
             }

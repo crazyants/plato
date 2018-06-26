@@ -9,6 +9,7 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Features;
+using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Internal.Shell
 {
@@ -92,7 +93,7 @@ namespace Plato.Internal.Shell
         {
 
             tenantServiceCollection.AddTransient<IShellFeatureManager, ShellFeatureManager>();
-            tenantServiceCollection.AddTransient<IShellDescriptorFeatureManager, ShellDescriptorFeatureManager>();
+            tenantServiceCollection.AddTransient<IShellDescriptorManager, ShellDescriptorManager>();
 
         }
 

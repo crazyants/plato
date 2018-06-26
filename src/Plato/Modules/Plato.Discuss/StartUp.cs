@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Features;
 using Plato.Internal.Hosting;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Discuss.Handlers;
+using Plato.Internal.Features.Abstractions;
 
 
 namespace Plato.Discuss

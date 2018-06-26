@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Plato.Internal.Features
+namespace Plato.Internal.Features.Abstractions
 {
 
     public interface IFeatureEventHandler

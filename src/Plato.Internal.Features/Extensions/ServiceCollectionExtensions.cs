@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Internal.Features.Extensions
 {

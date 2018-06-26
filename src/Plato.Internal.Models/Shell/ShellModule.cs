@@ -3,6 +3,8 @@
     public class ShellModule
     {
  
+        public int Id { get; set; }
+
         public string ModuleId { get; set; }
 
         public string Version { get; set; } = "1.0.0";

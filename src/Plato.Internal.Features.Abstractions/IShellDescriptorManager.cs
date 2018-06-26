@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
 
-namespace Plato.Internal.Features
+namespace Plato.Internal.Features.Abstractions
 {
-    public interface IShellDescriptorFeatureManager
+    public interface IShellDescriptorManager
     {
 
         Task<IShellDescriptor> GetEnabledDescriptorAsync();

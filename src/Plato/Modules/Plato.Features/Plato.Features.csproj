@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Features\Plato.Internal.Features.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
@@ -31,6 +32,8 @@
 
   <ItemGroup>
     <Folder Include="Content\" />
+    <Folder Include="Stores\" />
+    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>

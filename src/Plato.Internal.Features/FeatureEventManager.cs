@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Internal.Features
 {
@@ -31,8 +32,8 @@ namespace Plato.Internal.Features
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred while raising the 'Installing' event within feature: {context.Feature.Id}");
-                    context.Errors.Add($"{context.Feature.Id} threw an exception within the Installing event!", e.Message);
+                    _logger.LogError(e, $"An exception occurred while raising the 'Installing' event within feature: {context.Feature.ModuleId}");
+                    context.Errors.Add($"{context.Feature.ModuleId} threw an exception within the Installing event!", e.Message);
                 }
             }
 
@@ -50,8 +51,8 @@ namespace Plato.Internal.Features
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred while raising the 'Installed' event within feature: {context.Feature.Id}");
-                    context.Errors.Add($"{context.Feature.Id} threw an exception within the Installed event!", e.Message);
+                    _logger.LogError(e, $"An exception occurred while raising the 'Installed' event within feature: {context.Feature.ModuleId}");
+                    context.Errors.Add($"{context.Feature.ModuleId} threw an exception within the Installed event!", e.Message);
                 }
             }
 
@@ -70,8 +71,8 @@ namespace Plato.Internal.Features
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred while raising the 'Uninstalling' event within feature: {context.Feature.Id}");
-                    context.Errors.Add($"{context.Feature.Id} threw an exception within the Uninstalling event!", e.Message);
+                    _logger.LogError(e, $"An exception occurred while raising the 'Uninstalling' event within feature: {context.Feature.ModuleId}");
+                    context.Errors.Add($"{context.Feature.ModuleId} threw an exception within the Uninstalling event!", e.Message);
                 }
             }
 
@@ -90,8 +91,8 @@ namespace Plato.Internal.Features
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred while raising the 'Uninstalled' event within feature: {context.Feature.Id}");
-                    context.Errors.Add($"{context.Feature.Id} threw an exception within the Uninstalled event!", e.Message);
+                    _logger.LogError(e, $"An exception occurred while raising the 'Uninstalled' event within feature: {context.Feature.ModuleId}");
+                    context.Errors.Add($"{context.Feature.ModuleId} threw an exception within the Uninstalled event!", e.Message);
                 }
             }
 

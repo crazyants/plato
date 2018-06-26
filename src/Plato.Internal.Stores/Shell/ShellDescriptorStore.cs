@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -53,7 +52,17 @@ namespace Plato.Internal.Stores.Shell
                     distinctDictionary.TryAdd(module.ModuleId, module);
                 }
             }
-            
+
+            // Ensure each distinct feature has a unique Id
+            var distinctModules = distinctDictionary.Values.ToList();
+            for (var i = 0; i < distinctModules.Count; i++)
+            {
+                if (distinctModules[i].Id == 0)
+                {
+                    distinctModules[i].Id = i + 1;
+                }
+            }
+
             shellDescriptor.Modules = distinctDictionary.Values.ToList();
 
             var descriptor = await _dictionaryStore.UpdateAsync<ShellDescriptor>(_key, shellDescriptor);
