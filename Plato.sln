@@ -107,6 +107,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Search", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Search.Abstractions", "src\Plato.Internal.Search.Abstractions\Plato.Internal.Search.Abstractions.csproj", "{A6D056E1-EA84-47C4-A00C-C702E7A5F02A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Entities", "src\Plato\Modules\Plato.Entities\Plato.Entities.csproj", "{AEDA1736-E4A2-4260-8DB8-69248A94C302}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -297,6 +299,10 @@ Global
 		{A6D056E1-EA84-47C4-A00C-C702E7A5F02A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6D056E1-EA84-47C4-A00C-C702E7A5F02A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6D056E1-EA84-47C4-A00C-C702E7A5F02A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEDA1736-E4A2-4260-8DB8-69248A94C302}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEDA1736-E4A2-4260-8DB8-69248A94C302}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEDA1736-E4A2-4260-8DB8-69248A94C302}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEDA1736-E4A2-4260-8DB8-69248A94C302}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -349,6 +355,7 @@ Global
 		{2C8CE032-0B49-4623-BDF1-5C5F76D52A62} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{C69366D2-6317-42C9-9F97-441812929DAB} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{A6D056E1-EA84-47C4-A00C-C702E7A5F02A} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
+		{AEDA1736-E4A2-4260-8DB8-69248A94C302} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

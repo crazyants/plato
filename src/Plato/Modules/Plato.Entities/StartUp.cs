@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting;
 using Plato.Internal.Abstractions.SetUp;
-using Plato.Demo.Handlers;
+using Plato.Entities.Handlers;
+using Plato.Entities.Models;
+using Plato.Entities.Repositories;
 using Plato.Internal.Features;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
+using Plato.Internal.Repositories.Users;
 
-namespace Plato.Demo
+
+namespace Plato.Entities
 {
     public class Startup : StartupBase
     {
@@ -26,11 +29,14 @@ namespace Plato.Demo
             // Set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
 
-            // Feature installation event handler
+            // Feature event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
-            // Register navigation provider
-            services.AddScoped<INavigationProvider, AdminMenu>();
+            // Data Repositories
+            services.AddScoped<IEntityRepository<Entity>, EntityRepository>();
+
+            // Data Stores
+
 
         }
 

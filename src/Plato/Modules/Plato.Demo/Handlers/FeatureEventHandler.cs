@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features;
 
-namespace Plato.Demo.Services
+namespace Plato.Demo.Handlers
 {
 
     // Feature event handlers are executed in a temporary shell context 
@@ -37,11 +34,7 @@ namespace Plato.Demo.Services
 
         public async Task InstallingAsync(IFeatureEventContext context)
         {
-            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return;
-            //}
-
+      
             var demo = new SchemaTable()
             {
                 Name = "Demo",
@@ -87,16 +80,11 @@ namespace Plato.Demo.Services
 
             }
             
-
         }
 
         public Task InstalledAsync(IFeatureEventContext context)
         {
-            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return Task.CompletedTask;
-            //}
-
+      
             try
             {
                 
@@ -114,13 +102,7 @@ namespace Plato.Demo.Services
 
         public Task UninstallingAsync(IFeatureEventContext context)
         {
-            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return Task.CompletedTask;
-            //}
-
-            //throw new Exception("This is a test exception from Plato.Demos");
-
+   
             try
             {
 
@@ -137,11 +119,7 @@ namespace Plato.Demo.Services
 
         public Task UninstalledAsync(IFeatureEventContext context)
         {
-            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return Task.CompletedTask;
-            //}
-
+       
             try
             {
 

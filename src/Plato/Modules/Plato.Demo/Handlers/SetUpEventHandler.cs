@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
-using Plato.Internal.Stores.Abstractions;
-using Plato.Internal.Stores.Abstractions.Settings;
 
-namespace Plato.Demo.Services
+namespace Plato.Demo.Handlers
 {
     public class SetUpEventHandler : ISetUpEventHandler
     {

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Plato.Internal.Abstractions\Plato.Internal.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Features\Plato.Internal.Features.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
+  </ItemGroup>
+
+</Project>

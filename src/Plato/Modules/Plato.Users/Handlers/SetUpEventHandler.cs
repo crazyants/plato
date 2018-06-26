@@ -8,7 +8,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Users.Services
+namespace Plato.Users.Handlers
 {
     public class SetUpEventHandler : ISetUpEventHandler
     {

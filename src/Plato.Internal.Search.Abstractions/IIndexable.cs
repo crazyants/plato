@@ -6,5 +6,6 @@ namespace Plato.Internal.Search.Abstractions
 {
     public interface IIndexable
     {
+
     }
 }

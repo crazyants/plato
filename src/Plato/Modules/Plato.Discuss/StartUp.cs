@@ -28,6 +28,7 @@ namespace Plato.Discuss
 
             // register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
+            services.AddScoped<INavigationProvider, SiteMenu>();
 
         }
 
@@ -38,10 +39,10 @@ namespace Plato.Discuss
         {
 
             routes.MapAreaRoute(
-                name: "Discussions",
-                areaName: "Plato.Discussions",
-                template: "discussions/{controller}/{action}/{id?}",
-                defaults: new { controller = "Discussions", action = "Index" }
+                name: "Discuss",
+                areaName: "Plato.Discuss",
+                template: "discuss/{controller}/{action}/{id?}",
+                defaults: new { controller = "Home", action = "Index" }
             );
 
         }

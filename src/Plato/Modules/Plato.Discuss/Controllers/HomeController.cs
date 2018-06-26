@@ -7,12 +7,12 @@ using Plato.Internal.Stores.Abstractions.Settings;
 
 namespace Plato.Discussions.Controllers
 {
-    public class DiscussionsController : Controller
+    public class HomeController : Controller
     {
 
         private readonly ISiteSettingsStore _settingsStore;
         
-        public DiscussionsController(
+        public HomeController(
             ISiteSettingsStore settingsStore)
         {
             _settingsStore = settingsStore;
@@ -36,22 +36,22 @@ namespace Plato.Discussions.Controllers
 
             //ViewData["result"] = result;
 
-            var settings = await _settingsStore.GetAsync();
+            //var settings = await _settingsStore.GetAsync();
 
-            List<TextObject> list = new List<TextObject>();
-            list.Add(new TextObject("Ryan"));
-            list.Add(new TextObject("Jane"));
-            list.Add(new TextObject("Mike"));
-            list.Add(new TextObject("Roger"));
+            //List<TextObject> list = new List<TextObject>();
+            //list.Add(new TextObject("Ryan"));
+            //list.Add(new TextObject("Jane"));
+            //list.Add(new TextObject("Mike"));
+            //list.Add(new TextObject("Roger"));
 
-            if (settings != null)
-            {
-                list.Add(new TextObject(settings.SiteName));
-                list.Add(new TextObject(settings.BaseUrl));
-            }
+            //if (settings != null)
+            //{
+            //    list.Add(new TextObject(settings.SiteName));
+            //    list.Add(new TextObject(settings.BaseUrl));
+            //}
         
 
-            return View(list);
+            return View();
         }
 
         

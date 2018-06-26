@@ -18,7 +18,7 @@ using Plato.Internal.Layout.TagHelpers;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Users.ViewAdaptors;
-using Plato.Users.Services;
+using Plato.Users.Handlers;
 using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
 
