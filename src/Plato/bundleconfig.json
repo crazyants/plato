@@ -85,12 +85,48 @@
     },
     "sourceMap": false
   },
+  /* markdown */
+  {
+    "inputFiles": [
+      "wwwroot/js/app/markdown.js"
+    ],
+    "outputFileName": "wwwroot/js/app/markdown.min.js",
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  /* plato */
+  {
+    "inputFiles": [
+      "wwwroot/js/app/plato.js"
+    ],
+    "outputFileName": "wwwroot/js/app/plato.min.js",
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
   /* site */
   {
     "inputFiles": [
-      "wwwroot/js/site.js"
+      "wwwroot/js/app/plato.css",
+      "wwwroot/js/app/markdown.css"
     ],
-    "outputFileName": "wwwroot/js/site.min.js",
+    "outputFileName": "wwwroot/css/app.css",
+    "minify": {
+      "enabled": false,
+      "adjustRelativePaths": false
+    }
+  },
+  {
+    "inputFiles": [
+      "wwwroot/js/app/plato.js",
+      "wwwroot/js/app/markdown.js"
+    ],
+    "outputFileName": "wwwroot/js/app.min.js",
     "minify": {
       "enabled": true,
       "renameLocals": true

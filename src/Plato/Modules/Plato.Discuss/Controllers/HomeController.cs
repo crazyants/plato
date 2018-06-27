@@ -8,7 +8,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 
-namespace Plato.Discus.Controllers
+namespace Plato.Discuss.Controllers
 {
     public class HomeController : Controller
     {
@@ -44,36 +44,7 @@ namespace Plato.Discus.Controllers
             };
 
             await _entityRepository.InsertUpdateAsync(entity);
-
-
-
-            //string rootDirectory = _fileSystem.GetDirectoryInfo("Modules").FullName;
-
-            //var result = _moduleLocator.LocateModules(
-            //    new string[] {
-            //        rootDirectory
-            //    }, 
-            //    "Module", 
-            //    "module.txt", 
-            //    false);                
-
-            //ViewData["result"] = result;
-
-            //var settings = await _settingsStore.GetAsync();
-
-            //List<TextObject> list = new List<TextObject>();
-            //list.Add(new TextObject("Ryan"));
-            //list.Add(new TextObject("Jane"));
-            //list.Add(new TextObject("Mike"));
-            //list.Add(new TextObject("Roger"));
-
-            //if (settings != null)
-            //{
-            //    list.Add(new TextObject(settings.SiteName));
-            //    list.Add(new TextObject(settings.BaseUrl));
-            //}
-
-
+            
             return View();
         }
 

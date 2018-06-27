@@ -9,7 +9,8 @@
     <environment names="Development">
         <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />
         <link rel="stylesheet" href="~/css/vendors/font-awesome.css" />
-        <link rel="stylesheet" href="~/css/core.css" />
+        <link rel="stylesheet" href="~/css/app/markdown.css" />
+        <link rel="stylesheet" href="~/css/app/plato.css" />
         <link rel="stylesheet" href="~/css/theme.css" />
     </environment>
     <environment names="Staging,Production">
@@ -92,7 +93,8 @@
 <environment names="Development">
     <script src="~/js/vendors/jquery.js"></script>
     <script src="~/js/vendors/bootstrap.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/app/markdown.js" asp-append-version="true"></script>
+    <script src="~/js/app/plato.js" asp-append-version="true"></script>
 </environment>
 <environment names="Staging,Production">
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
@@ -103,7 +105,7 @@
             asp-fallback-src="~/js/vendors/bootstrap.min.js"
             asp-fallback-test="window.BS">
     </script>
-    <script src="~/js/site.min.js" asp-append-version="true">
+    <script src="~/js/app.min.js" asp-append-version="true">
     </script>
 </environment>
    
