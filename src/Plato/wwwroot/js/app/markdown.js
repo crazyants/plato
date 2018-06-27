@@ -104,21 +104,21 @@
                   buttonHandler = ns + '-' + button.name,
                   buttonIcon = this.__getIcon(button),
                   btnText = button.btnText ? button.btnText : '',
-                  btnClass = button.btnClass ? button.btnClass : 'i-btn',
+                  btnClass = button.btnClass ? button.btnClass : 'btn',
                   tabIndex = button.tabIndex ? button.tabIndex : '-1',
                   hotkey = typeof button.hotkey !== 'undefined' ? button.hotkey : '',
                   hotkeyCaption = typeof jQuery.hotkeys !== 'undefined' && hotkey !== '' ? ' (' + hotkey + ')' : '',
                   dropdown = typeof button.dropdown !== 'undefined' ? button.dropdown : null;
 
-            var $button = $('<a>');
-              $button.html('<span>' + this.__localize(btnText) + '</span>')
-                .addClass('i-btn')
-                .addClass('i-btn-default')
-                .addClass('i-tooltip')
+            var $button = $('<button data-toggle="tooltip">');
+              $button.html(this.__localize(btnText))
+                .addClass('btn')
+                  .addClass('btn-secondary')
                 .addClass(btnClass);
-              if (btnClass.match(/i\-btn\-(primary|success|info|warning|danger|link)/)) {
-                $button.removeClass('i-btn-default');
-            }
+              if (btnClass.match(/btn\-(primary|success|info|warning|danger|link)/)) {
+                $button.removeClass('btn-secondary');
+              }
+
             $button.attr({
               'title': this.__localize(button.title) + hotkeyCaption,
               'tabindex': tabIndex,
@@ -127,7 +127,12 @@
               'data-handler': buttonHandler,
               'data-tooltip-position': 'bottom'
             });
-              
+
+
+            if (dropdown) {
+                $button.attr('data-toggle', 'dropdown');
+            }
+
             if (button.toggle === true) {
                 $button.attr('data-toggle', 'button');
             }
@@ -136,19 +141,19 @@
                 if (dropdown) {
                     var chevron = $('<i/>');
                     chevron.addClass("fa fa-angle-down");
-                    chevron.prependTo($button.find("span"));
+                    chevron.prependTo($button);
                 }
                 var buttonIconContainer = $('<i>');
                 buttonIconContainer.addClass(buttonIcon);
-                buttonIconContainer.prependTo($button.find("span"));
+                buttonIconContainer.prependTo($button);
             }
 
             // dropdown
             if (dropdown) {
 
-                var $dropdown = $('<div class="i-dropdown"/>');
+                var $dropdown = $('<div class="dropdown"/>');
 
-                var $ul = $('<ul class="i-dropdown-menu">');
+                var $ul = $('<ul class="dropdown-menu">');
                 if (dropdown.css) { $ul.addClass(dropdown.css); }
 
                 $ul.css({
@@ -173,7 +178,7 @@
                             itemHotkey = item.hotkey || "",
                             itemValue = item.value || "";
 
-                        var $a = $('<a href="#" class="i-dropdown-link">');
+                        var $a = $('<a href="#">');
                         $a.html(item.text)
                             .attr({
                                 'title': item.tooltip ? this.__localize(item.tooltip) + itemHotkey : "",
@@ -182,9 +187,8 @@
                                 'data-hotkey': hotkey,
                                 'data-value': itemValue
                             });
-                        $a.data("dropdownCaller", $button);
-
-                        $li = $("<li>");
+                     
+                        $li = $('<li class="dropdown-item">');
                         $li.append($a);
                         $ul.append($li);
 
@@ -354,7 +358,7 @@
 
         // Create the panel
         var editorHeader = $('<div/>', {
-          'class': 'md-header i-btn-toolbar'
+          'class': 'md-header btn-toolbar'
         });
 
         // Merge the main & additional button groups together
@@ -396,7 +400,7 @@
         if (options.fullscreen.enable) {
             var fullScreenToolTip = this.__localize('Full Screen')
             editorHeader
-                .append('<div class="i-btn-group i-btn-group-right"><a class="i-btn i-btn-default md-control-fullscreen i-tooltip" href="#" data-tooltip-position="bottom" title="' + fullScreenToolTip + '"><span><i class="' + this.__getIcon(options.fullscreen.icons.fullscreenOn) + '"></i></span></a></div>')
+                .append('<div class="btn-group btn-group-right"><a class="btn btn-secondary md-control-fullscreen i-tooltip" href="#" data-tooltip-position="bottom" title="' + fullScreenToolTip + '"><span><i class="' + this.__getIcon(options.fullscreen.icons.fullscreenOn) + '"></i></span></a></div>')
                 .on('click',
                     '.md-control-fullscreen',
                     function(e) {
@@ -405,8 +409,8 @@
                     });
         }
         if (options.fullscreen.enable && options.fullscreen !== false) {
-            editorHeader.append('<div class="i-btn-group i-btn-group-right md-fullscreen-controls">' +
-                    '<a href="#" class="i-btn i-btn-default i-tooltip md-exit-fullscreen" data-tooltip-position="bottom" title="Exit fullscreen"><span><i class="' +
+            editorHeader.append('<div class="btn-group btn-group-right md-fullscreen-controls">' +
+                    '<a href="#" class="btn btn-secondary i-tooltip md-exit-fullscreen" data-tooltip-position="bottom" title="Exit fullscreen"><span><i class="' +
                     this.__getIcon(options.fullscreen.icons.fullscreenOff) +
                     '">' +
                     '</i></span></a>' +
@@ -472,7 +476,7 @@
           handler.push(saveHandler);
           callback.push(options.onSave);
 
-          editorFooter.append('<a class="i-btn i-btn-success" data-provider="' +
+          editorFooter.append('<a class="btn btn-success" data-provider="' +
             ns +
             '" data-handler="' +
             saveHandler +
@@ -1363,14 +1367,14 @@
       [
           {
               name: 'groupUtil',
-              css: 'i-btn-group md-tabs',
+              css: 'btn-group md-tabs',
               data: [
                   {
                       name: 'cmdWrite',
                       hotkey: 'Ctrl+P',
                       title: 'Write',
                       btnText: 'Write',
-                      btnClass: 'i-btn i-btn-default md-btn-write selected',
+                      btnClass: 'btn btn-secondary md-btn-write selected',
                       callback: function(e) {
                           // Check the preview mode and toggle based on this flag
                           var isPreview = e.$isPreview,
@@ -1385,7 +1389,7 @@
                       hotkey: 'Ctrl+P',
                       title: 'Preview',
                       btnText: 'Preview',
-                      btnClass: 'i-btn i-btn-default md-btn-preview',
+                      btnClass: 'btn btn-secondary md-btn-preview',
                       callback: function(e) {
                           // Check the preview mode and toggle based on this flag
                           var isPreview = e.$isPreview,
@@ -1399,7 +1403,7 @@
               ]
           }, {
               name: 'groupFont',
-              css: 'i-btn-group',
+              css: 'btn-group',
               data: [
                   {
                       name: 'cmdBold',
@@ -1484,7 +1488,7 @@
                       dropdown: {
                           title: "Heading",
                           width: "200px",
-                          css: "i-dropdown-menu-center md-header-dropdown",
+                          css: "md-header-dropdown",
                           items: [
                               {
                                   name: 'cmdHeading1',
@@ -1554,7 +1558,7 @@
               ]
           }, {
               name: 'groupLists',
-              css: 'i-btn-group',
+              css: 'btn-group',
               data: [
                   {
                       name: 'cmdList',
@@ -1670,7 +1674,7 @@
               ]
           }, {
               name: 'groupBlocks',
-              css: 'i-btn-group',
+              css: 'btn-group',
               data: [
                   {
                       name: 'cmdBlockquote',
@@ -1679,7 +1683,7 @@
                       dropdown: {
                           title: "Blockquote",
                           width: "200px",
-                          css: "i-dropdown-menu-center md-blockquote-dropdown",
+                          css: "dropdown md-blockquote-dropdown",
                           items: [
                               {
                                   name: 'cmdBlockquotePrimary',
@@ -1800,7 +1804,7 @@
               ]
           }, {
               name: 'groupInsert',
-              css: 'i-btn-group',
+              css: 'btn-group',
               data: [
                   {
                       name: 'cmdLink',
@@ -1893,10 +1897,10 @@
                        dropdown: {
                            title: "Embed Video",
                            width: "500px",
-                           css: "i-dropdown-menu-center",
+                           css: "dropdown",
                            items: null,
                            html:
-                               '<table class="i-table"><tr><td><div class="i-row"><input type="text" style="width: 100%;" class="i-input i-text-box"/></div><div class="i-row i-margin-top"><a href="#" class="i-btn i-btn-full i-btn-2x i-btn-primary"><span></span></a></div></td></tr></table>'
+                               '<table class="i-table"><tr><td><div class="i-row"><input type="text" style="width: 100%;" class="i-input i-text-box"/></div><div class="i-row i-margin-top"><a href="#" class="btn btn-full btn-2x btn-primary"><span></span></a></div></td></tr></table>'
                        },
                        icon: {
                            glyph: 'glyphicon glyphicon-search',
@@ -1913,7 +1917,7 @@
                                onShow: function ($sender, $dropdown) {
 
                                    var $input = $dropdown.find(".i-input"),
-                                        $btn = $dropdown.find(".i-btn");
+                                        $btn = $dropdown.find(".btn");
 
                                    // init controls
                                    $input.attr("placeholder", placeholderText);
@@ -1966,7 +1970,7 @@
               ]
           }, {
               name: 'groupEmbed',
-              css: 'i-btn-group i-btn-group-right',
+              css: 'btn-group btn-group-right',
               data: [
                   {
                       name: 'cmdLinkContent',
@@ -1975,7 +1979,7 @@
                       dropdown: {
                           title: "Link To Article",
                           width: "600px",
-                          css: "i-dropdown-menu-right",
+                          css: "dropdown",
                           items: null,
                           html:
                               '<table class="i-table"><tr><td><div class="i-input-group i-dropdown"><input type="text" style="width: 100%;" class="i-input i-text-box" data-autocomplete-url="{baseUrl}api/search?page_index={pageIndex}&page_size={pageSize}" data-autocomplete-page-size="10" data-dropdown-arrow="false"/><ul class="i-dropdown-menu"><li style="height: 100%;"><div class="i-loader-jumbo"><div class="i-loader i-loader-inverted i-loader-2x"></div></div></li></ul></div></td></tr></table>'

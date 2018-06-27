@@ -40,8 +40,9 @@
   /* fontawesome css */
   {
     "inputFiles": [
-      "bower_components/font-awesome/web-fonts-with-css/css/fontawesome-all.css",
-      "bower_components/font-awesome/web-fonts-with-css/css/fa-brands.css"
+      "bower_components/font-awesome5/css/all.css",
+      "bower_components/font-awesome5/css/fontawesome.css",
+      "bower_components/font-awesome5/css/brands.css"
     ],
     "outputFileName": "wwwroot/css/vendors/font-awesome.css",
     "minify": {
@@ -51,7 +52,9 @@
   },
   {
     "inputFiles": [
-      "bower_components/font-awesome/web-fonts-with-css/css/fontawesome-all.css"
+      "bower_components/font-awesome5/css/all.css",
+      "bower_components/font-awesome5/css/fontawesome.css",
+      "bower_components/font-awesome5/css/brands.css"
     ],
     "outputFileName": "wwwroot/css/vendors/font-awesome.min.css",
     "minify": {

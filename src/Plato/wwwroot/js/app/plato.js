@@ -165,7 +165,7 @@ $.Plato.UI = {
             resize: true,
             allowedUploadExtensions: [".gif", ".jpg", ".jpeg", ".png"],
             baseUrl: 'http://localhost:50439/',
-            hiddenButtons: [""],
+            hiddenButtons: null,
 
             onPreview: function (e) {
                 var output = '',
