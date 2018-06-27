@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Stores.Abstractions;
-using Plato.Internal.Stores.Query;
+
 
 namespace Plato.Internal.Stores.Roles
 {
@@ -55,12 +55,11 @@ namespace Plato.Internal.Stores.Roles
 
     #endregion
 
-    #region "UserQueryParams"
+    #region "RoleQueryParams"
 
     public class RoleQueryParams
     {
-
-     
+        
         private WhereInt _id;
          private WhereString _roleName;
 
@@ -80,7 +79,7 @@ namespace Plato.Internal.Stores.Roles
 
     #endregion
 
-    #region "UserQueryBuilder"
+    #region "RoleQueryBuilder"
 
     public class RoleQueryBuilder : IQueryBuilder
     {

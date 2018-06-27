@@ -94,8 +94,9 @@
 
           // Build each button group
           var z, buttons = btnGroups[y].data,
-            $group = $('<div/>', {
-                'class': btnGroups[y].css
+            $group = $('<div />', {
+                'class': btnGroups[y].css,
+                'role': 'group'
             });
 
           for (z = 0; z < buttons.length; z++) {
@@ -113,7 +114,6 @@
             var $button = $('<button data-toggle="tooltip">');
               $button.html(this.__localize(btnText))
                 .addClass('btn')
-                  .addClass('btn-secondary')
                 .addClass(btnClass);
               if (btnClass.match(/btn\-(primary|success|info|warning|danger|link)/)) {
                 $button.removeClass('btn-secondary');
@@ -130,6 +130,7 @@
 
 
             if (dropdown) {
+                $button.addClass("dropdown-toggle");
                 $button.attr('data-toggle', 'dropdown');
             }
 
@@ -138,11 +139,7 @@
             }
 
             if (buttonIcon) {
-                if (dropdown) {
-                    var chevron = $('<i/>');
-                    chevron.addClass("fa fa-angle-down");
-                    chevron.prependTo($button);
-                }
+            
                 var buttonIconContainer = $('<i>');
                 buttonIconContainer.addClass(buttonIcon);
                 buttonIconContainer.prependTo($button);
@@ -151,7 +148,7 @@
             // dropdown
             if (dropdown) {
 
-                var $dropdown = $('<div class="dropdown"/>');
+                var $dropdown = $('<div class="btn-group" role="group">');
 
                 var $ul = $('<ul class="dropdown-menu">');
                 if (dropdown.css) { $ul.addClass(dropdown.css); }
@@ -178,7 +175,7 @@
                             itemHotkey = item.hotkey || "",
                             itemValue = item.value || "";
 
-                        var $a = $('<a href="#">');
+                        var $a = $('<a href="#" class="dropdown-item">');
                         $a.html(item.text)
                             .attr({
                                 'title': item.tooltip ? this.__localize(item.tooltip) + itemHotkey : "",
@@ -188,7 +185,7 @@
                                 'data-value': itemValue
                             });
                      
-                        $li = $('<li class="dropdown-item">');
+                        $li = $('<li>');
                         $li.append($a);
                         $ul.append($li);
 
@@ -358,7 +355,7 @@
 
         // Create the panel
         var editorHeader = $('<div/>', {
-          'class': 'md-header btn-toolbar'
+            'class': 'md-header btn-toolbar'
         });
 
         // Merge the main & additional button groups together
@@ -396,11 +393,15 @@
             });
         }
 
+     // Build the buttons
+        if (allBtnGroups.length > 0) {
+          editorHeader = this.__buildButtons([allBtnGroups], editorHeader);
+        }
 
         if (options.fullscreen.enable) {
             var fullScreenToolTip = this.__localize('Full Screen')
             editorHeader
-                .append('<div class="btn-group btn-group-right"><a class="btn btn-secondary md-control-fullscreen i-tooltip" href="#" data-tooltip-position="bottom" title="' + fullScreenToolTip + '"><span><i class="' + this.__getIcon(options.fullscreen.icons.fullscreenOn) + '"></i></span></a></div>')
+                .append('<div class="btn-group"><button class="btn md-control-fullscreen" href="#" data-tooltip-position="bottom" title="' + fullScreenToolTip + '"><i class="' + this.__getIcon(options.fullscreen.icons.fullscreenOn) + '"></i></button></div>')
                 .on('click',
                     '.md-control-fullscreen',
                     function(e) {
@@ -409,11 +410,10 @@
                     });
         }
         if (options.fullscreen.enable && options.fullscreen !== false) {
-            editorHeader.append('<div class="btn-group btn-group-right md-fullscreen-controls">' +
-                    '<a href="#" class="btn btn-secondary i-tooltip md-exit-fullscreen" data-tooltip-position="bottom" title="Exit fullscreen"><span><i class="' +
+            editorHeader.append('<div class="btn-group md-fullscreen-controls">' +
+                    '<button href="#" class="btn md-exit-fullscreen" title="Exit fullscreen"><i class="' +
                     this.__getIcon(options.fullscreen.icons.fullscreenOff) +
-                    '">' +
-                    '</i></span></a>' +
+                    '"></i></button>' +
                     '</div>')
                 .on('click',
                     '.md-exit-fullscreen',
@@ -422,11 +422,6 @@
                         instance.setFullscreen(false);
                     });
         }
-
-        // Build the buttons
-        if (allBtnGroups.length > 0) {
-          editorHeader = this.__buildButtons([allBtnGroups], editorHeader);
-        }
           
         editor.append(editorHeader);
 
@@ -434,7 +429,7 @@
         if (container.is('textarea')) {
           container.before(editor);
           textarea = container;
-          textarea.addClass("i-input").addClass("md-textarea");
+          
           editor.append(textarea);
         } else {
           var rawContent = (typeof toMarkdown == 'function') ? toMarkdown(container.html()) : container.html(),
@@ -480,7 +475,7 @@
             ns +
             '" data-handler="' +
             saveHandler +
-            '"><i class="fa fa-plus"></i> ' +
+            '"><i class="fal fa-plus"></i> ' +
             this.__localize('Save') +
             '</button>');
             
@@ -814,8 +809,8 @@
     },
     hidePreview: function () {
 
-        this.$editor.find(".md-btn-write").addClass("selected");
-        this.$editor.find(".md-btn-preview").removeClass("selected");
+        this.$editor.find(".md-btn-write").addClass("active");
+        this.$editor.find(".md-btn-preview").removeClass("active");
 
       // Give flag that tells the editor to quit preview mode
       this.$isPreview = false;
@@ -1288,10 +1283,10 @@
 
             e.setSelection(cursor, cursor + chunk.length);
             
-            // hide dropdown
-            if ($target.data("dropdownCaller")) {
-                $target.data("dropdownCaller").idropdown("hide");
-            }
+            //// hide dropdown
+            //if ($target.data("dropdownCaller")) {
+            //    $target.data("dropdownCaller").idropdown("hide");
+            //}
 
         },
 
@@ -1337,9 +1332,9 @@
             e.setSelection(cursor, cursor + chunk.length);
 
             // hide dropdown
-            if ($target.data("dropdownCaller")) {
-                $target.data("dropdownCaller").idropdown("hide");
-            }
+            //if ($target.data("dropdownCaller")) {
+            //    $target.data("dropdownCaller").idropdown("hide");
+            //}
 
         }
 
@@ -1367,14 +1362,14 @@
       [
           {
               name: 'groupUtil',
-              css: 'btn-group md-tabs',
+              css: 'btn-group mr-1 md-tabs',
               data: [
                   {
                       name: 'cmdWrite',
                       hotkey: 'Ctrl+P',
                       title: 'Write',
                       btnText: 'Write',
-                      btnClass: 'btn btn-secondary md-btn-write selected',
+                      btnClass: 'btn md-btn-write selected',
                       callback: function(e) {
                           // Check the preview mode and toggle based on this flag
                           var isPreview = e.$isPreview,
@@ -1389,7 +1384,7 @@
                       hotkey: 'Ctrl+P',
                       title: 'Preview',
                       btnText: 'Preview',
-                      btnClass: 'btn btn-secondary md-btn-preview',
+                      btnClass: 'btn md-btn-preview',
                       callback: function(e) {
                           // Check the preview mode and toggle based on this flag
                           var isPreview = e.$isPreview,
@@ -1403,7 +1398,7 @@
               ]
           }, {
               name: 'groupFont',
-              css: 'btn-group',
+              css: 'btn-group mr-1',
               data: [
                   {
                       name: 'cmdBold',
@@ -1411,7 +1406,7 @@
                       title: 'Bold',
                       icon: {
                           glyph: 'glyphicon glyphicon-bold',
-                          fa: 'fa fa-bold',
+                          fa: 'fal fa-bold',
                           'fa-3': 'icon-bold',
                           octicons: 'octicon octicon-bold'
                       },
@@ -1449,7 +1444,7 @@
                       hotkey: 'Ctrl+I',
                       icon: {
                           glyph: 'glyphicon glyphicon-italic',
-                          fa: 'fa fa-italic',
+                          fa: 'fal fa-italic',
                           'fa-3': 'icon-italic',
                           octicons: 'octicon octicon-italic'
                       },
@@ -1543,7 +1538,7 @@
                       },
                       icon: {
                           glyph: 'glyphicon glyphicon-header',
-                          fa: 'fa fa-header',
+                          fa: 'fal fa-heading',
                           'fa-3': 'icon-font',
                           octicons: 'octicon octicon-text-size'
                       },
@@ -1558,7 +1553,7 @@
               ]
           }, {
               name: 'groupLists',
-              css: 'btn-group',
+              css: 'btn-group mr-1',
               data: [
                   {
                       name: 'cmdList',
@@ -1566,7 +1561,7 @@
                       title: 'Unordered List',
                       icon: {
                           glyph: 'glyphicon glyphicon-list',
-                          fa: 'fa fa-list',
+                          fa: 'fal fa-list',
                           'fa-3': 'icon-list-ul',
                           octicons: 'octicon octicon-list-unordered'
                       },
@@ -1620,7 +1615,7 @@
                       title: 'Ordered List',
                       icon: {
                           glyph: 'glyphicon glyphicon-th-list',
-                          fa: 'fa fa-list-ol',
+                          fa: 'fal fa-list-ol',
                           'fa-3': 'icon-list-ol',
                           octicons: 'octicon octicon-list-ordered'
                       },
@@ -1674,7 +1669,7 @@
               ]
           }, {
               name: 'groupBlocks',
-              css: 'btn-group',
+              css: 'btn-group mr-1',
               data: [
                   {
                       name: 'cmdBlockquote',
@@ -1743,7 +1738,7 @@
                       },
                       icon: {
                           glyph: 'glyphicon glyphicon-comment',
-                          fa: 'fa fa-quote-left',
+                          fa: 'fal fa-quote-left',
                           'fa-3': 'icon-quote-left',
                           octicons: 'octicon octicon-quote'
                       },
@@ -1760,7 +1755,7 @@
                       title: 'Code',
                       icon: {
                           glyph: 'glyphicon glyphicon-console',
-                          fa: 'fa fa-code',
+                          fa: 'fal fa-code',
                           'fa-3': 'icon-code',
                           octicons: 'octicon octicon-code'
                       },
@@ -1804,7 +1799,7 @@
               ]
           }, {
               name: 'groupInsert',
-              css: 'btn-group',
+              css: 'btn-group mr-1',
               data: [
                   {
                       name: 'cmdLink',
@@ -1812,7 +1807,7 @@
                       hotkey: 'Ctrl+L',
                       icon: {
                           glyph: 'glyphicon glyphicon-link',
-                          fa: 'fa fa-link',
+                          fa: 'fal fa-link',
                           'fa-3': 'icon-link',
                           octicons: 'octicon octicon-link'
                       },
@@ -1852,7 +1847,7 @@
                       hotkey: 'Ctrl+G',
                       icon: {
                           glyph: 'glyphicon glyphicon-picture',
-                          fa: 'fa fa-picture-o',
+                          fa: 'fal fa-image',
                           'fa-3': 'icon-picture',
                           octicons: 'octicon octicon-file-media'
                       },
@@ -1904,7 +1899,7 @@
                        },
                        icon: {
                            glyph: 'glyphicon glyphicon-search',
-                           fa: 'fa fa-youtube',
+                           fa: 'fab fa-youtube',
                            'fa-3': 'icon-search',
                            octicons: 'octicon octicon-search'
                        },
@@ -1970,7 +1965,7 @@
               ]
           }, {
               name: 'groupEmbed',
-              css: 'btn-group btn-group-right',
+              css: 'btn-group mr-1',
               data: [
                   {
                       name: 'cmdLinkContent',
@@ -1986,7 +1981,7 @@
                       },
                       icon: {
                           glyph: 'glyphicon glyphicon-search',
-                          fa: 'fa fa-hashtag',
+                          fa: 'fal fa-hashtag',
                           'fa-3': 'icon-search',
                           octicons: 'octicon octicon-search'
                       },
@@ -2038,14 +2033,14 @@
                           title: "Canned Replies",
                           width: "250px",
                           height: "350px",
-                          css: "i-dropdown-menu-right",
+                          css: "dropdown-right",
                           items: null,
                           html:
                               '<div class="i-loader-jumbo"><div class="i-loader i-loader-2x i-loader-inverted"></div></div>',
                       },
                       icon: {
                           glyph: 'glyphicon glyphicon-search',
-                          fa: 'fa fa-edit',
+                          fa: 'fal fa-edit',
                           'fa-3': 'icon-search',
                           octicons: 'octicon octicon-search'
                       },
@@ -2053,28 +2048,28 @@
 
                           var ajaxUrl = editor.$textarea.data("standardReplyUrl");
                           if (ajaxUrl) {
-                              $target.idropdown({
-                                      ajaxUrl: ajaxUrl,
-                                      onLoad: function($sender, $dropdown) {
+                              //$target.idropdown({
+                              //        ajaxUrl: ajaxUrl,
+                              //        onLoad: function($sender, $dropdown) {
 
-                                          $dropdown.find(".i-dropdown-link")
-                                              .click(function(e) {
-                                                  var replyId = $(this).data("replyId") || 0;
-                                                  if (replyId > 0) {
-                                                      e.preventDefault();
-                                                      var $template =
-                                                          $('div[data-reply-markdown-id="' + replyId + '"]');
-                                                      if ($template.length > 0) {
-                                                          $.fn.markdown.handlers
-                                                              .insertContent(editor, $template.html());
-                                                          $sender.idropdown("hide");
-                                                      }
-                                                  }
-                                              });
+                              //            $dropdown.find(".i-dropdown-link")
+                              //                .click(function(e) {
+                              //                    var replyId = $(this).data("replyId") || 0;
+                              //                    if (replyId > 0) {
+                              //                        e.preventDefault();
+                              //                        var $template =
+                              //                            $('div[data-reply-markdown-id="' + replyId + '"]');
+                              //                        if ($template.length > 0) {
+                              //                            $.fn.markdown.handlers
+                              //                                .insertContent(editor, $template.html());
+                              //                            $sender.idropdown("hide");
+                              //                        }
+                              //                    }
+                              //                });
 
-                                      }
-                                  },
-                                  "show");
+                              //        }
+                              //    },
+                              //    "show");
 
                           } else {
                               alert("No data-standard-reply-url has been defined on the editor.$textarea");
@@ -2101,7 +2096,7 @@
         fullscreenOn: {
           name: "fullscreenOn",
           icon: {
-            fa: 'fa fa-expand',
+            fa: 'fal fa-expand',
             glyph: 'glyphicon glyphicon-fullscreen',
             'fa-3': 'icon-resize-full',
             octicons: 'octicon octicon-link-external'
@@ -2110,7 +2105,7 @@
         fullscreenOff: {
           name: "fullscreenOff",
           icon: {
-              fa: 'fa fa-compress',
+              fa: 'fal fa-compress',
             glyph: 'glyphicon glyphicon-fullscreen',
             'fa-3': 'icon-resize-small',
             octicons: 'octicon octicon-browser'

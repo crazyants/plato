@@ -45,29 +45,26 @@
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="@Model.Email" class="form-control-label font-weight-bold"></label>
+                <label asp-for="@Model.Email" class="font-weight-bold"></label>
                 <span asp-validation-for="@Model.Email" class="text-danger float-xl-right"></span>
                 <input asp-for="@Model.Email" value="@Model.Email" placeholder="@T["email@address.com"]" class="form-control d-block" />
             </div>
             <div class="form-group">
-                <label asp-for="@Model.UserName" class="form-control-label font-weight-bold"></label>
+                <label asp-for="@Model.UserName" class="col-form-label font-weight-bold"></label>
                 <span asp-validation-for="@Model.UserName" class="text-danger float-xl-right"></span>
                 <input asp-for="@Model.UserName" value="@Model.UserName" placeholder="@T["Username"]" class="form-control" />
 
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Password" class="form-control-label font-weight-bold"></label>
+                <label asp-for="@Model.Password" class="col-form-label font-weight-bold"></label>
                 <span asp-validation-for="@Model.Password" class="text-danger float-xl-right"></span>
                 <input asp-for="@Model.Password" class="form-control" placeholder="@T["Password"]" />
-
             </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label asp-for="@Model.RememberMe">
-                        <input asp-for="@Model.RememberMe" />
-                        @T["Remember me"]
-                    </label>
-                </div>
+            <div class="form-check">
+                <label asp-for="@Model.RememberMe">
+                    <input asp-for="@Model.RememberMe" />
+                    @T["Remember me"]
+                </label>
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-lg btn-primary btn-block">@T["Login"]</button>

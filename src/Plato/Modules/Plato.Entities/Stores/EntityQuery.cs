@@ -1,70 +1,67 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models.Roles;
 using Plato.Internal.Stores.Abstractions;
-using Plato.Internal.Models.Users;
 
-namespace Plato.Internal.Stores.Users
+namespace Plato.Entities.Stores
 {
-    
-    #region "UserQuery"
 
-    public class UserQuery : DefaultQuery
+    #region "EntityQuery"
+
+    public class EntityQuery : DefaultQuery
     {
 
-        private readonly IStore<User> _store;
-        
-        public UserQuery(IStore<User> store) 
+        private readonly IStore<Entity> _store;
+
+        public EntityQuery(IStore<Entity> store)
         {
             _store = store;
         }
 
-        public UserQueryParams Params { get; set; }
+        public EntityQueryParams Params { get; set; }
 
         public override IQuery Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
-            Params = (UserQueryParams) Convert.ChangeType(defaultParams, typeof(UserQueryParams));
+            Params = (EntityQueryParams)Convert.ChangeType(defaultParams, typeof(EntityQueryParams));
             return this;
         }
 
         public override async Task<IPagedResults<T>> ToList<T>()
         {
 
-            var builder = new UserQueryBuilder(this);
+            var builder = new EntityQueryBuilder(this);
             var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
 
-            var users = await _store.SelectAsync<T>(
+            var data = await _store.SelectAsync<T>(
                 PageIndex,
                 PageSize,
                 startSql,
                 populateSql,
                 countSql,
                 Params.Id.Value,
-                Params.UserName.Value,
-                Params.Email.Value
+                Params.RoleName.Value
             );
-            
-            return users;
+
+            return data;
         }
     }
 
     #endregion
 
-    #region "UserQueryParams"
+    #region "EntityQueryParams"
 
-    public class UserQueryParams
+    public class EntityQueryParams
     {
 
-        private WhereString _email;
+
         private WhereInt _id;
-        private WhereString _userName;
-        private WhereInt _roleId;
         private WhereString _roleName;
 
         public WhereInt Id
@@ -73,46 +70,28 @@ namespace Plato.Internal.Stores.Users
             set => _id = value;
         }
 
-        public WhereString UserName
-        {
-            get => _userName ?? (_userName = new WhereString());
-            set => _userName = value;
-        }
-
-        public WhereString Email
-        {
-            get => _email ?? (_email = new WhereString());
-            set => _email = value;
-        }
-
-        public WhereInt RoleId
-        {
-            get => _roleId ?? (_roleId = new WhereInt());
-            set => _roleId = value;
-        }
-
         public WhereString RoleName
         {
             get => _roleName ?? (_roleName = new WhereString());
             set => _roleName = value;
         }
-        
+
     }
 
     #endregion
 
-    #region "UserQueryBuilder"
+    #region "EntityQueryBuilder"
 
-    public class UserQueryBuilder : IQueryBuilder
+    public class EntityQueryBuilder : IQueryBuilder
     {
         #region "Constructor"
 
         private readonly string _tableName;
-        private const string TableName = "Users";
+        private const string TableName = "Roles";
 
-        private readonly UserQuery _query;
+        private readonly EntityQuery _query;
 
-        public UserQueryBuilder(UserQuery query)
+        public EntityQueryBuilder(EntityQuery query)
         {
             _query = query;
             _tableName = !string.IsNullOrEmpty(_query.TablePrefix)
@@ -189,11 +168,11 @@ namespace Plato.Internal.Stores.Users
             return sb.ToString();
 
         }
-        
+
         private string BuildWhereClause()
         {
             var sb = new StringBuilder();
-         
+
 
             if (_query.Params.Id.Value > 0)
             {
@@ -202,18 +181,11 @@ namespace Plato.Internal.Stores.Users
                 sb.Append(_query.Params.Id.ToSqlString("Id"));
             }
 
-            if (!string.IsNullOrEmpty(_query.Params.UserName.Value))
+            if (!string.IsNullOrEmpty(_query.Params.RoleName.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.UserName.Operator);
-                sb.Append(_query.Params.UserName.ToSqlString("UserName"));
-            }
-
-            if (!string.IsNullOrEmpty(_query.Params.Email.Value))
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Email.Operator);
-                sb.Append(_query.Params.Email.ToSqlString("Email"));
+                    sb.Append(_query.Params.RoleName.Operator);
+                sb.Append(_query.Params.RoleName.ToSqlString("RoleName"));
             }
 
             return sb.ToString();

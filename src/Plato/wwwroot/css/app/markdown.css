@@ -1,33 +1,30 @@
 
 .md-editor {
-    float: left;
     width: 100%;
-    border-width: 1px;
+    border-width: 2px;
     border-style: solid;
     color: #222;
     background: white;
 }
 
 .md-editor .md-header,
+.md-editor .btn-toolbar,
 .md-editor .md-footer,
 .md-editor .md-preview,
-.md-editor .i-input,
-.md-editor .dz-message { float: left; width: 100%; text-align: left; }
+.md-editor .md-textarea,
+.md-editor .dz-message { display: block; text-align: left; }
 
-.md-editor .md-header .hidden { display: none; }
+
+.md-editor .btn-toolbar,
+.md-editor.md-fullscreen-mode .btn-toolbar { background: #fff; }
+
+.md-editor > .btn-toolbar .btn { background: white; border: 1px solid #ddd; }
 
 .md-editor .md-preview { max-height: 600px; }
-.md-header .i-btn-group { margin: 0 4px;  }
-.md-header .i-btn i { font-size: 10pt; min-width: 24px; }
-.md-header .i-btn i.fa-angle-down { min-width: initial; }
-.md-header .i-btn-default { color: #000; background-color: transparent; border-color: transparent; }
-.md-header .i-btn.disabled { display: none;  }
-
-.md-editor > .md-header .md-tabs .i-btn.selected {  }
 
 .md-editor .md-footer, 
 .md-editor > .md-header {
-    padding: 4px 0px;
+    padding: 6px;
     box-shadow: none;
 }
 
@@ -35,10 +32,18 @@
 .md-editor .md-footer, 
 .md-editor > .md-header,
 .md-editor > .dz-message {
-     border-color: #ddd;
+     border-color:#ddd;
 }
 
-.md-editor > .md-header  { border-bottom-width: 1px;border-style: solid; }
+.md-editor.active {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+
+
+.md-editor > .md-header  { border-width: 0; border-bottom-width: 1px;border-style: solid; }
 .md-editor > .md-footer,
 .md-editor > .dz-message  { border-top-width: 1px;border-style: solid; }
 
@@ -115,7 +120,6 @@
 }
 
 .md-editor.md-fullscreen-mode .md-header {
-    background: 0 0;
     text-align: center;
     position: fixed;
     width: 100%;

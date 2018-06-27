@@ -7,6 +7,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Entities.Handlers;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
@@ -33,6 +34,7 @@ namespace Plato.Entities
 
             // Data Repositories
             services.AddScoped<IEntityRepository<Entity>, EntityRepository>();
+            services.AddScoped<IEntityStore<Entity>, EntityStore>();
 
             // Data Stores
 

@@ -1,12 +1,20 @@
 ﻿
 
+/* Drop downs */
 
-.dropdown-item:hover, .dropdown-item:focus {
+.dropdown-menu {
+    box-shadow: 0 0 10px 1px rgba(50, 50, 50, 0.2);
+}
+
+.dropdown-item:hover, 
+.dropdown-item:focus {
     color: #fff;
     text-decoration: none;
     background-color: #007bff;
 }
 
+
+/* avatar */
 
 .avatar {
     width: 42px;
