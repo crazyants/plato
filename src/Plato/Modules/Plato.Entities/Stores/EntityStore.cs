@@ -12,7 +12,7 @@ namespace Plato.Entities.Stores
     public class EntityStore : IEntityStore<Entity>
     {
 
-        private const string Key = "Entity";
+        private string _key = "Entity";
 
         private readonly IEntityRepository<Entity> _entityRepository;
         private readonly ILogger<EntityStore> _logger;
@@ -37,13 +37,27 @@ namespace Plato.Entities.Stores
         public async Task<Entity> CreateAsync(Entity entity)
         {
 
-            return await _entityRepository.InsertUpdateAsync(entity);
+            var output = await _entityRepository.InsertUpdateAsync(entity);
+            if (output != null)
+            {
+                _cacheDependency.CancelToken(GetEntityCacheKey());
+            }
+
+            return output;
 
         }
 
         public async Task<Entity> UpdateAsync(Entity entity)
         {
-            return await _entityRepository.InsertUpdateAsync(entity);
+            var output = await _entityRepository.InsertUpdateAsync(entity);
+
+            if (output != null)
+            {
+                _cacheDependency.CancelToken(GetEntityCacheKey());
+            }
+
+            return output;
+
         }
 
         public async Task<bool> DeleteAsync(Entity entity)
@@ -51,7 +65,7 @@ namespace Plato.Entities.Stores
             var success = await _entityRepository.DeleteAsync(entity.Id);
             if (success)
             {
-                //_cacheDependency.CancelToken(CacheKey.GetRolesByUserIdCacheKey(model.UserId));
+                _cacheDependency.CancelToken(GetEntityCacheKey());
             }
 
             return success;
@@ -70,8 +84,9 @@ namespace Plato.Entities.Stores
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
         {
-          
-            return await _memoryCache.GetOrCreateAsync(Key, async (cacheEntry) =>
+
+            var key = GetEntityCacheKey();
+            return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
             {
                 var roles = await _entityRepository.SelectAsync<T>(args);
                 if (roles != null)
@@ -79,14 +94,22 @@ namespace Plato.Entities.Stores
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
                         _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, Key);
+                            _memoryCache.GetType().Name, key);
                     }
                 }
-                cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(Key));
+                cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
                 return roles;
             });
 
         }
+
+
+        private string GetEntityCacheKey()
+        {
+            return $"{_key}";
+        }
+
+
 
     }
 

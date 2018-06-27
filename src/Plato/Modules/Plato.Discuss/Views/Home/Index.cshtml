@@ -12,25 +12,52 @@
 <strong>Feature Version </strong> @ViewBag.Feature.Version
 <br />
 
-<hr/>
+<hr />
 
-<br/>
 
-<div class="row">
-    <div class="col-12">
 
-        <fieldset>
-            <div class="form-group">
-                <input id="title" type="text" class="form-control" placeholder="@T["Title"]" />
-            </div>
-            <div class="form-group">
-                <textarea id="message" class="form-control md-textarea" placeholder="Post your comments here..." rows="12"></textarea>
-            </div>
-            <div class="form-group mt-4">
-                <button type="submit" class="btn btn-lg btn-primary">@T["Submit"]</button>
-            </div>
-        </fieldset>
-    
-    </div>
-</div>
+<card title="@T["Users"]">
+
+    @if (Model.Results != null)
+    {
+        <ul class="list-group list-group-flush list-group-hover">
+            @foreach (var entity in Model.Results.Data)
+            {
+                <li class="list-group-item">
+
+                    <h6>
+                        @entity.Title
+                    </h6>
+                    <p class="text-muted">
+                        @entity.PlainText
+                    </p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <h6>@T["No discussions found"]</h6>
+    }
+
+</card>
+
+
+<br />
+
+<card title="@T["Post Reply"]">
+
+    <fieldset>
+        <div class="form-group">
+            <input id="title" type="text" class="form-control" placeholder="@T["Title"]" />
+        </div>
+        <div class="form-group">
+            <textarea id="message" class="form-control md-textarea" placeholder="Post your comments here..." rows="12"></textarea>
+        </div>
+        <div class="form-group mt-4">
+            <button type="submit" class="btn btn-lg btn-primary">@T["Submit"]</button>
+        </div>
+    </fieldset>
+
+</card>
 

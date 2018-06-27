@@ -87,7 +87,7 @@ namespace Plato.Entities.Stores
         #region "Constructor"
 
         private readonly string _tableName;
-        private const string TableName = "Roles";
+        private const string TableName = "Entities";
 
         private readonly EntityQuery _query;
 

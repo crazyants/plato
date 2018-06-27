@@ -6,6 +6,12 @@
     <title>@ViewData["Title"] - Plato</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- resources -->
+    <resources section="Header" />
+    <!-- resources -->
+    
+    <!--
     <environment names="Development">
         <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />
         <link rel="stylesheet" href="~/css/vendors/font-awesome.css" />
@@ -22,74 +28,80 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/dist/css/app.min.css" asp-append-version="true" />
     </environment>
+    -->
+
     @RenderSection("ModuleCSS", required: false)
 </head>
 <body>
-    
-<div class="collapse" id="navbar-header">
-    <div class="container-fluid bg-dark p-1">
-        <h3>Collapsed content</h3>
-        <p>Toggleable via the navbar brand.</p>
-    </div>
-</div>
-    
-<div class="nav nav-tabs">
-    <div class="container">
-        <div class="row">
-            <div class="navbar col-12" role="navigation">
-                <a class="navbar-brand" href="#">
-                    @T["Plato"]
-                </a>
-                <div class="float-right">
-                    <navigation name="site" class="nav nav-h nav-pills float-left"/>
-                    <ul class="nav nav-pills float-right">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item dropdown">
-                                <form asp-route-area="Plato.Users" asp-controller="Account" asp-action="LogOff" method="post">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">@User.Identity.Name<b class="caret"></b></a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" asp-route-area="Plato.Users" asp-controller="Profile" asp-action="Index">@T["Profile"]</a>
-                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Account"]</a>
-                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Messages"]</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">@T["Dashboard"]</a>
-                                        <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
-                                    </div>
-                                </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item hidden-sm-down">
-                                <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
-                            </li>
-                            <li class="navbar-divider hidden-sm-down"></li>
-                            <li class="nav-item hidden-sm-down">
-                                <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
-                            </li>
 
-                        }
-                        <li class="nav-item">
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="@T["Toggle navigation"]"></button>
-                        </li>
-                    </ul>
+    <div class="collapse" id="navbar-header">
+        <div class="container-fluid bg-dark p-1">
+            <h3>Collapsed content</h3>
+            <p>Toggleable via the navbar brand.</p>
+        </div>
+    </div>
+
+    <div class="nav nav-tabs">
+        <div class="container">
+            <div class="row">
+                <div class="navbar col-12" role="navigation">
+                    <a class="navbar-brand" href="#">
+                        @T["Plato"]
+                    </a>
+                    <div class="float-right">
+                        <navigation name="site" class="nav nav-h nav-pills float-left" />
+                        <ul class="nav nav-pills float-right">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item dropdown">
+                                    <form asp-route-area="Plato.Users" asp-controller="Account" asp-action="LogOff" method="post">
+                                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">@User.Identity.Name<b class="caret"></b></a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-controller="Profile" asp-action="Index">@T["Profile"]</a>
+                                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Account"]</a>
+                                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Messages"]</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">@T["Dashboard"]</a>
+                                            <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
+                                        </div>
+                                    </form>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item hidden-sm-down">
+                                    <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                                </li>
+                                <li class="navbar-divider hidden-sm-down"></li>
+                                <li class="nav-item hidden-sm-down">
+                                    <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
+                                </li>
+
+                            }
+                            <li class="nav-item">
+                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="@T["Toggle navigation"]"></button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="container">
-    <div class="pt-5">
-        @RenderBody()
-        <hr/>
-        <footer>
-            <p>&copy; @System.DateTime.Now.Year - Plato</p>
-        </footer>
+    <div class="container">
+        <div class="pt-5">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @System.DateTime.Now.Year - Plato</p>
+            </footer>
+        </div>
     </div>
-</div>
+    
+    <resources section="Footer" />
 
+    
+<!--
 <environment names="Development">
     <script src="~/js/vendors/jquery.js"></script>
     <script src="~/js/vendors/bootstrap.js"></script>
@@ -100,16 +112,17 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
             asp-fallback-src="~/js/vendors/jquery.min.js"
             asp-fallback-test="window.jQuery">
-    </script>
+        </script>
     <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.0.0/bootstrap.js"
             asp-fallback-src="~/js/vendors/bootstrap.min.js"
             asp-fallback-test="window.BS">
-    </script>
+        </script>
     <script src="~/js/app.min.js" asp-append-version="true">
-    </script>
+        </script>
 </environment>
-   
-@RenderSection("scripts", required: false)
+-->
+
+    @RenderSection("scripts", required: false)
 
 </body>
 </html>

@@ -1,17 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using Plato.Internal.Abstractions.Settings;
+﻿using System;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
-using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
-using Plato.Internal.Stores.Users;
 
 namespace Plato.Discuss.Controllers
 {
@@ -43,15 +41,18 @@ namespace Plato.Discuss.Controllers
             var feature = await _contextFacade.GetCurrentFeatureAsync();
 
             ViewBag.Feature = feature;
-
+            
+            var rnd = new Random();
             var entity = new Entity()
             {
                 FeatureId = feature.Id,
-                Title = "test",
-                Markdown = "TExt"
+                Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
+                Markdown = "Test message " + rnd.Next(0, 100000).ToString(),
+                Html = "Test message " + rnd.Next(0, 100000).ToString(),
+                PlainText = "Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message  " + rnd.Next(0, 100000).ToString()
             };
 
-            await _entityRepository.InsertUpdateAsync(entity);
+            var newEntity = await _entityStore.CreateAsync(entity);
 
             var pagerOptions = new PagerOptions()
             {
@@ -59,12 +60,14 @@ namespace Plato.Discuss.Controllers
                 PageSize = 20
             };
 
-            IPagedResults<Entity> model = await GetEntities(pagerOptions);
+            var model = new DiscussIndexViewModel()
+            {
+                Results = await GetEntities(pagerOptions)
+            };
             
+            return View(model);
 
-            return View();
         }
-
         
 
         public IActionResult About()
@@ -101,7 +104,7 @@ namespace Plato.Discuss.Controllers
                     // q.Email.IsIn("email440@address.com,email420@address.com");
                     // q.Id.Between(1, 5);
                 })
-                .OrderBy("Id", OrderBy.Asc)
+                .OrderBy("Id", OrderBy.Desc)
                 .ToList<Entity>();
         }
 

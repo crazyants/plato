@@ -1,4 +1,30 @@
 ﻿[
+  /* jquery */
+  {
+    "inputFiles": [
+      "bower_components/jquery/dist/jquery.js",
+      "bower_components/jquery-validation/dist/jquery.validate.js",
+      "bower_components/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"
+    ],
+    "outputFileName": "wwwroot/js/vendors/jquery.js",
+    "minify": {
+      "enabled": false
+    },
+    "sourceMap": false
+  },
+  {
+    "inputFiles": [
+      "bower_components/jquery/dist/jquery.js",
+      "bower_components/jquery-validation/dist/jquery.validate.js",
+      "bower_components/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"
+    ],
+    "outputFileName": "wwwroot/js/vendors/jquery.min.js",
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
   /* bootstrap css */
   {
     "inputFiles": [
@@ -62,14 +88,12 @@
       "adjustRelativePaths": false
     }
   },
-  /* jquery */
+  /* vue */
   {
     "inputFiles": [
-      "bower_components/jquery/dist/jquery.js",
-      "bower_components/jquery-validation/dist/jquery.validate.js",
-      "bower_components/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"
+      "bower_components/vue-2.5.16/dist/vue.js"
     ],
-    "outputFileName": "wwwroot/js/vendors/jquery.js",
+    "outputFileName": "wwwroot/js/vendors/vue.js",
     "minify": {
       "enabled": false
     },
@@ -77,11 +101,9 @@
   },
   {
     "inputFiles": [
-      "bower_components/jquery/dist/jquery.js",
-      "bower_components/jquery-validation/dist/jquery.validate.js",
-      "bower_components/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"
+      "bower_components/vue-2.5.16/dist/vue.js"
     ],
-    "outputFileName": "wwwroot/js/vendors/jquery.min.js",
+    "outputFileName": "wwwroot/js/vendors/vue.min.js",
     "minify": {
       "enabled": true,
       "renameLocals": true
@@ -112,7 +134,7 @@
     },
     "sourceMap": false
   },
-  /* site */
+  /* site css */
   {
     "inputFiles": [
       "wwwroot/js/app/plato.css",
@@ -124,10 +146,29 @@
       "adjustRelativePaths": false
     }
   },
+  /* site js */
   {
     "inputFiles": [
-      "wwwroot/js/app/plato.js",
-      "wwwroot/js/app/markdown.js"
+      "wwwroot/js/vendors/jquery.js",
+      "wwwroot/js/vendors/bootstrap.js",
+      "wwwroot/js/vendors/vue.js",
+      "wwwroot/js/app/markdown.js",
+      "wwwroot/js/app/plato.js"
+    ],
+    "outputFileName": "wwwroot/js/app.js",
+    "minify": {
+      "enabled": false,
+      "renameLocals": false
+    },
+    "sourceMap": false
+  },
+  {
+    "inputFiles": [
+      "wwwroot/js/vendors/jquery.js",
+      "wwwroot/js/vendors/bootstrap.js",
+      "wwwroot/js/vendors/vue.js",
+      "wwwroot/js/app/markdown.js",
+      "wwwroot/js/app/plato.js"
     ],
     "outputFileName": "wwwroot/js/app.min.js",
     "minify": {

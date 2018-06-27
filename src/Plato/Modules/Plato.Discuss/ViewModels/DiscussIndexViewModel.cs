@@ -9,7 +9,7 @@ namespace Plato.Discuss.ViewModels
     public class DiscussIndexViewModel
     {
 
-        public IPagedResults<Entity> Data { get; set; }
+        public IPagedResults<Entity> Results { get; set; }
 
 
     }

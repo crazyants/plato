@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Plato.Internal.Modules
+﻿namespace Plato.Internal.Modules
 {
     public class ModuleOptions
     {

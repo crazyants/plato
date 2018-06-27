@@ -62,8 +62,8 @@ namespace Plato.Internal.Theming
         void LoadThemeDescriptors()
         {
             _themeDescriptors = _themeLocator.LocateThemes(
-             new string[] { _contentRootPath + "\\" + _virtualPathToModules },
-             "Themes", "theme.txt", false);
+                new string[] {_contentRootPath + "\\" + _virtualPathToModules},
+                "Themes", "theme.txt", false);
         }
 
         #endregion
