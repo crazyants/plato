@@ -28,8 +28,7 @@ namespace Plato.Internal.Modules.Extensions
 
 
         public static void UseModuleStaticFiles(
-            this IApplicationBuilder app,
-            IHostingEnvironment env)
+            this IApplicationBuilder app, IHostingEnvironment env)
         {
             var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
             var modules = moduleManager.LoadModulesAsync().Result;
@@ -37,9 +36,11 @@ namespace Plato.Internal.Modules.Extensions
             {
 
                 // serve static files within module folders
-                var contentPath = Path.Combine(env.ContentRootPath,
+                var contentPath = Path.Combine(
+                    env.ContentRootPath,
                     moduleEntry.Descriptor.Location,
-                    moduleEntry.Descriptor.Id, "Content");
+                    moduleEntry.Descriptor.Id, 
+                    "Content");
 
                 if (Directory.Exists(contentPath))
                 {

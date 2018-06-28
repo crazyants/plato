@@ -17,7 +17,7 @@ namespace Plato.Theming.Resources
             _siteSettingsStore = siteSettingsStore;
         }
 
-        public async Task<IEnumerable<ResourceGroup>> GetResourceGroups()
+        public async Task<IEnumerable<ResourceEnvironment>> GetResourceGroups()
         {
 
             var themeName = await GetThemeNameAsync();
@@ -26,11 +26,11 @@ namespace Plato.Theming.Resources
                 return null;
             }
 
-            return new List<ResourceGroup>
+            return new List<ResourceEnvironment>
             {
 
                 // Development
-                new ResourceGroup(Environment.Development, new List<Resource>()
+                new ResourceEnvironment(Environment.Development, new List<Resource>()
                 {
                     new Resource()
                     {
@@ -41,7 +41,7 @@ namespace Plato.Theming.Resources
                 }),
 
                 // Staging
-                new ResourceGroup(Environment.Staging, new List<Resource>()
+                new ResourceEnvironment(Environment.Staging, new List<Resource>()
                 {
                     /* Css */
                     new Resource()
@@ -53,7 +53,7 @@ namespace Plato.Theming.Resources
                 }),
 
                 // Production
-                new ResourceGroup(Environment.Production, new List<Resource>()
+                new ResourceEnvironment(Environment.Production, new List<Resource>()
                 {
                     /* Css */
                     new Resource()

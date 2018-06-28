@@ -5,14 +5,14 @@ namespace Plato.Internal.Resources.Abstractions
     public class DefaultResources
     {
 
-        public static IEnumerable<ResourceGroup> GetDefaultResources()
+        public static IEnumerable<ResourceEnvironment> GetDefaultResources()
         {
 
-            return new List<ResourceGroup>
+            return new List<ResourceEnvironment>
             {
 
                 // Development
-                new ResourceGroup(Environment.Development, new List<Resource>()
+                new ResourceEnvironment(Environment.Development, new List<Resource>()
                 {
                     /* Css */
 
@@ -76,7 +76,7 @@ namespace Plato.Internal.Resources.Abstractions
                 }),
 
                 // Staging
-                new ResourceGroup(Environment.Staging, new List<Resource>()
+                new ResourceEnvironment(Environment.Staging, new List<Resource>()
                 {
                     /* Css */
                     new Resource()
@@ -95,7 +95,7 @@ namespace Plato.Internal.Resources.Abstractions
                 }),
 
                 // Production
-                new ResourceGroup(Environment.Production, new List<Resource>()
+                new ResourceEnvironment(Environment.Production, new List<Resource>()
                 {
                     /* Css */
                     new Resource()

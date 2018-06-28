@@ -17,7 +17,7 @@
     <Content Remove="Assets\**" />
     <EmbeddedResource Remove="Assets\**" />
     <None Remove="Assets\**" />
-    <Content Include="Themes\Default\Content\css\theme.css" />
+    <Content Include="Themes\Default\theme.css" />
     <None Update="wwwroot\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
@@ -61,6 +61,7 @@
     <Folder Include="App_Data\Schemas\1.0.0\rollback\" />
     <Folder Include="App_Data\Schemas\1.0.0\upgrade\" />
     <Folder Include="App_Data\Sites\" />
+    <Folder Include="Themes\Default\Content\css\" />
   </ItemGroup>
 
   <ItemGroup>

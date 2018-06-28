@@ -30,8 +30,7 @@ namespace Plato.Internal.Layout.TagHelpers
         }
 
         #endregion
-
-
+        
         #region "Implementation"
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -45,6 +44,7 @@ namespace Plato.Internal.Layout.TagHelpers
             var resources = await GetResourcesAsync();
             if (resources != null)
             {
+                var i = 1;
                 foreach (var resource in resources)
                 {
                     switch (resource.Type)
@@ -53,22 +53,33 @@ namespace Plato.Internal.Layout.TagHelpers
                         case ResourceType.JavaScript:
                             
                             sw.Write(BuildJavaScriptInclude(resource));
-                            sw.Write(sw.NewLine);
+                            if (i < resources.Count)
+                            {
+                                sw.Write(sw.NewLine);
+                            }
                             break;
 
                         case ResourceType.Css:
 
                             sw.Write(BuildCssInclude(resource));
-                            sw.Write(sw.NewLine);
+                            if (i < resources.Count)
+                            {
+                                sw.Write(sw.NewLine);
+                            }
                             break;
 
                         case ResourceType.Meta:
 
                             sw.Write(BuildMeta(resource));
-                            sw.Write(sw.NewLine);
+                            if (i < resources.Count)
+                            {
+                                sw.Write(sw.NewLine);
+                            }
                             break;
 
                     }
+
+                    i++;
                 }
             }
 
@@ -80,7 +91,59 @@ namespace Plato.Internal.Layout.TagHelpers
         #endregion
 
         #region "Private Methods"
+        
+        // Get all resources matching environment and section
+        async Task<IList<Resource>> GetResourcesAsync()
+        {
 
+            // Get all default and provided environments
+            var environments = await GetMergedEnvironmentsAsync();
+
+            // Filter by environment
+            var matchingEnvironments = environments.FirstOrDefault(g => g.Environment == GetDeploymentMode());
+
+            // filter by section
+            return @matchingEnvironments?.Resources.Where(r => r.Section == Section).ToList();
+
+        }
+
+        async Task<IEnumerable<ResourceEnvironment>> GetMergedEnvironmentsAsync()
+        {
+            
+            // Get provided resources
+            var provided = await _resourceManager.GetResources();
+            var providedEnvironments = provided.ToList();
+
+            // Get default resources
+            var defaults = DefaultResources.GetDefaultResources();
+            var defaultEnvironments = defaults.ToList();
+
+            // Merge provided resources into default groups
+            var output = defaultEnvironments.ToDictionary(p => p.Environment);
+            foreach (var defaultEnvironment in defaultEnvironments)
+            {
+
+                // Get provided resources matching our current environment
+                var matchingEnvironments = providedEnvironments
+                    .Where(g => g.Environment == defaultEnvironment.Environment)
+                    .ToList();
+
+                // Interate through each matching provided environment adding
+                // resources from that environment into our default environments
+                foreach (var group in matchingEnvironments)
+                {
+                    foreach (var resource in group.Resources)
+                    {
+                        output[defaultEnvironment.Environment].Resources.Add(resource);
+                    }
+                }
+                
+            }
+
+            return output.Values.ToList();
+
+        }
+        
         Environment GetDeploymentMode()
         {
             if (_hostingEnvironment.IsProduction())
@@ -89,47 +152,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 return Environment.Staging;
             return Environment.Development;
         }
-
-        async Task<IList<Resource>> GetResourcesAsync()
-        {
-            var groups = await GetMergedResourcesAsync();
-            var group = groups.FirstOrDefault(g => g.Environment == GetDeploymentMode());
-            return @group?.Resources.Where(r => r.Section == Section).ToList();
-        }
-
-        async Task<IEnumerable<ResourceGroup>> GetMergedResourcesAsync()
-        {
-            
-            var provided = await _resourceManager.GetResources();
-            var defaults = DefaultResources.GetDefaultResources();
-            var defaultGroups = defaults.ToList();
-            var providedGroups = provided.ToList();
-
-            // Merge resources in provided groups with resources in default groups
-            var dict = defaultGroups.ToDictionary(p => p.Environment);
-            foreach (var defaultGroup in defaultGroups)
-            {
-
-                var matchingGroups = providedGroups
-                    .Where(g => g.Environment == defaultGroup.Environment)
-                    .ToList();
-             
-                foreach (var group in matchingGroups)
-                {
-                    foreach (var resource in group.Resources)
-                    {
-                        dict[defaultGroup.Environment].Resources.Add(resource);
-                    }
-                
-                }
-                
-            }
-
-            return dict.Values.ToList();
-
-        }
         
-
         IHtmlContent BuildJavaScriptInclude(Resource resource)
         {
             return new HtmlString($"<script src=\"{resource.Url}\"></script>");
@@ -146,8 +169,7 @@ namespace Plato.Internal.Layout.TagHelpers
         }
 
         #endregion
-
-
+        
     }
 
 }

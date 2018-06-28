@@ -288,6 +288,10 @@ namespace Plato.Internal.Hosting.Web.Extensions
             
             app.UseModuleStaticFiles(env);
 
+            // allow static files within current theme
+
+            app.UseThemeStaticFiles(env);
+
             // add custom features
 
             app.AddThemingApplicationParts();

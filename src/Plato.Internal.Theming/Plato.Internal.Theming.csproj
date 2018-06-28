@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Plato.Internal.FileSystem.Abstractions\Plato.Internal.FileSystem.Abstractions.csproj" />
   </ItemGroup>
 
+    <ItemGroup>
+  <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.3" />
+    </ItemGroup>
+  
 </Project>

@@ -22,10 +22,10 @@ namespace Plato.Internal.Resources
         }
 
 
-        public async Task<IEnumerable<ResourceGroup>> GetResources()
+        public async Task<IEnumerable<ResourceEnvironment>> GetResources()
         {
 
-            var output = new List<ResourceGroup>();
+            var output = new List<ResourceEnvironment>();
             foreach (var provider in _resourceProviders)
             {
                 try

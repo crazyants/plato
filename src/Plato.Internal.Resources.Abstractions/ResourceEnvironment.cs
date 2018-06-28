@@ -4,14 +4,14 @@ using System.Linq;
 namespace Plato.Internal.Resources.Abstractions
 {
     
-    public class ResourceGroup
+    public class ResourceEnvironment
     {
 
         public Environment Environment { get; set; }
 
         public IList<Resource> Resources { get; set; }
 
-        public ResourceGroup(Environment env, IEnumerable<Resource> resources)
+        public ResourceEnvironment(Environment env, IEnumerable<Resource> resources)
         {
             this.Environment = env;
             this.Resources = resources.ToList();

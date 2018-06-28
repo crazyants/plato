@@ -6,7 +6,7 @@ namespace Plato.Internal.Resources.Abstractions
 
     public interface IResourceProvider
     {
-        Task<IEnumerable<ResourceGroup>> GetResourceGroups();
+        Task<IEnumerable<ResourceEnvironment>> GetResourceGroups();
 
     }
 
