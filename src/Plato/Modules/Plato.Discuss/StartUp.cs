@@ -6,8 +6,10 @@ using Plato.Internal.Hosting;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Discuss.Handlers;
+using Plato.Discuss.Resources;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Resources.Abstractions;
 
 namespace Plato.Discuss
 {
@@ -29,6 +31,9 @@ namespace Plato.Discuss
             // register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
+
+            // Register client resources
+            services.AddScoped<IResourceProvider, ResourceProvider>();
 
         }
 

@@ -15,32 +15,50 @@
 <hr />
 
 
+<div id="app">
 
-<card title="@T["Users"]">
+</div>
 
-    @if (Model.Results != null)
-    {
-        <ul class="list-group list-group-flush list-group-hover">
-            @foreach (var entity in Model.Results.Data)
+<div class="row">
+    <div class="col-8">
+
+        <card title="@T["Topics"]">
+
+            @if (Model.Results != null)
             {
-                <li class="list-group-item">
+                <ul class="list-group list-group-flush list-group-hover">
+                    @foreach (var entity in Model.Results.Data)
+                    {
+                        <li class="list-group-item">
 
-                    <h6>
-                        @entity.Title
-                    </h6>
-                    <p class="text-muted">
-                        @entity.PlainText
-                    </p>
-                </li>
+                            <h5>
+                                @entity.Title
+                            </h5>
+                            <p class="text-muted">
+                                @entity.PlainText
+                            </p>
+                        </li>
+                    }
+                </ul>
             }
-        </ul>
-    }
-    else
-    {
-        <h6>@T["No discussions found"]</h6>
-    }
+            else
+            {
+                <h6>@T["No discussions found"]</h6>
+            }
 
-</card>
+        </card>
+    </div>
+    <div class="col-4">
+        
+        <card title="@T["Channels"]">
+
+        
+        </card>
+        
+
+    </div>
+</div>
+
 
 
 <br />

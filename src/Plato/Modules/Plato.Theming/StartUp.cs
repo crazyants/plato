@@ -21,6 +21,8 @@ namespace Plato.Theming
 
         public override void ConfigureServices(IServiceCollection services)
         {
+
+            // Register client resources
             services.AddScoped<IResourceProvider, ResourceProvider>();
 
         }

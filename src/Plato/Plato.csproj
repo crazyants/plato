@@ -14,9 +14,13 @@
   <ItemGroup>
     <Compile Remove="Assets\**" />
     <Compile Remove="modules\**\*;node_modules\**\*" />
+    <Compile Remove="Themes\Default\Content\**" />
     <Content Remove="Assets\**" />
+    <Content Remove="Themes\Default\Content\**" />
     <EmbeddedResource Remove="Assets\**" />
+    <EmbeddedResource Remove="Themes\Default\Content\**" />
     <None Remove="Assets\**" />
+    <None Remove="Themes\Default\Content\**" />
     <Content Include="Themes\Default\theme.css" />
     <None Update="wwwroot\**\*">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -61,7 +65,6 @@
     <Folder Include="App_Data\Schemas\1.0.0\rollback\" />
     <Folder Include="App_Data\Schemas\1.0.0\upgrade\" />
     <Folder Include="App_Data\Sites\" />
-    <Folder Include="Themes\Default\Content\css\" />
   </ItemGroup>
 
   <ItemGroup>

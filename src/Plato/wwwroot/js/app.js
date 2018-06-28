@@ -32018,7 +32018,8 @@ $.Plato.Logger = {
         if (!$.Plato.Options.debug) {
             return;
         }
-        console.log(level + ": " + message + (new Date().getTime() * 10000));
+        var ticks = (new Date().getTime() * 10000);
+        console.log(level + ": " + message + " - " + ticks);
     }
 }
 
@@ -32053,7 +32054,6 @@ $(function(win, doc, $) {
 /* --------------------*/
 /* Plato UI */
 /* --------------------*/
-
 
 $.Plato.UI = {
     context: null,

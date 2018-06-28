@@ -59,10 +59,10 @@ namespace Plato.Entities.Models
                 Markdown = Convert.ToString(dr["Markdown"]);
             
             if (dr.ColumnIsNotNull("Html"))
-                Markdown = Convert.ToString(dr["Html"]);
+                Html = Convert.ToString(dr["Html"]);
 
             if (dr.ColumnIsNotNull("PlainText"))
-                Markdown = Convert.ToString(dr["PlainText"]);
+                PlainText = Convert.ToString(dr["PlainText"]);
 
             if (dr.ColumnIsNotNull("IsPublic"))
                 IsPublic = Convert.ToBoolean(dr["IsPublic"]);
