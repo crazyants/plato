@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -18,7 +17,6 @@ using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Extensions;
 using Plato.Internal.FileSystem;
@@ -87,6 +85,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
                 internalServices.AddPlatoViewFeature();
                 internalServices.AddPlatoTagHelpers();
                 internalServices.AddPlatoResources();
@@ -313,29 +312,29 @@ namespace Plato.Internal.Hosting.Web.Extensions
             applicationPartManager.FeatureProviders.Add(themingViewsFeatureProvider);
         }
         
-        public static void UseModuleStaticFiles(
-            this IApplicationBuilder app,
-                IHostingEnvironment env)
-        {
-            var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
-            var modules = moduleManager.LoadModulesAsync().Result;
-            foreach (var moduleEntry in modules)
-            {
-                // serve static files within module folders
-                var contentPath = Path.Combine(env.ContentRootPath,
-                    moduleEntry.Descriptor.Location,
-                    moduleEntry.Descriptor.Id, "Content");
-                if (Directory.Exists(contentPath))
-                {
-                    app.UseStaticFiles(new StaticFileOptions
-                    {
-                        RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
-                        FileProvider = new PhysicalFileProvider(contentPath)
-                    });
-                }
-            }
+        //public static void UseModuleStaticFiles(
+        //    this IApplicationBuilder app,
+        //        IHostingEnvironment env)
+        //{
+        //    var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
+        //    var modules = moduleManager.LoadModulesAsync().Result;
+        //    foreach (var moduleEntry in modules)
+        //    {
+        //        // serve static files within module folders
+        //        var contentPath = Path.Combine(env.ContentRootPath,
+        //            moduleEntry.Descriptor.Location,
+        //            moduleEntry.Descriptor.Id, "Content");
+        //        if (Directory.Exists(contentPath))
+        //        {
+        //            app.UseStaticFiles(new StaticFileOptions
+        //            {
+        //                RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
+        //                FileProvider = new PhysicalFileProvider(contentPath)
+        //            });
+        //        }
+        //    }
             
-        }
+        //}
 
         private static void AddDefaultFrameworkParts(ApplicationPartManager partManager)
         {

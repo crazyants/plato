@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Resources.Abstractions;
+using Plato.Theming.Resources;
 
 namespace Plato.Theming
 {
@@ -19,7 +21,7 @@ namespace Plato.Theming
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            //services.AddScoped<ISetUpService, SetUpService>();
+            services.AddScoped<IResourceProvider, ResourceProvider>();
 
         }
 

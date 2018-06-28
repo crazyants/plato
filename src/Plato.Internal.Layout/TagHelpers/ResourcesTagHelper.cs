@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Plato.Internal.Resources;
 using Plato.Internal.Resources.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
@@ -25,7 +22,8 @@ namespace Plato.Internal.Layout.TagHelpers
         private readonly IHostingEnvironment _hostingEnvironment;
 
         public ResourcesTagHelper(
-            IResourceManager resourceManager, IHostingEnvironment hostingEnvironment)
+            IResourceManager resourceManager,
+            IHostingEnvironment hostingEnvironment)
         {
             _resourceManager = resourceManager;
             _hostingEnvironment = hostingEnvironment;
@@ -36,7 +34,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
         #region "Implementation"
 
-        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
 
             output.TagName = "";
@@ -44,7 +42,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
             var sw = new StringWriter();
          
-            var resources = GetResources();
+            var resources = await GetResourcesAsync();
             if (resources != null)
             {
                 foreach (var resource in resources)
@@ -76,30 +74,61 @@ namespace Plato.Internal.Layout.TagHelpers
 
             var sb = sw.GetStringBuilder();
             output.Content.SetHtmlContent(sb.ToString());
-
-            return Task.CompletedTask;
-
+            
         }
 
         #endregion
 
         #region "Private Methods"
 
-        DeploymentMode GetDeploymentMode()
+        Environment GetDeploymentMode()
         {
             if (_hostingEnvironment.IsProduction())
-                return DeploymentMode.Production;
+                return Environment.Production;
             if (_hostingEnvironment.IsStaging())
-                return DeploymentMode.Staging;
-            return DeploymentMode.Development;
+                return Environment.Staging;
+            return Environment.Development;
         }
 
-        IList<Resource> GetResources()
+        async Task<IList<Resource>> GetResourcesAsync()
         {
-            var groups = DefaultResources.GetDefaultResources().ToList();
-            var group = groups.FirstOrDefault(g => g.DeploymentMode == GetDeploymentMode());
+            var groups = await GetMergedResourcesAsync();
+            var group = groups.FirstOrDefault(g => g.Environment == GetDeploymentMode());
             return @group?.Resources.Where(r => r.Section == Section).ToList();
         }
+
+        async Task<IEnumerable<ResourceGroup>> GetMergedResourcesAsync()
+        {
+            
+            var provided = await _resourceManager.GetResources();
+            var defaults = DefaultResources.GetDefaultResources();
+            var defaultGroups = defaults.ToList();
+            var providedGroups = provided.ToList();
+
+            // Merge resources in provided groups with resources in default groups
+            var dict = defaultGroups.ToDictionary(p => p.Environment);
+            foreach (var defaultGroup in defaultGroups)
+            {
+
+                var matchingGroups = providedGroups
+                    .Where(g => g.Environment == defaultGroup.Environment)
+                    .ToList();
+             
+                foreach (var group in matchingGroups)
+                {
+                    foreach (var resource in group.Resources)
+                    {
+                        dict[defaultGroup.Environment].Resources.Add(resource);
+                    }
+                
+                }
+                
+            }
+
+            return dict.Values.ToList();
+
+        }
+        
 
         IHtmlContent BuildJavaScriptInclude(Resource resource)
         {

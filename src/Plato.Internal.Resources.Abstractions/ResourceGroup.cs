@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Plato.Internal.Resources.Abstractions
 {
@@ -6,18 +7,18 @@ namespace Plato.Internal.Resources.Abstractions
     public class ResourceGroup
     {
 
-        public DeploymentMode DeploymentMode { get; set; }
+        public Environment Environment { get; set; }
 
-        public IEnumerable<Resource> Resources { get; set; }
+        public IList<Resource> Resources { get; set; }
 
-        public ResourceGroup(DeploymentMode mode, IEnumerable<Resource> resources)
+        public ResourceGroup(Environment env, IEnumerable<Resource> resources)
         {
-            this.DeploymentMode = mode;
-            this.Resources = resources;
+            this.Environment = env;
+            this.Resources = resources.ToList();
         }
     }
     
-    public enum DeploymentMode
+    public enum Environment
     {
         Development,
         Staging,

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Plato.Internal.Resources.Abstractions
 {
     public interface IResourceManager
     {
 
-        IEnumerable<ResourceGroup> GetResources();
+        Task<IEnumerable<ResourceGroup>> GetResources();
 
     }
 

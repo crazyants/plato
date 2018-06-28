@@ -12,7 +12,7 @@ namespace Plato.Internal.Resources.Abstractions
             {
 
                 // Development
-                new ResourceGroup(DeploymentMode.Development, new List<Resource>()
+                new ResourceGroup(Environment.Development, new List<Resource>()
                 {
                     /* Css */
 
@@ -76,7 +76,7 @@ namespace Plato.Internal.Resources.Abstractions
                 }),
 
                 // Staging
-                new ResourceGroup(DeploymentMode.Staging, new List<Resource>()
+                new ResourceGroup(Environment.Staging, new List<Resource>()
                 {
                     /* Css */
                     new Resource()
@@ -95,7 +95,7 @@ namespace Plato.Internal.Resources.Abstractions
                 }),
 
                 // Production
-                new ResourceGroup(DeploymentMode.Production, new List<Resource>()
+                new ResourceGroup(Environment.Production, new List<Resource>()
                 {
                     /* Css */
                     new Resource()
