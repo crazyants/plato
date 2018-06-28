@@ -34,7 +34,10 @@ namespace Plato.Entities
 
             // Data Repositories
             services.AddScoped<IEntityRepository<Entity>, EntityRepository>();
+            services.AddScoped<IEntityDataRepository<EntityData>, EntityDataRepository>();
+
             services.AddScoped<IEntityStore<Entity>, EntityStore>();
+            services.AddScoped<IEntityDataStore, EntityDataStore>();
 
             // Data Stores
 

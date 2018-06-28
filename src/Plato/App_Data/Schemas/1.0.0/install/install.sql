@@ -407,8 +407,7 @@ CONSTRAINT PK_Plato_EntityData_Id PRIMARY KEY CLUSTERED ( Id )
 
 CREATE TABLE Plato_Entities -- (discussion, article, blog post, bug etc)
 (
-	Id								INT IDENTITY(1,1) NOT NULL,
-	ParentId						INT DEFAULT (0) NOT NULL,
+	Id								INT IDENTITY(1,1) NOT NULL,	
 	FeatureId						INT DEFAULT (0) NOT NULL,	
 	Title							NVARCHAR(255) DEFAULT('') NOT NULL,
 	TitleNormalized					NVARCHAR(255) DEFAULT('') NOT NULL,
@@ -426,6 +425,28 @@ CREATE TABLE Plato_Entities -- (discussion, article, blog post, bug etc)
 	IsClosed						BIT DEFAULT(0) NOT NULL,
 CONSTRAINT PK_Plato_Entities_Id PRIMARY KEY CLUSTERED ( Id )
 )
+
+
+
+CREATE TABLE Plato_EntityReplies -- (discussion, article, blog post, bug etc)
+(
+	Id								INT IDENTITY(1,1) NOT NULL,	
+	EntityId						INT DEFAULT (0) NOT NULL,		
+	Markdown						NVARCHAR(MAX) DEFAULT('') NOT NULL,
+	Html							NVARCHAR(MAX) DEFAULT('') NOT NULL,	
+	Abstract						NVARCHAR(255) DEFAULT('') NOT NULL,	
+	CreatedDate						DATETIME2 NULL,
+	CreatedUserId					INT DEFAULT (0) NOT NULL,
+	ModifiedDate					DATETIME2 NULL,
+	ModifiedUserId					INT DEFAULT (0) NOT NULL,
+	IsPublic						BIT DEFAULT(0) NOT NULL,
+	IsSpam							BIT DEFAULT(0) NOT NULL,
+	IsPinned						BIT DEFAULT(0) NOT NULL,
+	IsDeleted						BIT DEFAULT(0) NOT NULL,	
+CONSTRAINT PK_Plato_Entities_Id PRIMARY KEY CLUSTERED ( Id )
+)
+
+
 
 GO
 
