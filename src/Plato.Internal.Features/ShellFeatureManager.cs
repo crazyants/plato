@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -12,6 +13,7 @@ using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstractions.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Features
@@ -39,6 +41,7 @@ namespace Plato.Internal.Features
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<ShellFeatureManager> _logger;
         private readonly IShellContextFactory _shellContextFactory;
+        private readonly ITypedModuleProvider _typedModuleProvider;
 
         public ShellFeatureManager(
             IShellDescriptorStore shellDescriptorStore,
@@ -47,7 +50,8 @@ namespace Plato.Internal.Features
             IHttpContextAccessor httpContextAccessor,
             IShellContextFactory shellContextFactory,
             ILogger<ShellFeatureManager> logger,
-            IPlatoHost platoHost)
+            IPlatoHost platoHost,
+            ITypedModuleProvider typedModuleProvider)
         {
             _shellDescriptorStore = shellDescriptorStore;
             _shellDescriptorManager = shellDescriptorManager;
@@ -55,6 +59,7 @@ namespace Plato.Internal.Features
             _httpContextAccessor = httpContextAccessor;
             _shellContextFactory = shellContextFactory;
             _platoHost = platoHost;
+            _typedModuleProvider = typedModuleProvider;
             _logger = logger;
         }
 
@@ -405,35 +410,46 @@ namespace Plato.Internal.Features
 
                     var handlersList = handlers.ToList();
 
-                    foreach (var handler in handlersList)
+                    // Interate through each feature we wish to invoke
+                    // Use the event handlers if available else just add to contexts collection
+                    foreach (var feature in features)
                     {
 
-                        foreach (var feature in features)
+                        // Only invoke non required features
+                        if (feature.IsRequired)
                         {
+                            continue;
+                        }
 
-                            // Only invoke non required features
-                            if (feature.IsRequired)
-                            {
-                                continue;
-                            }
-
-                            // Context that will be passed around
-                            var context = new FeatureEventContext()
-                            {
-                                Feature = feature,
-                                ServiceProvider = scope.ServiceProvider,
-                                Logger = _logger
-                            };
-                            
-                            // Only invoke handler for current feature
-                            if (!feature.ModuleId.Equals(handler.Id, StringComparison.OrdinalIgnoreCase))
-                            {
-                                continue;
-                            }
-
+                        // Context that will be passed around
+                        var context = new FeatureEventContext()
+                        {
+                            Feature = feature,
+                            ServiceProvider = scope.ServiceProvider,
+                            Logger = _logger
+                        };
+                        
+                        // get event handler for feature we are invoking
+                        var featureHandler = handlersList.FirstOrDefault(h => h.Id == feature.ModuleId);
+                        if (featureHandler != null)
+                        {
+                      
                             // Invoke handler
-                            contexts = await invoker(context, handler);
+                            var handlerContexts = await invoker(context, featureHandler);
 
+                            foreach (var handlerContext in handlerContexts)
+                            {
+                                contexts.AddOrUpdate(feature.ModuleId, handlerContext.Value, (k, v) =>
+                                {
+                                    foreach (var error in handlerContext.Value.Errors)
+                                    {
+                                        v.Errors.Add(error.Key, error.Value);
+                                    }
+                                    return v;
+                                });
+
+                            }
+                            
                             // Log any errors
                             if (context.Errors.Count > 0)
                             {
@@ -441,13 +457,82 @@ namespace Plato.Internal.Features
                                 {
                                     _logger.LogCritical(error.Value, $"An error occurred whilst invoking within {this.GetType().FullName}");
                                 }
-                                
+
                             }
-                          
+                            
+                        }
+                        else
+                        {
+
+                            // no matching IFeatureEventHandler
+                            contexts.AddOrUpdate(feature.ModuleId, context, (k, v) =>
+                            {
+                                foreach (var error in context.Errors)
+                                {
+                                    v.Errors.Add(error.Key, error.Value);
+                                }
+                                return v;
+                            });
 
                         }
 
                     }
+
+
+                    //foreach (var handler in handlersList)
+                    //{
+
+                    //    var handlerModule = await _typedModuleProvider.GetModuleForDependency(handler.GetType());
+                    //    var handlerFeature = features
+                    //        .FirstOrDefault(f => f.ModuleId == handlerModule.Descriptor.Id);
+
+                    //    // we have a specific handler for our feature
+                    //    if (handlerFeature != null)
+                    //    {
+
+                    //    }
+
+                    //    foreach (var feature in features)
+                    //    {
+
+                    //        // Only invoke non required features
+                    //        if (feature.IsRequired)
+                    //        {
+                    //            continue;
+                    //        }
+
+                    //        // Context that will be passed around
+                    //        var context = new FeatureEventContext()
+                    //        {
+                    //            Feature = feature,
+                    //            ServiceProvider = scope.ServiceProvider,
+                    //            Logger = _logger
+                    //        };
+                            
+                    //        // Only invoke handler for current feature
+                    //        if (!feature.ModuleId.Equals(handler.Id, StringComparison.OrdinalIgnoreCase))
+                    //        {
+                    //            continue;
+                    //        }
+
+                    //        // Invoke handler
+                    //        contexts = await invoker(context, handler);
+
+                    //        // Log any errors
+                    //        if (context.Errors.Count > 0)
+                    //        {
+                    //            foreach (var error in context.Errors)
+                    //            {
+                    //                _logger.LogCritical(error.Value, $"An error occurred whilst invoking within {this.GetType().FullName}");
+                    //            }
+                                
+                    //        }
+                          
+
+                    //    }
+
+
+                    //}
 
                 }
 
