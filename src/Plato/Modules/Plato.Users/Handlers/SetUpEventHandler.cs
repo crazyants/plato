@@ -42,7 +42,7 @@ namespace Plato.Users.Handlers
 
                 // UserData schema
                 UserData(builder);
-
+                
                 var result = await builder.ApplySchemaAsync();
                 if (result.Errors.Count > 0)
                 {
@@ -87,6 +87,8 @@ namespace Plato.Users.Handlers
                 {
                     options.ModuleName = "Plato.Users";
                     options.Version = "1.0.0";
+                    options.DropTablesBeforeCreate = true;
+                    options.DropProceduresBeforeCreate = true;
                 });
 
         }
@@ -196,6 +198,23 @@ namespace Plato.Users.Handlers
             builder
                 .CreateTable(users)
                 .CreateDefaultProcedures(users)
+
+            // Overwrite our SelectEntityById created via CreateDefaultProcedures
+            // above to also return all EntityData within a second result set
+            .CreateProcedure(
+                    new SchemaProcedure(
+                            $"SelectUserById",
+                            @" SELECT * FROM {prefix}_Users WITH (nolock) 
+                                WHERE (
+                                   Id = @Id
+                                )
+                                SELECT * FROM {prefix}_UserData WITH (nolock) 
+                                WHERE (
+                                   UserId = @Id
+                                )")
+                        .ForTable(users)
+                        .WithParameter(users.PrimaryKeyColumn))
+
                 .CreateProcedure(new SchemaProcedure("SelectUserByEmail", StoredProcedureType.SelectByKey)
                     .ForTable(users)
                     .WithParameter(new SchemaColumn() {Name = "Email", DbType = DbType.String, Length = "255"}))

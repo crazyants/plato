@@ -316,30 +316,6 @@ namespace Plato.Internal.Hosting.Web.Extensions
             applicationPartManager.FeatureProviders.Add(themingViewsFeatureProvider);
         }
         
-        //public static void UseModuleStaticFiles(
-        //    this IApplicationBuilder app,
-        //        IHostingEnvironment env)
-        //{
-        //    var moduleManager = app.ApplicationServices.GetRequiredService<IModuleManager>();
-        //    var modules = moduleManager.LoadModulesAsync().Result;
-        //    foreach (var moduleEntry in modules)
-        //    {
-        //        // serve static files within module folders
-        //        var contentPath = Path.Combine(env.ContentRootPath,
-        //            moduleEntry.Descriptor.Location,
-        //            moduleEntry.Descriptor.Id, "Content");
-        //        if (Directory.Exists(contentPath))
-        //        {
-        //            app.UseStaticFiles(new StaticFileOptions
-        //            {
-        //                RequestPath = "/" + moduleEntry.Descriptor.Id.ToLower() + "/content",
-        //                FileProvider = new PhysicalFileProvider(contentPath)
-        //            });
-        //        }
-        //    }
-            
-        //}
-
         private static void AddDefaultFrameworkParts(ApplicationPartManager partManager)
         {
             var mvcTagHelpersAssembly = typeof(InputTagHelper).Assembly;

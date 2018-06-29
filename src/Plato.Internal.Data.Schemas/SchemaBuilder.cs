@@ -225,6 +225,37 @@ namespace Plato.Internal.Data.Schemas
 
         }
 
+        public ISchemaBuilder DropDefaultProcedures(SchemaTable table)
+        {
+
+            DropProcedure(new SchemaProcedure($"Select{table.NameNormalized}", StoredProcedureType.Select)
+                .ForTable(table));
+
+            DropProcedure(
+                new SchemaProcedure(
+                        $"Select{GetSingularizedTableName(table)}By{table.PrimaryKeyColumn.NameNormalized}",
+                        StoredProcedureType.SelectByKey)
+                    .ForTable(table)
+                    .WithParameter(table.PrimaryKeyColumn));
+
+            // delete from table where primaryKey = @primaryKey
+            DropProcedure(
+                new SchemaProcedure(
+                        $"Delete{GetSingularizedTableName(table)}By{table.PrimaryKeyColumn.NameNormalized}",
+                        StoredProcedureType.DeleteByKey)
+                    .ForTable(table)
+                    .WithParameter(table.PrimaryKeyColumn));
+
+            // insert / update by primary key
+            DropProcedure(
+                new SchemaProcedure($"InsertUpdate{GetSingularizedTableName(table)}",
+                        StoredProcedureType.InsertUpdate)
+                    .ForTable(table));
+
+            return this;
+
+        }
+        
         public ISchemaBuilder DropProcedure(SchemaProcedure procedure)
         {
             var sb = new StringBuilder();
@@ -268,8 +299,8 @@ namespace Plato.Internal.Data.Schemas
         public ISchemaBuilder CreateStatement(string statement)
         {
             var notNull = !string.IsNullOrEmpty(statement);
-            var notPresent = !_statements.Contains(statement);
-            if (notNull && notPresent)
+            //var notPresent = !_statements.Contains(statement);
+            if (notNull)
                 _statements.Add(statement);
             return this;
         }

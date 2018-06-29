@@ -30,6 +30,8 @@ namespace Plato.Internal.Features
     public class ShellFeatureManager : IShellFeatureManager
     {
 
+        #region "Constructor"
+
         private readonly IPlatoHost _platoHost;
         private readonly IShellDescriptorStore _shellDescriptorStore;
         private readonly IShellDescriptorManager _shellDescriptorManager;
@@ -56,15 +58,17 @@ namespace Plato.Internal.Features
             _logger = logger;
         }
 
+        #endregion
+
         #region "Implementation"
-        
+
         public async Task<IEnumerable<IFeatureEventContext>> EnableFeatureAsync(string featureId)
         {
 
             // Get features to enable
             var feature = await _shellDescriptorManager.GetFeatureAsync(featureId);
 
-            // Ensure we also enable dependencies
+            // Ensure we also enable disabled dependencies
             var featureIds = feature.FeatureDependencies
                 .Select(d => d.ModuleId).ToArray();
             
@@ -81,7 +85,6 @@ namespace Plato.Internal.Features
 
             // Ensure we also disable enabled dependent features
             var featureIds = feature.DependentFeatures
-                .Where(d => d.IsEnabled = true)
                 .Select(d => d.ModuleId).ToArray();
 
           return await DisableFeaturesAsync(featureIds);
@@ -208,10 +211,8 @@ namespace Plato.Internal.Features
             // Get distinct Ids
             var ids = featureIds.Distinct().ToArray();
 
-            // Get features to enable
+            // Get features to disable
             var features = await _shellDescriptorManager.GetFeaturesAsync(ids);
-
-            // Conver to IList to work with
             var featuresToInvoke = features.Distinct().ToList();
             
             // Raise Uninstalling events
@@ -314,13 +315,11 @@ namespace Plato.Internal.Features
             {
                 // Update descriptor within database
                 var descriptor = await RemoveFeaturesAndSave(featureIds);
-                //await _shellDescriptorStore.SaveAsync(descriptor);
 
             }
-
-
+            
             // Dispose current shell context
-                RecycleShell();
+            RecycleShell();
 
             // Return all execution contexts
             return results.Values;
@@ -348,10 +347,7 @@ namespace Plato.Internal.Features
             foreach (var feature in enabledFeatures)
             {
                 var diable = featureIds.Any(f => f.Equals(feature.ModuleId, StringComparison.InvariantCultureIgnoreCase));
-                if (diable)
-                {
-                    
-                } else 
+                if (!diable)
                 {
                     descriptor.Modules.Add(new ShellModule(feature));
                 }
@@ -390,7 +386,7 @@ namespace Plato.Internal.Features
             var shellSettings = _runningShellTable.Match(httpContext);
 
             // Recycle shell
-            RecycleShell();
+            //RecycleShell();
 
             // Build descriptor to ensure correct feature event handlers are available within DI
             var descriptor = new ShellDescriptor();
@@ -425,20 +421,10 @@ namespace Plato.Internal.Features
                             var context = new FeatureEventContext()
                             {
                                 Feature = feature,
-                                ServiceProvider = scope.ServiceProvider
+                                ServiceProvider = scope.ServiceProvider,
+                                Logger = _logger
                             };
-
-                            // Add entry to indicate featrure was invoked
-                            contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
-                            {
-                                foreach (var error in context.Errors)
-                                {
-                                    v.Errors.Add(error.Key, error.Value);
-                                }
-
-                                return v;
-                            });
-
+                            
                             // Only invoke handler for current feature
                             if (!feature.ModuleId.Equals(handler.Id, StringComparison.OrdinalIgnoreCase))
                             {
@@ -447,6 +433,18 @@ namespace Plato.Internal.Features
 
                             // Invoke handler
                             contexts = await invoker(context, handler);
+
+                            // Log any errors
+                            if (context.Errors.Count > 0)
+                            {
+                                foreach (var error in context.Errors)
+                                {
+                                    _logger.LogCritical(error.Value, $"An error occurred whilst invoking within {this.GetType().FullName}");
+                                }
+                                
+                            }
+                          
+
                         }
 
                     }
@@ -473,6 +471,5 @@ namespace Plato.Internal.Features
 
         #endregion
         
-
     }
 }

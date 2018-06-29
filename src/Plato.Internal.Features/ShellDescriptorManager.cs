@@ -84,24 +84,12 @@ namespace Plato.Internal.Features
 
             // Update dependencies
             await EnsureDependenciesAreEstablished();
-
-            // Get explicitly enabled features
-            var enabledFeatures = await GetEnabledFeaturesAsync();
-            
-            //  Update all found features to reflect enabled 
-            foreach (var feature in enabledFeatures)
-            {
-                _features.AddOrUpdate(feature.ModuleId, feature, (k, v) =>
-                {
-                    v.IsEnabled = true;
-                    return v;
-                });
-            }
             
             return _features.Values;
 
         }
         
+  
         public async Task<IShellFeature> GetFeatureAsync(string featureId)
         {
             var features = await GetFeaturesAsync();
@@ -220,17 +208,41 @@ namespace Plato.Internal.Features
         
         async Task EnsureFeaturesLoadedAsync()
         {
+            
             if (_features == null)
             {
+                
                 _features = new ConcurrentDictionary<string, IShellFeature>();
                 var modules = await _moduleManager.LoadModulesAsync();
                 if (modules != null)
                 {
+
+                    // Get explicitly enabled features
+                    var enabledFeatures = await GetEnabledFeaturesAsync();
+                    var enabledFeatureNames = enabledFeatures
+                        .Select(f => f.ModuleId).ToArray();
+                    
+                    // Build features and dependencies 
                     foreach (var module in modules)
                     {
                         var feature = new ShellFeature(module);
                         feature.IsRequired = IsFeatureRequired(feature);
+
+                        if (enabledFeatureNames.Contains(module.Descriptor.Id))
+                        {
+                            feature.IsEnabled = true;
+                        }
+
+                        foreach (var dependency in module.Descriptor.Dependencies)
+                        {
+                            if (enabledFeatureNames.Contains(dependency.Id))
+                            {
+                                dependency.IsEnabled = true;
+                            }
+                        }
+
                         _features.TryAdd(module.Descriptor.Id, feature);
+
                     }
                 }
             }

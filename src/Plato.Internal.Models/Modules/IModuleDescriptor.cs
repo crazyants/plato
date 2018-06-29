@@ -42,8 +42,8 @@ namespace Plato.Internal.Models.Modules
 
         public string Version { get; set; }
 
+        public bool IsEnabled { get; set; }
+
     }
-
-
 
 }

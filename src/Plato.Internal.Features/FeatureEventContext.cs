@@ -16,6 +16,8 @@ namespace Plato.Internal.Features
 
         public IDictionary<string, string> Errors { get; set; } = new Dictionary<string, string>();
 
+        public ILogger Logger { get; set; }
+
         public FeatureEventContext()
         {
 
