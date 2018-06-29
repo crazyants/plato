@@ -187,6 +187,11 @@ namespace Plato.Internal.Data.Schemas
             return this;
         }
 
+        public string GetSingularizedTableName(SchemaTable table)
+        {
+            return _pluralizer.Singularize(table.Name);
+        }
+        
         public ISchemaBuilder CreateDefaultProcedures(SchemaTable table)
         {
             
@@ -197,7 +202,7 @@ namespace Plato.Internal.Data.Schemas
             // select * from table where primaryKey = @primaryKey
             CreateProcedure(
                 new SchemaProcedure(
-                        $"Select{_pluralizer.Singularize(table.Name)}By{table.PrimaryKeyColumn.NameNormalized}",
+                        $"Select{GetSingularizedTableName(table)}By{table.PrimaryKeyColumn.NameNormalized}",
                         StoredProcedureType.SelectByKey)
                     .ForTable(table)
                     .WithParameter(table.PrimaryKeyColumn));
@@ -205,14 +210,14 @@ namespace Plato.Internal.Data.Schemas
             // delete from table where primaryKey = @primaryKey
             CreateProcedure(
                 new SchemaProcedure(
-                        $"Delete{_pluralizer.Singularize(table.Name)}By{table.PrimaryKeyColumn.NameNormalized}",
+                        $"Delete{GetSingularizedTableName(table)}By{table.PrimaryKeyColumn.NameNormalized}",
                         StoredProcedureType.DeleteByKey)
                     .ForTable(table)
                     .WithParameter(table.PrimaryKeyColumn));
 
             // insert / update by primary key
             CreateProcedure(
-                new SchemaProcedure($"InsertUpdate{_pluralizer.Singularize(table.Name)}",
+                new SchemaProcedure($"InsertUpdate{GetSingularizedTableName(table)}",
                         StoredProcedureType.InsertUpdate)
                     .ForTable(table));
 

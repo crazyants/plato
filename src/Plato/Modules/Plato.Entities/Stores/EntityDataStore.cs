@@ -9,7 +9,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Entities.Stores
 {
-    public class EntityDataStore : IEntityDataStore
+    public class EntityDataStore : IEntityDataStore<EntityData>
     {
 
         #region "Private Variables"

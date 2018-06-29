@@ -72,18 +72,19 @@ namespace Plato.Internal.Features
             return await EnableFeaturesAsync(featureIds);
 
         }
-        
+
         public async Task<IEnumerable<IFeatureEventContext>> DisableFeatureAsync(string featureId)
         {
 
             // Get features to enable
-            var features = await _shellDescriptorManager.GetFeatureAsync(featureId);
+            var feature = await _shellDescriptorManager.GetFeatureAsync(featureId);
 
-            // Ensure we also disable dependent features
-            var featureIds = features.DependentFeatures
+            // Ensure we also disable enabled dependent features
+            var featureIds = feature.DependentFeatures
+                .Where(d => d.IsEnabled = true)
                 .Select(d => d.ModuleId).ToArray();
 
-            return await DisableFeaturesAsync(featureIds);
+          return await DisableFeaturesAsync(featureIds);
 
         }
         

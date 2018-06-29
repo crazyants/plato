@@ -25,10 +25,12 @@ namespace Plato.Internal.Models.Users
 
         public UserDetail Detail { get; set; }
         
-        public List<string> RoleNames { get; set; } = new List<string>();
+        public IEnumerable<string> RoleNames { get; set; } = new List<string>();
 
-        public List<Role> UserRoles { get; } = new List<Role>();
+        public IEnumerable<Role> UserRoles { get; } = new List<Role>();
         
+        public IEnumerable<UserData> Data { get; set; } = new List<UserData>();
+
         #endregion
 
         #region "constructor"

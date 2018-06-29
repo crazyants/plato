@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Hosting;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Entities.Handlers;
 using Plato.Entities.Models;
@@ -37,10 +36,10 @@ namespace Plato.Entities
             services.AddScoped<IEntityDataRepository<EntityData>, EntityDataRepository>();
 
             services.AddScoped<IEntityStore<Entity>, EntityStore>();
-            services.AddScoped<IEntityDataStore, EntityDataStore>();
+            services.AddScoped<IEntityDataStore<EntityData>, EntityDataStore>();
 
-            // Data Stores
-
+            services.AddScoped<IEntityDetailsStore<EntityDetails>, EntityDetailsStore>();
+            
 
         }
 

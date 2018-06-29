@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Repositories
 {
@@ -17,6 +19,7 @@ namespace Plato.Entities.Repositories
 
         private readonly IDbContext _dbContext;
         private readonly ILogger<EntityRepository> _logger;
+        private readonly IEntityDataRepository<EntityData> _entityDataRepository;
 
         #endregion
 
@@ -24,10 +27,12 @@ namespace Plato.Entities.Repositories
 
         public EntityRepository(
             IDbContext dbContext,
-            ILogger<EntityRepository> logger)
+            ILogger<EntityRepository> logger,
+            IEntityDataRepository<EntityData> entityDataRepository)
         {
             _dbContext = dbContext;
             _logger = logger;
+            _entityDataRepository = entityDataRepository;
         }
 
         #endregion
@@ -76,7 +81,8 @@ namespace Plato.Entities.Repositories
                 entity.CreatedUserId,
                 entity.CreatedDate,
                 entity.ModifiedUserId,
-                entity.ModifiedDate);
+                entity.ModifiedDate,
+                entity.Data);
 
             if (id > 0)
             {
@@ -159,7 +165,6 @@ namespace Plato.Entities.Repositories
             Entity entity = null;
             if ((reader != null) && (reader.HasRows))
             {
-                // user
 
                 entity = new Entity();
                 await reader.ReadAsync();
@@ -167,8 +172,25 @@ namespace Plato.Entities.Repositories
                 {
                     entity.PopulateModel(reader);
                 }
-                
-                //// data
+
+                // data
+
+                if (await reader.NextResultAsync())
+                {
+                    if (reader.HasRows)
+                    {
+                        var data = new List<EntityData>();
+                        while (await reader.ReadAsync())
+                        {
+                            var entityData = new EntityData(reader);
+                            data.Add(entityData);
+                        }
+
+                        entity.Data = data;
+                    }
+                }
+
+
 
                 //if (await reader.NextResultAsync())
                 //{
@@ -212,7 +234,8 @@ namespace Plato.Entities.Repositories
             int createdUserId,
             DateTime? createdDate,
             int modifiedUserId,
-            DateTime? modifiedDate)
+            DateTime? modifiedDate,
+            IEnumerable<EntityData> data)
         {
             using (var context = _dbContext)
             {
@@ -227,7 +250,7 @@ namespace Plato.Entities.Repositories
                     throw args.Exception;
                 };
 
-                return await context.ExecuteScalarAsync<int>(
+                var entityId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntity",
                     id,
@@ -246,8 +269,20 @@ namespace Plato.Entities.Repositories
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
                     modifiedDate.ToDateIfNull());
+                
+                if (entityId > 0)
+                {
+                    if (data != null)
+                    {
+                        foreach (var item in data)
+                        {
+                            await _entityDataRepository.InsertUpdateAsync(item);
+                        }
+                    }
 
+                }
 
+                return entityId;
             }
         }
 

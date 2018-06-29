@@ -3,7 +3,7 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Entities.Stores
 {
-    public interface IEntityDataStore
+    public interface IEntityDataStore<T> where T : class
     {
 
         Task<T> GetAsync<T>(int userId, string key);

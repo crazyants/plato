@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Schemas.Abstractions;
-using Plato.Internal.Features;
 using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Entities.Handlers
@@ -39,8 +38,7 @@ namespace Plato.Entities.Handlers
                 Entities(builder);
 
                 EntityData(builder);
-
-
+                
                 var result = await builder.ApplySchemaAsync();
                 if (result.Errors.Count > 0)
                 {
@@ -227,6 +225,24 @@ namespace Plato.Entities.Handlers
                 .CreateTable(entities)
                 .CreateDefaultProcedures(entities)
 
+
+                // Alter our SelectEntityById created via CreateDefaultProcedures
+                // above to also return all EntityData within a second result set
+                //.CreateProcedure(
+                //    new SchemaProcedure(
+                //            $"Select{builder.GetSingularizedTableName(entities)}By{entities.PrimaryKeyColumn.NameNormalized}",
+                //            @" SELECT * FROM {prefix}_Entities WITH (nolock) 
+                //                WHERE (
+                //                   Id = @Id
+                //                )
+                //                SELECT * FROM {prefix}_EntityData WITH (nolock) 
+                //                WHERE (
+                //                   EntityId = @Id
+                //                )")
+                //        .ForTable(entities)
+                //        .WithParameter(entities.PrimaryKeyColumn))
+
+
                 .CreateProcedure(new SchemaProcedure("SelectEntitiesPaged", StoredProcedureType.SelectPaged)
                     .ForTable(entities)
                     .WithParameters(new List<SchemaColumn>()
@@ -268,7 +284,7 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "[Key]",
-                        Length = "max",
+                        Length = "255",
                         DbType = DbType.String
                     },
                     new SchemaColumn()
@@ -315,4 +331,5 @@ namespace Plato.Entities.Handlers
 
 
     }
+
 }

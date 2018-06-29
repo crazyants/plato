@@ -46,7 +46,9 @@ namespace Plato.Internal.Data.Schemas.Abstractions
         ISchemaBuilder ApplySchema();
 
         Task<ISchemaBuilder> ApplySchemaAsync();
-        
+
+        string GetSingularizedTableName(SchemaTable table);
+
         string ToString();
 
     }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Plato.Internal.Stores.Abstractions;
+﻿using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Stores
 {

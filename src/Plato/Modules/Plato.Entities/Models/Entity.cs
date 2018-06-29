@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
@@ -40,6 +41,8 @@ namespace Plato.Entities.Models
 
         public DateTime? ModifiedDate { get; set; }
 
+        public IEnumerable<EntityData> Data { get; set; }
+        
         public void PopulateModel(IDataReader dr)
         {
             

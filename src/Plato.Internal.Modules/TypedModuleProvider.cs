@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Scaffolding.Internal;
 using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Abstractions;
 
@@ -33,6 +35,33 @@ namespace Plato.Internal.Modules
             }
 
             throw new InvalidOperationException($"Could not resolve module for type {dependency.Name}");
+        }
+
+        public async Task<IDictionary<Type, IModuleEntry>> GetModuleDependenciesAsync(IEnumerable<IModuleEntry> modules)
+        {
+
+            await BuildTypedProvider();
+
+            var entries = new Dictionary<Type, IModuleEntry>();
+            if (modules != null)
+            {
+                foreach (var module in modules)
+                {
+                    var types = _modules
+                        .Where(m => m.Value.Descriptor.Id == module.Descriptor.Id)
+                        .Select(m => m.Key);
+                    foreach (var type in types)
+                    {
+                        if (!entries.ContainsKey(type))
+                        {
+                            entries.Add(type, module);
+                        }
+                    }
+                }
+            }
+
+            return entries;
+
         }
 
         async Task BuildTypedProvider()

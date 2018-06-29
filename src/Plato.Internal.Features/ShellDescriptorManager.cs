@@ -88,7 +88,7 @@ namespace Plato.Internal.Features
             // Get explicitly enabled features
             var enabledFeatures = await GetEnabledFeaturesAsync();
             
-            //  Update all found features to reflect enabled and required
+            //  Update all found features to reflect enabled 
             foreach (var feature in enabledFeatures)
             {
                 _features.AddOrUpdate(feature.ModuleId, feature, (k, v) =>

@@ -9,7 +9,7 @@ using Plato.Internal.Repositories.Users;
 
 namespace Plato.Internal.Stores.Users
 {
-    public class UserDataStore : IUserDataStore
+    public class UserDataStore : IUserDataStore<UserData>
     {
 
         #region "Private Variables"

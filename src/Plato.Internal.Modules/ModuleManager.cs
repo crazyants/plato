@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Plato.Internal.Modules.Abstractions;
 using Microsoft.Extensions.Options;
@@ -21,7 +22,7 @@ namespace Plato.Internal.Modules
         IEnumerable<IModuleDescriptor> _moduleDescriptors;
 
         static List<IModuleEntry> _moduleEntries;
-        static List<Assembly> _loadedAssemblies;
+        static IDictionary<string, Assembly> _loadedAssemblies;
 
         readonly string _contentRootPath;
         readonly string _virtualPathToModules;
@@ -34,7 +35,7 @@ namespace Plato.Internal.Modules
 
         public IEnumerable<IModuleEntry> AvailableModules => _moduleEntries;
 
-        public IEnumerable<Assembly> AllAvailableAssemblies => _loadedAssemblies;
+        public IEnumerable<Assembly> AllAvailableAssemblies => _loadedAssemblies.Values;
 
         #endregion
 
@@ -65,7 +66,7 @@ namespace Plato.Internal.Modules
         public async Task<IEnumerable<Assembly>> LoadModuleAssembliesAsync()
         {
             await InitializeModules();
-            return _loadedAssemblies;
+            return _loadedAssemblies.Values;
         }
 
         public async Task<IEnumerable<Assembly>> LoadModuleAssembliesAsync(string[] moduleIds)
@@ -116,7 +117,7 @@ namespace Plato.Internal.Modules
             if (_moduleEntries == null)
             {
                 _moduleEntries = new List<IModuleEntry>();
-                _loadedAssemblies = new List<Assembly>();
+                _loadedAssemblies = new Dictionary<string, Assembly>();
                 await LocateModuleDescriptors();
                 await LoadModulesInternalAsync();
             }
@@ -138,12 +139,35 @@ namespace Plato.Internal.Modules
             foreach (var descriptor in _moduleDescriptors)
             {
                 var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
+
+                // The assembly may have already been loaded by another module
+                // For example if a module references the assembly we are trying to load
+                // LoadModuleAsync will only ever load the assembly once
+                // In this case add already loaded assemblies for the module
+                if (assemblies.Count == 0)
+                {
+                    assemblies = _loadedAssemblies
+                        .Where(m => m.Key == descriptor.Id)
+                        .Select(a => a.Value)
+                        .ToList();
+                }
+               
                 _moduleEntries.Add(new ModuleEntry()
                 {
                     Descriptor = descriptor,
                     Assmeblies = assemblies
                 });
-                _loadedAssemblies.AddRange(assemblies);
+
+                foreach (var assembly in assemblies)
+                {
+                    var assemblyName = Path.GetFileNameWithoutExtension(assembly.ManifestModule.Name);
+                    if (!_loadedAssemblies.ContainsKey(assemblyName))
+                    {
+                        _loadedAssemblies.Add(assemblyName, assembly);
+                    }
+                    
+                }
+                
 
             }
 

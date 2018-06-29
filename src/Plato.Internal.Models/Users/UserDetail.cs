@@ -1,5 +1,4 @@
 ﻿using System;
-using Newtonsoft.Json;
 using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Models.Users
@@ -19,14 +18,7 @@ namespace Plato.Internal.Models.Users
         #endregion
 
         #region "Implementation"
-
-        //public string Serialize()
-        //{
-        //    return JsonConvert.SerializeObject(this);
-        //}
-
-
-
+        
         #endregion#
 
     }

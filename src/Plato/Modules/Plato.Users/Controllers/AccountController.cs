@@ -36,7 +36,7 @@ namespace Plato.Users.Controllers
         private readonly ISchemaBuilder _schemaBuilder;
 
         public readonly IDocumentStore _documentStore;
-        private readonly IUserDetailsStore _userDetailStore;
+        private readonly IUserDetailsStore<UserDetail> _userDetailStore;
 
         public AccountController(
             UserManager<User> userManager,
@@ -44,7 +44,7 @@ namespace Plato.Users.Controllers
             IHttpContextAccessor httpContextAccessor, 
             ISchemaBuilder schemaBuilder,
             IDocumentStore documentStore,
-            IUserDetailsStore userDetailStore)
+            IUserDetailsStore<UserDetail> userDetailStore)
         {
             _userManager = userManager;
             _signInManager = signInManage;

@@ -11,10 +11,10 @@ namespace Plato.Users.Social.Stores
 
         public const string Key = "Plato.Users.Details";
 
-        private readonly IUserDataStore _userDataStore;
+        private readonly IUserDataStore<SocialLinks> _userDataStore;
 
         public SocialLinksStore(
-            IUserDataStore userDataStore)
+            IUserDataStore<SocialLinks> userDataStore)
         {
             _userDataStore = userDataStore;
         }

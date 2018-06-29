@@ -6,6 +6,7 @@ using System.Runtime.Loader;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
@@ -81,12 +82,16 @@ namespace Plato.Modules.Loader
             foreach (var file in folder.GetFiles())
             {
                 if (file.Extension.ToLower() == AssemblyExtension)
+                {
                     if (!IsAssemblyLoaded(Path.GetFileNameWithoutExtension(file.FullName)))
                     {
                         var assembly = LoadFromAssemblyPath(file.FullName);
                         if (assembly != null)
                             localList.Add(assembly);
                     }
+               
+                }
+                
             }
 
             // recursive lookup

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -294,6 +295,23 @@ namespace Plato.Internal.Repositories.Users
                 if (reader.HasRows)
                 {
                     user.PopulateModel(reader);
+                }
+
+                // data
+
+                if (await reader.NextResultAsync())
+                {
+                    if (reader.HasRows)
+                    {
+                        var data = new List<UserData>();
+                        while (await reader.ReadAsync())
+                        {
+                            var entityData = new UserData(reader);
+                            data.Add(entityData);
+                        }
+
+                        user.Data = data;
+                    }
                 }
 
                 //// secret

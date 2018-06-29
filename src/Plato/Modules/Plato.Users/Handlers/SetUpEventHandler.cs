@@ -352,7 +352,7 @@ namespace Plato.Users.Handlers
                     new SchemaColumn()
                     {
                         Name = "[Key]",
-                        Length = "max",
+                        Length = "255",
                         DbType = DbType.String
                     },
                     new SchemaColumn()

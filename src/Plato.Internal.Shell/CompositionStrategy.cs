@@ -11,15 +11,19 @@ namespace Plato.Internal.Shell
 {
     public class CompositionStrategy : ICompositionStrategy
     {
+
+        private readonly ITypedModuleProvider _typedModuleProvider;
         private readonly IModuleManager _moduleManager;
         private readonly ILogger _logger;
   
         public CompositionStrategy(
             IModuleManager moduleManager,
-            ILogger<CompositionStrategy> logger)
+            ILogger<CompositionStrategy> logger,
+            ITypedModuleProvider typedModuleProvider)
         {
             _moduleManager = moduleManager;
             _logger = logger;
+            _typedModuleProvider = typedModuleProvider;
         }
 
         public async Task<ShellBlueprint> ComposeAsync(IShellSettings settings, IShellDescriptor descriptor)
@@ -35,30 +39,33 @@ namespace Plato.Internal.Shell
             // Get module entires for active modules
             var modules = await _moduleManager.LoadModulesAsync(moduleNames);
 
+            // Get dependencies
+            var dependencies = await _typedModuleProvider.GetModuleDependenciesAsync(modules);
+            
             // TODO: Take advantage of ITypedModuleProvider
-            // Get all dependencies for loaded modules
-            var entries = new Dictionary<Type, IModuleEntry>();
-            if (modules != null)
-            {
-                foreach (var module in modules)
-                {
-                    var types = module.Assmeblies.SelectMany(assembly =>
-                        assembly.ExportedTypes.Where(IsComponentType));
-                    foreach (var type in types)
-                    {
-                        if (!entries.ContainsKey(type))
-                        {
-                            entries.Add(type, module);
-                        }
-                    }
-                }
-            }
+            //// Get all dependencies for loaded modules
+            //var entries = new Dictionary<Type, IModuleEntry>();
+            //if (modules != null)
+            //{
+            //    foreach (var module in modules)
+            //    {
+            //        var types = module.Assmeblies.SelectMany(assembly =>
+            //            assembly.ExportedTypes.Where(IsComponentType));
+            //        foreach (var type in types)
+            //        {
+            //            if (!entries.ContainsKey(type))
+            //            {
+            //                entries.Add(type, module);
+            //            }
+            //        }
+            //    }
+            //}
             
             var result = new ShellBlueprint
             {
                 Settings = settings,
                 Descriptor = descriptor,
-                Dependencies = entries
+                Dependencies = dependencies
             };
 
             if (_logger.IsEnabled(LogLevel.Debug))
@@ -68,12 +75,12 @@ namespace Plato.Internal.Shell
             return result;
         }
 
-        private bool IsComponentType(Type type)
-        {
-            if (type == null)
-                return false;
-            return type.IsClass && !type.IsAbstract && type.IsPublic;
-        }
+        //private bool IsComponentType(Type type)
+        //{
+        //    if (type == null)
+        //        return false;
+        //    return type.IsClass && !type.IsAbstract && type.IsPublic;
+        //}
 
 
     }

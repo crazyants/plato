@@ -4,26 +4,26 @@ using Plato.Internal.Models.Users;
 namespace Plato.Internal.Stores.Users
 {
 
-    public interface IUserDetailsStore
+    public interface IUserDetailsStore<T> where T : class
     {
 
-        Task<UserDetail> GetAsync(int userId);
+        Task<T> GetAsync(int userId);
 
-        Task<UserDetail> UpdateAsync(int userId, UserDetail value);
+        Task<T> UpdateAsync(int userId, UserDetail value);
 
         Task<bool> DeleteAsync(int userId);
 
     }
 
-    public class UserDetailsStore : IUserDetailsStore
+    public class UserDetailsStore : IUserDetailsStore<UserDetail>
     {
 
         public const string Key = "Plato.Users.Details";
 
-        private readonly IUserDataStore _userDataStore;
+        private readonly IUserDataStore<UserData> _userDataStore;
 
         public UserDetailsStore(
-            IUserDataStore userDataStore)
+            IUserDataStore<UserData> userDataStore)
         {
             _userDataStore = userDataStore;
         }
