@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -9,11 +10,9 @@ using Plato.Internal.Features.Abstractions;
 namespace Plato.Entities.Handlers
 {
 
-    public class FeatureEventHandler : IFeatureEventHandler
+    public class FeatureEventHandler : BaseFeatureEventHandler
     {
-        
-        public string Id { get; } = "Plato.Entities";
-
+    
         public string Version { get; } = "1.0.0";
         
         // Entities table
@@ -173,11 +172,11 @@ namespace Plato.Entities.Handlers
         
         #region "Implementation"
 
-        public async Task InstallingAsync(IFeatureEventContext context)
+        public override async Task InstallingAsync(IFeatureEventContext context)
         {
 
             if (context.Logger.IsEnabled(LogLevel.Information))
-                context.Logger.LogInformation($"InstallingAsync called within {Id}");
+                context.Logger.LogInformation($"InstallingAsync called within {ModuleId}");
             
             //var schemaBuilder = context.ServiceProvider.GetRequiredService<ISchemaBuilder>();
             using (var builder = _schemaBuilder)
@@ -218,7 +217,7 @@ namespace Plato.Entities.Handlers
 
         }
 
-        public Task InstalledAsync(IFeatureEventContext context)
+        public override Task InstalledAsync(IFeatureEventContext context)
         {
          
             try
@@ -236,11 +235,11 @@ namespace Plato.Entities.Handlers
 
         }
 
-        public async Task UninstallingAsync(IFeatureEventContext context)
+        public override async Task UninstallingAsync(IFeatureEventContext context)
         {
 
             if (context.Logger.IsEnabled(LogLevel.Information))
-                context.Logger.LogInformation($"UninstallingAsync called within {Id}");
+                context.Logger.LogInformation($"UninstallingAsync called within {ModuleId}");
             
             using (var builder = _schemaBuilder)
             {
@@ -294,7 +293,7 @@ namespace Plato.Entities.Handlers
             
         }
 
-        public Task UninstalledAsync(IFeatureEventContext context)
+        public override Task UninstalledAsync(IFeatureEventContext context)
         {
       
             try
@@ -320,7 +319,7 @@ namespace Plato.Entities.Handlers
             builder
                 .Configure(options =>
                 {
-                    options.ModuleName = Id;
+                    options.ModuleName = ModuleId;
                     options.Version = Version;
                     options.DropTablesBeforeCreate = true;
                     options.DropProceduresBeforeCreate = true;

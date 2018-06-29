@@ -9,7 +9,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Roles.Handlers
 {
-    public class SetUpEventHandler : ISetUpEventHandler
+    public class SetUpEventHandler : BaseSetUpEventHandler
     {
 
         private readonly ISchemaBuilder _schemaBuilder;
@@ -23,7 +23,7 @@ namespace Plato.Roles.Handlers
             _userManager = userManager;
         }
 
-        public async Task SetUp(SetUpContext context, Action<string, string> reportError)
+        public override async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
 
             using (var builder = _schemaBuilder)
@@ -58,7 +58,7 @@ namespace Plato.Roles.Handlers
             builder
                 .Configure(options =>
                 {
-                    options.ModuleName = "Plato.Roles";
+                    options.ModuleName = base.ModuleId;
                     options.Version = "1.0.0";
                 });
 

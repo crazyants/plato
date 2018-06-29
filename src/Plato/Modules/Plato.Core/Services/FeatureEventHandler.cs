@@ -5,22 +5,20 @@ using Plato.Internal.Features.Abstractions;
 
 namespace Plato.Core.Services
 {
-    public class FeatureEventHandler : IFeatureEventHandler
+    public class FeatureEventHandler : BaseFeatureEventHandler
     {
 
-        public string Id { get; } = "Plato.Core";
+    
+        private readonly ILogger<BaseFeatureEventHandler> _logger;
 
-
-        private readonly ILogger<FeatureEventHandler> _logger;
-
-        public FeatureEventHandler(ILogger<FeatureEventHandler> logger)
+        public FeatureEventHandler(ILogger<BaseFeatureEventHandler> logger)
         {
             _logger = logger;
         }
 
-        public Task InstallingAsync(IFeatureEventContext context)
+        public override Task InstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.ModuleId, Id, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.ModuleId, ModuleId, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -39,9 +37,9 @@ namespace Plato.Core.Services
 
         }
 
-        public Task InstalledAsync(IFeatureEventContext context)
+        public override Task InstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.ModuleId, Id, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.ModuleId, ModuleId, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -60,9 +58,9 @@ namespace Plato.Core.Services
 
         }
 
-        public Task UninstallingAsync(IFeatureEventContext context)
+        public override Task UninstallingAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.ModuleId, Id, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.ModuleId, ModuleId, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }
@@ -81,9 +79,9 @@ namespace Plato.Core.Services
 
         }
 
-        public Task UninstalledAsync(IFeatureEventContext context)
+        public override Task UninstalledAsync(IFeatureEventContext context)
         {
-            if (!String.Equals(context.Feature.ModuleId, Id, StringComparison.InvariantCultureIgnoreCase))
+            if (!String.Equals(context.Feature.ModuleId, ModuleId, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Task.CompletedTask;
             }

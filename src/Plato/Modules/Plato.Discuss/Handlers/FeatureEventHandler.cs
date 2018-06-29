@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features.Abstractions;
@@ -18,11 +19,9 @@ namespace Plato.Discuss.Handlers
     // with the features we want to enable or disable. The necessary IFeatureEventHandler can
     // then be registered within DI for the features we are enabling or disabling and the events can be invoked.
 
-    public class FeatureEventHandler : IFeatureEventHandler
+    public class FeatureEventHandler : BaseFeatureEventHandler
     {
-        
-        public string Id { get; } = "Plato.Discuss";
-
+  
         public string Version { get; } = "1.0.0";
 
         private readonly ISchemaBuilder _schemaBuilder;
@@ -34,7 +33,7 @@ namespace Plato.Discuss.Handlers
         
         #region "Implementation"
 
-        public async Task InstallingAsync(IFeatureEventContext context)
+        public override async Task InstallingAsync(IFeatureEventContext context)
         {
        
             //var schemaBuilder = context.ServiceProvider.GetRequiredService<ISchemaBuilder>();
@@ -65,7 +64,7 @@ namespace Plato.Discuss.Handlers
 
         }
 
-        public Task InstalledAsync(IFeatureEventContext context)
+        public override Task InstalledAsync(IFeatureEventContext context)
         {
             //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
             //{
@@ -87,7 +86,7 @@ namespace Plato.Discuss.Handlers
 
         }
 
-        public Task UninstallingAsync(IFeatureEventContext context)
+        public override Task UninstallingAsync(IFeatureEventContext context)
         {
             //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
             //{
@@ -110,7 +109,7 @@ namespace Plato.Discuss.Handlers
 
         }
 
-        public Task UninstalledAsync(IFeatureEventContext context)
+        public override Task UninstalledAsync(IFeatureEventContext context)
         {
             //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
             //{
@@ -140,7 +139,7 @@ namespace Plato.Discuss.Handlers
             builder
                 .Configure(options =>
                 {
-                    options.ModuleName = Id;
+                    options.ModuleName = ModuleId;
                     options.Version = Version;
                     options.DropTablesBeforeCreate = true;
                     options.DropProceduresBeforeCreate = true;

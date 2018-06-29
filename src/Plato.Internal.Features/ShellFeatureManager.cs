@@ -104,8 +104,6 @@ namespace Plato.Internal.Features
 
             // Get features to enable
             var features = await _shellDescriptorManager.GetFeaturesAsync(ids);
-
-            // Conver to IList to work with
             var featuresToInvoke = features.Distinct().ToList();
             
             // Raise installing events for features
@@ -430,13 +428,12 @@ namespace Plato.Internal.Features
                         };
                         
                         // get event handler for feature we are invoking
-                        var featureHandler = handlersList.FirstOrDefault(h => h.Id == feature.ModuleId);
+                        var featureHandler = handlersList.FirstOrDefault(h => h.ModuleId == feature.ModuleId);
                         if (featureHandler != null)
                         {
                       
                             // Invoke handler
                             var handlerContexts = await invoker(context, featureHandler);
-
                             foreach (var handlerContext in handlerContexts)
                             {
                                 contexts.AddOrUpdate(feature.ModuleId, handlerContext.Value, (k, v) =>
@@ -457,7 +454,6 @@ namespace Plato.Internal.Features
                                 {
                                     _logger.LogCritical(error.Value, $"An error occurred whilst invoking within {this.GetType().FullName}");
                                 }
-
                             }
                             
                         }
@@ -477,63 +473,7 @@ namespace Plato.Internal.Features
                         }
 
                     }
-
-
-                    //foreach (var handler in handlersList)
-                    //{
-
-                    //    var handlerModule = await _typedModuleProvider.GetModuleForDependency(handler.GetType());
-                    //    var handlerFeature = features
-                    //        .FirstOrDefault(f => f.ModuleId == handlerModule.Descriptor.Id);
-
-                    //    // we have a specific handler for our feature
-                    //    if (handlerFeature != null)
-                    //    {
-
-                    //    }
-
-                    //    foreach (var feature in features)
-                    //    {
-
-                    //        // Only invoke non required features
-                    //        if (feature.IsRequired)
-                    //        {
-                    //            continue;
-                    //        }
-
-                    //        // Context that will be passed around
-                    //        var context = new FeatureEventContext()
-                    //        {
-                    //            Feature = feature,
-                    //            ServiceProvider = scope.ServiceProvider,
-                    //            Logger = _logger
-                    //        };
-                            
-                    //        // Only invoke handler for current feature
-                    //        if (!feature.ModuleId.Equals(handler.Id, StringComparison.OrdinalIgnoreCase))
-                    //        {
-                    //            continue;
-                    //        }
-
-                    //        // Invoke handler
-                    //        contexts = await invoker(context, handler);
-
-                    //        // Log any errors
-                    //        if (context.Errors.Count > 0)
-                    //        {
-                    //            foreach (var error in context.Errors)
-                    //            {
-                    //                _logger.LogCritical(error.Value, $"An error occurred whilst invoking within {this.GetType().FullName}");
-                    //            }
-                                
-                    //        }
-                          
-
-                    //    }
-
-
-                    //}
-
+                    
                 }
 
             }

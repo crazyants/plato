@@ -6,8 +6,8 @@ namespace Plato.Internal.Features.Abstractions
     public interface IFeatureEventHandler
     {
 
-        string Id { get; }
-        
+        string ModuleId { get; }
+
         Task InstallingAsync(IFeatureEventContext context);
 
         Task InstalledAsync(IFeatureEventContext context);

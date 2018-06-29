@@ -10,7 +10,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Users.Handlers
 {
-    public class SetUpEventHandler : ISetUpEventHandler
+    public class SetUpEventHandler : BaseSetUpEventHandler
     {
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly UserManager<User> _userManager;
@@ -23,7 +23,7 @@ namespace Plato.Users.Handlers
             _userManager = userManager;
         }
 
-        public async Task SetUp(SetUpContext context, Action<string, string> reportError)
+        public override async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
 
             // build schemas
@@ -85,7 +85,7 @@ namespace Plato.Users.Handlers
             builder
                 .Configure(options =>
                 {
-                    options.ModuleName = "Plato.Users";
+                    options.ModuleName = base.ModuleId;
                     options.Version = "1.0.0";
                     options.DropTablesBeforeCreate = true;
                     options.DropProceduresBeforeCreate = true;

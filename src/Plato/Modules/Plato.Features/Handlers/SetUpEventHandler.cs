@@ -7,11 +7,9 @@ using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Features.Handlers
 {
-    public class SetUpEventHandler : ISetUpEventHandler
+    public class SetUpEventHandler : BaseSetUpEventHandler
     {
-
-        public string Id { get; } = "Plato.Features";
-
+        
         public string Version { get; } = "1.0.0";
 
         private readonly ISchemaBuilder _schemaBuilder;
@@ -22,7 +20,7 @@ namespace Plato.Features.Handlers
             _schemaBuilder = schemaBuilder;
         }
 
-        public async Task SetUp(
+        public override async Task SetUp(
             SetUpContext context,
             Action<string, string> reportError)
         {
@@ -64,7 +62,7 @@ namespace Plato.Features.Handlers
             builder
                 .Configure(options =>
                 {
-                    options.ModuleName = Id;
+                    options.ModuleName = base.ModuleId;
                     options.Version = Version;
                     options.DropTablesBeforeCreate = true;
                     options.DropProceduresBeforeCreate = true;

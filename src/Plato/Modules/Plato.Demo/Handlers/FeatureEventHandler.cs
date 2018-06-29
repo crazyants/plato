@@ -19,11 +19,10 @@ namespace Plato.Demo.Handlers
     // with the features we want to enable or disable. The necessary IFeatureEventHandler can
     // then be registered within DI for the features we are enabling or disabling and the events can be invoked.
 
-    public class FeatureEventHandler : IFeatureEventHandler
+    public class FeatureEventHandler : BaseFeatureEventHandler
     {
 
-        public string Id { get; } = "Plato.Demo";
-        
+        #region "Constructor"
 
         private readonly ISchemaBuilder _schemaBuilder;
 
@@ -31,9 +30,12 @@ namespace Plato.Demo.Handlers
         {
             _schemaBuilder = schemaBuilder;
         }
-        
 
-        public async Task InstallingAsync(IFeatureEventContext context)
+        #endregion
+
+        #region "Implementation"
+
+        public override async Task InstallingAsync(IFeatureEventContext context)
         {
       
             var demo = new SchemaTable()
@@ -58,7 +60,7 @@ namespace Plato.Demo.Handlers
                 builder
                     .Configure(options =>
                     {
-                        options.ModuleName = "Plato.Demo";
+                        options.ModuleName = base.ModuleId;
                         options.Version = "1.0.0";
                         options.DropTablesBeforeCreate = true;
                         options.DropProceduresBeforeCreate = true;
@@ -83,7 +85,7 @@ namespace Plato.Demo.Handlers
             
         }
 
-        public Task InstalledAsync(IFeatureEventContext context)
+        public override Task InstalledAsync(IFeatureEventContext context)
         {
       
             try
@@ -101,7 +103,7 @@ namespace Plato.Demo.Handlers
 
         }
 
-        public Task UninstallingAsync(IFeatureEventContext context)
+        public override Task UninstallingAsync(IFeatureEventContext context)
         {
    
             try
@@ -118,7 +120,7 @@ namespace Plato.Demo.Handlers
 
         }
 
-        public Task UninstalledAsync(IFeatureEventContext context)
+        public override Task UninstalledAsync(IFeatureEventContext context)
         {
        
             try
@@ -133,5 +135,9 @@ namespace Plato.Demo.Handlers
 
             return Task.CompletedTask;
         }
+
+        #endregion
+
+
     }
 }

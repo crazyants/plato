@@ -5,7 +5,7 @@ using Plato.Internal.Data.Schemas.Abstractions;
 
 namespace Plato.Entities.Handlers
 {
-    public class SetUpEventHandler : ISetUpEventHandler
+    public class SetUpEventHandler : BaseSetUpEventHandler
     {
 
         private readonly ISchemaBuilder _schemaBuilder;
@@ -16,7 +16,7 @@ namespace Plato.Entities.Handlers
             _schemaBuilder = schemaBuilder;
         }
 
-        public async Task SetUp(
+        public override async Task SetUp(
             SetUpContext context,
             Action<string, string> reportError)
         {
@@ -27,8 +27,6 @@ namespace Plato.Entities.Handlers
             
             using (var builder = _schemaBuilder)
             {
-
-            
 
                 // Did any errors occur?
 
