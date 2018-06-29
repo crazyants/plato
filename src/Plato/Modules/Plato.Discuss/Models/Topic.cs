@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Plato.Entities.Models;
 
 namespace Plato.Discuss.Models
 {
-    public class Topic 
+    public class Topic  : Entity
     {
-
-        public int Id { get; set; }
-
-        public string Title { get; set; }
-
-        public string Text { get; set; }
+        private TopicDetails Details { get; set; } = new TopicDetails();
 
     }
 }

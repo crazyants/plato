@@ -29,7 +29,6 @@ namespace Plato.Entities.Handlers
             {
 
                 // Did any errors occur?
-
                 var result = await builder.ApplySchemaAsync();
                 if (result.Errors.Count > 0)
                 {

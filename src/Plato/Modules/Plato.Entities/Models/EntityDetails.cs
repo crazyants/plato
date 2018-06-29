@@ -3,23 +3,18 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Entities.Models
 {
-
-    public class EntityParticipant
-    {
-
-        public int UserId { get; set; }
-
-        public string UserName { get; set; }
-
-        public int Participations { get; set; }
-
-    }
     
+ 
+    // TODO: DELETE
     public class EntityDetails : Serializable
     {
-
-        public IEnumerable<EntityParticipant> Participants { get; set; }
         
+        public string SomeValue { get; set; }
+
+
     }
+
+
+
 
 }

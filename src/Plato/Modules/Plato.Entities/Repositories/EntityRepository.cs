@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
@@ -186,7 +187,7 @@ namespace Plato.Entities.Repositories
                             data.Add(entityData);
                         }
 
-                        entity.Data = data;
+                        //entity.Data = data;
                     }
                 }
 
@@ -237,6 +238,8 @@ namespace Plato.Entities.Repositories
             DateTime? modifiedDate,
             IEnumerable<EntityData> data)
         {
+
+            var entityId = 0;
             using (var context = _dbContext)
             {
 
@@ -250,7 +253,7 @@ namespace Plato.Entities.Repositories
                     throw args.Exception;
                 };
 
-                var entityId = await context.ExecuteScalarAsync<int>(
+                entityId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntity",
                     id,
@@ -269,21 +272,23 @@ namespace Plato.Entities.Repositories
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
                     modifiedDate.ToDateIfNull());
-                
-                if (entityId > 0)
-                {
-                    if (data != null)
-                    {
-                        foreach (var item in data)
-                        {
-                            await _entityDataRepository.InsertUpdateAsync(item);
-                        }
-                    }
+            }
 
+            // Add entity data
+            if (entityId > 0)
+            {
+                if (data != null)
+                {
+                    foreach (var item in data)
+                    {
+                        await _entityDataRepository.InsertUpdateAsync(item);
+                    }
                 }
 
-                return entityId;
             }
+
+            return entityId;
+
         }
 
         #endregion

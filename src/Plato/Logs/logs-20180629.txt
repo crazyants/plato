@@ -1,0 +1,1500 @@
+2018-06-29 15:30:01.709 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-29 15:30:01.910 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-29 15:30:01.941 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-29 15:30:01.944 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-06-29 15:30:01.983 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-29 15:30:02.072 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:02.138 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-29 15:30:02.145 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:30:02.167 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:30:02.210 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:02.288 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-06-29 15:30:02.298 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 15:30:02.348 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Updating user data with id: 1
+2018-06-29 15:30:02.355 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting setting with id: 1
+2018-06-29 15:30:02.358 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 15:30:02.361 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 15:30:02.366 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting document entry for type: Plato.Users.Controllers.TestDocument2
+2018-06-29 15:30:04.193 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-06-29 15:30:04.527 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2262.0266ms
+2018-06-29 15:30:04.532 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2622.7578ms 200 text/html; charset=utf-8
+2018-06-29 15:30:04.551 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/vendors/font-awesome.css  
+2018-06-29 15:30:04.554 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /css/vendors/font-awesome.css was not modified
+2018-06-29 15:30:04.557 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.9488ms 304 text/css
+2018-06-29 15:30:09.849 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Admin/Admin/Index  
+2018-06-29 15:30:09.849 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:30:09.849 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:30:09.852 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Admin.Controllers.AdminController.Index (Plato.Admin) with arguments ((null)) - ModelState is Valid
+2018-06-29 15:30:09.910 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Admin/Views/Admin/Index.cshtml.
+2018-06-29 15:30:10.023 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Admin.Controllers.AdminController.Index (Plato.Admin) in 171.672ms
+2018-06-29 15:30:10.024 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 174.993ms 200 text/html; charset=utf-8
+2018-06-29 15:30:10.046 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-29 15:30:10.046 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:30:10.046 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:30:10.047 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.2135ms 404 
+2018-06-29 15:30:12.300 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Features/Admin/Index  
+2018-06-29 15:30:12.301 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:30:12.301 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:30:12.306 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Features.Controllers.AdminController.Index (Plato.Features) with arguments ((null)) - ModelState is Valid
+2018-06-29 15:30:12.459 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Features/Views/Admin/Index.cshtml.
+2018-06-29 15:30:12.808 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Features.Controllers.AdminController.Index (Plato.Features) in 502.9154ms
+2018-06-29 15:30:12.808 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 507.5986ms 200 text/html; charset=utf-8
+2018-06-29 15:30:12.837 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-29 15:30:12.837 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:30:12.838 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:30:12.838 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.9742ms 404 
+2018-06-29 15:30:18.238 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:50439/Plato.Features/Admin/Disable/Plato.Entities application/x-www-form-urlencoded 225
+2018-06-29 15:30:18.238 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:30:18.238 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:30:18.257 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Features.Controllers.AdminController.Disable (Plato.Features) with arguments (Plato.Entities) - ModelState is Valid
+2018-06-29 15:30:18.274 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: Plato.Entities InstallingAsync Event Raised
+2018-06-29 15:30:18.276 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: UninstallingAsync called within Plato.Entities
+2018-06-29 15:30:18.282 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: The following SQL statements will be executed...
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'plato2_Entities')
+BEGIN
+DROP TABLE plato2_Entities
+END
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntities') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntities;
+END
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntityById') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntityById;
+END
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_DeleteEntityById') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_DeleteEntityById;
+END
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_InsertUpdateEntity') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_InsertUpdateEntity;
+END
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntitiesPaged') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntitiesPaged;
+END
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'plato2_EntityData')
+BEGIN
+DROP TABLE plato2_EntityData
+END
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntityData') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntityData;
+END
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntityDatumById') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntityDatumById;
+END
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_DeleteEntityDatumById') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_DeleteEntityDatumById;
+END
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_InsertUpdateEntityDatum') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_InsertUpdateEntityDatum;
+END
+2018-06-29 15:30:18.283 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntityDatumByEntityId') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntityDatumByEntityId;
+END
+2018-06-29 15:30:18.361 +01:00 [Information] Plato.Internal.Repositories.Shell.ShellFeatureRepository: Deleting entity with id: 28
+2018-06-29 15:30:18.377 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:18.384 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Updating dictionary entry with id: 2
+2018-06-29 15:30:18.388 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting dictionary entry with id: 2
+2018-06-29 15:30:18.389 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:18.395 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:18.396 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Updating dictionary entry with id: 2
+2018-06-29 15:30:18.396 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting dictionary entry with id: 2
+2018-06-29 15:30:18.397 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:18.400 +01:00 [Information] Plato.Internal.Layout.Alerts.Alerter: The alert of type 'Success' was added for display. Message: 'Plato.Entities disabled successfully!'.
+2018-06-29 15:30:18.407 +01:00 [Information] Microsoft.AspNetCore.Mvc.RedirectToActionResult: Executing RedirectResult, redirecting to /Plato.Features/Admin/Index.
+2018-06-29 15:30:18.407 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Features.Controllers.AdminController.Disable (Plato.Features) in 165.6377ms
+2018-06-29 15:30:18.408 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 170.3932ms 302 
+2018-06-29 15:30:18.413 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Features/Admin/Index  
+2018-06-29 15:30:18.414 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:30:18.415 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:30:18.418 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Features.Controllers.AdminController.Index (Plato.Features) with arguments ((null)) - ModelState is Valid
+2018-06-29 15:30:18.438 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Features/Views/Admin/Index.cshtml.
+2018-06-29 15:30:18.446 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Features.Controllers.AdminController.Index (Plato.Features) in 30.1926ms
+2018-06-29 15:30:18.446 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 32.9278ms 200 text/html; charset=utf-8
+2018-06-29 15:30:18.467 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-29 15:30:18.467 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:30:18.468 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:30:18.468 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8976ms 404 
+2018-06-29 15:30:50.102 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 POST http://localhost:50439/Plato.Features/Admin/Enable/Plato.Discuss application/x-www-form-urlencoded 225
+2018-06-29 15:30:50.102 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:30:50.102 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:30:50.107 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Features.Controllers.AdminController.Enable (Plato.Features) with arguments (Plato.Discuss) - ModelState is Valid
+2018-06-29 15:30:50.117 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: InstallingAsync called within Plato.Entities
+2018-06-29 15:30:50.129 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: The following SQL statements will be executed...
+2018-06-29 15:30:50.129 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'plato2_Entities')
+BEGIN
+DROP TABLE plato2_Entities
+END
+2018-06-29 15:30:50.129 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE TABLE plato2_Entities(
+Id int IDENTITY(1,1) NOT NULL,
+FeatureId int DEFAULT (0) NOT NULL,
+Title nvarchar(255) DEFAULT ('') NOT NULL,
+TitleNormalized nvarchar(255) DEFAULT ('') NOT NULL,
+Markdown nvarchar(max) DEFAULT ('') NOT NULL,
+Html nvarchar(max) DEFAULT ('') NOT NULL,
+PlainText nvarchar(max) DEFAULT ('') NOT NULL,
+IsPublic bit DEFAULT (0) NOT NULL,
+IsSpam bit DEFAULT (0) NOT NULL,
+IsPinned bit DEFAULT (0) NOT NULL,
+IsDeleted bit DEFAULT (0) NOT NULL,
+IsClosed bit DEFAULT (0) NOT NULL,
+CreatedUserId int DEFAULT (0) NOT NULL,
+CreatedDate datetime DEFAULT (GetDate()) NOT NULL,
+ModifiedUserId int DEFAULT (0) NOT NULL,
+ModifiedDate datetime DEFAULT (GetDate()) NOT NULL,
+CONSTRAINT PK_plato2_Entities_Id PRIMARY KEY CLUSTERED ( Id )
+);SELECT 1 AS MigrationId;
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntities') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntities;
+END
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE PROCEDURE plato2_SelectEntities
+AS
+
+SET NOCOUNT ON
+
+/******
+Module: Plato.Entities
+Version: 1.0.0
+This stored procedure was generated programmatically by Plato on 29/06/2018 15:30:50. Changes made by hand may be lost.
+******/
+
+SELECT * FROM plato2_Entities WITH (nolock)
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntityById') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntityById;
+END
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE PROCEDURE plato2_SelectEntityById (
+   @Id int
+) AS
+SET NOCOUNT ON
+
+/******
+Module: Plato.Entities
+Version: 1.0.0
+This stored procedure was generated programmatically by Plato on 29/06/2018 15:30:50. Changes made by hand may be lost.
+******/
+
+SELECT * FROM plato2_Entities WITH (nolock) 
+WHERE (
+   Id = @Id
+)
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_DeleteEntityById') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_DeleteEntityById;
+END
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE PROCEDURE plato2_DeleteEntityById (
+   @Id int
+) AS
+SET NOCOUNT ON
+
+/******
+Module: Plato.Entities
+Version: 1.0.0
+This stored procedure was generated programmatically by Plato on 29/06/2018 15:30:50. Changes made by hand may be lost.
+******/
+
+IF EXISTS (SELECT Id FROM plato2_Entities WHERE (Id = @Id))
+BEGIN
+
+   DELETE FROM plato2_Entities
+   WHERE (
+       Id = @Id
+   )
+
+   SELECT 1;
+
+END
+
+SELECT 0;
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_InsertUpdateEntity') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_InsertUpdateEntity;
+END
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE PROCEDURE [plato2_InsertUpdateEntity](
+     @Id int,
+     @FeatureId int,
+     @Title nvarchar(255),
+     @TitleNormalized nvarchar(255),
+     @Markdown nvarchar(max),
+     @Html nvarchar(max),
+     @PlainText nvarchar(max),
+     @IsPublic bit,
+     @IsSpam bit,
+     @IsPinned bit,
+     @IsDeleted bit,
+     @IsClosed bit,
+     @CreatedUserId int,
+     @CreatedDate datetime,
+     @ModifiedUserId int,
+     @ModifiedDate datetime
+) AS
+
+SET NOCOUNT ON 
+
+/******
+Module: Plato.Entities
+Version: 1.0.0
+This stored procedure was generated programmatically by Plato on 29/06/2018 15:30:50. Changes made by hand may be lost.
+******/
+
+DECLARE @unique_id int;
+
+IF EXISTS (SELECT Id FROM plato2_Entities WHERE (Id = @Id))
+BEGIN
+
+   UPDATE plato2_Entities SET 
+       FeatureId = @FeatureId,
+       Title = @Title,
+       TitleNormalized = @TitleNormalized,
+       Markdown = @Markdown,
+       Html = @Html,
+       PlainText = @PlainText,
+       IsPublic = @IsPublic,
+       IsSpam = @IsSpam,
+       IsPinned = @IsPinned,
+       IsDeleted = @IsDeleted,
+       IsClosed = @IsClosed,
+       CreatedUserId = @CreatedUserId,
+       CreatedDate = @CreatedDate,
+       ModifiedUserId = @ModifiedUserId,
+       ModifiedDate = @ModifiedDate
+       WHERE Id = @Id
+
+     SET @unique_id = @Id;
+
+END
+ELSE
+BEGIN
+
+   INSERT INTO plato2_Entities ( 
+       FeatureId,
+       Title,
+       TitleNormalized,
+       Markdown,
+       Html,
+       PlainText,
+       IsPublic,
+       IsSpam,
+       IsPinned,
+       IsDeleted,
+       IsClosed,
+       CreatedUserId,
+       CreatedDate,
+       ModifiedUserId,
+       ModifiedDate
+   ) VALUES (
+       @FeatureId,
+       @Title,
+       @TitleNormalized,
+       @Markdown,
+       @Html,
+       @PlainText,
+       @IsPublic,
+       @IsSpam,
+       @IsPinned,
+       @IsDeleted,
+       @IsClosed,
+       @CreatedUserId,
+       @CreatedDate,
+       @ModifiedUserId,
+       @ModifiedDate
+     )
+
+     SET @unique_id = SCOPE_IDENTITY();
+
+END
+
+SELECT @unique_id;
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntityById') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntityById;
+END
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE PROCEDURE [plato2_SelectEntityById](
+     @Id int
+) AS
+
+SET NOCOUNT ON 
+
+/******
+Module: Plato.Entities
+Version: 1.0.0
+This stored procedure was generated programmatically by Plato on 29/06/2018 15:30:50. Changes made by hand may be lost.
+******/
+
+ SELECT * FROM plato2_Entities WITH (nolock) 
+WHERE (
+ Id = @Id
+)
+SELECT * FROM plato2_EntityData WITH (nolock) 
+WHERE (
+ EntityId = @Id
+)
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntitiesPaged') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntitiesPaged;
+END
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE PROCEDURE plato2_SelectEntitiesPaged (
+   @PageIndex int = 1,
+   @PageSize int = 10,
+   @SqlStartId nvarchar(max),
+   @SqlPopulate nvarchar(max),
+   @SqlCount nvarchar(max),
+   @Id int,
+   @Keywords nvarchar(255)
+) AS
+SET NOCOUNT ON
+
+/******
+Module: Plato.Entities
+Version: 1.0.0
+This stored procedure was generated programmatically by Plato on 29/06/2018 15:30:50. Changes made by hand may be lost.
+******/
+
+DECLARE @first_id int, @start_row int
+
+DECLARE @SqlParams nvarchar(max) = '@Id int, @Keywords nvarchar(255)';
+
+-- set start row pageSize * pageIndex - pageSize - 1
+-- 1 * 5 = 1, 2 * 5 = 6, 3 * 5 = 11
+-- 1 * 10 = 1, 2 * 10 = 11, 3 * 10 = 21
+SET @start_row = 1;
+IF (@PageIndex > 1)
+   SET @start_row = (
+       (@PageIndex * @PageSize) - (@PageSize - 1)
+   )
+
+-- Get the first row for our page of records
+SET ROWCOUNT @start_row;
+DECLARE @parms nvarchar(100);
+
+-- get the first Id
+SET @parms = '@start_id_out int OUTPUT,' + @SqlParams;
+EXECUTE sp_executesql  @SqlStartId, @parms, 
+   @start_id_out = @first_id OUTPUT,
+   @Id = 0,
+   @Keywords = '';
+
+-- set to our page size
+SET ROWCOUNT @PageSize;
+
+-- add our start parameter to the start
+SET @SqlParams = '@start_id_in int,' + @SqlParams;
+
+-- get all records >= @first_id
+EXECUTE sp_executesql @SqlPopulate, @SqlParams,
+   @start_id_in = @first_id,
+   @Id = 0,
+   @Keywords = '';
+
+SET ROWCOUNT 0;
+
+-- total count
+IF(@SqlCount <> '')
+EXECUTE sp_executesql @SqlCount, @SqlParams,
+   @start_id_in = @first_id,
+   @Id = 0,
+   @Keywords = '';
+
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'plato2_EntityData')
+BEGIN
+DROP TABLE plato2_EntityData
+END
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE TABLE plato2_EntityData(
+Id int IDENTITY(1,1) NOT NULL,
+EntityId int DEFAULT (0) NOT NULL,
+[Key] nvarchar(255) DEFAULT ('') NOT NULL,
+[Value] nvarchar(max) DEFAULT ('') NOT NULL,
+CreatedDate datetime2 DEFAULT (GetDate()) NOT NULL,
+CreatedUserId int DEFAULT (0) NOT NULL,
+ModifiedDate datetime2 DEFAULT (GetDate()) NOT NULL,
+ModifiedUserId int DEFAULT (0) NOT NULL,
+CONSTRAINT PK_plato2_EntityData_Id PRIMARY KEY CLUSTERED ( Id )
+);SELECT 1 AS MigrationId;
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntityData') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntityData;
+END
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE PROCEDURE plato2_SelectEntityData
+AS
+
+SET NOCOUNT ON
+
+/******
+Module: Plato.Entities
+Version: 1.0.0
+This stored procedure was generated programmatically by Plato on 29/06/2018 15:30:50. Changes made by hand may be lost.
+******/
+
+SELECT * FROM plato2_EntityData WITH (nolock)
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntityDatumById') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntityDatumById;
+END
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE PROCEDURE plato2_SelectEntityDatumById (
+   @Id int
+) AS
+SET NOCOUNT ON
+
+/******
+Module: Plato.Entities
+Version: 1.0.0
+This stored procedure was generated programmatically by Plato on 29/06/2018 15:30:50. Changes made by hand may be lost.
+******/
+
+SELECT * FROM plato2_EntityData WITH (nolock) 
+WHERE (
+   Id = @Id
+)
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_DeleteEntityDatumById') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_DeleteEntityDatumById;
+END
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE PROCEDURE plato2_DeleteEntityDatumById (
+   @Id int
+) AS
+SET NOCOUNT ON
+
+/******
+Module: Plato.Entities
+Version: 1.0.0
+This stored procedure was generated programmatically by Plato on 29/06/2018 15:30:50. Changes made by hand may be lost.
+******/
+
+IF EXISTS (SELECT Id FROM plato2_EntityData WHERE (Id = @Id))
+BEGIN
+
+   DELETE FROM plato2_EntityData
+   WHERE (
+       Id = @Id
+   )
+
+   SELECT 1;
+
+END
+
+SELECT 0;
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_InsertUpdateEntityDatum') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_InsertUpdateEntityDatum;
+END
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE PROCEDURE [plato2_InsertUpdateEntityDatum](
+     @Id int,
+     @EntityId int,
+     @Key nvarchar(255),
+     @Value nvarchar(max),
+     @CreatedDate datetime2,
+     @CreatedUserId int,
+     @ModifiedDate datetime2,
+     @ModifiedUserId int
+) AS
+
+SET NOCOUNT ON 
+
+/******
+Module: Plato.Entities
+Version: 1.0.0
+This stored procedure was generated programmatically by Plato on 29/06/2018 15:30:50. Changes made by hand may be lost.
+******/
+
+DECLARE @unique_id int;
+
+IF EXISTS (SELECT Id FROM plato2_EntityData WHERE (Id = @Id))
+BEGIN
+
+   UPDATE plato2_EntityData SET 
+       EntityId = @EntityId,
+       [Key] = @Key,
+       [Value] = @Value,
+       CreatedDate = @CreatedDate,
+       CreatedUserId = @CreatedUserId,
+       ModifiedDate = @ModifiedDate,
+       ModifiedUserId = @ModifiedUserId
+       WHERE Id = @Id
+
+     SET @unique_id = @Id;
+
+END
+ELSE
+BEGIN
+
+   INSERT INTO plato2_EntityData ( 
+       EntityId,
+       [Key],
+       [Value],
+       CreatedDate,
+       CreatedUserId,
+       ModifiedDate,
+       ModifiedUserId
+   ) VALUES (
+       @EntityId,
+       @Key,
+       @Value,
+       @CreatedDate,
+       @CreatedUserId,
+       @ModifiedDate,
+       @ModifiedUserId
+     )
+
+     SET @unique_id = SCOPE_IDENTITY();
+
+END
+
+SELECT @unique_id;
+2018-06-29 15:30:50.130 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'plato2_SelectEntityDatumByEntityId') AND type in (N'P', N'PC'))
+BEGIN
+DROP PROCEDURE plato2_SelectEntityDatumByEntityId;
+END
+2018-06-29 15:30:50.131 +01:00 [Information] Plato.Internal.Features.ShellFeatureManager: CREATE PROCEDURE plato2_SelectEntityDatumByEntityId (
+   @EntityId int
+) AS
+SET NOCOUNT ON
+
+/******
+Module: Plato.Entities
+Version: 1.0.0
+This stored procedure was generated programmatically by Plato on 29/06/2018 15:30:50. Changes made by hand may be lost.
+******/
+
+SELECT * FROM plato2_EntityData WITH (nolock) 
+WHERE (
+   EntityId = @EntityId
+)
+2018-06-29 15:30:50.200 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:50.202 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Updating dictionary entry with id: 2
+2018-06-29 15:30:50.205 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting dictionary entry with id: 2
+2018-06-29 15:30:50.206 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:50.256 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:50.257 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Updating dictionary entry with id: 2
+2018-06-29 15:30:50.264 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting dictionary entry with id: 2
+2018-06-29 15:30:50.264 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:50.290 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:50.290 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Updating dictionary entry with id: 2
+2018-06-29 15:30:50.291 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting dictionary entry with id: 2
+2018-06-29 15:30:50.291 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 15:30:50.293 +01:00 [Information] Plato.Internal.Layout.Alerts.Alerter: The alert of type 'Success' was added for display. Message: 'Plato.Discuss enabled successfully!'.
+2018-06-29 15:30:50.294 +01:00 [Information] Plato.Internal.Layout.Alerts.Alerter: The alert of type 'Success' was added for display. Message: 'Plato.Entities enabled successfully!'.
+2018-06-29 15:30:50.294 +01:00 [Information] Microsoft.AspNetCore.Mvc.RedirectToActionResult: Executing RedirectResult, redirecting to /Plato.Features/Admin/Index.
+2018-06-29 15:30:50.294 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Features.Controllers.AdminController.Enable (Plato.Features) in 187.6604ms
+2018-06-29 15:30:50.294 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 192.2944ms 302 
+2018-06-29 15:30:50.299 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Features/Admin/Index  
+2018-06-29 15:30:50.299 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:30:50.301 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:30:50.302 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Features.Controllers.AdminController.Index (Plato.Features) with arguments ((null)) - ModelState is Valid
+2018-06-29 15:30:50.303 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Features/Views/Admin/Index.cshtml.
+2018-06-29 15:30:50.313 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Features.Controllers.AdminController.Index (Plato.Features) in 11.7642ms
+2018-06-29 15:30:50.313 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 14.5448ms 200 text/html; charset=utf-8
+2018-06-29 15:30:50.335 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-29 15:30:50.336 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:30:50.336 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:30:50.336 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.8882ms 404 
+2018-06-29 15:31:00.545 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-29 15:31:00.545 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:31:00.545 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:31:00.547 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-06-29 15:31:00.548 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 15:31:00.549 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Updating user data with id: 1
+2018-06-29 15:31:00.552 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting setting with id: 1
+2018-06-29 15:31:00.553 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 15:31:00.553 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 15:31:00.553 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting document entry for type: Plato.Users.Controllers.TestDocument2
+2018-06-29 15:31:00.554 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-06-29 15:31:00.557 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 11.9772ms
+2018-06-29 15:31:00.557 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 12.9479ms 200 text/html; charset=utf-8
+2018-06-29 15:31:02.692 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/discuss  
+2018-06-29 15:31:02.692 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 15:31:02.692 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 15:31:02.698 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) with arguments ((null)) - ModelState is Valid
+2018-06-29 15:31:02.822 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Discuss/Views/Home/Index.cshtml.
+2018-06-29 15:31:02.844 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) in 146.7056ms
+2018-06-29 15:31:02.844 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 152.1052ms 200 text/html; charset=utf-8
+2018-06-29 15:51:10.717 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/webfonts/fa-brands-400.woff2  
+2018-06-29 15:51:10.717 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/webfonts/fa-light-300.woff2  
+2018-06-29 15:51:10.718 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /css/webfonts/fa-light-300.woff2 was not modified
+2018-06-29 15:51:10.718 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /css/webfonts/fa-brands-400.woff2 was not modified
+2018-06-29 15:51:10.718 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7609ms 304 font/woff2
+2018-06-29 15:51:10.718 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.7609ms 304 font/woff2
+2018-06-29 16:22:46.565 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-29 16:22:46.718 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-29 16:22:46.752 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-29 16:22:46.755 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-06-29 16:22:46.797 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-29 16:22:46.888 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 16:22:46.956 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-29 16:22:46.958 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 16:22:46.968 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 16:22:47.012 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 16:22:47.091 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-06-29 16:22:47.102 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 16:22:47.152 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Updating user data with id: 1
+2018-06-29 16:22:47.159 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting setting with id: 1
+2018-06-29 16:22:47.162 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 16:22:47.165 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 16:22:47.169 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting document entry for type: Plato.Users.Controllers.TestDocument2
+2018-06-29 16:22:49.005 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-06-29 16:22:49.300 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2231.7442ms
+2018-06-29 16:22:49.304 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2587.5114ms 200 text/html; charset=utf-8
+2018-06-29 16:22:49.324 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/app/plato.css  
+2018-06-29 16:22:49.327 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /css/app/plato.css was not modified
+2018-06-29 16:22:49.330 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 5.5494ms 304 text/css
+2018-06-29 16:22:51.355 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Admin/Admin/Index  
+2018-06-29 16:22:51.355 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 16:22:51.355 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 16:22:51.358 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Admin.Controllers.AdminController.Index (Plato.Admin) with arguments ((null)) - ModelState is Valid
+2018-06-29 16:22:51.422 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Admin/Views/Admin/Index.cshtml.
+2018-06-29 16:22:51.605 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Admin.Controllers.AdminController.Index (Plato.Admin) in 247.1652ms
+2018-06-29 16:22:51.605 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 250.5315ms 200 text/html; charset=utf-8
+2018-06-29 16:22:51.630 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-29 16:22:51.630 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 16:22:51.630 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 16:22:51.631 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 1.1261ms 404 
+2018-06-29 16:22:54.620 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/Plato.Features/Admin/Index  
+2018-06-29 16:22:54.620 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 16:22:54.620 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 16:22:54.626 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Features.Controllers.AdminController.Index (Plato.Features) with arguments ((null)) - ModelState is Valid
+2018-06-29 16:22:54.787 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Features/Views/Admin/Index.cshtml.
+2018-06-29 16:22:55.139 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Features.Controllers.AdminController.Index (Plato.Features) in 514.9143ms
+2018-06-29 16:22:55.139 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 519.5465ms 200 text/html; charset=utf-8
+2018-06-29 16:22:55.159 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/assets/img/avatar-male-4.jpg  
+2018-06-29 16:22:55.160 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 16:22:55.160 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: AuthenticationScheme: Identity.Application was successfully authenticated.
+2018-06-29 16:22:55.160 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.887ms 404 
+2018-06-29 17:51:53.564 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-29 17:51:53.758 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-29 17:51:53.790 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-29 17:51:53.793 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-06-29 17:51:53.833 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-29 17:51:53.922 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 17:51:53.989 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-29 17:51:53.992 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 17:51:54.002 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-29 17:51:54.044 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 17:51:54.124 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-06-29 17:51:54.135 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 17:51:54.185 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Updating user data with id: 1
+2018-06-29 17:51:54.193 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting setting with id: 1
+2018-06-29 17:51:54.196 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 17:51:54.199 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 17:51:54.203 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting document entry for type: Plato.Users.Controllers.TestDocument2
+2018-06-29 17:51:56.045 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-06-29 17:51:56.374 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2272.5331ms
+2018-06-29 17:51:56.378 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2621.0779ms 200 text/html; charset=utf-8
+2018-06-29 17:51:56.400 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/js/app/plato.js  
+2018-06-29 17:51:56.400 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/themes/default/theme.css  
+2018-06-29 17:51:56.400 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/plato.discuss/content/js/app.js  
+2018-06-29 17:51:56.403 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /default/theme.css was not modified
+2018-06-29 17:51:56.403 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /js/app.js was not modified
+2018-06-29 17:51:56.403 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /js/app/plato.js was not modified
+2018-06-29 17:51:56.409 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 8.2861ms 304 text/css
+2018-06-29 17:51:56.409 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 8.2864ms 304 application/javascript
+2018-06-29 17:51:56.409 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 8.5927ms 304 application/javascript
+2018-06-29 17:51:58.571 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/discuss  
+2018-06-29 17:51:58.571 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 17:51:58.571 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-29 17:51:58.577 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) with arguments ((null)) - ModelState is Valid
+2018-06-29 17:51:58.634 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data1
+2018-06-29 17:51:58.639 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting entity data with id: 1
+2018-06-29 17:51:58.642 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data2
+2018-06-29 17:51:58.646 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) in 70.4408ms
+2018-06-29 17:51:58.647 +01:00 [Error] Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware: An unhandled exception has occurred while executing the request
+System.InvalidOperationException: There is already an open DataReader associated with this Command which must be closed first.
+   at System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   at System.Data.SqlClient.SqlConnection.ValidateConnectionForExecute(String method, SqlCommand command)
+   at System.Data.SqlClient.SqlCommand.ValidateCommand(Boolean async, String method)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite, String method)
+   at System.Data.SqlClient.SqlCommand.BeginExecuteReader(CommandBehavior behavior, AsyncCallback callback, Object stateObject)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncImpl[TArg1](Func`4 beginMethod, Func`2 endFunction, Action`1 endAction, TArg1 arg1, Object state, TaskCreationOptions creationOptions)
+   at System.Threading.Tasks.TaskFactory`1.FromAsync[TArg1](Func`4 beginMethod, Func`2 endMethod, TArg1 arg1, Object state)
+   at System.Data.SqlClient.SqlCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Data.Providers.SqlProvider.<ExecuteScalarAsync>d__31`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Data\Providers\SqlProvider.cs:line 207
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Data.DbContext.<ExecuteScalarAsync>d__17`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Data\DbContext.cs:line 132
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityDataRepository.<InsertUpdateInternal>d__7.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityDataRepository.cs:line 149
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityDataRepository.<InsertUpdateAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityDataRepository.cs:line 101
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityRepository.<InsertUpdateInternal>d__9.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityRepository.cs:line 280
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityRepository.<InsertUpdateAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityRepository.cs:line 69
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Stores.EntityStore.<CreateAsync>d__7.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Stores\EntityStore.cs:line 40
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Discuss.Controllers.HomeController.<Index>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Discuss\Controllers\HomeController.cs:line 82
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__14.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeFilterPipelineAsync>d__17.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeAsync>d__15.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware.<Invoke>d__4.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Routing\PlatoRouterMiddleware.cs:line 72
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Middleware.PlatoContainerMiddleware.<Invoke>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Middleware\PlatoContainerMiddleware.cs:line 66
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.Extensions.MapMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__7.MoveNext()
+2018-06-29 17:51:58.775 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 204.7333ms 500 text/html; charset=utf-8
+2018-06-29 17:52:06.799 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/discuss  
+2018-06-29 17:52:06.800 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 17:52:06.800 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-29 17:52:06.801 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) with arguments ((null)) - ModelState is Valid
+2018-06-29 17:52:06.805 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data1
+2018-06-29 17:52:06.806 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting entity data with id: 2
+2018-06-29 17:52:06.807 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data2
+2018-06-29 17:52:06.814 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) in 13.5489ms
+2018-06-29 17:52:06.816 +01:00 [Error] Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware: An unhandled exception has occurred while executing the request
+System.InvalidOperationException: There is already an open DataReader associated with this Command which must be closed first.
+   at System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   at System.Data.SqlClient.SqlConnection.ValidateConnectionForExecute(String method, SqlCommand command)
+   at System.Data.SqlClient.SqlCommand.ValidateCommand(Boolean async, String method)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite, String method)
+   at System.Data.SqlClient.SqlCommand.BeginExecuteReader(CommandBehavior behavior, AsyncCallback callback, Object stateObject)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncImpl[TArg1](Func`4 beginMethod, Func`2 endFunction, Action`1 endAction, TArg1 arg1, Object state, TaskCreationOptions creationOptions)
+   at System.Threading.Tasks.TaskFactory`1.FromAsync[TArg1](Func`4 beginMethod, Func`2 endMethod, TArg1 arg1, Object state)
+   at System.Data.SqlClient.SqlCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Data.Providers.SqlProvider.<ExecuteScalarAsync>d__31`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Data\Providers\SqlProvider.cs:line 207
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Data.DbContext.<ExecuteScalarAsync>d__17`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Data\DbContext.cs:line 132
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityDataRepository.<InsertUpdateInternal>d__7.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityDataRepository.cs:line 149
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityDataRepository.<InsertUpdateAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityDataRepository.cs:line 101
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityRepository.<InsertUpdateInternal>d__9.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityRepository.cs:line 280
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityRepository.<InsertUpdateAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityRepository.cs:line 69
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Stores.EntityStore.<CreateAsync>d__7.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Stores\EntityStore.cs:line 40
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Discuss.Controllers.HomeController.<Index>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Discuss\Controllers\HomeController.cs:line 82
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__14.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeFilterPipelineAsync>d__17.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeAsync>d__15.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware.<Invoke>d__4.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Routing\PlatoRouterMiddleware.cs:line 72
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Middleware.PlatoContainerMiddleware.<Invoke>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Middleware\PlatoContainerMiddleware.cs:line 66
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.Extensions.MapMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__7.MoveNext()
+2018-06-29 17:52:06.911 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 111.9734ms 500 text/html; charset=utf-8
+2018-06-29 17:52:06.950 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-06-29 17:52:06.950 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-06-29 17:52:06.954 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.1155ms 200 image/x-icon
+2018-06-29 17:52:07.513 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/discuss  
+2018-06-29 17:52:07.513 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 17:52:07.513 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-29 17:52:07.513 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) with arguments ((null)) - ModelState is Valid
+2018-06-29 17:52:07.514 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data1
+2018-06-29 17:52:07.515 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting entity data with id: 3
+2018-06-29 17:52:07.515 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data2
+2018-06-29 17:52:07.517 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) in 3.8329ms
+2018-06-29 17:52:07.518 +01:00 [Error] Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware: An unhandled exception has occurred while executing the request
+System.InvalidOperationException: There is already an open DataReader associated with this Command which must be closed first.
+   at System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   at System.Data.SqlClient.SqlConnection.ValidateConnectionForExecute(String method, SqlCommand command)
+   at System.Data.SqlClient.SqlCommand.ValidateCommand(Boolean async, String method)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite, String method)
+   at System.Data.SqlClient.SqlCommand.BeginExecuteReader(CommandBehavior behavior, AsyncCallback callback, Object stateObject)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncImpl[TArg1](Func`4 beginMethod, Func`2 endFunction, Action`1 endAction, TArg1 arg1, Object state, TaskCreationOptions creationOptions)
+   at System.Threading.Tasks.TaskFactory`1.FromAsync[TArg1](Func`4 beginMethod, Func`2 endMethod, TArg1 arg1, Object state)
+   at System.Data.SqlClient.SqlCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Data.Providers.SqlProvider.<ExecuteScalarAsync>d__31`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Data\Providers\SqlProvider.cs:line 207
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Data.DbContext.<ExecuteScalarAsync>d__17`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Data\DbContext.cs:line 132
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityDataRepository.<InsertUpdateInternal>d__7.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityDataRepository.cs:line 149
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityDataRepository.<InsertUpdateAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityDataRepository.cs:line 101
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityRepository.<InsertUpdateInternal>d__9.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityRepository.cs:line 280
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityRepository.<InsertUpdateAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityRepository.cs:line 69
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Stores.EntityStore.<CreateAsync>d__7.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Stores\EntityStore.cs:line 40
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Discuss.Controllers.HomeController.<Index>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Discuss\Controllers\HomeController.cs:line 82
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__14.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeFilterPipelineAsync>d__17.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeAsync>d__15.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware.<Invoke>d__4.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Routing\PlatoRouterMiddleware.cs:line 72
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Middleware.PlatoContainerMiddleware.<Invoke>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Middleware\PlatoContainerMiddleware.cs:line 66
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.Extensions.MapMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__7.MoveNext()
+2018-06-29 17:52:07.604 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 91.7446ms 500 text/html; charset=utf-8
+2018-06-29 17:52:07.644 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-06-29 17:52:07.644 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-06-29 17:52:07.648 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 4.1673ms 200 image/x-icon
+2018-06-29 17:52:08.169 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/discuss  
+2018-06-29 17:52:08.169 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 17:52:08.169 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-29 17:52:08.169 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) with arguments ((null)) - ModelState is Valid
+2018-06-29 17:52:08.170 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data1
+2018-06-29 17:52:08.171 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting entity data with id: 4
+2018-06-29 17:52:08.171 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data2
+2018-06-29 17:52:08.174 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) in 4.3982ms
+2018-06-29 17:52:08.175 +01:00 [Error] Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware: An unhandled exception has occurred while executing the request
+System.InvalidOperationException: There is already an open DataReader associated with this Command which must be closed first.
+   at System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   at System.Data.SqlClient.SqlConnection.ValidateConnectionForExecute(String method, SqlCommand command)
+   at System.Data.SqlClient.SqlCommand.ValidateCommand(Boolean async, String method)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite, String method)
+   at System.Data.SqlClient.SqlCommand.BeginExecuteReader(CommandBehavior behavior, AsyncCallback callback, Object stateObject)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncImpl[TArg1](Func`4 beginMethod, Func`2 endFunction, Action`1 endAction, TArg1 arg1, Object state, TaskCreationOptions creationOptions)
+   at System.Threading.Tasks.TaskFactory`1.FromAsync[TArg1](Func`4 beginMethod, Func`2 endMethod, TArg1 arg1, Object state)
+   at System.Data.SqlClient.SqlCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Data.Providers.SqlProvider.<ExecuteScalarAsync>d__31`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Data\Providers\SqlProvider.cs:line 207
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Data.DbContext.<ExecuteScalarAsync>d__17`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Data\DbContext.cs:line 132
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityDataRepository.<InsertUpdateInternal>d__7.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityDataRepository.cs:line 149
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityDataRepository.<InsertUpdateAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityDataRepository.cs:line 101
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityRepository.<InsertUpdateInternal>d__9.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityRepository.cs:line 280
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityRepository.<InsertUpdateAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityRepository.cs:line 69
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Stores.EntityStore.<CreateAsync>d__7.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Stores\EntityStore.cs:line 40
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Discuss.Controllers.HomeController.<Index>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Discuss\Controllers\HomeController.cs:line 82
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__14.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeFilterPipelineAsync>d__17.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeAsync>d__15.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware.<Invoke>d__4.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Routing\PlatoRouterMiddleware.cs:line 72
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Middleware.PlatoContainerMiddleware.<Invoke>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Middleware\PlatoContainerMiddleware.cs:line 66
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.Extensions.MapMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__7.MoveNext()
+2018-06-29 17:52:08.262 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 93.4701ms 500 text/html; charset=utf-8
+2018-06-29 17:52:08.305 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-06-29 17:52:08.305 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-06-29 17:52:08.306 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 0.9657ms 200 image/x-icon
+2018-06-29 17:54:57.856 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-29 17:54:58.053 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-29 17:54:58.084 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-29 17:54:58.087 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-06-29 17:54:58.127 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-29 17:54:58.215 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 17:54:58.279 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-29 17:54:58.281 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 17:54:58.291 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-29 17:54:58.333 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 17:54:58.412 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-06-29 17:54:58.422 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 17:54:58.472 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Updating user data with id: 1
+2018-06-29 17:54:58.479 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting setting with id: 1
+2018-06-29 17:54:58.482 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 17:54:58.484 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 17:54:58.488 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting document entry for type: Plato.Users.Controllers.TestDocument2
+2018-06-29 17:55:00.351 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-06-29 17:55:00.645 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2256.0965ms
+2018-06-29 17:55:00.649 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2597.6849ms 200 text/html; charset=utf-8
+2018-06-29 17:55:02.374 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/discuss  
+2018-06-29 17:55:02.374 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 17:55:02.375 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-29 17:55:02.381 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) with arguments ((null)) - ModelState is Valid
+2018-06-29 17:55:02.432 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data1
+2018-06-29 17:55:02.436 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting entity data with id: 5
+2018-06-29 17:55:02.438 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data2
+2018-06-29 17:55:02.438 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting entity data with id: 6
+2018-06-29 17:55:02.638 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Discuss/Views/Home/Index.cshtml.
+2018-06-29 17:55:02.673 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) in 293.8287ms
+2018-06-29 17:55:02.673 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 299.8105ms 200 text/html; charset=utf-8
+2018-06-29 17:55:02.731 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/css/webfonts/fa-solid-900.woff2  
+2018-06-29 17:55:02.733 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: The file /css/webfonts/fa-solid-900.woff2 was not modified
+2018-06-29 17:55:02.735 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.2539ms 304 font/woff2
+2018-06-29 17:55:07.967 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/discuss  
+2018-06-29 17:55:07.968 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 17:55:07.968 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-29 17:55:07.969 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) with arguments ((null)) - ModelState is Valid
+2018-06-29 17:55:07.971 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data1
+2018-06-29 17:55:07.973 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting entity data with id: 7
+2018-06-29 17:55:07.974 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data2
+2018-06-29 17:55:07.975 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting entity data with id: 8
+2018-06-29 17:55:07.980 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Discuss/Views/Home/Index.cshtml.
+2018-06-29 17:55:07.983 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) in 14.3672ms
+2018-06-29 17:55:07.983 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 16.2317ms 200 text/html; charset=utf-8
+2018-06-29 17:55:08.068 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-06-29 17:55:08.069 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-06-29 17:55:08.076 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 7.5284ms 200 image/x-icon
+2018-06-29 17:56:34.932 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-29 17:56:35.146 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-29 17:56:35.176 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-29 17:56:35.179 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-06-29 17:56:35.219 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-29 17:56:35.341 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 17:56:35.387 +01:00 [Error] Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware: An unhandled exception has occurred while executing the request
+System.AggregateException: One or more errors occurred. (One or more errors occurred. (Invalid attempt to call HasRows when reader is closed.)) ---> System.AggregateException: One or more errors occurred. (Invalid attempt to call HasRows when reader is closed.) ---> System.InvalidOperationException: Invalid attempt to call HasRows when reader is closed.
+   at System.Data.SqlClient.SqlDataReader.get_HasRows()
+   at Plato.Internal.Repositories.Abstract.DictionaryRepository.<SelectEntries>d__6.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Repositories\Abstract\DictionaryRepository.cs:line 115
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Abstract.DictionaryStore.<GetAllKeys>d__6.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Abstract\DictionaryStore.cs:line 92
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Abstract.DictionaryStore.<GetByKeyAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Abstract\DictionaryStore.cs:line 85
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Abstract.DictionaryStore.<GetAsync>d__2`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Abstract\DictionaryStore.cs:line 35
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Shell.ShellDescriptorStore.<GetAsync>d__6.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Shell\ShellDescriptorStore.cs:line 43
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at Plato.Internal.Shell.ShellContextFactory.CreateShellContext(IShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Shell\ShellContextFactory.cs:line 50
+   at Plato.Internal.Hosting.DefaultPlatoHost.CreateShellContext(IShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 85
+   at Plato.Internal.Hosting.DefaultPlatoHost.<>c__DisplayClass8_0.<GetOrCreateShellContext>b__0(String tenant) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 60
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Plato.Internal.Hosting.DefaultPlatoHost.GetOrCreateShellContext(IShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 58
+   at Plato.Internal.Hosting.DefaultPlatoHost.<CreateAndActivateShells>b__14_0(ShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 162
+   at System.Threading.Tasks.Parallel.<>c__DisplayClass32_0`2.<ForEachWorker>b__0(Int32 i)
+   at System.Threading.Tasks.Parallel.<>c__DisplayClass19_0`1.<ForWorker>b__1(RangeWorker& currentWorker, Int32 timeout, Boolean& replicationDelegateYieldedBeforeCompletion)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.Tasks.Parallel.<>c__DisplayClass19_0`1.<ForWorker>b__1(RangeWorker& currentWorker, Int32 timeout, Boolean& replicationDelegateYieldedBeforeCompletion)
+   at System.Threading.Tasks.TaskReplicator.Replica`1.ExecuteAction(Boolean& yieldedBeforeCompletion)
+   at System.Threading.Tasks.TaskReplicator.Replica.Execute()
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.TaskReplicator.Run[TState](ReplicatableUserAction`1 action, ParallelOptions options, Boolean stopOnFirstFailure)
+   at System.Threading.Tasks.Parallel.ForWorker[TLocal](Int32 fromInclusive, Int32 toExclusive, ParallelOptions parallelOptions, Action`1 body, Action`2 bodyWithState, Func`4 bodyWithLocal, Func`1 localInit, Action`1 localFinally)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.Tasks.Parallel.ThrowSingleCancellationExceptionOrOtherException(ICollection exceptions, CancellationToken cancelToken, Exception otherException)
+   at System.Threading.Tasks.Parallel.ForWorker[TLocal](Int32 fromInclusive, Int32 toExclusive, ParallelOptions parallelOptions, Action`1 body, Action`2 bodyWithState, Func`4 bodyWithLocal, Func`1 localInit, Action`1 localFinally)
+   at System.Threading.Tasks.Parallel.ForEachWorker[TSource,TLocal](TSource[] array, ParallelOptions parallelOptions, Action`1 body, Action`2 bodyWithState, Action`3 bodyWithStateAndIndex, Func`4 bodyWithStateAndLocal, Func`5 bodyWithEverything, Func`1 localInit, Action`1 localFinally)
+   at System.Threading.Tasks.Parallel.ForEachWorker[TSource,TLocal](IEnumerable`1 source, ParallelOptions parallelOptions, Action`1 body, Action`2 bodyWithState, Action`3 bodyWithStateAndIndex, Func`4 bodyWithStateAndLocal, Func`5 bodyWithEverything, Func`1 localInit, Action`1 localFinally)
+   at System.Threading.Tasks.Parallel.ForEach[TSource](IEnumerable`1 source, Action`1 body)
+   at Plato.Internal.Hosting.DefaultPlatoHost.CreateAndActivateShells() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 158
+   at Plato.Internal.Hosting.DefaultPlatoHost.BuildCurrent() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 138
+   at Plato.Internal.Hosting.DefaultPlatoHost.Initialize() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 48
+   at Plato.Internal.Hosting.Web.Middleware.PlatoContainerMiddleware.<Invoke>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Middleware\PlatoContainerMiddleware.cs:line 33
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.Extensions.MapMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__7.MoveNext()
+---> (Inner Exception #0) System.AggregateException: One or more errors occurred. (Invalid attempt to call HasRows when reader is closed.) ---> System.InvalidOperationException: Invalid attempt to call HasRows when reader is closed.
+   at System.Data.SqlClient.SqlDataReader.get_HasRows()
+   at Plato.Internal.Repositories.Abstract.DictionaryRepository.<SelectEntries>d__6.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Repositories\Abstract\DictionaryRepository.cs:line 115
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Abstract.DictionaryStore.<GetAllKeys>d__6.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Abstract\DictionaryStore.cs:line 92
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Abstract.DictionaryStore.<GetByKeyAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Abstract\DictionaryStore.cs:line 85
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Abstract.DictionaryStore.<GetAsync>d__2`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Abstract\DictionaryStore.cs:line 35
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Shell.ShellDescriptorStore.<GetAsync>d__6.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Shell\ShellDescriptorStore.cs:line 43
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at Plato.Internal.Shell.ShellContextFactory.CreateShellContext(IShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Shell\ShellContextFactory.cs:line 50
+   at Plato.Internal.Hosting.DefaultPlatoHost.CreateShellContext(IShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 85
+   at Plato.Internal.Hosting.DefaultPlatoHost.<>c__DisplayClass8_0.<GetOrCreateShellContext>b__0(String tenant) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 60
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Plato.Internal.Hosting.DefaultPlatoHost.GetOrCreateShellContext(IShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 58
+   at Plato.Internal.Hosting.DefaultPlatoHost.<CreateAndActivateShells>b__14_0(ShellSettings settings) in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting\DefaultPlatoHost.cs:line 162
+   at System.Threading.Tasks.Parallel.<>c__DisplayClass32_0`2.<ForEachWorker>b__0(Int32 i)
+   at System.Threading.Tasks.Parallel.<>c__DisplayClass19_0`1.<ForWorker>b__1(RangeWorker& currentWorker, Int32 timeout, Boolean& replicationDelegateYieldedBeforeCompletion)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.Tasks.Parallel.<>c__DisplayClass19_0`1.<ForWorker>b__1(RangeWorker& currentWorker, Int32 timeout, Boolean& replicationDelegateYieldedBeforeCompletion)
+   at System.Threading.Tasks.TaskReplicator.Replica`1.ExecuteAction(Boolean& yieldedBeforeCompletion)
+   at System.Threading.Tasks.TaskReplicator.Replica.Execute()
+---> (Inner Exception #0) System.InvalidOperationException: Invalid attempt to call HasRows when reader is closed.
+   at System.Data.SqlClient.SqlDataReader.get_HasRows()
+   at Plato.Internal.Repositories.Abstract.DictionaryRepository.<SelectEntries>d__6.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Repositories\Abstract\DictionaryRepository.cs:line 115
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Abstract.DictionaryStore.<GetAllKeys>d__6.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Abstract\DictionaryStore.cs:line 92
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Abstract.DictionaryStore.<GetByKeyAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Abstract\DictionaryStore.cs:line 85
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Abstract.DictionaryStore.<GetAsync>d__2`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Abstract\DictionaryStore.cs:line 35
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Stores.Shell.ShellDescriptorStore.<GetAsync>d__6.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Stores\Shell\ShellDescriptorStore.cs:line 43<---
+<---
+
+2018-06-29 17:56:35.526 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 380.9752ms 500 text/html; charset=utf-8
+2018-06-29 17:57:32.212 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-29 17:57:32.445 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/  
+2018-06-29 17:57:32.479 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-29 17:57:32.482 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-06-29 17:57:32.522 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-29 17:57:32.611 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 17:57:32.677 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-29 17:57:32.679 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 17:57:32.689 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-29 17:57:32.731 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 17:57:32.818 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Users.Controllers.AccountController.Login (Plato.Users) with arguments () - ModelState is Valid
+2018-06-29 17:57:32.828 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 17:57:32.878 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Updating user data with id: 1
+2018-06-29 17:57:32.884 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting setting with id: 1
+2018-06-29 17:57:32.887 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 17:57:32.889 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all user data for userId 1
+2018-06-29 17:57:32.894 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting document entry for type: Plato.Users.Controllers.TestDocument2
+2018-06-29 17:57:34.674 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Users/Views/Account/Login.cshtml.
+2018-06-29 17:57:34.958 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Users.Controllers.AccountController.Login (Plato.Users) in 2163.5634ms
+2018-06-29 17:57:34.963 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2518.8195ms 200 text/html; charset=utf-8
+2018-06-29 17:57:36.527 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/discuss  
+2018-06-29 17:57:36.527 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 17:57:36.528 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-29 17:57:36.533 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) with arguments ((null)) - ModelState is Valid
+2018-06-29 17:57:36.584 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data1
+2018-06-29 17:57:36.588 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting entity data with id: 9
+2018-06-29 17:57:36.590 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data2
+2018-06-29 17:57:36.593 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) in 60.8866ms
+2018-06-29 17:57:36.594 +01:00 [Error] Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware: An unhandled exception has occurred while executing the request
+System.InvalidOperationException: There is already an open DataReader associated with this Command which must be closed first.
+   at System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   at System.Data.SqlClient.SqlConnection.ValidateConnectionForExecute(String method, SqlCommand command)
+   at System.Data.SqlClient.SqlCommand.ValidateCommand(Boolean async, String method)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite, String method)
+   at System.Data.SqlClient.SqlCommand.BeginExecuteReader(CommandBehavior behavior, AsyncCallback callback, Object stateObject)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncImpl[TArg1](Func`4 beginMethod, Func`2 endFunction, Action`1 endAction, TArg1 arg1, Object state, TaskCreationOptions creationOptions)
+   at System.Threading.Tasks.TaskFactory`1.FromAsync[TArg1](Func`4 beginMethod, Func`2 endMethod, TArg1 arg1, Object state)
+   at System.Data.SqlClient.SqlCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Data.Providers.SqlProvider.<ExecuteScalarAsync>d__31`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Data\Providers\SqlProvider.cs:line 207
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Internal.Data.DbContext.<ExecuteScalarAsync>d__17`1.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Data\DbContext.cs:line 132
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityDataRepository.<InsertUpdateInternal>d__7.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityDataRepository.cs:line 149
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityDataRepository.<InsertUpdateAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityDataRepository.cs:line 101
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityRepository.<InsertUpdateInternal>d__9.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityRepository.cs:line 280
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Repositories.EntityRepository.<InsertUpdateAsync>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Repositories\EntityRepository.cs:line 69
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Entities.Stores.EntityStore.<CreateAsync>d__7.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Entities\Stores\EntityStore.cs:line 40
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Plato.Discuss.Controllers.HomeController.<Index>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato\Modules\Plato.Discuss\Controllers\HomeController.cs:line 82
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__10.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeInnerFilterAsync>d__14.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeFilterPipelineAsync>d__17.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.<InvokeAsync>d__15.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware.<Invoke>d__4.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Routing\PlatoRouterMiddleware.cs:line 72
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Plato.Internal.Hosting.Web.Middleware.PlatoContainerMiddleware.<Invoke>d__5.MoveNext() in C:\Users\Ryan\Source\Repos\plato\src\Plato.Internal.Hosting.Web\Middleware\PlatoContainerMiddleware.cs:line 66
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.<Invoke>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.Extensions.MapMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__7.MoveNext()
+2018-06-29 17:57:36.720 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 193.5278ms 500 text/html; charset=utf-8
+2018-06-29 18:01:32.746 +01:00 [Information] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager: User profile is available. Using 'C:\Users\Ryan\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2018-06-29 18:01:32.967 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/discuss  
+2018-06-29 18:01:32.998 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Start creation of shells
+2018-06-29 18:01:33.001 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: ShellSettings found in 'Plato', attempting to load.
+2018-06-29 18:01:33.041 +01:00 [Information] Plato.Internal.Shell.ShellSettingsManager: Loaded ShellSettings for tenant 'Default'
+2018-06-29 18:01:33.132 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 18:01:33.200 +01:00 [Information] Plato.Internal.Hosting.DefaultPlatoHost: Done creating shells
+2018-06-29 18:01:33.203 +01:00 [Information] Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware: Begin Routing Request
+2018-06-29 18:01:33.213 +01:00 [Information] Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationHandler: Identity.Application was not authenticated. Failure message: Ticket expired
+2018-06-29 18:01:33.284 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executing action method Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) with arguments ((null)) - ModelState is Valid
+2018-06-29 18:01:33.383 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data1
+2018-06-29 18:01:33.387 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting entity data with id: 10
+2018-06-29 18:01:33.389 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Inserting user data with key: Data2
+2018-06-29 18:01:33.390 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting entity data with id: 11
+2018-06-29 18:01:35.088 +01:00 [Information] Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor: Executing ViewResult, running view at path /Modules/Plato.Discuss/Views/Home/Index.cshtml.
+2018-06-29 18:01:35.096 +01:00 [Information] Plato.Internal.Repositories.Abstract.DictionaryRepository: Selecting all dictionary entries
+2018-06-29 18:01:35.387 +01:00 [Information] Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker: Executed action Plato.Discuss.Controllers.HomeController.Index (Plato.Discuss) in 2110.7233ms
+2018-06-29 18:01:35.391 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 2425.4941ms 200 text/html; charset=utf-8
+2018-06-29 18:01:35.527 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request starting HTTP/1.1 GET http://localhost:50439/favicon.ico  
+2018-06-29 18:01:35.528 +01:00 [Information] Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware: Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Users\Ryan\Source\Repos\plato\src\Plato\wwwroot\favicon.ico'
+2018-06-29 18:01:35.530 +01:00 [Information] Microsoft.AspNetCore.Hosting.Internal.WebHost: Request finished in 3.3674ms 200 image/x-icon

@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Security.Cryptography;
-using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Plato.Discuss.ViewModels;
-using Plato.Entities.Models;
-using Plato.Entities.Repositories;
-using Plato.Entities.Stores;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Plato.Discuss.Models;
+using Plato.Discuss.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Settings;
+using Plato.Discuss.ViewModels;
+using Plato.Entities.Models;
+using Plato.Entities.Repositories;
+using Plato.Entities.Stores;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Discuss.Controllers
 {
@@ -19,17 +22,20 @@ namespace Plato.Discuss.Controllers
         private readonly ISiteSettingsStore _settingsStore;
         private readonly IEntityRepository<Entity> _entityRepository;
         private readonly IEntityStore<Entity> _entityStore;
+        private readonly ITopicStore<Topic> _topicStore;
 
         public HomeController(
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IEntityRepository<Entity> entityRepository,
-            IEntityStore<Entity> entityStore)
+            IEntityStore<Entity> entityStore,
+            ITopicStore<Topic> topicStore)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
             _entityRepository = entityRepository;
             _entityStore = entityStore;
+            _topicStore = topicStore;
         }
         
         public async Task<IActionResult> Index()
@@ -41,7 +47,31 @@ namespace Plato.Discuss.Controllers
             var feature = await _contextFacade.GetCurrentFeatureAsync();
 
             ViewBag.Feature = feature;
-            
+
+
+
+            var topic = new Topic()
+            {
+                Title = "Test Topic"
+            };
+
+            var newTopic = await _topicStore.CreateAsync(topic);
+
+            // ------------------------
+
+
+
+            var entityDetails1 = new EntityDetails()
+            {
+                SomeValue = "entityDetails1"
+            };
+
+            var entityDetails2 = new EntityDetails()
+            {
+                SomeValue = "entityDetails2"
+            };
+
+
             var rnd = new Random();
             var entity = new Entity()
             {
@@ -49,7 +79,21 @@ namespace Plato.Discuss.Controllers
                 Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
                 Markdown = "Test message " + rnd.Next(0, 100000).ToString(),
                 Html = "Test message " + rnd.Next(0, 100000).ToString(),
-                PlainText = "Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message  " + rnd.Next(0, 100000).ToString()
+                PlainText = "Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message  " + rnd.Next(0, 100000).ToString(),
+                Data = new List<EntityData>()
+                {
+                    new EntityData()
+                    {
+                        Key = "Data1",
+                        Value = entityDetails1.Serialize()
+                    },
+                    new EntityData()
+                    {
+                        Key = "Data2",
+                        Value = entityDetails2.Serialize()
+                    }
+                }
+
             };
 
             var newEntity = await _entityStore.CreateAsync(entity);
