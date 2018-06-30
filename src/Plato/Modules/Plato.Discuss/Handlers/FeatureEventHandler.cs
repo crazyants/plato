@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features.Abstractions;
 
@@ -26,134 +27,11 @@ namespace Plato.Discuss.Handlers
 
         private readonly ISchemaBuilder _schemaBuilder;
 
-        public FeatureEventHandler(ISchemaBuilder schemaBuilder)
+
+        private readonly SchemaTable _topics = new SchemaTable()
         {
-            _schemaBuilder = schemaBuilder;
-        }
-        
-        #region "Implementation"
-
-        public override async Task InstallingAsync(IFeatureEventContext context)
-        {
-       
-            //var schemaBuilder = context.ServiceProvider.GetRequiredService<ISchemaBuilder>();
-            using (var builder = _schemaBuilder)
-            {
-
-                // configure
-                Configure(builder);
-
-                // channels schema
-                
-                // topics schema
-                Topics(builder);
-                
-                var result = await builder.ApplySchemaAsync();
-                if (result.Errors.Count > 0)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        context.Errors.Add(error.Message, $"InstallingAsync within {this.GetType().FullName}");
-                        ;
-                    }
-
-                }
-
-            }
-            
-
-        }
-
-        public override Task InstalledAsync(IFeatureEventContext context)
-        {
-            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return Task.CompletedTask;
-            //}
-
-            try
-            {
-                
-             
-                
-            }
-            catch (Exception e)
-            {
-                context.Errors.Add(context.Feature.ModuleId, e.Message);
-            }
-
-            return Task.CompletedTask;
-
-        }
-
-        public override Task UninstallingAsync(IFeatureEventContext context)
-        {
-            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return Task.CompletedTask;
-            //}
-
-            //throw new Exception("This is a test exception from Plato.Demos");
-
-            try
-            {
-
-
-            }
-            catch (Exception e)
-            {
-                context.Errors.Add(context.Feature.ModuleId, e.Message);
-            }
-
-            return Task.CompletedTask;
-
-        }
-
-        public override Task UninstalledAsync(IFeatureEventContext context)
-        {
-            //if (!String.Equals(context.Feature.Id, Id, StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return Task.CompletedTask;
-            //}
-
-            try
-            {
-
-
-            }
-            catch (Exception e)
-            {
-                context.Errors.Add(context.Feature.ModuleId, e.Message);
-            }
-
-            return Task.CompletedTask;
-        }
-
-        #endregion
-
-        #region "Private Methods"
-
-        void Configure(ISchemaBuilder builder)
-        {
-
-            builder
-                .Configure(options =>
-                {
-                    options.ModuleName = ModuleId;
-                    options.Version = Version;
-                    options.DropTablesBeforeCreate = true;
-                    options.DropProceduresBeforeCreate = true;
-                });
-
-        }
-
-        void Topics(ISchemaBuilder builder)
-        {
-
-            var topics = new SchemaTable()
-            {
-                Name = "Topics",
-                Columns = new List<SchemaColumn>()
+            Name = "Topics",
+            Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()
                     {
@@ -221,14 +99,126 @@ namespace Plato.Discuss.Handlers
                         DbType = DbType.DateTime
                     }
                 }
-            };
+        };
+        
+
+        public FeatureEventHandler(ISchemaBuilder schemaBuilder)
+        {
+            _schemaBuilder = schemaBuilder;
+        }
+        
+        #region "Implementation"
+
+        public override async Task InstallingAsync(IFeatureEventContext context)
+        {
+       
+            //var schemaBuilder = context.ServiceProvider.GetRequiredService<ISchemaBuilder>();
+            using (var builder = _schemaBuilder)
+            {
+
+                // configure
+                Configure(builder);
+
+                // channels schema
+                
+                // topics schema
+                Topics(builder);
+                
+                var result = await builder.ApplySchemaAsync();
+                if (result.Errors.Count > 0)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        context.Errors.Add(error.Message, $"InstallingAsync within {this.GetType().FullName}");
+                        ;
+                    }
+
+                }
+
+            }
+            
+
+        }
+
+        public override Task InstalledAsync(IFeatureEventContext context)
+        {
+         
+            return Task.CompletedTask;
+
+        }
+
+        public override async Task UninstallingAsync(IFeatureEventContext context)
+        {
+            if (context.Logger.IsEnabled(LogLevel.Information))
+                context.Logger.LogInformation($"UninstallingAsync called within {ModuleId}");
+
+            using (var builder = _schemaBuilder)
+            {
+
+                // drop 
+                builder
+                    .DropTable(_topics)
+                    .DropDefaultProcedures(_topics)
+                    .DropProcedure(new SchemaProcedure("SelectTopicsPaged", StoredProcedureType.SelectByKey));
+                
+                // Log statements to execute
+                if (context.Logger.IsEnabled(LogLevel.Information))
+                {
+                    context.Logger.LogInformation($"The following SQL statements will be executed...");
+                    foreach (var statement in builder.Statements)
+                    {
+                        context.Logger.LogInformation(statement);
+                    }
+                }
+
+                // Execute statements
+                var result = await builder.ApplySchemaAsync();
+                if (result.Errors.Count > 0)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        context.Logger.LogCritical(error.Message, $"An error occurred within the UninstallingAsync method within {this.GetType().FullName}");
+                        context.Errors.Add(error.Message, $"UninstallingAsync within {this.GetType().FullName}");
+                    }
+
+                }
+
+            }
+            
+        }
+
+        public override Task UninstalledAsync(IFeatureEventContext context)
+        {
+            return Task.CompletedTask;
+        }
+
+        #endregion
+
+        #region "Private Methods"
+
+        void Configure(ISchemaBuilder builder)
+        {
 
             builder
-                .CreateTable(topics)
-                .CreateDefaultProcedures(topics)
+                .Configure(options =>
+                {
+                    options.ModuleName = ModuleId;
+                    options.Version = Version;
+                    options.DropTablesBeforeCreate = true;
+                    options.DropProceduresBeforeCreate = true;
+                });
+
+        }
+
+        void Topics(ISchemaBuilder builder)
+        {
+            
+            builder
+                .CreateTable(_topics)
+                .CreateDefaultProcedures(_topics)
 
                 .CreateProcedure(new SchemaProcedure("SelectTopicsPaged", StoredProcedureType.SelectPaged)
-                    .ForTable(topics)
+                    .ForTable(_topics)
                     .WithParameters(new List<SchemaColumn>()
                     {
                         new SchemaColumn()

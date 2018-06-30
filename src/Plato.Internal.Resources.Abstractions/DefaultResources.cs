@@ -28,12 +28,12 @@ namespace Plato.Internal.Resources.Abstractions
                         Type = ResourceType.Css,
                         Section = ResourceSection.Header
                     },
-                    new Resource()
-                    {
-                        Url = "/css/app/markdown.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
-                    },
+                    //new Resource()
+                    //{
+                    //    Url = "/css/app/markdown.css",
+                    //    Type = ResourceType.Css,
+                    //    Section = ResourceSection.Header
+                    //},
                     new Resource()
                     {
                         Url = "/css/app/plato.css",
@@ -61,12 +61,12 @@ namespace Plato.Internal.Resources.Abstractions
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     },
-                    new Resource()
-                    {
-                        Url = "/js/app/markdown.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
-                    },
+                    //new Resource()
+                    //{
+                    //    Url = "/js/app/markdown.js",
+                    //    Type = ResourceType.JavaScript,
+                    //    Section = ResourceSection.Footer
+                    //},
                     new Resource()
                     {
                         Url = "/js/app/plato.js",

@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
-using Plato.Discuss.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
@@ -59,7 +58,8 @@ namespace Plato.Discuss.Controllers
             
             var topicDetails = new TopicDetails()
             {
-                Participants = new List<Participant>()
+                SomeNewValue = "Example Value 123",
+                Users = new List<Participant>()
                 {
                     new Participant()
                     {
@@ -102,11 +102,16 @@ namespace Plato.Discuss.Controllers
                     .Append(newTopic.Id);
 
                 var details = newTopic.GetMetaData<TopicDetails>();
-                if (details?.Participants != null)
+                if (details?.Users != null)
                 {
+
+                    sb.Append("<h5>Some Value</h5>")
+                        .Append(details.SomeNewValue)
+                        .Append("<br>");
+
                     sb.Append("<h5>Participants</h5>");
 
-                    foreach (var user in details.Participants)
+                    foreach (var user in details.Users)
                     {
                         sb.Append(user.UserName)
                             .Append("<br>");
@@ -116,8 +121,6 @@ namespace Plato.Discuss.Controllers
                 }
             }
           
-            
-        
             var existingTopic = await _entityStore.GetByIdAsync(142);
             if (existingTopic != null)
             {
@@ -133,11 +136,16 @@ namespace Plato.Discuss.Controllers
 
                 // random details
                 var existingDetails = existingTopic.GetMetaData<TopicDetails>();
-                if (existingDetails?.Participants != null)
+                if (existingDetails?.Users != null)
                 {
+
+                    sb.Append("<h5>Some Value</h5>")
+                        .Append(existingDetails.SomeNewValue)
+                        .Append("<br>");
+
                     sb.Append("<h5>Participants</h5>");
 
-                    foreach (var user in existingDetails.Participants)
+                    foreach (var user in existingDetails.Users)
                     {
                         sb.Append(user.UserName)
                             .Append("<br>");
@@ -203,7 +211,57 @@ namespace Plato.Discuss.Controllers
             return View(model);
 
         }
-        
+
+
+        [HttpPost]
+        [ActionName(nameof(Index))]
+        public async Task<IActionResult> IndexPost(DiscussIndexViewModel model)
+        {
+            
+            var topic = new Entity()
+            {
+                Title = model.NewEntityViewModel.Title,
+                Markdown = model.NewEntityViewModel.Message
+            };
+
+            var topicDetails = new TopicDetails()
+            {
+                SomeNewValue = "Example Value 123",
+                Users = new List<Participant>()
+                {
+                    new Participant()
+                    {
+                        UserId = 1,
+                        UserName = "Test",
+                        Participations = 10
+
+                    },
+                    new Participant()
+                    {
+                        UserId = 2,
+                        UserName = "Mike Jones",
+                        Participations = 5
+                    },
+                    new Participant()
+                    {
+                        UserId = 3,
+                        UserName = "Sarah Smith",
+                        Participations = 2
+                    }
+                }
+            };
+
+            topic.SetMetaData<TopicDetails>(topicDetails);
+
+            var sb = new StringBuilder();
+
+            var newTopic = await _entityStore.CreateAsync(topic);
+
+            
+
+            return View(model);
+
+        }
 
         public IActionResult About()
         {

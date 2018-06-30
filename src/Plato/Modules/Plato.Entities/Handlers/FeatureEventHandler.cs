@@ -161,7 +161,42 @@ namespace Plato.Entities.Handlers
                 }
             }
         };
-        
+
+        // Entity participants
+        private readonly SchemaTable _entityParticipants = new SchemaTable()
+        {
+            Name = "EntityParticipants",
+            Columns = new List<SchemaColumn>()
+            {
+                new SchemaColumn()
+                {
+                    PrimaryKey = true,
+                    Name = "Id",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "EntityId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "UserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "UserName",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "CreatedDate",
+                    DbType = DbType.DateTime2
+                }
+            }
+        };
+
 
         private readonly ISchemaBuilder _schemaBuilder;
 
@@ -190,6 +225,9 @@ namespace Plato.Entities.Handlers
 
                 // Entity data schema
                 EntityData(builder);
+
+                // Entity participants
+                EntityParticipation(builder);
 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -220,17 +258,6 @@ namespace Plato.Entities.Handlers
         public override Task InstalledAsync(IFeatureEventContext context)
         {
          
-            try
-            {
-                
-             
-                
-            }
-            catch (Exception e)
-            {
-                context.Errors.Add(context.Feature.ModuleId, e.Message);
-            }
-
             return Task.CompletedTask;
 
         }
@@ -254,7 +281,14 @@ namespace Plato.Entities.Handlers
                 builder
                     .DropTable(_entityData)
                     .DropDefaultProcedures(_entityData)
-                    .DropProcedure(new SchemaProcedure("SelectEntityDatumByEntityId", StoredProcedureType.SelectByKey));
+                    .DropProcedure(new SchemaProcedure("SelectEntityDatumByEntityId"));
+                
+                // drop entity participants
+                builder
+                    .DropTable(_entityParticipants)
+                    .DropDefaultProcedures(_entityParticipants)
+                    .DropProcedure(new SchemaProcedure("SelectEntityParticipantsPaged"));
+
 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -279,32 +313,11 @@ namespace Plato.Entities.Handlers
                 }
 
             }
-
-
-            try
-            {
-
-
-            }
-            catch (Exception e)
-            {
-                context.Errors.Add(context.Feature.ModuleId, e.Message);
-            }
             
         }
 
         public override Task UninstalledAsync(IFeatureEventContext context)
         {
-      
-            try
-            {
-
-
-            }
-            catch (Exception e)
-            {
-                context.Errors.Add(context.Feature.ModuleId, e.Message);
-            }
 
             return Task.CompletedTask;
         }
@@ -385,7 +398,35 @@ namespace Plato.Entities.Handlers
                     .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
 
         }
-        
+
+        void EntityParticipation(ISchemaBuilder builder)
+        {
+
+
+            builder
+                .CreateTable(_entityParticipants)
+                .CreateDefaultProcedures(_entityParticipants);
+            
+            builder.CreateProcedure(new SchemaProcedure("SelectEntityParticipantsPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_entities)
+                .WithParameters(new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "UserName",
+                        DbType = DbType.String,
+                        Length = "255"
+                    }
+                }));
+
+        }
+
+
         #endregion
 
 

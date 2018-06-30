@@ -25,7 +25,7 @@ namespace Plato.Entities.Models
             _metaData.Add(typeof(T), (ISerializable)obj);
         }
 
-        public void SetMetaData(ISerializable obj, Type type)
+        public void SetMetaData(Type type, ISerializable obj)
         {
             _metaData.Add(type, obj);
         }

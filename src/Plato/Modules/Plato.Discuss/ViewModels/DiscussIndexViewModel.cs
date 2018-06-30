@@ -11,6 +11,21 @@ namespace Plato.Discuss.ViewModels
 
         public IPagedResults<Entity> Results { get; set; }
 
+        public NewEntityViewModel NewEntityViewModel { get; set; }
 
     }
+
+    public class NewEntityViewModel
+    {
+
+        public string Title { get; set; }
+
+        public string Message { get; set; }
+
+
+    }
+
+
+
+
 }

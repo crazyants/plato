@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Plato.Internal.Abstractions;
 
 namespace Plato.Discuss.Models
@@ -11,6 +9,8 @@ namespace Plato.Discuss.Models
 
         public int UserId { get; set; }
 
+        public string Test { get; set; }
+        
         public string UserName { get; set; }
 
         public int Participations { get; set; }
@@ -18,10 +18,13 @@ namespace Plato.Discuss.Models
     }
 
 
-    public class TopicDetails : Serializable, ISerializable
+    public class TopicDetails : Serializable
     {
 
-        public IEnumerable<Participant> Participants { get; set; }
+        public string SomeNewValue { get; set; }
+        
+        public IEnumerable<Participant> Users { get; set; }
+
 
     }
 }

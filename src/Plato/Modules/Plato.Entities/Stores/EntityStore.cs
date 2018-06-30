@@ -21,28 +21,34 @@ namespace Plato.Entities.Stores
 
         private string _key = "Entity";
 
+        #region "Constructor"
+
         private readonly IEntityRepository<Entity> _entityRepository;
         private readonly ILogger<EntityStore> _logger;
         private readonly ICacheDependency _cacheDependency;
         private readonly IMemoryCache _memoryCache;
         private readonly IDbQuery _dbQuery;
-        private readonly IModuleManager _moduleManager;
+        private readonly ITypedModuleProvider _typedModuleProvider;
 
         public EntityStore(
-            ILogger<EntityStore> logger,
+            ITypedModuleProvider typedModuleProvider,
             IEntityRepository<Entity> entityRepository,
             ICacheDependency cacheDependency,
+            ILogger<EntityStore> logger,
             IMemoryCache memoryCache,
-            IDbQuery dbQuery, 
-            IModuleManager moduleManager)
+            IDbQuery dbQuery)
         {
-            _logger = logger;
+            _typedModuleProvider = typedModuleProvider;
             _entityRepository = entityRepository;
-            _dbQuery = dbQuery;
-            _moduleManager = moduleManager;
             _cacheDependency = cacheDependency;
             _memoryCache = memoryCache;
+            _dbQuery = dbQuery;
+            _logger = logger;
         }
+
+        #endregion
+
+        #region "Implementation"
 
         public async Task<Entity> CreateAsync(Entity entity)
         {
@@ -105,37 +111,14 @@ namespace Plato.Entities.Stores
                     if (type != null)
                     {
                         var obj = JsonConvert.DeserializeObject(data.Value, type);
-                        entity.SetMetaData((ISerializable)obj, type);
+                        entity.SetMetaData(type, (ISerializable)obj);
                     }
                 }
             }
 
             return entity;
         }
-
-
-        private async Task<Type> GetModuleTypeCandidateAsync(string typeName)
-        {
-            
-            // Loop through each module assembly
-            foreach (var assembly in await _moduleManager.LoadModuleAssembliesAsync())
-            {
-                // Get all classes that implement ISerializable
-                foreach (var candidate in assembly.ExportedTypes
-                    .Where(p => typeof(ISerializable).IsAssignableFrom(p))
-                    .Select(t => t.GetTypeInfo()))
-                {
-                    if (candidate.GetTypeInfo().FullName == typeName)
-                    {
-                        return candidate.AsType();
-                    }
-                }
-            }
-
-            return null;
-
-        }
-
+        
         public IQuery QueryAsync()
         {
             var query = new EntityQuery(this);
@@ -163,14 +146,22 @@ namespace Plato.Entities.Stores
 
         }
 
+        #endregion
 
+        #region "Private Methods"
+        
+        async Task<Type> GetModuleTypeCandidateAsync(string typeName)
+        {
+            return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
+        }
+        
         private string GetEntityCacheKey()
         {
             return $"{_key}";
         }
 
-
-     
+        #endregion
+        
     }
 
 }

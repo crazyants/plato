@@ -17,6 +17,12 @@ namespace Plato.Internal.Data.Schemas.Abstractions
 
     public class SchemaProcedure
     {
+
+        public SchemaProcedure(string name)
+        {
+            this.Name = name;
+        }
+
         public SchemaProcedure(string name, StoredProcedureType type)
         {
             this.Name = name;
