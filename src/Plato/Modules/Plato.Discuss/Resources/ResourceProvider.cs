@@ -18,7 +18,13 @@ namespace Plato.Discuss.Resources
                 {
                     new Resource()
                     {
-                        Url = $"/plato.discuss/content/js/app.js",
+                        Url = "/plato.discuss/content/css/discuss.css",
+                        Type = ResourceType.Css,
+                        Section = ResourceSection.Header
+                    },
+                    new Resource()
+                    {
+                        Url = "/plato.discuss/content/js/discuss.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     }
@@ -27,25 +33,36 @@ namespace Plato.Discuss.Resources
                 // Staging
                 new ResourceEnvironment(Environment.Staging, new List<Resource>()
                 {
-                    /* Css */
                     new Resource()
                     {
-                        Url = $"/plato.discuss/content/js/app.js",
+                        Url = "/plato.discuss/content/css/discuss.css",
+                        Type = ResourceType.Css,
+                        Section = ResourceSection.Header
+                    },
+                    new Resource()
+                    {
+                        Url = "/plato.discuss/content/js/discuss.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
-                    },
+                    }
                 }),
 
                 // Production
                 new ResourceEnvironment(Environment.Production, new List<Resource>()
                 {
-                    /* Css */
                     new Resource()
                     {
-                        Url = $"/plato.discuss/content/js/app.js",
+                        Url = "/plato.discuss/content/css/discuss.css",
+                        Type = ResourceType.Css,
+                        Section = ResourceSection.Header
+                    },
+                    new Resource()
+                    {
+                        Url = "/plato.discuss/content/js/discuss.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
-                    },
+                    }
+                    
                 })
 
             };

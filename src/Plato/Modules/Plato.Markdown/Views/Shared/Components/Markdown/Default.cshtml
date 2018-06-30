@@ -1,3 +1,23 @@
 ﻿@model Plato.Markdown.ViewComponents.MarkdownViewModel
 
-<textarea value="@Model.Value" name="@Model.HtmlName" class="form-control md-textarea" placeholder="@Model.PlaceHolderText" rows="12">@Model.Value</textarea>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" href="#">Write</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">Peview</a>
+    </li>
+</ul>
+
+<textarea value="@Model.Value"
+          name="@Model.HtmlName"
+          data-provide="markdown"
+          class="form-control md-textarea"
+          placeholder="@Model.PlaceHolderText"
+          rows="6">
+    @if (!String.IsNullOrEmpty(@Model.Value))
+    {
+        @Model.Value
+    }
+</textarea>

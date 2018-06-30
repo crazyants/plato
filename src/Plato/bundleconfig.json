@@ -137,8 +137,7 @@
   /* site css */
   {
     "inputFiles": [
-      "wwwroot/js/app/plato.css",
-      "wwwroot/js/app/markdown.css"
+      "wwwroot/js/app/plato.css"
     ],
     "outputFileName": "wwwroot/css/app.css",
     "minify": {
@@ -152,7 +151,6 @@
       "wwwroot/js/vendors/jquery.js",
       "wwwroot/js/vendors/bootstrap.js",
       "wwwroot/js/vendors/vue.js",
-      "wwwroot/js/app/markdown.js",
       "wwwroot/js/app/plato.js"
     ],
     "outputFileName": "wwwroot/js/app.js",
@@ -167,7 +165,6 @@
       "wwwroot/js/vendors/jquery.js",
       "wwwroot/js/vendors/bootstrap.js",
       "wwwroot/js/vendors/vue.js",
-      "wwwroot/js/app/markdown.js",
       "wwwroot/js/app/plato.js"
     ],
     "outputFileName": "wwwroot/js/app.min.js",

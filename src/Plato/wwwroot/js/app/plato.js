@@ -90,8 +90,7 @@ $.Plato.UI = {
         this.initToolTips();
         this.initDropDowns();
         this.initAvatar();
-        this.initMarkDown();
-
+     
     },
     logInfo: function(message) {
         this.context.logger.logInfo(message);
@@ -152,42 +151,6 @@ $.Plato.UI = {
             }
 
             readUrl(this);
-        });
-
-    },
-    initMarkDown: function () {
-
-        this.logInfo("initMarkDown()");
-
-        $(".md-textarea").markdown({
-            autofocus: false,
-            savable: false,
-            resize: true,
-            allowedUploadExtensions: [".gif", ".jpg", ".jpeg", ".png"],
-            baseUrl: 'http://localhost:50439/',
-            hiddenButtons: null,
-
-            onPreview: function (e) {
-                var output = '',
-                    input = e.getContent();
-                if (input) {
-                    _kb.markdown.post({
-                        input: input
-                    },
-                        function (data) {
-                            output = data;
-                        });
-                }
-                return output;
-            },
-            footer: function (e) {
-                return '';
-            },
-            fullscreen: {
-                enable: true
-            },
-            minRows: 4,
-            maxRows: 15
         });
 
     }

@@ -230,12 +230,7 @@
     },
     __setListener: function() {
       // Set size and resizable Properties
-      var hasRows = typeof this.$textarea.attr('rows') !== 'undefined',
-        maxRows = this.$textarea.val().split("\n").length > 5 ? this.$textarea.val().split("\n").length : '5',
-        rowsVal = hasRows ? this.$textarea.attr('rows') : maxRows;
-
-
-      //this.$textarea.attr('rows', rowsVal);
+    
       if (this.$options.resize) {
         this.$textarea.css('resize', this.$options.resize);
       }
@@ -548,16 +543,17 @@
         } else if (options.initialstate === 'fullscreen' && options.fullscreen.enable) {
           this.setFullscreen(true);
         }
-          
-        // ignition UI 
-        //this.$editor.tidyUI();
 
+
+         
         // grow and shrink accordingly
           var maxRows = options.maxRows,
-            minRows = options.minRows,
-            startHeight = this.$textarea.height();
+              minRows = options.minRows;
 
-          console.log(startHeight)
+          var hasRows = typeof this.$textarea.attr('rows') !== 'undefined',
+              startRows = hasRows ? this.$textarea.attr('rows') : maxRows;
+
+
           this.$textarea.on('keyup keypress paste',
               function() {
                   if (!$("body").first().attr("data-page-is-dirty")) {
@@ -572,8 +568,7 @@
               });
 
           function initRows($textArea) {
-              var lineHeight = 26,
-                  startRows = Math.ceil(startHeight / lineHeight);
+              var lineHeight = 26;
               var rows = startRows || minRows;
               if ($textArea.val() !== "") {
                   rows = $textArea.val().split("\n").length;
@@ -1360,43 +1355,44 @@
     /* Buttons Properties */
     buttons: [
       [
+          //{
+          //    name: 'groupUtil',
+          //    css: 'btn-group mr-1 md-tabs',
+          //    data: [
+          //        {
+          //            name: 'cmdWrite',
+          //            hotkey: 'Ctrl+P',
+          //            title: 'Write',
+          //            btnText: 'Write',
+          //            btnClass: 'btn md-btn-write selected',
+          //            callback: function(e) {
+          //                // Check the preview mode and toggle based on this flag
+          //                var isPreview = e.$isPreview,
+          //                    content;
+
+          //                if (isPreview === true) {
+          //                    e.hidePreview();
+          //                }
+          //            }
+          //        }, {
+          //            name: 'cmdPreview',
+          //            hotkey: 'Ctrl+P',
+          //            title: 'Preview',
+          //            btnText: 'Preview',
+          //            btnClass: 'btn md-btn-preview',
+          //            callback: function(e) {
+          //                // Check the preview mode and toggle based on this flag
+          //                var isPreview = e.$isPreview,
+          //                    content;
+
+          //                if (isPreview === false) {
+          //                    e.showPreview();
+          //                }
+          //            }
+          //        }
+          //    ]
+          //  },
           {
-              name: 'groupUtil',
-              css: 'btn-group mr-1 md-tabs',
-              data: [
-                  {
-                      name: 'cmdWrite',
-                      hotkey: 'Ctrl+P',
-                      title: 'Write',
-                      btnText: 'Write',
-                      btnClass: 'btn md-btn-write selected',
-                      callback: function(e) {
-                          // Check the preview mode and toggle based on this flag
-                          var isPreview = e.$isPreview,
-                              content;
-
-                          if (isPreview === true) {
-                              e.hidePreview();
-                          }
-                      }
-                  }, {
-                      name: 'cmdPreview',
-                      hotkey: 'Ctrl+P',
-                      title: 'Preview',
-                      btnText: 'Preview',
-                      btnClass: 'btn md-btn-preview',
-                      callback: function(e) {
-                          // Check the preview mode and toggle based on this flag
-                          var isPreview = e.$isPreview,
-                              content;
-
-                          if (isPreview === false) {
-                              e.showPreview();
-                          }
-                      }
-                  }
-              ]
-          }, {
               name: 'groupFont',
               css: 'btn-group mr-1',
               data: [

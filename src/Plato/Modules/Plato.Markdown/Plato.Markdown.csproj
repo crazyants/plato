@@ -7,7 +7,6 @@
   <ItemGroup>
     <None Remove="Content\css\markdown.css" />
     <None Remove="Content\js\markdown.js" />
-    <None Remove="Content\js\markdown.min.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,9 +14,6 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Content Include="Content\js\markdown.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Content\js\markdown.min.js">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>

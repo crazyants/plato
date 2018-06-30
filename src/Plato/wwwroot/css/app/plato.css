@@ -234,20 +234,24 @@
 }
 
 .modal .modal-right {
-    -webkit-transform: translate3d(100%,0,0);
-    transform: translate3d(100%,0,0);
-    transition: transform .4s cubic-bezier(.25,.8,.25,1);
+    -webkit-transform: translate3d(100%,0,0) !important;
+    transform: translate3d(100%,0,0) !important;
+    transition: transform .4s cubic-bezier(.25,.8,.25,1) !important;
 }
 
 .modal > .modal-left,
 .modal > .modal-right {
-    position: fixed;
+    position: fixed !important;
     z-index: 1055;
     bottom: 0;
     top: 0;
-    max-width: 100% !important;
     margin: 0 !important;
+    min-width: 25%;
 }
+
+.modal > .modal-2x {  min-width: 50%; }
+.modal > .modal-3x {  min-width: 75%; }
+.modal > .modal-4x {  min-width: 100%; }
 
 .modal .modal-left,
 .modal .modal-right {
@@ -256,13 +260,11 @@
     -o-transition: -o-transform .4s cubic-bezier(.25, .8, .25, 1);
 }
 
-
-
 .modal.show .modal-bottom,
 .modal.show .modal-left,
 .modal.show .modal-right, 
 .modal.show .modal-top {
-    -webkit-transform: translate3d(0,0,0);
-    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0) !important;
+    transform: translate3d(0,0,0) !important;
 }
 

@@ -13,6 +13,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Content\css\discuss.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Content\css\discuss.css">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />

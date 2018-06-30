@@ -15,9 +15,9 @@
     <i class="fa fa-fw fa-reply-all"></i> Reply
 </a>
 
-<div class="modal hidden" id="modal-new" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modal-new" role="dialog" aria-hidden="true">
 
-    <div class="modal-dialog modal-right col-sm-12 col-md-10 col-lg-8 bg-light p-2 border-left" role="document">
+    <div class="modal-dialog modal-right modal-2x bg-light p-2 border-left" role="document">
         
         <div class="modal-content">
             <form asp-action="Index" method="post" enctype="multipart/form-data">
@@ -26,7 +26,7 @@
                     <fieldset>
                         <div class="form-group">
 
-                            <label asp-for="NewEntityViewModel.Title"><strong>@T["Title"]</strong></label>
+                            
                             <span asp-validation-for="NewEntityViewModel.Title" class="text-danger"></span>
                             <input asp-for="NewEntityViewModel.Title" placeholder="@T["Title"]" class="form-control" autofocus />
 
@@ -34,14 +34,12 @@
                         </div>
                         <div class="form-group">
 
-                            <label asp-for="NewEntityViewModel.Message"><strong>@T["Message"]</strong></label>
                             @await DisplayAsync(new View("Editor", new
                             {
-                                value = "editor from core",
+                                value = string.Empty,
                                 plreaceHolderText = "place holder text from core",
                                 htmlName = "Editor"
                             }))
-
                             
                         <!--
                         <textarea asp-for="NewEntityViewModel.Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>

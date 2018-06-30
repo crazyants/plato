@@ -7,7 +7,7 @@ using Plato.Markdown.ViewComponents;
 
 namespace Plato.Markdown.ViewAdaptors
 {
-    public class EditorViewAdaptor : BaseAdaptorProvider
+    public class EditorViewAdaptorProvider : BaseAdaptorProvider
     {
 
         public override Task<IViewAdaptorResult> ConfigureAsync()

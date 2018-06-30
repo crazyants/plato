@@ -24,7 +24,7 @@ namespace Plato.Markdown
         {
 
             // Register view adaptors
-            services.AddScoped<IViewAdaptorProvider, EditorViewAdaptor>();
+            services.AddScoped<IViewAdaptorProvider, EditorViewAdaptorProvider>();
             
             // Register client resources
             services.AddScoped<IResourceProvider, ResourceProvider>();
