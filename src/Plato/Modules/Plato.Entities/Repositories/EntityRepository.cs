@@ -87,12 +87,7 @@ namespace Plato.Entities.Repositories
 
             if (id > 0)
             {
-           
-
-
-
                 // return
-
                 return await SelectByIdAsync(id);
             }
 
@@ -180,14 +175,11 @@ namespace Plato.Entities.Repositories
                 {
                     if (reader.HasRows)
                     {
-                        var data = new List<EntityData>();
                         while (await reader.ReadAsync())
                         {
                             var entityData = new EntityData(reader);
-                            data.Add(entityData);
+                            entity.Data.Add(entityData);
                         }
-
-                        //entity.Data = data;
                     }
                 }
 
@@ -281,6 +273,7 @@ namespace Plato.Entities.Repositories
                 {
                     foreach (var item in data)
                     {
+                        item.EntityId = entityId;
                         await _entityDataRepository.InsertUpdateAsync(item);
                     }
                 }

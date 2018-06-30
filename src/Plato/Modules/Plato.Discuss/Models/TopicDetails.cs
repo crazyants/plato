@@ -18,7 +18,7 @@ namespace Plato.Discuss.Models
     }
 
 
-    public class TopicDetails : Serializable
+    public class TopicDetails : Serializable, ISerializable
     {
 
         public IEnumerable<Participant> Participants { get; set; }

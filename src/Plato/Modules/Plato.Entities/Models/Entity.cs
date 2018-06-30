@@ -42,7 +42,7 @@ namespace Plato.Entities.Models
 
         public DateTime? ModifiedDate { get; set; }
 
-        public IEnumerable<EntityData> Data { get; set; }
+        public IList<EntityData> Data { get; set; } = new List<EntityData>();
         
         public void PopulateModel(IDataReader dr)
         {

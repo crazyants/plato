@@ -88,8 +88,8 @@ namespace Plato.Entities.Stores
             var key = GetEntityCacheKey();
             return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
             {
-                var roles = await _entityRepository.SelectAsync<T>(args);
-                if (roles != null)
+                var output = await _entityRepository.SelectAsync<T>(args);
+                if (output != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
@@ -98,7 +98,7 @@ namespace Plato.Entities.Stores
                     }
                 }
                 cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
-                return roles;
+                return output;
             });
 
         }

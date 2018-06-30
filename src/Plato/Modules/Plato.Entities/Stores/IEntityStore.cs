@@ -2,7 +2,7 @@
 
 namespace Plato.Entities.Stores
 {
-    public interface IEntityStore<T> : IStore<T> where T : class
+    public interface IEntityStore<TModel> : IStore<TModel> where TModel : class
     {
 
     }

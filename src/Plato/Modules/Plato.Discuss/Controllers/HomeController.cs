@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
 using Plato.Discuss.Stores;
@@ -12,7 +13,6 @@ using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Stores;
-using Plato.Internal.Abstractions;
 
 namespace Plato.Discuss.Controllers
 {
@@ -48,55 +48,98 @@ namespace Plato.Discuss.Controllers
 
             ViewBag.Feature = feature;
 
+            // ------------------------
 
-
+            var rnd = new Random();
+            
             var topic = new Topic()
             {
-                Title = "Test Topic"
+                Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
+                Markdown = "Test message " + rnd.Next(0, 100000).ToString(),
+                Html = "Test message " + rnd.Next(0, 100000).ToString(),
+                PlainText = "Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message  " + rnd.Next(0, 100000).ToString(),
+            };
+            
+            var topicDetails = new TopicDetails()
+            {
+                Participants = new List<Participant>()
+                {
+                    new Participant()
+                    {
+                        UserId = 1,
+                        UserName = "Test",
+                        Participations = 10
+
+                    },
+                    new Participant()
+                    {
+                        UserId = 2,
+                        UserName = "Mike Jones",
+                        Participations = 5
+                    },
+                    new Participant()
+                    {
+                        UserId = 3,
+                        UserName = "Sarah Smith",
+                        Participations = 2
+                    }
+                }
             };
 
+            topic.MetaData.Add(typeof(TopicDetails), topicDetails);
+            
             var newTopic = await _topicStore.CreateAsync(topic);
+
+
+            var sb = new StringBuilder();
+            sb.Append(newTopic.Title)
+                .Append(" ")
+                .Append(newTopic.Id)
+                .Append("<br>")
+                .Append(newTopic.MetaData[typeof(TopicDetails)].ToString());
+
+
+            ViewBag.TopicData = sb.ToString();
+
 
             // ------------------------
 
 
 
-            var entityDetails1 = new EntityDetails()
-            {
-                SomeValue = "entityDetails1"
-            };
+            //var entityDetails1 = new EntityDetails()
+            //{
+            //    SomeValue = "entityDetails1"
+            //};
 
-            var entityDetails2 = new EntityDetails()
-            {
-                SomeValue = "entityDetails2"
-            };
+            //var entityDetails2 = new EntityDetails()
+            //{
+            //    SomeValue = "entityDetails2"
+            //};
 
+            //var entity = new Entity()
+            //{
+            //    FeatureId = feature.Id,
+            //    Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
+            //    Markdown = "Test message " + rnd.Next(0, 100000).ToString(),
+            //    Html = "Test message " + rnd.Next(0, 100000).ToString(),
+            //    PlainText = "Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message  " + rnd.Next(0, 100000).ToString(),
+            //    Data = new List<EntityData>()
+            //    {
+            //        new EntityData()
+            //        {
+            //            Key = "Data1",
+            //            Value = entityDetails1.Serialize()
+            //        },
+            //        new EntityData()
+            //        {
+            //            Key = "Data2",
+            //            Value = entityDetails2.Serialize()
+            //        }
+            //    }
 
-            var rnd = new Random();
-            var entity = new Entity()
-            {
-                FeatureId = feature.Id,
-                Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
-                Markdown = "Test message " + rnd.Next(0, 100000).ToString(),
-                Html = "Test message " + rnd.Next(0, 100000).ToString(),
-                PlainText = "Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message  " + rnd.Next(0, 100000).ToString(),
-                Data = new List<EntityData>()
-                {
-                    new EntityData()
-                    {
-                        Key = "Data1",
-                        Value = entityDetails1.Serialize()
-                    },
-                    new EntityData()
-                    {
-                        Key = "Data2",
-                        Value = entityDetails2.Serialize()
-                    }
-                }
+            //};
 
-            };
-
-            var newEntity = await _entityStore.CreateAsync(entity);
+            //var newEntity = await _entityStore.CreateAsync(entity);
 
             var pagerOptions = new PagerOptions()
             {

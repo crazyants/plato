@@ -6,7 +6,12 @@ using Plato.Internal.Hosting;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Discuss.Handlers;
+using Plato.Discuss.Models;
 using Plato.Discuss.Resources;
+using Plato.Discuss.Stores;
+using Plato.Entities.Models;
+using Plato.Entities.Repositories;
+using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Resources.Abstractions;
@@ -28,10 +33,20 @@ namespace Plato.Discuss
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
-            // register navigation provider
+            // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
+            // Entities
+            services.AddScoped<IEntityRepository<Entity>, EntityRepository>();
+            services.AddScoped<IEntityDataRepository<EntityData>, EntityDataRepository>();
+
+            services.AddScoped<IEntityStore<Entity>, EntityStore>();
+            services.AddScoped<IEntityDataStore<EntityData>, EntityDataStore>();
+            
+            // Topics
+            services.AddScoped<ITopicStore<Topic>, TopicStore>();
+            
             // Register client resources
             services.AddScoped<IResourceProvider, ResourceProvider>();
 

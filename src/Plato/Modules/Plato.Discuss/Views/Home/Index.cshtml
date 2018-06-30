@@ -3,6 +3,11 @@
     ViewData["Title"] = "Discussions";
 }
 
+
+
+@ViewBag.TopicData
+
+
 <h5>Discuss</h5>
 
 <strong>Feature Id </strong> @ViewBag.Feature.Id
@@ -20,36 +25,36 @@
 </a>
 
 <div class="modal hidden" id="modal-new" role="dialog" aria-hidden="true">
-    
-        <div class="modal-dialog modal-right col-sm-12 col-md-10 col-lg-8 bg-light p-2 border-left" role="document">
-            
-            <div class="modal-content">
-                <card title="@T["Post Reply"]">
 
-                    <fieldset>
-                        <div class="form-group">
-                            <input id="title" type="text" class="form-control" placeholder="@T["Title"]"/>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="message" class="form-control md-textarea" placeholder="Post your comments here..." rows="12"></textarea>
-                        </div>
-                        <div class="form-group mt-4">
-                           
-                            <button type="button" class="btn btn-primary">
-                                @T["Post"]
-                            </button>
-                            <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
-                                @T["Cancel"]
-                            </button>
-                        </div>
-                    </fieldset>
+    <div class="modal-dialog modal-right col-sm-12 col-md-10 col-lg-8 bg-light p-2 border-left" role="document">
 
-                </card>
-            </div>
-       
+        <div class="modal-content">
+            <card title="@T["Post Reply"]">
 
+                <fieldset>
+                    <div class="form-group">
+                        <input id="title" type="text" class="form-control" placeholder="@T["Title"]" />
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" class="form-control md-textarea" placeholder="Post your comments here..." rows="12"></textarea>
+                    </div>
+                    <div class="form-group mt-4">
+
+                        <button type="button" class="btn btn-primary">
+                            @T["Post"]
+                        </button>
+                        <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
+                            @T["Cancel"]
+                        </button>
+                    </div>
+                </fieldset>
+
+            </card>
         </div>
-    
+
+
+    </div>
+
 </div>
 
 
@@ -64,7 +69,7 @@
 
 <div class="row">
     <div class="col-8">
-        
+
         <div class="row">
             <div class="col-12">
                 <a href="#" class="btn btn-primary float-right">
@@ -75,40 +80,40 @@
                 </h4>
             </div>
         </div>
-        
 
-            @if (Model.Results != null)
-            {
-                <ul class="list-group list-group-flush list-group-hover mt-4">
-                    @foreach (var entity in Model.Results.Data)
-                    {
-                        <li class="list-group-item">
 
-                            <h6>
-                                @entity.Title
-                            </h6>
-                            <p class="text-muted">
-                                @entity.PlainText
-                            </p>
-                        </li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <h6>@T["No discussions found"]</h6>
-            }
+        @if (Model.Results != null)
+        {
+            <ul class="list-group list-group-flush list-group-hover mt-4">
+                @foreach (var entity in Model.Results.Data)
+                {
+                    <li class="list-group-item">
 
-      
+                        <h6>
+                            @entity.Title
+                        </h6>
+                        <p class="text-muted">
+                            @entity.PlainText
+                        </p>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <h6>@T["No discussions found"]</h6>
+        }
+
+
 
     </div>
     <div class="col-4">
-        
+
         <card title="@T["Channels"]">
 
-        
+
         </card>
-        
+
 
     </div>
 </div>
