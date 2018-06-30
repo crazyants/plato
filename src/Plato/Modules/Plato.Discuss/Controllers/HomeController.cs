@@ -22,20 +22,17 @@ namespace Plato.Discuss.Controllers
         private readonly ISiteSettingsStore _settingsStore;
         private readonly IEntityRepository<Entity> _entityRepository;
         private readonly IEntityStore<Entity> _entityStore;
-        private readonly ITopicStore<Topic> _topicStore;
-
+     
         public HomeController(
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IEntityRepository<Entity> entityRepository,
-            IEntityStore<Entity> entityStore,
-            ITopicStore<Topic> topicStore)
+            IEntityStore<Entity> entityStore)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
             _entityRepository = entityRepository;
             _entityStore = entityStore;
-            _topicStore = topicStore;
         }
         
         public async Task<IActionResult> Index()
@@ -52,7 +49,7 @@ namespace Plato.Discuss.Controllers
 
             var rnd = new Random();
             
-            var topic = new Topic()
+            var topic = new Entity()
             {
                 Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
                 Markdown = "Test message " + rnd.Next(0, 100000).ToString(),
@@ -86,21 +83,72 @@ namespace Plato.Discuss.Controllers
                 }
             };
 
-            topic.MetaData.Add(typeof(TopicDetails), topicDetails);
-            
-            var newTopic = await _topicStore.CreateAsync(topic);
-
+            topic.SetMetaData<TopicDetails>(topicDetails);
 
             var sb = new StringBuilder();
-            sb.Append(newTopic.Title)
-                .Append(" ")
-                .Append(newTopic.Id)
-                .Append("<br>")
-                .Append(newTopic.MetaData[typeof(TopicDetails)].ToString());
+
+            var newTopic = await _entityStore.CreateAsync(topic);
+
+            if (newTopic != null)
+            {
+             
+                sb
+                    .Append("<h1>New Topic</h1>")
+                    .Append("<strong>Title</strong>")
+                    .Append("<br>")
+                    .Append(newTopic.Title)
+                    .Append("<br>")
+                    .Append("<strong>ID</strong>")
+                    .Append(newTopic.Id);
+
+                var details = newTopic.GetMetaData<TopicDetails>();
+                if (details?.Participants != null)
+                {
+                    sb.Append("<h5>Participants</h5>");
+
+                    foreach (var user in details.Participants)
+                    {
+                        sb.Append(user.UserName)
+                            .Append("<br>");
+                    }
+
+
+                }
+            }
+          
+            
+        
+            var existingTopic = await _entityStore.GetByIdAsync(142);
+            if (existingTopic != null)
+            {
+
+                sb
+                    .Append("<h1>Existing Topic</h1>")
+                    .Append("<strong>Title </strong>")
+                    .Append("<br>")
+                    .Append(existingTopic.Title)
+                    .Append("<br>")
+                    .Append("<strong>ID </strong>")
+                    .Append(existingTopic.Id);
+
+                // random details
+                var existingDetails = existingTopic.GetMetaData<TopicDetails>();
+                if (existingDetails?.Participants != null)
+                {
+                    sb.Append("<h5>Participants</h5>");
+
+                    foreach (var user in existingDetails.Participants)
+                    {
+                        sb.Append(user.UserName)
+                            .Append("<br>");
+                    }
+
+                }
+
+            }
 
 
             ViewBag.TopicData = sb.ToString();
-
 
             // ------------------------
 

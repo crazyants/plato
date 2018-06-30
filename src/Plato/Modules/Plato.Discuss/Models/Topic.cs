@@ -5,12 +5,21 @@ using System.Collections.Generic;
 
 namespace Plato.Discuss.Models
 {
-    public class Topic  : Entity
-    {
+    //public class Topic  : Entity
+    //{
 
-        public IDictionary<Type, ISerializable> MetaData { get; set; } = new Dictionary<Type, ISerializable>();
+    //    public IDictionary<Type, ISerializable> MetaData { get; set; } = new Dictionary<Type, ISerializable>();
 
-        public TopicDetails Details { get; set; } = new TopicDetails();
+    //    public void SetData<T>(T obj) where T : class
+    //    {
+    //        this.MetaData.Add(typeof(T), (ISerializable)obj);
+    //    }
 
-    }
+    //    public T GetData<T>() where T : class
+    //    {
+    //        return (T)MetaData[typeof(T)];
+    //    }
+
+    //}
+
 }

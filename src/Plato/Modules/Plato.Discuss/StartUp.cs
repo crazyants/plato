@@ -37,15 +37,15 @@ namespace Plato.Discuss
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
-            // Entities
-            services.AddScoped<IEntityRepository<Entity>, EntityRepository>();
-            services.AddScoped<IEntityDataRepository<EntityData>, EntityDataRepository>();
+            //// Entities
+            //services.AddScoped<IEntityRepository<Entity>, EntityRepository>();
+            //services.AddScoped<IEntityDataRepository<EntityData>, EntityDataRepository>();
 
-            services.AddScoped<IEntityStore<Entity>, EntityStore>();
-            services.AddScoped<IEntityDataStore<EntityData>, EntityDataStore>();
+            //services.AddScoped<IEntityStore<Entity>, EntityStore>();
+            //services.AddScoped<IEntityDataStore<EntityData>, EntityDataStore>();
             
             // Topics
-            services.AddScoped<ITopicStore<Topic>, TopicStore>();
+            //services.AddScoped<ITopicStore<Topic>, TopicStore>();
             
             // Register client resources
             services.AddScoped<IResourceProvider, ResourceProvider>();

@@ -5,14 +5,12 @@ using System.Data.Common;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
-using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Repositories
 {
-    
+
     public class EntityRepository : IEntityRepository<Entity>
     {
         
@@ -180,11 +178,10 @@ namespace Plato.Entities.Repositories
                             var entityData = new EntityData(reader);
                             entity.Data.Add(entityData);
                         }
+
                     }
                 }
-
-
-
+                
                 //if (await reader.NextResultAsync())
                 //{
                 //    if (reader.HasRows)

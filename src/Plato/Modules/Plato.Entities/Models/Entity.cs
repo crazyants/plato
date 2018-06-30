@@ -3,48 +3,45 @@ using System.Collections.Generic;
 using System.Data;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Models;
 
 namespace Plato.Entities.Models
 {
-    public class Entity : IModel<Entity>
+    public class Entity : EntityBase
     {
 
-        public int Id { get; set; }
+        private readonly IDictionary<Type, ISerializable> _metaData;
+
+        public IDictionary<Type, ISerializable> MetaData => _metaData;
         
-        public int FeatureId { get; set; }
-
-        public string Title { get; set; }
-
-        public string TitleNormalized { get; set; }
-
-        public string Markdown { get; set; }
-
-        public string Html { get; set; }
-
-        public string PlainText { get; set; }
-
-        public bool IsPublic { get; set; }
-
-        public bool IsSpam { get; set; }
-
-        public bool IsPinned { get; set; }
-
-        public bool IsDeleted { get; set; }
-
-        public bool IsClosed { get; set; }
-
-        public int CreatedUserId { get; set; }
-
-        public DateTime? CreatedDate { get; set; }
-
-        public int ModifiedUserId { get; set; }
-
-        public DateTime? ModifiedDate { get; set; }
-
-        public IList<EntityData> Data { get; set; } = new List<EntityData>();
+        public Entity()
+        {
+            // TODO: Replace with concurrent dictionary
+            _metaData = new Dictionary<Type, ISerializable>();
+        }
         
-        public void PopulateModel(IDataReader dr)
+     
+        public void SetMetaData<T>(T obj) where T : class
+        {
+            _metaData.Add(typeof(T), (ISerializable)obj);
+        }
+
+        public void SetMetaData(ISerializable obj, Type type)
+        {
+            _metaData.Add(type, obj);
+        }
+
+        public T GetMetaData<T>() where T : class
+        {
+            if (_metaData.ContainsKey(typeof(T)))
+            {
+                return (T)_metaData[typeof(T)];
+            }
+
+            return default(T);
+
+        }
+        
+        public override void PopulateModel(IDataReader dr)
         {
             
             if (dr.ColumnIsNotNull("Id"))

@@ -11,5 +11,7 @@ namespace Plato.Internal.Modules.Abstractions
 
         Task<IDictionary<Type, IModuleEntry>> GetModuleDependenciesAsync(IEnumerable<IModuleEntry> modules);
 
+        Task<Type> GetTypeCandidateAsync(string typeName, Type baseType);
+
     }
 }

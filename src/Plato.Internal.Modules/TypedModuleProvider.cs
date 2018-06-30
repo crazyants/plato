@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Scaffolding.Internal;
 using Plato.Internal.Models.Modules;
@@ -61,6 +62,26 @@ namespace Plato.Internal.Modules
             }
 
             return entries;
+
+        }
+
+        public async Task<Type> GetTypeCandidateAsync(string typeName, Type baseType)
+        {
+
+            await BuildTypedProvider();
+
+            foreach (var candidate in _modules
+                .Where(p => baseType.IsAssignableFrom(p.Key))
+                .Select(t => t.Key.GetTypeInfo()))
+            {
+                if (candidate.GetTypeInfo().FullName == typeName)
+                {
+                    return candidate.AsType();
+                }
+            }
+
+            return null;
+
 
         }
 
