@@ -6,14 +6,13 @@ using System.Runtime.Loader;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Abstractions;
 
-namespace Plato.Modules.Loader
+namespace Plato.Internal.Modules.Loader
 {
     public class ModuleLoader : IModuleLoader
     {

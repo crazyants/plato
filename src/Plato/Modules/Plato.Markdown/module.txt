@@ -1,3 +1,6 @@
 Name: Plato Markdown
 Author: InstantASP
-Description: Adds a markdown editor component.
+Description: Adds a markdown editor component. Uses Markdig 0.15.0 for Markdown processing.
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Category: User Interface

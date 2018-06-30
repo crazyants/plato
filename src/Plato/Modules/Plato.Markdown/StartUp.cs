@@ -7,6 +7,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Resources.Abstractions;
 using Plato.Markdown.Resources;
+using Plato.Markdown.Services;
 using Plato.Markdown.ViewAdaptors;
 
 namespace Plato.Markdown
@@ -22,6 +23,9 @@ namespace Plato.Markdown
 
         public override void ConfigureServices(IServiceCollection services)
         {
+            
+            // Register markdown abstractions
+            services.AddSingleton<IMarkdownParserFactory, MarkdownParserFactory>();
 
             // Register view adaptors
             services.AddScoped<IViewAdaptorProvider, EditorViewAdaptorProvider>();

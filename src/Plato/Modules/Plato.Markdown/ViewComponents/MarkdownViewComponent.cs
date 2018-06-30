@@ -1,46 +1,58 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Internal.Stores.Abstractions.Roles;
+using Plato.Markdown.Services;
 
 namespace Plato.Markdown.ViewComponents
 {
     public class MarkdownViewComponent : ViewComponent
     {
-      
 
-        public MarkdownViewComponent()
+        private readonly IMarkdownParserFactory _markdownParserFactory;
+
+        public MarkdownViewComponent(
+            IMarkdownParserFactory markdownParserFactory)
         {
-         
+            _markdownParserFactory = markdownParserFactory;
         }
 
-        public Task<IViewComponentResult> InvokeAsync(
+        public async Task<IViewComponentResult> InvokeAsync(
             string value, 
             string placeHolderText,
             string htmlName)
         {
 
+            var markdown = @"# header 1
+
+werwerwerw wer wer wer wrwr wr wrwerwer wr we rewrwerwerwerw wer wer wer wrwr wr wrwerwer wr we rewrwerwerwerw wer wer wer wrwr wr wrwerwer wr we rewr
+werwerwerw wer wer wer wrwr wr wrwerwer wr we rewrwerwerwerw wer wer wer wrwr wr wrwerwer wr we rewrwerwerwerw wer wer wer wrwr wr wrwerwer wr we rewr
+
+'''
+werwerwerw wer wer wer wrwr wr wrwerwer wr we rewr
+'''
+
+## header 2
+
+werwerwerw wer wer wer wrwr wr wrwerwer wr we rewr
+
+
+";
+
+            var parser = _markdownParserFactory.GetParser();
+            var html = await parser.Parse(markdown);
+            
             var model = new MarkdownViewModel
             {
                 HtmlName = htmlName,
                 PlaceHolderText = placeHolderText,
-                Value = value
+                Value = value,
+                Preview = html
             };
 
-            return Task.FromResult((IViewComponentResult)View(model));
+            return View(model);
         }
 
     }
 
-    public class Selection<T>
-    {
-
-        public bool IsSelected { get; set; }
-
-        public T Value { get; set; }
-
-    }
 
     public class MarkdownViewModel
     {
@@ -50,6 +62,9 @@ namespace Plato.Markdown.ViewComponents
         public string PlaceHolderText { get; set; }
 
         public string HtmlName { get; set; }
+
+
+        public string Preview { get; set; }
 
     }
 

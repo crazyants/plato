@@ -1,5 +1,6 @@
 ﻿@model Plato.Markdown.ViewComponents.MarkdownViewModel
 
+@Model.Preview
 
 <ul class="nav nav-tabs">
     <li class="nav-item">
@@ -15,9 +16,7 @@
           data-provide="markdown"
           class="form-control md-textarea"
           placeholder="@Model.PlaceHolderText"
-          rows="6">
-    @if (!String.IsNullOrEmpty(@Model.Value))
+          rows="6">@if (!String.IsNullOrEmpty(@Model.Value))
     {
         @Model.Value
-    }
-</textarea>
+    }</textarea>

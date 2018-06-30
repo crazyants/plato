@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Plato.Internal.Modules.Abstractions;
-using Plato.Modules.Loader;
+using Plato.Internal.Modules.Loader;
 using Plato.Internal.Modules.Locator;
 
 namespace Plato.Internal.Modules.Extensions

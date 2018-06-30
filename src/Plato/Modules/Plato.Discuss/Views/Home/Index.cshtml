@@ -25,21 +25,19 @@
 
                     <fieldset>
                         <div class="form-group">
-
                             
                             <span asp-validation-for="NewEntityViewModel.Title" class="text-danger"></span>
                             <input asp-for="NewEntityViewModel.Title" placeholder="@T["Title"]" class="form-control" autofocus />
-
-
+                            
                         </div>
                         <div class="form-group">
 
                             @await DisplayAsync(new View("Editor", new
-                            {
-                                value = string.Empty,
-                                plreaceHolderText = "place holder text from core",
-                                htmlName = "Editor"
-                            }))
+                           {
+                               value = string.Empty,
+                               placeHolderText = "place holder text from core",
+                               htmlName = "Editor"
+                           }))
                             
                         <!--
                         <textarea asp-for="NewEntityViewModel.Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>
