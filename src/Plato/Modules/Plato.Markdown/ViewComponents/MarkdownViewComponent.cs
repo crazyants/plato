@@ -20,32 +20,12 @@ namespace Plato.Markdown.ViewComponents
             string placeHolderText,
             string htmlName)
         {
-
-            var markdown = @"# header 1
-
-werwerwerw wer wer wer wrwr wr wrwerwer wr we rewrwerwerwerw wer wer wer wrwr wr wrwerwer wr we rewrwerwerwerw wer wer wer wrwr wr wrwerwer wr we rewr
-werwerwerw wer wer wer wrwr wr wrwerwer wr we rewrwerwerwerw wer wer wer wrwr wr wrwerwer wr we rewrwerwerwerw wer wer wer wrwr wr wrwerwer wr we rewr
-
-'''
-werwerwerw wer wer wer wrwr wr wrwerwer wr we rewr
-'''
-
-## header 2
-
-werwerwerw wer wer wer wrwr wr wrwerwer wr we rewr
-
-
-";
-
-            var parser = _markdownParserFactory.GetParser();
-            var html = await parser.Parse(markdown);
-            
+          
             var model = new MarkdownViewModel
             {
                 HtmlName = htmlName,
                 PlaceHolderText = placeHolderText,
                 Value = value,
-                Preview = html
             };
 
             return View(model);

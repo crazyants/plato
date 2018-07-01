@@ -29814,6 +29814,7 @@ $(function (win, doc, $) {
         info: "Info",
         warning: "Warning",
         error: "Error",
+        prevLogDate: null,
         logInfo: function (message) {
             this.log(this.info, message);
         },
@@ -29827,8 +29828,17 @@ $(function (win, doc, $) {
             if (!$.Plato.Options.debug) {
                 return;
             }
-            var ticks = (new Date().getTime() * 10000);
-            console.log(level + ": " + message + " - " + ticks);
+            var difference = this.getDifferenceInMilliseconds();
+            this.prevLogDate = new Date();
+            console.log(level + ": " + message + " - " + difference + " ms elapsed since previous log entry.");
+        },
+        getDifferenceInMilliseconds: function() {
+            if (this.prevLogDate === null) {
+                this.prevLogDate = new Date();
+            } else {
+                return (this.prevLogDate - new Date()) / 10000;
+            }
+            return 0;
         }
     }
     
@@ -29842,6 +29852,12 @@ $(function (win, doc, $) {
             return $.Plato.Options;
         },
         logger: $.Plato.Logger
+    }
+
+    /* Client side localization */
+    win.$.Plato.Locale = {
+        lang: "en-US",
+
     }
 
     /* Plato UI */

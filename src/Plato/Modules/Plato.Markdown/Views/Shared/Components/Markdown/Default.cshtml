@@ -1,19 +1,18 @@
 ﻿@model Plato.Markdown.ViewComponents.MarkdownViewModel
 
-
-<div class="row" data-provide="markdown-container">
-
+<div data-provide="markdown-container">
+    
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-            <a class="nav-link active" href="#editor" data-toggle="tab" role="tab">@T["Write"]</a>
+            <a class="nav-link active" href="#write" data-toggle="tab" role="tab">@T["Write"]</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#preview" data-toggle="tab" role="tab">@T["Preview"]</a>
         </li>
     </ul>
 
-    <div class="tab-content" id="markdownContent">
-        <div class="tab-pane fade show active" id="editor" role="tabpanel">
+    <div class="tab-content d-block" id="markdownContent">
+        <div class="tab-pane fade show active" id="write" role="tabpanel">
             <textarea value="@Model.Value"
                   name="@Model.HtmlName"
                   data-provide="markdown"
@@ -24,8 +23,8 @@
                                @Model.Value
                            }</textarea>
         </div>
-        <div class="tab-pane fade" id="preview" role="tabpanel">
-            preview
+        <div class="tab-pane p-2 pt-4 fade" id="preview" role="tabpanel">
+       
         </div>
     </div>
 

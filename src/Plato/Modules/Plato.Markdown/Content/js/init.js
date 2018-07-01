@@ -43,8 +43,7 @@ $(function (win, doc, $) {
                     var $tabs = $caller.find('a[data-toggle="tab"]');
                     $tabs.on(event,
                         function(e) {
-                            var target = e.target;
-                            methods.showTab($(this), target.href.split("#")[1]);
+                            methods.showTab($caller, e.target.href.split("#")[1]);
                         });
 
                 }
@@ -55,18 +54,26 @@ $(function (win, doc, $) {
                 var $panels = $caller.find('div[data-role="tabpanel"]');
 
                 switch (tabId) {
-                    case "write":
-                        break;
-                    case "preview":
-                        var html = this.getHtml({
-                            markdown: "test"
+                case "write":
+                    break;
+                case "preview":
+
+                    var $editor = $caller.find("textarea");
+                    var html = this.getHtml({
+                            markdown: $editor.val()
+                        },
+                        function (data) {
+                            if (data.statusCode === 200) {
+                                $caller.find("#preview").empty().html(data.html);
+                            }
                         });
-                        $caller.find("#preview").html(html);
-                        break;
+
+                   
+                    break;
                 }
 
             },
-            getHtml: function (params) {
+            getHtml: function (params, fn) {
 
                 win.$.Plato.Http({
                     url: "/api/markdown/parse",
@@ -74,7 +81,7 @@ $(function (win, doc, $) {
                     async: false,
                     data: params
                 }).done(function (data) {
-                    
+                    fn(data);
                 });
 
             }
