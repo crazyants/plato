@@ -99,11 +99,6 @@ namespace Plato.Users.Controllers
 
         }
         
-        public async Task<IActionResult> LayoutTest(string id)
-        {
-            var result = await _userViewProvider.ProvideIndexAsync(new User(), this);
-            return View(result);
-        }
         
         public async Task<IActionResult> Display(string id)
         {

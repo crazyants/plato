@@ -12,11 +12,16 @@ using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Stores;
+using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
 
 namespace Plato.Discuss.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : Controller, IUpdateModel
     {
+
+        private readonly IViewProviderManager<DiscussIndexViewModel> _discussIndexViewProvider;
+
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly IEntityRepository<Entity> _entityRepository;
@@ -26,16 +31,37 @@ namespace Plato.Discuss.Controllers
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IEntityRepository<Entity> entityRepository,
-            IEntityStore<Entity> entityStore)
+            IEntityStore<Entity> entityStore,
+            IViewProviderManager<DiscussIndexViewModel> discussIndexViewProvider)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
             _entityRepository = entityRepository;
             _entityStore = entityStore;
+            _discussIndexViewProvider = discussIndexViewProvider;
         }
         
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
         {
+
+
+
+            // default options
+            if (filterOptions == null)
+            {
+                filterOptions = new FilterOptions();
+            }
+
+            // default pager
+            if (pagerOptions == null)
+            {
+                pagerOptions = new PagerOptions();
+            }
+
+
+
 
             string path = Request.Path;
             ViewData["path"] = path;
@@ -156,7 +182,7 @@ namespace Plato.Discuss.Controllers
             }
 
 
-            ViewBag.TopicData = sb.ToString();
+            //ViewBag.TopicData = sb.ToString();
 
             // ------------------------
 
@@ -197,69 +223,55 @@ namespace Plato.Discuss.Controllers
 
             //var newEntity = await _entityStore.CreateAsync(entity);
 
-            var pagerOptions = new PagerOptions()
-            {
-                Page = 1,
-                PageSize = 20
-            };
+            //var pagerOptions = new PagerOptions()
+            //{
+            //    Page = 1,
+            //    PageSize = 20
+            //};
 
-            var model = new DiscussIndexViewModel()
-            {
-                Results = await GetEntities(pagerOptions)
-            };
+            //var model = new DiscussIndexViewModel()
+            //{
+            //    Results = await GetEntities(pagerOptions)
+            //};
             
-            return View(model);
+            //return View(model);
+
+
+
+            // Get model
+            var model = await GetPagedModel(filterOptions, pagerOptions);
+
+            // Build view
+            var result = await _discussIndexViewProvider.ProvideIndexAsync(model, this);
+
+            // Return view
+            return View(result);
+            
 
         }
-
-
+        
         [HttpPost]
         [ActionName(nameof(Index))]
         public async Task<IActionResult> IndexPost(DiscussIndexViewModel model)
         {
             
-            var topic = new Entity()
-            {
-                Title = model.NewEntityViewModel.Title,
-                Markdown = model.NewEntityViewModel.Message
-            };
+         
+            // Build view
+            var result = await _discussIndexViewProvider.ProvideUpdateAsync(model, this);
 
-            var topicDetails = new TopicDetails()
-            {
-                SomeNewValue = "Example Value 123",
-                Users = new List<Participant>()
-                {
-                    new Participant()
-                    {
-                        UserId = 1,
-                        UserName = "Test",
-                        Participations = 10
+            // Return view
+            return View(result);
 
-                    },
-                    new Participant()
-                    {
-                        UserId = 2,
-                        UserName = "Mike Jones",
-                        Participations = 5
-                    },
-                    new Participant()
-                    {
-                        UserId = 3,
-                        UserName = "Sarah Smith",
-                        Participations = 2
-                    }
-                }
-            };
 
-            topic.SetMetaData<TopicDetails>(topicDetails);
+            //topic.SetMetaData<TopicDetails>(topicDetails);
 
-            var sb = new StringBuilder();
+            //var sb = new StringBuilder();
 
-            var newTopic = await _entityStore.CreateAsync(topic);
+            //var newTopic = await _entityStore.CreateAsync(topic);
 
             
 
-            return View(model);
+            //return View(model);
 
         }
 
@@ -282,7 +294,23 @@ namespace Plato.Discuss.Controllers
             return View();
         }
 
-        public async Task<IPagedResults<Entity>> GetEntities(PagerOptions pagerOptions)
+
+
+        private async Task<DiscussIndexViewModel> GetPagedModel(
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
+        {
+            var topics = await GetEntities(filterOptions, pagerOptions);
+            return new DiscussIndexViewModel(
+                topics,
+                filterOptions,
+                pagerOptions);
+        }
+
+
+        public async Task<IPagedResults<Entity>> GetEntities(
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
         {
             return await _entityStore.QueryAsync()
                 .Page(pagerOptions.Page, pagerOptions.PageSize)

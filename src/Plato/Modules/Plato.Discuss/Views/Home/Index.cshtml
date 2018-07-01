@@ -1,130 +1,75 @@
-﻿@using Plato.Internal.Layout.Views
-@model DiscussIndexViewModel
+﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Discussions";
+    ViewData["Title"] = "Manage Users";
 }
 
+<div class="layout">
 
-
-@Html.Raw(ViewBag.TopicData)
-
-
-
-
-<a href="#modal-new" class="btn btn-primary" data-toggle="modal" data-target="#modal-new" title="Reply">
-    <i class="fa fa-fw fa-reply-all"></i> Reply
-</a>
-
-<div class="modal fade" id="modal-new" role="dialog" aria-hidden="true">
-
-    <div class="modal-dialog modal-right modal-2x bg-light p-2 border-left" role="document">
-        
-        <div class="modal-content">
-            <form asp-action="Index" method="post" enctype="multipart/form-data">
-                <card title="@T["Post Reply"]">
-
-                    <fieldset>
-                        <div class="form-group">
-                            
-                            <span asp-validation-for="NewEntityViewModel.Title" class="text-danger"></span>
-                            <input asp-for="NewEntityViewModel.Title" placeholder="@T["Title"]" class="form-control" autofocus />
-                            
-                        </div>
-                        <div class="form-group">
-
-                            @await DisplayAsync(new View("Editor", new
-                           {
-                               value = string.Empty,
-                               placeHolderText = "place holder text from core",
-                               htmlName = "Editor"
-                           }))
-                            
-                        <!--
-                        <textarea asp-for="NewEntityViewModel.Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>
-                        -->
-                        </div>
-                        <div class="form-group mt-4">
-
-                            <button type="submit" class="btn btn-primary">
-                                @T["Post"]
-                            </button>
-                            <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
-                                @T["Cancel"]
-                            </button>
-                        </div>
-                    </fieldset>
-         
-                </card>
-            </form>
-        </div>
-        
-
+    <div class="layout-header">
+        @if (Model.Alerts != null)
+        {
+            <div class="layout-alerts">
+                <view model="@Model.Alerts"></view>
+            </div>
+        }
+        @if (Model.Tools != null)
+        {
+            <div class="float-right layout-tools">
+                <view model="@Model.Tools" />
+            </div>
+        }
+        @if (Model.Header != null)
+        {
+            <div class="layout-header-item">
+                <view model="@Model.Header" />
+            </div>
+        }
+        @if (Model.Meta != null)
+        {
+            <div class="layout-meta">
+                <view model="@Model.Meta"></view>
+            </div>
+        }
     </div>
 
-</div>
-
-
-
-
-
-
-
-<div id="app">
-
-</div>
-
-<div class="row">
-    <div class="col-8">
-
-        <div class="row">
-            <div class="col-12">
-                <a href="#" class="btn btn-primary float-right">
-                    @T["Post Topic"]
-                </a>
-                <h4 class="d-inline-block">
-                    @T["Discuss"]
-                </h4>
+    @if (Model.SideBar != null)
+    {
+        <div class="row layout-content">
+            <div class="col-md-9">
+                @if (Model.Content != null)
+                {
+                    <view model="@Model.Content"></view>
+                }
+            </div>
+            <div class="col-md-3">
+                @if (Model.SideBar != null)
+                {
+                    <view model="@Model.SideBar"></view>
+                }
             </div>
         </div>
-
-
-        @if (Model.Results != null)
+    }
+    else
+    {
+        @if (Model.Content != null)
         {
-            <ul class="list-group list-group-flush list-group-hover mt-4">
-                @foreach (var entity in Model.Results.Data)
-                {
-                    <li class="list-group-item">
-
-                        <h6>
-                            @entity.Title
-                        </h6>
-                        <p class="text-muted">
-                            @entity.PlainText
-                        </p>
-                    </li>
-                }
-            </ul>
+            <view model="@Model.Content"></view>
         }
-        else
+    }
+
+    <div class="layout-footer">
+        @if (Model.Actions != null)
         {
-            <h6>@T["No discussions found"]</h6>
+            <div class="float-right layout-actions">
+                <view model="@Model.Actions" />
+            </div>
         }
-
-
-
+        @if (Model.Footer != null)
+        {
+            <div class="layout-footer-item">
+                <view model="@Model.Footer"></view>
+            </div>
+        }
     </div>
-    <div class="col-4">
 
-        <card title="@T["Channels"]">
-
-
-        </card>
-
-
-    </div>
 </div>
-
-
-
-<br />
-

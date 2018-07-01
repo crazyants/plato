@@ -1,0 +1,86 @@
+﻿@model DiscussIndexViewModel
+
+
+<a href="#modal-new" class="btn btn-primary" data-toggle="modal" data-target="#modal-new" title="Reply">
+    <i class="fa fa-fw fa-reply-all"></i>
+    @T["New Topic"]
+</a>
+
+<card title="@T["Topics"]">
+
+    @if (Model.Results != null)
+    {
+        <ul class="list-group list-group-flush list-group-hover mt-4">
+            @foreach (var entity in Model.Results.Data)
+            {
+                <li class="list-group-item">
+
+                    <h6>
+                        @entity.Title
+                    </h6>
+                    <p class="text-muted">
+                        @entity.PlainText
+                    </p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <h6>@T["No discussions found"]</h6>
+    }
+
+</card>
+
+<div class="mt-4 mb-4">
+    <pager model="@Model.PagerOpts"></pager>
+</div>
+
+<div class="modal fade" id="modal-new" role="dialog" aria-hidden="true">
+
+    <div class="modal-dialog modal-right modal-2x bg-light p-2 border-left" role="document">
+
+        <div class="modal-content">
+            <form asp-action="Index" method="post" enctype="multipart/form-data">
+                <card title="@T["Post Reply"]">
+
+                    <fieldset>
+                        <div class="form-group">
+
+                            <span asp-validation-for="NewEntityViewModel.Title" class="text-danger"></span>
+                            <input asp-for="NewEntityViewModel.Title" placeholder="@T["Title"]" class="form-control" autofocus />
+
+                        </div>
+                        <div class="form-group">
+
+                            @await DisplayAsync(new View("Editor", new
+                           {
+                               value = string.Empty,
+                               placeHolderText = "place holder text from core",
+                               htmlName = "Editor"
+                           }))
+
+                           
+                            <textarea asp-for="NewEntityViewModel.Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>
+                           
+                        </div>
+                        <div class="form-group mt-4">
+
+                            <button type="submit" class="btn btn-primary">
+                                @T["Post"]
+                            </button>
+                            <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
+                                @T["Cancel"]
+                            </button>
+                        </div>
+                    </fieldset>
+
+                </card>
+            </form>
+        </div>
+
+
+    </div>
+
+</div>
+

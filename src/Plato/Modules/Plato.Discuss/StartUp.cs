@@ -9,11 +9,14 @@ using Plato.Discuss.Handlers;
 using Plato.Discuss.Models;
 using Plato.Discuss.Resources;
 using Plato.Discuss.Stores;
+using Plato.Discuss.ViewModels;
+using Plato.Discuss.ViewProviders;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Resources.Abstractions;
 
 namespace Plato.Discuss
@@ -39,6 +42,10 @@ namespace Plato.Discuss
 
             // Register client resources
             services.AddScoped<IResourceProvider, ResourceProvider>();
+
+            // Register view providers
+            services.AddScoped<IViewProviderManager<DiscussIndexViewModel>, ViewProviderManager<DiscussIndexViewModel>>();
+            services.AddScoped<IViewProvider<DiscussIndexViewModel>, DiscussIndexViewProvider>();
 
         }
 
