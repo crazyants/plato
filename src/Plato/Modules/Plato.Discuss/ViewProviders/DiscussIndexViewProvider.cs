@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -13,13 +14,20 @@ namespace Plato.Discuss.ViewProviders
     public class DiscussIndexViewProvider : BaseViewProvider<DiscussIndexViewModel>
     {
 
+        private const string EditorHtmlName = "message";
+
+
         private readonly IEntityStore<Entity> _entityStore;
+
+        private readonly HttpRequest _request;
 
 
         public DiscussIndexViewProvider(
-            IEntityStore<Entity> entityStore)
+            IEntityStore<Entity> entityStore,
+            IHttpContextAccessor httpContextAccessor)
         {
             _entityStore = entityStore;
+            _request = httpContextAccessor.HttpContext.Request;
         }
 
 
@@ -32,10 +40,26 @@ namespace Plato.Discuss.ViewProviders
         {
             return Task.FromResult(
                 Views(
-                    View<DiscussIndexViewModel>("Discuss.Index.Header", model => viewModel).Zone("header"),
-                    View<DiscussIndexViewModel>("Discuss.Index.Tools", model => viewModel).Zone("tools"),
-                    View<DiscussIndexViewModel>("Discuss.Index.Sidebar", model => viewModel).Zone("sidebar"),
-                    View<DiscussIndexViewModel>("Discuss.Index.Content", model => viewModel).Zone("content")
+                    View<DiscussIndexViewModel>("Discuss.Index.Header", model =>
+                    {
+                        viewModel.EditorHtmlName = EditorHtmlName;
+                        return viewModel;
+                    }).Zone("header"),
+                    View<DiscussIndexViewModel>("Discuss.Index.Tools", model =>
+                    {
+                        viewModel.EditorHtmlName = EditorHtmlName;
+                        return viewModel;
+                    }).Zone("tools"),
+                    View<DiscussIndexViewModel>("Discuss.Index.Sidebar", model =>
+                    {
+                        viewModel.EditorHtmlName = EditorHtmlName;
+                        return viewModel;
+                    }).Zone("sidebar"),
+                    View<DiscussIndexViewModel>("Discuss.Index.Content", model =>
+                    {
+                        viewModel.EditorHtmlName = EditorHtmlName;
+                        return viewModel;
+                    }).Zone("content")
                 ));
         }
 
@@ -44,23 +68,32 @@ namespace Plato.Discuss.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(DiscussIndexViewModel indexViewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(DiscussIndexViewModel viewModel, IUpdateModel updater)
         {
 
             var model = new DiscussIndexViewModel();;
 
             if (!await updater.TryUpdateModelAsync(model))
             {
-                return await BuildIndexAsync(indexViewModel, updater);
+                return await BuildIndexAsync(viewModel, updater);
             }
 
             if (updater.ModelState.IsValid)
             {
 
+                var message = string.Empty;
+                foreach (string key in _request.Form.Keys)
+                {
+                    if (key == EditorHtmlName)
+                    {
+                        message = _request.Form[key];
+                    }
+
+                }
 
                 var entity = new Entity();
-                entity.Title = indexViewModel.NewEntityViewModel.Title?.Trim();
-                entity.Markdown = indexViewModel.NewEntityViewModel.Message?.Trim();
+                entity.Title = viewModel.NewEntityViewModel.Title?.Trim();
+                entity.Markdown = message.Trim();
 
 
                 var newTopic = await _entityStore.CreateAsync(entity);
@@ -75,7 +108,7 @@ namespace Plato.Discuss.ViewProviders
 
             }
 
-            return await BuildIndexAsync(indexViewModel, updater);
+            return await BuildIndexAsync(viewModel, updater);
             
 
         }

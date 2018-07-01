@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
 using Plato.Discuss.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -12,6 +14,7 @@ using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Stores;
+using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 
@@ -26,19 +29,28 @@ namespace Plato.Discuss.Controllers
         private readonly ISiteSettingsStore _settingsStore;
         private readonly IEntityRepository<Entity> _entityRepository;
         private readonly IEntityStore<Entity> _entityStore;
-     
+        private readonly IAlerter _alerter;
+        
+        public IHtmlLocalizer T { get; }
+
+
         public HomeController(
+            IHtmlLocalizer<HomeController> localizer,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IEntityRepository<Entity> entityRepository,
             IEntityStore<Entity> entityStore,
-            IViewProviderManager<DiscussIndexViewModel> discussIndexViewProvider)
+            IViewProviderManager<DiscussIndexViewModel> discussIndexViewProvider, IAlerter alerter)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
             _entityRepository = entityRepository;
             _entityStore = entityStore;
             _discussIndexViewProvider = discussIndexViewProvider;
+            _alerter = alerter;
+
+            T = localizer;
+
         }
         
         public async Task<IActionResult> Index(
@@ -233,9 +245,14 @@ namespace Plato.Discuss.Controllers
             //{
             //    Results = await GetEntities(pagerOptions)
             //};
-            
+
             //return View(model);
 
+
+            // Maintain previous route data when generating page links
+            var routeData = new RouteData();
+            routeData.Values.Add("Options.Search", filterOptions.Search);
+            routeData.Values.Add("Options.Order", filterOptions.Order);
 
 
             // Get model
@@ -254,14 +271,19 @@ namespace Plato.Discuss.Controllers
         [ActionName(nameof(Index))]
         public async Task<IActionResult> IndexPost(DiscussIndexViewModel model)
         {
-            
-         
-            // Build view
+
+       
             var result = await _discussIndexViewProvider.ProvideUpdateAsync(model, this);
 
-            // Return view
-            return View(result);
+            if (!ModelState.IsValid)
+            {
+                return View(result);
+            }
+            
+            _alerter.Success(T["Role Created Successfully!"]);
 
+            return RedirectToAction(nameof(Index));
+            
 
             //topic.SetMetaData<TopicDetails>(topicDetails);
 
@@ -269,7 +291,7 @@ namespace Plato.Discuss.Controllers
 
             //var newTopic = await _entityStore.CreateAsync(topic);
 
-            
+
 
             //return View(model);
 

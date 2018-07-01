@@ -23,14 +23,14 @@ namespace Plato.Discuss.ViewModels
             this.PagerOpts.SetTotal(results?.Total ?? 0);
         }
 
+        public string EditorHtmlName { get; set; }
 
         public IPagedResults<Entity> Results { get; set; }
 
         public NewEntityViewModel NewEntityViewModel { get; set; }
 
         public PagerOptions PagerOpts { get; set; }
-
-
+        
         public FilterOptions FilterOpts { get; set; }
 
     }
