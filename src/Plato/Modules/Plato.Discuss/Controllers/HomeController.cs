@@ -253,8 +253,7 @@ namespace Plato.Discuss.Controllers
             var routeData = new RouteData();
             routeData.Values.Add("Options.Search", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
-
-
+            
             // Get model
             var model = await GetPagedModel(filterOptions, pagerOptions);
 

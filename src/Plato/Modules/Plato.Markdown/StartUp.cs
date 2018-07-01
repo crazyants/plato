@@ -33,6 +33,9 @@ namespace Plato.Markdown
             // Register client resources
             services.AddScoped<IResourceProvider, ResourceProvider>();
 
+            // Register message broker
+            services.AddSingleton<IMarkdownSubscriber, MarkdownSubscriber>();
+
         }
 
         public override void Configure(

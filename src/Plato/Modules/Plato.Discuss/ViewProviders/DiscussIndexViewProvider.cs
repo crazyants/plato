@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Discuss.ViewProviders
 {
@@ -18,20 +16,21 @@ namespace Plato.Discuss.ViewProviders
 
 
         private readonly IEntityStore<Entity> _entityStore;
+        private readonly IBroker _broker;
 
         private readonly HttpRequest _request;
 
 
         public DiscussIndexViewProvider(
             IEntityStore<Entity> entityStore,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IBroker broker)
         {
             _entityStore = entityStore;
+            _broker = broker;
             _request = httpContextAccessor.HttpContext.Request;
         }
-
-
-
+        
         public override Task<IViewProviderResult> BuildDisplayAsync(DiscussIndexViewModel model, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
@@ -71,6 +70,10 @@ namespace Plato.Discuss.ViewProviders
         public override async Task<IViewProviderResult> BuildUpdateAsync(DiscussIndexViewModel viewModel, IUpdateModel updater)
         {
 
+            _entityStore.Creating += Creating;
+            _entityStore.Created += Created;
+            _entityStore.Configure += Configure;
+
             var model = new DiscussIndexViewModel();;
 
             if (!await updater.TryUpdateModelAsync(model))
@@ -90,12 +93,11 @@ namespace Plato.Discuss.ViewProviders
                     }
 
                 }
-
+                
                 var entity = new Entity();
                 entity.Title = viewModel.NewEntityViewModel.Title?.Trim();
-                entity.Markdown = message.Trim();
-
-
+                entity.PlainText = message.Trim();
+                
                 var newTopic = await _entityStore.CreateAsync(entity);
 
 
@@ -110,8 +112,42 @@ namespace Plato.Discuss.ViewProviders
 
             return await BuildIndexAsync(viewModel, updater);
             
+        }
+
+        public void Creating(object sender, EntityStoreEventArgs e)
+        {
+
 
         }
+
+
+        public void Created(object sender, EntityStoreEventArgs e)
+        {
+          
+        }
+
+        public async Task<Entity> Configure(object sender, EntityStoreEventArgs e)
+        {
+
+            var html = "";
+
+            // Publish value to subscriber and get resulot
+            var methods = _broker.Pull<string>(this, e.Entity.PlainText).Result;
+            if (methods != null)
+            {
+                foreach (var method in methods)
+                {
+                    html = await method.Invoke(new Message<string>(e.Entity.PlainText, this));
+                }
+            }
+
+            e.Entity.Html = html;
+
+            return e.Entity;
+
+        }
+
+
     }
 
 }

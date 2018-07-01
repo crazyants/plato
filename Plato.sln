@@ -111,11 +111,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Entities", "src\Plato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Features.Abstractions", "src\Plato.Internal.Features.Abstractions\Plato.Internal.Features.Abstractions.csproj", "{64815E0A-2FE8-4BA6-AFF0-7316378404D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Resources", "src\Plato.Internal.Resources\Plato.Internal.Resources.csproj", "{30E7F9E0-DF92-47AB-B332-9756DBD2063D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Resources", "src\Plato.Internal.Resources\Plato.Internal.Resources.csproj", "{30E7F9E0-DF92-47AB-B332-9756DBD2063D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Theming", "src\Plato\Modules\Plato.Theming\Plato.Theming.csproj", "{DA96A24A-3B31-40A9-9BE5-89D93636AFEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Theming", "src\Plato\Modules\Plato.Theming\Plato.Theming.csproj", "{DA96A24A-3B31-40A9-9BE5-89D93636AFEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Resources.Abstractions", "src\Plato.Internal.Resources.Abstractions\Plato.Internal.Resources.Abstractions.csproj", "{DDE68A18-C17E-43B8-BE48-6E9B729FAFF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Resources.Abstractions", "src\Plato.Internal.Resources.Abstractions\Plato.Internal.Resources.Abstractions.csproj", "{DDE68A18-C17E-43B8-BE48-6E9B729FAFF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Messaging", "src\Plato.Internal.Messaging\Plato.Internal.Messaging.csproj", "{9A182728-6792-4806-8EC8-DD0B65155EED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Messaging.Abstractions", "src\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj", "{70EF9D97-A76A-4CB1-B32D-853FE6033905}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -327,6 +331,14 @@ Global
 		{DDE68A18-C17E-43B8-BE48-6E9B729FAFF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDE68A18-C17E-43B8-BE48-6E9B729FAFF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDE68A18-C17E-43B8-BE48-6E9B729FAFF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A182728-6792-4806-8EC8-DD0B65155EED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A182728-6792-4806-8EC8-DD0B65155EED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A182728-6792-4806-8EC8-DD0B65155EED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A182728-6792-4806-8EC8-DD0B65155EED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70EF9D97-A76A-4CB1-B32D-853FE6033905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70EF9D97-A76A-4CB1-B32D-853FE6033905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70EF9D97-A76A-4CB1-B32D-853FE6033905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70EF9D97-A76A-4CB1-B32D-853FE6033905}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -384,6 +396,8 @@ Global
 		{30E7F9E0-DF92-47AB-B332-9756DBD2063D} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{DA96A24A-3B31-40A9-9BE5-89D93636AFEF} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{DDE68A18-C17E-43B8-BE48-6E9B729FAFF2} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
+		{9A182728-6792-4806-8EC8-DD0B65155EED} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
+		{70EF9D97-A76A-4CB1-B32D-853FE6033905} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

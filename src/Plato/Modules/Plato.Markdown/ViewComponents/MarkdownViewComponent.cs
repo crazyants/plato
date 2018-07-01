@@ -7,12 +7,15 @@ namespace Plato.Markdown.ViewComponents
     public class MarkdownViewComponent : ViewComponent
     {
 
+        private readonly IMarkdownSubscriber _markdownSubscriber;
         private readonly IMarkdownParserFactory _markdownParserFactory;
 
         public MarkdownViewComponent(
-            IMarkdownParserFactory markdownParserFactory)
+            IMarkdownParserFactory markdownParserFactory,
+            IMarkdownSubscriber markdownSubscriber)
         {
             _markdownParserFactory = markdownParserFactory;
+            _markdownSubscriber = markdownSubscriber;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -20,7 +23,11 @@ namespace Plato.Markdown.ViewComponents
             string placeHolderText,
             string htmlName)
         {
-          
+
+            // add a subscription to our message broker
+            // this subscription is used by 
+            _markdownSubscriber.Subscribe();
+
             var model = new MarkdownViewModel
             {
                 HtmlName = htmlName,

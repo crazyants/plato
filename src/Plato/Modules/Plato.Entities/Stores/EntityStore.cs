@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -18,6 +16,20 @@ namespace Plato.Entities.Stores
 
     public class EntityStore : IEntityStore<Entity>
     {
+        
+        public event EntityStoreEventHandler Creating;
+        public event EntityStoreEventHandler Created;
+        public event EntityStoreEventHandler Updating;
+        public event EntityStoreEventHandler Updated;
+        public event EntityStoreEventHandler Deleting;
+        public event EntityStoreEventHandler Deleted;
+        public event EntityStoreEventHandler Selected;
+
+        public delegate void EntityStoreEventHandler(object sender, EntityStoreEventArgs e);
+        
+        public event ConfigureEntityEventHandler Configure;
+
+        public delegate Task<Entity> ConfigureEntityEventHandler(object sender, EntityStoreEventArgs e);
 
         private string _key = "Entity";
 
@@ -62,14 +74,37 @@ namespace Plato.Entities.Stores
                     Value = item.Value.Serialize()
                 });
             }
-
             entity.Data = data;
+            
+            // Allows us to optionally configure the entity before storing
+            var configuredEntity = entity;
+            if (Configure != null)
+            {
+                // Raise configure event
+                configuredEntity = await Configure.Invoke(this, new EntityStoreEventArgs()
+                {
+                    Entity = entity
+                });
+            }
+            
+            // Raise creating event
+            Creating?.Invoke(this, new EntityStoreEventArgs()
+            {
+                Entity = configuredEntity
+            });
 
-            var newEntity = await _entityRepository.InsertUpdateAsync(entity);
+            // Add entity
+            var newEntity = await _entityRepository.InsertUpdateAsync(configuredEntity);
             if (newEntity != null)
             {
                 _cacheDependency.CancelToken(GetEntityCacheKey());
                 newEntity = await GetByIdAsync(newEntity.Id);
+
+                // Raise created event
+                Created?.Invoke(this, new EntityStoreEventArgs()
+                {
+                    Entity = newEntity
+                });
             }
             
             return newEntity;
@@ -78,12 +113,34 @@ namespace Plato.Entities.Stores
 
         public async Task<Entity> UpdateAsync(Entity entity)
         {
-            var output = await _entityRepository.InsertUpdateAsync(entity);
+            
+            // Allows us to optionally configure the entity before storing
+            var configuredEntity = entity;
+            if (Configure != null)
+            {
+                // Raise configure event
+                configuredEntity = await Configure.Invoke(this, new EntityStoreEventArgs()
+                {
+                    Entity = entity
+                });
+            }
 
+            Updating?.Invoke(this, new EntityStoreEventArgs()
+            {
+                Entity = configuredEntity
+            });
+
+
+            var output = await _entityRepository.InsertUpdateAsync(configuredEntity);
             if (output != null)
             {
                 _cacheDependency.CancelToken(GetEntityCacheKey());
             }
+
+            Updated?.Invoke(this, new EntityStoreEventArgs()
+            {
+                Entity = output
+            });
 
             return output;
 
@@ -91,17 +148,31 @@ namespace Plato.Entities.Stores
 
         public async Task<bool> DeleteAsync(Entity entity)
         {
+
+            Deleting?.Invoke(this, new EntityStoreEventArgs()
+            {
+                Entity = entity
+            });
+
             var success = await _entityRepository.DeleteAsync(entity.Id);
             if (success)
             {
                 _cacheDependency.CancelToken(GetEntityCacheKey());
             }
 
+            Deleted?.Invoke(this, new EntityStoreEventArgs()
+            {
+                Success = success,
+                Entity = entity
+            });
+
             return success;
         }
 
         public async Task<Entity> GetByIdAsync(int id)
         {
+
+          
             var entity = await _entityRepository.SelectByIdAsync(id);
             if (entity != null)
             {
@@ -116,6 +187,11 @@ namespace Plato.Entities.Stores
                 }
             }
 
+            Selected?.Invoke(this, new EntityStoreEventArgs()
+            {
+                Entity = entity
+            });
+            
             return entity;
         }
         
