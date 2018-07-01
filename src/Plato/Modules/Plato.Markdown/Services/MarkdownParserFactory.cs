@@ -1,21 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Plato.Markdown.Services
+﻿namespace Plato.Markdown.Services
 {
-
-    public interface IMarkdownParser
-    {
-        Task<string> Parse(string markdown);
-
-    }
-
-    public interface IMarkdownParserFactory
-    {
-        IMarkdownParser GetParser();
-    }
 
     public class MarkdownParserFactory : IMarkdownParserFactory
     {

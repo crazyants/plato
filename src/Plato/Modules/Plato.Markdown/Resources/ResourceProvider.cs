@@ -24,6 +24,12 @@ namespace Plato.Markdown.Resources
                     },
                     new Resource()
                     {
+                        Url = $"/plato.markdown/content/js/init.js",
+                        Type = ResourceType.JavaScript,
+                        Section = ResourceSection.Footer
+                    },
+                    new Resource()
+                    {
                         Url = $"/plato.markdown/content/css/markdown.css",
                         Type = ResourceType.Css,
                         Section = ResourceSection.Header
@@ -33,10 +39,15 @@ namespace Plato.Markdown.Resources
                 // Staging
                 new ResourceEnvironment(Environment.Staging, new List<Resource>()
                 {
-                    /* Css */
                     new Resource()
                     {
                         Url = $"/plato.markdown/content/js/markdown.js",
+                        Type = ResourceType.JavaScript,
+                        Section = ResourceSection.Footer
+                    },
+                    new Resource()
+                    {
+                        Url = $"/plato.markdown/content/js/init.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     },
@@ -51,10 +62,15 @@ namespace Plato.Markdown.Resources
                 // Production
                 new ResourceEnvironment(Environment.Production, new List<Resource>()
                 {
-                    /* Css */
                     new Resource()
                     {
                         Url = $"/plato.markdown/content/js/markdown.js",
+                        Type = ResourceType.JavaScript,
+                        Section = ResourceSection.Footer
+                    },
+                    new Resource()
+                    {
+                        Url = $"/plato.markdown/content/js/init.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     },

@@ -40,6 +40,14 @@ namespace Plato.Markdown
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            routes.MapAreaRoute(
+                name: "PlatoMarkdownParserService",
+                areaName: "Plato.Markdown",
+                template: "api/{controller}/{action}/{id?}",
+                defaults: new { controller = "Parse", action = "Get" }
+            );
+
         }
     }
 }
