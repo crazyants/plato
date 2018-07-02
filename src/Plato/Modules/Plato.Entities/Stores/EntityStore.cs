@@ -38,7 +38,6 @@ namespace Plato.Entities.Stores
         #region "Constructor"
 
         private readonly IBroker _broker;
-
         private readonly IEntityRepository<Entity> _entityRepository;
         private readonly ILogger<EntityStore> _logger;
         private readonly ICacheDependency _cacheDependency;
