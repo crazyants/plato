@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Markdown.Services
@@ -30,22 +31,45 @@ namespace Plato.Markdown.Services
         {
 
             // Add a subscribtion to convert markdown to html
-            _broker.Sub<string>(async message =>
+            _broker.Sub<string>(new MessageOptions()
             {
-                var parser = _markdownParserFactory.GetParser();
-                return await parser.ParseAsync(message.What);
-            });
+                Key = "ParseMarkdown"
+            }, async message => await ParseMarkdownAsync(message.What));
+
+
+            _broker.Sub<string>(new MessageOptions()
+            {
+                Key = "ParseAbstract"
+            }, async message => await ParseMarkdownAsync(message.What));
+
 
         }
 
         public void Unsubscribe()
         {
-            _broker.Unsub<string>(async message =>
+
+            _broker.Unsub<string>(new MessageOptions()
             {
-                var parser = _markdownParserFactory.GetParser();
-                return await parser.ParseAsync(message.What);
-            });
+                Key = "ParseMarkdown"
+            }, async message => await ParseMarkdownAsync(message.What));
+
         }
+
+
+        private async Task<string> ParseMarkdownAsync(string markdown)
+        {
+            var parser = _markdownParserFactory.GetParser();
+            return await parser.ParseAsync(markdown);
+        }
+
+        private async Task<string> ParseAbstractAsync(string markdown)
+        {
+
+            var html = await ParseMarkdownAsync(markdown);
+
+            return html;
+        }
+
 
         public void Dispose()
         {

@@ -17,11 +17,11 @@ namespace Plato.Entities.Models
 
         public string TitleNormalized { get; set; }
 
-        public string Markdown { get; set; }
+        public string Message { get; set; }
 
         public string Html { get; set; }
 
-        public string PlainText { get; set; }
+        public string Abstract { get; set; }
 
         public bool IsPublic { get; set; }
 

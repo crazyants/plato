@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.Data;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Schemas.Abstractions;
@@ -46,7 +44,7 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "Markdown",
+                        Name = "[Message]",
                         Length = "max",
                         DbType = DbType.String
                     },
@@ -58,8 +56,8 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "PlainText",
-                        Length = "max",
+                        Name = "Abstract",
+                        Length = "500",
                         DbType = DbType.String
                     },
                     new SchemaColumn()

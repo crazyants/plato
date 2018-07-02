@@ -91,12 +91,11 @@ namespace Plato.Discuss.ViewProviders
                     {
                         message = _request.Form[key];
                     }
-
                 }
                 
                 var entity = new Entity();
                 entity.Title = viewModel.NewEntityViewModel.Title?.Trim();
-                entity.PlainText = message.Trim();
+                entity.Message = message.Trim();
                 
                 var newTopic = await _entityStore.CreateAsync(entity);
 
@@ -127,24 +126,43 @@ namespace Plato.Discuss.ViewProviders
 
         public async Task<Entity> Configure(object sender, EntityStoreEventArgs e)
         {
-            
-            // Publish message value to any subscribers and get results
-            var html = "";
-            var methods = await _broker.Pub<string>(this, e.Entity.PlainText);
-            if (methods != null)
-            {
-                foreach (var method in methods)
-                {
-                    html = await method.Invoke(new Message<string>(e.Entity.PlainText, this));
-                }
-            }
 
-            e.Entity.Html = html;
+            e.Entity.Html = await ParseMarkdown(e.Entity.Message);
+            e.Entity.Abstract = await ParseAbstract(e.Entity.Message);
 
             return e.Entity;
 
         }
+        
+        private async Task<string> ParseMarkdown(string message)
+        {
 
+            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            {
+                Key = "ParseMarkdown"
+            }, message))
+            {
+                return await handler.Invoke(new Message<string>(message, this));
+            }
+
+            return string.Empty;
+
+        }
+
+        private async Task<string> ParseAbstract(string message)
+        {
+
+            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            {
+                Key = "ParseAbstract"
+            }, message))
+            {
+                return await handler.Invoke(new Message<string>(message, this));
+            }
+
+            return message;
+
+        }
 
     }
 

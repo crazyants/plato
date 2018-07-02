@@ -40,7 +40,7 @@ namespace Plato.Discuss.Controllers
             {
                 FeatureId = feature.Id,
                 Title = "test",
-                Markdown = "TExt"
+                Message = "Text"
             };
 
             await _entityRepository.InsertUpdateAsync(entity);

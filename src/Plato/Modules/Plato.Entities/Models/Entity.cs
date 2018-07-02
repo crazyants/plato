@@ -56,14 +56,14 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("TitleNormalized"))
                 TitleNormalized = Convert.ToString(dr["TitleNormalized"]);
 
-            if (dr.ColumnIsNotNull("Markdown"))
-                Markdown = Convert.ToString(dr["Markdown"]);
+            if (dr.ColumnIsNotNull("Message"))
+                Message = Convert.ToString(dr["Message"]);
             
             if (dr.ColumnIsNotNull("Html"))
                 Html = Convert.ToString(dr["Html"]);
 
-            if (dr.ColumnIsNotNull("PlainText"))
-                PlainText = Convert.ToString(dr["PlainText"]);
+            if (dr.ColumnIsNotNull("Abstract"))
+                Abstract = Convert.ToString(dr["Abstract"]);
 
             if (dr.ColumnIsNotNull("IsPublic"))
                 IsPublic = Convert.ToBoolean(dr["IsPublic"]);
