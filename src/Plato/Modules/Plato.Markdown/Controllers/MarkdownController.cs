@@ -34,7 +34,7 @@ namespace Plato.Markdown.Controllers
             }
 
             var parser = _markdownParserFactory.GetParser();
-            var html = await parser.Parse(markdown);
+            var html = await parser.ParseAsync(markdown);
             
             return new ObjectResult(new
             {

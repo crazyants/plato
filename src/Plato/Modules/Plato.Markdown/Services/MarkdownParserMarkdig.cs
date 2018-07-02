@@ -29,7 +29,7 @@ namespace Plato.Markdown.Services
 
         #region "Implementation"
 
-        public Task<string> Parse(string markdown)
+        public Task<string> ParseAsync(string markdown)
         {
             if (string.IsNullOrEmpty(markdown))
                 return Task.FromResult(string.Empty);

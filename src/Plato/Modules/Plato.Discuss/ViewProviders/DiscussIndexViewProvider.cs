@@ -117,7 +117,6 @@ namespace Plato.Discuss.ViewProviders
         public void Creating(object sender, EntityStoreEventArgs e)
         {
 
-
         }
 
 
@@ -128,11 +127,10 @@ namespace Plato.Discuss.ViewProviders
 
         public async Task<Entity> Configure(object sender, EntityStoreEventArgs e)
         {
-
+            
+            // Publish message value to any subscribers and get results
             var html = "";
-
-            // Publish value to subscriber and get resulot
-            var methods = _broker.Pull<string>(this, e.Entity.PlainText).Result;
+            var methods = await _broker.Pub<string>(this, e.Entity.PlainText);
             if (methods != null)
             {
                 foreach (var method in methods)

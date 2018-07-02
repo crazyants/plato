@@ -17,34 +17,59 @@ namespace Plato.Internal.Messaging
             _subscribers = new Dictionary<Type, List<Delegate>>();
         }
 
-        public void Dispose()
-        {
-            _subscribers?.Clear();
-        }
-
-        public void Pub<T>(object source, T message) where T : class
+        public async Task<IEnumerable<Func<Message<T>, Task<T>>>> Pub<T>(object source, T message) where T : class
         {
 
             if (message == null || source == null)
-                return;
+                return null;
             if (!_subscribers.ContainsKey(typeof(T)))
             {
-                return;
+                return null;
             }
 
             var delegates = _subscribers[typeof(T)];
-            if (delegates == null || delegates.Count == 0) return;
+            if (delegates == null || delegates.Count == 0)
+            {
+                return null;
+            }
+
             var payload = new Message<T>(message, source);
 
             foreach (var handler in delegates.Select
                 (item => item as Action<Message<T>>))
             {
-                Task.Factory.StartNew(() => handler?.Invoke(payload));
+                handler?.Invoke(payload);
             }
+
+            var ourput = new List<Func<Message<T>, Task<T>>>();
+            foreach (var handler in delegates.Select
+                (item => item as Func<Message<T>, Task<T>>))
+            {
+                if (handler != null)
+                {
+                    // wrapper to convert delegates generic argument type
+                    // to concrete type (object) to allow for deferred execurtion
+                    var typedDelegate = new Func<Message<T>, Task<T>>((Message<T> input) => handler(input));
+                    ourput.Add(typedDelegate);
+                }
+            }
+
+            return ourput;
 
         }
 
         public void Sub<T>(Action<Message<T>> subscription) where T : class
+        {
+            var delegates = _subscribers.ContainsKey(typeof(T)) ?
+                _subscribers[typeof(T)] : new List<Delegate>();
+            if (!delegates.Contains(subscription))
+            {
+                delegates.Add(subscription);
+            }
+            _subscribers[typeof(T)] = delegates;
+        }
+        
+        public void Sub<T>(Func<Message<T>, Task<T>> subscription) where T : class
         {
             var delegates = _subscribers.ContainsKey(typeof(T)) ?
                 _subscribers[typeof(T)] : new List<Delegate>();
@@ -65,54 +90,22 @@ namespace Plato.Internal.Messaging
                 _subscribers.Remove(typeof(T));
         }
 
-        public async Task<IEnumerable<Func<Message<T>, Task<T>>>> Pull<T>(object source, T message) where T : class
+        public void Unsub<T>(Func<Message<T>, Task<T>> subscription) where T : class
         {
-            if (message == null || source == null)
-                return null;
-            if (!_subscribers.ContainsKey(typeof(T)))
-            {
-                return null;
-            }
-
+            if (!_subscribers.ContainsKey(typeof(T))) return;
             var delegates = _subscribers[typeof(T)];
-            if (delegates == null || delegates.Count == 0)
-            {
-                return null;
-            }
-            var payload = new Message<T>(message, source);
-            
-            var ourput = new List<Func<Message<T>, Task<T>>>();
-
-            foreach (var handler in delegates.Select
-                (item => item as Func<Message<T>, Task<T>>))
-            {
-                if (handler != null)
-                {
-
-                    var typedDelegate = new Func<Message<T>, Task<T>>((Message<T> input) => handler(input));
-
-                    var method = await handler?.Invoke(payload);
-                    ourput.Add(typedDelegate);
-                }
-            }
-
-            return ourput;
+            if (delegates.Contains(subscription))
+                delegates.Remove(subscription);
+            if (delegates.Count == 0)
+                _subscribers.Remove(typeof(T));
         }
 
-        public void Push<T>(Func<Message<T>, Task<T>> subscription) where T : class
+
+        public void Dispose()
         {
-            var delegates = _subscribers.ContainsKey(typeof(T)) ?
-                _subscribers[typeof(T)] : new List<Delegate>();
-            if (!delegates.Contains(subscription))
-            {
-                delegates.Add(subscription);
-            }
-            _subscribers[typeof(T)] = delegates;
+            _subscribers?.Clear();
         }
 
-        public void Pop<T>(Action<Message<T>> subscription) where T : class
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Markdown.Services
 {
 
-    public interface IMarkdownSubscriber
+    public interface IMarkdownSubscriber : IDisposable
     {
         void Subscribe();
+
+        void Unsubscribe();
     }
+
 
     public class MarkdownSubscriber : IMarkdownSubscriber
     {
@@ -24,19 +25,31 @@ namespace Plato.Markdown.Services
             _broker = broker;
             _markdownParserFactory = markdownParserFactory;
         }
-
+        
         public void Subscribe()
         {
 
-            //_broker.Pub<string>(this, markdownParserFactory);
-
-            _broker.Push<string>(async message =>
+            // Add a subscribtion to convert markdown to html
+            _broker.Sub<string>(async message =>
             {
                 var parser = _markdownParserFactory.GetParser();
-                return await parser.Parse(message.What);
+                return await parser.ParseAsync(message.What);
             });
 
         }
 
+        public void Unsubscribe()
+        {
+            _broker.Unsub<string>(async message =>
+            {
+                var parser = _markdownParserFactory.GetParser();
+                return await parser.ParseAsync(message.What);
+            });
+        }
+
+        public void Dispose()
+        {
+            Unsubscribe();
+        }
     }
 }
