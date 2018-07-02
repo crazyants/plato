@@ -1,18 +1,19 @@
-﻿using Plato.Entities.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.ViewModels
 {
-    public class DiscussIndexViewModel
+    public class HomeIndexViewModel
     {
 
-        public DiscussIndexViewModel()
+        public HomeIndexViewModel()
         {
 
         }
 
-        public DiscussIndexViewModel(
+        public HomeIndexViewModel(
             IPagedResults<Entity> results,
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
@@ -46,6 +47,7 @@ namespace Plato.Discuss.ViewModels
     public class NewEntityViewModel
     {
 
+        [Required]
         public string Title { get; set; }
 
         public string Message { get; set; }

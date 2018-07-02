@@ -1,5 +1,4 @@
-﻿@using Plato.Discuss.Models
-@model DiscussIndexViewModel
+﻿@model HomeTopicViewModel
 
 <card title="@T["Topics"]">
 
@@ -11,25 +10,27 @@
                 <li class="list-group-item">
 
                     @{
-                        var detail = entity.GetMetaData<TopicDetails>();
+                        //var detail = entity.GetMetaData<TopicDetails>();
                     }
                     
                     <h6>
-                        @entity.Title
+                        <a asp-controller="Home" asp-action="Topic" asp-route-id="@entity.Id">
+                            @entity.Title
+                        </a>
                     </h6>
 
                     <p class="text-muted">
                         @entity.Abstract
                     </p>
                     
-                    @if (detail != null)
+                    @*@if (detail != null)
                     {
                         @foreach (var participant in detail.Users)
                         {
                             @participant.UserName
                             <br/><br/>
                         }
-                    }
+                    }*@
 
 
 

@@ -23,7 +23,10 @@ namespace Plato.Discuss.Controllers
     public class HomeController : Controller, IUpdateModel
     {
 
-        private readonly IViewProviderManager<DiscussIndexViewModel> _discussIndexViewProvider;
+        #region "Constructor"
+
+        private readonly IViewProviderManager<HomeIndexViewModel> _homeIndexViewProvider;
+        private readonly IViewProviderManager<HomeTopicViewModel> _homeTopicViewProvider;
 
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
@@ -40,19 +43,25 @@ namespace Plato.Discuss.Controllers
             IContextFacade contextFacade,
             IEntityRepository<Entity> entityRepository,
             IEntityStore<Entity> entityStore,
-            IViewProviderManager<DiscussIndexViewModel> discussIndexViewProvider, IAlerter alerter)
+            IViewProviderManager<HomeIndexViewModel> homeIndexViewProvider,
+            IViewProviderManager<HomeTopicViewModel> homeTopicViewProvider,
+            IAlerter alerter)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
             _entityRepository = entityRepository;
             _entityStore = entityStore;
-            _discussIndexViewProvider = discussIndexViewProvider;
+            _homeIndexViewProvider = homeIndexViewProvider;
+            _homeTopicViewProvider = homeTopicViewProvider;
             _alerter = alerter;
-
             T = localizer;
 
         }
-        
+
+        #endregion
+
+        #region "Actions"
+
         public async Task<IActionResult> Index(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
@@ -275,10 +284,10 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
             routeData.Values.Add("Options.Order", filterOptions.Order);
             
             // Get model
-            var model = await GetPagedModel(filterOptions, pagerOptions);
+            var model = await GetIndexViewModel(filterOptions, pagerOptions);
 
             // Build view
-            var result = await _discussIndexViewProvider.ProvideIndexAsync(model, this);
+            var result = await _homeIndexViewProvider.ProvideIndexAsync(model, this);
 
             // Return view
             return View(result);
@@ -288,11 +297,11 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
         
         [HttpPost]
         [ActionName(nameof(Index))]
-        public async Task<IActionResult> IndexPost(DiscussIndexViewModel model)
+        public async Task<IActionResult> IndexPost(HomeIndexViewModel model)
         {
 
        
-            var result = await _discussIndexViewProvider.ProvideUpdateAsync(model, this);
+            var result = await _homeIndexViewProvider.ProvideUpdateAsync(model, this);
 
             if (!ModelState.IsValid)
             {
@@ -315,35 +324,81 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
             //return View(model);
 
         }
-
-        public IActionResult About()
+        
+        public async Task<IActionResult> Channel()
         {
             ViewData["Message"] = "Your application description page.";
 
             return View();
         }
 
-        public IActionResult Contact()
+        public async Task<IActionResult> Topic(
+            int id,
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
         {
-            ViewData["Message"] = "Your contact page.";
 
-            return View();
+            // default options
+            if (filterOptions == null)
+            {
+                filterOptions = new FilterOptions();
+            }
+
+
+            // default pager
+            if (pagerOptions == null)
+            {
+                pagerOptions = new PagerOptions();
+            }
+
+
+            // Maintain previous route data when generating page links
+            //var routeData = new RouteData();
+            //routeData.Values.Add("Options.Search", filterOptions.Search);
+            //routeData.Values.Add("Options.Order", filterOptions.Order);
+
+            //// Get model
+            //var model = await GetPagedModel(filterOptions, pagerOptions);
+
+            // Maintain previous route data when generating page links
+            var routeData = new RouteData();
+            routeData.Values.Add("Options.Search", filterOptions.Search);
+            routeData.Values.Add("Options.Order", filterOptions.Order);
+
+            // Get model
+            var model = await GetTopicViewModel(filterOptions, pagerOptions);
+            
+            // Build view
+            var result = await _homeTopicViewProvider.ProvideIndexAsync(model, this);
+
+            // Return view
+            return View(result);
+
+
         }
 
-        public IActionResult Error()
-        {
-            return View();
-        }
+        #endregion
 
+        #region "Private Methods"
 
-
-        private async Task<DiscussIndexViewModel> GetPagedModel(
+        private async Task<HomeIndexViewModel> GetIndexViewModel(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
             var topics = await GetEntities(filterOptions, pagerOptions);
-            return new DiscussIndexViewModel(
+            return new HomeIndexViewModel(
                 topics,
+                filterOptions,
+                pagerOptions);
+        }
+
+        private async Task<HomeTopicViewModel> GetTopicViewModel(
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
+        {
+            var replies = await GetEntities(filterOptions, pagerOptions);
+            return new HomeTopicViewModel(
+                replies,
                 filterOptions,
                 pagerOptions);
         }
@@ -370,6 +425,8 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                 .ToList<Entity>();
         }
 
+
+        #endregion
 
 
 

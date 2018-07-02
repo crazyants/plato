@@ -3,14 +3,12 @@ using Microsoft.AspNetCore.Http;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Discuss.ViewProviders
 {
-    public class DiscussIndexViewProvider : BaseViewProvider<DiscussIndexViewModel>
+    public class HomeTopicViewProvider : BaseViewProvider<HomeTopicViewModel>
     {
 
         private const string EditorHtmlName = "message";
@@ -21,7 +19,7 @@ namespace Plato.Discuss.ViewProviders
         private readonly HttpRequest _request;
 
 
-        public DiscussIndexViewProvider(
+        public HomeTopicViewProvider(
             IEntityStore<Entity> entityStore,
             IHttpContextAccessor httpContextAccessor)
         {
@@ -29,30 +27,30 @@ namespace Plato.Discuss.ViewProviders
             _request = httpContextAccessor.HttpContext.Request;
         }
         
-        public override Task<IViewProviderResult> BuildDisplayAsync(DiscussIndexViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(HomeTopicViewModel model, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
-        public override Task<IViewProviderResult> BuildIndexAsync(DiscussIndexViewModel viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(HomeTopicViewModel viewModel, IUpdateModel updater)
         {
             return Task.FromResult(
                 Views(
-                    View<DiscussIndexViewModel>("Discuss.Index.Header", model =>
+                    View<HomeTopicViewModel>("Home.Topic.Header", model =>
                     {
                         viewModel.EditorHtmlName = EditorHtmlName;
                         return viewModel;
                     }).Zone("header"),
-                    View<DiscussIndexViewModel>("Discuss.Index.Tools", model =>
+                    View<HomeTopicViewModel>("Home.Topic.Tools", model =>
                     {
                         viewModel.EditorHtmlName = EditorHtmlName;
                         return viewModel;
                     }).Zone("tools"),
-                    View<DiscussIndexViewModel>("Discuss.Index.Sidebar", model =>
+                    View<HomeTopicViewModel>("Home.Topic.Sidebar", model =>
                     {
                         viewModel.EditorHtmlName = EditorHtmlName;
                         return viewModel;
                     }).Zone("sidebar"),
-                    View<DiscussIndexViewModel>("Discuss.Index.Content", model =>
+                    View<HomeTopicViewModel>("Home.Topic.Content", model =>
                     {
                         viewModel.EditorHtmlName = EditorHtmlName;
                         return viewModel;
@@ -60,18 +58,18 @@ namespace Plato.Discuss.ViewProviders
                 ));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(DiscussIndexViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(HomeTopicViewModel model, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(DiscussIndexViewModel viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(HomeTopicViewModel viewModel, IUpdateModel updater)
         {
 
             _entityStore.Creating += Creating;
             _entityStore.Created += Created;
     
-            var model = new DiscussIndexViewModel();;
+            var model = new HomeTopicViewModel();;
 
             if (!await updater.TryUpdateModelAsync(model))
             {
@@ -91,7 +89,7 @@ namespace Plato.Discuss.ViewProviders
                 }
                 
                 var entity = new Entity();
-                entity.Title = viewModel.NewEntityViewModel.Title?.Trim();
+                //entity.Title = viewModel.NewEntityViewModel.Title?.Trim();
                 entity.Message = message.Trim();
                 
                 var newTopic = await _entityStore.CreateAsync(entity);
