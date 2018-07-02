@@ -96,10 +96,7 @@ namespace Plato.Entities.Stores
                     Entity = entity
                 });
             }
-
-
-
-
+            
             // Raise creating event
             Creating?.Invoke(this, new EntityStoreEventArgs()
             {
@@ -238,8 +235,7 @@ namespace Plato.Entities.Stores
         #endregion
 
         #region "Private Methods"
-
-
+        
         private async Task<string> ParseMarkdown(string message)
         {
 

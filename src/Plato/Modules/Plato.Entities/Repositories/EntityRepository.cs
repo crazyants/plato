@@ -13,16 +13,13 @@ namespace Plato.Entities.Repositories
 
     public class EntityRepository : IEntityRepository<Entity>
     {
-        
-        #region "Private Variables"
+     
+        #region "Constructor"
+
 
         private readonly IDbContext _dbContext;
         private readonly ILogger<EntityRepository> _logger;
         private readonly IEntityDataRepository<EntityData> _entityDataRepository;
-
-        #endregion
-
-        #region "Constructor"
 
         public EntityRepository(
             IDbContext dbContext,
