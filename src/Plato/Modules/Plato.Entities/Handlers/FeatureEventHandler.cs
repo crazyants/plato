@@ -195,7 +195,101 @@ namespace Plato.Entities.Handlers
             }
         };
 
-
+        // Entity replies
+        private readonly SchemaTable _entityReplies = new SchemaTable()
+        {
+            Name = "EntityReplies",
+            Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "EntityId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Title",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TitleNormalized",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Message]",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Html",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Abstract",
+                        Length = "500",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsPublic",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsSpam",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsPinned",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsDeleted",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsClosed",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTime
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTime
+                    }
+                }
+        };
+        
         private readonly ISchemaBuilder _schemaBuilder;
 
         public FeatureEventHandler(ISchemaBuilder schemaBuilder)
@@ -227,6 +321,9 @@ namespace Plato.Entities.Handlers
                 // Entity participants
                 EntityParticipation(builder);
 
+                // Entity replies
+                EntityReplies(builder);
+                
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
                 {
@@ -287,7 +384,12 @@ namespace Plato.Entities.Handlers
                     .DropDefaultProcedures(_entityParticipants)
                     .DropProcedure(new SchemaProcedure("SelectEntityParticipantsPaged"));
 
-
+                // drop entity replies
+                builder
+                    .DropTable(_entityReplies)
+                    .DropDefaultProcedures(_entityReplies)
+                    .DropProcedure(new SchemaProcedure("SelectEntityRepliesPaged", StoredProcedureType.SelectByKey));
+                
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
                 {
@@ -424,9 +526,33 @@ namespace Plato.Entities.Handlers
 
         }
 
+        void EntityReplies(ISchemaBuilder builder)
+        {
+            
+            builder
+                .CreateTable(_entityReplies)
+                .CreateDefaultProcedures(_entityReplies);
+            
+            builder.CreateProcedure(new SchemaProcedure("SelectEntityRepliesPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_entities)
+                .WithParameters(new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Keywords",
+                        DbType = DbType.String,
+                        Length = "255"
+                    }
+                }));
+
+        }
 
         #endregion
-
 
     }
 

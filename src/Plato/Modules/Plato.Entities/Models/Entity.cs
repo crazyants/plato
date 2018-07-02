@@ -8,10 +8,15 @@ namespace Plato.Entities.Models
 {
     public class Entity : EntityBase
     {
+  
+        public int FeatureId { get; set; }
+        
+        public IList<EntityData> Data { get; set; } = new List<EntityData>();
+        
+        public IDictionary<Type, ISerializable> MetaData => _metaData;
+
 
         private readonly IDictionary<Type, ISerializable> _metaData;
-
-        public IDictionary<Type, ISerializable> MetaData => _metaData;
         
         public Entity()
         {
@@ -42,54 +47,59 @@ namespace Plato.Entities.Models
         
         public override void PopulateModel(IDataReader dr)
         {
-            
-            if (dr.ColumnIsNotNull("Id"))
-                Id = Convert.ToInt32(dr["Id"]);
+
+            base.PopulateModel(dr);
 
             if (dr.ColumnIsNotNull("FeatureId"))
                 FeatureId = Convert.ToInt32(dr["FeatureId"]);
-
-            if (dr.ColumnIsNotNull("Title"))
-                Title = Convert.ToString(dr["Title"]);
-
-            if (dr.ColumnIsNotNull("TitleNormalized"))
-                TitleNormalized = Convert.ToString(dr["TitleNormalized"]);
-
-            if (dr.ColumnIsNotNull("Message"))
-                Message = Convert.ToString(dr["Message"]);
             
-            if (dr.ColumnIsNotNull("Html"))
-                Html = Convert.ToString(dr["Html"]);
+            //if (dr.ColumnIsNotNull("Id"))
+            //    Id = Convert.ToInt32(dr["Id"]);
 
-            if (dr.ColumnIsNotNull("Abstract"))
-                Abstract = Convert.ToString(dr["Abstract"]);
+            //if (dr.ColumnIsNotNull("FeatureId"))
+            //    FeatureId = Convert.ToInt32(dr["FeatureId"]);
 
-            if (dr.ColumnIsNotNull("IsPublic"))
-                IsPublic = Convert.ToBoolean(dr["IsPublic"]);
+            //if (dr.ColumnIsNotNull("Title"))
+            //    Title = Convert.ToString(dr["Title"]);
 
-            if (dr.ColumnIsNotNull("IsSpam"))
-                IsSpam = Convert.ToBoolean(dr["IsSpam"]);
+            //if (dr.ColumnIsNotNull("TitleNormalized"))
+            //    TitleNormalized = Convert.ToString(dr["TitleNormalized"]);
 
-            if (dr.ColumnIsNotNull("IsPinned"))
-                IsPinned = Convert.ToBoolean(dr["IsPinned"]);
+            //if (dr.ColumnIsNotNull("Message"))
+            //    Message = Convert.ToString(dr["Message"]);
+            
+            //if (dr.ColumnIsNotNull("Html"))
+            //    Html = Convert.ToString(dr["Html"]);
 
-            if (dr.ColumnIsNotNull("IsDeleted"))
-                IsDeleted = Convert.ToBoolean(dr["IsDeleted"]);
+            //if (dr.ColumnIsNotNull("Abstract"))
+            //    Abstract = Convert.ToString(dr["Abstract"]);
 
-            if (dr.ColumnIsNotNull("IsClosed"))
-                IsClosed = Convert.ToBoolean(dr["IsClosed"]);
+            //if (dr.ColumnIsNotNull("IsPublic"))
+            //    IsPublic = Convert.ToBoolean(dr["IsPublic"]);
 
-            if (dr.ColumnIsNotNull("CreatedUserId"))
-                CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
+            //if (dr.ColumnIsNotNull("IsSpam"))
+            //    IsSpam = Convert.ToBoolean(dr["IsSpam"]);
 
-            if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+            //if (dr.ColumnIsNotNull("IsPinned"))
+            //    IsPinned = Convert.ToBoolean(dr["IsPinned"]);
 
-            if (dr.ColumnIsNotNull("ModifiedUserId"))
-                ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
+            //if (dr.ColumnIsNotNull("IsDeleted"))
+            //    IsDeleted = Convert.ToBoolean(dr["IsDeleted"]);
 
-            if (dr.ColumnIsNotNull("ModifiedDate"))
-                ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
+            //if (dr.ColumnIsNotNull("IsClosed"))
+            //    IsClosed = Convert.ToBoolean(dr["IsClosed"]);
+
+            //if (dr.ColumnIsNotNull("CreatedUserId"))
+            //    CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
+
+            //if (dr.ColumnIsNotNull("CreatedDate"))
+            //    CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+
+            //if (dr.ColumnIsNotNull("ModifiedUserId"))
+            //    ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
+
+            //if (dr.ColumnIsNotNull("ModifiedDate"))
+            //    ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
             
         }
 

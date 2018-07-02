@@ -181,8 +181,7 @@ namespace Plato.Entities.Stores
 
         public async Task<Entity> GetByIdAsync(int id)
         {
-
-          
+            
             var entity = await _entityRepository.SelectByIdAsync(id);
             if (entity != null)
             {
@@ -265,8 +264,7 @@ namespace Plato.Entities.Stores
             return message.StripHtml().TrimToAround(500);
 
         }
-
-
+        
         async Task<Type> GetModuleTypeCandidateAsync(string typeName)
         {
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));

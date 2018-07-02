@@ -31,12 +31,13 @@ namespace Plato.Markdown.Services
         public void Subscribe()
         {
 
-            // Add a subscribtion to convert markdown to html
+            // Add a subscription to convert markdown to html
             _broker.Sub<string>(new MessageOptions()
             {
                 Key = "ParseMarkdown"
             }, async message => await ParseMarkdownAsync(message.What));
             
+            // Add a subscription to produce a plaintext abstract from our markdown
             _broker.Sub<string>(new MessageOptions()
             {
                 Key = "ParseAbstract"

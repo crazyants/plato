@@ -44,6 +44,10 @@ namespace Plato.Markdown
             IServiceProvider serviceProvider)
         {
 
+            // set-up parsing event listeners
+            var subscriber = app.ApplicationServices.GetRequiredService<IMarkdownSubscriber>();
+            subscriber?.Subscribe();
+            
             routes.MapAreaRoute(
                 name: "PlatoMarkdownParserService",
                 areaName: "Plato.Markdown",
