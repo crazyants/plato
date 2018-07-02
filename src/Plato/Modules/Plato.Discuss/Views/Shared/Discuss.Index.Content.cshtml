@@ -1,4 +1,5 @@
-﻿@model DiscussIndexViewModel
+﻿@using Plato.Discuss.Models
+@model DiscussIndexViewModel
 
 <card title="@T["Topics"]">
 
@@ -9,23 +10,32 @@
             {
                 <li class="list-group-item">
 
+                    @{
+                        var detail = entity.GetMetaData<TopicDetails>();
+                    }
+                    
                     <h6>
                         @entity.Title
                     </h6>
+
                     <p class="text-muted">
-                        <strong>Message</strong>@entity.Message
-
-                        <br />
-
-                        <strong>Html</strong> @entity.Html
-
-                        <br />
-
-                        <strong>Abstract</strong> @entity.Abstract
-
+                        @entity.Abstract
                     </p>
+                    
+                    @if (detail != null)
+                    {
+                        @foreach (var participant in detail.Users)
+                        {
+                            @participant.UserName
+                            <br/><br/>
+                        }
+                    }
+
+
+
                 </li>
-            }
+
+                        }
         </ul>
     }
     else

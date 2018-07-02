@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Markdown.Services
@@ -35,14 +36,12 @@ namespace Plato.Markdown.Services
             {
                 Key = "ParseMarkdown"
             }, async message => await ParseMarkdownAsync(message.What));
-
-
+            
             _broker.Sub<string>(new MessageOptions()
             {
                 Key = "ParseAbstract"
-            }, async message => await ParseMarkdownAsync(message.What));
-
-
+            }, async message => await ParseAbstractAsync(message.What));
+            
         }
 
         public void Unsubscribe()
@@ -53,9 +52,13 @@ namespace Plato.Markdown.Services
                 Key = "ParseMarkdown"
             }, async message => await ParseMarkdownAsync(message.What));
 
+            _broker.Unsub<string>(new MessageOptions()
+            {
+                Key = "ParseAbstract"
+            }, async message => await ParseAbstractAsync(message.What));
+
         }
-
-
+        
         private async Task<string> ParseMarkdownAsync(string markdown)
         {
             var parser = _markdownParserFactory.GetParser();
@@ -64,13 +67,10 @@ namespace Plato.Markdown.Services
 
         private async Task<string> ParseAbstractAsync(string markdown)
         {
-
             var html = await ParseMarkdownAsync(markdown);
-
-            return html;
+            return html.StripHtml().TrimToAround(500);
         }
-
-
+        
         public void Dispose()
         {
             Unsubscribe();

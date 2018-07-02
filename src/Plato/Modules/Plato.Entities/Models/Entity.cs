@@ -19,7 +19,6 @@ namespace Plato.Entities.Models
             _metaData = new Dictionary<Type, ISerializable>();
         }
         
-     
         public void SetMetaData<T>(T obj) where T : class
         {
             _metaData.Add(typeof(T), (ISerializable)obj);

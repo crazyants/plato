@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
@@ -16,18 +17,15 @@ namespace Plato.Discuss.ViewProviders
 
 
         private readonly IEntityStore<Entity> _entityStore;
-        private readonly IBroker _broker;
-
+ 
         private readonly HttpRequest _request;
 
 
         public DiscussIndexViewProvider(
             IEntityStore<Entity> entityStore,
-            IHttpContextAccessor httpContextAccessor,
-            IBroker broker)
+            IHttpContextAccessor httpContextAccessor)
         {
             _entityStore = entityStore;
-            _broker = broker;
             _request = httpContextAccessor.HttpContext.Request;
         }
         
@@ -72,8 +70,7 @@ namespace Plato.Discuss.ViewProviders
 
             _entityStore.Creating += Creating;
             _entityStore.Created += Created;
-            _entityStore.Configure += Configure;
-
+    
             var model = new DiscussIndexViewModel();;
 
             if (!await updater.TryUpdateModelAsync(model))
@@ -123,47 +120,7 @@ namespace Plato.Discuss.ViewProviders
         {
           
         }
-
-        public async Task<Entity> Configure(object sender, EntityStoreEventArgs e)
-        {
-
-            e.Entity.Html = await ParseMarkdown(e.Entity.Message);
-            e.Entity.Abstract = await ParseAbstract(e.Entity.Message);
-
-            return e.Entity;
-
-        }
         
-        private async Task<string> ParseMarkdown(string message)
-        {
-
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
-            {
-                Key = "ParseMarkdown"
-            }, message))
-            {
-                return await handler.Invoke(new Message<string>(message, this));
-            }
-
-            return string.Empty;
-
-        }
-
-        private async Task<string> ParseAbstract(string message)
-        {
-
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
-            {
-                Key = "ParseAbstract"
-            }, message))
-            {
-                return await handler.Invoke(new Message<string>(message, this));
-            }
-
-            return message;
-
-        }
-
     }
 
 }

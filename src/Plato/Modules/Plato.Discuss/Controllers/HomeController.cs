@@ -89,9 +89,29 @@ namespace Plato.Discuss.Controllers
             var topic = new Entity()
             {
                 Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
-                Message = "Test message " + rnd.Next(0, 100000).ToString(),
-                Html = "Test message " + rnd.Next(0, 100000).ToString(),
-                Abstract = "Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message  " + rnd.Next(0, 100000).ToString(),
+                Message = @"Hi There, 
+
+# header 1
+
+Test message Test message Test message Test :)
+
+## Header 2
+
+message Test message Test message Test message :(
+
+Test message Test message Test message Test 
+
+message Test message Test message Test message 
+
+Test message Test message Test message Test message 
+
+Test message Test message Test message Test message Test 
+
+- list 1
+- list 2
+- list 3
+
+message Test message  " + rnd.Next(0, 100000).ToString(),
             };
             
             var topicDetails = new TopicDetails()

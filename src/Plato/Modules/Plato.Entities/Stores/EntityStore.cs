@@ -7,8 +7,10 @@ using Newtonsoft.Json;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Entities.Stores
@@ -35,6 +37,8 @@ namespace Plato.Entities.Stores
 
         #region "Constructor"
 
+        private readonly IBroker _broker;
+
         private readonly IEntityRepository<Entity> _entityRepository;
         private readonly ILogger<EntityStore> _logger;
         private readonly ICacheDependency _cacheDependency;
@@ -48,13 +52,15 @@ namespace Plato.Entities.Stores
             ICacheDependency cacheDependency,
             ILogger<EntityStore> logger,
             IMemoryCache memoryCache,
-            IDbQuery dbQuery)
+            IDbQuery dbQuery,
+            IBroker broker)
         {
             _typedModuleProvider = typedModuleProvider;
             _entityRepository = entityRepository;
             _cacheDependency = cacheDependency;
             _memoryCache = memoryCache;
             _dbQuery = dbQuery;
+            _broker = broker;
             _logger = logger;
         }
 
@@ -75,6 +81,10 @@ namespace Plato.Entities.Stores
                 });
             }
             entity.Data = data;
+
+            // Parse Html and message abstract
+            entity.Html = await ParseMarkdown(entity.Message);
+            entity.Abstract = await ParseAbstract(entity.Message);
             
             // Allows us to optionally configure the entity before storing
             var configuredEntity = entity;
@@ -86,7 +96,10 @@ namespace Plato.Entities.Stores
                     Entity = entity
                 });
             }
-            
+
+
+
+
             // Raise creating event
             Creating?.Invoke(this, new EntityStoreEventArgs()
             {
@@ -225,7 +238,39 @@ namespace Plato.Entities.Stores
         #endregion
 
         #region "Private Methods"
-        
+
+
+        private async Task<string> ParseMarkdown(string message)
+        {
+
+            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            {
+                Key = "ParseMarkdown"
+            }, message))
+            {
+                return await handler.Invoke(new Message<string>(message, this));
+            }
+
+            return message;
+
+        }
+
+        private async Task<string> ParseAbstract(string message)
+        {
+
+            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            {
+                Key = "ParseAbstract"
+            }, message))
+            {
+                return await handler.Invoke(new Message<string>(message, this));
+            }
+
+            return message.StripHtml().TrimToAround(500);
+
+        }
+
+
         async Task<Type> GetModuleTypeCandidateAsync(string typeName)
         {
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
