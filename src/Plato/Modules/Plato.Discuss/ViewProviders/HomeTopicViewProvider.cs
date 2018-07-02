@@ -15,19 +15,22 @@ namespace Plato.Discuss.ViewProviders
 
 
         private readonly IEntityStore<Entity> _entityStore;
- 
+        private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
+
         private readonly HttpRequest _request;
 
 
         public HomeTopicViewProvider(
             IEntityStore<Entity> entityStore,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IEntityReplyStore<EntityReply> entityReplyStore)
         {
             _entityStore = entityStore;
+            _entityReplyStore = entityReplyStore;
             _request = httpContextAccessor.HttpContext.Request;
         }
         
-        public override Task<IViewProviderResult> BuildDisplayAsync(HomeTopicViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(HomeTopicViewModel viewMode, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
@@ -37,7 +40,7 @@ namespace Plato.Discuss.ViewProviders
                 Views(
                     View<HomeTopicViewModel>("Home.Topic.Header", model =>
                     {
-                        viewModel.EditorHtmlName = EditorHtmlName;
+                        viewModel.EditorHtmlName= EditorHtmlName;
                         return viewModel;
                     }).Zone("header"),
                     View<HomeTopicViewModel>("Home.Topic.Tools", model =>
@@ -58,7 +61,7 @@ namespace Plato.Discuss.ViewProviders
                 ));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(HomeTopicViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(HomeTopicViewModel viewMode, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
@@ -66,11 +69,8 @@ namespace Plato.Discuss.ViewProviders
         public override async Task<IViewProviderResult> BuildUpdateAsync(HomeTopicViewModel viewModel, IUpdateModel updater)
         {
 
-            _entityStore.Creating += Creating;
-            _entityStore.Created += Created;
-    
-            var model = new HomeTopicViewModel();;
-
+            var model = new HomeTopicViewModel();
+        
             if (!await updater.TryUpdateModelAsync(model))
             {
                 return await BuildIndexAsync(viewModel, updater);
@@ -87,14 +87,14 @@ namespace Plato.Discuss.ViewProviders
                         message = _request.Form[key];
                     }
                 }
-                
-                var entity = new Entity();
-                //entity.Title = viewModel.NewEntityViewModel.Title?.Trim();
-                entity.Message = message.Trim();
-                
-                var newTopic = await _entityStore.CreateAsync(entity);
 
-
+                var reply = new EntityReply();
+                reply.EntityId = viewModel.Entity.Id;
+                reply.Title = model.NewEntityReply.Title?.Trim();
+                reply.Message = message.Trim();
+                
+                var newReply = await _entityReplyStore.CreateAsync(reply);
+                
                 //var result = await _userManager.UpdateAsync(user);
 
                 //foreach (var error in result.Errors)

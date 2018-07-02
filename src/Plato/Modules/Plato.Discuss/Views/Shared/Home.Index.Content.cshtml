@@ -11,9 +11,9 @@
                 <li class="list-group-item">
 
                     @{
-                        var detail = entity.GetMetaData<TopicDetails>();
+                        var detail = entity.GetMetaData<EntityMetaData>();
                     }
-                    
+
                     <h6>
                         <a asp-controller="Home" asp-action="Topic" asp-route-id="@entity.Id">
                             @entity.Title
@@ -23,21 +23,20 @@
                     <p class="text-muted">
                         @entity.Abstract
                     </p>
-                    
+
                     @if (detail != null)
                     {
                         @foreach (var participant in detail.Users)
-                        {
-                            @participant.UserName
-                            <br/><br/>
-                        }
+                         {
+                             @participant.UserName
+                             <br/>
+                             <br/>
+                         }
                     }
-
-
 
                 </li>
 
-                        }
+            }
         </ul>
     }
     else

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
@@ -13,15 +10,15 @@ namespace Plato.Discuss.ViewModels
 
         public PagerOptions PagerOpts { get; set; }
 
-        public IPagedResults<Entity> Results { get; set; }
-
-
+        public IPagedResults<EntityReply> Results { get; set; }
+        
         public string EditorHtmlName { get; set; }
-
-
+        
         public NewEntityReplyViewModel NewEntityReply { get; set; }
 
         public FilterOptions FilterOpts { get; set; }
+        
+        public Entity Entity { get; set; }
 
         public HomeTopicViewModel()
         {
@@ -29,10 +26,12 @@ namespace Plato.Discuss.ViewModels
         }
 
         public HomeTopicViewModel(
-            IPagedResults<Entity> results,
+            Entity entity,
+            IPagedResults<EntityReply> results,
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
+            this.Entity = entity;
             this.Results = results;
             this.FilterOpts = filterOptions;
             this.PagerOpts = pagerOptions;
@@ -44,7 +43,7 @@ namespace Plato.Discuss.ViewModels
 
     public class NewEntityReplyViewModel
     {
-
+        
         [Required]
         public string Title { get; set; }
 

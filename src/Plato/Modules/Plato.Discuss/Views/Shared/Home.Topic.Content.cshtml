@@ -1,51 +1,65 @@
 ﻿@model HomeTopicViewModel
 
-<card title="@T["Topics"]">
+<card title="@T["Topic"]">
+    
+   @Html.Raw(@Model.Entity.Html)
+    
 
-    @if (Model.Results != null)
+    @await DisplayAsync(new View("Editor", new
     {
-        <ul class="list-group list-group-flush list-group-hover mt-4">
-            @foreach (var entity in Model.Results.Data)
-            {
-                <li class="list-group-item">
-
-                    @{
-                        //var detail = entity.GetMetaData<TopicDetails>();
-                    }
-                    
-                    <h6>
-                        <a asp-controller="Home" asp-action="Topic" asp-route-id="@entity.Id">
-                            @entity.Title
-                        </a>
-                    </h6>
-
-                    <p class="text-muted">
-                        @entity.Abstract
-                    </p>
-                    
-                    @*@if (detail != null)
-                    {
-                        @foreach (var participant in detail.Users)
-                        {
-                            @participant.UserName
-                            <br/><br/>
-                        }
-                    }*@
-
-
-
-                </li>
-
-                        }
-        </ul>
-    }
-    else
-    {
-        <h6>@T["No discussions found"]</h6>
-    }
-
+        value = @Model.Entity.Message,
+        placeHolderText = "place holder text from core",
+        htmlName = @Model.EditorHtmlName
+    }))
+    
 </card>
 
-<div class="mt-4 mb-4">
-    <pager model="@Model.PagerOpts"></pager>
-</div>
+<card title="@T["Replies"]">
+
+        @if (Model.Results != null)
+        {
+            <ul class="list-group list-group-flush list-group-hover mt-4">
+                @foreach (var entity in Model.Results.Data)
+                {
+                    <li class="list-group-item">
+
+                        @{
+                            //var detail = entity.GetMetaData<TopicDetails>();
+                        }
+
+                        <h6>
+                            <a asp-controller="Home" asp-action="Topic" asp-route-id="@entity.Id">
+                                @entity.Title
+                            </a>
+                        </h6>
+
+                        <p class="text-muted">
+                            @entity.Abstract
+                        </p>
+
+                        @*@if (detail != null)
+                            {
+                                @foreach (var participant in detail.Users)
+                                {
+                                    @participant.UserName
+                                    <br/><br/>
+                                }
+                            }*@
+
+
+
+                    </li>
+
+                }
+            </ul>
+        }
+        else
+        {
+            <h6>@T["No discussions found"]</h6>
+        }
+
+    </card>
+
+    <div class="mt-4 mb-4">
+        <pager model="@Model.PagerOpts"></pager>
+    </div>

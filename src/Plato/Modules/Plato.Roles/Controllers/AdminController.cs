@@ -143,8 +143,7 @@ namespace Plato.Roles.Controllers
         [ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(string id)
         {
-
-
+            
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
             {

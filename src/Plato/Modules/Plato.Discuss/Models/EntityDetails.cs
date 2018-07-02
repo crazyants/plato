@@ -18,7 +18,7 @@ namespace Plato.Discuss.Models
     }
 
 
-    public class TopicDetails : Serializable
+    public class EntityMetaData : Serializable
     {
 
         public string SomeNewValue { get; set; }

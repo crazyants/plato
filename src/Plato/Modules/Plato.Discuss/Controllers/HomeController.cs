@@ -12,7 +12,6 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
-using Plato.Entities.Repositories;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -30,8 +29,9 @@ namespace Plato.Discuss.Controllers
 
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
-        private readonly IEntityRepository<Entity> _entityRepository;
+        
         private readonly IEntityStore<Entity> _entityStore;
+        private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
         private readonly IAlerter _alerter;
         
         public IHtmlLocalizer T { get; }
@@ -41,16 +41,16 @@ namespace Plato.Discuss.Controllers
             IHtmlLocalizer<HomeController> localizer,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
-            IEntityRepository<Entity> entityRepository,
             IEntityStore<Entity> entityStore,
+            IEntityReplyStore<EntityReply> entityReplyStore,
             IViewProviderManager<HomeIndexViewModel> homeIndexViewProvider,
             IViewProviderManager<HomeTopicViewModel> homeTopicViewProvider,
             IAlerter alerter)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
-            _entityRepository = entityRepository;
             _entityStore = entityStore;
+            _entityReplyStore = entityReplyStore;
             _homeIndexViewProvider = homeIndexViewProvider;
             _homeTopicViewProvider = homeTopicViewProvider;
             _alerter = alerter;
@@ -123,7 +123,7 @@ Test message Test message Test message Test message Test
 message Test message  " + rnd.Next(0, 100000).ToString(),
             };
             
-            var topicDetails = new TopicDetails()
+            var topicDetails = new EntityMetaData()
             {
                 SomeNewValue = "Example Value 123",
                 Users = new List<Participant>()
@@ -150,7 +150,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                 }
             };
 
-            topic.SetMetaData<TopicDetails>(topicDetails);
+            topic.SetMetaData<EntityMetaData>(topicDetails);
 
             var sb = new StringBuilder();
 
@@ -168,7 +168,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                     .Append("<strong>ID</strong>")
                     .Append(newTopic.Id);
 
-                var details = newTopic.GetMetaData<TopicDetails>();
+                var details = newTopic.GetMetaData<EntityMetaData>();
                 if (details?.Users != null)
                 {
 
@@ -202,7 +202,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                     .Append(existingTopic.Id);
 
                 // random details
-                var existingDetails = existingTopic.GetMetaData<TopicDetails>();
+                var existingDetails = existingTopic.GetMetaData<EntityMetaData>();
                 if (existingDetails?.Users != null)
                 {
 
@@ -308,7 +308,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                 return View(result);
             }
             
-            _alerter.Success(T["Role Created Successfully!"]);
+            _alerter.Success(T["Topic Created Successfully!"]);
 
             return RedirectToAction(nameof(Index));
             
@@ -338,6 +338,12 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
             PagerOptions pagerOptions)
         {
 
+            var entity = await _entityStore.GetByIdAsync(id);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+            
             // default options
             if (filterOptions == null)
             {
@@ -350,23 +356,14 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
             {
                 pagerOptions = new PagerOptions();
             }
-
-
-            // Maintain previous route data when generating page links
-            //var routeData = new RouteData();
-            //routeData.Values.Add("Options.Search", filterOptions.Search);
-            //routeData.Values.Add("Options.Order", filterOptions.Order);
-
-            //// Get model
-            //var model = await GetPagedModel(filterOptions, pagerOptions);
-
+            
             // Maintain previous route data when generating page links
             var routeData = new RouteData();
             routeData.Values.Add("Options.Search", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
-
+            
             // Get model
-            var model = await GetTopicViewModel(filterOptions, pagerOptions);
+            var model = await GetTopicViewModel(id, filterOptions, pagerOptions);
             
             // Build view
             var result = await _homeTopicViewProvider.ProvideIndexAsync(model, this);
@@ -376,6 +373,37 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
 
 
         }
+        
+        [HttpPost]
+        [ActionName(nameof(Topic))]
+        public async Task<IActionResult> TopicPost(int id)
+        {
+        
+            var entity = await _entityStore.GetByIdAsync(id);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+
+
+            var model = new HomeTopicViewModel()
+            {
+                Entity = entity
+            };
+
+            var result = await _homeTopicViewProvider.ProvideUpdateAsync(model, this);
+
+            if (!ModelState.IsValid)
+            {
+                return View(result);
+            }
+
+            _alerter.Success(T["Reply Added Successfully!"]);
+
+            return RedirectToAction(nameof(Index));
+            
+        }
+
 
         #endregion
 
@@ -393,15 +421,19 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
         }
 
         private async Task<HomeTopicViewModel> GetTopicViewModel(
+            int entityId,
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
-            var replies = await GetEntities(filterOptions, pagerOptions);
+            var entity = await _entityStore.GetByIdAsync(entityId);
+            var replies = await GetEntityReplies(entityId, filterOptions, pagerOptions);
             return new HomeTopicViewModel(
+                entity,
                 replies,
                 filterOptions,
                 pagerOptions);
         }
+
 
 
         public async Task<IPagedResults<Entity>> GetEntities(
@@ -425,6 +457,28 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                 .ToList<Entity>();
         }
 
+
+        public async Task<IPagedResults<EntityReply>> GetEntityReplies(
+            int entityId,
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
+        {
+            return await _entityReplyStore.QueryAsync()
+                .Page(pagerOptions.Page, pagerOptions.PageSize)
+                .Select<EntityReplyQueryParams>(q =>
+                {
+                    //if (!string.IsNullOrEmpty(filterOptions.Search))
+                    //{
+                    //    q.UserName.IsIn(filterOptions.Search).Or();
+                    //    q.Email.IsIn(filterOptions.Search);
+                    //}
+                    // q.UserName.IsIn("Admin,Mark").Or();
+                    // q.Email.IsIn("email440@address.com,email420@address.com");
+                    // q.Id.Between(1, 5);
+                })
+                .OrderBy("Id", OrderBy.Desc)
+                .ToList<EntityReply>();
+        }
 
         #endregion
 
