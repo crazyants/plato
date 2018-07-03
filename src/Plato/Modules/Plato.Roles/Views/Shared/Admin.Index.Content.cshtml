@@ -1,0 +1,35 @@
+﻿@model RolesIndexViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Roles"]</h6>
+    </card-title>
+    <card-body>
+        @if (Model.Results != null)
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                @foreach (var role in Model.Results.Data)
+                {
+                    <li class="list-group-item">
+
+                        <h6 class="d-inline-block">
+                            @role.Name
+                        </h6>
+
+                        <a asp-controller="Admin" asp-action="Edit" asp-route-id="@role.Id" class="btn btn-primary float-right">@T["Edit"]</a>
+
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <h6>@T["No roles found"]</h6>
+        }
+    </card-body>
+</card>
+
+<div class="my-4">
+    <pager model="@Model.PagerOpts"></pager>
+</div>
+

@@ -1,0 +1,47 @@
+﻿@model EditRoleViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Role Details"]</h6>
+    </card-title>
+    <card-body>
+        <fieldset>
+            <div class="form-group" asp-validation-class-for="RoleName">
+                <label asp-for="RoleName"><strong>@T["Name"]</strong></label>
+                <span asp-validation-for="RoleName" class="text-danger"></span>
+                <input asp-for="RoleName" class="form-control" autofocus/>
+            </div>
+        </fieldset>
+        <fieldset>
+            @foreach (var category in Model.CategorizedPermissions.Keys)
+            {
+                <fieldset class="role-permissions">
+                    <h6>@category</h6>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th class="col-10">@T["Permission"]</th>
+                            <th class="col-1">@T["Allow"]</th>
+                            <th class="col-1">@T["Enabled"]</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var permission in Model.CategorizedPermissions[category])
+                        {
+                            <tr data-text="@permission.Description">
+                                <td class="col-10">@permission.Description</td>
+                                <td class="col-1">
+                                    <input type="checkbox" value="true" name="Checkbox.@permission.Name" checked="@(Model.Role?.RoleClaims?.Any(x => x.ClaimValue == permission.Name))"/>
+                                </td>
+                                <td class="col-1">
+                                    <input type="checkbox" disabled="disabled" name="Effective.@permission.Name" checked="@(Model.EnabledPermissions.Contains(permission.Name))"/>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </fieldset>
+            }
+        </fieldset>
+    </card-body>
+</card>

@@ -5,7 +5,7 @@ using Plato.Roles.ViewModels;
 
 namespace Plato.Roles.ViewProviders
 {
-    public class RoleIndexViewProvider : BaseViewProvider<RolesIndexViewModel>
+    public class AdminIndexViewProvider : BaseViewProvider<RolesIndexViewModel>
     {
 
         public override Task<IViewProviderResult> BuildDisplayAsync(RolesIndexViewModel model, IUpdateModel updater)
@@ -16,9 +16,9 @@ namespace Plato.Roles.ViewProviders
         {
             return Task.FromResult(
                 Views(
-                    View<RolesIndexViewModel>("Role.Index.Header", model => viewModel).Zone("header"),
-                    View<RolesIndexViewModel>("Role.Index.Tools", model => viewModel).Zone("tools"),
-                    View<RolesIndexViewModel>("Role.Index.Content", model => viewModel).Zone("content")
+                    View<RolesIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header"),
+                    View<RolesIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools"),
+                    View<RolesIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content")
                 ));
         }
 

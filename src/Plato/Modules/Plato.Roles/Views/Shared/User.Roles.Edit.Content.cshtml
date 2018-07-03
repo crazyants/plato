@@ -1,15 +1,17 @@
 ﻿@using Plato.Internal.Layout.Views
 @model EditUserRolesViewModel
 
-<card class="mt-4">
-    <card-title>
-        <h6 class="card-title">@T["Edit Roles"]</h6>
-    </card-title>
-    <card-body>
-        @await DisplayAsync(new View("SelectRoles", new
-        {
-            selectedRoles = @Model.SelectedRoles,
-            htmlName = @Model.HtmlName
-        }))
-    </card-body>
-</card>
+<div class="mt-4">
+    <card>
+        <card-title>
+            <h6 class="card-title">@T["Edit Roles"]</h6>
+        </card-title>
+        <card-body>
+            @await DisplayAsync(new View("SelectRoles", new
+            {
+                selectedRoles = @Model.SelectedRoles,
+                htmlName = @Model.HtmlName
+            }))
+        </card-body>
+    </card>
+</div>

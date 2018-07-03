@@ -36,21 +36,17 @@ namespace Plato.Roles.ViewProviders
 
             return Task.FromResult(
                 Views(
-                    View<Role>("Role.Display.Header", model => role).Zone("header"),
-                    View<Role>("Role.Display.Meta", model => role).Zone("meta"),
-                    View<Role>("Role.Display.Content", model => role).Zone("content"),
-                    View<Role>("Role.Display.Footer", model => role).Zone("footer")
+                    View<Role>("Admin.Display.Header", model => role).Zone("header"),
+                    View<Role>("Admin.Display.Meta", model => role).Zone("meta"),
+                    View<Role>("Admin.Display.Content", model => role).Zone("content"),
+                    View<Role>("Admin.Display.Footer", model => role).Zone("footer")
                 ));
 
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(Role role, IUpdateModel updater)
         {
-            return Task.FromResult(
-                Views(
-                    View<Role>("User.List", model => role).Zone("header").Order(3)
-                ));
-
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override async Task<IViewProviderResult> BuildEditAsync(Role role, IUpdateModel updater)
@@ -67,11 +63,11 @@ namespace Plato.Roles.ViewProviders
             };
 
             return Views(
-                View<EditRoleViewModel>("Role.Edit.Header", model => editRoleViewModel).Zone("header"),
-                View<EditRoleViewModel>("Role.Edit.Meta", model => editRoleViewModel).Zone("meta"),
-                View<EditRoleViewModel>("Role.Edit.Content", model => editRoleViewModel).Zone("content"),
-                View<EditRoleViewModel>("Role.Edit.Footer", model => editRoleViewModel).Zone("footer"),
-                View<EditRoleViewModel>("Role.Edit.Actions", model => editRoleViewModel).Zone("actions")
+                View<EditRoleViewModel>("Admin.Edit.Header", model => editRoleViewModel).Zone("header"),
+                View<EditRoleViewModel>("Admin.Edit.Meta", model => editRoleViewModel).Zone("meta"),
+                View<EditRoleViewModel>("Admin.Edit.Content", model => editRoleViewModel).Zone("content"),
+                View<EditRoleViewModel>("Admin.Edit.Footer", model => editRoleViewModel).Zone("footer"),
+                View<EditRoleViewModel>("Admin.Edit.Actions", model => editRoleViewModel).Zone("actions")
             );
 
         }
