@@ -75,13 +75,6 @@ namespace Plato.Entities.Repositories
         {
             using (var context = _dbContext)
             {
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation(
-                            $"SelectUser for Id {id} failed with the following error {args.Exception.Message}");
-                };
-
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntityReplyById", id);
@@ -107,9 +100,9 @@ namespace Plato.Entities.Repositories
                     output = new PagedResults<TModel>();
                     while (await reader.ReadAsync())
                     {
-                        var entity = new Entity();
-                        entity.PopulateModel(reader);
-                        output.Data.Add((TModel)Convert.ChangeType(entity, typeof(TModel)));
+                        var reply = new EntityReply();
+                        reply.PopulateModel(reader);
+                        output.Data.Add((TModel)Convert.ChangeType(reply, typeof(TModel)));
                     }
 
                     if (await reader.NextResultAsync())
@@ -117,7 +110,6 @@ namespace Plato.Entities.Repositories
                         await reader.ReadAsync();
                         output.PopulateTotal(reader);
                     }
-                    
                 }
             }
 

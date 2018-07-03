@@ -12,40 +12,44 @@
         <div class="modal-content">
             <form asp-controller="Home" asp-action="Topic" method="post" enctype="multipart/form-data">
             
-                <card title="@T["Post Reply"]">
+                <card>
+                    <card-title>
+                        @T["Post Reply"]
+                    </card-title>
+                    <card-body>
+                        <fieldset>
+                            <div class="form-group">
 
-                    <fieldset>
-                        <div class="form-group">
+                                <span asp-validation-for="NewEntityReply.Title" class="text-danger"></span>
+                                <input asp-for="NewEntityReply.Title" placeholder="@T["Title"]" class="form-control" autofocus/>
 
-                            <span asp-validation-for="NewEntityReply.Title" class="text-danger"></span>
-                            <input asp-for="NewEntityReply.Title" placeholder="@T["Title"]" class="form-control" autofocus/>
+                            </div>
+                            <div class="form-group">
 
-                        </div>
-                        <div class="form-group">
+                                @await DisplayAsync(new View("Editor", new
+                                {
+                                    value = string.Empty,
+                                    placeHolderText = "place holder text from core",
+                                    htmlName = @Model.EditorHtmlName
+                                }))
+                                <!--
+                                <textarea asp-for="NewEntityReply.Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>
+                                -->
 
-                            @await DisplayAsync(new View("Editor", new
-                            {
-                                value = string.Empty,
-                                placeHolderText = "place holder text from core",
-                                htmlName = @Model.EditorHtmlName
-                            }))
-                            <!--
-                            <textarea asp-for="NewEntityReply.Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>
-                            -->
+                            </div>
+                            <div class="form-group mt-4">
 
-                        </div>
-                        <div class="form-group mt-4">
-
-                            <button type="submit" class="btn btn-primary">
-                                @T["Post"]
-                            </button>
-                            <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
-                                @T["Cancel"]
-                            </button>
-                        </div>
-                    </fieldset>
-
+                                <button type="submit" class="btn btn-primary">
+                                    @T["Post"]
+                                </button>
+                                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
+                                    @T["Cancel"]
+                                </button>
+                            </div>
+                        </fieldset>
+                    </card-body>
                 </card>
+
             </form>
         </div>
         

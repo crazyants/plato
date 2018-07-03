@@ -1,49 +1,52 @@
 ﻿@using Plato.Discuss.Models
 @model HomeIndexViewModel
 
-<card title="@T["Topics"]">
+<card>
+    <card-title>
+        @T["Topics"]
+    </card-title>
+    <card-body>
+        @if (Model.Results != null)
+        {
+            <ul class="list-group list-group-flush list-group-hover mt-4">
+                @foreach (var entity in Model.Results.Data)
+                {
+                    <li class="list-group-item">
 
-    @if (Model.Results != null)
-    {
-        <ul class="list-group list-group-flush list-group-hover mt-4">
-            @foreach (var entity in Model.Results.Data)
-            {
-                <li class="list-group-item">
+                        @{
+                            var detail = entity.GetMetaData<EntityMetaData>();
+                        }
 
-                    @{
-                        var detail = entity.GetMetaData<EntityMetaData>();
-                    }
+                        <h6>
+                            <a asp-controller="Home" asp-action="Topic" asp-route-id="@entity.Id">
+                                @entity.Title
+                            </a>
+                        </h6>
 
-                    <h6>
-                        <a asp-controller="Home" asp-action="Topic" asp-route-id="@entity.Id">
-                            @entity.Title
-                        </a>
-                    </h6>
+                        <p class="text-muted">
+                            @entity.Abstract
+                        </p>
 
-                    <p class="text-muted">
-                        @entity.Abstract
-                    </p>
+                        @if (detail != null)
+                        {
+                            @foreach (var participant in detail.Users)
+                             {
+                                 @participant.UserName
+                                 <br/>
+                                 <br/>
+                             }
+                        }
 
-                    @if (detail != null)
-                    {
-                        @foreach (var participant in detail.Users)
-                         {
-                             @participant.UserName
-                             <br/>
-                             <br/>
-                         }
-                    }
+                    </li>
 
-                </li>
-
-            }
-        </ul>
-    }
-    else
-    {
-        <h6>@T["No discussions found"]</h6>
-    }
-
+                }
+            </ul>
+        }
+        else
+        {
+            <h6>@T["No discussions found"]</h6>
+        }
+    </card-body>
 </card>
 
 <div class="mt-4 mb-4">

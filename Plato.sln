@@ -121,6 +121,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Messaging", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Messaging.Abstractions", "src\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj", "{70EF9D97-A76A-4CB1-B32D-853FE6033905}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diagrams", "Diagrams", "{8B153E39-0276-47B3-B1A9-3A08524BC4B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -398,6 +400,7 @@ Global
 		{DDE68A18-C17E-43B8-BE48-6E9B729FAFF2} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{9A182728-6792-4806-8EC8-DD0B65155EED} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{70EF9D97-A76A-4CB1-B32D-853FE6033905} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
+		{8B153E39-0276-47B3-B1A9-3A08524BC4B3} = {C64C1498-66DB-482E-A2D6-4188E7D0B530}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

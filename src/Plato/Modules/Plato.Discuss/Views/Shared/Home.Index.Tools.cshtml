@@ -11,41 +11,47 @@
 
         <div class="modal-content">
             <form asp-controller="Home" asp-action="Index" method="post" enctype="multipart/form-data">
-                <card title="@T["Post Reply"]">
 
-                    <fieldset>
-                        <div class="form-group">
+                <card>
+                    <card-title>
+                        @T["Post Reply"]
+                    </card-title>
+                    <card-body>
 
-                            <span asp-validation-for="NewEntityViewModel.Title" class="text-danger"></span>
-                            <input asp-for="NewEntityViewModel.Title" placeholder="@T["Title"]" class="form-control" autofocus />
+                        <fieldset>
+                            <div class="form-group">
 
-                        </div>
-                        <div class="form-group">
+                                <span asp-validation-for="NewEntityViewModel.Title" class="text-danger"></span>
+                                <input asp-for="NewEntityViewModel.Title" placeholder="@T["Title"]" class="form-control" autofocus/>
 
-                            @await DisplayAsync(new View("Editor", new
-                            {
-                               value = string.Empty,
-                               placeHolderText = "place holder text from core",
-                               htmlName = @Model.EditorHtmlName
-                            }))
-                            
-                            <!--
-                            <textarea asp-for="NewEntityViewModel.Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>
-                            -->
+                            </div>
+                            <div class="form-group">
 
-                        </div>
-                        <div class="form-group mt-4">
+                                @await DisplayAsync(new View("Editor", new
+                                {
+                                    value = string.Empty,
+                                    placeHolderText = "place holder text from core",
+                                    htmlName = @Model.EditorHtmlName
+                                }))
 
-                            <button type="submit" class="btn btn-primary">
-                                @T["Post"]
-                            </button>
-                            <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
-                                @T["Cancel"]
-                            </button>
-                        </div>
-                    </fieldset>
+                                <!--
+                                <textarea asp-for="NewEntityViewModel.Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>
+                                -->
 
+                            </div>
+                            <div class="form-group mt-4">
+
+                                <button type="submit" class="btn btn-primary">
+                                    @T["Post"]
+                                </button>
+                                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
+                                    @T["Cancel"]
+                                </button>
+                            </div>
+                        </fieldset>
+                    </card-body>
                 </card>
+
             </form>
         </div>
         

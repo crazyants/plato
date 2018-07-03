@@ -1,11 +1,22 @@
 ﻿
-/* Hover state for lists-groups */
+/* ------------------- */
+/* Buttons */
+/* ------------------- */
 
+.btn { border-radius: 2px; }
+
+/* ------------------- */
+/* List Groups */
+/* ------------------- */
+
+/* Hover state for lists-groups */
 .list-group-hover .list-group-item:hover {
     background-color: #f5f5f5;
 }
 
+/* ------------------- */
 /* Dropdowns */
+/* ------------------- */
 
 .dropdown-menu {
      box-shadow: 0 0 10px 1px rgba(75, 75, 75, 0.2);
