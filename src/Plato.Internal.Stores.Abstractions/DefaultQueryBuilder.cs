@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Stores.Abstractions
@@ -210,6 +211,146 @@ namespace Plato.Internal.Stores.Abstractions
 
     #endregion
 
+    #region "WhereBool"
+
+    public class WhereBool
+    {
+        private readonly StringBuilder _builder;
+        private QueryOperator _operator = QueryOperator.And;
+
+        public WhereBool()
+        {
+            _builder = new StringBuilder();
+        }
+
+        public bool Value { get; private set; }
+
+        public string Operator => _operator == QueryOperator.And ? " AND " : " OR ";
+
+        public WhereBool Or()
+        {
+            _operator = QueryOperator.Or;
+            return this;
+        }
+
+        public WhereBool And()
+        {
+            _operator = QueryOperator.And;
+            return this;
+        }
+
+        public WhereBool Equals(bool value)
+        {
+            if (!string.IsNullOrEmpty(_builder.ToString()))
+                _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
+            Value = value;
+            _builder.Append("{0} = @{0}");
+            return this;
+        }
+        public WhereBool NotEqual(bool value)
+        {
+            if (!string.IsNullOrEmpty(_builder.ToString()))
+                _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
+            Value = value;
+            _builder.Append("{0} <> @{0}");
+            return this;
+        }
+
+        public string ToSqlString(string parameterName)
+        {
+            return _builder.ToString().Replace("{0}", parameterName);
+        }
+    }
+
+    #endregion
+
+    #region "WhereDate"
+
+    public class WhereDate
+    {
+        private readonly StringBuilder _builder;
+        private QueryOperator _operator = QueryOperator.And;
+
+        public WhereDate()
+        {
+            _builder = new StringBuilder();
+        }
+
+        public DateTime? Value { get; private set; }
+
+        public string Operator => _operator == QueryOperator.And ? " AND " : " OR ";
+
+        public WhereDate Or()
+        {
+            _operator = QueryOperator.Or;
+            return this;
+        }
+
+        public WhereDate And()
+        {
+            _operator = QueryOperator.And;
+            return this;
+        }
+
+        public WhereDate GreaterThan(DateTime value)
+        {
+            if (!string.IsNullOrEmpty(_builder.ToString()))
+                _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
+            Value = value;
+            _builder.Append("{0} > @{0}");
+            return this;
+        }
+
+        public WhereDate GreaterThanOrEqual(DateTime value)
+        {
+            if (!string.IsNullOrEmpty(_builder.ToString()))
+                _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
+            Value = value;
+            _builder.Append("{0} >= @{0}");
+            return this;
+        }
+
+        public WhereDate LessThan(DateTime value)
+        {
+            if (!string.IsNullOrEmpty(_builder.ToString()))
+                _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
+            Value = value;
+            _builder.Append("{0} < @{0}");
+            return this;
+        }
+
+        public WhereDate LessThanOrEqual(DateTime value)
+        {
+            if (!string.IsNullOrEmpty(_builder.ToString()))
+                _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
+            Value = value;
+            _builder.Append("{0} <= @{0}");
+            return this;
+        }
+
+
+        public WhereDate NotEqual(DateTime value)
+        {
+            if (!string.IsNullOrEmpty(_builder.ToString()))
+                _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
+            Value = value;
+            _builder.Append("{0} <> @{0}");
+            return this;
+        }
+
+        public string ToSqlString(string parameterName)
+        {
+            return _builder.ToString().Replace("{0}", parameterName);
+        }
+
+        string NormalizeDate(DateTime dateTime)
+        {
+            return dateTime.ToString(System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.SortableDateTimePattern);
+        }
+    }
+    
+    #endregion
+    
     #region "QueryOperator"
 
     public enum QueryOperator

@@ -123,7 +123,6 @@ namespace Plato.Users.ViewProviders
                 await _userManager.SetEmailAsync(user, model.Email);
 
                 var result = await _userManager.UpdateAsync(user);
-
                 foreach (var error in result.Errors)
                 {
                     updater.ModelState.AddModelError(string.Empty, error.Description);

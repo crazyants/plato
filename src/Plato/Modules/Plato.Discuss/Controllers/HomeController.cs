@@ -196,8 +196,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                     }
                 }
             }
-
-
+            
             var existingTopic = await _entityStore.GetByIdAsync(142);
             if (existingTopic != null)
             {
@@ -380,8 +379,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
 
             // Return view
             return View(result);
-
-
+            
         }
         
         [HttpPost]
@@ -443,9 +441,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                 filterOptions,
                 pagerOptions);
         }
-
-
-
+        
         public async Task<IPagedResults<Entity>> GetEntities(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
@@ -466,8 +462,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                 .OrderBy("Id", OrderBy.Desc)
                 .ToList<Entity>();
         }
-
-
+        
         public async Task<IPagedResults<EntityReply>> GetEntityReplies(
             int entityId,
             FilterOptions filterOptions,
@@ -477,6 +472,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                 .Page(pagerOptions.Page, pagerOptions.PageSize)
                 .Select<EntityReplyQueryParams>(q =>
                 {
+                    q.EntityId.Equals(entityId);
                     //if (!string.IsNullOrEmpty(filterOptions.Search))
                     //{
                     //    q.UserName.IsIn(filterOptions.Search).Or();

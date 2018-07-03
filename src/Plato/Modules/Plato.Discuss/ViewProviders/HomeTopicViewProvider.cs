@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -14,26 +15,24 @@ namespace Plato.Discuss.ViewProviders
         private const string EditorHtmlName = "message";
 
 
-        private readonly IEntityStore<Entity> _entityStore;
-        private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
+        private readonly IEntityManager<EntityReply> _entityReplyManager;
 
         private readonly HttpRequest _request;
 
 
         public HomeTopicViewProvider(
-            IEntityStore<Entity> entityStore,
             IHttpContextAccessor httpContextAccessor,
-            IEntityReplyStore<EntityReply> entityReplyStore)
+            IEntityManager<EntityReply> entityReplyManager)
         {
-            _entityStore = entityStore;
-            _entityReplyStore = entityReplyStore;
+            _entityReplyManager = entityReplyManager;
             _request = httpContextAccessor.HttpContext.Request;
         }
-        
+
         public override Task<IViewProviderResult> BuildDisplayAsync(HomeTopicViewModel viewMode, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
+
         public override Task<IViewProviderResult> BuildIndexAsync(HomeTopicViewModel viewModel, IUpdateModel updater)
         {
             return Task.FromResult(
@@ -92,32 +91,20 @@ namespace Plato.Discuss.ViewProviders
                 reply.EntityId = viewModel.Entity.Id;
                 reply.Message = message.Trim();
                 
-                var newReply = await _entityReplyStore.CreateAsync(reply);
-                
-                //var result = await _userManager.UpdateAsync(user);
+                var result = await _entityReplyManager.CreateAsync(reply);
 
-                //foreach (var error in result.Errors)
-                //{
-                //    updater.ModelState.AddModelError(string.Empty, error.Description);
-                //}
+                foreach (var error in result.Errors)
+                {
+                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                }
 
             }
 
             return await BuildIndexAsync(viewModel, updater);
             
         }
-
-        public void Creating(object sender, EntityStoreEventArgs e)
-        {
-
-        }
-
-
-        public void Created(object sender, EntityStoreEventArgs e)
-        {
-          
-        }
         
+
     }
 
 }

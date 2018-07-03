@@ -42,7 +42,7 @@ namespace Plato.Internal.Data.Schemas.Abstractions
                     case DbType.Date:
                         return "GetDate()";
                     case DbType.DateTime2:
-                        return "GetDate()";
+                        return "NULL";
                     case DbType.DateTime:
                         return "GetDate()";
                     case DbType.DateTimeOffset:
