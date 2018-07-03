@@ -1,0 +1,187 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using Plato.Entities.Models;
+using Plato.Entities.Stores;
+using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Messaging.Abstractions;
+
+namespace Plato.Entities.Services
+{
+    public class EntityReplyManager : IEntityManager<EntityReply>
+    {
+
+        public event EntityEvents.EntityEventHandler Creating;
+        public event EntityEvents.EntityEventHandler Created;
+        public event EntityEvents.EntityEventHandler Updating;
+        public event EntityEvents.EntityEventHandler Updated;
+        public event EntityEvents.EntityEventHandler Deleting;
+        public event EntityEvents.EntityEventHandler Deleted;
+     
+        private readonly IBroker _broker;
+        private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
+
+        public EntityReplyManager(
+            IEntityReplyStore<EntityReply> entityReplyStore, 
+            IBroker broker)
+        {
+            _entityReplyStore = entityReplyStore;
+            _broker = broker;
+        }
+
+        public async Task<IEntityResult> CreateAsync(EntityReply model)
+        {
+            
+            var result = new EntityResult();
+
+            if (model.EntityId <= 0)
+            {
+                return result.Failed(new EntityError($"{nameof(model.EntityId)} must must be greater than zero"));
+            }
+            
+            if (model.Id > 0)
+            {
+                return result.Failed(new EntityError($"{nameof(model.Id)} cannot be greater than zero when creating a reply"));
+            }
+            
+            if (String.IsNullOrWhiteSpace(model.Message))
+            {
+                return result.Failed(new EntityError($"{nameof(model.Message)} is required"));
+            }
+
+            // Parse Html and message abstract
+            model.Html = await ParseMarkdown(model.Message);
+            model.Abstract = await ParseAbstract(model.Message);
+
+            // Raise creating event
+            Creating?.Invoke(this, new EntityStoreEventArgs()
+            {
+                Model = model
+            });
+            
+            var reply = await _entityReplyStore.CreateAsync(model);
+            if (reply != null)
+            {
+                // Raise created event
+                Created?.Invoke(this, new EntityStoreEventArgs()
+                {
+                    Model = reply
+                });
+                return result.Success;
+            }
+
+            return result.Failed(new EntityError("An unknown error occurred whilst attempting to create the reply"));
+
+        }
+
+        public async Task<IEntityResult> UpdateAsync(EntityReply model)
+        {
+
+            var result = new EntityResult();
+
+            if (model.Id <= 0)
+            {
+                return result.Failed(new EntityError($"{nameof(model.Id)} must be a valid existing reply id"));
+            }
+            
+            if (String.IsNullOrWhiteSpace(model.Message))
+            {
+                return result.Failed(new EntityError($"{nameof(model.Message)} is required"));
+            }
+
+            // Parse Html and message abstract
+            model.Html = await ParseMarkdown(model.Message);
+            model.Abstract = await ParseAbstract(model.Message);
+            
+            // Raise updating event
+            Updating?.Invoke(this, new EntityStoreEventArgs()
+            {
+                Model = model
+            });
+
+
+            var reply = await _entityReplyStore.UpdateAsync(model);
+            if (reply != null)
+            {
+                Updated?.Invoke(this, new EntityStoreEventArgs()
+                {
+                    Model = reply
+                });
+                return result.Success;
+            }
+
+            return result.Failed(new EntityError("An unknown error occurred whilst attempting to update the reply."));
+
+        }
+
+        public async Task<IEntityResult> DeleteAsync(int id)
+        {
+
+            var result = new EntityResult();
+
+            var reply = await _entityReplyStore.GetByIdAsync(id);
+            if (reply == null)
+            {
+                return result.Failed(new EntityError($"An entity reply with the id of '{id}' could not be found"));
+            }
+
+            Deleting?.Invoke(this, new EntityStoreEventArgs()
+            {
+                Model = reply
+            });
+            
+            var success = await _entityReplyStore.DeleteAsync(reply);
+            Deleted?.Invoke(this, new EntityStoreEventArgs()
+            {
+                Success = success,
+                Model = reply
+            });
+
+            if (success)
+            {
+                return result.Success;
+            }
+
+            return result.Failed(new EntityError("An unknown error occurred whilst attempting to delete the reply."));
+
+        }
+
+
+        #region "Private Methods"
+
+        private async Task<string> ParseMarkdown(string message)
+        {
+
+            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            {
+                Key = "ParseMarkdown"
+            }, message))
+            {
+                return await handler.Invoke(new Message<string>(message, this));
+            }
+
+            return message;
+
+        }
+
+        private async Task<string> ParseAbstract(string message)
+        {
+
+            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            {
+                Key = "ParseAbstract"
+            }, message))
+            {
+                return await handler.Invoke(new Message<string>(message, this));
+            }
+
+            return message.StripHtml().TrimToAround(500);
+
+        }
+
+        #endregion
+
+
+    }
+}

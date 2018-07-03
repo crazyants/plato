@@ -7,7 +7,8 @@ namespace Plato.Entities.Stores
 
         public bool Success { get; set; }
 
-        public Entity Entity { get; set; }
+        public object Model { get; set; }
 
     }
+    
 }

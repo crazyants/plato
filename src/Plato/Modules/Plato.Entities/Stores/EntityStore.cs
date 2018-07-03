@@ -25,8 +25,7 @@ namespace Plato.Entities.Stores
         public event EntityStoreEventHandler Updated;
         public event EntityStoreEventHandler Deleting;
         public event EntityStoreEventHandler Deleted;
-        public event EntityStoreEventHandler Selected;
-
+     
         public delegate void EntityStoreEventHandler(object sender, EntityStoreEventArgs e);
         
         public event ConfigureEntityEventHandler Configure;
@@ -37,7 +36,6 @@ namespace Plato.Entities.Stores
 
         #region "Constructor"
 
-        private readonly IBroker _broker;
         private readonly IEntityRepository<Entity> _entityRepository;
         private readonly ILogger<EntityStore> _logger;
         private readonly ICacheDependency _cacheDependency;
@@ -51,15 +49,13 @@ namespace Plato.Entities.Stores
             ICacheDependency cacheDependency,
             ILogger<EntityStore> logger,
             IMemoryCache memoryCache,
-            IDbQuery dbQuery,
-            IBroker broker)
+            IDbQuery dbQuery)
         {
             _typedModuleProvider = typedModuleProvider;
             _entityRepository = entityRepository;
             _cacheDependency = cacheDependency;
             _memoryCache = memoryCache;
             _dbQuery = dbQuery;
-            _broker = broker;
             _logger = logger;
         }
 
@@ -80,10 +76,6 @@ namespace Plato.Entities.Stores
                 });
             }
             entity.Data = data;
-
-            // Parse Html and message abstract
-            entity.Html = await ParseMarkdown(entity.Message);
-            entity.Abstract = await ParseAbstract(entity.Message);
             
             // Allows us to optionally configure the entity before storing
             var configuredEntity = entity;
@@ -92,14 +84,14 @@ namespace Plato.Entities.Stores
                 // Raise configure event
                 configuredEntity = await Configure.Invoke(this, new EntityStoreEventArgs()
                 {
-                    Entity = entity
+                    Model = entity
                 });
             }
             
             // Raise creating event
             Creating?.Invoke(this, new EntityStoreEventArgs()
             {
-                Entity = configuredEntity
+                Model = configuredEntity
             });
 
             // Add entity
@@ -112,7 +104,7 @@ namespace Plato.Entities.Stores
                 // Raise created event
                 Created?.Invoke(this, new EntityStoreEventArgs()
                 {
-                    Entity = newEntity
+                    Model = newEntity
                 });
             }
             
@@ -130,13 +122,13 @@ namespace Plato.Entities.Stores
                 // Raise configure event
                 configuredEntity = await Configure.Invoke(this, new EntityStoreEventArgs()
                 {
-                    Entity = entity
+                    Model = entity
                 });
             }
 
             Updating?.Invoke(this, new EntityStoreEventArgs()
             {
-                Entity = configuredEntity
+                Model = configuredEntity
             });
 
 
@@ -148,7 +140,7 @@ namespace Plato.Entities.Stores
 
             Updated?.Invoke(this, new EntityStoreEventArgs()
             {
-                Entity = output
+                Model = output
             });
 
             return output;
@@ -160,7 +152,7 @@ namespace Plato.Entities.Stores
 
             Deleting?.Invoke(this, new EntityStoreEventArgs()
             {
-                Entity = entity
+                Model = entity
             });
 
             var success = await _entityRepository.DeleteAsync(entity.Id);
@@ -172,7 +164,7 @@ namespace Plato.Entities.Stores
             Deleted?.Invoke(this, new EntityStoreEventArgs()
             {
                 Success = success,
-                Entity = entity
+                Model = entity
             });
 
             return success;
@@ -195,11 +187,6 @@ namespace Plato.Entities.Stores
                 }
             }
 
-            Selected?.Invoke(this, new EntityStoreEventArgs()
-            {
-                Entity = entity
-            });
-            
             return entity;
         }
         
@@ -234,36 +221,7 @@ namespace Plato.Entities.Stores
 
         #region "Private Methods"
         
-        private async Task<string> ParseMarkdown(string message)
-        {
-
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
-            {
-                Key = "ParseMarkdown"
-            }, message))
-            {
-                return await handler.Invoke(new Message<string>(message, this));
-            }
-
-            return message;
-
-        }
-
-        private async Task<string> ParseAbstract(string message)
-        {
-
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
-            {
-                Key = "ParseAbstract"
-            }, message))
-            {
-                return await handler.Invoke(new Message<string>(message, this));
-            }
-
-            return message.StripHtml().TrimToAround(500);
-
-        }
-        
+    
         async Task<Type> GetModuleTypeCandidateAsync(string typeName)
         {
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));

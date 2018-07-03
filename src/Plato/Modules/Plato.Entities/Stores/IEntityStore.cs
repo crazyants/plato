@@ -12,7 +12,6 @@ namespace Plato.Entities.Stores
         event EntityStore.EntityStoreEventHandler Updated;
         event EntityStore.EntityStoreEventHandler Deleting;
         event EntityStore.EntityStoreEventHandler Deleted;
-        event EntityStore.EntityStoreEventHandler Selected;
         event EntityStore.ConfigureEntityEventHandler Configure;
 
     }

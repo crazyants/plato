@@ -6,6 +6,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Entities.Handlers;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -40,8 +41,11 @@ namespace Plato.Entities
             services.AddScoped<IEntityReplyStore<EntityReply>, EntityReplyStore>();
             services.AddScoped<IEntityDataStore<EntityData>, EntityDataStore>();
 
+            services.AddScoped<IEntityManager<Entity>, EntityManager>();
+            services.AddScoped<IEntityManager<EntityReply>, EntityReplyManager>();
+
             //services.AddScoped<IEntityDetailsStore<EntityDetails>, EntityDetailsStore>();
-            
+
 
         }
 
