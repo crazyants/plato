@@ -8,7 +8,7 @@
         <ul class="list-group list-group-flush list-group-hover">
             @foreach (var user in Model.Results.Data)
             {
-                @await DisplayAsync(new View("User.ListItem", user))
+                @await DisplayAsync(new View("Admin.Index.Content.Item", user))
             }
         </ul>
     </card-body>

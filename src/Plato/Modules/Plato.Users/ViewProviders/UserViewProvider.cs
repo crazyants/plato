@@ -43,10 +43,10 @@ namespace Plato.Users.ViewProviders
 
             return Task.FromResult(
                 Views(
-                    View<User>("User.Display.Header", model => user).Zone("header"),
-                    View<User>("User.Display.Meta", model => user).Zone("meta"),
-                    View<User>("User.Display.Content", model => user).Zone("content"),
-                    View<User>("User.Display.Footer", model => user).Zone("footer")
+                    View<User>("Admin.Display.Header", model => user).Zone("header"),
+                    View<User>("Admin.Display.Meta", model => user).Zone("meta"),
+                    View<User>("Admin.Display.Content", model => user).Zone("content"),
+                    View<User>("Admin.Display.Footer", model => user).Zone("footer")
                 ));
 
         }
@@ -64,30 +64,30 @@ namespace Plato.Users.ViewProviders
 
             return Task.FromResult(
                 Views(
-                    View<User>("User.Edit.Header", model => user).Zone("header"),
-                    View<User>("User.Edit.Meta", model => user).Zone("meta"),
-                    View<EditUserViewModel>("User.Edit.Content", model =>
+                    View<User>("Admin.Edit.Header", model => user).Zone("header"),
+                    View<User>("Admin.Edit.Meta", model => user).Zone("meta"),
+                    View<EditUserViewModel>("Admin.Edit.Content", model =>
                     {
                         model.Id = user.Id;
                         model.UserName = user.UserName;
                         model.Email = user.Email;
                         return model;
                     }).Zone("content"),
-                    View<EditUserViewModel>("User.Edit.Sidebar", model =>
+                    View<EditUserViewModel>("Admin.Edit.Sidebar", model =>
                     {
                         model.Id = user.Id;
                         model.UserName = user.UserName;
                         model.Email = user.Email;
                         return model;
                     }).Zone("sidebar"),
-                    View<EditUserViewModel>("User.Edit.Footer", model =>
+                    View<EditUserViewModel>("Admin.Edit.Footer", model =>
                     {
                         model.Id = user.Id;
                         model.UserName = user.UserName;
                         model.Email = user.Email;
                         return model;
                     }).Zone("footer"),
-                    View<EditUserViewModel>("User.Edit.Actions", model =>
+                    View<EditUserViewModel>("Admin.Edit.Actions", model =>
                     {
                         model.Id = user.Id;
                         model.UserName = user.UserName;
