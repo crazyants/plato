@@ -79,153 +79,161 @@
         }
       });
     },
-    __buildButtons: function (buttonsArray, container) {
+    __buildButtons: function(buttonsArray, container) {
 
-      var i,
-        ns = this.$ns,
-        handler = this.$handler,
-        callback = this.$callback;
+        var i,
+            ns = this.$ns,
+            handler = this.$handler,
+            callback = this.$callback;
 
-      for (i = 0; i < buttonsArray.length; i++) {
+        for (i = 0; i < buttonsArray.length; i++) {
 
-        // Build each group container
-        var y, btnGroups = buttonsArray[i];
-        for (y = 0; y < btnGroups.length; y++) {
+            // Build each group container
+            var y, btnGroups = buttonsArray[i];
+            for (y = 0; y < btnGroups.length; y++) {
 
-          // Build each button group
-          var z, buttons = btnGroups[y].data,
-            $group = $('<div />', {
-                'class': btnGroups[y].css,
-                'role': 'group'
-            });
+                // Build each button group
+                var z,
+                    buttons = btnGroups[y].data,
+                    $group = $('<div />',
+                        {
+                            'class': btnGroups[y].css,
+                            'role': 'group'
+                        });
 
-          for (z = 0; z < buttons.length; z++) {
+                for (z = 0; z < buttons.length; z++) {
 
-              var button = buttons[z],
-                  buttonHandler = ns + '-' + button.name,
-                  buttonIcon = this.__getIcon(button),
-                  btnText = button.btnText ? button.btnText : '',
-                  btnClass = button.btnClass ? button.btnClass : 'btn',
-                  tabIndex = button.tabIndex ? button.tabIndex : '-1',
-                  hotkey = typeof button.hotkey !== 'undefined' ? button.hotkey : '',
-                  hotkeyCaption = typeof jQuery.hotkeys !== 'undefined' && hotkey !== '' ? ' (' + hotkey + ')' : '',
-                  dropdown = typeof button.dropdown !== 'undefined' ? button.dropdown : null;
+                    var button = buttons[z],
+                        buttonHandler = ns + '-' + button.name,
+                        buttonIcon = this.__getIcon(button),
+                        btnText = button.btnText ? button.btnText : '',
+                        btnClass = button.btnClass ? button.btnClass : 'btn',
+                        tabIndex = button.tabIndex ? button.tabIndex : '-1',
+                        hotkey = typeof button.hotkey !== 'undefined' ? button.hotkey : '',
+                        hotkeyCaption = typeof jQuery.hotkeys !== 'undefined' && hotkey !== ''
+                            ? ' (' + hotkey + ')'
+                            : '',
+                        dropdown = typeof button.dropdown !== 'undefined' ? button.dropdown : null;
 
-            var $button = $('<button data-toggle="tooltip">');
-              $button.html(this.__localize(btnText))
-                .addClass('btn')
-                .addClass(btnClass);
-              if (btnClass.match(/btn\-(primary|success|info|warning|danger|link)/)) {
-                $button.removeClass('btn-secondary');
-              }
+                    var $button = $('<button data-toggle="tooltip">');
+                    $button.html(this.__localize(btnText))
+                        .addClass('btn')
+                        .addClass(btnClass);
+                    if (btnClass.match(/btn\-(primary|success|info|warning|danger|link)/)) {
+                        $button.removeClass('btn-secondary');
+                    }
 
-            $button.attr({
-              'title': this.__localize(button.title) + hotkeyCaption,
-              'tabindex': tabIndex,
-              'data-hotkey': hotkey,
-              'data-provider': ns,
-              'data-handler': buttonHandler,
-              'data-tooltip-position': 'bottom'
-            });
-
-
-            if (dropdown) {
-                $button.addClass("dropdown-toggle");
-                $button.attr('data-toggle', 'dropdown');
-            }
-
-            if (button.toggle === true) {
-                $button.attr('data-toggle', 'button');
-            }
-
-            if (buttonIcon) {
-            
-                var buttonIconContainer = $('<i>');
-                buttonIconContainer.addClass(buttonIcon);
-                buttonIconContainer.prependTo($button);
-            }
-
-            // dropdown
-            if (dropdown) {
-
-                var $dropdown = $('<div class="btn-group" role="group">');
-
-                var $ul = $('<ul class="dropdown-menu">');
-                if (dropdown.css) { $ul.addClass(dropdown.css); }
-
-                $ul.css({
-                    "width": dropdown.width || "250ox"
-                });
-
-                if (dropdown.height) {
-                    $ul.css({
-                        "max-height": dropdown.height,
-                        "overflow-y": "auto"
+                    $button.attr({
+                        'title': this.__localize(button.title) + hotkeyCaption,
+                        'tabindex': tabIndex,
+                        'data-hotkey': hotkey,
+                        'data-provider': ns,
+                        'data-handler': buttonHandler
                     });
-                }
 
-                var $li = null;
 
-                if (dropdown.items != null) {
-                    
-                    for (var x = 0; x < dropdown.items.length; x++) {
+                    if (dropdown) {
+                        $button.addClass("dropdown-toggle");
+                        $button.attr('data-toggle', 'dropdown');
+                    }
 
-                        var item = dropdown.items[x],
-                            itemHandler = ns + '-' + item.name,
-                            itemHotkey = item.hotkey || "",
-                            itemValue = item.value || "";
+                    if (button.toggle === true) {
+                        $button.attr('data-toggle', 'button');
+                    }
 
-                        var $a = $('<a href="#" class="dropdown-item">');
-                        $a.html(item.text)
-                            .attr({
-                                'title': item.tooltip ? this.__localize(item.tooltip) + itemHotkey : "",
-                                'data-provider': ns,
-                                'data-handler': itemHandler,
-                                'data-hotkey': hotkey,
-                                'data-value': itemValue
+                    if (buttonIcon) {
+
+                        var buttonIconContainer = $('<i>');
+                        buttonIconContainer.addClass(buttonIcon);
+                        buttonIconContainer.prependTo($button);
+                    }
+
+                    // dropdown
+                    if (dropdown) {
+
+                        var $dropdown = $('<div class="btn-group" role="group">');
+
+                        var $ul = $('<ul class="dropdown-menu">');
+                        if (dropdown.css) {
+                            $ul.addClass(dropdown.css);
+                        }
+
+                        $ul.css({
+                            "width": dropdown.width || "250ox"
+                        });
+
+                        if (dropdown.height) {
+                            $ul.css({
+                                "max-height": dropdown.height,
+                                "overflow-y": "auto"
                             });
-                     
-                        $li = $('<li>');
-                        $li.append($a);
-                        $ul.append($li);
+                        }
 
-                        // register item handler and callback
-                        handler.push(itemHandler);
-                        callback.push(item.callback);
+                        var $li = null;
+
+                        if (dropdown.items != null) {
+
+                            for (var x = 0; x < dropdown.items.length; x++) {
+
+                                var item = dropdown.items[x],
+                                    itemHandler = ns + '-' + item.name,
+                                    itemHotkey = item.hotkey || "",
+                                    itemValue = item.value || "";
+
+                                var $a = $('<a href="#" class="dropdown-item">');
+                                $a.html(item.text)
+                                    .attr({
+                                        'title': item.tooltip ? this.__localize(item.tooltip) + itemHotkey : "",
+                                        'data-provider': ns,
+                                        'data-handler': itemHandler,
+                                        'data-hotkey': hotkey,
+                                        'data-value': itemValue
+                                    });
+
+                                $li = $('<li>');
+                                $li.append($a);
+                                $ul.append($li);
+
+                                // register item handler and callback
+                                handler.push(itemHandler);
+                                callback.push(item.callback);
+
+                            }
+
+                        } else {
+
+                            $li = $("<li>");
+                            $li.append(dropdown.html.replace("{baseUrl}", this.$options.baseUrl));
+                            $ul.append($li);
+
+                        }
+
+                        $dropdown.append($button);
+                        $dropdown.append($ul);
+
+                        $group.append($dropdown);
+
+                    } else {
+
+                        $group.append($button);
 
                     }
 
-                } else {
-
-                    $li = $("<li>");
-                    $li.append(dropdown.html.replace("{baseUrl}", this.$options.baseUrl));
-                    $ul.append($li);
+                    // register button handler and callback
+                    handler.push(buttonHandler);
+                    callback.push(button.callback);
 
                 }
-           
-                $dropdown.append($button);
-                $dropdown.append($ul);
 
-                $group.append($dropdown);
-
-            } else {
-                
-                $group.append($button);
-
+                // add the button group into container DOM
+                container.append($group);
             }
-              
-            // register button handler and callback
-            handler.push(buttonHandler);
-            callback.push(button.callback);
-
-          }
-
-          // add the button group into container DOM
-          container.append($group);
         }
-      }
 
-      return container;
+
+        container.find("button").tooltip();
+
+        return container;
 
     },
     __setListener: function() {
@@ -1547,7 +1555,173 @@
                       }
                   }
               ]
-          }, {
+            }, {
+                name: 'groupInsert',
+                css: 'btn-group mr-1',
+                data: [
+                    {
+                        name: 'cmdLink',
+                        title: 'Link To URL',
+                        hotkey: 'Ctrl+L',
+                        icon: {
+                            glyph: 'glyphicon glyphicon-link',
+                            fa: 'fal fa-link',
+                            'fa-3': 'icon-link',
+                            octicons: 'octicon octicon-link'
+                        },
+                        callback: function (e) {
+
+                            // Give [] surround the selection and prepend the link
+                            var chunk,
+                                cursor,
+                                selected = e.getSelection(),
+                                content = e.getContent(),
+                                link = null;
+
+                            if (selected.length === 0) {
+                                // Give extra word
+                                chunk = e.__localize('enter link description here');
+                            } else {
+                                chunk = selected.text;
+                            }
+
+                            link = prompt(e.__localize('Insert Hyperlink'), 'http://');
+
+                            //var urlRegex = new RegExp('^((http|https)://|(mailto:)|(//))[a-z0-9]', 'i');
+                            if (link !== null && link !== '' && link !== 'http://' && link !== 'https://') {
+                                var sanitizedLink = $('<div>' + link + '</div>').text();
+
+                                // transform selection and set the cursor into chunked text
+                                e.replaceSelection('[' + chunk + '](' + sanitizedLink + ')');
+                                cursor = selected.start + 1;
+
+                                // Set the cursor
+                                e.setSelection(cursor, cursor + chunk.length);
+                            }
+                        }
+                    }, {
+                        name: 'cmdImage',
+                        title: 'Link To Image',
+                        hotkey: 'Ctrl+G',
+                        icon: {
+                            glyph: 'glyphicon glyphicon-picture',
+                            fa: 'fal fa-image',
+                            'fa-3': 'icon-picture',
+                            octicons: 'octicon octicon-file-media'
+                        },
+                        callback: function (e) {
+
+                            // Give ![] surround the selection and prepend the image link
+                            var chunk,
+                                cursor,
+                                selected = e.getSelection(),
+                                content = e.getContent();
+
+                            if (selected.length === 0) {
+                                // Give extra word
+                                chunk = e.__localize('enter image description here');
+                            } else {
+                                chunk = selected.text;
+                            }
+
+                            var link = prompt(e.__localize('Insert Image Hyperlink'), 'http://');
+
+                            var urlRegex = new RegExp('^((http|https)://|(//))[a-z0-9]', 'i');
+                            if (link !== null && link !== '' && link !== 'http://' && urlRegex.test(link)) {
+                                var sanitizedLink = $('<div>' + link + '</div>').text();
+
+                                // transform selection and set the cursor into chunked text
+                                e.replaceSelection('![' + chunk + '](' + sanitizedLink + ' "' + e.__localize('enter image title here') + '")');
+                                cursor = selected.start + 2;
+
+                                // Set the next tab
+                                e.setNextTab(e.__localize('enter image title here'));
+
+                                // Set the cursor
+                                e.setSelection(cursor, cursor + chunk.length);
+
+                            }
+                        }
+                    },
+                    {
+                        name: 'cmdVideo',
+                        title: 'Embed Video',
+                        hotkey: 'Ctrl+Y',
+                        dropdown: {
+                            title: "Embed Video",
+                            width: "500px",
+                            css: "dropdown",
+                            items: null,
+                            html:
+                                '<table class="i-table"><tr><td><div class="i-row"><input type="text" style="width: 100%;" class="i-input i-text-box"/></div><div class="i-row i-margin-top"><a href="#" class="btn btn-full btn-2x btn-primary"><span></span></a></div></td></tr></table>'
+                        },
+                        icon: {
+                            glyph: 'glyphicon glyphicon-search',
+                            fa: 'fal fa-play',
+                            'fa-3': 'icon-search',
+                            octicons: 'octicon octicon-search'
+                        },
+                        callback: function (editor, $target) {
+
+                            var placeholderText = editor.__localize("Enter a YouTube or Vimeo URL..."),
+                                buttonText = editor.__localize("Add Video");
+
+                            $target.idropdown({
+                                onShow: function ($sender, $dropdown) {
+
+                                    var $input = $dropdown.find(".i-input"),
+                                        $btn = $dropdown.find(".btn");
+
+                                    // init controls
+                                    $input.attr("placeholder", placeholderText);
+                                    $btn.find("span").text(buttonText);
+
+                                    // click handler
+                                    $btn.unbind("click")
+                                        .bind("click",
+                                            function (e) {
+
+                                                e.preventDefault();
+
+                                                var chunk,
+                                                    selected = editor.getSelection();
+
+                                                // get user supplied Url
+                                                if ($input.val() !== "") {
+                                                    placeholderText = $input.val();
+                                                }
+
+                                                // set chunk to insert
+                                                if (selected.length === 0) {
+                                                    chunk = placeholderText;
+                                                } else {
+                                                    chunk = selected.text;
+                                                }
+
+                                                // replace selection
+                                                editor.replaceSelection('[video]' + chunk + '[/video]');
+
+                                                editor.$textarea.focus();
+
+                                                // set the cursor
+                                                var cursor = selected.start + chunk.length + 15;
+                                                editor.setSelection(cursor, cursor);
+
+                                                // reset
+                                                $input.val("");
+                                                $sender.idropdown("hide");
+
+                                            });
+
+                                }
+
+                            },
+                                "show");
+
+                        }
+                    }
+                ]
+            }, {
               name: 'groupLists',
               css: 'btn-group mr-1',
               data: [
@@ -1792,172 +1966,6 @@
                           e.setSelection(cursor, cursor + chunk.length);
                       }
                   }
-              ]
-          }, {
-              name: 'groupInsert',
-              css: 'btn-group mr-1',
-              data: [
-                  {
-                      name: 'cmdLink',
-                      title: 'Link To URL',
-                      hotkey: 'Ctrl+L',
-                      icon: {
-                          glyph: 'glyphicon glyphicon-link',
-                          fa: 'fal fa-link',
-                          'fa-3': 'icon-link',
-                          octicons: 'octicon octicon-link'
-                      },
-                      callback: function (e) {
-
-                          // Give [] surround the selection and prepend the link
-                          var chunk,
-                              cursor,
-                              selected = e.getSelection(),
-                              content = e.getContent(),
-                              link = null;
-
-                          if (selected.length === 0) {
-                              // Give extra word
-                              chunk = e.__localize('enter link description here');
-                          } else {
-                              chunk = selected.text;
-                          }
-
-                          link = prompt(e.__localize('Insert Hyperlink'), 'http://');
-
-                          //var urlRegex = new RegExp('^((http|https)://|(mailto:)|(//))[a-z0-9]', 'i');
-                          if (link !== null && link !== '' && link !== 'http://' && link !== 'https://') {
-                              var sanitizedLink = $('<div>' + link + '</div>').text();
-
-                              // transform selection and set the cursor into chunked text
-                              e.replaceSelection('[' + chunk + '](' + sanitizedLink + ')');
-                              cursor = selected.start + 1;
-
-                              // Set the cursor
-                              e.setSelection(cursor, cursor + chunk.length);
-                          }
-                      }
-                  }, {
-                      name: 'cmdImage',
-                      title: 'Link To Image',
-                      hotkey: 'Ctrl+G',
-                      icon: {
-                          glyph: 'glyphicon glyphicon-picture',
-                          fa: 'fal fa-image',
-                          'fa-3': 'icon-picture',
-                          octicons: 'octicon octicon-file-media'
-                      },
-                      callback: function (e) {
-
-                          // Give ![] surround the selection and prepend the image link
-                          var chunk,
-                              cursor,
-                              selected = e.getSelection(),
-                              content = e.getContent();
-
-                          if (selected.length === 0) {
-                              // Give extra word
-                              chunk = e.__localize('enter image description here');
-                          } else {
-                              chunk = selected.text;
-                          }
-
-                          var link = prompt(e.__localize('Insert Image Hyperlink'), 'http://');
-
-                          var urlRegex = new RegExp('^((http|https)://|(//))[a-z0-9]', 'i');
-                          if (link !== null && link !== '' && link !== 'http://' && urlRegex.test(link)) {
-                              var sanitizedLink = $('<div>' + link + '</div>').text();
-
-                              // transform selection and set the cursor into chunked text
-                              e.replaceSelection('![' + chunk + '](' + sanitizedLink + ' "' + e.__localize('enter image title here') + '")');
-                              cursor = selected.start + 2;
-
-                              // Set the next tab
-                              e.setNextTab(e.__localize('enter image title here'));
-
-                              // Set the cursor
-                              e.setSelection(cursor, cursor + chunk.length);
-
-                          }
-                      }
-                  },
-                  {
-                       name: 'cmdVideo',
-                       title: 'Embed Video',
-                       hotkey: 'Ctrl+Y',
-                       dropdown: {
-                           title: "Embed Video",
-                           width: "500px",
-                           css: "dropdown",
-                           items: null,
-                           html:
-                               '<table class="i-table"><tr><td><div class="i-row"><input type="text" style="width: 100%;" class="i-input i-text-box"/></div><div class="i-row i-margin-top"><a href="#" class="btn btn-full btn-2x btn-primary"><span></span></a></div></td></tr></table>'
-                       },
-                       icon: {
-                           glyph: 'glyphicon glyphicon-search',
-                           fa: 'fab fa-youtube',
-                           'fa-3': 'icon-search',
-                           octicons: 'octicon octicon-search'
-                       },
-                       callback: function (editor, $target) {
-
-                           var placeholderText = editor.__localize("Enter a YouTube or Vimeo URL..."),
-                               buttonText = editor.__localize("Add Video");
-
-                           $target.idropdown({
-                               onShow: function ($sender, $dropdown) {
-
-                                   var $input = $dropdown.find(".i-input"),
-                                        $btn = $dropdown.find(".btn");
-
-                                   // init controls
-                                   $input.attr("placeholder", placeholderText);
-                                   $btn.find("span").text(buttonText);
-
-                                   // click handler
-                                   $btn.unbind("click")
-                                       .bind("click",
-                                           function(e) {
-
-                                                e.preventDefault();
-
-                                                var chunk,
-                                                    selected = editor.getSelection();
-
-                                                // get user supplied Url
-                                                if ($input.val() !== "") {
-                                                    placeholderText = $input.val();
-                                                }
-
-                                                // set chunk to insert
-                                                if (selected.length === 0) {
-                                                    chunk = placeholderText;
-                                                } else {
-                                                    chunk = selected.text;
-                                                }
-                                               
-                                                // replace selection
-                                                editor.replaceSelection('[video]' + chunk + '[/video]');
-                                               
-                                                editor.$textarea.focus();
-
-                                                // set the cursor
-                                                var cursor = selected.start + chunk.length + 15;
-                                                editor.setSelection(cursor, cursor);
-
-                                                // reset
-                                                $input.val("");
-                                                $sender.idropdown("hide");
-                                               
-                                           });
-
-                               }
-
-                           },
-                               "show");
-
-                       }
-                   }
               ]
           }, {
               name: 'groupEmbed',

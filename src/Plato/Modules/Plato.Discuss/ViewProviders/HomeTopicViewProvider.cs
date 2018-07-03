@@ -90,7 +90,6 @@ namespace Plato.Discuss.ViewProviders
 
                 var reply = new EntityReply();
                 reply.EntityId = viewModel.Entity.Id;
-                reply.Title = model.NewEntityReply.Title?.Trim();
                 reply.Message = message.Trim();
                 
                 var newReply = await _entityReplyStore.CreateAsync(reply);

@@ -12,19 +12,22 @@
     </ul>
 
     <div class="tab-content d-block">
-        <div class="tab-pane fade show active" id="write" role="tabpanel">
+      
+        <div class="tab-pane fade show active mt-2" id="write" role="tabpanel">
             <textarea value="@Model.Value"
-                  name="@Model.HtmlName"
-                  data-provide="markdown"
-                  class="form-control md-textarea"
-                  placeholder="@Model.PlaceHolderText"
-                  rows="6">@if (!String.IsNullOrEmpty(@Model.Value))
-                           {
-                               @Model.Value
-                           }</textarea>
+              name="@Model.HtmlName"
+              data-provide="markdown"
+              asp-autofocus="@Model.AutoFocusw"
+              class="form-control md-textarea"
+              placeholder="@Model.PlaceHolderText"
+              rows="6">@if (!String.IsNullOrEmpty(@Model.Value))
+                       {
+                           @Model.Value
+                       }</textarea>
         </div>
-        <div class="tab-pane p-2 pt-4 fade" id="preview" role="tabpanel">
+        <div class="tab-pane fade mt-2" id="preview" role="tabpanel">
         </div>
+       
     </div>
 
 </div>

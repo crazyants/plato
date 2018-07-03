@@ -3,8 +3,10 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Stores
@@ -21,7 +23,7 @@ namespace Plato.Entities.Stores
 
         private string _key = "EntityReply";
 
-
+        private readonly IBroker _broker;
         private readonly IEntityReplyRepository<EntityReply> _entityReplyRepository;
         private readonly ILogger<EntityReplyStore> _logger;
         private readonly ICacheDependency _cacheDependency;
@@ -33,36 +35,47 @@ namespace Plato.Entities.Stores
             ICacheDependency cacheDependency, 
             IMemoryCache memoryCache, 
             IDbQuery dbQuery,
-            IEntityReplyRepository<EntityReply> entityReplyRepository)
+            IEntityReplyRepository<EntityReply> entityReplyRepository, IBroker broker)
         {
             _logger = logger;
             _cacheDependency = cacheDependency;
             _memoryCache = memoryCache;
             _dbQuery = dbQuery;
             _entityReplyRepository = entityReplyRepository;
+            _broker = broker;
         }
 
 
         public async Task<EntityReply> CreateAsync(EntityReply reply)
         {
-            var newEntity = await _entityReplyRepository.InsertUpdateAsync(reply);
-            if (newEntity != null)
+
+            // Parse Html and message abstract
+            reply.Html = await ParseMarkdown(reply.Message);
+            reply.Abstract = await ParseAbstract(reply.Message);
+            
+            var newReply = await _entityReplyRepository.InsertUpdateAsync(reply);
+            if (newReply != null)
             {
                 _cacheDependency.CancelToken(GetEntityReplyCacheKey());
             }
 
-            return newEntity;
+            return newReply;
         }
 
         public async Task<EntityReply> UpdateAsync(EntityReply reply)
         {
-            var newEntity = await _entityReplyRepository.InsertUpdateAsync(reply);
-            if (newEntity != null)
+
+            // Parse Html and message abstract
+            reply.Html = await ParseMarkdown(reply.Message);
+            reply.Abstract = await ParseAbstract(reply.Message);
+            
+            var updatedReply = await _entityReplyRepository.InsertUpdateAsync(reply);
+            if (updatedReply != null)
             {
                 _cacheDependency.CancelToken(GetEntityReplyCacheKey());
             }
 
-            return newEntity;
+            return updatedReply;
         }
 
         public async Task<bool> DeleteAsync(EntityReply reply)
@@ -115,7 +128,38 @@ namespace Plato.Entities.Stores
 
         }
         
-        private string GetEntityReplyCacheKey()
+        private async Task<string> ParseMarkdown(string message)
+        {
+
+            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            {
+                Key = "ParseMarkdown"
+            }, message))
+            {
+                return await handler.Invoke(new Message<string>(message, this));
+            }
+
+            return message;
+
+        }
+
+        async Task<string> ParseAbstract(string message)
+        {
+
+            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            {
+                Key = "ParseAbstract"
+            }, message))
+            {
+                return await handler.Invoke(new Message<string>(message, this));
+            }
+
+            return message.StripHtml().TrimToAround(500);
+
+        }
+
+
+        string GetEntityReplyCacheKey()
         {
             return $"{_key}";
         }

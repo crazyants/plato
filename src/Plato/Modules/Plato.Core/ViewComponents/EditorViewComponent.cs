@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Core.ViewComponents
@@ -16,16 +17,18 @@ namespace Plato.Core.ViewComponents
         }
 
         public Task<IViewComponentResult> InvokeAsync(
-            string value, 
-            string placeHolderText,
-            string htmlName)
+            string value,
+            LocalizedHtmlString placeHolderText,
+            string htmlName,
+            bool autoFocus)
         {
 
             var model = new EditorViewModel
             {
                 HtmlName = htmlName,
-                PlaceHolderText = placeHolderText,
-                Value = value
+                PlaceHolderText = placeHolderText?.Value ?? string.Empty,
+                Value = value,
+                AutoFocus = autoFocus
             };
 
             return Task.FromResult((IViewComponentResult)View(model));
@@ -50,6 +53,8 @@ namespace Plato.Core.ViewComponents
         public string PlaceHolderText { get; set; }
 
         public string HtmlName { get; set; }
+
+        public bool AutoFocus { get; set; }
 
     }
 

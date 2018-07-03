@@ -1,3 +1,8 @@
 ﻿@model Plato.Core.ViewComponents.EditorViewModel
 
-<textarea name="@Model.HtmlName" class="form-control md-textarea" placeholder="@Model.PlaceHolderText" rows="12">@Model.Value</textarea>
+<textarea 
+    name="@Model.HtmlName" 
+    class="form-control md-textarea" 
+    placeholder="@Model.PlaceHolderText" 
+    autofocus="@Model.AutoFocus.ToString().ToLower()"
+    rows="12">@Model.Value</textarea>

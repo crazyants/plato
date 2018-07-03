@@ -7,14 +7,14 @@
 
 <div class="modal fade" id="modal-new" role="dialog" aria-hidden="true">
 
-    <div class="modal-dialog modal-right modal-2x bg-light p-2 border-left" role="document">
+    <div class="modal-dialog modal-right modal-3x bg-light p-2 border-left" role="document">
 
         <div class="modal-content">
             <form asp-controller="Home" asp-action="Index" method="post" enctype="multipart/form-data">
 
                 <card>
                     <card-title>
-                        @T["Post Reply"]
+                        @T["Start a new topic..."]
                     </card-title>
                     <card-body>
 
@@ -30,7 +30,7 @@
                                 @await DisplayAsync(new View("Editor", new
                                 {
                                     value = string.Empty,
-                                    placeHolderText = "place holder text from core",
+                                    placeHolderText = T["Add your comments here"],
                                     htmlName = @Model.EditorHtmlName
                                 }))
 

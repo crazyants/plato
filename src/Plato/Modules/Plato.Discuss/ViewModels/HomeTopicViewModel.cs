@@ -43,12 +43,9 @@ namespace Plato.Discuss.ViewModels
 
     public class NewEntityReplyViewModel
     {
-        
+   
         [Required]
-        public string Title { get; set; }
-
         public string Message { get; set; }
-
 
     }
 

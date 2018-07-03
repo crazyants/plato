@@ -214,18 +214,6 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "Title",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "TitleNormalized",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
                         Name = "[Message]",
                         Length = "max",
                         DbType = DbType.String

@@ -13,10 +13,6 @@ namespace Plato.Entities.Models
         public int Id { get; set; }
 
   
-        public string Title { get; set; }
-
-        public string TitleNormalized { get; set; }
-
         public string Message { get; set; }
 
         public string Html { get; set; }
@@ -46,13 +42,7 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("Id"))
                 Id = Convert.ToInt32(dr["Id"]);
-            
-            if (dr.ColumnIsNotNull("Title"))
-                Title = Convert.ToString(dr["Title"]);
-
-            if (dr.ColumnIsNotNull("TitleNormalized"))
-                TitleNormalized = Convert.ToString(dr["TitleNormalized"]);
-
+       
             if (dr.ColumnIsNotNull("Message"))
                 Message = Convert.ToString(dr["Message"]);
 

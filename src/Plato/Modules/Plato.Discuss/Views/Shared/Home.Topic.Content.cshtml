@@ -8,11 +8,11 @@
         </div>
         <div class="float-right">
 
-            <a href="#" data-toggle="tooltip" title="@T["Edit Post"]" class="btn" role="button">
+            <a href="#" data-toggle="tooltip" title="@T["Edit Post"]" class="btn text-muted" role="button">
                 <i class="fal fa-pencil"></i>
             </a>
 
-            <a href="#" data-toggle="tooltip" title="@T["Your Reaction"]" class="btn" role="button">
+            <a href="#" data-toggle="tooltip" title="@T["Your Reaction"]" class="btn text-muted" role="button">
                 <i class="fal fa-smile"></i>
             </a>
 
@@ -25,65 +25,60 @@
 
         @Html.Raw(@Model.Entity.Html)
 
-        <div class="hidden" style="display: none;">
+        <div class="hidden">
             @await DisplayAsync(new View("Editor", new
             {
                 value = @Model.Entity.Message,
-                placeHolderText = "place holder text from core",
                 htmlName = @Model.EditorHtmlName
             }))
         </div>
+
     </card-body>
 </card>
 
-<card>
-    <card-title>
-        @T["Topic"]
-    </card-title>
-    <card-body>
-    @if (Model.Results != null)
-    {
-        <ul class="list-group list-group-flush list-group-hover mt-4">
-            @foreach (var entity in Model.Results.Data)
-            {
-                <li class="list-group-item">
+@if (Model.Results != null)
+{
+    @foreach (var reply in Model.Results.Data)
+     {
+         <div class="mt-4">
+             <card>
+                 <card-title>
+                     
+                     <div class="float-left">
+                        @reply.CreatedDate
+                     </div>
+                     <div class="float-right">
 
-                    @{
-                        //var detail = entity.GetMetaData<TopicDetails>();
-                    }
+                         <a href="#" data-toggle="tooltip" title="@T["Edit Post"]" class="btn text-muted" role="button">
+                             <i class="fal fa-pencil"></i>
+                         </a>
 
-                    <h6>
-                        <a asp-controller="Home" asp-action="Topic" asp-route-id="@entity.Id">
-                            @entity.Title
-                        </a>
-                    </h6>
+                         <a href="#" data-toggle="tooltip" title="@T["Your Reaction"]" class="btn text-muted" role="button">
+                             <i class="fal fa-smile"></i>
+                         </a>
 
-                    <p class="text-muted">
-                        @entity.Abstract
-                    </p>
+                     </div>
 
-                    @*@if (detail != null)
-                            {
-                                @foreach (var participant in detail.Users)
-                                {
-                                    @participant.UserName
-                                    <br/><br/>
-                                }
-                            }*@
+                 </card-title>
+                 <card-body>
 
+                     @{
+                         //var detail = entity.GetMetaData<TopicDetails>();
+                     }
 
+                     <p class="text-muted">
+                         @Html.Raw(reply.Html)
+                     </p>
+                 </card-body>
+             </card>
+         </div>
+     }
 
-                </li>
-
-            }
-        </ul>
-    }
-    else
-    {
-        <h6>@T["No discussions found"]</h6>
-    }
-    </card-body>
-</card>
+}
+else
+{
+    <h6>@T["No replies"]</h6>
+}
 
 <div class="mt-4 mb-4">
     <pager model="@Model.PagerOpts"></pager>

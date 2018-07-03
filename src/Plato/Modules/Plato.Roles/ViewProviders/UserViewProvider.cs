@@ -69,7 +69,7 @@ namespace Plato.Roles.ViewProviders
             
             // Build selected roles
             var rolesToAdd = new List<string>();
-            foreach (string key in _request.Form.Keys)
+            foreach (var key in _request.Form.Keys)
             {
                 if (key.StartsWith(HtmlName))
                 {
@@ -127,8 +127,7 @@ namespace Plato.Roles.ViewProviders
                 {
                     updater.ModelState.AddModelError(string.Empty, error.Description);
                 }
-
-
+                
             }
 
             return await BuildEditAsync(user, updater);

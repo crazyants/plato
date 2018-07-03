@@ -46,8 +46,6 @@ namespace Plato.Entities.Repositories
             var id = await InsertUpdateInternal(
                 reply.Id,
                 reply.EntityId,
-                reply.Title,
-                reply.TitleNormalized,
                 reply.Message,
                 reply.Html,
                 reply.Abstract,
@@ -197,8 +195,6 @@ namespace Plato.Entities.Repositories
         async Task<int> InsertUpdateInternal(
           int id,
           int entityId,
-          string title,
-          string titleNormalized,
           string message,
           string html,
           string messageAbstract,
@@ -223,8 +219,8 @@ namespace Plato.Entities.Repositories
                     if (_logger.IsEnabled(LogLevel.Error))
                         _logger.LogInformation(
                             id == 0
-                                ? $"Insert for entity with title '{title}' failed with the following error '{args.Exception.Message}'"
-                                : $"Update for entity with Id {id} failed with the following error {args.Exception.Message}");
+                                ? $"Insert for entity reply with entityId '{entityId}' failed with the following error '{args.Exception.Message}'"
+                                : $"Update for entity reply with Id {id} failed with the following error {args.Exception.Message}");
                     throw args.Exception;
                 };
 
@@ -233,8 +229,6 @@ namespace Plato.Entities.Repositories
                     "InsertUpdateEntityReply",
                     id,
                     entityId,
-                    title.ToEmptyIfNull().TrimToSize(255),
-                    titleNormalized.ToEmptyIfNull().TrimToSize(255),
                     message.ToEmptyIfNull(),
                     html.ToEmptyIfNull(),
                     messageAbstract.ToEmptyIfNull().TrimToSize(500),

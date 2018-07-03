@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Markdown.Services;
 
 namespace Plato.Markdown.ViewComponents
@@ -16,24 +17,25 @@ namespace Plato.Markdown.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            string value, 
-            string placeHolderText,
-            string htmlName)
+            string value,
+            LocalizedHtmlString placeHolderText,
+            string htmlName,
+            bool autoFocus)
         {
 
             var model = new MarkdownViewModel
             {
                 HtmlName = htmlName,
-                PlaceHolderText = placeHolderText,
+                PlaceHolderText = placeHolderText?.Value ?? string.Empty,
                 Value = value,
+                AutoFocusw = autoFocus
             };
 
             return View(model);
         }
 
     }
-
-
+    
     public class MarkdownViewModel
     {
 
@@ -42,10 +44,9 @@ namespace Plato.Markdown.ViewComponents
         public string PlaceHolderText { get; set; }
 
         public string HtmlName { get; set; }
-
-
-        public string Preview { get; set; }
-
+        
+        public bool AutoFocusw { get; set; }
+        
     }
 
 }
