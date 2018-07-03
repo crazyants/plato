@@ -5,36 +5,15 @@ using System.Linq;
 namespace Plato.Entities.Models
 {
 
-    public class EntityError
-    {
-
-        public EntityError(string message)
-        : this("", message)
-        {
-         
-        }
-
-        public EntityError(string code, string message)
-        {
-            this.Code = code;
-            this.Message = message;
-        }
-
-        public string Code { get; set; }
-
-        public string Message { get; set; }
-
-    }
-
     public interface IEntityResult
     {
 
         bool Succeeded { get; }
 
+        object Response { get; }
+
         IEnumerable<EntityError> Errors { get; }
-
-        EntityResult Success { get; }
-
+        
     }
 
     public class EntityResult : IEntityResult
@@ -43,21 +22,20 @@ namespace Plato.Entities.Models
         private readonly List<EntityError> _errors = new List<EntityError>();
    
         public bool Succeeded { get; protected set; }
+
+        public object Response { get; protected set; }
         
         public IEnumerable<EntityError> Errors => (IEnumerable<EntityError>)this._errors;
 
-        public EntityResult Success
+        public EntityResult Success(object response)
         {
-            get
+            return new EntityResult()
             {
-                var entityResult = new EntityResult()
-                {
-                    Succeeded = true
-                };
-                return entityResult;
-            }
+                Response = response,
+                Succeeded = true
+            };
         }
-        
+
         public EntityResult Failed(params EntityError[] errors)
         {
             var entityResult = new EntityResult()
@@ -81,5 +59,25 @@ namespace Plato.Entities.Models
         }
 
     }
+    
+    public class EntityError
+    {
+
+        public EntityError(string description) : this("", description)
+        {
+        }
+
+        public EntityError(string code, string description)
+        {
+            this.Code = code;
+            this.Description = description;
+        }
+
+        public string Code { get; set; }
+
+        public string Description { get; set; }
+
+    }
+
 
 }

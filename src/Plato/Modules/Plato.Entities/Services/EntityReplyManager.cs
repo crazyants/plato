@@ -68,7 +68,7 @@ namespace Plato.Entities.Services
                 {
                     Model = reply
                 });
-                return result.Success;
+                return result.Success(reply);
             }
 
             return result.Failed(new EntityError("An unknown error occurred whilst attempting to create the reply"));
@@ -108,7 +108,7 @@ namespace Plato.Entities.Services
                 {
                     Model = reply
                 });
-                return result.Success;
+                return result.Success(reply);
             }
 
             return result.Failed(new EntityError("An unknown error occurred whilst attempting to update the reply."));
@@ -140,7 +140,7 @@ namespace Plato.Entities.Services
 
             if (success)
             {
-                return result.Success;
+                return result.Success(reply);
             }
 
             return result.Failed(new EntityError("An unknown error occurred whilst attempting to delete the reply."));

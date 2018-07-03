@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -12,18 +13,17 @@ namespace Plato.Discuss.ViewProviders
     {
 
         private const string EditorHtmlName = "message";
+        
+        private readonly IEntityManager<Entity> _entityManager;
 
-
-        private readonly IEntityStore<Entity> _entityStore;
- 
         private readonly HttpRequest _request;
 
 
         public HomeIndexViewProvider(
-            IEntityStore<Entity> entityStore,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IEntityManager<Entity> entityManager)
         {
-            _entityStore = entityStore;
+            _entityManager = entityManager;
             _request = httpContextAccessor.HttpContext.Request;
         }
         
@@ -66,9 +66,7 @@ namespace Plato.Discuss.ViewProviders
         public override async Task<IViewProviderResult> BuildUpdateAsync(HomeIndexViewModel viewModel, IUpdateModel updater)
         {
 
-            _entityStore.Creating += Creating;
-            _entityStore.Created += Created;
-    
+         
             var model = new HomeIndexViewModel();;
 
             if (!await updater.TryUpdateModelAsync(model))
@@ -87,20 +85,19 @@ namespace Plato.Discuss.ViewProviders
                         message = _request.Form[key];
                     }
                 }
-                
-                var entity = new Entity();
-                entity.Title = viewModel.NewEntityViewModel.Title?.Trim();
-                entity.Message = message.Trim();
-                
-                var newTopic = await _entityStore.CreateAsync(entity);
 
+                var entity = new Entity
+                {
+                    Title = viewModel.NewEntityViewModel.Title?.Trim(),
+                    Message = message.Trim()
+                };
 
-                //var result = await _userManager.UpdateAsync(user);
+                var result = await _entityManager.CreateAsync(entity);
+                foreach (var error in result.Errors)
+                {
+                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                }
 
-                //foreach (var error in result.Errors)
-                //{
-                //    updater.ModelState.AddModelError(string.Empty, error.Description);
-                //}
 
             }
 

@@ -7,10 +7,8 @@ using Newtonsoft.Json;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Modules.Abstractions;
 
 namespace Plato.Entities.Stores
@@ -18,20 +16,7 @@ namespace Plato.Entities.Stores
 
     public class EntityStore : IEntityStore<Entity>
     {
-        
-        public event EntityStoreEventHandler Creating;
-        public event EntityStoreEventHandler Created;
-        public event EntityStoreEventHandler Updating;
-        public event EntityStoreEventHandler Updated;
-        public event EntityStoreEventHandler Deleting;
-        public event EntityStoreEventHandler Deleted;
      
-        public delegate void EntityStoreEventHandler(object sender, EntityStoreEventArgs e);
-        
-        public event ConfigureEntityEventHandler Configure;
-
-        public delegate Task<Entity> ConfigureEntityEventHandler(object sender, EntityStoreEventArgs e);
-
         private string _key = "Entity";
 
         #region "Constructor"
@@ -77,35 +62,12 @@ namespace Plato.Entities.Stores
             }
             entity.Data = data;
             
-            // Allows us to optionally configure the entity before storing
-            var configuredEntity = entity;
-            if (Configure != null)
-            {
-                // Raise configure event
-                configuredEntity = await Configure.Invoke(this, new EntityStoreEventArgs()
-                {
-                    Model = entity
-                });
-            }
-            
-            // Raise creating event
-            Creating?.Invoke(this, new EntityStoreEventArgs()
-            {
-                Model = configuredEntity
-            });
-
             // Add entity
-            var newEntity = await _entityRepository.InsertUpdateAsync(configuredEntity);
+            var newEntity = await _entityRepository.InsertUpdateAsync(entity);
             if (newEntity != null)
             {
                 _cacheDependency.CancelToken(GetEntityCacheKey());
                 newEntity = await GetByIdAsync(newEntity.Id);
-
-                // Raise created event
-                Created?.Invoke(this, new EntityStoreEventArgs()
-                {
-                    Model = newEntity
-                });
             }
             
             return newEntity;
@@ -114,59 +76,23 @@ namespace Plato.Entities.Stores
 
         public async Task<Entity> UpdateAsync(Entity entity)
         {
-            
-            // Allows us to optionally configure the entity before storing
-            var configuredEntity = entity;
-            if (Configure != null)
-            {
-                // Raise configure event
-                configuredEntity = await Configure.Invoke(this, new EntityStoreEventArgs()
-                {
-                    Model = entity
-                });
-            }
-
-            Updating?.Invoke(this, new EntityStoreEventArgs()
-            {
-                Model = configuredEntity
-            });
-
-
-            var output = await _entityRepository.InsertUpdateAsync(configuredEntity);
+            var output = await _entityRepository.InsertUpdateAsync(entity);
             if (output != null)
             {
                 _cacheDependency.CancelToken(GetEntityCacheKey());
             }
-
-            Updated?.Invoke(this, new EntityStoreEventArgs()
-            {
-                Model = output
-            });
-
             return output;
-
         }
 
         public async Task<bool> DeleteAsync(Entity entity)
         {
-
-            Deleting?.Invoke(this, new EntityStoreEventArgs()
-            {
-                Model = entity
-            });
-
+         
             var success = await _entityRepository.DeleteAsync(entity.Id);
             if (success)
             {
                 _cacheDependency.CancelToken(GetEntityCacheKey());
             }
-
-            Deleted?.Invoke(this, new EntityStoreEventArgs()
-            {
-                Success = success,
-                Model = entity
-            });
-
+            
             return success;
         }
 

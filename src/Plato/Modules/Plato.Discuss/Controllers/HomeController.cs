@@ -12,6 +12,7 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -31,6 +32,9 @@ namespace Plato.Discuss.Controllers
         private readonly ISiteSettingsStore _settingsStore;
         
         private readonly IEntityStore<Entity> _entityStore;
+
+
+        private readonly IEntityManager<Entity> _entityManager;
         private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
         private readonly IAlerter _alerter;
         
@@ -45,15 +49,18 @@ namespace Plato.Discuss.Controllers
             IEntityReplyStore<EntityReply> entityReplyStore,
             IViewProviderManager<HomeIndexViewModel> homeIndexViewProvider,
             IViewProviderManager<HomeTopicViewModel> homeTopicViewProvider,
+            IEntityManager<Entity> entityManager,
             IAlerter alerter)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
+            _entityManager = entityManager;
             _entityStore = entityStore;
             _entityReplyStore = entityReplyStore;
             _homeIndexViewProvider = homeIndexViewProvider;
             _homeTopicViewProvider = homeTopicViewProvider;
             _alerter = alerter;
+            
             T = localizer;
 
         }
@@ -154,40 +161,43 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
 
             var sb = new StringBuilder();
 
-            var newTopic = await _entityStore.CreateAsync(topic);
-
-            if (newTopic != null)
+            var data = await _entityManager.CreateAsync(topic);
+            if (data.Succeeded)
             {
-             
-                sb
-                    .Append("<h1>New Topic</h1>")
-                    .Append("<strong>Title</strong>")
-                    .Append("<br>")
-                    .Append(newTopic.Title)
-                    .Append("<br>")
-                    .Append("<strong>ID</strong>")
-                    .Append(newTopic.Id);
-
-                var details = newTopic.GetMetaData<EntityMetaData>();
-                if (details?.Users != null)
+                if (data.Response is Entity newTopic) 
                 {
 
-                    sb.Append("<h5>Some Value</h5>")
-                        .Append(details.SomeNewValue)
-                        .Append("<br>");
+                    sb
+                        .Append("<h1>New Topic</h1>")
+                        .Append("<strong>Title</strong>")
+                        .Append("<br>")
+                        .Append(newTopic.Title)
+                        .Append("<br>")
+                        .Append("<strong>ID</strong>")
+                        .Append(newTopic.Id);
 
-                    sb.Append("<h5>Participants</h5>");
-
-                    foreach (var user in details.Users)
+                    var details = newTopic.GetMetaData<EntityMetaData>();
+                    if (details?.Users != null)
                     {
-                        sb.Append(user.UserName)
+
+                        sb.Append("<h5>Some Value</h5>")
+                            .Append(details.SomeNewValue)
                             .Append("<br>");
+
+                        sb.Append("<h5>Participants</h5>");
+
+                        foreach (var user in details.Users)
+                        {
+                            sb.Append(user.UserName)
+                                .Append("<br>");
+                        }
+
+
                     }
-
-
                 }
             }
-          
+
+
             var existingTopic = await _entityStore.GetByIdAsync(142);
             if (existingTopic != null)
             {

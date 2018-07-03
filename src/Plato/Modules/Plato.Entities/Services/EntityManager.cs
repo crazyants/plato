@@ -76,7 +76,7 @@ namespace Plato.Entities.Services
                     Model = entity
                 });
                 // Return success
-                return result.Success;
+                return result.Success(entity);
             }
 
             return result.Failed(new EntityError("An unknown error occurred whilst attempting to create an eneity"));
@@ -121,7 +121,7 @@ namespace Plato.Entities.Services
                 {
                     Model = entity
                 });
-                return result.Success;
+                return result.Success(entity);
             }
 
             return result.Failed(new EntityError("An unknown error occurred whilst attempting to create an eneity."));
@@ -153,7 +153,7 @@ namespace Plato.Entities.Services
 
             if (success)
             {
-                return result.Success;
+                return result.Success(entity);
             }
 
             return result.Failed(new EntityError("An unknown error occurred whilst attempting to create an eneity."));
