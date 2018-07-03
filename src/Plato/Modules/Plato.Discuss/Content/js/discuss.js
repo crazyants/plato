@@ -20,7 +20,7 @@ $(function (win, doc, $) {
     }
     
     $(doc).ready(function () {
-        $.Plato.Discuss.init(context);
+        //$.Plato.Discuss.init(context);
     });
     
 

@@ -1,8 +1,23 @@
 ﻿@model HomeTopicViewModel
 
-<card>
+<card type="Danger">
     <card-title>
-        @T["Topic"]
+        
+        <div class="float-left">
+            <h6 class="card-title">@T["Topic"]</h6>
+        </div>
+        <div class="float-right">
+
+            <a href="#" data-toggle="tooltip" title="@T["Edit Post"]" class="btn" role="button">
+                <i class="fal fa-pencil"></i>
+            </a>
+
+            <a href="#" data-toggle="tooltip" title="@T["Your Reaction"]" class="btn" role="button">
+                <i class="fal fa-smile"></i>
+            </a>
+
+        </div>
+
     </card-title>
     <card-body>
 

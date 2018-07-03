@@ -42,7 +42,7 @@ $(function (win, doc, $) {
             }
             var difference = this.getDifferenceInMilliseconds();
             this.prevLogDate = new Date();
-            console.log(level + ": " + message + " - " + difference + " ms elapsed since previous log entry.");
+            console.log(level + ": " + message + " - " + difference + "ms elapsed since previous log entry.");
         },
         getDifferenceInMilliseconds: function() {
             if (this.prevLogDate === null) {
@@ -74,10 +74,9 @@ $(function (win, doc, $) {
 
     /* Plato UI */
     win.$.Plato.UI = {
-        context: null,
-        init: function (context) {
-            this.context = context;
-
+        context: win.$.Plato.Context,
+        init: function () {
+            
             // init
             this.initToolTips();
             this.initDropDowns();
@@ -95,8 +94,8 @@ $(function (win, doc, $) {
             this.logInfo("initToolTips()");
 
             // Enable bootstratp tooltips
-            if (this.context.options.BSToolTipEnabled) {
-                $(this.context.options.BSToolTipSelector).tooltip();
+            if (this.context.options().BSToolTipEnabled) {
+                $(this.context.options().BSToolTipSelector).tooltip();
                 this.logInfo("Bootstratp tooltipss initialized.");
             }
 
@@ -218,10 +217,10 @@ $(function (win, doc, $) {
     /* ---------------------------------------------*/
     
     $(doc).ready(function () {
-        
-        var context = $.Plato.Context;
+
+        var context = win.$.Plato.Context;
         context.logger.logInfo("$.Plato.Options = " + JSON.stringify(context.options(), null, "     "));
-        $.Plato.UI.init(context);
+        $.Plato.UI.init();
 
     });
 

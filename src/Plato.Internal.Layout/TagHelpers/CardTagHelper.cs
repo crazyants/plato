@@ -45,13 +45,13 @@ namespace Plato.Internal.Layout.TagHelpers
             // title
             if (cardContext.Title != null)
             {
-                var h3 = new TagBuilder("h6");
-                h3.AddCssClass("card-title");
-                h3.InnerHtml.AppendHtml(cardContext.Title);
+                //var h3 = new TagBuilder("h6");
+                //h3.AddCssClass("card-title");
+                //h3.InnerHtml.AppendHtml(cardContext.Title);
 
                 var panelTitle = new TagBuilder("div");
                 panelTitle.AddCssClass("card-header");
-                panelTitle.InnerHtml.AppendHtml(h3);
+                panelTitle.InnerHtml.AppendHtml(cardContext.Title);
 
                 output.Content.AppendHtml(panelTitle);
             }
