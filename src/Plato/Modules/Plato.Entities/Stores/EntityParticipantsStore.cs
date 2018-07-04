@@ -82,14 +82,8 @@ namespace Plato.Entities.Stores
         {
             return await _entityParticipantsRepository.SelectByIdAsync(id);
         }
-
-        public IQuery QueryAsync()
-        {
-           
-            throw new NotImplementedException();
-        }
-
-        public IQuery<EntityParticipant> QueryAsync2()
+        
+        public IQuery<EntityParticipant> QueryAsync()
         {
             var query = new EntityParticipantQuery(this);
             return _dbQuery.ConfigureQuery<EntityParticipant>(query);

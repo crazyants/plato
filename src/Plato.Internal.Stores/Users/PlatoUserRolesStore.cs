@@ -133,13 +133,8 @@ namespace Plato.Internal.Stores.Users
         {
             return await _userRolesRepository.SelectUserRolesByUserId(userId);
         }
-
-        public IQuery QueryAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQuery<UserRole> QueryAsync2()
+        
+        public IQuery<UserRole> QueryAsync()
         {
             //var query = new EntityReplyQuery(this);
             //return _dbQuery.ConfigureQuery<EntityReply>(query); ;

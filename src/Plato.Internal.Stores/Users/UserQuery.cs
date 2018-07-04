@@ -30,29 +30,7 @@ namespace Plato.Internal.Stores.Users
             Params = (UserQueryParams) Convert.ChangeType(defaultParams, typeof(UserQueryParams));
             return this;
         }
-
-        public override async Task<IPagedResults<T>> ToList<T>()
-        {
-
-            var builder = new UserQueryBuilder(this);
-            var startSql = builder.BuildSqlStartId();
-            var populateSql = builder.BuildSqlPopulate();
-            var countSql = builder.BuildSqlCount();
-
-            var users = await _store.SelectAsync<T>(
-                PageIndex,
-                PageSize,
-                startSql,
-                populateSql,
-                countSql,
-                Params.Id.Value,
-                Params.UserName.Value,
-                Params.Email.Value
-            );
-            
-            return users;
-        }
-
+        
         public override async Task<IPagedResults<User>> ToList()
         {
             var builder = new UserQueryBuilder(this);

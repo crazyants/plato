@@ -95,12 +95,7 @@ namespace Plato.Entities.Stores
 
         }
 
-        public IQuery QueryAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQuery<EntityReply> QueryAsync2()
+        public IQuery<EntityReply> QueryAsync()
         {
             var query = new EntityReplyQuery(this);
             return _dbQuery.ConfigureQuery< EntityReply>(query); ;

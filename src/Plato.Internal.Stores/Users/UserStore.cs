@@ -391,7 +391,7 @@ namespace Plato.Internal.Stores.Users
                 .Page(1, 1000)
                 .Select<UserQueryParams>(q => q.RoleName.Equals(roleName))
                 .OrderBy("Id", OrderBy.Desc)
-                .ToList<User>();
+                .ToList();
 
             return pagedResult.Data;
         }

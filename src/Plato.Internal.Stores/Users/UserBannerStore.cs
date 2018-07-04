@@ -108,12 +108,7 @@ namespace Plato.Internal.Stores.Users
             return userBanner;
         }
 
-        public IQuery QueryAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQuery<UserBanner> QueryAsync2()
+        public IQuery<UserBanner> QueryAsync()
         {
             throw new NotImplementedException();
         }

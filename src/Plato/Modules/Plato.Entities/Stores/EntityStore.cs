@@ -119,13 +119,8 @@ namespace Plato.Entities.Stores
 
             return entity;
         }
-        
-        public IQuery QueryAsync()
-        {
-            return null;
-        }
-        
-        public IQuery<Entity> QueryAsync2()
+ 
+        public IQuery<Entity> QueryAsync()
         {
             var query = new EntityQuery(this);
             return _dbQuery.ConfigureQuery<Entity>(query); ;

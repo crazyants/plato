@@ -189,7 +189,7 @@ namespace Plato.Users.Controllers
                     // q.Id.Between(1, 5);
                 })
                 .OrderBy("Id", OrderBy.Asc)
-                .ToList<User>();
+                .ToList();
         }
         
         #endregion

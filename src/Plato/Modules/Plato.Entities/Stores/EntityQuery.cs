@@ -29,27 +29,7 @@ namespace Plato.Entities.Stores
             Params = (EntityQueryParams)Convert.ChangeType(defaultParams, typeof(EntityQueryParams));
             return this;
         }
-
-        public override async Task<IPagedResults<T>> ToList<T>()
-        {
-
-            var builder = new EntityQueryBuilder(this);
-            var startSql = builder.BuildSqlStartId();
-            var populateSql = builder.BuildSqlPopulate();
-            var countSql = builder.BuildSqlCount();
-
-            var data = await _store.SelectAsync<T>(
-                PageIndex,
-                PageSize,
-                startSql,
-                populateSql,
-                countSql,
-                Params.Keywords.Value
-            );
-
-            return data;
-        }
-
+        
         public override async Task<IPagedResults<Entity>> ToList()
         {
 

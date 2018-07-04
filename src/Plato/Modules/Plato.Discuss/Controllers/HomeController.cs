@@ -439,7 +439,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
             PagerOptions pagerOptions)
         {
             var feature = await _contextFacade.GetCurrentFeatureAsync();
-            return await _entityStore.QueryAsync2()
+            return await _entityStore.QueryAsync()
                 .Page(pagerOptions.Page, pagerOptions.PageSize)
                 .Select<EntityQueryParams>(q =>
                 {
@@ -490,7 +490,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                     // q.Id.Between(1, 5);
                 })
                 .OrderBy("Id", OrderBy.Desc)
-                .ToList<EntityReply>();
+                .ToList();
         }
 
         #endregion

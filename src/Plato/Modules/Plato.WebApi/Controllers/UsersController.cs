@@ -37,7 +37,7 @@ namespace Plato.WebApi.Controllers
                     // q.Id.Between(1, 5);
                 })
                 .OrderBy(sortBy, sortOrder)
-                .ToList<User>();
+                .ToList();
             
             return new ObjectResult(new
             {

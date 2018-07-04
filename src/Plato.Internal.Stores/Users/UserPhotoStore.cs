@@ -105,12 +105,7 @@ namespace Plato.Internal.Stores.Users
             return userPhoto;
         }
 
-        public IQuery QueryAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQuery<UserPhoto> QueryAsync2()
+        public IQuery<UserPhoto> QueryAsync()
         {
             throw new NotImplementedException();
         }

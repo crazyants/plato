@@ -14,13 +14,9 @@ namespace Plato.Internal.Stores.Abstractions
         Task<bool> DeleteAsync(TModel model);
 
         Task<TModel> GetByIdAsync(int id);
-
-        IQuery QueryAsync();
-
-        IQuery<TModel> QueryAsync2();
-
-        Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class;
         
+        IQuery<TModel> QueryAsync();
+
         Task<IPagedResults<TModel>> SelectAsync(params object[] args);
 
 

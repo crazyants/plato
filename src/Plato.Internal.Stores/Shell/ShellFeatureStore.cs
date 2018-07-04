@@ -51,12 +51,7 @@ namespace Plato.Internal.Stores.Shell
             return await _featureRepository.SelectByIdAsync(id);
         }
 
-        public IQuery QueryAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQuery<ShellFeature> QueryAsync2()
+        public IQuery<ShellFeature> QueryAsync()
         {
             throw new NotImplementedException();
         }

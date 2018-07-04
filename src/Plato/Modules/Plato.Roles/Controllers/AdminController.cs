@@ -242,7 +242,7 @@ namespace Plato.Roles.Controllers
                     }
                 })
                 .OrderBy("Id", OrderBy.Desc)
-                .ToList<Role>();
+                .ToList();
         }
 
         #endregion

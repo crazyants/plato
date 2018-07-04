@@ -170,12 +170,7 @@ namespace Plato.Internal.Stores.Users
             return user;
         }
         
-        public IQuery QueryAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQuery<User> QueryAsync2()
+        public IQuery<User> QueryAsync()
         {
             var query = new UserQuery(this);
             return _dbQuery.ConfigureQuery(query); ;

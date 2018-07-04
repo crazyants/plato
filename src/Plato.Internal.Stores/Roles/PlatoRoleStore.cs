@@ -155,13 +155,8 @@ namespace Plato.Internal.Stores.Roles
             });
             
         }
-
-        public IQuery QueryAsync()
-        {
-        throw new NotImplementedException();
-        }
-
-        public IQuery<Role> QueryAsync2()
+        
+        public IQuery<Role> QueryAsync()
         {
             var query = new RoleQuery(this);
             return _dbQuery.ConfigureQuery< Role>(query); ;

@@ -30,28 +30,7 @@ namespace Plato.Internal.Stores.Roles
             Params = (RoleQueryParams)Convert.ChangeType(defaultParams, typeof(RoleQueryParams));
             return this;
         }
-
-        public override async Task<IPagedResults<T>> ToList<T>()
-        {
-
-            var builder = new RoleQueryBuilder(this);
-            var startSql = builder.BuildSqlStartId();
-            var populateSql = builder.BuildSqlPopulate();
-            var countSql = builder.BuildSqlCount();
-
-            var data = await _store.SelectAsync<T>(
-                PageIndex,
-                PageSize,
-                startSql,
-                populateSql,
-                countSql,
-                Params.Id.Value,
-                Params.RoleName.Value
-            );
-
-            return data;
-        }
-
+        
         public override async Task<IPagedResults<Role>> ToList()
         {
             var builder = new RoleQueryBuilder(this);
