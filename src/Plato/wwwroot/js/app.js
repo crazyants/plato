@@ -29915,7 +29915,7 @@ $(function (win, doc, $) {
             this.logInfo("initAvatar()");
 
             // Avatar upload selector with preview
-            $(this.context.options.AvatarUploadSelector).change(function () {
+            $(this.context.options().AvatarUploadSelector).change(function () {
                 function readUrl(input) {
                     if (input.files && input.files[0]) {
                         var reader = new FileReader();

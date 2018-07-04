@@ -16,27 +16,32 @@
                         @{
                             var detail = entity.GetMetaData<EntityMetaData>();
                         }
+                        
+                       
+                        <div class="list-left">
+                            <avatar class="avatar" user-id="@entity.CreatedBy.Id"/>
+                        </div>
+                        <div class="list-body">
+                            <h6>
+                                <a asp-controller="Home" asp-action="Topic" asp-route-id="@entity.Id">
+                                    @entity.Title
+                                </a>
+                            </h6>
+                            <p class="text-muted">
+                                @entity.Abstract
+                            </p>
 
-                        <h6>
-                            <a asp-controller="Home" asp-action="Topic" asp-route-id="@entity.Id">
-                                @entity.Title
-                            </a>
-                        </h6>
-
-                        <p class="text-muted">
-                            @entity.Abstract
-                        </p>
-
-                        @if (detail != null)
-                        {
-                            @foreach (var participant in detail.Users)
-                             {
-                                 @participant.UserName
-                                 <br/>
-                                 <br/>
-                             }
-                        }
-
+                            @if (detail != null)
+                            {
+                                @foreach (var participant in detail.Users)
+                                 {
+                                     @participant.UserName
+                                     <br/>
+                                     <br/>
+                                 }
+                            }
+                        </div>
+                        
                     </li>
 
                 }
