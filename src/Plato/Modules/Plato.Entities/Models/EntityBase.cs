@@ -37,6 +37,10 @@ namespace Plato.Entities.Models
 
         public DateTime? ModifiedDate { get; set; }
 
+        public EntityUser CreatedBy { get; private set; } = new EntityUser();
+
+        public EntityUser ModifiedBy { get; private set; } = new EntityUser();
+        
         public virtual void PopulateModel(IDataReader dr)
         {
 
@@ -70,11 +74,33 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
+            if (CreatedUserId > 0)
+            {
+                CreatedBy.Id = CreatedUserId;
+                if (dr.ColumnIsNotNull("CreatedUserName"))
+                    CreatedBy.UserName = Convert.ToString(dr["CreatedUserName"]);
+                if (dr.ColumnIsNotNull("CreatedNormalizedUserName"))
+                    CreatedBy.NormalizedUserName = Convert.ToString(dr["CreatedNormalizedUserName"]);
+                if (dr.ColumnIsNotNull("CreatedDisplayName"))
+                    CreatedBy.DisplayName = Convert.ToString(dr["CreatedDisplayName"]);
+            }
+
             if (dr.ColumnIsNotNull("CreatedDate"))
                 CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
 
             if (dr.ColumnIsNotNull("ModifiedUserId"))
                 ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
+
+            if (ModifiedUserId > 0)
+            {
+                ModifiedBy.Id = ModifiedUserId;
+                if (dr.ColumnIsNotNull("ModifiedUserName"))
+                    ModifiedBy.UserName = Convert.ToString(dr["ModifiedUserName"]);
+                if (dr.ColumnIsNotNull("ModifiedNormalizedUserName"))
+                    ModifiedBy.NormalizedUserName = Convert.ToString(dr["ModifiedNormalizedUserName"]);
+                if (dr.ColumnIsNotNull("ModifiedDisplayName"))
+                    ModifiedBy.DisplayName = Convert.ToString(dr["ModifiedDisplayName"]);
+            }
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
                 ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
@@ -83,4 +109,19 @@ namespace Plato.Entities.Models
 
 
     }
+
+
+    public class EntityUser
+    {
+
+        public int Id { get; set; }
+
+        public string UserName { get; set; }
+
+        public string NormalizedUserName { get; set; }
+
+        public string DisplayName { get; set; }
+
+    }
+
 }

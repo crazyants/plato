@@ -57,9 +57,11 @@ namespace Plato.Entities.Services
             if (user != null)
             {
                 model.CreatedUserId = user.Id;
+                model.ModifiedUserId = user.Id;
             }
 
             model.CreatedDate = DateTime.UtcNow;
+            model.ModifiedDate = DateTime.UtcNow;
 
             // Validate
             if (model.Id > 0)

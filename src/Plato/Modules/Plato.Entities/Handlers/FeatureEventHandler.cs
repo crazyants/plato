@@ -441,9 +441,18 @@ namespace Plato.Entities.Handlers
             builder.CreateProcedure(
                 new SchemaProcedure(
                         $"SelectEntityById",
-                        @" SELECT * FROM {prefix}_Entities WITH (nolock) 
+                        @" SELECT e.*, 
+                                    c.UserName AS CreatedUserName, 
+                                    c.NormalizedUserName AS CreatedNormalizedUserName,
+                                    c.DisplayName AS CreatedDisplayName,
+                                    m.UserName AS ModifiedUserName, 
+                                    m.NormalizedUserName AS ModifiedNormalizedUserName,
+                                    m.DisplayName AS ModifiedDisplayName
+                                FROM {prefix}_Entities e WITH (nolock) 
+                                    LEFT OUTER JOIN {prefix}_Users c ON e.CreatedUserId = c.Id
+                                    LEFT OUTER JOIN {prefix}_Users m ON e.ModifiedUserId = m.Id
                                 WHERE (
-                                   Id = @Id
+                                   e.Id = @Id
                                 )
                                 SELECT * FROM {prefix}_EntityData WITH (nolock) 
                                 WHERE (

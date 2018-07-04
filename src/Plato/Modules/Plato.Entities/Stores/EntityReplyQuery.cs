@@ -153,17 +153,16 @@ namespace Plato.Entities.Stores
     {
         #region "Constructor"
 
-        private readonly string _tableName;
-        private const string TableName = "EntityReplies";
+        private readonly string _entityRepliesTableName;
+        private readonly string _usersTableName;
 
         private readonly EntityReplyQuery _query;
 
         public EntityReplyQueryBuilder(EntityReplyQuery query)
         {
             _query = query;
-            _tableName = !string.IsNullOrEmpty(_query.TablePrefix)
-                ? _query.TablePrefix + TableName
-                : TableName;
+            _entityRepliesTableName = GetTableNameWithPrefix("EntityReplies");
+            _usersTableName = GetTableNameWithPrefix("Users");
         }
 
         #endregion
@@ -175,7 +174,8 @@ namespace Plato.Entities.Stores
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = Id FROM ").Append(_tableName);
+            sb.Append("SELECT @start_id_out = r.Id FROM ")
+                .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             if (!string.IsNullOrEmpty(orderBy))
@@ -186,12 +186,15 @@ namespace Plato.Entities.Stores
         public string BuildSqlPopulate()
         {
 
-            var tablePrefix = _query.TablePrefix;
-
             var whereClause = BuildWhereClauseForStartId();
             var orderBy = BuildOrderBy();
+
             var sb = new StringBuilder();
-            sb.Append("SELECT * FROM ").Append(_tableName);
+            sb.Append("SELECT ")
+                .Append(BuildPopulateSelect())
+                .Append(" FROM ")
+                .Append(BuildTables());
+            
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             if (!string.IsNullOrEmpty(orderBy))
@@ -203,28 +206,66 @@ namespace Plato.Entities.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(Id) FROM ").Append(_tableName);
+            sb.Append("SELECT COUNT(r.Id) FROM ")
+                .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             return sb.ToString();
+        }
+
+
+        string BuildPopulateSelect()
+        {
+            var sb = new StringBuilder();
+            sb.Append("r.*, ")
+                .Append("u.UserName AS CreatedUserName, ")
+                .Append("u.NormalizedUserName AS CreatedNormalizedUserName,")
+                .Append("u.DisplayName AS CreatedDisplayName");
+
+            return sb.ToString();
+
+        }
+
+        string BuildTables()
+        {
+            
+            var sb = new StringBuilder();
+
+            sb.Append(_entityRepliesTableName)
+                .Append(" r ");
+
+            // join created user
+            sb.Append("LEFT OUTER JOIN ")
+                .Append(_usersTableName)
+                .Append(" u ON r.CreatedUserId = u.Id");
+
+            return sb.ToString();
+
         }
 
         #endregion
 
         #region "Private Methods"
 
+        private string GetTableNameWithPrefix(string tableName)
+        {
+            return !string.IsNullOrEmpty(_query.TablePrefix)
+                ? _query.TablePrefix + tableName
+                : tableName;
+        }
+
         private string BuildWhereClauseForStartId()
         {
             var sb = new StringBuilder();
             // default to ascending
             if (_query.SortColumns.Count == 0)
-                sb.Append("Id >= @start_id_in");
+                sb.Append("r.Id >= @start_id_in");
             // set start operator based on first order by
             foreach (var sortColumn in _query.SortColumns)
             {
                 sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "Id <= @start_id_in"
-                    : "Id >= @start_id_in");
+                    ? "r.Id <= @start_id_in"
+                    : "r.Id >= @start_id_in");
                 break;
             }
 
@@ -244,7 +285,7 @@ namespace Plato.Entities.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("Id"));
+                sb.Append(_query.Params.Id.ToSqlString("r.Id"));
             }
 
             if (_query.Params.EntityId.Value > 0)
@@ -260,16 +301,23 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.Keywords.Operator);
                 sb.Append(_query.Params.Keywords.ToSqlString("Keywords"));
             }
-
-           
-            if (!string.IsNullOrEmpty(sb.ToString()))
-                sb.Append(_query.Params.IsPrivate.Operator);
-            sb.Append(_query.Params.IsPrivate.ToSqlString("IsPrivate"));
-      
+            
          
-   
             return sb.ToString();
 
+        }
+
+
+        string GetQualifiedColumnName(string columnName)
+        {
+            if (columnName == null)
+            {
+                throw new ArgumentNullException(nameof(columnName));
+            }
+
+            return columnName.IndexOf('.') >= 0
+                ? columnName
+                : "r." + columnName;
         }
 
         private string BuildOrderBy()
@@ -279,7 +327,7 @@ namespace Plato.Entities.Stores
             var i = 0;
             foreach (var sortColumn in _query.SortColumns)
             {
-                sb.Append(sortColumn.Key);
+                sb.Append(GetQualifiedColumnName(sortColumn.Key));
                 if (sortColumn.Value != OrderBy.Asc)
                     sb.Append(" DESC");
                 if (i < _query.SortColumns.Count - 1)
