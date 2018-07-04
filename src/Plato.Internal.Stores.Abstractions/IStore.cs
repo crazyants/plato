@@ -19,5 +19,8 @@ namespace Plato.Internal.Stores.Abstractions
 
         Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class;
         
+        Task<IPagedResults<TModel>> SelectAsync(params object[] args);
+
+
     }
 }

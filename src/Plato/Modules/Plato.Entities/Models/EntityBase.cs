@@ -113,6 +113,7 @@ namespace Plato.Entities.Models
 
     public class EntityUser
     {
+        private string _displayName;
 
         public int Id { get; set; }
 
@@ -120,7 +121,11 @@ namespace Plato.Entities.Models
 
         public string NormalizedUserName { get; set; }
 
-        public string DisplayName { get; set; }
+        public string DisplayName
+        {
+            get => String.IsNullOrEmpty(_displayName) ? this.UserName : _displayName;
+            set => _displayName = value;
+        }
 
     }
 

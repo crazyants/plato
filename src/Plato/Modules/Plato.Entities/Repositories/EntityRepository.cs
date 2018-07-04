@@ -106,10 +106,15 @@ namespace Plato.Entities.Repositories
                 return await BuildEntityFromResultSets(reader);
             }
         }
-        
-        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] inputParams) where T : class
+
+        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
         {
-            PagedResults<T> output = null;
+            throw new NotImplementedException();
+        }
+
+        public async Task<IPagedResults<Entity>> SelectAsync(params object[] inputParams)
+        {
+            PagedResults<Entity> output = null;
             using (var context = _dbContext)
             {
 
@@ -127,12 +132,12 @@ namespace Plato.Entities.Repositories
 
                 if ((reader != null) && (reader.HasRows))
                 {
-                    output = new PagedResults<T>();
+                    output = new PagedResults<Entity>();
                     while (await reader.ReadAsync())
                     {
                         var entity = new Entity();
                         entity.PopulateModel(reader);
-                        output.Data.Add((T)Convert.ChangeType(entity, typeof(T)));
+                        output.Data.Add(entity);
                     }
 
                     if (await reader.NextResultAsync())

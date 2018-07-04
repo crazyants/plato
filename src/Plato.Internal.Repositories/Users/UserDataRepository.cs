@@ -108,12 +108,23 @@ namespace Plato.Internal.Repositories.Users
                 return await SelectByIdAsync(id);
             return null;
         }
-
+        
         public Task<bool> DeleteAsync(int id)
         {
             if (_logger.IsEnabled(LogLevel.Information))
                 _logger.LogInformation($"Deleting user data with id: {id}");
             
+            throw new NotImplementedException();
+        }
+        
+        public Task<IPagedResults<UserData>> SelectAsync(params object[] inputParams)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        {
             throw new NotImplementedException();
         }
 
@@ -158,10 +169,7 @@ namespace Plato.Internal.Repositories.Users
 
         }
 
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            throw new NotImplementedException();
-        }
+
 
         #endregion
 

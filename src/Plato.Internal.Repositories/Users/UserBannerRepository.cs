@@ -67,6 +67,7 @@ namespace Plato.Internal.Repositories.Users
 
         public Task<bool> DeleteAsync(int id)
         {
+            // TODO
             throw new NotImplementedException();
         }
 
@@ -95,6 +96,12 @@ namespace Plato.Internal.Repositories.Users
         {
             throw new NotImplementedException();
         }
+
+        public Task<IPagedResults<UserBanner>> SelectAsync(params object[] inputParams)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public async Task<UserBanner> SelectByIdAsync(int id)
         {

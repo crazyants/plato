@@ -235,6 +235,40 @@ namespace Plato.Internal.Repositories.Roles
             return output;
         }
 
+
+        public async Task<IPagedResults<Role>> SelectAsync(params object[] inputParams)
+        {
+            PagedResults<Role> output = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectRolesPaged",
+                    inputParams
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new PagedResults<Role>();
+                    while (await reader.ReadAsync())
+                    {
+                        var role = new Role();
+                        role.PopulateModel(reader);
+                        output.Data.Add(role);
+                    }
+
+                    if (await reader.NextResultAsync())
+                    {
+                        await reader.ReadAsync();
+                        output.PopulateTotal(reader);
+                    }
+                }
+            }
+
+            return output;
+        }
+
+
         public async Task<IEnumerable<Role>> SelectRoles()
         {
             var output = new List<Role>();

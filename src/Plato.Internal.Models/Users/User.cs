@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Data;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Models.Annotations;
 using Plato.Internal.Models.Roles;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
 namespace Plato.Internal.Models.Users
 {
-
-    [TableName("Users")]
+    
     public class User : IdentityUser<int>, IModel<User>
     {
 
+        private string _displayName;
+
         #region "Public Properties"
-                   
-        [ColumnName("DisplayName", typeof(string), 255)]
-        public string DisplayName { get; set; }
-        
-        [ColumnName("SamAccountName", typeof(string), 255)]
+
+        public string DisplayName
+        {
+            get => string.IsNullOrWhiteSpace(_displayName) ? this.UserName : _displayName;
+            set => _displayName = value;
+        }
+
         public string SamAccountName { get; set;  }
           
         public UserSecret Secret { get; set;  }

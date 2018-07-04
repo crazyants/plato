@@ -9,7 +9,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Entities.Stores
 {
-    public class EntityDataStore : IEntityDataStore<EntityData>
+    public class EntityDataStore<T> : IEntityDataStore<T> where T : class
     {
 
         #region "Private Variables"
@@ -30,7 +30,7 @@ namespace Plato.Entities.Stores
 
         #region "IMplementation"
 
-        public async Task<T> GetAsync<T>(int entityId, string key)
+        public async Task<T> GetAsync(int entityId, string key)
         {
             var result = await GetByEntityIdAndKeyAsync(entityId, key);
             if (result != null)
@@ -51,7 +51,7 @@ namespace Plato.Entities.Stores
             return default(T);
         }
 
-        public async Task<T> UpdateAsync<T>(int entityId, string key, ISerializable value)
+        public async Task<T> UpdateAsync(int entityId, string key, ISerializable value)
         {
 
             // Get or create setting
@@ -68,7 +68,7 @@ namespace Plato.Entities.Stores
             var updatedData = await _entityDataRepository.InsertUpdateAsync(data);
             if (updatedData != null)
             {
-                return await GetAsync<T>(entityId, updatedData.Key);
+                return await GetAsync(entityId, updatedData.Key);
             }
 
             return default(T);

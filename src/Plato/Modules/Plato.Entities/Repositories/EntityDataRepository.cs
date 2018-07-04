@@ -112,11 +112,23 @@ namespace Plato.Entities.Repositories
             return null;
         }
 
+    
+
         public Task<bool> DeleteAsync(int id)
         {
             if (_logger.IsEnabled(LogLevel.Information))
                 _logger.LogInformation($"Deleting user data with id: {id}");
             
+            throw new NotImplementedException();
+        }
+        
+        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IPagedResults<EntityData>> SelectAsync(params object[] inputParams)
+        {
             throw new NotImplementedException();
         }
 
@@ -159,11 +171,6 @@ namespace Plato.Entities.Repositories
                     modifiedUserId);
             }
 
-        }
-
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            throw new NotImplementedException();
         }
 
         #endregion

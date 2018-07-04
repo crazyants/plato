@@ -32,7 +32,7 @@ namespace Plato.Internal.Repositories.Abstract
         #endregion
 
         #region "Implementation"
-
+        
         public async Task<bool> DeleteAsync(int id)
         {
 
@@ -163,12 +163,25 @@ namespace Plato.Internal.Repositories.Abstract
             return entry;
 
         }
-
-
+        
         public Task<bool> DeleteByKeyAsync(string key)
         {
+            // TODO
             throw new NotImplementedException();
         }
+
+        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        public Task<IPagedResults<DictionaryEntry>> SelectAsync(params object[] inputParams)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
 
         #endregion
 
@@ -208,11 +221,6 @@ namespace Plato.Internal.Repositories.Abstract
                     modifiedUserId);
             }
             
-        }
-
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            throw new NotImplementedException();
         }
 
 

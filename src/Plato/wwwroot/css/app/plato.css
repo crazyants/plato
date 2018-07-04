@@ -272,5 +272,6 @@
 
 .list-left { float: left; }
 .list-left + .list-body { margin-left: 56px; }
-
+.list-right { float: left; }
+.list-right + .list-body { margin-right: 56px; }
 

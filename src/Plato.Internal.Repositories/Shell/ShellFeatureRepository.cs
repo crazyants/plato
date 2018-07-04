@@ -40,6 +40,7 @@ namespace Plato.Internal.Repositories.Shell
 
         #region "Implementation"
 
+
         public async Task<bool> DeleteAsync(int id)
         {
 
@@ -125,6 +126,46 @@ namespace Plato.Internal.Repositories.Shell
                         var entity = new ShellFeature();
                         entity.PopulateModel(reader);
                         output.Data.Add((T)Convert.ChangeType(entity, typeof(T)));
+                    }
+
+                    if (await reader.NextResultAsync())
+                    {
+                        await reader.ReadAsync();
+                        output.PopulateTotal(reader);
+                    }
+                }
+            }
+
+            return output;
+        }
+
+
+        public async Task<IPagedResults<ShellFeature>> SelectAsync(params object[] inputParams)
+        {
+            PagedResults<ShellFeature> output = null;
+            using (var context = _dbContext)
+            {
+
+                _dbContext.OnException += (sender, args) =>
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
+                };
+
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectShellFeaturesPaged",
+                    inputParams
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new PagedResults<ShellFeature>();
+                    while (await reader.ReadAsync())
+                    {
+                        var entity = new ShellFeature();
+                        entity.PopulateModel(reader);
+                        output.Data.Add(entity);
                     }
 
                     if (await reader.NextResultAsync())

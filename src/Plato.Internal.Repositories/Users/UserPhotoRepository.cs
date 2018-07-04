@@ -65,9 +65,22 @@ namespace Plato.Internal.Repositories.Users
         #endregion
 
         #region "Implementation"
+        
+        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task<IPagedResults<UserPhoto>> SelectAsync(params object[] inputParams)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
 
         public Task<bool> DeleteAsync(int id)
         {
+            // TODO
             throw new NotImplementedException();
         }
 
@@ -90,12 +103,7 @@ namespace Plato.Internal.Repositories.Users
 
             return null;
         }
-        
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            throw new NotImplementedException();
-        }
-
+   
         public async Task<UserPhoto> SelectByIdAsync(int id)
         {
             UserPhoto photo = null;

@@ -144,6 +144,11 @@ namespace Plato.Internal.Stores.Users
             throw new NotImplementedException();
         }
 
+        public Task<IPagedResults<UserRole>> SelectAsync(params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
         private string GetCacheKey(int userId)
         {
             return $"{Key}_{userId.ToString()}";

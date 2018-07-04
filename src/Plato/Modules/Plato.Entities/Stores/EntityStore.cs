@@ -27,6 +27,7 @@ namespace Plato.Entities.Stores
         private readonly IMemoryCache _memoryCache;
         private readonly IDbQuery _dbQuery;
         private readonly ITypedModuleProvider _typedModuleProvider;
+        private readonly IEntityDataStore<EntityData> _entityDataStore;
 
         public EntityStore(
             ITypedModuleProvider typedModuleProvider,
@@ -34,13 +35,15 @@ namespace Plato.Entities.Stores
             ICacheDependency cacheDependency,
             ILogger<EntityStore> logger,
             IMemoryCache memoryCache,
-            IDbQuery dbQuery)
+            IDbQuery dbQuery, 
+            IEntityDataStore<EntityData> entityDataStore)
         {
             _typedModuleProvider = typedModuleProvider;
             _entityRepository = entityRepository;
             _cacheDependency = cacheDependency;
             _memoryCache = memoryCache;
             _dbQuery = dbQuery;
+            _entityDataStore = entityDataStore;
             _logger = logger;
         }
 
@@ -124,11 +127,19 @@ namespace Plato.Entities.Stores
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
         {
+            return null;
+        }
 
-            var key = GetEntityCacheKey();
+
+        public async Task<IPagedResults<Entity>> SelectAsync(params object[] args) 
+        {
+
+            var hash = args.GetHashCode().ToString();
+            var key = GetEntityCacheKey(hash);
+
             return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
             {
-                var output = await _entityRepository.SelectAsync<T>(args);
+                var output = await _entityRepository.SelectAsync(args);
                 if (output != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Information))
@@ -147,7 +158,6 @@ namespace Plato.Entities.Stores
 
         #region "Private Methods"
         
-    
         async Task<Type> GetModuleTypeCandidateAsync(string typeName)
         {
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
@@ -157,9 +167,13 @@ namespace Plato.Entities.Stores
         {
             return $"{_key}";
         }
-
-        #endregion
+        private string GetEntityCacheKey(string hash)
+        {
+            return $"{_key}_hash";
+        }
         
+        #endregion
+
     }
 
 }

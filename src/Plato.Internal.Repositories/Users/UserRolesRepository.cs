@@ -32,7 +32,7 @@ namespace Plato.Internal.Repositories.Users
         #endregion
         
         #region "Implementation"
-
+        
         public async Task<bool> DeleteAsync(int id)
         {
             bool success;
@@ -99,7 +99,6 @@ namespace Plato.Internal.Repositories.Users
 
             return userRoles;
         }
-
         
         public async Task<IEnumerable<UserRole>> InsertUserRolesAsync(
             int userId, IEnumerable<string> roleNames)
@@ -176,6 +175,17 @@ namespace Plato.Internal.Repositories.Users
             return success > 0 ? true : false;
 
         }
+        
+        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IPagedResults<UserRole>> SelectAsync(params object[] inputParams)
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion
 
@@ -198,12 +208,6 @@ namespace Plato.Internal.Repositories.Users
         }
 
 
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            throw new NotImplementedException();
-        }
-
-       
         #endregion
     }
 }

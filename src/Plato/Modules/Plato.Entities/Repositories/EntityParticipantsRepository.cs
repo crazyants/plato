@@ -108,6 +108,46 @@ namespace Plato.Entities.Repositories
             return output;
         }
 
+        public async Task<IPagedResults<EntityParticipant>> SelectAsync(params object[] inputParams)
+        {
+            PagedResults<EntityParticipant> output = null;
+            using (var context = _dbContext)
+            {
+
+                _dbContext.OnException += (sender, args) =>
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
+                };
+
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectEntityParticipantsPaged",
+                    inputParams
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new PagedResults<EntityParticipant>();
+                    while (await reader.ReadAsync())
+                    {
+                        var participant = new EntityParticipant();
+                        participant.PopulateModel(reader);
+                        output.Data.Add(participant);
+                    }
+
+                    if (await reader.NextResultAsync())
+                    {
+                        await reader.ReadAsync();
+                        output.PopulateTotal(reader);
+                    }
+
+                }
+            }
+
+            return output;
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             if (_logger.IsEnabled(LogLevel.Information))

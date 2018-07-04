@@ -17,9 +17,10 @@
                             var detail = entity.GetMetaData<EntityMetaData>();
                         }
                         
-                       
                         <div class="list-left">
-                            <avatar class="avatar" user-id="@entity.CreatedBy.Id"/>
+                            <a href="#">
+                                <avatar data-toggle="tooltip" title="@entity.CreatedBy.DisplayName" class="avatar" user-id="@entity.CreatedBy.Id" />
+                            </a>
                         </div>
                         <div class="list-body">
                             <h6>
@@ -28,11 +29,16 @@
                                 </a>
                             </h6>
                             <p class="text-muted">
+                           
                                 @entity.Abstract
-                            </p>
+                                <br/>
+                                By <a href="#">@entity.CreatedBy.DisplayName</a> on @entity.CreatedDate
 
+                            </p>
+                       
                             @if (detail != null)
                             {
+                                <strong>Participants:</strong>
                                 @foreach (var participant in detail.Users)
                                  {
                                      @participant.UserName

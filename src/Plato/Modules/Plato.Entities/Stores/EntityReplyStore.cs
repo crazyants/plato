@@ -127,7 +127,34 @@ namespace Plato.Entities.Stores
             });
 
         }
-        
+
+        public async Task<IPagedResults<EntityReply>> SelectAsync(params object[] args)
+        {
+            var hash = args.GetHashCode().ToString();
+            var key = GetEntityReplyCacheKey(hash);
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Selecting entity replies for key '{0}' with the following parameters: {1}",
+                    key, args.Select(a => a));
+            }
+
+            return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
+            {
+                var output = await _entityReplyRepository.SelectAsync<EntityReply>(args);
+                if (output != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Information))
+                    {
+                        _logger.LogInformation("Adding entity replies to cache with key: {0}", key);
+                    }
+                }
+                cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
+                return output;
+            });
+
+        }
+
         string GetCacheHashCode(params object[] args)
         {
 

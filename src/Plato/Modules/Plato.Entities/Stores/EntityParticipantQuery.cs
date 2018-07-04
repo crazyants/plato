@@ -10,7 +10,7 @@ namespace Plato.Entities.Stores
 {
     #region "EntityQuery"
 
-    public class EntityParticipantQuery : DefaultQuery
+    public class EntityParticipantQuery : DefaultQuery<EntityParticipant>
     {
 
         private readonly IStore<EntityParticipant> _store;
@@ -39,6 +39,26 @@ namespace Plato.Entities.Stores
             var countSql = builder.BuildSqlCount();
 
             var data = await _store.SelectAsync<T>(
+                PageIndex,
+                PageSize,
+                startSql,
+                populateSql,
+                countSql,
+                Params.Id.Value,
+                Params.RoleName.Value
+            );
+
+            return data;
+        }
+
+        public override async Task<IPagedResults<EntityParticipant>> ToList()
+        {
+            var builder = new EntityParticipantQueryBuilder(this);
+            var startSql = builder.BuildSqlStartId();
+            var populateSql = builder.BuildSqlPopulate();
+            var countSql = builder.BuildSqlCount();
+
+            var data = await _store.SelectAsync(
                 PageIndex,
                 PageSize,
                 startSql,

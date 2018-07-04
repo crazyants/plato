@@ -45,6 +45,7 @@ namespace Plato.Internal.Repositories.Users
 
         public Task<bool> DeleteAsync(int id)
         {
+            // TODO
             throw new NotImplementedException();
         }
 
@@ -266,6 +267,46 @@ namespace Plato.Internal.Repositories.Users
                         var user = new User();
                         user.PopulateModel(reader);
                         output.Data.Add((T)Convert.ChangeType(user, typeof(T)));
+                    }
+
+                    if (await reader.NextResultAsync())
+                    {
+                        await reader.ReadAsync();
+                        output.PopulateTotal(reader);
+                    }
+                }
+            }
+
+            return output;
+        }
+
+
+        public async Task<IPagedResults<User>> SelectAsync(params object[] inputParams)
+        {
+            PagedResults<User> output = null;
+            using (var context = _dbContext)
+            {
+
+                _dbContext.OnException += (sender, args) =>
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                        _logger.LogInformation($"SelectUsersPaged failed with the following error {args.Exception.Message}");
+                };
+
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectUsersPaged",
+                    inputParams
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new PagedResults<User>();
+                    while (await reader.ReadAsync())
+                    {
+                        var user = new User();
+                        user.PopulateModel(reader);
+                        output.Data.Add(user);
                     }
 
                     if (await reader.NextResultAsync())

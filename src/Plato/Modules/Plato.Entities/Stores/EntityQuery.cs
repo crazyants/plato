@@ -10,7 +10,7 @@ namespace Plato.Entities.Stores
 
     #region "EntityQuery"
 
-    public class EntityQuery : DefaultQuery
+    public class EntityQuery : DefaultQuery<Entity>
     {
 
         private readonly IStore<Entity> _store;
@@ -49,6 +49,28 @@ namespace Plato.Entities.Stores
 
             return data;
         }
+
+        public override async Task<IPagedResults<Entity>> ToList()
+        {
+
+            var builder = new EntityQueryBuilder(this);
+            var startSql = builder.BuildSqlStartId();
+            var populateSql = builder.BuildSqlPopulate();
+            var countSql = builder.BuildSqlCount();
+
+            var data = await _store.SelectAsync(
+                PageIndex,
+                PageSize,
+                startSql,
+                populateSql,
+                countSql,
+                Params.Keywords.Value
+            );
+
+            return data;
+        }
+
+
     }
 
     #endregion

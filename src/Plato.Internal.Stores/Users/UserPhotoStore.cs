@@ -115,6 +115,11 @@ namespace Plato.Internal.Stores.Users
             throw new NotImplementedException();
         }
 
+        public Task<IPagedResults<UserPhoto>> SelectAsync(params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<UserPhoto> UpdateAsync(UserPhoto userPhoto)
         {
             if (userPhoto == null)

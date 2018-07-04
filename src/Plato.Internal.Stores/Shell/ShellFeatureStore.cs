@@ -61,6 +61,11 @@ namespace Plato.Internal.Stores.Shell
             throw new NotImplementedException();
         }
 
+        public Task<IPagedResults<ShellFeature>> SelectAsync(params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<ShellFeature>> SelectFeatures()
         {
             return await _featureRepository.SelectFeatures();

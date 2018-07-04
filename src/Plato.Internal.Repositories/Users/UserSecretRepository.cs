@@ -30,9 +30,10 @@ namespace Plato.Internal.Repositories.Users
         #endregion
 
         #region "Implementation"
-
+        
         public Task<bool> DeleteAsync(int id)
         {
+            // TODO
             throw new NotImplementedException();
         }
 
@@ -70,6 +71,17 @@ namespace Plato.Internal.Repositories.Users
 
             return secret;
         }
+        
+        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
+        {
+            throw new NotImplementedException();
+        }
+        public Task<IPagedResults<UserSecret>> SelectAsync(params object[] inputParams)
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
 
         #endregion
 
@@ -103,10 +115,6 @@ namespace Plato.Internal.Repositories.Users
         }
 
 
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            throw new NotImplementedException();
-        }
 
         #endregion
     }

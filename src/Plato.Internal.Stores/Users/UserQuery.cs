@@ -11,7 +11,7 @@ namespace Plato.Internal.Stores.Users
     
     #region "UserQuery"
 
-    public class UserQuery : DefaultQuery
+    public class UserQuery : DefaultQuery<User>
     {
 
         private readonly IStore<User> _store;
@@ -50,6 +50,27 @@ namespace Plato.Internal.Stores.Users
                 Params.Email.Value
             );
             
+            return users;
+        }
+
+        public override async Task<IPagedResults<User>> ToList()
+        {
+            var builder = new UserQueryBuilder(this);
+            var startSql = builder.BuildSqlStartId();
+            var populateSql = builder.BuildSqlPopulate();
+            var countSql = builder.BuildSqlCount();
+
+            var users = await _store.SelectAsync(
+                PageIndex,
+                PageSize,
+                startSql,
+                populateSql,
+                countSql,
+                Params.Id.Value,
+                Params.UserName.Value,
+                Params.Email.Value
+            );
+
             return users;
         }
     }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Plato.Internal.Data.Abstractions
 {
-    public abstract class DefaultQuery : IQuery
+    public abstract class DefaultQuery<TModel> : IQuery where TModel : class
     {
 
         private readonly Dictionary<string, OrderBy> _sortColumns;
@@ -28,6 +28,8 @@ namespace Plato.Internal.Data.Abstractions
 
         public abstract Task<IPagedResults<T>> ToList<T>() where T : class;
 
+        public abstract Task<IPagedResults<TModel>> ToList();
+        
         public IQuery OrderBy(string columnName, OrderBy sortOrder = Abstractions.OrderBy.Asc)
         {
             _sortColumns.Add(columnName, sortOrder);

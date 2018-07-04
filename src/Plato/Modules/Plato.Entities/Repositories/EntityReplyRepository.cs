@@ -114,6 +114,41 @@ namespace Plato.Entities.Repositories
             return output;
         }
 
+
+        public async Task<IPagedResults<EntityReply>> SelectAsync(params object[] inputParams)
+        {
+            PagedResults<EntityReply> output = null;
+            using (var context = _dbContext)
+            {
+
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectEntityRepliesPaged",
+                    inputParams
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new PagedResults<EntityReply>();
+                    while (await reader.ReadAsync())
+                    {
+                        var reply = new EntityReply();
+                        reply.PopulateModel(reader);
+                        output.Data.Add(reply);
+                    }
+
+                    if (await reader.NextResultAsync())
+                    {
+                        await reader.ReadAsync();
+                        output.PopulateTotal(reader);
+                    }
+                }
+            }
+
+            return output;
+        }
+
+
         public async Task<bool> DeleteAsync(int id)
         {
             if (_logger.IsEnabled(LogLevel.Information))

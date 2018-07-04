@@ -118,6 +118,11 @@ namespace Plato.Internal.Stores.Users
             throw new NotImplementedException();
         }
 
+        public Task<IPagedResults<UserBanner>> SelectAsync(params object[] args)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<UserBanner> UpdateAsync(UserBanner userBanner)
         {
             if (userBanner == null)
