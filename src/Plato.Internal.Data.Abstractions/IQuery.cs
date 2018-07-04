@@ -21,8 +21,7 @@ namespace Plato.Internal.Data.Abstractions
         IDictionary<string, OrderBy> SortColumns { get; }
 
     }
-
-
+    
     public enum OrderBy
     {
         Desc = 0,

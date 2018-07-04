@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Users;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Plato.Internal.Data.Abstractions;
@@ -72,9 +71,8 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<UserBanner> GetByIdAsync(int id)
         {
-            UserBanner userBanner;
             var key = GetCacheKey(LocalCacheKeys.ById, id);
-            if (!_memoryCache.TryGetValue(key, out userBanner))
+            if (!_memoryCache.TryGetValue(key, out UserBanner userBanner))
             {
                 userBanner = await _userBannerRepository.SelectByIdAsync(id);
                 if (userBanner != null)
@@ -91,9 +89,8 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<UserBanner> GetByUserIdAsync(int userId)
         {
-            UserBanner userBanner;
             var key = GetCacheKey(LocalCacheKeys.ByUserId, userId);
-            if (!_memoryCache.TryGetValue(key, out userBanner))
+            if (!_memoryCache.TryGetValue(key, out UserBanner userBanner))
             {
                 userBanner = await _userBannerRepository.SelectByUserIdAsync(userId);
                 if (userBanner != null)
@@ -144,12 +141,12 @@ namespace Plato.Internal.Stores.Users
 
 
         #region "Private Methods"
-
-
+        
         private string GetCacheKey(LocalCacheKeys cacheKey, object vaule)
         {
             return _key + "_" + cacheKey + "_" + vaule;
         }
+
         private void ClearCache(UserBanner userBanner)
         {
             _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ById, userBanner.Id));

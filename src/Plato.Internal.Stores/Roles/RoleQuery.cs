@@ -23,9 +23,9 @@ namespace Plato.Internal.Stores.Roles
 
         public RoleQueryParams Params { get; set; }
 
-        public override IQuery<Role> Select<T>(Action<T> configure)
+        public override IQuery<Role> Select<TParams>(Action<TParams> configure)
         {
-            var defaultParams = new T();
+            var defaultParams = new TParams();
             configure(defaultParams);
             Params = (RoleQueryParams)Convert.ChangeType(defaultParams, typeof(RoleQueryParams));
             return this;

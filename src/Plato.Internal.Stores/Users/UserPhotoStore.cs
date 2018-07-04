@@ -70,9 +70,8 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<UserPhoto> GetByIdAsync(int id)
         {
-            UserPhoto userPhoto;
             var key = GetCacheKey(LocalCacheKeys.ById, id);
-            if (!_memoryCache.TryGetValue(key, out userPhoto))
+            if (!_memoryCache.TryGetValue(key, out UserPhoto userPhoto))
             {
                 userPhoto = await _userPhotoRepository.SelectByIdAsync(id);
                 if (userPhoto != null)

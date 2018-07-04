@@ -21,9 +21,9 @@ namespace Plato.Entities.Stores
 
         public EntityReplyQueryParams Params { get; set; }
 
-        public override IQuery<EntityReply> Select<T>(Action<T> configure)
+        public override IQuery<EntityReply> Select<TParams>(Action<TParams> configure)
         {
-            var defaultParams = new T();
+            var defaultParams = new TParams();
             configure(defaultParams);
             Params = (EntityReplyQueryParams)Convert.ChangeType(defaultParams, typeof(EntityReplyQueryParams));
             return this;

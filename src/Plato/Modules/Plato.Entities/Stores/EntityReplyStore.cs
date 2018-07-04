@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
@@ -11,12 +9,11 @@ using Plato.Entities.Repositories;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Stores
 {
-    
+
     public interface IEntityReplyStore<TModel> : IStore<TModel> where TModel : class
     {
 

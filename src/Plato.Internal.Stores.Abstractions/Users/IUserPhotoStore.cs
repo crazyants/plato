@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Internal.Stores.Abstractions.Users
 {
-    public interface IUserPhotoStore<T> : IStore<T> where T : class
+    public interface IUserPhotoStore<TModel> : IStore<TModel> where TModel : class
     {
-        Task<T> GetByUserIdAsync(int userId);
+        Task<TModel> GetByUserIdAsync(int userId);
     }
 }

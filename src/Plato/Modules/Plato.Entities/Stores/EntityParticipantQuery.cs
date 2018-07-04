@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
@@ -22,9 +21,9 @@ namespace Plato.Entities.Stores
 
         public EntityParticipantQueryParams Params { get; set; }
 
-        public override IQuery<EntityParticipant> Select<T>(Action<T> configure)
+        public override IQuery<EntityParticipant> Select<TParams>(Action<TParams> configure)
         {
-            var defaultParams = new T();
+            var defaultParams = new TParams();
             configure(defaultParams);
             Params = (EntityParticipantQueryParams)Convert.ChangeType(defaultParams, typeof(EntityParticipantQueryParams));
             return this;
@@ -57,8 +56,7 @@ namespace Plato.Entities.Stores
 
     public class EntityParticipantQueryParams
     {
-
-
+        
         private WhereInt _id;
         private WhereString _roleName;
 

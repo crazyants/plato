@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -8,7 +7,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Internal.Stores.Users
 {
-    
+
     #region "UserQuery"
 
     public class UserQuery : DefaultQuery<User>
@@ -23,9 +22,9 @@ namespace Plato.Internal.Stores.Users
 
         public UserQueryParams Params { get; set; }
 
-        public override IQuery<User> Select<T>(Action<T> configure)
+        public override IQuery<User> Select<TParams>(Action<TParams> configure)
         {
-            var defaultParams = new T();
+            var defaultParams = new TParams();
             configure(defaultParams);
             Params = (UserQueryParams) Convert.ChangeType(defaultParams, typeof(UserQueryParams));
             return this;
