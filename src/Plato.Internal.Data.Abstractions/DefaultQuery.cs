@@ -4,47 +4,8 @@ using System.Threading.Tasks;
 
 namespace Plato.Internal.Data.Abstractions
 {
-    public abstract class DefaultQuery<TModel> : IQuery where TModel : class
-    {
 
-        private readonly Dictionary<string, OrderBy> _sortColumns;
-
-        public IDictionary<string, OrderBy> SortColumns => _sortColumns;
-
-        public int PageIndex { get; private set; }
-
-        public int PageSize { get; private set; }
-
-        public string TablePrefix { get; set; }
-
-        public IQuery Page(int pageIndex, int pageSize)
-        {
-            this.PageIndex = pageIndex;
-            this.PageSize = pageSize;
-            return this;
-        }
-
-        public abstract IQuery Select<T>(Action<T> configure) where T : new();
-
-        public abstract Task<IPagedResults<T>> ToList<T>() where T : class;
-
-        public abstract Task<IPagedResults<TModel>> ToList();
-        
-        public IQuery OrderBy(string columnName, OrderBy sortOrder = Abstractions.OrderBy.Asc)
-        {
-            _sortColumns.Add(columnName, sortOrder);
-            return this;
-        }
-
-        protected DefaultQuery()
-        {
-            _sortColumns = new Dictionary<string, OrderBy>();
-        }
-        
-    }
-
-
-    public abstract class BaseQuery<TModel> : IQuery<TModel> where TModel : class
+    public abstract class DefaultQuery<TModel> : IQuery<TModel> where TModel : class
     {
 
         private readonly Dictionary<string, OrderBy> _sortColumns;
@@ -74,7 +35,7 @@ namespace Plato.Internal.Data.Abstractions
             return this;
         }
 
-        protected BaseQuery()
+        protected DefaultQuery()
         {
             _sortColumns = new Dictionary<string, OrderBy>();
         }

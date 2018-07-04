@@ -11,7 +11,7 @@ namespace Plato.Internal.Stores.Roles
 
     #region "RoleQuery"
 
-    public class RoleQuery : BaseQuery<Role>
+    public class RoleQuery : DefaultQuery<Role>
     {
 
         private readonly IStore<Role> _store;

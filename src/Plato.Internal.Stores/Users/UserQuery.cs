@@ -11,7 +11,7 @@ namespace Plato.Internal.Stores.Users
     
     #region "UserQuery"
 
-    public class UserQuery : BaseQuery<User>
+    public class UserQuery : DefaultQuery<User>
     {
 
         private readonly IStore<User> _store;

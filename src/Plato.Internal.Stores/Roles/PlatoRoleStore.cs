@@ -22,14 +22,14 @@ namespace Plato.Internal.Stores.Roles
         private readonly ICacheDependency _cacheDependency;
         private readonly ILogger<PlatoRoleStore> _logger;
         private readonly IMemoryCache _memoryCache;
-        private readonly IDbQuery2 _dbQuery;
+        private readonly IDbQueryConfiguration _dbQuery;
       
         public PlatoRoleStore(
             IRoleRepository<Role> roleRepository,
             ICacheDependency cacheDependency,
             ILogger<PlatoRoleStore> logger,
             IMemoryCache memoryCache,
-            IDbQuery2 dbQuery)
+            IDbQueryConfiguration dbQuery)
         {
             _roleRepository = roleRepository;
             _cacheDependency = cacheDependency;

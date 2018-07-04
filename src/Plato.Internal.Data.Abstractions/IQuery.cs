@@ -4,24 +4,6 @@ using System.Threading.Tasks;
 
 namespace Plato.Internal.Data.Abstractions
 {
-    public interface IQuery
-    {
-
-        string TablePrefix { get; set; }
-
-        IQuery Page(int pageIndex, int pageSize);
-
-        IQuery Select<T>(Action<T> configure) where T : new();
-
-        IQuery OrderBy(string columnName, OrderBy sortOrder = Abstractions.OrderBy.Asc);
-
-        Task<IPagedResults<T>> ToList<T>() where T : class;
-
-        IDictionary<string, OrderBy> SortColumns { get; }
-
-    }
-
-
 
     public interface IQuery<TModel> where TModel : class
     {
@@ -30,7 +12,7 @@ namespace Plato.Internal.Data.Abstractions
 
         IQuery<TModel> Page(int pageIndex, int pageSize);
 
-        IQuery<TModel> Select<T>(Action<T> configure) where T : new();
+        IQuery<TModel> Select<TParams>(Action<TParams> configure) where TParams : new();
 
         IQuery<TModel> OrderBy(string columnName, OrderBy sortOrder = Abstractions.OrderBy.Asc);
 

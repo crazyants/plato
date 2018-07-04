@@ -31,13 +31,13 @@ namespace Plato.Entities.Stores
         private readonly ILogger<EntityReplyStore> _logger;
         private readonly ICacheDependency _cacheDependency;
         private readonly IMemoryCache _memoryCache;
-        private readonly IDbQuery2 _dbQuery;
+        private readonly IDbQueryConfiguration _dbQuery;
             
         public EntityReplyStore(
             ILogger<EntityReplyStore> logger,
             ICacheDependency cacheDependency, 
             IMemoryCache memoryCache,
-            IDbQuery2 dbQuery,
+            IDbQueryConfiguration dbQuery,
             IEntityReplyRepository<EntityReply> entityReplyRepository)
         {
             _logger = logger;

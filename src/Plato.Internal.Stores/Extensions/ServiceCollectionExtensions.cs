@@ -30,11 +30,8 @@ namespace Plato.Internal.Stores.Extensions
             services.AddScoped<IDocumentStore, DocumentStore>();
 
             // Ensure query is aware of current db context
-            services.AddScoped<IDbQuery, DbQuery>();
-
-            services.AddScoped<IDbQuery2, DbQuery2>();
-
-
+            services.AddScoped<IDbQueryConfiguration, DbQueryConfiguration>();
+            
             // Files
             services.AddScoped<IFileStore, FileStore>();
 

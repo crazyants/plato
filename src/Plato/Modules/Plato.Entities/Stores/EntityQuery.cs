@@ -10,7 +10,7 @@ namespace Plato.Entities.Stores
 
     #region "EntityQuery"
 
-    public class EntityQuery : BaseQuery<Entity>
+    public class EntityQuery : DefaultQuery<Entity>
     {
 
         private readonly IStore<Entity> _store;

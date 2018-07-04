@@ -26,7 +26,7 @@ namespace Plato.Entities.Stores
         private readonly ILogger<EntityStore> _logger;
         private readonly ICacheDependency _cacheDependency;
         private readonly IMemoryCache _memoryCache;
-        private readonly IDbQuery2 _dbQuery;
+        private readonly IDbQueryConfiguration _dbQuery;
         private readonly ITypedModuleProvider _typedModuleProvider;
         private readonly IEntityDataStore<EntityData> _entityDataStore;
 
@@ -36,7 +36,7 @@ namespace Plato.Entities.Stores
             ICacheDependency cacheDependency,
             ILogger<EntityStore> logger,
             IMemoryCache memoryCache,
-            IDbQuery2 dbQuery, 
+            IDbQueryConfiguration dbQuery, 
             IEntityDataStore<EntityData> entityDataStore)
         {
             _typedModuleProvider = typedModuleProvider;

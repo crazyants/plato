@@ -24,14 +24,14 @@ namespace Plato.Entities.Stores
         private readonly ILogger<EntityParticipantsStore> _logger;
         private readonly ICacheDependency _cacheDependency;
         private readonly IMemoryCache _memoryCache;
-        private readonly IDbQuery2 _dbQuery;
+        private readonly IDbQueryConfiguration _dbQuery;
 
         public EntityParticipantsStore(
             IEntityParticipantsRepository<EntityParticipant> entityParticipantsRepository,
             ILogger<EntityParticipantsStore> logger,
             ICacheDependency cacheDependency,
             IMemoryCache memoryCache,
-            IDbQuery2 dbQuery)
+            IDbQueryConfiguration dbQuery)
         {
             _entityParticipantsRepository = entityParticipantsRepository;
             _logger = logger;
