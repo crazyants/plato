@@ -17,6 +17,8 @@ namespace Plato.Internal.Stores.Abstractions
 
         IQuery QueryAsync();
 
+        IQuery<TModel> QueryAsync2();
+
         Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class;
         
         Task<IPagedResults<TModel>> SelectAsync(params object[] args);

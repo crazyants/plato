@@ -110,6 +110,11 @@ namespace Plato.Internal.Stores.Users
             throw new NotImplementedException();
         }
 
+        public IQuery<UserPhoto> QueryAsync2()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
         {
             throw new NotImplementedException();

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,13 +31,13 @@ namespace Plato.Entities.Stores
         private readonly ILogger<EntityReplyStore> _logger;
         private readonly ICacheDependency _cacheDependency;
         private readonly IMemoryCache _memoryCache;
-        private readonly IDbQuery _dbQuery;
+        private readonly IDbQuery2 _dbQuery;
             
         public EntityReplyStore(
             ILogger<EntityReplyStore> logger,
             ICacheDependency cacheDependency, 
-            IMemoryCache memoryCache, 
-            IDbQuery dbQuery,
+            IMemoryCache memoryCache,
+            IDbQuery2 dbQuery,
             IEntityReplyRepository<EntityReply> entityReplyRepository)
         {
             _logger = logger;
@@ -96,8 +97,13 @@ namespace Plato.Entities.Stores
 
         public IQuery QueryAsync()
         {
+            throw new NotImplementedException();
+        }
+
+        public IQuery<EntityReply> QueryAsync2()
+        {
             var query = new EntityReplyQuery(this);
-            return _dbQuery.ConfigureQuery(query); ;
+            return _dbQuery.ConfigureQuery< EntityReply>(query); ;
         }
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class

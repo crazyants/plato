@@ -19,7 +19,7 @@ namespace Plato.Internal.Stores.Users
         private readonly string _key = CacheKeys.Users.ToString();
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
-        private readonly IDbQuery _dbQuery;
+        private readonly IDbQuery2 _dbQuery;
         private readonly IUserRepository<User> _userRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _memoryCache;
@@ -31,7 +31,7 @@ namespace Plato.Internal.Stores.Users
         #region "constructor"
 
         public PlatoUserStore(
-            IDbQuery dbQuery,
+            IDbQuery2 dbQuery,
             IUserRepository<User> userRepository,
             IHttpContextAccessor httpContextAccessor,
             IMemoryCache memoryCache,
@@ -171,6 +171,11 @@ namespace Plato.Internal.Stores.Users
         }
         
         public IQuery QueryAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQuery<User> QueryAsync2()
         {
             var query = new UserQuery(this);
             return _dbQuery.ConfigureQuery(query); ;

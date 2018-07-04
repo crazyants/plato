@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
@@ -23,14 +24,14 @@ namespace Plato.Entities.Stores
         private readonly ILogger<EntityParticipantsStore> _logger;
         private readonly ICacheDependency _cacheDependency;
         private readonly IMemoryCache _memoryCache;
-        private readonly IDbQuery _dbQuery;
+        private readonly IDbQuery2 _dbQuery;
 
         public EntityParticipantsStore(
             IEntityParticipantsRepository<EntityParticipant> entityParticipantsRepository,
             ILogger<EntityParticipantsStore> logger,
             ICacheDependency cacheDependency,
             IMemoryCache memoryCache,
-            IDbQuery dbQuery)
+            IDbQuery2 dbQuery)
         {
             _entityParticipantsRepository = entityParticipantsRepository;
             _logger = logger;
@@ -84,8 +85,14 @@ namespace Plato.Entities.Stores
 
         public IQuery QueryAsync()
         {
+           
+            throw new NotImplementedException();
+        }
+
+        public IQuery<EntityParticipant> QueryAsync2()
+        {
             var query = new EntityParticipantQuery(this);
-            return _dbQuery.ConfigureQuery(query);
+            return _dbQuery.ConfigureQuery<EntityParticipant>(query);
         }
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class

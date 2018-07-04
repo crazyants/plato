@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -21,14 +22,14 @@ namespace Plato.Internal.Stores.Roles
         private readonly ICacheDependency _cacheDependency;
         private readonly ILogger<PlatoRoleStore> _logger;
         private readonly IMemoryCache _memoryCache;
-        private readonly IDbQuery _dbQuery;
+        private readonly IDbQuery2 _dbQuery;
       
         public PlatoRoleStore(
             IRoleRepository<Role> roleRepository,
             ICacheDependency cacheDependency,
             ILogger<PlatoRoleStore> logger,
             IMemoryCache memoryCache,
-            IDbQuery dbQuery)
+            IDbQuery2 dbQuery)
         {
             _roleRepository = roleRepository;
             _cacheDependency = cacheDependency;
@@ -157,8 +158,13 @@ namespace Plato.Internal.Stores.Roles
 
         public IQuery QueryAsync()
         {
+        throw new NotImplementedException();
+        }
+
+        public IQuery<Role> QueryAsync2()
+        {
             var query = new RoleQuery(this);
-            return _dbQuery.ConfigureQuery(query); ;
+            return _dbQuery.ConfigureQuery< Role>(query); ;
         }
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class

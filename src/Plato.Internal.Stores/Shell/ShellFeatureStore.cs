@@ -56,6 +56,11 @@ namespace Plato.Internal.Stores.Shell
             throw new NotImplementedException();
         }
 
+        public IQuery<ShellFeature> QueryAsync2()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
         {
             throw new NotImplementedException();

@@ -139,6 +139,13 @@ namespace Plato.Internal.Stores.Users
             throw new NotImplementedException();
         }
 
+        public IQuery<UserRole> QueryAsync2()
+        {
+            //var query = new EntityReplyQuery(this);
+            //return _dbQuery.ConfigureQuery<EntityReply>(query); ;
+            throw new NotImplementedException();
+        }
+
         public Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
         {
             throw new NotImplementedException();

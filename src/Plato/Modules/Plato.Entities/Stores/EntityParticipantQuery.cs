@@ -10,7 +10,7 @@ namespace Plato.Entities.Stores
 {
     #region "EntityQuery"
 
-    public class EntityParticipantQuery : DefaultQuery<EntityParticipant>
+    public class EntityParticipantQuery : BaseQuery<EntityParticipant>
     {
 
         private readonly IStore<EntityParticipant> _store;
@@ -22,7 +22,7 @@ namespace Plato.Entities.Stores
 
         public EntityParticipantQueryParams Params { get; set; }
 
-        public override IQuery Select<T>(Action<T> configure)
+        public override IQuery<EntityParticipant> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);

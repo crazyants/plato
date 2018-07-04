@@ -9,7 +9,7 @@ namespace Plato.Entities.Stores
 {
     #region "EntityReplyQuery"
 
-    public class EntityReplyQuery : DefaultQuery<EntityReply>
+    public class EntityReplyQuery : BaseQuery<EntityReply>
     {
 
         private readonly IStore<EntityReply> _store;
@@ -21,7 +21,7 @@ namespace Plato.Entities.Stores
 
         public EntityReplyQueryParams Params { get; set; }
 
-        public override IQuery Select<T>(Action<T> configure)
+        public override IQuery<EntityReply> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);

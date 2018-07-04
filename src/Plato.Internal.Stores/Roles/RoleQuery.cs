@@ -11,7 +11,7 @@ namespace Plato.Internal.Stores.Roles
 
     #region "RoleQuery"
 
-    public class RoleQuery : DefaultQuery<Role>
+    public class RoleQuery : BaseQuery<Role>
     {
 
         private readonly IStore<Role> _store;
@@ -23,7 +23,7 @@ namespace Plato.Internal.Stores.Roles
 
         public RoleQueryParams Params { get; set; }
 
-        public override IQuery Select<T>(Action<T> configure)
+        public override IQuery<Role> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);

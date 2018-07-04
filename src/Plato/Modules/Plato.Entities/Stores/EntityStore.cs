@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -25,7 +26,7 @@ namespace Plato.Entities.Stores
         private readonly ILogger<EntityStore> _logger;
         private readonly ICacheDependency _cacheDependency;
         private readonly IMemoryCache _memoryCache;
-        private readonly IDbQuery _dbQuery;
+        private readonly IDbQuery2 _dbQuery;
         private readonly ITypedModuleProvider _typedModuleProvider;
         private readonly IEntityDataStore<EntityData> _entityDataStore;
 
@@ -35,7 +36,7 @@ namespace Plato.Entities.Stores
             ICacheDependency cacheDependency,
             ILogger<EntityStore> logger,
             IMemoryCache memoryCache,
-            IDbQuery dbQuery, 
+            IDbQuery2 dbQuery, 
             IEntityDataStore<EntityData> entityDataStore)
         {
             _typedModuleProvider = typedModuleProvider;
@@ -121,13 +122,18 @@ namespace Plato.Entities.Stores
         
         public IQuery QueryAsync()
         {
-            var query = new EntityQuery(this);
-            return _dbQuery.ConfigureQuery(query); ;
-        }
-
-        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
-        {
             return null;
+        }
+        
+        public IQuery<Entity> QueryAsync2()
+        {
+            var query = new EntityQuery(this);
+            return _dbQuery.ConfigureQuery<Entity>(query); ;
+        }
+        
+        public Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
+        {
+            throw new NotImplementedException();
         }
 
 

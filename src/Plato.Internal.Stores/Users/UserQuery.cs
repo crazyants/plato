@@ -11,7 +11,7 @@ namespace Plato.Internal.Stores.Users
     
     #region "UserQuery"
 
-    public class UserQuery : DefaultQuery<User>
+    public class UserQuery : BaseQuery<User>
     {
 
         private readonly IStore<User> _store;
@@ -23,7 +23,7 @@ namespace Plato.Internal.Stores.Users
 
         public UserQueryParams Params { get; set; }
 
-        public override IQuery Select<T>(Action<T> configure)
+        public override IQuery<User> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
