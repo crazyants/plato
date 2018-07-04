@@ -135,7 +135,7 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
             Value = value;
-            _builder.Append("{0} = @{0}");
+            _builder.Append("{0} = ").Append(value.ToString());
             return this;
         }
 
@@ -144,7 +144,7 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
             Value = value;
-            _builder.Append("{0} < @{0}");
+            _builder.Append("{0} < ").Append(value.ToString()); ;
             return this;
         }
 
@@ -153,7 +153,7 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
             Value = value;
-            _builder.Append("{0} <= @{0}");
+            _builder.Append("{0} <= ").Append(value.ToString()); ;
             return this;
         }
 
@@ -162,7 +162,7 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
             Value = value;
-            _builder.Append("{0} >= @{0}");
+            _builder.Append("{0} >= ").Append(value.ToString()); ;
             return this;
         }
 
@@ -171,7 +171,7 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
             Value = value;
-            _builder.Append("{0} >= @{0}");
+            _builder.Append("{0} >= ").Append(value.ToString()); ; ;
             return this;
         }
         
@@ -223,6 +223,12 @@ namespace Plato.Internal.Stores.Abstractions
             _builder = new StringBuilder();
         }
 
+        public WhereBool(bool defaultValue)
+        {
+            this.Value = defaultValue;
+            _builder = new StringBuilder();
+        }
+
         public bool Value { get; private set; }
 
         public string Operator => _operator == QueryOperator.And ? " AND " : " OR ";
@@ -244,20 +250,27 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
             Value = value;
-            _builder.Append("{0} = @{0}");
+            _builder.Append("{0} = ").Append(value ? "1" : "0");
             return this;
         }
+
         public WhereBool NotEqual(bool value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" ").Append(_operator.ToString().ToUpper()).Append(" ");
             Value = value;
-            _builder.Append("{0} <> @{0}");
+            _builder.Append("{0} <> ").Append(value ? "1" : "0");
             return this;
         }
 
         public string ToSqlString(string parameterName)
         {
+
+            if (String.IsNullOrEmpty(_builder.ToString()))
+            {
+                throw new Exception("You must call Equals or NotEqual before ToSqlString");
+            }
+
             return _builder.ToString().Replace("{0}", parameterName);
         }
     }

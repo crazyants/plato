@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Entities.Services
@@ -23,13 +24,16 @@ namespace Plato.Entities.Services
 
         private readonly IBroker _broker;
         private readonly IEntityStore<Entity> _entityStore;
+        private readonly IContextFacade _contextFacade;
 
         public EntityManager(
             IEntityStore<Entity> entityStore,
-            IBroker broker)
+            IBroker broker, 
+            IContextFacade contextFacade)
         {
             _entityStore = entityStore;
             _broker = broker;
+            _contextFacade = contextFacade;
         }
 
         #endregion
@@ -40,11 +44,32 @@ namespace Plato.Entities.Services
         {
 
             var result = new EntityResult();
+            
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            var feature = await _contextFacade.GetCurrentFeatureAsync();
+
+            // Set entities featureId based on current feature
+            if (feature != null)
+            {
+                model.FeatureId = feature.Id;
+            }
+            
+            if (user != null)
+            {
+                model.CreatedUserId = user.Id;
+            }
+
+            model.CreatedDate = DateTime.UtcNow;
 
             // Validate
             if (model.Id > 0)
             {
                 return result.Failed(new EntityError($"{nameof(model.Id)} cannot be greater than zero when creating an entity"));
+            }
+
+            if (model.FeatureId == 0)
+            {
+                return result.Failed(new EntityError($"{nameof(model.FeatureId)} must be greater than zero when creating an entity"));
             }
 
             if (String.IsNullOrWhiteSpace(model.Title))
@@ -87,7 +112,16 @@ namespace Plato.Entities.Services
         {
 
             var result = new EntityResult();
-            
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            if (user != null)
+            {
+                model.ModifiedUserId = user.Id;
+            }
+
+            model.ModifiedDate = DateTime.UtcNow;
+
             // Validate
             if (model.Id <= 0)
             {

@@ -150,7 +150,7 @@ namespace Plato.Internal.Data.Providers
             try
             {
                 await OpenAsync();           
-                using (SqlCommand command = CreateCommand(_dbConnection, sql, args))
+                using (var command = CreateCommand(_dbConnection, sql, args))
                 {
                     reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
                     OnExecutedCommand(command);
@@ -315,7 +315,6 @@ namespace Plato.Internal.Data.Providers
 
         void AddParam(IDbCommand cmd, object item)
         {
-
             
             var p = cmd.CreateParameter();
             p.ParameterName = $"@{cmd.Parameters.Count}";
@@ -340,16 +339,21 @@ namespace Plato.Internal.Data.Providers
                 }
                 else if (t == typeof(string))
                 {
-                    p.Size = Math.Max(((string) item).Length + 1, 4000);		// Help query plan caching by using common size
+                    p.Size = Math.Max(((string) item).Length + 1, 4000); // Help query plan caching by using common size
                     p.Value = item;
                 }
                 else if (t == typeof(bool))
                 {
                     p.Value = ((bool)item) ? 1 : 0;
+                    p.DbType = DbType.Boolean;
                 }
                 else if (t == typeof(int))
                 {
                     p.Value = ((int)item);
+                }
+                else if (t == typeof(DateTime?))
+                {
+                    p.Value = ((DateTime) item);
                 }
                 else
                 {

@@ -62,7 +62,7 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "IsPublic",
+                        Name = "IsPrivate",
                         DbType = DbType.Boolean
                     },
                     new SchemaColumn()
@@ -232,7 +232,7 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "IsPublic",
+                        Name = "IsPrivate",
                         DbType = DbType.Boolean
                     },
                     new SchemaColumn()
@@ -459,64 +459,9 @@ namespace Plato.Entities.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "FeatureId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
                         Name = "Keywords",
                         DbType = DbType.String,
                         Length = "255"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsPublic",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsSpam",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsPinned",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsDeleted",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsClosed",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTime2
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedDate",
-                        DbType = DbType.DateTime2
                     }
                 }));
 
@@ -577,64 +522,9 @@ namespace Plato.Entities.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "EntityId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
                         Name = "Keywords",
                         DbType = DbType.String,
                         Length = "255"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsPublic",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsSpam",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsPinned",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsDeleted",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsClosed",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTime2
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedDate",
-                        DbType = DbType.DateTime2
                     }
                 }));
 

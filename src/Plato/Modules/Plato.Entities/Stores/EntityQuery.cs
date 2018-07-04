@@ -3,7 +3,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Models.Roles;
 using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Stores
@@ -45,18 +44,7 @@ namespace Plato.Entities.Stores
                 startSql,
                 populateSql,
                 countSql,
-                Params.Id.Value,
-                Params.FeatureId.Value,
-                Params.Keywords.Value,
-                Params.IsPublic.Value,
-                Params.IsSpam.Value,
-                Params.IsPinned.Value,
-                Params.IsDeleted.Value,
-                Params.IsClosed.Value,
-                Params.CreatedUserId.Value,
-                Params.CreatedDate.Value,
-                Params.ModifiedUserId.Value,
-                Params.ModifiedDate.Value
+                Params.Keywords.Value
             );
 
             return data;

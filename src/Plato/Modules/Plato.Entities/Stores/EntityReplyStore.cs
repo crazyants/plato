@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
@@ -21,8 +25,7 @@ namespace Plato.Entities.Stores
     {
 
         private string _key = "EntityReply";
-
-        private readonly IBroker _broker;
+        
         private readonly IEntityReplyRepository<EntityReply> _entityReplyRepository;
         private readonly ILogger<EntityReplyStore> _logger;
         private readonly ICacheDependency _cacheDependency;
@@ -34,24 +37,18 @@ namespace Plato.Entities.Stores
             ICacheDependency cacheDependency, 
             IMemoryCache memoryCache, 
             IDbQuery dbQuery,
-            IEntityReplyRepository<EntityReply> entityReplyRepository, IBroker broker)
+            IEntityReplyRepository<EntityReply> entityReplyRepository)
         {
             _logger = logger;
             _cacheDependency = cacheDependency;
             _memoryCache = memoryCache;
             _dbQuery = dbQuery;
             _entityReplyRepository = entityReplyRepository;
-            _broker = broker;
         }
-
-
+        
         public async Task<EntityReply> CreateAsync(EntityReply reply)
         {
 
-            // Parse Html and message abstract
-            reply.Html = await ParseMarkdown(reply.Message);
-            reply.Abstract = await ParseAbstract(reply.Message);
-            
             var newReply = await _entityReplyRepository.InsertUpdateAsync(reply);
             if (newReply != null)
             {
@@ -64,10 +61,6 @@ namespace Plato.Entities.Stores
         public async Task<EntityReply> UpdateAsync(EntityReply reply)
         {
 
-            // Parse Html and message abstract
-            reply.Html = await ParseMarkdown(reply.Message);
-            reply.Abstract = await ParseAbstract(reply.Message);
-            
             var updatedReply = await _entityReplyRepository.InsertUpdateAsync(reply);
             if (updatedReply != null)
             {
@@ -109,7 +102,16 @@ namespace Plato.Entities.Stores
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
         {
-            var key = GetEntityReplyCacheKey();
+
+            var hash = args.GetHashCode().ToString();
+            var key = GetEntityReplyCacheKey(hash);
+          
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Selecting entity replies for key '{0}' with the following parameters: {1}",
+                   key, args.Select(a => a));
+            }
+          
             return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
             {
                 var output = await _entityReplyRepository.SelectAsync<T>(args);
@@ -117,8 +119,7 @@ namespace Plato.Entities.Stores
                 {
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        _logger.LogDebug("Adding entity replies to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, key);
+                        _logger.LogInformation("Adding entity replies to cache with key: {0}", key);
                     }
                 }
                 cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
@@ -127,43 +128,47 @@ namespace Plato.Entities.Stores
 
         }
         
-        private async Task<string> ParseMarkdown(string message)
+        string GetCacheHashCode(params object[] args)
         {
 
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            if ((args == null) || (args.Length == 0))
             {
-                Key = "ParseMarkdown"
-            }, message))
-            {
-                return await handler.Invoke(new Message<string>(message, this));
+                return string.Empty;
             }
 
-            return message;
-
-        }
-
-        async Task<string> ParseAbstract(string message)
-        {
-
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            // Precalculate buffer size & ensure GetHashCode is only ever called once
+            var codes = new List<int>();
+            var len = 0;
+            foreach (var arg in args)
             {
-                Key = "ParseAbstract"
-            }, message))
-            {
-                return await handler.Invoke(new Message<string>(message, this));
+                // An argument can be null
+                if (arg != null)
+                {
+                    var code = arg.GetHashCode();
+                    len += code.ToString().Length;
+                    codes.Add(code);
+                }
             }
 
-            return message.StripHtml().TrimToAround(500);
+            var sb = new StringBuilder(len);
+            foreach (var code in codes)
+            {
+                  sb.Append(code);
+            }
+
+            return sb.ToString();
 
         }
-
 
         string GetEntityReplyCacheKey()
         {
             return $"{_key}";
         }
 
-
-
+        string GetEntityReplyCacheKey(string hash)
+        {
+            return $"{_key}_{hash}";
+        }
+        
     }
 }

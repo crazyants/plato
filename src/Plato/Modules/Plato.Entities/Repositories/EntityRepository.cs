@@ -68,7 +68,7 @@ namespace Plato.Entities.Repositories
                 entity.Message,
                 entity.Html,
                 entity.Abstract,
-                entity.IsPublic,
+                entity.IsPrivate,
                 entity.IsSpam,
                 entity.IsPinned,
                 entity.IsDeleted,
@@ -107,7 +107,7 @@ namespace Plato.Entities.Repositories
             }
         }
         
-        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] inputParameters) where T : class
+        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] inputParams) where T : class
         {
             PagedResults<T> output = null;
             using (var context = _dbContext)
@@ -122,7 +122,7 @@ namespace Plato.Entities.Repositories
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntitiesPaged",
-                    inputParameters
+                    inputParams
                 );
 
                 if ((reader != null) && (reader.HasRows))
@@ -215,7 +215,7 @@ namespace Plato.Entities.Repositories
             string message,
             string html,
             string messageAbstract,
-            bool isPublic,
+            bool isPrivate,
             bool isSpam,
             bool isPinned,
             bool isDeleted,
@@ -251,7 +251,7 @@ namespace Plato.Entities.Repositories
                     message.ToEmptyIfNull(),
                     html.ToEmptyIfNull(),
                     messageAbstract.ToEmptyIfNull().TrimToSize(500),
-                    isPublic,
+                    isPrivate,
                     isSpam,
                     isPinned,
                     isDeleted,

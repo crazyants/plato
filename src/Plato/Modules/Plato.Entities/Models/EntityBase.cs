@@ -19,7 +19,7 @@ namespace Plato.Entities.Models
 
         public string Abstract { get; set; }
 
-        public bool IsPublic { get; set; }
+        public bool IsPrivate { get; set; }
 
         public bool IsSpam { get; set; }
 
@@ -52,8 +52,8 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("Abstract"))
                 Abstract = Convert.ToString(dr["Abstract"]);
 
-            if (dr.ColumnIsNotNull("IsPublic"))
-                IsPublic = Convert.ToBoolean(dr["IsPublic"]);
+            if (dr.ColumnIsNotNull("IsPrivate"))
+                IsPrivate = Convert.ToBoolean(dr["IsPrivate"]);
 
             if (dr.ColumnIsNotNull("IsSpam"))
                 IsSpam = Convert.ToBoolean(dr["IsSpam"]);

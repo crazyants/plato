@@ -43,18 +43,7 @@ namespace Plato.Entities.Stores
                 startSql,
                 populateSql,
                 countSql,
-                Params.Id.Value,
-                Params.EntityId.Value,
-                Params.Keywords.Value,
-                Params.IsPublic.Value,
-                Params.IsSpam.Value,
-                Params.IsPinned.Value,
-                Params.IsDeleted.Value,
-                Params.IsClosed.Value,
-                Params.CreatedUserId.Value,
-                Params.CreatedDate.Value,
-                Params.ModifiedUserId.Value,
-                Params.ModifiedDate.Value
+                Params.Keywords.Value
             );
 
             return data;
@@ -72,7 +61,7 @@ namespace Plato.Entities.Stores
         private WhereInt _id;
         private WhereInt _entityId;
         private WhereString _keywords;
-        private WhereBool _isPublic;
+        private WhereBool _isPrivate;
         private WhereBool _isSpam;
         private WhereBool _isPinned;
         private WhereBool _isDeleted;
@@ -100,10 +89,10 @@ namespace Plato.Entities.Stores
             set => _keywords = value;
         }
 
-        public WhereBool IsPublic
+        public WhereBool IsPrivate
         {
-            get => _isPublic ?? (_isPublic = new WhereBool());
-            set => _isPublic = value;
+            get => _isPrivate ?? (_isPrivate = new WhereBool());
+            set => _isPrivate = value;
         }
 
         public WhereBool IsSpam
@@ -269,16 +258,18 @@ namespace Plato.Entities.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("RoleName"));
+                sb.Append(_query.Params.Keywords.ToSqlString("Keywords"));
             }
-            
+
+           
             if (!string.IsNullOrEmpty(sb.ToString()))
-                sb.Append(_query.Params.Keywords.Operator);
-            sb.Append(_query.Params.Keywords.ToSqlString("RoleName"));
+                sb.Append(_query.Params.IsPrivate.Operator);
+            sb.Append(_query.Params.IsPrivate.ToSqlString("IsPrivate"));
+      
+         
    
-
-
             return sb.ToString();
+
         }
 
         private string BuildOrderBy()

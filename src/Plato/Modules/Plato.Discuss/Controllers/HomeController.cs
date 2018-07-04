@@ -87,13 +87,7 @@ namespace Plato.Discuss.Controllers
             {
                 pagerOptions = new PagerOptions();
             }
-
-
-
-
-            string path = Request.Path;
-            ViewData["path"] = path;
-
+            
             var feature = await _contextFacade.GetCurrentFeatureAsync();
 
             ViewBag.Feature = feature;
@@ -327,9 +321,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
             //var sb = new StringBuilder();
 
             //var newTopic = await _entityStore.CreateAsync(topic);
-
-
-
+            
             //return View(model);
 
         }
@@ -473,11 +465,13 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                 .Select<EntityReplyQueryParams>(q =>
                 {
                     q.EntityId.Equals(entityId);
-                    //if (!string.IsNullOrEmpty(filterOptions.Search))
-                    //{
-                    //    q.UserName.IsIn(filterOptions.Search).Or();
-                    //    q.Email.IsIn(filterOptions.Search);
-                    //}
+                    q.IsPrivate.Equals(false);
+                    q.IsSpam.Equals(false);
+                    q.IsDeleted.Equals(false);
+                    if (!string.IsNullOrEmpty(filterOptions.Search))
+                    {
+                        q.Keywords.IsIn(filterOptions.Search);
+                    }
                     // q.UserName.IsIn("Admin,Mark").Or();
                     // q.Email.IsIn("email440@address.com,email420@address.com");
                     // q.Id.Between(1, 5);
