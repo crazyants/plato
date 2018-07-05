@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Plato.Entities.Models;
@@ -20,8 +20,8 @@ namespace Plato.Entities.Stores
         #region "Constructor"
 
         private readonly ICacheManager _cacheManager;
-
         private readonly IEntityRepository<Entity> _entityRepository;
+        private readonly IEntityDataStore<EntityData> _entityDataStore;
         private readonly ILogger<EntityStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ITypedModuleProvider _typedModuleProvider;
@@ -31,11 +31,13 @@ namespace Plato.Entities.Stores
             IEntityRepository<Entity> entityRepository,
             ILogger<EntityStore> logger,
             IDbQueryConfiguration dbQuery, 
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IEntityDataStore<EntityData> entityDataStore)
         {
             _typedModuleProvider = typedModuleProvider;
             _entityRepository = entityRepository;
             _cacheManager = cacheManager;
+            _entityDataStore = entityDataStore;
             _dbQuery = dbQuery;
             _logger = logger;
         }
@@ -125,7 +127,37 @@ namespace Plato.Entities.Stores
         public async Task<IPagedResults<Entity>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityRepository.SelectAsync(args));
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+                var pagedResults = await _entityRepository.SelectAsync(args);
+                
+                if (pagedResults != null)
+                {
+                    // get all meta data for returned results
+                    var entityData = await _entityDataStore
+                        .QueryAsync()
+                        .Select<EntityDataQueryParams>(q =>
+                        {
+                            q.EntityId.IsIn(pagedResults.Data.Select(r => r.Id).ToArray());
+                        }).ToList();
+
+                    foreach (var result in pagedResults.Data)
+                    {
+                        foreach (var data in entityData.Data.Where(d => d.EntityId == result.Id))
+                        {
+                            var type = await GetModuleTypeCandidateAsync(data.Key);
+                            if (type != null)
+                            {
+                                var obj = JsonConvert.DeserializeObject(data.Value, type);
+                                result.SetMetaData(type, (ISerializable) obj);
+                            }
+                        }
+                    }
+
+                }
+            
+                return pagedResults;
+            });
         }
 
         #endregion

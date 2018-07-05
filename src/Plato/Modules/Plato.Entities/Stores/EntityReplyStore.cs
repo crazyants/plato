@@ -97,35 +97,7 @@ namespace Plato.Entities.Stores
             var query = new EntityReplyQuery(this);
             return _dbQuery.ConfigureQuery< EntityReply>(query); ;
         }
-
-        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
-        {
-
-            var hash = args.GetHashCode().ToString();
-            var key = GetEntityReplyCacheKey(hash);
-          
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation("Selecting entity replies for key '{0}' with the following parameters: {1}",
-                   key, args.Select(a => a));
-            }
-          
-            return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
-            {
-                var output = await _entityReplyRepository.SelectAsync<T>(args);
-                if (output != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Information))
-                    {
-                        _logger.LogInformation("Adding entity replies to cache with key: {0}", key);
-                    }
-                }
-                cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
-                return output;
-            });
-
-        }
-
+        
         public async Task<IPagedResults<EntityReply>> SelectAsync(params object[] args)
         {
             var hash = args.GetHashCode().ToString();
@@ -139,7 +111,7 @@ namespace Plato.Entities.Stores
 
             return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
             {
-                var output = await _entityReplyRepository.SelectAsync<EntityReply>(args);
+                var output = await _entityReplyRepository.SelectAsync(args);
                 if (output != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Information))

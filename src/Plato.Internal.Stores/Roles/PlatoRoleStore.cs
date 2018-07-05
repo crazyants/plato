@@ -160,36 +160,14 @@ namespace Plato.Internal.Stores.Roles
             var query = new RoleQuery(this);
             return _dbQuery.ConfigureQuery< Role>(query); ;
         }
-
-        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
-        {
-
-            var key = CacheKey.GetRolesCacheKey();
-
-            return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
-            {
-                var roles = await _roleRepository.SelectAsync<T>(args);
-                if (roles != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Information))
-                    {
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, key);
-                    }
-                }
-                cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
-                return roles;
-            });
-            
-        }
-
+        
         public async Task<IPagedResults<Role>> SelectAsync(params object[] args)
         {
             var key = CacheKey.GetRolesCacheKey();
 
             return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
             {
-                var roles = await _roleRepository.SelectAsync<Role>(args);
+                var roles = await _roleRepository.SelectAsync(args);
                 if (roles != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Information))

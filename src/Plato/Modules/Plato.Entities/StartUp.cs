@@ -32,15 +32,18 @@ namespace Plato.Entities
             // Feature event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
-            // Data Repositories
+            // Repositories
             services.AddScoped<IEntityRepository<Entity>, EntityRepository>();
-            services.AddScoped<IEntityReplyRepository<EntityReply>, EntityReplyRepository>();
             services.AddScoped<IEntityDataRepository<EntityData>, EntityDataRepository>();
-
+            services.AddScoped<IEntityReplyRepository<EntityReply>, EntityReplyRepository>();
+            
+            // Stores
             services.AddScoped<IEntityStore<Entity>, EntityStore>();
+            services.AddScoped<IEntityDataStore<EntityData>, EntityDataStore>();
+            services.AddScoped<IEntityDataItemStore<EntityData>, EntityDataItemStore<EntityData>>();
             services.AddScoped<IEntityReplyStore<EntityReply>, EntityReplyStore>();
-            services.AddScoped<IEntityDataStore<EntityData>, EntityDataStore<EntityData>>();
 
+            // Managers
             services.AddScoped<IEntityManager<Entity>, EntityManager>();
             services.AddScoped<IEntityManager<EntityReply>, EntityReplyManager>();
 

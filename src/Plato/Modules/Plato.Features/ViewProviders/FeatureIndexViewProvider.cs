@@ -12,30 +12,30 @@ namespace Plato.Features.ViewProviders
     public class FeaturesIndexViewProvider : BaseViewProvider<FeaturesViewModel>
     {
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(FeaturesViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(FeaturesViewModel model, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(FeaturesViewModel viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(FeaturesViewModel viewModel, IUpdateModel updater)
         {
 
-            return Views(
+            return Task.FromResult(Views(
                 View<FeaturesViewModel>("Features.Index.Header", model => viewModel).Zone("header"),
                 View<FeaturesViewModel>("Features.Index.Content", model => viewModel).Zone("content")
-            );
+            ));
 
 
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(FeaturesViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(FeaturesViewModel model, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(FeaturesViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(FeaturesViewModel model, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
     }
 

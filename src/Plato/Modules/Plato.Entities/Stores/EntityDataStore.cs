@@ -1,111 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
-using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Cache;
+using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Modules.Abstractions;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Stores
 {
-    public class EntityDataStore<T> : IEntityDataStore<T> where T : class
+
+    public interface IEntityDataStore<T> : IStore<T> where T : class
     {
 
-        #region "Private Variables"
+    }
 
+    public class EntityDataStore : IEntityDataStore<EntityData>
+    {
+        private readonly ICacheManager _cacheManager;
         private readonly IEntityDataRepository<EntityData> _entityDataRepository;
+        private readonly ILogger<EntityDataStore> _logger;
+        private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ITypedModuleProvider _typedModuleProvider;
 
-        #endregion
-
-        #region ""Constructor"
 
         public EntityDataStore(
-            IEntityDataRepository<EntityData> entityDataRepository)
+            ICacheManager cacheManager,
+            IEntityDataRepository<EntityData> entityDataRepository, 
+            ILogger<EntityDataStore> logger,
+            IDbQueryConfiguration dbQuery,
+            ITypedModuleProvider typedModuleProvider)
         {
+            _cacheManager = cacheManager;
             _entityDataRepository = entityDataRepository;
+            _logger = logger;
+            _dbQuery = dbQuery;
+            _typedModuleProvider = typedModuleProvider;
         }
 
-        #endregion
 
-        #region "IMplementation"
-
-        public async Task<T> GetAsync(int entityId, string key)
-        {
-            var result = await GetByEntityIdAndKeyAsync(entityId, key);
-            if (result != null)
-            {
-                // If the generic type implements ISerializable use
-                // the the DeserializeAsync method on the generic type
-                // Allows us to implement our own Serialize and Deserialize
-                // methods on the type if we want to override the default
-                // Serializable base class virtual methods
-                var serializable = typeof(T) as ISerializable;
-                if (serializable != null)
-                {
-                    return await serializable.DeserializeGenericTypeAsync<T>(result.Value);
-                }
-                return await result.Value.DeserializeAsync<T>();
-            }
-
-            return default(T);
-        }
-
-        public async Task<T> UpdateAsync(int entityId, string key, ISerializable value)
-        {
-
-            // Get or create setting
-            var data = await GetByEntityIdAndKeyAsync(entityId, key)
-                       ?? new EntityData()
-                       {
-                           EntityId = entityId,
-                           Key = key
-                       };
-
-            // Serilize value
-            data.Value = await value.SerializeAsync();
-
-            var updatedData = await _entityDataRepository.InsertUpdateAsync(data);
-            if (updatedData != null)
-            {
-                return await GetAsync(entityId, updatedData.Key);
-            }
-
-            return default(T);
-        }
-
-        public Task<bool> DeleteAsync(int userId, string key)
+        public Task<EntityData> CreateAsync(EntityData model)
         {
             throw new NotImplementedException();
         }
 
-        #endregion
-
-        #region "Private Methods"
-
-        private async Task<EntityData> GetByEntityIdAndKeyAsync(int userId, string key)
+        public Task<EntityData> UpdateAsync(EntityData model)
         {
-            var allKeys = await GetAllKeys(userId);
-            return allKeys?.FirstOrDefault(s => s.Key == key);
+            throw new NotImplementedException();
         }
 
-        private async Task<IEnumerable<EntityData>> GetAllKeys(int entityId)
+        public Task<bool> DeleteAsync(EntityData model)
         {
-            var output = new List<EntityData>();
-            var entries = await _entityDataRepository.SelectDataByEntityId(entityId);
-            if (entries != null)
-            {
-                foreach (var entry in entries)
-                {
-                    output.Add(entry);
-                }
-            }
-
-            return output;
+            throw new NotImplementedException();
         }
 
-        #endregion
+        public Task<EntityData> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
 
+        public IQuery<EntityData> QueryAsync()
+        {
+            var query = new EntityDataQuery(this);
+            return _dbQuery.ConfigureQuery<EntityData>(query); ;
+        }
+
+        public async Task<IPagedResults<EntityData>> SelectAsync(params object[] args)
+        {
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityDataRepository.SelectAsync(args));
+        }
     }
-
 }

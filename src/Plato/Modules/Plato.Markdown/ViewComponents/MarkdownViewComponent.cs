@@ -16,7 +16,7 @@ namespace Plato.Markdown.ViewComponents
             _markdownParserFactory = markdownParserFactory;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(
+        public Task<IViewComponentResult> InvokeAsync(
             string value,
             LocalizedHtmlString placeHolderText,
             string htmlName,
@@ -31,7 +31,7 @@ namespace Plato.Markdown.ViewComponents
                 AutoFocusw = autoFocus
             };
 
-            return View(model);
+            return Task.FromResult((IViewComponentResult)View(model));
         }
 
     }

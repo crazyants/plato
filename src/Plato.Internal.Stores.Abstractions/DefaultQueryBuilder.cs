@@ -195,11 +195,9 @@ namespace Plato.Internal.Stores.Abstractions
                 _builder.Append(" OR ");
             Value = value[0];
             _builder
-                .Append("{0} IN ( SELECT * FROM plato_fn_ListToTable('")
-                .Append(delimiter)
-                .Append("', '").
-                Append(value.ToDelimitedString()).
-                Append("' )");
+                .Append("{0} IN (")
+                .Append(value.ToDelimitedString(delimiter))
+                .Append(")");
             return this;
         }
 

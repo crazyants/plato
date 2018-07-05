@@ -88,34 +88,13 @@ namespace Plato.Entities.Stores
             var query = new EntityParticipantQuery(this);
             return _dbQuery.ConfigureQuery<EntityParticipant>(query);
         }
-
-        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
-        {
-            var key = GetEntityParticipantCacheKey();
-            return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
-            {
-                var output = await _entityParticipantsRepository.SelectAsync<T>(args);
-                if (output != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Information))
-                    {
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, key);
-                    }
-                }
-
-                cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
-                return output;
-            });
-
-        }
-
+        
         public async Task<IPagedResults<EntityParticipant>> SelectAsync(params object[] args)
         {
             var key = GetEntityParticipantCacheKey();
             return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
             {
-                var output = await _entityParticipantsRepository.SelectAsync<EntityParticipant>(args);
+                var output = await _entityParticipantsRepository.SelectAsync(args);
                 if (output != null)
                 {
                     if (_logger.IsEnabled(LogLevel.Information))

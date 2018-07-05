@@ -364,7 +364,8 @@ namespace Plato.Entities.Handlers
                 builder
                     .DropTable(_entityData)
                     .DropDefaultProcedures(_entityData)
-                    .DropProcedure(new SchemaProcedure("SelectEntityDatumByEntityId"));
+                    .DropProcedure(new SchemaProcedure("SelectEntityDatumByEntityId"))
+                    .DropProcedure(new SchemaProcedure("SelectEntityDatumPaged"));
                 
                 // drop entity participants
                 builder
@@ -460,8 +461,7 @@ namespace Plato.Entities.Handlers
                                 )")
                     .ForTable(_entities)
                     .WithParameter(_entities.PrimaryKeyColumn));
-
-
+            
             builder.CreateProcedure(new SchemaProcedure("SelectEntitiesPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_entities)
                 .WithParameters(new List<SchemaColumn>()
@@ -478,8 +478,7 @@ namespace Plato.Entities.Handlers
 
         void EntityData(ISchemaBuilder builder)
         {
-
-         
+            
             builder
                 // Create tables
                 .CreateTable(_entityData)
@@ -488,6 +487,18 @@ namespace Plato.Entities.Handlers
                 .CreateProcedure(new SchemaProcedure("SelectEntityDatumByEntityId", StoredProcedureType.SelectByKey)
                     .ForTable(_entityData)
                     .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
+
+            builder.CreateProcedure(new SchemaProcedure("SelectEntityDatumPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_entityData)
+                .WithParameters(new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        Name = "[Key]",
+                        DbType = DbType.String,
+                        Length = "255"
+                    }
+                }));
 
         }
 

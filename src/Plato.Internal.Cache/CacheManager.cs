@@ -45,11 +45,14 @@ namespace Plato.Internal.Cache
 
                 entry.SetValue(obj);
                 entry.Dispose();
-                
+            
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
+                    var type = obj != null
+                        ? ((TItem)obj).GetType()
+                        : typeof(TItem);
                     _logger.LogInformation("Added entry to cache of type {0} with key: {1}",
-                        ((TItem)obj).GetType(), key);
+                        type.Name, key);
                 }
                 
             }

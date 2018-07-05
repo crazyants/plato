@@ -106,12 +106,7 @@ namespace Plato.Entities.Repositories
                 return await BuildEntityFromResultSets(reader);
             }
         }
-
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public async Task<IPagedResults<Entity>> SelectAsync(params object[] inputParams)
         {
             PagedResults<Entity> output = null;

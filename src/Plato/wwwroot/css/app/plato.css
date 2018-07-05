@@ -3,6 +3,7 @@
 .transition-3x { transition: all 0.25s ease-out; }
 .transition-4x { transition: all 0.30s ease-out; }
 
+.card-title { margin: 0.50rem 0; }
 /* ------------------------- */
 /* Drop downs */
 /* ------------------------- */
@@ -14,24 +15,74 @@
 
 /* Dropdown animation */
 
+.dropdown-menu {
+    margin-top: 9px !important;
+}
+
 .dropdown-menu.show {
+    top: 100%;
     animation: showDropdown 0.1s ease-out;
+}
+
+.dropdown-menu-right.show {
+    top: 100%;
+    animation: showDropdown 0.1s ease-out;
+}
+
+.btn-group.show>.dropdown-arrow, 
+.dropdown.show > .dropdown-arrow {
+    display: block;
+    -webkit-transform-origin: bottom;
+    transform-origin: bottom;
+    animation: showDropdown 0.1s ease-out;
+}
+
+.btn-group .dropdown-arrow,
+.dropdown .dropdown-arrow {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    overflow: hidden;
+    height: 1.25rem;
+    width: 1.25rem;
+    margin-top: -10px;
+    margin-left: -10px;
+    pointer-events: none;
+    z-index: 1001;
+}
+
+.btn-group .dropdown-arrow:before,
+.dropdown .dropdown-arrow:before {
+    content: "";
+    position: absolute;
+    bottom: -.375rem;
+    left: 50%;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    display: block;
+    height: .75rem;
+    width: .75rem;
+    margin-left: -5px;
+    background-color: hsla(0,0%,100%,.98);
+    -webkit-box-shadow: 0 0 0 1px rgba(61,70,79,.05), 0 2px 7px 1px rgba(61,70,79,.16);
+    box-shadow: 0 0 0 1px rgba(61,70,79,.05), 0 2px 7px 1px rgba(61,70,79,.16);
+    pointer-events: none;
 }
 
 @keyframes showDropdown {
     0% {
-        top: 100%;
         opacity: 0;
         -webkit-transform: scale(.8);
         transform: scale(.8)
     }
     to {
-        top: 100%;
         opacity: 1;
         -webkit-transform: scale(1);
         transform: scale(1)
     }
 }
+
 
 /* ------------------------- */
 /* avatar */

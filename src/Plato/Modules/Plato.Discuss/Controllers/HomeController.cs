@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -25,15 +26,15 @@ namespace Plato.Discuss.Controllers
 
         #region "Constructor"
 
+
+        private readonly IEntityDataStore<EntityData> _entityDataStore;
+
         private readonly IViewProviderManager<HomeIndexViewModel> _homeIndexViewProvider;
         private readonly IViewProviderManager<HomeTopicViewModel> _homeTopicViewProvider;
 
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
-        
         private readonly IEntityStore<Entity> _entityStore;
-
-
         private readonly IEntityManager<Entity> _entityManager;
         private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
         private readonly IAlerter _alerter;
@@ -51,7 +52,7 @@ namespace Plato.Discuss.Controllers
             IViewProviderManager<HomeIndexViewModel> homeIndexViewProvider,
             IViewProviderManager<HomeTopicViewModel> homeTopicViewProvider,
             IEntityManager<Entity> entityManager,
-            IAlerter alerter)
+            IAlerter alerter, IEntityDataStore<EntityData> entityDataStore)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
@@ -61,7 +62,8 @@ namespace Plato.Discuss.Controllers
             _homeIndexViewProvider = homeIndexViewProvider;
             _homeTopicViewProvider = homeTopicViewProvider;
             _alerter = alerter;
-            
+            _entityDataStore = entityDataStore;
+
             T = localizer;
     
 
@@ -88,197 +90,11 @@ namespace Plato.Discuss.Controllers
                 pagerOptions = new PagerOptions();
             }
 
-            //var feature = await _contextFacade.GetCurrentFeatureAsync();
-
-            //ViewBag.Feature = feature;
 
             // ------------------------
 
-//            var rnd = new Random();
-
-//            var topic = new Entity()
-//            {
-//                Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
-//                Message = @"Hi There, 
-
-//# header 1
-
-//Test message Test message Test message Test :)
-
-//## Header 2
-
-//message Test message Test message Test message :(
-
-//Test message Test message Test message Test 
-
-//message Test message Test message Test message 
-
-//Test message Test message Test message Test message 
-
-//Test message Test message Test message Test message Test 
-
-//- list 1
-//- list 2
-//- list 3
-
-//message Test message  " + rnd.Next(0, 100000).ToString(),
-//            };
-
-//            var topicDetails = new EntityMetaData()
-//            {
-//                SomeNewValue = "Example Value 123",
-//                Users = new List<Participant>()
-//                {
-//                    new Participant()
-//                    {
-//                        UserId = 1,
-//                        UserName = "Test",
-//                        Participations = 10
-
-//                    },
-//                    new Participant()
-//                    {
-//                        UserId = 2,
-//                        UserName = "Mike Jones",
-//                        Participations = 5
-//                    },
-//                    new Participant()
-//                    {
-//                        UserId = 3,
-//                        UserName = "Sarah Smith",
-//                        Participations = 2
-//                    }
-//                }
-//            };
-
-//            topic.SetMetaData<EntityMetaData>(topicDetails);
-
-//            var sb = new StringBuilder();
-
-//            var data = await _entityManager.CreateAsync(topic);
-//            if (data.Succeeded)
-//            {
-//                if (data.Response is Entity newTopic)
-//                {
-
-//                    sb
-//                        .Append("<h1>New Topic</h1>")
-//                        .Append("<strong>Title</strong>")
-//                        .Append("<br>")
-//                        .Append(newTopic.Title)
-//                        .Append("<br>")
-//                        .Append("<strong>ID</strong>")
-//                        .Append(newTopic.Id);
-
-//                    var details = newTopic.GetMetaData<EntityMetaData>();
-//                    if (details?.Users != null)
-//                    {
-
-//                        sb.Append("<h5>Some Value</h5>")
-//                            .Append(details.SomeNewValue)
-//                            .Append("<br>");
-
-//                        sb.Append("<h5>Participants</h5>");
-
-//                        foreach (var user in details.Users)
-//                        {
-//                            sb.Append(user.UserName)
-//                                .Append("<br>");
-//                        }
-
-
-//                    }
-//                }
-//            }
-
-//            var existingTopic = await _entityStore.GetByIdAsync(142);
-//            if (existingTopic != null)
-//            {
-
-//                sb
-//                    .Append("<h1>Existing Topic</h1>")
-//                    .Append("<strong>Title </strong>")
-//                    .Append("<br>")
-//                    .Append(existingTopic.Title)
-//                    .Append("<br>")
-//                    .Append("<strong>ID </strong>")
-//                    .Append(existingTopic.Id);
-
-//                // random details
-//                var existingDetails = existingTopic.GetMetaData<EntityMetaData>();
-//                if (existingDetails?.Users != null)
-//                {
-
-//                    sb.Append("<h5>Some Value</h5>")
-//                        .Append(existingDetails.SomeNewValue)
-//                        .Append("<br>");
-
-//                    sb.Append("<h5>Participants</h5>");
-
-//                    foreach (var user in existingDetails.Users)
-//                    {
-//                        sb.Append(user.UserName)
-//                            .Append("<br>");
-//                    }
-
-//                }
-
-//            }
-
-
-//            ViewBag.TopicData = sb.ToString();
-
-            // ------------------------
-
-
-
-            //var entityDetails1 = new EntityDetails()
-            //{
-            //    SomeValue = "entityDetails1"
-            //};
-
-            //var entityDetails2 = new EntityDetails()
-            //{
-            //    SomeValue = "entityDetails2"
-            //};
-
-            //var entity = new Entity()
-            //{
-            //    FeatureId = feature.Id,
-            //    Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
-            //    Markdown = "Test message " + rnd.Next(0, 100000).ToString(),
-            //    Html = "Test message " + rnd.Next(0, 100000).ToString(),
-            //    PlainText = "Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message Test message  " + rnd.Next(0, 100000).ToString(),
-            //    Data = new List<EntityData>()
-            //    {
-            //        new EntityData()
-            //        {
-            //            Key = "Data1",
-            //            Value = entityDetails1.Serialize()
-            //        },
-            //        new EntityData()
-            //        {
-            //            Key = "Data2",
-            //            Value = entityDetails2.Serialize()
-            //        }
-            //    }
-
-            //};
-
-            //var newEntity = await _entityStore.CreateAsync(entity);
-
-            //var pagerOptions = new PagerOptions()
-            //{
-            //    Page = 1,
-            //    PageSize = 20
-            //};
-
-            //var model = new DiscussIndexViewModel()
-            //{
-            //    Results = await GetEntities(pagerOptions)
-            //};
-
-            //return View(model);
+            ViewBag.TopicData = await CreateSampleData();
+            
 
 
             // Maintain previous route data when generating page links
@@ -288,6 +104,19 @@ namespace Plato.Discuss.Controllers
             
             // Get model
             var model = await GetIndexViewModel(filterOptions, pagerOptions);
+
+
+            var data =  await GetEntityDataAsync(model.Results.Data.Select(e => e.Id).ToArray());
+            
+            var sb = new StringBuilder();
+            foreach (var item in data.Data)
+            {
+                sb.Append(item.Key)
+                    .Append(" ")
+                    .Append(item.Value);
+            }
+
+            ViewBag.MetaData = sb.ToString();
 
             // Build view
             var result = await _homeIndexViewProvider.ProvideIndexAsync(model, this);
@@ -314,23 +143,14 @@ namespace Plato.Discuss.Controllers
             _alerter.Success(T["Topic Created Successfully!"]);
 
             return RedirectToAction(nameof(Index));
-            
-
-            //topic.SetMetaData<TopicDetails>(topicDetails);
-
-            //var sb = new StringBuilder();
-
-            //var newTopic = await _entityStore.CreateAsync(topic);
-            
-            //return View(model);
 
         }
         
-        public async Task<IActionResult> Channel()
+        public Task<IActionResult> Channel()
         {
             ViewData["Message"] = "Your application description page.";
 
-            return View();
+            return Task.FromResult((IActionResult) View());
         }
 
         public async Task<IActionResult> Topic(
@@ -495,6 +315,166 @@ namespace Plato.Discuss.Controllers
                 })
                 .OrderBy("Id", OrderBy.Desc)
                 .ToList();
+        }
+        
+        public async Task<IPagedResults<EntityData>> GetEntityDataAsync(
+            int[] entityIds)
+        {
+            return await _entityDataStore
+                .QueryAsync()
+                .Select<EntityDataQueryParams>(q => { q.EntityId.IsIn(entityIds); }).ToList();
+        }
+
+
+
+        private async Task<string> CreateSampleData()
+        { 
+
+            var rnd = new Random();
+            var topic = new Entity()
+            {
+                Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
+                Message = @"Hi There, 
+
+# header 1
+
+Test message Test message Test message Test :)
+
+## Header 2
+
+message Test message Test message Test message :(
+
+Test message Test message Test message Test 
+
+    var entity = await _entityStore.GetByIdAsync(entityId);
+    var replies = await GetEntityReplies(entityId, filterOptions, pagerOptions);
+        return new HomeTopicViewModel(
+            entity,
+            replies,
+            filterOptions,
+            pagerOptions);
+
+### Header 3
+
+message Test message Test message Test message 
+
+Test message Test message Test message Test message 
+
+#### Header 4
+
+Test message Test message Test message Test message Test 
+
+- list 1
+- list 2
+- list 3
+
+message Test message  " + rnd.Next(0, 100000).ToString(),
+};
+
+            var topicDetails = new EntityMetaData()
+            {
+                SomeNewValue = "Example Value 123",
+                Users = new List<Participant>()
+                            {
+                                new Participant()
+                                {
+                                    UserId = 1,
+                                    UserName = "Test",
+                                    Participations = 10
+
+                                },
+                                new Participant()
+                                {
+                                    UserId = 2,
+                                    UserName = "Mike Jones",
+                                    Participations = 5
+                                },
+                                new Participant()
+                                {
+                                    UserId = 3,
+                                    UserName = "Sarah Smith",
+                                    Participations = 2
+                                }
+                            }
+            };
+
+            topic.SetMetaData<EntityMetaData>(topicDetails);
+
+            var sb = new StringBuilder();
+
+            var data = await _entityManager.CreateAsync(topic);
+            if (data.Succeeded)
+            {
+                if (data.Response is Entity newTopic)
+                {
+
+                    sb
+                        .Append("<h1>New Topic</h1>")
+                        .Append("<strong>Title</strong>")
+                        .Append("<br>")
+                        .Append(newTopic.Title)
+                        .Append("<br>")
+                        .Append("<strong>ID</strong>")
+                        .Append(newTopic.Id);
+
+                    var details = newTopic.GetMetaData<EntityMetaData>();
+                    if (details?.Users != null)
+                    {
+
+                        sb.Append("<h5>Some Value</h5>")
+                            .Append(details.SomeNewValue)
+                            .Append("<br>");
+
+                        sb.Append("<h5>Participants</h5>");
+
+                        foreach (var user in details.Users)
+                        {
+                            sb.Append(user.UserName)
+                                .Append("<br>");
+                        }
+
+
+                    }
+                }
+            }
+
+            var existingTopic = await _entityStore.GetByIdAsync(142);
+            if (existingTopic != null)
+            {
+
+                sb
+                    .Append("<h1>Existing Topic</h1>")
+                    .Append("<strong>Title </strong>")
+                    .Append("<br>")
+                    .Append(existingTopic.Title)
+                    .Append("<br>")
+                    .Append("<strong>ID </strong>")
+                    .Append(existingTopic.Id);
+
+                // random details
+                var existingDetails = existingTopic.GetMetaData<EntityMetaData>();
+                if (existingDetails?.Users != null)
+                {
+
+                    sb.Append("<h5>Some Value</h5>")
+                        .Append(existingDetails.SomeNewValue)
+                        .Append("<br>");
+
+                    sb.Append("<h5>Participants</h5>");
+
+                    foreach (var user in existingDetails.Users)
+                    {
+                        sb.Append(user.UserName)
+                            .Append("<br>");
+                    }
+
+                }
+
+            }
+
+
+            return sb.ToString();
+
         }
 
         #endregion

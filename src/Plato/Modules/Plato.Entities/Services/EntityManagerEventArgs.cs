@@ -1,6 +1,5 @@
-﻿using Plato.Entities.Models;
-
-namespace Plato.Entities.Stores
+﻿
+namespace Plato.Entities.Services
 {
     public class EntityManagerEventArgs
     {

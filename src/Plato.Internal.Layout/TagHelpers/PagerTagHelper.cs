@@ -101,12 +101,22 @@ namespace Plato.Internal.Layout.TagHelpers
         HtmlString BuildFirst()
         {
 
+            if (this.Model.Page <= 2)
+            {
+                return new HtmlString(string.Empty);
+            }
+
+            _routeData.Remove(pageKey);
+            var url = _urlHelper.RouteUrl(new UrlRouteContext { Values = _routeData });
+
             var text = FirstText ?? T["First"];
 
             var builder = new HtmlContentBuilder();
             var htmlContentBuilder = builder
                 .AppendHtml("<li class=\"page-item\">")
-                .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
+                .AppendHtml("<a class=\"page-link\" href=\"")
+                .AppendHtml(url)
+                .AppendHtml("\" aria-label=\"Previous\" >")
                 .AppendHtml("<span aria-hidden=\"true\">")
                 .AppendHtml(text)
                 .AppendHtml("</span>")
@@ -119,12 +129,23 @@ namespace Plato.Internal.Layout.TagHelpers
 
         HtmlString BuildPrevious()
         {
+
+            if (this.Model.Page == 1)
+            {
+                return new HtmlString(string.Empty);
+            }
+
             var text = PreviousText ?? T["&laquo;"];
 
+            _routeData[pageKey] = this.Model.Page - 1;
+            var url = _urlHelper.RouteUrl(new UrlRouteContext { Values = _routeData });
+            
             var builder = new HtmlContentBuilder();
             var htmlContentBuilder = builder
                 .AppendHtml("<li class=\"page-item\">")
-                .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
+                .AppendHtml("<a class=\"page-link\" href=\"")
+                .AppendHtml(url)
+                .AppendHtml("\" aria-label=\"Previous\" >")
                 .AppendHtml("<span aria-hidden=\"true\">")
                 .AppendHtml(text)
                 .AppendHtml("</span>")
@@ -174,6 +195,8 @@ namespace Plato.Internal.Layout.TagHelpers
                         .AppendHtml("\">")
                         .AppendHtml("<a class=\"page-link\" href=\"")
                         .AppendHtml(url)
+                        .AppendHtml("\" aria-label=\"")
+                        .AppendHtml(i.ToString())
                         .AppendHtml("\">")
                         .AppendHtml(i.ToString())
                         .AppendHtml("</a>")
@@ -193,12 +216,22 @@ namespace Plato.Internal.Layout.TagHelpers
         HtmlString BuildNext()
         {
 
+            if (this.Model.Page == _totalPageCount)
+            {
+                return new HtmlString(string.Empty);
+            }
+
             var text = NextText ?? T["&raquo;"];
 
+            _routeData[pageKey] = this.Model.Page + 1;
+            var url = _urlHelper.RouteUrl(new UrlRouteContext { Values = _routeData });
+            
             var builder = new HtmlContentBuilder();
             var htmlContentBuilder = builder
                 .AppendHtml("<li class=\"page-item\">")
-                .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Next\" >")
+                .AppendHtml("<a class=\"page-link\" href=\"")
+                .AppendHtml(url)
+                .AppendHtml("\" aria-label=\"Next\">")
                 .AppendHtml("<span aria-hidden=\"true\">")
                 .AppendHtml(text)
                 .AppendHtml("</span>")
@@ -211,12 +244,23 @@ namespace Plato.Internal.Layout.TagHelpers
 
         HtmlString BuildLast()
         {
+
+            if (this.Model.Page >= _totalPageCount - 1)
+            {
+                return new HtmlString(string.Empty);
+            }
+
             var text = LastText ?? T["Last"];
 
+            _routeData[pageKey] = _totalPageCount;
+            var url = _urlHelper.RouteUrl(new UrlRouteContext { Values = _routeData });
+            
             var builder = new HtmlContentBuilder();
             var htmlContentBuilder = builder
                 .AppendHtml("<li class=\"page-item\">")
-                .AppendHtml("<a class=\"page-link\" href=\"#\" aria-label=\"Previous\" >")
+                .AppendHtml("<a class=\"page-link\" href=\"")
+                .AppendHtml(url)
+                .AppendHtml("\" aria-label=\"Last\">")
                 .AppendHtml("<span aria-hidden=\"true\">")
                 .AppendHtml(text)
                 .AppendHtml("</span>")

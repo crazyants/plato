@@ -194,24 +194,11 @@ namespace Plato.Internal.Stores.Users
             return updatedUser;
         }
 
-        public async Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
-        {
-            if (!_memoryCache.TryGetValue(_key, out IPagedResults<T> users))
-            {
-                users = await _userRepository.SelectAsync<T>(args);
-                if (users != null)
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, _key);
-            }
-            return users;
-        }
-
         public async Task<IPagedResults<User>> SelectAsync(params object[] args)
         {
             if (!_memoryCache.TryGetValue(_key, out IPagedResults<User> users))
             {
-                users = await _userRepository.SelectAsync<User>(args);
+                users = await _userRepository.SelectAsync(args);
                 if (users != null)
                     if (_logger.IsEnabled(LogLevel.Debug))
                         _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
