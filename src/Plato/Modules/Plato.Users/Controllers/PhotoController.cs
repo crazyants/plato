@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Hosting.Web;
 using Plato.Internal.Models.Users;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -40,10 +36,14 @@ namespace Plato.Users.Controllers
             _hostEnvironment = hostEnvironment;
             _fileStore = fileStore;
 
-            _pathToEmptyImage = _fileStore.Combine(hostEnvironment.ContentRootPath,
-                "wwwroot",
-                "images",
-                "photo.png");
+            if (_pathToEmptyImage == null)
+            {
+                _pathToEmptyImage = _fileStore.Combine(hostEnvironment.ContentRootPath,
+                    "wwwroot",
+                    "images",
+                    "photo.png");
+            }
+   
         }
 
         [HttpGet]

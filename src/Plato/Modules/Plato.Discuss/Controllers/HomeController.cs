@@ -106,17 +106,17 @@ namespace Plato.Discuss.Controllers
             var model = await GetIndexViewModel(filterOptions, pagerOptions);
 
 
-            var data =  await GetEntityDataAsync(model.Results.Data.Select(e => e.Id).ToArray());
+            //var data =  await GetEntityDataAsync(model.Results.Data.Select(e => e.Id).ToArray());
             
-            var sb = new StringBuilder();
-            foreach (var item in data.Data)
-            {
-                sb.Append(item.Key)
-                    .Append(" ")
-                    .Append(item.Value);
-            }
+            //var sb = new StringBuilder();
+            //foreach (var item in data.Data)
+            //{
+            //    sb.Append(item.Key)
+            //        .Append(" ")
+            //        .Append(item.Value);
+            //}
 
-            ViewBag.MetaData = sb.ToString();
+            //ViewBag.MetaData = sb.ToString();
 
             // Build view
             var result = await _homeIndexViewProvider.ProvideIndexAsync(model, this);
@@ -317,13 +317,13 @@ namespace Plato.Discuss.Controllers
                 .ToList();
         }
         
-        public async Task<IPagedResults<EntityData>> GetEntityDataAsync(
-            int[] entityIds)
-        {
-            return await _entityDataStore
-                .QueryAsync()
-                .Select<EntityDataQueryParams>(q => { q.EntityId.IsIn(entityIds); }).ToList();
-        }
+        //public async Task<IPagedResults<EntityData>> GetEntityDataAsync(
+        //    int[] entityIds)
+        //{
+        //    return await _entityDataStore
+        //        .QueryAsync()
+        //        .Select<EntityDataQueryParams>(q => { q.EntityId.IsIn(entityIds); }).ToList();
+        //}
 
 
 
@@ -374,24 +374,24 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
             var topicDetails = new EntityMetaData()
             {
                 SomeNewValue = "Example Value 123",
-                Users = new List<Participant>()
+                Participants = new List<Participant>()
                             {
                                 new Participant()
                                 {
-                                    UserId = 1,
+                                    Id = 1,
                                     UserName = "Test",
                                     Participations = 10
 
                                 },
                                 new Participant()
                                 {
-                                    UserId = 2,
+                                    Id = 2,
                                     UserName = "Mike Jones",
                                     Participations = 5
                                 },
                                 new Participant()
                                 {
-                                    UserId = 3,
+                                    Id = 3,
                                     UserName = "Sarah Smith",
                                     Participations = 2
                                 }
@@ -418,7 +418,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                         .Append(newTopic.Id);
 
                     var details = newTopic.GetMetaData<EntityMetaData>();
-                    if (details?.Users != null)
+                    if (details?.Participants != null)
                     {
 
                         sb.Append("<h5>Some Value</h5>")
@@ -427,7 +427,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
 
                         sb.Append("<h5>Participants</h5>");
 
-                        foreach (var user in details.Users)
+                        foreach (var user in details.Participants)
                         {
                             sb.Append(user.UserName)
                                 .Append("<br>");
@@ -453,7 +453,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
 
                 // random details
                 var existingDetails = existingTopic.GetMetaData<EntityMetaData>();
-                if (existingDetails?.Users != null)
+                if (existingDetails?.Participants != null)
                 {
 
                     sb.Append("<h5>Some Value</h5>")
@@ -462,7 +462,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
 
                     sb.Append("<h5>Participants</h5>");
 
-                    foreach (var user in existingDetails.Users)
+                    foreach (var user in existingDetails.Participants)
                     {
                         sb.Append(user.UserName)
                             .Append("<br>");

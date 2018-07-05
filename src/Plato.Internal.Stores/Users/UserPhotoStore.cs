@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Users;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
+using Plato.Internal.Cache;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 
@@ -13,32 +12,20 @@ namespace Plato.Internal.Stores.Users
     public class UserPhotoStore : IUserPhotoStore<UserPhoto>
     {
 
-        private readonly string _key = CacheKeys.UserPhotos.ToString();
-        private readonly MemoryCacheEntryOptions _cacheEntryOptions;
-        
+        private readonly ICacheManager _cacheManager;
         private readonly IUserPhotoRepository<UserPhoto> _userPhotoRepository;
-        private readonly IDistributedCache _distributedCache;
-        private readonly IMemoryCache _memoryCache;
         private readonly ILogger<UserPhotoStore> _logger;
 
         #region "Constrcutor"
 
         public UserPhotoStore(
             IUserPhotoRepository<UserPhoto> userPhotoRepository,
-            IMemoryCache memoryCache,
-            IDistributedCache distributedCache,
-            ILogger<UserPhotoStore> logger)
+            ILogger<UserPhotoStore> logger,
+            ICacheManager cacheManager)
         {
             _userPhotoRepository = userPhotoRepository;
-            _memoryCache = memoryCache;
-            _distributedCache = distributedCache;
+            _cacheManager = cacheManager;
             _logger = logger;
-
-            _cacheEntryOptions = new MemoryCacheEntryOptions
-            {
-                SlidingExpiration = TimeSpan.FromSeconds(10)
-            };
-
         }
 
         #endregion
@@ -54,71 +41,13 @@ namespace Plato.Internal.Stores.Users
             var newUserPhoto = await _userPhotoRepository.InsertUpdateAsync(userPhoto);
             if (newUserPhoto != null)
             {
-                if (_logger.IsEnabled(LogLevel.Debug))
-                    _logger.LogDebug("Entry removed from cache of type {0}. Entry key: {1}.",
-                        _memoryCache.GetType().Name, _key);
-                ClearCache(userPhoto);
+                _cacheManager.CancelTokens(this.GetType(), "ById", userPhoto.Id);
+                _cacheManager.CancelTokens(this.GetType(), userPhoto.UserId);
             }
 
             return newUserPhoto;
         }
-
-        public Task<bool> DeleteAsync(UserPhoto model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<UserPhoto> GetByIdAsync(int id)
-        {
-            var key = GetCacheKey(LocalCacheKeys.ById, id);
-            if (!_memoryCache.TryGetValue(key, out UserPhoto userPhoto))
-            {
-                userPhoto = await _userPhotoRepository.SelectByIdAsync(id);
-                if (userPhoto != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, key);
-                    _memoryCache.Set(key, userPhoto, _cacheEntryOptions);
-                }
-            }
-
-            return userPhoto;
-        }
-
-        public async Task<UserPhoto> GetByUserIdAsync(int userId)
-        {
-            var key = GetCacheKey(LocalCacheKeys.ByUserId, userId);
-            if (!_memoryCache.TryGetValue(key, out UserPhoto userPhoto))
-            {
-                userPhoto = await _userPhotoRepository.SelectByUserIdAsync(userId);
-                if (userPhoto != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, key);
-                    _memoryCache.Set(key, userPhoto, _cacheEntryOptions);
-                }
-            }
-
-            return userPhoto;
-        }
-
-        public IQuery<UserPhoto> QueryAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IPagedResults<UserPhoto>> SelectAsync(params object[] args)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public async Task<UserPhoto> UpdateAsync(UserPhoto userPhoto)
         {
             if (userPhoto == null)
@@ -128,36 +57,44 @@ namespace Plato.Internal.Stores.Users
             var updatedUserPhoto = await _userPhotoRepository.InsertUpdateAsync(userPhoto);
             if (updatedUserPhoto != null)
             {
-                if (_logger.IsEnabled(LogLevel.Debug))
-                    _logger.LogDebug("Entry removed from cache of type {0}. Entry key: {1}.",
-                        _memoryCache.GetType().Name, _key);
-                ClearCache(updatedUserPhoto);
+                _cacheManager.CancelTokens(this.GetType(), "ById", userPhoto.Id);
+                _cacheManager.CancelTokens(this.GetType(), userPhoto.UserId);
             }
             return updatedUserPhoto;
         }
-
-        #endregion
         
-        #region "Private Methods"
-
-
-        private string GetCacheKey(LocalCacheKeys cacheKey, object vaule)
+        public Task<bool> DeleteAsync(UserPhoto model)
         {
-            return _key + "_" + cacheKey + "_" + vaule;
-        }
-        private void ClearCache(UserPhoto userPhoto)
-        {
-            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ById, userPhoto.Id));
-            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByUserId, userPhoto.UserId));
+            throw new NotImplementedException();
         }
 
-        private enum LocalCacheKeys
+        public async Task<UserPhoto> GetByIdAsync(int id)
         {
-            ById,
-            ByUserId
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), "ById", id);
+            return await _cacheManager.GetOrCreateAsync(token,
+                async (cacheEntry) => await _userPhotoRepository.SelectByIdAsync(id));
+
+        }
+
+        public async Task<UserPhoto> GetByUserIdAsync(int userId)
+        {
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), userId);
+            return await _cacheManager.GetOrCreateAsync(token,
+                async (cacheEntry) => await _userPhotoRepository.SelectByUserIdAsync(userId));
+        }
+
+        public IQuery<UserPhoto> QueryAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IPagedResults<UserPhoto>> SelectAsync(params object[] args)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
         
     }
+
 }

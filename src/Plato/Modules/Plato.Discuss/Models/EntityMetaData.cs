@@ -1,18 +1,13 @@
 ﻿using System.Collections.Generic;
+using Plato.Entities.Models;
 using Plato.Internal.Abstractions;
 
 namespace Plato.Discuss.Models
 {
 
-    public class Participant
+    public class Participant : EntityUser
     {
-
-        public int UserId { get; set; }
-
-        public string Test { get; set; }
-        
-        public string UserName { get; set; }
-
+      
         public int Participations { get; set; }
 
     }
@@ -23,7 +18,7 @@ namespace Plato.Discuss.Models
 
         public string SomeNewValue { get; set; }
         
-        public IEnumerable<Participant> Users { get; set; }
+        public IEnumerable<Participant> Participants { get; set; } = new List<Participant>();
 
 
     }

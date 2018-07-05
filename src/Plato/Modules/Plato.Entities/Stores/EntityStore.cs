@@ -129,19 +129,19 @@ namespace Plato.Entities.Stores
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
-                var pagedResults = await _entityRepository.SelectAsync(args);
+                var results = await _entityRepository.SelectAsync(args);
                 
-                if (pagedResults != null)
+                if (results != null)
                 {
                     // get all meta data for returned results
                     var entityData = await _entityDataStore
                         .QueryAsync()
                         .Select<EntityDataQueryParams>(q =>
                         {
-                            q.EntityId.IsIn(pagedResults.Data.Select(r => r.Id).ToArray());
+                            q.EntityId.IsIn(results.Data.Select(r => r.Id).ToArray());
                         }).ToList();
 
-                    foreach (var result in pagedResults.Data)
+                    foreach (var result in results.Data)
                     {
                         foreach (var data in entityData.Data.Where(d => d.EntityId == result.Id))
                         {
@@ -156,7 +156,7 @@ namespace Plato.Entities.Stores
 
                 }
             
-                return pagedResults;
+                return results;
             });
         }
 
