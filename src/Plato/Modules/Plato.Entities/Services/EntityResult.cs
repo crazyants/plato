@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Plato.Entities.Models
+namespace Plato.Entities.Services
 {
 
     public interface IEntityResult
@@ -78,6 +78,5 @@ namespace Plato.Entities.Models
         public string Description { get; set; }
 
     }
-
-
+    
 }

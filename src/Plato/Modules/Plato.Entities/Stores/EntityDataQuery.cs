@@ -60,7 +60,6 @@ namespace Plato.Entities.Stores
     public class EntityDataQueryParams
     {
 
-
         private WhereInt _id;
         private WhereInt _entityId;
         private WhereString _key;
@@ -152,6 +151,10 @@ namespace Plato.Entities.Stores
         }
 
 
+        #endregion
+
+        #region "Private Methods"
+        
         string BuildPopulateSelect()
         {
             return "*";
@@ -164,10 +167,6 @@ namespace Plato.Entities.Stores
             sb.Append(_entityDataTableName).Append(" d ");
             return sb.ToString();
         }
-
-        #endregion
-
-        #region "Private Methods"
 
         private string GetTableNameWithPrefix(string tableName)
         {
