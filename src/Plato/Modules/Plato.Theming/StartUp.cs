@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Hosting;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Resources.Abstractions;
@@ -32,9 +31,7 @@ namespace Plato.Theming
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-
-         
-
         }
+
     }
 }

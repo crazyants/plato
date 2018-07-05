@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plato.Entities.Models;
-using Plato.Entities.Stores;
+﻿using Plato.Entities.Stores;
 
 namespace Plato.Entities.Services
 {
@@ -14,8 +12,8 @@ namespace Plato.Entities.Services
         public event EntityEventHandler Deleting;
         public event EntityEventHandler Deleted;
 
-        public delegate void EntityEventHandler(object sender, EntityStoreEventArgs e);
+        public delegate void EntityEventHandler(object sender, EntityManagerEventArgs e);
         
-
     }
+
 }

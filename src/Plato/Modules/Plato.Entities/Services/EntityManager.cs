@@ -89,7 +89,7 @@ namespace Plato.Entities.Services
             model.Abstract = await ParseAbstract(model.Message);
             
             // Raise creating event
-            Creating?.Invoke(this, new EntityStoreEventArgs()
+            Creating?.Invoke(this, new EntityManagerEventArgs()
             {
                 Model = model
             });
@@ -98,7 +98,7 @@ namespace Plato.Entities.Services
             if (entity != null)
             {
                 // Raise created event
-                Created?.Invoke(this, new EntityStoreEventArgs()
+                Created?.Invoke(this, new EntityManagerEventArgs()
                 {
                     Model = entity
                 });
@@ -145,7 +145,7 @@ namespace Plato.Entities.Services
             model.Abstract = await ParseAbstract(model.Message);
 
             // Raise updating event
-            Updating?.Invoke(this, new EntityStoreEventArgs()
+            Updating?.Invoke(this, new EntityManagerEventArgs()
             {
                 Model = model
             });
@@ -153,7 +153,7 @@ namespace Plato.Entities.Services
             var entity = await _entityStore.UpdateAsync(model);
             if (entity != null)
             {
-                Updated?.Invoke(this, new EntityStoreEventArgs()
+                Updated?.Invoke(this, new EntityManagerEventArgs()
                 {
                     Model = entity
                 });
@@ -175,13 +175,13 @@ namespace Plato.Entities.Services
                 return result.Failed(new EntityError($"An entity is the id {id} could not be found"));
             }
 
-            Deleting?.Invoke(this, new EntityStoreEventArgs()
+            Deleting?.Invoke(this, new EntityManagerEventArgs()
             {
                 Model = entity
             });
 
             var success = await _entityStore.DeleteAsync(entity);
-            Deleted?.Invoke(this, new EntityStoreEventArgs()
+            Deleted?.Invoke(this, new EntityManagerEventArgs()
             {
                 Success = success,
                 Model = entity

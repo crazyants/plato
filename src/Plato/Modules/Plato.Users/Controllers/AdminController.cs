@@ -27,8 +27,7 @@ namespace Plato.Users.Controllers
         private readonly UserManager<User> _userManager;
 
         public IHtmlLocalizer T { get; }
-
-
+        
         public AdminController(
             IHtmlLocalizer<AdminController> localizer,
             IPlatoUserStore<User> platoUserStore, 

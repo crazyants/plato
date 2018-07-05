@@ -438,11 +438,19 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
+
+            // Get current feature (i.e. Plato.Discuss) from area
             var feature = await _contextFacade.GetCurrentFeatureAsync();
+
             return await _entityStore.QueryAsync()
                 .Page(pagerOptions.Page, pagerOptions.PageSize)
                 .Select<EntityQueryParams>(q =>
                 {
+
+                    if (feature != null)
+                    {
+                        q.FeatureId.Equals(feature.Id);
+                    }
 
                     q.HideSpam.True();
                     q.HidePrivate.True();
@@ -450,10 +458,6 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
 
                     //q.IsPinned.True();
 
-                    if (feature != null)
-                    {
-                        q.FeatureId.Equals(feature.Id);
-                    }
 
                     //if (!string.IsNullOrEmpty(filterOptions.Search))
                     //{

@@ -105,13 +105,13 @@ namespace Plato.Discuss.ViewProviders
             
         }
 
-        public void Creating(object sender, EntityStoreEventArgs e)
+        public void Creating(object sender, EntityManagerEventArgs e)
         {
 
         }
 
 
-        public void Created(object sender, EntityStoreEventArgs e)
+        public void Created(object sender, EntityManagerEventArgs e)
         {
           
         }

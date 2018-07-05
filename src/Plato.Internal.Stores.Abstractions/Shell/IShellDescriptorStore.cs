@@ -2,7 +2,7 @@
 
 namespace Plato.Internal.Stores.Abstractions.Shell
 {
-    public interface IShellDescriptorStore : IDictionaryStore<IShellDescriptor>
+    public interface IShellDescriptorStore : ISettingsStore<IShellDescriptor>
     {
     }
 }

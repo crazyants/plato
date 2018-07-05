@@ -2,7 +2,7 @@
 
 namespace Plato.Entities.Stores
 {
-    public class EntityStoreEventArgs
+    public class EntityManagerEventArgs
     {
 
         public bool Success { get; set; }

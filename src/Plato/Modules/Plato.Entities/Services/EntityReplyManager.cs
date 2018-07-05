@@ -55,7 +55,7 @@ namespace Plato.Entities.Services
             model.Abstract = await ParseAbstract(model.Message);
 
             // Raise creating event
-            Creating?.Invoke(this, new EntityStoreEventArgs()
+            Creating?.Invoke(this, new EntityManagerEventArgs()
             {
                 Model = model
             });
@@ -64,7 +64,7 @@ namespace Plato.Entities.Services
             if (reply != null)
             {
                 // Raise created event
-                Created?.Invoke(this, new EntityStoreEventArgs()
+                Created?.Invoke(this, new EntityManagerEventArgs()
                 {
                     Model = reply
                 });
@@ -95,7 +95,7 @@ namespace Plato.Entities.Services
             model.Abstract = await ParseAbstract(model.Message);
             
             // Raise updating event
-            Updating?.Invoke(this, new EntityStoreEventArgs()
+            Updating?.Invoke(this, new EntityManagerEventArgs()
             {
                 Model = model
             });
@@ -104,7 +104,7 @@ namespace Plato.Entities.Services
             var reply = await _entityReplyStore.UpdateAsync(model);
             if (reply != null)
             {
-                Updated?.Invoke(this, new EntityStoreEventArgs()
+                Updated?.Invoke(this, new EntityManagerEventArgs()
                 {
                     Model = reply
                 });
@@ -126,13 +126,13 @@ namespace Plato.Entities.Services
                 return result.Failed(new EntityError($"An entity reply with the id of '{id}' could not be found"));
             }
 
-            Deleting?.Invoke(this, new EntityStoreEventArgs()
+            Deleting?.Invoke(this, new EntityManagerEventArgs()
             {
                 Model = reply
             });
             
             var success = await _entityReplyStore.DeleteAsync(reply);
-            Deleted?.Invoke(this, new EntityStoreEventArgs()
+            Deleted?.Invoke(this, new EntityManagerEventArgs()
             {
                 Success = success,
                 Model = reply

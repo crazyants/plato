@@ -7,6 +7,7 @@ using Environment = Plato.Internal.Resources.Abstractions.Environment;
 
 namespace Plato.Theming.Resources
 {
+
     public class ResourceProvider : IResourceProvider
     {
 
@@ -85,4 +86,5 @@ namespace Plato.Theming.Resources
 
 
     }
+
 }

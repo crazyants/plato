@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.TagHelpers.Cache;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -69,6 +70,17 @@ namespace Plato.Entities.Stores
             var newEntity = await _entityRepository.InsertUpdateAsync(entity);
             if (newEntity != null)
             {
+
+                // Cancel possible SelectAsync tokens
+                var tokens = CacheTokenStore.TryGet(this.GetType());
+                if (tokens != null)
+                {
+                    foreach (var token in tokens)
+                    {
+                        _cacheDependency.CancelToken(token.ToString());
+                    }
+                }
+
                 _cacheDependency.CancelToken(GetEntityCacheKey());
                 newEntity = await GetByIdAsync(newEntity.Id);
             }
@@ -82,6 +94,16 @@ namespace Plato.Entities.Stores
             var output = await _entityRepository.InsertUpdateAsync(entity);
             if (output != null)
             {
+
+                // Cancel possible SelectAsync tokens
+                var tokens = CacheTokenStore.TryGet(this.GetType());
+                if (tokens != null)
+                {
+                    foreach (var token in tokens)
+                    {
+                        _cacheDependency.CancelToken(token.ToString());
+                    }
+                }
                 _cacheDependency.CancelToken(GetEntityCacheKey());
             }
             return output;
@@ -93,7 +115,18 @@ namespace Plato.Entities.Stores
             var success = await _entityRepository.DeleteAsync(entity.Id);
             if (success)
             {
-                _cacheDependency.CancelToken(GetEntityCacheKey());
+
+                // Cancel possible SelectAsync tokens
+                var tokens = CacheTokenStore.TryGet(this.GetType());
+                if (tokens != null)
+                {
+                    foreach (var token in tokens)
+                    {
+                        _cacheDependency.CancelToken(token.ToString());
+                    }
+                }
+
+                //_cacheDependency.CancelToken(cacheKey.ToString());
             }
             
             return success;
@@ -124,20 +157,13 @@ namespace Plato.Entities.Stores
             var query = new EntityQuery(this);
             return _dbQuery.ConfigureQuery<Entity>(query); ;
         }
-        
-        public Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public async Task<IPagedResults<Entity>> SelectAsync(params object[] args) 
+      
+        public async Task<IPagedResults<Entity>> SelectAsync(params object[] args)
         {
 
-            var hash = args.GetHashCode().ToString();
-            var key = GetEntityCacheKey(hash);
-
-            return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
+            var token = CacheTokenStore.GetOrAddToken(this.GetType(), args);
+         
+            return await _memoryCache.GetOrCreateAsync(token.ToString(), async (cacheEntry) =>
             {
                 var output = await _entityRepository.SelectAsync(args);
                 if (output != null)
@@ -145,10 +171,10 @@ namespace Plato.Entities.Stores
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
                         _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, key);
+                            _memoryCache.GetType().Name, token.ToString());
                     }
                 }
-                cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
+                cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(token.ToString()));
                 return output;
             });
 
@@ -167,9 +193,9 @@ namespace Plato.Entities.Stores
         {
             return $"{_key}";
         }
-        private string GetEntityCacheKey(string hash)
+        private string GetEntityCacheKey(int hashCode)
         {
-            return $"{_key}_hash";
+            return $"{_key}_{hashCode}";
         }
         
         #endregion
