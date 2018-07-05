@@ -57,27 +57,7 @@ namespace Plato.Internal.Cache
             return (TItem)obj;
 
         }
-
-        public void CancelTokens(Type type)
-        {
-            var tokens = GetTokensForType(type);
-            foreach (var token in tokens)
-            {
-                CancelToken(token);
-            }
-        }
-
-        public void CancelToken(CacheToken token)
-        {
-            Tokens.Remove(token);
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation("Cancelling cache entry with key '{1}'", 
-                   token.ToString());
-            }
-            _cacheDependency.CancelToken(token.ToString());
-        }
-
+        
         public CacheToken GetOrCreateToken(Type type, params object[] varyBy)
         {
             var key = new CacheToken(type, varyBy);
@@ -88,6 +68,46 @@ namespace Plato.Internal.Cache
 
             Tokens.Add(key, type);
             return key;
+        }
+        
+        public void CancelTokens(Type type)
+        {
+            var tokens = GetTokensForType(type);
+            foreach (var token in tokens)
+            {
+                CancelToken(token);
+            }
+        }
+
+        public void CancelTokens(Type type, params object[] varyBy)
+        {
+            var cancallationToken = new CacheToken(type, varyBy);
+            var tokens = GetTokensForType(type);
+            foreach (var token in tokens)
+            {
+                if (cancallationToken == token)
+                {
+                    CancelToken(token);
+                }
+                
+            }
+        }
+
+        public void CancelToken(CacheToken token)
+        {
+            if (Tokens.ContainsKey(token))
+            {
+                Tokens.Remove(token);
+            }
+          
+            _cacheDependency.CancelToken(token.ToString());
+            
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Invalidated cache entry with key '{1}'",
+                    token.ToString());
+            }
+
         }
 
         IEnumerable<CacheToken> GetTokensForType(Type type)

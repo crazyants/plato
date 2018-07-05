@@ -17,37 +17,26 @@ namespace Plato.Entities.Stores
     public class EntityStore : IEntityStore<Entity>
     {
      
-        private string _key = "Entity";
-
         #region "Constructor"
 
         private readonly ICacheManager _cacheManager;
 
         private readonly IEntityRepository<Entity> _entityRepository;
         private readonly ILogger<EntityStore> _logger;
-        //private readonly ICacheDependency _cacheDependency;
-        //private readonly IMemoryCache _memoryCache;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ITypedModuleProvider _typedModuleProvider;
-        //private readonly IEntityDataStore<EntityData> _entityDataStore;
-
+     
         public EntityStore(
             ITypedModuleProvider typedModuleProvider,
             IEntityRepository<Entity> entityRepository,
-            ICacheDependency cacheDependency,
             ILogger<EntityStore> logger,
-            IMemoryCache memoryCache,
             IDbQueryConfiguration dbQuery, 
-            IEntityDataStore<EntityData> entityDataStore,
             ICacheManager cacheManager)
         {
             _typedModuleProvider = typedModuleProvider;
             _entityRepository = entityRepository;
-            //_cacheDependency = cacheDependency;
-            //_memoryCache = memoryCache;
-            _dbQuery = dbQuery;
-            //_entityDataStore = entityDataStore;
             _cacheManager = cacheManager;
+            _dbQuery = dbQuery;
             _logger = logger;
         }
 
@@ -69,13 +58,10 @@ namespace Plato.Entities.Stores
             }
             entity.Data = data;
             
-            // Add entity
             var newEntity = await _entityRepository.InsertUpdateAsync(entity);
             if (newEntity != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
-
-                //_cacheDependency.CancelToken(GetEntityCacheKey());
                 newEntity = await GetByIdAsync(newEntity.Id);
             }
             
@@ -88,10 +74,7 @@ namespace Plato.Entities.Stores
             var output = await _entityRepository.InsertUpdateAsync(entity);
             if (output != null)
             {
-
                 _cacheManager.CancelTokens(this.GetType());
-
-                //_cacheDependency.CancelToken(GetEntityCacheKey());
             }
             return output;
         }
@@ -102,10 +85,7 @@ namespace Plato.Entities.Stores
             var success = await _entityRepository.DeleteAsync(entity.Id);
             if (success)
             {
-
                 _cacheManager.CancelTokens(this.GetType());
-
-                //_cacheDependency.CancelToken(cacheKey.ToString());
             }
             
             return success;
@@ -113,24 +93,29 @@ namespace Plato.Entities.Stores
 
         public async Task<Entity> GetByIdAsync(int id)
         {
-            
-            var entity = await _entityRepository.SelectByIdAsync(id);
-            if (entity != null)
+
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
-                foreach (var data in entity.Data)
+                var entity = await _entityRepository.SelectByIdAsync(id);
+                if (entity != null)
                 {
-                    var type = await GetModuleTypeCandidateAsync(data.Key);
-                    if (type != null)
+                    foreach (var data in entity.Data)
                     {
-                        var obj = JsonConvert.DeserializeObject(data.Value, type);
-                        entity.SetMetaData(type, (ISerializable)obj);
+                        var type = await GetModuleTypeCandidateAsync(data.Key);
+                        if (type != null)
+                        {
+                            var obj = JsonConvert.DeserializeObject(data.Value, type);
+                            entity.SetMetaData(type, (ISerializable) obj);
+                        }
                     }
                 }
-            }
 
-            return entity;
+                return entity;
+            });
+
         }
- 
+
         public IQuery<Entity> QueryAsync()
         {
             var query = new EntityQuery(this);
@@ -139,23 +124,8 @@ namespace Plato.Entities.Stores
       
         public async Task<IPagedResults<Entity>> SelectAsync(params object[] args)
         {
-
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-                var output = await _entityRepository.SelectAsync(args);
-                if (output != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Information))
-                    {
-                        _logger.LogInformation("Adding entry to cache with key: {0}",
-                            token.ToString());
-                    }
-                }
-                //cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(token.ToString()));
-                return output;
-            });
-
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityRepository.SelectAsync(args));
         }
 
         #endregion
@@ -166,16 +136,7 @@ namespace Plato.Entities.Stores
         {
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
-        
-        private string GetEntityCacheKey()
-        {
-            return $"{_key}";
-        }
-        private string GetEntityCacheKey(int hashCode)
-        {
-            return $"{_key}_{hashCode}";
-        }
-        
+     
         #endregion
 
     }

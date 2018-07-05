@@ -18,7 +18,7 @@ namespace Plato.Internal.Cache
 
         void CancelTokens(Type type);
 
-     
+        void CancelTokens(Type type, params object[] varyBy);
     }
 
 }

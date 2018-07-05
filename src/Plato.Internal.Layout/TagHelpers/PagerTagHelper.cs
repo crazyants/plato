@@ -236,6 +236,8 @@ namespace Plato.Internal.Layout.TagHelpers
 
             var builder = new HtmlContentBuilder();
             var htmlContentBuilder = builder
+                .AppendHtml("<li class=\"page-item\">")
+                .AppendHtml("<div class=\"p-2 text-muted\">")
                 .Append(page)
                 .Append(" ")
                 .Append(this.Model.Page.ToString())
@@ -246,7 +248,9 @@ namespace Plato.Internal.Layout.TagHelpers
                 .Append(", ")
                 .Append(this.Model.Total.ToString())
                 .Append(" ")
-                .Append(results);
+                .Append(results)
+                .AppendHtml("</div>")
+                .AppendHtml("</li>");;
 
             return htmlContentBuilder.ToHtmlString();
         }

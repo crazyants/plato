@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 
 namespace Plato.Internal.Cache
 {
@@ -18,6 +13,9 @@ namespace Plato.Internal.Cache
 
         public CacheToken(Type type, params object[] varyBy)
         {
+
+            // This is not perfect but avoids the overhead of a real cryptographic hash
+            // Get hashcodes for primative types as opposed to varyBy object array complex type
             var sb = new StringBuilder();
             foreach (var vary in varyBy)
             {
@@ -69,7 +67,7 @@ namespace Plato.Internal.Cache
                 return hashCode;
             }
         }
-
+        
         public override string ToString()
         {
             return $"{_type}_{GetHashCode()}";
