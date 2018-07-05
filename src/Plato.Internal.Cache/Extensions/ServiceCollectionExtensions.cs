@@ -15,6 +15,7 @@ namespace Plato.Internal.Cache.Extensions
             services.Add(ServiceDescriptor.Singleton<IMemoryCache, MemoryCache>());
             services.Add(ServiceDescriptor.Transient<IDistributedCache, MemoryDistributedCache>());
 
+            services.AddSingleton<ICacheManager, CacheManager>();
             services.AddSingleton<ICacheDependency, CacheDependency>();
 
             return services;

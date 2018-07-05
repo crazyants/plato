@@ -91,6 +91,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 .AppendHtml(BuildLinks())
                 .AppendHtml(BuildNext())
                 .AppendHtml(BuildLast())
+                .AppendHtml(BuildLabel())
                 .AppendHtml("</ul>");
 
             return await Task.FromResult(htmlContentBuilder);
@@ -167,7 +168,7 @@ namespace Plato.Internal.Layout.TagHelpers
                     var url = _urlHelper.RouteUrl(new UrlRouteContext {Values = _routeData});
 
                     var builder = new HtmlContentBuilder();
-                    output = builder
+                    output.AppendHtml(builder
                         .AppendHtml("<li class=\"page-item")
                         .AppendHtml(i == Model.Page ? " active" : "")
                         .AppendHtml("\">")
@@ -176,7 +177,7 @@ namespace Plato.Internal.Layout.TagHelpers
                         .AppendHtml("\">")
                         .AppendHtml(i.ToString())
                         .AppendHtml("</a>")
-                        .AppendHtml("</li>");
+                        .AppendHtml("</li>"));
                 }
             }
 
@@ -224,7 +225,32 @@ namespace Plato.Internal.Layout.TagHelpers
 
             return htmlContentBuilder.ToHtmlString();
         }
-        
+
+
+        HtmlString BuildLabel()
+        {
+
+            var page = T["Page"];
+            var of = T["of"];
+            var results = T["Results"];
+
+            var builder = new HtmlContentBuilder();
+            var htmlContentBuilder = builder
+                .Append(page)
+                .Append(" ")
+                .Append(this.Model.Page.ToString())
+                .Append(" ")
+                .Append(of)
+                .Append(" ")
+                .Append(_totalPageCount.ToString())
+                .Append(", ")
+                .Append(this.Model.Total.ToString())
+                .Append(" ")
+                .Append(results);
+
+            return htmlContentBuilder.ToHtmlString();
+        }
+
     }
 
 }

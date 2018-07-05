@@ -94,139 +94,139 @@ namespace Plato.Discuss.Controllers
 
             // ------------------------
 
-            var rnd = new Random();
+//            var rnd = new Random();
 
-            var topic = new Entity()
-            {
-                Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
-                Message = @"Hi There, 
+//            var topic = new Entity()
+//            {
+//                Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
+//                Message = @"Hi There, 
 
-# header 1
+//# header 1
 
-Test message Test message Test message Test :)
+//Test message Test message Test message Test :)
 
-## Header 2
+//## Header 2
 
-message Test message Test message Test message :(
+//message Test message Test message Test message :(
 
-Test message Test message Test message Test 
+//Test message Test message Test message Test 
 
-message Test message Test message Test message 
+//message Test message Test message Test message 
 
-Test message Test message Test message Test message 
+//Test message Test message Test message Test message 
 
-Test message Test message Test message Test message Test 
+//Test message Test message Test message Test message Test 
 
-- list 1
-- list 2
-- list 3
+//- list 1
+//- list 2
+//- list 3
 
-message Test message  " + rnd.Next(0, 100000).ToString(),
-            };
+//message Test message  " + rnd.Next(0, 100000).ToString(),
+//            };
 
-            var topicDetails = new EntityMetaData()
-            {
-                SomeNewValue = "Example Value 123",
-                Users = new List<Participant>()
-                {
-                    new Participant()
-                    {
-                        UserId = 1,
-                        UserName = "Test",
-                        Participations = 10
+//            var topicDetails = new EntityMetaData()
+//            {
+//                SomeNewValue = "Example Value 123",
+//                Users = new List<Participant>()
+//                {
+//                    new Participant()
+//                    {
+//                        UserId = 1,
+//                        UserName = "Test",
+//                        Participations = 10
 
-                    },
-                    new Participant()
-                    {
-                        UserId = 2,
-                        UserName = "Mike Jones",
-                        Participations = 5
-                    },
-                    new Participant()
-                    {
-                        UserId = 3,
-                        UserName = "Sarah Smith",
-                        Participations = 2
-                    }
-                }
-            };
+//                    },
+//                    new Participant()
+//                    {
+//                        UserId = 2,
+//                        UserName = "Mike Jones",
+//                        Participations = 5
+//                    },
+//                    new Participant()
+//                    {
+//                        UserId = 3,
+//                        UserName = "Sarah Smith",
+//                        Participations = 2
+//                    }
+//                }
+//            };
 
-            topic.SetMetaData<EntityMetaData>(topicDetails);
+//            topic.SetMetaData<EntityMetaData>(topicDetails);
 
-            var sb = new StringBuilder();
+//            var sb = new StringBuilder();
 
-            var data = await _entityManager.CreateAsync(topic);
-            if (data.Succeeded)
-            {
-                if (data.Response is Entity newTopic)
-                {
+//            var data = await _entityManager.CreateAsync(topic);
+//            if (data.Succeeded)
+//            {
+//                if (data.Response is Entity newTopic)
+//                {
 
-                    sb
-                        .Append("<h1>New Topic</h1>")
-                        .Append("<strong>Title</strong>")
-                        .Append("<br>")
-                        .Append(newTopic.Title)
-                        .Append("<br>")
-                        .Append("<strong>ID</strong>")
-                        .Append(newTopic.Id);
+//                    sb
+//                        .Append("<h1>New Topic</h1>")
+//                        .Append("<strong>Title</strong>")
+//                        .Append("<br>")
+//                        .Append(newTopic.Title)
+//                        .Append("<br>")
+//                        .Append("<strong>ID</strong>")
+//                        .Append(newTopic.Id);
 
-                    var details = newTopic.GetMetaData<EntityMetaData>();
-                    if (details?.Users != null)
-                    {
+//                    var details = newTopic.GetMetaData<EntityMetaData>();
+//                    if (details?.Users != null)
+//                    {
 
-                        sb.Append("<h5>Some Value</h5>")
-                            .Append(details.SomeNewValue)
-                            .Append("<br>");
+//                        sb.Append("<h5>Some Value</h5>")
+//                            .Append(details.SomeNewValue)
+//                            .Append("<br>");
 
-                        sb.Append("<h5>Participants</h5>");
+//                        sb.Append("<h5>Participants</h5>");
 
-                        foreach (var user in details.Users)
-                        {
-                            sb.Append(user.UserName)
-                                .Append("<br>");
-                        }
-
-
-                    }
-                }
-            }
-
-            var existingTopic = await _entityStore.GetByIdAsync(142);
-            if (existingTopic != null)
-            {
-
-                sb
-                    .Append("<h1>Existing Topic</h1>")
-                    .Append("<strong>Title </strong>")
-                    .Append("<br>")
-                    .Append(existingTopic.Title)
-                    .Append("<br>")
-                    .Append("<strong>ID </strong>")
-                    .Append(existingTopic.Id);
-
-                // random details
-                var existingDetails = existingTopic.GetMetaData<EntityMetaData>();
-                if (existingDetails?.Users != null)
-                {
-
-                    sb.Append("<h5>Some Value</h5>")
-                        .Append(existingDetails.SomeNewValue)
-                        .Append("<br>");
-
-                    sb.Append("<h5>Participants</h5>");
-
-                    foreach (var user in existingDetails.Users)
-                    {
-                        sb.Append(user.UserName)
-                            .Append("<br>");
-                    }
-
-                }
-
-            }
+//                        foreach (var user in details.Users)
+//                        {
+//                            sb.Append(user.UserName)
+//                                .Append("<br>");
+//                        }
 
 
-            ViewBag.TopicData = sb.ToString();
+//                    }
+//                }
+//            }
+
+//            var existingTopic = await _entityStore.GetByIdAsync(142);
+//            if (existingTopic != null)
+//            {
+
+//                sb
+//                    .Append("<h1>Existing Topic</h1>")
+//                    .Append("<strong>Title </strong>")
+//                    .Append("<br>")
+//                    .Append(existingTopic.Title)
+//                    .Append("<br>")
+//                    .Append("<strong>ID </strong>")
+//                    .Append(existingTopic.Id);
+
+//                // random details
+//                var existingDetails = existingTopic.GetMetaData<EntityMetaData>();
+//                if (existingDetails?.Users != null)
+//                {
+
+//                    sb.Append("<h5>Some Value</h5>")
+//                        .Append(existingDetails.SomeNewValue)
+//                        .Append("<br>");
+
+//                    sb.Append("<h5>Participants</h5>");
+
+//                    foreach (var user in existingDetails.Users)
+//                    {
+//                        sb.Append(user.UserName)
+//                            .Append("<br>");
+//                    }
+
+//                }
+
+//            }
+
+
+//            ViewBag.TopicData = sb.ToString();
 
             // ------------------------
 

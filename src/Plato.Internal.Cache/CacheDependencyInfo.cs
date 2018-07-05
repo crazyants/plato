@@ -4,7 +4,7 @@ using Microsoft.Extensions.Primitives;
 namespace Plato.Internal.Cache
 {
 
-    class CacheDependencyInfo
+    internal class CacheDependencyInfo
     {
 
         public IChangeToken ChangeToken { get; set; }

@@ -2,51 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace Plato.Internal.Cache
 {
-
-    public class CacheTokenStore
-    {
-        public static IDictionary<CacheToken, Type> Tokens { get; } = new Dictionary<CacheToken, Type>();
-
-        public static IEnumerable<CacheToken> TryGetTokens(Type type)
-        {
-            return Tokens
-                .Where(t => t.Value == type)
-                .Select(c => c.Key)
-                .ToList();
-        }
-
-        public static CacheToken GetOrAddToken(Type type, params object[] varyBy)
-        {
-            var key = new CacheToken(type, varyBy);
-            if (Tokens.ContainsKey(key))
-            {
-                return key;
-            }
-            Tokens.Add(key, type);
-            return key;
-        }
-
-        public static void Flush(Type type)
-        {
-            Tokens.Clear();
-            foreach (var entry in Tokens)
-            {
-                if (entry.Value != type)
-                {
-                    Tokens.Add(entry.Key, entry.Value);
-                }
-            }
-
-        }
-
-    }
-
+    
     public class CacheToken : IEquatable<CacheToken>
     {
-        
+
         private readonly Type _type;
         private readonly int _typeHashCode;
         private readonly string _varyByHashCode;
@@ -61,7 +26,7 @@ namespace Plato.Internal.Cache
                     sb.Append(vary.GetHashCode());
                 }
             }
-            
+
             _type = type;
             _varyByHashCode = sb.ToString();
             _typeHashCode = _type.GetHashCode();
@@ -70,7 +35,7 @@ namespace Plato.Internal.Cache
         public static bool operator ==(CacheToken a, CacheToken b)
         {
             var areEqual = ReferenceEquals(a, b);
-            if ((object)a != null && (object)b != null)
+            if ((object) a != null && (object) b != null)
             {
                 areEqual = a.Equals(b);
             }
