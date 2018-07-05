@@ -8,18 +8,19 @@ namespace Plato.Internal.Cache
 
     public class CacheTokenStore
     {
-        public static IDictionary<CacheKey, Type> Tokens { get; } = new Dictionary<CacheKey, Type>();
+        public static IDictionary<CacheToken, Type> Tokens { get; } = new Dictionary<CacheToken, Type>();
 
-        public static IEnumerable<CacheKey> TryGet(Type type)
+        public static IEnumerable<CacheToken> TryGetTokens(Type type)
         {
             return Tokens
                 .Where(t => t.Value == type)
-                .Select(c => c.Key);
+                .Select(c => c.Key)
+                .ToList();
         }
 
-        public static CacheKey GetOrAddToken(Type type, params object[] varyBy)
+        public static CacheToken GetOrAddToken(Type type, params object[] varyBy)
         {
-            var key = new CacheKey(type, varyBy);
+            var key = new CacheToken(type, varyBy);
             if (Tokens.ContainsKey(key))
             {
                 return key;
@@ -43,15 +44,14 @@ namespace Plato.Internal.Cache
 
     }
 
-    public class CacheKey : IEquatable<CacheKey>
+    public class CacheToken : IEquatable<CacheToken>
     {
         
         private readonly Type _type;
-        private readonly object _varyBy;
         private readonly int _typeHashCode;
         private readonly string _varyByHashCode;
 
-        public CacheKey(Type type, params object[] varyBy)
+        public CacheToken(Type type, params object[] varyBy)
         {
             var sb = new StringBuilder();
             foreach (var vary in varyBy)
@@ -62,13 +62,12 @@ namespace Plato.Internal.Cache
                 }
             }
             
-            _varyBy = varyBy;
             _type = type;
             _varyByHashCode = sb.ToString();
             _typeHashCode = _type.GetHashCode();
         }
 
-        public static bool operator ==(CacheKey a, CacheKey b)
+        public static bool operator ==(CacheToken a, CacheToken b)
         {
             var areEqual = ReferenceEquals(a, b);
             if ((object)a != null && (object)b != null)
@@ -79,9 +78,9 @@ namespace Plato.Internal.Cache
             return areEqual;
         }
 
-        public static bool operator !=(CacheKey a, CacheKey b) => !(a == b);
+        public static bool operator !=(CacheToken a, CacheToken b) => !(a == b);
 
-        public bool Equals(CacheKey other)
+        public bool Equals(CacheToken other)
         {
             var areEqual = false;
 
@@ -93,7 +92,7 @@ namespace Plato.Internal.Cache
             return areEqual;
         }
 
-        public override bool Equals(object obj) => this.Equals(obj as CacheKey);
+        public override bool Equals(object obj) => this.Equals(obj as CacheToken);
 
         public override int GetHashCode()
         {

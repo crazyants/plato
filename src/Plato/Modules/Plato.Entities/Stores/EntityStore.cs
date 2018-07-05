@@ -72,13 +72,15 @@ namespace Plato.Entities.Stores
             {
 
                 // Cancel possible SelectAsync tokens
-                var tokens = CacheTokenStore.TryGet(this.GetType());
-                if (tokens != null)
+                var tokens = CacheTokenStore.TryGetTokens(this.GetType());
+                foreach (var token in tokens)
                 {
-                    foreach (var token in tokens)
+                    if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        _cacheDependency.CancelToken(token.ToString());
+                        _logger.LogInformation("Cancelling cache entry with key: {0}",
+                            token.ToString());
                     }
+                    _cacheDependency.CancelToken(token.ToString());
                 }
 
                 _cacheDependency.CancelToken(GetEntityCacheKey());
@@ -96,14 +98,17 @@ namespace Plato.Entities.Stores
             {
 
                 // Cancel possible SelectAsync tokens
-                var tokens = CacheTokenStore.TryGet(this.GetType());
-                if (tokens != null)
+                var tokens = CacheTokenStore.TryGetTokens(this.GetType());
+                foreach (var token in tokens)
                 {
-                    foreach (var token in tokens)
+                    if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        _cacheDependency.CancelToken(token.ToString());
+                        _logger.LogInformation("Cancelling cache entry with key: {0}",
+                            token.ToString());
                     }
+                    _cacheDependency.CancelToken(token.ToString());
                 }
+
                 _cacheDependency.CancelToken(GetEntityCacheKey());
             }
             return output;
@@ -117,13 +122,15 @@ namespace Plato.Entities.Stores
             {
 
                 // Cancel possible SelectAsync tokens
-                var tokens = CacheTokenStore.TryGet(this.GetType());
-                if (tokens != null)
+                var tokens = CacheTokenStore.TryGetTokens(this.GetType());
+                foreach (var token in tokens)
                 {
-                    foreach (var token in tokens)
+                    if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        _cacheDependency.CancelToken(token.ToString());
+                        _logger.LogInformation("Cancelling cache entry with key: {0}",
+                            token.ToString());
                     }
+                    _cacheDependency.CancelToken(token.ToString());
                 }
 
                 //_cacheDependency.CancelToken(cacheKey.ToString());
@@ -170,8 +177,8 @@ namespace Plato.Entities.Stores
                 {
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, token.ToString());
+                        _logger.LogInformation("Adding entry to cache with key: {0}",
+                            token.ToString());
                     }
                 }
                 cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(token.ToString()));
