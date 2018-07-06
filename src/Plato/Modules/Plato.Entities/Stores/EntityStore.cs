@@ -64,6 +64,12 @@ namespace Plato.Entities.Stores
             var newEntity = await _entityRepository.InsertUpdateAsync(entity);
             if (newEntity != null)
             {
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Added new entity with id {1}",
+                        newEntity.Id);
+                }
+                
                 _cacheManager.CancelTokens(this.GetType());
                 _cacheManager.CancelTokens(typeof(EntityDataStore));
                 newEntity = await GetByIdAsync(newEntity.Id);
@@ -88,13 +94,19 @@ namespace Plato.Entities.Stores
             }
             entity.Data = data;
 
-            var output = await _entityRepository.InsertUpdateAsync(entity);
-            if (output != null)
+            var updatedEntity = await _entityRepository.InsertUpdateAsync(entity);
+            if (updatedEntity != null)
             {
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Updated existing entity with id {1}",
+                        updatedEntity.Id);
+                }
+
                 _cacheManager.CancelTokens(this.GetType());
                 _cacheManager.CancelTokens(typeof(EntityDataStore));
             }
-            return output;
+            return updatedEntity;
         }
 
         public async Task<bool> DeleteAsync(Entity entity)
@@ -103,6 +115,12 @@ namespace Plato.Entities.Stores
             var success = await _entityRepository.DeleteAsync(entity.Id);
             if (success)
             {
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Deleted entity '{0}' with id {1}",
+                        entity.Title, entity.Id);
+                }
+
                 _cacheManager.CancelTokens(this.GetType());
             }
             

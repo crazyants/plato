@@ -1,4 +1,5 @@
-﻿using Plato.Entities.Models;
+﻿using System;
+using Plato.Entities.Models;
 
 namespace Plato.Entities.Services
 {
@@ -12,14 +13,25 @@ namespace Plato.Entities.Services
     }
 
 
-    public class EntityReplyEventArgs
+    public class EntityReplyEventArgs : EventArgs
     {
+  
+        public bool Success { get; }
 
-        public bool Success { get; set; }
+        public Entity Entity { get; }
 
-        public Entity Entity { get; set; }
+        public EntityReply EntityReply { get; }
 
-        public EntityReply EntityReply { get; set; }
+        public EntityReplyEventArgs(bool success)
+        {
+            Success = success;
+        }
+        
+        public EntityReplyEventArgs(Entity entity, EntityReply entityReply)
+        {
+            Entity = entity;
+            EntityReply = entityReply;
+        }
 
     }
 

@@ -78,22 +78,14 @@ namespace Plato.Entities.Services
             reply.Abstract = await ParseAbstract(reply.Message);
             
             // Raise creating event
-            Creating?.Invoke(this, new EntityReplyEventArgs()
-            {
-                Entity = entity,
-                EntityReply = reply
-            });
+            Creating?.Invoke(this, new EntityReplyEventArgs(entity, reply));
             
-            var entityReply = await _entityReplyStore.CreateAsync(reply);
-            if (entityReply != null)
+            var newReply = await _entityReplyStore.CreateAsync(reply);
+            if (newReply != null)
             {
                 // Raise created event
-                Created?.Invoke(this, new EntityReplyEventArgs()
-                {
-                    Entity = entity,
-                    EntityReply = entityReply
-                });
-                return result.Success(entityReply);
+                Created?.Invoke(this, new EntityReplyEventArgs(entity, newReply));
+                return result.Success(newReply);
             }
 
             return result.Failed(new EntityError("An unknown error occurred whilst attempting to create the reply"));
@@ -134,20 +126,12 @@ namespace Plato.Entities.Services
             reply.Abstract = await ParseAbstract(reply.Message);
             
             // Raise updating event
-            Updating?.Invoke(this, new EntityReplyEventArgs()
-            {
-                Entity = entity,
-                EntityReply = reply
-            });
+            Updating?.Invoke(this, new EntityReplyEventArgs(entity, reply));
             
             var updatedReply = await _entityReplyStore.UpdateAsync(reply);
             if (updatedReply != null)
             {
-                Updated?.Invoke(this, new EntityReplyEventArgs()
-                {
-                    Entity = entity,
-                    EntityReply = updatedReply
-                });
+                Updated?.Invoke(this, new EntityReplyEventArgs(entity, updatedReply));
                 return result.Success(updatedReply);
             }
 
@@ -166,20 +150,12 @@ namespace Plato.Entities.Services
                 return result.Failed(new EntityError($"An entity reply with the id of '{id}' could not be found"));
             }
 
-            Deleting?.Invoke(this, new EntityReplyEventArgs()
-            {
-                EntityReply = reply
-            });
-            
+            Deleting?.Invoke(this, new EntityReplyEventArgs(null, reply));
+           
             var success = await _entityReplyStore.DeleteAsync(reply);
-            Deleted?.Invoke(this, new EntityReplyEventArgs()
-            {
-                Success = success,
-                EntityReply = reply
-            });
-
             if (success)
             {
+                Deleted?.Invoke(this, new EntityReplyEventArgs(null, reply));
                 return result.Success(reply);
             }
 

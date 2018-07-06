@@ -26,7 +26,7 @@ namespace Plato.Discuss.Services
         public async Task<IEntityResult> CreateAsync(EntityReply model)
         {
 
-            _entityReplyManager.Created += async (sender, args) =>
+            _entityReplyManager.Created += async (sender, args) => 
             {
                 
                 // Get last 5 participants
@@ -42,6 +42,7 @@ namespace Plato.Discuss.Services
 
                 var postDetails = args.Entity.GetMetaData<PostDetails>() ?? new PostDetails();
                 postDetails.TotalReplies = postDetails.TotalReplies + 1;
+
                 if (replies?.Data != null)
                 {
                     var participants = new List<EntityUser>();

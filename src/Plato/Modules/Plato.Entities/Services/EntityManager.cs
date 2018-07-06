@@ -181,14 +181,13 @@ namespace Plato.Entities.Services
             });
 
             var success = await _entityStore.DeleteAsync(entity);
-            Deleted?.Invoke(this, new EntityEventArgs()
-            {
-                Success = success,
-                Entity = entity
-            });
-
             if (success)
             {
+                Deleted?.Invoke(this, new EntityEventArgs()
+                {
+                    Success = true,
+                    Entity = entity
+                });
                 return result.Success(entity);
             }
 
