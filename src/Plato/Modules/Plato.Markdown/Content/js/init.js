@@ -35,36 +35,41 @@ $(function (win, doc, $) {
                 methods.bind($caller);
                 
             },
-            bind: function ($caller) {
+            getUniqueId: function ($caller) {
 
+                return parseInt($caller.attr("data-markdown-id")) || 0;
+            },
+            bind: function ($caller) {
+                
                 var event = $caller.data(dataKey).event;
                 if (event) {
-                 
                     var $tabs = $caller.find('a[data-toggle="tab"]');
                     $tabs.on(event,
                         function(e) {
                             methods.showTab($caller, e.target.href.split("#")[1]);
                         });
-
                 }
 
             },
             showTab: function($caller, tabId) {
 
-                var $panels = $caller.find('div[data-role="tabpanel"]');
+                var id = this.getUniqueId($caller);
 
                 switch (tabId) {
-                case "write":
+                    case "write_" + id:
                     break;
-                case "preview":
+                    case "preview_" + id:
 
                     var $editor = $caller.find("textarea");
-                    var html = this.getHtml({
+                    this.getHtml({
                             markdown: $editor.val()
                         },
                         function (data) {
                             if (data.statusCode === 200) {
-                                $caller.find("#preview").empty().html(data.html);
+                                $caller
+                                    .find("#preview_" + id)
+                                    .empty()
+                                    .html(data.html);
                             }
                         });
 

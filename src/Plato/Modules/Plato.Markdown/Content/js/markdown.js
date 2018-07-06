@@ -208,7 +208,9 @@
 
                         }
 
+
                         $dropdown.append($button);
+                        $dropdown.append('<div class="dropdown-arrow"></div>');
                         $dropdown.append($ul);
 
                         $group.append($dropdown);
@@ -1547,11 +1549,8 @@
                           octicons: 'octicon octicon-text-size'
                       },
                       callback: function(e, $target) {
-                          $target.idropdown({
-                                  onShow: function($caller) {
-                                  }
-                              },
-                              "show");
+
+
                       }
                   }
               ]
@@ -1666,57 +1665,6 @@
                             var placeholderText = editor.__localize("Enter a YouTube or Vimeo URL..."),
                                 buttonText = editor.__localize("Add Video");
 
-                            $target.idropdown({
-                                onShow: function ($sender, $dropdown) {
-
-                                    var $input = $dropdown.find(".i-input"),
-                                        $btn = $dropdown.find(".btn");
-
-                                    // init controls
-                                    $input.attr("placeholder", placeholderText);
-                                    $btn.find("span").text(buttonText);
-
-                                    // click handler
-                                    $btn.unbind("click")
-                                        .bind("click",
-                                            function (e) {
-
-                                                e.preventDefault();
-
-                                                var chunk,
-                                                    selected = editor.getSelection();
-
-                                                // get user supplied Url
-                                                if ($input.val() !== "") {
-                                                    placeholderText = $input.val();
-                                                }
-
-                                                // set chunk to insert
-                                                if (selected.length === 0) {
-                                                    chunk = placeholderText;
-                                                } else {
-                                                    chunk = selected.text;
-                                                }
-
-                                                // replace selection
-                                                editor.replaceSelection('[video]' + chunk + '[/video]');
-
-                                                editor.$textarea.focus();
-
-                                                // set the cursor
-                                                var cursor = selected.start + chunk.length + 15;
-                                                editor.setSelection(cursor, cursor);
-
-                                                // reset
-                                                $input.val("");
-                                                $sender.idropdown("hide");
-
-                                            });
-
-                                }
-
-                            },
-                                "show");
 
                         }
                     }
@@ -1913,11 +1861,7 @@
                           octicons: 'octicon octicon-quote'
                       },
                       callback: function(e, $target) {
-                          $target.idropdown({
-                              onShow: function($caller) {
-                              }
-                          },
-                              "show");
+                       
                       }
                   }, {
                       name: 'cmdCode',
@@ -1993,39 +1937,6 @@
 
                           var placeholderText = editor.__localize("Search for articles to link to...");
 
-                          $target.idropdown({
-                                  onShow: function($sender, $dropdown) {
-
-                                      var $input = $dropdown.find(".i-input");
-                                      $input.attr("placeholder", placeholderText);
-
-                                      $input.searchSuggest({
-                                          config:
-                                          {
-                                              method: 'POST',
-                                              data:
-                                              {
-                                                  enable_role_check: true,
-                                                  global_scope: 1,
-                                                  access_type: 1
-                                              }
-                                          },
-                                          onKeyDown: function($caller, e) {
-                                              if (e.keyCode === 13) {
-                                                  e.preventDefault();
-                                              }
-                                          },
-                                          onItemClick: function($caller, result, e) {
-                                              e.preventDefault();
-                                              $target.attr("data-value", "#" + result.id + " ");
-                                              $.fn.markdown.handlers.insertContentLink(editor, $target);
-                                              $sender.idropdown("hide");
-                                          }
-                                      });
-                                  }
-
-                              },
-                              "show");
 
                       }
                   },
@@ -2052,28 +1963,7 @@
 
                           var ajaxUrl = editor.$textarea.data("standardReplyUrl");
                           if (ajaxUrl) {
-                              //$target.idropdown({
-                              //        ajaxUrl: ajaxUrl,
-                              //        onLoad: function($sender, $dropdown) {
-
-                              //            $dropdown.find(".i-dropdown-link")
-                              //                .click(function(e) {
-                              //                    var replyId = $(this).data("replyId") || 0;
-                              //                    if (replyId > 0) {
-                              //                        e.preventDefault();
-                              //                        var $template =
-                              //                            $('div[data-reply-markdown-id="' + replyId + '"]');
-                              //                        if ($template.length > 0) {
-                              //                            $.fn.markdown.handlers
-                              //                                .insertContent(editor, $template.html());
-                              //                            $sender.idropdown("hide");
-                              //                        }
-                              //                    }
-                              //                });
-
-                              //        }
-                              //    },
-                              //    "show");
+                              
 
                           } else {
                               alert("No data-standard-reply-url has been defined on the editor.$textarea");

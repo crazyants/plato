@@ -29796,7 +29796,10 @@ if (typeof jQuery === "undefined") {
 $(function (win, doc, $) {
 
     "use strict";
-    
+
+    /* $.Plato */
+    /* ---------------------------------------------*/
+
     win.$.Plato = {};
 
     /* Default options */
@@ -29999,27 +30002,8 @@ $(function (win, doc, $) {
 
     }
 
-
-    /* Initialize */
+    /* jQuery Plugins */
     /* ---------------------------------------------*/
-    
-    $(doc).ready(function () {
-
-        var context = win.$.Plato.Context;
-        context.logger.logInfo("$.Plato.Options = " + JSON.stringify(context.options(), null, "     "));
-        $.Plato.UI.init();
-
-    });
-
-}(window, document, jQuery));
-
-/* ---------------------- */
-/* jQuery PlugIns */
-/* ---------------------- */
-
-$(function (win, doc, $) {
-
-    'use strict';
 
     /* scrollTo */
     var scrollTo = function () {
@@ -30028,7 +30012,9 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            event: "click"
+            event: "click",
+            onBeforeComplete: function() {},
+            onComplete: function() {}
         };
 
         var methods = {
@@ -30050,17 +30036,17 @@ $(function (win, doc, $) {
                 var event = $caller.data(dataKey).event;
                 if (event) {
                     $caller.on(event,
-                        function(e) {
+                        function (e) {
                             e.preventDefault();
                             methods.scrollTo($caller);
-                          
-                           
+
+
                         });
                 }
 
             },
-            scrollTo: function($caller) {
-                
+            scrollTo: function ($caller) {
+
                 jQuery.extend(jQuery.easing,
                     {
                         def: 'easeOutQuad',
@@ -30077,10 +30063,13 @@ $(function (win, doc, $) {
                     var $target = $(href);
                     if ($target.length > 0) {
                         $('html, body').stop().animate({
-                                scrollTop: ($target.offset().top - 10)
-                            },
-                            500,
-                            'easeInOutExpo');
+                            scrollTop: ($target.offset().top - 10)
+                        },
+                            250,
+                            'easeInOutExpo', function() {
+                                $caller.data(dataKey).onComplete($caller, $target);
+                            });
+                        $caller.data(dataKey).onBeforeComplete($caller, $target);
                     }
                 }
 
@@ -30141,13 +30130,22 @@ $(function (win, doc, $) {
 
     }();
 
+    /* Register jQuery Plugins */
     $.fn.extend({
         scrollTo: scrollTo.init
     });
-
+    
+    /* Initialize */
+    /* ---------------------------------------------*/
+    
     $(doc).ready(function () {
 
-        $('[data-toggle="scroll"]').scrollTo();
+        var context = win.$.Plato.Context;
+        context.logger.logInfo("$.Plato.Options = " + JSON.stringify(context.options(), null, "     "));
+        $.Plato.UI.init();
+
+        /* plug-ins */
+        $('[data-provide="scroll"]').scrollTo();
 
     });
 

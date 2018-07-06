@@ -17,6 +17,7 @@ namespace Plato.Core.ViewComponents
         }
 
         public Task<IViewComponentResult> InvokeAsync(
+            int id,
             string value,
             LocalizedHtmlString placeHolderText,
             string htmlName,
@@ -25,6 +26,7 @@ namespace Plato.Core.ViewComponents
 
             var model = new EditorViewModel
             {
+                Id = id,
                 HtmlName = htmlName,
                 PlaceHolderText = placeHolderText?.Value ?? string.Empty,
                 Value = value,
@@ -47,6 +49,8 @@ namespace Plato.Core.ViewComponents
 
     public class EditorViewModel
     {
+
+        public int Id { get; set; }
 
         public string Value { get; set; }
 

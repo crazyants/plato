@@ -20,7 +20,7 @@
     display: block;
     height: .75rem;
     width: .75rem;
-    background-color: #f8f8f8;
+    background-color: transparent;
     border: 1px solid #ddd;
     pointer-events: none;
 }

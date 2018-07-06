@@ -17,6 +17,7 @@ namespace Plato.Markdown.ViewComponents
         }
 
         public Task<IViewComponentResult> InvokeAsync(
+            int id,
             string value,
             LocalizedHtmlString placeHolderText,
             string htmlName,
@@ -25,6 +26,7 @@ namespace Plato.Markdown.ViewComponents
 
             var model = new MarkdownViewModel
             {
+                Id = id,
                 HtmlName = htmlName,
                 PlaceHolderText = placeHolderText?.Value ?? string.Empty,
                 Value = value,
@@ -38,6 +40,8 @@ namespace Plato.Markdown.ViewComponents
     
     public class MarkdownViewModel
     {
+
+        public int Id { get; set; }
 
         public string Value { get; set; }
 

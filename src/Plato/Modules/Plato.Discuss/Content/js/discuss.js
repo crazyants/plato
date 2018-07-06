@@ -19,7 +19,26 @@ $(function (win, doc, $) {
         logger: $.Plato.Logger
     }
     
+    $.fn.extend({
+        scrollTo: scrollTo.init
+    });
+
     $(doc).ready(function () {
+        
+        $('[data-provide="postQuote"]').scrollTo({
+            onComplete: function ($caller, $target) {
+                var $textarea = $target.find("textarea");
+
+                $textarea.focus();
+            }
+        });
+
+        $('[data-provide="postReply"]').scrollTo({
+            onComplete: function($caller, $target) {
+                $target.find("textarea").focus();
+            }
+        });
+
         //$.Plato.Discuss.init(context);
     });
     
@@ -122,7 +141,7 @@ $.Plato.Discuss = {
     }
 }
 
-// vue
+// vue components
 
 Vue.component('field-icon', {
     template: '<img class="list-item-icon i-tooltip" v-bind:title="tooltip" v-bind:src="getImageUrl()" />',
