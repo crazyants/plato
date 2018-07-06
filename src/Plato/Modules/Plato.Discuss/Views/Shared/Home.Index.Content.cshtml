@@ -49,6 +49,14 @@
                             </a>
                         </div>
                         <div class="list-body">
+                            
+                            @if (detail != null)
+                            {
+                                <div class="float-right">
+                                    @detail.TotalReplies
+                                </div>
+                            }
+
                             <h5>
                                 <a asp-controller="Home" asp-action="Topic" asp-route-id="@entity.Id">
                                     @entity.Title
@@ -71,8 +79,8 @@
                                 }
                                 By <a href="#">@entity.CreatedBy.DisplayName</a> on @entity.CreatedDate
                             </p>
-                       
-                           
+
+
                         </div>
                         
                     </li>

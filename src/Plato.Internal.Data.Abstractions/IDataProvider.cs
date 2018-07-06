@@ -9,17 +9,13 @@ namespace Plato.Internal.Data.Abstractions
     {
         IDbConnection Connection { get; }
 
-        IDataReader ExecuteReader(string sql, params object[] args);
+        //IDataReader ExecuteReader(string sql, params object[] args);
 
         Task<DbDataReader> ExecuteReaderAsync(string sql, params object[] args);
         
-        T ExecuteScalar<T>(string sql, params object[] args);
-
         Task<T> ExecuteScalarAsync<T>(string sql, params object[] args);
 
-        int Execute(string sql, params object[] args);
-
-        Task<int> ExecuteAsync(string sql, params object[] args);
+        Task<T> ExecuteAsync<T>(string sql, params object[] args);
 
         void HandleException(Exception x);
 

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Data.Providers;
-using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Data
 {
@@ -93,14 +92,14 @@ namespace Plato.Internal.Data
 
         #region "Implementation"
 
-        public IDataReader ExecuteReader(CommandType commandType, string sql, params object[] commandParams)
-        {
-            if (_provider == null)
-                return null;
-            if (commandType == CommandType.StoredProcedure)
-                sql = GenerateExecuteStoredProcedureSql(sql, commandParams);
-            return _provider.ExecuteReader(sql, commandParams);
-        }
+        //public IDataReader ExecuteReader(CommandType commandType, string sql, params object[] commandParams)
+        //{
+        //    if (_provider == null)
+        //        return null;
+        //    if (commandType == CommandType.StoredProcedure)
+        //        sql = GenerateExecuteStoredProcedureSql(sql, commandParams);
+        //    return _provider.ExecuteReader(sql, commandParams);
+        //}
 
         public async Task<DbDataReader> ExecuteReaderAsync(
             CommandType commandType,
@@ -113,16 +112,7 @@ namespace Plato.Internal.Data
                 sql = GenerateExecuteStoredProcedureSql(sql, commandParams);
             return await _provider.ExecuteReaderAsync(sql, commandParams);
         }
-
-        public T ExecuteScalar<T>(CommandType commandType, string sql, params object[] args)
-        {
-            if (_provider == null)
-                return default(T);
-            if (commandType == CommandType.StoredProcedure)
-                sql = GenerateExecuteStoredProcedureSql(sql, args);
-            return _provider.ExecuteScalar<T>(sql, args);
-        }
-
+        
         public async Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] args)
         {
             if (_provider == null)
@@ -132,22 +122,13 @@ namespace Plato.Internal.Data
             return await _provider.ExecuteScalarAsync<T>(sql, args);
         }
 
-        public int Execute(CommandType commandType, string sql, params object[] args)
+        public async Task<T> ExecuteAsync<T>(CommandType commandType, string sql, params object[] args)
         {
             if (_provider == null)
-                return default(int);
+                return default(T);
             if (commandType == CommandType.StoredProcedure)
                 sql = GenerateExecuteStoredProcedureSql(sql, args);
-           return _provider.Execute(sql, args);
-        }
-
-        public async Task<int> ExecuteAsync(CommandType commandType, string sql, params object[] args)
-        {
-            if (_provider == null)
-                return default(int);
-            if (commandType == CommandType.StoredProcedure)
-                sql = GenerateExecuteStoredProcedureSql(sql, args);
-            return await _provider.ExecuteAsync(sql, args);
+            return await _provider.ExecuteAsync<T>(sql, args);
         }
         
         #endregion

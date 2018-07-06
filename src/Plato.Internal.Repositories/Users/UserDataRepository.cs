@@ -40,6 +40,7 @@ namespace Plato.Internal.Repositories.Users
             if (_logger.IsEnabled(LogLevel.Information))
                 _logger.LogInformation($"Selecting setting with id: {id}");
 
+            UserData userData = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -49,16 +50,15 @@ namespace Plato.Internal.Repositories.Users
                 {
                     if (reader.HasRows)
                     {
-                        var data = new UserData();
+                        userData = new UserData();
                         await reader.ReadAsync();
-                        data.PopulateModel(reader);
-                        return data;
+                        userData.PopulateModel(reader);
                     }
                 }
 
             }
 
-            return null;
+            return userData;
 
         }
 
@@ -150,11 +150,12 @@ namespace Plato.Internal.Repositories.Users
                     : $"Updating user data with id: {id}");
             }
 
+            var output = 0;
             using (var context = _dbContext)
             {
                 if (context == null)
                     return 0;
-                return await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUserDatum",
                     id,
@@ -167,6 +168,7 @@ namespace Plato.Internal.Repositories.Users
                     modifiedUserId);
             }
 
+            return output;
         }
 
 

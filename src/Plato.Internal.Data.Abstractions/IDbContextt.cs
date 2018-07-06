@@ -14,13 +14,9 @@ namespace Plato.Internal.Data.Abstractions
 
         Task<DbDataReader> ExecuteReaderAsync(CommandType commandType, string sql, params object[] commandParams);
         
-        T ExecuteScalar<T>(CommandType commandType, string sql, params object[] commandParams);
-
         Task<T> ExecuteScalarAsync<T>(CommandType commandType, string sql, params object[] commandParams);
-        
-        int Execute(CommandType commandType, string sql, params object[] commandParams);
-
-        Task<int> ExecuteAsync(CommandType commandType, string sql, params object[] commandParams);
+   
+        Task<T> ExecuteAsync<T>(CommandType commandType, string sql, params object[] commandParams);
         
         void HandleException(Exception x);
 

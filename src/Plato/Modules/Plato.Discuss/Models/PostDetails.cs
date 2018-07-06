@@ -12,6 +12,8 @@ namespace Plato.Discuss.Models
 
         public string SomeNewValue { get; set; }
         
+        public int TotalReplies { get; set; }
+
         public IEnumerable<EntityUser> Participants { get; set; } = new List<EntityUser>();
 
 

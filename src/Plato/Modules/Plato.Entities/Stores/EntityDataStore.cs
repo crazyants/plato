@@ -73,5 +73,7 @@ namespace Plato.Entities.Stores
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _entityDataRepository.SelectAsync(args));
         }
+
     }
+
 }

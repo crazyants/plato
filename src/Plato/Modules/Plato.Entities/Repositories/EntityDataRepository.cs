@@ -40,8 +40,11 @@ namespace Plato.Entities.Repositories
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
+            {
                 _logger.LogInformation($"Selecting entity data with id: {id}");
-
+            }
+                
+            EntityData data = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -51,16 +54,15 @@ namespace Plato.Entities.Repositories
                 {
                     if (reader.HasRows)
                     {
-                        var data = new EntityData();
+                        data = new EntityData();
                         await reader.ReadAsync();
                         data.PopulateModel(reader);
-                        return data;
                     }
                 }
 
             }
 
-            return null;
+            return data;
 
         }
 

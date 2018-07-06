@@ -299,30 +299,15 @@ namespace Plato.Discuss.Controllers
                 .Select<EntityReplyQueryParams>(q =>
                 {
                     q.EntityId.Equals(entityId);
-                    //q.IsPrivate();
-                    //q.IsSpam.False();
-                    //q.IsDeleted.False();
                     if (!string.IsNullOrEmpty(filterOptions.Search))
                     {
                         q.Keywords.IsIn(filterOptions.Search);
                     }
-                    // q.UserName.IsIn("Admin,Mark").Or();
-                    // q.Email.IsIn("email440@address.com,email420@address.com");
-                    // q.Id.Between(1, 5);
                 })
-                .OrderBy("Id", OrderBy.Desc)
+                .OrderBy("CreatedDate", OrderBy.Asc)
                 .ToList();
         }
         
-        //public async Task<IPagedResults<EntityData>> GetEntityDataAsync(
-        //    int[] entityIds)
-        //{
-        //    return await _entityDataStore
-        //        .QueryAsync()
-        //        .Select<EntityDataQueryParams>(q => { q.EntityId.IsIn(entityIds); }).ToList();
-        //}
-
-
 
         private async Task<string> CreateSampleData()
         { 
@@ -388,6 +373,16 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                                 {
                                     Id = 3,
                                     UserName = "Sarah Smith"
+                                },
+                                new EntityUser()
+                                {
+                                    Id = 4,
+                                    UserName = "Mark Williams"
+                                },
+                                new EntityUser()
+                                {
+                                    Id = 5,
+                                    UserName = "Marcus"
                                 }
                             }
             };

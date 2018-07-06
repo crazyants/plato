@@ -65,6 +65,7 @@ namespace Plato.Entities.Stores
             if (newEntity != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
+                _cacheManager.CancelTokens(typeof(EntityDataStore));
                 newEntity = await GetByIdAsync(newEntity.Id);
             }
             
@@ -91,6 +92,7 @@ namespace Plato.Entities.Stores
             if (output != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
+                _cacheManager.CancelTokens(typeof(EntityDataStore));
             }
             return output;
         }

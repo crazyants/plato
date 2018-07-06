@@ -33,11 +33,11 @@ namespace Plato.Internal.Data.Migrations
             var result = new DataMigrationResult();
             foreach (var migration in dataMigrationRecord.Migrations)
             {
-                var commit = CommitMigration(migration);
-                if (commit > 0)
-                    result.SuccessfulMigrations.Add(migration);
-                else
-                    result.FailedMigrations.Add(migration);
+                //var commit = CommitMigration(migration);
+                //if (commit > 0)
+                //    result.SuccessfulMigrations.Add(migration);
+                //else
+                //    result.FailedMigrations.Add(migration);
             }
             result.Errors = _errors;
             return result;
@@ -47,30 +47,30 @@ namespace Plato.Internal.Data.Migrations
 
         #region "Private Methods"
 
-        private int CommitMigration(DataMigration migration)
-        {
+        //private int CommitMigration(DataMigration migration)
+        //{
 
-            var migrationId = 0;
-            using (var context = _dbContext)
-            {
-                foreach (var statement in migration.Statements)
-                {
-                    try
-                    {
-                        migrationId = context.ExecuteScalar<int>(
-                            System.Data.CommandType.Text, statement);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (_errors == null)
-                            _errors = new List<Exception>();;
-                        _errors.Add(ex);
-                    }
-                }
-            }
-            return migrationId;
+        //    var migrationId = 0;
+        //    using (var context = _dbContext)
+        //    {
+        //        foreach (var statement in migration.Statements)
+        //        {
+        //            try
+        //            {
+        //                migrationId = context.ExecuteScalar<int>(
+        //                    System.Data.CommandType.Text, statement);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                if (_errors == null)
+        //                    _errors = new List<Exception>();;
+        //                _errors.Add(ex);
+        //            }
+        //        }
+        //    }
+        //    return migrationId;
 
-        }
+        //}
 
         #endregion
 

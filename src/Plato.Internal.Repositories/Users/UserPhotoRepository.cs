@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Data;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Internal.Repositories.Users
@@ -65,13 +64,7 @@ namespace Plato.Internal.Repositories.Users
         #endregion
 
         #region "Implementation"
-        
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            throw new NotImplementedException();
-        }
-
-
+     
         public Task<IPagedResults<UserPhoto>> SelectAsync(params object[] inputParams)
         {
             // TODO

@@ -41,6 +41,7 @@ namespace Plato.Discuss.Services
                     .ToList();
 
                 var postDetails = args.Entity.GetMetaData<PostDetails>() ?? new PostDetails();
+                postDetails.TotalReplies = postDetails.TotalReplies + 1;
                 if (replies?.Data != null)
                 {
                     var participants = new List<EntityUser>();
@@ -50,8 +51,8 @@ namespace Plato.Discuss.Services
                     }
                     postDetails.Participants = participants;
                 }
-
-                args.Entity.SetMetaData(postDetails);
+                
+                args.Entity.SetMetaData<PostDetails>(postDetails);
 
                 await _entityStore.UpdateAsync(args.Entity);
                 

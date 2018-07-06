@@ -41,8 +41,7 @@ namespace Plato.Entities.Services
             
             var result = new EntityResult();
 
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            
+          
             if (reply.EntityId <= 0)
             {
                 return result.Failed(new EntityError($"{nameof(reply.EntityId)} must must be greater than zero"));
@@ -63,10 +62,15 @@ namespace Plato.Entities.Services
             {
                 return result.Failed(new EntityError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
-            
-            reply.CreatedUserId = user.Id;
+
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user != null)
+            {
+                reply.CreatedUserId = user.Id;
+                reply.ModifiedUserId = user.Id;
+            }
+           
             reply.CreatedDate = DateTime.UtcNow;
-            reply.ModifiedUserId = user.Id;
             reply.ModifiedDate = DateTime.UtcNow;
 
             // Parse Html and message abstract
@@ -101,8 +105,6 @@ namespace Plato.Entities.Services
 
             var result = new EntityResult();
 
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
             if (reply.Id <= 0)
             {
                 return result.Failed(new EntityError($"{nameof(reply.Id)} must be a valid existing reply id"));
@@ -118,8 +120,13 @@ namespace Plato.Entities.Services
             {
                 return result.Failed(new EntityError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
-
-            reply.ModifiedUserId = user.Id;
+            
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user != null)
+            {
+                reply.ModifiedUserId = user.Id;
+            }
+            
             reply.ModifiedDate = DateTime.UtcNow;
 
             // Parse Html and message abstract

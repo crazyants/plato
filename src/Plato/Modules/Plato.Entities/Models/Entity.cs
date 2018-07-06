@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using Plato.Internal.Abstractions;
@@ -18,24 +19,22 @@ namespace Plato.Entities.Models
         public IList<EntityData> Data { get; set; } = new List<EntityData>();
         
         public IDictionary<Type, ISerializable> MetaData => _metaData;
-
-
-        private readonly IDictionary<Type, ISerializable> _metaData;
+        
+        private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
         
         public Entity()
         {
-            // TODO: Replace with concurrent dictionary
-            _metaData = new Dictionary<Type, ISerializable>();
+            _metaData = new ConcurrentDictionary<Type, ISerializable>();
         }
         
         public void SetMetaData<T>(T obj) where T : class
         {
-            _metaData.Add(typeof(T), (ISerializable)obj);
+            _metaData.TryAdd(typeof(T), (ISerializable)obj);
         }
 
         public void SetMetaData(Type type, ISerializable obj)
         {
-            _metaData.Add(type, obj);
+            _metaData.TryAdd(type, obj);
         }
 
         public T GetMetaData<T>() where T : class

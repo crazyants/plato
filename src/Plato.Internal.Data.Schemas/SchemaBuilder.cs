@@ -305,29 +305,6 @@ namespace Plato.Internal.Data.Schemas
             return this;
         }
         
-        public ISchemaBuilder ApplySchema()
-        {
-
-            using (var context = _dbContext)
-            {
-                foreach (var statement in _statements)
-                {
-                    try
-                    {
-                        context.Execute(CommandType.Text, statement);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, $"An exception was encountered whilst building the schema. The supplied SQL statement that generated the exception was: {statement} ");
-                        _errors.Add(ex);
-                    }
-                }
-            }
-            
-            return this;
-
-        }
-
         public async Task<ISchemaBuilder> ApplySchemaAsync()
         {
 
@@ -337,7 +314,7 @@ namespace Plato.Internal.Data.Schemas
                 {
                     try
                     {
-                        await context.ExecuteAsync(CommandType.Text, statement);
+                        await context.ExecuteAsync<int>(CommandType.Text, statement);
                     }
                     catch (Exception ex)
                     {

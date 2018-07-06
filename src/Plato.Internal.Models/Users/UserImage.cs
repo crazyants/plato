@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Annotations;
 

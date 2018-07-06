@@ -47,8 +47,6 @@ namespace Plato.Internal.Data.Schemas.Abstractions
 
         ISchemaBuilder DropDefaultProcedures(SchemaTable table);
 
-        ISchemaBuilder ApplySchema();
-
         Task<ISchemaBuilder> ApplySchemaAsync();
 
         string GetSingularizedTableName(SchemaTable table);

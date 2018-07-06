@@ -14,13 +14,8 @@ namespace Plato.Internal.Data.Providers
         #region "Private Variables"
 
         private readonly string _connectionString;
-        private readonly string _tablePrefix;
         private SqlConnection _dbConnection;
-        private static int _sharedConnectionDepth;
-        private int _oneTimeCommandTimeout;
-        private string _lastSql;
-        private object[] _lastArgs;
-
+    
         #endregion
 
         #region "Constructors"
@@ -30,34 +25,15 @@ namespace Plato.Internal.Data.Providers
         }
 
         public SqlProvider(string connectionString)
-            : this(connectionString, "", 120)
-        {
-                  
-        }
-
-        public SqlProvider(string connectionString, string tablePrefix)
-      : this(connectionString, tablePrefix, 120)
-        {
-        }
-
-        public SqlProvider(
-            string connectionString, 
-            string tablePrefix,
-            int oneTimeCommandTimeout)
         {
             _connectionString = connectionString;
-            _tablePrefix = tablePrefix;
-            _oneTimeCommandTimeout = oneTimeCommandTimeout;
         }
 
         #endregion
 
         #region "Properties"
-
-        public bool KeepConnectionAlive { get; set; }
-
-        public int OneTimeCommandTimeout { get; set; }
-
+        
+      
         public int CommandTimeout { get; set; }
 
         public IDbConnection Connection => _dbConnection;
@@ -66,83 +42,34 @@ namespace Plato.Internal.Data.Providers
 
         #region "Open / Close"
 
-        public void Open()
-        {
-            if (_sharedConnectionDepth == 0)
-            {
-                _dbConnection = new SqlConnection
-                {
-                    ConnectionString = _connectionString
-                };
-                _dbConnection.Open();
-                if (KeepConnectionAlive)
-                    _sharedConnectionDepth++;
-            }
-            _sharedConnectionDepth++;
-        }
 
         public async Task OpenAsync()
         {
-            if (_sharedConnectionDepth == 0)
+
+            if (String.IsNullOrEmpty(_connectionString))
             {
-
-                if (String.IsNullOrEmpty(_connectionString))
-                {
-                    throw new Exception("The connection string has not been initialized.");;
-                }
-
-                _dbConnection = new SqlConnection {ConnectionString = _connectionString};
-                await _dbConnection.OpenAsync();
-                if (KeepConnectionAlive)
-                    _sharedConnectionDepth++;
+                throw new Exception("The connection string has not been initialized.");
+                ;
             }
-            _sharedConnectionDepth++;
+
+            _dbConnection = new SqlConnection {ConnectionString = _connectionString};
+            await _dbConnection.OpenAsync();
+
         }
-        
+
         public void Close()
         {
-            if (_sharedConnectionDepth > 0)
+            if (_dbConnection != null)
             {
-                _sharedConnectionDepth--;
-                if (_sharedConnectionDepth == 0)
-                {
-                    if (_dbConnection != null)
-                    {
-                        OnConnectionClosing(_dbConnection);
-                        _dbConnection.Dispose();
-                        _dbConnection = null;
-                    }
-                }
+                _dbConnection.Dispose();
+                _dbConnection = null;
             }
         }
 
         #endregion
 
         #region "Implementation"
-
-        public IDataReader ExecuteReader(string sql, params object[] args)
-        {
-
-            System.Data.IDataReader reader;
-            try
-            {
-                Open();
-                using (IDbCommand command = CreateCommand(_dbConnection, sql, args))
-                {
-                    reader = command.ExecuteReader(CommandBehavior.CloseConnection);
-                    OnExecutedCommand(command);
-                }
-            }
-            catch (Exception exception)
-            {
-                HandleException(exception);
-                throw;
-            }
         
-            return reader;
-
-        }
-
         public async Task<DbDataReader> ExecuteReaderAsync(string sql, params object[] args)
         {
 
@@ -165,29 +92,7 @@ namespace Plato.Internal.Data.Providers
             return reader;
 
         }
-        
-        public T ExecuteScalar<T>(string sql, params object[] args)
-        {
-            object output = null;
-            try
-            {
-                Open();
-                using (var cmd = CreateCommand(_dbConnection, sql, args))
-                {
-                    output = cmd.ExecuteScalar();
-                    OnExecutedCommand(cmd);
-                }
-            }
-            catch (Exception x)
-            {
-                HandleException(x);
-                throw;
-            }
-          
-            return (T)Convert.ChangeType(output, typeof(T)); ;
-
-        }
-
+     
         public async Task<T> ExecuteScalarAsync<T>(string sql, params object[] args)
         {
 
@@ -211,47 +116,17 @@ namespace Plato.Internal.Data.Providers
             
         }
 
-        public int Execute(string sql, params object[] args)
+        public async Task<T> ExecuteAsync<T>(string sql, params object[] args)
         {
             try
             {
-                Open();
+                await OpenAsync();
                 using (var cmd = CreateCommand(_dbConnection, sql, args))
                 {
-                    var retv = cmd.ExecuteNonQuery();
+                    var retv = await cmd.ExecuteNonQueryAsync();
                     OnExecutedCommand(cmd);
-                    return retv;
+                    return (T)Convert.ChangeType(retv, typeof(T));
                 }
-            }
-            catch (Exception x)
-            {
-                HandleException(x);
-                throw;
-            }
-        }
-
-        public async Task<int> ExecuteAsync(string sql, params object[] args)
-        {
-            try
-            {
-
-                try
-                {
-                    await OpenAsync();
-                    using (var cmd = CreateCommand(_dbConnection, sql, args))
-                    {
-                        var retv = await cmd.ExecuteNonQueryAsync();
-                        OnExecutedCommand(cmd);
-                        return retv;
-                    }
-
-                }
-                finally
-                {
-                    Close();
-                }
-                
-
             }
             catch (Exception x)
             {
@@ -295,22 +170,10 @@ namespace Plato.Internal.Data.Providers
 
         void DoPreExecute(IDbCommand cmd)
         {
-   
-            if (OneTimeCommandTimeout != 0)
-            {
-                cmd.CommandTimeout = OneTimeCommandTimeout;
-                _oneTimeCommandTimeout = 0;
-            }
-            else if (CommandTimeout != 0)
+            if (CommandTimeout != 0)
             {
                 cmd.CommandTimeout = CommandTimeout;
             }
-                       
-            OnExecutingCommand(cmd);
-                      
-            _lastSql = cmd.CommandText;
-            _lastArgs = (from IDataParameter parameter in cmd.Parameters select parameter.Value).ToArray();
-
         }
 
         void AddParam(IDbCommand cmd, object item)
@@ -379,11 +242,7 @@ namespace Plato.Internal.Data.Providers
         {
             OnException?.Invoke(this, new DbExceptionEventArgs(x));
         }
-                  
-        public virtual void OnConnectionClosing(IDbConnection conn) { }
-
-        public virtual void OnExecutingCommand(IDbCommand cmd) { }
-        
+     
         #endregion
 
     }
