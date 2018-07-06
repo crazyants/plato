@@ -29856,8 +29856,7 @@ $(function (win, doc, $) {
 
     /* Client side localization */
     win.$.Plato.Locale = {
-        lang: "en-US",
-
+        lang: "en-US"
     }
 
     /* Plato UI */
@@ -30009,6 +30008,146 @@ $(function (win, doc, $) {
         var context = win.$.Plato.Context;
         context.logger.logInfo("$.Plato.Options = " + JSON.stringify(context.options(), null, "     "));
         $.Plato.UI.init();
+
+    });
+
+}(window, document, jQuery));
+
+/* ---------------------- */
+/* jQuery PlugIns */
+/* ---------------------- */
+
+$(function (win, doc, $) {
+
+    'use strict';
+
+    /* scrollTo */
+    var scrollTo = function () {
+
+        var dataKey = "scrollTo",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            event: "click"
+        };
+
+        var methods = {
+            init: function ($caller, methodName) {
+                if (methodName) {
+                    if (this[methodName]) {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                methods.bind($caller);
+
+            },
+            bind: function ($caller) {
+
+                var event = $caller.data(dataKey).event;
+                if (event) {
+                    $caller.on(event,
+                        function(e) {
+                            e.preventDefault();
+                            methods.scrollTo($caller);
+                          
+                           
+                        });
+                }
+
+            },
+            scrollTo: function($caller) {
+                
+                jQuery.extend(jQuery.easing,
+                    {
+                        def: 'easeOutQuad',
+                        easeInOutExpo: function (x, t, b, c, d) {
+                            if (t === 0) return b;
+                            if (t === d) return b + c;
+                            if ((t /= d / 2) < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
+                            return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
+                        }
+                    });
+
+                var href = $caller.attr("href");
+                if (href) {
+                    var $target = $(href);
+                    if ($target.length > 0) {
+                        $('html, body').stop().animate({
+                                scrollTop: ($target.offset().top - 10)
+                            },
+                            500,
+                            'easeInOutExpo');
+                    }
+                }
+
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).markdownEditor
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().markdownEditor 
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+    }();
+
+    $.fn.extend({
+        scrollTo: scrollTo.init
+    });
+
+    $(doc).ready(function () {
+
+        $('[data-toggle="scroll"]').scrollTo();
 
     });
 

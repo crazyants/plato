@@ -1,6 +1,33 @@
 
+/* replies */
 
+.topic-reply-left { float: left; }
+.topic-reply-left + .topic-reply-body { position: relative; margin-left: 56px; }
+.topic-reply-right { float: right; }
+.topic-reply-right + .topic-reply-body { position: relative; margin-right: 56px; }
+
+.topic-reply-left a.avatar-link { float: left; margin-top: 1rem; }
+.topic-reply-left  .avatar { width: 36px; height: 36px; }
+
+.topic-reply-left + .topic-reply-body:before {
+    content: "";
+    position: absolute;
+    top: 1.75rem;
+    left: 0;
+    margin-left: -6px;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    display: block;
+    height: .75rem;
+    width: .75rem;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    pointer-events: none;
+}
+
+/* add reaction drop down */
 .reaction-dropdown-menu { width: 215px; white-space: normal; }
 .reaction-dropdown-menu-item { padding: 4px; background-color: transparent; }
 
+/* emoji */
 .emoji { background-color: transparent; }

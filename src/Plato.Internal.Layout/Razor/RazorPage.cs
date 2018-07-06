@@ -1,22 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using Plato.Internal.Layout.ViewAdaptors;
-using Plato.Internal.Layout.TagHelpers;
 using Plato.Internal.Layout.Views;
+using Plato.Internal.Models.Users;
+using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Internal.Layout.Razor
 {
-
-
-
-
+    
     public abstract class RazorPage<TModel> :
         Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
@@ -65,6 +59,18 @@ namespace Plato.Internal.Layout.Razor
             }
 
             return builder;
+        }
+
+
+        public async Task<User> GetAuthenticatedUserAsync()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userStore = ViewContext.HttpContext.RequestServices.GetRequiredService<IPlatoUserStore<User>>();
+                return await userStore.GetByUserNameAsync(User.Identity.Name);
+            }
+
+            return null;
         }
 
     }

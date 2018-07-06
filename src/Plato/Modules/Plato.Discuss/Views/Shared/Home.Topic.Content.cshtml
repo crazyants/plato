@@ -61,99 +61,133 @@
 @if (Model.Results != null)
 {
     @foreach (var reply in Model.Results.Data)
-     {
-         <div class="mt-4">
-             <card>
-                 <card-title>
-                     
-                     <div class="list-left">
-                         <a href="#">
-                             <avatar data-toggle="tooltip" title="@reply.CreatedBy.DisplayName" class="avatar" user-id="@reply.CreatedBy.Id" />
-                         </a>
-                     </div>
-                     <div class="list-body">
-                         
-                         <h6 class="card-title">
-                             <a href="#">
-                                 @reply.CreatedBy.DisplayName
-                             </a>
-                             @T["posted on"]
-                             @reply.CreatedDate
-                         </h6>
+    {
+        <div class="topic-reply mt-4">
+            <div class="topic-reply-left">
+                <a href="#" class="avatar-link">
+                    <avatar data-toggle="tooltip" title="@reply.CreatedBy.DisplayName" class="avatar" user-id="@reply.CreatedBy.Id" />
+                </a>
+            </div>
+            <div class="topic-reply-body">
+                <card>
+                    <card-title>
 
-                     </div>
-                     
 
-                     <ul class="nav nav-h navbar p-0 float-right">
-                         <li class="nav-item dropdown">
-                             <a class="nav-link text-muted" href="#" role="button">
-                                 <i class="fal fa-pencil"></i>
-                             </a>
-                         </li>
-                         <li class="nav-item dropdown">
-                             <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                 <i class="fal fa-smile"></i>
-                             </a>
-                             <div class="dropdown-arrow"></div>
-                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <div class="card-title float-left">
+                            <a href="#">
+                                @reply.CreatedBy.DisplayName
+                            </a>
+                            @T["posted "]
+                            @reply.CreatedDate
+                        </div>
 
-                                 <div class="reaction-dropdown-menu mx-1 mb-1">
-                                 
-                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="+1" name="input[content]" aria-label="React with thumbs up emoji" value="THUMBS_UP react">
-                                         <div alias="+1" class="emoji">👍</div>
-                                     </button>
-                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="-1" name="input[content]" aria-label="React with thumbs down emoji" value="THUMBS_DOWN react">
-                                         <div alias="-1" class="emoji">👎</div>
-                                     </button>
-                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Laugh" name="input[content]" aria-label="React with laugh emoji" value="LAUGH react">
-                                         <div alias="smile" class="emoji">😄</div>
-                                     </button>
-                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Hooray" name="input[content]" aria-label="React with hooray emoji" value="HOORAY react">
-                                         <div alias="tada" class="emoji">🎉</div>
-                                     </button>
-                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Confused" name="input[content]" aria-label="React with confused emoji" value="CONFUSED react">
-                                         <div alias="thinking_face" class="emoji">😕</div>
-                                     </button>
-                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Heart" name="input[content]" aria-label="React with heart emoji" value="HEART react">
-                                         <div alias="heart" class="emoji">❤️</div>
-                                     </button>
-                                 </div>
+                        <ul class="nav nav-h navbar p-0 float-right">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-muted" href="#" role="button">
+                                    <i class="fal fa-pencil"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fal fa-smile"></i>
+                                </a>
+                                <div class="dropdown-arrow"></div>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                             </div>
-                         </li>
-                     </ul>
-                  
-                 </card-title>
-                 <card-body>
+                                    <div class="reaction-dropdown-menu mx-1 mb-1">
 
-                     @{
-                         //var detail = entity.GetMetaData<TopicDetails>();
-                     }
+                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="+1" name="input[content]" aria-label="React with thumbs up emoji" value="THUMBS_UP react">
+                                            <div alias="+1" class="emoji">👍</div>
+                                        </button>
+                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="-1" name="input[content]" aria-label="React with thumbs down emoji" value="THUMBS_DOWN react">
+                                            <div alias="-1" class="emoji">👎</div>
+                                        </button>
+                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Laugh" name="input[content]" aria-label="React with laugh emoji" value="LAUGH react">
+                                            <div alias="smile" class="emoji">😄</div>
+                                        </button>
+                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Hooray" name="input[content]" aria-label="React with hooray emoji" value="HOORAY react">
+                                            <div alias="tada" class="emoji">🎉</div>
+                                        </button>
+                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Confused" name="input[content]" aria-label="React with confused emoji" value="CONFUSED react">
+                                            <div alias="thinking_face" class="emoji">😕</div>
+                                        </button>
+                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Heart" name="input[content]" aria-label="React with heart emoji" value="HEART react">
+                                            <div alias="heart" class="emoji">❤️</div>
+                                        </button>
+                                    </div>
 
-                     <p class="text-muted">
-                         @Html.Raw(reply.Html)
-                     </p>
-                 </card-body>
-             </card>
-         </div>
-     }
+                                </div>
+                            </li>
+                        </ul>
+
+
+                    </card-title>
+                    <card-body>
+
+                        <p class="text-muted">
+                            @Html.Raw(reply.Html)
+                        </p>
+                    </card-body>
+                </card>
+            </div>
+        </div>
+    }
 }
 else
 {
-    <div class="mt-4">
+    <div class="my-4">
         <card>
             <card-body>
-                <a href="#" class="btn btn-primary">
-                    @T["Post Reply"]
-                </a>
-                <span class="text-muted ml-2">@T["No one has replied to this topic yet. Be the first!"]</span>
-
-
+                <i class="fal fa-reply"></i>
+                <span class="text-muted ml-2">@T["No resplies have been posted yet. Be the first!"]</span>
             </card-body>
         </card>
     </div>
 }
 
-<div class="mt-4 mb-4">
-    <pager model="@Model.PagerOpts"></pager>
+@if (Model.PagerOpts.Total > Model.PagerOpts.PageSize)
+{
+    <div class="mt-4">
+        <pager model="@Model.PagerOpts"></pager>
+    </div>
+}
+
+@{
+    var user = await GetAuthenticatedUserAsync();
+}
+
+<div id="postReply" class="mt-4">
+    <div class="topic-reply mt-4">
+        <div class="topic-reply-left">
+            @if (user != null)
+            {
+                <a href="#" class="avatar-link">
+                    <avatar data-toggle="tooltip" title="@user.DisplayName" class="avatar" user-id="@user.Id" />
+                </a>}
+
+        </div>
+        <div class="topic-reply-body">
+            <form asp-controller="Home" asp-action="Topic" method="post" enctype="multipart/form-data">
+                <card>
+                    <card-body>
+                        <fieldset>
+                            @await DisplayAsync(new View("Editor", new
+                            {
+                                value = string.Empty,
+                                placeHolderText = T["Post a reply..."],
+                                htmlName = @Model.EditorHtmlName
+                            }))
+                        </fieldset>
+                    </card-body>
+                    <card-footer>
+                        <button type="submit" class="btn btn-primary">
+                            @T["Post"]
+                        </button>
+                    </card-footer>
+                </card>
+            </form>
+        </div>
+    </div>
 </div>
+
+

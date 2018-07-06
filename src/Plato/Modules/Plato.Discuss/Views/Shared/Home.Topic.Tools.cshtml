@@ -1,51 +1,8 @@
 ﻿@model HomeTopicViewModel
 
-<a href="#modal-new" class="btn btn-primary" data-toggle="modal" data-target="#modal-new" title="Reply">
+<a href="#postReply" data-toggle="scroll" class="btn btn-primary" title="Reply">
     <i class="fal fa-fw fa-plus"></i>
     @T["New Reply"]
 </a>
 
-<div class="modal fade" id="modal-new" role="dialog" aria-hidden="true">
-
-    <div class="modal-dialog modal-right modal-3x bg-light p-2 border-left" role="document">
-
-        <div class="modal-content">
-            <form asp-controller="Home" asp-action="Topic" method="post" enctype="multipart/form-data">
-            
-                <card>
-                    <card-title>
-                        @T["Post Reply"]
-                    </card-title>
-                    <card-body>
-                        <fieldset>
-                            <div class="form-group">
-
-                                @await DisplayAsync(new View("Editor", new
-                                {
-                                    value = string.Empty,
-                                    placeHolderText = T["Add your reply..."],
-                                    htmlName = @Model.EditorHtmlName,
-                                    autoFocus = true
-                                }))
-                             
-                            </div>
-                            <div class="form-group mt-4">
-
-                                <button type="submit" class="btn btn-primary">
-                                    @T["Post"]
-                                </button>
-                                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
-                                    @T["Cancel"]
-                                </button>
-                            </div>
-                        </fieldset>
-                    </card-body>
-                </card>
-
-            </form>
-        </div>
-        
-    </div>
-
-</div>
 

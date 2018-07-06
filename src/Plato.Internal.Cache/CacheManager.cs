@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +12,8 @@ namespace Plato.Internal.Cache
     public class CacheManager : ICacheManager
     {
 
-        public static IDictionary<CacheToken, Type> Tokens { get; } = new Dictionary<CacheToken, Type>();
+        public static ConcurrentDictionary<CacheToken, Type> Tokens { get; } =
+            new ConcurrentDictionary<CacheToken, Type>();
 
         private readonly IMemoryCache _memoryCache;
         private readonly ICacheDependency _cacheDependency;
@@ -25,8 +27,7 @@ namespace Plato.Internal.Cache
             _memoryCache = memoryCache;
             _logger = logger;
         }
-
-
+        
         public async Task<TItem> GetOrCreateAsync<TItem>(CacheToken token, Func<ICacheEntry, Task<TItem>> factory)
         {
 
@@ -69,7 +70,7 @@ namespace Plato.Internal.Cache
                 return key;
             }
 
-            Tokens.Add(key, type);
+            Tokens.TryAdd(key, type);
             return key;
         }
         
@@ -100,7 +101,7 @@ namespace Plato.Internal.Cache
         {
             if (Tokens.ContainsKey(token))
             {
-                Tokens.Remove(token);
+                Tokens.TryRemove(token, out Type type);
             }
           
             _cacheDependency.CancelToken(token.ToString());

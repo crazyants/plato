@@ -194,8 +194,7 @@ $(function (win, doc, $) {
     $.fn.extend({
         markdownEditor: markdown.init
     });
-
-
+    
     $(doc).ready(function () {
 
         $('[data-provide="markdown-container"]')
