@@ -91,7 +91,7 @@ namespace Plato.Discuss.Controllers
 
             // ------------------------
 
-            // ViewBag.TopicData = await CreateSampleData();
+             //ViewBag.TopicData = await CreateSampleData();
             
 
             // Maintain previous route data when generating page links

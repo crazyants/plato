@@ -159,42 +159,7 @@ namespace Plato.Entities.Handlers
                 }
             }
         };
-
-        // Entity participants
-        private readonly SchemaTable _entityParticipants = new SchemaTable()
-        {
-            Name = "EntityParticipants",
-            Columns = new List<SchemaColumn>()
-            {
-                new SchemaColumn()
-                {
-                    PrimaryKey = true,
-                    Name = "Id",
-                    DbType = DbType.Int32
-                },
-                new SchemaColumn()
-                {
-                    Name = "EntityId",
-                    DbType = DbType.Int32
-                },
-                new SchemaColumn()
-                {
-                    Name = "UserId",
-                    DbType = DbType.Int32
-                },
-                new SchemaColumn()
-                {
-                    Name = "UserName",
-                    DbType = DbType.Int32
-                },
-                new SchemaColumn()
-                {
-                    Name = "CreatedDate",
-                    DbType = DbType.DateTime2
-                }
-            }
-        };
-
+        
         // Entity replies
         private readonly SchemaTable _entityReplies = new SchemaTable()
         {
@@ -305,10 +270,7 @@ namespace Plato.Entities.Handlers
 
                 // Entity data schema
                 EntityData(builder);
-
-                // Entity participants
-                EntityParticipation(builder);
-
+                
                 // Entity replies
                 EntityReplies(builder);
                 
@@ -367,18 +329,15 @@ namespace Plato.Entities.Handlers
                     .DropProcedure(new SchemaProcedure("SelectEntityDatumByEntityId"))
                     .DropProcedure(new SchemaProcedure("SelectEntityDatumPaged"));
                 
-                // drop entity participants
-                builder
-                    .DropTable(_entityParticipants)
-                    .DropDefaultProcedures(_entityParticipants)
-                    .DropProcedure(new SchemaProcedure("SelectEntityParticipantsPaged"));
-
                 // drop entity replies
                 builder
                     .DropTable(_entityReplies)
                     .DropDefaultProcedures(_entityReplies)
                     .DropProcedure(new SchemaProcedure("SelectEntityRepliesPaged", StoredProcedureType.SelectByKey));
                 
+
+
+
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
                 {
@@ -501,41 +460,36 @@ namespace Plato.Entities.Handlers
                 }));
 
         }
-
-        void EntityParticipation(ISchemaBuilder builder)
-        {
-
-
-            builder
-                .CreateTable(_entityParticipants)
-                .CreateDefaultProcedures(_entityParticipants);
-            
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityParticipantsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entities)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "UserName",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
-
-        }
-
+        
         void EntityReplies(ISchemaBuilder builder)
         {
             
             builder
                 .CreateTable(_entityReplies)
                 .CreateDefaultProcedures(_entityReplies);
+
+            // Overwrite our SelectEntityReplyById created via CreateDefaultProcedures
+            // above to also return basic user data
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        "SelectEntityReplyById",
+                        @" SELECT r.*, 
+                                    c.UserName AS CreatedUserName, 
+                                    c.NormalizedUserName AS CreatedNormalizedUserName,
+                                    c.DisplayName AS CreatedDisplayName,
+                                    m.UserName AS ModifiedUserName, 
+                                    m.NormalizedUserName AS ModifiedNormalizedUserName,
+                                    m.DisplayName AS ModifiedDisplayName
+                                FROM {prefix}_EntityReplies r WITH (nolock) 
+                                    LEFT OUTER JOIN {prefix}_Users c ON r.CreatedUserId = c.Id
+                                    LEFT OUTER JOIN {prefix}_Users m ON r.ModifiedUserId = m.Id
+                                WHERE (
+                                   r.Id = @Id
+                                )")
+                    .ForTable(_entities)
+                    .WithParameter(_entities.PrimaryKeyColumn));
             
+
             builder.CreateProcedure(new SchemaProcedure("SelectEntityRepliesPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_entities)
                 .WithParameters(new List<SchemaColumn>()

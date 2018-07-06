@@ -270,9 +270,9 @@ namespace Plato.Entities.Stores
             // join created user
             sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
-                .Append(" c ON e.CreatedUserId = c.Id");
+                .Append(" c ON e.CreatedUserId = c.Id ");
             
-            sb.Append(" LEFT OUTER JOIN ")
+            sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
                 .Append(" m ON e.ModifiedUserId = m.Id");
             

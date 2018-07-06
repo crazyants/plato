@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Entities.Services
@@ -21,12 +22,14 @@ namespace Plato.Entities.Services
      
         private readonly IBroker _broker;
         private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
+        private readonly IContextFacade _contextFacade;
 
         public EntityReplyManager(
             IEntityReplyStore<EntityReply> entityReplyStore, 
-            IBroker broker)
+            IBroker broker, IContextFacade contextFacade)
         {
             _entityReplyStore = entityReplyStore;
+            _contextFacade = contextFacade;
             _broker = broker;
         }
 
@@ -35,6 +38,8 @@ namespace Plato.Entities.Services
             
             var result = new EntityResult();
 
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            
             if (model.EntityId <= 0)
             {
                 return result.Failed(new EntityError($"{nameof(model.EntityId)} must must be greater than zero"));
@@ -50,10 +55,15 @@ namespace Plato.Entities.Services
                 return result.Failed(new EntityError($"{nameof(model.Message)} is required"));
             }
 
+            model.CreatedUserId = user.Id;
+            model.CreatedDate = DateTime.UtcNow;
+            model.ModifiedUserId = user.Id;
+            model.ModifiedDate = DateTime.UtcNow;
+
             // Parse Html and message abstract
             model.Html = await ParseMarkdown(model.Message);
             model.Abstract = await ParseAbstract(model.Message);
-
+            
             // Raise creating event
             Creating?.Invoke(this, new EntityManagerEventArgs()
             {
@@ -80,6 +90,8 @@ namespace Plato.Entities.Services
 
             var result = new EntityResult();
 
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
             if (model.Id <= 0)
             {
                 return result.Failed(new EntityError($"{nameof(model.Id)} must be a valid existing reply id"));
@@ -89,6 +101,9 @@ namespace Plato.Entities.Services
             {
                 return result.Failed(new EntityError($"{nameof(model.Message)} is required"));
             }
+
+            model.ModifiedUserId = user.Id;
+            model.ModifiedDate = DateTime.UtcNow;
 
             // Parse Html and message abstract
             model.Html = await ParseMarkdown(model.Message);
@@ -146,8 +161,7 @@ namespace Plato.Entities.Services
             return result.Failed(new EntityError("An unknown error occurred whilst attempting to delete the reply."));
 
         }
-
-
+        
         #region "Private Methods"
 
         private async Task<string> ParseMarkdown(string message)

@@ -3,19 +3,18 @@
 .transition-3x { transition: all 0.25s ease-out; }
 .transition-4x { transition: all 0.30s ease-out; }
 
-
 /* ------------------------- */
 /* Grid system */
 /* ------------------------- */
 
-/* smaller gutters */
-.gutter-sm {
+/* smaller bootstrap gutters */
+row.gutter-sm {
     margin-right: -8px;
     margin-left: -8px;
 }
 
-.gutter-sm > .col,
-.gutter-sm > [class*="col-"] {
+row.gutter-sm > .col,
+row.gutter-sm > [class*="col-"] {
     padding-right: 8px;
     padding-left: 8px;
 }

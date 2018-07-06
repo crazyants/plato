@@ -211,15 +211,17 @@ namespace Plato.Entities.Stores
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             return sb.ToString();
         }
-
-
+        
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("r.*, ")
-                .Append("u.UserName AS CreatedUserName, ")
+            sb.Append("r.*,")
+                .Append("u.UserName AS CreatedUserName,")
                 .Append("u.NormalizedUserName AS CreatedNormalizedUserName,")
-                .Append("u.DisplayName AS CreatedDisplayName");
+                .Append("u.DisplayName AS CreatedDisplayName,")
+                .Append("m.UserName AS ModifiedUserName,")
+                .Append("m.NormalizedUserName AS ModifiedNormalizedUserName,")
+                .Append("m.DisplayName AS ModifiedDisplayName");
 
             return sb.ToString();
 
@@ -236,8 +238,12 @@ namespace Plato.Entities.Stores
             // join created user
             sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
-                .Append(" u ON r.CreatedUserId = u.Id");
-
+                .Append(" u ON r.CreatedUserId = u.Id ");
+            
+            sb.Append("LEFT OUTER JOIN ")
+                .Append(_usersTableName)
+                .Append(" m ON r.ModifiedUserId = m.Id");
+            
             return sb.ToString();
 
         }

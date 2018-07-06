@@ -100,20 +100,7 @@ namespace Plato.Entities.Stores
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var entity = await _entityRepository.SelectByIdAsync(id);
-                if (entity != null)
-                {
-                    foreach (var data in entity.Data)
-                    {
-                        var type = await GetModuleTypeCandidateAsync(data.Key);
-                        if (type != null)
-                        {
-                            var obj = JsonConvert.DeserializeObject(data.Value, type);
-                            entity.SetMetaData(type, (ISerializable) obj);
-                        }
-                    }
-                }
-
-                return entity;
+                return await MergeEntityData(entity);
             });
 
         }
@@ -130,32 +117,10 @@ namespace Plato.Entities.Stores
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var results = await _entityRepository.SelectAsync(args);
-                
                 if (results != null)
                 {
-                    // get all meta data for returned results
-                    var entityData = await _entityDataStore
-                        .QueryAsync()
-                        .Select<EntityDataQueryParams>(q =>
-                        {
-                            q.EntityId.IsIn(results.Data.Select(r => r.Id).ToArray());
-                        }).ToList();
-
-                    foreach (var result in results.Data)
-                    {
-                        foreach (var data in entityData.Data.Where(d => d.EntityId == result.Id))
-                        {
-                            var type = await GetModuleTypeCandidateAsync(data.Key);
-                            if (type != null)
-                            {
-                                var obj = JsonConvert.DeserializeObject(data.Value, type);
-                                result.SetMetaData(type, (ISerializable) obj);
-                            }
-                        }
-                    }
-
+                    results.Data = await MergeEntityData(results.Data);
                 }
-            
                 return results;
             });
         }
@@ -163,6 +128,70 @@ namespace Plato.Entities.Stores
         #endregion
 
         #region "Private Methods"
+
+
+        async Task<IList<Entity>> MergeEntityData(IList<Entity> entities)
+        {
+
+            if (entities == null)
+            {
+                return null;
+            }
+
+            // Get all entity data matching supplied entity ids
+            var results = await _entityDataStore.QueryAsync()
+                .Select<EntityDataQueryParams>(q => { q.EntityId.IsIn(entities.Select(e => e.Id).ToArray()); })
+                .ToList();
+            
+            // Merge data into entities
+            return await MergeEntityData(entities, results.Data);
+            
+        }
+
+        async Task<IList<Entity>> MergeEntityData(IList<Entity> entities, IList<EntityData> data)
+        {
+
+            if (entities == null || data == null)
+            {
+                return entities;
+            }
+
+            for (var i = 0; i < entities.Count; i++)
+            {
+                entities[i].Data = data.Where(d => d.EntityId == entities[i].Id).ToList();
+                entities[i] = await MergeEntityData(entities[i]);
+            }
+
+            return entities;
+
+        }
+
+        async Task<Entity> MergeEntityData(Entity entity)
+        {
+
+            if (entity == null)
+            {
+                return null;
+            }
+
+            if (entity.Data == null)
+            {
+                return entity;
+            }
+
+            foreach (var data in entity.Data)
+            {
+                var type = await GetModuleTypeCandidateAsync(data.Key);
+                if (type != null)
+                {
+                    var obj = JsonConvert.DeserializeObject(data.Value, type);
+                    entity.SetMetaData(type, (ISerializable) obj);
+                }
+            }
+
+            return entity;
+
+        }
         
         async Task<Type> GetModuleTypeCandidateAsync(string typeName)
         {

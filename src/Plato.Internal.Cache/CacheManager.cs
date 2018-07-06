@@ -84,11 +84,11 @@ namespace Plato.Internal.Cache
 
         public void CancelTokens(Type type, params object[] varyBy)
         {
-            var cancallationToken = new CacheToken(type, varyBy);
+            var cancellationToken = new CacheToken(type, varyBy);
             var tokens = GetTokensForType(type);
             foreach (var token in tokens)
             {
-                if (cancallationToken == token)
+                if (cancellationToken == token)
                 {
                     CancelToken(token);
                 }
