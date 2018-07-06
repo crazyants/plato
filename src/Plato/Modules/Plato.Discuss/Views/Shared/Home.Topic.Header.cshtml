@@ -1,7 +1,16 @@
 ﻿@model HomeTopicViewModel
 
-<h4>@Model.Entity.Title</h4>
-<span class="text-muted">@T["Chat with others in our community."]</span>
+<div class="list-left">
+    <a href="#">
+        <avatar data-toggle="tooltip" title="@Model.Entity.CreatedBy.DisplayName" class="avatar" user-id="@Model.Entity.CreatedBy.Id" />
+    </a>
+</div>
+<div class="list-body">
+    <h4>@Model.Entity.Title</h4>
+<span class="text-muted">
+    By <a href="#">@Model.Entity.CreatedBy.DisplayName</a> on @Model.Entity.CreatedDate
+</span>
+</div>
 <hr />
 
 

@@ -34,14 +34,14 @@
 
     @if (Model.SideBar != null)
     {
-        <div class="row layout-content">
-            <div class="col-md-9">
+        <div class="row gutter-sm layout-content">
+            <div class="col-9">
                 @if (Model.Content != null)
                 {
                     <view model="@Model.Content"></view>
                 }
             </div>
-            <div class="col-md-3">
+            <div class="col-3">
                 @if (Model.SideBar != null)
                 {
                     <view model="@Model.SideBar"></view>
@@ -52,9 +52,9 @@
     else
     {
         @if (Model.Content != null)
-        {
-            <view model="@Model.Content"></view>
-        }
+         {
+             <view model="@Model.Content"></view>
+         }
     }
 
     <div class="layout-footer">

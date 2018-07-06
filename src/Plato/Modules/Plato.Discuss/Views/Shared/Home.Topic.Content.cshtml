@@ -2,30 +2,52 @@
 
 <card type="Danger">
     <card-title>
-        
-        <div class="float-left">
-            <h6 class="card-title">@T["Topic"]</h6>
-        </div>
-        <div class="float-right">
 
-            <a href="#" data-toggle="tooltip" title="@T["Edit Post"]" class="btn text-muted" role="button">
-                <i class="fal fa-pencil"></i>
-            </a>
+        <h6 class="card-title float-left">@T["Topic"]</h6>
+        <ul class="nav nav-h navbar p-0 float-right">
+            <li class="nav-item dropdown">
+                <a class="nav-link text-muted" href="#" role="button">
+                    <i class="fal fa-pencil"></i>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fal fa-smile"></i>
+                </a>
+                <div class="dropdown-arrow"></div>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-            <a href="#" data-toggle="tooltip" title="@T["Your Reaction"]" class="btn text-muted" role="button">
-                <i class="fal fa-smile"></i>
-            </a>
+                    <div class="reaction-dropdown-menu mx-1 mb-1">
+                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="+1" name="input[content]" aria-label="React with thumbs up emoji" value="THUMBS_UP react">
+                            <div alias="+1" class="emoji">👍</div>
+                        </button>
+                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="-1" name="input[content]" aria-label="React with thumbs down emoji" value="THUMBS_DOWN react">
+                            <div alias="-1" class="emoji">👎</div>
+                        </button>
+                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Laugh" name="input[content]" aria-label="React with laugh emoji" value="LAUGH react">
+                            <div alias="smile" class="emoji">😄</div>
+                        </button>
+                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Hooray" name="input[content]" aria-label="React with hooray emoji" value="HOORAY react">
+                            <div alias="tada" class="emoji">🎉</div>
+                        </button>
+                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Confused" name="input[content]" aria-label="React with confused emoji" value="CONFUSED react">
+                            <div alias="thinking_face" class="emoji">😕</div>
+                        </button>
+                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Heart" name="input[content]" aria-label="React with heart emoji" value="HEART react">
+                            <div alias="heart" class="emoji">❤️</div>
+                        </button>
+                    </div>
 
-        </div>
+                </div>
+            </li>
+        </ul>
 
     </card-title>
     <card-body>
 
-        <avatar user-id="@Model.Entity.CreatedUserId"></avatar>
-
         @Html.Raw(@Model.Entity.Html)
 
-        <div class="hidden">
+        <div class="hidden" style="display: none;">
             @await DisplayAsync(new View("Editor", new
             {
                 value = @Model.Entity.Message,
@@ -44,21 +66,49 @@
              <card>
                  <card-title>
                      
-                     <div class="float-left">
-                        @reply.CreatedDate
-                     </div>
-                     <div class="float-right">
+                     <h6 class="card-title float-left">@reply.CreatedDate</h6>
 
-                         <a href="#" data-toggle="tooltip" title="@T["Edit Post"]" class="btn text-muted" role="button">
-                             <i class="fal fa-pencil"></i>
-                         </a>
+                     <ul class="nav nav-h navbar p-0 float-right">
+                         <li class="nav-item dropdown">
+                             <a class="nav-link text-muted" href="#" role="button">
+                                 <i class="fal fa-pencil"></i>
+                             </a>
+                         </li>
+                         <li class="nav-item dropdown">
+                             <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <i class="fal fa-smile"></i>
+                             </a>
+                             <div class="dropdown-arrow"></div>
+                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                         <a href="#" data-toggle="tooltip" title="@T["Your Reaction"]" class="btn text-muted" role="button">
-                             <i class="fal fa-smile"></i>
-                         </a>
+                                 <div class="reaction-dropdown-menu mx-1 mb-1">
+                                 
+                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="+1" name="input[content]" aria-label="React with thumbs up emoji" value="THUMBS_UP react">
+                                         <div alias="+1" class="emoji">👍</div>
+                                     </button>
+                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="-1" name="input[content]" aria-label="React with thumbs down emoji" value="THUMBS_DOWN react">
+                                         <div alias="-1" class="emoji">👎</div>
+                                     </button>
+                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Laugh" name="input[content]" aria-label="React with laugh emoji" value="LAUGH react">
+                                         <div alias="smile" class="emoji">😄</div>
+                                     </button>
+                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Hooray" name="input[content]" aria-label="React with hooray emoji" value="HOORAY react">
+                                         <div alias="tada" class="emoji">🎉</div>
+                                     </button>
+                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Confused" name="input[content]" aria-label="React with confused emoji" value="CONFUSED react">
+                                         <div alias="thinking_face" class="emoji">😕</div>
+                                     </button>
+                                     <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Heart" name="input[content]" aria-label="React with heart emoji" value="HEART react">
+                                         <div alias="heart" class="emoji">❤️</div>
+                                     </button>
+                                 </div>
 
-                     </div>
-
+                             </div>
+                         </li>
+                     </ul>
+                  
+                     
+                   
                  </card-title>
                  <card-body>
 
@@ -73,11 +123,21 @@
              </card>
          </div>
      }
-
 }
 else
 {
-    <h6>@T["No replies"]</h6>
+    <div class="mt-4">
+        <card>
+            <card-body>
+                <a href="#" class="btn btn-primary">
+                    @T["Post Reply"]
+                </a>
+                <span class="text-muted ml-2">@T["No one has replied to this topic yet. Be the first!"]</span>
+
+
+            </card-body>
+        </card>
+    </div>
 }
 
 <div class="mt-4 mb-4">

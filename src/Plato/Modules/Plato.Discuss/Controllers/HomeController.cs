@@ -40,9 +40,7 @@ namespace Plato.Discuss.Controllers
         private readonly IAlerter _alerter;
         
         public IHtmlLocalizer T { get; }
-
-
-
+        
         public HomeController(
             IHtmlLocalizer<HomeController> localizer,
             ISiteSettingsStore settingsStore,
@@ -93,9 +91,8 @@ namespace Plato.Discuss.Controllers
 
             // ------------------------
 
-            ViewBag.TopicData = await CreateSampleData();
+            // ViewBag.TopicData = await CreateSampleData();
             
-
 
             // Maintain previous route data when generating page links
             var routeData = new RouteData();
