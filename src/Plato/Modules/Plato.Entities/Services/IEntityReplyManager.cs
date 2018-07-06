@@ -2,7 +2,7 @@
 
 namespace Plato.Entities.Services
 {
-    public interface IEntityReplyManager<in TModel> where TModel : class
+    public interface IEntityReplyManager<TModel> where TModel : class
     {
 
         event EntityReplyEvents.Handler Creating;
@@ -12,11 +12,11 @@ namespace Plato.Entities.Services
         event EntityReplyEvents.Handler Deleting;
         event EntityReplyEvents.Handler Deleted;
 
-        Task<IEntityResult> CreateAsync(TModel reply);
+        Task<IEntityResult<TModel>> CreateAsync(TModel reply);
 
-        Task<IEntityResult> UpdateAsync(TModel reply);
+        Task<IEntityResult<TModel>> UpdateAsync(TModel reply);
 
-        Task<IEntityResult> DeleteAsync(int id);
+        Task<IEntityResult<TModel>> DeleteAsync(int id);
 
     }
 }

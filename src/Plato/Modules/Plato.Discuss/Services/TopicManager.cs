@@ -14,17 +14,17 @@ namespace Plato.Discuss.Services
             _entityManager = entityManager;
         }
 
-        public async Task<IEntityResult> CreateAsync(Entity model)
+        public async Task<IEntityResult<Entity>> CreateAsync(Entity model)
         {
             return await _entityManager.CreateAsync(model);
         }
 
-        public async Task<IEntityResult> UpdateAsync(Entity model)
+        public async Task<IEntityResult<Entity>> UpdateAsync(Entity model)
         {
             return await _entityManager.UpdateAsync(model);
         }
 
-        public async Task<IEntityResult> DeleteAsync(int id)
+        public async Task<IEntityResult<Entity>> DeleteAsync(int id)
         {
             return await _entityManager.DeleteAsync(id);
         }

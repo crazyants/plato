@@ -36,10 +36,10 @@ namespace Plato.Entities.Services
             _broker = broker;
         }
 
-        public async Task<IEntityResult> CreateAsync(EntityReply reply)
+        public async Task<IEntityResult<EntityReply>> CreateAsync(EntityReply reply)
         {
             
-            var result = new EntityResult();
+            var result = new EntityResult<EntityReply>();
 
           
             if (reply.EntityId <= 0)
@@ -92,10 +92,10 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IEntityResult> UpdateAsync(EntityReply reply)
+        public async Task<IEntityResult<EntityReply>> UpdateAsync(EntityReply reply)
         {
 
-            var result = new EntityResult();
+            var result = new EntityResult<EntityReply>();
 
             if (reply.Id <= 0)
             {
@@ -139,10 +139,10 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IEntityResult> DeleteAsync(int id)
+        public async Task<IEntityResult<EntityReply>> DeleteAsync(int id)
         {
 
-            var result = new EntityResult();
+            var result = new EntityResult<EntityReply>();
 
             var reply = await _entityReplyStore.GetByIdAsync(id);
             if (reply == null)

@@ -3,14 +3,14 @@ using Plato.Entities.Services;
 
 namespace Plato.Discuss.Services
 {
-    public interface IPostManager<in TModel> where TModel : class
+    public interface IPostManager<TModel> where TModel : class
     {
 
-        Task<IEntityResult> CreateAsync(TModel model);
+        Task<IEntityResult<TModel>> CreateAsync(TModel model);
 
-        Task<IEntityResult> UpdateAsync(TModel model);
+        Task<IEntityResult<TModel>> UpdateAsync(TModel model);
 
-        Task<IEntityResult> DeleteAsync(int id);
+        Task<IEntityResult<TModel>> DeleteAsync(int id);
 
     }
 

@@ -3,7 +3,7 @@ using Plato.Entities.Models;
 
 namespace Plato.Entities.Services
 {
-    public interface IEntityManager<in TModel> where TModel : class
+    public interface IEntityManager<TModel> where TModel : class
     {
 
         event EntityEvents.Handler Creating;
@@ -13,11 +13,11 @@ namespace Plato.Entities.Services
         event EntityEvents.Handler Deleting;
         event EntityEvents.Handler Deleted;
       
-        Task<IEntityResult> CreateAsync(TModel model);
+        Task<IEntityResult<TModel>> CreateAsync(TModel model);
 
-        Task<IEntityResult> UpdateAsync(TModel model);
+        Task<IEntityResult<TModel>> UpdateAsync(TModel model);
 
-        Task<IEntityResult> DeleteAsync(int id);
+        Task<IEntityResult<TModel>> DeleteAsync(int id);
 
     }
     

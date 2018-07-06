@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
@@ -14,34 +12,24 @@ using Plato.Internal.Stores.Abstractions;
 namespace Plato.Entities.Stores
 {
 
-    public interface IEntityReplyStore<TModel> : IStore<TModel> where TModel : class
-    {
-
-    }
-
     public class EntityReplyStore : IEntityReplyStore<EntityReply>
     {
 
-        private string _key = "EntityReply";
-        
+        private readonly ICacheManager _cacheManager;
         private readonly IEntityReplyRepository<EntityReply> _entityReplyRepository;
         private readonly ILogger<EntityReplyStore> _logger;
-        private readonly ICacheDependency _cacheDependency;
-        private readonly IMemoryCache _memoryCache;
         private readonly IDbQueryConfiguration _dbQuery;
             
         public EntityReplyStore(
             ILogger<EntityReplyStore> logger,
-            ICacheDependency cacheDependency, 
-            IMemoryCache memoryCache,
             IDbQueryConfiguration dbQuery,
-            IEntityReplyRepository<EntityReply> entityReplyRepository)
+            IEntityReplyRepository<EntityReply> entityReplyRepository,
+            ICacheManager cacheManager)
         {
             _logger = logger;
-            _cacheDependency = cacheDependency;
-            _memoryCache = memoryCache;
             _dbQuery = dbQuery;
             _entityReplyRepository = entityReplyRepository;
+            _cacheManager = cacheManager;
         }
         
         public async Task<EntityReply> CreateAsync(EntityReply reply)
@@ -50,7 +38,15 @@ namespace Plato.Entities.Stores
             var newReply = await _entityReplyRepository.InsertUpdateAsync(reply);
             if (newReply != null)
             {
-                _cacheDependency.CancelToken(GetEntityReplyCacheKey());
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Added entity reply with id {0} for entity { 1}",
+                        newReply.Id, newReply.EntityId);
+                }
+                _cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
+                _cacheManager.CancelTokens(typeof(EntityReplyStore), reply.EntityId);
+                _cacheManager.CancelTokens(this.GetType());
+                _cacheManager.CancelTokens(this.GetType(), reply.Id);
             }
 
             return newReply;
@@ -62,7 +58,15 @@ namespace Plato.Entities.Stores
             var updatedReply = await _entityReplyRepository.InsertUpdateAsync(reply);
             if (updatedReply != null)
             {
-                _cacheDependency.CancelToken(GetEntityReplyCacheKey());
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Update entity reply with id {1}",
+                       updatedReply.Id);
+                }
+                _cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
+                _cacheManager.CancelTokens(typeof(EntityReplyStore), reply.EntityId);
+                _cacheManager.CancelTokens(this.GetType());
+                _cacheManager.CancelTokens(this.GetType(), reply.Id);
             }
 
             return updatedReply;
@@ -73,22 +77,38 @@ namespace Plato.Entities.Stores
             var success = await _entityReplyRepository.DeleteAsync(reply.Id);
             if (success)
             {
-                _cacheDependency.CancelToken(GetEntityReplyCacheKey());
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Deleted entity reply with id {0} for entity { 1}",
+                        reply.Id, reply.EntityId);
+                }
+                _cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
+                _cacheManager.CancelTokens(typeof(EntityReplyStore), reply.EntityId);
+                _cacheManager.CancelTokens(this.GetType());
+                _cacheManager.CancelTokens(this.GetType(), reply.Id);
             }
-
-
+            
             return success;
 
         }
 
         public async Task<EntityReply> GetByIdAsync(int id)
         {
-            var reply = await _entityReplyRepository.SelectByIdAsync(id);
-            if (reply != null)
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
+                var reply = await _entityReplyRepository.SelectByIdAsync(id);
+                if (reply != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Information))
+                    {
+                        _logger.LogInformation("Selecting entity reply for key '{0}' with id {1}",
+                            token.ToString(), id);
+                    }
+                }
 
-            }
-            return reply;
+                return reply;
+            });
 
         }
 
@@ -100,72 +120,22 @@ namespace Plato.Entities.Stores
         
         public async Task<IPagedResults<EntityReply>> SelectAsync(params object[] args)
         {
-            var hash = args.GetHashCode().ToString();
-            var key = GetEntityReplyCacheKey(hash);
-
-            if (_logger.IsEnabled(LogLevel.Information))
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
-                _logger.LogInformation("Selecting entity replies for key '{0}' with the following parameters: {1}",
-                    key, args.Select(a => a));
-            }
 
-            return await _memoryCache.GetOrCreateAsync(key, async (cacheEntry) =>
-            {
-                var output = await _entityReplyRepository.SelectAsync(args);
-                if (output != null)
+                if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    if (_logger.IsEnabled(LogLevel.Information))
-                    {
-                        _logger.LogInformation("Adding entity replies to cache with key: {0}", key);
-                    }
+                    _logger.LogInformation("Selecting entity replies for key '{0}' with the following parameters: {1}",
+                        token.ToString(), args.Select(a => a));
                 }
-                cacheEntry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
-                return output;
+                
+                return await _entityReplyRepository.SelectAsync(args);
+
             });
 
         }
 
-        string GetCacheHashCode(params object[] args)
-        {
-
-            if ((args == null) || (args.Length == 0))
-            {
-                return string.Empty;
-            }
-
-            // Precalculate buffer size & ensure GetHashCode is only ever called once
-            var codes = new List<int>();
-            var len = 0;
-            foreach (var arg in args)
-            {
-                // An argument can be null
-                if (arg != null)
-                {
-                    var code = arg.GetHashCode();
-                    len += code.ToString().Length;
-                    codes.Add(code);
-                }
-            }
-
-            var sb = new StringBuilder(len);
-            foreach (var code in codes)
-            {
-                  sb.Append(code);
-            }
-
-            return sb.ToString();
-
-        }
-
-        string GetEntityReplyCacheKey()
-        {
-            return $"{_key}";
-        }
-
-        string GetEntityReplyCacheKey(string hash)
-        {
-            return $"{_key}_{hash}";
-        }
         
     }
 }

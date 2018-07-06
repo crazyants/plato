@@ -5,40 +5,40 @@ using System.Linq;
 namespace Plato.Entities.Services
 {
 
-    public interface IEntityResult
+    public interface IEntityResult<T> where T : class
     {
 
         bool Succeeded { get; }
 
-        object Response { get; }
+        T Response { get; }
 
         IEnumerable<EntityError> Errors { get; }
         
     }
 
-    public class EntityResult : IEntityResult
+    public class EntityResult<T> : IEntityResult<T> where T : class
     {
 
         private readonly List<EntityError> _errors = new List<EntityError>();
    
         public bool Succeeded { get; protected set; }
 
-        public object Response { get; protected set; }
+        public T Response { get; protected set; }
         
         public IEnumerable<EntityError> Errors => (IEnumerable<EntityError>)this._errors;
 
-        public EntityResult Success(object response)
+        public EntityResult<T> Success(object response)
         {
-            return new EntityResult()
+            return new EntityResult<T>()
             {
-                Response = response,
+                Response = (T)Convert.ChangeType(response, typeof(T)),
                 Succeeded = true
             };
         }
 
-        public EntityResult Failed(params EntityError[] errors)
+        public EntityResult<T> Failed(params EntityError[] errors)
         {
-            var entityResult = new EntityResult()
+            var entityResult = new EntityResult<T>()
             {
                 Succeeded = false
             };

@@ -40,10 +40,10 @@ namespace Plato.Entities.Services
 
         #region "Implementation"
 
-        public async Task<IEntityResult> CreateAsync(Entity model)
+        public async Task<IEntityResult<Entity>> CreateAsync(Entity model)
         {
 
-            var result = new EntityResult();
+            var result = new EntityResult<Entity>();
             
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             var feature = await _contextFacade.GetCurrentFeatureAsync();
@@ -110,10 +110,10 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IEntityResult> UpdateAsync(Entity model)
+        public async Task<IEntityResult<Entity>> UpdateAsync(Entity model)
         {
 
-            var result = new EntityResult();
+            var result = new EntityResult<Entity>();
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
@@ -164,10 +164,10 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IEntityResult> DeleteAsync(int id)
+        public async Task<IEntityResult<Entity>> DeleteAsync(int id)
         {
 
-            var result = new EntityResult();
+            var result = new EntityResult<Entity>();
 
             var entity = await _entityStore.GetByIdAsync(id);
             if (entity == null)
