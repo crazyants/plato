@@ -1,19 +1,31 @@
-﻿using Plato.Entities.Stores;
-
-namespace Plato.Entities.Services
+﻿namespace Plato.Entities.Services
 {
     public class EntityEvents
     {
 
-        public event EntityEventHandler Creating;
-        public event EntityEventHandler Created;
-        public event EntityEventHandler Updating;
-        public event EntityEventHandler Updated;
-        public event EntityEventHandler Deleting;
-        public event EntityEventHandler Deleted;
+        public event Handler Creating;
+        public event Handler Created;
+        public event Handler Updating;
+        public event Handler Updated;
+        public event Handler Deleting;
+        public event Handler Deleted;
 
-        public delegate void EntityEventHandler(object sender, EntityManagerEventArgs e);
-        
+        public delegate void Handler(object sender, EntityEventArgs e);
+
+    }
+
+    public class EntityReplyEvents
+    {
+
+        public event Handler Creating;
+        public event Handler Created;
+        public event Handler Updating;
+        public event Handler Updated;
+        public event Handler Deleting;
+        public event Handler Deleted;
+
+        public delegate void Handler(object sender, EntityReplyEventArgs e);
+
     }
 
 }

@@ -368,34 +368,31 @@ Test message Test message Test message Test message Test
 message Test message  " + rnd.Next(0, 100000).ToString(),
 };
 
-            var topicDetails = new EntityMetaData()
+            var topicDetails = new PostDetails()
             {
                 SomeNewValue = "Example Value 123",
-                Participants = new List<Participant>()
+                Participants = new List<EntityUser>()
                             {
-                                new Participant()
+                                new EntityUser()
                                 {
                                     Id = 1,
-                                    UserName = "Test",
-                                    Participations = 10
+                                    UserName = "Test"
 
                                 },
-                                new Participant()
+                                new EntityUser()
                                 {
                                     Id = 2,
-                                    UserName = "Mike Jones",
-                                    Participations = 5
+                                    UserName = "Mike Jones"
                                 },
-                                new Participant()
+                                new EntityUser()
                                 {
                                     Id = 3,
-                                    UserName = "Sarah Smith",
-                                    Participations = 2
+                                    UserName = "Sarah Smith"
                                 }
                             }
             };
 
-            topic.SetMetaData<EntityMetaData>(topicDetails);
+            topic.SetMetaData<PostDetails>(topicDetails);
 
             var sb = new StringBuilder();
 
@@ -414,7 +411,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                         .Append("<strong>ID</strong>")
                         .Append(newTopic.Id);
 
-                    var details = newTopic.GetMetaData<EntityMetaData>();
+                    var details = newTopic.GetMetaData<PostDetails>();
                     if (details?.Participants != null)
                     {
 
@@ -449,7 +446,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                     .Append(existingTopic.Id);
 
                 // random details
-                var existingDetails = existingTopic.GetMetaData<EntityMetaData>();
+                var existingDetails = existingTopic.GetMetaData<PostDetails>();
                 if (existingDetails?.Participants != null)
                 {
 

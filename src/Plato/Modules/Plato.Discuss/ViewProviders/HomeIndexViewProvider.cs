@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
@@ -14,16 +15,16 @@ namespace Plato.Discuss.ViewProviders
 
         private const string EditorHtmlName = "message";
         
-        private readonly IEntityManager<Entity> _entityManager;
+        private readonly IPostManager<Entity> _topicManager;
 
         private readonly HttpRequest _request;
 
 
         public HomeIndexViewProvider(
             IHttpContextAccessor httpContextAccessor,
-            IEntityManager<Entity> entityManager)
+            IPostManager<Entity> topicManager)
         {
-            _entityManager = entityManager;
+            _topicManager = topicManager;
             _request = httpContextAccessor.HttpContext.Request;
         }
         
@@ -92,7 +93,7 @@ namespace Plato.Discuss.ViewProviders
                     Message = message.Trim()
                 };
 
-                var result = await _entityManager.CreateAsync(entity);
+                var result = await _topicManager.CreateAsync(entity);
                 foreach (var error in result.Errors)
                 {
                     updater.ModelState.AddModelError(string.Empty, error.Description);
@@ -105,16 +106,6 @@ namespace Plato.Discuss.ViewProviders
             
         }
 
-        public void Creating(object sender, EntityManagerEventArgs e)
-        {
-
-        }
-
-
-        public void Created(object sender, EntityManagerEventArgs e)
-        {
-          
-        }
         
     }
 

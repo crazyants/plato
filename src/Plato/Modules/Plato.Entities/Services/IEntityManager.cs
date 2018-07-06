@@ -6,12 +6,12 @@ namespace Plato.Entities.Services
     public interface IEntityManager<in TModel> where TModel : class
     {
 
-        event EntityEvents.EntityEventHandler Creating;
-        event EntityEvents.EntityEventHandler Created;
-        event EntityEvents.EntityEventHandler Updating;
-        event EntityEvents.EntityEventHandler Updated;
-        event EntityEvents.EntityEventHandler Deleting;
-        event EntityEvents.EntityEventHandler Deleted;
+        event EntityEvents.Handler Creating;
+        event EntityEvents.Handler Created;
+        event EntityEvents.Handler Updating;
+        event EntityEvents.Handler Updated;
+        event EntityEvents.Handler Deleting;
+        event EntityEvents.Handler Deleted;
       
         Task<IEntityResult> CreateAsync(TModel model);
 
@@ -20,6 +20,5 @@ namespace Plato.Entities.Services
         Task<IEntityResult> DeleteAsync(int id);
 
     }
-
-
+    
 }

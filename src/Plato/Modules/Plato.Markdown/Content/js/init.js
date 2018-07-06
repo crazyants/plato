@@ -45,37 +45,49 @@ $(function (win, doc, $) {
                 if (event) {
                     var $tabs = $caller.find('a[data-toggle="tab"]');
                     $tabs.on(event,
-                        function(e) {
-                            methods.showTab($caller, e.target.href.split("#")[1]);
+                        function (e) {
+                            methods.showTab($caller, e);
                         });
                 }
 
             },
-            showTab: function($caller, tabId) {
-
+            showTab: function($caller, e) {
+                
                 var id = this.getUniqueId($caller);
-
+                var $editor = $caller.find("textarea");
+                
+                var tabId = e.target.href.split("#")[1];
                 switch (tabId) {
                     case "write_" + id:
-                    break;
+                        win.setTimeout(function() {
+                                $editor.focus();
+                            },
+                            200);
+
+                        break;
+
                     case "preview_" + id:
 
-                    var $editor = $caller.find("textarea");
-                    this.getHtml({
-                            markdown: $editor.val()
-                        },
-                        function (data) {
-                            if (data.statusCode === 200) {
-                                $caller
-                                    .find("#preview_" + id)
-                                    .empty()
-                                    .html(data.html);
-                            }
-                        });
+                        if ($editor.val().trim() === "") {
+                            e.preventDefault();
+                            $editor.focus();
+                            return;
+                        }
 
-                   
-                    break;
-                }
+                        this.getHtml({
+                                markdown: $editor.val()
+                            },
+                            function(data) {
+                                if (data.statusCode === 200) {
+                                    $caller
+                                        .find("#preview_" + id)
+                                        .empty()
+                                        .html(data.html);
+                                }
+                            });
+
+                        break;
+                    }
 
             },
             getHtml: function (params, fn) {

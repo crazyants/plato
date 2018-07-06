@@ -6,6 +6,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Discuss.Handlers;
 using Plato.Discuss.Resources;
+using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Discuss.ViewProviders;
 using Plato.Entities.Models;
@@ -35,6 +36,10 @@ namespace Plato.Discuss
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
+            // Register data access
+            services.AddScoped<IPostManager<Entity>, TopicManager>();
+            services.AddScoped<IPostManager<EntityReply>, ReplyManager>();
+            
             // Register client resources
             services.AddScoped<IResourceProvider, ResourceProvider>();
 

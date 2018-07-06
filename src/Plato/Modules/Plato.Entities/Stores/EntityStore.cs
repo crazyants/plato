@@ -48,7 +48,8 @@ namespace Plato.Entities.Stores
 
         public async Task<Entity> CreateAsync(Entity entity)
         {
-            
+
+            // Serialize any present meta data for storage
             var data = new List<EntityData>();
             foreach (var item in entity.MetaData)
             {
@@ -73,6 +74,19 @@ namespace Plato.Entities.Stores
 
         public async Task<Entity> UpdateAsync(Entity entity)
         {
+
+            // Serialize any present meta data for storage
+            var data = new List<EntityData>();
+            foreach (var item in entity.MetaData)
+            {
+                data.Add(new EntityData()
+                {
+                    Key = item.Key.FullName,
+                    Value = item.Value.Serialize()
+                });
+            }
+            entity.Data = data;
+
             var output = await _entityRepository.InsertUpdateAsync(entity);
             if (output != null)
             {

@@ -51,14 +51,6 @@
 
         @Html.Raw(@Model.Entity.Html)
 
-        <div class="hidden">
-            @await DisplayAsync(new View("Editor", new
-            {
-                Id = @Model.Entity.Id,
-                value = @Model.Entity.Message,
-                htmlName = @Model.EditorHtmlName
-            }))
-        </div>
 
     </card-body>
 </card>
@@ -173,7 +165,7 @@ else
 }
 
 <div id="postReply" class="mt-4">
-    <div class="topic-reply mt-4">
+    <div class="mt-4">
         <div class="topic-reply-left">
             @if (user != null)
             {

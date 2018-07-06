@@ -10,120 +10,138 @@ using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Entities.Services
 {
-    public class EntityReplyManager : IEntityManager<EntityReply>
+    public class EntityReplyManager : IEntityReplyManager<EntityReply>
     {
 
-        public event EntityEvents.EntityEventHandler Creating;
-        public event EntityEvents.EntityEventHandler Created;
-        public event EntityEvents.EntityEventHandler Updating;
-        public event EntityEvents.EntityEventHandler Updated;
-        public event EntityEvents.EntityEventHandler Deleting;
-        public event EntityEvents.EntityEventHandler Deleted;
+        public event EntityReplyEvents.Handler Creating;
+        public event EntityReplyEvents.Handler Created;
+        public event EntityReplyEvents.Handler Updating;
+        public event EntityReplyEvents.Handler Updated;
+        public event EntityReplyEvents.Handler Deleting;
+        public event EntityReplyEvents.Handler Deleted;
      
         private readonly IBroker _broker;
+        private readonly IEntityStore<Entity> _entityStore;
         private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
         private readonly IContextFacade _contextFacade;
 
         public EntityReplyManager(
             IEntityReplyStore<EntityReply> entityReplyStore, 
-            IBroker broker, IContextFacade contextFacade)
+            IBroker broker, IContextFacade contextFacade,
+            IEntityStore<Entity> entityStore)
         {
             _entityReplyStore = entityReplyStore;
             _contextFacade = contextFacade;
+            _entityStore = entityStore;
             _broker = broker;
         }
 
-        public async Task<IEntityResult> CreateAsync(EntityReply model)
+        public async Task<IEntityResult> CreateAsync(EntityReply reply)
         {
             
             var result = new EntityResult();
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             
-            if (model.EntityId <= 0)
+            if (reply.EntityId <= 0)
             {
-                return result.Failed(new EntityError($"{nameof(model.EntityId)} must must be greater than zero"));
+                return result.Failed(new EntityError($"{nameof(reply.EntityId)} must must be greater than zero"));
             }
             
-            if (model.Id > 0)
+            if (reply.Id > 0)
             {
-                return result.Failed(new EntityError($"{nameof(model.Id)} cannot be greater than zero when creating a reply"));
+                return result.Failed(new EntityError($"{nameof(reply.Id)} cannot be greater than zero when creating a reply"));
             }
             
-            if (String.IsNullOrWhiteSpace(model.Message))
+            if (String.IsNullOrWhiteSpace(reply.Message))
             {
-                return result.Failed(new EntityError($"{nameof(model.Message)} is required"));
+                return result.Failed(new EntityError($"{nameof(reply.Message)} is required"));
             }
 
-            model.CreatedUserId = user.Id;
-            model.CreatedDate = DateTime.UtcNow;
-            model.ModifiedUserId = user.Id;
-            model.ModifiedDate = DateTime.UtcNow;
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
+            {
+                return result.Failed(new EntityError($"An entity with the Id '{reply.EntityId}' could not be found"));
+            }
+            
+            reply.CreatedUserId = user.Id;
+            reply.CreatedDate = DateTime.UtcNow;
+            reply.ModifiedUserId = user.Id;
+            reply.ModifiedDate = DateTime.UtcNow;
 
             // Parse Html and message abstract
-            model.Html = await ParseMarkdown(model.Message);
-            model.Abstract = await ParseAbstract(model.Message);
+            reply.Html = await ParseMarkdown(reply.Message);
+            reply.Abstract = await ParseAbstract(reply.Message);
             
             // Raise creating event
-            Creating?.Invoke(this, new EntityManagerEventArgs()
+            Creating?.Invoke(this, new EntityReplyEventArgs()
             {
-                Model = model
+                Entity = entity,
+                EntityReply = reply
             });
             
-            var reply = await _entityReplyStore.CreateAsync(model);
-            if (reply != null)
+            var entityReply = await _entityReplyStore.CreateAsync(reply);
+            if (entityReply != null)
             {
                 // Raise created event
-                Created?.Invoke(this, new EntityManagerEventArgs()
+                Created?.Invoke(this, new EntityReplyEventArgs()
                 {
-                    Model = reply
+                    Entity = entity,
+                    EntityReply = entityReply
                 });
-                return result.Success(reply);
+                return result.Success(entityReply);
             }
 
             return result.Failed(new EntityError("An unknown error occurred whilst attempting to create the reply"));
 
         }
 
-        public async Task<IEntityResult> UpdateAsync(EntityReply model)
+        public async Task<IEntityResult> UpdateAsync(EntityReply reply)
         {
 
             var result = new EntityResult();
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-            if (model.Id <= 0)
+            if (reply.Id <= 0)
             {
-                return result.Failed(new EntityError($"{nameof(model.Id)} must be a valid existing reply id"));
+                return result.Failed(new EntityError($"{nameof(reply.Id)} must be a valid existing reply id"));
             }
             
-            if (String.IsNullOrWhiteSpace(model.Message))
+            if (String.IsNullOrWhiteSpace(reply.Message))
             {
-                return result.Failed(new EntityError($"{nameof(model.Message)} is required"));
+                return result.Failed(new EntityError($"{nameof(reply.Message)} is required"));
+            }
+            
+            var entity = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (entity == null)
+            {
+                return result.Failed(new EntityError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
 
-            model.ModifiedUserId = user.Id;
-            model.ModifiedDate = DateTime.UtcNow;
+            reply.ModifiedUserId = user.Id;
+            reply.ModifiedDate = DateTime.UtcNow;
 
             // Parse Html and message abstract
-            model.Html = await ParseMarkdown(model.Message);
-            model.Abstract = await ParseAbstract(model.Message);
+            reply.Html = await ParseMarkdown(reply.Message);
+            reply.Abstract = await ParseAbstract(reply.Message);
             
             // Raise updating event
-            Updating?.Invoke(this, new EntityManagerEventArgs()
+            Updating?.Invoke(this, new EntityReplyEventArgs()
             {
-                Model = model
+                Entity = entity,
+                EntityReply = reply
             });
-
-
-            var reply = await _entityReplyStore.UpdateAsync(model);
-            if (reply != null)
+            
+            var updatedReply = await _entityReplyStore.UpdateAsync(reply);
+            if (updatedReply != null)
             {
-                Updated?.Invoke(this, new EntityManagerEventArgs()
+                Updated?.Invoke(this, new EntityReplyEventArgs()
                 {
-                    Model = reply
+                    Entity = entity,
+                    EntityReply = updatedReply
                 });
-                return result.Success(reply);
+                return result.Success(updatedReply);
             }
 
             return result.Failed(new EntityError("An unknown error occurred whilst attempting to update the reply."));
@@ -141,16 +159,16 @@ namespace Plato.Entities.Services
                 return result.Failed(new EntityError($"An entity reply with the id of '{id}' could not be found"));
             }
 
-            Deleting?.Invoke(this, new EntityManagerEventArgs()
+            Deleting?.Invoke(this, new EntityReplyEventArgs()
             {
-                Model = reply
+                EntityReply = reply
             });
             
             var success = await _entityReplyStore.DeleteAsync(reply);
-            Deleted?.Invoke(this, new EntityManagerEventArgs()
+            Deleted?.Invoke(this, new EntityReplyEventArgs()
             {
                 Success = success,
-                Model = reply
+                EntityReply = reply
             });
 
             if (success)

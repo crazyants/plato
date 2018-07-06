@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
-using Plato.Entities.Stores;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 
@@ -15,16 +15,16 @@ namespace Plato.Discuss.ViewProviders
         private const string EditorHtmlName = "message";
 
 
-        private readonly IEntityManager<EntityReply> _entityReplyManager;
+        private readonly IPostManager<EntityReply> _replyManager;
 
         private readonly HttpRequest _request;
 
 
         public HomeTopicViewProvider(
             IHttpContextAccessor httpContextAccessor,
-            IEntityManager<EntityReply> entityReplyManager)
+            IPostManager<EntityReply> replyManager)
         {
-            _entityReplyManager = entityReplyManager;
+            _replyManager = replyManager;
             _request = httpContextAccessor.HttpContext.Request;
         }
 
@@ -91,7 +91,7 @@ namespace Plato.Discuss.ViewProviders
                 reply.EntityId = viewModel.Entity.Id;
                 reply.Message = message.Trim();
                 
-                var result = await _entityReplyManager.CreateAsync(reply);
+                var result = await _replyManager.CreateAsync(reply);
 
                 foreach (var error in result.Errors)
                 {

@@ -13,12 +13,12 @@ namespace Plato.Entities.Services
     public class EntityManager : IEntityManager<Entity>
     {
 
-        public event EntityEvents.EntityEventHandler Creating;
-        public event EntityEvents.EntityEventHandler Created;
-        public event EntityEvents.EntityEventHandler Updating;
-        public event EntityEvents.EntityEventHandler Updated;
-        public event EntityEvents.EntityEventHandler Deleting;
-        public event EntityEvents.EntityEventHandler Deleted;
+        public event EntityEvents.Handler Creating;
+        public event EntityEvents.Handler Created;
+        public event EntityEvents.Handler Updating;
+        public event EntityEvents.Handler Updated;
+        public event EntityEvents.Handler Deleting;
+        public event EntityEvents.Handler Deleted;
    
         #region "Constructor"
 
@@ -89,18 +89,18 @@ namespace Plato.Entities.Services
             model.Abstract = await ParseAbstract(model.Message);
             
             // Raise creating event
-            Creating?.Invoke(this, new EntityManagerEventArgs()
+            Creating?.Invoke(this, new EntityEventArgs()
             {
-                Model = model
+                Entity = model
             });
             
             var entity = await _entityStore.CreateAsync(model);
             if (entity != null)
             {
                 // Raise created event
-                Created?.Invoke(this, new EntityManagerEventArgs()
+                Created?.Invoke(this, new EntityEventArgs()
                 {
-                    Model = entity
+                    Entity = entity
                 });
                 // Return success
                 return result.Success(entity);
@@ -145,17 +145,17 @@ namespace Plato.Entities.Services
             model.Abstract = await ParseAbstract(model.Message);
 
             // Raise updating event
-            Updating?.Invoke(this, new EntityManagerEventArgs()
+            Updating?.Invoke(this, new EntityEventArgs()
             {
-                Model = model
+                Entity = model
             });
             
             var entity = await _entityStore.UpdateAsync(model);
             if (entity != null)
             {
-                Updated?.Invoke(this, new EntityManagerEventArgs()
+                Updated?.Invoke(this, new EntityEventArgs()
                 {
-                    Model = entity
+                    Entity = entity
                 });
                 return result.Success(entity);
             }
@@ -175,16 +175,16 @@ namespace Plato.Entities.Services
                 return result.Failed(new EntityError($"An entity is the id {id} could not be found"));
             }
 
-            Deleting?.Invoke(this, new EntityManagerEventArgs()
+            Deleting?.Invoke(this, new EntityEventArgs()
             {
-                Model = entity
+                Entity = entity
             });
 
             var success = await _entityStore.DeleteAsync(entity);
-            Deleted?.Invoke(this, new EntityManagerEventArgs()
+            Deleted?.Invoke(this, new EntityEventArgs()
             {
                 Success = success,
-                Model = entity
+                Entity = entity
             });
 
             if (success)
