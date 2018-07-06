@@ -65,7 +65,9 @@ namespace Plato.Discuss.Services
             {
 
                 var entity = await _entityStore.GetByIdAsync(result.Response.EntityId);
-
+                var postDetails = entity.GetMetaData<PostDetails>() ?? new PostDetails();
+                postDetails.TotalReplies = (postDetails.TotalReplies + 1);
+                
                 // Get last 5 participants
 
                 var replies = await _entityReplyStore.QueryAsync()
@@ -76,10 +78,7 @@ namespace Plato.Discuss.Services
                     })
                     .OrderBy("ModifiedDate", OrderBy.Desc)
                     .ToList();
-
-                var postDetails = entity.GetMetaData<PostDetails>() ?? new PostDetails();
-                postDetails.TotalReplies = postDetails.TotalReplies + 1;
-
+                
                 if (replies?.Data != null)
                 {
                     var participants = new List<EntityUser>();

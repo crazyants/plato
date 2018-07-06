@@ -29,12 +29,26 @@ namespace Plato.Entities.Models
         
         public void SetMetaData<T>(T obj) where T : class
         {
-            _metaData.TryAdd(typeof(T), (ISerializable)obj);
+            if (_metaData.ContainsKey(typeof(T)))
+            {
+                _metaData.TryUpdate(typeof(T), (ISerializable) obj, _metaData[typeof(T)]);
+            }
+            else
+            {
+                _metaData.TryAdd(typeof(T), (ISerializable)obj);
+            }
         }
 
         public void SetMetaData(Type type, ISerializable obj)
         {
-            _metaData.TryAdd(type, obj);
+            if (_metaData.ContainsKey(type))
+            {
+                _metaData.TryUpdate(type, (ISerializable)obj, _metaData[type]);
+            }
+            else
+            {
+                _metaData.TryAdd(type, obj);
+            }
         }
 
         public T GetMetaData<T>() where T : class
