@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Data;
+using System.Net.Mail;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
 
 namespace Plato.Email.Models
 {
-    public class Email : IModel<Email>
+    public class EmailMessage : IModel<EmailMessage>
     {
         
         public int Id { get; set; }
@@ -24,10 +25,45 @@ namespace Plato.Email.Models
 
         public EmailPriority Priority { get; set; }
 
-        public short Attempts { get; set; }
+        public short SendAttempts { get; set; }
 
-        public System.DateTime DateStamp { get; set; }
+        public int CreatedUserId { get; set; }
 
+        public System.DateTime CreatedDate { get; set; }
+
+        public EmailMessage()
+        {
+
+        }
+
+        public EmailMessage(MailMessage message)
+        {
+
+            if (message.To.Count > 0)
+            {
+                this.To = message.To[0].Address;
+            }
+
+            if (message.CC.Count > 0)
+            {
+                this.Cc = message.CC[0].Address;
+            }
+
+            if (message.Bcc.Count > 0)
+            {
+                this.Bcc = message.Bcc[0].Address;
+            }
+
+            if (message.From != null)
+            {
+                this.From = message.From.Address;
+            }
+            
+            this.Subject = message.Subject;
+            this.Body = message.Body;
+
+
+        }
 
         public void PopulateModel(IDataReader dr)
         {
@@ -57,11 +93,14 @@ namespace Plato.Email.Models
             if (dr.ColumnIsNotNull("Priority"))
                 Priority = (EmailPriority)Convert.ToInt32(dr["Priority"]);
 
-            if (dr.ColumnIsNotNull("Attempts"))
-                Attempts = Convert.ToInt16(dr["Attempts"]);
+            if (dr.ColumnIsNotNull("SendAttempts"))
+                SendAttempts = Convert.ToInt16(dr["SendAttempts"]);
 
-            if (dr.ColumnIsNotNull("DateStamp"))
-                DateStamp = Convert.ToDateTime(dr["DateStamp"]);
+            if (dr.ColumnIsNotNull("CreatedUserId"))
+                CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
+            
+            if (dr.ColumnIsNotNull("CreatedDate"))
+                CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
             
         }
 

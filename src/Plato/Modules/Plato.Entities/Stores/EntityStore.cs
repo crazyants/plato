@@ -16,9 +16,7 @@ namespace Plato.Entities.Stores
 
     public class EntityStore : IEntityStore<Entity>
     {
-     
-        #region "Constructor"
-
+   
         private readonly ICacheManager _cacheManager;
         private readonly IEntityRepository<Entity> _entityRepository;
         private readonly IEntityDataStore<EntityData> _entityDataStore;
@@ -41,8 +39,6 @@ namespace Plato.Entities.Stores
             _dbQuery = dbQuery;
             _logger = logger;
         }
-
-        #endregion
 
         #region "Implementation"
 

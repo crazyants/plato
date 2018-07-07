@@ -72,7 +72,7 @@ namespace Plato.Internal.Data.Schemas.Abstractions
                 switch (this.DbType)
                 {
                     case DbType.Int16:
-                        return "short";
+                        return "smallint";
                     case DbType.Int64:
                         return "float";
                     case DbType.Int32:
