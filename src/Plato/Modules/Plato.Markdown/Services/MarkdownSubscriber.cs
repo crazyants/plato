@@ -5,16 +5,8 @@ using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Markdown.Services
 {
-
-    public interface IMarkdownSubscriber : IDisposable
-    {
-        void Subscribe();
-
-        void Unsubscribe();
-    }
-
-
-    public class MarkdownSubscriber : IMarkdownSubscriber
+    
+    public class MarkdownSubscriber : IBrokerSubscriber
     {
 
         private readonly IBroker _broker;

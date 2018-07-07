@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Resources.Abstractions;
 using Plato.Markdown.Resources;
 using Plato.Markdown.Services;
@@ -33,8 +34,8 @@ namespace Plato.Markdown
             // Register client resources
             services.AddScoped<IResourceProvider, ResourceProvider>();
 
-            // Register message broker
-            services.AddSingleton<IMarkdownSubscriber, MarkdownSubscriber>();
+            // Register message broker subscriber
+            services.AddSingleton<IBrokerSubscriber, MarkdownSubscriber>();
 
         }
 
@@ -45,7 +46,7 @@ namespace Plato.Markdown
         {
 
             // set-up parsing event listeners
-            var subscriber = app.ApplicationServices.GetRequiredService<IMarkdownSubscriber>();
+            var subscriber = app.ApplicationServices.GetRequiredService<IBrokerSubscriber>();
             subscriber?.Subscribe();
             
             routes.MapAreaRoute(

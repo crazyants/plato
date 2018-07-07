@@ -9,7 +9,10 @@ namespace Plato.Entities.Models
 {
     public class Entity : EntityBase
     {
-  
+        
+        private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
+
+
         public int FeatureId { get; set; }
         
         public string Title { get; set; }
@@ -17,17 +20,15 @@ namespace Plato.Entities.Models
         public string TitleNormalized { get; set; }
         
         public IList<EntityData> Data { get; set; } = new List<EntityData>();
-        
+
         public IDictionary<Type, ISerializable> MetaData => _metaData;
-        
-        private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
         
         public Entity()
         {
             _metaData = new ConcurrentDictionary<Type, ISerializable>();
         }
         
-        public void SetMetaData<T>(T obj) where T : class
+        public void AddOrUpdate<T>(T obj) where T : class
         {
             if (_metaData.ContainsKey(typeof(T)))
             {
@@ -39,7 +40,7 @@ namespace Plato.Entities.Models
             }
         }
 
-        public void SetMetaData(Type type, ISerializable obj)
+        public void AddOrUpdate(Type type, ISerializable obj)
         {
             if (_metaData.ContainsKey(type))
             {
@@ -51,14 +52,14 @@ namespace Plato.Entities.Models
             }
         }
 
-        public T GetMetaData<T>() where T : class
+        public T TryGet<T>() where T : class
         {
             if (_metaData.ContainsKey(typeof(T)))
             {
                 return (T)_metaData[typeof(T)];
             }
 
-            return default(T);
+            return null;
 
         }
         

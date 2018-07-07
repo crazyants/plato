@@ -226,7 +226,7 @@ namespace Plato.Entities.Stores
                 if (type != null)
                 {
                     var obj = JsonConvert.DeserializeObject(data.Value, type);
-                    entity.SetMetaData(type, (ISerializable) obj);
+                    entity.AddOrUpdate(type, (ISerializable) obj);
                 }
             }
 

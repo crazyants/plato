@@ -40,7 +40,7 @@
                     <li class="list-group-item">
 
                         @{
-                            var detail = entity.GetMetaData<PostDetails>();
+                            var detail = entity.TryGet<PostDetails>();
                         }
                         
                         <div class="list-left">

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -79,12 +77,25 @@ namespace Plato.Entities.Services
             
             // Raise creating event
             Creating?.Invoke(this, new EntityReplyEventArgs(entity, reply));
-            
+
+            // Publish EntityReplyCreating event
+            await _broker.Pub<EntityReply>(this, new MessageOptions()
+            {
+                Key = "EntityReplyCreating"
+            }, reply);
+
             var newReply = await _entityReplyStore.CreateAsync(reply);
             if (newReply != null)
             {
                 // Raise created event
                 Created?.Invoke(this, new EntityReplyEventArgs(entity, newReply));
+
+                // Publish EntityReplyCreated event
+                await _broker.Pub<EntityReply>(this, new MessageOptions()
+                {
+                    Key = "EntityReplyCreated"
+                }, newReply);
+
                 return result.Success(newReply);
             }
 
@@ -127,11 +138,25 @@ namespace Plato.Entities.Services
             
             // Raise updating event
             Updating?.Invoke(this, new EntityReplyEventArgs(entity, reply));
-            
+
+            // Publish EntityReplyUpdating event
+            await _broker.Pub<EntityReply>(this, new MessageOptions()
+            {
+                Key = "EntityReplyUpdating"
+            }, reply);
+
             var updatedReply = await _entityReplyStore.UpdateAsync(reply);
             if (updatedReply != null)
             {
+                // Raise Updated event
                 Updated?.Invoke(this, new EntityReplyEventArgs(entity, updatedReply));
+
+                // Publish EntityReplyUpdated event
+                await _broker.Pub<EntityReply>(this, new MessageOptions()
+                {
+                    Key = "EntityReplyUpdated"
+                }, updatedReply);
+
                 return result.Success(updatedReply);
             }
 
@@ -150,12 +175,28 @@ namespace Plato.Entities.Services
                 return result.Failed(new EntityError($"An entity reply with the id of '{id}' could not be found"));
             }
 
+            // Raise Deleting event
             Deleting?.Invoke(this, new EntityReplyEventArgs(null, reply));
-           
+
+            // Publish EntityReplyDeleting event
+            await _broker.Pub<EntityReply>(this, new MessageOptions()
+            {
+                Key = "EntityReplyDeleting"
+            }, reply);
+
             var success = await _entityReplyStore.DeleteAsync(reply);
             if (success)
             {
+
+                // Raise Deleted event
                 Deleted?.Invoke(this, new EntityReplyEventArgs(null, reply));
+
+                // Publish EntityReplyDeleted event
+                await _broker.Pub<EntityReply>(this, new MessageOptions()
+                {
+                    Key = "EntityReplyDeleted"
+                }, reply);
+
                 return result.Success(reply);
             }
 

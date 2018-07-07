@@ -387,7 +387,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                             }
             };
 
-            topic.SetMetaData<PostDetails>(topicDetails);
+            topic.AddOrUpdate<PostDetails>(topicDetails);
 
             var sb = new StringBuilder();
 
@@ -406,7 +406,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                         .Append("<strong>ID</strong>")
                         .Append(newTopic.Id);
 
-                    var details = newTopic.GetMetaData<PostDetails>();
+                    var details = newTopic.TryGet<PostDetails>();
                     if (details?.Participants != null)
                     {
 
@@ -441,7 +441,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                     .Append(existingTopic.Id);
 
                 // random details
-                var existingDetails = existingTopic.GetMetaData<PostDetails>();
+                var existingDetails = existingTopic.TryGet<PostDetails>();
                 if (existingDetails?.Participants != null)
                 {
 

@@ -6,9 +6,21 @@ namespace Plato.Entities.Services
     public class EntityEventArgs
     {
 
-        public bool Success { get; set; }
+        public bool Success { get; }
 
-        public Entity Entity { get; set; }
+        public Entity Entity { get; }
+
+
+        public EntityEventArgs(Entity entity)
+        {
+            Entity = entity;
+        }
+
+        public EntityEventArgs(Entity entity, bool success)
+        {
+            Entity = entity;
+            Success = success;
+        }
 
     }
 

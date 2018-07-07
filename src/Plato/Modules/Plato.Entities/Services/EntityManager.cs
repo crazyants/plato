@@ -89,19 +89,27 @@ namespace Plato.Entities.Services
             model.Abstract = await ParseAbstract(model.Message);
             
             // Raise creating event
-            Creating?.Invoke(this, new EntityEventArgs()
+            Creating?.Invoke(this, new EntityEventArgs(model));
+
+            // Publish EntityCreating event
+            await _broker.Pub<Entity>(this, new MessageOptions()
             {
-                Entity = model
-            });
+                Key = "EntityCreating"
+            }, model);
             
             var entity = await _entityStore.CreateAsync(model);
             if (entity != null)
             {
+
                 // Raise created event
-                Created?.Invoke(this, new EntityEventArgs()
+                Created?.Invoke(this, new EntityEventArgs(entity));
+
+                // Publish EntityCreated event
+                await _broker.Pub<Entity>(this, new MessageOptions()
                 {
-                    Entity = entity
-                });
+                    Key = "EntityCreated"
+                }, model);
+
                 // Return success
                 return result.Success(entity);
             }
@@ -144,19 +152,28 @@ namespace Plato.Entities.Services
             model.Html = await ParseMarkdown(model.Message);
             model.Abstract = await ParseAbstract(model.Message);
 
-            // Raise updating event
-            Updating?.Invoke(this, new EntityEventArgs()
+            // Raise Updating event
+            Updating?.Invoke(this, new EntityEventArgs(model));
+
+            // Publish EntityUpdating event
+            await _broker.Pub<Entity>(this, new MessageOptions()
             {
-                Entity = model
-            });
-            
+                Key = "EntityUpdating"
+            }, model);
+
             var entity = await _entityStore.UpdateAsync(model);
             if (entity != null)
             {
-                Updated?.Invoke(this, new EntityEventArgs()
+
+                // Raise Updated event
+                Updated?.Invoke(this, new EntityEventArgs(entity));
+
+                // Publish EntityUpdated event
+                await _broker.Pub<Entity>(this, new MessageOptions()
                 {
-                    Entity = entity
-                });
+                    Key = "EntityUpdated"
+                }, model);
+
                 return result.Success(entity);
             }
 
@@ -175,19 +192,28 @@ namespace Plato.Entities.Services
                 return result.Failed(new EntityError($"An entity is the id {id} could not be found"));
             }
 
-            Deleting?.Invoke(this, new EntityEventArgs()
+            // Raise Deleting event
+            Deleting?.Invoke(this, new EntityEventArgs(entity));
+
+            // Publish EntityDeleting event
+            await _broker.Pub<Entity>(this, new MessageOptions()
             {
-                Entity = entity
-            });
+                Key = "EntityDeleting"
+            }, entity);
 
             var success = await _entityStore.DeleteAsync(entity);
             if (success)
             {
-                Deleted?.Invoke(this, new EntityEventArgs()
+
+                // Raise Deleted event
+                Deleted?.Invoke(this, new EntityEventArgs(entity, true));
+
+                // Publish EntityDeleted event
+                await _broker.Pub<Entity>(this, new MessageOptions()
                 {
-                    Success = true,
-                    Entity = entity
-                });
+                    Key = "EntityDeleted"
+                }, entity);
+
                 return result.Success(entity);
             }
 
