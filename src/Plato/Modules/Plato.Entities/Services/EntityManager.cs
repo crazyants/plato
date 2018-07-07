@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
@@ -40,10 +40,10 @@ namespace Plato.Entities.Services
 
         #region "Implementation"
 
-        public async Task<IEntityResult<Entity>> CreateAsync(Entity model)
+        public async Task<IActivityResult<Entity>> CreateAsync(Entity model)
         {
 
-            var result = new EntityResult<Entity>();
+            var result = new ActivityResult<Entity>();
             
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             var feature = await _contextFacade.GetCurrentFeatureAsync();
@@ -118,10 +118,10 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IEntityResult<Entity>> UpdateAsync(Entity model)
+        public async Task<IActivityResult<Entity>> UpdateAsync(Entity model)
         {
 
-            var result = new EntityResult<Entity>();
+            var result = new ActivityResult<Entity>();
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
@@ -181,10 +181,10 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IEntityResult<Entity>> DeleteAsync(int id)
+        public async Task<IActivityResult<Entity>> DeleteAsync(int id)
         {
 
-            var result = new EntityResult<Entity>();
+            var result = new ActivityResult<Entity>();
 
             var entity = await _entityStore.GetByIdAsync(id);
             if (entity == null)

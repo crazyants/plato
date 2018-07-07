@@ -1,0 +1,95 @@
+﻿@model EmailSettingsViewModel
+@{
+    ViewData["Title"] = "Email Settings";
+}
+
+<h4>@T["Email Settings"]</h4>
+<span class="text-muted">@T["Manage outbound email settings."]</span>
+<hr/>
+
+<form asp-action="Index" method="post" enctype="multipart/form-data">
+    
+    <card>
+        <card-title>
+            <h6 class="card-title">@T["SMTP Settings"]</h6>
+        </card-title>
+        <card-body>
+            
+            <div class="row">
+                <div class="col">
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="Host">
+                            <label asp-for="@Model.SmtpSettings.Host"><strong>@T["Server Address"]</strong></label>
+                            <span asp-validation-for="@Model.SmtpSettings.Host" class="text-danger"></span>
+                            <input placeholder="smtp.yourdomain.com" asp-for="@Model.SmtpSettings.Host" class="form-control" autofocus/>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col">
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="Port">
+                            <label asp-for="@Model.SmtpSettings.Port"><strong>@T["Server Port"]</strong></label>
+                            <span asp-validation-for="@Model.SmtpSettings.Port" class="text-danger"></span>
+                            <input placeholder="25" asp-for="@Model.SmtpSettings.Port" class="form-control" autofocus/>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+      
+            <div class="row">
+                <div class="col">
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="UserName">
+                            <label asp-for="@Model.SmtpSettings.UserName"><strong>@T["Username"]</strong></label>
+                            <span asp-validation-for="@Model.SmtpSettings.UserName" class="text-danger"></span>
+                            <input placeholder="email@address.com" asp-for="@Model.SmtpSettings.UserName" class="form-control" autofocus/>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col">
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="Password">
+                            <label asp-for="@Model.SmtpSettings.Password"><strong>@T["Password"]</strong></label>
+                            <span asp-validation-for="@Model.SmtpSettings.Password" class="text-danger"></span>
+                            <input asp-for="@Model.SmtpSettings.Password" class="form-control" autofocus/>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            
+            
+            <div class="row">
+                <div class="col">
+                    <fieldset>
+                          
+                        <fieldset>
+                            <div class="form-group" asp-validation-class-for="DefaultFrom">
+                                <label asp-for="@Model.SmtpSettings.DefaultFrom"><strong>@T["Default Sender"]</strong></label>
+                                <span asp-validation-for="@Model.SmtpSettings.DefaultFrom" class="text-danger"></span>
+                                <input placeholder="you@yourdomain.com" asp-for="@Model.SmtpSettings.DefaultFrom" class="form-control" autofocus/>
+                            </div>
+                        </fieldset>
+                    </fieldset>
+                </div>
+                <div class="col">
+                    <fieldset>
+                           
+                        <label asp-for="@Model.SmtpSettings.Enabled">
+                            <input asp-for="@Model.SmtpSettings.Enabled" />
+                            @T["Enable Polling"]
+                        </label>
+
+                    </fieldset>
+                </div>
+            </div>
+            
+            
+      
+
+        </card-body>
+        <card-footer>
+            <button class="btn btn-primary" type="submit">@T["Save"]</button>
+        </card-footer>
+    </card>
+    
+</form>

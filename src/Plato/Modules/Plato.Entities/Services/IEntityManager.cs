@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Plato.Entities.Models;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Entities.Services
 {
@@ -13,11 +14,11 @@ namespace Plato.Entities.Services
         event EntityEvents.Handler Deleting;
         event EntityEvents.Handler Deleted;
       
-        Task<IEntityResult<TModel>> CreateAsync(TModel model);
+        Task<IActivityResult<TModel>> CreateAsync(TModel model);
 
-        Task<IEntityResult<TModel>> UpdateAsync(TModel model);
+        Task<IActivityResult<TModel>> UpdateAsync(TModel model);
 
-        Task<IEntityResult<TModel>> DeleteAsync(int id);
+        Task<IActivityResult<TModel>> DeleteAsync(int id);
 
     }
     

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
@@ -34,10 +35,10 @@ namespace Plato.Entities.Services
             _broker = broker;
         }
 
-        public async Task<IEntityResult<EntityReply>> CreateAsync(EntityReply reply)
+        public async Task<IActivityResult<EntityReply>> CreateAsync(EntityReply reply)
         {
             
-            var result = new EntityResult<EntityReply>();
+            var result = new ActivityResult<EntityReply>();
 
           
             if (reply.EntityId <= 0)
@@ -103,10 +104,10 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IEntityResult<EntityReply>> UpdateAsync(EntityReply reply)
+        public async Task<IActivityResult<EntityReply>> UpdateAsync(EntityReply reply)
         {
 
-            var result = new EntityResult<EntityReply>();
+            var result = new ActivityResult<EntityReply>();
 
             if (reply.Id <= 0)
             {
@@ -164,10 +165,10 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IEntityResult<EntityReply>> DeleteAsync(int id)
+        public async Task<IActivityResult<EntityReply>> DeleteAsync(int id)
         {
 
-            var result = new EntityResult<EntityReply>();
+            var result = new ActivityResult<EntityReply>();
 
             var reply = await _entityReplyStore.GetByIdAsync(id);
             if (reply == null)

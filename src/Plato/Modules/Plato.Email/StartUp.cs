@@ -2,11 +2,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Email.Handlers;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Email.Handlers;
+using Plato.Email.Models;
+using Plato.Email.Repositories;
+using Plato.Email.Services;
+using Plato.Email.Stores;
 
 namespace Plato.Email
 {
@@ -27,6 +31,16 @@ namespace Plato.Email
 
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
+
+            // Manager
+            services.AddSingleton<IEmailManager, EmailManager>();
+
+            // Repositories
+            services.AddScoped<IEmailRepository<EmailMessage>, EmailRepository>();
+
+            // Stores
+            services.AddScoped<IEmailSettingsStore<EmailSettings>, EmailSettingsStore>();
+            
 
         }
 

@@ -4,6 +4,7 @@ using Plato.Discuss.Models;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Discuss.Services
@@ -26,7 +27,7 @@ namespace Plato.Discuss.Services
             _entityStore = entityStore;
         }
 
-        public async Task<IEntityResult<EntityReply>> CreateAsync(EntityReply model)
+        public async Task<IActivityResult<EntityReply>> CreateAsync(EntityReply model)
         {
 
             //_entityReplyManager.Created += async (sender, args) =>
@@ -100,7 +101,7 @@ namespace Plato.Discuss.Services
 
         }
 
-        public async Task<IEntityResult<EntityReply>> UpdateAsync(EntityReply model)
+        public async Task<IActivityResult<EntityReply>> UpdateAsync(EntityReply model)
         {
 
             _entityReplyManager.Updated += (sender, args) =>
@@ -112,7 +113,7 @@ namespace Plato.Discuss.Services
          
         }
 
-        public async Task<IEntityResult<EntityReply>> DeleteAsync(int id)
+        public async Task<IActivityResult<EntityReply>> DeleteAsync(int id)
         {
 
             _entityReplyManager.Updated += (sender, args) =>

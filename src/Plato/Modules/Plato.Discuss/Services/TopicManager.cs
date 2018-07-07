@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Discuss.Services
 {
@@ -14,17 +15,17 @@ namespace Plato.Discuss.Services
             _entityManager = entityManager;
         }
 
-        public async Task<IEntityResult<Entity>> CreateAsync(Entity model)
+        public async Task<IActivityResult<Entity>> CreateAsync(Entity model)
         {
             return await _entityManager.CreateAsync(model);
         }
 
-        public async Task<IEntityResult<Entity>> UpdateAsync(Entity model)
+        public async Task<IActivityResult<Entity>> UpdateAsync(Entity model)
         {
             return await _entityManager.UpdateAsync(model);
         }
 
-        public async Task<IEntityResult<Entity>> DeleteAsync(int id)
+        public async Task<IActivityResult<Entity>> DeleteAsync(int id)
         {
             return await _entityManager.DeleteAsync(id);
         }
