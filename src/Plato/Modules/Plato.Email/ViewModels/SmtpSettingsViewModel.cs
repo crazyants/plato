@@ -27,13 +27,11 @@ namespace Plato.Email.ViewModels
 
     public class SmtpSettingsViewModel
     {
-        
-        public bool Enabled { get; set; } = true;
-
-
+ 
         [Required]
         [StringLength(255)]
-        public bool DefaultFrom { get; set; } = true;
+        [DataType(DataType.EmailAddress)]
+        public string DefaultFrom { get; set; }
         
         [Required]
         [StringLength(255)]
@@ -50,15 +48,23 @@ namespace Plato.Email.ViewModels
         [StringLength(255)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
-        public int SendAttempts { get; set; }
-
-        public int BatchSize { get; set; }
-
+        
         [Required]
         public SmtpDeliveryMethod DeliveryMethod { get; set; }
 
         public string PickupDirectoryLocation { get; set; }
+        
+        public bool EnablePolling { get; set; } = true;
+
+        [Required]
+        public int PollIntervalSeconds { get; set; } = 120;
+
+        [Required]
+        public int SendAttempts { get; set; } = 3;
+
+        [Required]
+        public int BatchSize { get; set; } = 50;
+
 
 
     }

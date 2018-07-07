@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -8,12 +9,6 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Email.Services
 {
-
-    public interface ISmtpService
-    {
-        Task<IActivityResult<MailMessage>> SendAsync(MailMessage message);
-
-    }
 
     public class SmtpService : ISmtpService
     {
@@ -35,27 +30,32 @@ namespace Plato.Email.Services
         {
 
             var result = new SmtpResult();
-
-            if (_smtpSettings?.DefaultFrom == null)
-            {
-                return result.Failed("SMTP settings must be configured before an email can be sent.");
-            }
-
-            if (message.From == null)
-            {
-                message.From = new MailAddress(_smtpSettings.DefaultFrom);
-            }
-
             try
             {
                 using (var client = GetClient())
                 {
                     await client.SendMailAsync(message);
+                    
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                    {
+
+                        _logger.LogDebug("Email sent successfully. From: {0}, To: {1}, Subject{ 2}, Date: {3}'",
+                            message.From.Address,
+                            String.Join(",", message.To.Select(t => t.Address).ToArray()),
+                            message.Subject,
+                            DateTime.UtcNow);
+                    }
+
                     return result.Success(message);
                 }
             }
             catch (Exception e)
             {
+                _logger.LogCritical(e, "A crtical exception occurred whilst sending an email message. From: {0}, To: {1}, Subject{ 2}, Date: {3}'",
+                    message.From.Address,
+                    String.Join(",", message.To.Select(t => t.Address).ToArray()),
+                    message.Subject,
+                    DateTime.UtcNow);
                 return result.Failed($"An error occurred while sending an email: '{e.Message}'");
             }
 
