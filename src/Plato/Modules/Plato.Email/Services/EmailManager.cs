@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Mail;
-using System.Text;
 using System.Threading.Tasks;
 using Plato.Email.Models;
 using Plato.Email.Stores;
@@ -29,9 +27,7 @@ namespace Plato.Email.Services
 
         public async Task QueueAsync(MailMessage message)
         {
-
             await _emailStore.CreateAsync(new EmailMessage(message));
-
         }
 
         public Task SendAsync()
