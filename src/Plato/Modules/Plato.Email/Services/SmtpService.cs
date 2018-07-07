@@ -18,12 +18,14 @@ namespace Plato.Email.Services
     public class SmtpService : ISmtpService
     {
 
-        private readonly SmtpSettings _options;
+        private readonly SmtpSettings _smtpSettings;
         private readonly ILogger<SmtpService> _logger;
         
-        public SmtpService(SmtpSettings options, ILogger<SmtpService> logger)
+        public SmtpService(
+            SmtpSettings smtpSettings, 
+            ILogger<SmtpService> logger)
         {
-            _options = options;
+            _smtpSettings = smtpSettings;
             _logger = logger;
         }
         
@@ -34,14 +36,14 @@ namespace Plato.Email.Services
 
             var result = new SmtpResult();
 
-            if (_options?.DefaultFrom == null)
+            if (_smtpSettings?.DefaultFrom == null)
             {
                 return result.Failed("SMTP settings must be configured before an email can be sent.");
             }
 
             if (message.From == null)
             {
-                message.From = new MailAddress(_options.DefaultFrom);
+                message.From = new MailAddress(_smtpSettings.DefaultFrom);
             }
 
             try
@@ -67,7 +69,7 @@ namespace Plato.Email.Services
         {
             var smtp = new SmtpClient()
             {
-                DeliveryMethod = _options.DeliveryMethod
+                DeliveryMethod = _smtpSettings.DeliveryMethod
             };
 
             switch (smtp.DeliveryMethod)
@@ -75,21 +77,21 @@ namespace Plato.Email.Services
 
                 case SmtpDeliveryMethod.Network:
 
-                    smtp.Host = _options.Host;
-                    smtp.Port = _options.Port;
-                    smtp.EnableSsl = _options.EnableSsl;
+                    smtp.Host = _smtpSettings.Host;
+                    smtp.Port = _smtpSettings.Port;
+                    smtp.EnableSsl = _smtpSettings.EnableSsl;
 
-                    smtp.UseDefaultCredentials = _options.RequireCredentials && _options.UseDefaultCredentials;
+                    smtp.UseDefaultCredentials = _smtpSettings.RequireCredentials && _smtpSettings.UseDefaultCredentials;
 
-                    if (_options.RequireCredentials)
+                    if (_smtpSettings.RequireCredentials)
                     {
-                        if (_options.UseDefaultCredentials)
+                        if (_smtpSettings.UseDefaultCredentials)
                         {
                             smtp.UseDefaultCredentials = true;
                         }
-                        else if (!String.IsNullOrWhiteSpace(_options.UserName))
+                        else if (!String.IsNullOrWhiteSpace(_smtpSettings.UserName))
                         {
-                            smtp.Credentials = new NetworkCredential(_options.UserName, _options.Password);
+                            smtp.Credentials = new NetworkCredential(_smtpSettings.UserName, _smtpSettings.Password);
                         }
                     }
 
@@ -102,7 +104,7 @@ namespace Plato.Email.Services
 
                 case SmtpDeliveryMethod.SpecifiedPickupDirectory:
 
-                    smtp.PickupDirectoryLocation = _options.PickupDirectoryLocation;
+                    smtp.PickupDirectoryLocation = _smtpSettings.PickupDirectoryLocation;
                     break;
 
                 default:

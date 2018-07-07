@@ -3,6 +3,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Plato.Email.Models;
 using Plato.Email.Stores;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Email.Services
 {
@@ -11,7 +12,7 @@ namespace Plato.Email.Services
     {
         Task QueueAsync(MailMessage message);
 
-        Task SendAsync();
+        Task<IActivityResult<MailMessage>> SendAsync();
 
     }
 
@@ -19,10 +20,14 @@ namespace Plato.Email.Services
     {
 
         private readonly IEmailStore<EmailMessage> _emailStore;
+        private readonly SmtpSettings _smtpSettings;
 
-        public EmailManager(IEmailStore<EmailMessage> emailStore)
+        public EmailManager(
+            IEmailStore<EmailMessage> emailStore,
+            SmtpSettings smtpSettings)
         {
             _emailStore = emailStore;
+            _smtpSettings = smtpSettings;
         }
 
         public async Task QueueAsync(MailMessage message)
@@ -30,8 +35,9 @@ namespace Plato.Email.Services
             await _emailStore.CreateAsync(new EmailMessage(message));
         }
 
-        public Task SendAsync()
+        public Task<IActivityResult<MailMessage>> SendAsync()
         {
+        
             throw new NotImplementedException();
         }
     }
