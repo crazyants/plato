@@ -31,7 +31,6 @@ namespace Plato.Discuss.Controllers
 
         private readonly IViewProviderManager<Entity> _discussViewProvider;
 
-        private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly IEntityStore<Entity> _entityStore;
         private readonly IEntityManager<Entity> _entityManager;
@@ -51,7 +50,6 @@ namespace Plato.Discuss.Controllers
             IAlerter alerter, IEntityDataStore<EntityData> entityDataStore)
         {
             _settingsStore = settingsStore;
-            _contextFacade = contextFacade;
             _entityManager = entityManager;
             _entityStore = entityStore;
             _entityReplyStore = entityReplyStore;
@@ -85,21 +83,12 @@ namespace Plato.Discuss.Controllers
                 pagerOptions = new PagerOptions();
             }
 
-
-            // ------------------------
-
-             //ViewBag.TopicData = await CreateSampleData();
-            
-
             // Maintain previous route data when generating page links
             var routeData = new RouteData();
             routeData.Values.Add("Options.Search", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
             routeData.Values.Add("Pager.Page", pagerOptions.Page);
-            
-            // Get model
-            //var model = await GetIndexViewModel(filterOptions, pagerOptions);
-            
+         
             // Build view
             var result = await _discussViewProvider.ProvideIndexAsync(new Entity(), this);
 
@@ -111,12 +100,13 @@ namespace Plato.Discuss.Controllers
         
         [HttpPost]
         [ActionName(nameof(Index))]
-        public async Task<IActionResult> IndexPost(HomeIndexViewModel model)
+        public async Task<IActionResult> IndexPost(NewEntityViewModel model)
         {
             
             var entity = new Entity()
             {
-                Title = model.NewEntityViewModel.Title
+                Title = model.Title,
+                Message = model.Message
             };
 
             var result = await _discussViewProvider.ProvideUpdateAsync(entity, this);
@@ -168,11 +158,8 @@ namespace Plato.Discuss.Controllers
             var routeData = new RouteData();
             routeData.Values.Add("Options.Search", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
-            routeData.Values.Add("page", pagerOptions.Page);
+            routeData.Values.Add("Pager.Page", pagerOptions.Page);
        
-            // Get model
-            //var model = await GetTopicViewModel(id, filterOptions, pagerOptions);
-
             // Build view
             var result = await _discussViewProvider.ProvideDisplayAsync(entity, this);
 
@@ -204,71 +191,11 @@ namespace Plato.Discuss.Controllers
             return RedirectToAction(nameof(Topic));
             
         }
-
-
+        
         #endregion
 
         #region "Private Methods"
-
-
-        public async Task<IPagedResults<Entity>> GetEntities(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-
-            // Get current feature (i.e. Plato.Discuss) from area
-            var feature = await _contextFacade.GetCurrentFeatureAsync();
-
-            return await _entityStore.QueryAsync()
-                .Page(pagerOptions.Page, pagerOptions.PageSize)
-                .Select<EntityQueryParams>(q =>
-                {
-
-                    if (feature != null)
-                    {
-                        q.FeatureId.Equals(feature.Id);
-                    }
-
-                    q.HideSpam.True();
-                    q.HidePrivate.True();
-                    q.HideDeleted.True();
-
-                    //q.IsPinned.True();
-
-
-                    //if (!string.IsNullOrEmpty(filterOptions.Search))
-                    //{
-                    //    q.UserName.IsIn(filterOptions.Search).Or();
-                    //    q.Email.IsIn(filterOptions.Search);
-                    //}
-                    // q.UserName.IsIn("Admin,Mark").Or();
-                    // q.Email.IsIn("email440@address.com,email420@address.com");
-                    // q.Id.Between(1, 5);
-                })
-                .OrderBy("Id", OrderBy.Desc)
-                .ToList();
-        }
         
-        public async Task<IPagedResults<EntityReply>> GetEntityReplies(
-            int entityId,
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-            return await _entityReplyStore.QueryAsync()
-                .Page(pagerOptions.Page, pagerOptions.PageSize)
-                .Select<EntityReplyQueryParams>(q =>
-                {
-                    q.EntityId.Equals(entityId);
-                    if (!string.IsNullOrEmpty(filterOptions.Search))
-                    {
-                        q.Keywords.IsIn(filterOptions.Search);
-                    }
-                })
-                .OrderBy("CreatedDate", OrderBy.Asc)
-                .ToList();
-        }
-        
-
         private async Task<string> CreateSampleData()
         { 
 

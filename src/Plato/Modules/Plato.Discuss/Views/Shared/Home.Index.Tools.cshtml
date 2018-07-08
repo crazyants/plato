@@ -1,4 +1,4 @@
-﻿@model HomeIndexViewModel
+﻿@model NewEntityViewModel
 
 <a href="#modal-new" class="btn btn-primary" data-toggle="modal" data-target="#modal-new" title="Reply">
     <i class="fal fa-fw fa-plus"></i>
@@ -11,6 +11,9 @@
 
         <div class="modal-content">
             <form asp-controller="Home" asp-action="Index" method="post" enctype="multipart/form-data">
+                
+            
+                <input asp-for="EntityId" type="hidden" />
 
                 <card>
                     <card-title>
@@ -21,8 +24,8 @@
                         <fieldset>
                             <div class="form-group">
 
-                                <span asp-validation-for="NewEntityViewModel.Title" class="text-danger"></span>
-                                <input asp-for="NewEntityViewModel.Title" placeholder="@T["Title"]" class="form-control" autofocus/>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                                <input asp-for="Title" placeholder="@T["Title"]" class="form-control" autofocus/>
 
                             </div>
                             <div class="form-group">
@@ -35,7 +38,7 @@
                                 }))
 
                                 <!--
-                                <textarea asp-for="NewEntityViewModel.Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>
+                                <textarea asp-for="Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>
                                 -->
 
                             </div>

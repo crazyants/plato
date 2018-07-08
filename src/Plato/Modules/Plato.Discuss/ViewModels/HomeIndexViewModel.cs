@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Plato.Entities.Models;
+﻿using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
 
@@ -28,8 +27,6 @@ namespace Plato.Discuss.ViewModels
 
         public IPagedResults<Entity> Results { get; set; }
 
-        public NewEntityViewModel NewEntityViewModel { get; set; }
-
         public PagerOptions PagerOpts { get; set; }
         
         public FilterOptions FilterOpts { get; set; }
@@ -41,17 +38,6 @@ namespace Plato.Discuss.ViewModels
         public string Search { get; set; }
 
         public EntityOrder Order { get; set; }
-
-    }
-
-    public class NewEntityViewModel
-    {
-
-        [Required]
-        public string Title { get; set; }
-
-        public string Message { get; set; }
-
 
     }
 

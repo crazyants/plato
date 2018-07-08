@@ -1,0 +1,45 @@
+﻿@model HomeTopicViewModel
+
+@{
+    var user = await GetAuthenticatedUserAsync();
+}
+
+<div id="postReply" class="mt-4">
+    <div class="mt-4">
+        <div class="topic-reply-left">
+            @if (user != null)
+            {
+                <a href="#" class="avatar-link">
+                    <avatar data-toggle="tooltip" title="@user.DisplayName" class="avatar" user-id="@user.Id" />
+                </a>}
+
+        </div>
+        <div class="topic-reply-body">
+            <form asp-controller="Home" asp-action="Topic" method="post" enctype="multipart/form-data">
+
+
+                <input asp-for="@Model.Entity.Id" type="hidden" />
+
+                <card>
+                    <card-body>
+                        <fieldset>
+                            @await DisplayAsync(new View("Editor", new
+                            {
+                                value = string.Empty,
+                                placeHolderText = T["Post a reply..."],
+                                htmlName = @Model.EditorHtmlName
+                            }))
+                        </fieldset>
+                    </card-body>
+                    <card-footer>
+                        <button type="submit" class="btn btn-primary">
+                            @T["Post"]
+                        </button>
+                    </card-footer>
+                </card>
+            </form>
+        </div>
+    </div>
+</div>
+
+

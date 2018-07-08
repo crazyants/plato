@@ -1,7 +1,35 @@
 ﻿@model FollowViewModel
 
+<card class="card mt-4">
+    <card-title>
+        @T["Get Notified"]
+    </card-title>
+    <card-body>
+        
+        @if (!Model.IsFollowing)
+        {
+            <div class="text-muted">
+                @T["Follow to get notified via email when replies are posted..."]
+                <br /><br />
+            </div>
+            <a href="#" class="btn d-block btn-secondary" role="button">
+                <i class="fal fa-bell"></i> @T["Follow"]
+            </a>
+        }
+        else
+        {
+            <div class="text-muted">
+                @T["You are already subscribed to this item. Unsubscribe below..."]
+                <br /><br />
+            </div>
+            <a href="#" class="btn d-block btn-danger" role="button">
+                <i class="fal fa-bell-slash"></i> @T["Unsubscribe"]
+            </a>
+        }
 
-<h1>Follow Entity</h1>
+
+    </card-body>
+</card>
 
 
 

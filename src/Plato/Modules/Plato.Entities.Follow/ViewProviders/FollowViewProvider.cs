@@ -42,30 +42,7 @@ namespace Plato.Entities.Follow.ViewProviders
 
         public override Task<IViewProviderResult> BuildUpdateAsync(Entity entity, IUpdateModel updater)
         {
-
-            //var model = new EditSocialViewModel();
-
-            //if (!await updater.TryUpdateModelAsync(model))
-            //{
-            //    return await BuildEditAsync(user, updater);
-            //}
-
-            ////model.FacebookUrl = model.UserName?.Trim();
-
-            //if (updater.ModelState.IsValid)
-            //{
-            //    var result = await _socialLinksStore.UpdateAsync(user.Id, new SocialLinks()
-            //    {
-            //        FacebookUrl = model.FacebookUrl,
-            //        TwitterUrl  = model.TwitterUrl,
-            //        YouTubeUrl = model.YouTubeUrl
-            //    });
-            //}
-
-            //return await BuildEditAsync(user, updater);
-
             return Task.FromResult(default(IViewProviderResult));
-
         }
         
     }

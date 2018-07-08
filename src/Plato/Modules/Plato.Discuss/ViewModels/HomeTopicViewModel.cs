@@ -28,7 +28,7 @@ namespace Plato.Discuss.ViewModels
         
         public string EditorHtmlName { get; set; }
         
-        public NewEntityReplyViewModel NewEntityReply { get; set; }
+        //public NewEntityReplyViewModel NewEntityReply { get; set; }
 
         public FilterOptions FilterOpts { get; set; }
         
@@ -37,12 +37,12 @@ namespace Plato.Discuss.ViewModels
     }
 
 
-    public class NewEntityReplyViewModel
-    {
+    //public class NewEntityReplyViewModel
+    //{
    
-        [Required]
-        public string Message { get; set; }
+    //    [Required]
+    //    public string Message { get; set; }
 
-    }
+    //}
 
 }
