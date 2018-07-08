@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Internal.Repositories;
+using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Entities.Follow.Repositories
+namespace Plato.Entities.Follow.Stores
 {
-    public interface IEntityFollowRepository<TModel> : IRepository<TModel> where TModel : class
+    public interface IEntityFollowStore<TModel> : IStore<TModel> where TModel : class
     {
 
         Task<IEnumerable<TModel>> SelectEntityFollowsByEntityId(int entityId);
@@ -12,5 +12,6 @@ namespace Plato.Entities.Follow.Repositories
         Task<TModel> SelectEntityFollowByUserIdAndEntityId(int userId, int entityId);
 
     }
+
 
 }

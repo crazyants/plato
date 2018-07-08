@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,19 +11,18 @@ namespace Plato.Internal.Messaging
     public class Broker : IBroker
     {
 
-        private readonly IDictionary<Type,  List<DescribedDelegate>> _subscribers;
+        private readonly ConcurrentDictionary<Type,  List<DescribedDelegate>> _subscribers;
 
         public Broker()
         {
-            _subscribers = new Dictionary<Type, List<DescribedDelegate>>();
+            _subscribers = new ConcurrentDictionary<Type, List<DescribedDelegate>>();
         }
 
         public Task<IEnumerable<Func<Message<T>, Task<T>>>> Pub<T>(object sender, MessageOptions options, T message) where T : class
         {
 
             var ourput = new List<Func<Message<T>, Task<T>>>();
-
-
+            
             if (message == null || sender == null)
             {
                 return Task.FromResult((IEnumerable<Func<Message<T>, Task<T>>>)ourput);
@@ -102,9 +102,13 @@ namespace Plato.Internal.Messaging
             if (!_subscribers.ContainsKey(typeof(T))) return;
             var delegates = _subscribers[typeof(T)];
             if (delegates.Contains(describedDelegate))
+            {
                 delegates.Remove(describedDelegate);
+            }
             if (delegates.Count == 0)
-                _subscribers.Remove(typeof(T));
+            {
+                _subscribers.TryRemove(typeof(T), out List<DescribedDelegate> method);
+            }
         }
 
         public void Unsub<T>(MessageOptions options, Func<Message<T>, Task<T>> subscription) where T : class
@@ -115,9 +119,14 @@ namespace Plato.Internal.Messaging
             if (!_subscribers.ContainsKey(typeof(T))) return;
             var delegates = _subscribers[typeof(T)];
             if (delegates.Contains(describedDelegate))
+            {
                 delegates.Remove(describedDelegate);
+            }
             if (delegates.Count == 0)
-                _subscribers.Remove(typeof(T));
+            {
+                _subscribers.TryRemove(typeof(T), out List<DescribedDelegate> method);
+            }
+                
         }
         
         public void Dispose()

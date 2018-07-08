@@ -50,7 +50,7 @@ namespace Plato.Markdown
             subscriber?.Subscribe();
             
             routes.MapAreaRoute(
-                name: "PlatoMarkdownParserService",
+                name: "PlatoMarkdownWebApi",
                 areaName: "Plato.Markdown",
                 template: "api/{controller}/{action}/{id?}",
                 defaults: new { controller = "Parse", action = "Get" }

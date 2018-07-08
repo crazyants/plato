@@ -40,7 +40,7 @@ namespace Plato.Markdown.Controllers
             {
                 html,
                 StatusCode = HttpStatusCode.OK,
-                Message = "Album created successfully."
+                Message = "Markdown parsed successfully"
             });
 
         }

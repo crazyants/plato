@@ -1,29 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Email.Models;
+using Plato.Email.Stores;
+using Plato.Entities.Follow.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Email.Stores
+namespace Plato.Entities.Follow.Stores
 {
-
     #region "EmailQuery"
 
-    public class EmailQuery : DefaultQuery<EmailMessage>
+    public class EntityFollowQuery : DefaultQuery<EntityFollow>
     {
 
-        private readonly IStore<EmailMessage> _store;
+        private readonly IStore<EntityFollow> _store;
 
-        public EmailQuery(IStore<EmailMessage> store)
+        public EntityFollowQuery(IStore<EntityFollow> store)
         {
             _store = store;
         }
 
         public EntityQueryParams Params { get; set; }
 
-        public override IQuery<EmailMessage> Select<T>(Action<T> configure)
+        public override IQuery<EntityFollow> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
@@ -31,7 +33,7 @@ namespace Plato.Email.Stores
             return this;
         }
 
-        public override async Task<IPagedResults<EmailMessage>> ToList()
+        public override async Task<IPagedResults<EntityFollow>> ToList()
         {
 
             var builder = new EntityQueryBuilder(this);
@@ -77,7 +79,7 @@ namespace Plato.Email.Stores
             get => _keywords ?? (_keywords = new WhereString());
             set => _keywords = value;
         }
-        
+
 
     }
 
@@ -89,15 +91,17 @@ namespace Plato.Email.Stores
     {
         #region "Constructor"
 
-        private readonly string _emailsTableName;
-    
-        private readonly EmailQuery _query;
+        private readonly string _entityFollowsTableName;
+        private readonly string _usersTableName;
 
-        public EntityQueryBuilder(EmailQuery query)
+        private readonly EntityFollowQuery _query;
+
+        public EntityQueryBuilder(EntityFollowQuery query)
         {
             _query = query;
-            _emailsTableName = GetTableNameWithPrefix("Emails");
-    
+            _entityFollowsTableName = GetTableNameWithPrefix("EntityFollows");
+            _usersTableName = GetTableNameWithPrefix("Users");
+
         }
 
         #endregion
@@ -109,7 +113,7 @@ namespace Plato.Email.Stores
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = e.Id FROM ")
+            sb.Append("SELECT @start_id_out = f.Id FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -141,17 +145,21 @@ namespace Plato.Email.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(e.Id) FROM ")
+            sb.Append("SELECT COUNT(f.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             return sb.ToString();
         }
-        
+
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("e.*");
+            sb.Append("f.*, ")
+                .Append("u.Email, ")
+                .Append("u.UserName, ")
+                .Append("u.DisplayName, ")
+                .Append("u.NormalizedUserName");
             return sb.ToString();
 
         }
@@ -160,10 +168,10 @@ namespace Plato.Email.Stores
         {
 
             var sb = new StringBuilder();
-
-            sb.Append(_emailsTableName)
-                .Append(" e ");
-
+            sb.Append(_entityFollowsTableName)
+                .Append(" f WITH (nolock) LEFT OUTER JOIN ")
+                .Append(_usersTableName)
+                .Append(" u ON f.UserId = u.Id");
             return sb.ToString();
 
         }
@@ -184,13 +192,13 @@ namespace Plato.Email.Stores
             var sb = new StringBuilder();
             // default to ascending
             if (_query.SortColumns.Count == 0)
-                sb.Append("e.Id >= @start_id_in");
+                sb.Append("f.Id >= @start_id_in");
             // set start operator based on first order by
             foreach (var sortColumn in _query.SortColumns)
             {
                 sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "e.Id <= @start_id_in"
-                    : "e.Id >= @start_id_in");
+                    ? "f.Id <= @start_id_in"
+                    : "f.Id >= @start_id_in");
                 break;
             }
 
@@ -211,9 +219,9 @@ namespace Plato.Email.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("e.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("f.Id"));
             }
-            
+
 
             return sb.ToString();
 
@@ -229,7 +237,7 @@ namespace Plato.Email.Stores
 
             return columnName.IndexOf('.') >= 0
                 ? columnName
-                : "e." + columnName;
+                : "f." + columnName;
         }
 
         private string BuildOrderBy()
@@ -253,6 +261,5 @@ namespace Plato.Email.Stores
     }
 
     #endregion
-
 
 }

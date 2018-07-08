@@ -26,8 +26,9 @@
 }
 
 /* add reaction drop down */
-.reaction-dropdown-menu { width: 215px; white-space: normal; }
+.reaction-dropdown-menu { width: 235px; white-space: normal; }
 .reaction-dropdown-menu-item { padding: 4px; background-color: transparent; }
 
 /* emoji */
-.emoji { background-color: transparent; }
+.emoji { font-size: 13pt; background-color: transparent; }
+.emoji-animate-on-hover:hover { animation: pulseOutLrg 0.40s 0s none; }

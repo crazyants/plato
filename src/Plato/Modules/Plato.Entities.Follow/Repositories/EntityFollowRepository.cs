@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Entities.Follow.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Entities.Follow.Models;
 
 namespace Plato.Entities.Follow.Repositories
 {
@@ -161,7 +161,7 @@ namespace Plato.Entities.Follow.Repositories
             return output;
         }
 
-        public async Task<EntityFollow> SelectEntityFollowsByUserIdAndEntityId(int userId, int entityId)
+        public async Task<EntityFollow> SelectEntityFollowByUserIdAndEntityId(int userId, int entityId)
         {
             EntityFollow follow = null;
             using (var context = _dbContext)

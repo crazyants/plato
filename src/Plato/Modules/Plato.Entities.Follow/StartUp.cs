@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Entities.Follow.ViewProviders;
 using Plato.Entities.Models;
-using Plato.Internal.Hosting;
-using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.Follow.Handlers;
+using Plato.Entities.Follow.Models;
+using Plato.Entities.Follow.Repositories;
+using Plato.Entities.Follow.Stores;
 
 namespace Plato.Entities.Follow
 {
@@ -34,6 +34,9 @@ namespace Plato.Entities.Follow
             services.AddScoped<IViewProviderManager<Entity>, ViewProviderManager<Entity>>();
             services.AddScoped<IViewProvider<Entity>, FollowViewProvider>();
 
+            // Data access
+            services.AddScoped<IEntityFollowRepository<EntityFollow>, EntityFollowRepository>();
+            services.AddScoped<IEntityFollowStore<EntityFollow>, EntityFollowStore>();
 
         }
 
@@ -42,6 +45,14 @@ namespace Plato.Entities.Follow
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+            
+            routes.MapAreaRoute(
+                name: "EntitiesFollowWebApi",
+                areaName: "Plato.Markdown",
+                template: "api/entities/{controller}/{action}/{id?}",
+                defaults: new { controller = "Follow", action = "Get" }
+            );
+
         }
     }
 }

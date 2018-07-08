@@ -6,7 +6,7 @@ using Plato.Internal.Models;
 
 namespace Plato.Entities.Follow.Models
 {
-    class EntityFollow : IModel<EntityFollow>
+    public class EntityFollow : IModel<EntityFollow>
     {
 
         public int Id { get; set; }
