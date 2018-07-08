@@ -35,7 +35,7 @@
     @if (Model.SideBar != null)
     {
         <div class="row gutter-sm layout-content">
-            <div class="col-9">
+            <div class="col-lg-9 col-md-12">
                 @if (Model.Content != null)
                 {
                     <view model="@Model.Content"></view>
@@ -55,7 +55,7 @@
                     }
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-lg-3 col-md-12">
                 @if (Model.SideBar != null)
                 {
                     <view model="@Model.SideBar"></view>

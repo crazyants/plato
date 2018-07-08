@@ -18,24 +18,24 @@
             <form asp-controller="Home" asp-action="Topic" method="post" enctype="multipart/form-data">
                 
                 <input asp-for="@Model.EntityId" type="hidden" />
-
+                
+                        @await DisplayAsync(new View("Editor", new
+                        {
+                            value = string.Empty,
+                            placeHolderText = T["Post a reply..."],
+                            htmlName = @Model.EditorHtmlName
+                        }))
+                  
+                 
                 <card>
                     <card-body>
-                        <fieldset>
-                            @await DisplayAsync(new View("Editor", new
-                            {
-                                value = string.Empty,
-                                placeHolderText = T["Post a reply..."],
-                                htmlName = @Model.EditorHtmlName
-                            }))
-                        </fieldset>
-                    </card-body>
-                    <card-footer>
                         <button type="submit" class="btn btn-primary">
                             @T["Post"]
                         </button>
-                    </card-footer>
+                    </card-body>
                 </card>
+           
+                 
             </form>
         </div>
     </div>

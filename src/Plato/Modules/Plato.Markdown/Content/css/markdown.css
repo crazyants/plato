@@ -1,10 +1,11 @@
 
 .md-editor {
     width: 100%;
-    border-width: 2px;
+    border-width: 1px;
     border-style: solid;
     color: #222;
     background: white;
+    border-radius: 3px;
 }
 
 .md-editor .md-header,

@@ -11,6 +11,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Entities.Follow.Handlers;
 
 namespace Plato.Entities.Follow
 {
@@ -26,6 +27,9 @@ namespace Plato.Entities.Follow
         public override void ConfigureServices(IServiceCollection services)
         {
 
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+            
             // View providers
             services.AddScoped<IViewProviderManager<Entity>, ViewProviderManager<Entity>>();
             services.AddScoped<IViewProvider<Entity>, FollowViewProvider>();

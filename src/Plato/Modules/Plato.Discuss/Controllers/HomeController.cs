@@ -58,7 +58,6 @@ namespace Plato.Discuss.Controllers
             _entityDataStore = entityDataStore;
 
             T = localizer;
-    
 
         }
 
@@ -83,7 +82,8 @@ namespace Plato.Discuss.Controllers
                 pagerOptions = new PagerOptions();
             }
 
-        
+            await CreateSampleData();
+
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
             this.RouteData.Values.Add("page", pagerOptions.Page);

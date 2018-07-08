@@ -34,26 +34,6 @@ namespace Plato.Entities.Repositories
         
         #region "Implementation"
 
-        public async Task<bool> DeleteAsync(int id)
-        {
-
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation($"Deleting entity with id: {id}");
-            }
-
-            var success = 0;
-            using (var context = _dbContext)
-            {
-                success = await context.ExecuteScalarAsync<int>(
-                    CommandType.StoredProcedure,
-                    "DeleteEntityById", id);
-            }
-
-            return success > 0 ? true : false;
-
-        }
-
         public async Task<Entity> InsertUpdateAsync(Entity entity)
         {
 
@@ -90,21 +70,17 @@ namespace Plato.Entities.Repositories
 
         public async Task<Entity> SelectByIdAsync(int id)
         {
+
+            Entity entity = null;
             using (var context = _dbContext)
             {
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation(
-                            $"SelectUser for Id {id} failed with the following error {args.Exception.Message}");
-                };
-
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntityById", id);
-
-                return await BuildEntityFromResultSets(reader);
+                entity = await BuildEntityFromResultSets(reader);
             }
+
+            return entity;
         }
         
         public async Task<IPagedResults<Entity>> SelectAsync(params object[] inputParams)
@@ -147,6 +123,27 @@ namespace Plato.Entities.Repositories
             }
 
             return output;
+        }
+
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Deleting entity with id: {id}");
+            }
+
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteEntityById", id);
+            }
+
+            return success > 0 ? true : false;
+
         }
 
         #endregion

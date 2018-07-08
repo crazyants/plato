@@ -31,11 +31,11 @@ namespace Plato.Entities.Models
 
         public int CreatedUserId { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public int ModifiedUserId { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
         public EntityUser CreatedBy { get; private set; } = new EntityUser();
 
@@ -117,15 +117,13 @@ namespace Plato.Entities.Models
 
         public int Id { get; set; }
 
+        public string Email { get; set; }
+
         public string UserName { get; set; }
 
         public string NormalizedUserName { get; set; }
 
-        public string DisplayName
-        {
-            get => String.IsNullOrEmpty(_displayName) ? this.UserName : _displayName;
-            set => _displayName = value;
-        }
+        public string DisplayName { get; set; }
 
     }
 
