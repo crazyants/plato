@@ -27,3 +27,15 @@
     color: #fff;
     background-color: #007bff;
 }
+
+/* ------------------- */
+/* Switches */
+/* ------------------- */
+
+
+.switch input:checked + .switch-slider  { 
+    color:#FFFFFF; 
+    background-color:#007bff; 
+    border-color:#007bff;
+}
+

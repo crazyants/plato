@@ -31,16 +31,22 @@ namespace Plato.Email.ViewModels
         [Required]
         [StringLength(255)]
         [DataType(DataType.EmailAddress)]
+        [Display(Name = "default from")]
         public string DefaultFrom { get; set; }
         
         [Required]
         [StringLength(255)]
+        [DataType(DataType.Text)]
+        [Display(Name = "host")]
         public string Host { get; set; }
 
         [Required]
+        [StringLength(10)]
+        [DataType(DataType.Text)]
+        [Display(Name = "port")]
         public int Port { get; set; } = 25;
 
-        public bool UseTls { get; set; } = true;
+        public bool EnableSsl { get; set; } = true;
 
         [StringLength(255)]
         public string UserName { get; set; }
@@ -57,15 +63,16 @@ namespace Plato.Email.ViewModels
         public bool EnablePolling { get; set; } = true;
 
         [Required]
+        [Display(Name = "interval")]
         public int PollIntervalSeconds { get; set; } = 120;
 
         [Required]
+        [Display(Name = "attempts")]
         public int SendAttempts { get; set; } = 3;
 
         [Required]
+        [Display(Name = "batch size")]
         public int BatchSize { get; set; } = 50;
-
-
 
     }
 

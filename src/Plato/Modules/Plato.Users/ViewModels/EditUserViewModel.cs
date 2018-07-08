@@ -15,6 +15,7 @@ namespace Plato.Users.ViewModels
 
         [Required]
         [EmailAddress]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
         [DataType(DataType.Password)]

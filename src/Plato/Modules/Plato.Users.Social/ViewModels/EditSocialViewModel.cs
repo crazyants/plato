@@ -5,13 +5,16 @@ namespace Plato.Users.Social.ViewModels
     public class EditSocialViewModel
     {
 
-        [DataType(DataType.Url), MaxLength(255)]
+        [StringLength(255)]
+        [DataType(DataType.Url)]
         public string FacebookUrl { get; set; }
 
-        [DataType(DataType.Url), MaxLength(255)]
+        [StringLength(255)]
+        [DataType(DataType.Url)]
         public string TwitterUrl { get; set; }
 
-        [DataType(DataType.Url), MaxLength(255)]
+        [StringLength(255)]
+        [DataType(DataType.Url)]
         public string YouTubeUrl { get; set; }
 
 

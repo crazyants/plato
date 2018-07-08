@@ -7,6 +7,7 @@ namespace Plato.Roles.ViewModels
 {
     public class EditRoleViewModel
     {
+
         public int Id { get; set; }
 
         [Required]

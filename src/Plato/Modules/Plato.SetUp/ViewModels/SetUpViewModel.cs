@@ -15,12 +15,13 @@ namespace Plato.SetUp.ViewModels
 
         //public bool DatabaseProviderPreset { get; set; }
 
+        [Required]
         public string ConnectionString { get; set; }
 
         public bool ConnectionStringPreset { get; set; }
 
         public string TablePrefix { get; set; }
-
+        
         public bool TablePrefixPreset { get; set; }
 
         [Required]
@@ -38,6 +39,6 @@ namespace Plato.SetUp.ViewModels
         [DataType(DataType.Password)]
         public string PasswordConfirmation { get; set; }
         
-        //public string RecipeName { get; set; }
     }
+
 }

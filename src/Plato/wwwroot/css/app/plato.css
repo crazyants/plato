@@ -726,3 +726,60 @@
     overflow: hidden;
 }
 
+
+
+
+
+/* ------------------------- */
+/* toggle switch */
+/* ------------------------- */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 62px;
+    height: 32px;
+    line-height: 32px;
+    vertical-align: middle;
+}
+
+.switch input {display:none;}
+
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    background-color: rgba(150,150,150,.4);
+    transition: 250ms ease-in-out;
+}
+
+
+.switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 30px;
+    width: 30px;
+    right: 1px;
+    bottom: 1px;
+    background-color: white;
+    -webkit-transition: transform .2s;
+    transition: transform .2s;
+}
+
+.switch input:checked + .switch-slider:before {
+    -webkit-transform: translateX(-30px);
+    -ms-transform: translateX(-30px);
+    transform: translateX(-30px);
+}
+
+.switch-round .switch-slider {
+    border-radius: 34px;
+}
+
+.switch-round .switch-slider:before {
+    border-radius: 50%;
+}

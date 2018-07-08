@@ -11,97 +11,147 @@
     
     <card>
         <card-title>
-            <h6 class="card-title">@T["SMTP Settings"]</h6>
+            <h6 class="card-title">@T["General"]</h6>
         </card-title>
         <card-body>
-            
+
+            <div class="row">
+                <div class="col">
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="DefaultFrom">
+                            <label asp-for="@Model.SmtpSettings.DefaultFrom">
+                                <strong>@T["Default From"]</strong>
+                                <span asp-validation-for="@Model.SmtpSettings.DefaultFrom" class="text-danger"></span>
+                                <br />
+                                <span class="text-muted">@T["The email address messages will appear to be sent from."]</span>
+                            </label>
+                            <input placeholder="noreply@yourdomain.com" asp-for="@Model.SmtpSettings.DefaultFrom" class="form-control" />
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+        </card-body>
+    </card>
+
+    <card  class="card mt-4">
+        <card-title>
+            <h6 class="card-title">@T["SMTP Server"]</h6>
+        </card-title>
+        <card-body>
+
             <div class="row">
                 <div class="col">
                     <fieldset>
                         <div class="form-group" asp-validation-class-for="Host">
-                            <label asp-for="@Model.SmtpSettings.Host"><strong>@T["Server Address"]</strong></label>
-                            <span asp-validation-for="@Model.SmtpSettings.Host" class="text-danger"></span>
-                            <input placeholder="smtp.yourdomain.com" asp-for="@Model.SmtpSettings.Host" class="form-control" autofocus/>
+                            <label asp-for="@Model.SmtpSettings.Host">
+                                <strong>@T["Server Address"]</strong>
+                                <span asp-validation-for="@Model.SmtpSettings.Host" class="text-danger"></span><br />
+                                <span class="text-muted">@T["The host name for your SMTP server."]</span>
+                            </label>
+
+                            <input placeholder="smtp.yourdomain.com" asp-for="@Model.SmtpSettings.Host" class="form-control" autofocus />
                         </div>
                     </fieldset>
                 </div>
                 <div class="col">
                     <fieldset>
                         <div class="form-group" asp-validation-class-for="Port">
-                            <label asp-for="@Model.SmtpSettings.Port"><strong>@T["Server Port"]</strong></label>
-                            <span asp-validation-for="@Model.SmtpSettings.Port" class="text-danger"></span>
-                            <input placeholder="25" asp-for="@Model.SmtpSettings.Port" class="form-control"/>
+                            <label asp-for="@Model.SmtpSettings.Port">
+                                <strong>@T["Server Port"]</strong>
+                                <span asp-validation-for="@Model.SmtpSettings.Port" class="text-danger"></span>
+                                <br />
+                                <span class="text-muted">@T["The port for your SMTP server."]</span>
+                            </label>
+
+                            <input placeholder="25" asp-for="@Model.SmtpSettings.Port" class="form-control" />
                         </div>
                     </fieldset>
                 </div>
             </div>
-      
+
             <div class="row">
                 <div class="col">
                     <fieldset>
                         <div class="form-group" asp-validation-class-for="UserName">
-                            <label asp-for="@Model.SmtpSettings.UserName"><strong>@T["Username"]</strong></label>
-                            <span asp-validation-for="@Model.SmtpSettings.UserName" class="text-danger"></span>
-                            <input placeholder="email@address.com" asp-for="@Model.SmtpSettings.UserName" class="form-control"/>
+                            <label asp-for="@Model.SmtpSettings.UserName">
+                                <strong>@T["Username"]</strong>
+                                <span asp-validation-for="@Model.SmtpSettings.UserName" class="text-danger"></span>
+                                <br/>
+                                <span class="text-muted">@T["If authentication is required provided your username."]</span>
+                            </label>
+                            
+                            <input placeholder="email@address.com" asp-for="@Model.SmtpSettings.UserName" class="form-control" />
                         </div>
                     </fieldset>
                 </div>
                 <div class="col">
                     <fieldset>
                         <div class="form-group" asp-validation-class-for="Password">
-                            <label asp-for="@Model.SmtpSettings.Password"><strong>@T["Password"]</strong></label>
-                            <span asp-validation-for="@Model.SmtpSettings.Password" class="text-danger"></span>
-                            <input asp-for="@Model.SmtpSettings.Password" class="form-control"/>
+                            <label asp-for="@Model.SmtpSettings.Password">
+                                <strong>@T["Password"]</strong>
+                                <span asp-validation-for="@Model.SmtpSettings.Password" class="text-danger"></span>    
+                                <br />
+                                <span class="text-muted">@T["If authentication is required provided your password."]</span>
+                            </label>
+                            
+                            <input asp-for="@Model.SmtpSettings.Password" class="form-control" />
                         </div>
                     </fieldset>
                 </div>
             </div>
             
             <div class="row">
-                <div class="col">
+                <div class="col-12">
+              
                     <fieldset>
-                        <div class="form-group" asp-validation-class-for="DefaultFrom">
-                            <label asp-for="@Model.SmtpSettings.DefaultFrom"><strong>@T["Default From"]</strong></label>
-                            <span asp-validation-for="@Model.SmtpSettings.DefaultFrom" class="text-danger"></span>
-                            <input placeholder="noreply@yourdomain.com" asp-for="@Model.SmtpSettings.DefaultFrom" class="form-control"/>
+                        <div class="form-group" asp-validation-class-for="EnablePolling">
+                            <label asp-for="@Model.SmtpSettings.EnableSsl">
+                                <span class="switch switch-round">
+                                    <input class="form-check-input" asp-for="@Model.SmtpSettings.EnableSsl"/>
+                                    <span class="switch-slider"></span>
+                                </span>
+                                @T["Enable TLS / SSL"]
+                            </label>
                         </div>
                     </fieldset>
                 </div>
-                <div class="col">
-                
-                </div>
             </div>
-            
-            
-            <h5>Polling Options</h5>
+
+        </card-body>
+    </card>
+
+    <card class="card mt-4">
+        <card-title>
+            <h6 class="card-title">@T["Polling Options"]</h6>
+        </card-title>
+        <card-body>
             
             <div class="row">
                 <div class="col">
                     <fieldset>
                         <div class="form-group" asp-validation-class-for="PollIntervalSeconds">
-                            <label asp-for="@Model.SmtpSettings.PollIntervalSeconds"><strong>@T["Polling Interval"]</strong></label>
-                            <span asp-validation-for="@Model.SmtpSettings.PollIntervalSeconds" class="text-danger"></span>
+                            <label asp-for="@Model.SmtpSettings.PollIntervalSeconds">
+                                <strong>@T["Interval"]</strong>
+                                <span asp-validation-for="@Model.SmtpSettings.PollIntervalSeconds" class="text-danger"></span>
+                                <br />
+                                <span class="text-muted">@T["The interval in seconds to poll the queue."]</span>
+                            </label>
+                            
                             <input placeholder="4" asp-for="@Model.SmtpSettings.PollIntervalSeconds" class="form-control"/>
                         </div>
                     </fieldset>
                 </div>
                 <div class="col">
                     <fieldset>
-                        <label asp-for="@Model.SmtpSettings.EnablePolling">
-                            <input asp-for="@Model.SmtpSettings.EnablePolling" />
-                            @T["Enable Polling"]
-                        </label>
-                    </fieldset>
-         
-                </div>
-            </div>
-      
-            <div class="row">
-                <div class="col">
-                    <fieldset>
                         <div class="form-group" asp-validation-class-for="BatchSize">
-                            <label asp-for="@Model.SmtpSettings.BatchSize"><strong>@T["Batch Size"]</strong></label>
-                            <span asp-validation-for="@Model.SmtpSettings.BatchSize" class="text-danger"></span>
+                            <label asp-for="@Model.SmtpSettings.BatchSize">
+                                <strong>@T["Batch Size"]</strong>
+                                <span asp-validation-for="@Model.SmtpSettings.BatchSize" class="text-danger"></span>
+                                <br />
+                                <span class="text-muted">@T["Number of emails to send per poll."]</span>
+                            </label>
+                            
                             <input placeholder="50" asp-for="@Model.SmtpSettings.BatchSize" class="form-control"/>
                         </div>
                     </fieldset>
@@ -109,19 +159,44 @@
                 <div class="col">
                     <fieldset>
                         <div class="form-group" asp-validation-class-for="SendAttempts">
-                            <label asp-for="@Model.SmtpSettings.SendAttempts"><strong>@T["Send Attempts"]</strong></label>
-                            <span asp-validation-for="@Model.SmtpSettings.UserName" class="text-danger"></span>
+                            <label asp-for="@Model.SmtpSettings.SendAttempts">
+                                <strong>@T["Send Attempts"]</strong>
+                                <span asp-validation-for="@Model.SmtpSettings.UserName" class="text-danger"></span>
+                                <br />
+                                <span class="text-muted">@T["Attempts before messages are deleted."]</span>
+                            </label>
+                            
                             <input placeholder="4" asp-for="@Model.SmtpSettings.SendAttempts" class="form-control"/>
                         </div>
                     </fieldset>
                 </div>
             </div>
-
+            
+            <div class="row">
+                <div class="col">
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="EnablePolling">
+                            <label asp-for="@Model.SmtpSettings.EnablePolling">
+                                <span class="switch switch-round">
+                                    <input class="form-check-input" asp-for="@Model.SmtpSettings.EnablePolling"/>
+                                    <span class="switch-slider"></span>
+                                </span>
+                                @T["Enable Outbound Polling"]
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            
 
         </card-body>
+ 
+    </card>
+    
+    <card class="card mt-4">
         <card-footer>
             <button class="btn btn-primary" type="submit">@T["Save"]</button>
         </card-footer>
     </card>
-    
+
 </form>

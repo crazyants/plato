@@ -6,6 +6,7 @@ namespace Plato.Users.ViewModels
     {
         
         [EmailAddress]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
         [Required]
