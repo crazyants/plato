@@ -41,12 +41,11 @@ namespace Plato.Email.ViewModels
         public string Host { get; set; }
 
         [Required]
-        [StringLength(10)]
         [DataType(DataType.Text)]
         [Display(Name = "port")]
         public int Port { get; set; } = 25;
 
-        public bool EnableSsl { get; set; } = true;
+        public bool EnableSsl { get; set; }
 
         [StringLength(255)]
         public string UserName { get; set; }
@@ -54,9 +53,9 @@ namespace Plato.Email.ViewModels
         [StringLength(255)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        
+
         [Required]
-        public SmtpDeliveryMethod DeliveryMethod { get; set; }
+        public SmtpDeliveryMethod DeliveryMethod { get; set; } 
 
         public string PickupDirectoryLocation { get; set; }
         
@@ -64,7 +63,7 @@ namespace Plato.Email.ViewModels
 
         [Required]
         [Display(Name = "interval")]
-        public int PollIntervalSeconds { get; set; } = 120;
+        public int PollInterval { get; set; } = 120;
 
         [Required]
         [Display(Name = "attempts")]

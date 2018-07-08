@@ -30,7 +30,8 @@ namespace Plato.Discuss.Controllers
         private readonly IEntityDataStore<EntityData> _entityDataStore;
 
         private readonly IViewProviderManager<HomeIndexViewModel> _homeIndexViewProvider;
-        private readonly IViewProviderManager<HomeTopicViewModel> _homeTopicViewProvider;
+
+        private readonly IViewProviderManager<Entity> _entityViewProvider;
 
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
@@ -48,7 +49,7 @@ namespace Plato.Discuss.Controllers
             IEntityStore<Entity> entityStore,
             IEntityReplyStore<EntityReply> entityReplyStore,
             IViewProviderManager<HomeIndexViewModel> homeIndexViewProvider,
-            IViewProviderManager<HomeTopicViewModel> homeTopicViewProvider,
+            IViewProviderManager<Entity> entityViewProvider,
             IEntityManager<Entity> entityManager,
             IAlerter alerter, IEntityDataStore<EntityData> entityDataStore)
         {
@@ -58,7 +59,7 @@ namespace Plato.Discuss.Controllers
             _entityStore = entityStore;
             _entityReplyStore = entityReplyStore;
             _homeIndexViewProvider = homeIndexViewProvider;
-            _homeTopicViewProvider = homeTopicViewProvider;
+            _entityViewProvider = entityViewProvider;
             _alerter = alerter;
             _entityDataStore = entityDataStore;
 
@@ -181,10 +182,10 @@ namespace Plato.Discuss.Controllers
             routeData.Values.Add("Options.Order", filterOptions.Order);
             
             // Get model
-            var model = await GetTopicViewModel(id, filterOptions, pagerOptions);
+            //var model = await GetTopicViewModel(id, filterOptions, pagerOptions);
             
             // Build view
-            var result = await _homeTopicViewProvider.ProvideIndexAsync(model, this);
+            var result = await _entityViewProvider.ProvideIndexAsync(entity, this);
 
             // Return view
             return View(result);
@@ -201,14 +202,9 @@ namespace Plato.Discuss.Controllers
             {
                 return NotFound();
             }
-
-
-            var model = new HomeTopicViewModel()
-            {
-                Entity = entity
-            };
-
-            var result = await _homeTopicViewProvider.ProvideUpdateAsync(model, this);
+            
+        
+            var result = await _entityViewProvider.ProvideUpdateAsync(entity, this);
 
             if (!ModelState.IsValid)
             {
@@ -237,19 +233,19 @@ namespace Plato.Discuss.Controllers
                 pagerOptions);
         }
 
-        private async Task<HomeTopicViewModel> GetTopicViewModel(
-            int entityId,
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-            var entity = await _entityStore.GetByIdAsync(entityId);
-            var replies = await GetEntityReplies(entityId, filterOptions, pagerOptions);
-            return new HomeTopicViewModel(
-                entity,
-                replies,
-                filterOptions,
-                pagerOptions);
-        }
+        //private async Task<HomeTopicViewModel> GetTopicViewModel(
+        //    int entityId,
+        //    FilterOptions filterOptions,
+        //    PagerOptions pagerOptions)
+        //{
+        //    var entity = await _entityStore.GetByIdAsync(entityId);
+        //    var replies = await GetEntityReplies(entityId, filterOptions, pagerOptions);
+        //    return new HomeTopicViewModel(
+        //        entity,
+        //        replies,
+        //        filterOptions,
+        //        pagerOptions);
+        //}
         
         public async Task<IPagedResults<Entity>> GetEntities(
             FilterOptions filterOptions,

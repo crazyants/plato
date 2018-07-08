@@ -19,25 +19,7 @@ namespace Plato.Discuss.ViewModels
         public FilterOptions FilterOpts { get; set; }
         
         public Entity Entity { get; set; }
-
-        public HomeTopicViewModel()
-        {
-
-        }
-
-        public HomeTopicViewModel(
-            Entity entity,
-            IPagedResults<EntityReply> results,
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-            this.Entity = entity;
-            this.Results = results;
-            this.FilterOpts = filterOptions;
-            this.PagerOpts = pagerOptions;
-            this.PagerOpts.SetTotal(results?.Total ?? 0);
-        }
-
+        
     }
 
 

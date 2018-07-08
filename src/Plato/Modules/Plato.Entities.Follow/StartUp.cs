@@ -2,15 +2,17 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Layout.ViewProviders;
+using Plato.Entities.Follow.ViewProviders;
+using Plato.Entities.Models;
+using Plato.Internal.Hosting;
+using Plato.Internal.Abstractions.SetUp;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Security.Abstractions;
-using Plato.Users.Social.ViewProviders;
+using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Users.Social.Stores;
+using Plato.Internal.Layout.ViewProviders;
 
-namespace Plato.Users.Social
+namespace Plato.Entities.Follow
 {
     public class Startup : StartupBase
     {
@@ -25,15 +27,9 @@ namespace Plato.Users.Social
         {
 
             // View providers
-            services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
-            services.AddScoped<IViewProvider<User>, UserViewProvider>();
+            services.AddScoped<IViewProviderManager<Entity>, ViewProviderManager<Entity>>();
+            services.AddScoped<IViewProvider<Entity>, FollowViewProvider>();
 
-            // Data store
-            services.AddScoped<ISocialLinksStore, SocialLinksStore>();
-            
-            // Module permissions
-            services.AddScoped<IPermissionsProvider, PermissionsProvider>();
-            
 
         }
 

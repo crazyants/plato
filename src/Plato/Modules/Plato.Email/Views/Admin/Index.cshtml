@@ -25,7 +25,7 @@
                                 <br />
                                 <span class="text-muted">@T["The email address messages will appear to be sent from."]</span>
                             </label>
-                            <input placeholder="noreply@yourdomain.com" asp-for="@Model.SmtpSettings.DefaultFrom" class="form-control" />
+                            <input placeholder="noreply@yourdomain.com" asp-for="@Model.SmtpSettings.DefaultFrom" class="form-control" autofocus />
                         </div>
                     </fieldset>
                 </div>
@@ -49,8 +49,7 @@
                                 <span asp-validation-for="@Model.SmtpSettings.Host" class="text-danger"></span><br />
                                 <span class="text-muted">@T["The host name for your SMTP server."]</span>
                             </label>
-
-                            <input placeholder="smtp.yourdomain.com" asp-for="@Model.SmtpSettings.Host" class="form-control" autofocus />
+                            <input placeholder="smtp.yourdomain.com" asp-for="@Model.SmtpSettings.Host" class="form-control" />
                         </div>
                     </fieldset>
                 </div>
@@ -131,14 +130,14 @@
                 <div class="col">
                     <fieldset>
                         <div class="form-group" asp-validation-class-for="PollIntervalSeconds">
-                            <label asp-for="@Model.SmtpSettings.PollIntervalSeconds">
+                            <label asp-for="@Model.SmtpSettings.PollInterval">
                                 <strong>@T["Interval"]</strong>
-                                <span asp-validation-for="@Model.SmtpSettings.PollIntervalSeconds" class="text-danger"></span>
+                                <span asp-validation-for="@Model.SmtpSettings.PollInterval" class="text-danger"></span>
                                 <br />
                                 <span class="text-muted">@T["The interval in seconds to poll the queue."]</span>
                             </label>
                             
-                            <input placeholder="4" asp-for="@Model.SmtpSettings.PollIntervalSeconds" class="form-control"/>
+                            <input placeholder="4" asp-for="@Model.SmtpSettings.PollInterval" class="form-control"/>
                         </div>
                     </fieldset>
                 </div>

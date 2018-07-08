@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Plato.Internal.Layout.ViewProviders;
@@ -54,8 +55,15 @@ namespace Plato.Internal.Layout
 
         void ZoneResults()
         {
+            
             foreach (var result in _results)
             {
+
+                if (result?.Views == null)
+                {
+                    continue;
+                }
+                
                 foreach (var view in result.Views)
                 {
                     // We can only handle views that implement IPositionedView

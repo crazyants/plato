@@ -6,7 +6,7 @@ namespace Plato.Email.Models
     public class SmtpSettings
     {
 
-        public bool Enabled { get; set; } = true;
+        public bool EnablePolling { get; set; } = true;
 
         public string DefaultFrom { get; set; }
 
@@ -22,9 +22,11 @@ namespace Plato.Email.Models
 
         public int SendAttempts { get; set; }
 
+        public int PollingInterval { get; set; }
+        
         public int BatchSize { get; set; }
 
-        public SmtpDeliveryMethod DeliveryMethod { get; set; }
+        public SmtpDeliveryMethod DeliveryMethod { get; set; } = SmtpDeliveryMethod.Network;
 
         public string PickupDirectoryLocation { get; set; }
 

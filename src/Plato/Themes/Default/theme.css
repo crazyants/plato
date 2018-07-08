@@ -5,6 +5,10 @@
 
 .btn { border-radius: 2px; }
 
+.btn-secondary { background: #f8f8f8; border-color: #ccc; color: #000;  }
+
+.btn-secondary:hover {  background: #f2f2f2; border-color: #aaa; color: #000;  }
+
 /* ------------------- */
 /* List Groups */
 /* ------------------- */
@@ -31,7 +35,6 @@
 /* ------------------- */
 /* Switches */
 /* ------------------- */
-
 
 .switch input:checked + .switch-slider  { 
     color:#FFFFFF; 

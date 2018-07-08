@@ -71,16 +71,21 @@ namespace Plato.Email.Controllers
             {
                 return View(await GetModel());
             }
-
-
+            
             var settings = new EmailSettings()
             {
                 SmtpSettings = new SmtpSettings()
                 {
+                    DefaultFrom = viewModel.SmtpSettings.DefaultFrom,
                     Host = viewModel.SmtpSettings.Host,
                     Port = viewModel.SmtpSettings.Port,
                     UserName = viewModel.SmtpSettings.UserName,
-                    Password = viewModel.SmtpSettings.Password
+                    Password = viewModel.SmtpSettings.Password,
+                    EnableSsl = viewModel.SmtpSettings.EnableSsl,
+                    PollingInterval = viewModel.SmtpSettings.PollInterval,
+                    BatchSize = viewModel.SmtpSettings.BatchSize,
+                    SendAttempts = viewModel.SmtpSettings.SendAttempts,
+                    EnablePolling = viewModel.SmtpSettings.EnablePolling
                 }
             };
             
@@ -112,15 +117,25 @@ namespace Plato.Email.Controllers
                 {
                     SmtpSettings = new SmtpSettingsViewModel()
                     {
+                        DefaultFrom = settings.SmtpSettings.DefaultFrom,
                         Host = settings.SmtpSettings.Host,
                         Port = settings.SmtpSettings.Port,
                         UserName = settings.SmtpSettings.UserName,
-                        Password = settings.SmtpSettings.Password
+                        Password = settings.SmtpSettings.Password,
+                        EnableSsl = settings.SmtpSettings.EnableSsl,
+                        PollInterval = settings.SmtpSettings.PollingInterval,
+                        BatchSize = settings.SmtpSettings.BatchSize,
+                        SendAttempts = settings.SmtpSettings.SendAttempts,
+                        EnablePolling = settings.SmtpSettings.EnablePolling
                     }
                 };
             }
             
-            return new EmailSettingsViewModel();
+            // return default settings
+            return new EmailSettingsViewModel()
+            {
+                SmtpSettings = new SmtpSettingsViewModel()
+            };
 
         }
 

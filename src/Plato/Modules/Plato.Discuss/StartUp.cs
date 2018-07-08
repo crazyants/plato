@@ -47,10 +47,9 @@ namespace Plato.Discuss
             services.AddScoped<IViewProviderManager<HomeIndexViewModel>, ViewProviderManager<HomeIndexViewModel>>();
             services.AddScoped<IViewProvider<HomeIndexViewModel>, HomeIndexViewProvider>();
 
-            services.AddScoped<IViewProviderManager<HomeTopicViewModel>, ViewProviderManager<HomeTopicViewModel>>();
-            services.AddScoped<IViewProvider<HomeTopicViewModel>, HomeTopicViewProvider>();
-
-
+            services.AddScoped<IViewProviderManager<Entity>, ViewProviderManager<Entity>>();
+            services.AddScoped<IViewProvider<Entity>, EntityViewProvider>();
+            
         }
 
         public override void Configure(
