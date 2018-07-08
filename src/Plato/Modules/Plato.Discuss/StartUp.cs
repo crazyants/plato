@@ -44,11 +44,8 @@ namespace Plato.Discuss
             services.AddScoped<IResourceProvider, ResourceProvider>();
 
             // Register view providers
-            services.AddScoped<IViewProviderManager<HomeIndexViewModel>, ViewProviderManager<HomeIndexViewModel>>();
-            services.AddScoped<IViewProvider<HomeIndexViewModel>, HomeIndexViewProvider>();
-
             services.AddScoped<IViewProviderManager<Entity>, ViewProviderManager<Entity>>();
-            services.AddScoped<IViewProvider<Entity>, EntityViewProvider>();
+            services.AddScoped<IViewProvider<Entity>, DiscussViewProvider>();
             
         }
 
