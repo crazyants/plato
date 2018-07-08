@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Routing;
 
 namespace Plato.Internal.Layout.ModelBinding
 {
@@ -10,6 +11,8 @@ namespace Plato.Internal.Layout.ModelBinding
         private readonly Controller _controller;
 
         public ModelStateDictionary ModelState { get; }
+
+        public RouteData RouteData { get; }
 
         public ControllerModelUpdater(Controller controller)
         {

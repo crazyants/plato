@@ -26,10 +26,6 @@ namespace Plato.Discuss.ViewModels
 
         public IPagedResults<EntityReply> Results { get; set; }
         
-        public string EditorHtmlName { get; set; }
-        
-        //public NewEntityReplyViewModel NewEntityReply { get; set; }
-
         public FilterOptions FilterOpts { get; set; }
         
         public Entity Entity { get; set; }

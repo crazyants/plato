@@ -52,41 +52,35 @@ namespace Plato.Discuss.ViewProviders
             var filterOptions = new FilterOptions();
 
             var pagerOptions = new PagerOptions();
-            pagerOptions.Page = GetPageIndex();
+            pagerOptions.Page = GetPageIndex(updater);
 
             var indexViewModel = await GetIndexViewModel(filterOptions, pagerOptions);
-            indexViewModel.EditorHtmlName = EditorHtmlName;
-
+         
             return Views(
                 View<HomeIndexViewModel>("Home.Index.Header", model => indexViewModel).Zone("header"),
-                View<NewEntityViewModel>("Home.Index.Tools", model =>
+                View<NewEntityViewModel>("Home.Index.Tools", model => new NewEntityViewModel()
                 {
-                    return new NewEntityViewModel()
-                    {
-                        EditorHtmlName = EditorHtmlName
-                    };
+                    EditorHtmlName = EditorHtmlName
                 }).Zone("tools"),
                 View<HomeIndexViewModel>("Home.Index.Sidebar", model => indexViewModel).Zone("sidebar"),
                 View<HomeIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content")
             );
 
         }
-
-
+        
         public override async Task<IViewProviderResult> BuildDisplayAsync(Entity entity, IUpdateModel updater)
         {
            
             var filterOptions = new FilterOptions();
 
             var pagerOptions = new PagerOptions();
-            pagerOptions.Page = GetPageIndex();
+            pagerOptions.Page = GetPageIndex(updater);
 
             var replies = await GetEntityReplies(entity.Id, filterOptions, pagerOptions);
 
             var topivViewModel = new HomeTopicViewModel(replies, pagerOptions)
             {
-                Entity = entity,
-                EditorHtmlName = EditorHtmlName,
+                Entity = entity
             };
 
             return Views(
@@ -94,12 +88,15 @@ namespace Plato.Discuss.ViewProviders
                 View<HomeTopicViewModel>("Home.Topic.Tools", model => topivViewModel).Zone("tools"),
                 View<HomeTopicViewModel>("Home.Topic.Sidebar", model => topivViewModel).Zone("sidebar"),
                 View<HomeTopicViewModel>("Home.Topic.Content", model => topivViewModel).Zone("content"),
-                View<HomeTopicViewModel>("Home.Topic.Footer", model => topivViewModel).Zone("footer")
+                View<NewEntityReplyViewModel>("Home.Topic.Footer", model => new NewEntityReplyViewModel()
+                {
+                    EntityId = entity.Id,
+                    EditorHtmlName = EditorHtmlName
+                }).Zone("footer")
             );
 
         }
         
-    
         public override Task<IViewProviderResult> BuildEditAsync(Entity entity, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
@@ -111,8 +108,7 @@ namespace Plato.Discuss.ViewProviders
             var model = new NewEntityViewModel();
             model.EntityId = entity.Id;
             model.Title = entity.Title;
-            model.Message = entity.Message;
-
+      
             if (!await updater.TryUpdateModelAsync(model))
             {
                 return await BuildIndexAsync(entity, updater);
@@ -145,11 +141,12 @@ namespace Plato.Discuss.ViewProviders
                 }
                 else
                 {
-                    var reply = new EntityReply();
-                    reply.EntityId = model.EntityId;
-                    reply.Message = message.Trim();
-
-                    var result = await _replyManager.CreateAsync(reply);
+                
+                    var result = await _replyManager.CreateAsync(new EntityReply
+                    {
+                        EntityId = model.EntityId,
+                        Message = message.Trim()
+                    });
 
                     foreach (var error in result.Errors)
                     {
@@ -170,7 +167,7 @@ namespace Plato.Discuss.ViewProviders
         
         #region "Private Methods"
 
-        private async Task<HomeIndexViewModel> GetIndexViewModel(
+        async Task<HomeIndexViewModel> GetIndexViewModel(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
@@ -181,7 +178,7 @@ namespace Plato.Discuss.ViewProviders
                 pagerOptions);
         }
         
-        public async Task<IPagedResults<Entity>> GetEntities(
+        async Task<IPagedResults<Entity>> GetEntities(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
@@ -219,7 +216,7 @@ namespace Plato.Discuss.ViewProviders
                 .ToList();
         }
         
-        public async Task<IPagedResults<EntityReply>> GetEntityReplies(
+        async Task<IPagedResults<EntityReply>> GetEntityReplies(
             int entityId,
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
@@ -238,12 +235,12 @@ namespace Plato.Discuss.ViewProviders
                 .ToList();
         }
         
-        private int GetPageIndex()
+        int GetPageIndex(IUpdateModel updater)
         {
 
             var page = 1;
-            var routeData = _actionContextAccessor.ActionContext.RouteData;
-            var found = routeData.Values.TryGetValue("Pager.Page", out object value);
+            var routeData = updater.RouteData;
+            var found = routeData.Values.TryGetValue("page", out object value);
             if (found)
             {
                 int.TryParse(value.ToString(), out page);

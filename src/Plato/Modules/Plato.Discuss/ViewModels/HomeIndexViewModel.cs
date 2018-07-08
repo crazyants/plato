@@ -23,11 +23,9 @@ namespace Plato.Discuss.ViewModels
             this.PagerOpts.SetTotal(results?.Total ?? 0);
         }
 
-        public string EditorHtmlName { get; set; }
+        public IPagedResults<Entity> Results { get; }
 
-        public IPagedResults<Entity> Results { get; set; }
-
-        public PagerOptions PagerOpts { get; set; }
+        public PagerOptions PagerOpts { get; }
         
         public FilterOptions FilterOpts { get; set; }
 

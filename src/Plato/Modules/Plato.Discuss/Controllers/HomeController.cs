@@ -83,11 +83,10 @@ namespace Plato.Discuss.Controllers
                 pagerOptions = new PagerOptions();
             }
 
-            // Maintain previous route data when generating page links
-            var routeData = new RouteData();
-            routeData.Values.Add("Options.Search", filterOptions.Search);
-            routeData.Values.Add("Options.Order", filterOptions.Order);
-            routeData.Values.Add("Pager.Page", pagerOptions.Page);
+        
+            //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
+            //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
+            this.RouteData.Values.Add("page", pagerOptions.Page);
          
             // Build view
             var result = await _discussViewProvider.ProvideIndexAsync(new Entity(), this);
@@ -158,7 +157,7 @@ namespace Plato.Discuss.Controllers
             var routeData = new RouteData();
             routeData.Values.Add("Options.Search", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
-            routeData.Values.Add("Pager.Page", pagerOptions.Page);
+            routeData.Values.Add("page", pagerOptions.Page);
        
             // Build view
             var result = await _discussViewProvider.ProvideDisplayAsync(entity, this);
