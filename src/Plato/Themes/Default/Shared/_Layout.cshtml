@@ -45,7 +45,7 @@
                                             <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">@T["Dashboard"]</a>
                                             <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
                                         </div>
-                            
+
                                     </li>
                                     <li class="nav-item">
                                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="@T["Toggle navigation"]"></button>
@@ -81,11 +81,19 @@
             </footer>
         </div>
     </div>
-    
 
 
+    <resources section="Footer" />
 
-<resources section="Footer" />
+    <script>
+        $(function (win) {
+            win.PlatoOptions = {
+                url: "http://localhost:50439/",
+                apiKey: "987654321"
+            }
+        }(window));
+    </script>
+
 
 </body>
 </html>

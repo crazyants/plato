@@ -29805,7 +29805,8 @@ $(function (win, doc, $) {
     /* Default options */
     win.$.Plato.Options = {
         debug: true,
-        apiKey: "123456789",
+        url: "",
+        apiKey: "",
         // UI tooltips
         BSToolTipEnabled: true,
         BSToolTipSelector: "[data-toggle='tooltip']",
@@ -29942,18 +29943,27 @@ $(function (win, doc, $) {
     win.$.Plato.Http = function(config) {
 
         var context = win.$.Plato.Context;
-        if (context) {
-            context.logger.logInfo("$.Plato.Http - Starting Request: " + JSON.stringify(config, null, "     "));
+        if (!context) {
+            throw new Error("Plato.Http requires a valid Plato.Context object");
         }
+
+        var opts = context.options();
+        if (!opts) {
+            throw new Error("Plato.Http requires a valid Plato.Options object");
+        }
+
         // update URL to include absolute URL
-        //config.url = _opts.url + config.url;
+        config.url = opts.url + config.url;
 
         // add basic authentication headers
-        var apiKey = win.$.Plato.Context.options().apiKey;
+        var apiKey = opts.apiKey;
         if (apiKey) {
-            config.beforeSend = function (xhr) {
+            context.logger.logInfo("ApiKey: " + apiKey);
+            config.beforeSend = function(xhr) {
                 xhr.setRequestHeader("Authorization", "Basic " + apiKey);
             }
+        } else {
+            context.logger.logInfo("No api key was supplied");
         }
 
         // set content type & API version
@@ -29999,6 +30009,8 @@ $(function (win, doc, $) {
                 }
             };
         }());
+        
+        context.logger.logInfo("$.Plato.Http - Starting Request: " + JSON.stringify(config, null, "     "));
 
         return http.promise(config);
 

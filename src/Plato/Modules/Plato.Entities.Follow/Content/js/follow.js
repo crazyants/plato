@@ -72,7 +72,7 @@ $(function (win, doc, $) {
                 };
 
                 win.$.Plato.Http({
-                    url: "/api/follows/entity/",
+                    url: "api/follows/entity/post",
                     method: "POST",
                     data: params
                 }).done(function(data) {
@@ -94,7 +94,7 @@ $(function (win, doc, $) {
                 };
 
                 win.$.Plato.Http({
-                    url: "/api/follows/entity/",
+                    url: "api/follows/entity/delete",
                     method: "DELETE",
                     data: params
                 }).done(function(data) {

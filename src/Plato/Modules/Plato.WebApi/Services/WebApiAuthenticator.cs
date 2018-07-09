@@ -12,6 +12,10 @@ namespace Plato.WebApi.Services
     public class WebApiAuthenticator : IWebApiAuthenticator
     {
 
+        
+        private const string headerName = "Authorization";
+        private const string token = "Basic ";
+
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -56,72 +60,75 @@ namespace Plato.WebApi.Services
         {
 
             var headers = _httpContextAccessor.HttpContext.Request.Headers;
-            if (headers.ContainsKey("Authorization"))
+            if (!headers.ContainsKey("Authorization"))
             {
-
-                var header = headers["Authorization"];
-
-                var stringValues = header.Contains("Basic");
-
-                // ensure auth.Scheme is set to basic
-                if (header.Contains("Basic"))
-                {
-                    var value = "";
-
-                    // ensure we have a parameter
-                    if (!String.IsNullOrEmpty(value))
-                    {
-                        // ensure we have a apiKey
-                        var credentials = value.Trim();
-                        if (!String.IsNullOrEmpty(credentials))
-                        {
-
-                            var separatorIndex = credentials.IndexOf(':');
-                            string appApiKey = null;
-                            string userApiKey = null;
-
-                            if (separatorIndex >= 0)
-                            {
-                                appApiKey = credentials.Substring(0, separatorIndex);
-                                userApiKey = credentials.Substring(separatorIndex + 1);
-                            }
-                            else
-                            {
-                                appApiKey = credentials;
-                            }
-
-                            // ensure we have a app API key
-                            if (!string.IsNullOrEmpty(appApiKey))
-                            {
-
-                                // Get site settings
-                                var settings = await _siteSettingsStore.GetAsync();
-                                if (settings == null)
-                                {
-                                    return null;
-                                }
-
-                                // does this match?
-                                if (appApiKey == settings.ApiKey)
-                                {
-                                    // ensure we have a user API key
-                                    if (!string.IsNullOrEmpty(userApiKey))
-                                    {
-                                        var user = await _platoUserStore.GetByApiKeyAsync(userApiKey);
-                                        if (user != null)
-                                        {
-                                            return user;
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                }
+                return null;
             }
 
-            return null;
+            var headerValue = string.Empty;
+            if (headers[headerName].Count > 0)
+            {
+                headerValue = headers[headerName][0];
+            }
+
+            if (String.IsNullOrWhiteSpace(headerValue))
+            {
+                return null;
+            }
+
+            var startIndex = headerValue.IndexOf(token, StringComparison.InvariantCultureIgnoreCase);
+            if (startIndex == -1)
+            {
+                return null;
+            }
+
+            // ensure we have a credentials
+            var credentials = headerValue.Substring(token.Length);
+            if (String.IsNullOrEmpty(credentials))
+            {
+                return null;
+            }
+
+            var separatorIndex = credentials.IndexOf(':');
+            string appApiKey = null, userApiKey = null;
+
+            if (separatorIndex >= 0)
+            {
+                appApiKey = credentials.Substring(0, separatorIndex);
+                userApiKey = credentials.Substring(separatorIndex + 1);
+            }
+            else
+            {
+                appApiKey = credentials;
+            }
+
+            // ensure we have a app API key
+            if (String.IsNullOrEmpty(appApiKey))
+            {
+                return null;
+            }
+
+            // Get site settings
+            var settings = await _siteSettingsStore.GetAsync();
+            if (settings == null)
+            {
+                return null;
+            }
+
+            // Do the app keys match?
+            if (!appApiKey.Equals(settings.ApiKey, StringComparison.InvariantCulture))
+            {
+                return null;
+            }
+
+            // Do we have a user api key?
+            if (String.IsNullOrEmpty(userApiKey))
+            {
+                return null;
+            }
+
+            return await _platoUserStore.GetByApiKeyAsync(userApiKey);
+
 
         }
 

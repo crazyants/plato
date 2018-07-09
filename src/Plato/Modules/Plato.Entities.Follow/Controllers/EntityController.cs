@@ -54,13 +54,6 @@ namespace Plato.Entities.Follow.Controllers
             });
 
         }
-
-        [HttpPut]
-        [ResponseCache(NoStore = true)]
-        public Task<IActionResult> Put(EntityFollow follow)
-        {
-            throw new NotImplementedException();
-        }
         
         [HttpPost]
         [ResponseCache(NoStore = true)]
@@ -74,7 +67,7 @@ namespace Plato.Entities.Follow.Controllers
                 return new ObjectResult(new
                 {
                     StatusCode = HttpStatusCode.Unauthorized,
-                    Message = "Could not authenticate your request"
+                    Message = "Could not authenticate the request."
                 });
             }
 
@@ -118,6 +111,14 @@ namespace Plato.Entities.Follow.Controllers
 
 
         }
+
+        [HttpPut]
+        [ResponseCache(NoStore = true)]
+        public Task<IActionResult> Put(EntityFollow follow)
+        {
+            throw new NotImplementedException();
+        }
+
 
         [HttpDelete]
         [ResponseCache(NoStore = true)]
