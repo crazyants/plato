@@ -34,9 +34,7 @@ namespace Plato.Internal.Abstractions.Settings
 
         public string ThemeName { get; set; } = "Default";
 
-        public string Serialize()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
+        public string ApiKey { get; set; }
+
     }
 }

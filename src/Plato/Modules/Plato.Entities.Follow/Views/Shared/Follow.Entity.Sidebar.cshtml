@@ -12,8 +12,8 @@
                 @T["Follow to get notified via email when replies are posted..."]
                 <br /><br />
             </div>
-            <button class="btn d-block btn-secondary" data-provide="follow-button" data-action="subscribe" data-entity-id="@Model.EntityId" role="button">
-                <i class="fal fa-bell"></i> @T["Follow"]
+            <button class="btn btn-block btn-secondary" data-provide="follow-button" data-action="subscribe" data-entity-id="@Model.EntityId" role="button">
+                <i class="fal fa-bell"></i> @T["Subscribe"]
             </button>
         }
         else
@@ -22,7 +22,7 @@
                 @T["You are already subscribed to this item. Unsubscribe below..."]
                 <br /><br />
             </div>
-            <button class="btn d-block btn-danger" data-provide="follow-button" data-action="unsubscribe" data-entity-id="@Model.EntityId" role="button">
+            <button class="btn btn-block btn-danger" data-provide="follow-button" data-action="unsubscribe" data-entity-id="@Model.EntityId" role="button">
                 <i class="fal fa-bell-slash"></i> @T["Unsubscribe"]
             </button>
         }

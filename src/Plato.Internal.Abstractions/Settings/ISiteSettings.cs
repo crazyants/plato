@@ -35,5 +35,7 @@ namespace Plato.Internal.Abstractions.Settings
 
         string ThemeName { get; set; }
 
+        string ApiKey { get; set; }
+
     }
 }

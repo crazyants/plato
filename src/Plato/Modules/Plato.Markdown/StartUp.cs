@@ -52,7 +52,7 @@ namespace Plato.Markdown
             routes.MapAreaRoute(
                 name: "PlatoMarkdownWebApi",
                 areaName: "Plato.Markdown",
-                template: "api/{controller}/{action}/{id?}",
+                template: "api/markdown/{controller}/{action}/{id?}",
                 defaults: new { controller = "Parse", action = "Get" }
             );
 

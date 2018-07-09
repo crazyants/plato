@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.WebApi.Services;
 
 namespace Plato.WebApi
 {
@@ -21,6 +22,9 @@ namespace Plato.WebApi
         public override void ConfigureServices(IServiceCollection services)
         {
 
+            // Services
+            services.AddScoped<IWebApiAuthenticator, WebApiAuthenticator>();
+
 
         }
 
@@ -30,12 +34,12 @@ namespace Plato.WebApi
             IServiceProvider serviceProvider)
         {
         
-            routes.MapAreaRoute(
-                name: "WebAPI",
-                areaName: "Plato.WebApi",
-                template: "api/{controller}/{action}/{id?}",
-                defaults: new { controller = "Users", action = "Get" }
-            );
+            //routes.MapAreaRoute(
+            //    name: "WebAPI",
+            //    areaName: "Plato.WebApi",
+            //    template: "api/{controller}/{action}/{id?}",
+            //    defaults: new { controller = "Users", action = "Get" }
+            //);
 
         }
 

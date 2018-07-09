@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Plato.Internal.Modules.Abstractions\Plato.Internal.Modules.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Security.Abstractions\Plato.Internal.Security.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Stores.Abstractions\Plato.Internal.Stores.Abstractions.csproj" />
   </ItemGroup>
 
 

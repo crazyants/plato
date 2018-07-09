@@ -10,18 +10,18 @@ using Plato.Markdown.Services;
 namespace Plato.Markdown.Controllers
 {
 
-    public class MarkdownController : Controller
+    public class ParseController : Controller
     {
         private readonly IMarkdownParserFactory _markdownParserFactory;
 
-        public MarkdownController(IMarkdownParserFactory markdownParserFactory)
+        public ParseController(IMarkdownParserFactory markdownParserFactory)
         {
             _markdownParserFactory = markdownParserFactory;
         }
 
         [HttpGet]
         [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Parse(string markdown)
+        public async Task<IActionResult> Get(string markdown)
         {
             if (String.IsNullOrEmpty(markdown))
             {

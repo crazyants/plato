@@ -17,7 +17,8 @@ $(function (win, doc, $) {
     /* Default options */
     win.$.Plato.Options = {
         debug: true,
-        // bootstrap tooltips
+        apiKey: "123456789",
+        // UI tooltips
         BSToolTipEnabled: true,
         BSToolTipSelector: "[data-toggle='tooltip']",
         MagnificSelector: "[data-toggle='dialog']",
@@ -160,11 +161,12 @@ $(function (win, doc, $) {
         //config.url = _opts.url + config.url;
 
         // add basic authentication headers
-        //if (_opts.apiKey) {
-        //    config.beforeSend = function (xhr) {
-        //        xhr.setRequestHeader("Authorization", "Basic " + _opts.apiKey);
-        //    }
-        //}
+        var apiKey = win.$.Plato.Context.options().apiKey;
+        if (apiKey) {
+            config.beforeSend = function (xhr) {
+                xhr.setRequestHeader("Authorization", "Basic " + apiKey);
+            }
+        }
 
         // set content type & API version
         config.headers = {

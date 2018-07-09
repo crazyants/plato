@@ -7,7 +7,6 @@ using Plato.Internal.Navigation;
 using Plato.Discuss.Handlers;
 using Plato.Discuss.Resources;
 using Plato.Discuss.Services;
-using Plato.Discuss.ViewModels;
 using Plato.Discuss.ViewProviders;
 using Plato.Entities.Models;
 using Plato.Internal.Features.Abstractions;

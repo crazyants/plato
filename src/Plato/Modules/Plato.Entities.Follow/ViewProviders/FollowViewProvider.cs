@@ -28,6 +28,12 @@ namespace Plato.Entities.Follow.ViewProviders
         
         public override async Task<IViewProviderResult> BuildDisplayAsync(Entity entity, IUpdateModel updater)
         {
+
+            if (entity == null)
+            {
+                await BuildIndexAsync(new Entity(), updater);
+            }
+
             var isFollowing = false;
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
@@ -43,6 +49,7 @@ namespace Plato.Entities.Follow.ViewProviders
             return Views(
                 View<FollowViewModel>("Follow.Entity.Sidebar", model =>
                 {
+                    model.EntityId = entity.Id;
                     model.IsFollowing = isFollowing;
                     return model;
                 }).Zone("sidebar").Order(10)

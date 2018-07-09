@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
     <ProjectReference Include="..\Plato.Email\Plato.Email.csproj" />
     <ProjectReference Include="..\Plato.Entities\Plato.Entities.csproj" />
+    <ProjectReference Include="..\Plato.WebApi\Plato.WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -11,7 +11,9 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.Follow.Handlers;
 using Plato.Entities.Follow.Models;
 using Plato.Entities.Follow.Repositories;
+using Plato.Entities.Follow.Resources;
 using Plato.Entities.Follow.Stores;
+using Plato.Internal.Resources.Abstractions;
 
 namespace Plato.Entities.Follow
 {
@@ -33,6 +35,9 @@ namespace Plato.Entities.Follow
             // View providers
             services.AddScoped<IViewProviderManager<Entity>, ViewProviderManager<Entity>>();
             services.AddScoped<IViewProvider<Entity>, FollowViewProvider>();
+         
+            // Register client resources
+            services.AddScoped<IResourceProvider, ResourceProvider>();
 
             // Data access
             services.AddScoped<IEntityFollowRepository<EntityFollow>, EntityFollowRepository>();
@@ -48,8 +53,8 @@ namespace Plato.Entities.Follow
             
             routes.MapAreaRoute(
                 name: "EntitiesFollowWebApi",
-                areaName: "Plato.Markdown",
-                template: "api/entities/{controller}/{action}/{id?}",
+                areaName: "Plato.Entities.Follow",
+                template: "api/follows/{controller}/{action}/{id?}",
                 defaults: new { controller = "Follow", action = "Get" }
             );
 
