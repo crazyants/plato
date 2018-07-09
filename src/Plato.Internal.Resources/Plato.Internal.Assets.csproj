@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Plato.Internal.Assets</RootNamespace>
   </PropertyGroup>
 
     <ItemGroup>
@@ -12,7 +13,7 @@
   </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Plato.Internal.Resources.Abstractions\Plato.Internal.Resources.Abstractions.csproj" />
+      <ProjectReference Include="..\Plato.Internal.Resources.Abstractions\Plato.Internal.Assets.Abstractions.csproj" />
     </ItemGroup>
 
   

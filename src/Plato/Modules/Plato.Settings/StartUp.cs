@@ -7,6 +7,7 @@ using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Models.Shell;
 using Plato.Settings.Services;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Navigation;
 using Plato.Settings.Handlers;
 
 namespace Plato.Settings
@@ -25,8 +26,12 @@ namespace Plato.Settings
         public override void ConfigureServices(IServiceCollection services)
         {
 
+            // Register setup events
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-           
+
+            // Navigation provider
+            services.AddScoped<INavigationProvider, AdminMenu>();
+            
         }
 
         public override void Configure(

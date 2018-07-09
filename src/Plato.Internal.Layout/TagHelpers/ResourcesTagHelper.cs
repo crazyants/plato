@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Plato.Internal.Resources.Abstractions;
+using Plato.Internal.Assets.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
@@ -18,14 +18,14 @@ namespace Plato.Internal.Layout.TagHelpers
 
         #region "Constrcutor"
 
-        private readonly IResourceManager _resourceManager;
+        private readonly IAssetManager _assetManager;
         private readonly IHostingEnvironment _hostingEnvironment;
 
         public ResourcesTagHelper(
-            IResourceManager resourceManager,
+            IAssetManager assetManager,
             IHostingEnvironment hostingEnvironment)
         {
-            _resourceManager = resourceManager;
+            _assetManager = assetManager;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -93,7 +93,7 @@ namespace Plato.Internal.Layout.TagHelpers
         #region "Private Methods"
         
         // Get all resources matching environment and section
-        async Task<IList<Resource>> GetResourcesAsync()
+        async Task<IList<Asset>> GetResourcesAsync()
         {
 
             // Get all default and provided environments
@@ -107,15 +107,15 @@ namespace Plato.Internal.Layout.TagHelpers
 
         }
 
-        async Task<IEnumerable<ResourceEnvironment>> GetMergedEnvironmentsAsync()
+        async Task<IEnumerable<AssetEnvironment>> GetMergedEnvironmentsAsync()
         {
             
             // Get provided resources
-            var provided = await _resourceManager.GetResources();
+            var provided = await _assetManager.GetResources();
             var providedEnvironments = provided.ToList();
 
             // Get default resources
-            var defaults = DefaultResources.GetDefaultResources();
+            var defaults = DefaultAssets.GetDefaultResources();
             var defaultEnvironments = defaults.ToList();
 
             // Merge provided resources into default groups
@@ -153,19 +153,19 @@ namespace Plato.Internal.Layout.TagHelpers
             return Environment.Development;
         }
         
-        IHtmlContent BuildJavaScriptInclude(Resource resource)
+        IHtmlContent BuildJavaScriptInclude(Asset asset)
         {
-            return new HtmlString($"<script src=\"{resource.Url}\"></script>");
+            return new HtmlString($"<script src=\"{asset.Url}\"></script>");
         }
 
-        IHtmlContent BuildCssInclude(Resource resource)
+        IHtmlContent BuildCssInclude(Asset asset)
         {
-            return new HtmlString($"<link rel=\"stylesheet\" href=\"{resource.Url}\" />");
+            return new HtmlString($"<link rel=\"stylesheet\" href=\"{asset.Url}\" />");
         }
 
-        IHtmlContent BuildMeta(Resource resource)
+        IHtmlContent BuildMeta(Asset asset)
         {
-            return new HtmlString($"<script src=\"{resource.Url}\"></script>");
+            return new HtmlString($"<script src=\"{asset.Url}\"></script>");
         }
 
         #endregion

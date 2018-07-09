@@ -1,17 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Plato.Internal.Resources.Abstractions;
+using Plato.Internal.Assets.Abstractions;
 
-namespace Plato.Internal.Resources.Extensions
+namespace Plato.Internal.Assets.Extensions
 {
     public static class ServiceCollectionExtensions
     {
 
-        public static IServiceCollection AddPlatoResources(
+        public static IServiceCollection AddPlatoAssets(
             this IServiceCollection services)
         {
 
-            services.TryAddScoped<IResourceManager, ResourceManager>();
+            services.TryAddScoped<IAssetManager, AssetManager>();
             
             return services;
 

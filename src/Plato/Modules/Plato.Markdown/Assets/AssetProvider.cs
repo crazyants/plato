@@ -1,34 +1,34 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Internal.Resources.Abstractions;
+using Plato.Internal.Assets.Abstractions;
 
-namespace Plato.Markdown.Resources
+namespace Plato.Markdown.Assets
 {
-    public class ResourceProvider : IResourceProvider
+    public class AssetProvider : IAssetProvider
     {
 
-        public Task<IEnumerable<ResourceEnvironment>> GetResourceGroups()
+        public Task<IEnumerable<AssetEnvironment>> GetResourceGroups()
         {
 
-            IEnumerable<ResourceEnvironment> result = new List<ResourceEnvironment>
+            IEnumerable<AssetEnvironment> result = new List<AssetEnvironment>
             {
 
                 // Development
-                new ResourceEnvironment(Environment.Development, new List<Resource>()
+                new AssetEnvironment(Environment.Development, new List<Asset>()
                 {
-                    new Resource()
+                    new Asset()
                     {
                         Url = $"/plato.markdown/content/js/markdown.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = $"/plato.markdown/content/js/init.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = $"/plato.markdown/content/css/markdown.css",
                         Type = ResourceType.Css,
@@ -37,21 +37,21 @@ namespace Plato.Markdown.Resources
                 }),
 
                 // Staging
-                new ResourceEnvironment(Environment.Staging, new List<Resource>()
+                new AssetEnvironment(Environment.Staging, new List<Asset>()
                 {
-                    new Resource()
+                    new Asset()
                     {
                         Url = $"/plato.markdown/content/js/markdown.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = $"/plato.markdown/content/js/init.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = $"/plato.markdown/content/css/markdown.css",
                         Type = ResourceType.Css,
@@ -60,21 +60,21 @@ namespace Plato.Markdown.Resources
                 }),
 
                 // Production
-                new ResourceEnvironment(Environment.Production, new List<Resource>()
+                new AssetEnvironment(Environment.Production, new List<Asset>()
                 {
-                    new Resource()
+                    new Asset()
                     {
                         Url = $"/plato.markdown/content/js/markdown.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = $"/plato.markdown/content/js/init.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = $"/plato.markdown/content/css/markdown.css",
                         Type = ResourceType.Css,

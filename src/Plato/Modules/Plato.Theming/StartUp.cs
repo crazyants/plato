@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Resources.Abstractions;
-using Plato.Theming.Resources;
+using Plato.Internal.Assets.Abstractions;
+using Plato.Theming.Assets;
 
 namespace Plato.Theming
 {
@@ -22,7 +22,7 @@ namespace Plato.Theming
         {
 
             // Register client resources
-            services.AddScoped<IResourceProvider, ResourceProvider>();
+            services.AddScoped<IAssetProvider, AssetProvider>();
 
         }
 

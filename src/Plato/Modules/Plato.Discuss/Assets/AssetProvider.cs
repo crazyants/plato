@@ -1,28 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Internal.Resources.Abstractions;
+using Plato.Internal.Assets.Abstractions;
 
-namespace Plato.Discuss.Resources
+namespace Plato.Discuss.Assets
 {
-    public class ResourceProvider : IResourceProvider
+    public class AssetProvider : IAssetProvider
     {
         
-        public Task<IEnumerable<ResourceEnvironment>> GetResourceGroups()
+        public Task<IEnumerable<AssetEnvironment>> GetResourceGroups()
         {
 
-            IEnumerable<ResourceEnvironment> result = new List<ResourceEnvironment>
+            IEnumerable<AssetEnvironment> result = new List<AssetEnvironment>
             {
 
                 // Development
-                new ResourceEnvironment(Environment.Development, new List<Resource>()
+                new AssetEnvironment(Environment.Development, new List<Asset>()
                 {
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/plato.discuss/content/css/discuss.css",
                         Type = ResourceType.Css,
                         Section = ResourceSection.Header
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/plato.discuss/content/js/discuss.js",
                         Type = ResourceType.JavaScript,
@@ -31,15 +31,15 @@ namespace Plato.Discuss.Resources
                 }),
 
                 // Staging
-                new ResourceEnvironment(Environment.Staging, new List<Resource>()
+                new AssetEnvironment(Environment.Staging, new List<Asset>()
                 {
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/plato.discuss/content/css/discuss.css",
                         Type = ResourceType.Css,
                         Section = ResourceSection.Header
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/plato.discuss/content/js/discuss.js",
                         Type = ResourceType.JavaScript,
@@ -48,15 +48,15 @@ namespace Plato.Discuss.Resources
                 }),
 
                 // Production
-                new ResourceEnvironment(Environment.Production, new List<Resource>()
+                new AssetEnvironment(Environment.Production, new List<Asset>()
                 {
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/plato.discuss/content/css/discuss.css",
                         Type = ResourceType.Css,
                         Section = ResourceSection.Header
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/plato.discuss/content/js/discuss.js",
                         Type = ResourceType.JavaScript,

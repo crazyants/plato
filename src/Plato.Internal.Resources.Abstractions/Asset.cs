@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.Internal.Resources.Abstractions
+namespace Plato.Internal.Assets.Abstractions
 {
     
-    public class Resource
+    public class Asset
     {
 
         // <link rel="stylesheet" href="~/css/vendors/bootstrap.css" />

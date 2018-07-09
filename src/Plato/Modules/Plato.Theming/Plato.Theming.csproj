@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting.Abstractions\Plato.Internal.Hosting.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Plato.Internal.Resources.Abstractions\Plato.Internal.Resources.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Resources.Abstractions\Plato.Internal.Assets.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores.Abstractions\Plato.Internal.Stores.Abstractions.csproj" />
   </ItemGroup>
 

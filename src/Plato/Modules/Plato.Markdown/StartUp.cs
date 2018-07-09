@@ -6,8 +6,8 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Resources.Abstractions;
-using Plato.Markdown.Resources;
+using Plato.Internal.Assets.Abstractions;
+using Plato.Markdown.Assets;
 using Plato.Markdown.Services;
 using Plato.Markdown.ViewAdaptors;
 
@@ -32,7 +32,7 @@ namespace Plato.Markdown
             services.AddScoped<IViewAdaptorProvider, EditorViewAdaptorProvider>();
             
             // Register client resources
-            services.AddScoped<IResourceProvider, ResourceProvider>();
+            services.AddScoped<IAssetProvider, AssetProvider>();
 
             // Register message broker subscriber
             services.AddSingleton<IBrokerSubscriber, MarkdownSubscriber>();

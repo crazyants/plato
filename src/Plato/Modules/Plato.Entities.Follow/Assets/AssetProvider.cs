@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Internal.Resources.Abstractions;
+using Plato.Internal.Assets.Abstractions;
 
-namespace Plato.Entities.Follow.Resources
+namespace Plato.Entities.Follow.Assets
 {
-    public class ResourceProvider : IResourceProvider
+    public class AssetProvider : IAssetProvider
     {
         
-        public Task<IEnumerable<ResourceEnvironment>> GetResourceGroups()
+        public Task<IEnumerable<AssetEnvironment>> GetResourceGroups()
         {
 
-            IEnumerable<ResourceEnvironment> result = new List<ResourceEnvironment>
+            IEnumerable<AssetEnvironment> result = new List<AssetEnvironment>
             {
 
                 // Development
-                new ResourceEnvironment(Environment.Development, new List<Resource>()
+                new AssetEnvironment(Environment.Development, new List<Asset>()
                 {
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/plato.entities.follow/content/js/follow.js",
                         Type = ResourceType.JavaScript,
@@ -25,9 +25,9 @@ namespace Plato.Entities.Follow.Resources
                 }),
 
                 // Staging
-                new ResourceEnvironment(Environment.Staging, new List<Resource>()
+                new AssetEnvironment(Environment.Staging, new List<Asset>()
                 {
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/plato.entities.follow/content/js/follow.min.js",
                         Type = ResourceType.JavaScript,
@@ -36,9 +36,9 @@ namespace Plato.Entities.Follow.Resources
                 }),
 
                 // Production
-                new ResourceEnvironment(Environment.Production, new List<Resource>()
+                new AssetEnvironment(Environment.Production, new List<Asset>()
                 {
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/plato.entities.follow/content/js/follow.min.js",
                         Type = ResourceType.JavaScript,

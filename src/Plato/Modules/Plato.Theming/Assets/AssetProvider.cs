@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Internal.Resources.Abstractions;
+using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
-using Environment = Plato.Internal.Resources.Abstractions.Environment;
+using Environment = Plato.Internal.Assets.Abstractions.Environment;
 
-namespace Plato.Theming.Resources
+namespace Plato.Theming.Assets
 {
 
-    public class ResourceProvider : IResourceProvider
+    public class AssetProvider : IAssetProvider
     {
 
         private readonly ISiteSettingsStore _siteSettingsStore;
 
-        public ResourceProvider(ISiteSettingsStore siteSettingsStore)
+        public AssetProvider(ISiteSettingsStore siteSettingsStore)
         {
             _siteSettingsStore = siteSettingsStore;
         }
 
-        public async Task<IEnumerable<ResourceEnvironment>> GetResourceGroups()
+        public async Task<IEnumerable<AssetEnvironment>> GetResourceGroups()
         {
 
             var themeName = await GetThemeNameAsync();
@@ -27,13 +27,13 @@ namespace Plato.Theming.Resources
                 return null;
             }
 
-            return new List<ResourceEnvironment>
+            return new List<AssetEnvironment>
             {
 
                 // Development
-                new ResourceEnvironment(Environment.Development, new List<Resource>()
+                new AssetEnvironment(Environment.Development, new List<Asset>()
                 {
-                    new Resource()
+                    new Asset()
                     {
                         Url = $"/themes/{themeName}/theme.css",
                         Type = ResourceType.Css,
@@ -42,10 +42,10 @@ namespace Plato.Theming.Resources
                 }),
 
                 // Staging
-                new ResourceEnvironment(Environment.Staging, new List<Resource>()
+                new AssetEnvironment(Environment.Staging, new List<Asset>()
                 {
                     /* Css */
-                    new Resource()
+                    new Asset()
                     {
                         Url =  $"/themes/{themeName}/theme.min.css",
                         Type = ResourceType.Css,
@@ -54,10 +54,10 @@ namespace Plato.Theming.Resources
                 }),
 
                 // Production
-                new ResourceEnvironment(Environment.Production, new List<Resource>()
+                new AssetEnvironment(Environment.Production, new List<Asset>()
                 {
                     /* Css */
-                    new Resource()
+                    new Asset()
                     {
                         Url = $"/themes/{themeName}/theme.min.css",
                         Type = ResourceType.Css,

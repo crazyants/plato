@@ -2,30 +2,30 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Resources.Abstractions;
+using Plato.Internal.Assets.Abstractions;
 
-namespace Plato.Internal.Resources
+namespace Plato.Internal.Assets
 {
     
-    public class ResourceManager : IResourceManager
+    public class AssetManager : IAssetManager
     {
 
-        private readonly IEnumerable<IResourceProvider> _resourceProviders;
-        private readonly ILogger<ResourceManager> _logger;
+        private readonly IEnumerable<IAssetProvider> _resourceProviders;
+        private readonly ILogger<AssetManager> _logger;
 
-        public ResourceManager(
-            IEnumerable<IResourceProvider> resourceProviders,
-            ILogger<ResourceManager> logger)
+        public AssetManager(
+            IEnumerable<IAssetProvider> resourceProviders,
+            ILogger<AssetManager> logger)
         {
             _resourceProviders = resourceProviders;
             _logger = logger;
         }
 
 
-        public async Task<IEnumerable<ResourceEnvironment>> GetResources()
+        public async Task<IEnumerable<AssetEnvironment>> GetResources()
         {
 
-            var output = new List<ResourceEnvironment>();
+            var output = new List<AssetEnvironment>();
             foreach (var provider in _resourceProviders)
             {
                 try

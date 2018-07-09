@@ -1,28 +1,28 @@
 ﻿using System.Collections.Generic;
 
-namespace Plato.Internal.Resources.Abstractions
+namespace Plato.Internal.Assets.Abstractions
 {
-    public class DefaultResources
+    public class DefaultAssets
     {
 
-        public static IEnumerable<ResourceEnvironment> GetDefaultResources()
+        public static IEnumerable<AssetEnvironment> GetDefaultResources()
         {
 
-            return new List<ResourceEnvironment>
+            return new List<AssetEnvironment>
             {
 
                 // Development
-                new ResourceEnvironment(Environment.Development, new List<Resource>()
+                new AssetEnvironment(Environment.Development, new List<Asset>()
                 {
                     /* Css */
 
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/css/vendors/bootstrap.css",
                         Type = ResourceType.Css,
                         Section = ResourceSection.Header
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/css/vendors/font-awesome.css",
                         Type = ResourceType.Css,
@@ -34,7 +34,7 @@ namespace Plato.Internal.Resources.Abstractions
                     //    Type = ResourceType.Css,
                     //    Section = ResourceSection.Header
                     //},
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/css/app/plato.css",
                         Type = ResourceType.Css,
@@ -43,19 +43,19 @@ namespace Plato.Internal.Resources.Abstractions
 
                     /* JavaScript */
 
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/js/vendors/jquery.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/js/vendors/bootstrap.js",
                         Type = ResourceType.JavaScript,
                         Section = ResourceSection.Footer
                     },
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/js/vendors/vue.js",
                         Type = ResourceType.JavaScript,
@@ -67,7 +67,7 @@ namespace Plato.Internal.Resources.Abstractions
                     //    Type = ResourceType.JavaScript,
                     //    Section = ResourceSection.Footer
                     //},
-                    new Resource()
+                    new Asset()
                     {
                         Url = "/js/app/plato.js",
                         Type = ResourceType.JavaScript,
@@ -76,17 +76,17 @@ namespace Plato.Internal.Resources.Abstractions
                 }),
 
                 // Staging
-                new ResourceEnvironment(Environment.Staging, new List<Resource>()
+                new AssetEnvironment(Environment.Staging, new List<Asset>()
                 {
                     /* Css */
-                    new Resource()
+                    new Asset()
                     {
                         Url = "~/css/app.css",
                         Type = ResourceType.Css,
                         Section = ResourceSection.Header
                     },
                     /* JavaScript */
-                    new Resource()
+                    new Asset()
                     {
                         Url = "~/js/app.js",
                         Type = ResourceType.JavaScript,
@@ -95,17 +95,17 @@ namespace Plato.Internal.Resources.Abstractions
                 }),
 
                 // Production
-                new ResourceEnvironment(Environment.Production, new List<Resource>()
+                new AssetEnvironment(Environment.Production, new List<Asset>()
                 {
                     /* Css */
-                    new Resource()
+                    new Asset()
                     {
                         Url = "~/css/app.min.css",
                         Type = ResourceType.Css,
                         Section = ResourceSection.Header
                     },
                     /* JavaScript */
-                    new Resource()
+                    new Asset()
                     {
                         Url = "~/js/app.min.js",
                         Type = ResourceType.JavaScript,

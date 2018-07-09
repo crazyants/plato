@@ -5,14 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Discuss.Handlers;
-using Plato.Discuss.Resources;
+using Plato.Discuss.Assets;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewProviders;
 using Plato.Entities.Models;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Resources.Abstractions;
+using Plato.Internal.Assets.Abstractions;
 
 namespace Plato.Discuss
 {
@@ -40,7 +40,7 @@ namespace Plato.Discuss
             services.AddScoped<IPostManager<EntityReply>, ReplyManager>();
             
             // Register client resources
-            services.AddScoped<IResourceProvider, ResourceProvider>();
+            services.AddScoped<IAssetProvider, AssetProvider>();
 
             // Register view providers
             services.AddScoped<IViewProviderManager<Entity>, ViewProviderManager<Entity>>();

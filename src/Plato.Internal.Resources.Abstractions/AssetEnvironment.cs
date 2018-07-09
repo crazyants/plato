@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Plato.Internal.Resources.Abstractions
+namespace Plato.Internal.Assets.Abstractions
 {
     
-    public class ResourceEnvironment
+    public class AssetEnvironment
     {
 
         public Environment Environment { get; set; }
 
-        public IList<Resource> Resources { get; set; }
+        public IList<Asset> Resources { get; set; }
 
-        public ResourceEnvironment(Environment env, IEnumerable<Resource> resources)
+        public AssetEnvironment(Environment env, IEnumerable<Asset> resources)
         {
             this.Environment = env;
             this.Resources = resources.ToList();

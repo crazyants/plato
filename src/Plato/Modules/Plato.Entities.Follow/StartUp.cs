@@ -11,9 +11,9 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Entities.Follow.Handlers;
 using Plato.Entities.Follow.Models;
 using Plato.Entities.Follow.Repositories;
-using Plato.Entities.Follow.Resources;
+using Plato.Entities.Follow.Assets;
 using Plato.Entities.Follow.Stores;
-using Plato.Internal.Resources.Abstractions;
+using Plato.Internal.Assets.Abstractions;
 
 namespace Plato.Entities.Follow
 {
@@ -36,8 +36,8 @@ namespace Plato.Entities.Follow
             services.AddScoped<IViewProviderManager<Entity>, ViewProviderManager<Entity>>();
             services.AddScoped<IViewProvider<Entity>, FollowViewProvider>();
          
-            // Register client resources
-            services.AddScoped<IResourceProvider, ResourceProvider>();
+            // Register client assets
+            services.AddScoped<IAssetProvider, AssetProvider>();
 
             // Data access
             services.AddScoped<IEntityFollowRepository<EntityFollow>, EntityFollowRepository>();
