@@ -36,7 +36,7 @@ namespace Plato.Roles
 
             builder
                 .Add(T["Settings"], 9999, settings => settings
-                    .Add(T["Role Settings"], 2, roles => roles
+                    .Add(T["Role Settings"], 4, roles => roles
                         .Action("Index", "Admin", "Plato.Roles")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

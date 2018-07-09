@@ -49,7 +49,36 @@ namespace Plato.Settings.Controllers
             return View(await GetModel());
 
         }
+
+        public async Task<IActionResult> CreateApiKey()
+        {
+
+            var settings = await _siteSettingsStore.GetAsync();
+            if (settings == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+
+            settings.ApiKey = System.Guid.NewGuid().ToString();
+         
+            var result = await _siteSettingsStore.SaveAsync(settings);
+            if (result != null)
+            {
+                _alerter.Success(T["Key Updated Successfully!"]);
+            }
+            else
+            {
+                _alerter.Danger(T["A problem occurred updating the settings. Please try again!"]);
+            }
+            
+            return RedirectToAction(nameof(Index));
+        }
+
+
         
+
+
 
         [HttpPost]
         [ActionName(nameof(Index))]
@@ -70,7 +99,8 @@ namespace Plato.Settings.Controllers
             
             var settings = new SiteSettings()
             {
-                SiteName = viewModel.SiteName
+                SiteName = viewModel.SiteName,
+                ApiKey = viewModel.ApiKey
             };
             
             var result = await _siteSettingsStore.SaveAsync(settings);
@@ -100,7 +130,8 @@ namespace Plato.Settings.Controllers
             {
                 return new SiteSettingsViewModel()
                 {
-                    SiteName = settings.SiteName
+                    SiteName = settings.SiteName,
+                    ApiKey = settings.ApiKey
 
                 };
             }
@@ -108,7 +139,8 @@ namespace Plato.Settings.Controllers
             // return default settings
             return new SiteSettingsViewModel()
             {
-                SiteName = "Example Site"
+                SiteName = "Example Site",
+                ApiKey = System.Guid.NewGuid().ToString()
             };
 
         }

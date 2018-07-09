@@ -16,11 +16,4 @@
       <ProjectReference Include="..\Plato.Internal.Resources.Abstractions\Plato.Internal.Assets.Abstractions.csproj" />
     </ItemGroup>
 
-  
-  <ItemGroup>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.logging.abstractions\2.0.2\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

@@ -6,7 +6,15 @@ namespace Plato.Settings.ViewModels
     {
 
         [Required]
+        [StringLength(255)]
+        [Display(Name = "site name")]
         public string SiteName { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        [Display(Name = "api key")]
+        public string ApiKey { get; set; }
+
 
     }
 }

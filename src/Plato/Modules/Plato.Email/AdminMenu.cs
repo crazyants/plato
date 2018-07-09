@@ -22,7 +22,7 @@ namespace Plato.Email
 
             builder
                 .Add(T["Settings"], 9999, configuration => configuration
-                    .Add(T["Email Settings"], 1, installed => installed
+                    .Add(T["Email Settings"], 2, installed => installed
                         .Action("Index", "Admin", "Plato.Email")
                         //.Permission(Permissions.ManageUsers)
                         .LocalNav()
