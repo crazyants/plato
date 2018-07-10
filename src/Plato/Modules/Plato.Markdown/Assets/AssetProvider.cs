@@ -14,71 +14,71 @@ namespace Plato.Markdown.Assets
             {
 
                 // Development
-                new AssetEnvironment(Environment.Development, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Development, new List<Asset>()
                 {
                     new Asset()
                     {
                         Url = $"/plato.markdown/content/js/markdown.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     },
                     new Asset()
                     {
                         Url = $"/plato.markdown/content/js/init.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     },
                     new Asset()
                     {
                         Url = $"/plato.markdown/content/css/markdown.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     }
                 }),
 
                 // Staging
-                new AssetEnvironment(Environment.Staging, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Staging, new List<Asset>()
                 {
                     new Asset()
                     {
                         Url = $"/plato.markdown/content/js/markdown.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     },
                     new Asset()
                     {
                         Url = $"/plato.markdown/content/js/init.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     },
                     new Asset()
                     {
                         Url = $"/plato.markdown/content/css/markdown.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     }
                 }),
 
                 // Production
-                new AssetEnvironment(Environment.Production, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
                     new Asset()
                     {
                         Url = $"/plato.markdown/content/js/markdown.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     },
                     new Asset()
                     {
                         Url = $"/plato.markdown/content/js/init.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     },
                     new Asset()
                     {
                         Url = $"/plato.markdown/content/css/markdown.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     }
                 })
 

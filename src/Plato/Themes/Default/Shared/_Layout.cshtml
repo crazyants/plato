@@ -1,99 +1,90 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>@ViewData["Title"] - Plato</title>
-<base href="/" />
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<resources section="Header" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Plato</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <assets section="Header" />
 </head>
 <body>
+    
+<assets section="Body" />
 
-    <div class="collapse" id="navbar-header">
-        <div class="container-fluid bg-dark p-1">
-            <h3>Collapsed content</h3>
-            <p>Toggleable via the navbar brand.</p>
-        </div>
+<div class="collapse" id="navbar-header">
+    <div class="container-fluid bg-dark p-1">
+        <h3>Collapsed content</h3>
+        <p>Toggleable via the navbar brand.</p>
     </div>
+</div>
 
-    <div class="nav nav-tabs">
-        <div class="container">
-            <div class="row">
-                <div class="navbar col-12" role="navigation">
-                    <a class="navbar-brand" href="#">
-                        @T["Plato"]
-                    </a>
-                    <div class="float-right">
-                        <navigation name="site" class="nav nav-h nav-pills float-left" />
+<div class="nav nav-tabs">
+    <div class="container">
+        <div class="row">
+            <div class="navbar col-12" role="navigation">
+                <a class="navbar-brand" href="#">
+                    @T["Plato"]
+                </a>
+                <div class="float-right">
+                    <navigation name="site" class="nav nav-h nav-pills float-left" />
 
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <form asp-route-area="Plato.Users" asp-controller="Account" asp-action="LogOff" method="post" class="d-inline">
-                                <ul class="nav nav-pills float-right">
-                                    <li class="nav-item dropdown">
-
-                                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                            @User.Identity.Name
-                                        </a>
-                                        <div class="dropdown-arrow"></div>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-controller="Profile" asp-action="Index">@T["Profile"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Account"]</a>
-                                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Messages"]</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">@T["Dashboard"]</a>
-                                            <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
-                                        </div>
-
-                                    </li>
-                                    <li class="nav-item">
-                                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="@T["Toggle navigation"]"></button>
-                                    </li>
-                                </ul>
-                            </form>
-                        }
-                        else
-                        {
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-route-area="Plato.Users" asp-controller="Account" asp-action="LogOff" method="post" class="d-inline">
                             <ul class="nav nav-pills float-right">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                                <li class="nav-item dropdown">
+
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                        @User.Identity.Name
+                                    </a>
+                                    <div class="dropdown-arrow"></div>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" asp-route-area="Plato.Users" asp-controller="Profile" asp-action="Index">@T["Profile"]</a>
+                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Account"]</a>
+                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Account" asp-action="Login">@T["Messages"]</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">@T["Dashboard"]</a>
+                                        <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
+                                    </div>
+
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
+                                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="@T["Toggle navigation"]"></button>
                                 </li>
                             </ul>
-                        }
+                        </form>
+                    }
+                    else
+                    {
+                        <ul class="nav nav-pills float-right">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
+                            </li>
+                        </ul>
+                    }
 
 
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="container">
-        <div class="pt-5">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; @System.DateTime.Now.Year - Plato</p>
-            </footer>
-        </div>
+<div class="container">
+    <div class="pt-5">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @System.DateTime.Now.Year - Plato</p>
+        </footer>
     </div>
-
-
-    <resources section="Footer" />
-
-    <script>
-        $(function (win) {
-            win.PlatoOptions = {
-                url: "http://localhost:50439/",
-                apiKey: "987654321"
-            }
-        }(window));
-    </script>
-
-
+</div>
+    
+<assets section="Footer" />
+    
 </body>
 </html>

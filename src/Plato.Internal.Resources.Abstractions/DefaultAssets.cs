@@ -12,21 +12,21 @@ namespace Plato.Internal.Assets.Abstractions
             {
 
                 // Development
-                new AssetEnvironment(Environment.Development, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Development, new List<Asset>()
                 {
                     /* Css */
 
                     new Asset()
                     {
                         Url = "/css/vendors/bootstrap.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     },
                     new Asset()
                     {
                         Url = "/css/vendors/font-awesome.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     },
                     //new Resource()
                     //{
@@ -37,8 +37,8 @@ namespace Plato.Internal.Assets.Abstractions
                     new Asset()
                     {
                         Url = "/css/app/plato.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     },
 
                     /* JavaScript */
@@ -46,20 +46,20 @@ namespace Plato.Internal.Assets.Abstractions
                     new Asset()
                     {
                         Url = "/js/vendors/jquery.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     },
                     new Asset()
                     {
                         Url = "/js/vendors/bootstrap.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     },
                     new Asset()
                     {
                         Url = "/js/vendors/vue.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     },
                     //new Resource()
                     //{
@@ -70,46 +70,46 @@ namespace Plato.Internal.Assets.Abstractions
                     new Asset()
                     {
                         Url = "/js/app/plato.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     }
                 }),
 
                 // Staging
-                new AssetEnvironment(Environment.Staging, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Staging, new List<Asset>()
                 {
                     /* Css */
                     new Asset()
                     {
                         Url = "~/css/app.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     },
                     /* JavaScript */
                     new Asset()
                     {
                         Url = "~/js/app.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     },
                 }),
 
                 // Production
-                new AssetEnvironment(Environment.Production, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
                     /* Css */
                     new Asset()
                     {
                         Url = "~/css/app.min.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     },
                     /* JavaScript */
                     new Asset()
                     {
                         Url = "~/js/app.min.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     },
                 })
 

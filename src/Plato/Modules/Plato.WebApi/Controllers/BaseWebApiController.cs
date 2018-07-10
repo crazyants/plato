@@ -10,10 +10,10 @@ namespace Plato.WebApi.Controllers
     public class BaseWebApiController : Controller
     {
 
-        public Task<User> GetAuthenticatedUserAsync()
+        public async Task<User> GetAuthenticatedUserAsync()
         {
             var webApiAuthenticator = HttpContext.RequestServices.GetRequiredService<IWebApiAuthenticator>();
-            return webApiAuthenticator.GetAuthenticatedUserAsync();
+            return await webApiAuthenticator.GetAuthenticatedUserAsync();
         }
 
     }

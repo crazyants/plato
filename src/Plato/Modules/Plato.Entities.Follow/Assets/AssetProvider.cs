@@ -14,35 +14,35 @@ namespace Plato.Entities.Follow.Assets
             {
 
                 // Development
-                new AssetEnvironment(Environment.Development, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Development, new List<Asset>()
                 {
                     new Asset()
                     {
                         Url = "/plato.entities.follow/content/js/follow.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     }
                 }),
 
                 // Staging
-                new AssetEnvironment(Environment.Staging, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Staging, new List<Asset>()
                 {
                     new Asset()
                     {
                         Url = "/plato.entities.follow/content/js/follow.min.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     }
                 }),
 
                 // Production
-                new AssetEnvironment(Environment.Production, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
                     new Asset()
                     {
                         Url = "/plato.entities.follow/content/js/follow.min.js",
-                        Type = ResourceType.JavaScript,
-                        Section = ResourceSection.Footer
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
                     }
                 })
 

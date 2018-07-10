@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
-using Environment = Plato.Internal.Assets.Abstractions.Environment;
 
 namespace Plato.Theming.Assets
 {
@@ -31,37 +30,37 @@ namespace Plato.Theming.Assets
             {
 
                 // Development
-                new AssetEnvironment(Environment.Development, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Development, new List<Asset>()
                 {
                     new Asset()
                     {
                         Url = $"/themes/{themeName}/theme.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     }
                 }),
 
                 // Staging
-                new AssetEnvironment(Environment.Staging, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Staging, new List<Asset>()
                 {
                     /* Css */
                     new Asset()
                     {
                         Url =  $"/themes/{themeName}/theme.min.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     },
                 }),
 
                 // Production
-                new AssetEnvironment(Environment.Production, new List<Asset>()
+                new AssetEnvironment(TargetEnvironment.Production, new List<Asset>()
                 {
                     /* Css */
                     new Asset()
                     {
                         Url = $"/themes/{themeName}/theme.min.css",
-                        Type = ResourceType.Css,
-                        Section = ResourceSection.Header
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
                     },
                 })
 

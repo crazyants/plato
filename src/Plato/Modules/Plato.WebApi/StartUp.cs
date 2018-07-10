@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Hosting;
+using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.WebApi.Assets;
 using Plato.WebApi.Services;
 using Plato.WebApi.ViewProviders;
 
@@ -28,6 +29,9 @@ namespace Plato.WebApi
 
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
+
+            // Register client assets
+            services.AddScoped<IAssetProvider, AssetProvider>();
 
             // View providers
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();

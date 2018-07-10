@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Html;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,23 +17,29 @@ namespace Plato.Internal.Assets.Abstractions
 
         public string CdnUrl { get; set; }
 
-        public ResourceType Type { get; set; }
+        public AssetType Type { get; set; }
 
-        public ResourceSection Section { get; set; }
+        public AssetSection Section { get; set; }
 
+        public int Priority { get; set; }
+
+        public IHtmlContent InlineContent { get; set; }
     }
     
-    public enum ResourceSection
+    public enum AssetSection
     {
+        Meta,
         Header,
         Body,
         Footer
     }
 
-    public enum ResourceType
+    public enum AssetType
     {
-        JavaScript,
-        Css,
+        IncludeJavaScript,
+        IncludeCss,
+        InlineJavaScript,
+        InlineCss,
         Meta
     }
 

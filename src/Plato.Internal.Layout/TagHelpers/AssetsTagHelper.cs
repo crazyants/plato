@@ -5,23 +5,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Assets.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
 
-    [HtmlTargetElement("resources")]
-    public class ResourcesTagHelper : TagHelper
+    [HtmlTargetElement("assets")]
+    public class AssetsTagHelper : TagHelper
     {
       
-        public ResourceSection Section { get; set; }
+        public AssetSection Section { get; set; }
 
         #region "Constrcutor"
 
         private readonly IAssetManager _assetManager;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ResourcesTagHelper(
+        public AssetsTagHelper(
             IAssetManager assetManager,
             IHostingEnvironment hostingEnvironment)
         {
@@ -50,7 +51,7 @@ namespace Plato.Internal.Layout.TagHelpers
                     switch (resource.Type)
                     {
 
-                        case ResourceType.JavaScript:
+                        case AssetType.IncludeJavaScript:
                             
                             sw.Write(BuildJavaScriptInclude(resource));
                             if (i < resources.Count)
@@ -59,7 +60,7 @@ namespace Plato.Internal.Layout.TagHelpers
                             }
                             break;
 
-                        case ResourceType.Css:
+                        case AssetType.IncludeCss:
 
                             sw.Write(BuildCssInclude(resource));
                             if (i < resources.Count)
@@ -68,7 +69,7 @@ namespace Plato.Internal.Layout.TagHelpers
                             }
                             break;
 
-                        case ResourceType.Meta:
+                        case AssetType.Meta:
 
                             sw.Write(BuildMeta(resource));
                             if (i < resources.Count)
@@ -76,6 +77,16 @@ namespace Plato.Internal.Layout.TagHelpers
                                 sw.Write(sw.NewLine);
                             }
                             break;
+
+                        case AssetType.InlineJavaScript:
+
+                            sw.Write(BuildInlineJavaScript(resource));
+                            if (i < resources.Count)
+                            {
+                                sw.Write(sw.NewLine);
+                            }
+                            break;
+
 
                     }
 
@@ -100,7 +111,7 @@ namespace Plato.Internal.Layout.TagHelpers
             var environments = await GetMergedEnvironmentsAsync();
 
             // Filter by environment
-            var matchingEnvironments = environments.FirstOrDefault(g => g.Environment == GetDeploymentMode());
+            var matchingEnvironments = environments.FirstOrDefault(g => g.TargetEnvironment == GetDeploymentMode());
 
             // filter by section
             return @matchingEnvironments?.Resources.Where(r => r.Section == Section).ToList();
@@ -119,13 +130,13 @@ namespace Plato.Internal.Layout.TagHelpers
             var defaultEnvironments = defaults.ToList();
 
             // Merge provided resources into default groups
-            var output = defaultEnvironments.ToDictionary(p => p.Environment);
+            var output = defaultEnvironments.ToDictionary(p => p.TargetEnvironment);
             foreach (var defaultEnvironment in defaultEnvironments)
             {
 
                 // Get provided resources matching our current environment
                 var matchingEnvironments = providedEnvironments
-                    .Where(g => g.Environment == defaultEnvironment.Environment)
+                    .Where(g => g.TargetEnvironment == defaultEnvironment.TargetEnvironment)
                     .ToList();
 
                 // Interate through each matching provided environment adding
@@ -134,7 +145,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 {
                     foreach (var resource in group.Resources)
                     {
-                        output[defaultEnvironment.Environment].Resources.Add(resource);
+                        output[defaultEnvironment.TargetEnvironment].Resources.Add(resource);
                     }
                 }
                 
@@ -144,13 +155,13 @@ namespace Plato.Internal.Layout.TagHelpers
 
         }
         
-        Environment GetDeploymentMode()
+        TargetEnvironment GetDeploymentMode()
         {
             if (_hostingEnvironment.IsProduction())
-                return Environment.Production;
+                return TargetEnvironment.Production;
             if (_hostingEnvironment.IsStaging())
-                return Environment.Staging;
-            return Environment.Development;
+                return TargetEnvironment.Staging;
+            return TargetEnvironment.Development;
         }
         
         IHtmlContent BuildJavaScriptInclude(Asset asset)
@@ -168,8 +179,22 @@ namespace Plato.Internal.Layout.TagHelpers
             return new HtmlString($"<script src=\"{asset.Url}\"></script>");
         }
 
+        IHtmlContent BuildInlineJavaScript(Asset asset)
+        {
+            var builder = new HtmlContentBuilder();
+            var content = builder
+                    .AppendHtml("<script>")
+                    .AppendHtml(System.Environment.NewLine)
+                    .AppendHtml(asset.InlineContent)
+                    .AppendHtml(System.Environment.NewLine)
+                    .AppendHtml("</script>");
+
+            return content.ToHtmlString();
+        }
+
+
         #endregion
-        
+
     }
 
 }
