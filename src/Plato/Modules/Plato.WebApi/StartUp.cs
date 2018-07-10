@@ -5,7 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation;
 using Plato.WebApi.Services;
+using Plato.WebApi.ViewProviders;
 
 namespace Plato.WebApi
 {
@@ -22,9 +26,15 @@ namespace Plato.WebApi
         public override void ConfigureServices(IServiceCollection services)
         {
 
+            // Navigation provider
+            services.AddScoped<INavigationProvider, AdminMenu>();
+
+            // View providers
+            services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
+            services.AddScoped<IViewProvider<User>, UserViewProvider>();
+
             // Services
             services.AddScoped<IWebApiAuthenticator, WebApiAuthenticator>();
-
 
         }
 

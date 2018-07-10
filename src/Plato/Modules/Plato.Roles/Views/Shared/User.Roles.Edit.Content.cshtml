@@ -7,11 +7,19 @@
             <h6 class="card-title">@T["Edit Roles"]</h6>
         </card-title>
         <card-body>
+            
+            <div class="text-muted">
+                @T["Associate this user with one or more roles. These roles are used to control access to specific areas or individual features within Plato. Leave blank to assicat ethe user with all roles."]
+            </div>
+            <br />
+
             @await DisplayAsync(new View("SelectRoles", new
             {
                 selectedRoles = @Model.SelectedRoles,
                 htmlName = @Model.HtmlName
             }))
+            
+
         </card-body>
     </card>
 </div>

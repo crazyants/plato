@@ -1,0 +1,24 @@
+﻿@model EditUserViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Api Key"]</h6>
+    </card-title>
+    <card-body>
+        <div class="form-group">
+            <label asp-for="ApiKey">
+         
+                <span class="text-muted">@T["Used to identify the user for any remote api requests"]</span>
+            </label>
+            <input asp-for="ApiKey" class="form-control" autofocus />
+            <br />
+            <a class="float-right" asp-action="CreateApiKey">
+                <i class="fal fa-key"></i>
+                @T["Generate a new API Key"]
+            </a>
+        </div>
+    
+    </card-body>
+</card>
+
+
