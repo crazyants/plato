@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Stores.Abstract;
@@ -36,6 +37,13 @@ namespace Plato.Internal.Stores.Settings
 
         public async Task<ISiteSettings> SaveAsync(ISiteSettings siteSettings)
         {
+
+            // Auto populate API key if one if not present
+            if (String.IsNullOrWhiteSpace(siteSettings.ApiKey))
+            {
+                siteSettings.ApiKey = System.Guid.NewGuid().ToString();
+            }
+
             var settings = await _dictionaryStore.UpdateAsync<SiteSettings>(_key, siteSettings);
             if (settings != null)
             {

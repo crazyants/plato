@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Cache;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Users;
@@ -15,15 +14,10 @@ namespace Plato.Internal.Stores.Users
     {
 
         #region "Private Variables"
-
-        private readonly string _key = CacheKeys.Users.ToString();
-        private readonly MemoryCacheEntryOptions _cacheEntryOptions;
-
+        
+        private readonly ICacheManager _cacheManager;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly IUserRepository<User> _userRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IMemoryCache _memoryCache;
-        private readonly IDistributedCache _distributedCache;
         private readonly ILogger<PlatoUserStore> _logger;
 
         #endregion
@@ -33,22 +27,13 @@ namespace Plato.Internal.Stores.Users
         public PlatoUserStore(
             IDbQueryConfiguration dbQuery,
             IUserRepository<User> userRepository,
-            IHttpContextAccessor httpContextAccessor,
             IMemoryCache memoryCache,
-            IDistributedCache distributedCache,
-            ILogger<PlatoUserStore> logger
-        )
+            ILogger<PlatoUserStore> logger, ICacheManager cacheManager)
         {
             _dbQuery = dbQuery;
             _userRepository = userRepository;
-            _httpContextAccessor = httpContextAccessor;
-            _memoryCache = memoryCache;
-            _distributedCache = distributedCache;
             _logger = logger;
-            _cacheEntryOptions = new MemoryCacheEntryOptions
-            {
-                SlidingExpiration = TimeSpan.FromSeconds(10)
-            };
+            _cacheManager = cacheManager;
         }
 
         #endregion
@@ -58,116 +43,100 @@ namespace Plato.Internal.Stores.Users
         public async Task<User> CreateAsync(User user)
         {
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
+            }
+
             if (user.Id > 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(user.Id));
+            }
+
             var newUser = await _userRepository.InsertUpdateAsync(user);
             if (newUser != null)
             {
-                if (_logger.IsEnabled(LogLevel.Debug))
-                    _logger.LogDebug("Entry removed from cache of type {0}. Entry key: {1}.",
-                        _memoryCache.GetType().Name, _key);
+
+                // Ensure new users have an API key, update this after adding the user
+                // so we can append the newly generated unique userId to the guid
+                if (String.IsNullOrEmpty(newUser.ApiKey))
+                {
+                    newUser.ApiKey = System.Guid.NewGuid().ToString() + user.Id.ToString();
+                    newUser = await UpdateAsync(user);
+                }
+
                 ClearCache(user);
             }
 
             return newUser;
         }
 
-        public Task<bool> DeleteAsync(User user)
+        public async Task<User> UpdateAsync(User user)
         {
-            throw new NotImplementedException();
-            //ClearUserCache(user);
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            if (user.Id == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(user.Id));
+            }
+
+            if (String.IsNullOrEmpty(user.ApiKey))
+            {
+                user.ApiKey = System.Guid.NewGuid().ToString() + user.Id.ToString();
+            }
+
+            var updatedUser = await _userRepository.InsertUpdateAsync(user);
+            if (updatedUser != null)
+            {
+                ClearCache(user);
+            }
+
+            return updatedUser;
+        }
+        
+        public async Task<bool> DeleteAsync(User user)
+        {
+            
+            var success = await _userRepository.DeleteAsync(user.Id);
+            if (success)
+            {
+                ClearCache(user);
+            }
+
+            return success;
+
         }
 
         public async Task<User> GetByIdAsync(int id)
         {
-            var key = GetCacheKey(LocalCacheKeys.ById, id);
-            if (!_memoryCache.TryGetValue(key, out User user))
-            {
-                user = await _userRepository.SelectByIdAsync(id);
-                if (user != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, key);
-                    _memoryCache.Set(key, user, _cacheEntryOptions);
-                }
-            }
-
-            return user;
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userRepository.SelectByIdAsync(id));
         }
 
         public async Task<User> GetByUserNameNormalizedAsync(string userNameNormalized)
         {
-            User user;
-            var key = GetCacheKey(LocalCacheKeys.ByUserNameNormalzied, userNameNormalized);
-            if (!_memoryCache.TryGetValue(key, out user))
-            {
-                user = await _userRepository.SelectByUserNameNormalizedAsync(userNameNormalized);
-                if (user != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, key);
-                    _memoryCache.Set(key, user, _cacheEntryOptions);
-                }
-            }
-
-            return user;
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), userNameNormalized);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userRepository.SelectByUserNameNormalizedAsync(userNameNormalized));
         }
 
         public async Task<User> GetByUserNameAsync(string userName)
         {
-            var key = GetCacheKey(LocalCacheKeys.ByUserName, userName);
-            if (!_memoryCache.TryGetValue(key, out User user))
-            {
-                user = await _userRepository.SelectByUserNameAsync(userName);
-                if (user != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, _key);
-                    _memoryCache.Set(key, user, _cacheEntryOptions);
-                }
-            }
-
-            return user;
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), userName);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userRepository.SelectByUserNameAsync(userName));
         }
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            var key = GetCacheKey(LocalCacheKeys.ByEmail, email);
-            if (!_memoryCache.TryGetValue(key, out User user))
-            {
-                user = await _userRepository.SelectByEmailAsync(email);
-                if (user != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, _key);
-                    _memoryCache.Set(key, user, _cacheEntryOptions);
-                }
-            }
-
-            return user;
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), email);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userRepository.SelectByEmailAsync(email));
         }
 
         public async Task<User> GetByApiKeyAsync(string apiKey)
         {
-            var key = GetCacheKey(LocalCacheKeys.ByApiKey, apiKey);
-            if (!_memoryCache.TryGetValue(key, out User user))
-            {
-                user = await _userRepository.SelectByApiKeyAsync(apiKey);
-                if (user != null)
-                {
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, _key);
-                    _memoryCache.Set(key, user, _cacheEntryOptions);
-                }
-            }
-
-            return user;
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), apiKey);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userRepository.SelectByApiKeyAsync(apiKey));
         }
         
         public IQuery<User> QueryAsync()
@@ -176,35 +145,11 @@ namespace Plato.Internal.Stores.Users
             return _dbQuery.ConfigureQuery(query); ;
         }
 
-        public async Task<User> UpdateAsync(User user)
-        {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-            if (user.Id == 0)
-                throw new ArgumentOutOfRangeException(nameof(user.Id));
-            var updatedUser = await _userRepository.InsertUpdateAsync(user);
-            if (updatedUser != null)
-            {
-                if (_logger.IsEnabled(LogLevel.Debug))
-                    _logger.LogDebug("Entry removed from cache of type {0}. Entry key: {1}.",
-                        _memoryCache.GetType().Name, _key);
-                ClearCache(user);
-            }
-
-            return updatedUser;
-        }
-
+    
         public async Task<IPagedResults<User>> SelectAsync(params object[] args)
         {
-            if (!_memoryCache.TryGetValue(_key, out IPagedResults<User> users))
-            {
-                users = await _userRepository.SelectAsync(args);
-                if (users != null)
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug("Adding entry to cache of type {0}. Entry key: {1}.",
-                            _memoryCache.GetType().Name, _key);
-            }
-            return users;
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userRepository.SelectAsync(args));
         }
 
         #endregion
@@ -213,24 +158,12 @@ namespace Plato.Internal.Stores.Users
 
         private void ClearCache(User user)
         {
-            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ById, user.Id));
-            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByEmail, user.Email));
-            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByUserName, user.UserName));
-            _memoryCache.Remove(GetCacheKey(LocalCacheKeys.ByUserNameNormalzied, user.NormalizedUserName));
-        }
-
-        private string GetCacheKey(LocalCacheKeys cacheKey, object vaule)
-        {
-            return _key + "_" + cacheKey + "_" + vaule;
-        }
-
-        private enum LocalCacheKeys
-        {
-            ById,
-            ByEmail,
-            ByUserName,
-            ByUserNameNormalzied,
-            ByApiKey
+            _cacheManager.CancelTokens(this.GetType());
+            _cacheManager.CancelTokens(this.GetType(), user.Id);
+            _cacheManager.CancelTokens(this.GetType(), user.UserName);
+            _cacheManager.CancelTokens(this.GetType(), user.Email);
+            _cacheManager.CancelTokens(this.GetType(), user.NormalizedUserName);
+            _cacheManager.CancelTokens(this.GetType(), user.ApiKey);
         }
 
         #endregion

@@ -109,6 +109,11 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "PrimaryRoleId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "UserName",
                         Length = "255",
                         DbType = DbType.String
@@ -192,6 +197,12 @@ namespace Plato.Users.Handlers
                         Name = "AccessFailedCount",
                         DbType = DbType.Int32
                     },
+                    new SchemaColumn()
+                    {
+                        Name = "ApiKey",
+                        DbType = DbType.String,
+                        Length = "255"
+                    }
                 }
             };
 

@@ -17,14 +17,17 @@ namespace Plato.Internal.Cache
             // This is not perfect but avoids the overhead of a real cryptographic hash
             // Get hashcodes for primative types as opposed to varyBy object array complex type
             var sb = new StringBuilder();
-            foreach (var vary in varyBy)
+            if (varyBy != null)
             {
-                if (vary != null)
+                foreach (var vary in varyBy)
                 {
-                    sb.Append(vary.GetHashCode());
+                    if (vary != null)
+                    {
+                        sb.Append(vary.GetHashCode());
+                    }
                 }
             }
-
+          
             _type = type;
             _varyByHashCode = sb.ToString();
             _typeHashCode = _type.GetHashCode();

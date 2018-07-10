@@ -63,6 +63,7 @@ namespace Plato.Internal.Repositories.Users
             
             var id = await InsertUpdateInternal(
                 user.Id,
+                user.PrimaryRoleId,
                 user.UserName,
                 user.NormalizedUserName,
                 user.Email,
@@ -77,7 +78,8 @@ namespace Plato.Internal.Repositories.Users
                 user.TwoFactorEnabled,
                 user.LockoutEnd,
                 user.LockoutEnabled,
-                user.AccessFailedCount);
+                user.AccessFailedCount,
+                user.ApiKey);
 
             if (id > 0)
             {
@@ -355,47 +357,15 @@ namespace Plato.Internal.Repositories.Users
                     }
                 }
 
-                //// secret
-
-                //if (await reader.NextResultAsync())
-                //{
-                //    if (reader.HasRows)
-                //    {
-                //        await reader.ReadAsync();
-                //        user.Secret = new UserSecret(reader);
-                //    }
-                //}
-
-                //// detail
-
-                //if (await reader.NextResultAsync())
-                //{
-                //    if (reader.HasRows)
-                //    {
-                //        await reader.ReadAsync();
-                //        user.Detail = new UserDetail(reader);
-                //    }
-                //}
-
-                //// roles
-
-                //if (await reader.NextResultAsync())
-                //{
-                //    if (reader.HasRows)
-                //    {
-                //        while (await reader.ReadAsync())
-                //        {
-                //            user.UserRoles.Add(new Role(reader));
-                //        }
-                //    }
-                //}
-
             }
+
             return user;
+
         }
 
         private async Task<int> InsertUpdateInternal(
             int id,
+            int primaryRoleId,
             string userName,
             string normalizedUserName,
             string email,
@@ -410,27 +380,19 @@ namespace Plato.Internal.Repositories.Users
             bool twoFactorEnabled,
             DateTimeOffset? lockoutEnd,
             bool lockoutEnabled,
-            int accessFailedCount
-
-            )
+            int accessFailedCount,
+            string apiKey)
         {
+     
+            var userId = 0;
             using (var context = _dbContext)
             {
 
-                context.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation(
-                            id == 0
-                                ? $"Insert for user with email address '{email}' failed with the following error '{args.Exception.Message}'"
-                                : $"Update for user with Id {id} failed with the following error {args.Exception.Message}");
-                    throw args.Exception;
-                };
-
-                return await context.ExecuteScalarAsync<int>(
+                userId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateUser",
                     id,
+                    primaryRoleId,
                     userName.ToEmptyIfNull().TrimToSize(255),
                     normalizedUserName.ToEmptyIfNull().TrimToSize(255),
                     email.ToEmptyIfNull().TrimToSize(255),
@@ -445,9 +407,13 @@ namespace Plato.Internal.Repositories.Users
                     twoFactorEnabled,
                     lockoutEnd,
                     lockoutEnabled,
-                    accessFailedCount
-                    );
+                    accessFailedCount,
+                    apiKey.ToEmptyIfNull().TrimToSize(255)
+                );
             }
+
+            return userId;
+
         }
 
         #endregion

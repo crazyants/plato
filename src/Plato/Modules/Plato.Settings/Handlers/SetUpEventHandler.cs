@@ -37,7 +37,7 @@ namespace Plato.Settings.Handlers
                 var siteSettings = await _siteSettingsStore.GetAsync() ?? new SiteSettings();
                 siteSettings.SiteName = context.SiteName;
                 siteSettings.SuperUser = context.AdminUsername;
-
+           
                 // add default route for set-up site
                 siteSettings.HomeRoute = new RouteValueDictionary()
                 {

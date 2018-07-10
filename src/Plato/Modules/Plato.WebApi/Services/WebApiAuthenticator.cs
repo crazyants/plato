@@ -13,8 +13,8 @@ namespace Plato.WebApi.Services
     {
 
         
-        private const string headerName = "Authorization";
-        private const string token = "Basic ";
+        private const string HeaderName = "Authorization";
+        private const string Token = "Basic ";
 
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISiteSettingsStore _siteSettingsStore;
@@ -66,9 +66,9 @@ namespace Plato.WebApi.Services
             }
 
             var headerValue = string.Empty;
-            if (headers[headerName].Count > 0)
+            if (headers[HeaderName].Count > 0)
             {
-                headerValue = headers[headerName][0];
+                headerValue = headers[HeaderName][0];
             }
 
             if (String.IsNullOrWhiteSpace(headerValue))
@@ -76,14 +76,14 @@ namespace Plato.WebApi.Services
                 return null;
             }
 
-            var startIndex = headerValue.IndexOf(token, StringComparison.InvariantCultureIgnoreCase);
+            var startIndex = headerValue.IndexOf(Token, StringComparison.InvariantCultureIgnoreCase);
             if (startIndex == -1)
             {
                 return null;
             }
 
             // ensure we have a credentials
-            var credentials = headerValue.Substring(token.Length);
+            var credentials = headerValue.Substring(Token.Length);
             if (String.IsNullOrEmpty(credentials))
             {
                 return null;

@@ -88,17 +88,12 @@ namespace Plato.WebApi.Assets
                 return settings.ApiKey;
             }
 
-            if (user.Detail == null)
-            {
-                return settings.ApiKey;
-            }
-
-            if (String.IsNullOrWhiteSpace(user.Detail.ApiKey))
+            if (String.IsNullOrWhiteSpace(user.ApiKey))
             {
                 return settings.ApiKey;
             }
             
-            return $"{settings.ApiKey}:{user.Detail.ApiKey}";
+            return $"{settings.ApiKey}:{user.ApiKey}";
 
 
         }

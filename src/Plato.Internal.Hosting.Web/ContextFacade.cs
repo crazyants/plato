@@ -75,11 +75,15 @@ namespace Plato.Internal.Hosting.Web
             var settings = await GetSiteSettingsAsync();
             if (!String.IsNullOrWhiteSpace(settings.BaseUrl))
             {
-                return settings.BaseUrl;
+                if (settings.BaseUrl.EndsWith("/"))
+                {
+                    return settings.BaseUrl;
+                }
+                return settings.BaseUrl + "/";
             }
             
             var request = _httpContextAccessor.HttpContext.Request;
-            return $"{request.Scheme}://{request.Host}{request.PathBase}";
+            return $"{request.Scheme}://{request.Host}{request.PathBase}/";
             
         }
 

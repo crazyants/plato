@@ -42,7 +42,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
             var sw = new StringWriter();
          
-            var assets = await GetASsetsAsync();
+            var assets = await GetAssetsAsync();
             if (assets != null)
             {
                 var i = 1;
@@ -104,7 +104,7 @@ namespace Plato.Internal.Layout.TagHelpers
         #region "Private Methods"
         
         // Get all resources matching environment and section
-        async Task<IList<Asset>> GetASsetsAsync()
+        async Task<IList<Asset>> GetAssetsAsync()
         {
 
             // Get all default and provided environments

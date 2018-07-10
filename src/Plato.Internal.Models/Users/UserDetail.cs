@@ -13,7 +13,6 @@ namespace Plato.Internal.Models.Users
 
         public DateTime? ModifiedDate { get; set; }
 
-        public string ApiKey { get; set; }
         
     }
 

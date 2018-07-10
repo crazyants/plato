@@ -21,8 +21,12 @@ namespace Plato.Internal.Models.Users
             set => _displayName = value;
         }
 
+        public int PrimaryRoleId { get; set; }
+
         public string SamAccountName { get; set;  }
           
+        public string ApiKey { get; set; }
+
         public UserSecret Secret { get; set;  }
 
         public UserDetail Detail { get; set; }
@@ -73,7 +77,7 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("SamAccountName"))
                 this.SamAccountName = Convert.ToString(dr["SamAccountName"]);
-
+       
             if (dr.ColumnIsNotNull("PasswordHash"))
                 this.PasswordHash = Convert.ToString(dr["PasswordHash"]);
 
@@ -97,9 +101,12 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("AccessFailedCount"))
                 this.AccessFailedCount = Convert.ToInt32(dr["AccessFailedCount"]);
+            
+            if (dr.ColumnIsNotNull("ApiKey"))
+                this.ApiKey = Convert.ToString(dr["ApiKey"]);
 
         }
-        
+
         #endregion
 
     }

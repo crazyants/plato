@@ -38,12 +38,11 @@ namespace Plato.WebApi.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
-            var details = await _userDetailsStore.GetAsync(user.Id);
-
+         
             return Views(
                 View<EditUserViewModel>("User.Edit.Content", model =>
                 {
-                    model.ApiKey = details.ApiKey;
+                    model.ApiKey = user.ApiKey;
                     return model;
                 }).Order(10)
             );
@@ -63,9 +62,9 @@ namespace Plato.WebApi.ViewProviders
             if (updater.ModelState.IsValid)
             {
 
-                var details = await _userDetailsStore.GetAsync(user.Id);
-                details.ApiKey = model.ApiKey;
-                await _userDetailsStore.UpdateAsync(user.Id, details);
+                user.ApiKey = model.ApiKey;
+
+                await _platoUserStore.UpdateAsync(user);
                 
             }
             
