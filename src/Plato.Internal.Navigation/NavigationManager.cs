@@ -50,6 +50,7 @@ namespace Plato.Internal.Navigation
 
         public IEnumerable<MenuItem> BuildMenu(string name, ActionContext actionContext)
         {
+
             var builder = new NavigationBuilder();
 
             // Processes all navigation builders to create a flat list of menu items.
@@ -91,7 +92,7 @@ namespace Plato.Internal.Navigation
 
         #region "Private Methods"
 
-        static void Merge(List<MenuItem> items)
+        void Merge(List<MenuItem> items)
         {
             
             // Use two cursors to find all similar captions. If the same caption is represented
@@ -248,9 +249,10 @@ namespace Plato.Internal.Navigation
 
         List<MenuItem> Reduce(IEnumerable<MenuItem> items)
         {
-            var filtered = items.ToList();
+            var menuItems = items as MenuItem[] ?? items.ToArray();
+            var filtered = menuItems.ToList();
 
-            foreach (var item in items)
+            foreach (var item in menuItems)
             {
                 if (!HasHrefOrChildHref(item))
                 {
@@ -282,7 +284,7 @@ namespace Plato.Internal.Navigation
 
         }
 
-        private static bool HasHrefOrChildHref(MenuItem item)
+        bool HasHrefOrChildHref(MenuItem item)
         {
             if (item.Href != "#")
             {

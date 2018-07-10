@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
 
-namespace Plato.Core.Services
+namespace Plato.Core.Handlers
 {
     public class SetUpEventHandler : BaseSetUpEventHandler
     {

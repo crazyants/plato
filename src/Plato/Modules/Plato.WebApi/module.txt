@@ -1,5 +1,5 @@
-Name: Plato Web API
-Description: Provides a secure set of RESTful web apis to access & manage core data within Plato.
+Name: Plato Web Api
+Description: Provides services & settings allowing modules to implement RESTful services.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core

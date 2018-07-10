@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileSystemGlobbing.Abstractions;
@@ -22,15 +21,12 @@ namespace Plato.Internal.FileSystem
         public PlatoFileSystem(
             string rootPath,
             IFileProvider fileProvider,
-            ILogger logger)
-        {
+            ILogger logger){
             _fileProvider = fileProvider;
             _logger = logger;
             RootPath = rootPath;
-            //T = NullLocalizer.Instance;
         }
-
-
+        
         public string RootPath
         {
             get; private set;
@@ -66,7 +62,7 @@ namespace Plato.Internal.FileSystem
             const string extension = "deleted";
             for (var i = 0; i < 100; i++)
             {
-                var newExtension = (i == 0 ? extension : string.Format("{0}{1}", extension, i));
+                var newExtension = (i == 0 ? extension : $"{extension}{i}");
                 var newFileName = Path.ChangeExtension(destinationFileName, newExtension);
                 try
                 {
@@ -76,7 +72,7 @@ namespace Plato.Internal.FileSystem
                 }
                 catch
                 {
-                    // We need to try with another extension
+                  
                 }
             }
 
@@ -88,7 +84,8 @@ namespace Plato.Internal.FileSystem
             }
             catch (Exception ex)
             {             
-                throw new Exception(string.Format("Unable to make room for file \"{0}\" in \"App_Data\" folder. {1}", destinationFileName, ex.Message ));
+                throw new Exception(
+                    $"Unable to make room available for file \"{destinationFileName}\". Exception details follow: {ex.Message}");
             }
         }
         
@@ -147,7 +144,6 @@ namespace Plato.Internal.FileSystem
 
         }
         
-
         public IChangeToken Watch(string path)
         {
             return _fileProvider.Watch(path);

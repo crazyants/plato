@@ -16,12 +16,7 @@ namespace Plato.Internal.Navigation
 
         public NavigationItemBuilder(MenuItem existingItem)
         {
-            if (existingItem == null)
-            {
-                throw new ArgumentNullException(nameof(existingItem));
-            }
-
-            _item = existingItem;
+            _item = existingItem ?? throw new ArgumentNullException(nameof(existingItem));
         }
 
         public NavigationItemBuilder Caption(LocalizedString caption)

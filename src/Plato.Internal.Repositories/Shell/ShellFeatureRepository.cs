@@ -230,6 +230,18 @@ namespace Plato.Internal.Repositories.Shell
             string moduleId,
             string version)
         {
+
+            // We always need a ModuleId
+            if (String.IsNullOrEmpty(moduleId))
+            {
+                throw new ArgumentNullException(nameof(moduleId));
+            }
+
+            if (String.IsNullOrEmpty(version))
+            {
+                version = "1.0.0";
+            }
+            
             using (var context = _dbContext)
             {
 

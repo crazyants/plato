@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -58,8 +57,7 @@ namespace Plato.WebApi.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-
-
+            
             settings.ApiKey = System.Guid.NewGuid().ToString();
          
             var result = await _siteSettingsStore.SaveAsync(settings);
@@ -74,11 +72,7 @@ namespace Plato.WebApi.Controllers
             
             return RedirectToAction(nameof(Index));
         }
-
-
         
-
-
 
         [HttpPost]
         [ActionName(nameof(Index))]

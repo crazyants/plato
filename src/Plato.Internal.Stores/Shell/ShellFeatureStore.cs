@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Abstractions;
@@ -25,6 +26,10 @@ namespace Plato.Internal.Stores.Shell
 
         public async Task<ShellFeature> CreateAsync(ShellFeature feature)
         {
+            if (feature == null)
+            {
+                throw new ArgumentNullException(nameof(feature));
+            }
 
             return await _featureRepository.InsertUpdateAsync(feature);
 
@@ -32,6 +37,12 @@ namespace Plato.Internal.Stores.Shell
 
         public async Task<ShellFeature> UpdateAsync(ShellFeature feature)
         {
+
+            if (feature == null)
+            {
+                throw new ArgumentNullException(nameof(feature));
+            }
+            
             return await _featureRepository.InsertUpdateAsync(feature);
         }
 
@@ -48,6 +59,12 @@ namespace Plato.Internal.Stores.Shell
 
         public async Task<ShellFeature> GetByIdAsync(int id)
         {
+
+            if (id <= 0)
+            {
+                throw new InvalidEnumArgumentException(nameof(id));
+            }
+
             return await _featureRepository.SelectByIdAsync(id);
         }
 

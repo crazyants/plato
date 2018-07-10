@@ -11,6 +11,8 @@ namespace Plato.Internal.Models.Modules
 
         IEnumerable<Assembly> Assmeblies { get; set; }
 
+        Assembly Assembly { get; set; }
+        
         IEnumerable<Type> ExportedTypes { get; set; }
 
     }

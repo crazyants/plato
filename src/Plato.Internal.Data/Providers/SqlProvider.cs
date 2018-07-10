@@ -49,7 +49,6 @@ namespace Plato.Internal.Data.Providers
             if (String.IsNullOrEmpty(_connectionString))
             {
                 throw new Exception("The connection string has not been initialized.");
-                ;
             }
 
             _dbConnection = new SqlConnection {ConnectionString = _connectionString};

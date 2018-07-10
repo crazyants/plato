@@ -27,13 +27,24 @@ namespace Plato.Internal.Modules
         
         public async Task<IModuleEntry> GetModuleForDependency(Type dependency)
         {
-
-            await BuildTypedProvider();
-
-            if (_modules.TryGetValue(dependency, out var module))
+            
+            var moduleEntries = await _moduleManager.LoadModulesAsync();
+            foreach (var moduleEntry in moduleEntries)
             {
-                return module;
+             
+                if (dependency.Assembly.ManifestModule.Name ==
+                    moduleEntry.Assembly.ManifestModule.Name)
+                {
+                    return moduleEntry;
+                }
             }
+            
+            // await BuildTypedProvider();
+    
+            //if (_modules.TryGetValue(dependency, out var module))
+            //{
+            //    return module;
+            //}
 
             throw new InvalidOperationException($"Could not resolve module for type {dependency.Name}");
         }

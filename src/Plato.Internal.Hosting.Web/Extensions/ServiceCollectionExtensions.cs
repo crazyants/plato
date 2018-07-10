@@ -385,12 +385,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
             foreach (var controller in context.Result.Controllers)
             {
                 var controllerType = controller.ControllerType.AsType();
-                var module = _typedModuleProvider.GetModuleForDependency(controllerType).Result;
+                var module = _typedModuleProvider.GetModuleForDependency(controllerType)
+                    .GetAwaiter()
+                    .GetResult();
                 if (module != null)
                 {
                     controller.RouteValues.Add("area", module.Descriptor.Id);
                 }
-
             }
         }
 

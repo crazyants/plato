@@ -43,14 +43,6 @@ namespace Plato.WebApi
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-        
-            //routes.MapAreaRoute(
-            //    name: "WebAPI",
-            //    areaName: "Plato.WebApi",
-            //    template: "api/{controller}/{action}/{id?}",
-            //    defaults: new { controller = "Users", action = "Get" }
-            //);
-
         }
 
     }

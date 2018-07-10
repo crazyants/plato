@@ -48,8 +48,7 @@ namespace Plato.Internal.Modules.Loader
 
         public ModuleLoader(
             IPlatoFileSystem fileSystem,
-            ILogger<ModuleLoader> logger
-        )
+            ILogger<ModuleLoader> logger)
         {
             _fileSystem = fileSystem;
             _logger = logger;

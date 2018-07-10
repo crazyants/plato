@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -29,29 +27,31 @@ namespace Plato.Email.Services
         public void Configure(SmtpSettings options)
         {
 
-            var settings = _emailSettingsStore.GetAsync()
+            var settings = _emailSettingsStore
+                .GetAsync()
                 .GetAwaiter()
-                .GetResult()
-                .SmtpSettings;
+                .GetResult();
+
+            var smtpSettings = settings.SmtpSettings;
 
             // Set options
-            options.DefaultFrom = settings.DefaultFrom;
-            options.DeliveryMethod = settings.DeliveryMethod;
-            options.PickupDirectoryLocation = settings.PickupDirectoryLocation;
-            options.Host = settings.Host;
-            options.Port = settings.Port;
-            options.EnableSsl = settings.EnableSsl;
-            options.RequireCredentials = settings.RequireCredentials;
-            options.UseDefaultCredentials = settings.UseDefaultCredentials;
-            options.UserName = settings.UserName;
+            options.DefaultFrom = smtpSettings.DefaultFrom;
+            options.DeliveryMethod = smtpSettings.DeliveryMethod;
+            options.PickupDirectoryLocation = smtpSettings.PickupDirectoryLocation;
+            options.Host = smtpSettings.Host;
+            options.Port = smtpSettings.Port;
+            options.EnableSsl = smtpSettings.EnableSsl;
+            options.RequireCredentials = smtpSettings.RequireCredentials;
+            options.UseDefaultCredentials = smtpSettings.UseDefaultCredentials;
+            options.UserName = smtpSettings.UserName;
 
             // Decrypt the password
-            if (!String.IsNullOrWhiteSpace(settings.Password))
+            if (!String.IsNullOrWhiteSpace(smtpSettings.Password))
             {
                 try
                 {
                     var protector = _dataProtectionProvider.CreateProtector(nameof(SmtpSettingsConfiguration));
-                    options.Password = protector.Unprotect(settings.Password);
+                    options.Password = protector.Unprotect(smtpSettings.Password);
                 }
                 catch
                 {

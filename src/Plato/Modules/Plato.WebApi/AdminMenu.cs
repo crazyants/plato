@@ -22,7 +22,7 @@ namespace Plato.WebApi
 
             builder
                 .Add(T["Settings"], 9999, configuration => configuration
-                    .Add(T["Web Api Settings"], 6, installed => installed
+                    .Add(T["Web Api Settings"], 6, webApiSettings => webApiSettings
                         .Action("Index", "Admin", "Plato.WebApi")
                         //.Permission(Permissions.ManageUsers)
                         .LocalNav()

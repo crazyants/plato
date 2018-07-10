@@ -85,9 +85,11 @@ namespace Plato.Internal.Modules
             foreach (var descriptor in descriptors)
             {
                 var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
+                var assembly = assemblies.FirstOrDefault(a => a.FullName == descriptor.Id);
                 _moduleEntries.Add(new ModuleEntry()
                 {
                     Descriptor = descriptor,
+                    Assembly = assembly,
                     Assmeblies = assemblies
                 });
                 loadedAssemblies.AddRange(assemblies);
@@ -138,8 +140,15 @@ namespace Plato.Internal.Modules
 
             foreach (var descriptor in _moduleDescriptors)
             {
+ 
+                // Load all assemblies within descriptors bin folder
                 var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
 
+                // get assembly with name matching descriptor Id
+                var moduleAssembly = assemblies.FirstOrDefault(a =>
+                    Path.GetFileNameWithoutExtension(a.ManifestModule.Name) == descriptor.Id);
+
+            
                 // The assembly may have already been loaded by another module
                 // For example if a module references the assembly we are trying to load
                 // LoadModuleAsync will only ever load the assembly once
@@ -151,10 +160,23 @@ namespace Plato.Internal.Modules
                         .Select(a => a.Value)
                         .ToList();
                 }
-               
+
+                if (moduleAssembly == null)
+                {
+                    moduleAssembly = assemblies.FirstOrDefault(a =>
+                        Path.GetFileNameWithoutExtension(a.ManifestModule.Name) == descriptor.Id);
+                }
+                
+                if (moduleAssembly == null)
+                {
+                    throw new Exception($"Could not locate assembly for module '{descriptor.Id}'. Please ensure the folder containing your module has the same name as your modules primary assembly. For example if you have an assembly called 'MyCustomModule.Data.dll' your Modules/ModuleFolder should be named '/MyCustomModule.Data'.");
+                }
+
+
                 _moduleEntries.Add(new ModuleEntry()
                 {
                     Descriptor = descriptor,
+                    Assembly = moduleAssembly,
                     Assmeblies = assemblies
                 });
 

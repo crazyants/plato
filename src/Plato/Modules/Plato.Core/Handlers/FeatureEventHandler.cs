@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Features.Abstractions;
 
-namespace Plato.Core.Services
+namespace Plato.Core.Handlers
 {
     public class FeatureEventHandler : BaseFeatureEventHandler
     {
