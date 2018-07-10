@@ -16,11 +16,9 @@ namespace Plato.Internal.Repositories.Users
 
         #region "Private Variables"
 
+        private readonly IUserDataRepository<UserData> _userDataRepository;
         private readonly IDbContext _dbContext;
         private readonly IUserSecretRepository<UserSecret> _userSecretRepository;
-        //private readonly IUserDetailRepository<UserDetail> _userDetailRepository;
-        //private readonly IUserPhotoRepository<UserPhoto> _userPhotoRepository;
-
         private readonly ILogger<UserSecretRepository> _logger;
 
         #endregion
@@ -30,17 +28,17 @@ namespace Plato.Internal.Repositories.Users
         public UserRepository(
             IDbContext dbContext,
             IUserSecretRepository<UserSecret> userSecretRepository,
-            ILogger<UserSecretRepository> logger)
+            ILogger<UserSecretRepository> logger,
+            IUserDataRepository<UserData> userDataRepository)
         {
             _dbContext = dbContext;
             _userSecretRepository = userSecretRepository;
-            //_userDetailRepository = userDetailRepository;
             _logger = logger;
+            _userDataRepository = userDataRepository;
         }
 
         #endregion
-
-
+        
         #region "Implementation"
 
         public Task<bool> DeleteAsync(int id)
@@ -79,28 +77,11 @@ namespace Plato.Internal.Repositories.Users
                 user.LockoutEnd,
                 user.LockoutEnabled,
                 user.AccessFailedCount,
-                user.ApiKey);
+                user.ApiKey,
+                user.Data);
 
             if (id > 0)
             {
-                //// secerts
-
-                //if (user.Secret == null)
-                //    user.Secret = new UserSecret();
-                //if ((user.Id == 0) || (user.Secret.UserId == 0))
-                //    user.Secret.UserId = id;
-                //await _userSecretRepository.InsertUpdateAsync(user.Secret);
-
-                //// detail
-
-                //if (user.Detail == null)
-                //    user.Detail = new UserDetail();
-                //if ((user.Id == 0) || (user.Detail.UserId == 0))
-                //    user.Detail.UserId = id;
-                //await _userDetailRepository.InsertUpdateAsync(user.Detail);
-                
-                // return
-
                 return await SelectByIdAsync(id);
             }
 
@@ -381,7 +362,8 @@ namespace Plato.Internal.Repositories.Users
             DateTimeOffset? lockoutEnd,
             bool lockoutEnabled,
             int accessFailedCount,
-            string apiKey)
+            string apiKey,
+            IEnumerable<UserData> data)
         {
      
             var userId = 0;
@@ -412,6 +394,20 @@ namespace Plato.Internal.Repositories.Users
                 );
             }
 
+            // Add user data
+            if (userId > 0)
+            {
+                if (data != null)
+                {
+                    foreach (var item in data)
+                    {
+                        item.Id = userId;
+                        await _userDataRepository.InsertUpdateAsync(item);
+                    }
+                }
+
+            }
+            
             return userId;
 
         }

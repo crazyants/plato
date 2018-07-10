@@ -165,8 +165,7 @@ namespace Plato.Entities.Stores
         #endregion
 
         #region "Private Methods"
-
-
+        
         async Task<IList<Entity>> MergeEntityData(IList<Entity> entities)
         {
 

@@ -67,6 +67,18 @@ namespace Plato.Internal.Stores.Users
                 throw new ArgumentOutOfRangeException(nameof(user.Id));
             }
 
+            // Serialize any present meta data for storage
+            var data = new List<UserData>();
+            foreach (var item in user.MetaData)
+            {
+                data.Add(new UserData()
+                {
+                    Key = item.Key.FullName,
+                    Value = item.Value.Serialize()
+                });
+            }
+            user.Data = data;
+
             var newUser = await _userRepository.InsertUpdateAsync(user);
             if (newUser != null)
             {
@@ -100,6 +112,18 @@ namespace Plato.Internal.Stores.Users
             {
                 user.ApiKey = System.Guid.NewGuid().ToString() + user.Id.ToString();
             }
+
+            // Serialize any present meta data for storage
+            var data = new List<UserData>();
+            foreach (var item in user.MetaData)
+            {
+                data.Add(new UserData()
+                {
+                    Key = item.Key.FullName,
+                    Value = item.Value.Serialize()
+                });
+            }
+            user.Data = data;
 
             var updatedUser = await _userRepository.InsertUpdateAsync(user);
             if (updatedUser != null)

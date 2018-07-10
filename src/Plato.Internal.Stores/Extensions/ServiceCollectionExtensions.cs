@@ -53,8 +53,6 @@ namespace Plato.Internal.Stores.Extensions
             services.AddScoped<IUserDataItemStore<UserData>, UserDataItemStore>();
             services.AddScoped<IUserDataStore<UserData>, UserDataStore>();
 
-            //services.AddScoped<IUserDetailsStore<UserDetail>, UserDetailsStore>();
-
             return services;
 
 
