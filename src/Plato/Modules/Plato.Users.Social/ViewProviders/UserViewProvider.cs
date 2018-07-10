@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Social.Models;
 using Plato.Users.Social.Stores;
 using Plato.Users.Social.ViewModels;
@@ -14,14 +15,13 @@ namespace Plato.Users.Social.ViewProviders
 
         private readonly UserManager<User> _userManager;
  
-        private readonly ISocialLinksStore _socialLinksStore;
+        private readonly IPlatoUserStore<User> _platoUserStore;
 
         public UserViewProvider(
-            UserManager<User> userManager,
-            ISocialLinksStore socialLinksStore)
+            UserManager<User> userManager, IPlatoUserStore<User> platoUserStore)
         {
             _userManager = userManager;
-            _socialLinksStore = socialLinksStore;
+            _platoUserStore = platoUserStore;
         }
         
         public override Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
@@ -37,8 +37,8 @@ namespace Plato.Users.Social.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
 
-            var socialLinks = await _socialLinksStore.GetAsync(user.Id);
-            
+            var socialLinks = user.TryGet<SocialLinks>();
+
             return Views(
                 View<EditSocialViewModel>("Social.Edit.Content", model =>
                 {
@@ -63,12 +63,17 @@ namespace Plato.Users.Social.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-                var result = await _socialLinksStore.UpdateAsync(user.Id, new SocialLinks()
+
+                var socialLinks = new SocialLinks()
                 {
                     FacebookUrl = model.FacebookUrl,
-                    TwitterUrl  = model.TwitterUrl,
+                    TwitterUrl = model.TwitterUrl,
                     YouTubeUrl = model.YouTubeUrl
-                });
+                };
+
+                user.AddOrUpdate<SocialLinks>(socialLinks);
+
+                var result = await _platoUserStore.UpdateAsync(user);
             }
             
             return await BuildEditAsync(user, updater);

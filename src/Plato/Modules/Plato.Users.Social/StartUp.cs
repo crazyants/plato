@@ -8,6 +8,8 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
 using Plato.Users.Social.ViewProviders;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Stores.Users;
+using Plato.Users.Social.Models;
 using Plato.Users.Social.Stores;
 
 namespace Plato.Users.Social
@@ -29,8 +31,9 @@ namespace Plato.Users.Social
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
 
             // Data store
-            services.AddScoped<ISocialLinksStore, SocialLinksStore>();
-            
+            //services.AddScoped<ISocialLinksStore, SocialLinksStore>();
+            //services.AddScoped<IUserDataStore<SocialLinks>, UserDataItemStore<SocialLinks>>();
+
             // Module permissions
             services.AddScoped<IPermissionsProvider, PermissionsProvider>();
             

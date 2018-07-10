@@ -4,16 +4,16 @@ using Plato.Users.Social.Models;
 namespace Plato.Users.Social.Stores
 {
 
-    public interface ISocialLinksStore
-    {
+    //public interface ISocialLinksStore
+    //{
 
-        Task<SocialLinks> GetAsync(int userId);
+    //    Task<SocialLinks> GetAsync(int userId);
 
-        Task<SocialLinks> UpdateAsync(int userId, SocialLinks value);
+    //    Task<SocialLinks> UpdateAsync(int userId, SocialLinks value);
 
-        Task<bool> DeleteAsync(int userId);
+    //    Task<bool> DeleteAsync(int userId);
 
-    }
+    //}
 
 
 }

@@ -30,19 +30,14 @@ namespace Plato.Internal.Stores.Users
         #region "UserStore"
 
         private readonly IPlatoUserRoleStore<UserRole> _platoUserRoleStore;
-
-        private readonly IUserRepository<User> _userRepository;
- 
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IPlatoRoleStore _platoRoleStore;
 
         public UserStore(
-            IUserRepository<User> userRepository,
             IPlatoUserStore<User> platoUserStore,
             IPlatoRoleStore platoRoleStore,
             IPlatoUserRoleStore<UserRole> platoUserRoleStore)
         {
-            _userRepository = userRepository;
             _platoUserStore = platoUserStore;
             _platoRoleStore = platoRoleStore;
             _platoUserRoleStore = platoUserRoleStore;
@@ -59,11 +54,30 @@ namespace Plato.Internal.Stores.Users
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
 
-            var newUser = await _userRepository.InsertUpdateAsync(user);
+            var newUser = await _platoUserStore.CreateAsync(user);
             if ((newUser != null) && (newUser.Id > 0))
                 return IdentityResult.Success;
 
             return IdentityResult.Failed();
+        }
+
+        public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            try
+            {
+                await _platoUserStore.UpdateAsync(user);
+            }
+            catch
+            {
+                return IdentityResult.Failed();
+            }
+
+            return IdentityResult.Success;
         }
 
         public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
@@ -75,7 +89,7 @@ namespace Plato.Internal.Stores.Users
 
             try
             {
-                await _userRepository.DeleteAsync(user.Id);
+                await _platoUserStore.DeleteAsync(user);
             }
             catch
             {
@@ -89,18 +103,17 @@ namespace Plato.Internal.Stores.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            int id;
-            if (!int.TryParse(userId, out id))
+            if (!int.TryParse(userId, out var id))
                 return null;
 
-            return await _userRepository.SelectByIdAsync(id);
+            return await _platoUserStore.GetByIdAsync(id);
         }
 
         public async Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return await _userRepository.SelectByUserNameAsync(normalizedUserName);
+            return await _platoUserStore.GetByUserNameAsync(normalizedUserName);
         }
 
         public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
@@ -157,25 +170,7 @@ namespace Plato.Internal.Stores.Users
             return Task.CompletedTask;
         }
 
-        public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-
-            try
-            {
-                await _userRepository.InsertUpdateAsync(user);
-            }
-            catch
-            {
-                return IdentityResult.Failed();
-            }
-
-            return IdentityResult.Success;
-        }
-
+    
         #endregion
 
         #region "IUserPasswordStore"
@@ -288,7 +283,7 @@ namespace Plato.Internal.Stores.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return _userRepository.SelectByEmailAsync(normalizedEmail);
+            return _platoUserStore.GetByEmailAsync(normalizedEmail);
         }
 
         public Task<string> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
