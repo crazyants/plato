@@ -50,10 +50,11 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         private static IServiceCollection _services;
 
+        // ----------------------
         // services
+        // ----------------------
 
-        public static IServiceCollection AddPlato(
-            this IServiceCollection services)
+        public static IServiceCollection AddPlato(this IServiceCollection services)
         {
             
             services.AddPlatoHost();
@@ -105,8 +106,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         }
         
-        public static IServiceCollection AddHPlatoTennetHost(
-            this IServiceCollection services,
+        public static IServiceCollection AddHPlatoTennetHost(this IServiceCollection services,
             Action<IServiceCollection> configure)
         {
 
@@ -126,8 +126,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         }
 
-        public static IServiceCollection AddPlatoAuth(
-            this IServiceCollection services)
+        public static IServiceCollection AddPlatoAuth(this IServiceCollection services)
         {
 
             services.AddAuthentication(options =>
@@ -164,8 +163,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         }
 
-        public static IServiceCollection AddPlatoMvc(
-            this IServiceCollection services)
+        public static IServiceCollection AddPlatoMvc(this IServiceCollection services)
         {
 
             // add mvc core services
@@ -193,8 +191,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         }
 
-        public static IServiceCollection AddPlatoModuleMvc(
-            this IServiceCollection services)
+        public static IServiceCollection AddPlatoModuleMvc(this IServiceCollection services)
         {
 
             var moduleManager = services.BuildServiceProvider().GetService<IModuleManager>();
@@ -240,12 +237,9 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 }
             }
             
-
             // implement our own conventions to automatically add [areas] route attributes to loaded module controllers
-
             // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-2.1
-
-            services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, ModularApplicationModelProvider>());
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IApplicationModelProvider, ModuleApplicationModelProvider>());
             
             return services;
 
@@ -257,8 +251,9 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 .ApplicationParts.Add(new AssemblyPart(assembly));
         }
 
-
+        // ----------------------
         // app
+        // ----------------------
 
         public static IApplicationBuilder UsePlato(
             this IApplicationBuilder app,
@@ -361,47 +356,4 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
     }
     
-    // TODO: Refactor below code into individual classes within Plato.Hosting
-    #region "Add [Area=Module.Id] Atrribute to Module Controllers"
-
- 
-    public class ModularApplicationModelProvider : IApplicationModelProvider
-    {
-   
-        private readonly ITypedModuleProvider _typedModuleProvider;
-
-        public ModularApplicationModelProvider(
-            ITypedModuleProvider typedModuleProvider)
-        {
-            _typedModuleProvider = typedModuleProvider;
-        }
-
-        public int Order => 1000;
-        
-        public void OnProvidersExecuted(ApplicationModelProviderContext context)
-        {
-            
-            // This code is called only once per tenant during the construction of routes
-            foreach (var controller in context.Result.Controllers)
-            {
-                var controllerType = controller.ControllerType.AsType();
-                var module = _typedModuleProvider.GetModuleForDependency(controllerType)
-                    .GetAwaiter()
-                    .GetResult();
-                if (module != null)
-                {
-                    controller.RouteValues.Add("area", module.Descriptor.Id);
-                }
-            }
-        }
-
-        public void OnProvidersExecuting(ApplicationModelProviderContext context)
-        {
-        }
-
-    }
-
-    #endregion
-
-
 }

@@ -144,13 +144,12 @@ namespace Plato.Internal.Modules
                 // Load all assemblies within descriptors bin folder
                 var assemblies = await _moduleLoader.LoadModuleAsync(descriptor);
 
-                // get assembly with name matching descriptor Id
+                // get assembly with name matching descriptor Id (i.e. the modules primary assembly)
                 var moduleAssembly = assemblies.FirstOrDefault(a =>
                     Path.GetFileNameWithoutExtension(a.ManifestModule.Name) == descriptor.Id);
-
-            
+                
                 // The assembly may have already been loaded by another module
-                // For example if a module references the assembly we are trying to load
+                // For example if a module references the modules assembly we are trying to load
                 // LoadModuleAsync will only ever load the assembly once
                 // In this case add already loaded assemblies for the module
                 if (assemblies.Count == 0)
@@ -161,18 +160,20 @@ namespace Plato.Internal.Modules
                         .ToList();
                 }
 
+                // Attempt to get modules assembly again from any previously added dependenvies
                 if (moduleAssembly == null)
                 {
                     moduleAssembly = assemblies.FirstOrDefault(a =>
                         Path.GetFileNameWithoutExtension(a.ManifestModule.Name) == descriptor.Id);
                 }
                 
+                // We always need a module assembly. 
                 if (moduleAssembly == null)
                 {
-                    throw new Exception($"Could not locate assembly for module '{descriptor.Id}'. Please ensure the folder containing your module has the same name as your modules primary assembly. For example if you have an assembly called 'MyCustomModule.Data.dll' your Modules/ModuleFolder should be named '/MyCustomModule.Data'.");
+                    throw new Exception($"Could not locate assembly for module '{descriptor.Id}'. Please ensure the folder containing your '{descriptor.Id}' module has the same name as your modules primary assembly name minus the .DLL extension. You can either rename the '{descriptor.Id}' modules primary assembly to '{descriptor.Id}.dll' or change the module folder name to match your existing assembly name minus the .DLL extension. For example if your modules assembly is named 'MyCustomModule.Data.dll' your module folder name should be named 'MyCustomModule.Data' so the full path would be 'Modules/MyCustomModule.Data'");
                 }
-
-
+                
+                // Add the described module entry to our local list
                 _moduleEntries.Add(new ModuleEntry()
                 {
                     Descriptor = descriptor,
@@ -180,6 +181,7 @@ namespace Plato.Internal.Modules
                     Assmeblies = assemblies
                 });
 
+                // Add all located assemblies to local for query next time round
                 foreach (var assembly in assemblies)
                 {
                     var assemblyName = Path.GetFileNameWithoutExtension(assembly.ManifestModule.Name);

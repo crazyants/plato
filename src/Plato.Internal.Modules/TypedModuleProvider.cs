@@ -31,9 +31,7 @@ namespace Plato.Internal.Modules
             var moduleEntries = await _moduleManager.LoadModulesAsync();
             foreach (var moduleEntry in moduleEntries)
             {
-             
-                if (dependency.Assembly.ManifestModule.Name ==
-                    moduleEntry.Assembly.ManifestModule.Name)
+                if (dependency.Assembly.FullName == moduleEntry.Assembly.FullName)
                 {
                     return moduleEntry;
                 }
