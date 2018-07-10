@@ -17,7 +17,7 @@ namespace Plato.WebApi.Assets
             _contextFacade = contextFacade;
         }
 
-        public async Task<IEnumerable<AssetEnvironment>> GetResourceGroups()
+        public async Task<IEnumerable<AssetEnvironment>> GetAssetGroups()
         {
 
             var script = "$(function (win) { win.PlatoOptions = { url: '{url}', apiKey: '{apiKey}' } } (window));";

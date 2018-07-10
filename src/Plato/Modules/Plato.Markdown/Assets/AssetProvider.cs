@@ -7,7 +7,7 @@ namespace Plato.Markdown.Assets
     public class AssetProvider : IAssetProvider
     {
 
-        public Task<IEnumerable<AssetEnvironment>> GetResourceGroups()
+        public Task<IEnumerable<AssetEnvironment>> GetAssetGroups()
         {
 
             IEnumerable<AssetEnvironment> result = new List<AssetEnvironment>

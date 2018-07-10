@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Assets.Abstractions;
@@ -10,30 +11,29 @@ namespace Plato.Internal.Assets
     public class AssetManager : IAssetManager
     {
 
-        private readonly IEnumerable<IAssetProvider> _resourceProviders;
+        private readonly IEnumerable<IAssetProvider> _assetProviders;
         private readonly ILogger<AssetManager> _logger;
 
         public AssetManager(
-            IEnumerable<IAssetProvider> resourceProviders,
+            IEnumerable<IAssetProvider> assetProviders,
             ILogger<AssetManager> logger)
         {
-            _resourceProviders = resourceProviders;
+            _assetProviders = assetProviders;
             _logger = logger;
         }
-
-
-        public async Task<IEnumerable<AssetEnvironment>> GetResources()
+        
+        public async Task<IEnumerable<AssetEnvironment>> GetAssets()
         {
 
             var output = new List<AssetEnvironment>();
-            foreach (var provider in _resourceProviders)
+            foreach (var provider in _assetProviders)
             {
                 try
                 {
-                    var resources = await provider.GetResourceGroups();
-                    if (resources != null)
+                    var env = await provider.GetAssetGroups();
+                    if (env != null)
                     {
-                        output.AddRange(resources);
+                        output.AddRange(env);
                     }
                 }
                 catch (Exception e)
@@ -41,7 +41,7 @@ namespace Plato.Internal.Assets
                     _logger.LogError(e, $"An exception occurred whilst attempting to execute a resource provider of type {provider.GetType()}.");
                 }
             }
-
+            
             return output;
         }
 

@@ -42,19 +42,19 @@ namespace Plato.Internal.Layout.TagHelpers
 
             var sw = new StringWriter();
          
-            var resources = await GetResourcesAsync();
-            if (resources != null)
+            var assets = await GetASsetsAsync();
+            if (assets != null)
             {
                 var i = 1;
-                foreach (var resource in resources)
+                foreach (var asset in assets)
                 {
-                    switch (resource.Type)
+                    switch (asset.Type)
                     {
 
                         case AssetType.IncludeJavaScript:
                             
-                            sw.Write(BuildJavaScriptInclude(resource));
-                            if (i < resources.Count)
+                            sw.Write(BuildJavaScriptInclude(asset));
+                            if (i < assets.Count)
                             {
                                 sw.Write(sw.NewLine);
                             }
@@ -62,8 +62,8 @@ namespace Plato.Internal.Layout.TagHelpers
 
                         case AssetType.IncludeCss:
 
-                            sw.Write(BuildCssInclude(resource));
-                            if (i < resources.Count)
+                            sw.Write(BuildCssInclude(asset));
+                            if (i < assets.Count)
                             {
                                 sw.Write(sw.NewLine);
                             }
@@ -71,8 +71,8 @@ namespace Plato.Internal.Layout.TagHelpers
 
                         case AssetType.Meta:
 
-                            sw.Write(BuildMeta(resource));
-                            if (i < resources.Count)
+                            sw.Write(BuildMeta(asset));
+                            if (i < assets.Count)
                             {
                                 sw.Write(sw.NewLine);
                             }
@@ -80,8 +80,8 @@ namespace Plato.Internal.Layout.TagHelpers
 
                         case AssetType.InlineJavaScript:
 
-                            sw.Write(BuildInlineJavaScript(resource));
-                            if (i < resources.Count)
+                            sw.Write(BuildInlineJavaScript(asset));
+                            if (i < assets.Count)
                             {
                                 sw.Write(sw.NewLine);
                             }
@@ -104,7 +104,7 @@ namespace Plato.Internal.Layout.TagHelpers
         #region "Private Methods"
         
         // Get all resources matching environment and section
-        async Task<IList<Asset>> GetResourcesAsync()
+        async Task<IList<Asset>> GetASsetsAsync()
         {
 
             // Get all default and provided environments
@@ -113,8 +113,11 @@ namespace Plato.Internal.Layout.TagHelpers
             // Filter by environment
             var matchingEnvironments = environments.FirstOrDefault(g => g.TargetEnvironment == GetDeploymentMode());
 
-            // filter by section
-            return @matchingEnvironments?.Resources.Where(r => r.Section == Section).ToList();
+            // filter by section and return ordered assets
+            return @matchingEnvironments?.Resources
+                .Where(r => r.Section == Section)
+                .OrderBy(p => p.Priority)
+                .ToList();
 
         }
 
@@ -122,7 +125,7 @@ namespace Plato.Internal.Layout.TagHelpers
         {
             
             // Get provided resources
-            var provided = await _assetManager.GetResources();
+            var provided = await _assetManager.GetAssets();
             var providedEnvironments = provided.ToList();
 
             // Get default resources

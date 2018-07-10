@@ -8,7 +8,7 @@ namespace Plato.Internal.Assets.Abstractions
     public interface IAssetManager
     {
 
-        Task<IEnumerable<AssetEnvironment>> GetResources();
+        Task<IEnumerable<AssetEnvironment>> GetAssets();
 
     }
 
