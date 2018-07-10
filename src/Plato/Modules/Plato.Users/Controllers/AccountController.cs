@@ -36,22 +36,19 @@ namespace Plato.Users.Controllers
         private readonly ISchemaBuilder _schemaBuilder;
 
         public readonly IDocumentStore _documentStore;
-        private readonly IUserDetailsStore<UserDetail> _userDetailStore;
-
+     
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManage,
             IHttpContextAccessor httpContextAccessor, 
             ISchemaBuilder schemaBuilder,
-            IDocumentStore documentStore,
-            IUserDetailsStore<UserDetail> userDetailStore)
+            IDocumentStore documentStore)
         {
             _userManager = userManager;
             _signInManager = signInManage;
             _httpContextAccessor = httpContextAccessor;
             _schemaBuilder = schemaBuilder;
             _documentStore = documentStore;
-            _userDetailStore = userDetailStore;
         }
 
         [HttpGet]
@@ -63,12 +60,6 @@ namespace Plato.Users.Controllers
             {
                 IsEmailConfirmed = true
             };
-
-            var newDetail = await _userDetailStore.UpdateAsync(1, detail);
-
-
-            var existingDetail = await _userDetailStore.GetAsync(1);
-
 
 
             var doc = new TestDocument2()

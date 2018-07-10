@@ -109,11 +109,11 @@ namespace Plato.Users.Controllers
             else
                 userPhoto = await _userPhotoStore.CreateAsync(userPhoto);
 
-            // update user
-            user.Detail.ModifiedUserId = user.Id;
-            user.Detail.ModifiedDate = DateTime.UtcNow;
+            //// update user
+            //user.Detail.ModifiedUserId = user.Id;
+            //user.Detail.ModifiedDate = DateTime.UtcNow;
 
-            await _platoUserStore.UpdateAsync(user);
+            //await _platoUserStore.UpdateAsync(user);
 
             return View();
         }

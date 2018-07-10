@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Features;
-using Plato.Internal.Models.Roles;
 using Plato.Internal.Stores.Settings;
 using Plato.Internal.Stores.Roles;
 using Plato.Internal.Stores.Users;
@@ -52,9 +50,10 @@ namespace Plato.Internal.Stores.Extensions
 
             //services.AddScoped<IUserBannerStore<UserBanner>, UserBannerStore>();
 
+            services.AddScoped<IUserDataItemStore<UserData>, UserDataItemStore>();
             services.AddScoped<IUserDataStore<UserData>, UserDataStore>();
 
-            services.AddScoped<IUserDetailsStore<UserDetail>, UserDetailsStore>();
+            //services.AddScoped<IUserDetailsStore<UserDetail>, UserDetailsStore>();
 
             return services;
 

@@ -109,25 +109,62 @@ namespace Plato.Internal.Repositories.Users
             return null;
         }
         
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
+     
             if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Deleting user data with id: {id}");
-            
-            throw new NotImplementedException();
+            {
+                _logger.LogInformation($"Deleting user data id: {id}");
+            }
+
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteUserDatumById", id);
+            }
+
+            return success > 0 ? true : false;
+
         }
         
-        public Task<IPagedResults<UserData>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<UserData>> SelectAsync(params object[] inputParams)
         {
-            throw new NotImplementedException();
+
+            PagedResults<UserData> output = null;
+            using (var context = _dbContext)
+            {
+
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectUserDatumPaged",
+                    inputParams
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new PagedResults<UserData>();
+                    while (await reader.ReadAsync())
+                    {
+                        var data = new UserData();
+                        data.PopulateModel(reader);
+                        output.Data.Add(data);
+                    }
+
+                    if (await reader.NextResultAsync())
+                    {
+                        await reader.ReadAsync();
+                        output.PopulateTotal(reader);
+                    }
+
+                }
+            }
+
+            return output;
+            
         }
-
-
-        public Task<IPagedResults<TModel>> SelectAsync<TModel>(params object[] inputParams) where TModel : class
-        {
-            throw new NotImplementedException();
-        }
-
+        
         #endregion
 
         #region "Private Methods"

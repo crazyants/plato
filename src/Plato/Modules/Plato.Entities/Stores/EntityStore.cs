@@ -179,6 +179,11 @@ namespace Plato.Entities.Stores
             var results = await _entityDataStore.QueryAsync()
                 .Select<EntityDataQueryParams>(q => { q.EntityId.IsIn(entities.Select(e => e.Id).ToArray()); })
                 .ToList();
+
+            if (results == null)
+            {
+                return entities;
+            }
             
             // Merge data into entities
             return await MergeEntityData(entities, results.Data);

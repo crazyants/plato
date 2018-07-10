@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Data;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Roles;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Models.Users
 {
     
     public class User : IdentityUser<int>, IModel<User>
     {
+
+
+        private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
 
         private string _displayName;
 
@@ -27,9 +32,9 @@ namespace Plato.Internal.Models.Users
           
         public string ApiKey { get; set; }
 
-        public UserSecret Secret { get; set;  }
+        //public UserSecret Secret { get; set;  }
 
-        public UserDetail Detail { get; set; }
+        //public UserDetail Detail { get; set; }
         
         public IEnumerable<string> RoleNames { get; set; } = new List<string>();
 
@@ -43,8 +48,48 @@ namespace Plato.Internal.Models.Users
 
         public User()
         {
-            this.Detail = new UserDetail();
-            this.Secret = new UserSecret();
+            _metaData = new ConcurrentDictionary<Type, ISerializable>();
+            //this.Detail = new UserDetail();
+            //this.Secret = new UserSecret();
+        }
+
+        #endregion
+
+        #region "Public Methods"
+        
+        public void AddOrUpdate<T>(T obj) where T : class
+        {
+            if (_metaData.ContainsKey(typeof(T)))
+            {
+                _metaData.TryUpdate(typeof(T), (ISerializable)obj, _metaData[typeof(T)]);
+            }
+            else
+            {
+                _metaData.TryAdd(typeof(T), (ISerializable)obj);
+            }
+        }
+
+        public void AddOrUpdate(Type type, ISerializable obj)
+        {
+            if (_metaData.ContainsKey(type))
+            {
+                _metaData.TryUpdate(type, (ISerializable)obj, _metaData[type]);
+            }
+            else
+            {
+                _metaData.TryAdd(type, obj);
+            }
+        }
+
+        public T TryGet<T>() where T : class
+        {
+            if (_metaData.ContainsKey(typeof(T)))
+            {
+                return (T)_metaData[typeof(T)];
+            }
+
+            return null;
+
         }
 
         #endregion
@@ -56,6 +101,9 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("Id"))
                 this.Id = Convert.ToInt32(dr["Id"]);
+
+            if (dr.ColumnIsNotNull("PrimaryRoleId"))
+                this.PrimaryRoleId = Convert.ToInt32(dr["PrimaryRoleId"]);
 
             if (dr.ColumnIsNotNull("UserName"))
                 this.UserName = Convert.ToString(dr["UserName"]);

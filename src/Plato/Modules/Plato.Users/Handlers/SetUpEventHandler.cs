@@ -226,14 +226,44 @@ namespace Plato.Users.Handlers
                         .ForTable(users)
                         .WithParameter(users.PrimaryKeyColumn))
 
-                .CreateProcedure(new SchemaProcedure("SelectUserByEmail", StoredProcedureType.SelectByKey)
+                .CreateProcedure(new SchemaProcedure("SelectUserByEmail", @"
+                            DECLARE @Id int;
+                            SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
+                                WHERE (
+                                   Email = @Email
+                            ))
+                            EXEC {prefix}_SelectUserById @id;")
                     .ForTable(users)
                     .WithParameter(new SchemaColumn() {Name = "Email", DbType = DbType.String, Length = "255"}))
-                .CreateProcedure(new SchemaProcedure("SelectUserByUserName", StoredProcedureType.SelectByKey)
+                    
+                .CreateProcedure(new SchemaProcedure("SelectUserByUserName", @"
+                            DECLARE @Id int;
+                            SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
+                                WHERE (
+                                   UserName = @UserName
+                            ))
+                            EXEC {prefix}_SelectUserById @id;")
                     .ForTable(users)
-                    .WithParameter(new SchemaColumn() {Name = "Username", DbType = DbType.String, Length = "255"}))
+                    .WithParameter(new SchemaColumn() {Name = "UserName", DbType = DbType.String, Length = "255"}))
+                    
+                .CreateProcedure(new SchemaProcedure("SelectUserByApiKey", @"
+                            DECLARE @Id int;
+                            SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
+                                WHERE (
+                                   ApiKey = @ApiKey
+                            ))
+                            EXEC {prefix}_SelectUserById @id;")
+                    .ForTable(users)
+                    .WithParameter(new SchemaColumn() { Name = "ApiKey", DbType = DbType.String, Length = "255" }))
+                    
                 .CreateProcedure(
-                    new SchemaProcedure("SelectUserByUserNameNormalized", StoredProcedureType.SelectByKey)
+                    new SchemaProcedure("SelectUserByUserNameNormalized", @"
+                            DECLARE @Id int;
+                            SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
+                                WHERE (
+                                   NormalizedUserName = @NormalizedUserName
+                            ))
+                            EXEC {prefix}_SelectUserById @id;")
                         .ForTable(users)
                         .WithParameter(new SchemaColumn()
                         {
@@ -241,8 +271,15 @@ namespace Plato.Users.Handlers
                             DbType = DbType.String,
                             Length = "255"
                         }))
+
                 .CreateProcedure(
-                    new SchemaProcedure("SelectUserByEmailAndPassword", StoredProcedureType.SelectByKey)
+                    new SchemaProcedure("SelectUserByEmailAndPassword", @"
+                            DECLARE @Id int;
+                            SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
+                                WHERE (
+                                   Email = @Email AND PasswordHash = @PasswordHash
+                            ))
+                            EXEC {prefix}_SelectUserById @id;")
                         .ForTable(users)
                         .WithParameters(new List<SchemaColumn>()
                         {
@@ -259,6 +296,7 @@ namespace Plato.Users.Handlers
                                 Length = "255"
                             }
                         }))
+
                 .CreateProcedure(new SchemaProcedure("SelectUsersPaged", StoredProcedureType.SelectPaged)
                     .ForTable(users)
                     .WithParameters(new List<SchemaColumn>()
@@ -422,6 +460,19 @@ namespace Plato.Users.Handlers
                 .CreateProcedure(new SchemaProcedure("SelectUserDatumByUserId", StoredProcedureType.SelectByKey)
                     .ForTable(userData)
                     .WithParameter(new SchemaColumn() {Name = "UserId", DbType = DbType.Int32}));
+
+            builder.CreateProcedure(new SchemaProcedure("SelectUserDatumPaged", StoredProcedureType.SelectPaged)
+                .ForTable(userData)
+                .WithParameters(new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        Name = "[Key]",
+                        DbType = DbType.String,
+                        Length = "255"
+                    }
+                }));
+
 
         }
 

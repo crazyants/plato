@@ -11,27 +11,27 @@ namespace Plato.Users.Social.Stores
 
         public const string Key = "Plato.Users.Details";
 
-        private readonly IUserDataStore<SocialLinks> _userDataStore;
+        private readonly IUserDataItemStore<SocialLinks> _userDataItemStore;
 
         public SocialLinksStore(
-            IUserDataStore<SocialLinks> userDataStore)
+            IUserDataItemStore<SocialLinks> userDataItemStore)
         {
-            _userDataStore = userDataStore;
+            _userDataItemStore = userDataItemStore;
         }
 
         public async Task<SocialLinks> GetAsync(int userId)
         {
-            return await _userDataStore.GetAsync<SocialLinks>(userId, Key);
+            return await _userDataItemStore.GetAsync<SocialLinks>(userId, Key);
         }
 
         public async Task<SocialLinks> UpdateAsync(int userId, SocialLinks value)
         {
-            return await _userDataStore.UpdateAsync<SocialLinks>(userId, Key, value);
+            return await _userDataItemStore.UpdateAsync<SocialLinks>(userId, Key, value);
         }
 
         public async Task<bool> DeleteAsync(int userId)
         {
-            return await _userDataStore.DeleteAsync(userId, Key);
+            return await _userDataItemStore.DeleteAsync(userId, Key);
         }
     }
 }

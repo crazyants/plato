@@ -280,7 +280,7 @@ namespace Plato.Internal.Stores.Users
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
 
-            user.Detail.IsEmailConfirmed = confirmed;
+            user.EmailConfirmed = confirmed;
             return Task.CompletedTask;
         }
 

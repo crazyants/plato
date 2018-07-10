@@ -307,21 +307,21 @@ namespace Plato.Internal.Data.Schemas
         
         public async Task<ISchemaBuilder> ApplySchemaAsync()
         {
-
-            using (var context = _dbContext)
+            
+            foreach (var statement in _statements)
             {
-                foreach (var statement in _statements)
+                try
                 {
-                    try
+                    using (var context = _dbContext)
                     {
                         await context.ExecuteAsync<int>(CommandType.Text, statement);
                     }
-                    catch (Exception ex)
-                    {
-                        if (_errors == null)
-                            _errors = new List<Exception>();
-                        _errors.Add(ex);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    if (_errors == null)
+                        _errors = new List<Exception>();
+                    _errors.Add(ex);
                 }
 
             }

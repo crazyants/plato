@@ -89,11 +89,11 @@ namespace Plato.Users.Controllers
             else
                 userBanner = await _userBannerStore.CreateAsync(userBanner);
 
-            // update user
-            user.Detail.ModifiedUserId = user.Id;
-            user.Detail.ModifiedDate = DateTime.UtcNow;
+            //// update user
+            //user.Detail.ModifiedUserId = user.Id;
+            //user.Detail.ModifiedDate = DateTime.UtcNow;
 
-            await _platoUserStore.UpdateAsync(user);
+            //await _platoUserStore.UpdateAsync(user);
 
             ViewData["Test"] = sb.ToString();
 

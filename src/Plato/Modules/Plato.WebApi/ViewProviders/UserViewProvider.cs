@@ -14,16 +14,14 @@ namespace Plato.WebApi.ViewProviders
     {
 
         private readonly UserManager<User> _userManager;
-
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IUserDetailsStore<UserDetail> _userDetailsStore;
-
+        
         public UserViewProvider(
-            UserManager<User> userManager, IPlatoUserStore<User> platoUserStore, IUserDetailsStore<UserDetail> userDetailsStore)
+            UserManager<User> userManager,
+            IPlatoUserStore<User> platoUserStore)
         {
             _userManager = userManager;
             _platoUserStore = platoUserStore;
-            _userDetailsStore = userDetailsStore;
         }
         
         public override Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)

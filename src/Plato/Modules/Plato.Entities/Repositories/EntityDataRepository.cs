@@ -113,12 +113,24 @@ namespace Plato.Entities.Repositories
             return null;
         }
         
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
+       
             if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation($"Deleting user data with id: {id}");
-            
-            throw new NotImplementedException();
+            {
+                _logger.LogInformation($"Deleting entity data id: {id}");
+            }
+
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteEntityDatumById", id);
+            }
+
+            return success > 0 ? true : false;
+
         }
     
         public async Task<IPagedResults<EntityData>> SelectAsync(params object[] inputParams)

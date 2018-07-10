@@ -1,111 +1,75 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
+using Microsoft.Extensions.Logging;
+using Plato.Internal.Cache;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Repositories.Users;
+using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Internal.Stores.Users
 {
-    public class UserDataStore : IUserDataStore<UserData>
+    public interface IUserDataStore<T> : IStore<T> where T : class
     {
 
-        #region "Private Variables"
+    }
 
+    public class UserDataStore : IUserDataStore<UserData>
+    {
+        private readonly ICacheManager _cacheManager;
         private readonly IUserDataRepository<UserData> _userDataRepository;
+        private readonly ILogger<UserDataStore> _logger;
+        private readonly IDbQueryConfiguration _dbQuery;
+        private readonly ITypedModuleProvider _typedModuleProvider;
 
-        #endregion
-
-        #region ""Constructor"
 
         public UserDataStore(
-            IUserDataRepository<UserData> userDataRepository)
+            ICacheManager cacheManager,
+            IUserDataRepository<UserData> userDataRepository,
+            ILogger<UserDataStore> logger,
+            IDbQueryConfiguration dbQuery,
+            ITypedModuleProvider typedModuleProvider)
         {
+            _cacheManager = cacheManager;
             _userDataRepository = userDataRepository;
+            _logger = logger;
+            _dbQuery = dbQuery;
+            _typedModuleProvider = typedModuleProvider;
         }
 
-        #endregion
 
-        #region "IMplementation"
-
-        public async Task<T> GetAsync<T>(int userId, string key)
-        {
-            var result = await GetByUserIdAndKeyAsync(userId, key);
-            if (result != null)
-            {
-                // If the generic type implements ISerializable use
-                // the the DeserializeAsync method on the generic type
-                // Allows us to implement our own Serialize and Deserialize
-                // methods on the type if we want to override the default
-                // Serializable base class virtual methods
-                var serializable = typeof(T) as ISerializable;
-                if (serializable != null)
-                {
-                    return await serializable.DeserializeGenericTypeAsync<T>(result.Value);
-                }
-                return await result.Value.DeserializeAsync<T>();
-            }
-
-            return default(T);
-        }
-
-        public async Task<T> UpdateAsync<T>(int userId, string key, ISerializable value)
-        {
-
-            // Get or create setting
-            var data = await GetByUserIdAndKeyAsync(userId, key)
-                       ?? new UserData()
-                       {
-                           UserId = userId,
-                           Key = key
-                       };
-
-            // Serilize value
-            data.Value = await value.SerializeAsync();
-
-            var updatedData = await _userDataRepository.InsertUpdateAsync(data);
-            if (updatedData != null)
-            {
-                return await GetAsync<T>(userId, updatedData.Key);
-            }
-
-            return default(T);
-        }
-
-        public Task<bool> DeleteAsync(int userId, string key)
+        public Task<UserData> CreateAsync(UserData model)
         {
             throw new NotImplementedException();
         }
 
-        #endregion
-
-        #region "Private Methods"
-
-        private async Task<UserData> GetByUserIdAndKeyAsync(int userId, string key)
+        public Task<UserData> UpdateAsync(UserData model)
         {
-            var allKeys = await GetAllKeys(userId);
-            return allKeys?.FirstOrDefault(s => s.Key == key);
+            throw new NotImplementedException();
         }
 
-        private async Task<IEnumerable<UserData>> GetAllKeys(int userId)
+        public Task<bool> DeleteAsync(UserData model)
         {
-            var output = new List<UserData>();
-            var entries = await _userDataRepository.SelectDataByUserId(userId);
-            if (entries != null)
-            {
-                foreach (var entry in entries)
-                {
-                    output.Add(entry);
-                }
-            }
-
-            return output;
+            throw new NotImplementedException();
         }
 
-        #endregion
+        public Task<UserData> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQuery<UserData> QueryAsync()
+        {
+            var query = new UserDataQuery(this);
+            return _dbQuery.ConfigureQuery<UserData>(query); ;
+        }
+
+        public async Task<IPagedResults<UserData>> SelectAsync(params object[] args)
+        {
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userDataRepository.SelectAsync(args));
+        }
 
     }
-
 }
