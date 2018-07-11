@@ -93,10 +93,10 @@ $(function (win, doc, $) {
             getHtml: function (params, fn) {
 
                 win.$.Plato.Http({
-                    url: "/api/markdown/parse",
-                    method: "GET",
+                    url: "api/markdown/parse/post",
+                    method: "POST",
                     async: false,
-                    data: params
+                    data: JSON.stringify(params)
                 }).done(function (data) {
                     fn(data);
                 });

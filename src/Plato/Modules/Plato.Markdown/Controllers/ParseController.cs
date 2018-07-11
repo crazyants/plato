@@ -10,6 +10,13 @@ using Plato.Markdown.Services;
 namespace Plato.Markdown.Controllers
 {
 
+
+    public class MarkDownInput
+    {
+        public string Markdown { get; set; }
+    }
+
+
     public class ParseController : Controller
     {
         private readonly IMarkdownParserFactory _markdownParserFactory;
@@ -19,22 +26,22 @@ namespace Plato.Markdown.Controllers
             _markdownParserFactory = markdownParserFactory;
         }
 
-        [HttpGet]
+        [HttpPost]
         [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Get(string markdown)
+        public async Task<IActionResult> Post([FromBody] MarkDownInput markdownInput)
         {
-            if (String.IsNullOrEmpty(markdown))
+            if (String.IsNullOrEmpty(markdownInput.Markdown))
             {
                 return new ObjectResult(new
                 {
                     string.Empty,
                     StatusCode = HttpStatusCode.OK,
-                    Message = "Album created successfully."
+                    Message = "No markdown input was supplied"
                 });
             }
 
             var parser = _markdownParserFactory.GetParser();
-            var html = await parser.ParseAsync(markdown);
+            var html = await parser.ParseAsync(markdownInput.Markdown);
             
             return new ObjectResult(new
             {
