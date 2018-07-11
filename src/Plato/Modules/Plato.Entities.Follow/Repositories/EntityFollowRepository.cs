@@ -29,8 +29,10 @@ namespace Plato.Entities.Follow.Repositories
         public async Task<EntityFollow> InsertUpdateAsync(EntityFollow follow)
         {
             if (follow == null)
+            {
                 throw new ArgumentNullException(nameof(follow));
-
+            }
+                
             var id = await InsertUpdateInternal(
                 follow.Id,
                 follow.EntityId,
@@ -54,7 +56,7 @@ namespace Plato.Entities.Follow.Repositories
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEmailById", id);
+                    "SelectEntityFollowById", id);
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
@@ -100,9 +102,7 @@ namespace Plato.Entities.Follow.Repositories
                         await reader.ReadAsync();
                         output.PopulateTotal(reader);
                     }
-
-
-
+                    
                 }
             }
 
@@ -142,9 +142,7 @@ namespace Plato.Entities.Follow.Repositories
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntityFollowsByEntityId",
-                    entityId
-                );
-
+                    entityId);
                 if ((reader != null) && (reader.HasRows))
                 {
                     output = new List<EntityFollow>();
@@ -195,10 +193,10 @@ namespace Plato.Entities.Follow.Repositories
             DateTime createdDate)
         {
 
-            var emailId = 0;
+            var output = 0;
             using (var context = _dbContext)
             {
-                emailId = await context.ExecuteScalarAsync<int>(
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityFollow",
                     id,
@@ -208,7 +206,7 @@ namespace Plato.Entities.Follow.Repositories
                     createdDate);
             }
 
-            return emailId;
+            return output;
 
         }
 

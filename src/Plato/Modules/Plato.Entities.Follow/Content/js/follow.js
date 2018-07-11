@@ -80,19 +80,26 @@ $(function (win, doc, $) {
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(params)
                 }).done(function(data) {
+                    
+                    if (data.statusCode === 200) {
 
-                    if (data.id > 0) {
                         $caller
                             .removeClass("btn-secondary")
-                            .addClass("btn-danger");
+                            .addClass("btn-danger")
+                            .attr("data-action", "unsubscribe");
+
+                        $caller.find("i")
+                            .removeClass("fa-bell")
+                            .addClass("fa-bell-slash");
                     }
+                 
                 });
 
             }, 
             unsubscribe: function($caller) {
                 
                 var params = {
-                    entityId: this.getEntityId($caller)
+                    EntityId: this.getEntityId($caller)
                 };
 
                 win.$.Plato.Http({
@@ -100,9 +107,21 @@ $(function (win, doc, $) {
                     method: "DELETE",
                     dataType: 'json',
                     contentType: 'application/json; charset=utf-8',
-                    data: params
-                }).done(function(data) {
-                    fn(data);
+                    data: JSON.stringify(params)
+                }).done(function (data) {
+
+                    if (data.statusCode === 200) {
+                        $caller
+                            .addClass("btn-secondary")
+                            .removeClass("btn-danger")
+                            .attr("data-action", "subscribe");
+                        
+                        $caller.find("i")
+                            .removeClass("fa-bell-slash")
+                            .addClass("fa-bell");
+
+                    }
+
                 });
 
             },
@@ -122,58 +141,8 @@ $(function (win, doc, $) {
                     throw new Error("An entity id is required in order to follow an entity");
                 }
                 return entityId;
-            },
-         
-            //show: function ($caller) {
-
-            //    var delay = $caller.data("notify").delay || $caller.data("notifyDelay");
-
-            //    var $target = notify.getElement($caller);
-            //    $target.addClass("i-notify-visible");
-
-            //    if (delay > 0) {
-            //        win.setTimeout(function () {
-            //            notify.hide($caller);
-            //        },
-            //            delay);
-            //    }
-
-            //},
-            //hide: function ($caller) {
-            //    $(".i-notify").removeClass("i-notify-visible");
-            //},
-            //getElement: function ($caller) {
-
-            //    var text = $caller.data("notifyText") || $caller.data("notify").text,
-            //        css = $caller.data("notifyCss") || $caller.data("notify").css,
-            //        closeButton = $caller.data("notifyCloseButton") || $caller.data("notify").closeButton,
-            //        iconCss = $caller.data("notifyIconCss") || $caller.data("notify").iconCss;
-
-            //    // create alert html
-            //    var s = "<div class=\"" + css + "\"><div>";
-            //    s += (iconCss ? "<i class=\"" + iconCss + "\"></i>" : "");
-            //    s += text;
-
-            //    if (closeButton === true) {
-            //        s += "<a class=\"i-notify-close\" href=\"#\"><i class=\"fa fa-times\"></i></a>";
-            //    }
-            //    s += "</div></div>";
-
-            //    // create and add to dom
-            //    var $alert = $(s);
-            //    $("body").append($alert);
-
-            //    $("body")
-            //        .find(".i-notify-close")
-            //        .unbind("click")
-            //        .bind("click",
-            //            function (e) {
-            //                e.preventDefault();
-            //                $($caller).inotify("hide");
-            //            });
-
-            //    return $alert;
-            //}
+            }
+        
         }
 
         return {

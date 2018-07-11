@@ -177,12 +177,25 @@ namespace Plato.Entities.Follow.Handlers
             builder
                 .CreateTable(_entityFollows)
                 .CreateDefaultProcedures(_entityFollows);
-
+            
+            // Overwrite our SelectEntityFollowById created via CreateDefaultProcedures
+            // above to also return basic user data with follow
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        $"SelectEntityFollowById",
+                        @"SELECT f.*, u.Email, u.UserName, u.DisplayName, u.NormalizedUserName FROM {prefix}_EntityFollows f WITH (nolock) 
+                                LEFT OUTER JOIN {prefix}_Users u ON f.UserId = u.Id 
+                                WHERE (
+                                    f.Id = @Id 
+                                )")
+                    .ForTable(_entityFollows)
+                    .WithParameter(_entityFollows.PrimaryKeyColumn));
+                    
             // Returns all followers for a specific entity
             builder
                 .CreateProcedure(
                     new SchemaProcedure("SelectEntityFollowsByEntityId",
-                            @" SELECT f.*, u.Email, u.UserName, u.DisplayName, u.NormalizedUserName FROM {prefix}_EntityFollows f WITH (nolock) 
+                            @"SELECT f.*, u.Email, u.UserName, u.DisplayName, u.NormalizedUserName FROM {prefix}_EntityFollows f WITH (nolock) 
                                 LEFT OUTER JOIN {prefix}_Users u ON f.UserId = u.Id 
                                 WHERE (
                                     f.EntityId = @EntityId AND
@@ -204,20 +217,19 @@ namespace Plato.Entities.Follow.Handlers
                                 LEFT OUTER JOIN {prefix}_Users u ON f.UserId = u.Id 
                                 WHERE (
                                     f.EntityId = @EntityId AND
-                                    u.Id = @UserId AND 
-                                    u.EmailConfirmed = 1 AND 
-                                    u.LockoutEnabled = 0
+                                    u.Id = @UserId
                                 )")
                         .ForTable(_entityFollows)
                         .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn()
                             {
-                                Name = "EntityId",
-                                DbType = DbType.Int32,
-                            }, new SchemaColumn()
-                            {
                                 Name = "UserId",
+                                DbType = DbType.Int32,
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "EntityId",
                                 DbType = DbType.Int32,
                             }
                         }));

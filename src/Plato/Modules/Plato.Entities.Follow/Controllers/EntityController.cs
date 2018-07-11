@@ -100,7 +100,6 @@ namespace Plato.Entities.Follow.Controllers
                 Message = "An error occurred whilst attempting to add the entity follow. It could be the user is already following the entity."
             });
 
-
         }
 
         [HttpPut]
@@ -109,11 +108,10 @@ namespace Plato.Entities.Follow.Controllers
         {
             throw new NotImplementedException();
         }
-
-
+        
         [HttpDelete]
         [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Delete([FromBody] int entityId)
+        public async Task<IActionResult> Delete([FromBody] EntityFollow follow)
         {
 
             var user = await base.GetAuthenticatedUserAsync();
@@ -126,14 +124,15 @@ namespace Plato.Entities.Follow.Controllers
                 });
             }
             
-            var follow = await _entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, entityId);
-            if (follow != null)
+            var existingFollow = await _entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, follow.EntityId);
+            if (existingFollow != null)
             {
-                var success = await _entityFollowStore.DeleteAsync(follow);
+                var success = await _entityFollowStore.DeleteAsync(existingFollow);
                 if (success)
                 {
                     return new ObjectResult(new
                     {
+                        existingFollow,
                         StatusCode = HttpStatusCode.OK,
                         Message = "Follow deleted successfully"
                     });

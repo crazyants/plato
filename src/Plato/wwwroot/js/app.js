@@ -29979,7 +29979,6 @@ $(function (win, doc, $) {
                         context.logger.logInfo("$.Plato.Http - Error: " +
                             JSON.stringify(xhr, null, "     ") +
                             thrownError);
-                    
                     }
                 },
                 onAlways = function (xhr, textStatus) {
