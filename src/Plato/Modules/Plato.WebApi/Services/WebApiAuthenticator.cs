@@ -33,11 +33,8 @@ namespace Plato.WebApi.Services
 
         public async Task<User> GetAuthenticatedUserAsync()
         {
-
-            return await GetUserViaBasicAuthAsync();
-
-            //return await GetUserViaCookieAuthAsync() ??
-            //       await GetUserViaBasicAuthAsync();
+            return await GetUserViaCookieAuthAsync() ??
+                   await GetUserViaBasicAuthAsync();
         }
 
         #endregion

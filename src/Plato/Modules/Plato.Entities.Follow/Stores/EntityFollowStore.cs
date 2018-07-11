@@ -36,6 +36,27 @@ namespace Plato.Entities.Follow.Stores
 
         public async Task<EntityFollow> CreateAsync(EntityFollow model)
         {
+
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            if (model.EntityId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.EntityId));
+            }
+            
+            if (model.UserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.UserId));
+            }
+
+            if (String.IsNullOrEmpty(model.CancellationGuid))
+            {
+                model.CancellationGuid = System.Guid.NewGuid().ToString();
+            }
+
             var follow = await _entityFollowRepository.InsertUpdateAsync(model);
             if (follow != null)
             {
@@ -47,6 +68,28 @@ namespace Plato.Entities.Follow.Stores
 
         public async Task<EntityFollow> UpdateAsync(EntityFollow model)
         {
+
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            if (model.EntityId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.EntityId));
+            }
+
+            if (model.UserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.UserId));
+            }
+
+            if (String.IsNullOrEmpty(model.CancellationGuid))
+            {
+                model.CancellationGuid = System.Guid.NewGuid().ToString();
+            }
+
+
             var follow = await _entityFollowRepository.InsertUpdateAsync(model);
             if (follow != null)
             {
@@ -58,6 +101,17 @@ namespace Plato.Entities.Follow.Stores
 
         public async Task<bool> DeleteAsync(EntityFollow model)
         {
+            
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            if (model.Id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.Id));
+            }
+            
             var success = await _entityFollowRepository.DeleteAsync(model.Id);
             if (success)
             {

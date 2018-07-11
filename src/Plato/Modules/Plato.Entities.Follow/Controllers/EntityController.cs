@@ -26,15 +26,6 @@ namespace Plato.Entities.Follow.Controllers
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Get(int id)
         {
-
-   
-            var user = await base.GetAuthenticatedUserAsync();
-
-            return new ObjectResult(new
-            {
-                StatusCode = HttpStatusCode.OK,
-                Message = user != null ? user.UserName : "no user found"
-            });
             
             var follow = await _entityFollowStore.GetByIdAsync(id);
             if (follow != null)
@@ -57,9 +48,9 @@ namespace Plato.Entities.Follow.Controllers
         
         [HttpPost]
         [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Post(EntityFollow follow)
+        public async Task<IActionResult> Post([FromBody] EntityFollow follow)
         {
-            
+     
             // We need a user to subscribe to the entity
             var user = await base.GetAuthenticatedUserAsync();
             if (user == null)
@@ -87,16 +78,16 @@ namespace Plato.Entities.Follow.Controllers
             {
                 EntityId = follow.EntityId,
                 UserId = user.Id,
-                CancellationGuid = "123456",
                 CreatedDate = DateTime.UtcNow
             };
 
             // Add and return result
-            var result = _entityFollowStore.CreateAsync(followToAdd);
+            var result = await _entityFollowStore.CreateAsync(followToAdd);
             if (result != null)
             {
                 return new ObjectResult(new
                 {
+                    result,
                     StatusCode = HttpStatusCode.OK,
                     Message = "Entity follow created successfully"
                 });
@@ -106,7 +97,7 @@ namespace Plato.Entities.Follow.Controllers
             return new ObjectResult(new
             {
                 StatusCode = HttpStatusCode.InternalServerError,
-                Message = "An error occurred whilst attempting to add the entity follow"
+                Message = "An error occurred whilst attempting to add the entity follow. It could be the user is already following the entity."
             });
 
 
@@ -122,7 +113,7 @@ namespace Plato.Entities.Follow.Controllers
 
         [HttpDelete]
         [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Delete(int entityId)
+        public async Task<IActionResult> Delete([FromBody] int entityId)
         {
 
             var user = await base.GetAuthenticatedUserAsync();

@@ -68,13 +68,17 @@ $(function (win, doc, $) {
             subscribe: function($caller) {
 
                 var params = {
+                    Id: 0,
+                    UserId: 0,
                     EntityId: this.getEntityId($caller)
                 };
 
                 win.$.Plato.Http({
                     url: "api/follows/entity/post",
                     method: "POST",
-                    data: params
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(params)
                 }).done(function(data) {
 
                     if (data.id > 0) {
@@ -86,16 +90,16 @@ $(function (win, doc, $) {
 
             }, 
             unsubscribe: function($caller) {
-
-                var entityId = this.getEntityId($caller);
-             
+                
                 var params = {
-                    id: entityId
+                    entityId: this.getEntityId($caller)
                 };
 
                 win.$.Plato.Http({
                     url: "api/follows/entity/delete",
                     method: "DELETE",
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
                     data: params
                 }).done(function(data) {
                     fn(data);

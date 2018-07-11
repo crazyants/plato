@@ -108,7 +108,7 @@ namespace Plato.Internal.Cache
             
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation("Invalidated cache entry with key '{1}'",
+                _logger.LogInformation("Invalidated cache entry with key '{0}'",
                     token.ToString());
             }
 

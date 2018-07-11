@@ -78,7 +78,7 @@ namespace Plato.Internal.Stores.Users
                 // so we can append the newly generated unique userId to the guid
                 if (String.IsNullOrEmpty(newUser.ApiKey))
                 {
-                    newUser = await UpdateAsync(user);
+                    newUser = await UpdateAsync(newUser);
                 }
 
                 ClearCache(user);
