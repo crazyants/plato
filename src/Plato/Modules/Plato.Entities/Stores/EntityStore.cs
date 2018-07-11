@@ -153,8 +153,10 @@ namespace Plato.Entities.Stores
 
             // Get all existing entity data
             var data = await _entityDataStore.GetByEntityIdAsync(entity.Id);
-            var dataList = data.ToList();
 
+            // Prepare list to search, use dummy list if needed
+            var dataList = data?.ToList() ?? new List<EntityData>();
+            
             // Iterate all meta data on the supplied object,
             // check if a key already exists, if so update existing key 
             var output = new List<EntityData>();

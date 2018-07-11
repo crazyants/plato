@@ -40,7 +40,7 @@
                     <li class="list-group-item">
 
                         @{
-                            var detail = entity.TryGet<PostDetails>();
+                            var detail = entity.GetOrCreate<PostDetails>();
                         }
                         
                         <div class="list-left">

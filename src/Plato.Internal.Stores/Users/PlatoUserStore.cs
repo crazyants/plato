@@ -211,8 +211,10 @@ namespace Plato.Internal.Stores.Users
 
             // Get all existing user data
             var data = await _userDataStore.GetByUserIdAsync(user.Id);
-            var dataList = data.ToList();
 
+            // Prepare list to search, use dummy list if needed
+            var dataList = data?.ToList() ?? new List<UserData>();
+            
             // Iterate all meta data on the supplied user object,
             // check if a key already exists, if so update existing key 
             var output = new List<UserData>();
