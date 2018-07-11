@@ -102,7 +102,7 @@ namespace Plato.Categories.Handlers
         // Category Roles table
         private readonly SchemaTable _categoryRoles = new SchemaTable()
         {
-            Name = "Categories",
+            Name = "CategoryRoles",
             Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()

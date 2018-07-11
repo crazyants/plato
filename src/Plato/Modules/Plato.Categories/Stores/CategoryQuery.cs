@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Categories.Models;
@@ -8,7 +7,6 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Categories.Stores
 {
-
 
     #region "CategoryQuery"
 
@@ -35,7 +33,7 @@ namespace Plato.Categories.Stores
         public override async Task<IPagedResults<Category>> ToList()
         {
 
-            var builder = new EntityQueryBuilder(this);
+            var builder = new CategoryQueryBuilder(this);
             var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
@@ -86,18 +84,18 @@ namespace Plato.Categories.Stores
 
     #region "CategoryQueryBuilder"
 
-    public class EntityQueryBuilder : IQueryBuilder
+    public class CategoryQueryBuilder : IQueryBuilder
     {
         #region "Constructor"
 
-        private readonly string _CategorysTableName;
+        private readonly string _categorysTableName;
 
         private readonly CategoryQuery _query;
 
-        public EntityQueryBuilder(CategoryQuery query)
+        public CategoryQueryBuilder(CategoryQuery query)
         {
             _query = query;
-            _CategorysTableName = GetTableNameWithPrefix("Categorys");
+            _categorysTableName = GetTableNameWithPrefix("Categories");
 
         }
 
@@ -110,7 +108,7 @@ namespace Plato.Categories.Stores
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = e.Id FROM ")
+            sb.Append("SELECT @start_id_out = c.Id FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -142,7 +140,7 @@ namespace Plato.Categories.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(e.Id) FROM ")
+            sb.Append("SELECT COUNT(c.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -152,7 +150,7 @@ namespace Plato.Categories.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("e.*");
+            sb.Append("c.*");
             return sb.ToString();
 
         }
@@ -162,8 +160,8 @@ namespace Plato.Categories.Stores
 
             var sb = new StringBuilder();
 
-            sb.Append(_CategorysTableName)
-                .Append(" e ");
+            sb.Append(_categorysTableName)
+                .Append(" c ");
 
             return sb.ToString();
 
@@ -185,13 +183,13 @@ namespace Plato.Categories.Stores
             var sb = new StringBuilder();
             // default to ascending
             if (_query.SortColumns.Count == 0)
-                sb.Append("e.Id >= @start_id_in");
+                sb.Append("c.Id >= @start_id_in");
             // set start operator based on first order by
             foreach (var sortColumn in _query.SortColumns)
             {
                 sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "e.Id <= @start_id_in"
-                    : "e.Id >= @start_id_in");
+                    ? "c.Id <= @start_id_in"
+                    : "c.Id >= @start_id_in");
                 break;
             }
 
@@ -212,7 +210,7 @@ namespace Plato.Categories.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("e.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("c.Id"));
             }
 
 
@@ -230,7 +228,7 @@ namespace Plato.Categories.Stores
 
             return columnName.IndexOf('.') >= 0
                 ? columnName
-                : "e." + columnName;
+                : "c." + columnName;
         }
 
         private string BuildOrderBy()

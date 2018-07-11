@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Email.Models;
@@ -34,7 +33,7 @@ namespace Plato.Email.Stores
         public override async Task<IPagedResults<EmailMessage>> ToList()
         {
 
-            var builder = new EntityQueryBuilder(this);
+            var builder = new EmailQueryBuilder(this);
             var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
@@ -85,7 +84,7 @@ namespace Plato.Email.Stores
 
     #region "EmailQueryBuilder"
 
-    public class EntityQueryBuilder : IQueryBuilder
+    public class EmailQueryBuilder : IQueryBuilder
     {
         #region "Constructor"
 
@@ -93,7 +92,7 @@ namespace Plato.Email.Stores
     
         private readonly EmailQuery _query;
 
-        public EntityQueryBuilder(EmailQuery query)
+        public EmailQueryBuilder(EmailQuery query)
         {
             _query = query;
             _emailsTableName = GetTableNameWithPrefix("Emails");
@@ -253,6 +252,5 @@ namespace Plato.Email.Stores
     }
 
     #endregion
-
-
+    
 }
