@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Repositories.Users
 {
@@ -17,24 +17,22 @@ namespace Plato.Internal.Repositories.Users
         #region "Private Variables"
 
         private readonly IUserDataRepository<UserData> _userDataRepository;
-        private readonly IDbContext _dbContext;
-        private readonly IUserSecretRepository<UserSecret> _userSecretRepository;
         private readonly ILogger<UserSecretRepository> _logger;
+        private readonly IDbContext _dbContext;
 
         #endregion
 
         #region "Constructor"
 
         public UserRepository(
-            IDbContext dbContext,
             IUserSecretRepository<UserSecret> userSecretRepository,
+            IUserDataRepository<UserData> userDataRepository,
             ILogger<UserSecretRepository> logger,
-            IUserDataRepository<UserData> userDataRepository)
+            IDbContext dbContext)
         {
-            _dbContext = dbContext;
-            _userSecretRepository = userSecretRepository;
-            _logger = logger;
             _userDataRepository = userDataRepository;
+            _dbContext = dbContext;
+            _logger = logger;
         }
 
         #endregion
@@ -52,14 +50,7 @@ namespace Plato.Internal.Repositories.Users
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
 
-            // ensure we have our dependencies
-            if (_userSecretRepository == null)
-                throw new ArgumentNullException(nameof(_userSecretRepository));
-
-            //if (_userDetailRepository == null)
-            //    throw new ArgumentNullException(nameof(_userDetailRepository));
-            
-            var id = await InsertUpdateInternal(
+            var userId = await InsertUpdateInternal(
                 user.Id,
                 user.PrimaryRoleId,
                 user.UserName,
@@ -80,9 +71,9 @@ namespace Plato.Internal.Repositories.Users
                 user.ApiKey,
                 user.Data);
 
-            if (id > 0)
+            if (userId > 0)
             {
-                return await SelectByIdAsync(id);
+                return await SelectByIdAsync(userId);
             }
 
             return null;
@@ -90,6 +81,8 @@ namespace Plato.Internal.Repositories.Users
 
         public async Task<User> SelectByIdAsync(int id)
         {
+
+            User user = null;
             using (var context = _dbContext)
             {
                 _dbContext.OnException += (sender, args) =>
@@ -103,8 +96,11 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserById", id);
 
-                return await BuildUserFromResultSets(reader);
+                user = await BuildUserFromResultSets(reader);
             }
+
+            return user;
+
         }
 
         public async Task<User> SelectByUserNameNormalizedAsync(string userNameNormalized)
@@ -113,6 +109,7 @@ namespace Plato.Internal.Repositories.Users
             if (string.IsNullOrEmpty(userNameNormalized))
                 throw new ArgumentNullException(nameof(userNameNormalized));
 
+            User user = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -120,8 +117,11 @@ namespace Plato.Internal.Repositories.Users
                     "SelectUserByUserNameNormalized",
                     userNameNormalized.TrimToSize(255));
 
-                return await BuildUserFromResultSets(reader);
+                user = await BuildUserFromResultSets(reader);
             }
+
+            return user;
+
         }
 
         public async Task<User> SelectByEmailAsync(string email)
@@ -129,6 +129,7 @@ namespace Plato.Internal.Repositories.Users
             if (string.IsNullOrEmpty(email))
                 throw new ArgumentNullException(nameof(email));
 
+            User user = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -136,8 +137,11 @@ namespace Plato.Internal.Repositories.Users
                     "SelectUserByEmail", 
                     email.TrimToSize(255));
 
-                return await BuildUserFromResultSets(reader);
+                user = await BuildUserFromResultSets(reader);
             }
+
+            return user;
+
         }
 
         public async Task<User> SelectByUserNameAsync(string userName)
@@ -145,14 +149,18 @@ namespace Plato.Internal.Repositories.Users
             if (string.IsNullOrEmpty(userName))
                 throw new ArgumentNullException(nameof(userName));
 
+            User user = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserByUserName", 
                     userName.TrimToSize(255));
-                return await BuildUserFromResultSets(reader);
+                user = await BuildUserFromResultSets(reader);
             }
+
+            return user;
+
         }
 
         public async Task<User> SelectByUserNameAndPasswordAsync(string userName, string password)
@@ -162,6 +170,7 @@ namespace Plato.Internal.Repositories.Users
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentNullException(nameof(password));
 
+            User user = null;
             using (var context = _dbContext)
             {
 
@@ -177,8 +186,11 @@ namespace Plato.Internal.Repositories.Users
                     userName.TrimToSize(255),
                     password.TrimToSize(255));
 
-                return await BuildUserFromResultSets(reader);
+                user = await BuildUserFromResultSets(reader);
             }
+
+            return user;
+
         }
 
         public async Task<User> SelectByEmailAndPasswordAsync(string email, string password)
@@ -188,6 +200,7 @@ namespace Plato.Internal.Repositories.Users
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentNullException(nameof(password));
 
+            User user = null;
             using (var context = _dbContext)
             {
 
@@ -203,15 +216,20 @@ namespace Plato.Internal.Repositories.Users
                     email.TrimToSize(255),
                     password.TrimToSize(255));
 
-                return await BuildUserFromResultSets(reader);
+                user = await BuildUserFromResultSets(reader);
             }
+
+            return user;
         }
 
         public async Task<User> SelectByApiKeyAsync(string apiKey)
         {
-            if (string.IsNullOrEmpty(apiKey))
+            if (String.IsNullOrEmpty(apiKey))
+            {
                 throw new ArgumentNullException(nameof(apiKey));
-
+            }
+                
+            User user = null;
             using (var context = _dbContext)
             {
 
@@ -220,8 +238,11 @@ namespace Plato.Internal.Repositories.Users
                     "SelectUserByApiKey",
                     apiKey.TrimToSize(255));
 
-                return await BuildUserFromResultSets(reader);
+                user = await BuildUserFromResultSets(reader);
             }
+
+            return user;
+
         }
 
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] inputParameters) where T : class
@@ -261,9 +282,9 @@ namespace Plato.Internal.Repositories.Users
             }
 
             return output;
+
         }
-
-
+        
         public async Task<IPagedResults<User>> SelectAsync(params object[] inputParams)
         {
             PagedResults<User> output = null;
@@ -330,10 +351,9 @@ namespace Plato.Internal.Repositories.Users
                         var data = new List<UserData>();
                         while (await reader.ReadAsync())
                         {
-                            var entityData = new UserData(reader);
-                            data.Add(entityData);
+                            var userData = new UserData(reader);
+                            data.Add(userData);
                         }
-
                         user.Data = data;
                     }
                 }
@@ -401,7 +421,7 @@ namespace Plato.Internal.Repositories.Users
                 {
                     foreach (var item in data)
                     {
-                        item.Id = userId;
+                        item.UserId = userId;
                         await _userDataRepository.InsertUpdateAsync(item);
                     }
                 }

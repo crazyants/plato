@@ -62,7 +62,12 @@ namespace Plato.Internal.Repositories.Users
 
         }
 
-        public async Task<IEnumerable<UserData>> SelectDataByUserId(int userId)
+        public Task<UserData> SelectByKeyAndUserIdAsync(string key, int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<UserData>> SelectByUserIdAsync(int userId)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))

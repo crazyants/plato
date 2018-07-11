@@ -6,7 +6,9 @@ namespace Plato.Internal.Repositories.Users
     public interface IUserDataRepository<T> : IRepository<T> where T : class
     {
 
-        Task<IEnumerable<T>> SelectDataByUserId(int userId);
+        Task<T> SelectByKeyAndUserIdAsync(string key, int userId);
+
+        Task<IEnumerable<T>> SelectByUserIdAsync(int userId);
 
     }
 }

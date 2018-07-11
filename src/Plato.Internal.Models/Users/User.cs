@@ -12,8 +12,7 @@ namespace Plato.Internal.Models.Users
     
     public class User : IdentityUser<int>, IModel<User>
     {
-
-
+        
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
 
         private string _displayName;
@@ -32,17 +31,12 @@ namespace Plato.Internal.Models.Users
           
         public string ApiKey { get; set; }
 
-        //public UserSecret Secret { get; set;  }
-
-        //public UserDetail Detail { get; set; }
-        
         public IEnumerable<string> RoleNames { get; set; } = new List<string>();
 
         public IEnumerable<Role> UserRoles { get; } = new List<Role>();
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
-
-
+        
         public IEnumerable<UserData> Data { get; set; } = new List<UserData>();
 
         #endregion
@@ -52,8 +46,6 @@ namespace Plato.Internal.Models.Users
         public User()
         {
             _metaData = new ConcurrentDictionary<Type, ISerializable>();
-            //this.Detail = new UserDetail();
-            //this.Secret = new UserSecret();
         }
 
         #endregion
@@ -84,14 +76,14 @@ namespace Plato.Internal.Models.Users
             }
         }
 
-        public T TryGet<T>() where T : class
+        public T GetOrCreate<T>() where T : class
         {
             if (_metaData.ContainsKey(typeof(T)))
             {
                 return (T)_metaData[typeof(T)];
             }
 
-            return null;
+            return Activator.CreateInstance<T>();
 
         }
 

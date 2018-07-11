@@ -68,7 +68,7 @@ namespace Plato.Discuss.Services
             {
 
                 var entity = await _entityStore.GetByIdAsync(result.Response.EntityId);
-                var postDetails = entity.TryGet<PostDetails>() ?? new PostDetails();
+                var postDetails = entity.GetOrCreate<PostDetails>() ?? new PostDetails();
                 postDetails.TotalReplies = (postDetails.TotalReplies + 1);
 
                 // Get last 5 participants

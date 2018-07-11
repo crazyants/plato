@@ -5,7 +5,6 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Social.Models;
-using Plato.Users.Social.Stores;
 using Plato.Users.Social.ViewModels;
 
 namespace Plato.Users.Social.ViewProviders
@@ -13,14 +12,10 @@ namespace Plato.Users.Social.ViewProviders
     public class UserViewProvider : BaseViewProvider<User>
     {
 
-        private readonly UserManager<User> _userManager;
- 
         private readonly IPlatoUserStore<User> _platoUserStore;
 
-        public UserViewProvider(
-            UserManager<User> userManager, IPlatoUserStore<User> platoUserStore)
+        public UserViewProvider(IPlatoUserStore<User> platoUserStore)
         {
-            _userManager = userManager;
             _platoUserStore = platoUserStore;
         }
         
@@ -37,12 +32,14 @@ namespace Plato.Users.Social.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
 
-            var socialLinks = user.TryGet<SocialLinks>();
+            var socialLinks = user.GetOrCreate<SocialLinks>();
 
             return Views(
                 View<EditSocialViewModel>("Social.Edit.Content", model =>
                 {
-                    model.FacebookUrl = socialLinks?.FacebookUrl;
+                    model.FacebookUrl = socialLinks.FacebookUrl;
+                    model.TwitterUrl = socialLinks.TwitterUrl;
+                    model.YouTubeUrl = socialLinks.YouTubeUrl;
                     return model;
                 }).Order(10)
             );
@@ -58,24 +55,22 @@ namespace Plato.Users.Social.ViewProviders
             {
                 return await BuildEditAsync(user, updater);
             }
-            
-            //model.FacebookUrl = model.UserName?.Trim();
-
+           
             if (updater.ModelState.IsValid)
             {
 
-                var socialLinks = new SocialLinks()
-                {
-                    FacebookUrl = model.FacebookUrl,
-                    TwitterUrl = model.TwitterUrl,
-                    YouTubeUrl = model.YouTubeUrl
-                };
+                // Store social links in generic UserData store
+                var data = user.GetOrCreate<SocialLinks>();
+                data.FacebookUrl = model.FacebookUrl;
+                data.TwitterUrl = model.TwitterUrl;
+                data.YouTubeUrl = model.YouTubeUrl;
+                user.AddOrUpdate<SocialLinks>(data);
 
-                user.AddOrUpdate<SocialLinks>(socialLinks);
+                // Update user
+                await _platoUserStore.UpdateAsync(user);
 
-                var result = await _platoUserStore.UpdateAsync(user);
             }
-            
+
             return await BuildEditAsync(user, updater);
 
         }

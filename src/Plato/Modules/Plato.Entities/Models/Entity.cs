@@ -52,14 +52,14 @@ namespace Plato.Entities.Models
             }
         }
 
-        public T TryGet<T>() where T : class
+        public T GetOrCreate<T>() where T : class
         {
             if (_metaData.ContainsKey(typeof(T)))
             {
                 return (T)_metaData[typeof(T)];
             }
 
-            return null;
+            return Activator.CreateInstance<T>();
 
         }
         

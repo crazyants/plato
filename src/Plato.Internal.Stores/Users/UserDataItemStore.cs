@@ -82,16 +82,16 @@ namespace Plato.Internal.Stores.Users
 
         #region "Private Methods"
 
-        private async Task<UserData> GetByUserIdAndKeyAsync(int userId, string key)
+        async Task<UserData> GetByUserIdAndKeyAsync(int userId, string key)
         {
             var allKeys = await GetAllKeys(userId);
             return allKeys?.FirstOrDefault(s => s.Key == key);
         }
 
-        private async Task<IEnumerable<UserData>> GetAllKeys(int userId)
+        async Task<IEnumerable<UserData>> GetAllKeys(int userId)
         {
             var output = new List<UserData>();
-            var entries = await _userDataRepository.SelectDataByUserId(userId);
+            var entries = await _userDataRepository.SelectByUserIdAsync(userId);
             if (entries != null)
             {
                 foreach (var entry in entries)

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Repositories.Users;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Internal.Stores.Abstractions.Users;
 
@@ -52,8 +51,10 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-
+            }
+                
             var newUser = await _platoUserStore.CreateAsync(user);
             if ((newUser != null) && (newUser.Id > 0))
                 return IdentityResult.Success;
@@ -66,8 +67,10 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-
+            }
+                
             try
             {
                 await _platoUserStore.UpdateAsync(user);
@@ -85,8 +88,10 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-
+            }
+                
             try
             {
                 await _platoUserStore.DeleteAsync(user);
@@ -104,7 +109,10 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (!int.TryParse(userId, out var id))
+            {
                 return null;
+            }
+                
 
             return await _platoUserStore.GetByIdAsync(id);
         }
@@ -169,8 +177,7 @@ namespace Plato.Internal.Stores.Users
 
             return Task.CompletedTask;
         }
-
-    
+        
         #endregion
 
         #region "IUserPasswordStore"
@@ -180,8 +187,10 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-
+            }
+                
             user.PasswordHash = passwordHash;
 
             return Task.CompletedTask;
@@ -192,8 +201,10 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-
+            }
+                
             return Task.FromResult(user.PasswordHash);
         }
 
@@ -202,7 +213,10 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
+            }
+                
 
             return Task.FromResult(user.PasswordHash != null);
         }
@@ -216,11 +230,15 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
+            }
+                
 
             user.SecurityStamp = stamp;
 
             return Task.CompletedTask;
+
         }
 
         public Task<string> GetSecurityStampAsync(User user, CancellationToken cancellationToken)
@@ -228,8 +246,12 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
+            }
+                
             return Task.FromResult(user.SecurityStamp);
+
         }
 
         #endregion
@@ -241,11 +263,13 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-
+            }
+                
             user.Email = email;
-
             return Task.CompletedTask;
+
         }
 
         public Task<string> GetEmailAsync(User user, CancellationToken cancellationToken)
@@ -253,9 +277,12 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-
+            }
+                
             return Task.FromResult(user.Email);
+
         }
 
         public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
@@ -263,9 +290,12 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-
+            }
+                
             return Task.FromResult(user.EmailConfirmed);
+
         }
 
         public Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
@@ -273,10 +303,13 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-
+            }
+                
             user.EmailConfirmed = confirmed;
             return Task.CompletedTask;
+
         }
 
         public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
@@ -291,9 +324,12 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-
+            }
+                
             return Task.FromResult(user.NormalizedEmail);
+
         }
 
         public Task SetNormalizedEmailAsync(User user, string normalizedEmail, CancellationToken cancellationToken)
@@ -301,11 +337,13 @@ namespace Plato.Internal.Stores.Users
             cancellationToken.ThrowIfCancellationRequested();
 
             if (user == null)
+            {
                 throw new ArgumentNullException(nameof(user));
-
+            }
+                
             user.NormalizedEmail = normalizedEmail;
-
             return Task.CompletedTask;
+
         }
 
         #endregion
@@ -368,26 +406,34 @@ namespace Plato.Internal.Stores.Users
 
             var roleNames = await GetRolesAsync(user, cancellationToken);
             if (roleNames == null)
+            {
                 return false;
+            }
+                
             foreach (var name in roleNames)
             {
                 if (string.Equals(name, roleName, StringComparison.CurrentCultureIgnoreCase))
+                {
                     return true;
+                }
+                    
             }
+
             return false;
+
         }
 
         public async Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            IPagedResults<User> pagedResult  = await _platoUserStore.QueryAsync()
+            var results  = await _platoUserStore.QueryAsync()
                 .Page(1, 1000)
                 .Select<UserQueryParams>(q => q.RoleName.Equals(roleName))
                 .OrderBy("Id", OrderBy.Desc)
                 .ToList();
 
-            return pagedResult.Data;
+            return results.Data;
         }
 
         #endregion

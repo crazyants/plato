@@ -292,7 +292,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                         .Append("<strong>ID</strong>")
                         .Append(newTopic.Id);
 
-                    var details = newTopic.TryGet<PostDetails>();
+                    var details = newTopic.GetOrCreate<PostDetails>();
                     if (details?.Participants != null)
                     {
 
@@ -327,7 +327,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
                     .Append(existingTopic.Id);
 
                 // random details
-                var existingDetails = existingTopic.TryGet<PostDetails>();
+                var existingDetails = existingTopic.GetOrCreate<PostDetails>();
                 if (existingDetails?.Participants != null)
                 {
 

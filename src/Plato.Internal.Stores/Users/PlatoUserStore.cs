@@ -67,18 +67,9 @@ namespace Plato.Internal.Stores.Users
                 throw new ArgumentOutOfRangeException(nameof(user.Id));
             }
 
-            // Serialize any present meta data for storage
-            var data = new List<UserData>();
-            foreach (var item in user.MetaData)
-            {
-                data.Add(new UserData()
-                {
-                    Key = item.Key.FullName,
-                    Value = item.Value.Serialize()
-                });
-            }
-            user.Data = data;
-
+            // transform meta data
+            user.Data = await SerializeMetaData(user);
+            
             var newUser = await _userRepository.InsertUpdateAsync(user);
             if (newUser != null)
             {
@@ -112,18 +103,9 @@ namespace Plato.Internal.Stores.Users
             {
                 user.ApiKey = System.Guid.NewGuid().ToString() + user.Id.ToString();
             }
-
-            // Serialize any present meta data for storage
-            var data = new List<UserData>();
-            foreach (var item in user.MetaData)
-            {
-                data.Add(new UserData()
-                {
-                    Key = item.Key.FullName,
-                    Value = item.Value.Serialize()
-                });
-            }
-            user.Data = data;
+           
+            // transform meta data
+            user.Data = await SerializeMetaData(user);
 
             var updatedUser = await _userRepository.InsertUpdateAsync(user);
             if (updatedUser != null)
@@ -192,7 +174,6 @@ namespace Plato.Internal.Stores.Users
             var token = _cacheManager.GetOrCreateToken(this.GetType(), apiKey);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
-
                 var user = await _userRepository.SelectByApiKeyAsync(apiKey);
                 return await MergeUserData(user);
             });
@@ -225,6 +206,40 @@ namespace Plato.Internal.Stores.Users
 
         #region "Private Methods"
 
+        async Task<IEnumerable<UserData>> SerializeMetaData(User user)
+        {
+
+            // Get all existing user data
+            var data = await _userDataStore.GetByUserIdAsync(user.Id);
+            var dataList = data.ToList();
+
+            // Iterate all meta data on the supplied user object,
+            // check if a key already exists, if so update existing key 
+            var output = new List<UserData>();
+            foreach (var item in user.MetaData)
+            {
+                var key = item.Key.FullName;
+                var userData = dataList.FirstOrDefault(d => d.Key == key);
+                if (userData != null)
+                {
+                    userData.Value = item.Value.Serialize();
+                }
+                else
+                {
+                    userData = new UserData()
+                    {
+                        Key = key,
+                        Value = item.Value.Serialize()
+                    };
+                }
+
+                output.Add(userData);
+            }
+
+            return output;
+
+        }
+        
         async Task<IList<User>> MergeUserData(IList<User> users)
         {
 
@@ -298,7 +313,7 @@ namespace Plato.Internal.Stores.Users
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
 
-        private void ClearCache(User user)
+        void ClearCache(User user)
         {
             _cacheManager.CancelTokens(this.GetType());
             _cacheManager.CancelTokens(this.GetType(), user.Id);
