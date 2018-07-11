@@ -453,14 +453,28 @@ namespace Plato.Users.Handlers
             };
 
             builder
-                // Create tables
                 .CreateTable(userData)
-                // Create basic default CRUD procedures
                 .CreateDefaultProcedures(userData)
                 .CreateProcedure(new SchemaProcedure("SelectUserDatumByUserId", StoredProcedureType.SelectByKey)
                     .ForTable(userData)
-                    .WithParameter(new SchemaColumn() {Name = "UserId", DbType = DbType.Int32}));
-
+                    .WithParameter(new SchemaColumn() {Name = "UserId", DbType = DbType.Int32}))
+                .CreateProcedure(new SchemaProcedure("SelectUserDatumByKeyAndUserId", StoredProcedureType.SelectByKey)
+                    .ForTable(userData)
+                    .WithParameters(new List<SchemaColumn>()
+                    {
+                        new SchemaColumn()
+                        {
+                            Name = "[Key]",
+                            DbType = DbType.String,
+                            Length = "255"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "UserId",
+                            DbType = DbType.Int32
+                        }
+                    }));
+            
             builder.CreateProcedure(new SchemaProcedure("SelectUserDatumPaged", StoredProcedureType.SelectPaged)
                 .ForTable(userData)
                 .WithParameters(new List<SchemaColumn>()

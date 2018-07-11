@@ -45,17 +45,8 @@ namespace Plato.Entities.Stores
         public async Task<Entity> CreateAsync(Entity entity)
         {
 
-            // Serialize any present meta data for storage
-            var data = new List<EntityData>();
-            foreach (var item in entity.MetaData)
-            {
-                data.Add(new EntityData()
-                {
-                    Key = item.Key.FullName,
-                    Value = item.Value.Serialize()
-                });
-            }
-            entity.Data = data;
+            // transform meta data
+            entity.Data = await SerializeMetaDataAsync(entity);
             
             var newEntity = await _entityRepository.InsertUpdateAsync(entity);
             if (newEntity != null)
@@ -78,17 +69,8 @@ namespace Plato.Entities.Stores
         public async Task<Entity> UpdateAsync(Entity entity)
         {
 
-            // Serialize any present meta data for storage
-            var data = new List<EntityData>();
-            foreach (var item in entity.MetaData)
-            {
-                data.Add(new EntityData()
-                {
-                    Key = item.Key.FullName,
-                    Value = item.Value.Serialize()
-                });
-            }
-            entity.Data = data;
+            // transform meta data
+            entity.Data = await SerializeMetaDataAsync(entity);
 
             var updatedEntity = await _entityRepository.InsertUpdateAsync(entity);
             if (updatedEntity != null)
@@ -165,6 +147,40 @@ namespace Plato.Entities.Stores
         #endregion
 
         #region "Private Methods"
+
+        async Task<IEnumerable<EntityData>> SerializeMetaDataAsync(Entity entity)
+        {
+
+            // Get all existing entity data
+            var data = await _entityDataStore.GetByEntityIdAsync(entity.Id);
+            var dataList = data.ToList();
+
+            // Iterate all meta data on the supplied object,
+            // check if a key already exists, if so update existing key 
+            var output = new List<EntityData>();
+            foreach (var item in entity.MetaData)
+            {
+                var key = item.Key.FullName;
+                var entityData = dataList.FirstOrDefault(d => d.Key == key);
+                if (entityData != null)
+                {
+                    entityData.Value = item.Value.Serialize();
+                }
+                else
+                {
+                    entityData = new EntityData()
+                    {
+                        Key = key,
+                        Value = item.Value.Serialize()
+                    };
+                }
+
+                output.Add(entityData);
+            }
+
+            return output;
+
+        }
         
         async Task<IList<Entity>> MergeEntityData(IList<Entity> entities)
         {

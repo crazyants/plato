@@ -68,7 +68,7 @@ namespace Plato.Internal.Stores.Users
             }
 
             // transform meta data
-            user.Data = await SerializeMetaData(user);
+            user.Data = await SerializeMetaDataAsync(user);
             
             var newUser = await _userRepository.InsertUpdateAsync(user);
             if (newUser != null)
@@ -105,7 +105,7 @@ namespace Plato.Internal.Stores.Users
             }
            
             // transform meta data
-            user.Data = await SerializeMetaData(user);
+            user.Data = await SerializeMetaDataAsync(user);
 
             var updatedUser = await _userRepository.InsertUpdateAsync(user);
             if (updatedUser != null)
@@ -206,7 +206,7 @@ namespace Plato.Internal.Stores.Users
 
         #region "Private Methods"
 
-        async Task<IEnumerable<UserData>> SerializeMetaData(User user)
+        async Task<IEnumerable<UserData>> SerializeMetaDataAsync(User user)
         {
 
             // Get all existing user data

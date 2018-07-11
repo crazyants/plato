@@ -19,7 +19,7 @@ namespace Plato.Entities.Models
 
         public string TitleNormalized { get; set; }
         
-        public IList<EntityData> Data { get; set; } = new List<EntityData>();
+        public IEnumerable<EntityData> Data { get; set; } = new List<EntityData>();
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
         

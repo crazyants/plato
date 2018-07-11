@@ -66,12 +66,14 @@ namespace Plato.Entities.Repositories
 
         }
 
-        public async Task<IEnumerable<EntityData>> SelectDataByEntityId(int entityId)
+        public async Task<IEnumerable<EntityData>> SelectByEntityIdAsync(int entityId)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
+            {
                 _logger.LogInformation($"Selecting all entity data for id {entityId}");
-
+            }
+                
             List<EntityData> data = null;
             using (var context = _dbContext)
             {

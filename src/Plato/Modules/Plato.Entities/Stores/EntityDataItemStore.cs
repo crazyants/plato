@@ -92,7 +92,7 @@ namespace Plato.Entities.Stores
         private async Task<IEnumerable<EntityData>> GetAllKeys(int entityId)
         {
             var output = new List<EntityData>();
-            var entries = await _entityDataRepository.SelectDataByEntityId(entityId);
+            var entries = await _entityDataRepository.SelectByEntityIdAsync(entityId);
             if (entries != null)
             {
                 foreach (var entry in entries)

@@ -169,36 +169,16 @@ namespace Plato.Entities.Repositories
                 {
                     if (reader.HasRows)
                     {
+                        var data = new List<EntityData>();
                         while (await reader.ReadAsync())
                         {
                             var entityData = new EntityData(reader);
-                            entity.Data.Add(entityData);
+                            data.Add(entityData);
                         }
-
+                        entity.Data = data;
                     }
+
                 }
-                
-                //if (await reader.NextResultAsync())
-                //{
-                //    if (reader.HasRows)
-                //    {
-                //        await reader.ReadAsync();
-                //        user.Detail = new UserDetail(reader);
-                //    }
-                //}
-
-                //// roles
-
-                //if (await reader.NextResultAsync())
-                //{
-                //    if (reader.HasRows)
-                //    {
-                //        while (await reader.ReadAsync())
-                //        {
-                //            user.UserRoles.Add(new Role(reader));
-                //        }
-                //    }
-                //}
 
             }
             return entity;

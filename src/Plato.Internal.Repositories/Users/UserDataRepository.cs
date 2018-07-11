@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using System.Data;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
@@ -62,16 +62,45 @@ namespace Plato.Internal.Repositories.Users
 
         }
 
-        public Task<UserData> SelectByKeyAndUserIdAsync(string key, int userId)
+        public async Task<UserData> SelectByKeyAndUserIdAsync(string key, int userId)
         {
-            throw new NotImplementedException();
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Selecting all user data for userId {userId}");
+            }
+
+            UserData data = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectUserDatumByKeyAndUserId",
+                    key.ToEmptyIfNull(),
+                    userId);
+                if (reader != null)
+                {
+                    if (reader.HasRows)
+                    {
+                        await reader.ReadAsync();
+                        data = new UserData();
+                        data.PopulateModel(reader);
+                    }
+                }
+            }
+
+            return data;
+
         }
 
         public async Task<IEnumerable<UserData>> SelectByUserIdAsync(int userId)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
+            {
                 _logger.LogInformation($"Selecting all user data for userId {userId}");
+            }
+                
 
             List<UserData> data = null;
             using (var context = _dbContext)
@@ -212,9 +241,7 @@ namespace Plato.Internal.Repositories.Users
 
             return output;
         }
-
-
-
+        
         #endregion
 
     }

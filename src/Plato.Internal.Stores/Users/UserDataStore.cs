@@ -45,12 +45,26 @@ namespace Plato.Internal.Stores.Users
         
         public async Task<UserData> CreateAsync(UserData model)
         {
-            return await _userDataRepository.InsertUpdateAsync(model);
+            var result =  await _userDataRepository.InsertUpdateAsync(model);
+            if (result != null)
+            {
+                _cacheManager.CancelTokens(this.GetType());
+            }
+
+            return result;
+
         }
 
         public async Task<UserData> UpdateAsync(UserData model)
         {
-            return await _userDataRepository.InsertUpdateAsync(model);
+            var result = await _userDataRepository.InsertUpdateAsync(model);
+            if (result != null)
+            {
+                _cacheManager.CancelTokens(this.GetType());
+            }
+
+            return result;
+
         }
 
         public async Task<bool> DeleteAsync(UserData model)
@@ -90,12 +104,15 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<UserData> GetByKeyAndUserIdAsync(string key, int userId)
         {
-            return await _userDataRepository.SelectByKeyAndUserIdAsync(key, userId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), key, userId);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userDataRepository.SelectByKeyAndUserIdAsync(key, userId));
+            
         }
 
         public async Task<IEnumerable<UserData>> GetByUserIdAsync(int userId)
         {
-            return await _userDataRepository.SelectByUserIdAsync(userId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), userId);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userDataRepository.SelectByUserIdAsync(userId));
         }
     }
 }
