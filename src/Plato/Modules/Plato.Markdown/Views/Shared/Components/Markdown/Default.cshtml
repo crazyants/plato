@@ -1,9 +1,7 @@
 ﻿@model Plato.Markdown.ViewComponents.MarkdownViewModel
 
-
-<card data-markdown-id="@Model.Id" data-provide="markdown-container">
+<card class="card card-sm-gutter" data-markdown-id="@Model.Id" data-provide="markdown-container">
     <card-title>
-        
         <ul class="nav nav-tabs card-header-tabs" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" href="#write_@Model.Id" data-toggle="tab" role="tab">@T["Write"]</a>
@@ -12,30 +10,27 @@
                 <a class="nav-link" href="#preview_@Model.Id" data-toggle="tab" role="tab">@T["Preview"]</a>
             </li>
         </ul>
-
-
     </card-title>
     <card-body>
    
-            <div class="tab-content d-block">
+        <div class="tab-content d-block">
       
-                <div class="tab-pane fade show active mt-2" id="write_@Model.Id" role="tabpanel">
-                    <textarea value="@Model.Value"
-              name="@Model.HtmlName"
-              data-provide="markdown"
-              asp-autofocus="@Model.AutoFocusw"
-              class="form-control md-textarea"
-              placeholder="@Model.PlaceHolderText"
-              rows="6">@if (!String.IsNullOrEmpty(@Model.Value))
-                       {
-                           @Model.Value
-                       }</textarea>
-                </div>
-                <div class="tab-pane fade mt-2" id="preview_@Model.Id" role="tabpanel">
-                </div>
-       
+            <div class="tab-pane fade show active mt-2" id="write_@Model.Id" role="tabpanel">
+                <textarea value="@Model.Value"
+                  name="@Model.HtmlName"
+                  data-provide="markdown"
+                  asp-autofocus="@Model.AutoFocusw"
+                  class="form-control md-textarea"
+                  placeholder="@Model.PlaceHolderText"
+                  rows="6">@if (!String.IsNullOrEmpty(@Model.Value))
+                           {
+                               @Model.Value
+                           }</textarea>
             </div>
-
+            <div class="tab-pane fade mt-2" id="preview_@Model.Id" role="tabpanel">
+            </div>
+       
+        </div>
       
 
     </card-body>

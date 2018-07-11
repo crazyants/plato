@@ -25,6 +25,8 @@
 
 .card-title { margin: 0.50rem 0; }
 
+.card-sm-gutter .card-body { padding: 0.5rem; }
+
 /* ------------------------- */
 /* Drop downs */
 /* ------------------------- */

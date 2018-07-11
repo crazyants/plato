@@ -76,8 +76,6 @@ $(function (win, doc, $) {
                 win.$.Plato.Http({
                     url: "api/follows/entity/post",
                     method: "POST",
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(params)
                 }).done(function(data) {
                     
@@ -107,8 +105,6 @@ $(function (win, doc, $) {
                 win.$.Plato.Http({
                     url: "api/follows/entity/delete",
                     method: "DELETE",
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(params)
                 }).done(function (data) {
 

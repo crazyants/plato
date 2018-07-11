@@ -102,56 +102,6 @@ $(function (win, doc, $) {
                 });
 
             }
-            //show: function ($caller) {
-
-            //    var delay = $caller.data("notify").delay || $caller.data("notifyDelay");
-
-            //    var $target = notify.getElement($caller);
-            //    $target.addClass("i-notify-visible");
-
-            //    if (delay > 0) {
-            //        win.setTimeout(function () {
-            //            notify.hide($caller);
-            //        },
-            //            delay);
-            //    }
-
-            //},
-            //hide: function ($caller) {
-            //    $(".i-notify").removeClass("i-notify-visible");
-            //},
-            //getElement: function ($caller) {
-
-            //    var text = $caller.data("notifyText") || $caller.data("notify").text,
-            //        css = $caller.data("notifyCss") || $caller.data("notify").css,
-            //        closeButton = $caller.data("notifyCloseButton") || $caller.data("notify").closeButton,
-            //        iconCss = $caller.data("notifyIconCss") || $caller.data("notify").iconCss;
-
-            //    // create alert html
-            //    var s = "<div class=\"" + css + "\"><div>";
-            //    s += (iconCss ? "<i class=\"" + iconCss + "\"></i>" : "");
-            //    s += text;
-
-            //    if (closeButton === true) {
-            //        s += "<a class=\"i-notify-close\" href=\"#\"><i class=\"fa fa-times\"></i></a>";
-            //    }
-            //    s += "</div></div>";
-
-            //    // create and add to dom
-            //    var $alert = $(s);
-            //    $("body").append($alert);
-
-            //    $("body")
-            //        .find(".i-notify-close")
-            //        .unbind("click")
-            //        .bind("click",
-            //            function (e) {
-            //                e.preventDefault();
-            //                $($caller).inotify("hide");
-            //            });
-
-            //    return $alert;
-            //}
         }
 
         return {
