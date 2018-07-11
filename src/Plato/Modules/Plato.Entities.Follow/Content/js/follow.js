@@ -91,6 +91,8 @@ $(function (win, doc, $) {
                         $caller.find("i")
                             .removeClass("fa-bell")
                             .addClass("fa-bell-slash");
+
+                        $caller.find("span").text($caller.attr("data-unsubscribe-text"));
                     }
                  
                 });
@@ -119,6 +121,8 @@ $(function (win, doc, $) {
                         $caller.find("i")
                             .removeClass("fa-bell-slash")
                             .addClass("fa-bell");
+
+                        $caller.find("span").text($caller.attr("data-subscribe-text"));
 
                     }
 

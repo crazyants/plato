@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Follow.Models;
@@ -26,24 +24,12 @@ namespace Plato.Entities.Follow.Controllers
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Get(int id)
         {
-            
             var follow = await _entityFollowStore.GetByIdAsync(id);
             if (follow != null)
             {
-                return new ObjectResult(new
-                {
-                    follow,
-                    StatusCode = HttpStatusCode.OK,
-                    Message = "Entity follow found successfully"
-                });
+                return base.Result(follow);
             }
-
-            return new ObjectResult(new
-            {
-                StatusCode = HttpStatusCode.NotFound,
-                Message = $"No entity follow with the Id {id} could be found"
-            });
-
+            return base.NotFound();
         }
         
         [HttpPost]
@@ -55,22 +41,15 @@ namespace Plato.Entities.Follow.Controllers
             var user = await base.GetAuthenticatedUserAsync();
             if (user == null)
             {
-                return new ObjectResult(new
-                {
-                    StatusCode = HttpStatusCode.Unauthorized,
-                    Message = "Could not authenticate the request."
-                });
+                return base.UnauthorizedException();
             }
 
             // Is the user already following the entity?
             var existingFollow = await _entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, follow.EntityId);
             if (existingFollow != null)
             {
-                return new ObjectResult(new
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Message = $"Authenticated user already following entity with id '{follow.EntityId}'"
-                });
+                return base.Result(HttpStatusCode.OK,
+                    $"Authenticated user already following entity with id '{follow.EntityId}'");
             }
 
             // Build a new subscription
@@ -85,20 +64,11 @@ namespace Plato.Entities.Follow.Controllers
             var result = await _entityFollowStore.CreateAsync(followToAdd);
             if (result != null)
             {
-                return new ObjectResult(new
-                {
-                    result,
-                    StatusCode = HttpStatusCode.OK,
-                    Message = "Entity follow created successfully"
-                });
+                return base.Result(result);
             }
 
             // We should not reach here
-            return new ObjectResult(new
-            {
-                StatusCode = HttpStatusCode.InternalServerError,
-                Message = "An error occurred whilst attempting to add the entity follow. It could be the user is already following the entity."
-            });
+            return base.InternalServerError();
 
         }
 
@@ -117,11 +87,7 @@ namespace Plato.Entities.Follow.Controllers
             var user = await base.GetAuthenticatedUserAsync();
             if (user == null)
             {
-                return new ObjectResult(new
-                {
-                    StatusCode = HttpStatusCode.Unauthorized,
-                    Message = "Could not authenticate your request"
-                });
+                return base.UnauthorizedException();
             }
             
             var existingFollow = await _entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, follow.EntityId);
@@ -130,22 +96,13 @@ namespace Plato.Entities.Follow.Controllers
                 var success = await _entityFollowStore.DeleteAsync(existingFollow);
                 if (success)
                 {
-                    return new ObjectResult(new
-                    {
-                        existingFollow,
-                        StatusCode = HttpStatusCode.OK,
-                        Message = "Follow deleted successfully"
-                    });
+                    return base.Result(existingFollow);
                 }
 
             }
 
-            return new ObjectResult(new
-            {
-                StatusCode = HttpStatusCode.InternalServerError,
-                Message = "An error occurred whilst attempting to delete the entity follow"
-            });
-
+            // We should not reach here
+            return base.InternalServerError();
 
         }
 
