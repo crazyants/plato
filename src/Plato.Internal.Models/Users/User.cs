@@ -83,7 +83,7 @@ namespace Plato.Internal.Models.Users
                 return (T)_metaData[typeof(T)];
             }
 
-            return Activator.CreateInstance<T>();
+            return ActivateInstanceOf<T>.Instance();
 
         }
 

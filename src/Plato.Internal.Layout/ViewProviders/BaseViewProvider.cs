@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Layout.EmbeddedViews;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.Views;
@@ -34,11 +35,12 @@ namespace Plato.Internal.Layout.ViewProviders
             );
         }
 
-        public IPositionedView View<TViewModel>(string viewName, Func<TViewModel, TViewModel> configure) where TViewModel : new()
+        public IPositionedView View<TViewModel>(string viewName, Func<TViewModel, TViewModel> configure) where TViewModel : class
         {
 
             // Create proxy model 
-            var proxy = Activator.CreateInstance(typeof(TViewModel));
+            var proxy = ActivateInstanceOf<TViewModel>.Instance();
+            //var proxy =  Activator.CreateInstance(typeof(TViewModel));
 
             // Configure model
             var model = configure((TViewModel) proxy);

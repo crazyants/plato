@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
@@ -107,7 +108,9 @@ namespace Plato.Entities.Repositories
                     output = new PagedResults<TModel>();
                     while (await reader.ReadAsync())
                     {
-                        var entity = (TModel) Activator.CreateInstance(typeof(TModel));
+                      
+                        var entity = ActivateInstanceOf<TModel>.Instance();
+                        //var entity = (TModel) Activator.CreateInstance(typeof(TModel));
                         entity.PopulateModel(reader);
                         output.Data.Add(entity);
                     }
@@ -157,8 +160,7 @@ namespace Plato.Entities.Repositories
             if ((reader != null) && (reader.HasRows))
             {
 
-                entity = (TModel)Activator.CreateInstance(typeof(TModel));
-
+                entity = ActivateInstanceOf<TModel>.Instance();
                 await reader.ReadAsync();
                 if (reader.HasRows)
                 {

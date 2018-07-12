@@ -29,7 +29,7 @@ namespace Plato.Internal.Stores.Users
 
         #region "IMplementation"
 
-        public async Task<T> GetAsync<T>(int userId, string key)
+        public async Task<T> GetAsync<T>(int userId, string key) where T : class
         {
             var result = await GetByUserIdAndKeyAsync(userId, key);
             if (result != null)
@@ -50,7 +50,7 @@ namespace Plato.Internal.Stores.Users
             return default(T);
         }
 
-        public async Task<T> UpdateAsync<T>(int userId, string key, ISerializable value)
+        public async Task<T> UpdateAsync<T>(int userId, string key, ISerializable value) where T : class
         {
 
             // Get or create setting

@@ -9,7 +9,12 @@ namespace Plato.Entities.Models
 {
     public class Entity : EntityBase
     {
-      
+
+        public Entity() :base()
+        {
+            
+        }
+
         public override void PopulateModel(IDataReader dr)
         {
 

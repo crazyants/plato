@@ -90,7 +90,7 @@ namespace Plato.Entities.Models
                 return (T)_metaData[typeof(T)];
             }
 
-            return Activator.CreateInstance<T>();
+            return ActivateInstanceOf<T>.Instance(); 
 
         }
 
