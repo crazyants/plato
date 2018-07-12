@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
+using Plato.Discuss.Channels.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 
@@ -39,6 +40,12 @@ namespace Plato.Discuss.Channels.Controllers
                 Name = "test",
                 IconCss = "fal fa-plane"
             };
+
+            var detail = category.GetOrCreate<ChannelDetails>();
+            detail.TotalTopics = 100;
+
+            category.AddOrUpdate<ChannelDetails>(detail);
+
 
             await _categoryStore.CreateAsync(category);
           

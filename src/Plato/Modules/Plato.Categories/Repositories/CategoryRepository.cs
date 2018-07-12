@@ -19,16 +19,20 @@ namespace Plato.Categories.Repositories
     {
      
         #region "Constructor"
-        
+
+        private readonly ICategoryDataRepository<CategoryData> _categoryDataRepository;
+
         private readonly IDbContext _dbContext;
         private readonly ILogger<CategoryRepository> _logger;
       
         public CategoryRepository(
             IDbContext dbContext,
-            ILogger<CategoryRepository> logger)
+            ILogger<CategoryRepository> logger,
+            ICategoryDataRepository<CategoryData> categoryDataRepository)
         {
             _dbContext = dbContext;
             _logger = logger;
+            _categoryDataRepository = categoryDataRepository;
         }
 
         #endregion
@@ -55,7 +59,8 @@ namespace Plato.Categories.Repositories
                 model.CreatedUserId,
                 model.CreatedDate,
                 model.ModifiedUserId,
-                model.ModifiedDate);
+                model.ModifiedDate,
+                model.Data);
 
             if (id > 0)
             {
@@ -201,7 +206,8 @@ namespace Plato.Categories.Repositories
             int createdUserId,
             DateTime? createdDate,
             int modifiedUserId,
-            DateTime? modifiedDate)
+            DateTime? modifiedDate,
+            IEnumerable<CategoryData> data)
         {
 
             var categoryId = 0;
@@ -235,6 +241,20 @@ namespace Plato.Categories.Repositories
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
                     modifiedDate.ToDateIfNull());
+            }
+
+            // Add category data
+            if (categoryId > 0)
+            {
+                if (data != null)
+                {
+                    foreach (var item in data)
+                    {
+                        item.CategoryId = categoryId;
+                        await _categoryDataRepository.InsertUpdateAsync(item);
+                    }
+                }
+
             }
 
             return categoryId;
