@@ -1,17 +1,32 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Abstractions
 {
 
     public static class ActivateInstanceOf<T> where T : class
     {
-        // https://stackoverflow.com/questions/6582259/fast-creation-of-objects-instead-of-activator-createinstancetype
+   
+        public static readonly Func<T> Instance = Creator();
 
-        public static readonly Func<T> Instance = Expression.Lambda<Func<T>>
-        (
-            Expression.New(typeof(T))
-        ).Compile();
+        static Func<T> Creator()
+        {
+            Type t = typeof(T);
+            if (t == typeof(string))
+            {
+                return Expression.Lambda<Func<T>>(Expression.Constant(string.Empty)).Compile();
+            }
+            
+            if (t.HasDefaultConstructor())
+            {
+                return Expression.Lambda<Func<T>>(Expression.New(t)).Compile();
+            }
+                
+            return () => (T)FormatterServices.GetUninitializedObject(t);
+
+        }
 
     }
 

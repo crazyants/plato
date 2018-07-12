@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Plato.Internal.Features.Abstractions;
+using Plato.Discuss.Channels.ViewProviders;
+using Plato.Discuss.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
-
+using Plato.Internal.Layout.ViewProviders;
 
 namespace Plato.Discuss.Channels
 {
@@ -28,6 +28,10 @@ namespace Plato.Discuss.Channels
 
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
+
+            // View providers
+            services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
+            services.AddScoped<IViewProvider<Topic>, ChannelsViewProvider>();
             
             //// Repositories
             //services.AddScoped<IEmailRepository<EmailMessage>, EmailRepository>();

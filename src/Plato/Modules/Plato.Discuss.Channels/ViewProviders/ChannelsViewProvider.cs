@@ -1,73 +1,66 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+using Plato.Categories.Models;
+using Plato.Categories.Stores;
+using Plato.Discuss.Channels.ViewModels;
+using Plato.Discuss.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Models.Users;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
-    //public class ChannelsProvider : BaseViewProvider<Entity>
-    //{
+    public class ChannelsViewProvider : BaseViewProvider<Topic>
+    {
 
 
-    //    private readonly IContextFacade _contextFacade;
-    //    private readonly IEntityFollowStore<EntityFollow> entityFollowStore;
+        private readonly IContextFacade _contextFacade;
+        private readonly ICategoryStore<Category> _categoryStore;
 
-    //    public FollowViewProvider(
-    //        IContextFacade contextFacade,
-    //        IEntityFollowStore<EntityFollow> entityFollowStore)
-    //    {
-    //        _contextFacade = contextFacade;
-    //        this.entityFollowStore = entityFollowStore;
-    //    }
-        
-    //    public override async Task<IViewProviderResult> BuildDisplayAsync(Entity entity, IUpdateModel updater)
-    //    {
+        public ChannelsViewProvider(
+            IContextFacade contextFacade,
+            ICategoryStore<Category> categoryStore)
+        {
+            _contextFacade = contextFacade;
+            _categoryStore = categoryStore;
+        }
 
-    //        if (entity == null)
-    //        {
-    //            await BuildIndexAsync(new Entity(), updater);
-    //        }
 
-    //        var isFollowing = false;
+        public override Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IUpdateModel updater)
+        {
+            return Task.FromResult(Views(
+                View<ChannelsViewModel>("Channels.Sidebar", model =>
+                {
 
-    //        var user = await _contextFacade.GetAuthenticatedUserAsync();
-    //        if (user != null)
-    //        {
-    //            var entityFollow = await entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, entity.Id);
-    //            if (entityFollow != null)
-    //            {
-    //                isFollowing = true;
-    //            }
-    //        }
+                    return model;
+                }).Zone("sidebar").Order(1)
+            ));
+
+        }
+
+        public override Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
+        {
             
-    //        return Views(
-    //            View<FollowViewModel>("Follow.Entity.Sidebar", model =>
-    //            {
-    //                model.EntityId = entity.Id;
-    //                model.IsFollowing = isFollowing;
-    //                return model;
-    //            }).Zone("sidebar").Order(10)
-    //        );
+            return Task.FromResult(Views(
+                View<ChannelsViewModel>("Channels.Sidebar", model =>
+                {
+                
+                    return model;
+                }).Zone("sidebar").Order(1)
+            ));
 
-    //    }
+        }
 
-    //    public override Task<IViewProviderResult> BuildIndexAsync(Entity entity, IUpdateModel updater)
-    //    {
-    //        return Task.FromResult(default(IViewProviderResult));
-    //    }
 
-    //    public override Task<IViewProviderResult> BuildEditAsync(Entity entity, IUpdateModel updater)
-    //    {
+        public override Task<IViewProviderResult> BuildEditAsync(Topic viewModel, IUpdateModel updater)
+        {
 
-    //        return Task.FromResult(default(IViewProviderResult));
-    //    }
+            return Task.FromResult(default(IViewProviderResult));
+        }
 
-    //    public override Task<IViewProviderResult> BuildUpdateAsync(Entity entity, IUpdateModel updater)
-    //    {
-    //        return Task.FromResult(default(IViewProviderResult));
-    //    }
-        
-    //}
+        public override Task<IViewProviderResult> BuildUpdateAsync(Topic viewModel, IUpdateModel updater)
+        {
+            return Task.FromResult(default(IViewProviderResult));
+        }
+
+    }
 }
