@@ -45,13 +45,17 @@ namespace Plato.Internal.Hosting.Web
             return null;
         }
 
-        public async Task<ShellModule> GetCurrentFeatureAsync()
+        public async Task<ShellModule> GetFeatureByAreaAsync()
         {
-
             // Current area name
             var areaName =(string) _actionContextAccessor.ActionContext
                 .RouteData.Values["area"];
-            
+            return await GetFeatureByModuleIdAsync(areaName);
+        }
+
+        public async Task<ShellModule> GetFeatureByModuleIdAsync(string areaName)
+        {
+
             // Get module from descriptor matching areaName
             var descriptor = await _shellDescriptorManager.GetEnabledDescriptorAsync();
             if (descriptor != null)
@@ -62,7 +66,9 @@ namespace Plato.Internal.Hosting.Web
             }
 
             throw new Exception($"There was a problem obtaining the feature for the area name {areaName}.");
+
         }
+
 
         public async Task<ISiteSettings> GetSiteSettingsAsync()
         {

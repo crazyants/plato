@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,7 @@ namespace Plato.Categories.Repositories
 {
     public interface ICategoryRepository<T> : IRepository<T> where T : class
     {
-
+        Task<IEnumerable<T>> SelectByFeatureIdAsync(int featureId);
     }
     
     public class CategoryRepository : ICategoryRepository<Category>
@@ -120,9 +121,7 @@ namespace Plato.Categories.Repositories
                         await reader.ReadAsync();
                         output.PopulateTotal(reader);
                     }
-
-
-
+                    
                 }
             }
 
@@ -147,6 +146,41 @@ namespace Plato.Categories.Repositories
 
             return success > 0 ? true : false;
 
+        }
+        
+        public async Task<IEnumerable<Category>> SelectByFeatureIdAsync(int featureId)
+        {
+
+            List<Category> output = null;
+            using (var context = _dbContext)
+            {
+
+                _dbContext.OnException += (sender, args) =>
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
+                };
+
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectCategoriesByFeatureId",
+                    featureId
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new List<Category>();
+                    while (await reader.ReadAsync())
+                    {
+                        var category = new Category();
+                        category.PopulateModel(reader);
+                        output.Add(category);
+                    }
+                    
+                }
+            }
+
+            return output;
         }
 
         #endregion
@@ -208,6 +242,7 @@ namespace Plato.Categories.Repositories
         }
 
         #endregion
+
     }
 
 }

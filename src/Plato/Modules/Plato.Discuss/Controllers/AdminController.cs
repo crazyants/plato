@@ -32,7 +32,7 @@ namespace Plato.Discuss.Controllers
             string path = Request.Path;
             ViewData["path"] = path;
 
-            var feature = await _contextFacade.GetCurrentFeatureAsync();
+            var feature = await _contextFacade.GetFeatureByAreaAsync();
 
             ViewBag.Feature = feature;
 

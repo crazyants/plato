@@ -187,7 +187,7 @@ namespace Plato.Discuss.ViewProviders
         {
 
             // Get current feature (i.e. Plato.Discuss) from area
-            var feature = await _contextFacade.GetCurrentFeatureAsync();
+            var feature = await _contextFacade.GetFeatureByAreaAsync();
 
             return await _entityStore.QueryAsync()
                 .Page(pagerOptions.Page, pagerOptions.PageSize)

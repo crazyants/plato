@@ -45,7 +45,7 @@ namespace Plato.Entities.Services
             var result = new ActivityResult<TModel>();
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-            var feature = await _contextFacade.GetCurrentFeatureAsync();
+            var feature = await _contextFacade.GetFeatureByAreaAsync();
 
             // Set entities featureId based on current feature
             if (feature != null)

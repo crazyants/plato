@@ -10,10 +10,12 @@ namespace Plato.Internal.Hosting.Abstractions
 
         Task<User> GetAuthenticatedUserAsync();
 
-        Task<ShellModule> GetCurrentFeatureAsync();
+        Task<ShellModule> GetFeatureByAreaAsync();
+
+        Task<ShellModule> GetFeatureByModuleIdAsync(string areaName);
 
         Task<ISiteSettings> GetSiteSettingsAsync();
-
+        
         Task<string> GetBaseUrl();
 
     }

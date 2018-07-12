@@ -141,6 +141,29 @@ namespace Plato.Categories.Stores
 
             });
         }
+        
+        public async Task<IEnumerable<Category>> GetByFeatureIdAsync(int featureId)
+        {
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), featureId);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Selecting categories for feature with Id '{0}'",
+                        featureId);
+                }
+
+                var results = await _categoryRepository.SelectByFeatureIdAsync(featureId);
+                if (results != null)
+                {
+                    results = await MergeCategoryData(results.ToList());
+                }
+
+                return results;
+
+            });
+        }
 
         #endregion
 

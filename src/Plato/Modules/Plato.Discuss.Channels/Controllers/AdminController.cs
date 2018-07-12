@@ -29,14 +29,15 @@ namespace Plato.Discuss.Channels.Controllers
             string path = Request.Path;
             ViewData["path"] = path;
 
-            var feature = await _contextFacade.GetCurrentFeatureAsync();
+            var feature = await _contextFacade.GetFeatureByAreaAsync();
 
             ViewBag.Feature = feature;
 
             var category = new Category()
             {
                 FeatureId = feature.Id,
-                Name = "test"
+                Name = "test",
+                IconCss = "fal fa-plane"
             };
 
             await _categoryStore.CreateAsync(category);

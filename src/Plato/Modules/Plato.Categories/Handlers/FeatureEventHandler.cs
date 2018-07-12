@@ -269,8 +269,9 @@ namespace Plato.Categories.Handlers
                 builder
                     .DropTable(_categories)
                     .DropDefaultProcedures(_categories)
-                    .DropProcedure(new SchemaProcedure("SelectCategoriesPaged", StoredProcedureType.SelectByKey));
-
+                    .DropProcedure(new SchemaProcedure("SelectCategoriesPaged", StoredProcedureType.SelectByKey))
+                    .DropProcedure(new SchemaProcedure("SelectCategoriesByFeatureId", StoredProcedureType.SelectByKey));
+                
                 // drop category data
                 builder
                     .DropTable(_categoryData)
@@ -334,10 +335,15 @@ namespace Plato.Categories.Handlers
 
         void Categories(ISchemaBuilder builder)
         {
-            
+
             builder
                 .CreateTable(_categories)
                 .CreateDefaultProcedures(_categories);
+
+            builder
+                .CreateProcedure(new SchemaProcedure("SelectCategoriesByFeatureId", StoredProcedureType.SelectByKey)
+                    .ForTable(_categories)
+                    .WithParameter(new SchemaColumn() {Name = "FeatureId", DbType = DbType.Int32}));
             
             builder.CreateProcedure(new SchemaProcedure("SelectCategoriesPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_categories)

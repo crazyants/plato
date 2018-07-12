@@ -24,7 +24,7 @@ namespace Plato.Discuss.Services
         {
             if (model.FeatureId == 0)
             {
-                var feature = await _contextFacade.GetCurrentFeatureAsync();
+                var feature = await _contextFacade.GetFeatureByAreaAsync();
                 if (feature != null)
                 {
                     model.FeatureId = feature.Id;
@@ -39,7 +39,7 @@ namespace Plato.Discuss.Services
 
             if (model.FeatureId == 0)
             {
-                var feature = await _contextFacade.GetCurrentFeatureAsync();
+                var feature = await _contextFacade.GetFeatureByAreaAsync();
                 if (feature != null)
                 {
                     model.FeatureId = feature.Id;
