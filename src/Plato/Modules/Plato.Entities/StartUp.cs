@@ -46,7 +46,7 @@ namespace Plato.Entities
             services.AddScoped<IEntityReplyStore<EntityReply>, EntityReplyStore>();
 
             // Managers
-            services.AddScoped<IEntityManager<Entity>, EntityManager2<Entity>>();
+            services.AddScoped<IEntityManager<Entity>, EntityManager<Entity>>();
             services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager>();
 
             //services.AddScoped<IEntityDetailsStore<EntityDetails>, EntityDetailsStore>();

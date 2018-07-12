@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using Plato.Internal.Abstractions;
 
 namespace Plato.Entities.Models
@@ -53,7 +54,9 @@ namespace Plato.Entities.Models
         void AddOrUpdate(Type type, ISerializable obj);
 
         T GetOrCreate<T>() where T : class;
-        
+
+        void PopulateModel(IDataReader dr);
+
     }
     
     public interface IEntityData

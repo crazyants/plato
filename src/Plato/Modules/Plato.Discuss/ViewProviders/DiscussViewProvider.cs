@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
@@ -13,16 +14,16 @@ using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.ViewProviders
 {
-    public class DiscussViewProvider : BaseViewProvider<Entity>
+    public class DiscussViewProvider : BaseViewProvider<Topic>
     {
 
         private const string EditorHtmlName = "message";
 
         private readonly IContextFacade _contextFacade;
-        private readonly IEntityStore<Entity> _entityStore;
+        private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
 
-        private readonly IPostManager<Entity> _topicManager;
+        private readonly IPostManager<Topic> _topicManager;
         private readonly IPostManager<EntityReply> _replyManager;
         private readonly IActionContextAccessor _actionContextAccessor;
 
@@ -33,7 +34,9 @@ namespace Plato.Discuss.ViewProviders
             IPostManager<EntityReply> replyManager,
             IEntityReplyStore<EntityReply> entityReplyStore,
             IActionContextAccessor actionContextAccessor,
-            IContextFacade contextFacade, IEntityStore<Entity> entityStore, IPostManager<Entity> topicManager)
+            IContextFacade contextFacade,
+            IEntityStore<Topic> entityStore,
+            IPostManager<Topic> topicManager)
         {
             _replyManager = replyManager;
             _entityReplyStore = entityReplyStore;
@@ -46,7 +49,7 @@ namespace Plato.Discuss.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Entity entity, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Topic entity, IUpdateModel updater)
         {
 
             var filterOptions = new FilterOptions();
@@ -68,7 +71,7 @@ namespace Plato.Discuss.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Entity entity, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic entity, IUpdateModel updater)
         {
            
             var filterOptions = new FilterOptions();
@@ -97,12 +100,12 @@ namespace Plato.Discuss.ViewProviders
 
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(Entity entity, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Topic entity, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Entity entity, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic entity, IUpdateModel updater)
         {
 
             var model = new NewEntityViewModel();
@@ -178,7 +181,7 @@ namespace Plato.Discuss.ViewProviders
                 pagerOptions);
         }
         
-        async Task<IPagedResults<Entity>> GetEntities(
+        async Task<IPagedResults<Topic>> GetEntities(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {

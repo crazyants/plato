@@ -10,7 +10,7 @@ using Plato.Internal.Messaging.Abstractions;
 namespace Plato.Entities.Services
 {
     
-    public class EntityManager2<TModel> : IEntityManager<TModel> where TModel : class, IEntity
+    public class EntityManager<TModel> : IEntityManager<TModel> where TModel : class, IEntity
     {
 
         public event EntityEvents<TModel>.Handler Creating;
@@ -26,7 +26,7 @@ namespace Plato.Entities.Services
         private readonly IEntityStore<TModel> _entityStore;
         private readonly IContextFacade _contextFacade;
 
-        public EntityManager2(
+        public EntityManager(
             IEntityStore<TModel> entityStore,
             IBroker broker,
             IContextFacade contextFacade)

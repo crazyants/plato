@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Plato.Discuss.Models;
-using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;

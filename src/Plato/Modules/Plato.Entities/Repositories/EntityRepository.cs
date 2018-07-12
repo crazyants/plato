@@ -72,7 +72,7 @@ namespace Plato.Entities.Repositories
         public async Task<TModel> SelectByIdAsync(int id)
         {
 
-            Entity entity = null;
+            TModel entity = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -81,7 +81,7 @@ namespace Plato.Entities.Repositories
                 entity = await BuildEntityFromResultSets(reader);
             }
 
-            return (TModel)Convert.ChangeType(entity, typeof(TModel));
+            return entity;
         }
         
         public async Task<IPagedResults<TModel>> SelectAsync(params object[] inputParams)
@@ -107,9 +107,9 @@ namespace Plato.Entities.Repositories
                     output = new PagedResults<TModel>();
                     while (await reader.ReadAsync())
                     {
-                        var entity = new Entity();
+                        var entity = (TModel) Activator.CreateInstance(typeof(TModel));
                         entity.PopulateModel(reader);
-                        output.Data.Add((TModel)Convert.ChangeType(entity, typeof(TModel)));
+                        output.Data.Add(entity);
                     }
 
                     if (await reader.NextResultAsync())
@@ -151,13 +151,14 @@ namespace Plato.Entities.Repositories
 
         #region "Private Methods"
 
-        async Task<Entity> BuildEntityFromResultSets(DbDataReader reader)
+        async Task<TModel> BuildEntityFromResultSets(DbDataReader reader)
         {
-            Entity entity = null;
+            TModel entity = null;
             if ((reader != null) && (reader.HasRows))
             {
 
-                entity = new Entity();
+                entity = (TModel)Activator.CreateInstance(typeof(TModel));
+
                 await reader.ReadAsync();
                 if (reader.HasRows)
                 {
@@ -182,6 +183,7 @@ namespace Plato.Entities.Repositories
                 }
 
             }
+
             return entity;
         }
 

@@ -28,7 +28,7 @@ namespace Plato.Discuss.Controllers
 
         private readonly IEntityDataStore<IEntityData> _entityDataStore;
 
-        private readonly IViewProviderManager<Entity> _discussViewProvider;
+        private readonly IViewProviderManager<Topic> _discussViewProvider;
 
         private readonly ISiteSettingsStore _settingsStore;
         private readonly IEntityStore<Topic> _entityStore;
@@ -42,7 +42,7 @@ namespace Plato.Discuss.Controllers
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IEntityStore<Topic> entityStore,
-            IViewProviderManager<Entity> discussViewProvider,
+            IViewProviderManager<Topic> discussViewProvider,
             IPostManager<Topic> postManager,
             IAlerter alerter, IEntityDataStore<IEntityData> entityDataStore)
         {
@@ -85,7 +85,7 @@ namespace Plato.Discuss.Controllers
             this.RouteData.Values.Add("page", pagerOptions.Page);
          
             // Build view
-            var result = await _discussViewProvider.ProvideIndexAsync(new Entity(), this);
+            var result = await _discussViewProvider.ProvideIndexAsync(new Topic(), this);
 
             // Return view
             return View(result);
@@ -98,7 +98,7 @@ namespace Plato.Discuss.Controllers
         public async Task<IActionResult> IndexPost(NewEntityViewModel model)
         {
             
-            var entity = new Entity()
+            var entity = new Topic()
             {
                 Title = model.Title,
                 Message = model.Message

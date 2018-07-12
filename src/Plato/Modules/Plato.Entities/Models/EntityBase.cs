@@ -9,7 +9,7 @@ using Plato.Internal.Models;
 
 namespace Plato.Entities.Models
 {
-    public class EntityBase :  IModel<Entity>, IEntity
+    public class EntityBase :  IEntity
     {
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
         

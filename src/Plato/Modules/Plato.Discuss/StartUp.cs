@@ -11,6 +11,7 @@ using Plato.Discuss.Services;
 using Plato.Discuss.ViewProviders;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -41,6 +42,7 @@ namespace Plato.Discuss
             // Stores
             services.AddScoped<IEntityStore<Topic>, EntityStore<Topic>>();
             services.AddScoped<IEntityRepository<Topic>, EntityRepository<Topic>>();
+            services.AddScoped<IEntityManager<Topic>, EntityManager<Topic>>();
 
             // Register data access
             services.AddScoped<IPostManager<Topic>, TopicManager>();
@@ -50,8 +52,8 @@ namespace Plato.Discuss
             services.AddScoped<IAssetProvider, AssetProvider>();
             
             // Register view providers
-            services.AddScoped<IViewProviderManager<Entity>, ViewProviderManager<Entity>>();
-            services.AddScoped<IViewProvider<Entity>, DiscussViewProvider>();
+            services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
+            services.AddScoped<IViewProvider<Topic>, DiscussViewProvider>();
             
         }
 
