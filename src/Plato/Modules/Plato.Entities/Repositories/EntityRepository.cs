@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
@@ -83,6 +82,7 @@ namespace Plato.Entities.Repositories
             }
 
             return entity;
+
         }
         
         public async Task<IPagedResults<TModel>> SelectAsync(params object[] inputParams)
@@ -108,9 +108,7 @@ namespace Plato.Entities.Repositories
                     output = new PagedResults<TModel>();
                     while (await reader.ReadAsync())
                     {
-                      
                         var entity = ActivateInstanceOf<TModel>.Instance();
-                        //var entity = (TModel) Activator.CreateInstance(typeof(TModel));
                         entity.PopulateModel(reader);
                         output.Data.Add(entity);
                     }
@@ -120,9 +118,7 @@ namespace Plato.Entities.Repositories
                         await reader.ReadAsync();
                         output.PopulateTotal(reader);
                     }
-
-
-
+                    
                 }
             }
 
@@ -156,15 +152,15 @@ namespace Plato.Entities.Repositories
 
         async Task<TModel> BuildEntityFromResultSets(DbDataReader reader)
         {
-            TModel entity = null;
+
+            TModel model = null;
             if ((reader != null) && (reader.HasRows))
             {
-
-                entity = ActivateInstanceOf<TModel>.Instance();
+                model = ActivateInstanceOf<TModel>.Instance();
                 await reader.ReadAsync();
                 if (reader.HasRows)
                 {
-                    entity.PopulateModel(reader);
+                    model.PopulateModel(reader);
                 }
 
                 // data
@@ -179,14 +175,14 @@ namespace Plato.Entities.Repositories
                             var entityData = new EntityData(reader);
                             data.Add(entityData);
                         }
-                        entity.Data = data;
+                        model.Data = data;
                     }
 
                 }
 
             }
 
-            return entity;
+            return model;
         }
 
         async Task<int> InsertUpdateInternal(

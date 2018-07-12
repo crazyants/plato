@@ -2,10 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Models;
 
 namespace Plato.Entities.Models
 {
@@ -20,8 +18,7 @@ namespace Plato.Entities.Models
         public string Title { get; set; }
 
         public string TitleNormalized { get; set; }
-
-
+        
         public string Message { get; set; }
 
         public string Html { get; set; }
@@ -93,8 +90,7 @@ namespace Plato.Entities.Models
             return ActivateInstanceOf<T>.Instance(); 
 
         }
-
-
+        
         public virtual void PopulateModel(IDataReader dr)
         {
 
@@ -160,15 +156,12 @@ namespace Plato.Entities.Models
                 ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
 
         }
-
-
+        
     }
-
-
+    
     public class EntityUser
     {
-        private string _displayName;
-
+  
         public int Id { get; set; }
 
         public string Email { get; set; }

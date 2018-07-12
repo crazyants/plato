@@ -13,7 +13,6 @@ using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
-using Plato.Internal.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -24,12 +23,8 @@ namespace Plato.Discuss.Controllers
     {
 
         #region "Constructor"
-
-
-        private readonly IEntityDataStore<IEntityData> _entityDataStore;
-
+        
         private readonly IViewProviderManager<Topic> _discussViewProvider;
-
         private readonly ISiteSettingsStore _settingsStore;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IPostManager<Topic> _postManager;
@@ -44,17 +39,14 @@ namespace Plato.Discuss.Controllers
             IEntityStore<Topic> entityStore,
             IViewProviderManager<Topic> discussViewProvider,
             IPostManager<Topic> postManager,
-            IAlerter alerter, IEntityDataStore<IEntityData> entityDataStore)
+            IAlerter alerter)
         {
             _settingsStore = settingsStore;
             _postManager = postManager;
             _entityStore = entityStore;
             _discussViewProvider = discussViewProvider;
             _alerter = alerter;
-            _entityDataStore = entityDataStore;
-
             T = localizer;
-
         }
 
         #endregion
@@ -98,13 +90,13 @@ namespace Plato.Discuss.Controllers
         public async Task<IActionResult> IndexPost(NewEntityViewModel model)
         {
             
-            var entity = new Topic()
+            var topic = new Topic()
             {
                 Title = model.Title,
                 Message = model.Message
             };
 
-            var result = await _discussViewProvider.ProvideUpdateAsync(entity, this);
+            var result = await _discussViewProvider.ProvideUpdateAsync(topic, this);
 
             if (!ModelState.IsValid)
             {
@@ -130,8 +122,8 @@ namespace Plato.Discuss.Controllers
             PagerOptions pagerOptions)
         {
 
-            var entity = await _entityStore.GetByIdAsync(id);
-            if (entity == null)
+            var topic = await _entityStore.GetByIdAsync(id);
+            if (topic == null)
             {
                 return NotFound();
             }
@@ -156,7 +148,7 @@ namespace Plato.Discuss.Controllers
             routeData.Values.Add("page", pagerOptions.Page);
        
             // Build view
-            var result = await _discussViewProvider.ProvideDisplayAsync(entity, this);
+            var result = await _discussViewProvider.ProvideDisplayAsync(topic, this);
 
             // Return view
             return View(result);
@@ -168,13 +160,13 @@ namespace Plato.Discuss.Controllers
         public async Task<IActionResult> TopicPost(int id)
         {
         
-            var entity = await _entityStore.GetByIdAsync(id);
-            if (entity == null)
+            var topic = await _entityStore.GetByIdAsync(id);
+            if (topic == null)
             {
                 return NotFound();
             }
             
-            var result = await _discussViewProvider.ProvideUpdateAsync(entity, this);
+            var result = await _discussViewProvider.ProvideUpdateAsync(topic, this);
 
             if (!ModelState.IsValid)
             {
@@ -349,11 +341,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
         }
 
         #endregion
-
-
-
+        
     }
-
-
-
+    
 }

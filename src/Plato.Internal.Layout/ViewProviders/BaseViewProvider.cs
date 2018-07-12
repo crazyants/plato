@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Layout.EmbeddedViews;
 using Plato.Internal.Layout.ModelBinding;
@@ -40,8 +39,7 @@ namespace Plato.Internal.Layout.ViewProviders
 
             // Create proxy model 
             var proxy = ActivateInstanceOf<TViewModel>.Instance();
-            //var proxy =  Activator.CreateInstance(typeof(TViewModel));
-
+        
             // Configure model
             var model = configure((TViewModel) proxy);
 

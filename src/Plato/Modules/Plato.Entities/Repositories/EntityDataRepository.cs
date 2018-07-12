@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using Plato.Entities.Models;
-using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Repositories.Abstract;
 
 namespace Plato.Entities.Repositories
 {
