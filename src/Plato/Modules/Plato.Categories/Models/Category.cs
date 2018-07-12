@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
 
@@ -7,6 +10,9 @@ namespace Plato.Categories.Models
 {
     public class Category  : IModel<Category>
     {
+
+        private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
+
 
         public int Id { get; set; }
 
@@ -35,6 +41,51 @@ namespace Plato.Categories.Models
         public int ModifiedUserId { get; set; }
         
         public DateTime ModifiedDate { get; set; }
+        
+        public IEnumerable<CategoryData> Data { get; set; } = new List<CategoryData>();
+
+        public IDictionary<Type, ISerializable> MetaData => _metaData;
+        
+        public Category()
+        {
+            _metaData = new ConcurrentDictionary<Type, ISerializable>();
+        }
+
+        public void AddOrUpdate<T>(T obj) where T : class
+        {
+            if (_metaData.ContainsKey(typeof(T)))
+            {
+                _metaData.TryUpdate(typeof(T), (ISerializable)obj, _metaData[typeof(T)]);
+            }
+            else
+            {
+                _metaData.TryAdd(typeof(T), (ISerializable)obj);
+            }
+        }
+
+        public void AddOrUpdate(Type type, ISerializable obj)
+        {
+            if (_metaData.ContainsKey(type))
+            {
+                _metaData.TryUpdate(type, (ISerializable)obj, _metaData[type]);
+            }
+            else
+            {
+                _metaData.TryAdd(type, obj);
+            }
+        }
+
+        public T GetOrCreate<T>() where T : class
+        {
+            if (_metaData.ContainsKey(typeof(T)))
+            {
+                return (T)_metaData[typeof(T)];
+            }
+
+            return Activator.CreateInstance<T>();
+
+        }
+
 
         public void PopulateModel(IDataReader dr)
         {

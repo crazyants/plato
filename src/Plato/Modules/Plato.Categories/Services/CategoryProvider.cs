@@ -4,7 +4,10 @@ using System.Text;
 
 namespace Plato.Categories.Services
 {
-    class CategoryProvider
+    public class CategoryProvider
     {
+
+
+
     }
 }

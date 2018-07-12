@@ -1,0 +1,13 @@
+Name: Plato Discuss Channels
+Description: Add channels to help organize topics within Plato Discuss.
+Category: Discussions
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Categories",
+		Version: "1.0.0"
+	}
+]

@@ -99,6 +99,58 @@ namespace Plato.Categories.Handlers
                 }
         };
 
+        // Category data table
+        private readonly SchemaTable _categoryData = new SchemaTable()
+        {
+            Name = "CategoryData",
+            Columns = new List<SchemaColumn>()
+            {
+                new SchemaColumn()
+                {
+                    PrimaryKey = true,
+                    Name = "Id",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "CategoryId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "[Key]",
+                    Length = "255",
+                    DbType = DbType.String
+                },
+                new SchemaColumn()
+                {
+                    Name = "[Value]",
+                    Length = "max",
+                    DbType = DbType.String
+                },
+                new SchemaColumn()
+                {
+                    Name = "CreatedDate",
+                    DbType = DbType.DateTime2
+                },
+                new SchemaColumn()
+                {
+                    Name = "CreatedUserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedDate",
+                    DbType = DbType.DateTime2
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedUserId",
+                    DbType = DbType.Int32
+                }
+            }
+        };
+
         // Category Roles table
         private readonly SchemaTable _categoryRoles = new SchemaTable()
         {
@@ -169,6 +221,9 @@ namespace Plato.Categories.Handlers
                 // Categories schema
                 Categories(builder);
 
+                // Category data
+                CategoryData(builder);
+
                 // Category roles schema
                 CategoryRoles(builder);
                 
@@ -216,6 +271,13 @@ namespace Plato.Categories.Handlers
                     .DropDefaultProcedures(_categories)
                     .DropProcedure(new SchemaProcedure("SelectCategoriesPaged", StoredProcedureType.SelectByKey));
 
+                // drop category data
+                builder
+                    .DropTable(_categoryData)
+                    .DropDefaultProcedures(_categoryData)
+                    .DropProcedure(new SchemaProcedure("SelectCategoryDatumByCategoryId"))
+                    .DropProcedure(new SchemaProcedure("SelectCategoryDatumPaged"));
+                
                 // drop category roles
                 builder
                     .DropTable(_categoryRoles)
@@ -290,6 +352,33 @@ namespace Plato.Categories.Handlers
                 }));
 
         }
+
+        void CategoryData(ISchemaBuilder builder)
+        {
+
+            builder
+                // Create tables
+                .CreateTable(_categoryData)
+                // Create basic default CRUD procedures
+                .CreateDefaultProcedures(_categoryData)
+                .CreateProcedure(new SchemaProcedure("SelectCategoryDatumBycategoryId", StoredProcedureType.SelectByKey)
+                    .ForTable(_categoryData)
+                    .WithParameter(new SchemaColumn() { Name = "CategoryId", DbType = DbType.Int32 }));
+
+            builder.CreateProcedure(new SchemaProcedure("SelectCategoryDatumPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_categoryData)
+                .WithParameters(new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        Name = "[Key]",
+                        DbType = DbType.String,
+                        Length = "255"
+                    }
+                }));
+
+        }
+
 
         void CategoryRoles(ISchemaBuilder builder)
         {

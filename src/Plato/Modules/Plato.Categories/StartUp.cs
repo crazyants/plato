@@ -32,10 +32,12 @@ namespace Plato.Categories
 
             //// Repositories
             services.AddScoped<ICategoryRepository<Category>, CategoryRepository>();
-        
+            services.AddScoped<ICategoryDataRepository<CategoryData>, CategoryDataRepository>();
+
             //// Stores
             services.AddScoped<ICategoryStore<Category>, CategoryStore>();
-        
+            services.AddScoped<ICategoryDataStore<CategoryData>, CategoryDataStore>();
+
             //// Managers
             //services.AddScoped<IEntityManager<Entity>, EntityManager>();
             //services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager>();

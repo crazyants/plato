@@ -1,32 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using System.Data;
-using Plato.Entities.Models;
+using Plato.Categories.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Repositories.Abstract;
+using Plato.Internal.Repositories;
 
-namespace Plato.Entities.Repositories
+namespace Plato.Categories.Repositories
 {
-    
-    public class EntityDataRepository : IEntityDataRepository<EntityData>
+    public interface ICategoryDataRepository<T> : IRepository<T> where T : class
+    {
+
+        Task<IEnumerable<T>> SelectByCategoryIdAsync(int userId);
+
+    }
+
+    public class CategoryDataRepository : ICategoryDataRepository<CategoryData>
     {
 
         #region Private Variables"
 
         private readonly IDbContext _dbContext;
-        private readonly ILogger<EntityDataRepository> _logger;
+        private readonly ILogger<CategoryDataRepository> _logger;
 
         #endregion
 
         #region "Constructor"
 
-        public EntityDataRepository(
+        public CategoryDataRepository(
             IDbContext dbContext,
-            ILogger<EntityDataRepository> logger)
+            ILogger<CategoryDataRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -36,25 +41,25 @@ namespace Plato.Entities.Repositories
 
         #region "Implementation"
 
-        public async Task<EntityData> SelectByIdAsync(int id)
+        public async Task<CategoryData> SelectByIdAsync(int id)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation($"Selecting entity data with id: {id}");
             }
-                
-            EntityData data = null;
+
+            CategoryData data = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                   CommandType.StoredProcedure,
-                    "SelectEntityDatumById", id);
+                    "SelectCategoryDatumById", id);
                 if (reader != null)
                 {
                     if (reader.HasRows)
                     {
-                        data = new EntityData();
+                        data = new CategoryData();
                         await reader.ReadAsync();
                         data.PopulateModel(reader);
                     }
@@ -66,29 +71,29 @@ namespace Plato.Entities.Repositories
 
         }
 
-        public async Task<IEnumerable<EntityData>> SelectByEntityIdAsync(int entityId)
+        public async Task<IEnumerable<CategoryData>> SelectByCategoryIdAsync(int categoryId)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Selecting all entity data for id {entityId}");
+                _logger.LogInformation($"Selecting all category data for id {categoryId}");
             }
-                
-            List<EntityData> data = null;
+
+            List<CategoryData> data = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityDatumByEntityId",
-                    entityId);
+                    "SelectCategoryDatumByCategoryId",
+                    categoryId);
                 if (reader != null)
                 {
                     if (reader.HasRows)
                     {
-                        data = new List<EntityData>();
+                        data = new List<CategoryData>();
                         while (await reader.ReadAsync())
                         {
-                            var entityData = new EntityData();
+                            var entityData = new CategoryData();
                             entityData.PopulateModel(reader);
                             data.Add(entityData);
                         }
@@ -99,11 +104,11 @@ namespace Plato.Entities.Repositories
 
         }
 
-        public async Task<EntityData> InsertUpdateAsync(EntityData data)
+        public async Task<CategoryData> InsertUpdateAsync(CategoryData data)
         {
             var id = await InsertUpdateInternal(
                 data.Id,
-                data.EntityId,
+                data.CategoryId,
                 data.Key.ToEmptyIfNull().TrimToSize(255),
                 data.Value.ToEmptyIfNull(),
                 data.CreatedDate.ToDateIfNull(),
@@ -114,10 +119,10 @@ namespace Plato.Entities.Repositories
                 return await SelectByIdAsync(id);
             return null;
         }
-        
+
         public async Task<bool> DeleteAsync(int id)
         {
-       
+
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation($"Deleting entity data id: {id}");
@@ -128,31 +133,31 @@ namespace Plato.Entities.Repositories
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityDatumById", id);
+                    "DeleteCategoryDatumById", id);
             }
 
             return success > 0 ? true : false;
 
         }
-    
-        public async Task<IPagedResults<EntityData>> SelectAsync(params object[] inputParams)
+
+        public async Task<IPagedResults<CategoryData>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EntityData> output = null;
+            PagedResults<CategoryData> output = null;
             using (var context = _dbContext)
             {
-             
+
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityDatumPaged",
+                    "SelectCategoryDatumPaged",
                     inputParams
                 );
 
                 if ((reader != null) && (reader.HasRows))
                 {
-                    output = new PagedResults<EntityData>();
+                    output = new PagedResults<CategoryData>();
                     while (await reader.ReadAsync())
                     {
-                        var data = new EntityData();
+                        var data = new CategoryData();
                         data.PopulateModel(reader);
                         output.Data.Add(data);
                     }
@@ -162,7 +167,7 @@ namespace Plato.Entities.Repositories
                         await reader.ReadAsync();
                         output.PopulateTotal(reader);
                     }
-                    
+
                 }
             }
 
@@ -175,7 +180,7 @@ namespace Plato.Entities.Repositories
 
         private async Task<int> InsertUpdateInternal(
             int id,
-            int entityId,
+            int categoryId,
             string key,
             string value,
             DateTime? createdDate,
@@ -187,20 +192,19 @@ namespace Plato.Entities.Repositories
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation(id == 0
-                    ? $"Inserting entity data with key: {key}"
-                    : $"Updating entity data with id: {id}");
+                    ? $"Inserting category data with key: {key}"
+                    : $"Updating category data with id: {id}");
             }
-            
-            var output = 0;
+
             using (var context = _dbContext)
             {
                 if (context == null)
                     return 0;
-                output = await context.ExecuteScalarAsync<int>(
+                return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "InsertUpdateEntityDatum",
+                    "InsertUpdateCategoryDatum",
                     id,
-                    entityId,
+                    categoryId,
                     key.ToEmptyIfNull().TrimToSize(255),
                     value.ToEmptyIfNull(),
                     createdDate.ToDateIfNull(),
@@ -209,12 +213,12 @@ namespace Plato.Entities.Repositories
                     modifiedUserId);
             }
 
-            return output;
-
         }
 
         #endregion
 
     }
+
+
 
 }
