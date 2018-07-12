@@ -8,6 +8,7 @@ using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
@@ -33,18 +34,19 @@ namespace Plato.Entities
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Repositories
-            services.AddScoped<IEntityRepository<Entity>, EntityRepository>();
-            services.AddScoped<IEntityDataRepository<EntityData>, EntityDataRepository>();
+            services.AddScoped<IEntityRepository<Entity>, EntityRepository<Entity>>();
+            services.AddScoped<IEntityDataRepository<IEntityData>, EntityDataRepository>();
             services.AddScoped<IEntityReplyRepository<EntityReply>, EntityReplyRepository>();
             
             // Stores
-            services.AddScoped<IEntityStore<Entity>, EntityStore>();
-            services.AddScoped<IEntityDataStore<EntityData>, EntityDataStore>();
+            services.AddScoped<IEntityStore<Entity>, EntityStore<Entity>>();
+            services.AddScoped<IEntityDataStore<IEntityData>, EntityDataStore>();
+
             services.AddScoped<IEntityDataItemStore<EntityData>, EntityDataItemStore<EntityData>>();
             services.AddScoped<IEntityReplyStore<EntityReply>, EntityReplyStore>();
 
             // Managers
-            services.AddScoped<IEntityManager<Entity>, EntityManager>();
+            services.AddScoped<IEntityManager<Entity>, EntityManager2<Entity>>();
             services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager>();
 
             //services.AddScoped<IEntityDetailsStore<EntityDetails>, EntityDetailsStore>();

@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.Discuss
+namespace Plato.Discuss.Channels
 {
     public class AdminMenu : INavigationProvider
     {
@@ -22,12 +22,8 @@ namespace Plato.Discuss
 
             builder
                 .Add(T["Discuss"], 1, users => users
-                    .Add(T["Latest"], 1, manage => manage
-                        .Action("Index", "Admin", "Plato.Discuss")
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    ).Add(T["settings"], 999, create => create
-                        .Action("Channels", "Admin", "Plato.Discuss")
+                    .Add(T["Channels"], 2, manage => manage
+                        .Action("Index", "Admin", "Plato.Discuss.Channels")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));

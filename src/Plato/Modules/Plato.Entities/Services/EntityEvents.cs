@@ -1,6 +1,6 @@
 ﻿namespace Plato.Entities.Services
 {
-    public class EntityEvents
+    public class EntityEvents<TModel> where TModel : class
     {
 
         public event Handler Creating;
@@ -10,7 +10,7 @@
         public event Handler Deleting;
         public event Handler Deleted;
 
-        public delegate void Handler(object sender, EntityEventArgs e);
+        public delegate void Handler(object sender, EntityEventArgs<TModel> e);
 
     }
 

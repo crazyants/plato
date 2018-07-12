@@ -43,7 +43,7 @@ namespace Plato.Entities.Stores
                     _logger.LogInformation("Added entity reply with id {0} for entity { 1}",
                         newReply.Id, newReply.EntityId);
                 }
-                _cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
+                //_cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
                 _cacheManager.CancelTokens(typeof(EntityReplyStore), reply.EntityId);
                 _cacheManager.CancelTokens(this.GetType());
                 _cacheManager.CancelTokens(this.GetType(), reply.Id);
@@ -63,7 +63,7 @@ namespace Plato.Entities.Stores
                     _logger.LogInformation("Update entity reply with id {1}",
                        updatedReply.Id);
                 }
-                _cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
+                //_cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
                 _cacheManager.CancelTokens(typeof(EntityReplyStore), reply.EntityId);
                 _cacheManager.CancelTokens(this.GetType());
                 _cacheManager.CancelTokens(this.GetType(), reply.Id);
@@ -82,7 +82,7 @@ namespace Plato.Entities.Stores
                     _logger.LogInformation("Deleted entity reply with id {0} for entity { 1}",
                         reply.Id, reply.EntityId);
                 }
-                _cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
+                //_cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);
                 _cacheManager.CancelTokens(typeof(EntityReplyStore), reply.EntityId);
                 _cacheManager.CancelTokens(this.GetType());
                 _cacheManager.CancelTokens(this.GetType(), reply.Id);

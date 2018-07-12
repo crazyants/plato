@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Data;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
 
 namespace Plato.Entities.Models
 {
     
-    public class EntityData : IModel<EntityData>
+    public class EntityData : IModel<EntityData>, IEntityData
     {
 
         #region "Public Properties"

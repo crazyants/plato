@@ -10,19 +10,19 @@ namespace Plato.Entities.Stores
 
     #region "EntityQuery"
 
-    public class EntityQuery : DefaultQuery<Entity>
+    public class EntityQuery<TModel> : DefaultQuery<TModel> where TModel : class
     {
 
-        private readonly IStore<Entity> _store;
+        private readonly IStore<TModel> _store;
 
-        public EntityQuery(IStore<Entity> store)
+        public EntityQuery(IStore<TModel> store)
         {
             _store = store;
         }
-
+        
         public EntityQueryParams Params { get; set; }
 
-        public override IQuery<Entity> Select<T>(Action<T> configure)
+        public override IQuery<TModel> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
@@ -30,10 +30,10 @@ namespace Plato.Entities.Stores
             return this;
         }
         
-        public override async Task<IPagedResults<Entity>> ToList()
+        public override async Task<IPagedResults<TModel>> ToList()
         {
 
-            var builder = new EntityQueryBuilder(this);
+            var builder = new EntityQueryBuilder<TModel>(this);
             var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
@@ -180,16 +180,16 @@ namespace Plato.Entities.Stores
 
     #region "EntityQueryBuilder"
 
-    public class EntityQueryBuilder : IQueryBuilder
+    public class EntityQueryBuilder<TModel> : IQueryBuilder where TModel : class
     {
         #region "Constructor"
 
         private readonly string _entitiesTableName;
         private readonly string _usersTableName;
 
-        private readonly EntityQuery _query;
+        private readonly EntityQuery<TModel> _query;
 
-        public EntityQueryBuilder(EntityQuery query)
+        public EntityQueryBuilder(EntityQuery<TModel> query)
         {
             _query = query;
             _entitiesTableName = GetTableNameWithPrefix("Entities");

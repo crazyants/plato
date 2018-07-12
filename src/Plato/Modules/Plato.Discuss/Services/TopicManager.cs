@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Plato.Discuss.Models;
 using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Internal.Abstractions;
@@ -6,20 +7,21 @@ using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Discuss.Services
 {
-    public class TopicManager : IPostManager<Entity>
+    public class TopicManager : IPostManager<Topic>
     {
 
-        private readonly IEntityManager<Entity> _entityManager;
+        private readonly IEntityManager<Topic> _entityManager;
         private readonly IContextFacade _contextFacade;
 
-        public TopicManager(IEntityManager<Entity> entityManager, 
+        public TopicManager(
+            IEntityManager<Topic> entityManager, 
             IContextFacade contextFacade)
         {
             _entityManager = entityManager;
             _contextFacade = contextFacade;
         }
 
-        public async Task<IActivityResult<Entity>> CreateAsync(Entity model)
+        public async Task<IActivityResult<Topic>> CreateAsync(Topic model)
         {
             if (model.FeatureId == 0)
             {
@@ -33,7 +35,7 @@ namespace Plato.Discuss.Services
             return await _entityManager.CreateAsync(model);
         }
 
-        public async Task<IActivityResult<Entity>> UpdateAsync(Entity model)
+        public async Task<IActivityResult<Topic>> UpdateAsync(Topic model)
         {
 
             if (model.FeatureId == 0)
@@ -48,7 +50,7 @@ namespace Plato.Discuss.Services
             return await _entityManager.UpdateAsync(model);
         }
 
-        public async Task<IActivityResult<Entity>> DeleteAsync(int id)
+        public async Task<IActivityResult<Topic>> DeleteAsync(int id)
         {
             return await _entityManager.DeleteAsync(id);
         }

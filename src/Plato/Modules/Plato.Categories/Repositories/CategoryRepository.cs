@@ -165,9 +165,9 @@ namespace Plato.Categories.Repositories
             string backColor,
             int sortOrder,
             int createdUserId,
-            DateTime createdDate,
+            DateTime? createdDate,
             int modifiedUserId,
-            DateTime modifiedDate)
+            DateTime? modifiedDate)
         {
 
             var categoryId = 0;
@@ -198,9 +198,9 @@ namespace Plato.Categories.Repositories
                     backColor.ToEmptyIfNull().TrimToSize(50),
                     sortOrder,
                     createdUserId,
-                    createdDate,
+                    createdDate.ToDateIfNull(),
                     modifiedUserId,
-                    modifiedDate);
+                    modifiedDate.ToDateIfNull());
             }
 
             return categoryId;

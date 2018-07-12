@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Plato.Discuss.Models;
-using Plato.Internal.Data.Abstractions;
+using Plato.Discuss.Services;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
-using Plato.Entities.Services;
 using Plato.Entities.Stores;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -27,14 +26,13 @@ namespace Plato.Discuss.Controllers
         #region "Constructor"
 
 
-        private readonly IEntityDataStore<EntityData> _entityDataStore;
+        private readonly IEntityDataStore<IEntityData> _entityDataStore;
 
         private readonly IViewProviderManager<Entity> _discussViewProvider;
 
         private readonly ISiteSettingsStore _settingsStore;
-        private readonly IEntityStore<Entity> _entityStore;
-        private readonly IEntityManager<Entity> _entityManager;
-        private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
+        private readonly IEntityStore<Topic> _entityStore;
+        private readonly IPostManager<Topic> _postManager;
         private readonly IAlerter _alerter;
         
         public IHtmlLocalizer T { get; }
@@ -43,16 +41,14 @@ namespace Plato.Discuss.Controllers
             IHtmlLocalizer<HomeController> localizer,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
-            IEntityStore<Entity> entityStore,
-            IEntityReplyStore<EntityReply> entityReplyStore,
+            IEntityStore<Topic> entityStore,
             IViewProviderManager<Entity> discussViewProvider,
-            IEntityManager<Entity> entityManager,
-            IAlerter alerter, IEntityDataStore<EntityData> entityDataStore)
+            IPostManager<Topic> postManager,
+            IAlerter alerter, IEntityDataStore<IEntityData> entityDataStore)
         {
             _settingsStore = settingsStore;
-            _entityManager = entityManager;
+            _postManager = postManager;
             _entityStore = entityStore;
-            _entityReplyStore = entityReplyStore;
             _discussViewProvider = discussViewProvider;
             _alerter = alerter;
             _entityDataStore = entityDataStore;
@@ -199,7 +195,7 @@ namespace Plato.Discuss.Controllers
         { 
 
             var rnd = new Random();
-            var topic = new Entity()
+            var topic = new Topic()
             {
                 Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
                 Message = @"Hi There, 
@@ -277,7 +273,7 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
 
             var sb = new StringBuilder();
 
-            var data = await _entityManager.CreateAsync(topic);
+            var data = await _postManager.CreateAsync(topic);
             if (data.Succeeded)
             {
                 if (data.Response is Entity newTopic)

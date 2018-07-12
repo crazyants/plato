@@ -3,20 +3,19 @@ using Plato.Entities.Models;
 
 namespace Plato.Entities.Services
 {
-    public class EntityEventArgs
+    public class EntityEventArgs<TModel> where TModel : class
     {
 
         public bool Success { get; }
 
-        public Entity Entity { get; }
-
-
-        public EntityEventArgs(Entity entity)
+        public TModel Entity { get; }
+        
+        public EntityEventArgs(TModel entity)
         {
             Entity = entity;
         }
 
-        public EntityEventArgs(Entity entity, bool success)
+        public EntityEventArgs(TModel entity, bool success)
         {
             Entity = entity;
             Success = success;

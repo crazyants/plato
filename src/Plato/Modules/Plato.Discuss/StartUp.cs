@@ -6,9 +6,12 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Discuss.Handlers;
 using Plato.Discuss.Assets;
+using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewProviders;
 using Plato.Entities.Models;
+using Plato.Entities.Repositories;
+using Plato.Entities.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -35,13 +38,17 @@ namespace Plato.Discuss
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
+            // Stores
+            services.AddScoped<IEntityStore<Topic>, EntityStore<Topic>>();
+            services.AddScoped<IEntityRepository<Topic>, EntityRepository<Topic>>();
+
             // Register data access
-            services.AddScoped<IPostManager<Entity>, TopicManager>();
+            services.AddScoped<IPostManager<Topic>, TopicManager>();
             services.AddScoped<IPostManager<EntityReply>, ReplyManager>();
             
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
-
+            
             // Register view providers
             services.AddScoped<IViewProviderManager<Entity>, ViewProviderManager<Entity>>();
             services.AddScoped<IViewProvider<Entity>, DiscussViewProvider>();

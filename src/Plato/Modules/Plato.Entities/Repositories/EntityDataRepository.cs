@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using Plato.Entities.Models;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Repositories.Abstract;
@@ -12,7 +13,7 @@ using Plato.Internal.Repositories.Abstract;
 namespace Plato.Entities.Repositories
 {
     
-    public class EntityDataRepository : IEntityDataRepository<EntityData>
+    public class EntityDataRepository : IEntityDataRepository<IEntityData>
     {
 
         #region Private Variables"
@@ -36,7 +37,7 @@ namespace Plato.Entities.Repositories
 
         #region "Implementation"
 
-        public async Task<EntityData> SelectByIdAsync(int id)
+        public async Task<IEntityData> SelectByIdAsync(int id)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -66,7 +67,7 @@ namespace Plato.Entities.Repositories
 
         }
 
-        public async Task<IEnumerable<EntityData>> SelectByEntityIdAsync(int entityId)
+        public async Task<IEnumerable<IEntityData>> SelectByEntityIdAsync(int entityId)
         {
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -99,7 +100,7 @@ namespace Plato.Entities.Repositories
 
         }
 
-        public async Task<EntityData> InsertUpdateAsync(EntityData data)
+        public async Task<IEntityData> InsertUpdateAsync(IEntityData data)
         {
             var id = await InsertUpdateInternal(
                 data.Id,
@@ -135,9 +136,9 @@ namespace Plato.Entities.Repositories
 
         }
     
-        public async Task<IPagedResults<EntityData>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<IEntityData>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EntityData> output = null;
+            PagedResults<IEntityData> output = null;
             using (var context = _dbContext)
             {
              
@@ -149,7 +150,7 @@ namespace Plato.Entities.Repositories
 
                 if ((reader != null) && (reader.HasRows))
                 {
-                    output = new PagedResults<EntityData>();
+                    output = new PagedResults<IEntityData>();
                     while (await reader.ReadAsync())
                     {
                         var data = new EntityData();

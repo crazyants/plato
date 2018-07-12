@@ -5,25 +5,26 @@ using System.Data.Common;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Entities.Repositories
 {
 
-    public class EntityRepository : IEntityRepository<Entity>
+    public class EntityRepository<TModel> : IEntityRepository<TModel> where TModel : class, IEntity
     {
      
         #region "Constructor"
         
         private readonly IDbContext _dbContext;
-        private readonly ILogger<EntityRepository> _logger;
-        private readonly IEntityDataRepository<EntityData> _entityDataRepository;
+        private readonly ILogger<EntityRepository<TModel>> _logger;
+        private readonly IEntityDataRepository<IEntityData> _entityDataRepository;
 
         public EntityRepository(
             IDbContext dbContext,
-            ILogger<EntityRepository> logger,
-            IEntityDataRepository<EntityData> entityDataRepository)
+            ILogger<EntityRepository<TModel>> logger,
+            IEntityDataRepository<IEntityData> entityDataRepository)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -34,7 +35,7 @@ namespace Plato.Entities.Repositories
         
         #region "Implementation"
 
-        public async Task<Entity> InsertUpdateAsync(Entity entity)
+        public async Task<TModel> InsertUpdateAsync(TModel entity)
         {
 
             if (entity == null)
@@ -68,7 +69,7 @@ namespace Plato.Entities.Repositories
             return null;
         }
 
-        public async Task<Entity> SelectByIdAsync(int id)
+        public async Task<TModel> SelectByIdAsync(int id)
         {
 
             Entity entity = null;
@@ -80,12 +81,12 @@ namespace Plato.Entities.Repositories
                 entity = await BuildEntityFromResultSets(reader);
             }
 
-            return entity;
+            return (TModel)Convert.ChangeType(entity, typeof(TModel));
         }
         
-        public async Task<IPagedResults<Entity>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<TModel>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<Entity> output = null;
+            PagedResults<TModel> output = null;
             using (var context = _dbContext)
             {
 
@@ -103,12 +104,12 @@ namespace Plato.Entities.Repositories
 
                 if ((reader != null) && (reader.HasRows))
                 {
-                    output = new PagedResults<Entity>();
+                    output = new PagedResults<TModel>();
                     while (await reader.ReadAsync())
                     {
                         var entity = new Entity();
                         entity.PopulateModel(reader);
-                        output.Data.Add(entity);
+                        output.Data.Add((TModel)Convert.ChangeType(entity, typeof(TModel)));
                     }
 
                     if (await reader.NextResultAsync())
@@ -201,7 +202,7 @@ namespace Plato.Entities.Repositories
             DateTime? createdDate,
             int modifiedUserId,
             DateTime? modifiedDate,
-            IEnumerable<EntityData> data)
+            IEnumerable<IEntityData> data)
         {
 
             var entityId = 0;
@@ -211,10 +212,13 @@ namespace Plato.Entities.Repositories
                 context.OnException += (sender, args) =>
                 {
                     if (_logger.IsEnabled(LogLevel.Error))
+                    {
                         _logger.LogInformation(
                             id == 0
                                 ? $"Insert for entity with title '{title}' failed with the following error '{args.Exception.Message}'"
                                 : $"Update for entity with Id {id} failed with the following error {args.Exception.Message}");
+                    }
+
                     throw args.Exception;
                 };
 

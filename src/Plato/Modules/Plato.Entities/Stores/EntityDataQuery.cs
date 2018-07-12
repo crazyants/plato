@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
@@ -10,19 +11,19 @@ namespace Plato.Entities.Stores
 
     #region "EntityDataQuery"
 
-    public class EntityDataQuery : DefaultQuery<EntityData>
+    public class EntityDataQuery : DefaultQuery<IEntityData>
     {
 
-        private readonly IStore<EntityData> _store;
+        private readonly IStore<IEntityData> _store;
 
-        public EntityDataQuery(IStore<EntityData> store)
+        public EntityDataQuery(IStore<IEntityData> store)
         {
             _store = store;
         }
 
         public EntityDataQueryParams Params { get; set; }
 
-        public override IQuery<EntityData> Select<T>(Action<T> configure)
+        public override IQuery<IEntityData> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
@@ -30,7 +31,7 @@ namespace Plato.Entities.Stores
             return this;
         }
 
-        public override async Task<IPagedResults<EntityData>> ToList()
+        public override async Task<IPagedResults<IEntityData>> ToList()
         {
 
             var builder = new EntityDataQueryBuilder(this);
