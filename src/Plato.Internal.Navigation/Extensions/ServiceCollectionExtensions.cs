@@ -11,7 +11,8 @@ namespace Plato.Internal.Navigation.Extensions
         {
 
             services.TryAddScoped<INavigationManager, NavigationManager>();
-            
+            services.TryAddScoped<IBreadCrumbManager, BreadCrumbManager>();
+
             return services;
 
         }

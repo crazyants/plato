@@ -3,12 +3,8 @@ using Plato.Categories.Models;
 
 namespace Plato.Discuss.Channels.ViewModels
 {
-    public class ChannelsViewModel
+    public class ChannelIndexViewModel
     {
-
         public IEnumerable<Category> Channels;
-
-        public Category EditChannel { get; set; }
-
     }
 }

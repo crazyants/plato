@@ -59,15 +59,26 @@
                     <a class="navbar-brand text-muted" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">
                         @T["Plato"]
                     </a>
-                    <navigation id="AppMenu" name="site"
+                    <navigation name="site"
                                 class="nav nav-h"
                                 ul-class="nav nav-pills float-right"/>
                 </div>
             </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row d-block p-4">
-                
+    
+               
+            <breadcrumb class="breadcrumb bg-light border-bottom col-12"/>
+
+
+            <nav class="row" aria-label="breadcrumb">
+             
+                <ol class="">
+                    <li class="breadcrumb-item"><a asp-area="Plato.Admin" asp-controller="Admin" asp-action="Index">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Channels</li>
+                </ol>
+            </nav>
+   
+            <div class="d-block p-2">
+             
                 @RenderBody()
                 <hr/>
                 <footer>

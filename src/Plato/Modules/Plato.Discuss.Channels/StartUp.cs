@@ -35,7 +35,7 @@ namespace Plato.Discuss.Channels
             services.AddScoped<IViewProvider<Topic>, DiscussViewProvider>();
 
             services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();
-            services.AddScoped<IViewProvider<Category>, ChannelsViewProvider>();
+            services.AddScoped<IViewProvider<Category>, ChannelViewProvider>();
 
 
             //// Repositories

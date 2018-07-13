@@ -136,10 +136,12 @@ namespace Plato.Users.ViewProviders
 
         private async Task UpdateUserPhoto(User user, IFormFile file)
         {
-            
+
             if (file == null)
+            {
                 throw new ArgumentNullException(nameof(file));
-            
+            }
+                
             byte[] bytes = null;
             var stream = file.OpenReadStream();
             if (stream != null)

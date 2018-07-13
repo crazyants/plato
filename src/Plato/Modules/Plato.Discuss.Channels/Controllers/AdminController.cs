@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
@@ -11,6 +12,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Settings;
 
 namespace Plato.Discuss.Channels.Controllers
@@ -22,28 +24,46 @@ namespace Plato.Discuss.Channels.Controllers
         private readonly ICategoryStore<Category> _categoryStore;
         private readonly IViewProviderManager<Category> _viewProvider;
         private readonly IAlerter _alerter;
+        private readonly IBreadCrumbManager _breadCrumbManager;
 
         public IHtmlLocalizer T { get; }
+        public IStringLocalizer S { get; }
 
         public AdminController(
-            IHtmlLocalizer<AdminController> localizer,
+            IHtmlLocalizer<AdminController> htmlLocalizer,
+            IStringLocalizer<AdminController> stringLocalizer,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             ICategoryStore<Category> categoryStore,
             IViewProviderManager<Category> viewProvider,
-            IAlerter alerter)
+            IAlerter alerter,
+            IBreadCrumbManager breadCrumbManager)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
             _viewProvider = viewProvider;
             _alerter = alerter;
+            _breadCrumbManager = breadCrumbManager;
 
-            T = localizer;
+            T = htmlLocalizer;
+            S = stringLocalizer;
         }
 
         public async Task<IActionResult> Index()
         {
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Channels"], channels => channels
+                    .Action("Index", "Admin", "Plato.Discuss.Channels")
+                    .LocalNav()
+                );
+            });
+            
             var model = await _viewProvider.ProvideIndexAsync(new Category(), this);
             return View(model);
         }
@@ -53,10 +73,35 @@ namespace Plato.Discuss.Channels.Controllers
             var model = await _viewProvider.ProvideEditAsync(new Category(), this);
             return View(model);
         }
-        
-        public Task<IActionResult> Edit(string id)
+
+        [HttpPost]
+        [ActionName(nameof(Create))]
+        public async Task<IActionResult> CreatePost(int id)
         {
-            return Task.FromResult((IActionResult)View());
+            
+            var result = await _viewProvider.ProvideUpdateAsync(new Category(), this);
+
+            if (!ModelState.IsValid)
+            {
+                return View(result);
+            }
+
+            _alerter.Success(T["Channel Added Successfully!"]);
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
+
+        public async Task<IActionResult> Edit(int id)
+        {
+
+            var category = await _categoryStore.GetByIdAsync(id);
+            
+
+            var model = await _viewProvider.ProvideEditAsync(category, this);
+            return View(model);
+
         }
 
         [HttpPost]
