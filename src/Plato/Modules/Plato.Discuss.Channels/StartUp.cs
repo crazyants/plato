@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Categories.Models;
 using Plato.Discuss.Channels.ViewProviders;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Shell;
@@ -31,8 +32,12 @@ namespace Plato.Discuss.Channels
 
             // View providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
-            services.AddScoped<IViewProvider<Topic>, ChannelsViewProvider>();
-            
+            services.AddScoped<IViewProvider<Topic>, DiscussViewProvider>();
+
+            services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();
+            services.AddScoped<IViewProvider<Category>, ChannelsViewProvider>();
+
+
             //// Repositories
             //services.AddScoped<IEmailRepository<EmailMessage>, EmailRepository>();
 

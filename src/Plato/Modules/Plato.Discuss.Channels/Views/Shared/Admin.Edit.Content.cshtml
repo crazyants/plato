@@ -1,0 +1,107 @@
+﻿@model EditChannelViewModel
+
+
+<card class="card mb-4">
+    <card-title>
+        <h6 class="card-title">@T["Add Channel"]</h6>
+    </card-title>
+    <card-body>
+
+        <div class="row">
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Name">
+                        <label asp-for="Name"><strong>@T["Name"]</strong></label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="input-group">
+                            <input placeholder="@T["name your channel"]" asp-for="Name" class="form-control" autofocus />
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-2">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Icon">
+                        <label asp-for="Name"><strong>@T["Icon"]</strong></label>
+                        <br />
+                        <a href="#modal-new" class="btn btn-secondary text-center  text-muted" data-toggle="modal" data-target="#modal-new" role="button">
+                            @T["Change Icon"]
+                        </a>
+
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-2">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Icon">
+                        <label asp-for="Name"><strong>@T["Text Color"]</strong></label>
+                        <br />
+                        <div asp-color-picker="#ff0000" class="input-group-prepend">
+                            <div class="input-group-text" style="cursor: pointer;">
+                                <i class="fa fa-square"></i>
+                            </div>
+                            <input type="text" asp-for="Name" class="form-control" style="width: 100px;" />
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-2">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Icon">
+                        <label asp-for="Name"><strong>@T["Label Color"]</strong></label>
+                        <br />
+                        <div asp-color-picker="#ff0000" class="input-group-prepend">
+                            <div class="input-group-text" style="cursor: pointer;">
+                                <i class="fa fa-square"></i>
+                            </div>
+                            <input type="text" asp-for="Name" class="form-control" style="width: 100px;" />
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Description">
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <textarea placeholder="@T["optional channel description"]" asp-for="Description" rows="2" class="form-control"></textarea>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+    </card-body>
+</card>
+
+
+<div class="modal fade" id="modal-new" role="dialog" aria-hidden="true">
+
+    <div class="modal-dialog" role="document" style="min-width: 90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6>@T["Select Icon..."]</h6>
+            </div>
+            <div class="modal-body" style="max-height: 600px; overflow: scroll;">
+
+                @foreach (var icon in Model.ChannelIcons.Icons)
+                {
+                    var css = Model.ChannelIcons.Prefix + icon;
+                    <label class="btn btn-secondary radio-icon" id="@icon">
+                        <input type="radio" value="@icon" name="iconCss" id="@icon" />
+                        <span><i class="@css"></i></span>
+                    </label>
+                }
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary">
+                    @T["Update Icon"]
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>

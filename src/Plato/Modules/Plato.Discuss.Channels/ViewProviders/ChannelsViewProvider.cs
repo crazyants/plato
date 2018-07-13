@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.ViewModels;
@@ -9,7 +10,7 @@ using Plato.Internal.Layout.ModelBinding;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
-    public class ChannelsViewProvider : BaseViewProvider<Topic>
+    public class ChannelsViewProvider : BaseViewProvider<Category>
     {
 
 
@@ -25,51 +26,77 @@ namespace Plato.Discuss.Channels.ViewProviders
         }
 
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Category viewModel, IUpdateModel updater)
         {
-
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
-            if (feature == null)
-            {
-                return default(IViewProviderResult);
-            }
-
-            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-
+            var indexViewModel = await GetIndexModel();
+         
             return Views(
-                View<ChannelsViewModel>("Channels.Sidebar", model =>
-                {
-                    model.Channels = categories;
-                    return model;
-                }).Zone("sidebar").Order(1)
+                View<ChannelsViewModel>("Admin.Index.Header", model => indexViewModel).Zone("header").Order(1),
+                View<ChannelsViewModel>("Admin.Index.Tools", model => indexViewModel).Zone("tools").Order(1),
+                View<ChannelsViewModel>("Admin.Index.Content", model => indexViewModel).Zone("content").Order(1)
             );
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Category viewModel, IUpdateModel updater)
         {
-            
-            return Task.FromResult(Views(
-                View<ChannelsViewModel>("Channels.Sidebar", model =>
+            return Task.FromResult(default(IViewProviderResult));
+
+        }
+
+
+        public override async Task<IViewProviderResult> BuildEditAsync(Category viewModel, IUpdateModel updater)
+        {
+
+            EditChannelViewModel editChannelViewModel = null;
+            if (viewModel.Id == 0)
+            {
+                editChannelViewModel = new EditChannelViewModel()
                 {
-                
-                    return model;
-                }).Zone("sidebar").Order(1)
-            ));
+                    ChannelIcons = new DefaultIcons()
+                };
+            }
+            else
+            {
 
+            }
+
+
+            return Views(
+                View<EditChannelViewModel>("Admin.Edit.Header", model => editChannelViewModel).Zone("header").Order(1),
+                View<EditChannelViewModel>("Admin.Edit.Content", model => editChannelViewModel).Zone("content").Order(1),
+                View<EditChannelViewModel>("Admin.Edit.Actions", model => editChannelViewModel).Zone("actions").Order(1),
+                View<EditChannelViewModel>("Admin.Edit.Footer", model => editChannelViewModel).Zone("footer").Order(1)
+            );
         }
 
-
-        public override Task<IViewProviderResult> BuildEditAsync(Topic viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Category viewModel, IUpdateModel updater)
         {
-
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Topic viewModel, IUpdateModel updater)
+
+
+        async Task<ChannelsViewModel> GetIndexModel()
         {
-            return Task.FromResult(default(IViewProviderResult));
+
+            var featureId = "Plato.Discuss.Channels";
+            var feature = await _contextFacade.GetFeatureByModuleIdAsync(featureId);
+            if (feature == null)
+            {
+                throw new Exception($"No feature could be found for the Id '{featureId}'");
+            }
+
+            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+
+            return new ChannelsViewModel()
+            {
+                Channels = categories,
+                EditChannel = new Category()
+            };
+
         }
+
 
     }
 }

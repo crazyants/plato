@@ -10,7 +10,5 @@ namespace Plato.Discuss.Channels.ViewModels
 
         public Category EditChannel { get; set; }
 
-        public DefaultIcons ChannelIcons { get; set; }
-
     }
 }
