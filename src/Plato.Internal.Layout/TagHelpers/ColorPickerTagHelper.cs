@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Plato.Internal.Assets.Abstractions;
 
@@ -21,7 +22,10 @@ namespace Plato.Internal.Layout.TagHelpers
 
         public ColorPickerTagHelper(IAssetManager assetManager)
         {
-         
+
+            var script = "$('[data-provide=\"color-picker\"]').colorpicker( {color: \"{color}\", format: \"hex\", align: \"left\" });";
+            script = script.Replace("{color}", this.Color);
+
             // Register JavasScript and CSSS with asset manager
             assetManager.SetAssets(new List<AssetEnvironment>
             {
@@ -39,27 +43,25 @@ namespace Plato.Internal.Layout.TagHelpers
                             Url = "/js/vendors/bootstrap-colorpicker.js",
                             Type = AssetType.IncludeJavaScript,
                             Section = AssetSection.Footer
+                        },
+                        new Asset()
+                        {
+                            InlineContent = new HtmlString(script),
+                            Type = AssetType.InlineJavaScript,
+                            Section = AssetSection.Footer,
+                            Priority = 99999,
                         }
                     })
             });
 
         }
-
-
+        
         #region "Implementation"
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-
-            // Register color picker scripts with asset manager
-        
-            if (!String.IsNullOrEmpty(Color))
-            {
-                output.Attributes.SetAttribute("autofocus", "");
-            }
-
+            output.Attributes.SetAttribute("data-provide", "color-picker");
             return Task.CompletedTask;
-
         }
 
         #endregion

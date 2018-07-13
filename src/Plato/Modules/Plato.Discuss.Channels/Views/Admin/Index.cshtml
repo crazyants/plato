@@ -19,40 +19,64 @@
     <card-body>
         
         <div class="row">
-            <div class="col">
+            <div class="col-4">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="Name">
                         
                         <label asp-for="EditChannel.Name"><strong>@T["Name"]</strong></label>
                         <span asp-validation-for="EditChannel.Name" class="text-danger"></span>
-
+                     
                         <div class="input-group">
-                            
-                            <input placeholder="@T["name this channel"]" asp-for="EditChannel.Name" class="form-control" autofocus />
-                            
-                            <a href="#modal-new" class="btn btn-secondary text-center  text-muted" data-toggle="modal" data-target="#modal-new" role="button">
-                                @T["Change Icon"]
-                            </a>
-                           
+                            <input placeholder="@T["provide a name for your channel"]" asp-for="EditChannel.Name" class="form-control" autofocus />
+                      
                         </div>
-
+                        
+                
                         
                     </div>
                 </fieldset>
             </div>
-            <div class="col">
+            <div class="col-4">
                 <fieldset>
-                    <div class="form-group" asp-validation-class-for="Icon">
-                        <label asp-for="EditChannel.Name"><strong>@T["Icon"]</strong></label>
-                        <br/><br/>
+                    <div class="form-group" asp-validation-class-for="Name">
+                        
+                        <label asp-for="EditChannel.Name"><strong>@T["Description"]</strong></label>
+                        <span asp-validation-for="EditChannel.Name" class="text-danger"></span>
+                        <input placeholder="@T["describe the type of topics in this channel"]" asp-for="EditChannel.Name" class="form-control" autofocus />
+                            
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-2">
+                <fieldset>
 
-                        <input asp-color-picker="#ff0000" asp-for="EditChannel.Name" class="form-control" autofocus />
+                    <div class="form-group" asp-validation-class-for="Icon">
+                        <label asp-for="EditChannel.Name"><strong>@T["Color"]</strong></label>
+                        <br/>
+
+                        <div asp-color-picker="#ff0000" class="input-group-prepend">
+                            <div class="input-group-text" style="cursor: pointer;">
+                                <i class="fa fa-square"></i>
+                            </div>
+                            <input type="text" asp-for="EditChannel.Name" class="form-control" style="width: 100px;"/>
+                        </div>
 
 
                     </div>
                 </fieldset>
             </div>
-
+            <div class="col-2">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Icon">
+                        <label asp-for="EditChannel.Name"><strong>@T["Icon"]</strong></label>
+                        <br/>
+                        <a href="#modal-new" class="btn btn-secondary text-center  text-muted" data-toggle="modal" data-target="#modal-new" role="button">
+                            @T["Change Icon"]
+                        </a>
+                        
+                    </div>
+                </fieldset>
+            </div>
         </div>
  
     </card-body>
@@ -130,6 +154,5 @@
         }
     </card-body>
 </card>
-
 
 

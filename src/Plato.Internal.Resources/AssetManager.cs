@@ -25,6 +25,7 @@ namespace Plato.Internal.Assets
         public async Task<IEnumerable<AssetEnvironment>> GetAssets()
         {
 
+            // Check providers for assets
             var output = new List<AssetEnvironment>();
             foreach (var provider in _assetProviders)
             {
@@ -42,7 +43,7 @@ namespace Plato.Internal.Assets
                 }
             }
             
-            // do we have any assets set via SetAssets();
+            // Merge assets set via SetAssets();
             if (_localAssets.Count > 0)
             {
                 output.AddRange(_localAssets);
