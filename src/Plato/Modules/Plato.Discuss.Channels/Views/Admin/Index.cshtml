@@ -1,7 +1,135 @@
-﻿@{
+﻿@model ChannelsViewModel
+@{
     ViewData["Title"] = "Discuss Channels";
 }
 
-<h5>Discuss Channels</h5>
+<div class="float-right">
+    <a asp-controller="Admin" asp-action="Create" class="btn btn-primary">
+        @T["Add Channel"]
+    </a>
+</div>
+<h4>@T["Channels"]</h4>
+<span class="text-muted">@T["Channel can help you organize your conversations."]</span>
+<hr />
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Add Channel"]</h6>
+    </card-title>
+    <card-body>
+        
+        <div class="row">
+            <div class="col">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Name">
+                        
+                        <label asp-for="EditChannel.Name"><strong>@T["Name"]</strong></label>
+                        <span asp-validation-for="EditChannel.Name" class="text-danger"></span>
+
+                        <div class="input-group">
+                            
+                            <input placeholder="@T["name this channel"]" asp-for="EditChannel.Name" class="form-control" autofocus />
+                            
+                            <a href="#modal-new" class="btn btn-secondary text-center  text-muted" data-toggle="modal" data-target="#modal-new" role="button">
+                                @T["Change Icon"]
+                            </a>
+                           
+                        </div>
+
+                        
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Icon">
+                        <label asp-for="EditChannel.Name"><strong>@T["Icon"]</strong></label>
+                        <br/><br/>
+
+                        <input asp-color-picker="#ff0000" asp-for="EditChannel.Name" class="form-control" autofocus />
+
+
+                    </div>
+                </fieldset>
+            </div>
+
+        </div>
+ 
+    </card-body>
+    <card-footer>
+        <button type="submit" class="btn btn-primary" role="button">
+            @T["Save"]
+        </button>
+    </card-footer>
+</card>
+
+<div class="modal fade" id="modal-new" role="dialog" aria-hidden="true">
+
+    <div class="modal-dialog" role="document" style="min-width: 90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6>@T["Select Icon..."]</h6>
+            </div>
+            <div class="modal-body" style="max-height: 600px; overflow: scroll;">
+
+                @foreach (var icon in Model.ChannelIcons.Icons)
+                {
+                    var css = Model.ChannelIcons.Prefix + icon;
+                    <label class="btn btn-secondary radio-icon" id="@icon">
+                        <input type="radio" value="@icon" name="iconCss" id="@icon"/>
+                        <span><i class="@css"></i></span>
+                    </label>
+                }
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary">
+                    @T["Update Icon"]
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">@T["Roles"]</h6>
+    </card-title>
+    <card-body>
+        @if (Model.Channels != null)
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                @foreach (var channel in Model.Channels)
+                {
+                    <li class="list-group-item">
+
+                        @if (!String.IsNullOrEmpty(channel.IconCss))
+                        {
+                            <i class="@channel.IconCss"></i>
+                        }
+
+                        <h6 class="d-inline-block">
+                            @channel.Name
+                        </h6>
+
+                        <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="btn btn-primary float-right">@T["Edit"]</a>
+
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <h6>@T["No channels found"]</h6>
+        }
+    </card-body>
+</card>
+
 
 

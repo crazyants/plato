@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
+using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 
@@ -48,12 +50,37 @@ namespace Plato.Discuss.Channels.Controllers
 
 
             await _categoryStore.CreateAsync(category);
-          
 
-            return View();
+
+
+            var model = await GetModel();
+
+
+            return View(model);
         }
 
-        
+
+        async Task<ChannelsViewModel> GetModel()
+        {
+
+            var featureId = "Plato.Discuss.Channels";
+            var feature = await _contextFacade.GetFeatureByModuleIdAsync(featureId);
+            if (feature == null)
+            {
+                throw new Exception($"No feature could be found for the Id '{featureId}'");
+            }
+
+            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+
+            return new ChannelsViewModel()
+            {
+                Channels = categories,
+                EditChannel = new Category(),
+                ChannelIcons = new DefaultIcons()
+            };
+
+        }
+
 
     }
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Plato.Internal.Assets.Abstractions
@@ -9,6 +7,8 @@ namespace Plato.Internal.Assets.Abstractions
     {
 
         Task<IEnumerable<AssetEnvironment>> GetAssets();
+
+        void SetAssets(IEnumerable<AssetEnvironment> environments);
 
     }
 

@@ -307,6 +307,37 @@
 }
 
 /* ------------------------- */
+/* Forms */
+/* ------------------------- */
+
+.radio-icon { overflow: hidden; width: 42px; height: 42px; position: relative; }
+.radio-icon input { display:none; }
+
+.radio-icon i {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.radio-icon input + span { color: #555; }
+.radio-icon input:checked + span { color: #fff; }
+
+.radio-icon input:checked + span:before {
+    content: '-';
+    text-indent: -5000px;
+    background-color: #007bff;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    display: block;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* ------------------------- */
 /* Asides style model */
 /* ------------------------- */
 

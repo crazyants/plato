@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Assets.Abstractions;
 
 namespace Plato.Internal.Assets
 {
-    
+
     public class AssetManager : IAssetManager
     {
+        private readonly IList<AssetEnvironment> _localAssets = new List<AssetEnvironment>();
 
         private readonly IEnumerable<IAssetProvider> _assetProviders;
         private readonly ILogger<AssetManager> _logger;
@@ -42,7 +42,25 @@ namespace Plato.Internal.Assets
                 }
             }
             
+            // do we have any assets set via SetAssets();
+            if (_localAssets.Count > 0)
+            {
+                output.AddRange(_localAssets);
+            }
+           
             return output;
+
+        }
+
+        public void SetAssets(IEnumerable<AssetEnvironment> environments)
+        {
+            foreach (var env in environments)
+            {
+                if (!_localAssets.Contains(env))
+                {
+                    _localAssets.Add(env);
+                }
+            }
         }
 
     }
