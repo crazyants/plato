@@ -310,7 +310,7 @@
 /* Forms */
 /* ------------------------- */
 
-.radio-icon { overflow: hidden; width: 42px; height: 42px; position: relative; }
+.radio-icon { overflow: hidden; width: 62px; height: 62px; position: relative; }
 .radio-icon input { display:none; }
 
 .radio-icon i {
@@ -318,6 +318,7 @@
     z-index: 2;
     left: 50%;
     top: 50%;
+    font-size: 14pt;
     transform: translate(-50%, -50%);
 }
 

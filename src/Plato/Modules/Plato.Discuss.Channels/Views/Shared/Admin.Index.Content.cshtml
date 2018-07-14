@@ -11,20 +11,30 @@
                 @foreach (var channel in Model.Channels)
                 {
                     <li class="list-group-item">
+                        
+                        <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
+                            <i class="fal fa-pencil"></i>
+                            @T["Edit"]
+                        </a>
 
                         @if (!String.IsNullOrEmpty(channel.IconCss))
                         {
                             <i class="@channel.IconCss"></i>
                         }
 
-                        <h6 class="d-inline-block">
-                            @channel.Name
+                        <h6>
+                            <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="font-weight-bold">
+                                @channel.Name
+                            </a>
                         </h6>
 
-                        <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
-                            <i class="fal fa-pencil"></i>
-                            @T["Edit"]
-                        </a>
+                        @if (!String.IsNullOrEmpty(channel.Description))
+                        {
+                            <div class="text-muted">
+                                @channel.Description
+                            </div>
+                        }
+
 
                     </li>
                 }
@@ -32,7 +42,12 @@
         }
         else
         {
-            <h6>@T["No channels found"]</h6>
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    <h6>@T["No channels found"]</h6>
+                </li>
+            </ul>
+            
         }
     </card-body>
 </card>

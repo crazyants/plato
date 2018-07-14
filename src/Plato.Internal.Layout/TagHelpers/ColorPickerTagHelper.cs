@@ -19,13 +19,11 @@ namespace Plato.Internal.Layout.TagHelpers
         [HtmlAttributeName("asp-color-picker")]
         public string Color { get; set; }
         
-
         public ColorPickerTagHelper(IAssetManager assetManager)
         {
 
-            var script = "$('[data-provide=\"color-picker\"]').colorpicker( {color: \"{color}\", format: \"hex\", align: \"left\" });";
-            script = script.Replace("{color}", this.Color);
-
+            var script = "$('[data-provide=\"color-picker\"]').colorpicker( { format: \"hex\", align: \"left\" });";
+        
             // Register JavasScript and CSSS with asset manager
             assetManager.SetAssets(new List<AssetEnvironment>
             {
@@ -49,7 +47,7 @@ namespace Plato.Internal.Layout.TagHelpers
                             InlineContent = new HtmlString(script),
                             Type = AssetType.InlineJavaScript,
                             Section = AssetSection.Footer,
-                            Priority = 99999,
+                            Priority = int.MaxValue,
                         }
                     })
             });

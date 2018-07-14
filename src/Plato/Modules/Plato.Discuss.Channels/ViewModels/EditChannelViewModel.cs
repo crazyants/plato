@@ -22,6 +22,8 @@ namespace Plato.Discuss.Channels.ViewModels
 
         [StringLength(50)]
         public string BackColor { get; set; }
+        
+        public string IconPrefix { get; set; }
 
         [StringLength(255)]
         public string IconCss { get; set; }

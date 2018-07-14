@@ -7,6 +7,7 @@ using Plato.Discuss.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Models.Shell;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
@@ -48,12 +49,15 @@ namespace Plato.Discuss.Channels.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(Category viewModel, IUpdateModel updater)
         {
 
+            var defaultIcons = new DefaultIcons();
+
             EditChannelViewModel editChannelViewModel = null;
             if (viewModel.Id == 0)
             {
                 editChannelViewModel = new EditChannelViewModel()
                 {
-                    ChannelIcons = new DefaultIcons()
+                    IconPrefix = defaultIcons.Prefix,
+                    ChannelIcons = defaultIcons
                 };
             }
             else
@@ -66,7 +70,8 @@ namespace Plato.Discuss.Channels.ViewProviders
                     ForeColor = viewModel.ForeColor,
                     BackColor = viewModel.BackColor,
                     IconCss = viewModel.IconCss,
-                    ChannelIcons = new DefaultIcons()
+                    IconPrefix = defaultIcons.Prefix,
+                    ChannelIcons = defaultIcons
                 };
             }
             
@@ -96,14 +101,22 @@ namespace Plato.Discuss.Channels.ViewProviders
             if (updater.ModelState.IsValid)
             {
 
+                var featureId = 0;
+                var feature = await GetcurrentFeature();
+                if (feature != null)
+                {
+                    featureId = feature.Id;
+                }
+
                 category = new Category()
                 {
                     Id = model.Id,
+                    FeatureId = featureId,
                     Name = model.Name,
                     Description = model.Description,
                     ForeColor = model.ForeColor,
                     BackColor = model.BackColor,
-                    IconCss = model.IconCss
+                    IconCss = model.IconPrefix + model.IconCss
                 };
 
                 category = await _categoryStore.CreateAsync(category);
@@ -121,20 +134,23 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         async Task<ChannelIndexViewModel> GetIndexModel()
         {
-
+            var feature = await GetcurrentFeature();
+            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+            return new ChannelIndexViewModel()
+            {
+                Channels = categories
+            };
+        }
+        
+        async Task<ShellModule> GetcurrentFeature()
+        {
             var featureId = "Plato.Discuss.Channels";
             var feature = await _contextFacade.GetFeatureByModuleIdAsync(featureId);
             if (feature == null)
             {
                 throw new Exception($"No feature could be found for the Id '{featureId}'");
             }
-
-            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            return new ChannelIndexViewModel()
-            {
-                Channels = categories
-            };
-
+            return feature;
         }
 
         #endregion

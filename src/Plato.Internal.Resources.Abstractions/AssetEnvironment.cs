@@ -20,6 +20,7 @@ namespace Plato.Internal.Assets.Abstractions
     
     public enum TargetEnvironment
     {
+        All,
         Development,
         Staging,
         Production

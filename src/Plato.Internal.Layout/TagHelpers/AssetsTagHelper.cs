@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Assets.Abstractions;
@@ -16,6 +18,10 @@ namespace Plato.Internal.Layout.TagHelpers
     {
       
         public AssetSection Section { get; set; }
+
+        [ViewContext]
+        [HtmlAttributeNotBound]
+        public ViewContext ViewContext { get; set; }
 
         #region "Constrcutor"
 
@@ -31,7 +37,8 @@ namespace Plato.Internal.Layout.TagHelpers
         }
 
         #endregion
-        
+
+
         #region "Implementation"
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -42,7 +49,9 @@ namespace Plato.Internal.Layout.TagHelpers
 
             var sw = new StringWriter();
          
+            // Get provided assets
             var assets = await GetAssetsAsync();
+
             if (assets != null)
             {
                 var i = 1;
@@ -111,7 +120,7 @@ namespace Plato.Internal.Layout.TagHelpers
             var environments = await GetMergedEnvironmentsAsync();
 
             // Filter by environment
-            var matchingEnvironments = environments.FirstOrDefault(g => g.TargetEnvironment == GetDeploymentMode());
+            var matchingEnvironments = environments.FirstOrDefault(g => g.TargetEnvironment == TargetEnvironment.All || g.TargetEnvironment == GetDeploymentMode());
 
             // filter by section and return ordered assets
             return @matchingEnvironments?.Resources

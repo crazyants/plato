@@ -1,13 +1,9 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
-using Plato.Discuss.Channels.Models;
-using Plato.Discuss.Channels.ViewModels;
-using Plato.Discuss.Channels.ViewProviders;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -92,7 +88,7 @@ namespace Plato.Discuss.Channels.Controllers
 
         [HttpPost]
         [ActionName(nameof(Create))]
-        public async Task<IActionResult> CreatePost(int id)
+        public async Task<IActionResult> CreatePost()
         {
             
             var result = await _viewProvider.ProvideUpdateAsync(new Category(), this);
@@ -107,8 +103,7 @@ namespace Plato.Discuss.Channels.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-
-
+        
         public async Task<IActionResult> Edit(int id)
         {
 
@@ -147,12 +142,45 @@ namespace Plato.Discuss.Channels.Controllers
                 return View(result);
             }
 
-            _alerter.Success(T["User Updated Successfully!"]);
+            _alerter.Success(T["Channel Updated Successfully!"]);
 
             return RedirectToAction(nameof(Index));
 
         }
-        
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            
+            var ok = int.TryParse(id, out int categoryId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var currentCategory = await _categoryStore.GetByIdAsync(categoryId);
+
+            if (currentCategory == null)
+            {
+                return NotFound();
+            }
+
+            var success = await _categoryStore.DeleteAsync(currentCategory);
+
+            if (success)
+            {
+                _alerter.Success(T["Channel Deleted Successfully"]);
+            }
+            else
+            {
+
+                _alerter.Danger(T["Could not delete the channel"]);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 
 }

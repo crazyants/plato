@@ -2,7 +2,10 @@
 
 @if (Model.Id > 0)
 {
-    <a class="btn btn-danger" asp-route-action="Delete" asp-route-id="@Model.Id">@T["Delete User"]</a>
+    <button type="submit" asp-controller="Admin" asp-action="Delete" asp-route-id="@Model.Id.ToString()" class="btn btn-danger btn-sm">
+        <i class="fal fa-trash"></i>
+        @T["Delete"]
+    </button>
 }
 
 

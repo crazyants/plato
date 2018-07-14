@@ -25,10 +25,13 @@ namespace Plato.Internal.Layout.ViewHelpers
             var builder = new HtmlContentBuilder();
 
             var htmlContentBuilder = builder
-                .AppendHtml("<div class=\"alert")
+                .AppendHtml("<div class=\"alert alert-dismissible fade show")
                 .AppendHtml(GetCssClass())
                 .AppendHtml("\" role=\"alert\">")
                 .AppendHtml(_alert.Message)
+                .AppendHtml("<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">")
+                .AppendHtml("<span aria-hidden=\"true\">&times;</span>")
+                .AppendHtml("</button>")
                 .AppendHtml("</div>");
 
             return Task.FromResult((IHtmlContent)builder);

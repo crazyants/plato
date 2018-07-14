@@ -1,9 +1,18 @@
 ﻿@model EditChannelViewModel
 
+<input type="hidden" asp-for="Id" />
+<input type="hidden" asp-for="IconPrefix" />
 
-<card class="card mb-4">
+<card>
     <card-title>
-        <h6 class="card-title">@T["Add Channel"]</h6>
+        @if (Model.Id > 0)
+        {
+            <h6 class="card-title">@T["Edit Channel"]</h6>
+        }
+        else
+        {
+            <h6 class="card-title">@T["Add Channel"]</h6>
+        }
     </card-title>
     <card-body>
 
@@ -24,8 +33,20 @@
                     <div class="form-group" asp-validation-class-for="Icon">
                         <label asp-for="Name"><strong>@T["Icon"]</strong></label>
                         <br />
-                        <a href="#modal-new" class="btn btn-secondary text-center  text-muted" data-toggle="modal" data-target="#modal-new" role="button">
-                            @T["Change Icon"]
+                        <a href="#selectIconModal" id="selectIconTrigger" class="btn btn-secondary text-center  text-muted" data-toggle="modal" data-target="#selectIconModal" role="button">
+
+                            @if (String.IsNullOrEmpty(Model.IconCss))
+                            {
+                                <i class="fal fa-plus"></i>
+                                @T["Add Icon"]
+                            }
+                            else
+                            {
+                                <i class="@Model.IconCss"></i>
+                                @T["Update Icon"]
+                            }
+
+
                         </a>
 
                     </div>
@@ -34,27 +55,28 @@
             <div class="col-2">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="Icon">
-                        <label asp-for="Name"><strong>@T["Text Color"]</strong></label>
+                        <label asp-for="BackColor"><strong>@T["Background"]</strong></label>
                         <br />
-                        <div asp-color-picker="#ff0000" class="input-group-prepend">
+                        <div asp-color-picker="BackColor" class="input-group-prepend">
                             <div class="input-group-text" style="cursor: pointer;">
-                                <i class="fa fa-square"></i>
+                                <i class="fa fa-square" style="color:@Model.BackColor"></i>
                             </div>
-                            <input type="text" asp-for="Name" class="form-control" style="width: 100px;" />
+                            <input type="text" asp-for="BackColor" class="form-control" style="width: 100px;" />
                         </div>
                     </div>
                 </fieldset>
             </div>
+
             <div class="col-2">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="Icon">
-                        <label asp-for="Name"><strong>@T["Label Color"]</strong></label>
+                        <label asp-for="ForeColor"><strong>@T["Text"]</strong></label>
                         <br />
-                        <div asp-color-picker="#ff0000" class="input-group-prepend">
+                        <div asp-color-picker="ForeColor" class="input-group-prepend">
                             <div class="input-group-text" style="cursor: pointer;">
-                                <i class="fa fa-square"></i>
+                                <i class="fa fa-square" style="color:@Model.ForeColor"></i>
                             </div>
-                            <input type="text" asp-for="Name" class="form-control" style="width: 100px;" />
+                            <input type="text" asp-for="ForeColor" class="form-control" style="width: 100px;" />
                         </div>
                     </div>
                 </fieldset>
@@ -76,28 +98,30 @@
     </card-body>
 </card>
 
+<div class="modal fade" id="selectIconModal" role="dialog" aria-hidden="true">
 
-<div class="modal fade" id="modal-new" role="dialog" aria-hidden="true">
-
-    <div class="modal-dialog" role="document" style="min-width: 90%;">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 90%;">
         <div class="modal-content">
             <div class="modal-header">
-                <h6>@T["Select Icon..."]</h6>
+                <h6>@T["Channel Icon"]</h6>
             </div>
-            <div class="modal-body" style="max-height: 600px; overflow: scroll;">
-
-                @foreach (var icon in Model.ChannelIcons.Icons)
-                {
-                    var css = Model.ChannelIcons.Prefix + icon;
-                    <label class="btn btn-secondary radio-icon" id="@icon">
-                        <input type="radio" value="@icon" name="iconCss" id="@icon" />
-                        <span><i class="@css"></i></span>
-                    </label>
-                }
+            <div class="modal-body" style="max-height: 600px; overflow-y: scroll;">
+                
+                <div id="availableIcons">
+                    @foreach (var icon in Model.ChannelIcons.Icons)
+                    {
+                        var css = Model.IconPrefix + icon;
+                        var selected = Model.IconCss == css;
+                        <label class="btn btn-secondary radio-icon" id="@icon">
+                            <input checked="@selected" type="radio" value="@icon" name="iconCss" id="@icon" />
+                            <span><i class="@css"></i></span>
+                        </label>
+                    }
+                </div>
 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary">
+                <button tyoe="button" class="btn btn-primary" data-dismiss="modal">
                     @T["Update Icon"]
                 </button>
             </div>
@@ -105,3 +129,43 @@
     </div>
 
 </div>
+
+<script section="Footer">
+
+    $(function(win, doc, $) {
+
+        var selectedIcon = "";
+
+        $(doc).ready(function () {
+            alert("read");
+            $('#selectIconModal').on('show.bs.modal',
+                function(e) {
+
+                    alert("init buttons")
+                    var $inputs = $("#availableIcons").find("input");
+                    $inputs.change(function() {
+                        alert(selectedIcon);
+                        selectedIcon = $(this).val();
+
+                    });
+
+
+                });
+
+            $('#selectIconModal').on('hidden.bs.modal',
+                function(e) {
+
+                    var $i = $("#selectIconTrigger").find("i");
+                    if ($i.length > 0) {
+                        i.removeAttr("class");
+                        i.addClass(selectedIcon);
+                    }
+
+
+                });
+        });
+
+
+    }(window, document, jQuery));
+
+</script>
