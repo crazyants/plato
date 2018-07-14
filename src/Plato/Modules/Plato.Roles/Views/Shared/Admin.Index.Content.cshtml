@@ -16,7 +16,10 @@
                             @role.Name
                         </h6>
 
-                        <a asp-controller="Admin" asp-action="Edit" asp-route-id="@role.Id" class="btn btn-primary float-right">@T["Edit"]</a>
+                        <a asp-controller="Admin" asp-action="Edit" asp-route-id="@role.Id" class="btn btn-secondary float-right">
+                            <i class="fal fa-pencil"></i>
+                            @T["Edit"]
+                        </a>
 
                     </li>
                 }

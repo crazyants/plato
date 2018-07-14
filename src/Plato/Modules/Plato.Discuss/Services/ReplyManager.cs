@@ -74,7 +74,7 @@ namespace Plato.Discuss.Services
                 // Get last 5 participants
 
                 var replies = await _entityReplyStore.QueryAsync()
-                    .Page(1, 5)
+                    .Take(1, 5)
                     .Select<EntityReplyQueryParams>(q =>
                     {
                         q.EntityId.Equals(result.Response.EntityId);

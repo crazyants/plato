@@ -29,7 +29,7 @@ namespace Plato.WebApi.Controllers
         {
 
             var users = await _ploatUserStore.QueryAsync()
-                .Page(page, pageSize)
+                .Take(page, pageSize)
                 .Select<UserQueryParams>(q =>
                 {
                     // q.UserName.IsIn("Admin,Mark").Or();

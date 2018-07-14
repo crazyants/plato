@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
 using Plato.Email.Models;
 using Plato.Email.Stores;
 using Plato.Email.ViewModels;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Navigation;
 
 namespace Plato.Email.Controllers
 {
@@ -20,21 +22,29 @@ namespace Plato.Email.Controllers
         private readonly IAuthorizationService _authorizationService;
         private readonly IEmailSettingsStore<EmailSettings> _emailSettingsStore;
         private readonly IAlerter _alerter;
-
-        public IHtmlLocalizer T { get; }
+        private readonly IBreadCrumbManager _breadCrumbManager;
         
+        public IHtmlLocalizer T { get; }
+
+        public IStringLocalizer S { get; }
+
+
         public AdminController(
-            IHtmlLocalizer<AdminController> localizer,
+            IHtmlLocalizer<AdminController> htmlLocalizer,
+            IStringLocalizer<AdminController> stringLocalizer,
             IAuthorizationService authorizationService,
             IEmailSettingsStore<EmailSettings> emailSettingsStore,
-            IAlerter alerter)
+            IAlerter alerter,
+            IBreadCrumbManager breadCrumbManager)
         {
        
             _alerter = alerter;
+            _breadCrumbManager = breadCrumbManager;
             _authorizationService = authorizationService;
             _emailSettingsStore = emailSettingsStore;
 
-            T = localizer;
+            T = htmlLocalizer;
+            S = stringLocalizer;
 
         }
 
@@ -49,7 +59,19 @@ namespace Plato.Email.Controllers
             //{
             //    return Unauthorized();
             //}
-            
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Settings"], channels => channels
+                    .Action("Index", "Admin", "Plato.Settings")
+                    .LocalNav()
+                ).Add(S["Email Settings"]);
+            });
+
+
             return View(await GetModel());
 
         }

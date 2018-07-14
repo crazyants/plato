@@ -12,7 +12,7 @@ namespace Plato.Internal.Navigation
     public interface IBreadCrumbManager
     {
 
-        void Configure(Action<NavigationBuilder> action);
+        void Configure(Action<NavigationBuilder> configureBuilder);
 
         IEnumerable<MenuItem> BuildMenu(ActionContext actionContext);
 
@@ -39,12 +39,11 @@ namespace Plato.Internal.Navigation
 
         #region "Implementation"
 
-        public void Configure(Action<NavigationBuilder> action)
+        public void Configure(Action<NavigationBuilder> configureBuilder)
         {
             var builder = new NavigationBuilder();
-            action(builder);
+            configureBuilder(builder);
             _menuItems = builder.Build();
-       
         }
 
         public IEnumerable<MenuItem> BuildMenu(ActionContext actionContext)
@@ -60,8 +59,7 @@ namespace Plato.Internal.Navigation
         }
 
         #endregion
-
-
+        
         #region "Private Methods"
 
         List<MenuItem> ComputeHref(List<MenuItem> menuItems, ActionContext actionContext)
@@ -82,7 +80,7 @@ namespace Plato.Internal.Navigation
             {
                 if (String.IsNullOrEmpty(menuItemUrl))
                 {
-                    return "#";
+                    return string.Empty;
                 }
                 else
                 {
@@ -127,8 +125,7 @@ namespace Plato.Internal.Navigation
 
             return url;
         }
-
-
+        
         #endregion
 
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ViewProviders;
@@ -23,16 +24,20 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<UsersIndexViewModel> _userListViewProvider;
         private readonly IPlatoUserStore<User> _ploatUserStore;
         private readonly IAlerter _alerter;
-
+        private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly UserManager<User> _userManager;
 
         public IHtmlLocalizer T { get; }
+
+        public IStringLocalizer S { get; }
         
         public AdminController(
-            IHtmlLocalizer<AdminController> localizer,
+            IHtmlLocalizer<AdminController> htmlLocalizer,
+            IStringLocalizer<AdminController> stringLocalizer,
             IPlatoUserStore<User> platoUserStore, 
             IViewProviderManager<User> userViewProvider,
             IViewProviderManager<UsersIndexViewModel> userListViewProvider,
+            IBreadCrumbManager breadCrumbManager,
             UserManager<User> userManager,
             IAlerter alerter)
         {
@@ -41,9 +46,11 @@ namespace Plato.Users.Controllers
             _userViewProvider = userViewProvider;
             _userListViewProvider = userListViewProvider;
             _userManager = userManager;
+            _breadCrumbManager = breadCrumbManager;
             _alerter = alerter;
 
-            T = localizer;
+            T = htmlLocalizer;
+            S = stringLocalizer;
 
         }
 
@@ -53,6 +60,20 @@ namespace Plato.Users.Controllers
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
+
+            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
+            //{
+            //    return Unauthorized();
+            //}
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Users"]);
+            });
+
 
             // default options
             if (filterOptions == null)
@@ -102,6 +123,12 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Display(string id)
         {
 
+            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
+            //{
+            //    return Unauthorized();
+            //}
+
+
             var currentUser = await _userManager.FindByIdAsync(id);
             if (!(currentUser is User))
             {
@@ -114,12 +141,47 @@ namespace Plato.Users.Controllers
 
         public async Task<IActionResult> Create()
         {
+
+            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
+            //{
+            //    return Unauthorized();
+            //}
+
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Users"], channels => channels
+                    .Action("Index", "Admin", "Plato.Users")
+                    .LocalNav()
+                ).Add(S["Add User"]);
+            });
+
             var result = await _userViewProvider.ProvideEditAsync(new User(), this);
             return View(result);
         }
         
         public async Task<IActionResult> Edit(string id)
         {
+
+            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
+            //{
+            //    return Unauthorized();
+            //}
+
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Users"], channels => channels
+                    .Action("Index", "Admin", "Plato.Users")
+                    .LocalNav()
+                ).Add(S["Edit User"]);
+            });
 
             var currentUser = await _userManager.FindByIdAsync(id);
             if (!(currentUser is User))
@@ -175,7 +237,7 @@ namespace Plato.Users.Controllers
             PagerOptions pagerOptions)
         {
             return await _ploatUserStore.QueryAsync()
-                .Page(pagerOptions.Page, pagerOptions.PageSize)
+                .Take(pagerOptions.Page, pagerOptions.PageSize)
                 .Select<UserQueryParams>(q =>
                 {
                     if (!string.IsNullOrEmpty(filterOptions.Search))

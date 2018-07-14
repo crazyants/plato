@@ -2,16 +2,17 @@
 
 <li class="list-group-item">
     
-    <input type="checkbox" class="form-check-inline mr-0" name="featureIds" value="@Model.Id" id="@Model.Id">
-    
     <h6 class="d-inline-block">
         <avatar class="avatar" user-id="@Model.Id" />
-        <label class="form-check-label" for="@Model.Id">
+        <a asp-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.Id" class="font-weight-bold">
             @Model.UserName
-        </label>
+        </a>
     </h6>
     
-    <a asp-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary float-right">@T["Edit"]</a>
+    <a asp-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary float-right">
+        <i class="fal fa-pencil"></i>
+        @T["Edit"]
+    </a>
 
 </li>
 

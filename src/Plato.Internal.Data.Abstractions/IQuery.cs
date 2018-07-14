@@ -10,7 +10,7 @@ namespace Plato.Internal.Data.Abstractions
 
         string TablePrefix { get; set; }
 
-        IQuery<TModel> Page(int pageIndex, int pageSize);
+        IQuery<TModel> Take(int pageIndex, int pageSize);
 
         IQuery<TModel> Select<TParams>(Action<TParams> configure) where TParams : new();
 

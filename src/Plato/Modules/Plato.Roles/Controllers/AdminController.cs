@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -30,17 +31,22 @@ namespace Plato.Roles.Controllers
         private readonly IPlatoRoleStore _platoRoleStore;
         private readonly RoleManager<Role> _roleManager;
         private readonly IAlerter _alerter;
+        private readonly IBreadCrumbManager _breadCrumbManager;
 
         public IHtmlLocalizer T { get; }
 
+        public IStringLocalizer S { get; }
+
 
         public AdminController(
-            IHtmlLocalizer<AdminController> localizer,
+            IHtmlLocalizer<AdminController> htmlLocalizer,
+            IStringLocalizer<AdminController> stringLocalizer,
             IViewProviderManager<RolesIndexViewModel> roleIndexViewProvider,
             IPlatoRoleStore platoRoleStore, 
             IViewProviderManager<Role> roleViewProvider,
             RoleManager<Role> roleManager, IAlerter alerter,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IBreadCrumbManager breadCrumbManager)
         {
             _roleIndexViewProvider = roleIndexViewProvider;
             _platoRoleStore = platoRoleStore;
@@ -48,8 +54,10 @@ namespace Plato.Roles.Controllers
             _roleManager = roleManager;
             _alerter = alerter;
             _authorizationService = authorizationService;
+            _breadCrumbManager = breadCrumbManager;
 
-            T = localizer;
+            T = htmlLocalizer;
+            S = stringLocalizer;
 
         }
 
@@ -66,7 +74,15 @@ namespace Plato.Roles.Controllers
             //{
             //    return Unauthorized();
             //}
-            
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Roles"]);
+            });
+
 
             // default options
             if (filterOptions == null)
@@ -97,9 +113,20 @@ namespace Plato.Roles.Controllers
 
         }
         
-
         public async Task<IActionResult> Create()
         {
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Roles"], channels => channels
+                    .Action("Index", "Admin", "Plato.Roles")
+                    .LocalNav()
+                ).Add(S["Add Role"]);
+            });
+
             var result = await _roleViewProvider.ProvideEditAsync(new Role(), this);
             return View(result);
         }
@@ -126,6 +153,17 @@ namespace Plato.Roles.Controllers
         public async Task<IActionResult> Edit(string id)
         {
 
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Roles"], channels => channels
+                    .Action("Index", "Admin", "Plato.Roles")
+                    .LocalNav()
+                ).Add(S["Edit Role"]);
+            });
+
             var role = await _roleManager.FindByIdAsync(id);
 
             if (role == null)
@@ -137,8 +175,7 @@ namespace Plato.Roles.Controllers
             return View(result);
 
         }
-
-
+        
         [HttpPost]
         [ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(string id)
@@ -206,8 +243,7 @@ namespace Plato.Roles.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-
+        
         #endregion
 
         #region "Private Methods"
@@ -229,7 +265,7 @@ namespace Plato.Roles.Controllers
             PagerOptions pagerOptions)
         {
             return await _platoRoleStore.QueryAsync()
-                .Page(pagerOptions.Page, pagerOptions.PageSize)
+                .Take(pagerOptions.Page, pagerOptions.PageSize)
                 .Select<RoleQueryParams>(q =>
                 {
                     if (filterOptions.RoleId > 0)

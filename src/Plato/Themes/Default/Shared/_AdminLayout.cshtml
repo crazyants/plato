@@ -65,19 +65,11 @@
                 </div>
             </div>
     
-               
-            <breadcrumb class="breadcrumb bg-light border-bottom col-12"/>
-
-
-            <nav class="row" aria-label="breadcrumb">
-             
-                <ol class="">
-                    <li class="breadcrumb-item"><a asp-area="Plato.Admin" asp-controller="Admin" asp-action="Index">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Channels</li>
-                </ol>
+            <nav class="row border-bottom" aria-label="breadcrumb">
+                <breadcrumb class="breadcrumb bg-light mb-0 col-12"/>
             </nav>
    
-            <div class="d-block p-2">
+            <div class="d-block px-1 py-4">
              
                 @RenderBody()
                 <hr/>

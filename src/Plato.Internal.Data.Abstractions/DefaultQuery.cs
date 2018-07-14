@@ -18,7 +18,7 @@ namespace Plato.Internal.Data.Abstractions
 
         public string TablePrefix { get; set; }
 
-        public IQuery<TModel> Page(int pageIndex, int pageSize)
+        public IQuery<TModel> Take(int pageIndex, int pageSize)
         {
             this.PageIndex = pageIndex;
             this.PageSize = pageSize;

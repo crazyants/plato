@@ -27,6 +27,7 @@ namespace Plato.Discuss.Channels.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
 
         public IHtmlLocalizer T { get; }
+
         public IStringLocalizer S { get; }
 
         public AdminController(
@@ -36,8 +37,8 @@ namespace Plato.Discuss.Channels.Controllers
             IContextFacade contextFacade,
             ICategoryStore<Category> categoryStore,
             IViewProviderManager<Category> viewProvider,
-            IAlerter alerter,
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager,
+            IAlerter alerter)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
@@ -53,15 +54,17 @@ namespace Plato.Discuss.Channels.Controllers
         public async Task<IActionResult> Index()
         {
 
+            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
+            //{
+            //    return Unauthorized();
+            //}
+            
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Admin", "Plato.Admin")
                     .LocalNav()
-                ).Add(S["Channels"], channels => channels
-                    .Action("Index", "Admin", "Plato.Discuss.Channels")
-                    .LocalNav()
-                );
+                ).Add(S["Channels"]);
             });
             
             var model = await _viewProvider.ProvideIndexAsync(new Category(), this);
@@ -70,6 +73,19 @@ namespace Plato.Discuss.Channels.Controllers
 
         public async Task<IActionResult> Create()
         {
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Channels"], channels => channels
+                    .Action("Index", "Admin", "Plato.Discuss.Channels")
+                    .LocalNav()
+                ).Add(S["Add Channel"]);
+            });
+
+
             var model = await _viewProvider.ProvideEditAsync(new Category(), this);
             return View(model);
         }
@@ -96,9 +112,18 @@ namespace Plato.Discuss.Channels.Controllers
         public async Task<IActionResult> Edit(int id)
         {
 
-            var category = await _categoryStore.GetByIdAsync(id);
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Channels"], channels => channels
+                    .Action("Index", "Admin", "Plato.Discuss.Channels")
+                    .LocalNav()
+                ).Add(S["Edit Channel"]);
+            });
             
-
+            var category = await _categoryStore.GetByIdAsync(id);
             var model = await _viewProvider.ProvideEditAsync(category, this);
             return View(model);
 
@@ -127,10 +152,7 @@ namespace Plato.Discuss.Channels.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-
-
-     
-
+        
     }
 
 }

@@ -190,7 +190,7 @@ namespace Plato.Discuss.ViewProviders
             var feature = await _contextFacade.GetFeatureByAreaAsync();
 
             return await _entityStore.QueryAsync()
-                .Page(pagerOptions.Page, pagerOptions.PageSize)
+                .Take(pagerOptions.Page, pagerOptions.PageSize)
                 .Select<EntityQueryParams>(q =>
                 {
 
@@ -225,7 +225,7 @@ namespace Plato.Discuss.ViewProviders
             PagerOptions pagerOptions)
         {
             return await _entityReplyStore.QueryAsync()
-                .Page(pagerOptions.Page, pagerOptions.PageSize)
+                .Take(pagerOptions.Page, pagerOptions.PageSize)
                 .Select<EntityReplyQueryParams>(q =>
                 {
                     q.EntityId.Equals(entityId);

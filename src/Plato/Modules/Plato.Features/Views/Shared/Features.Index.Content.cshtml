@@ -1,6 +1,6 @@
 ﻿@model FeaturesViewModel
 
-<card>
+<card class="card card-body-flush">
     <card-title>
         <h6 class="card-title">Manage Features</h6>
     </card-title>
@@ -53,7 +53,7 @@
                             <span data-toggle="tooltip" title="@T["Feature dependencies:"] @String.Join(", ", dependencyNames)" class="text-muted mx-2">
                                 @if (dependencyNames.Length > 0)
                                 {
-                                    <i class="fa fa-code-branch fa-flip-vertical"></i>
+                                    <i class="fal fa-code-branch fa-flip-vertical"></i>
                                 }
                                 else
                                 {
@@ -63,7 +63,7 @@
                             <span data-toggle="tooltip" title="@T["Dependentt feature:"] @String.Join(", ", dependentNames)" class="text-muted mx-2">
                                 @if (dependentNames.Length > 0)
                                 {
-                                    <i class="fa fa-code-branch"></i>
+                                    <i class="fal fa-code-branch"></i>
                                 }
                                 else
                                 {
@@ -75,11 +75,17 @@
                             {
                                 @if (!feature.IsEnabled)
                                 {
-                                    <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">@T["Enable"]</button>
+                                    <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
+                                        <i class="fal fa-check"></i>
+                                        @T["Enable"]
+                                    </button>
                                 }
                                 else
                                 {
-                                    <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.ModuleId" class="btn btn-default" itemprop="UnsafeUrl">@T["Disable"]</button>
+                                    <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.ModuleId" class="btn btn-secondary" itemprop="UnsafeUrl">
+                                        <i class="fal fa-times"></i>
+                                        @T["Disable"]
+                                    </button>
                                 }
                             }
 
