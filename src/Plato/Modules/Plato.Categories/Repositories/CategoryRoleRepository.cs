@@ -10,12 +10,8 @@ using Plato.Internal.Repositories;
 
 namespace Plato.Categories.Repositories
 {
-    public interface ICategoryRolesRepository<T> : IRepository<T> where T : class
-    {
-        Task<IEnumerable<T>> SelectByFeatureIdAsync(int featureId);
-    }
 
-    public class CategoryRolesRepository : ICategoryRolesRepository<CategoryRole>
+    public class CategoryRoleRepository : ICategoryRoleRepository<CategoryRole>
     {
 
         #region "Constructor"
@@ -25,7 +21,7 @@ namespace Plato.Categories.Repositories
         private readonly IDbContext _dbContext;
         private readonly ILogger<CategoryRepository> _logger;
 
-        public CategoryRolesRepository(
+        public CategoryRoleRepository(
             IDbContext dbContext,
             ILogger<CategoryRepository> logger,
             ICategoryDataRepository<CategoryData> categoryDataRepository)
@@ -145,7 +141,7 @@ namespace Plato.Categories.Repositories
 
         }
 
-        public async Task<IEnumerable<CategoryRole>> SelectByFeatureIdAsync(int featureId)
+        public async Task<IEnumerable<CategoryRole>> SelectByCategoryIdAsync(int categoryId)
         {
 
             List<CategoryRole> output = null;
@@ -160,8 +156,8 @@ namespace Plato.Categories.Repositories
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectCategoriesByFeatureId",
-                    featureId
+                    "SelectCategoryRolesByCategoryId",
+                    categoryId
                 );
 
                 if ((reader != null) && (reader.HasRows))
@@ -178,6 +174,26 @@ namespace Plato.Categories.Repositories
             }
 
             return output;
+        }
+
+        public async Task<bool> DeleteByCategoryIdAsync(int categoryId)
+        {
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Deleting category roles for category Id: {categoryId}");
+            }
+
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteCategoryRolesByCategoryId", categoryId);
+            }
+
+            return success > 0 ? true : false;
+
         }
 
         #endregion

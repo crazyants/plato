@@ -6,15 +6,10 @@ using Microsoft.Extensions.Logging;
 using Plato.Categories.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Repositories;
 
 namespace Plato.Categories.Repositories
 {
-    public interface ICategoryRepository<T> : IRepository<T> where T : class
-    {
-        Task<IEnumerable<T>> SelectByFeatureIdAsync(int featureId);
-    }
-    
+
     public class CategoryRepository : ICategoryRepository<Category>
     {
      

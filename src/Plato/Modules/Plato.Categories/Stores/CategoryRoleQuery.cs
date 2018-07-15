@@ -7,33 +7,32 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Categories.Stores
 {
+    #region "CategoryRoleQuery"
 
-    #region "CategoryQuery"
-
-    public class CategoryQuery : DefaultQuery<Category>
+    public class CategoryRoleQuery : DefaultQuery<CategoryRole>
     {
 
-        private readonly IStore<Category> _store;
+        private readonly IStore<CategoryRole> _store;
 
-        public CategoryQuery(IStore<Category> store)
+        public CategoryRoleQuery(IStore<CategoryRole> store)
         {
             _store = store;
         }
 
-        public CategoryQueryParams Params { get; set; }
+        public CategoryRoleQueryParams Params { get; set; }
 
-        public override IQuery<Category> Select<T>(Action<T> configure)
+        public override IQuery<CategoryRole> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
-            Params = (CategoryQueryParams)Convert.ChangeType(defaultParams, typeof(CategoryQueryParams));
+            Params = (CategoryRoleQueryParams)Convert.ChangeType(defaultParams, typeof(CategoryRoleQueryParams));
             return this;
         }
 
-        public override async Task<IPagedResults<Category>> ToList()
+        public override async Task<IPagedResults<CategoryRole>> ToList()
         {
 
-            var builder = new CategoryQueryBuilder(this);
+            var builder = new CategoryRoleQueryBuilder(this);
             var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
@@ -55,9 +54,9 @@ namespace Plato.Categories.Stores
 
     #endregion
 
-    #region "CategoryQueryParams"
+    #region "CategoryRoleQueryParams"
 
-    public class CategoryQueryParams
+    public class CategoryRoleQueryParams
     {
 
 
@@ -76,25 +75,26 @@ namespace Plato.Categories.Stores
             get => _keywords ?? (_keywords = new WhereString());
             set => _keywords = value;
         }
-        
+
+
     }
 
     #endregion
 
-    #region "CategoryQueryBuilder"
+    #region "CategoryRoleQueryBuilder"
 
-    public class CategoryQueryBuilder : IQueryBuilder
+    public class CategoryRoleQueryBuilder : IQueryBuilder
     {
         #region "Constructor"
 
-        private readonly string _categorysTableName;
+        private readonly string _categoryRolesTableName;
 
-        private readonly CategoryQuery _query;
+        private readonly CategoryRoleQuery _query;
 
-        public CategoryQueryBuilder(CategoryQuery query)
+        public CategoryRoleQueryBuilder(CategoryRoleQuery query)
         {
             _query = query;
-            _categorysTableName = GetTableNameWithPrefix("Categories");
+            _categoryRolesTableName = GetTableNameWithPrefix("Categories");
 
         }
 
@@ -159,7 +159,7 @@ namespace Plato.Categories.Stores
 
             var sb = new StringBuilder();
 
-            sb.Append(_categorysTableName)
+            sb.Append(_categoryRolesTableName)
                 .Append(" c ");
 
             return sb.ToString();

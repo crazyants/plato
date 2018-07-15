@@ -282,8 +282,13 @@ namespace Plato.Categories.Handlers
                 // drop category roles
                 builder
                     .DropTable(_categoryRoles)
-                    .DropDefaultProcedures(_categoryRoles);
+                    .DropDefaultProcedures(_categoryRoles)
+                    .DropProcedure(new SchemaProcedure("SelectCategoryRolesByCategoryId"))
+                    .DropProcedure(new SchemaProcedure("SelectCategoryRolesPaged"))
+                    .DropProcedure(new SchemaProcedure("DeleteCategoryRolesByCategoryId"));
 
+
+                
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
                 {
@@ -393,6 +398,16 @@ namespace Plato.Categories.Handlers
                 .CreateTable(_categoryRoles)
                 .CreateDefaultProcedures(_categoryRoles);
 
+            builder
+                .CreateProcedure(new SchemaProcedure("SelectCategoryRolesByCategoryId", StoredProcedureType.SelectByKey)
+                    .ForTable(_categories)
+                    .WithParameter(new SchemaColumn() { Name = "CategoryId", DbType = DbType.Int32 }));
+
+            builder
+                .CreateProcedure(new SchemaProcedure("DeleteCategoryRolesByCategoryId", StoredProcedureType.DeleteByKey)
+                    .ForTable(_categories)
+                    .WithParameter(new SchemaColumn() { Name = "CategoryId", DbType = DbType.Int32 }));
+            
             builder.CreateProcedure(new SchemaProcedure("SelectCategoryRolesPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_categoryRoles)
                 .WithParameters(new List<SchemaColumn>()

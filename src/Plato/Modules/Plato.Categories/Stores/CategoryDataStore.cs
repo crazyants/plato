@@ -6,17 +6,9 @@ using Plato.Categories.Repositories;
 using Plato.Internal.Cache;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Modules.Abstractions;
-using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Categories.Stores
 {
-
-    public interface ICategoryDataStore<T> : IStore<T> where T : class
-    {
-
-        Task<IEnumerable<T>> GetByCategoryIdAsync(int entityId);
-
-    }
 
     public class CategoryDataStore : ICategoryDataStore<CategoryData>
     {
