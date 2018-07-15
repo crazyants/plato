@@ -21,7 +21,7 @@ namespace Plato.WebApi.Middleware
             
             // Register client options for web api with our script manager
             var scriptManager = context.RequestServices.GetRequiredService<IScriptManager>();
-            scriptManager?.RegisterScriptBlock(new ScriptBlock(await BuildScriptBlock(context)), ScriptSection.Footer);
+            scriptManager?.RegisterScriptBlock(new ScriptBlock(await BuildScriptBlock(context), int.MinValue), ScriptSection.Footer);
             
             await _next(context);
 
@@ -66,10 +66,6 @@ namespace Plato.WebApi.Middleware
 
         }
 
-
-
-
     }
-
 
 }

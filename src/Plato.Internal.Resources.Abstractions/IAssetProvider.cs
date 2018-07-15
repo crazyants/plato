@@ -6,7 +6,7 @@ namespace Plato.Internal.Assets.Abstractions
 
     public interface IAssetProvider
     {
-        Task<IEnumerable<AssetEnvironment>> GetAssetGroups();
+        Task<IEnumerable<AssetEnvironment>> GetAssetEnvironments();
 
     }
 

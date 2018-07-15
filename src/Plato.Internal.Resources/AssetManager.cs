@@ -31,10 +31,10 @@ namespace Plato.Internal.Assets
             {
                 try
                 {
-                    var env = await provider.GetAssetGroups();
-                    if (env != null)
+                    var environments = await provider.GetAssetEnvironments();
+                    if (environments != null)
                     {
-                        output.AddRange(env);
+                        output.AddRange(environments);
                     }
                 }
                 catch (Exception e)
@@ -55,11 +55,11 @@ namespace Plato.Internal.Assets
 
         public void SetAssets(IEnumerable<AssetEnvironment> environments)
         {
-            foreach (var env in environments)
+            foreach (var environment in environments)
             {
-                if (!_localAssets.Contains(env))
+                if (!_localAssets.Contains(environment))
                 {
-                    _localAssets.Add(env);
+                    _localAssets.Add(environment);
                 }
             }
         }

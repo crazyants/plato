@@ -29,9 +29,6 @@ namespace Plato.WebApi
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
 
-            // Register client assets
-            // services.AddScoped<IAssetProvider, AssetProvider>();
-
             // View providers
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
@@ -47,7 +44,7 @@ namespace Plato.WebApi
             IServiceProvider serviceProvider)
         {
 
-            // Register client script middleware 
+            // Register client options middleware 
             app.UseMiddleware<WebApiClientOptionsMiddleware>();
 
         }

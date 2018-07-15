@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Html;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Html;
 
 namespace Plato.Internal.Abstractions.Extensions
 {
@@ -18,7 +17,7 @@ namespace Plato.Internal.Abstractions.Extensions
             }
         }
         
-        public static string ToString(this IHtmlContent content)
+        public static string Stringify(this IHtmlContent content)
         {
             using (var writer = new StringWriter())
             {

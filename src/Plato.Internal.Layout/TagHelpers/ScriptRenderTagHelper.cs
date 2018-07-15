@@ -43,6 +43,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
             var result = new HelperResult(async textWriter => await RenderBlocks(textWriter, capture));
             output.Content.SetHtmlContent(result);
+
         }
 
         async Task RenderBlocks(TextWriter textWriter, ScriptBlocks blocks)
@@ -52,9 +53,10 @@ namespace Plato.Internal.Layout.TagHelpers
             var orderedBlocksList = orderedBlocks.ToList();
 
             // Get blocks we can merge
-            var mergableBlocks = orderedBlocksList.Where(b =>
-                ((AutoMerge && (!b.CanMerge.HasValue || b.CanMerge.Value)) ||
-                (!AutoMerge && b.CanMerge.HasValue && b.CanMerge.Value)));
+            var mergableBlocks = orderedBlocksList.Where(b => (
+                (AutoMerge && b.CanMerge) ||
+                (!AutoMerge && b.CanMerge))
+            );
             
             // Convert mergables to list
             var mergableBlocksList = mergableBlocks.ToList();
@@ -81,7 +83,12 @@ namespace Plato.Internal.Layout.TagHelpers
                 {
                     TagRenderMode = TagRenderMode.Normal
                 };
-                tagBuilder.InnerHtml.AppendHtml(block.Content);
+
+                tagBuilder.InnerHtml
+                    .AppendHtml(System.Environment.NewLine)
+                    .AppendHtml(block.Content)
+                    .AppendHtml(System.Environment.NewLine);
+
                 tagBuilder.MergeAttributes(block.Attributes, replaceExisting: true);
                 tagBuilder.WriteTo(textWriter, NullHtmlEncoder.Default);
                 await textWriter.WriteLineAsync();
@@ -89,7 +96,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
         }
 
-        async Task RenderMergedBlocks(TextWriter tw, IEnumerable<ScriptBlock> blocks)
+        async Task RenderMergedBlocks(TextWriter textWriter, IEnumerable<ScriptBlock> blocks)
         {
 
             var blockList = blocks.ToList();
@@ -104,12 +111,15 @@ namespace Plato.Internal.Layout.TagHelpers
 
             foreach (var block in blockList)
             {
-                tagBuilder.InnerHtml.AppendHtml(block.Content);
+                tagBuilder.InnerHtml
+                    .AppendHtml(System.Environment.NewLine)
+                    .AppendHtml(block.Content)
+                    .AppendHtml(System.Environment.NewLine);
                 tagBuilder.MergeAttributes(block.Attributes, replaceExisting: true);
             }
 
-            tagBuilder.WriteTo(tw, NullHtmlEncoder.Default);
-            await tw.WriteLineAsync();
+            tagBuilder.WriteTo(textWriter, NullHtmlEncoder.Default);
+            await textWriter.WriteLineAsync();
 
         }
 

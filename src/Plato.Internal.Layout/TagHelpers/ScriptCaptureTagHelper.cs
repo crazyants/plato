@@ -1,9 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Scripting.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
@@ -16,8 +13,15 @@ namespace Plato.Internal.Layout.TagHelpers
         const string SectionAttributeName = "section";
         const string PriorityAttributeName = "priority";
         const string AllowMergeAttributeName = "allow-merge";
+        const string EnsureUniqueAttributeName = "ensure-unique";
 
-        private static readonly string[] SystemAttributes = new[] { SectionAttributeName, PriorityAttributeName, AllowMergeAttributeName };
+        private static readonly string[] SystemAttributes = new[]
+        {
+            SectionAttributeName,
+            PriorityAttributeName,
+            AllowMergeAttributeName,
+            EnsureUniqueAttributeName
+        };
 
         [HtmlAttributeName(SectionAttributeName)]
         public ScriptSection Section { get; set; }
@@ -26,7 +30,10 @@ namespace Plato.Internal.Layout.TagHelpers
         public int? Priority { get; set; }
 
         [HtmlAttributeName(AllowMergeAttributeName)]
-        public bool? AllowMerge { get; set; }
+        public bool AllowMerge { get; set; }
+
+        [HtmlAttributeName(EnsureUniqueAttributeName)]
+        public bool EnsureUnique { get; set; }
         
         private readonly IScriptManager _scriptManager;
 
@@ -45,9 +52,10 @@ namespace Plato.Internal.Layout.TagHelpers
             var content = await output.GetChildContentAsync();
 
             var order = Priority ?? int.MaxValue;
-            var block = new ScriptBlock(content, attributes, order, AllowMerge);
-
-            _scriptManager.RegisterScriptBlock(block, Section);
+            
+            _scriptManager.RegisterScriptBlock(
+                new ScriptBlock(content, attributes, order, AllowMerge, EnsureUnique),
+                Section);
 
             output.SuppressOutput();
 

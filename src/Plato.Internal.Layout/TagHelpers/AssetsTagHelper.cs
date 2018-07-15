@@ -4,24 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Assets.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
 
-    [HtmlTargetElement("assets")]
+    [HtmlTargetElement("assets", Attributes = "section")]
     public class AssetsTagHelper : TagHelper
     {
-      
-        public AssetSection Section { get; set; }
 
-        [ViewContext]
-        [HtmlAttributeNotBound]
-        public ViewContext ViewContext { get; set; }
+        [HtmlAttributeName("section")]
+        public AssetSection Section { get; set; }
 
         #region "Constrcutor"
 
@@ -86,17 +80,6 @@ namespace Plato.Internal.Layout.TagHelpers
                                 sw.Write(sw.NewLine);
                             }
                             break;
-
-                        //case AssetType.InlineJavaScript:
-
-                        //    sw.Write(BuildInlineJavaScript(asset));
-                        //    if (i < assets.Count)
-                        //    {
-                        //        sw.Write(sw.NewLine);
-                        //    }
-                        //    break;
-
-
                     }
 
                     i++;
@@ -190,20 +173,6 @@ namespace Plato.Internal.Layout.TagHelpers
         {
             return new HtmlString($"<script src=\"{asset.Url}\"></script>");
         }
-
-        //IHtmlContent BuildInlineJavaScript(Asset asset)
-        //{
-        //    var builder = new HtmlContentBuilder();
-        //    var content = builder
-        //            .AppendHtml("<script>")
-        //            .AppendHtml(System.Environment.NewLine)
-        //            .AppendHtml(asset.InlineContent)
-        //            .AppendHtml(System.Environment.NewLine)
-        //            .AppendHtml("</script>");
-
-        //    return content.ToHtmlString();
-        //}
-
 
         #endregion
 

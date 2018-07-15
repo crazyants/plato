@@ -17,7 +17,7 @@ namespace Plato.Theming.Assets
             _siteSettingsStore = siteSettingsStore;
         }
 
-        public async Task<IEnumerable<AssetEnvironment>> GetAssetGroups()
+        public async Task<IEnumerable<AssetEnvironment>> GetAssetEnvironments()
         {
 
             var themeName = await GetThemeNameAsync();

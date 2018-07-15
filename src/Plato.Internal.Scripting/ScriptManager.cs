@@ -41,7 +41,7 @@ namespace Plato.Internal.Scripting
             
         }
 
-        // Register a ScriptCapture on the HttpContext for a specific section
+        // Register a ScriptBlock on the HttpContext for a specific section
         public void RegisterScriptBlock(ScriptBlock block, ScriptSection section)
         {
             
