@@ -62,7 +62,7 @@ namespace Plato.Internal.Stores.Roles
 
         public async Task<Role> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
-            return await _platoRoleStore.GetByNormalizedName(normalizedRoleName);
+            return await _platoRoleStore.GetByNormalizedNameAsync(normalizedRoleName);
         }
 
         public Task<string> GetNormalizedRoleNameAsync(Role role, CancellationToken cancellationToken)

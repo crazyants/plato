@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Categories.Handlers;
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
+using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -23,26 +24,23 @@ namespace Plato.Categories
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-            //// Set-up event handler
-            //services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-
+            
             //// Feature event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
-            //// Repositories
+            // Repositories
             services.AddScoped<ICategoryRepository<Category>, CategoryRepository>();
             services.AddScoped<ICategoryDataRepository<CategoryData>, CategoryDataRepository>();
+            services.AddScoped<ICategoryRoleRepository<CategoryRole>, CategoryRoleRepository>();
 
-            //// Stores
+            // Stores
             services.AddScoped<ICategoryStore<Category>, CategoryStore>();
             services.AddScoped<ICategoryDataStore<CategoryData>, CategoryDataStore>();
+            services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
 
-            //// Managers
-            //services.AddScoped<IEntityManager<Entity>, EntityManager>();
-            //services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager>();
-
-
+            // Managers
+            services.AddScoped<ICategoryManager<Category>, CategoryManager<Category>>();
+        
         }
 
         public override void Configure(

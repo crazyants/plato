@@ -6,13 +6,13 @@ namespace Plato.Internal.Stores.Abstractions.Roles
 {
     public interface IPlatoRoleStore : IStore<Role>
     {
-        Task<Role> GetByName(string name);
+        Task<Role> GetByNameAsync(string name);
 
-        Task<IList<Role>> GetRolesByUserId(int userId);
+        Task<IList<Role>> GetRolesByUserIdAsync(int userId);
 
         Task<IEnumerable<Role>> GetRolesAsync();
         
-        Task<Role> GetByNormalizedName(string nameNormalized);
+        Task<Role> GetByNormalizedNameAsync(string nameNormalized);
 
         Task<IEnumerable<string>> GetRoleNamesAsync();
 

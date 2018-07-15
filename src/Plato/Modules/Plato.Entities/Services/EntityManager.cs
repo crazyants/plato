@@ -65,22 +65,22 @@ namespace Plato.Entities.Services
             // Validate
             if (model.Id > 0)
             {
-                return result.Failed(new EntityError($"{nameof(model.Id)} cannot be greater than zero when creating an entity"));
+                return result.Failed(new ActivityError($"{nameof(model.Id)} cannot be greater than zero when creating an entity"));
             }
 
             if (model.FeatureId == 0)
             {
-                return result.Failed(new EntityError($"{nameof(model.FeatureId)} must be greater than zero when creating an entity"));
+                return result.Failed(new ActivityError($"{nameof(model.FeatureId)} must be greater than zero when creating an entity"));
             }
 
             if (String.IsNullOrWhiteSpace(model.Title))
             {
-                return result.Failed(new EntityError($"{nameof(model.Title)} is required"));
+                return result.Failed(new ActivityError($"{nameof(model.Title)} is required"));
             }
 
             if (String.IsNullOrWhiteSpace(model.Message))
             {
-                return result.Failed(new EntityError($"{nameof(model.Message)} is required"));
+                return result.Failed(new ActivityError($"{nameof(model.Message)} is required"));
             }
 
             // Parse Html and message abstract
@@ -113,7 +113,7 @@ namespace Plato.Entities.Services
                 return result.Success(entity);
             }
 
-            return result.Failed(new EntityError("An unknown error occurred whilst attempting to create an eneity"));
+            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create an eneity"));
 
         }
 
@@ -133,17 +133,17 @@ namespace Plato.Entities.Services
             // Validate
             if (model.Id <= 0)
             {
-                return result.Failed(new EntityError($"{nameof(model.Id)} must be a valid existing entity id"));
+                return result.Failed(new ActivityError($"{nameof(model.Id)} must be a valid existing entity id"));
             }
 
             if (String.IsNullOrWhiteSpace(model.Title))
             {
-                return result.Failed(new EntityError($"{nameof(model.Title)} is required"));
+                return result.Failed(new ActivityError($"{nameof(model.Title)} is required"));
             }
 
             if (String.IsNullOrWhiteSpace(model.Message))
             {
-                return result.Failed(new EntityError($"{nameof(model.Message)} is required"));
+                return result.Failed(new ActivityError($"{nameof(model.Message)} is required"));
             }
 
             // Parse Html and message abstract
@@ -175,7 +175,7 @@ namespace Plato.Entities.Services
                 return result.Success(entity);
             }
 
-            return result.Failed(new EntityError("An unknown error occurred whilst attempting to create an eneity."));
+            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create an eneity."));
 
         }
 
@@ -192,7 +192,7 @@ namespace Plato.Entities.Services
             var entity = await _entityStore.GetByIdAsync(model.Id);
             if (entity == null)
             {
-                return result.Failed(new EntityError($"An entity with the id {model.Id} could not be found"));
+                return result.Failed(new ActivityError($"An entity with the id {model.Id} could not be found"));
             }
 
             // Raise Deleting event
@@ -220,7 +220,7 @@ namespace Plato.Entities.Services
                 return result.Success(entity);
             }
 
-            return result.Failed(new EntityError("An unknown error occurred whilst attempting to create an eneity."));
+            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create an eneity."));
 
         }
 

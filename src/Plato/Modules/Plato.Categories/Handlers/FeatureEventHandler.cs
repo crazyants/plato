@@ -396,12 +396,31 @@ namespace Plato.Categories.Handlers
             builder
                 .CreateTable(_categoryRoles)
                 .CreateDefaultProcedures(_categoryRoles);
-
-            builder
-                .CreateProcedure(new SchemaProcedure("SelectCategoryRolesByCategoryId", StoredProcedureType.SelectByKey)
+            
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        $"SelectCategoryRoleById",
+                        @" SELECT cr.*, r.[Name] AS RoleName
+                                FROM {prefix}_CategoryRoles cr WITH (nolock) 
+                                    INNER JOIN {prefix}_Roles r ON cr.RoleId = r.Id                                    
+                                WHERE (
+                                   cr.Id = @Id
+                                )")
+                    .ForTable(_categoryRoles)
+                    .WithParameter(_categoryRoles.PrimaryKeyColumn));
+            
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        $"SelectCategoryRolesByCategoryId",
+                        @" SELECT cr.*, r.[Name] AS RoleName
+                                FROM {prefix}_CategoryRoles cr WITH (nolock) 
+                                    INNER JOIN {prefix}_Roles r ON cr.RoleId = r.Id                                    
+                                WHERE (
+                                   cr.CategoryId = @CategoryId
+                                )")
                     .ForTable(_categoryRoles)
                     .WithParameter(new SchemaColumn() { Name = "CategoryId", DbType = DbType.Int32 }));
-
+            
             builder
                 .CreateProcedure(new SchemaProcedure("DeleteCategoryRolesByCategoryId", StoredProcedureType.DeleteByKey)
                     .ForTable(_categoryRoles)
@@ -418,7 +437,6 @@ namespace Plato.Categories.Handlers
                         }
                     ));
             
-
             builder.CreateProcedure(new SchemaProcedure("SelectCategoryRolesPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_categoryRoles)
                 .WithParameters(new List<SchemaColumn>()

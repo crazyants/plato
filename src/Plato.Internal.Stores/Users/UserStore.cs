@@ -354,7 +354,7 @@ namespace Plato.Internal.Stores.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var role = await _platoRoleStore.GetByName(roleName);
+            var role = await _platoRoleStore.GetByNameAsync(roleName);
             if (role != null)
             {
                 var userRole = await _platoUserRoleStore.CreateAsync(new UserRole()
@@ -370,7 +370,7 @@ namespace Plato.Internal.Stores.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var role = await _platoRoleStore.GetByName(roleName);
+            var role = await _platoRoleStore.GetByNameAsync(roleName);
             if (role != null)
             {
                 await _platoUserRoleStore.DeletetUserRole(user.Id, role.Id);
@@ -383,7 +383,7 @@ namespace Plato.Internal.Stores.Users
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var roles = await _platoRoleStore.GetRolesByUserId(user.Id);
+            var roles = await _platoRoleStore.GetRolesByUserIdAsync(user.Id);
             if (roles == null)
             {
                 return new List<string>();

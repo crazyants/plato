@@ -10,18 +10,18 @@ namespace Plato.Internal.Abstractions
 
         TResponse Response { get; }
 
-        IEnumerable<EntityError> Errors { get; }
+        IEnumerable<ActivityError> Errors { get; }
 
     }
 
-    public class EntityError
+    public class ActivityError
     {
 
-        public EntityError(string description) : this("", description)
+        public ActivityError(string description) : this("", description)
         {
         }
 
-        public EntityError(string code, string description)
+        public ActivityError(string code, string description)
         {
             this.Code = code;
             this.Description = description;

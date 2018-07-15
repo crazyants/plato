@@ -134,7 +134,7 @@ namespace Plato.Users.ViewProviders
 
         }
 
-        private async Task UpdateUserPhoto(User user, IFormFile file)
+        async Task UpdateUserPhoto(User user, IFormFile file)
         {
 
             if (file == null)

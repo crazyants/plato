@@ -14,6 +14,8 @@ namespace Plato.Categories.Models
 
         public int RoleId { get; set; }
 
+        public string RoleName { get; set; }
+
         public int CreatedUserId { get; set; }
 
         public DateTime? CreatedDate { get; set; }
@@ -35,6 +37,9 @@ namespace Plato.Categories.Models
             if (dr.ColumnIsNotNull("RoleId"))
                 RoleId = Convert.ToInt32(dr["RoleId"]);
 
+            if (dr.ColumnIsNotNull("RoleName"))
+                RoleName = Convert.ToString(dr["RoleName"]);
+            
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 

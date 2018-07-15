@@ -43,23 +43,23 @@ namespace Plato.Entities.Services
           
             if (reply.EntityId <= 0)
             {
-                return result.Failed(new EntityError($"{nameof(reply.EntityId)} must must be greater than zero"));
+                return result.Failed(new ActivityError($"{nameof(reply.EntityId)} must must be greater than zero"));
             }
             
             if (reply.Id > 0)
             {
-                return result.Failed(new EntityError($"{nameof(reply.Id)} cannot be greater than zero when creating a reply"));
+                return result.Failed(new ActivityError($"{nameof(reply.Id)} cannot be greater than zero when creating a reply"));
             }
             
             if (String.IsNullOrWhiteSpace(reply.Message))
             {
-                return result.Failed(new EntityError($"{nameof(reply.Message)} is required"));
+                return result.Failed(new ActivityError($"{nameof(reply.Message)} is required"));
             }
 
             var entity = await _entityStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
-                return result.Failed(new EntityError($"An entity with the Id '{reply.EntityId}' could not be found"));
+                return result.Failed(new ActivityError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
@@ -100,7 +100,7 @@ namespace Plato.Entities.Services
                 return result.Success(newReply);
             }
 
-            return result.Failed(new EntityError("An unknown error occurred whilst attempting to create the reply"));
+            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create the reply"));
 
         }
 
@@ -111,18 +111,18 @@ namespace Plato.Entities.Services
 
             if (reply.Id <= 0)
             {
-                return result.Failed(new EntityError($"{nameof(reply.Id)} must be a valid existing reply id"));
+                return result.Failed(new ActivityError($"{nameof(reply.Id)} must be a valid existing reply id"));
             }
             
             if (String.IsNullOrWhiteSpace(reply.Message))
             {
-                return result.Failed(new EntityError($"{nameof(reply.Message)} is required"));
+                return result.Failed(new ActivityError($"{nameof(reply.Message)} is required"));
             }
             
             var entity = await _entityStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
-                return result.Failed(new EntityError($"An entity with the Id '{reply.EntityId}' could not be found"));
+                return result.Failed(new ActivityError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
             
             var user = await _contextFacade.GetAuthenticatedUserAsync();
@@ -161,7 +161,7 @@ namespace Plato.Entities.Services
                 return result.Success(updatedReply);
             }
 
-            return result.Failed(new EntityError("An unknown error occurred whilst attempting to update the reply."));
+            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to update the reply."));
 
         }
 
@@ -173,7 +173,7 @@ namespace Plato.Entities.Services
             var reply = await _entityReplyStore.GetByIdAsync(id);
             if (reply == null)
             {
-                return result.Failed(new EntityError($"An entity reply with the id of '{id}' could not be found"));
+                return result.Failed(new ActivityError($"An entity reply with the id of '{id}' could not be found"));
             }
 
             // Raise Deleting event
@@ -201,7 +201,7 @@ namespace Plato.Entities.Services
                 return result.Success(reply);
             }
 
-            return result.Failed(new EntityError("An unknown error occurred whilst attempting to delete the reply."));
+            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to delete the reply."));
 
         }
         

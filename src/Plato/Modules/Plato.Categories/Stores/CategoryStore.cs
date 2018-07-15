@@ -42,21 +42,7 @@ namespace Plato.Categories.Stores
 
         public async Task<Category> CreateAsync(Category model)
         {
-
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
-            if (model.FeatureId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(model.FeatureId));
-            }
-
-
-            // We already need a featureId for the category
-
-
+            
             // transform meta data
             model.Data = await SerializeMetaDataAsync(model);
             
@@ -78,16 +64,6 @@ namespace Plato.Categories.Stores
 
         public async Task<Category> UpdateAsync(Category model)
         {
-
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
-            if (model.FeatureId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(model.FeatureId));
-            }
             
             // transform meta data
             model.Data = await SerializeMetaDataAsync(model);

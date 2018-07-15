@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Plato.Categories.Models;
+using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Discuss.Models;
@@ -17,13 +18,16 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         private readonly IContextFacade _contextFacade;
         private readonly ICategoryStore<Category> _categoryStore;
+        private readonly ICategoryManager<Category> _categoryManager;
 
         public ChannelViewProvider(
             IContextFacade contextFacade,
-            ICategoryStore<Category> categoryStore)
+            ICategoryStore<Category> categoryStore,
+            ICategoryManager<Category> categoryManager)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
+            _categoryManager = categoryManager;
         }
 
         #region "Implementation"
@@ -102,7 +106,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             {
 
                 var featureId = 0;
-                var feature = await GetcurrentFeature();
+                var feature = await _contextFacade.GetFeatureByAreaAsync();
                 if (feature != null)
                 {
                     featureId = feature.Id;
@@ -119,8 +123,15 @@ namespace Plato.Discuss.Channels.ViewProviders
                     IconCss = model.IconPrefix + model.IconCss
                 };
 
-                category = await _categoryStore.CreateAsync(category);
-            
+                var result = model.Id == 0
+                    ? await _categoryManager.CreateAsync(category)
+                    : await _categoryManager.UpdateAsync(category);
+
+                foreach (var error in result.Errors)
+                {
+                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                }
+
             }
 
             return await BuildEditAsync(category, updater);

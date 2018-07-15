@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 
 namespace Plato.Categories.Services
@@ -12,11 +13,13 @@ namespace Plato.Categories.Services
 
         Task<IActivityResult<TCategory>> DeleteAsync(TCategory model);
 
-        Task<IActivityResult<TCategory>> AddToRolesAsync(TCategory model, string roleName);
+        Task<IActivityResult<TCategory>> AddToRoleAsync(TCategory model, string roleName);
 
         Task<IActivityResult<TCategory>> RemoveFromRoleAsync(TCategory model, string roleName);
 
-        Task<IActivityResult<TCategory>> IsInRoleAsync(TCategory model, string roleName);
+        Task<bool> IsInRoleAsync(TCategory model, string roleName);
+        
+        Task<IEnumerable<string>> GetRolesAsync(TCategory model);
 
     }
 

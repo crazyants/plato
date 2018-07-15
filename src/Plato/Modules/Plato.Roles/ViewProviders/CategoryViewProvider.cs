@@ -1,11 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Plato.Categories.Models;
+using Plato.Categories.Services;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Roles.ViewModels;
@@ -17,18 +21,23 @@ namespace Plato.Roles.ViewProviders
 
         private const string HtmlName = "UserRoles";
 
-        private readonly UserManager<User> _userManager;
+        private readonly ICategoryManager<Category> _categoryManager;
         private readonly IPlatoRoleStore _platoRoleStore;
-        
+        private readonly IContextFacade _contextFacade;
+
+
         private readonly HttpRequest _request;
 
         public CategoryViewProvider(
-            UserManager<User> userManager,
             IPlatoRoleStore platoRoleStore,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            ICategoryManager<Category> categoryManager,
+            IContextFacade contextFacade)
         {
-            _userManager = userManager;
+          
             _platoRoleStore = platoRoleStore;
+            _categoryManager = categoryManager;
+            _contextFacade = contextFacade;
             _request = httpContextAccessor.HttpContext.Request;
         }
 
@@ -59,7 +68,7 @@ namespace Plato.Roles.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Category user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Category viewModel, IUpdateModel updater)
         {
 
             // Get available role names
@@ -81,7 +90,6 @@ namespace Plato.Roles.ViewProviders
                         {
                             rolesToAdd.Add(value);
                         }
-
                     }
                 }
             }
@@ -92,48 +100,77 @@ namespace Plato.Roles.ViewProviders
 
             if (!await updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(user, updater);
+                return await BuildEditAsync(viewModel, updater);
             }
 
             if (updater.ModelState.IsValid)
             {
 
-                //// Remove roles in two steps to prevent an iteration on a modified collection
-                //var rolesToRemove = new List<string>();
-                //foreach (var role in await _userManager.GetRolesAsync(user))
-                //{
-                //    if (!rolesToAdd.Contains(role))
-                //    {
-                //        rolesToRemove.Add(role);
-                //    }
-                //}
+                var featureId = 0;
+                var feature = await _contextFacade.GetFeatureByAreaAsync();
+                if (feature != null)
+                {
+                    featureId = feature.Id;
+                }
 
-                //foreach (var role in rolesToRemove)
-                //{
-                //    await _userManager.RemoveFromRoleAsync(user, role);
-                //}
+                viewModel.FeatureId = featureId;
 
-                //// Add new roles
-                //foreach (var role in rolesToAdd)
-                //{
-                //    if (!await _userManager.IsInRoleAsync(user, role))
-                //    {
-                //        await _userManager.AddToRoleAsync(user, role);
-                //    }
-                //}
+                var result = viewModel.Id == 0
+                    ? await _categoryManager.CreateAsync(viewModel)
+                    : await _categoryManager.UpdateAsync(viewModel);
+                
+                if (result.Succeeded)
+                {
 
-                //var result = await _userManager.UpdateAsync(user);
+                    // Remove roles in two steps to prevent an iteration on a modified collection
+                    var rolesToRemove = new List<string>();
+                    foreach (var role in await _categoryManager.GetRolesAsync(result.Response))
+                    {
+                        if (!rolesToAdd.Contains(role))
+                        {
+                            rolesToRemove.Add(role);
+                        }
+                    }
 
-                //foreach (var error in result.Errors)
-                //{
-                //    updater.ModelState.AddModelError(string.Empty, error.Description);
-                //}
+                    foreach (var role in rolesToRemove)
+                    {
+                        await _categoryManager.RemoveFromRoleAsync(result.Response, role);
+                    }
+
+                    // Add new roles
+                    foreach (var role in rolesToAdd)
+                    {
+                        if (!await _categoryManager.IsInRoleAsync(result.Response, role))
+                        {
+                            await _categoryManager.AddToRoleAsync(result.Response, role);
+                        }
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        updater.ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    
+                    return await BuildEditAsync(result.Response, updater);
+
+                }
 
             }
 
-            return await BuildEditAsync(user, updater);
+            return await BuildEditAsync(viewModel, updater);
 
         }
+
+        async Task<ShellModule> GetcurrentFeature()
+        {
+            var feature = await _contextFacade.GetFeatureByAreaAsync();
+            if (feature == null)
+            {
+                throw new Exception("No feature could be found");
+            }
+            return feature;
+        }
+
 
     }
 }

@@ -105,7 +105,7 @@ namespace Plato.Internal.Stores.Roles
 
         }
 
-        public async Task<Role> GetByName(string name)
+        public async Task<Role> GetByNameAsync(string name)
         {
 
             var key = CacheKey.GetRoleCacheKey(name);
@@ -132,7 +132,7 @@ namespace Plato.Internal.Stores.Roles
             return await _roleRepository.SelectRoles();
         }
 
-        public async Task<Role> GetByNormalizedName(string nameNormalized)
+        public async Task<Role> GetByNormalizedNameAsync(string nameNormalized)
         {
 
             var key = CacheKey.GetRoleCacheKey(nameNormalized);
@@ -181,7 +181,7 @@ namespace Plato.Internal.Stores.Roles
 
         }
 
-        public async Task<IList<Role>> GetRolesByUserId(int userId)
+        public async Task<IList<Role>> GetRolesByUserIdAsync(int userId)
         {
             
             var key = CacheKey.GetRolesByUserIdCacheKey(userId);
@@ -211,13 +211,13 @@ namespace Plato.Internal.Stores.Roles
 
         public async Task<IEnumerable<string>> GetRoleNamesByUserIdAsync(int userId)
         {
-            var roles = await GetRolesByUserId(userId);
+            var roles = await GetRolesByUserIdAsync(userId);
             return roles.Select(r => r.Name).OrderBy(r => r).ToList();
         }
 
         public async Task<IEnumerable<int>> GetRoleIdsByUserIdAsync(int userId)
         {
-            var roles = await GetRolesByUserId(userId);
+            var roles = await GetRolesByUserIdAsync(userId);
             return roles.Select(r => r.Id).OrderBy(r => r).ToList();
         }
 
