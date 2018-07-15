@@ -7,6 +7,12 @@ namespace Plato.Internal.Scripting.Abstractions
     public class ScriptBlock
     {
 
+        public ScriptBlock(string script)
+            : this(new HtmlString(script))
+        {
+
+        }
+
         public ScriptBlock(IHtmlContent content)
            : this(content, null)
         {

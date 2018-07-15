@@ -47,7 +47,7 @@ namespace Plato.Internal.Layout.TagHelpers
             var order = Priority ?? int.MaxValue;
             var block = new ScriptBlock(content, attributes, order, AllowMerge);
 
-            _scriptManager.SetScriptBlock(block, Section);
+            _scriptManager.RegisterScriptBlock(block, Section);
 
             output.SuppressOutput();
 

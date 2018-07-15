@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Html;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Plato.Internal.Assets.Abstractions
 {
@@ -38,8 +35,6 @@ namespace Plato.Internal.Assets.Abstractions
     {
         IncludeJavaScript,
         IncludeCss,
-        InlineJavaScript,
-        InlineCss,
         Meta
     }
 

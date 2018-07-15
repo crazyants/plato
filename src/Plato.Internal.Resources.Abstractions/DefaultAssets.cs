@@ -28,12 +28,6 @@ namespace Plato.Internal.Assets.Abstractions
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
-                    //new Resource()
-                    //{
-                    //    Url = "/css/app/markdown.css",
-                    //    Type = ResourceType.Css,
-                    //    Section = ResourceSection.Header
-                    //},
                     new Asset()
                     {
                         Url = "/css/app/plato.css",
@@ -61,12 +55,6 @@ namespace Plato.Internal.Assets.Abstractions
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     },
-                    //new Resource()
-                    //{
-                    //    Url = "/js/app/markdown.js",
-                    //    Type = ResourceType.JavaScript,
-                    //    Section = ResourceSection.Footer
-                    //},
                     new Asset()
                     {
                         Url = "/js/app/plato.js",

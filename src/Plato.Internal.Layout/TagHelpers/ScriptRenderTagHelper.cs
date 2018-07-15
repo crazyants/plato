@@ -13,7 +13,8 @@ namespace Plato.Internal.Layout.TagHelpers
     [HtmlTargetElement("scripts", Attributes = "section")]
     public class ScriptRenderTagHelper : TagHelper
     {
-        private const string ScriptTag = "script";
+
+        const string ScriptTag = "script";
 
         [HtmlAttributeName("section")]
         public ScriptSection Section { get; set; }
@@ -31,39 +32,48 @@ namespace Plato.Internal.Layout.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
 
+            output.TagName = null;
+
             var capture = _scriptManager.GetScriptBlocks(this.Section);
             if (capture == null)
             {
+                output.SuppressOutput();
                 return;
             }
 
-            var result = new HelperResult(async tw => await RenderBlocks(tw, capture));
-
-            output.TagName = null;
+            var result = new HelperResult(async textWriter => await RenderBlocks(textWriter, capture));
             output.Content.SetHtmlContent(result);
         }
 
-        async Task RenderBlocks(TextWriter tw, ScriptBlocks blocks)
+        async Task RenderBlocks(TextWriter textWriter, ScriptBlocks blocks)
         {
 
             var orderedBlocks = blocks.Blocks.OrderBy(b => b.Order);
             var orderedBlocksList = orderedBlocks.ToList();
 
+            // Get blocks we can merge
             var mergableBlocks = orderedBlocksList.Where(b =>
                 ((AutoMerge && (!b.CanMerge.HasValue || b.CanMerge.Value)) ||
                 (!AutoMerge && b.CanMerge.HasValue && b.CanMerge.Value)));
             
-            var otherBlocks = orderedBlocksList.Except(mergableBlocks);
-
+            // Convert mergables to list
             var mergableBlocksList = mergableBlocks.ToList();
 
-            await RenderMergedBlocks(tw, mergableBlocksList);
+            // Create a final list of blocks we need to merge
+            var finalList = mergableBlocksList.ToList();
 
-            await RenderSeparateBlocks(tw, otherBlocks);
+            // Render merged blocks
+            await RenderMergedBlocks(textWriter, finalList);
+            
+            // Get all other blocks we can't merge
+            var otherBlocks = orderedBlocksList.Except(mergableBlocksList);
+
+            // Render blocks we can't merge
+            await RenderSeparateBlocks(textWriter, otherBlocks);
 
         }
 
-        async Task RenderSeparateBlocks(TextWriter tw, IEnumerable<ScriptBlock> blocks)
+        async Task RenderSeparateBlocks(TextWriter textWriter, IEnumerable<ScriptBlock> blocks)
         {
             foreach (var block in blocks)
             {
@@ -73,10 +83,8 @@ namespace Plato.Internal.Layout.TagHelpers
                 };
                 tagBuilder.InnerHtml.AppendHtml(block.Content);
                 tagBuilder.MergeAttributes(block.Attributes, replaceExisting: true);
-                tagBuilder.WriteTo(tw, NullHtmlEncoder.Default);
-
-                await tw.WriteLineAsync();
-
+                tagBuilder.WriteTo(textWriter, NullHtmlEncoder.Default);
+                await textWriter.WriteLineAsync();
             }
 
         }

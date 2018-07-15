@@ -4,7 +4,7 @@
     {
         ScriptBlocks GetScriptBlocks(ScriptSection section);
 
-        void SetScriptBlock(ScriptBlock block, ScriptSection section);
+        void RegisterScriptBlock(ScriptBlock block, ScriptSection section);
 
     }
     

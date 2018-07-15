@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Scripting.Abstractions;
 
@@ -11,7 +7,7 @@ namespace Plato.Internal.Scripting
 
     public class ScriptManager : IScriptManager
     {
-        const string _key = "Script_";
+        const string ScriptKey = "js_";
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<ScriptManager> _logger;
@@ -28,7 +24,7 @@ namespace Plato.Internal.Scripting
 
         public ScriptBlocks GetScriptBlocks(ScriptSection section)
         {
-            var key = _key + section;
+            var key = ScriptKey + section;
             var context = _httpContextAccessor.HttpContext;
          
             if (!context.Items.ContainsKey(key))
@@ -46,10 +42,10 @@ namespace Plato.Internal.Scripting
         }
 
         // Register a ScriptCapture on the HttpContext for a specific section
-        public void SetScriptBlock(ScriptBlock block, ScriptSection section)
+        public void RegisterScriptBlock(ScriptBlock block, ScriptSection section)
         {
             
-            var key = _key + section;
+            var key = ScriptKey + section;
 
             ScriptBlocks blocks = null;
             var context = _httpContextAccessor.HttpContext;
@@ -64,7 +60,7 @@ namespace Plato.Internal.Scripting
                 context.Items.Add(key, blocks);
             }
 
-            blocks.Add(block.Content, block.Attributes, block.Order, block.CanMerge);
+            blocks.Add(block);
 
             if (_logger.IsEnabled(LogLevel.Information))
             {

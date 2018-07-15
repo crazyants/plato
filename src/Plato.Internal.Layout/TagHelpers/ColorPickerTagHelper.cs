@@ -1,11 +1,10 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Scripting.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
@@ -18,12 +17,16 @@ namespace Plato.Internal.Layout.TagHelpers
 
         [HtmlAttributeName("asp-color-picker")]
         public string Color { get; set; }
-        
-        public ColorPickerTagHelper(IAssetManager assetManager)
+
+        private readonly IScriptManager _scriptManager;
+
+        public ColorPickerTagHelper(
+            IAssetManager assetManager,
+            IScriptManager scriptManager)
         {
 
-            var script = "$('[data-provide=\"color-picker\"]').colorpicker( { format: \"hex\", align: \"left\" });";
-        
+            _scriptManager = scriptManager;
+            
             // Register JavasScript and CSSS with asset manager
             assetManager.SetAssets(new List<AssetEnvironment>
             {
@@ -41,13 +44,6 @@ namespace Plato.Internal.Layout.TagHelpers
                             Url = "/js/vendors/bootstrap-colorpicker.js",
                             Type = AssetType.IncludeJavaScript,
                             Section = AssetSection.Footer
-                        },
-                        new Asset()
-                        {
-                            InlineContent = new HtmlString(script),
-                            Type = AssetType.InlineJavaScript,
-                            Section = AssetSection.Footer,
-                            Priority = int.MaxValue,
                         }
                     })
             });
@@ -58,6 +54,13 @@ namespace Plato.Internal.Layout.TagHelpers
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
+
+            var script = "$('[data-provide=\"color-picker\"]').colorpicker( { format: \"hex\", align: \"left\" });";
+            
+            _scriptManager.RegisterScriptBlock(
+                new ScriptBlock(new HtmlString(script)),
+                ScriptSection.Footer);
+
             output.Attributes.SetAttribute("data-provide", "color-picker");
             return Task.CompletedTask;
         }

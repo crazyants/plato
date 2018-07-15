@@ -87,14 +87,14 @@ namespace Plato.Internal.Layout.TagHelpers
                             }
                             break;
 
-                        case AssetType.InlineJavaScript:
+                        //case AssetType.InlineJavaScript:
 
-                            sw.Write(BuildInlineJavaScript(asset));
-                            if (i < assets.Count)
-                            {
-                                sw.Write(sw.NewLine);
-                            }
-                            break;
+                        //    sw.Write(BuildInlineJavaScript(asset));
+                        //    if (i < assets.Count)
+                        //    {
+                        //        sw.Write(sw.NewLine);
+                        //    }
+                        //    break;
 
 
                     }
@@ -191,18 +191,18 @@ namespace Plato.Internal.Layout.TagHelpers
             return new HtmlString($"<script src=\"{asset.Url}\"></script>");
         }
 
-        IHtmlContent BuildInlineJavaScript(Asset asset)
-        {
-            var builder = new HtmlContentBuilder();
-            var content = builder
-                    .AppendHtml("<script>")
-                    .AppendHtml(System.Environment.NewLine)
-                    .AppendHtml(asset.InlineContent)
-                    .AppendHtml(System.Environment.NewLine)
-                    .AppendHtml("</script>");
+        //IHtmlContent BuildInlineJavaScript(Asset asset)
+        //{
+        //    var builder = new HtmlContentBuilder();
+        //    var content = builder
+        //            .AppendHtml("<script>")
+        //            .AppendHtml(System.Environment.NewLine)
+        //            .AppendHtml(asset.InlineContent)
+        //            .AppendHtml(System.Environment.NewLine)
+        //            .AppendHtml("</script>");
 
-            return content.ToHtmlString();
-        }
+        //    return content.ToHtmlString();
+        //}
 
 
         #endregion
