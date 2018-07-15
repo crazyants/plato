@@ -15,86 +15,75 @@
         }
     </card-title>
     <card-body>
-
         <div class="row">
-            <div class="col-6">
+            <div class="col-3">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="Name">
                         <label asp-for="Name"><strong>@T["Name"]</strong></label>
                         <span asp-validation-for="Name" class="text-danger"></span>
                         <div class="input-group">
-                            <input placeholder="@T["name your channel"]" asp-for="Name" class="form-control" autofocus />
+                            <input placeholder="@T["name your channel"]" asp-for="Name" class="form-control" autofocus/>
                         </div>
                     </div>
                 </fieldset>
             </div>
-            <div class="col-2">
+            <div class="col-4">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Description">
+                        <label asp-for="Name"><strong>@T["Description"]</strong></label>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <input type="text" placeholder="@T["optional channel description"]" asp-for="Description" rows="2" class="form-control"/>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-1">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="Icon">
+                        
                         <label asp-for="Name"><strong>@T["Icon"]</strong></label>
-                        <br />
-                        <a href="#selectIconModal" id="selectIconTrigger" class="btn btn-secondary text-center  text-muted" data-toggle="modal" data-target="#selectIconModal" role="button">
-
+                        <br/>
+                        <button type="button" href="#selectIconModal" id="selectIconTrigger" data-toggle="modal" data-target="#selectIconModal" class="btn btn-secondary text-muted" role="button">
                             @if (String.IsNullOrEmpty(Model.IconCss))
                             {
                                 <i class="fal fa-plus"></i>
-                                @T["Add Icon"]
                             }
                             else
                             {
                                 <i class="@Model.IconCss"></i>
-                                @T["Update Icon"]
                             }
-
-
-                        </a>
+                        </button>
 
                     </div>
                 </fieldset>
             </div>
-            <div class="col-2">
+            <div class="col-4">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="Icon">
-                        <label asp-for="BackColor"><strong>@T["Background"]</strong></label>
-                        <br />
-                        <div asp-color-picker="BackColor" class="input-group-prepend">
-                            <div class="input-group-text" style="cursor: pointer;">
-                                <i class="fa fa-square" style="color:@Model.BackColor"></i>
+                        
+                        <label asp-for="Name"><strong>@T["Colors"]</strong></label>
+
+                        <div class="input-group">
+                            
+                            <div asp-color-picker="BackColor" class="input-group-prepend">
+                                <div class="input-group-text" data-toggle="tooltip" title="@T["Background Color"]" style="cursor: pointer;">
+                                    <i class="fa fa-square" style="color: @Model.BackColor"></i>
+                                </div>
+                                <input type="text" asp-for="BackColor" class="form-control" style="width: 95px;" />
                             </div>
-                            <input type="text" asp-for="BackColor" class="form-control" style="width: 100px;" />
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
 
-            <div class="col-2">
-                <fieldset>
-                    <div class="form-group" asp-validation-class-for="Icon">
-                        <label asp-for="ForeColor"><strong>@T["Text"]</strong></label>
-                        <br />
-                        <div asp-color-picker="ForeColor" class="input-group-prepend">
-                            <div class="input-group-text" style="cursor: pointer;">
-                                <i class="fa fa-square" style="color:@Model.ForeColor"></i>
+                            <div asp-color-picker="ForeColor" class="input-group-prepend">
+                                <div class="input-group-text" data-toggle="tooltip" title="@T["Text Color"]" style="cursor: pointer;">
+                                    <i class="fa fa-square" style="color: @Model.ForeColor"></i>
+                                </div>
+                                <input type="text" asp-for="ForeColor" class="form-control" style="width: 95px;" />
                             </div>
-                            <input type="text" asp-for="ForeColor" class="form-control" style="width: 100px;" />
+
                         </div>
-                    </div>
-                </fieldset>
-            </div>
 
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <fieldset>
-                    <div class="form-group" asp-validation-class-for="Description">
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                        <textarea placeholder="@T["optional channel description"]" asp-for="Description" rows="2" class="form-control"></textarea>
                     </div>
                 </fieldset>
             </div>
         </div>
-
     </card-body>
 </card>
 
@@ -107,7 +96,7 @@
             </div>
             <div class="modal-body" style="max-height: 600px; overflow-y: scroll;">
                 
-                <div id="availableIcons">
+                <div id="availableIcons" data-icon-prefix="@Model.ChannelIcons.Prefix">
                     @foreach (var icon in Model.ChannelIcons.Icons)
                     {
                         var css = Model.IconPrefix + icon;
@@ -130,42 +119,54 @@
 
 </div>
 
-<script section="Footer">
 
-    $(function(win, doc, $) {
+<script section="Header">
+
+    // JavaScript in Header
+
+</script>
+
+<script section="Body">
+
+    // JavaScript in body
+
+</script>
+
+<script section="Footer" allow-merge="true">
+
+    // JavaScript in footer
+
+</script>
+
+<script section="Footer" allow-merge="true">
+
+        $(function(win, doc, $) {
 
         var selectedIcon = "";
 
         $(doc).ready(function () {
-            alert("read");
-            $('#selectIconModal').on('show.bs.modal',
-                function(e) {
 
-                    alert("init buttons")
-                    var $inputs = $("#availableIcons").find("input");
-                    $inputs.change(function() {
-                        alert(selectedIcon);
-                        selectedIcon = $(this).val();
+            var $icons = $("#availableIcons"),
+            $inputs = $icons.find("input[name=iconCss]"),
+            $checked = $icons.find("input[name=iconCss]:checked"),
+            iconPrefix = $icons.attr("data-icon-prefix");
 
-                    });
+        selectedIcon = $checked.val();
 
-
-                });
-
-            $('#selectIconModal').on('hidden.bs.modal',
-                function(e) {
-
-                    var $i = $("#selectIconTrigger").find("i");
-                    if ($i.length > 0) {
-                        i.removeAttr("class");
-                        i.addClass(selectedIcon);
-                    }
-
-
-                });
+            $inputs.change(function() {
+            selectedIcon = $(this).val();
         });
 
+        $('#selectIconModal').on('hidden.bs.modal',
+                function(e) {
+                    var $i = $("#selectIconTrigger").find("i");
+                    if ($i.length > 0) {
+            $i.removeClass()
+                .addClass(iconPrefix + selectedIcon);
+        }
+    });
+});
 
-    }(window, document, jQuery));
+}(window, document, jQuery));
 
 </script>

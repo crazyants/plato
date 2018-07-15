@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Scripting.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
@@ -19,7 +20,7 @@ namespace Plato.Internal.Layout.TagHelpers
         private static readonly string[] SystemAttributes = new[] { SectionAttributeName, PriorityAttributeName, AllowMergeAttributeName };
 
         [HtmlAttributeName(SectionAttributeName)]
-        public AssetSection Section { get; set; }
+        public ScriptSection Section { get; set; }
 
         [HtmlAttributeName(PriorityAttributeName)]
         public int? Priority { get; set; }
@@ -27,9 +28,12 @@ namespace Plato.Internal.Layout.TagHelpers
         [HtmlAttributeName(AllowMergeAttributeName)]
         public bool? AllowMerge { get; set; }
         
-        [ViewContext]
-        [HtmlAttributeNotBound]
-        public ViewContext ViewContext { get; set; }
+        private readonly IScriptManager _scriptManager;
+
+        public ScriptCaptureTagHelper(IScriptManager scriptManager)
+        {
+            _scriptManager = scriptManager;
+        }
         
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
@@ -37,23 +41,14 @@ namespace Plato.Internal.Layout.TagHelpers
             var attributes = context.AllAttributes
                 .Where(a => !SystemAttributes.Contains(a.Name))
                 .ToDictionary(k => k.Name, v => v.Value);
+
             var content = await output.GetChildContentAsync();
 
-            var key = $"Script_{Section.ToString()}";
-            ScriptCapture capture = null;
-            if (ViewContext.HttpContext.Items.ContainsKey(key))
-            {
-                capture = ViewContext.HttpContext.Items[key] as ScriptCapture;
-            }
-
-            if (capture == null)
-            {
-                capture = new ScriptCapture();
-                ViewContext.HttpContext.Items.Add(key, capture);
-            }
-
             var order = Priority ?? int.MaxValue;
-            capture.Add(content, attributes, order, AllowMerge);
+            var block = new ScriptBlock(content, attributes, order, AllowMerge);
+
+            _scriptManager.SetScriptBlock(block, Section);
+
             output.SuppressOutput();
 
         }

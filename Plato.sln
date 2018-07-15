@@ -133,7 +133,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Entities.Follow", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Categories", "src\Plato\Modules\Plato.Categories\Plato.Categories.csproj", "{405CC4C8-A17C-4C2B-9EF8-64601A116F2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Discuss.Channels", "src\Plato\Modules\Plato.Discuss.Channels\Plato.Discuss.Channels.csproj", "{25F13F03-8ED0-4B22-AB57-B79CF58672C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Discuss.Channels", "src\Plato\Modules\Plato.Discuss.Channels\Plato.Discuss.Channels.csproj", "{25F13F03-8ED0-4B22-AB57-B79CF58672C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Scripting", "src\Plato.Internal.Scripting\Plato.Internal.Scripting.csproj", "{62D4D486-D7AF-4D7C-BC74-93DC204B15E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Scripting.Abstractions", "src\Plato.Internal.Scripting.Abstractions\Plato.Internal.Scripting.Abstractions.csproj", "{6CDAB291-DA45-45D0-B38D-AA604DB59DFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -377,6 +381,14 @@ Global
 		{25F13F03-8ED0-4B22-AB57-B79CF58672C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25F13F03-8ED0-4B22-AB57-B79CF58672C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25F13F03-8ED0-4B22-AB57-B79CF58672C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62D4D486-D7AF-4D7C-BC74-93DC204B15E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62D4D486-D7AF-4D7C-BC74-93DC204B15E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62D4D486-D7AF-4D7C-BC74-93DC204B15E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62D4D486-D7AF-4D7C-BC74-93DC204B15E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CDAB291-DA45-45D0-B38D-AA604DB59DFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CDAB291-DA45-45D0-B38D-AA604DB59DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CDAB291-DA45-45D0-B38D-AA604DB59DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CDAB291-DA45-45D0-B38D-AA604DB59DFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -443,6 +455,8 @@ Global
 		{04F502F7-4A4F-40AC-B7C7-3886341D8269} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{405CC4C8-A17C-4C2B-9EF8-64601A116F2F} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{25F13F03-8ED0-4B22-AB57-B79CF58672C7} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{62D4D486-D7AF-4D7C-BC74-93DC204B15E6} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
+		{6CDAB291-DA45-45D0-B38D-AA604DB59DFA} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}
