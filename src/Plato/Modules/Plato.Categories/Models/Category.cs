@@ -85,8 +85,7 @@ namespace Plato.Categories.Models
             return ActivateInstanceOf<T>.Instance();
 
         }
-
-
+        
         public void PopulateModel(IDataReader dr)
         {
             

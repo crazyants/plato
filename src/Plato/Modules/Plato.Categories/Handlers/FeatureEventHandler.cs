@@ -393,6 +393,19 @@ namespace Plato.Categories.Handlers
                 .CreateTable(_categoryRoles)
                 .CreateDefaultProcedures(_categoryRoles);
 
+            builder.CreateProcedure(new SchemaProcedure("SelectCategoryRolesPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_categoryRoles)
+                .WithParameters(new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        Name = "Keywords",
+                        DbType = DbType.String,
+                        Length = "255"
+                    }
+                }));
+
+
         }
 
         #endregion

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Plato.Categories.Models;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
@@ -49,6 +50,10 @@ namespace Plato.Roles
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
 
+            // category view providers
+            services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();
+            services.AddScoped<IViewProvider<Category>, CategoryViewProvider>();
+            
             // role view providers
 
             services.AddScoped<IViewProviderManager<RolesIndexViewModel>, ViewProviderManager<RolesIndexViewModel>>();

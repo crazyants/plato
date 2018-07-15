@@ -395,8 +395,9 @@
 /* ------------------------- */
 
 .layout { margin-bottom: 2rem; }
+
 .layout-content .card,
-.layout-sidebar .card{ margin-top: 1.5rem; }
+.layout-sidebar .card { margin-top: 1.5rem; }
 
 .layout-content > div > .card:first-child,
 .layout-sidebar > div > .card:first-child { margin-top: 1rem; }
