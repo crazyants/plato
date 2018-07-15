@@ -196,6 +196,28 @@ namespace Plato.Categories.Repositories
 
         }
 
+        public async Task<bool> DeleteByRoleIdAndCategoryIdAsync(int roleId, int categoryId)
+        {
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Deleting category roles for category Id: {categoryId}");
+            }
+
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteCategoryRolesByRoleIdAndCategoryId",
+                    roleId,
+                    categoryId);
+            }
+
+            return success > 0 ? true : false;
+
+        }
+
         #endregion
 
         #region "Private Methods"

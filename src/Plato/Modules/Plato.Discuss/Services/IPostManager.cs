@@ -4,14 +4,14 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Discuss.Services
 {
-    public interface IPostManager<TModel> where TModel : class
+    public interface IPostManager<TEntity> where TEntity : class
     {
 
-        Task<IActivityResult<TModel>> CreateAsync(TModel model);
+        Task<IActivityResult<TEntity>> CreateAsync(TEntity model);
 
-        Task<IActivityResult<TModel>> UpdateAsync(TModel model);
+        Task<IActivityResult<TEntity>> UpdateAsync(TEntity model);
 
-        Task<IActivityResult<TModel>> DeleteAsync(int id);
+        Task<IActivityResult<TEntity>> DeleteAsync(TEntity model);
 
     }
 

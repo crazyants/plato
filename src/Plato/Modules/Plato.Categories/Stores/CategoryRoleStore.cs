@@ -126,6 +126,23 @@ namespace Plato.Categories.Stores
             return success;
 
         }
+
+        public async Task<bool> DeleteByRoleIdAndCategoryIdAsync(int roleId, int categoryId)
+        {
+            var success = await _categoryRoleRepository.DeleteByRoleIdAndCategoryIdAsync(roleId, categoryId);
+            if (success)
+            {
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Deleted category role for role '{0}' and category '{1}'",
+                      roleId, categoryId);
+                }
+                _cacheManager.CancelTokens(this.GetType());
+
+            }
+
+            return success;
+        }
     }
 
 }

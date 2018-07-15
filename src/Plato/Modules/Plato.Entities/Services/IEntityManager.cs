@@ -3,22 +3,23 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Entities.Services
 {
-    public interface IEntityManager<TModel> where TModel : class
+
+    public interface IEntityManager<TEntity> where TEntity : class
     {
 
-        event EntityEvents<TModel>.Handler Creating;
-        event EntityEvents<TModel>.Handler Created;
-        event EntityEvents<TModel>.Handler Updating;
-        event EntityEvents<TModel>.Handler Updated;
-        event EntityEvents<TModel>.Handler Deleting;
-        event EntityEvents<TModel>.Handler Deleted;
-      
-        Task<IActivityResult<TModel>> CreateAsync(TModel model);
+        event EntityEvents<TEntity>.Handler Creating;
+        event EntityEvents<TEntity>.Handler Created;
+        event EntityEvents<TEntity>.Handler Updating;
+        event EntityEvents<TEntity>.Handler Updated;
+        event EntityEvents<TEntity>.Handler Deleting;
+        event EntityEvents<TEntity>.Handler Deleted;
 
-        Task<IActivityResult<TModel>> UpdateAsync(TModel model);
+        Task<IActivityResult<TEntity>> CreateAsync(TEntity model);
 
-        Task<IActivityResult<TModel>> DeleteAsync(int id);
+        Task<IActivityResult<TEntity>> UpdateAsync(TEntity model);
+
+        Task<IActivityResult<TEntity>> DeleteAsync(TEntity model);
 
     }
-    
+
 }

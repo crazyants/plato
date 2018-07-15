@@ -17,6 +17,14 @@ namespace Plato.Internal.Abstractions
 
         public IEnumerable<EntityError> Errors => (IEnumerable<EntityError>)this._errors;
 
+        public ActivityResult<TResponse> Success()
+        {
+            return new ActivityResult<TResponse>()
+            {
+                Succeeded = true
+            };
+        }
+
         public ActivityResult<TResponse> Success(object response)
         {
             return new ActivityResult<TResponse>()

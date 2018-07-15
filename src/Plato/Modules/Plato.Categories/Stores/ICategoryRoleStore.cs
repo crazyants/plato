@@ -10,6 +10,8 @@ namespace Plato.Categories.Stores
         Task<IEnumerable<TModel>> GetByCategoryIdAsync(int categoryId);
 
         Task<bool> DeleteByCategoryIdAsync(int categoryId);
+        
+        Task<bool> DeleteByRoleIdAndCategoryIdAsync(int roleId, int categoryId);
 
     }
 

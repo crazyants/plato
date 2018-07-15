@@ -112,8 +112,9 @@ namespace Plato.Discuss.Services
             return await _entityReplyManager.UpdateAsync(model);
          
         }
+        
 
-        public async Task<IActivityResult<EntityReply>> DeleteAsync(int id)
+        public async Task<IActivityResult<EntityReply>> DeleteAsync(EntityReply model)
         {
 
             _entityReplyManager.Updated += (sender, args) =>
@@ -121,7 +122,7 @@ namespace Plato.Discuss.Services
 
             };
 
-            return await _entityReplyManager.DeleteAsync(id);
+            return await _entityReplyManager.DeleteAsync(model.Id);
             
         }
 

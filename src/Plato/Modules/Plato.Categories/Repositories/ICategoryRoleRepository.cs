@@ -11,6 +11,8 @@ namespace Plato.Categories.Repositories
 
         Task<bool> DeleteByCategoryIdAsync(int categoryId);
 
+        Task<bool> DeleteByRoleIdAndCategoryIdAsync(int roleId, int categoryId);
+
     }
 
 

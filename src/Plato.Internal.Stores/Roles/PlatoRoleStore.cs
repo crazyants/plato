@@ -13,7 +13,6 @@ namespace Plato.Internal.Stores.Roles
 {
     public class PlatoRoleStore : IPlatoRoleStore
     {
-
   
         #region "Constructor"
         

@@ -9,25 +9,25 @@ using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Entities.Services
 {
-    
-    public class EntityManager<TModel> : IEntityManager<TModel> where TModel : class, IEntity
+
+    public class EntityManager<TEntity> : IEntityManager<TEntity> where TEntity : class, IEntity
     {
 
-        public event EntityEvents<TModel>.Handler Creating;
-        public event EntityEvents<TModel>.Handler Created;
-        public event EntityEvents<TModel>.Handler Updating;
-        public event EntityEvents<TModel>.Handler Updated;
-        public event EntityEvents<TModel>.Handler Deleting;
-        public event EntityEvents<TModel>.Handler Deleted;
-   
+        public event EntityEvents<TEntity>.Handler Creating;
+        public event EntityEvents<TEntity>.Handler Created;
+        public event EntityEvents<TEntity>.Handler Updating;
+        public event EntityEvents<TEntity>.Handler Updated;
+        public event EntityEvents<TEntity>.Handler Deleting;
+        public event EntityEvents<TEntity>.Handler Deleted;
+
         #region "Constructor"
 
         private readonly IBroker _broker;
-        private readonly IEntityStore<TModel> _entityStore;
+        private readonly IEntityStore<TEntity> _entityStore;
         private readonly IContextFacade _contextFacade;
 
         public EntityManager(
-            IEntityStore<TModel> entityStore,
+            IEntityStore<TEntity> entityStore,
             IBroker broker,
             IContextFacade contextFacade)
         {
@@ -40,9 +40,9 @@ namespace Plato.Entities.Services
 
         #region "Implementation"
 
-        public async Task<IActivityResult<TModel>> CreateAsync(TModel model)
+        public async Task<IActivityResult<TEntity>> CreateAsync(TEntity model)
         {
-            var result = new ActivityResult<TModel>();
+            var result = new ActivityResult<TEntity>();
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             var feature = await _contextFacade.GetFeatureByAreaAsync();
@@ -88,10 +88,10 @@ namespace Plato.Entities.Services
             model.Abstract = await ParseAbstract(model.Message);
 
             // Raise creating event
-            Creating?.Invoke(this, new EntityEventArgs<TModel>(model));
+            Creating?.Invoke(this, new EntityEventArgs<TEntity>(model));
 
             // Publish EntityCreating event
-            await _broker.Pub<TModel>(this, new MessageOptions()
+            await _broker.Pub<TEntity>(this, new MessageOptions()
             {
                 Key = "EntityCreating"
             }, model);
@@ -101,10 +101,10 @@ namespace Plato.Entities.Services
             {
 
                 // Raise created event
-                Created?.Invoke(this, new EntityEventArgs<TModel>(entity));
+                Created?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
                 // Publish EntityCreated event
-                await _broker.Pub<TModel>(this, new MessageOptions()
+                await _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityCreated"
                 }, model);
@@ -117,9 +117,9 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IActivityResult<TModel>> UpdateAsync(TModel model)
+        public async Task<IActivityResult<TEntity>> UpdateAsync(TEntity model)
         {
-            var result = new ActivityResult<TModel>();
+            var result = new ActivityResult<TEntity>();
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
@@ -151,10 +151,10 @@ namespace Plato.Entities.Services
             model.Abstract = await ParseAbstract(model.Message);
 
             // Raise Updating event
-            Updating?.Invoke(this, new EntityEventArgs<TModel>(model));
+            Updating?.Invoke(this, new EntityEventArgs<TEntity>(model));
 
             // Publish EntityUpdating event
-            await _broker.Pub<TModel>(this, new MessageOptions()
+            await _broker.Pub<TEntity>(this, new MessageOptions()
             {
                 Key = "EntityUpdating"
             }, model);
@@ -164,10 +164,10 @@ namespace Plato.Entities.Services
             {
 
                 // Raise Updated event
-                Updated?.Invoke(this, new EntityEventArgs<TModel>(entity));
+                Updated?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
                 // Publish EntityUpdated event
-                await _broker.Pub<TModel>(this, new MessageOptions()
+                await _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityUpdated"
                 }, model);
@@ -179,22 +179,27 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IActivityResult<TModel>> DeleteAsync(int id)
+        public async Task<IActivityResult<TEntity>> DeleteAsync(TEntity model)
         {
 
-            var result = new ActivityResult<TModel>();
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
 
-            var entity = await _entityStore.GetByIdAsync(id);
+            var result = new ActivityResult<TEntity>();
+
+            var entity = await _entityStore.GetByIdAsync(model.Id);
             if (entity == null)
             {
-                return result.Failed(new EntityError($"An entity is the id {id} could not be found"));
+                return result.Failed(new EntityError($"An entity with the id {model.Id} could not be found"));
             }
 
             // Raise Deleting event
-            Deleting?.Invoke(this, new EntityEventArgs<TModel>(entity));
+            Deleting?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
             // Publish EntityDeleting event
-            await _broker.Pub<TModel>(this, new MessageOptions()
+            await _broker.Pub<TEntity>(this, new MessageOptions()
             {
                 Key = "EntityDeleting"
             }, entity);
@@ -204,10 +209,10 @@ namespace Plato.Entities.Services
             {
 
                 // Raise Deleted event
-                Deleted?.Invoke(this, new EntityEventArgs<TModel>(entity, true));
+                Deleted?.Invoke(this, new EntityEventArgs<TEntity>(entity, true));
 
                 // Publish EntityDeleted event
-                await _broker.Pub<TModel>(this, new MessageOptions()
+                await _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityDeleted"
                 }, entity);
@@ -257,5 +262,5 @@ namespace Plato.Entities.Services
         #endregion
 
     }
-    
+
 }

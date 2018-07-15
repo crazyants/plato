@@ -49,9 +49,9 @@ namespace Plato.Discuss.Services
             return await _entityManager.UpdateAsync(model);
         }
 
-        public async Task<IActivityResult<Topic>> DeleteAsync(int id)
+        public async Task<IActivityResult<Topic>> DeleteAsync(Topic model)
         {
-            return await _entityManager.DeleteAsync(id);
+            return await _entityManager.DeleteAsync(model);
         }
     }
 }
