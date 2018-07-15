@@ -28,7 +28,6 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\Plato.Internal.Resources.Abstractions\Plato.Internal.Assets.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

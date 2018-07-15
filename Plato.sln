@@ -111,11 +111,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Entities", "src\Plato
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Features.Abstractions", "src\Plato.Internal.Features.Abstractions\Plato.Internal.Features.Abstractions.csproj", "{64815E0A-2FE8-4BA6-AFF0-7316378404D7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Assets", "src\Plato.Internal.Resources\Plato.Internal.Assets.csproj", "{30E7F9E0-DF92-47AB-B332-9756DBD2063D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Assets", "src\Plato.Internal.Assets\Plato.Internal.Assets.csproj", "{30E7F9E0-DF92-47AB-B332-9756DBD2063D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Theming", "src\Plato\Modules\Plato.Theming\Plato.Theming.csproj", "{DA96A24A-3B31-40A9-9BE5-89D93636AFEF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Assets.Abstractions", "src\Plato.Internal.Resources.Abstractions\Plato.Internal.Assets.Abstractions.csproj", "{DDE68A18-C17E-43B8-BE48-6E9B729FAFF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Assets.Abstractions", "src\Plato.Internal.Assets.Abstractions\Plato.Internal.Assets.Abstractions.csproj", "{DDE68A18-C17E-43B8-BE48-6E9B729FAFF2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Messaging", "src\Plato.Internal.Messaging\Plato.Internal.Messaging.csproj", "{9A182728-6792-4806-8EC8-DD0B65155EED}"
 EndProject

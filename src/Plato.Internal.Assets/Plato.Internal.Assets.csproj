@@ -13,7 +13,7 @@
   </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Plato.Internal.Resources.Abstractions\Plato.Internal.Assets.Abstractions.csproj" />
+      <ProjectReference Include="..\Plato.Internal.Assets.Abstractions\Plato.Internal.Assets.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>
