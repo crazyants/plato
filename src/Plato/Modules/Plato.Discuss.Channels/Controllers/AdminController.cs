@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
+using Plato.Categories.Services;
 using Plato.Categories.Stores;
+using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -18,6 +20,7 @@ namespace Plato.Discuss.Channels.Controllers
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly ICategoryStore<Category> _categoryStore;
+        private readonly ICategoryManager<Category> _categoryManager;
         private readonly IViewProviderManager<Category> _viewProvider;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -34,13 +37,15 @@ namespace Plato.Discuss.Channels.Controllers
             ICategoryStore<Category> categoryStore,
             IViewProviderManager<Category> viewProvider,
             IBreadCrumbManager breadCrumbManager,
-            IAlerter alerter)
+            IAlerter alerter, 
+            ICategoryManager<Category> categoryManager)
         {
             _settingsStore = settingsStore;
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
             _viewProvider = viewProvider;
             _alerter = alerter;
+            _categoryManager = categoryManager;
             _breadCrumbManager = breadCrumbManager;
 
             T = htmlLocalizer;
@@ -88,19 +93,52 @@ namespace Plato.Discuss.Channels.Controllers
 
         [HttpPost]
         [ActionName(nameof(Create))]
-        public async Task<IActionResult> CreatePost()
+        public async Task<IActionResult> CreatePost(EditChannelViewModel viewModel)
         {
-            
-            var result = await _viewProvider.ProvideUpdateAsync(new Category(), this);
 
             if (!ModelState.IsValid)
             {
-                return View(result);
+                return View(viewModel);
             }
 
-            _alerter.Success(T["Channel Added Successfully!"]);
+            var featureId = 0;
+            var feature = await _contextFacade.GetFeatureByAreaAsync();
+            if (feature != null)
+            {
+                featureId = feature.Id;
+            }
 
-            return RedirectToAction(nameof(Index));
+            var category =  new Category()
+            {
+                FeatureId = featureId,
+                Name = viewModel.Name,
+                Description = viewModel.Description,
+                ForeColor = viewModel.ForeColor,
+                BackColor = viewModel.BackColor,
+                IconCss = viewModel.IconPrefix + viewModel.IconCss
+            };
+
+            var result = await _categoryManager.CreateAsync(category);
+            if (result.Succeeded)
+            {
+
+                await _viewProvider.ProvideUpdateAsync(result.Response, this);
+
+                _alerter.Success(T["Channel Added Successfully!"]);
+
+                return RedirectToAction(nameof(Index));
+
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return View(viewModel);
+
 
         }
         

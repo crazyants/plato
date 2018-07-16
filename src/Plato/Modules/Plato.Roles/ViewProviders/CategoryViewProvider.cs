@@ -52,10 +52,12 @@ namespace Plato.Roles.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Category user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Category category, IUpdateModel updater)
         {
 
-            var selectedRoles = await _platoRoleStore.GetRoleNamesByUserIdAsync(user.Id);
+            var selectedRoles = await _categoryManager.GetRolesAsync(category);
+
+            //var selectedRoles = await _platoRoleStore.GetRoleNamesByUserIdAsync(user.Id);
 
             return Views(
                 View<EditUserRolesViewModel>("Category.Roles.Edit.Content", model =>
@@ -68,7 +70,7 @@ namespace Plato.Roles.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Category viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Category category, IUpdateModel updater)
         {
 
             // Get available role names
@@ -100,64 +102,65 @@ namespace Plato.Roles.ViewProviders
 
             if (!await updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(viewModel, updater);
+                return await BuildEditAsync(category, updater);
             }
 
             if (updater.ModelState.IsValid)
             {
 
-                var featureId = 0;
-                var feature = await _contextFacade.GetFeatureByAreaAsync();
-                if (feature != null)
+                //var featureId = 0;
+                //var feature = await _contextFacade.GetFeatureByAreaAsync();
+                //if (feature != null)
+                //{
+                //    featureId = feature.Id;
+                //}
+
+                //category.FeatureId = featureId;
+
+                // Remove roles in two steps to prevent an iteration on a modified collection
+                var rolesToRemove = new List<string>();
+                foreach (var role in await _categoryManager.GetRolesAsync(category))
                 {
-                    featureId = feature.Id;
+                    if (!rolesToAdd.Contains(role))
+                    {
+                        rolesToRemove.Add(role);
+                    }
                 }
 
-                viewModel.FeatureId = featureId;
+                foreach (var role in rolesToRemove)
+                {
+                    await _categoryManager.RemoveFromRoleAsync(category, role);
+                }
 
-                var result = viewModel.Id == 0
-                    ? await _categoryManager.CreateAsync(viewModel)
-                    : await _categoryManager.UpdateAsync(viewModel);
+                // Add new roles
+                foreach (var role in rolesToAdd)
+                {
+                    if (!await _categoryManager.IsInRoleAsync(category, role))
+                    {
+                        await _categoryManager.AddToRoleAsync(category, role);
+                    }
+                }
                 
+                var result = await _categoryManager.UpdateAsync(category);
+
                 if (result.Succeeded)
                 {
 
-                    // Remove roles in two steps to prevent an iteration on a modified collection
-                    var rolesToRemove = new List<string>();
-                    foreach (var role in await _categoryManager.GetRolesAsync(result.Response))
-                    {
-                        if (!rolesToAdd.Contains(role))
-                        {
-                            rolesToRemove.Add(role);
-                        }
-                    }
+                    return await BuildEditAsync(result.Response, updater);
 
-                    foreach (var role in rolesToRemove)
-                    {
-                        await _categoryManager.RemoveFromRoleAsync(result.Response, role);
-                    }
-
-                    // Add new roles
-                    foreach (var role in rolesToAdd)
-                    {
-                        if (!await _categoryManager.IsInRoleAsync(result.Response, role))
-                        {
-                            await _categoryManager.AddToRoleAsync(result.Response, role);
-                        }
-                    }
-
+                }
+                else
+                {
                     foreach (var error in result.Errors)
                     {
                         updater.ModelState.AddModelError(string.Empty, error.Description);
                     }
-                    
-                    return await BuildEditAsync(result.Response, updater);
 
                 }
 
             }
 
-            return await BuildEditAsync(viewModel, updater);
+            return await BuildEditAsync(category, updater);
 
         }
 
