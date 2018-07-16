@@ -1,0 +1,5 @@
+Name: Plato Https
+Description: Ensures all requests within Plato are made over HTTPS.
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0

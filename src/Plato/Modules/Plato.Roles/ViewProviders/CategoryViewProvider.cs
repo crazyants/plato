@@ -57,8 +57,6 @@ namespace Plato.Roles.ViewProviders
 
             var selectedRoles = await _categoryManager.GetRolesAsync(category);
 
-            //var selectedRoles = await _platoRoleStore.GetRoleNamesByUserIdAsync(user.Id);
-
             return Views(
                 View<EditUserRolesViewModel>("Category.Roles.Edit.Content", model =>
                 {

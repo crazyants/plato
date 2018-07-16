@@ -135,9 +135,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Categories", "src\Pla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Discuss.Channels", "src\Plato\Modules\Plato.Discuss.Channels\Plato.Discuss.Channels.csproj", "{25F13F03-8ED0-4B22-AB57-B79CF58672C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Scripting", "src\Plato.Internal.Scripting\Plato.Internal.Scripting.csproj", "{62D4D486-D7AF-4D7C-BC74-93DC204B15E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Scripting", "src\Plato.Internal.Scripting\Plato.Internal.Scripting.csproj", "{62D4D486-D7AF-4D7C-BC74-93DC204B15E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Internal.Scripting.Abstractions", "src\Plato.Internal.Scripting.Abstractions\Plato.Internal.Scripting.Abstractions.csproj", "{6CDAB291-DA45-45D0-B38D-AA604DB59DFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Scripting.Abstractions", "src\Plato.Internal.Scripting.Abstractions\Plato.Internal.Scripting.Abstractions.csproj", "{6CDAB291-DA45-45D0-B38D-AA604DB59DFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plato.Https", "src\Plato\Modules\Plato.Https\Plato.Https.csproj", "{659D71A6-06AF-4D93-B3EB-F89309E36F6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -389,6 +391,10 @@ Global
 		{6CDAB291-DA45-45D0-B38D-AA604DB59DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CDAB291-DA45-45D0-B38D-AA604DB59DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CDAB291-DA45-45D0-B38D-AA604DB59DFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{659D71A6-06AF-4D93-B3EB-F89309E36F6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{659D71A6-06AF-4D93-B3EB-F89309E36F6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{659D71A6-06AF-4D93-B3EB-F89309E36F6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{659D71A6-06AF-4D93-B3EB-F89309E36F6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -457,6 +463,7 @@ Global
 		{25F13F03-8ED0-4B22-AB57-B79CF58672C7} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{62D4D486-D7AF-4D7C-BC74-93DC204B15E6} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{6CDAB291-DA45-45D0-B38D-AA604DB59DFA} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
+		{659D71A6-06AF-4D93-B3EB-F89309E36F6F} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

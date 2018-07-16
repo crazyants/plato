@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
 using System.Threading.Tasks;
@@ -8,25 +7,21 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models;
-using Plato.Internal.Models.Abstract;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstract;
-using Plato.Internal.Stores.Users;
 
 namespace Plato.Users.Controllers
 {
 
-    public class TestDocument2 : BaseDocument
-    {
+    //public class TestDocument2 : BaseDocument
+    //{
 
-        public string Title { get; set; }
+    //    public string Title { get; set; }
 
-        public string Body { get; set; }
-
-
-    }
-
-
+    //    public string Body { get; set; }
+        
+    //}
+    
     public class AccountController : Controller
     {
 
@@ -62,27 +57,27 @@ namespace Plato.Users.Controllers
             };
 
 
-            var doc = new TestDocument2()
-            {
-                Title = "test 123 123 ",
-                Body = "testing 123 123 123 "
-            };
+            //var doc = new TestDocument2()
+            //{
+            //    Title = "test 123 123 ",
+            //    Body = "testing 123 123 123 "
+            //};
             
-            var existingDoc = await _documentStore.GetAsync<TestDocument2>();
-            if (existingDoc != null)
-            {
-                var newDoc = await _documentStore.SaveAsync<TestDocument2>(existingDoc);
+            //var existingDoc = await _documentStore.GetAsync<TestDocument2>();
+            //if (existingDoc != null)
+            //{
+            //    var newDoc = await _documentStore.SaveAsync<TestDocument2>(existingDoc);
 
-                var sb = new StringBuilder();
+            //    var sb = new StringBuilder();
 
-                sb.Append("Id: " + newDoc.Id);
-                sb.Append("<br>");
-                sb.Append("Title: " + newDoc.Title);
-                sb.Append("<br>");
-                sb.Append("Body: " + newDoc.Body);
+            //    sb.Append("Id: " + newDoc.Id);
+            //    sb.Append("<br>");
+            //    sb.Append("Title: " + newDoc.Title);
+            //    sb.Append("<br>");
+            //    sb.Append("Body: " + newDoc.Body);
                 
-                ViewBag.docs = sb.ToString();
-            }
+            //    ViewBag.docs = sb.ToString();
+            //}
 
             //for (var i = 0; i < 500; i++)
             //{
@@ -94,11 +89,9 @@ namespace Plato.Users.Controllers
 
             //    }, password);
             //}
-
-
-
-            var user = _httpContextAccessor.HttpContext.User;
-            var claims = user.Claims;
+            
+            //var user = _httpContextAccessor.HttpContext.User;
+            //var claims = user.Claims;
 
             var model = new LoginViewModel();
             model.Email = "";
@@ -115,9 +108,7 @@ namespace Plato.Users.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
-
-
-         
+            
              // ----------
 
              ViewData["ReturnUrl"] = returnUrl;
@@ -148,8 +139,7 @@ namespace Plato.Users.Controllers
                 if (result.RequiresTwoFactor)
                 {
                     //return RedirectToAction(nameof(LoginWith2fa), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-
-
+                    
                     ModelState.AddModelError(string.Empty, "Account Required Two Factor Authentication.");
                     return View(model);
 
