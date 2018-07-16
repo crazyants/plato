@@ -5,13 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Plato.Internal.Models\Plato.Internal.Models.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.AspNetCore.Authorization">
-      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.authorization\2.0.4\lib\netstandard2.0\Microsoft.AspNetCore.Authorization.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Plato.Internal.Models\Plato.Internal.Models.csproj" />
   </ItemGroup>
 
 </Project>
