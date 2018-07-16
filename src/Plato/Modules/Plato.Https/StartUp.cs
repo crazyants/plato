@@ -1,8 +1,12 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
+using Plato.Https.Configuration;
 using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Https
@@ -10,30 +14,10 @@ namespace Plato.Https
     public class Startup : StartupBase
     {
 
-        // https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-2.1&tabs=visual-studio
-        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.httpspolicybuilderextensions.usehttpsredirection?view=aspnetcore-2.1
-
-
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            // Set HTTP Strict Transport Security options
-            // Used only for production as these headers are highly cachable
-            //services.AddHsts(options =>
-            //{
-            //    options.Preload = true;
-            //    options.IncludeSubDomains = true;
-            //    options.MaxAge = TimeSpan.FromDays(60);
-            //    options.ExcludedHosts.Add("example.com");
-            //    options.ExcludedHosts.Add("www.example.com");
-            //});
-
-            //// Configure options for UseHttpsRedirection below
-            //services.AddHttpsRedirection(options =>
-            //{
-            //    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-            //    options.HttpsPort = 5001;
-            //});
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<RewriteOptions>, HttpsRewriteOptionsConfiguration>());
 
         }
 
@@ -42,17 +26,13 @@ namespace Plato.Https
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+            
+            var rewriteOptions = new RewriteOptions();
 
-            //if (env.IsDevelopment())
-            //{
+            // Configure the rewrite options.
+            serviceProvider.GetService<IConfigureOptions<RewriteOptions>>().Configure(rewriteOptions);
 
-            //}
-            //else
-            //{
-            //    app.UseHsts();
-            //}
-
-            //app.UseHttpsRedirection();
+            app.UseRewriter(rewriteOptions);
 
         }
     }

@@ -27,49 +27,51 @@ namespace Plato.Internal.Hosting.Web.Routing
             _next = next;
             _logger = logger;
         }
-        
+
         public async Task Invoke(HttpContext httpContext)
         {
             if (_logger.IsEnabled(LogLevel.Information))
                 _logger.LogInformation("Begin Routing Request");
-            
-            var shellSettings = (ShellSettings)httpContext.Features[typeof(ShellSettings)];
-            
+
+            var shellSettings = (ShellSettings) httpContext.Features[typeof(ShellSettings)];
+
             // Define a PathBase for the current request that is the RequestUrlPrefix.
             // This will allow any view to reference ~/ as the tenant's base url.
             // Because IIS or another middleware might have already set it, we just append the tenant prefix value.
-            if (!string.IsNullOrEmpty(shellSettings.RequestedUrlPrefix))
+            if (!String.IsNullOrEmpty(shellSettings.RequestedUrlPrefix))
             {
                 httpContext.Request.PathBase += ("/" + shellSettings.RequestedUrlPrefix);
-                httpContext.Request.Path = httpContext.Request.Path.ToString().Substring(httpContext.Request.PathBase.Value.Length);
+                httpContext.Request.Path = httpContext.Request.Path.ToString()
+                    .Substring(httpContext.Request.PathBase.Value.Length);
             }
-            
+
             // Do we need to rebuild the pipeline ?
             var rebuildPipeline = httpContext.Items["BuildPipeline"] != null;
-            if (rebuildPipeline && _pipelines.ContainsKey(shellSettings.Name))
+            lock (_pipelines)
             {
-                _pipelines.Remove(shellSettings.Name);
+                if (rebuildPipeline && _pipelines.ContainsKey(shellSettings.Name))
+                {
+                    _pipelines.Remove(shellSettings.Name);
+                }
             }
 
-            if (!_pipelines.TryGetValue(shellSettings.Name, out var pipeline))
+            // Building a pipeline can't be done by two requests
+            RequestDelegate pipeline;
+            lock (_pipelines)
             {
-                // Building a pipeline can't be done by two requests
-                lock (_pipelines)
+                if (!_pipelines.TryGetValue(shellSettings.Name, out pipeline))
                 {
-                    if (!_pipelines.TryGetValue(shellSettings.Name, out pipeline))
-                    {
-                        pipeline = BuildTenantPipeline(shellSettings, httpContext.RequestServices);
+                    pipeline = BuildTenantPipeline(shellSettings, httpContext.RequestServices);
 
-                        //if (shellSettings.State == Shell.Models.TenantState.Running)
-                        //{
-                       
-                            _pipelines.Add(shellSettings.Name, pipeline);
-                        //}
+                    if (shellSettings.State == TenantState.Running)
+                    {
+                        _pipelines.Add(shellSettings.Name, pipeline);
                     }
                 }
             }
 
             await pipeline.Invoke(httpContext);
+
         }
 
         // Build the middleware pipeline for the current tenant
