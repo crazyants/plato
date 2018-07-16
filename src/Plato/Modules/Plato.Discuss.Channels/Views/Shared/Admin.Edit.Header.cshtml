@@ -1,6 +1,6 @@
 ﻿@model EditChannelViewModel
 
-@if (Model.Id == 0)
+@if (Model.IsNewChannel)
 {
     <h4>@T["Add Channel"]</h4>
     <span class="text-muted">@T["Channels help group & organize conversations."]</span>

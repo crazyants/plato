@@ -1,18 +1,16 @@
 ﻿@model EditChannelViewModel
 
-<input type="hidden" asp-for="Id" />
-<input type="hidden" asp-for="FeatureId" />
 <input type="hidden" asp-for="IconPrefix" />
 
 <card>
     <card-title>
-        @if (Model.Id > 0)
+        @if (Model.IsNewChannel)
         {
-            <h6 class="card-title">@T["Edit Channel"]</h6>
+        <h6 class="card-title">@T["Add Channel"]</h6>
         }
         else
         {
-            <h6 class="card-title">@T["Add Channel"]</h6>
+        <h6 class="card-title">@T["Edit Channel"]</h6>
         }
     </card-title>
     <card-body>
@@ -123,7 +121,7 @@
             </div>
             <div class="modal-footer">
                 <button tyoe="button" class="btn btn-primary" data-dismiss="modal">
-                    @T["Update Icon"]
+                    @T["Use Selected Icon"]
                 </button>
             </div>
         </div>
@@ -137,29 +135,34 @@
 
         var selectedIcon = "";
 
-        $(doc).ready(function () {
+            $(doc).ready(function() {
 
-            var $icons = $("#availableIcons"),
-            $inputs = $icons.find("input[name=iconCss]"),
-            $checked = $icons.find("input[name=iconCss]:checked"),
-            iconPrefix = $icons.attr("data-icon-prefix");
+                var $icons = $("#availableIcons"),
+                    $inputs = $icons.find("input[name=iconCss]"),
+                    $checked = $icons.find("input[name=iconCss]:checked"),
+                    iconPrefix = $icons.attr("data-icon-prefix");
 
-        selectedIcon = $checked.val();
+                if ($checked.length > 0) {
+                    selectedIcon = $checked.val();
+                }
 
-            $inputs.change(function() {
-            selectedIcon = $(this).val();
-        });
+                $inputs.change(function() {
+                    selectedIcon = $(this).val();
+                });
 
-        $('#selectIconModal').on('hidden.bs.modal',
-                function(e) {
-                    var $i = $("#selectIconTrigger").find("i");
-                    if ($i.length > 0) {
-            $i.removeClass()
-                .addClass(iconPrefix + selectedIcon);
-        }
-    });
-});
+                $('#selectIconModal').on('hidden.bs.modal',
+                    function (e) {
+                        if (selectedIcon === "") {
+                            return;
+                        }
+                        var $i = $("#selectIconTrigger").find("i");
+                        if ($i.length > 0) {
+                            $i.removeClass()
+                                .addClass(iconPrefix + selectedIcon);
+                        }
+                    });
+            });
 
-}(window, document, jQuery));
+        }(window, document, jQuery));
 
 </script>

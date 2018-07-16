@@ -1,6 +1,6 @@
 ﻿@model EditChannelViewModel
 
-@if (Model.Id > 0)
+@if (!Model.IsNewChannel)
 {
     <button type="submit" asp-controller="Admin" asp-action="Delete" asp-route-id="@Model.Id.ToString()" class="btn btn-danger btn-sm">
         <i class="fal fa-trash"></i>

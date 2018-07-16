@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
@@ -18,17 +19,19 @@ namespace Plato.Categories.Services
         private readonly ICategoryRoleStore<CategoryRole> _categoryRoleStore;
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoRoleStore _roleStore;
+        private readonly ICategoryDataStore<CategoryData> _categoryDataStore;
 
         public CategoryManager(
             ICategoryStore<TCategory> categoryStore,
             ICategoryRoleStore<CategoryRole> categoryRoleStore,
             IPlatoRoleStore roleStore, 
-            IContextFacade contextFacade)
+            IContextFacade contextFacade, ICategoryDataStore<CategoryData> categoryDataStore)
         {
             _categoryStore = categoryStore;
             _categoryRoleStore = categoryRoleStore;
             _roleStore = roleStore;
             _contextFacade = contextFacade;
+            _categoryDataStore = categoryDataStore;
         }
 
         #region "Implementation"
@@ -89,7 +92,7 @@ namespace Plato.Categories.Services
 
             if (model.FeatureId <= 0)
             {
-                throw new ArgumentNullException(nameof(model));
+                throw new ArgumentNullException(nameof(model.FeatureId));
             }
             
             if (model.Id <= 0)
@@ -128,12 +131,25 @@ namespace Plato.Categories.Services
             }
 
             var result = new ActivityResult<TCategory>();
-            
-            var success = await _categoryStore.DeleteAsync(model);
-            if (success)
+            if (await _categoryStore.DeleteAsync(model))
             {
+                // Delete category roles
+                await _categoryRoleStore.DeleteByCategoryIdAsync(model.Id);
+
+                // Delete category data
+                var data = await _categoryDataStore.GetByCategoryIdAsync(model.Id);
+                if (data != null)
+                {
+                    foreach (var item in data)
+                    {
+                        await _categoryDataStore.DeleteAsync(item);
+                    }
+                    
+                }
+
                 // Return success
                 return result.Success();
+
             }
             
             return result.Failed(new ActivityError("An unknown error occurred whilst attempting to delete the category"));

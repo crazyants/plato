@@ -50,31 +50,31 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(Category viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Category category, IUpdateModel updater)
         {
 
             var defaultIcons = new DefaultIcons();
 
             EditChannelViewModel editChannelViewModel = null;
-            if (viewModel.Id == 0)
+            if (category.Id == 0)
             {
                 editChannelViewModel = new EditChannelViewModel()
                 {
                     IconPrefix = defaultIcons.Prefix,
-                    ChannelIcons = defaultIcons
+                    ChannelIcons = defaultIcons,
+                    IsNewChannel = true
                 };
             }
             else
             {
                 editChannelViewModel = new EditChannelViewModel()
                 {
-                    Id = viewModel.Id,
-                    FeatureId = viewModel.FeatureId,
-                    Name = viewModel.Name,
-                    Description = viewModel.Description,
-                    ForeColor = viewModel.ForeColor,
-                    BackColor = viewModel.BackColor,
-                    IconCss = viewModel.IconCss,
+                    Id = category.Id,
+                    Name = category.Name,
+                    Description = category.Description,
+                    ForeColor = category.ForeColor,
+                    BackColor = category.BackColor,
+                    IconCss = category.IconCss,
                     IconPrefix = defaultIcons.Prefix,
                     ChannelIcons = defaultIcons
                 };
@@ -105,16 +105,22 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-                
+
+                var iconCss = model.IconCss;
+                if (!string.IsNullOrEmpty(iconCss))
+                {
+                    iconCss = model.IconPrefix + iconCss;
+                }
+
                 var result = await _categoryManager.UpdateAsync(new Category()
                 {
-                    Id = model.Id,
-                    FeatureId = model.FeatureId,
+                    Id = category.Id,
+                    FeatureId = category.FeatureId,
                     Name = model.Name,
                     Description = model.Description,
                     ForeColor = model.ForeColor,
                     BackColor = model.BackColor,
-                    IconCss = model.IconPrefix + model.IconCss
+                    IconCss = iconCss
                 });
 
                 foreach (var error in result.Errors)

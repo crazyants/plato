@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
@@ -18,7 +19,6 @@ namespace Plato.Discuss.Channels.Controllers
     public class AdminController : Controller, IUpdateModel
     {
         private readonly IContextFacade _contextFacade;
-        private readonly ISiteSettingsStore _settingsStore;
         private readonly ICategoryStore<Category> _categoryStore;
         private readonly ICategoryManager<Category> _categoryManager;
         private readonly IViewProviderManager<Category> _viewProvider;
@@ -32,7 +32,6 @@ namespace Plato.Discuss.Channels.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
-            ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             ICategoryStore<Category> categoryStore,
             IViewProviderManager<Category> viewProvider,
@@ -40,7 +39,6 @@ namespace Plato.Discuss.Channels.Controllers
             IAlerter alerter, 
             ICategoryManager<Category> categoryManager)
         {
-            _settingsStore = settingsStore;
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
             _viewProvider = viewProvider;
@@ -85,10 +83,15 @@ namespace Plato.Discuss.Channels.Controllers
                     .LocalNav()
                 ).Add(S["Add Channel"]);
             });
+            
+            // We need to pass along the featureId
+            var model = await _viewProvider.ProvideEditAsync(new Category
+            {
+                FeatureId = await GetFeatureIdAsync() 
 
-
-            var model = await _viewProvider.ProvideEditAsync(new Category(), this);
+            }, this);
             return View(model);
+
         }
 
         [HttpPost]
@@ -101,21 +104,20 @@ namespace Plato.Discuss.Channels.Controllers
                 return View(viewModel);
             }
 
-            var featureId = 0;
-            var feature = await _contextFacade.GetFeatureByAreaAsync();
-            if (feature != null)
+            var iconCss = viewModel.IconCss;
+            if (!string.IsNullOrEmpty(iconCss))
             {
-                featureId = feature.Id;
+                iconCss = viewModel.IconPrefix + iconCss;
             }
 
             var category =  new Category()
             {
-                FeatureId = featureId,
+                FeatureId = await GetFeatureIdAsync(),
                 Name = viewModel.Name,
                 Description = viewModel.Description,
                 ForeColor = viewModel.ForeColor,
                 BackColor = viewModel.BackColor,
-                IconCss = viewModel.IconPrefix + viewModel.IconCss
+                IconCss = iconCss
             };
 
             var result = await _categoryManager.CreateAsync(category);
@@ -138,8 +140,7 @@ namespace Plato.Discuss.Channels.Controllers
             }
 
             return View(viewModel);
-
-
+            
         }
         
         public async Task<IActionResult> Edit(int id)
@@ -203,9 +204,9 @@ namespace Plato.Discuss.Channels.Controllers
                 return NotFound();
             }
 
-            var success = await _categoryStore.DeleteAsync(currentCategory);
+            var result = await _categoryManager.DeleteAsync(currentCategory);
 
-            if (success)
+            if (result.Succeeded)
             {
                 _alerter.Success(T["Channel Deleted Successfully"]);
             }
@@ -218,6 +219,18 @@ namespace Plato.Discuss.Channels.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+
+        async Task<int> GetFeatureIdAsync()
+        {
+            var feature = await _contextFacade.GetFeatureByAreaAsync();
+            if (feature != null)
+            {
+                return feature.Id;
+            }
+
+            throw new Exception($"Could not find required feture registration for Plato.Discuss.Channels");
+        }
 
     }
 

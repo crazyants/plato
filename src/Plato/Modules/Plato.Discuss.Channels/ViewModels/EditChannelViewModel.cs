@@ -6,10 +6,9 @@ namespace Plato.Discuss.Channels.ViewModels
     public class EditChannelViewModel
     {
 
+        public bool IsNewChannel { get; set; }
+
         public int Id { get; set; }
-
-        public int FeatureId { get; set; }
-
 
         [Required]
         [StringLength(255)]
