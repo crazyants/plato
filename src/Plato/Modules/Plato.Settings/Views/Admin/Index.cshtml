@@ -30,28 +30,9 @@
                         </div>
                     </fieldset>
 
-                    <fieldset>
-                        <div class="form-group" asp-validation-class-for="ApiKey">
-                            <label asp-for="@Model.ApiKey">
-                                <strong>@T["API Key"]</strong>
-                                <span asp-validation-for="@Model.ApiKey" class="text-danger"></span>
-                                <br/>
-                                <span class="text-muted">@T["The API key is required to help secure client side api requests."]</span>
-                            </label>
-                            <input asp-for="@Model.ApiKey" class="form-control"/>
-                            <br/>
-                            <a asp-action="CreateApiKey">
-                                <i class="fal fa-key"></i>
-                                @T["Generate a new API Key"]
-                            </a>
-                        </div>
-                    </fieldset>
-
 
                 </div>
             </div>
-            
-            
             
 
         </card-body>

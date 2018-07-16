@@ -25,8 +25,7 @@ namespace Plato.Https
 
             // Stores
             services.AddScoped<IHttpsSettingsStore<HttpsSettings>, HttpsSettingsStore>();
-
-
+            
             // Rewrite configuration
             services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<RewriteOptions>, HttpsRewriteOptionsConfiguration>());
 

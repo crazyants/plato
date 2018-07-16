@@ -1,5 +1,5 @@
 Name: Plato Https
-Description: Ensures all requests within Plato are made over HTTPS.
+Description: Provides settings allowing you to enforce HTTPS within Plato.
 Author: InstantASP
 Version: 1.0.0
 PlatoVersion: 1.0.0

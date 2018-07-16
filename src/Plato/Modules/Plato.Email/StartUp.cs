@@ -55,8 +55,7 @@ namespace Plato.Email
             IServiceProvider serviceProvider)
         {
 
-
-
+       
 
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -65,11 +64,7 @@ namespace Plato.Settings.Controllers
                     .LocalNav()
                 ).Add(S["Settings"]);
             });
-
-
-
-
-
+            
             return View(await GetModel());
 
         }
@@ -82,10 +77,7 @@ namespace Plato.Settings.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-
-
-            settings.ApiKey = System.Guid.NewGuid().ToString();
-         
+            
             var result = await _siteSettingsStore.SaveAsync(settings);
             if (result != null)
             {
@@ -103,14 +95,12 @@ namespace Plato.Settings.Controllers
         [ActionName(nameof(Index))]
         public async Task<IActionResult> IndexPost(SiteSettingsViewModel viewModel)
         {
-
-
+            
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
             //{
             //    return Unauthorized();
             //}
-
-
+            
             if (!ModelState.IsValid)
             {
                 return View(await GetModel());
@@ -149,17 +139,14 @@ namespace Plato.Settings.Controllers
             {
                 return new SiteSettingsViewModel()
                 {
-                    SiteName = settings.SiteName,
-                    ApiKey = settings.ApiKey
-
+                    SiteName = settings.SiteName
                 };
             }
             
             // return default settings
             return new SiteSettingsViewModel()
             {
-                SiteName = "Example Site",
-                ApiKey = System.Guid.NewGuid().ToString()
+                SiteName = "Example Site"
             };
 
         }

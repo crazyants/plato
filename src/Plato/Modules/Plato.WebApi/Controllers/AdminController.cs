@@ -26,8 +26,7 @@ namespace Plato.WebApi.Controllers
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
-
-
+        
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,

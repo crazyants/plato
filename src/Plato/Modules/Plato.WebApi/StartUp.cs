@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.WebApi.Configuration;
 using Plato.WebApi.Middleware;
 using Plato.WebApi.Services;
 using Plato.WebApi.ViewProviders;
@@ -26,6 +29,11 @@ namespace Plato.WebApi
         public override void ConfigureServices(IServiceCollection services)
         {
 
+            // Rewrite web api configuration
+            //services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<WebApiOptions>, WebApiOptionsConfiguration>());
+            //services.AddTransient<IConfigureOptions<WebApiOptions>, WebApiOptionsConfiguration>();
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<WebApiOptions>, WebApiOptionsConfiguration>());
+
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
 
@@ -36,6 +44,7 @@ namespace Plato.WebApi
             // Services
             services.AddScoped<IWebApiAuthenticator, WebApiAuthenticator>();
 
+            
         }
 
         public override void Configure(
@@ -43,7 +52,7 @@ namespace Plato.WebApi
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-
+            
             // Register client options middleware 
             app.UseMiddleware<WebApiClientOptionsMiddleware>();
 

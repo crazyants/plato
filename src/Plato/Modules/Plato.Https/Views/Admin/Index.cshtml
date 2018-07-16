@@ -15,9 +15,6 @@
         </card-title>
         <card-body>
             
-       
-      
-            
             <fieldset>
                 <div class="form-group" asp-validation-class-for="EnablePolling">
                     <label asp-for="@Model.EnforceSsl">
@@ -25,7 +22,7 @@
                             <input class="form-check-input" asp-for="EnforceSsl"/>
                             <span class="switch-slider"></span>
                         </span>
-                        @T["Enforce SSL"]
+                        @T["Enforce HTTPS / SSL"]
                     </label>
                 </div>
             </fieldset>
@@ -37,7 +34,7 @@
                             <input class="form-check-input" asp-for="UsePermanentRedirect"/>
                             <span class="switch-slider"></span>
                         </span>
-                        @T["Use 301 Permanently moved status code"]
+                        @T["Use 301 permanent redirect"]
                     </label>
                 </div>
             </fieldset>
