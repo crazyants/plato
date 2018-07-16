@@ -20,10 +20,10 @@
                     <fieldset>
                         <div class="form-group" asp-validation-class-for="DefaultFrom">
                             <label asp-for="@Model.SmtpSettings.DefaultFrom">
-                                <strong>@T["Default From"]</strong>
+                                <strong>@T["Default Sender"]</strong>
                                 <span asp-validation-for="@Model.SmtpSettings.DefaultFrom" class="text-danger"></span>
                                 <br />
-                                <span class="text-muted">@T["The email address messages will appear to be sent from."]</span>
+                                <span class="text-muted">@T["Application generated emails will appear to be sent from this email address"]</span>
                             </label>
                             <input placeholder="noreply@yourdomain.com" asp-for="@Model.SmtpSettings.DefaultFrom" class="form-control" autofocus />
                         </div>
@@ -110,7 +110,7 @@
                                     <input class="form-check-input" asp-for="@Model.SmtpSettings.EnableSsl"/>
                                     <span class="switch-slider"></span>
                                 </span>
-                                @T["Enable TLS / SSL"]
+                                @T["Enable TLS / SSL for SMTP Server"]
                             </label>
                         </div>
                     </fieldset>

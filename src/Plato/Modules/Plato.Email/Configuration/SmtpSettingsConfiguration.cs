@@ -5,12 +5,12 @@ using Microsoft.Extensions.Options;
 using Plato.Email.Models;
 using Plato.Email.Stores;
 
-namespace Plato.Email.Services
+namespace Plato.Email.Configuration
 {
     public class SmtpSettingsConfiguration : IConfigureOptions<SmtpSettings>
     {
         
-        private IEmailSettingsStore<EmailSettings> _emailSettingsStore;
+        private readonly IEmailSettingsStore<EmailSettings> _emailSettingsStore;
         private readonly IDataProtectionProvider _dataProtectionProvider;
         private readonly ILogger<SmtpSettingsConfiguration> _logger;
 

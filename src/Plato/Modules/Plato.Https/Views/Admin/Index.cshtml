@@ -1,0 +1,67 @@
+﻿@model HttpsSettingsViewModel
+@{
+    ViewData["Title"] = "Https Settings";
+}
+
+<h4>@T["SSL Settings"]</h4>
+<span class="text-muted">@T["Use the options below to ensure HTTPS."]</span>
+<hr/>
+
+<form asp-action="Index" method="post" enctype="multipart/form-data">
+    
+    <card>
+        <card-title>
+            <h6 class="card-title">@T["SSL Settings"]</h6>
+        </card-title>
+        <card-body>
+            
+       
+      
+            
+            <fieldset>
+                <div class="form-group" asp-validation-class-for="EnablePolling">
+                    <label asp-for="@Model.EnforceSsl">
+                        <span class="switch switch-round">
+                            <input class="form-check-input" asp-for="EnforceSsl"/>
+                            <span class="switch-slider"></span>
+                        </span>
+                        @T["Enforce SSL"]
+                    </label>
+                </div>
+            </fieldset>
+           
+            <fieldset>
+                <div class="form-group" asp-validation-class-for="UsePermanentRedirect">
+                    <label asp-for="UsePermanentRedirect">
+                        <span class="switch switch-round">
+                            <input class="form-check-input" asp-for="UsePermanentRedirect"/>
+                            <span class="switch-slider"></span>
+                        </span>
+                        @T["Use 301 Permanently moved status code"]
+                    </label>
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                <div class="form-group" asp-validation-class-for="SendAttempts">
+                    <label asp-for="SslPort">
+                        <strong>@T["SSL Port"]</strong>
+                        <span asp-validation-for="SslPort" class="text-danger"></span>
+                    </label>
+                            
+                    <input placeholder="443" asp-for="SslPort" class="form-control col-2"/>
+                </div>
+            </fieldset>
+
+
+        </card-body>
+ 
+    </card>
+    
+    <card class="card mt-4">
+        <card-footer>
+            <button class="btn btn-primary" type="submit">@T["Save"]</button>
+        </card-footer>
+    </card>
+
+</form>
