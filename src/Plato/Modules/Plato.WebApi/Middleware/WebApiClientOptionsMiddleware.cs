@@ -18,13 +18,16 @@ namespace Plato.WebApi.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
+
             // Register client options for web api with our script manager
             var scriptManager = context.RequestServices.GetRequiredService<IScriptManager>();
-            scriptManager?.RegisterScriptBlock(new ScriptBlock(await BuildScriptBlock(context), int.MinValue), ScriptSection.Footer);
+            scriptManager?.RegisterScriptBlock(BuildScriptBlock(context), ScriptSection.Footer);
+
             await _next(context);
+
         }
         
-        Task<string> BuildScriptBlock(HttpContext context)
+        ScriptBlock BuildScriptBlock(HttpContext context)
         {
             
             var options = context.RequestServices.GetRequiredService<IOptions<WebApiOptions>>();
@@ -33,8 +36,8 @@ namespace Plato.WebApi.Middleware
             var script = "$(function (win) { win.PlatoOptions = { url: '{url}', apiKey: '{apiKey}' } } (window));";
             script = script.Replace("{url}", options.Value.Url);
             script = script.Replace("{apiKey}", options.Value.ApiKey);
-
-            return Task.FromResult(script);
+            
+            return new ScriptBlock(script, int.MinValue);
 
         }
   

@@ -57,7 +57,6 @@ namespace Plato.WebApi.Configuration
             return $"{settings.ApiKey}:{user.ApiKey}";
 
         }
-
-
+        
     }
 }

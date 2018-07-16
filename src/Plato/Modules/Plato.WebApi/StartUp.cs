@@ -30,9 +30,8 @@ namespace Plato.WebApi
         {
 
             // Rewrite web api configuration
-            //services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<WebApiOptions>, WebApiOptionsConfiguration>());
-            //services.AddTransient<IConfigureOptions<WebApiOptions>, WebApiOptionsConfiguration>();
-            services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<WebApiOptions>, WebApiOptionsConfiguration>());
+            services.TryAddEnumerable(ServiceDescriptor
+                .Transient<IConfigureOptions<WebApiOptions>, WebApiOptionsConfiguration>());
 
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
