@@ -16,6 +16,7 @@ using Plato.Entities.Stores;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Discuss.Controllers
 {
@@ -230,30 +231,30 @@ message Test message  " + rnd.Next(0, 100000).ToString(),
             var topicDetails = new PostDetails()
             {
                 SomeNewValue = "Example Value 123",
-                Participants = new List<EntityUser>()
+                Participants = new List<SimpleUser>()
                             {
-                                new EntityUser()
+                                new SimpleUser()
                                 {
                                     Id = 1,
                                     UserName = "Test"
 
                                 },
-                                new EntityUser()
+                                new SimpleUser()
                                 {
                                     Id = 2,
                                     UserName = "Mike Jones"
                                 },
-                                new EntityUser()
+                                new SimpleUser()
                                 {
                                     Id = 3,
                                     UserName = "Sarah Smith"
                                 },
-                                new EntityUser()
+                                new SimpleUser()
                                 {
                                     Id = 4,
                                     UserName = "Mark Williams"
                                 },
-                                new EntityUser()
+                                new SimpleUser()
                                 {
                                     Id = 5,
                                     UserName = "Marcus"

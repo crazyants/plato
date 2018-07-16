@@ -54,9 +54,8 @@ namespace Plato.Email
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-
-       
-
         }
+
     }
+
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Models
 {
@@ -43,9 +44,9 @@ namespace Plato.Entities.Models
 
         public DateTime ModifiedDate { get; set; }
 
-        public EntityUser CreatedBy { get; private set; } = new EntityUser();
+        public SimpleUser CreatedBy { get; private set; } = new SimpleUser();
 
-        public EntityUser ModifiedBy { get; private set; } = new EntityUser();
+        public SimpleUser ModifiedBy { get; private set; } = new SimpleUser();
 
         public IEnumerable<IEntityData> Data { get; set; } = new List<EntityData>();
 
@@ -159,19 +160,6 @@ namespace Plato.Entities.Models
         
     }
     
-    public class EntityUser
-    {
-  
-        public int Id { get; set; }
 
-        public string Email { get; set; }
-
-        public string UserName { get; set; }
-
-        public string NormalizedUserName { get; set; }
-
-        public string DisplayName { get; set; }
-
-    }
 
 }

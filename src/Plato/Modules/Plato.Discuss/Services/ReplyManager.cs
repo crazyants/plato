@@ -6,6 +6,7 @@ using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Discuss.Services
 {
@@ -85,7 +86,7 @@ namespace Plato.Discuss.Services
 
                 if (replies?.Data != null)
                 {
-                    var participants = new List<EntityUser>();
+                    var participants = new List<SimpleUser>();
                     foreach (var reply in replies.Data)
                     {
                         participants.Add(reply.CreatedBy);

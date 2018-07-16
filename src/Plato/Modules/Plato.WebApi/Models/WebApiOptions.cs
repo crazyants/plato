@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Plato.WebApi
+﻿namespace Plato.WebApi
 {
     public class WebApiOptions
     {

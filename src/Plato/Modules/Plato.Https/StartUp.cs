@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,13 +35,15 @@ namespace Plato.Https
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-            
-            var rewriteOptions = new RewriteOptions();
 
-            // Configure the rewrite options.
-            serviceProvider.GetService<IConfigureOptions<RewriteOptions>>().Configure(rewriteOptions);
+            // Options
+            var options = new RewriteOptions();
 
-            app.UseRewriter(rewriteOptions);
+            // Call configure on HttpsRewriteOptionsConfiguration
+            serviceProvider.GetService<IConfigureOptions<RewriteOptions>>().Configure(options);
+
+            // Provide options to rewritter
+            app.UseRewriter(options);
 
         }
     }

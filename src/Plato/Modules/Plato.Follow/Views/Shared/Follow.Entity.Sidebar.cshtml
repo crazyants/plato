@@ -1,0 +1,41 @@
+﻿@model FollowViewModel
+
+<card>
+    <card-title>
+        @T["Get Notified"]
+    </card-title>
+    <card-body>
+        
+        @if (!Model.IsFollowing)
+        {
+            <div class="text-muted">
+                @T["Subscribe to get notified via email when updates are posted..."]
+                <br /><br />
+            </div>
+            <button class="btn btn-block btn-secondary" data-provide="follow-button" data-subscribe-text="@T["Subscribe"]" data-unsubscribe-text="@T["Unsubscribe"]" data-action="subscribe" data-entity-id="@Model.EntityId" role="button">
+                <i class="fal fa-bell"></i> 
+                <span>
+                    @T["Subscribe"]
+                </span>
+            </button>
+        }
+        else
+        {
+            <div class="text-muted">
+                @T["You are already subscribed to updates. Unsubscribe below..."]
+                <br /><br />
+            </div>
+            <button class="btn btn-block btn-danger" data-provide="follow-button" data-subscribe-text="@T["Subscribe"]" data-unsubscribe-text="@T["Unsubscribe"]" data-action="unsubscribe" data-entity-id="@Model.EntityId" role="button">
+                <i class="fal fa-bell-slash"></i> 
+                <span>
+                    @T["Unsubscribe"]
+                </span>
+            </button>
+        }
+
+
+    </card-body>
+</card>
+
+
+

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Models
 {
@@ -41,9 +42,9 @@ namespace Plato.Entities.Models
 
         DateTime ModifiedDate { get; set; }
 
-        EntityUser CreatedBy { get; } 
+        SimpleUser CreatedBy { get; }
 
-        EntityUser ModifiedBy { get; } 
+        SimpleUser ModifiedBy { get; } 
         
         IEnumerable<IEntityData> Data { get; set; }
 

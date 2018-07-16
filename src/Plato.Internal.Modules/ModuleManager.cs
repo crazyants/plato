@@ -170,7 +170,7 @@ namespace Plato.Internal.Modules
                 // We always need a module assembly. 
                 if (moduleAssembly == null)
                 {
-                    throw new Exception($"Could not locate assembly for module '{descriptor.Id}'. Please ensure the folder containing your '{descriptor.Id}' module has the same name as your modules primary assembly name minus the .DLL extension. You can either rename the '{descriptor.Id}' modules primary assembly to '{descriptor.Id}.dll' or change the module folder name to match your existing assembly name minus the .DLL extension. For example if your modules assembly is named 'MyCustomModule.Data.dll' your module folder name should be named 'MyCustomModule.Data' so the full path would be 'Modules/MyCustomModule.Data'");
+                    throw new Exception($"Could not locate {descriptor.Id}.dll for module {descriptor.Id}. Please ensure the DLL exists within the modules /bin folder. If the modules DLL exists please ensure the folder containing your '{descriptor.Id}' module has the same name as your modules primary assembly name minus the .DLL extension. You can either rename the '{descriptor.Id}' modules primary assembly to '{descriptor.Id}.dll' or change the module folder name to match your existing assembly name minus the .DLL extension. For example if your modules assembly is named 'MyCustomModule.Data.dll' your module folder name should be named 'MyCustomModule.Data' so the full path would be 'Modules/MyCustomModule.Data'");
                 }
                 
                 // Add the described module entry to our local list

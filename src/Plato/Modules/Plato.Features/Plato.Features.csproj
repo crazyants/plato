@@ -32,8 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Content\" />
-    <Folder Include="Stores\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
