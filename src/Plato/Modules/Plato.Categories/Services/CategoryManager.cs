@@ -153,21 +153,35 @@ namespace Plato.Categories.Services
             {
                 throw new ArgumentNullException(nameof(roleName));
             }
-            
+
             var result = new ActivityResult<TCategory>();
 
-            var role = await _roleStore.GetByNameAsync(roleName);
-            if (role == null)
+            // Ensure the role exists
+            var existingRole = await _roleStore.GetByNameAsync(roleName);
+            if (existingRole == null)
             {
                 return result.Failed(new ActivityError($"A role with the name {roleName} could not be found"));
             }
 
+            // Ensure supplied role name is not already associated with the category
+            var roles = await _categoryRoleStore.GetByCategoryIdAsync(model.Id);
+            if (roles != null)
+            {
+                foreach (var role in roles)
+                {
+                    if (role.RoleName.Equals(roleName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return result.Failed(new ActivityError($"A role with the name '{roleName}' is already associated with the category '{model.Name}'"));
+                    }
+                }
+            }
+            
             var user = await _contextFacade.GetAuthenticatedUserAsync();
         
             var categoryRole = new CategoryRole()
             {
                 CategoryId = model.Id,
-                RoleId = role.Id,
+                RoleId = existingRole.Id,
                 CreatedUserId = user?.Id ?? 0
             };
 
@@ -177,7 +191,7 @@ namespace Plato.Categories.Services
                 return result.Success();
             }
 
-            return result.Failed(new ActivityError($"An unknown error occurred whilst attempting to add role '{role.Name}' for category '{model.Name}'"));
+            return result.Failed(new ActivityError($"An unknown error occurred whilst attempting to add role '{existingRole.Name}' for category '{model.Name}'"));
 
         }
 

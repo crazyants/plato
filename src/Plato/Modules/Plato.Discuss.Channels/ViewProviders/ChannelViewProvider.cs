@@ -50,7 +50,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildEditAsync(Category viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Category viewModel, IUpdateModel updater)
         {
 
             var defaultIcons = new DefaultIcons();
@@ -69,6 +69,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                 editChannelViewModel = new EditChannelViewModel()
                 {
                     Id = viewModel.Id,
+                    FeatureId = viewModel.FeatureId,
                     Name = viewModel.Name,
                     Description = viewModel.Description,
                     ForeColor = viewModel.ForeColor,
@@ -79,12 +80,12 @@ namespace Plato.Discuss.Channels.ViewProviders
                 };
             }
             
-            return Views(
+            return Task.FromResult(Views(
                 View<EditChannelViewModel>("Admin.Edit.Header", model => editChannelViewModel).Zone("header").Order(1),
                 View<EditChannelViewModel>("Admin.Edit.Content", model => editChannelViewModel).Zone("content").Order(1),
                 View<EditChannelViewModel>("Admin.Edit.Actions", model => editChannelViewModel).Zone("actions").Order(1),
                 View<EditChannelViewModel>("Admin.Edit.Footer", model => editChannelViewModel).Zone("footer").Order(1)
-            );
+            ));
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(Category category, IUpdateModel updater)
@@ -104,26 +105,17 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-
-                //var featureId = 0;
-                //var feature = await _contextFacade.GetFeatureByAreaAsync();
-                //if (feature != null)
-                //{
-                //    featureId = feature.Id;
-                //}
-
-                //category = new Category()
-                //{
-                //    Id = model.Id,
-                //    FeatureId = featureId,
-                //    Name = model.Name,
-                //    Description = model.Description,
-                //    ForeColor = model.ForeColor,
-                //    BackColor = model.BackColor,
-                //    IconCss = model.IconPrefix + model.IconCss
-                //};
-
-                var result = await _categoryManager.UpdateAsync(category);
+                
+                var result = await _categoryManager.UpdateAsync(new Category()
+                {
+                    Id = model.Id,
+                    FeatureId = model.FeatureId,
+                    Name = model.Name,
+                    Description = model.Description,
+                    ForeColor = model.ForeColor,
+                    BackColor = model.BackColor,
+                    IconCss = model.IconPrefix + model.IconCss
+                });
 
                 foreach (var error in result.Errors)
                 {

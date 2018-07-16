@@ -138,23 +138,32 @@ namespace Plato.Roles.ViewProviders
                         await _categoryManager.AddToRoleAsync(category, role);
                     }
                 }
-                
-                var result = await _categoryManager.UpdateAsync(category);
 
-                if (result.Succeeded)
-                {
+                //var result = await _categoryManager.UpdateAsync(new Category()
+                //{
+                //    Id = model.Id,
+                //    FeatureId = model.FeatureId,
+                //    Name = model.Name,
+                //    Description = model.Description,
+                //    ForeColor = model.ForeColor,
+                //    BackColor = model.BackColor,
+                //    IconCss = model.IconPrefix + model.IconCss
+                //});
 
-                    return await BuildEditAsync(result.Response, updater);
+                //if (result.Succeeded)
+                //{
 
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        updater.ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                //    return await BuildEditAsync(result.Response, updater);
 
-                }
+                //}
+                //else
+                //{
+                //    foreach (var error in result.Errors)
+                //    {
+                //        updater.ModelState.AddModelError(string.Empty, error.Description);
+                //    }
+
+                //}
 
             }
 

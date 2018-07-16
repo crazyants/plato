@@ -7,7 +7,10 @@ namespace Plato.Discuss.Channels.ViewModels
     {
 
         public int Id { get; set; }
-        
+
+        public int FeatureId { get; set; }
+
+
         [Required]
         [StringLength(255)]
         [DataType(DataType.Text)]
