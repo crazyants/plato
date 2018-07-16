@@ -8,27 +8,31 @@
       
         @if (Model.Channels != null)
         {
-            <div class="list-group">
+            <div class="list-group list-group-flush">
             @foreach (var channel in Model.Channels)
              {
                
-                 <a href="#" class="list-group-item list-group-item-action">
+                 <a href="#" title="@channel.Description" class="list-group-item list-group-item-action">
 
                      @if (!String.IsNullOrWhiteSpace(channel.IconCss))
                      {
-                         <i class="fal @channel.IconCss"></i>
+                         <div class="float-left mr-3">
+                             <span class="channel-icon channel-icon-sm" style="background-color: @channel.BackColor; color: @channel.ForeColor">
+                                 <i class="@channel.IconCss"></i>
+                             </span>
+                         </div>
                      }
 
                      @channel.Name
                      
-                     @{
+                     @*@{
                          var detail = channel.GetOrCreate<ChannelDetails>();
                      }
                      @if (detail != null)
                      {
                          @detail.TotalTopics
                      }
-                     <span class="badge badge-primary badge-pill float-right">14</span>
+                     <span class="badge badge-primary badge-pill float-right">14</span>*@
                  </a>
              }
             </div>

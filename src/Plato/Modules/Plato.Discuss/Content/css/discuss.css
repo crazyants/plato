@@ -32,3 +32,13 @@
 /* emoji */
 .emoji { font-size: 13pt; background-color: transparent; }
 .emoji-animate-on-hover:hover { animation: pulseOutLrg 0.40s 0s none; }
+
+/* channels */
+
+.channel-icon { vertical-align: middle; text-align: center; display: inline-block; border-radius: 3px; }
+.channel-icon-sm { width: 24px; height: 24px; line-height: 22px; }
+.channel-icon-sm i { font-size: 10pt; }
+
+.channel-icon-md { width: 32px; height: 32px; line-height: 32px; }
+
+.channel-icon-lg { width: 32px; height: 32px; line-height: 32px; }

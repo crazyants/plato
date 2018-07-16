@@ -29,12 +29,26 @@ namespace Plato.Email.Stores
 
         public async Task<EmailMessage> CreateAsync(EmailMessage model)
         {
-            return await _emailRepository.InsertUpdateAsync(model);
+            var result = await _emailRepository.InsertUpdateAsync(model);
+            if (result != null)
+            {
+                _cacheManager.CancelTokens(this.GetType());
+            }
+
+            return result;
+
         }
 
         public async Task<EmailMessage> UpdateAsync(EmailMessage model)
         {
-            return await _emailRepository.InsertUpdateAsync(model);
+            var result = await _emailRepository.InsertUpdateAsync(model);
+            if (result != null)
+            {
+                _cacheManager.CancelTokens(this.GetType());
+            }
+
+            return result;
+
         }
 
         public async Task<bool> DeleteAsync(EmailMessage model)
@@ -74,7 +88,7 @@ namespace Plato.Email.Stores
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Selecting entities for key '{0}' with the following parameters: {1}",
+                    _logger.LogInformation("Selecting emails for key '{0}' with the following parameters: {1}",
                         token.ToString(), args.Select(a => a));
                 }
 
@@ -84,7 +98,6 @@ namespace Plato.Email.Stores
         }
 
         #endregion
-
-
+        
     }
 }

@@ -1,7 +1,7 @@
 ﻿@using Plato.Discuss.Models
 @model HomeIndexViewModel
 
-<card>
+<card class="card card-body-flush">
     <card-title>
         <h6 class="card-title float-left">@T["Topics"]</h6>
         <ul class="nav nav-h navbar p-0 float-right">
@@ -34,10 +34,10 @@
     <card-body>
         @if (Model.Results != null)
         {
-            <ul class="list-group list-group-flush list-group-hover mt-4">
+            <ul class="list-group list-group-flush list-group-hover">
                 @foreach (var entity in Model.Results.Data)
                 {
-                    <li class="list-group-item">
+                    <li class="list-group-item pt-4">
 
                         @{
                             var detail = entity.GetOrCreate<PostDetails>();
