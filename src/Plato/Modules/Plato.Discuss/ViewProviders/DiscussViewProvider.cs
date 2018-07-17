@@ -49,7 +49,7 @@ namespace Plato.Discuss.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Topic entity, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Topic topic, IUpdateModel updater)
         {
 
             var filterOptions = new FilterOptions();

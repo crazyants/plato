@@ -55,7 +55,6 @@ namespace Plato.Roles
             services.AddScoped<IViewProvider<Category>, CategoryViewProvider>();
             
             // role view providers
-
             services.AddScoped<IViewProviderManager<RolesIndexViewModel>, ViewProviderManager<RolesIndexViewModel>>();
             services.AddScoped<IViewProvider<RolesIndexViewModel>, AdminIndexViewProvider>();
 

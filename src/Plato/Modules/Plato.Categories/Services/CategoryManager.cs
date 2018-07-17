@@ -1,37 +1,46 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
+using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Categories.Services
 {
 
     public class CategoryManager<TCategory> : ICategoryManager<TCategory> where TCategory : class, ICategory
     {
-
-        private readonly ICategoryStore<TCategory> _categoryStore;
+        
+        
         private readonly ICategoryRoleStore<CategoryRole> _categoryRoleStore;
-        private readonly IContextFacade _contextFacade;
-        private readonly IPlatoRoleStore _roleStore;
         private readonly ICategoryDataStore<CategoryData> _categoryDataStore;
+        private readonly ICategoryStore<TCategory> _categoryStore;
+        private readonly IContextFacade _contextFacade;
+        private readonly IAliasCreator _aliasCreator;
+        private readonly IPlatoRoleStore _roleStore;
+        private readonly IBroker _broker;
 
         public CategoryManager(
             ICategoryStore<TCategory> categoryStore,
             ICategoryRoleStore<CategoryRole> categoryRoleStore,
-            IPlatoRoleStore roleStore, 
-            IContextFacade contextFacade, ICategoryDataStore<CategoryData> categoryDataStore)
+            ICategoryDataStore<CategoryData> categoryDataStore,
+            IContextFacade contextFacade,
+            IAliasCreator aliasCreator,
+            IPlatoRoleStore roleStore,
+            IBroker broker)
         {
             _categoryStore = categoryStore;
             _categoryRoleStore = categoryRoleStore;
             _roleStore = roleStore;
             _contextFacade = contextFacade;
             _categoryDataStore = categoryDataStore;
+            _broker = broker;
+            _aliasCreator = aliasCreator;
         }
 
         #region "Implementation"
@@ -39,6 +48,7 @@ namespace Plato.Categories.Services
         public async Task<IActivityResult<TCategory>> CreateAsync(TCategory model)
         {
 
+            // Validate
             if (model == null)
             {
                 throw new ArgumentNullException(nameof(model));
@@ -59,32 +69,45 @@ namespace Plato.Categories.Services
                 throw new ArgumentNullException(nameof(model.Name));
             }
             
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            // Configure model
 
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (model.CreatedUserId == 0)
             {
                 model.CreatedUserId = user?.Id ?? 0;
             }
             
             model.CreatedDate = DateTime.UtcNow;
+            model.Alias = await ParseAlias(model.Name);
+          
+            // Publish CategoryCreating event
+            await _broker.Pub<TCategory>(this, new MessageOptions()
+            {
+                Key = "CategoryCreating"
+            }, model);
 
             var result = new ActivityResult<TCategory>();
 
             var category = await _categoryStore.CreateAsync(model);
             if (category != null)
             {
+                // Publish CategoryCreated event
+                await _broker.Pub<TCategory>(this, new MessageOptions()
+                {
+                    Key = "CategoryCreated"
+                }, category);
                 // Return success
                 return result.Success(category);
             }
 
             return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create the category"));
-
-
+            
         }
 
         public async Task<IActivityResult<TCategory>> UpdateAsync(TCategory model)
         {
             
+            // Validate
             if (model == null)
             {
                 throw new ArgumentNullException(nameof(model));
@@ -105,16 +128,29 @@ namespace Plato.Categories.Services
                 throw new ArgumentNullException(nameof(model.Name));
             }
             
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            // Configure model
 
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
             model.ModifiedUserId = user?.Id ?? 0;
             model.ModifiedDate = DateTime.UtcNow;
+            model.Alias = await ParseAlias(model.Name);
+            
+            // Publish CategoryUpdating event
+            await _broker.Pub<TCategory>(this, new MessageOptions()
+            {
+                Key = "CategoryUpdating"
+            }, model);
 
             var result = new ActivityResult<TCategory>();
 
             var category = await _categoryStore.UpdateAsync(model);
             if (category != null)
             {
+                // Publish CategoryUpdated event
+                await _broker.Pub<TCategory>(this, new MessageOptions()
+                {
+                    Key = "CategoryUpdated"
+                }, category);
                 // Return success
                 return result.Success(category);
             }
@@ -125,10 +161,18 @@ namespace Plato.Categories.Services
 
         public async Task<IActivityResult<TCategory>> DeleteAsync(TCategory model)
         {
+
+            // Validate
             if (model == null)
             {
                 throw new ArgumentNullException(nameof(model));
             }
+
+            // Publish CategoryDeleting event
+            await _broker.Pub<TCategory>(this, new MessageOptions()
+            {
+                Key = "CategoryDeleting"
+            }, model);
 
             var result = new ActivityResult<TCategory>();
             if (await _categoryStore.DeleteAsync(model))
@@ -146,6 +190,12 @@ namespace Plato.Categories.Services
                     }
                     
                 }
+
+                // Publish CategoryDeleted event
+                await _broker.Pub<TCategory>(this, new MessageOptions()
+                {
+                    Key = "CategoryDeleted"
+                }, model);
 
                 // Return success
                 return result.Success();
@@ -294,6 +344,26 @@ namespace Plato.Categories.Services
             }
 
             return new string[] {};
+
+        }
+
+        #endregion
+
+        #region "Private Methods"
+
+        private async Task<string> ParseAlias(string input)
+        {
+
+            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            {
+                Key = "ParseCategoryAlias"
+            }, input))
+            {
+                return await handler.Invoke(new Message<string>(input, this));
+            }
+
+            // No subscription found, use default alias creator
+            return _aliasCreator.Create(input);
 
         }
 

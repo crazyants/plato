@@ -47,7 +47,7 @@ namespace Plato.Follow
             
             routes.MapAreaRoute(
                 name: "EntitiesFollowWebApi",
-                areaName: "Plato.Entities.Follow",
+                areaName: "Plato.Follow",
                 template: "api/follows/{controller}/{action}/{id?}",
                 defaults: new { controller = "Follow", action = "Get" }
             );

@@ -18,7 +18,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Discuss.Controllers
+namespace Plato.Discuss.Channels.Controllers
 {
     public class HomeController : Controller, IUpdateModel
     {
@@ -55,66 +55,11 @@ namespace Plato.Discuss.Controllers
         #region "Actions"
 
         public async Task<IActionResult> Index(
+            int categoryId,
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
             
-            // default options
-            if (filterOptions == null)
-            {
-                filterOptions = new FilterOptions();
-            }
-
-            // default pager
-            if (pagerOptions == null)
-            {
-                pagerOptions = new PagerOptions();
-            }
-
-            await CreateSampleData();
-
-            //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
-            //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
-            this.RouteData.Values.Add("page", pagerOptions.Page);
-         
-            // Build view
-            var result = await _discussViewProvider.ProvideIndexAsync(new Topic(), this);
-
-            // Return view
-            return View(result);
-            
-
-        }
-        
-        [HttpPost]
-        [ActionName(nameof(Index))]
-        public async Task<IActionResult> IndexPost(NewEntityViewModel model)
-        {
-            
-            var topic = new Topic()
-            {
-                Title = model.Title,
-                Message = model.Message
-            };
-
-            var result = await _discussViewProvider.ProvideUpdateAsync(topic, this);
-
-            if (!ModelState.IsValid)
-            {
-                return View(result);
-            }
-            
-            _alerter.Success(T["Topic Created Successfully!"]);
-
-            return RedirectToAction(nameof(Index));
-
-        }
-        
-        public async Task<IActionResult> Channel(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-
             // default options
             if (filterOptions == null)
             {
@@ -130,79 +75,18 @@ namespace Plato.Discuss.Controllers
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
             this.RouteData.Values.Add("page", pagerOptions.Page);
+            this.RouteData.Values.Add("categoryId", categoryId);
 
             // Build view
             var result = await _discussViewProvider.ProvideIndexAsync(new Topic(), this);
 
             // Return view
             return View(result);
-
+            
 
         }
-
-        public async Task<IActionResult> Topic(
-            int id,
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-
-            var topic = await _entityStore.GetByIdAsync(id);
-            if (topic == null)
-            {
-                return NotFound();
-            }
-            
-            // default options
-            if (filterOptions == null)
-            {
-                filterOptions = new FilterOptions();
-            }
-
-
-            // default pager
-            if (pagerOptions == null)
-            {
-                pagerOptions = new PagerOptions();
-            }
-            
-            // Maintain previous route data when generating page links
-            var routeData = new RouteData();
-            routeData.Values.Add("Options.Search", filterOptions.Search);
-            routeData.Values.Add("Options.Order", filterOptions.Order);
-            routeData.Values.Add("page", pagerOptions.Page);
-       
-            // Build view
-            var result = await _discussViewProvider.ProvideDisplayAsync(topic, this);
-
-            // Return view
-            return View(result);
-            
-        }
         
-        [HttpPost]
-        [ActionName(nameof(Topic))]
-        public async Task<IActionResult> TopicPost(int id)
-        {
-        
-            var topic = await _entityStore.GetByIdAsync(id);
-            if (topic == null)
-            {
-                return NotFound();
-            }
-            
-            var result = await _discussViewProvider.ProvideUpdateAsync(topic, this);
-
-            if (!ModelState.IsValid)
-            {
-                return View(result);
-            }
-
-            _alerter.Success(T["Reply Added Successfully!"]);
-
-            return RedirectToAction(nameof(Topic));
-            
-        }
-        
+    
         #endregion
 
         #region "Private Methods"

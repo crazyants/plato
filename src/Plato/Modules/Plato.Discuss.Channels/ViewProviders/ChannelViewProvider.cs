@@ -37,9 +37,9 @@ namespace Plato.Discuss.Channels.ViewProviders
             var indexViewModel = await GetIndexModel();
          
             return Views(
-                View<ChannelIndexViewModel>("Admin.Index.Header", model => indexViewModel).Zone("header").Order(1),
-                View<ChannelIndexViewModel>("Admin.Index.Tools", model => indexViewModel).Zone("tools").Order(1),
-                View<ChannelIndexViewModel>("Admin.Index.Content", model => indexViewModel).Zone("content").Order(1)
+                View<HomeChannelViewModel>("Admin.Index.Header", model => indexViewModel).Zone("header").Order(1),
+                View<HomeChannelViewModel>("Admin.Index.Tools", model => indexViewModel).Zone("tools").Order(1),
+                View<HomeChannelViewModel>("Admin.Index.Content", model => indexViewModel).Zone("content").Order(1)
             );
 
         }
@@ -139,11 +139,11 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Private Methods"
 
-        async Task<ChannelIndexViewModel> GetIndexModel()
+        async Task<HomeChannelViewModel> GetIndexModel()
         {
             var feature = await GetcurrentFeature();
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            return new ChannelIndexViewModel()
+            return new HomeChannelViewModel()
             {
                 Channels = categories
             };

@@ -41,6 +41,7 @@ using Plato.Internal.Messaging.Extensions;
 using Plato.Internal.Assets.Extensions;
 using Plato.Internal.Scripting.Extensions;
 using Plato.Internal.Tasks.Extensions;
+using Plato.Internal.Text.Extensions;
 using Plato.Internal.Theming.Extensions;
 
 namespace Plato.Internal.Hosting.Web.Extensions
@@ -81,7 +82,8 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
                 internalServices.AddPlatoCaching();
-               
+                internalServices.AddPlatoText();
+
                 internalServices.AddPlatoModules();
                 internalServices.AddPlatoTheming();
                

@@ -60,7 +60,12 @@ namespace Plato.Discuss.Channels
         {
 
 
-
+            routes.MapAreaRoute(
+                name: "DiscussChannel",
+                areaName: "Plato.Discuss.Channels",
+                template: "discuss/channel/{id}/{alias}",
+                defaults: new { controller = "Home", action = "Index" }
+            );
 
         }
     }

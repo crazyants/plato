@@ -44,12 +44,12 @@ namespace Plato.Discuss.Follow.ViewProviders
             }
             
             return Views(
-                View<FollowViewModel>("Follow.Entity.Sidebar", model =>
+                View<FollowViewModel>("Topic.Sidebar", model =>
                 {
                     model.EntityId = entity.Id;
                     model.IsFollowing = isFollowing;
                     return model;
-                }).Zone("sidebar").Order(10)
+                }).Zone("sidebar").Order(2)
             );
 
         }
