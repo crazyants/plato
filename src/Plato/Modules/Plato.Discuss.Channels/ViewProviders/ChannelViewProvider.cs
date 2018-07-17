@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
@@ -9,11 +6,10 @@ using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Shell;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
-    public class ChannelViewProvider : BaseViewProvider<ChannelViewModel>
+    public class ChannelViewProvider : BaseViewProvider<ChannelIndexViewModel>
     {
 
         private readonly IContextFacade _contextFacade;
@@ -32,7 +28,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(ChannelViewModel viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(ChannelIndexViewModel indexViewModel, IUpdateModel updater)
         {
 
             // Ensure we explictly set the featureId
@@ -43,11 +39,18 @@ namespace Plato.Discuss.Channels.ViewProviders
             }
 
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            
+
+            Category category = null;
+            if (indexViewModel.FilterOpts.ChannelId > 0)
+            {
+                category = await _categoryStore.GetByIdAsync(indexViewModel.FilterOpts.ChannelId);
+            }
+
+
             return Views(
-                View<ChannelViewModel>("Home.Index.Header", model => viewModel).Zone("header").Order(1),
-                View<ChannelViewModel>("Home.Index.Tools", model => viewModel).Zone("tools").Order(1),
-                View<ChannelViewModel>("Home.Index.Content", model => viewModel).Zone("content").Order(1),
+                View<Category>("Home.Index.Header", model => category).Zone("header").Order(1),
+                View<Category>("Home.Index.Tools", model => category).Zone("tools").Order(1),
+                View<ChannelIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
                 View<ChannelsViewModel>("Discuss.Index.Sidebar", model =>
                 {
                     model.Channels = categories;
@@ -57,19 +60,19 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(ChannelViewModel viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(ChannelIndexViewModel indexViewModel, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(ChannelViewModel category, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(ChannelIndexViewModel category, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(ChannelViewModel category, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(ChannelIndexViewModel category, IUpdateModel updater)
         {
 
             return Task.FromResult(default(IViewProviderResult));

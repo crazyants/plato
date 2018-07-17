@@ -35,6 +35,8 @@ namespace Plato.Discuss.ViewModels
     {
         public string Search { get; set; }
 
+        public int ChannelId { get; set; }
+
         public EntityOrder Order { get; set; }
 
     }

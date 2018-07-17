@@ -39,8 +39,8 @@ namespace Plato.Discuss.Channels
             services.AddScoped<IViewProviderManager<DiscussViewModel>, ViewProviderManager<DiscussViewModel>>();
             services.AddScoped<IViewProvider<DiscussViewModel>, DiscussViewProvider>();
 
-            services.AddScoped<IViewProviderManager<ChannelViewModel>, ViewProviderManager<ChannelViewModel>>();
-            services.AddScoped<IViewProvider<ChannelViewModel>, ChannelViewProvider>();
+            services.AddScoped<IViewProviderManager<ChannelIndexViewModel>, ViewProviderManager<ChannelIndexViewModel>>();
+            services.AddScoped<IViewProvider<ChannelIndexViewModel>, ChannelViewProvider>();
 
             // Admin view providers
             services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();

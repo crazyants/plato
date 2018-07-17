@@ -62,6 +62,7 @@ namespace Plato.Entities.Stores
 
         private WhereInt _id;
         private WhereInt _featureId;
+        private WhereInt _categoryId;
         private WhereString _keywords;
         private WhereBool _showPrivate;
         private WhereBool _hidePrivate;
@@ -88,6 +89,13 @@ namespace Plato.Entities.Stores
             get => _featureId ?? (_featureId = new WhereInt());
             set => _featureId = value;
         }
+
+        public WhereInt CategoryId
+        {
+            get => _categoryId ?? (_categoryId = new WhereInt());
+            set => _categoryId = value;
+        }
+
 
         public WhereString Keywords
         {
@@ -331,6 +339,14 @@ namespace Plato.Entities.Stores
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.FeatureId.Operator);
                 sb.Append(_query.Params.FeatureId.ToSqlString("FeatureId"));
+            }
+
+            // CategoryId
+            if (_query.Params.CategoryId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.CategoryId.Operator);
+                sb.Append(_query.Params.CategoryId.ToSqlString("CategoryId"));
             }
 
             // Keywords

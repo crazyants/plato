@@ -195,7 +195,53 @@ namespace Plato.Categories.Handlers
                     }
                 }
         };
-        
+
+        // Entity Categories table
+        private readonly SchemaTable _entityCategories = new SchemaTable()
+        {
+            Name = "EntityCategories",
+            Columns = new List<SchemaColumn>()
+            {
+                new SchemaColumn()
+                {
+                    PrimaryKey = true,
+                    Name = "Id",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "EntityId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "CategoryId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "CreatedUserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "CreatedDate",
+                    DbType = DbType.DateTime
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedUserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedDate",
+                    DbType = DbType.DateTime
+                }
+            }
+        };
+
+
         private readonly ISchemaBuilder _schemaBuilder;
 
         public FeatureEventHandler(ISchemaBuilder schemaBuilder)
@@ -226,7 +272,11 @@ namespace Plato.Categories.Handlers
 
                 // Category roles schema
                 CategoryRoles(builder);
-                
+
+                // Entity categories schema
+                EntityCategories(builder);
+
+
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
                 {
@@ -287,7 +337,16 @@ namespace Plato.Categories.Handlers
                     .DropProcedure(new SchemaProcedure("SelectCategoryRolesPaged"))
                     .DropProcedure(new SchemaProcedure("DeleteCategoryRolesByCategoryId"))
                     .DropProcedure(new SchemaProcedure("DeleteCategoryRolesByRoleIdAndCategoryId"));
-            
+                
+                // drop entity categories
+                builder
+                    .DropTable(_entityCategories)
+                    .DropDefaultProcedures(_entityCategories)
+                    .DropProcedure(new SchemaProcedure("SelectEntityCategoriesByEntityId"))
+                    .DropProcedure(new SchemaProcedure("DeleteEntityCategoriesByEntityId"))
+                    .DropProcedure(new SchemaProcedure("DeleteEntityCategoryByEntityIdAndCategoryId"))
+                    .DropProcedure(new SchemaProcedure("SelectEntityCategoriesPaged"));
+                
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
                 {
@@ -388,8 +447,7 @@ namespace Plato.Categories.Handlers
                 }));
 
         }
-
-
+        
         void CategoryRoles(ISchemaBuilder builder)
         {
 
@@ -448,10 +506,70 @@ namespace Plato.Categories.Handlers
                         Length = "255"
                     }
                 }));
-
-
+            
         }
 
+        void EntityCategories(ISchemaBuilder builder)
+        {
+
+            builder
+                .CreateTable(_entityCategories)
+                .CreateDefaultProcedures(_entityCategories);
+
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        $"SelectEntityCategoriesById",
+                        @" SELECT ec.*, c.[Name] AS CategoryName
+                                FROM {prefix}_Categories c WITH (nolock) 
+                                    INNER JOIN {prefix}_EntityCategories ec ON ec.CategoryId = c.Id                                    
+                                WHERE (
+                                   ec.Id = @Id
+                                )")
+                    .ForTable(_categoryRoles)
+                    .WithParameter(_categoryRoles.PrimaryKeyColumn));
+
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        $"SelectEntityCategoriesByEntityId",
+                        @" SELECT ec.*, c.[Name] AS CategoryName
+                                FROM {prefix}_Categories c WITH (nolock) 
+                                    INNER JOIN {prefix}_EntityCategories ec ON ec.CategoryId = c.Id                                    
+                                WHERE (
+                                   ec.EntityId = @EntityId
+                                )")
+                    .ForTable(_entityCategories)
+                    .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
+
+            builder
+                .CreateProcedure(new SchemaProcedure("DeleteEntityCategoriesByEntityId", StoredProcedureType.DeleteByKey)
+                    .ForTable(_entityCategories)
+                    .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
+
+            builder
+                .CreateProcedure(new SchemaProcedure("DeleteEntityCategoryByEntityIdAndCategoryId",
+                        StoredProcedureType.DeleteByKey)
+                    .ForTable(_entityCategories)
+                    .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn() {Name = "RoleId", DbType = DbType.Int32},
+                            new SchemaColumn() {Name = "CategoryId", DbType = DbType.Int32}
+                        }
+                    ));
+
+            builder.CreateProcedure(new SchemaProcedure("SelectEntityCategoriesPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_entityCategories)
+                .WithParameters(new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        Name = "Keywords",
+                        DbType = DbType.String,
+                        Length = "255"
+                    }
+                }));
+            
+        }
+        
         #endregion
 
     }

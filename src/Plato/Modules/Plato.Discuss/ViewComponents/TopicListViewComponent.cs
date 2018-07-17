@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation;
-using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Discuss.ViewComponents
 {
@@ -26,15 +22,11 @@ namespace Plato.Discuss.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            int pageIndex,
-            int pageSize)
+            FilterOptions filterOpts,
+            PagerOptions pagerOpts)
         {
-            var filterOptions = new FilterOptions();
-
-            var pagerOptions = new PagerOptions();
-            pagerOptions.Page = pageIndex;
-
-            var model = await GetIndexViewModel(filterOptions, pagerOptions);
+       
+            var model = await GetIndexViewModel(filterOpts, pagerOpts);
 
             return View(model);
         }
@@ -54,7 +46,7 @@ namespace Plato.Discuss.ViewComponents
 
 
         async Task<IPagedResults<Topic>> GetEntities(
-            FilterOptions filterOptions,
+            FilterOptions filterOpts,
             PagerOptions pagerOptions)
         {
 
@@ -65,12 +57,17 @@ namespace Plato.Discuss.ViewComponents
                 .Take(pagerOptions.Page, pagerOptions.PageSize)
                 .Select<EntityQueryParams>(q =>
                 {
-
+                    
                     if (feature != null)
                     {
                         q.FeatureId.Equals(feature.Id);
                     }
 
+                    if (filterOpts.ChannelId > 0)
+                    {
+                        q.CategoryId.Equals(filterOpts.ChannelId);
+                    }
+                    
                     q.HideSpam.True();
                     q.HidePrivate.True();
                     q.HideDeleted.True();

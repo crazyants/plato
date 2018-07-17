@@ -27,7 +27,7 @@ namespace Plato.Discuss.Channels.Controllers
 
         #region "Constructor"
         
-        private readonly IViewProviderManager<ChannelViewModel> _channelViewProvider;
+        private readonly IViewProviderManager<ChannelIndexViewModel> _channelViewProvider;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly ICategoryStore<Category> _categoryStore;
         private readonly IPostManager<Topic> _postManager;
@@ -40,7 +40,7 @@ namespace Plato.Discuss.Channels.Controllers
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             ICategoryStore<Category> categoryStore,
-            IViewProviderManager<ChannelViewModel> channelViewProvider,
+            IViewProviderManager<ChannelIndexViewModel> channelViewProvider,
             IPostManager<Topic> postManager,
             IAlerter alerter)
         {
@@ -74,6 +74,9 @@ namespace Plato.Discuss.Channels.Controllers
                 filterOptions = new FilterOptions();
             }
 
+            // Ensure we set the channel Id
+            filterOptions.ChannelId = category.Id;
+
             // default pager
             if (pagerOptions == null)
             {
@@ -83,15 +86,13 @@ namespace Plato.Discuss.Channels.Controllers
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
             this.RouteData.Values.Add("page", pagerOptions.Page);
-            this.RouteData.Values.Add("categoryId", id);
-
-            var channelViewModel = new ChannelViewModel()
-            {
-                Channel = category
-            };
-
+    
             // Build view
-            var result = await _channelViewProvider.ProvideIndexAsync(channelViewModel, this);
+            var result = await _channelViewProvider.ProvideIndexAsync(new ChannelIndexViewModel()
+            {
+                FilterOpts = filterOptions,
+                PagerOpts = pagerOptions
+            }, this);
 
             // Return view
             return View(result);

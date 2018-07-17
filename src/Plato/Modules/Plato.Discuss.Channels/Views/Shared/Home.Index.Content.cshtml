@@ -1,9 +1,7 @@
-﻿@model ChannelViewModel
-
+﻿@model ChannelIndexViewModel
 
 @await DisplayAsync(new View("TopicList", new
 {
-    pageIndex = 1,
-    pageSize = 20
+    filterOpts = @Model.FilterOpts,
+    pagerOpts = @Model.PagerOpts
 }))
-

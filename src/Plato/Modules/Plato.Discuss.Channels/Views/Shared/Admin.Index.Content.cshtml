@@ -1,4 +1,4 @@
-﻿@model HomeChannelViewModel
+﻿@model ChannelsViewModel
 
 <card class="card card-body-flush">
     <card-title>
@@ -32,7 +32,6 @@
                                     @channel.Name
                                 </a>
                             </h6>
-                            
                             @if (!String.IsNullOrEmpty(channel.Description))
                             {
                                 <div class="text-muted">
