@@ -32,13 +32,18 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "CategoryId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "Title",
                         Length = "255",
                         DbType = DbType.String
                     },
                     new SchemaColumn()
                     {
-                        Name = "TitleNormalized",
+                        Name = "Alias",
                         Length = "255",
                         DbType = DbType.String
                     },
@@ -84,6 +89,56 @@ namespace Plato.Entities.Handlers
                     {
                         Name = "IsClosed",
                         DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalViews",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalReplies",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalReactions",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalFollows",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalReports",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MeanViews",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MeanReplies",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MeanReactions",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MeanFollows",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MeanReports",
+                        DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {

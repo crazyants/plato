@@ -23,8 +23,17 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("Title"))
                 Title = Convert.ToString(dr["Title"]);
 
-            if (dr.ColumnIsNotNull("TitleNormalized"))
-                TitleNormalized = Convert.ToString(dr["TitleNormalized"]);
+            if (dr.ColumnIsNotNull("Alias"))
+                Alias = Convert.ToString(dr["Alias"]);
+
+            if (dr.ColumnIsNotNull("TotalViews"))
+                TotalViews = Convert.ToInt32(dr["TotalViews"]);
+            
+            if (dr.ColumnIsNotNull("TotalReplies"))
+                TotalReplies = Convert.ToInt32(dr["TotalReplies"]);
+
+            if (dr.ColumnIsNotNull("TotalFollows"))
+                TotalFollows = Convert.ToInt32(dr["TotalFollows"]);
 
         }
 

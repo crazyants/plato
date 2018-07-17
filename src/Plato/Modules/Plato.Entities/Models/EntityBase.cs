@@ -16,9 +16,11 @@ namespace Plato.Entities.Models
 
         public int FeatureId { get; set; }
 
+        public int CategoryId { get; set; }
+        
         public string Title { get; set; }
 
-        public string TitleNormalized { get; set; }
+        public string Alias { get; set; }
         
         public string Message { get; set; }
 
@@ -35,6 +37,26 @@ namespace Plato.Entities.Models
         public bool IsDeleted { get; set; }
 
         public bool IsClosed { get; set; }
+
+        public int TotalViews { get; set; }
+
+        public int TotalReplies { get; set; }
+
+        public int TotalReactions { get; set; }
+
+        public int TotalFollows { get; set; }
+
+        public int TotalReports { get; set; }
+
+        public int MeanViews { get; set; }
+
+        public int MeanReplies { get; set; }
+
+        public int MeanReactions { get; set; }
+
+        public int MeanFollows { get; set; }
+
+        public int MeanReports { get; set; }
 
         public int CreatedUserId { get; set; }
 
