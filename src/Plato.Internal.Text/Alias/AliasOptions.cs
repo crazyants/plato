@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Plato.Internal.Text.Alias
 {
@@ -31,6 +30,7 @@ namespace Plato.Internal.Text.Alias
             {
                 {"--", "-"}
             };
+
         }
 
     }

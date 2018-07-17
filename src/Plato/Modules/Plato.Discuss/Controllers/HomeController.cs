@@ -25,7 +25,7 @@ namespace Plato.Discuss.Controllers
 
         #region "Constructor"
         
-        private readonly IViewProviderManager<Topic> _discussViewProvider;
+        private readonly IViewProviderManager<DiscussViewModel> _discussViewProvider;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IPostManager<Topic> _postManager;
@@ -38,7 +38,7 @@ namespace Plato.Discuss.Controllers
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IEntityStore<Topic> entityStore,
-            IViewProviderManager<Topic> discussViewProvider,
+            IViewProviderManager<DiscussViewModel> discussViewProvider,
             IPostManager<Topic> postManager,
             IAlerter alerter)
         {
@@ -78,7 +78,7 @@ namespace Plato.Discuss.Controllers
             this.RouteData.Values.Add("page", pagerOptions.Page);
          
             // Build view
-            var result = await _discussViewProvider.ProvideIndexAsync(new Topic(), this);
+            var result = await _discussViewProvider.ProvideIndexAsync(new DiscussViewModel(), this);
 
             // Return view
             return View(result);
@@ -90,14 +90,15 @@ namespace Plato.Discuss.Controllers
         [ActionName(nameof(Index))]
         public async Task<IActionResult> IndexPost(NewEntityViewModel model)
         {
-            
-            var topic = new Topic()
+
+
+            var discussViewModel = new DiscussViewModel()
             {
                 Title = model.Title,
                 Message = model.Message
             };
 
-            var result = await _discussViewProvider.ProvideUpdateAsync(topic, this);
+            var result = await _discussViewProvider.ProvideUpdateAsync(discussViewModel, this);
 
             if (!ModelState.IsValid)
             {
@@ -132,7 +133,7 @@ namespace Plato.Discuss.Controllers
             this.RouteData.Values.Add("page", pagerOptions.Page);
 
             // Build view
-            var result = await _discussViewProvider.ProvideIndexAsync(new Topic(), this);
+            var result = await _discussViewProvider.ProvideIndexAsync(new DiscussViewModel(), this);
 
             // Return view
             return View(result);
@@ -170,9 +171,15 @@ namespace Plato.Discuss.Controllers
             routeData.Values.Add("Options.Search", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
             routeData.Values.Add("page", pagerOptions.Page);
-       
+
+
+            var discussViewModel = new DiscussViewModel()
+            {
+                TopicId = id
+            };
+
             // Build view
-            var result = await _discussViewProvider.ProvideDisplayAsync(topic, this);
+            var result = await _discussViewProvider.ProvideDisplayAsync(discussViewModel, this);
 
             // Return view
             return View(result);
@@ -183,14 +190,13 @@ namespace Plato.Discuss.Controllers
         [ActionName(nameof(Topic))]
         public async Task<IActionResult> TopicPost(int id)
         {
-        
-            var topic = await _entityStore.GetByIdAsync(id);
-            if (topic == null)
+
+            var model = new DiscussViewModel()
             {
-                return NotFound();
-            }
+                TopicId = id
+            };
             
-            var result = await _discussViewProvider.ProvideUpdateAsync(topic, this);
+            var result = await _discussViewProvider.ProvideUpdateAsync(model, this);
 
             if (!ModelState.IsValid)
             {

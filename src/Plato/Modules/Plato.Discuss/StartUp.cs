@@ -8,6 +8,7 @@ using Plato.Discuss.Handlers;
 using Plato.Discuss.Assets;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
+using Plato.Discuss.ViewModels;
 using Plato.Discuss.ViewProviders;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
@@ -52,8 +53,8 @@ namespace Plato.Discuss
             services.AddScoped<IAssetProvider, AssetProvider>();
             
             // Register view providers
-            services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
-            services.AddScoped<IViewProvider<Topic>, DiscussViewProvider>();
+            services.AddScoped<IViewProviderManager<DiscussViewModel>, ViewProviderManager<DiscussViewModel>>();
+            services.AddScoped<IViewProvider<DiscussViewModel>, DiscussViewProvider>();
             
         }
 

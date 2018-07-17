@@ -1,0 +1,9 @@
+﻿@model ChannelViewModel
+
+
+@await DisplayAsync(new View("TopicList", new
+{
+    pageIndex = 1,
+    pageSize = 20
+}))
+

@@ -11,7 +11,7 @@ namespace Plato.Internal.Text.Alias
     public class AliasCreator : IAliasCreator
     {
 
-        private AliasOptions AliasOptions { get; set; }
+        private AliasOptions Options { get;  }
         
         #region "Constructor"
 
@@ -21,10 +21,7 @@ namespace Plato.Internal.Text.Alias
 
         public AliasCreator(AliasOptions aliasOptions)
         {
-            if (aliasOptions != null)
-                AliasOptions = aliasOptions;
-            else
-                throw new ArgumentNullException("aliasOptions", "can't be null use default config or empty construct.");
+            Options = aliasOptions ?? throw new ArgumentNullException(nameof(aliasOptions));
         }
 
         #endregion
@@ -33,14 +30,16 @@ namespace Plato.Internal.Text.Alias
 
         public string Create(string str)
         {
-            if (AliasOptions.ForceLowerCase)
+            if (Options.ForceLowerCase)
+            {
                 str = str.ToLower();
-
-            str = CleanWhiteSpace(str, AliasOptions.CollapseWhiteSpace);
-            str = ApplyReplacements(str, AliasOptions.InitialReplacements);
+            }
+                
+            str = CleanWhiteSpace(str, Options.CollapseWhiteSpace);
+            str = ApplyReplacements(str, Options.InitialReplacements);
             str = RemoveDiacritics(str);
-            str = DeleteCharacters(str, AliasOptions.DeniedCharactersRegex);
-            str = ApplyReplacements(str, AliasOptions.FinalReplacements);
+            str = DeleteCharacters(str, Options.DeniedCharactersRegex);
+            str = ApplyReplacements(str, Options.FinalReplacements);
 
             return str;
         }
@@ -59,12 +58,12 @@ namespace Plato.Internal.Text.Alias
             var stFormD = str.Normalize(NormalizationForm.FormD);
             var sb = new StringBuilder();
 
-            for (var ich = 0; ich < stFormD.Length; ich++)
+            foreach (var chr in stFormD)
             {
-                var uc = CharUnicodeInfo.GetUnicodeCategory(stFormD[ich]);
+                var uc = CharUnicodeInfo.GetUnicodeCategory(chr);
                 if (uc != UnicodeCategory.NonSpacingMark)
                 {
-                    sb.Append(stFormD[ich]);
+                    sb.Append(chr);
                 }
             }
 

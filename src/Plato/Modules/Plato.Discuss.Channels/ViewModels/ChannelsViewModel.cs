@@ -3,8 +3,8 @@ using Plato.Categories.Models;
 
 namespace Plato.Discuss.Channels.ViewModels
 {
-    public class HomeChannelViewModel
+    public class ChannelsViewModel
     {
-        public IEnumerable<Category> Channels;
+        public IEnumerable<Category> Channels { get; set; }
     }
 }

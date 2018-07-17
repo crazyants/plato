@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Plato.Discuss.Models;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
@@ -28,17 +28,9 @@ namespace Plato.Discuss.ViewModels
         
         public FilterOptions FilterOpts { get; set; }
         
-        public Entity Entity { get; set; }
+        public Topic Entity { get; set; }
         
+
     }
-
-
-    //public class NewEntityReplyViewModel
-    //{
-   
-    //    [Required]
-    //    public string Message { get; set; }
-
-    //}
 
 }

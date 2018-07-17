@@ -3,11 +3,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Categories.Models;
+using Plato.Discuss.Channels.ViewAdaptors;
+using Plato.Discuss.Channels.ViewModels;
 using Plato.Discuss.Channels.ViewProviders;
 using Plato.Discuss.Models;
+using Plato.Discuss.ViewModels;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Layout.ViewProviders;
 
 namespace Plato.Discuss.Channels
@@ -30,27 +34,21 @@ namespace Plato.Discuss.Channels
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
 
-            // View providers
-            services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
-            services.AddScoped<IViewProvider<Topic>, DiscussViewProvider>();
+            // Discuss view providers
 
+            services.AddScoped<IViewProviderManager<DiscussViewModel>, ViewProviderManager<DiscussViewModel>>();
+            services.AddScoped<IViewProvider<DiscussViewModel>, DiscussViewProvider>();
+
+            services.AddScoped<IViewProviderManager<ChannelViewModel>, ViewProviderManager<ChannelViewModel>>();
+            services.AddScoped<IViewProvider<ChannelViewModel>, ChannelViewProvider>();
+
+            // Admin view providers
             services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();
-            services.AddScoped<IViewProvider<Category>, ChannelViewProvider>();
+            services.AddScoped<IViewProvider<Category>, AdminViewProvider>();
 
-
-            //// Repositories
-            //services.AddScoped<IEmailRepository<EmailMessage>, EmailRepository>();
-
-            //// Stores
-            //services.AddScoped<IEmailSettingsStore<EmailSettings>, EmailSettingsStore>();
-
-            //// Email manager
-            //services.AddSingleton<IEmailManager, EmailManager>();
-
-            //// Smtp settings & service
-            //services.AddTransient<IConfigureOptions<SmtpSettings>, SmtpSettingsConfiguration>();
-            //services.AddScoped<ISmtpService, SmtpService>();
-
+            // Register view adaptors
+            services.AddScoped<IViewAdaptorProvider, DiscussViewAdaptorProvider>();
+            
         }
 
         public override void Configure(

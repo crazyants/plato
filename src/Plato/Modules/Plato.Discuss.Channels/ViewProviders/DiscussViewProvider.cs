@@ -6,13 +6,13 @@ using Plato.Discuss.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Discuss.ViewModels;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
-    public class DiscussViewProvider : BaseViewProvider<Topic>
+    public class DiscussViewProvider : BaseViewProvider<DiscussViewModel>
     {
-
-
+        
         private readonly IContextFacade _contextFacade;
         private readonly ICategoryStore<Category> _categoryStore;
 
@@ -25,9 +25,10 @@ namespace Plato.Discuss.Channels.ViewProviders
         }
 
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(DiscussViewModel viewModel, IUpdateModel updater)
         {
 
+            // Ensure we explictly set the featureId
             var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
             if (feature == null)
             {
@@ -35,18 +36,18 @@ namespace Plato.Discuss.Channels.ViewProviders
             }
 
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-
-            return Views(
-                View<HomeChannelViewModel>("Channels.Sidebar", model =>
+            
+            return Views(View<ChannelsViewModel>("Discuss.Index.Sidebar", model =>
                 {
                     model.Channels = categories;
                     return model;
                 }).Zone("sidebar").Order(1)
             );
+            
 
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(DiscussViewModel viewModel, IUpdateModel updater)
         {
 
             var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
@@ -58,7 +59,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(
-                View<HomeChannelViewModel>("Channels.Sidebar", model =>
+                View<ChannelsViewModel>("Discuss.Index.Sidebar", model =>
                 {
                     model.Channels = categories;
                     return model;
@@ -68,13 +69,13 @@ namespace Plato.Discuss.Channels.ViewProviders
         }
 
 
-        public override Task<IViewProviderResult> BuildEditAsync(Topic viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(DiscussViewModel viewModel, IUpdateModel updater)
         {
 
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Topic viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(DiscussViewModel viewModel, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

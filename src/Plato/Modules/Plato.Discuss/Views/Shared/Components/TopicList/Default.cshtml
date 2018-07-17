@@ -1,15 +1,6 @@
 ﻿@using Plato.Discuss.Models
 @model HomeIndexViewModel
 
-
-@await DisplayAsync(new View("TopicList", new
-{
-    pageIndex = @Model.PagerOpts.Page,
-    pageSize = @Model.PagerOpts.PageSize
-}))
-
-
-
 <card class="card card-body-flush">
     <card-title>
         <h6 class="card-title float-left">@T["Topics"]</h6>
