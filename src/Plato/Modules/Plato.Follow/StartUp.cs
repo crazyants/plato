@@ -11,7 +11,6 @@ using Plato.Follow.Handlers;
 using Plato.Follow.Models;
 using Plato.Follow.Repositories;
 using Plato.Follow.Stores;
-using Plato.Follow.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
 
 namespace Plato.Follow
@@ -30,11 +29,7 @@ namespace Plato.Follow
 
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
-            
-            // View providers
-            //services.AddScoped<IViewProviderManager<Entity>, ViewProviderManager<Entity>>();
-            //services.AddScoped<IViewProvider<Entity>, FollowViewProvider>();
-         
+       
             // Register client assets
             services.AddScoped<IAssetProvider, AssetProvider>();
 
