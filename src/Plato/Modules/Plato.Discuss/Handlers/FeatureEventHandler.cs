@@ -28,78 +28,78 @@ namespace Plato.Discuss.Handlers
         private readonly ISchemaBuilder _schemaBuilder;
 
 
-        private readonly SchemaTable _topics = new SchemaTable()
-        {
-            Name = "Topics",
-            Columns = new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        PrimaryKey = true,
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ParentId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ChannelId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Title",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "TitleNormalized",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Text]",
-                        Length = "max",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Data]",
-                        Length = "max",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsSpam",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsDeleted",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsQueued",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTime
-                    }
-                }
-        };
+        //private readonly SchemaTable _topics = new SchemaTable()
+        //{
+        //    Name = "Topics",
+        //    Columns = new List<SchemaColumn>()
+        //        {
+        //            new SchemaColumn()
+        //            {
+        //                PrimaryKey = true,
+        //                Name = "Id",
+        //                DbType = DbType.Int32
+        //            },
+        //            new SchemaColumn()
+        //            {
+        //                Name = "ParentId",
+        //                DbType = DbType.Int32
+        //            },
+        //            new SchemaColumn()
+        //            {
+        //                Name = "ChannelId",
+        //                DbType = DbType.Int32
+        //            },
+        //            new SchemaColumn()
+        //            {
+        //                Name = "Title",
+        //                Length = "255",
+        //                DbType = DbType.String
+        //            },
+        //            new SchemaColumn()
+        //            {
+        //                Name = "TitleNormalized",
+        //                Length = "255",
+        //                DbType = DbType.String
+        //            },
+        //            new SchemaColumn()
+        //            {
+        //                Name = "[Text]",
+        //                Length = "max",
+        //                DbType = DbType.String
+        //            },
+        //            new SchemaColumn()
+        //            {
+        //                Name = "[Data]",
+        //                Length = "max",
+        //                DbType = DbType.String
+        //            },
+        //            new SchemaColumn()
+        //            {
+        //                Name = "IsSpam",
+        //                DbType = DbType.Boolean
+        //            },
+        //            new SchemaColumn()
+        //            {
+        //                Name = "IsDeleted",
+        //                DbType = DbType.Boolean
+        //            },
+        //            new SchemaColumn()
+        //            {
+        //                Name = "IsQueued",
+        //                DbType = DbType.Boolean
+        //            },
+        //            new SchemaColumn()
+        //            {
+        //                Name = "CreatedUserId",
+        //                DbType = DbType.Int32
+        //            },
+        //            new SchemaColumn()
+        //            {
+        //                Name = "CreatedDate",
+        //                DbType = DbType.DateTime
+        //            }
+        //        }
+        //};
         
 
         public FeatureEventHandler(ISchemaBuilder schemaBuilder)
@@ -155,11 +155,11 @@ namespace Plato.Discuss.Handlers
             using (var builder = _schemaBuilder)
             {
 
-                // drop 
-                builder
-                    .DropTable(_topics)
-                    .DropDefaultProcedures(_topics)
-                    .DropProcedure(new SchemaProcedure("SelectTopicsPaged", StoredProcedureType.SelectByKey));
+                //// drop 
+                //builder
+                //    .DropTable(_topics)
+                //    .DropDefaultProcedures(_topics)
+                //    .DropProcedure(new SchemaProcedure("SelectTopicsPaged", StoredProcedureType.SelectByKey));
                 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -199,40 +199,40 @@ namespace Plato.Discuss.Handlers
         void Configure(ISchemaBuilder builder)
         {
 
-            builder
-                .Configure(options =>
-                {
-                    options.ModuleName = ModuleId;
-                    options.Version = Version;
-                    options.DropTablesBeforeCreate = true;
-                    options.DropProceduresBeforeCreate = true;
-                });
+            //builder
+            //    .Configure(options =>
+            //    {
+            //        options.ModuleName = ModuleId;
+            //        options.Version = Version;
+            //        options.DropTablesBeforeCreate = true;
+            //        options.DropProceduresBeforeCreate = true;
+            //    });
 
         }
 
         void Topics(ISchemaBuilder builder)
         {
             
-            builder
-                .CreateTable(_topics)
-                .CreateDefaultProcedures(_topics)
+            //builder
+            //    .CreateTable(_topics)
+            //    .CreateDefaultProcedures(_topics)
 
-                .CreateProcedure(new SchemaProcedure("SelectTopicsPaged", StoredProcedureType.SelectPaged)
-                    .ForTable(_topics)
-                    .WithParameters(new List<SchemaColumn>()
-                    {
-                        new SchemaColumn()
-                        {
-                            Name = "Id",
-                            DbType = DbType.Int32
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "Keywords",
-                            DbType = DbType.String,
-                            Length = "255"
-                        }
-                    }));
+            //    .CreateProcedure(new SchemaProcedure("SelectTopicsPaged", StoredProcedureType.SelectPaged)
+            //        .ForTable(_topics)
+            //        .WithParameters(new List<SchemaColumn>()
+            //        {
+            //            new SchemaColumn()
+            //            {
+            //                Name = "Id",
+            //                DbType = DbType.Int32
+            //            },
+            //            new SchemaColumn()
+            //            {
+            //                Name = "Keywords",
+            //                DbType = DbType.String,
+            //                Length = "255"
+            //            }
+            //        }));
 
         }
 

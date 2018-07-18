@@ -19,11 +19,11 @@ namespace Plato.Categories.Repositories
         private readonly ICategoryDataRepository<CategoryData> _categoryDataRepository;
 
         private readonly IDbContext _dbContext;
-        private readonly ILogger<CategoryRepository> _logger;
+        private readonly ILogger<CategoryRoleRepository> _logger;
 
         public CategoryRoleRepository(
             IDbContext dbContext,
-            ILogger<CategoryRepository> logger,
+            ILogger<CategoryRoleRepository> logger,
             ICategoryDataRepository<CategoryData> categoryDataRepository)
         {
             _dbContext = dbContext;

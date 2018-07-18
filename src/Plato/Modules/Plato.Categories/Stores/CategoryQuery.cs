@@ -10,19 +10,19 @@ namespace Plato.Categories.Stores
 
     #region "CategoryQuery"
 
-    public class CategoryQuery : DefaultQuery<Category>
+    public class CategoryQuery<TModel> : DefaultQuery<TModel> where TModel : class
     {
 
-        private readonly IStore<Category> _store;
+        private readonly IStore<TModel> _store;
 
-        public CategoryQuery(IStore<Category> store)
+        public CategoryQuery(IStore<TModel> store)
         {
             _store = store;
         }
 
         public CategoryQueryParams Params { get; set; }
 
-        public override IQuery<Category> Select<T>(Action<T> configure)
+        public override IQuery<TModel> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
@@ -30,10 +30,10 @@ namespace Plato.Categories.Stores
             return this;
         }
 
-        public override async Task<IPagedResults<Category>> ToList()
+        public override async Task<IPagedResults<TModel>> ToList()
         {
 
-            var builder = new CategoryQueryBuilder(this);
+            var builder = new CategoryQueryBuilder<TModel>(this);
             var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
@@ -59,8 +59,7 @@ namespace Plato.Categories.Stores
 
     public class CategoryQueryParams
     {
-
-
+        
         private WhereInt _id;
         private WhereString _keywords;
 
@@ -83,15 +82,15 @@ namespace Plato.Categories.Stores
 
     #region "CategoryQueryBuilder"
 
-    public class CategoryQueryBuilder : IQueryBuilder
+    public class CategoryQueryBuilder<TModel> : IQueryBuilder where TModel : class
     {
         #region "Constructor"
 
         private readonly string _categorysTableName;
 
-        private readonly CategoryQuery _query;
+        private readonly CategoryQuery<TModel> _query;
 
-        public CategoryQueryBuilder(CategoryQuery query)
+        public CategoryQueryBuilder(CategoryQuery<TModel> query)
         {
             _query = query;
             _categorysTableName = GetTableNameWithPrefix("Categories");

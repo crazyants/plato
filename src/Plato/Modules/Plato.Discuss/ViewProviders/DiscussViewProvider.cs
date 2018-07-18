@@ -14,7 +14,7 @@ using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.ViewProviders
 {
-    public class DiscussViewProvider : BaseViewProvider<DiscussViewModel>
+    public class DiscussViewProvider : BaseViewProvider<Topic>
     {
 
         private const string EditorHtmlName = "message";
@@ -49,7 +49,7 @@ namespace Plato.Discuss.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(DiscussViewModel topic, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Topic topic, IUpdateModel updater)
         {
 
             var filterOptions = new FilterOptions();
@@ -71,7 +71,7 @@ namespace Plato.Discuss.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildDisplayAsync(DiscussViewModel viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
         {
            
             var filterOptions = new FilterOptions();
@@ -80,7 +80,7 @@ namespace Plato.Discuss.ViewProviders
             pagerOptions.Page = GetPageIndex(updater);
 
 
-            var topic = await _entityStore.GetByIdAsync(viewModel.TopicId);
+            var topic = await _entityStore.GetByIdAsync(viewModel.Id);
             if (topic == null)
             {
                 return await BuildIndexAsync(viewModel, updater);
@@ -109,23 +109,22 @@ namespace Plato.Discuss.ViewProviders
 
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(DiscussViewModel entity, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Topic entity, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(DiscussViewModel viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic viewModel, IUpdateModel updater)
         {
 
-            var topic = await _entityStore.GetByIdAsync(viewModel.TopicId);
+            var topic = await _entityStore.GetByIdAsync(viewModel.Id);
             if (topic == null)
             {
                 return await BuildIndexAsync(viewModel, updater);
             }
-
-
+            
             var model = new NewEntityViewModel();
-            model.EntityId = viewModel.TopicId;
+            model.EntityId = viewModel.Id;
             model.Title = viewModel.Title;
       
             if (!await updater.TryUpdateModelAsync(model))
@@ -153,6 +152,8 @@ namespace Plato.Discuss.ViewProviders
                         Title = model.Title,
                         Message = message
                     });
+
+
                     foreach (var error in result.Errors)
                     {
                         updater.ModelState.AddModelError(string.Empty, error.Description);

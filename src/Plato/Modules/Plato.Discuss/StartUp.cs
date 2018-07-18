@@ -53,8 +53,8 @@ namespace Plato.Discuss
             services.AddScoped<IAssetProvider, AssetProvider>();
             
             // Register view providers
-            services.AddScoped<IViewProviderManager<DiscussViewModel>, ViewProviderManager<DiscussViewModel>>();
-            services.AddScoped<IViewProvider<DiscussViewModel>, DiscussViewProvider>();
+            services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
+            services.AddScoped<IViewProvider<Topic>, DiscussViewProvider>();
             
         }
 

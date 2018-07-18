@@ -29,12 +29,12 @@ namespace Plato.Categories
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Repositories
-            services.AddScoped<ICategoryRepository<Category>, CategoryRepository>();
+            services.AddScoped<ICategoryRepository<Category>, CategoryRepository<Category>>();
             services.AddScoped<ICategoryDataRepository<CategoryData>, CategoryDataRepository>();
             services.AddScoped<ICategoryRoleRepository<CategoryRole>, CategoryRoleRepository>();
 
             // Stores
-            services.AddScoped<ICategoryStore<Category>, CategoryStore>();
+            services.AddScoped<ICategoryStore<Category>, CategoryStore<Category>>();
             services.AddScoped<ICategoryDataStore<CategoryData>, CategoryDataStore>();
             services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
 

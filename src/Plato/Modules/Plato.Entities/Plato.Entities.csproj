@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Features\Plato.Internal.Features.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Repositories\Plato.Internal.Repositories.csproj" />
+    <ProjectReference Include="..\..\..\Plato.Internal.Text.Abstractions\Plato.Internal.Text.Abstractions.csproj" />
   </ItemGroup>
 
     <ItemGroup>

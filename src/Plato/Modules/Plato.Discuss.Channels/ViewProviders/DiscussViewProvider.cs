@@ -10,7 +10,7 @@ using Plato.Discuss.ViewModels;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
-    public class DiscussViewProvider : BaseViewProvider<DiscussViewModel>
+    public class DiscussViewProvider : BaseViewProvider<Topic>
     {
         
         private readonly IContextFacade _contextFacade;
@@ -25,7 +25,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         }
 
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(DiscussViewModel viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IUpdateModel updater)
         {
 
             // Ensure we explictly set the featureId
@@ -47,7 +47,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(DiscussViewModel viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
         {
 
             var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
@@ -69,13 +69,13 @@ namespace Plato.Discuss.Channels.ViewProviders
         }
 
 
-        public override Task<IViewProviderResult> BuildEditAsync(DiscussViewModel viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Topic viewModel, IUpdateModel updater)
         {
 
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(DiscussViewModel viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Topic viewModel, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

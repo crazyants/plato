@@ -4,6 +4,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Entities.Models
 {
+
     public class Entity : EntityBase
     {
 

@@ -1,21 +1,18 @@
-﻿namespace Plato.Discuss.ViewModels
+﻿using Plato.Discuss.Models;
+
+namespace Plato.Discuss.ViewModels
 {
-    public class DiscussViewModel
-    {
+    //public class DiscussViewModel
+    //{
 
-        public DiscussViewModel()
-        {
+    //    public DiscussViewModel()
+    //    {
 
-        }
+    //    }
 
-        public string Title { get; set; }
-
-        public string Message { get; set; }
-
-        public int TopicId { get; set; }
-
-        public int ChannelId { get; set; }
+    //    public int TopicId { get; set; }
         
-    }
+    //    public Topic Topic { get; set; }
+    //}
 
 }

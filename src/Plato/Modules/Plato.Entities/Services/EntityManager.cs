@@ -6,6 +6,7 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Entities.Services
 {
@@ -25,15 +26,18 @@ namespace Plato.Entities.Services
         private readonly IBroker _broker;
         private readonly IEntityStore<TEntity> _entityStore;
         private readonly IContextFacade _contextFacade;
+        private readonly IAliasCreator _aliasCreator;
 
         public EntityManager(
             IEntityStore<TEntity> entityStore,
             IBroker broker,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            IAliasCreator aliasCreator)
         {
             _entityStore = entityStore;
             _broker = broker;
             _contextFacade = contextFacade;
+            _aliasCreator = aliasCreator;
         }
 
         #endregion
@@ -86,6 +90,7 @@ namespace Plato.Entities.Services
             // Parse Html and message abstract
             model.Html = await ParseMarkdown(model.Message);
             model.Abstract = await ParseAbstract(model.Message);
+            model.Alias = await ParseAlias(model.Title);
 
             // Raise creating event
             Creating?.Invoke(this, new EntityEventArgs<TEntity>(model));
@@ -149,6 +154,7 @@ namespace Plato.Entities.Services
             // Parse Html and message abstract
             model.Html = await ParseMarkdown(model.Message);
             model.Abstract = await ParseAbstract(model.Message);
+            model.Alias = await ParseAlias(model.Title);
 
             // Raise Updating event
             Updating?.Invoke(this, new EntityEventArgs<TEntity>(model));
@@ -258,6 +264,23 @@ namespace Plato.Entities.Services
             return message.StripHtml().TrimToAround(500);
 
         }
+
+        private async Task<string> ParseAlias(string input)
+        {
+
+            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            {
+                Key = "ParseEntityAlias"
+            }, input))
+            {
+                return await handler.Invoke(new Message<string>(input, this));
+            }
+
+            // No subscription found, use default alias creator
+            return _aliasCreator.Create(input);
+
+        }
+
 
         #endregion
 

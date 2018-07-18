@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using Plato.Internal.Abstractions;
 
@@ -40,6 +41,15 @@ namespace Plato.Categories.Models
 
         IDictionary<Type, ISerializable> MetaData { get; }
         
+
+        void AddOrUpdate<T>(T obj) where T : class;
+
+        void AddOrUpdate(Type type, ISerializable obj);
+
+        T GetOrCreate<T>() where T : class;
+
+        void PopulateModel(IDataReader dr);
+
     }
 
 }

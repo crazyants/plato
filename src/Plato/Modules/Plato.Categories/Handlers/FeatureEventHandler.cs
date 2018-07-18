@@ -551,7 +551,7 @@ namespace Plato.Categories.Handlers
                     .ForTable(_entityCategories)
                     .WithParameters(new List<SchemaColumn>()
                         {
-                            new SchemaColumn() {Name = "RoleId", DbType = DbType.Int32},
+                            new SchemaColumn() {Name = "EntityId", DbType = DbType.Int32},
                             new SchemaColumn() {Name = "CategoryId", DbType = DbType.Int32}
                         }
                     ));

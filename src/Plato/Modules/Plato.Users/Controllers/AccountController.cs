@@ -62,7 +62,7 @@ namespace Plato.Users.Controllers
             //    Title = "test 123 123 ",
             //    Body = "testing 123 123 123 "
             //};
-            
+
             //var existingDoc = await _documentStore.GetAsync<TestDocument2>();
             //if (existingDoc != null)
             //{
@@ -75,7 +75,7 @@ namespace Plato.Users.Controllers
             //    sb.Append("Title: " + newDoc.Title);
             //    sb.Append("<br>");
             //    sb.Append("Body: " + newDoc.Body);
-                
+
             //    ViewBag.docs = sb.ToString();
             //}
 
@@ -89,7 +89,7 @@ namespace Plato.Users.Controllers
 
             //    }, password);
             //}
-            
+
             //var user = _httpContextAccessor.HttpContext.User;
             //var claims = user.Claims;
 
