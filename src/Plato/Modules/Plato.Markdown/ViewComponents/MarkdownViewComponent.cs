@@ -21,7 +21,8 @@ namespace Plato.Markdown.ViewComponents
             string value,
             LocalizedHtmlString placeHolderText,
             string htmlName,
-            bool autoFocus)
+            bool autoFocus,
+            int tabIndex)
         {
 
             var model = new MarkdownViewModel
@@ -30,7 +31,8 @@ namespace Plato.Markdown.ViewComponents
                 HtmlName = htmlName,
                 PlaceHolderText = placeHolderText?.Value ?? string.Empty,
                 Value = value,
-                AutoFocusw = autoFocus
+                AutoFocusw = autoFocus,
+                TabIndex = tabIndex
             };
 
             return Task.FromResult((IViewComponentResult)View(model));
@@ -51,6 +53,7 @@ namespace Plato.Markdown.ViewComponents
         
         public bool AutoFocusw { get; set; }
         
+        public int TabIndex { get; set; }
     }
 
 }

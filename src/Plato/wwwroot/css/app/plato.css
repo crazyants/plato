@@ -74,6 +74,9 @@
     z-index: 1001;
 }
 
+.btn-group .dropdown-arrow-right,
+.dropdown .dropdown-arrow-right { left: 85%; }
+
 .btn-group .dropdown-arrow:before,
 .dropdown .dropdown-arrow:before {
     content: "";
@@ -389,6 +392,19 @@
 .list-left + .list-body { margin-left: 56px; }
 .list-right { float: left; }
 .list-right + .list-body { margin-right: 56px; }
+
+.list-group-check-list input { display: none; }
+.list-group-check-list input + label {  cursor: pointer; }
+.list-group-check-list input:checked + label { background: #F6F7F5; }
+
+.list-group-check-list input + label > i:after {
+    content: "\f00c"; 
+    display: none;
+}
+.list-group-check-list input:checked + label > i:after {
+  
+    display: inline;
+}
 
 /* ------------------------- */
 /* Plato Layout */

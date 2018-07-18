@@ -1,6 +1,6 @@
 ﻿@model Plato.Roles.ViewComponents.SelectRolesViewModel
 
-<select id="@Model.HtmlName" name="@Model.HtmlName" multiple="multiple" class="form-control" style="min-height: 175px;" >
+<select id="@Model.HtmlName" name="@Model.HtmlName" multiple="multiple" class="form-control" style="min-height: 150px;" >
     @for (var i = 0; i < Model.SelectedRoles.Count; i++)
     {
         var role = Model.SelectedRoles[i];

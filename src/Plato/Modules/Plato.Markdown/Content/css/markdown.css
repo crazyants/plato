@@ -4,7 +4,7 @@
     border-width: 1px;
     border-style: solid;
     background: white;
-    border-radius: 3px;
+    border-radius: 0.25rem;
 }
 
 
@@ -29,7 +29,7 @@
 
 /* Buttons */
 .md-editor .btn-toolbar .btn { background: white; border: 1px solid #ddd; }
-.md-editor .btn-toolbar .btn.disabled { opacity: .1; }
+.md-editor .btn-toolbar .btn.disabled { display: none; }
 
 /* Main border color */
 .md-editor,
