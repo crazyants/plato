@@ -7,12 +7,6 @@
     border-radius: 3px;
 }
 
-.md-editor .md-header,
-.md-editor .btn-toolbar,
-.md-editor .md-footer,
-.md-editor .md-preview,
-.md-editor .md-textarea,
-.md-editor .dz-message { display: block; text-align: left; }
 
 /* floated row to allow us to float tabs left and buttons right */
 
@@ -23,27 +17,19 @@
     border-bottom: 1px solid #ddd;
 }
 
-.md-header-row .nav {
+.md-header-row .nav { 
     padding: .50rem .50rem 0 .50rem;
     margin-bottom: -1px;
 }
 
 .md-header-row .btn-toolbar {
     background-color: transparent;
-    padding: .25rem .50rem 0 .50rem;
+    padding: .30rem .50rem 0 .50rem;
 }
 
 /* Buttons */
 .md-editor .btn-toolbar .btn { background: white; border: 1px solid #ddd; }
 .md-editor .btn-toolbar .btn.disabled { opacity: .1; }
-
-.md-editor .md-preview { display: none; min-height: 200px; max-height: 600px; }
-
-.md-editor .md-footer, 
-.md-editor > .md-header {
-    padding: 6px;
-    box-shadow: none;
-}
 
 /* Main border color */
 .md-editor,
@@ -70,17 +56,19 @@
 .md-editor .md-preview {
     outline: 0 !important;
     width: 100%;
+    min-height: 200px;
     resize: vertical;
     border: 0 !important;
     box-shadow: none !important;
-    transition: all .2s;
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;
-    background-color: #fff;
+    background-color: white;
     background-clip: padding-box;
     border-radius: 0;
 }
+
+.md-editor .md-preview { overflow: auto; max-height: 600px; }
 
 /* header selection dropdown */
 .md-header-dropdown h1,
@@ -100,14 +88,24 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 19;
-    padding: 30px 0 15px;
+    z-index: 5;
+    padding: 0;
     border: 0 !important;
+}
+
+.md-editor.md-fullscreen-mode.active {
+    border-radius: 0;
+    box-shadow: none !important;
 }
 
 .md-editor.md-fullscreen-mode .md-footer,
 .md-editor.md-fullscreen-mode .dz-message {
     display: none;
+}
+
+.md-editor.md-fullscreen-mode .tab-content,
+.md-editor.md-fullscreen-mode .tab-pane {
+    height: 100%;
 }
 
 .md-editor.md-fullscreen-mode .md-textarea,
@@ -121,15 +119,11 @@
     resize: none !important;
     box-shadow: none !important;
     border: 0 !important;
+    overflow: auto;
 }
 
 .md-editor.md-fullscreen-mode .md-control-fullscreen { display: none; }
 .md-editor .md-fullscreen-controls { display: none; }
-
-.md-editor.md-fullscreen-mode .md-preview {
-    color: #333;
-    overflow: auto;
-}
 
 .md-editor.md-fullscreen-mode .md-header {
     text-align: center;

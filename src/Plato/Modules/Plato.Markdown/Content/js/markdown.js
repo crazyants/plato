@@ -308,33 +308,57 @@
         return src;
       }
     },
-    setFullscreen: function(mode) {
-        var $editor = this.$editor,
-            $textarea = this.$textarea;
+    setFullscreen: function (mode) {
 
-      if (mode === true) {
+          var $editor = this.$editor,
+              $textarea = this.$textarea,
+              height = $textarea.height();
 
-        $editor.addClass('md-fullscreen-mode');
-        $('body').addClass('md-nooverflow');
-        this.$options.onFullscreen(this);
+        if (mode === true) {
 
-        if (this.$isPreview === true) {
-            var $preview = $editor.find('.md-preview');
-            $preview.find("pre").css({ "max-width": $editor.width() });
-            $preview.find("table").css({ "max-width": $editor.width() });
+            $editor.addClass('md-fullscreen-mode');
+            $('body').addClass('md-nooverflow');
+            this.$options.onFullscreen(this);
+
+            // Ensure textarea takes up 100%
+            $textarea.css({
+                "height": '100%'
+            });
+
+            // Store original height
+            $textarea.data("height", height);
+
+            $textarea.focus();
+
+            if (this.$isPreview === true) {
+                var $preview = $editor.find('.md-preview');
+                $preview.find("pre").css({ "max-width": $editor.width() });
+                $preview.find("table").css({ "max-width": $editor.width() });
+            }
+
+        } else {
+
+            $editor.removeClass('md-fullscreen-mode');
+            $('body').removeClass('md-nooverflow');
+            this.$options.onFullscreenExit(this);
+
+            $textarea.focus();
+
+            // Apply original height
+            if ($textarea.data("height")) {
+                $textarea.css({ "height": $textarea.data("height") + "px" });
+            }
+
+            if (this.$isPreview === true) {
+                this.hidePreview()
+                    .showPreview();
+            }
+
         }
 
-      } else {
-        $editor.removeClass('md-fullscreen-mode');
-        $('body').removeClass('md-nooverflow');
-        this.$options.onFullscreenExit(this);
+        this.$isFullscreen = mode;
+  
 
-        if (this.$isPreview === true)
-          this.hidePreview().showPreview();
-      }
-
-      this.$isFullscreen = mode;
-      $textarea.focus();
     },
     showEditor: function() {
 
@@ -683,24 +707,31 @@
 
             var hasRows = typeof this.$textarea.attr('rows') !== 'undefined',
                 startRows = hasRows ? this.$textarea.attr('rows') : maxRows;
-
-
+            
             this.$textarea.on('keyup keypress paste',
                 function() {
                     if (!$("body").first().attr("data-page-is-dirty")) {
                         $("body").first().attr("data-page-is-dirty", true);
                     }
-                    initRows($(this));
+                    //initRows($(this));
                 });
 
             this.$textarea.on('focus',
                 function() {
-                    initRows($(this));
+                    //initRows($(this));
                 });
 
             function initRows($textArea) {
-                var lineHeight = 26;
-                var rows = startRows || minRows;
+
+                // No need to adjust rows in full screen as the editor
+                // takes up 100% of the screen space
+                if (instance.$isFullscreen) {
+                    return;
+                }
+
+                var lineHeight = 26,
+                    rows = startRows || minRows;
+
                 if ($textArea.val() !== "") {
                     rows = $textArea.val().split("\n").length;
                 }
@@ -715,13 +746,17 @@
                     rows = startRows;
                 }
 
+                $textArea.attr("rows", null);
+
                 if (rows >= maxRows) {
-                    $textArea.css({ "overflow": "auto", "height": lineHeight * rows + "px" });
+                    $textArea.css({ "height": lineHeight * rows + "px" });
                 } else {
-                    $textArea.css({ "overflow": "hidden", "height": lineHeight * rows + "px" });
+                    $textArea.css({ "height": lineHeight * rows + "px" });
                 }
 
             }
+
+            //initRows(this.$textarea);
 
         } else {
 

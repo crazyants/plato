@@ -1,32 +1,56 @@
 ﻿@model EditEntityViewModel
 
-<card>
-    <card-title>
-        @T["Start a new topic..."]
-    </card-title>
-    <card-body>
 
-        <fieldset>
-            <div class="form-group">
 
-                <span asp-validation-for="Title" class="text-danger"></span>
-                <input asp-for="Title" placeholder="@T["Title"]" class="form-control" autofocus />
+@{
+    var user = await GetAuthenticatedUserAsync();
+}
 
-            </div>
-            <div class="form-group">
 
-                @await DisplayAsync(new View("Editor", new
-                {
-                    value = string.Empty,
-                    placeHolderText = T["Add your comments here"],
-                    htmlName = @Model.EditorHtmlName
-                }))
 
-            </div>
 
-        </fieldset>
-    </card-body>
-</card>
+<div id="postReply" class="mt-4">
+    <div class="mt-4">
+        <div class="topic-reply-left">
+            @if (user != null)
+            {
+                <a href="#" class="avatar-link">
+                    <avatar data-toggle="tooltip" title="@user.DisplayName" class="avatar" user-id="@user.Id" />
+                </a>}
+
+        </div>
+        <div class="topic-reply-body">
+            <card>
+                <card-body>
+
+                    <fieldset>
+                        <div class="form-group">
+
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                            <input asp-for="Title" placeholder="@T["Title"]" class="form-control" autofocus />
+
+                        </div>
+                        <div class="form-group">
+
+                            @await DisplayAsync(new View("Editor", new
+                            {
+                                value = string.Empty,
+                                placeHolderText = T["Add your comments here"],
+                                htmlName = @Model.EditorHtmlName
+                            }))
+
+                        </div>
+
+                    </fieldset>
+                </card-body>
+            </card>
+        </div>
+    </div>
+</div>
+
+
+
+
 
 <input asp-for="EntityId" type="hidden" />
 
