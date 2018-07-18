@@ -336,387 +336,430 @@
       this.$isFullscreen = mode;
       $textarea.focus();
     },
-    showEditor: function () {
+    showEditor: function() {
 
-      var instance = this,
-        textarea,
-        ns = this.$ns,
-        container = this.$element,
-        originalHeigth = container.css('height'),
-        originalWidth = container.css('width'),
-        editable = this.$editable,
-        handler = this.$handler,
-        callback = this.$callback,
-        options = this.$options,
-        editor = $('<div/>', {
-          'class': 'md-editor',
-          click: function() {
-            instance.focus();
-          }
-        });
+        var instance = this,
+            textarea,
+            ns = this.$ns,
+            container = this.$element,
+            originalHeigth = container.css('height'),
+            originalWidth = container.css('width'),
+            editable = this.$editable,
+            handler = this.$handler,
+            callback = this.$callback,
+            options = this.$options,
+            editor = $('<div/>',
+                {
+                    'class': 'md-editor',
+                    click: function() {
+                        instance.focus();
+                    }
+                });
 
-      // Prepare the editor
-      if (this.$editor === null) {
+        // Prepare the editor
+        if (this.$editor === null) {
 
-        // Create the panel
-        var editorHeader = $('<div/>', {
-            'class': 'md-header btn-toolbar'
-        });
+            // Create the panel
+            var editorHeader = $('<div/>',
+                {
+                    'class': 'md-header btn-toolbar'
+                });
 
-        // Merge the main & additional button groups together
-        var allBtnGroups = [];
-        if (options.buttons.length > 0) allBtnGroups = allBtnGroups.concat(options.buttons[0]);
-        if (options.additionalButtons.length > 0) {
-          // iterate the additional button groups
-          $.each(options.additionalButtons[0], function(idx, buttonGroup) {
+            // Merge the main & additional button groups together
+            var allBtnGroups = [];
+            if (options.buttons.length > 0) allBtnGroups = allBtnGroups.concat(options.buttons[0]);
+            if (options.additionalButtons.length > 0) {
+                // iterate the additional button groups
+                $.each(options.additionalButtons[0],
+                    function(idx, buttonGroup) {
 
-            // see if the group name of the additional group matches an existing group
-            var matchingGroups = $.grep(allBtnGroups, function(allButtonGroup, allIdx) {
-              return allButtonGroup.name === buttonGroup.name;
-            });
+                        // see if the group name of the additional group matches an existing group
+                        var matchingGroups = $.grep(allBtnGroups,
+                            function(allButtonGroup, allIdx) {
+                                return allButtonGroup.name === buttonGroup.name;
+                            });
 
-            // if it matches add the additional buttons to that group, if not just add it to the all buttons group
-            if (matchingGroups.length > 0) {
-              matchingGroups[0].data = matchingGroups[0].data.concat(buttonGroup.data);
+                        // if it matches add the additional buttons to that group, if not just add it to the all buttons group
+                        if (matchingGroups.length > 0) {
+                            matchingGroups[0].data = matchingGroups[0].data.concat(buttonGroup.data);
+                        } else {
+                            allBtnGroups.push(options.additionalButtons[0][idx]);
+                        }
+
+                    });
+            }
+
+            // Reduce and/or reorder the button groups
+            if (options.reorderButtonGroups.length > 0) {
+                allBtnGroups = allBtnGroups
+                    .filter(function(btnGroup) {
+                        return options.reorderButtonGroups.indexOf(btnGroup.name) > -1;
+                    })
+                    .sort(function(a, b) {
+                        if (options.reorderButtonGroups.indexOf(a.name) < options.reorderButtonGroups.indexOf(b.name))
+                            return -1;
+                        if (options.reorderButtonGroups.indexOf(a.name) > options.reorderButtonGroups.indexOf(b.name))
+                            return 1;
+                        return 0;
+                    });
+            }
+
+
+
+            // Build the buttons
+            if (allBtnGroups.length > 0) {
+                editorHeader = this.__buildButtons([allBtnGroups], editorHeader);
+            }
+
+            if (options.fullscreen.enable) {
+                var fullScreenToolTip = this.__localize('Full Screen')
+                editorHeader
+                    .append(
+                        '<div class="btn-group"><button class="btn md-control-fullscreen" href="#" data-tooltip-position="bottom" title="' +
+                        fullScreenToolTip +
+                        '"><i class="' +
+                        this.__getIcon(options.fullscreen.icons.fullscreenOn) +
+                        '"></i></button></div>')
+                    .on('click',
+                        '.md-control-fullscreen',
+                        function(e) {
+                            e.preventDefault();
+                            instance.setFullscreen(true);
+                        });
+            }
+            if (options.fullscreen.enable && options.fullscreen !== false) {
+                editorHeader.append('<div class="btn-group md-fullscreen-controls">' +
+                        '<button href="#" class="btn md-exit-fullscreen" title="Exit fullscreen"><i class="' +
+                        this.__getIcon(options.fullscreen.icons.fullscreenOff) +
+                        '"></i></button>' +
+                        '</div>')
+                    .on('click',
+                        '.md-exit-fullscreen',
+                        function(e) {
+                            e.preventDefault();
+                            instance.setFullscreen(false);
+                        });
+            }
+
+            editor.append(editorHeader);
+
+
+            // Wrap the textarea
+            if (container.is('textarea')) {
+                container.before(editor);
+                textarea = container;
+
+                editor.append(textarea);
             } else {
-              allBtnGroups.push(options.additionalButtons[0][idx]);
+                var rawContent = (typeof toMarkdown == 'function') ? toMarkdown(container.html()) : container.html(),
+                    currentContent = $.trim(rawContent);
+
+                // This is some arbitrary content that could be edited
+                textarea = $('<textarea/>',
+                    {
+                        'class': 'i-input md-textarea',
+                        'val': currentContent
+                    });
+
+                editor.append(textarea);
+
+                // Save the editable
+                editable.el = container;
+                editable.type = container.prop('tagName').toLowerCase();
+                editable.content = container.html();
+
+                $(container[0].attributes).each(function() {
+                    editable.attrKeys.push(this.nodeName);
+                    editable.attrValues.push(this.nodeValue);
+                });
+
+                // Set editor to block the original container
+                container.replaceWith(editor);
             }
 
-          });
-        }
+            var editorFooter = $('<div/>',
+                    {
+                        'class': 'md-footer'
+                    }),
+                createFooter = false,
+                footer = '';
+            // Create the footer if savable
+            if (options.savable) {
+                createFooter = true;
+                var saveHandler = 'cmdSave';
 
-        // Reduce and/or reorder the button groups
-        if (options.reorderButtonGroups.length > 0) {
-          allBtnGroups = allBtnGroups
-            .filter(function(btnGroup) {
-              return options.reorderButtonGroups.indexOf(btnGroup.name) > -1;
-            })
-            .sort(function(a, b) {
-              if (options.reorderButtonGroups.indexOf(a.name) < options.reorderButtonGroups.indexOf(b.name)) return -1;
-              if (options.reorderButtonGroups.indexOf(a.name) > options.reorderButtonGroups.indexOf(b.name)) return 1;
-              return 0;
-            });
-        }
+                // Register handler and callback
+                handler.push(saveHandler);
+                callback.push(options.onSave);
 
-     // Build the buttons
-        if (allBtnGroups.length > 0) {
-          editorHeader = this.__buildButtons([allBtnGroups], editorHeader);
-        }
+                editorFooter.append('<a class="btn btn-success" data-provider="' +
+                    ns +
+                    '" data-handler="' +
+                    saveHandler +
+                    '"><i class="fal fa-plus"></i> ' +
+                    this.__localize('Save') +
+                    '</button>');
 
-        if (options.fullscreen.enable) {
-            var fullScreenToolTip = this.__localize('Full Screen')
-            editorHeader
-                .append('<div class="btn-group"><button class="btn md-control-fullscreen" href="#" data-tooltip-position="bottom" title="' + fullScreenToolTip + '"><i class="' + this.__getIcon(options.fullscreen.icons.fullscreenOn) + '"></i></button></div>')
-                .on('click',
-                    '.md-control-fullscreen',
-                    function(e) {
-                        e.preventDefault();
-                        instance.setFullscreen(true);
-                    });
-        }
-        if (options.fullscreen.enable && options.fullscreen !== false) {
-            editorHeader.append('<div class="btn-group md-fullscreen-controls">' +
-                    '<button href="#" class="btn md-exit-fullscreen" title="Exit fullscreen"><i class="' +
-                    this.__getIcon(options.fullscreen.icons.fullscreenOff) +
-                    '"></i></button>' +
-                    '</div>')
-                .on('click',
-                    '.md-exit-fullscreen',
-                    function (e) {
-                        e.preventDefault();
-                        instance.setFullscreen(false);
-                    });
-        }
-          
-        editor.append(editorHeader);
+            }
 
-        // Wrap the textarea
-        if (container.is('textarea')) {
-          container.before(editor);
-          textarea = container;
-          
-          editor.append(textarea);
+            footer = typeof options.footer === 'function' ? options.footer(this) : options.footer;
+
+            if ($.trim(footer) !== '') {
+                createFooter = true;
+                editorFooter.append(footer);
+            }
+
+            if (createFooter) editor.append(editorFooter);
+
+            // Set width
+            if (options.width && options.width !== 'inherit') {
+                if (jQuery.isNumeric(options.width)) {
+                    editor.css('display', 'table');
+                    textarea.css('width', options.width + 'px');
+                } else {
+                    editor.addClass(options.width);
+                }
+            }
+
+            // Set height
+            if (options.height && options.height !== 'inherit') {
+                if ($.isNumeric(options.height)) {
+                    var height = options.height;
+                    if (editorHeader) height = Math.max(0, height - editorHeader.outerHeight());
+                    if (editorFooter) height = Math.max(0, height - editorFooter.outerHeight());
+                    textarea.css('height', height + 'px');
+                } else {
+                    editor.addClass(options.height);
+                }
+            }
+
+            // Reference
+            this.$editor = editor;
+            this.$textarea = textarea;
+            this.$editable = editable;
+            this.$oldContent = this.getContent();
+
+            this.__setListener();
+            this.__setEventListeners();
+
+            // Set editor attributes, data short-hand API and listener
+            this.$editor.attr('id', (new Date()).getTime());
+            this.$editor.on('click', '[data-provider="i-markdown"]', $.proxy(this.__handle, this));
+
+            if (this.$element.is(':disabled') || this.$element.is('[readonly]')) {
+                this.$editor.addClass('md-editor-disabled');
+                this.disableButtons('all');
+            }
+
+            if (this.eventSupported('keydown') && typeof jQuery.hotkeys === 'object') {
+                editorHeader.find('[data-provider="i-markdown"]').each(function() {
+                    var $button = $(this),
+                        hotkey = $button.attr('data-hotkey');
+                    if (hotkey.toLowerCase() !== '') {
+                        textarea.bind('keydown',
+                            hotkey,
+                            function() {
+                                $button.trigger('click');
+                                return false;
+                            });
+                    }
+                });
+            }
+
+            if (options.initialstate === 'preview') {
+                this.showPreview();
+            } else if (options.initialstate === 'fullscreen' && options.fullscreen.enable) {
+                this.setFullscreen(true);
+            }
+
+            // grow and shrink accordingly
+            var maxRows = options.maxRows,
+                minRows = options.minRows;
+
+            var hasRows = typeof this.$textarea.attr('rows') !== 'undefined',
+                startRows = hasRows ? this.$textarea.attr('rows') : maxRows;
+
+
+            this.$textarea.on('keyup keypress paste',
+                function() {
+                    if (!$("body").first().attr("data-page-is-dirty")) {
+                        $("body").first().attr("data-page-is-dirty", true);
+                    }
+                    initRows($(this));
+                });
+
+            this.$textarea.on('focus',
+                function() {
+                    initRows($(this));
+                });
+
+            function initRows($textArea) {
+                var lineHeight = 26;
+                var rows = startRows || minRows;
+                if ($textArea.val() !== "") {
+                    rows = $textArea.val().split("\n").length;
+                }
+                rows = Math.max(rows || minRows);
+                if (rows > maxRows) {
+                    rows = maxRows;
+                }
+                if (rows < minRows) {
+                    rows = minRows;
+                }
+                if (rows < startRows) {
+                    rows = startRows;
+                }
+
+                if (rows >= maxRows) {
+                    $textArea.css({ "overflow": "auto", "height": lineHeight * rows + "px" });
+                } else {
+                    $textArea.css({ "overflow": "hidden", "height": lineHeight * rows + "px" });
+                }
+
+            }
+
         } else {
-          var rawContent = (typeof toMarkdown == 'function') ? toMarkdown(container.html()) : container.html(),
-            currentContent = $.trim(rawContent);
 
-          // This is some arbitrary content that could be edited
-          textarea = $('<textarea/>', {
-            'class': 'i-input md-textarea',
-            'val': currentContent
-          });
+            this.$editor.show();
 
-          editor.append(textarea);
-
-          // Save the editable
-          editable.el = container;
-          editable.type = container.prop('tagName').toLowerCase();
-          editable.content = container.html();
-
-          $(container[0].attributes).each(function() {
-            editable.attrKeys.push(this.nodeName);
-            editable.attrValues.push(this.nodeValue);
-          });
-
-          // Set editor to block the original container
-          container.replaceWith(editor);
         }
 
-        var editorFooter = $('<div/>', {
-            'class': 'md-footer'
-          }),
-          createFooter = false,
-          footer = '';
-        // Create the footer if savable
-        if (options.savable) {
-          createFooter = true;
-          var saveHandler = 'cmdSave';
-
-          // Register handler and callback
-          handler.push(saveHandler);
-          callback.push(options.onSave);
-
-          editorFooter.append('<a class="btn btn-success" data-provider="' +
-            ns +
-            '" data-handler="' +
-            saveHandler +
-            '"><i class="fal fa-plus"></i> ' +
-            this.__localize('Save') +
-            '</button>');
-            
+        if (options.autofocus) {
+            this.$textarea.focus();
+            this.$editor.addClass('active');
         }
 
-        footer = typeof options.footer === 'function' ? options.footer(this) : options.footer;
+        // hide hidden buttons from options
+        this.hideButtons(options.hiddenButtons);
 
-        if ($.trim(footer) !== '') {
-          createFooter = true;
-          editorFooter.append(footer);
-        }
+        // disable disabled buttons from options
+        this.disableButtons(options.disabledButtons);
 
-        if (createFooter) editor.append(editorFooter);
+        // enable dropZone if available and configured
+        if (options.dropZoneOptions) {
+            if (this.$editor.dropzone) {
+                if (!options.dropZoneOptions.init) {
 
-        // Set width
-        if (options.width && options.width !== 'inherit') {
-          if (jQuery.isNumeric(options.width)) {
-            editor.css('display', 'table');
-            textarea.css('width', options.width + 'px');
-          } else {
-            editor.addClass(options.width);
-          }
-        }
+                    options.dropZoneOptions.init = function() {
 
-        // Set height
-        if (options.height && options.height !== 'inherit') {
-          if ($.isNumeric(options.height)) {
-            var height = options.height;
-            if (editorHeader) height = Math.max(0, height - editorHeader.outerHeight());
-            if (editorFooter) height = Math.max(0, height - editorFooter.outerHeight());
-            textarea.css('height', height + 'px');
-          } else {
-            editor.addClass(options.height);
-          }
-        }
+                        var caretPos = 0, allowedUploadExtensions = options.allowedUploadExtensions;
+                        this.on('addedfile',
+                            function(file) {
 
-        // Reference
-        this.$editor = editor;
-        this.$textarea = textarea;
-        this.$editable = editable;
-        this.$oldContent = this.getContent();
+                                caretPos = textarea.prop('selectionStart');
 
-        this.__setListener();
-        this.__setEventListeners();
-
-        // Set editor attributes, data short-hand API and listener
-        this.$editor.attr('id', (new Date()).getTime());
-        this.$editor.on('click', '[data-provider="i-markdown"]', $.proxy(this.__handle, this));
-
-        if (this.$element.is(':disabled') || this.$element.is('[readonly]')) {
-          this.$editor.addClass('md-editor-disabled');
-          this.disableButtons('all');
-        }
-
-        if (this.eventSupported('keydown') && typeof jQuery.hotkeys === 'object') {
-          editorHeader.find('[data-provider="i-markdown"]').each(function() {
-            var $button = $(this),
-              hotkey = $button.attr('data-hotkey');
-            if (hotkey.toLowerCase() !== '') {
-              textarea.bind('keydown', hotkey, function() {
-                $button.trigger('click');
-                return false;
-              });
-            }
-          });
-        }
-
-        if (options.initialstate === 'preview') {
-          this.showPreview();
-        } else if (options.initialstate === 'fullscreen' && options.fullscreen.enable) {
-          this.setFullscreen(true);
-        }
-
-
-         
-        // grow and shrink accordingly
-          var maxRows = options.maxRows,
-              minRows = options.minRows;
-
-          var hasRows = typeof this.$textarea.attr('rows') !== 'undefined',
-              startRows = hasRows ? this.$textarea.attr('rows') : maxRows;
-
-
-          this.$textarea.on('keyup keypress paste',
-              function() {
-                  if (!$("body").first().attr("data-page-is-dirty")) {
-                      $("body").first().attr("data-page-is-dirty", true);
-                  }
-                  initRows($(this));
-              });
-
-          this.$textarea.on('focus',
-              function () {
-                  initRows($(this));
-              });
-
-          function initRows($textArea) {
-              var lineHeight = 26;
-              var rows = startRows || minRows;
-              if ($textArea.val() !== "") {
-                  rows = $textArea.val().split("\n").length;
-              }
-              rows = Math.max(rows || minRows);
-              if (rows > maxRows) { rows = maxRows; }
-              if (rows < minRows) { rows = minRows; }
-              if (rows < startRows) { rows = startRows; }
-
-              if (rows >= maxRows) {
-                  $textArea.css({ "overflow": "auto", "height": lineHeight * rows + "px" });
-              } else {
-                  $textArea.css({ "overflow": "hidden", "height": lineHeight * rows + "px" });
-              }
-              
-          }
-
-
-      } else {
-
-          this.$editor.show();
-
-      }
-
-      if (options.autofocus) {
-        this.$textarea.focus();
-        this.$editor.addClass('active');
-      }
-        
-      // hide hidden buttons from options
-      this.hideButtons(options.hiddenButtons);
-
-      // disable disabled buttons from options
-      this.disableButtons(options.disabledButtons);
-
-      // enable dropZone if available and configured
-      if (options.dropZoneOptions) {
-        if (this.$editor.dropzone) {
-            if (!options.dropZoneOptions.init) {
-                
-                options.dropZoneOptions.init = function () {
-
-                    var caretPos = 0, allowedUploadExtensions = options.allowedUploadExtensions;
-                    this.on('addedfile', function (file) {
-
-                        caretPos = textarea.prop('selectionStart');
-
-                        var fileName = file.upload.filename;
-                        var allowed = false;
-                        if (fileName && allowedUploadExtensions) {
-                            var bits = fileName.split(".");
-                            var fileExtension = bits[bits.length - 1];
-                            for (var i = 0; i < allowedUploadExtensions.length; i++) {
-                                var allowedExtension = allowedUploadExtensions[i].ext;
-                                if (fileExtension === allowedExtension) {
-                                    allowed = true;
+                                var fileName = file.upload.filename;
+                                var allowed = false;
+                                if (fileName && allowedUploadExtensions) {
+                                    var bits = fileName.split(".");
+                                    var fileExtension = bits[bits.length - 1];
+                                    for (var i = 0; i < allowedUploadExtensions.length; i++) {
+                                        var allowedExtension = allowedUploadExtensions[i].ext;
+                                        if (fileExtension === allowedExtension) {
+                                            allowed = true;
+                                        }
+                                    }
                                 }
-                            }
-                        }
 
-                        if (allowed === false) {
-                            alert("File type is not allowed");
-                            this.removeFile(file);
-                            return false;
-                        }
+                                if (allowed === false) {
+                                    alert("File type is not allowed");
+                                    this.removeFile(file);
+                                    return false;
+                                }
 
-                        return true;
+                                return true;
 
-                    });
-                    
-                    this.on('drop', function(e) {
-                        caretPos = textarea.prop('selectionStart');
-                    });
-                    this.on('success', function (file, results) {
+                            });
 
-                        if (results) {
-                            for (var i = 0; i < results.length; i++) {
-                                var result = results[i];
-                                var text = textarea.val();
-                                textarea.val(text.substring(0, caretPos) + '\n![' + result.name + '](' + result.url + ')\n' + text.substring(caretPos));
+                        this.on('drop',
+                            function(e) {
+                                caretPos = textarea.prop('selectionStart');
+                            });
+                        this.on('success',
+                            function(file, results) {
 
-                            }
-                        }
-              
-              
-                    });
-                    this.on('error', function(file, error, xhr) {
-                        console.log('Error:', error);
-                    });
-                };
-          }
-          this.$editor.addClass('dropzone');
-          this.$editor.dropzone(options.dropZoneOptions);
-        } else {
-          console.log('dropZoneOptions was configured, but DropZone was not detected.');
+                                if (results) {
+                                    for (var i = 0; i < results.length; i++) {
+                                        var result = results[i];
+                                        var text = textarea.val();
+                                        textarea.val(text.substring(0, caretPos) +
+                                            '\n![' +
+                                            result.name +
+                                            '](' +
+                                            result.url +
+                                            ')\n' +
+                                            text.substring(caretPos));
+
+                                    }
+                                }
+
+
+                            });
+                        this.on('error',
+                            function(file, error, xhr) {
+                                console.log('Error:', error);
+                            });
+                    };
+                }
+                this.$editor.addClass('dropzone');
+                this.$editor.dropzone(options.dropZoneOptions);
+            } else {
+                console.log('dropZoneOptions was configured, but DropZone was not detected.');
+            }
         }
-      }
-        
-      // paste handler
-      this.$editor.on('paste',
-          function (event) {
-              var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-              for (var index in items) {
-                  var item = items[index];
-                  if (item.kind === 'file') {
-                      // add file to dropzone instance
-                      this.dropzone.addFile(item.getAsFile());
-                  }
-              }
-          });
-        
-      // enable data-uris via drag and drop
-      if (options.enableDropDataUri === true) {
-        this.$editor.on('drop', function(e) {
-          var caretPos = textarea.prop('selectionStart');
-          e.stopPropagation();
-          e.preventDefault();
-          $.each(e.originalEvent.dataTransfer.files, function(index, file){
-            var fileReader = new FileReader();
-              fileReader.onload = (function(file) {
-                 var type = file.type.split('/')[0];
-                 return function(e) {
-                    var text = textarea.val();
-                    if (type === 'image')
-                      textarea.val(text.substring(0, caretPos) + '\n<img src="'+ e.target.result  +'" />\n' + text.substring(caretPos) );
-                    else
-                      textarea.val(text.substring(0, caretPos) + '\n<a href="'+ e.target.result  +'">Download ' + file.name + '</a>\n' + text.substring(caretPos) );
-                 };
-              })(file);
-            fileReader.readAsDataURL(file);
-          });
-        });
-      }
 
-      // Trigger the onShow hook
-      options.onShow(this);
-        
-      return this;
+        // paste handler
+        this.$editor.on('paste',
+            function(event) {
+                var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                for (var index in items) {
+                    var item = items[index];
+                    if (item.kind === 'file') {
+                        // add file to dropzone instance
+                        this.dropzone.addFile(item.getAsFile());
+                    }
+                }
+            });
+
+        // enable data-uris via drag and drop
+        if (options.enableDropDataUri === true) {
+            this.$editor.on('drop',
+                function(e) {
+                    var caretPos = textarea.prop('selectionStart');
+                    e.stopPropagation();
+                    e.preventDefault();
+                    $.each(e.originalEvent.dataTransfer.files,
+                        function(index, file) {
+                            var fileReader = new FileReader();
+                            fileReader.onload = (function(file) {
+                                var type = file.type.split('/')[0];
+                                return function(e) {
+                                    var text = textarea.val();
+                                    if (type === 'image')
+                                        textarea.val(text.substring(0, caretPos) +
+                                            '\n<img src="' +
+                                            e.target.result +
+                                            '" />\n' +
+                                            text.substring(caretPos));
+                                    else
+                                        textarea.val(text.substring(0, caretPos) +
+                                            '\n<a href="' +
+                                            e.target.result +
+                                            '">Download ' +
+                                            file.name +
+                                            '</a>\n' +
+                                            text.substring(caretPos));
+                                };
+                            })(file);
+                            fileReader.readAsDataURL(file);
+                        });
+                });
+        }
+
+        // Trigger the onShow hook
+        options.onShow(this);
+
+        return this;
 
     },
     parseContent: function(val) {
@@ -2007,6 +2050,7 @@
         }
       }
     },
+    buttonContainer: "#markdownButtons",
 
     /* Events hook */
     onShow: function(e) {},

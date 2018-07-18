@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Categories.Models;
+using Plato.Categories.Repositories;
+using Plato.Categories.Services;
+using Plato.Categories.Stores;
+using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewAdaptors;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Discuss.Channels.ViewProviders;
@@ -28,19 +32,21 @@ namespace Plato.Discuss.Channels
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            //// Feature installation event handler
-            //services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
-
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
+            
+            // Data stores
+            services.AddScoped<ICategoryRepository<Channel>, CategoryRepository<Channel>>();
+            services.AddScoped<ICategoryStore<Channel>, CategoryStore<Channel>>();
+            services.AddScoped<ICategoryManager<Channel>, CategoryManager<Channel>>();
 
             // Discuss view providers
-
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, DiscussViewProvider>();
 
-            services.AddScoped<IViewProviderManager<ChannelIndexViewModel>, ViewProviderManager<ChannelIndexViewModel>>();
-            services.AddScoped<IViewProvider<ChannelIndexViewModel>, ChannelViewProvider>();
+            // Channel view provider
+            services.AddScoped<IViewProviderManager<Channel>, ViewProviderManager<Channel>>();
+            services.AddScoped<IViewProvider<Channel>, ChannelViewProvider>();
 
             // Admin view providers
             services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();

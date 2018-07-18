@@ -25,7 +25,7 @@ namespace Plato.Discuss.ViewModels
 
         public IPagedResults<Topic> Results { get; }
 
-        public PagerOptions PagerOpts { get; }
+        public PagerOptions PagerOpts { get; set; }
         
         public FilterOptions FilterOpts { get; set; }
 

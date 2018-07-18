@@ -19,10 +19,10 @@ namespace Plato.Categories.Stores
 
         private readonly ICategoryRepository<TCategory> _categoryRepository;
         private readonly ICategoryDataStore<CategoryData> _categoryDataStore;
-        private readonly ICacheManager _cacheManager;
+        private readonly ITypedModuleProvider _typedModuleProvider;
         private readonly ILogger<CategoryStore<TCategory>> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
-        private readonly ITypedModuleProvider _typedModuleProvider;
+        private readonly ICacheManager _cacheManager;
 
         public CategoryStore(
             ICategoryRepository<TCategory> categoryRepository,

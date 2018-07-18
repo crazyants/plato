@@ -56,12 +56,17 @@ namespace Plato.Discuss.ViewProviders
 
             var pagerOptions = new PagerOptions();
             pagerOptions.Page = GetPageIndex(updater);
+            
+            var indexViewModel = new HomeIndexViewModel();
+            indexViewModel.FilterOpts = filterOptions;
+            indexViewModel.PagerOpts = pagerOptions;
 
-            var indexViewModel = await GetIndexViewModel(filterOptions, pagerOptions);
-         
+
+                //await GetIndexViewModel(filterOptions, pagerOptions);
+
             return Views(
                 View<HomeIndexViewModel>("Home.Index.Header", model => indexViewModel).Zone("header"),
-                View<NewEntityViewModel>("Home.Index.Tools", model => new NewEntityViewModel()
+                View<EditEntityViewModel>("Home.Index.Tools", model => new EditEntityViewModel()
                 {
                     EditorHtmlName = EditorHtmlName
                 }).Zone("tools"),
@@ -109,9 +114,22 @@ namespace Plato.Discuss.ViewProviders
 
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(Topic entity, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Topic topic, IUpdateModel updater)
         {
-            return Task.FromResult(default(IViewProviderResult));
+            
+            var newEntityViewModel = new EditEntityViewModel()
+            {
+                EntityId = topic.Id
+            };
+
+            return Task.FromResult(Views(
+                View<EditEntityViewModel>("Home.Edit.Header", model => newEntityViewModel).Zone("header"),
+                View<EditEntityViewModel>("Home.Edit.Content", model => newEntityViewModel).Zone("content"),
+                View<EditEntityViewModel>("Home.Edit.Footer", model => newEntityViewModel).Zone("Footer")
+            ));
+
+
+
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(Topic viewModel, IUpdateModel updater)
@@ -123,7 +141,7 @@ namespace Plato.Discuss.ViewProviders
                 return await BuildIndexAsync(viewModel, updater);
             }
             
-            var model = new NewEntityViewModel();
+            var model = new EditEntityViewModel();
             model.EntityId = viewModel.Id;
             model.Title = viewModel.Title;
       
@@ -144,40 +162,74 @@ namespace Plato.Discuss.ViewProviders
                     }
                 }
 
-                if (model.EntityId == 0)
+
+                await _topicManager.UpdateAsync(viewModel);
+
+                if (model.EntityId > 0)
                 {
-
-                    var result = await _topicManager.CreateAsync(new Topic()
-                    {
-                        Title = model.Title,
-                        Message = message
-                    });
-
-
-                    foreach (var error in result.Errors)
-                    {
-                        updater.ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                    
-                }
-                else
-                {
-                
                     var result = await _replyManager.CreateAsync(new EntityReply
                     {
                         EntityId = model.EntityId,
                         Message = message.Trim()
                     });
 
+
                     foreach (var error in result.Errors)
                     {
                         updater.ModelState.AddModelError(string.Empty, error.Description);
                     }
 
-                    return await BuildDisplayAsync(viewModel, updater);
 
                 }
-               
+                
+
+                //if (result.Succeeded)
+                //{
+
+                //}
+                //else
+                //{
+                //    foreach (var error in result.Errors)
+                //    {
+                //        updater.ModelState.AddModelError(string.Empty, error.Description);
+                //    }
+                //}
+
+
+                //if (model.EntityId == 0)
+                //{
+
+                //    //var result = await _topicManager.CreateAsync(new Topic()
+                //    //{
+                //    //    Title = model.Title,
+                //    //    Message = message
+                //    //});
+
+
+                //    //foreach (var error in result.Errors)
+                //    //{
+                //    //    updater.ModelState.AddModelError(string.Empty, error.Description);
+                //    //}
+
+                //}
+                //else
+                //{
+
+                //    var result = await _replyManager.CreateAsync(new EntityReply
+                //    {
+                //        EntityId = model.EntityId,
+                //        Message = message.Trim()
+                //    });
+
+                //    foreach (var error in result.Errors)
+                //    {
+                //        updater.ModelState.AddModelError(string.Empty, error.Description);
+                //    }
+
+                //    return await BuildDisplayAsync(viewModel, updater);
+
+                //}
+
             }
 
             return await BuildIndexAsync(viewModel, updater);
@@ -188,54 +240,54 @@ namespace Plato.Discuss.ViewProviders
         
         #region "Private Methods"
 
-        async Task<HomeIndexViewModel> GetIndexViewModel(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-            var topics = await GetEntities(filterOptions, pagerOptions);
-            return new HomeIndexViewModel(
-                topics,
-                filterOptions,
-                pagerOptions);
-        }
+        //async Task<HomeIndexViewModel> GetIndexViewModel(
+        //    FilterOptions filterOptions,
+        //    PagerOptions pagerOptions)
+        //{
+        //    //var topics = await GetEntities(filterOptions, pagerOptions);
+        //    return new HomeIndexViewModel(
+        //        topics,
+        //        filterOptions,
+        //        pagerOptions);
+        //}
         
-        async Task<IPagedResults<Topic>> GetEntities(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
+        //async Task<IPagedResults<Topic>> GetEntities(
+        //    FilterOptions filterOptions,
+        //    PagerOptions pagerOptions)
+        //{
 
-            // Get current feature (i.e. Plato.Discuss) from area
-            var feature = await _contextFacade.GetFeatureByAreaAsync();
+        //    // Get current feature (i.e. Plato.Discuss) from area
+        //    var feature = await _contextFacade.GetFeatureByAreaAsync();
 
-            return await _entityStore.QueryAsync()
-                .Take(pagerOptions.Page, pagerOptions.PageSize)
-                .Select<EntityQueryParams>(q =>
-                {
+        //    return await _entityStore.QueryAsync()
+        //        .Take(pagerOptions.Page, pagerOptions.PageSize)
+        //        .Select<EntityQueryParams>(q =>
+        //        {
 
-                    if (feature != null)
-                    {
-                        q.FeatureId.Equals(feature.Id);
-                    }
+        //            if (feature != null)
+        //            {
+        //                q.FeatureId.Equals(feature.Id);
+        //            }
 
-                    q.HideSpam.True();
-                    q.HidePrivate.True();
-                    q.HideDeleted.True();
+        //            q.HideSpam.True();
+        //            q.HidePrivate.True();
+        //            q.HideDeleted.True();
 
-                    //q.IsPinned.True();
+        //            //q.IsPinned.True();
 
 
-                    //if (!string.IsNullOrEmpty(filterOptions.Search))
-                    //{
-                    //    q.UserName.IsIn(filterOptions.Search).Or();
-                    //    q.Email.IsIn(filterOptions.Search);
-                    //}
-                    // q.UserName.IsIn("Admin,Mark").Or();
-                    // q.Email.IsIn("email440@address.com,email420@address.com");
-                    // q.Id.Between(1, 5);
-                })
-                .OrderBy("Id", OrderBy.Desc)
-                .ToList();
-        }
+        //            //if (!string.IsNullOrEmpty(filterOptions.Search))
+        //            //{
+        //            //    q.UserName.IsIn(filterOptions.Search).Or();
+        //            //    q.Email.IsIn(filterOptions.Search);
+        //            //}
+        //            // q.UserName.IsIn("Admin,Mark").Or();
+        //            // q.Email.IsIn("email440@address.com,email420@address.com");
+        //            // q.Id.Between(1, 5);
+        //        })
+        //        .OrderBy("Id", OrderBy.Desc)
+        //        .ToList();
+        //}
         
         async Task<IPagedResults<EntityReply>> GetEntityReplies(
             int entityId,

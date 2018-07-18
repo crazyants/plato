@@ -1,0 +1,32 @@
+﻿@model EditEntityViewModel
+
+<card>
+    <card-title>
+        @T["Start a new topic..."]
+    </card-title>
+    <card-body>
+
+        <fieldset>
+            <div class="form-group">
+
+                <span asp-validation-for="Title" class="text-danger"></span>
+                <input asp-for="Title" placeholder="@T["Title"]" class="form-control" autofocus />
+
+            </div>
+            <div class="form-group">
+
+                @await DisplayAsync(new View("Editor", new
+                {
+                    value = string.Empty,
+                    placeHolderText = T["Add your comments here"],
+                    htmlName = @Model.EditorHtmlName
+                }))
+
+            </div>
+
+        </fieldset>
+    </card-body>
+</card>
+
+<input asp-for="EntityId" type="hidden" />
+

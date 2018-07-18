@@ -87,10 +87,21 @@ namespace Plato.Discuss.Controllers
             
 
         }
-        
+
+        public async Task<IActionResult> Create()
+        {
+
+
+            var result = await _discussViewProvider.ProvideEditAsync(new Topic(), this);
+
+            // Return view
+            return View(result);
+
+        }
+
         [HttpPost]
-        [ActionName(nameof(Index))]
-        public async Task<IActionResult> IndexPost(NewEntityViewModel model)
+        [ActionName(nameof(Create))]
+        public async Task<IActionResult> CreatePost(EditEntityViewModel model)
         {
             
             
@@ -119,37 +130,7 @@ namespace Plato.Discuss.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-        
-        public async Task<IActionResult> Channel(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-
-            // default options
-            if (filterOptions == null)
-            {
-                filterOptions = new FilterOptions();
-            }
-
-            // default pager
-            if (pagerOptions == null)
-            {
-                pagerOptions = new PagerOptions();
-            }
-            
-            //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
-            //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
-            this.RouteData.Values.Add("page", pagerOptions.Page);
-
-            // Build view
-            var result = await _discussViewProvider.ProvideIndexAsync(new Topic(), this);
-
-            // Return view
-            return View(result);
-
-
-        }
-
+    
         public async Task<IActionResult> Topic(
             int id,
             FilterOptions filterOptions,
@@ -200,7 +181,7 @@ namespace Plato.Discuss.Controllers
             {
                 return NotFound();
             }
-
+            
             var result = await _discussViewProvider.ProvideUpdateAsync(topic, this);
 
             if (!ModelState.IsValid)

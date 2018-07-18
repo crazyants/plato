@@ -23,8 +23,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
         }
-
-
+        
         public override async Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IUpdateModel updater)
         {
 
@@ -69,10 +68,26 @@ namespace Plato.Discuss.Channels.ViewProviders
         }
 
 
-        public override Task<IViewProviderResult> BuildEditAsync(Topic viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Topic viewModel, IUpdateModel updater)
         {
 
-            return Task.FromResult(default(IViewProviderResult));
+            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
+            if (feature == null)
+            {
+                return default(IViewProviderResult);
+            }
+
+            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+
+            return Views(View<ChannelsViewModel>("Discuss.Edit.Sidebar", model =>
+                {
+                    model.Channels = categories;
+                    return model;
+                }).Zone("sidebar").Order(1)
+            );
+
+
+
         }
 
         public override Task<IViewProviderResult> BuildUpdateAsync(Topic viewModel, IUpdateModel updater)

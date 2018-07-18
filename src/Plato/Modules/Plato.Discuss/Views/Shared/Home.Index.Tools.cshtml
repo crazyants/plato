@@ -1,9 +1,16 @@
-﻿@model NewEntityViewModel
+﻿@model EditEntityViewModel
 
-<a href="#modal-new" class="btn btn-primary" data-toggle="modal" data-target="#modal-new" title="Reply">
+
+<a asp-controller="Home" asp-action="Create" class="btn btn-primary" title="Reply">
     <i class="fal fa-fw fa-plus"></i>
     @T["New Topic"]
 </a>
+
+
+@*<a href="#modal-new" class="btn btn-primary" data-toggle="modal" data-target="#modal-new" title="Reply">
+    <i class="fal fa-fw fa-plus"></i>
+    @T["New Topic"]
+</a>*@
 
 <div class="modal fade" id="modal-new" role="dialog" aria-hidden="true">
 
@@ -12,7 +19,6 @@
         <div class="modal-content">
             <form asp-controller="Home" asp-action="Index" method="post" enctype="multipart/form-data">
                 
-            
                 <input asp-for="EntityId" type="hidden" />
 
                 <card>
@@ -43,11 +49,10 @@
 
                             </div>
                             <div class="form-group mt-4">
-
                                 <button type="submit" class="btn btn-primary">
                                     @T["Post"]
                                 </button>
-                                <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                     @T["Cancel"]
                                 </button>
                             </div>

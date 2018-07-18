@@ -2,14 +2,17 @@
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
+using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
+using Plato.Discuss.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
-    public class ChannelViewProvider : BaseViewProvider<ChannelIndexViewModel>
+    public class ChannelViewProvider : BaseViewProvider<Channel>
     {
 
         private readonly IContextFacade _contextFacade;
@@ -28,7 +31,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(ChannelIndexViewModel indexViewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Channel channel, IUpdateModel updater)
         {
 
             // Ensure we explictly set the featureId
@@ -41,11 +44,22 @@ namespace Plato.Discuss.Channels.ViewProviders
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
 
             Category category = null;
-            if (indexViewModel.FilterOpts.ChannelId > 0)
+            if (channel.Id > 0)
             {
-                category = await _categoryStore.GetByIdAsync(indexViewModel.FilterOpts.ChannelId);
+                category = await _categoryStore.GetByIdAsync(channel.Id);
             }
 
+            var filterOptions = new FilterOptions();
+
+            var pagerOptions = new PagerOptions();
+            pagerOptions.Page = GetPageIndex(updater);
+
+
+            var indexViewModel = new ChannelIndexViewModel
+            {
+                FilterOpts = filterOptions,
+                PagerOpts = pagerOptions
+            };
 
             return Views(
                 View<Category>("Home.Index.Header", model => category).Zone("header").Order(1),
@@ -60,19 +74,19 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(ChannelIndexViewModel indexViewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Channel indexViewModel, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(ChannelIndexViewModel category, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Channel category, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(ChannelIndexViewModel category, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Channel category, IUpdateModel updater)
         {
 
             return Task.FromResult(default(IViewProviderResult));
@@ -84,7 +98,22 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Private Methods"
 
-    
+        int GetPageIndex(IUpdateModel updater)
+        {
+
+            var page = 1;
+            var routeData = updater.RouteData;
+            var found = routeData.Values.TryGetValue("page", out object value);
+            if (found)
+            {
+                int.TryParse(value.ToString(), out page);
+            }
+
+            return page;
+
+        }
+
+
         #endregion
 
     }

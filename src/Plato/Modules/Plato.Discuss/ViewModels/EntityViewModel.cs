@@ -3,7 +3,7 @@
 namespace Plato.Discuss.ViewModels
 {
 
-    public class NewEntityViewModel : NewEntityReplyViewModel
+    public class EditEntityViewModel : NewEntityReplyViewModel
     {
 
         [Required]
