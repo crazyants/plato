@@ -3,7 +3,6 @@
     width: 100%;
     border-width: 1px;
     border-style: solid;
-    color: #222;
     background: white;
     border-radius: 3px;
 }
@@ -15,13 +14,30 @@
 .md-editor .md-textarea,
 .md-editor .dz-message { display: block; text-align: left; }
 
+/* floated row to allow us to float tabs left and buttons right */
 
-.md-editor .btn-toolbar,
-.md-editor.md-fullscreen-mode .btn-toolbar { background: #fff; }
+.md-header-row {
+    float: left;
+    width: 100%;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+}
 
-.md-editor > .btn-toolbar .btn { background: white; border: 1px solid #ddd; }
+.md-header-row .nav {
+    padding: .50rem .50rem 0 .50rem;
+    margin-bottom: -1px;
+}
 
-.md-editor .md-preview { max-height: 600px; }
+.md-header-row .btn-toolbar {
+    background-color: transparent;
+    padding: .25rem .50rem 0 .50rem;
+}
+
+/* Buttons */
+.md-editor .btn-toolbar .btn { background: white; border: 1px solid #ddd; }
+.md-editor .btn-toolbar .btn.disabled { opacity: .1; }
+
+.md-editor .md-preview { display: none; min-height: 200px; max-height: 600px; }
 
 .md-editor .md-footer, 
 .md-editor > .md-header {
@@ -29,46 +45,41 @@
     box-shadow: none;
 }
 
+/* Main border color */
 .md-editor,
 .md-editor .md-footer, 
 .md-editor > .md-header,
 .md-editor > .dz-message {
-     border-color:#ddd;
+     border-color:#ced4da;
 }
 
+/* Focus */
 .md-editor.active {
     border-color: #80bdff;
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
-
-
+/* Disable some borders */
 .md-editor > .md-header  { border-width: 0; border-bottom-width: 1px;border-style: solid; }
 .md-editor > .md-footer,
 .md-editor > .dz-message  { border-top-width: 1px;border-style: solid; }
 
-.md-editor > .md-preview {
-    box-shadow: none;
-    background: #fff;
-    color: #000;
-    padding: 7px 9px;
-    border: 0;
-    border-top: 1px dashed #eeeeee;
-    border-bottom: 1px dashed #eeeeee;
-    min-height: 10px;
-    overflow-y: auto;
-}
-
-.md-editor > .md-textarea {
-    outline: 0;
+/* Style textarea and preview */
+.md-editor .md-textarea,
+.md-editor .md-preview {
+    outline: 0 !important;
     width: 100%;
-    border: 0;
-    min-height: 100px;
     resize: vertical;
-    border: 0;
+    border: 0 !important;
     box-shadow: none !important;
     transition: all .2s;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    background-color: #fff;
+    background-clip: padding-box;
+    border-radius: 0;
 }
 
 /* header selection dropdown */
@@ -136,7 +147,7 @@
 }
 
 .md-editor.md-fullscreen-mode .md-fullscreen-controls {
-    display: block;
+    display: inline;
 }
 
 .md-editor.md-fullscreen-mode .md-editor {

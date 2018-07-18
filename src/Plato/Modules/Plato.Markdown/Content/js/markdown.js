@@ -75,7 +75,7 @@
         }
 
         if (halt === false) {
-          alter(that.$editor.find('a[data-handler="' + v + '"]'));
+          alter(that.$editor.find('button[data-handler="' + v + '"]'));
         }
       });
     },
@@ -359,12 +359,107 @@
         // Prepare the editor
         if (this.$editor === null) {
 
+
+            var editorId = (new Date()).getTime();
+
             // Create the panel
             var editorHeader = $('<div/>',
                 {
-                    'class': 'md-header btn-toolbar'
+                    'class': 'md-header'
                 });
 
+            var editorHeaderRow = $('<div/>',
+                {
+                    'class': 'md-header-row'
+                });
+            
+            var editorHeaderLeft = $('<div/>',
+                {
+                    'class': 'float-left'
+                });
+
+            var editorHeaderRight = $('<div/>',
+                {
+                    'class': 'float-right'
+                });
+
+            var editorTabs = $("<ul/>",
+                {
+                    'class': 'nav nav-tabs',
+                    'roles': 'tablist'
+
+                });
+            
+            var editorButtons = $('<div/>',
+                {
+                    'class': 'btn-toolbar text-right'
+                });
+            
+            var writeLink = $("<a/>",
+                {
+                    'class': 'nav-link active',
+                    'href': '#writeTab' + editorId,
+                    'text': 'Write',
+                    'role': 'tab',
+                    'id': 'writeLink' + editorId
+                });
+
+            writeLink.on("click", function(e) {
+                e.preventDefault();
+                instance.hidePreview();
+            });
+
+            var writeTab = $("<li/>",
+                {
+                    'class': 'nav-item'
+
+                });
+
+            writeTab.append(writeLink);
+
+            var previewLink = $("<a/>",
+                {
+                    'class': 'nav-link',
+                    'href': '#previewTab' + editorId,
+                    'text': 'Preview',
+                    'role': 'tab',
+                    'id': 'previewLink' + editorId
+                });
+
+            previewLink.on("click", function (e) {
+                e.preventDefault();
+                instance.showPreview();
+            });
+
+            var previewTab = $("<li/>",
+                {
+                    'class': 'nav-item'
+
+                });
+            previewTab.append(previewLink);
+
+            editorTabs.append(writeTab);
+            editorTabs.append(previewTab);
+            
+            var tabBody = $("<div/>",
+                {
+                    'class': 'tab-content d-block'
+                });
+            
+            var writeTabBody = $("<div/>",
+                {
+                    'class': 'tab-pane show active md-write',
+                    'role': 'tabpanel',
+                    'id': 'writeTab' + editorId
+                });
+
+            var previewTabBody = $("<div/>",
+                {
+                    'class': 'tab-pane md-preview',
+                    'role': 'tabpanel',
+                    'id': 'previewTab' + editorId
+                });
+            
             // Merge the main & additional button groups together
             var allBtnGroups = [];
             if (options.buttons.length > 0) allBtnGroups = allBtnGroups.concat(options.buttons[0]);
@@ -403,19 +498,17 @@
                         return 0;
                     });
             }
-
-
-
+            
             // Build the buttons
             if (allBtnGroups.length > 0) {
-                editorHeader = this.__buildButtons([allBtnGroups], editorHeader);
+                editorButtons = this.__buildButtons([allBtnGroups], editorButtons);
             }
 
             if (options.fullscreen.enable) {
-                var fullScreenToolTip = this.__localize('Full Screen')
-                editorHeader
+                var fullScreenToolTip = this.__localize('Full Screen');
+                editorButtons
                     .append(
-                        '<div class="btn-group"><button class="btn md-control-fullscreen" href="#" data-tooltip-position="bottom" title="' +
+                        '<div class="btn-group"><button class="btn md-control-fullscreen" data-tooltip-position="bottom" title="' +
                         fullScreenToolTip +
                         '"><i class="' +
                         this.__getIcon(options.fullscreen.icons.fullscreenOn) +
@@ -428,10 +521,10 @@
                         });
             }
             if (options.fullscreen.enable && options.fullscreen !== false) {
-                editorHeader.append('<div class="btn-group md-fullscreen-controls">' +
-                        '<button href="#" class="btn md-exit-fullscreen" title="Exit fullscreen"><i class="' +
+                editorButtons.append('<div class="btn-group md-fullscreen-controls">' +
+                        '<div class="btn-group"><button class="btn md-exit-fullscreen" title="Exit fullscreen"><i class="' +
                         this.__getIcon(options.fullscreen.icons.fullscreenOff) +
-                        '"></i></button>' +
+                        '"></i></button></div>' +
                         '</div>')
                     .on('click',
                         '.md-exit-fullscreen',
@@ -441,15 +534,27 @@
                         });
             }
 
-            editor.append(editorHeader);
-
-
+            // Build header
+            editorHeaderLeft.append(editorTabs);
+            editorHeaderRight.append(editorButtons);
+            editorHeaderRow.append(editorHeaderLeft);
+            editorHeaderRow.append(editorHeaderRight);
+            editor.append(editorHeaderRow);
+            
             // Wrap the textarea
             if (container.is('textarea')) {
+
                 container.before(editor);
                 textarea = container;
 
-                editor.append(textarea);
+                writeTabBody.append(textarea);
+                previewTabBody.append($("<div/>"));
+
+                tabBody.append(writeTabBody);
+                tabBody.append(previewTabBody);
+
+                editor.append(tabBody);
+
             } else {
                 var rawContent = (typeof toMarkdown == 'function') ? toMarkdown(container.html()) : container.html(),
                     currentContent = $.trim(rawContent);
@@ -543,16 +648,16 @@
             this.__setEventListeners();
 
             // Set editor attributes, data short-hand API and listener
-            this.$editor.attr('id', (new Date()).getTime());
+            this.$editor.attr('id', editorId);
             this.$editor.on('click', '[data-provider="i-markdown"]', $.proxy(this.__handle, this));
-
+            
             if (this.$element.is(':disabled') || this.$element.is('[readonly]')) {
                 this.$editor.addClass('md-editor-disabled');
                 this.disableButtons('all');
             }
 
             if (this.eventSupported('keydown') && typeof jQuery.hotkeys === 'object') {
-                editorHeader.find('[data-provider="i-markdown"]').each(function() {
+                editorHeader.find('[data-provider="markdown"]').each(function() {
                     var $button = $(this),
                         hotkey = $button.attr('data-hotkey');
                     if (hotkey.toLowerCase() !== '') {
@@ -763,128 +868,173 @@
 
     },
     parseContent: function(val) {
-      var content;
+        var content;
 
-      // parse with supported markdown parser
-      val = val || this.$textarea.val();
+        // parse with supported markdown parser
+        val = val || this.$textarea.val();
 
-      if (this.$options.parser) {
-        content = this.$options.parser(val);
-      } else if (typeof markdown == 'object') {
-        content = markdown.toHTML(val);
-      } else if (typeof marked == 'function') {
-        content = marked(val);
-      } else {
-        content = val;
-      }
+        if (this.$options.parser) {
+            content = this.$options.parser(val);
+        } else if (typeof markdown == 'object') {
+            content = markdown.toHTML(val);
+        } else if (typeof marked == 'function') {
+            content = marked(val);
+        } else {
+            content = val;
+        }
 
-      return content;
+        return content;
     },
-    showPreview: function () {
+    showPreview: function() {
 
-      var options = this.$options,
-        container = this.$textarea,
-        width = container.width(),
-        afterContainer = container.next(),
-        replacementContainer = $('<div/>', {
-          'class': 'md-preview i-user-content',
-          'data-provider': 'markdown-preview'
-        }),
-        content,
-        callbackContent;
-
-      if (this.$isPreview === true) {
-        // Avoid sequenced element creation on misused scenario
-        // @see https://github.com/toopay/bootstrap-markdown/issues/170
-        return this;
-      }
+        if (this.$isPreview === true) {
+            // Avoid sequenced element creation on misused scenario
+            // @see https://github.com/toopay/bootstrap-markdown/issues/170
+            return this;
+        }
         
-      // Give flag that tells the editor to enter preview mode
-      this.$isPreview = true;
-      // Disable all buttons
-      this.disableButtons('all')
-          .enableButtons('cmdPreview')
-          .enableButtons('cmdWrite');
+        // Give flag that tells the editor to enter preview mode
+        this.$isPreview = true;
 
-      this.$editor.find(".md-btn-write").removeClass("selected");
-      this.$editor.find(".md-btn-preview").addClass("selected");
+        var $editor = this.$editor,
+            $textarea = this.$textarea,
+            $writeTab = $("#writeTab" + $editor.attr("id")),
+            $writeLink = $("#writeLink" + $editor.attr("id")),
+            $previewTab = $("#previewTab" + $editor.attr("id")),
+            $previewLink = $("#previewLink" + $editor.attr("id"));
+        
+        if ($textarea.val().trim() === "") {
+            $textarea.focus();
+            //return false;
+        }
 
-      // Hide dropzone message
-      this.$editor.find(".dz-message").hide();
+        win.$.Plato.Http({
+            url: "api/markdown/parse/post",
+            method: "POST",
+            async: false,
+            data: JSON.stringify({
+                markdown: $textarea.val()
+            })
+        }).done(function (data) {
 
-      // Try to get the content from callback
-      callbackContent = options.onPreview(this, replacementContainer);
-      // Set the content based on the callback content if string, otherwise parse value from textarea
-      content = typeof callbackContent == 'string' ? callbackContent : this.parseContent();
+            // Update tabs
+            $writeLink.removeClass("active");
+            $writeTab.hide();
 
-      // Build preview element
-      replacementContainer.html(content);
+            $previewLink.addClass("active");
+            $previewTab.show();
 
-      // constrain pre and tables to preview width
-      replacementContainer.find("pre").css({ "max-width": width });
-      replacementContainer.find("table").css({ "max-width": width });
 
-      if (afterContainer && afterContainer.attr('class') == 'md-footer') {
-        // If there is footer element, insert the preview container before it
-        replacementContainer.insertBefore(afterContainer);
-      } else {
-        // Otherwise, just append it after textarea
-        container.parent().append(replacementContainer);
-      }
+            if (data.statusCode === 200) {
+                $previewTab
+                    .empty()
+                    .html(data.html);
+            }
 
-      // Set the preview element dimensions
-      replacementContainer.css({
-        "min-height": container.outerHeight() + 'px',
-        "height": "auto"
-      });
 
-      if (this.$options.resize) {
-        replacementContainer.css('resize', this.$options.resize);
-      }
+        });
 
-      // Hide the last-active textarea
-      container.hide();
 
-      // Attach the editor instances
-      replacementContainer.data('markdown', this);
 
-      if (this.$element.is(':disabled') || this.$element.is('[readonly]')) {
-        this.$editor.addClass('md-editor-disabled');
+  
+        
+        //var options = this.$options,
+        //  container = this.$textarea,
+        //  width = container.width(),
+        //  afterContainer = container.next(),
+        //  replacementContainer = $('<div/>', {
+        //    'class': 'md-preview',
+        //    'data-provider': 'markdown-preview'
+        //  }),
+        //  content,
+        //  callbackContent;
+        
+        // Disable all buttons
         this.disableButtons('all');
-      }
 
-      return this;
+        // Hide dropzone message
+        this.$editor.find(".dz-message").hide();
+
+
+        //// Try to get the content from callback
+        //callbackContent = options.onPreview(this, replacementContainer);
+
+        //// Set the content based on the callback content if string, otherwise parse value from textarea
+        //content = typeof callbackContent == 'string' ? callbackContent : this.parseContent();
+
+        //// Build preview element
+        //replacementContainer.html(content);
+
+        //// constrain pre and tables to preview width
+        //replacementContainer.find("pre").css({ "max-width": width });
+        //replacementContainer.find("table").css({ "max-width": width });
+
+        //if (afterContainer && afterContainer.attr('class') == 'md-footer') {
+        //  // If there is footer element, insert the preview container before it
+        //  replacementContainer.insertBefore(afterContainer);
+        //} else {
+        //  // Otherwise, just append it after textarea
+        //  container.parent().append(replacementContainer);
+        //}
+
+        //// Set the preview element dimensions
+        //replacementContainer.css({
+        //  "min-height": container.outerHeight() + 'px',
+        //  "height": "auto"
+        //});
+
+        //if (this.$options.resize) {
+        //  replacementContainer.css('resize', this.$options.resize);
+        //}
+
+        //// Hide the last-active textarea
+        //container.hide();
+
+        //// Attach the editor instances
+        //replacementContainer.data('markdown', this);
+
+        if (this.$element.is(':disabled') || this.$element.is('[readonly]')) {
+          this.$editor.addClass('md-editor-disabled');
+          this.disableButtons('all');
+        }
+
+        return this;
     },
     hidePreview: function () {
 
-        this.$editor.find(".md-btn-write").addClass("active");
-        this.$editor.find(".md-btn-preview").removeClass("active");
+        // Give flag that tells the editor to quit preview mode
+        this.$isPreview = false;
 
-      // Give flag that tells the editor to quit preview mode
-      this.$isPreview = false;
+        var $editor = this.$editor,
+            $writeTab = $("#writeTab" + $editor.attr("id")),
+            $writeLink = $("#writeLink" + $editor.attr("id")),
+            $previewTab = $("#previewTab" + $editor.attr("id")),
+            $previewLink = $("#previewLink" + $editor.attr("id"));
 
-      // Obtain the preview container
-      var container = this.$editor.find('div[data-provider="markdown-preview"]');
+        $writeLink.addClass("active");
+        $writeTab.show();
 
-      // Remove the preview container
-      container.remove();
+        $previewLink.removeClass("active");
+        $previewTab.hide();
         
-      // Enable all buttons
-      this.enableButtons('all');
-      // Disable configured disabled buttons
-      this.disableButtons(this.$options.disabledButtons);
+        // Enable all buttons
+        this.enableButtons('all');
 
-      // Show dropzone message
-      this.$editor.find(".dz-message").show();
+        // Disable configured disabled buttons
+        this.disableButtons(this.$options.disabledButtons);
 
-      // Perform any callbacks
-      this.$options.onPreviewEnd(this);
+        // Show dropzone message
+        this.$editor.find(".dz-message").show();
 
-      // Back to the editor
-      this.$textarea.show();
-      this.__setListener();
+        // Perform any callbacks
+        this.$options.onPreviewEnd(this);
 
-      return this;
+        //// Back to the editor
+        //this.$textarea.show();
+        //this.__setListener();
+
+        return this;
+
     },
     isDirty: function() {
       return this.$oldContent != this.getContent();
@@ -1395,16 +1545,14 @@
     savable: false,
     width: 'inherit',
     height: 'inherit',
-    resize: 'none',
+    resize: null,
     iconlibrary: 'fa',
     language: 'en',
     initialstate: 'editor',
     parser: null,
     dropZoneOptions: null,
     enableDropDataUri: false,
-    baseUrl: '',
-
-
+  
     /* Buttons Properties */
     buttons: [
       [
@@ -2026,7 +2174,7 @@
     disabledButtons: [], // Default disabled buttons
     footer: '',
     minRows: 4,
-    maxRows: 12,
+    maxRows: 15,
     fullscreen: {
       enable: true,
       icons: {

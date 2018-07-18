@@ -24,12 +24,6 @@ namespace Plato.Markdown.Assets
                     },
                     new Asset()
                     {
-                        Url = $"/plato.markdown/content/js/init.js",
-                        Type = AssetType.IncludeJavaScript,
-                        Section = AssetSection.Footer
-                    },
-                    new Asset()
-                    {
                         Url = $"/plato.markdown/content/css/markdown.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
@@ -47,12 +41,6 @@ namespace Plato.Markdown.Assets
                     },
                     new Asset()
                     {
-                        Url = $"/plato.markdown/content/js/init.js",
-                        Type = AssetType.IncludeJavaScript,
-                        Section = AssetSection.Footer
-                    },
-                    new Asset()
-                    {
                         Url = $"/plato.markdown/content/css/markdown.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
@@ -65,12 +53,6 @@ namespace Plato.Markdown.Assets
                     new Asset()
                     {
                         Url = $"/plato.markdown/content/js/markdown.js",
-                        Type = AssetType.IncludeJavaScript,
-                        Section = AssetSection.Footer
-                    },
-                    new Asset()
-                    {
-                        Url = $"/plato.markdown/content/js/init.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     },
