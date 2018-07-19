@@ -3,6 +3,8 @@
 .transition-3x { transition: all 0.25s ease-out; }
 .transition-4x { transition: all 0.30s ease-out; }
 
+.hidden { display: none; }
+
 /* ------------------------- */
 /* Grid system */
 /* ------------------------- */
@@ -32,6 +34,10 @@
 /* Drop downs */
 /* ------------------------- */
 
+.dropdown-toggle-no-caret:after {
+    display: none;
+}
+
 .dropdown-item:hover, 
 .dropdown-item:focus {
     text-decoration: none;
@@ -43,12 +49,12 @@
     margin-top: 9px !important;
 }
 
-.dropdown-menu.show {
+.dropdown-menu:not(.dropdown-menu-right).show {
     animation: showDropdown 0.1s ease-out;
 }
 
 .dropdown-menu-right.show {
-    animation: showDropdown 0.1s ease-out;
+    animation: showDropdownRight 0.1s ease-out;
 }
 
 .btn-group.show>.dropdown-arrow, 
@@ -98,18 +104,41 @@
 @keyframes showDropdown {
     0% {
         top: 100%;
+        left: 0;
+        right: 100%;
         opacity: 0;
         -webkit-transform: scale(.8);
         transform: scale(.8)
     }
     to {
         top: 100%;
+        left: 0;
+        right: 100%;
         opacity: 1;
         -webkit-transform: scale(1);
         transform: scale(1)
     }
 }
 
+
+@keyframes showDropdownRight {
+    0% {
+        top: 100%;
+        left: auto;
+        right: 0;
+        opacity: 0;
+        -webkit-transform: scale(.8);
+        transform: scale(.8)
+    }
+    to {
+        top: 100%;
+        left: auto;
+        right: 0;
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1)
+    }
+}
 
 /* ------------------------- */
 /* avatar */

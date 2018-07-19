@@ -30145,9 +30145,209 @@ $(function (win, doc, $) {
 
     }();
 
+    /* selectDropdown */
+    var selectDropdown = function () {
+
+        var dataKey = "selectDropdown",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            event: "click",
+            onBeforeComplete: function () { },
+            onComplete: function () { }
+        };
+
+        var methods = {
+            state: {
+                buttonText: "" // initial button text
+            },
+            $button: null, // the button that triggers the menu
+            $menu: null, // the dropdown menu
+            $input: null, // search input
+            $empty: null, // used to show no results
+            $labels: {}, // used to cache working labels
+            $preview: null, // container for selection preview
+            init: function ($caller, methodName) {
+                if (methodName) {
+                    if (this[methodName]) {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                this.$input = $caller.find('[type="search"]');
+                this.$button = $caller.find('[data-toggle="dropdown"]');
+                this.$menu = $caller.find('.dropdown-menu');
+                this.$labels = this.$menu.find("label");
+                this.$empty = $caller.find(".empty");
+
+                this.$preview = $caller.find("p");
+                if (this.$preview.length === 0) {
+                    this.$preview = $caller.next();
+                }
+
+                this.state.buttonText = this.$button.text();
+
+                methods.bind($caller);
+
+            },
+            bind: function ($caller) {
+
+                var self = this;
+
+                if ($caller.hasClass("dropdown")) {
+                    
+                    this.$input.on('keyup', function (e) {
+                        self.filterItems($caller);
+                    });
+                    
+                    //If the user clicks on any item, set the title of the button as the text of the item
+                    this.$menu.on('click',
+                        '.dropdown-item',
+                        function (e) {
+
+                            // prevent dropdowns from closing when clicking within dropdowns
+                            e.stopPropagation();
+
+                            // Toggle active state on item click
+                            if (!$(this).hasClass("active")) {
+                                $(this).addClass("active");
+                            } else {
+                                $(this).removeClass("active");
+                            }
+
+                            self.$preview.empty();
+
+                            // Update button text to reflect selected items
+                            var $active = $(self.$menu).find(".active");
+                            if ($active.length === 0) {
+
+                                self.$preview.hide();
+
+                            } else {
+
+                                var html = "";
+                                for (var i = 0; i < $active.length; i++) {
+                                    html += '<div class="list-group-item">';
+                                    html += '<i class="fal fa-check float-right"></i>';
+                                    html += $($active[i]).html();
+                                    html += "</div>";
+                                }
+
+                                self.$preview.html(html);
+                                self.$preview.show();
+                            }
+                            
+                        });
+
+                }
+            
+            },
+            filterItems: function($caller) {
+
+                var $input = $caller.find('[type="search"]'),
+                    word = $input.val().trim(),
+                    length = this.$labels.length,
+                    hidden = 0;
+
+                if (word.length === 0) {
+                    $(this.$labels.show());
+                }
+
+                for (var i = 0; i < length; i++) {
+
+                    var $label = $(this.$labels[i]);
+                    if ($label.length > 0 && $label.data("value")) {
+                        if ($label.data("value").toLowerCase().startsWith(word)) {
+                            $label.show();
+                        }
+                        else {
+                            $label.hide();
+                            hidden++;
+                        }
+                    }
+                   
+                }
+
+                //If all items are hidden, show the empty view
+                if (hidden === length) {
+                    this.$empty.show();
+                }
+                else {
+                    this.$empty.hide();
+                }
+
+            },
+          
+            scrollTo: function ($caller) {
+
+           
+
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).markdownEditor
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().markdownEditor 
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+    }();
+
+
     /* Register jQuery Plugins */
     $.fn.extend({
-        scrollTo: scrollTo.init
+        scrollTo: scrollTo.init,
+        selectDropdown: selectDropdown.init
+
     });
     
     /* Initialize */
@@ -30160,7 +30360,13 @@ $(function (win, doc, $) {
         $.Plato.UI.init();
 
         /* plug-ins */
+
+        /* Scolls to a specific element. Typical usage...
+         * <a href="#somelement" data-provide="scroll"> */      
         $('[data-provide="scroll"]').scrollTo();
+
+
+        $('[data-provide="select-dropdown"]').selectDropdown();
 
     });
 

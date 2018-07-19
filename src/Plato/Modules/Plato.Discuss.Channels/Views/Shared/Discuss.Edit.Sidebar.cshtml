@@ -2,64 +2,66 @@
 
 
 <card>
-    <card-title>
-        <h6 class="card-title">@T["Post Within..."]</h6>
-    </card-title>
+
     <card-body>
-                  
-        <div class="dropdown">
-            <button type="button" class="btn btn-lg btn-secondary btn-block dropdown-toggle" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+        <div class="dropdown" data-provide="select-dropdown" data->
+            <a type="button" class="btn btn-primary btn-lg btn-block text-left dropdown-toggle dropdown-toggle-no-caret" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 @T["Channel"]
-            </button>
-            <div class="dropdown-arrow dropdown-arrow-right"></div>
-            <div class="dropdown-menu dropdown-menu-right col-12" aria-labelledby="channelDropdown">
-                <form>
-                    @if (Model.Channels != null)
-                    {
-                        <div class="list-group-check-list">
-                            @foreach (var channel in Model.Channels)
-                            {
-                                <input type="checkbox" id="@channel.Id" />
-                                <label class="list-group-item dropdown-item" for="@channel.Id">
-                        
-                                    <i class="fal float-right"></i>
+                <i class="fal fa-cog float-right"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" style="width: 350px;" aria-labelledby="channelDropdown">
 
-                                    @if (!String.IsNullOrWhiteSpace(channel.IconCss))
-                                    {
-                                        <SPAN class="float-left mr-3">
-                                            <span class="channel-icon channel-icon-sm" style="background-color: @channel.BackColor; color: @channel.ForeColor">
-                                                <i class="@channel.IconCss"></i>
-                                            </span>
-                                        </SPAN>
-                                    }
+                <div class="m-2">
+                    <input type="search" class="form-control" id="searchCoin" placeholder="@T["Search..."]" autofocus="autofocus">
+                </div>
+                <div class="dropdown-header hidden empty">
+                    @T["No channel found"]
+                </div>
 
+                @if (Model.Channels != null)
+                {
+                    <div class="list-group-flush list-group-check-list" style="max-height: 200px; overflow: auto;">
+                        @foreach (var channel in Model.Channels)
+                        {
+                            <input type="checkbox" id="@channel.Id" />
+                            <label data-value="@channel.Name" class="list-group-item dropdown-item" for="@channel.Id">
 
+                                <i class="fal float-right"></i>
 
-                                    @channel.Name
+                                @if (!String.IsNullOrWhiteSpace(channel.IconCss))
+                                {
+                                    <SPAN class="float-left mr-3">
+                                        <span class="channel-icon channel-icon-sm" style="background-color: @channel.BackColor; color: @channel.ForeColor">
+                                            <i class="@channel.IconCss"></i>
+                                        </span>
+                                    </SPAN>
+                                }
 
-                                </label>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                @T["No channels available."]
-                            </li>
-                        </ul>
+                                @channel.Name
 
-
-                    }
-                </form>
-
+                            </label>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            @T["No channels available."]
+                        </li>
+                    </ul>
+                }
 
             </div>
         </div>
 
+        <p class="hidden">
+            @T["Select a channel"]
+        </p>
+
     </card-body>
 </card>
-
 
 
 
