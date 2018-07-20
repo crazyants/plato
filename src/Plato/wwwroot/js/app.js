@@ -30158,9 +30158,6 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-            state: {
-                buttonText: "" // initial button text
-            },
             $button: null, // the button that triggers the menu
             $menu: null, // the dropdown menu
             $input: null, // search input
@@ -30183,14 +30180,17 @@ $(function (win, doc, $) {
                 this.$labels = this.$menu.find("label");
                 this.$empty = $caller.find(".empty");
 
+                // Attempt to find a P tag within our .dropdown element
+                // If not found use the next element after the .dropdown 
+                // for the selection preview
                 this.$preview = $caller.find("p");
                 if (this.$preview.length === 0) {
                     this.$preview = $caller.next();
                 }
 
-                this.state.buttonText = this.$button.text();
-
+                // Bind events
                 methods.bind($caller);
+
 
             },
             bind: function ($caller) {
@@ -30198,10 +30198,21 @@ $(function (win, doc, $) {
                 var self = this;
 
                 if ($caller.hasClass("dropdown")) {
-                    
-                    this.$input.on('keyup', function (e) {
-                        self.filterItems($caller);
-                    });
+
+                    // On dropdown shown
+                    $caller.on('shown.bs.dropdown',
+                        function() {
+                            
+                            // Set focus on search input by default
+                            self.$input.focus();
+
+                        });
+
+
+                    this.$input.on('keyup',
+                        function(e) {
+                            self.filterItems($caller);
+                        });
                     
                     //If the user clicks on any item, set the title of the button as the text of the item
                     this.$menu.on('click',
@@ -30231,7 +30242,6 @@ $(function (win, doc, $) {
                                 var html = "";
                                 for (var i = 0; i < $active.length; i++) {
                                     html += '<div class="list-group-item">';
-                                    html += '<i class="fal fa-check float-right"></i>';
                                     html += $($active[i]).html();
                                     html += "</div>";
                                 }

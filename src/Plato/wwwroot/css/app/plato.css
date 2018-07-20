@@ -422,18 +422,20 @@
 .list-right { float: left; }
 .list-right + .list-body { margin-right: 56px; }
 
+/* List group with check box selection */
 .list-group-check-list input { display: none; }
 .list-group-check-list input + label {  cursor: pointer; }
 .list-group-check-list input:checked + label { background: #F6F7F5; }
-
 .list-group-check-list input + label > i:after {
     content: "\f00c"; 
-    display: none;
+    opacity:0;
+    vertical-align: middle;
 }
 .list-group-check-list input:checked + label > i:after {
-  
-    display: inline;
+    opacity:1;
 }
+
+.list-group-check-list .list-group-item { padding: 0.50rem 1.25rem; }
 
 /* ------------------------- */
 /* Plato Layout */
