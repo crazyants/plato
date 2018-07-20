@@ -1,52 +1,48 @@
 ﻿@model EditEntityViewModel
 
-
 @{
     var user = await GetAuthenticatedUserAsync();
 }
 
-<div id="postReply" class="mt-4">
-    <div class="mt-4">
-        <div class="topic-reply-left">
-            @if (user != null)
-            {
-                <a href="#" class="avatar-link">
-                    <avatar data-toggle="tooltip" title="@user.DisplayName" class="avatar" user-id="@user.Id" />
-                </a>}
+<div class="mt-0" id="postReply">
 
-        </div>
-        <div class="topic-reply-body">
-            <card>
-                <card-body>
+    <div class="topic-reply-left">
+        @if (user != null)
+        {
+            <a href="#" class="avatar-link">
+                <avatar data-toggle="tooltip" title="@user.DisplayName" class="avatar" user-id="@user.Id" />
+            </a>}
 
-                    <fieldset>
-                        <div class="form-group">
-
-                            <span asp-validation-for="Title" class="text-danger"></span>
-                            <input asp-for="Title" placeholder="@T["Title"]" tabindex="1" class="form-control" autofocus />
-
-                        </div>
-                        <div class="form-group">
-
-                            @await DisplayAsync(new View("Editor", new
-                            {
-                                value = string.Empty,
-                                placeHolderText = T["Add your comments here"],
-                                htmlName = @Model.EditorHtmlName,
-                                tabIndex = 2
-                            }))
-
-                        </div>
-
-                    </fieldset>
-                </card-body>
-            </card>
-        </div>
     </div>
+    <div class="topic-reply-body">
+        <card class="card mt-0">
+            <card-body>
+
+                <fieldset>
+                    <div class="form-group">
+
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                        <input asp-for="Title" placeholder="@T["Title"]" tabindex="1" class="form-control" autofocus />
+
+                    </div>
+                    <div class="form-group">
+
+                        @await DisplayAsync(new View("Editor", new
+                        {
+                            value = string.Empty,
+                            placeHolderText = T["Add your comments here"],
+                            htmlName = @Model.EditorHtmlName,
+                            tabIndex = 2
+                        }))
+
+                    </div>
+                </fieldset>
+
+            </card-body>
+        </card>
+    </div>
+  
 </div>
-
-
-
 
 
 <input asp-for="EntityId" type="hidden" />

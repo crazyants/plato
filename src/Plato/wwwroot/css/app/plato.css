@@ -426,14 +426,14 @@
 .list-group-check-list input { display: none; }
 .list-group-check-list input + label {  cursor: pointer; }
 .list-group-check-list input:checked + label { background: #F6F7F5; }
-.list-group-check-list input + label > i:after {
-    content: "\f00c"; 
-    opacity:0;
+.list-group-check-list input + label > i.check-icon {
     vertical-align: middle;
+    width: 20px;
 }
-.list-group-check-list input:checked + label > i:after {
-    opacity:1;
-}
+
+.list-group-check-list-preview i.check-icon { display: none; }
+
+
 
 .list-group-check-list .list-group-item { padding: 0.50rem 1.25rem; }
 
@@ -442,12 +442,8 @@
 /* ------------------------- */
 
 .layout { margin-bottom: 2rem; }
-
 .layout-content .card,
 .layout-sidebar .card { margin-top: 1.5rem; }
-
-.layout-content > div > .card,
-.layout-sidebar > div >  .card,
 .layout-content > div > .card:first-child,
 .layout-sidebar > div > .card:first-child { margin-top: 0; }
 

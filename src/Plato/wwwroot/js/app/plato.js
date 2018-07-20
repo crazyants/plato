@@ -370,6 +370,9 @@ $(function (win, doc, $) {
         };
 
         var methods = {
+            state: {
+                previewHtml: null
+            },
             $button: null, // the button that triggers the menu
             $menu: null, // the dropdown menu
             $input: null, // search input
@@ -395,10 +398,12 @@ $(function (win, doc, $) {
                 // Attempt to find a P tag within our .dropdown element
                 // If not found use the next element after the .dropdown 
                 // for the selection preview
-                this.$preview = $caller.find("p");
+                this.$preview = $caller.find(".list-group-check-list-preview");
                 if (this.$preview.length === 0) {
                     this.$preview = $caller.next();
                 }
+
+                this.state.previewHtml = this.$preview.html();
 
                 // Bind events
                 methods.bind($caller);
@@ -436,18 +441,23 @@ $(function (win, doc, $) {
 
                             // Toggle active state on item click
                             if (!$(this).hasClass("active")) {
+                                $(this).find(".check-icon").addClass("fa-check");
                                 $(this).addClass("active");
                             } else {
+                                $(this).find(".check-icon").removeClass("fa-check");
                                 $(this).removeClass("active");
                             }
 
+                            // Clear selection preview
                             self.$preview.empty();
 
-                            // Update button text to reflect selected items
+                            // Update preview to reflect selected items
                             var $active = $(self.$menu).find(".active");
                             if ($active.length === 0) {
 
-                                self.$preview.hide();
+                                self.$preview
+                                    .empty()
+                                    .html(self.state.previewHtml);
 
                             } else {
 
