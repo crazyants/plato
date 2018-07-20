@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -19,16 +20,21 @@ namespace Plato.Roles.ViewProviders
         private readonly UserManager<User> _userManager;
         private readonly IPlatoRoleStore _platoRoleStore;
 
+        private readonly IStringLocalizer T;
+
         private readonly HttpRequest _request;
 
         public UserViewProvider(
             UserManager<User> userManager,
             IPlatoRoleStore platoRoleStore,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IStringLocalizer<UserViewProvider> stringLocalize)
         {
             _userManager = userManager;
             _platoRoleStore = platoRoleStore;
             _request = httpContextAccessor.HttpContext.Request;
+
+            T = stringLocalize;
         }
 
 
@@ -64,9 +70,6 @@ namespace Plato.Roles.ViewProviders
             // Get available role names
             var roleNames = await _platoRoleStore.GetRoleNamesAsync();
 
-            // Convert to list to prevent multiple enumerations below
-            var roleNamesList = roleNames.ToList();
-            
             // Build selected roles
             var rolesToAdd = new List<string>();
             foreach (var key in _request.Form.Keys)
@@ -96,8 +99,7 @@ namespace Plato.Roles.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-                
-                // Remove roles in two steps to prevent an iteration on a modified collection
+
                 var rolesToRemove = new List<string>();
                 foreach (var role in await _userManager.GetRolesAsync(user))
                 {
@@ -129,6 +131,7 @@ namespace Plato.Roles.ViewProviders
                 }
                 
             }
+           
 
             return await BuildEditAsync(user, updater);
 

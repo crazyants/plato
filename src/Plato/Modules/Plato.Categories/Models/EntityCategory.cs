@@ -16,11 +16,11 @@ namespace Plato.Categories.Models
 
         public int CreatedUserId { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         public int ModifiedUserId { get; set; }
 
-        public DateTime ModifiedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
         
         public void PopulateModel(IDataReader dr)
         {

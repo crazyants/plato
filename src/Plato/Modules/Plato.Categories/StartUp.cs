@@ -38,6 +38,7 @@ namespace Plato.Categories
             services.AddScoped<ICategoryStore<Category>, CategoryStore<Category>>();
             services.AddScoped<ICategoryDataStore<CategoryData>, CategoryDataStore>();
             services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
+            services.AddScoped<IEntityCategoryStore<EntityCategory>, EntityCategoryStore>();
 
             // Managers
             services.AddScoped<ICategoryManager<Category>, CategoryManager<Category>>();

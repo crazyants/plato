@@ -6,6 +6,7 @@ using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
@@ -57,15 +58,15 @@ namespace Plato.Discuss.ViewProviders
             var pagerOptions = new PagerOptions();
             pagerOptions.Page = GetPageIndex(updater);
             
-            var indexViewModel = new HomeIndexViewModel();
-            indexViewModel.FilterOpts = filterOptions;
-            indexViewModel.PagerOpts = pagerOptions;
+            var viewModel = new HomeIndexViewModel();
+            viewModel.FilterOpts = filterOptions;
+            viewModel.PagerOpts = pagerOptions;
             
             return Views(
-                View<HomeIndexViewModel>("Home.Index.Header", model => indexViewModel).Zone("header"),
-                View<HomeIndexViewModel>("Home.Index.Tools", model => indexViewModel).Zone("tools"),
-                View<HomeIndexViewModel>("Home.Index.Sidebar", model => indexViewModel).Zone("sidebar"),
-                View<HomeIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content")
+                View<HomeIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
+                View<HomeIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
+                View<HomeIndexViewModel>("Home.Index.Sidebar", model => viewModel).Zone("sidebar"),
+                View<HomeIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
             );
 
         }
@@ -111,70 +112,71 @@ namespace Plato.Discuss.ViewProviders
         public override Task<IViewProviderResult> BuildEditAsync(Topic topic, IUpdateModel updater)
         {
             
-            var newEntityViewModel = new EditEntityViewModel()
+            var viewModel = new EditEntityViewModel()
             {
                 EntityId = topic.Id,
                 EditorHtmlName = EditorHtmlName
             };
 
             return Task.FromResult(Views(
-                View<EditEntityViewModel>("Home.Edit.Header", model => newEntityViewModel).Zone("header"),
-                View<EditEntityViewModel>("Home.Edit.Content", model => newEntityViewModel).Zone("content"),
-                View<EditEntityViewModel>("Home.Edit.Footer", model => newEntityViewModel).Zone("Footer")
+                View<EditEntityViewModel>("Home.Edit.Header", model => viewModel).Zone("header"),
+                View<EditEntityViewModel>("Home.Edit.Content", model => viewModel).Zone("content"),
+                View<EditEntityViewModel>("Home.Edit.Footer", model => viewModel).Zone("Footer")
             ));
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IUpdateModel updater)
         {
 
-            var topic = await _entityStore.GetByIdAsync(viewModel.Id);
-            if (topic == null)
+            //var existingTopic = await _entityStore.GetByIdAsync(topic.Id);
+            //if (existingTopic == null)
+            //{
+            //    return await BuildIndexAsync(topic, updater);
+            //}
+
+            // Get posted message
+            var message = string.Empty;
+            foreach (string key in _request.Form.Keys)
             {
-                return await BuildIndexAsync(viewModel, updater);
+                if (key == EditorHtmlName)
+                {
+                    message = _request.Form[key];
+                }
             }
             
             var model = new EditEntityViewModel();
-            model.EntityId = viewModel.Id;
-            model.Title = viewModel.Title;
-            model.Message = viewModel.Message;
+            model.EntityId = topic.Id;
+            model.Title = topic.Title;
+            model.Message = message;
 
             if (!await updater.TryUpdateModelAsync(model))
             {
-                return await BuildIndexAsync(viewModel, updater);
+                return await BuildIndexAsync(topic, updater);
             }
 
             if (updater.ModelState.IsValid)
             {
-
-                var message = string.Empty;
-                foreach (string key in _request.Form.Keys)
-                {
-                    if (key == EditorHtmlName)
-                    {
-                        message = _request.Form[key];
-                    }
-                }
                 
-                await _topicManager.UpdateAsync(viewModel);
-
-                if (model.EntityId > 0)
-                {
-                    var result = await _replyManager.CreateAsync(new EntityReply
-                    {
-                        EntityId = model.EntityId,
-                        Message = message.Trim()
-                    });
+                await _topicManager.UpdateAsync(topic);
 
 
-                    foreach (var error in result.Errors)
-                    {
-                        updater.ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                //if (model.EntityId > 0)
+                //{
+                //    var reply = await _replyManager.CreateAsync(new EntityReply
+                //    {
+                //        EntityId = model.EntityId,
+                //        Message = message.Trim()
+                //    });
+
+                //    foreach (var error in result.Errors)
+                //    {
+                //        updater.ModelState.AddModelError(string.Empty, error.Description);
+                //    }
 
 
-                }
-                
+                //}
+
 
                 //if (result.Succeeded)
                 //{
@@ -223,15 +225,26 @@ namespace Plato.Discuss.ViewProviders
 
                 //}
 
-            }
+                return await BuildDisplayAsync(topic, updater);
 
-            return await BuildIndexAsync(viewModel, updater);
+            }
+        
+
+            return await BuildEditAsync(topic, updater);
 
         }
 
         #endregion
-        
+
+
         #region "Private Methods"
+
+        async Task<bool> IsNewEntity(int entityId)
+        {
+            return await _entityStore.GetByIdAsync(entityId) == null;
+        }
+
+
 
         //async Task<HomeIndexViewModel> GetIndexViewModel(
         //    FilterOptions filterOptions,
@@ -243,7 +256,7 @@ namespace Plato.Discuss.ViewProviders
         //        filterOptions,
         //        pagerOptions);
         //}
-        
+
         //async Task<IPagedResults<Topic>> GetEntities(
         //    FilterOptions filterOptions,
         //    PagerOptions pagerOptions)
@@ -281,7 +294,7 @@ namespace Plato.Discuss.ViewProviders
         //        .OrderBy("Id", OrderBy.Desc)
         //        .ToList();
         //}
-        
+
         async Task<IPagedResults<EntityReply>> GetEntityReplies(
             int entityId,
             FilterOptions filterOptions,
