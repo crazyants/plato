@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
 
@@ -49,5 +47,6 @@ namespace Plato.Categories.Models
                 ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
 
         }
+
     }
 }

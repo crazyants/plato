@@ -518,7 +518,7 @@ namespace Plato.Categories.Handlers
 
             builder.CreateProcedure(
                 new SchemaProcedure(
-                        $"SelectEntityCategoriesById",
+                        $"SelectEntityCategoryById",
                         @" SELECT ec.*, c.[Name] AS CategoryName
                                 FROM {prefix}_Categories c WITH (nolock) 
                                     INNER JOIN {prefix}_EntityCategories ec ON ec.CategoryId = c.Id                                    
