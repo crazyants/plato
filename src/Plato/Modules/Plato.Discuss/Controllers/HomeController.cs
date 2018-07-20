@@ -12,7 +12,6 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
-using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -90,8 +89,7 @@ namespace Plato.Discuss.Controllers
 
         public async Task<IActionResult> Create()
         {
-
-
+            
             var result = await _discussViewProvider.ProvideEditAsync(new Topic(), this);
 
             // Return view
@@ -104,13 +102,11 @@ namespace Plato.Discuss.Controllers
         public async Task<IActionResult> CreatePost(EditEntityViewModel model)
         {
             
+            //if (!ModelState.IsValid)
+            //{
+            //    return await Create();
+            //}
             
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-      
             var result = await _postManager.CreateAsync(new Topic()
             {
                 Title = model.Title,

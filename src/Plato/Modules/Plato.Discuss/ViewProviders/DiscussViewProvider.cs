@@ -60,16 +60,10 @@ namespace Plato.Discuss.ViewProviders
             var indexViewModel = new HomeIndexViewModel();
             indexViewModel.FilterOpts = filterOptions;
             indexViewModel.PagerOpts = pagerOptions;
-
-
-                //await GetIndexViewModel(filterOptions, pagerOptions);
-
+            
             return Views(
                 View<HomeIndexViewModel>("Home.Index.Header", model => indexViewModel).Zone("header"),
-                View<EditEntityViewModel>("Home.Index.Tools", model => new EditEntityViewModel()
-                {
-                    EditorHtmlName = EditorHtmlName
-                }).Zone("tools"),
+                View<HomeIndexViewModel>("Home.Index.Tools", model => indexViewModel).Zone("tools"),
                 View<HomeIndexViewModel>("Home.Index.Sidebar", model => indexViewModel).Zone("sidebar"),
                 View<HomeIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content")
             );
@@ -119,7 +113,8 @@ namespace Plato.Discuss.ViewProviders
             
             var newEntityViewModel = new EditEntityViewModel()
             {
-                EntityId = topic.Id
+                EntityId = topic.Id,
+                EditorHtmlName = EditorHtmlName
             };
 
             return Task.FromResult(Views(
@@ -127,8 +122,6 @@ namespace Plato.Discuss.ViewProviders
                 View<EditEntityViewModel>("Home.Edit.Content", model => newEntityViewModel).Zone("content"),
                 View<EditEntityViewModel>("Home.Edit.Footer", model => newEntityViewModel).Zone("Footer")
             ));
-
-
 
         }
 
@@ -144,7 +137,8 @@ namespace Plato.Discuss.ViewProviders
             var model = new EditEntityViewModel();
             model.EntityId = viewModel.Id;
             model.Title = viewModel.Title;
-      
+            model.Message = viewModel.Message;
+
             if (!await updater.TryUpdateModelAsync(model))
             {
                 return await BuildIndexAsync(viewModel, updater);
@@ -161,8 +155,7 @@ namespace Plato.Discuss.ViewProviders
                         message = _request.Form[key];
                     }
                 }
-
-
+                
                 await _topicManager.UpdateAsync(viewModel);
 
                 if (model.EntityId > 0)
