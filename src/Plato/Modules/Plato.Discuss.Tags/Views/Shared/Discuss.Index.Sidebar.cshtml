@@ -1,0 +1,56 @@
+﻿@model TagsViewModel
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">@T["Channels"]</h6>
+    </card-title>
+    <card-body>
+      
+        @if (Model.Channels != null)
+        {
+            <div class="list-group list-group-flush">
+            @foreach (var channel in Model.Channels)
+             {
+               
+                 <a asp-area="Plato.Discuss.Tags" asp-controller="Home" asp-action="Index" asp-route-id="@channel.Id" asp-route-alias="@channel.Alias" title="@channel.Description" class="list-group-item list-group-item-action">
+
+                     @if (!String.IsNullOrWhiteSpace(channel.IconCss))
+                     {
+                         <div class="float-left mr-3">
+                             <span class="channel-icon channel-icon-sm" style="background-color: @channel.BackColor; color: @channel.ForeColor">
+                                 <i class="@channel.IconCss"></i>
+                             </span>
+                         </div>
+                     }
+
+                     @channel.Name
+                     
+                     @*@{
+                         var detail = channel.GetOrCreate<ChannelDetails>();
+                     }
+                     @if (detail != null)
+                     {
+                         @detail.TotalTopics
+                     }
+                     <span class="badge badge-primary badge-pill float-right">14</span>*@
+                 </a>
+             }
+            </div>
+        }
+        else
+        {
+          
+            <div class="text-center my-4 text-muted">
+                @T["Create channels to help you organize your discussions"]
+                <br/><br/>
+                <a asp-area="Plato.Discuss.Tags" asp-controller="Admin" asp-action="Index" target="_blank" class="btn btn-primary" role="button">
+                    <i class="fal fa-external-link"></i>
+                    @T["Manage Channels"]
+                </a>
+            </div>
+            
+        }
+        
+    </card-body>
+</card>
+

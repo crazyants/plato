@@ -79,7 +79,7 @@ namespace Plato.Labels.Repositories
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityCategoriesPaged",
+                    "SelectEntityLabelsPaged",
                     inputParams
                 );
 
@@ -132,7 +132,7 @@ namespace Plato.Labels.Repositories
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityCategoriesByEntityId",
+                    "SelectEntityLabelsByEntityId",
                     entityId);
 
                 if ((reader != null) && (reader.HasRows))
@@ -163,7 +163,7 @@ namespace Plato.Labels.Repositories
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityCategoriesByEntityId", entityId);
+                    "DeleteEntityLabelsByEntityId", entityId);
             }
 
             return success > 0 ? true : false;

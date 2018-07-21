@@ -1,5 +1,5 @@
 Name: Plato Categories
-Description: Adds core data abstractions to allow organizing entities into categories.
+Description: Adds core data services to allow you to organize entities into categories.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core

@@ -1,0 +1,8 @@
+﻿@model EditTopicTagsViewModel
+
+@await DisplayAsync(new View("SelectTags", new
+{
+    selectedChannels = @Model.SelectedChannels,
+    htmlName = @Model.HtmlName
+}))
+

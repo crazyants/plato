@@ -2,14 +2,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Models.Shell;
 using Plato.Labels.Handlers;
 using Plato.Labels.Models;
 using Plato.Labels.Repositories;
 using Plato.Labels.Services;
 using Plato.Labels.Stores;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Shell;
 
 namespace Plato.Labels
 {

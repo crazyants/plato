@@ -13,10 +13,10 @@ namespace Plato.Labels.Handlers
     
         public string Version { get; } = "1.0.0";
         
-        // Categories table
-        private readonly SchemaTable _categories = new SchemaTable()
+        // Labels table
+        private readonly SchemaTable _labels = new SchemaTable()
         {
-            Name = "Categories",
+            Name = "Labels",
             Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -99,10 +99,10 @@ namespace Plato.Labels.Handlers
                 }
         };
 
-        // Category data table
-        private readonly SchemaTable _categoryData = new SchemaTable()
+        // Label data table
+        private readonly SchemaTable _LabelData = new SchemaTable()
         {
-            Name = "CategoryData",
+            Name = "LabelData",
             Columns = new List<SchemaColumn>()
             {
                 new SchemaColumn()
@@ -113,7 +113,7 @@ namespace Plato.Labels.Handlers
                 },
                 new SchemaColumn()
                 {
-                    Name = "CategoryId",
+                    Name = "LabelId",
                     DbType = DbType.Int32
                 },
                 new SchemaColumn()
@@ -151,10 +151,10 @@ namespace Plato.Labels.Handlers
             }
         };
 
-        // Category Roles table
-        private readonly SchemaTable _categoryRoles = new SchemaTable()
+        // Label Roles table
+        private readonly SchemaTable _LabelRoles = new SchemaTable()
         {
-            Name = "CategoryRoles",
+            Name = "LabelRoles",
             Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -165,7 +165,7 @@ namespace Plato.Labels.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "CategoryId",
+                        Name = "LabelId",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()
@@ -196,10 +196,10 @@ namespace Plato.Labels.Handlers
                 }
         };
 
-        // Entity Categories table
-        private readonly SchemaTable _entityCategories = new SchemaTable()
+        // Entity Labels table
+        private readonly SchemaTable _entityLabels = new SchemaTable()
         {
-            Name = "EntityCategories",
+            Name = "EntityLabels",
             Columns = new List<SchemaColumn>()
             {
                 new SchemaColumn()
@@ -215,7 +215,7 @@ namespace Plato.Labels.Handlers
                 },
                 new SchemaColumn()
                 {
-                    Name = "CategoryId",
+                    Name = "LabelId",
                     DbType = DbType.Int32
                 },
                 new SchemaColumn()
@@ -264,19 +264,18 @@ namespace Plato.Labels.Handlers
                 // configure
                 Configure(builder);
 
-                // Categories schema
-                Categories(builder);
+                // Labels schema
+                Labels(builder);
 
-                // Category data
-                CategoryData(builder);
+                // Label data
+                LabelData(builder);
 
-                // Category roles schema
-                CategoryRoles(builder);
+                // Label roles schema
+                LabelRoles(builder);
 
-                // Entity categories schema
-                EntityCategories(builder);
-
-
+                // Entity labels schema
+                EntityLabels(builder);
+                
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
                 {
@@ -315,37 +314,37 @@ namespace Plato.Labels.Handlers
             using (var builder = _schemaBuilder)
             {
                 
-                // drop categories
+                // drop labels
                 builder
-                    .DropTable(_categories)
-                    .DropDefaultProcedures(_categories)
-                    .DropProcedure(new SchemaProcedure("SelectCategoriesPaged", StoredProcedureType.SelectByKey))
-                    .DropProcedure(new SchemaProcedure("SelectCategoriesByFeatureId", StoredProcedureType.SelectByKey));
+                    .DropTable(_labels)
+                    .DropDefaultProcedures(_labels)
+                    .DropProcedure(new SchemaProcedure("SelectLabelsPaged", StoredProcedureType.SelectByKey))
+                    .DropProcedure(new SchemaProcedure("SelectLabelsByFeatureId", StoredProcedureType.SelectByKey));
                 
-                // drop category data
+                // drop Label data
                 builder
-                    .DropTable(_categoryData)
-                    .DropDefaultProcedures(_categoryData)
-                    .DropProcedure(new SchemaProcedure("SelectCategoryDatumByCategoryId"))
-                    .DropProcedure(new SchemaProcedure("SelectCategoryDatumPaged"));
+                    .DropTable(_LabelData)
+                    .DropDefaultProcedures(_LabelData)
+                    .DropProcedure(new SchemaProcedure("SelectLabelDatumByLabelId"))
+                    .DropProcedure(new SchemaProcedure("SelectLabelDatumPaged"));
                 
-                // drop category roles
+                // drop Label roles
                 builder
-                    .DropTable(_categoryRoles)
-                    .DropDefaultProcedures(_categoryRoles)
-                    .DropProcedure(new SchemaProcedure("SelectCategoryRolesByCategoryId"))
-                    .DropProcedure(new SchemaProcedure("SelectCategoryRolesPaged"))
-                    .DropProcedure(new SchemaProcedure("DeleteCategoryRolesByCategoryId"))
-                    .DropProcedure(new SchemaProcedure("DeleteCategoryRolesByRoleIdAndCategoryId"));
+                    .DropTable(_LabelRoles)
+                    .DropDefaultProcedures(_LabelRoles)
+                    .DropProcedure(new SchemaProcedure("SelectLabelRolesByLabelId"))
+                    .DropProcedure(new SchemaProcedure("SelectLabelRolesPaged"))
+                    .DropProcedure(new SchemaProcedure("DeleteLabelRolesByLabelId"))
+                    .DropProcedure(new SchemaProcedure("DeleteLabelRolesByRoleIdAndLabelId"));
                 
-                // drop entity categories
+                // drop entity labels
                 builder
-                    .DropTable(_entityCategories)
-                    .DropDefaultProcedures(_entityCategories)
-                    .DropProcedure(new SchemaProcedure("SelectEntityCategoriesByEntityId"))
-                    .DropProcedure(new SchemaProcedure("DeleteEntityCategoriesByEntityId"))
-                    .DropProcedure(new SchemaProcedure("DeleteEntityCategoryByEntityIdAndCategoryId"))
-                    .DropProcedure(new SchemaProcedure("SelectEntityCategoriesPaged"));
+                    .DropTable(_entityLabels)
+                    .DropDefaultProcedures(_entityLabels)
+                    .DropProcedure(new SchemaProcedure("SelectEntityLabelsByEntityId"))
+                    .DropProcedure(new SchemaProcedure("DeleteEntityLabelsByEntityId"))
+                    .DropProcedure(new SchemaProcedure("DeleteEntityLabelByEntityIdAndLabelId"))
+                    .DropProcedure(new SchemaProcedure("SelectEntityLabelsPaged"));
                 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -396,20 +395,20 @@ namespace Plato.Labels.Handlers
 
         }
 
-        void Categories(ISchemaBuilder builder)
+        void Labels(ISchemaBuilder builder)
         {
 
             builder
-                .CreateTable(_categories)
-                .CreateDefaultProcedures(_categories);
+                .CreateTable(_labels)
+                .CreateDefaultProcedures(_labels);
 
             builder
-                .CreateProcedure(new SchemaProcedure("SelectCategoriesByFeatureId", StoredProcedureType.SelectByKey)
-                    .ForTable(_categories)
+                .CreateProcedure(new SchemaProcedure("SelectLabelsByFeatureId", StoredProcedureType.SelectByKey)
+                    .ForTable(_labels)
                     .WithParameter(new SchemaColumn() {Name = "FeatureId", DbType = DbType.Int32}));
             
-            builder.CreateProcedure(new SchemaProcedure("SelectCategoriesPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_categories)
+            builder.CreateProcedure(new SchemaProcedure("SelectLabelsPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_labels)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -422,20 +421,20 @@ namespace Plato.Labels.Handlers
 
         }
 
-        void CategoryData(ISchemaBuilder builder)
+        void LabelData(ISchemaBuilder builder)
         {
 
             builder
                 // Create tables
-                .CreateTable(_categoryData)
+                .CreateTable(_LabelData)
                 // Create basic default CRUD procedures
-                .CreateDefaultProcedures(_categoryData)
-                .CreateProcedure(new SchemaProcedure("SelectCategoryDatumBycategoryId", StoredProcedureType.SelectByKey)
-                    .ForTable(_categoryData)
-                    .WithParameter(new SchemaColumn() { Name = "CategoryId", DbType = DbType.Int32 }));
+                .CreateDefaultProcedures(_LabelData)
+                .CreateProcedure(new SchemaProcedure("SelectLabelDatumByLabelId", StoredProcedureType.SelectByKey)
+                    .ForTable(_LabelData)
+                    .WithParameter(new SchemaColumn() { Name = "LabelId", DbType = DbType.Int32 }));
 
-            builder.CreateProcedure(new SchemaProcedure("SelectCategoryDatumPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_categoryData)
+            builder.CreateProcedure(new SchemaProcedure("SelectLabelDatumPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_LabelData)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -448,55 +447,55 @@ namespace Plato.Labels.Handlers
 
         }
         
-        void CategoryRoles(ISchemaBuilder builder)
+        void LabelRoles(ISchemaBuilder builder)
         {
 
             builder
-                .CreateTable(_categoryRoles)
-                .CreateDefaultProcedures(_categoryRoles);
+                .CreateTable(_LabelRoles)
+                .CreateDefaultProcedures(_LabelRoles);
             
             builder.CreateProcedure(
                 new SchemaProcedure(
-                        $"SelectCategoryRoleById",
+                        $"SelectLabelRoleById",
                         @" SELECT cr.*, r.[Name] AS RoleName
-                                FROM {prefix}_CategoryRoles cr WITH (nolock) 
+                                FROM {prefix}_LabelRoles cr WITH (nolock) 
                                     INNER JOIN {prefix}_Roles r ON cr.RoleId = r.Id                                    
                                 WHERE (
                                    cr.Id = @Id
                                 )")
-                    .ForTable(_categoryRoles)
-                    .WithParameter(_categoryRoles.PrimaryKeyColumn));
+                    .ForTable(_LabelRoles)
+                    .WithParameter(_LabelRoles.PrimaryKeyColumn));
             
             builder.CreateProcedure(
                 new SchemaProcedure(
-                        $"SelectCategoryRolesByCategoryId",
+                        $"SelectLabelRolesByLabelId",
                         @" SELECT cr.*, r.[Name] AS RoleName
-                                FROM {prefix}_CategoryRoles cr WITH (nolock) 
+                                FROM {prefix}_LabelRoles cr WITH (nolock) 
                                     INNER JOIN {prefix}_Roles r ON cr.RoleId = r.Id                                    
                                 WHERE (
-                                   cr.CategoryId = @CategoryId
+                                   cr.LabelId = @LabelId
                                 )")
-                    .ForTable(_categoryRoles)
-                    .WithParameter(new SchemaColumn() { Name = "CategoryId", DbType = DbType.Int32 }));
+                    .ForTable(_LabelRoles)
+                    .WithParameter(new SchemaColumn() { Name = "LabelId", DbType = DbType.Int32 }));
             
             builder
-                .CreateProcedure(new SchemaProcedure("DeleteCategoryRolesByCategoryId", StoredProcedureType.DeleteByKey)
-                    .ForTable(_categoryRoles)
-                    .WithParameter(new SchemaColumn() { Name = "CategoryId", DbType = DbType.Int32 }));
+                .CreateProcedure(new SchemaProcedure("DeleteLabelRolesByLabelId", StoredProcedureType.DeleteByKey)
+                    .ForTable(_LabelRoles)
+                    .WithParameter(new SchemaColumn() { Name = "LabelId", DbType = DbType.Int32 }));
 
             builder
-                .CreateProcedure(new SchemaProcedure("DeleteCategoryRolesByRoleIdAndCategoryId",
+                .CreateProcedure(new SchemaProcedure("DeleteLabelRolesByRoleIdAndLabelId",
                         StoredProcedureType.DeleteByKey)
-                    .ForTable(_categoryRoles)
+                    .ForTable(_LabelRoles)
                     .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn() {Name = "RoleId", DbType = DbType.Int32},
-                            new SchemaColumn() {Name = "CategoryId", DbType = DbType.Int32}
+                            new SchemaColumn() {Name = "LabelId", DbType = DbType.Int32}
                         }
                     ));
             
-            builder.CreateProcedure(new SchemaProcedure("SelectCategoryRolesPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_categoryRoles)
+            builder.CreateProcedure(new SchemaProcedure("SelectLabelRolesPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_LabelRoles)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -509,55 +508,55 @@ namespace Plato.Labels.Handlers
             
         }
 
-        void EntityCategories(ISchemaBuilder builder)
+        void EntityLabels(ISchemaBuilder builder)
         {
 
             builder
-                .CreateTable(_entityCategories)
-                .CreateDefaultProcedures(_entityCategories);
+                .CreateTable(_entityLabels)
+                .CreateDefaultProcedures(_entityLabels);
 
             builder.CreateProcedure(
                 new SchemaProcedure(
-                        $"SelectEntityCategoryById",
-                        @" SELECT ec.*, c.[Name] AS CategoryName
-                                FROM {prefix}_Categories c WITH (nolock) 
-                                    INNER JOIN {prefix}_EntityCategories ec ON ec.CategoryId = c.Id                                    
+                        $"SelectEntityLabelById",
+                        @" SELECT el.*, l.[Name] AS LabelName
+                                FROM {prefix}_Labels l WITH (nolock) 
+                                    INNER JOIN {prefix}_EntityLabels el ON el.LabelId = l.Id                                    
                                 WHERE (
-                                   ec.Id = @Id
+                                   el.Id = @Id
                                 )")
-                    .ForTable(_categoryRoles)
-                    .WithParameter(_categoryRoles.PrimaryKeyColumn));
+                    .ForTable(_LabelRoles)
+                    .WithParameter(_LabelRoles.PrimaryKeyColumn));
 
             builder.CreateProcedure(
                 new SchemaProcedure(
-                        $"SelectEntityCategoriesByEntityId",
-                        @" SELECT ec.*, c.[Name] AS CategoryName
-                                FROM {prefix}_Categories c WITH (nolock) 
-                                    INNER JOIN {prefix}_EntityCategories ec ON ec.CategoryId = c.Id                                    
+                        $"SelectEntityLabelsByEntityId",
+                        @" SELECT el.*, l.[Name] AS LabelName
+                                FROM {prefix}_Labels l WITH (nolock) 
+                                    INNER JOIN {prefix}_EntityLabels el ON el.LabelId = l.Id                                    
                                 WHERE (
-                                   ec.EntityId = @EntityId
+                                   el.EntityId = @EntityId
                                 )")
-                    .ForTable(_entityCategories)
+                    .ForTable(_entityLabels)
                     .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
 
             builder
-                .CreateProcedure(new SchemaProcedure("DeleteEntityCategoriesByEntityId", StoredProcedureType.DeleteByKey)
-                    .ForTable(_entityCategories)
+                .CreateProcedure(new SchemaProcedure("DeleteEntityLabelsByEntityId", StoredProcedureType.DeleteByKey)
+                    .ForTable(_entityLabels)
                     .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
 
             builder
-                .CreateProcedure(new SchemaProcedure("DeleteEntityCategoryByEntityIdAndCategoryId",
+                .CreateProcedure(new SchemaProcedure("DeleteEntityLabelByEntityIdAndLabelId",
                         StoredProcedureType.DeleteByKey)
-                    .ForTable(_entityCategories)
+                    .ForTable(_entityLabels)
                     .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn() {Name = "EntityId", DbType = DbType.Int32},
-                            new SchemaColumn() {Name = "CategoryId", DbType = DbType.Int32}
+                            new SchemaColumn() {Name = "LabelId", DbType = DbType.Int32}
                         }
                     ));
 
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityCategoriesPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entityCategories)
+            builder.CreateProcedure(new SchemaProcedure("SelectEntityLabelsPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_entityLabels)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()

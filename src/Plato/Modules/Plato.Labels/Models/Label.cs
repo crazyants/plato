@@ -12,8 +12,7 @@ namespace Plato.Labels.Models
     {
 
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
-
-
+        
         public int Id { get; set; }
 
         public int ParentId { get; set; }
