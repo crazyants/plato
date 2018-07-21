@@ -370,8 +370,13 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-            state: {
-                previewHtml: null
+            preview: {
+                template: '<li class="list-group-item">{text}</li>',
+                text: "No selection",
+                empty: function() {
+                    var html = methods.preview.template;
+                    return html.replace("{text}", methods.preview.text);
+                }
             },
             $button: null, // the button that triggers the menu
             $menu: null, // the dropdown menu
@@ -398,12 +403,15 @@ $(function (win, doc, $) {
                 // Attempt to find a P tag within our .dropdown element
                 // If not found use the next element after the .dropdown 
                 // for the selection preview
-                this.$preview = $caller.find(".list-group-check-list-preview");
+                this.$preview = $caller.find(".select-dropdown-preview");
                 if (this.$preview.length === 0) {
                     this.$preview = $caller.next();
                 }
 
-                this.state.previewHtml = this.$preview.html();
+                // Set empty preview selection text
+                if (this.$preview.length > 0) {
+                    this.preview.text = this.$preview.attr("data-empty-preview-text");
+                }
 
                 // Bind events
                 methods.bind($caller);
@@ -441,10 +449,8 @@ $(function (win, doc, $) {
 
                             // Toggle active state on item click
                             if (!$(this).hasClass("active")) {
-                                $(this).find(".check-icon").addClass("fa-check");
                                 $(this).addClass("active");
                             } else {
-                                $(this).find(".check-icon").removeClass("fa-check");
                                 $(this).removeClass("active");
                             }
 
@@ -455,9 +461,11 @@ $(function (win, doc, $) {
                             var $active = $(self.$menu).find(".active");
                             if ($active.length === 0) {
 
+                                var template = self.preview.template
+
                                 self.$preview
                                     .empty()
-                                    .html(self.state.previewHtml);
+                                    .html(self.preview.empty());
 
                             } else {
 

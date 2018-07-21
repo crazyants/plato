@@ -416,26 +416,32 @@
 
 /* ------------------------- */
 /* Lists */
+/* ------------------------- */
 
 .list-left { float: left; }
 .list-left + .list-body { margin-left: 56px; }
 .list-right { float: left; }
 .list-right + .list-body { margin-right: 56px; }
 
-/* List group with check box selection */
-.list-group-check-list input { display: none; }
-.list-group-check-list input + label {  cursor: pointer; }
-.list-group-check-list input:checked + label { background: #F6F7F5; }
-.list-group-check-list input + label > i.check-icon {
+/* ------------------------- */
+/* Select Dropdown */
+/* ------------------------- */
+
+.select-dropdown input { display: none; }
+.select-dropdown input + label {  cursor: pointer; }
+
+.select-dropdown input + label > i.check-icon:after {
     vertical-align: middle;
     width: 20px;
+    content: '\f00c';
+    opacity: 0;
+}
+.select-dropdown input:checked + label > i.check-icon:after {
+    opacity: 1;
 }
 
-.list-group-check-list-preview i.check-icon { display: none; }
+.select-dropdown-preview i.check-icon { display: none; }
 
-
-
-.list-group-check-list .list-group-item { padding: 0.50rem 1.25rem; }
 
 /* ------------------------- */
 /* Plato Layout */
