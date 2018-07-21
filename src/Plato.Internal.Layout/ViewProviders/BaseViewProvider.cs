@@ -21,9 +21,12 @@ namespace Plato.Internal.Layout.ViewProviders
         public abstract Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater);
 
         public abstract Task<IViewProviderResult> BuildUpdateAsync(TModel model, IUpdateModel updater);
-
+        
         public virtual Task<bool> ValidateModelAsync(TModel model, IUpdateModel updater)
         {
+            // We don't always need to implement ValidateModelAsync for certain views
+            // For example views that don't perform any updates. We'll leave this method
+            // virtual to allow us to override if needed
             return Task.FromResult(true);
         }
 

@@ -112,25 +112,13 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         public override async Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
-
-            // Build selected channels
-            var channelsToAdd = GetChannelsToAdd();
-
+         
             // Build model
             var model = new EditTopicChannelsViewModel();
-            if (channelsToAdd.Count > 0)
-            {
-                model.SelectedChannels = channelsToAdd;
-            }
-
+            model.SelectedChannels = GetChannelsToAdd(); ;
+         
             // Validate model
-            if (!await updater.TryUpdateModelAsync(model))
-            {
-                return false;
-            }
-
-            return true;
-
+            return await updater.TryUpdateModelAsync(model);
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IUpdateModel updater)
@@ -143,55 +131,50 @@ namespace Plato.Discuss.Channels.ViewProviders
                 return await BuildIndexAsync(topic, updater);
             }
 
-            // 1. Validate model
-
+            // Validate model
             if (await ValidateModelAsync(topic, updater))
             {
                
-                // Build selected channels
+                // Get selected channels
                 var channelsToAdd = GetChannelsToAdd();
-
-                // Build channels to remove
-                var channelsToRemove = new List<int>();
-                foreach (var role in await GetCategoryIdsByEntityIdAsync(topic.Id))
+                if (channelsToAdd != null)
                 {
-                    if (!channelsToAdd.Contains(role))
+
+                    // Build channels to remove
+                    var channelsToRemove = new List<int>();
+                    foreach (var role in await GetCategoryIdsByEntityIdAsync(topic.Id))
                     {
-                        channelsToRemove.Add(role);
+                        if (!channelsToAdd.Contains(role))
+                        {
+                            channelsToRemove.Add(role);
+                        }
                     }
-                }
 
-                // Remove channels
-                foreach (var channelId in channelsToRemove)
-                {
-                    await _entityCategoryStore.DeleteByEntityIdAndCategoryId(topic.Id, channelId);
-                }
-
-                var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-                // Add new entity categories
-                foreach (var channel in channelsToAdd)
-                {
-                    await _entityCategoryStore.CreateAsync(new EntityCategory()
+                    // Remove channels
+                    foreach (var channelId in channelsToRemove)
                     {
-                        EntityId = topic.Id,
-                        CategoryId = channel,
-                        CreatedUserId = user?.Id ?? 0,
-                        ModifiedUserId = user?.Id ?? 0,
-                    });
+                        await _entityCategoryStore.DeleteByEntityIdAndCategoryId(topic.Id, channelId);
+                    }
+                    
+                    var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+                    // Add new entity categories
+                    foreach (var channel in channelsToAdd)
+                    {
+                        await _entityCategoryStore.CreateAsync(new EntityCategory()
+                        {
+                            EntityId = topic.Id,
+                            CategoryId = channel,
+                            CreatedUserId = user?.Id ?? 0,
+                            ModifiedUserId = user?.Id ?? 0,
+                        });
+                    }
+
                 }
 
             }
-            else
-            {
-
-                updater.ModelState.AddModelError(string.Empty, T["A channel is required! XXXXXXXXXXXXX"]);
-
-                //return await BuildEditAsync(topic, updater);
-
-            }
-
-            return await BuildDisplayAsync(topic, updater);
+           
+            return await BuildEditAsync(topic, updater);
 
         }
 
@@ -203,11 +186,15 @@ namespace Plato.Discuss.Channels.ViewProviders
         List<int> GetChannelsToAdd()
         {
             // Build selected channels
-            var channelsToAdd = new List<int>();
+            List<int> channelsToAdd = null;
             foreach (var key in _request.Form.Keys)
             {
                 if (key.StartsWith(ChannelHtmlName))
                 {
+                    if (channelsToAdd == null)
+                    {
+                        channelsToAdd = new List<int>();
+                    }
                     var values = _request.Form[key];
                     foreach (var value in values)
                     {
@@ -236,7 +223,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             ;
             if (channels != null)
             {
-                return channels.Select(s => s.Id).ToArray();
+                return channels.Select(s => s.CategoryId).ToArray();
             }
 
             return new List<int>();

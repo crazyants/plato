@@ -103,7 +103,7 @@ namespace Plato.Discuss.ViewProviders
                 View<HomeTopicViewModel>("Home.Topic.Content", model => topivViewModel).Zone("content"),
                 View<NewEntityReplyViewModel>("Home.Topic.Footer", model => new NewEntityReplyViewModel()
                 {
-                    EntityId = topic.Id,
+                    
                     EditorHtmlName = EditorHtmlName
                 }).Zone("footer")
             );
@@ -114,7 +114,7 @@ namespace Plato.Discuss.ViewProviders
         {
 
             // Ensures we persist the message between post backs
-            var message = "";
+            var message = topic.Message;
             if (_request.Method == "POST")
             {
                 foreach (string key in _request.Form.Keys)
@@ -128,7 +128,7 @@ namespace Plato.Discuss.ViewProviders
           
             var viewModel = new EditEntityViewModel()
             {
-                EntityId = topic.Id,
+                Title = topic.Title,
                 EditorHtmlName = EditorHtmlName,
                 Message = message
             };
@@ -140,8 +140,7 @@ namespace Plato.Discuss.ViewProviders
             ));
 
         }
-
-
+        
         public override async Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
 
@@ -149,101 +148,35 @@ namespace Plato.Discuss.ViewProviders
             model.Title = topic.Title;
             model.Message = topic.Message;
 
-            if (!await updater.TryUpdateModelAsync(model))
-            {
-                return false;
-            }
-
-            return true;
+            return await updater.TryUpdateModelAsync(model);
 
         }
-
-
+        
         public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IUpdateModel updater)
         {
 
-            //var existingTopic = await _entityStore.GetByIdAsync(topic.Id);
-            //if (existingTopic == null)
-            //{
-            //    return await BuildIndexAsync(topic, updater);
-            //}
-
-            // Get posted message
-            var message = string.Empty;
-            foreach (string key in _request.Form.Keys)
-            {
-                if (key == EditorHtmlName)
-                {
-                    message = _request.Form[key];
-                }
-            }
-            
-
-            var model = new EditEntityViewModel();
-            model.EntityId = topic.Id;
-            model.Title = topic.Title;
-            model.Message = message;
-
-            if (!await updater.TryUpdateModelAsync(model))
+            var entity = await _entityStore.GetByIdAsync(topic.Id);
+            if (entity == null)
             {
                 return await BuildIndexAsync(topic, updater);
             }
             
-            if (updater.ModelState.IsValid)
+            // Validate 
+            if (await ValidateModelAsync(topic, updater))
             {
+                
+                // Update
+                var result = await _topicManager.UpdateAsync(topic);
 
-                IActivityResult<Topic> topicManagerResult;
-                if (await IsNewEntity(model.EntityId))
+                // Was there a problem updating the entity?
+                if (!result.Succeeded)
                 {
-                    topicManagerResult = await _topicManager.CreateAsync(topic);
-                }
-                else
-                {
-                    topicManagerResult = await _topicManager.UpdateAsync(topic);
-                }
-
-                if (topicManagerResult.Succeeded)
-                {
-                    model.EntityId = topicManagerResult.Response.Id;
-                    if (!await updater.TryUpdateModelAsync(model))
+                    foreach (var error in result.Errors)
                     {
-                        return await BuildIndexAsync(topic, updater);
+                        updater.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
-
-                //await _topicManager.UpdateAsync(topic);
-
-
-                //if (model.EntityId > 0)
-                //{
-                //    var reply = await _replyManager.CreateAsync(new EntityReply
-                //    {
-                //        EntityId = model.EntityId,
-                //        Message = message.Trim()
-                //    });
-
-                //    foreach (var error in result.Errors)
-                //    {
-                //        updater.ModelState.AddModelError(string.Empty, error.Description);
-                //    }
-
-
-                //}
-
-
-                //if (result.Succeeded)
-                //{
-
-                //}
-                //else
-                //{
-                //    foreach (var error in result.Errors)
-                //    {
-                //        updater.ModelState.AddModelError(string.Empty, error.Description);
-                //    }
-                //}
-
-
+              
                 //if (model.EntityId == 0)
                 //{
 
@@ -278,10 +211,7 @@ namespace Plato.Discuss.ViewProviders
 
                 //}
 
-                return await BuildDisplayAsync(topic, updater);
-
             }
-        
 
             return await BuildEditAsync(topic, updater);
 
@@ -291,61 +221,7 @@ namespace Plato.Discuss.ViewProviders
 
 
         #region "Private Methods"
-
-        async Task<bool> IsNewEntity(int entityId)
-        {
-            return await _entityStore.GetByIdAsync(entityId) == null;
-        }
-
-        //async Task<HomeIndexViewModel> GetIndexViewModel(
-        //    FilterOptions filterOptions,
-        //    PagerOptions pagerOptions)
-        //{
-        //    //var topics = await GetEntities(filterOptions, pagerOptions);
-        //    return new HomeIndexViewModel(
-        //        topics,
-        //        filterOptions,
-        //        pagerOptions);
-        //}
-
-        //async Task<IPagedResults<Topic>> GetEntities(
-        //    FilterOptions filterOptions,
-        //    PagerOptions pagerOptions)
-        //{
-
-        //    // Get current feature (i.e. Plato.Discuss) from area
-        //    var feature = await _contextFacade.GetFeatureByAreaAsync();
-
-        //    return await _entityStore.QueryAsync()
-        //        .Take(pagerOptions.Page, pagerOptions.PageSize)
-        //        .Select<EntityQueryParams>(q =>
-        //        {
-
-        //            if (feature != null)
-        //            {
-        //                q.FeatureId.Equals(feature.Id);
-        //            }
-
-        //            q.HideSpam.True();
-        //            q.HidePrivate.True();
-        //            q.HideDeleted.True();
-
-        //            //q.IsPinned.True();
-
-
-        //            //if (!string.IsNullOrEmpty(filterOptions.Search))
-        //            //{
-        //            //    q.UserName.IsIn(filterOptions.Search).Or();
-        //            //    q.Email.IsIn(filterOptions.Search);
-        //            //}
-        //            // q.UserName.IsIn("Admin,Mark").Or();
-        //            // q.Email.IsIn("email440@address.com,email420@address.com");
-        //            // q.Id.Between(1, 5);
-        //        })
-        //        .OrderBy("Id", OrderBy.Desc)
-        //        .ToList();
-        //}
-
+        
         async Task<IPagedResults<EntityReply>> GetEntityReplies(
             int entityId,
             FilterOptions filterOptions,

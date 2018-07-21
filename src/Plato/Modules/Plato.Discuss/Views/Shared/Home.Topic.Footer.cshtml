@@ -4,8 +4,8 @@
     var user = await GetAuthenticatedUserAsync();
 }
 
-<div id="postReply" class="mt-4">
-    <div class="mt-4">
+<div id="postReply">
+ 
         <div class="topic-reply-left">
             @if (user != null)
             {
@@ -17,7 +17,7 @@
         <div class="topic-reply-body">
             <form asp-controller="Home" asp-action="Topic" method="post" enctype="multipart/form-data">
                 
-                <input asp-for="@Model.EntityId" type="hidden" />
+                @*<input asp-for="@Model.EntityId" type="hidden" />*@
                 
                         @await DisplayAsync(new View("Editor", new
                         {
@@ -38,7 +38,7 @@
                  
             </form>
         </div>
-    </div>
+  
 </div>
 
 

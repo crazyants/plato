@@ -119,7 +119,7 @@ namespace Plato.Internal.Layout.ViewProviders
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred within the view providers BuildUpdateAsync method. Please review the UpdateAsync method within your view provider and try again. {e.Message}");
+                    _logger.LogError(e, $"An exception occurred within the view providers IsModelStateValid method. Please review the IsModelStateValid method within your view provider and try again. {e.Message}");
                     throw;
                 }
             }
@@ -127,5 +127,6 @@ namespace Plato.Internal.Layout.ViewProviders
             return valid;
 
         }
+
     }
 }
