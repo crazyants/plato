@@ -11,12 +11,15 @@
         {
             <a href="#" class="avatar-link">
                 <avatar data-toggle="tooltip" title="@user.DisplayName" class="avatar" user-id="@user.Id" />
-            </a>}
+            </a>
+        }
 
     </div>
     <div class="topic-reply-body">
         <card class="card mt-0">
             <card-body>
+                
+                <div asp-validation-summary="ModelOnly"></div>
 
                 <fieldset>
                     <div class="form-group">
@@ -26,10 +29,10 @@
 
                     </div>
                     <div class="form-group">
-
+                        
                         @await DisplayAsync(new View("Editor", new
                         {
-                            value = string.Empty,
+                            value = @Model.Message,
                             placeHolderText = T["Add your comments here"],
                             htmlName = @Model.EditorHtmlName,
                             tabIndex = 2

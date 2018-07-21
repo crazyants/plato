@@ -7,7 +7,8 @@ namespace Plato.Discuss.ViewModels
     {
 
         [Required]
-        [StringLength(255)]
+        [MinLength(5)]
+        [MaxLength(255)]
         public string Title { get; set; }
 
     }
@@ -18,6 +19,7 @@ namespace Plato.Discuss.ViewModels
         public int EntityId { get; set; }
 
         [Required]
+        [MinLength(5)]
         public string Message { get; set; }
 
         public string EditorHtmlName { get; set; }

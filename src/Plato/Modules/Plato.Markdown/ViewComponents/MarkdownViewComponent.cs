@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Markdown.Services;
@@ -45,6 +46,7 @@ namespace Plato.Markdown.ViewComponents
 
         public int Id { get; set; }
 
+        [Required]
         public string Value { get; set; }
 
         public string PlaceHolderText { get; set; }

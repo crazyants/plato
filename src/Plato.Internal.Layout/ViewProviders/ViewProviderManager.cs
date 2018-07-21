@@ -104,5 +104,28 @@ namespace Plato.Internal.Layout.ViewProviders
             return new LayoutViewModel(results.ToArray()).BuildLayout();
 
         }
+
+        public async Task<bool> IsModelStateValid(TModel model, IUpdateModel updater)
+        {
+            var valid = true;
+            foreach (var provider in _providers)
+            {
+                try
+                {
+                    if (!await provider.ValidateModelAsync(model, updater))
+                    {
+                        valid = false;
+                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"An exception occurred within the view providers BuildUpdateAsync method. Please review the UpdateAsync method within your view provider and try again. {e.Message}");
+                    throw;
+                }
+            }
+
+            return valid;
+
+        }
     }
 }

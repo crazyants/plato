@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
@@ -98,35 +99,133 @@ namespace Plato.Discuss.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditEntityViewModel model)
         {
-            
-            //if (!ModelState.IsValid)
-            //{
-            //    return await Create();
-            //}
-            
-            var result = await _postManager.CreateAsync(new Topic()
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Validate model state within all view providers
+            if (await _discussViewProvider.IsModelStateValid(new Topic()
             {
                 Title = model.Title,
                 Message = model.Message
-            });
-
-            if (result.Succeeded)
+            }, this))
             {
-                await _discussViewProvider.ProvideUpdateAsync(result.Response, this);
-                _alerter.Success(T["Topic Created Successfully!"]);
-            }
-            else
-            {
-                _alerter.Danger(T["A problem occurred creating the topic. Please try again.!"]);
+
+                // We need to first add the entity so we have a nuique entity Id
+                // for all ProvideUpdateAsync methods within each view provider
+                var topic = await _postManager.CreateAsync(new Topic()
+                {
+                    Title = model.Title,
+                    Message = model.Message
+                });
+
+                // Ensure the insert was successful
+                if (topic.Succeeded)
+                {
+
+                    // Execute view providers
+                    var result = await _discussViewProvider.ProvideUpdateAsync(topic.Response, this);
+
+                    // Everything was OK
+                    _alerter.Success(T["Topic Created Successfully!"]);
+
+                    // 
+                    return View(result);
+
+                }
+                
             }
 
-            return RedirectToAction(nameof(Index));
+
+            // if we reach this point some view model validation
+            // within a view providers failed, display errors
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
+                }
+            }
+
+            return await Create();
+
+
+
+
+
+            //var result = await _discussViewProvider.ProvideUpdateAsync(new Topic()
+            //{
+            //    Title = model.Title,
+            //    Message = model.Message
+            //}, this);
+
+            //// Ensure model state is still validate after executing all view providers
+            //if (this.ModelState.IsValid)
+            //{
+            //    // Everything was OK
+            //    _alerter.Success(T["Topic Created Successfully!"]);
+            //    return View(result);
+            //}
+
+
+
+
+
+
+
+            //// We need to first add the entity so we have a nuique entity Id
+            //// for all ProvideUpdateAsync methods within each view provider
+            //var topic = await _postManager.CreateAsync(new Topic()
+            //{
+            //    Title = model.Title,
+            //    Message = model.Message
+            //});
+
+            //// Ensure the insert was successful
+            //if (topic.Succeeded)
+            //{
+
+            //    // Execute view providers
+            //    var result = await _discussViewProvider.ProvideUpdateAsync(topic.Response, this);
+
+            //    // Ensure model state is still validate after executing all view providers
+            //    if (this.ModelState.IsValid)
+            //    {
+            //        // Everything was OK
+            //        _alerter.Success(T["Topic Created Successfully!"]);
+            //        return View(result);
+            //    }
+
+            //    // if we reach this point some view model validation
+            //    // within a view providers ProvideUpdateAsync method failed
+            //    foreach (var modelState in ViewData.ModelState.Values)
+            //    {
+            //        foreach (var error in modelState.Errors)
+            //        {
+            //            _alerter.Danger(T[error.ErrorMessage]);
+            //        }
+            //    }
+
+            //    return await Create();
+
+            //}
+            //else
+            //{
+
+            //    // We could not add the initial entity
+            //    _alerter.Danger(T["A problem occurred creating the topic. Please try again.!"]);
+            //    return await Create();
+
+            //}
 
         }
-    
+
         public async Task<IActionResult> Topic(
             int id,
             FilterOptions filterOptions,

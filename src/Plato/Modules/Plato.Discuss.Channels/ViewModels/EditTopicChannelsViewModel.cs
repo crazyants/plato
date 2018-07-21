@@ -6,6 +6,8 @@ namespace Plato.Discuss.Channels.ViewModels
     public class EditTopicChannelsViewModel
     {
 
+        public int EntityId { get; set; }
+
         [Required]
         public IEnumerable<int> SelectedChannels { get; set; }
 

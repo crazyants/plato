@@ -14,6 +14,8 @@ namespace Plato.Internal.Layout.ViewProviders
 
         Task<IViewProviderResult> ProvideUpdateAsync(TModel model, IUpdateModel updater);
 
+        Task<bool> IsModelStateValid(TModel model, IUpdateModel updater);
+
     }
     
 }

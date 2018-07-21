@@ -22,6 +22,11 @@ namespace Plato.Internal.Layout.ViewProviders
 
         public abstract Task<IViewProviderResult> BuildUpdateAsync(TModel model, IUpdateModel updater);
 
+        public virtual Task<bool> ValidateModelAsync(TModel model, IUpdateModel updater)
+        {
+            return Task.FromResult(true);
+        }
+
         #endregion
 
         #region "Helper Methods"
