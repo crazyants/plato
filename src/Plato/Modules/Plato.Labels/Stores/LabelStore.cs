@@ -151,7 +151,7 @@ namespace Plato.Labels.Stores
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Selecting categories for feature with Id '{0}'",
+                    _logger.LogInformation("Selecting labels for feature with Id '{0}'",
                         featureId);
                 }
 

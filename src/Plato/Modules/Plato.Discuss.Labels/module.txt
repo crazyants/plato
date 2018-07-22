@@ -1,5 +1,5 @@
-Name: Plato Discuss Tags
-Description: Adds tagging support to entities.
+Name: Plato Discuss Labels
+Description: Adds the ability to label topics.
 Category: Discussions
 Author: InstantASP
 Version: 1.0.0

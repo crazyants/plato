@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using Plato.Discuss.Tags.Models;
 
-namespace Plato.Discuss.Tags.ViewModels
+namespace Plato.Discuss.Labels.ViewModels
 {
     public class SelectTagsViewModel
     {
         
-        public IList<Selection<Tag>> SelectedChannels { get; set; }
+        public IList<Selection<Models.Label>> SelectedChannels { get; set; }
 
         public string HtmlName { get; set; }
 

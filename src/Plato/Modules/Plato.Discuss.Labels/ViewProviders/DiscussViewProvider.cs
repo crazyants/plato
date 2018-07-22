@@ -3,26 +3,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Tags.Models;
-using Plato.Discuss.Tags.ViewModels;
-using Plato.Discuss.Models;
-using Plato.Discuss.Services;
 using Plato.Entities.Stores;
-using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Labels.Models;
 using Plato.Labels.Stores;
+using Plato.Discuss.Labels.ViewModels;
+using Plato.Discuss.Models;
 
-namespace Plato.Discuss.Tags.ViewProviders
+namespace Plato.Discuss.Labels.ViewProviders
 {
     public class DiscussViewProvider : BaseViewProvider<Topic>
     {
 
         private const string ChannelHtmlName = "channel";
 
-        private readonly ILabelStore<Tag> _tagStore;
+        private readonly ILabelStore<Models.Label> _tagStore;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
@@ -33,7 +30,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
         public DiscussViewProvider(
             IContextFacade contextFacade,
-            ILabelStore<Tag> tagStore, 
+            ILabelStore<Models.Label> tagStore, 
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityLabelStore<EntityLabel> entityLabelStore,
@@ -61,7 +58,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
             var tags = await _tagStore.GetByFeatureIdAsync(feature.Id);
             
-            return Views(View<TagsViewModel>("Discuss.Tags.Index.Sidebar", model =>
+            return Views(View<LabelsViewModel>("Discuss.Labels.Index.Sidebar", model =>
                 {
                     model.Channels = tags;
                     return model;
@@ -83,7 +80,7 @@ namespace Plato.Discuss.Tags.ViewProviders
             var categories = await _tagStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(
-                View<TagsViewModel>("Discuss.Index.Sidebar", model =>
+                View<LabelsViewModel>("Discuss.Index.Sidebar", model =>
                 {
                     model.Channels = categories;
                     return model;

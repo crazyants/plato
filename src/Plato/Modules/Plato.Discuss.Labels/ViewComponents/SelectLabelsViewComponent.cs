@@ -2,22 +2,20 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Categories.Stores;
-using Plato.Discuss.Tags.Models;
-using Plato.Discuss.Tags.ViewModels;
+using Plato.Discuss.Labels.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Labels.Stores;
 
-namespace Plato.Discuss.Tags.ViewComponents
+namespace Plato.Discuss.Labels.ViewComponents
 {
 
-    public class SelectTagsViewComponent : ViewComponent
+    public class SelectLabelsViewComponent : ViewComponent
     {
-        private readonly ILabelStore<Tag> _tagStore;
+        private readonly ILabelStore<Models.Label> _tagStore;
         private readonly IContextFacade _contextFacade;
 
-        public SelectTagsViewComponent(
-            ILabelStore<Tag> tagStore, 
+        public SelectLabelsViewComponent(
+            ILabelStore<Models.Label> tagStore, 
             IContextFacade contextFacade)
         {
             _tagStore = tagStore;
@@ -41,14 +39,14 @@ namespace Plato.Discuss.Tags.ViewComponents
 
         }
 
-        private async Task<IList<Selection<Tag>>> BuildSelectionsAsync(
+        private async Task<IList<Selection<Models.Label>>> BuildSelectionsAsync(
             IEnumerable<int> selected)
         {
 
             var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
             var channels = await _tagStore.GetByFeatureIdAsync(feature.Id);
             
-            var selections = channels.Select(c => new Selection<Tag>
+            var selections = channels.Select(c => new Selection<Models.Label>
                 {
                     IsSelected = selected.Any(v => v == c.Id),
                     Value = c

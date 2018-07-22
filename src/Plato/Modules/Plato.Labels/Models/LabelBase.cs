@@ -8,7 +8,7 @@ using Plato.Internal.Models;
 
 namespace Plato.Labels.Models
 {
-    public class Label  : IModel<Label>, ILabel
+    public class LabelBase  : IModel<LabelBase>, ILabel
     {
 
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
@@ -45,7 +45,7 @@ namespace Plato.Labels.Models
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
         
-        public Label()
+        public LabelBase()
         {
             _metaData = new ConcurrentDictionary<Type, ISerializable>();
         }

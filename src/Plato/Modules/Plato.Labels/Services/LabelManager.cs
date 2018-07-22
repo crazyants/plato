@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Plato.Labels.Models;
-using Plato.Labels.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Internal.Text.Abstractions;
+using Plato.Labels.Models;
+using Plato.Labels.Stores;
 
 namespace Plato.Labels.Services
 {
@@ -16,29 +16,28 @@ namespace Plato.Labels.Services
     public class LabelManager<TLabel> : ILabelManager<TLabel> where TLabel : class, ILabel
     {
         
-        
-        private readonly ILabelRoleStore<LabelRole> _LabelRoleStore;
-        private readonly ILabelDataStore<LabelData> _LabelDataStore;
-        private readonly ILabelStore<TLabel> _LabelStore;
+        private readonly ILabelRoleStore<LabelRole> _labelRoleStore;
+        private readonly ILabelDataStore<LabelData> _labelDataStore;
+        private readonly ILabelStore<TLabel> _labelStore;
         private readonly IContextFacade _contextFacade;
         private readonly IAliasCreator _aliasCreator;
         private readonly IPlatoRoleStore _roleStore;
         private readonly IBroker _broker;
 
         public LabelManager(
-            ILabelStore<TLabel> LabelStore,
-            ILabelRoleStore<LabelRole> LabelRoleStore,
-            ILabelDataStore<LabelData> LabelDataStore,
+            ILabelStore<TLabel> labelStore,
+            ILabelRoleStore<LabelRole> labelRoleStore,
+            ILabelDataStore<LabelData> labelDataStore,
             IContextFacade contextFacade,
             IAliasCreator aliasCreator,
             IPlatoRoleStore roleStore,
             IBroker broker)
         {
-            _LabelStore = LabelStore;
-            _LabelRoleStore = LabelRoleStore;
+            _labelStore = labelStore;
+            _labelRoleStore = labelRoleStore;
             _roleStore = roleStore;
             _contextFacade = contextFacade;
-            _LabelDataStore = LabelDataStore;
+            _labelDataStore = labelDataStore;
             _broker = broker;
             _aliasCreator = aliasCreator;
         }
@@ -88,16 +87,16 @@ namespace Plato.Labels.Services
 
             var result = new ActivityResult<TLabel>();
 
-            var Label = await _LabelStore.CreateAsync(model);
-            if (Label != null)
+            var label = await _labelStore.CreateAsync(model);
+            if (label != null)
             {
                 // Publish LabelCreated event
                 await _broker.Pub<TLabel>(this, new MessageOptions()
                 {
                     Key = "LabelCreated"
-                }, Label);
+                }, label);
                 // Return success
-                return result.Success(Label);
+                return result.Success(label);
             }
 
             return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create the Label"));
@@ -143,16 +142,16 @@ namespace Plato.Labels.Services
 
             var result = new ActivityResult<TLabel>();
 
-            var Label = await _LabelStore.UpdateAsync(model);
-            if (Label != null)
+            var label = await _labelStore.UpdateAsync(model);
+            if (label != null)
             {
                 // Publish LabelUpdated event
                 await _broker.Pub<TLabel>(this, new MessageOptions()
                 {
                     Key = "LabelUpdated"
-                }, Label);
+                }, label);
                 // Return success
-                return result.Success(Label);
+                return result.Success(label);
             }
 
             return result.Failed(new ActivityError("An unknown error occurred whilst attempting to update the Label"));
@@ -175,18 +174,18 @@ namespace Plato.Labels.Services
             }, model);
 
             var result = new ActivityResult<TLabel>();
-            if (await _LabelStore.DeleteAsync(model))
+            if (await _labelStore.DeleteAsync(model))
             {
                 // Delete Label roles
-                await _LabelRoleStore.DeleteByLabelIdAsync(model.Id);
+                await _labelRoleStore.DeleteByLabelIdAsync(model.Id);
 
                 // Delete Label data
-                var data = await _LabelDataStore.GetByLabelIdAsync(model.Id);
+                var data = await _labelDataStore.GetByLabelIdAsync(model.Id);
                 if (data != null)
                 {
                     foreach (var item in data)
                     {
-                        await _LabelDataStore.DeleteAsync(item);
+                        await _labelDataStore.DeleteAsync(item);
                     }
                     
                 }
@@ -230,7 +229,7 @@ namespace Plato.Labels.Services
             }
 
             // Ensure supplied role name is not already associated with the Label
-            var roles = await _LabelRoleStore.GetByLabelIdAsync(model.Id);
+            var roles = await _labelRoleStore.GetByLabelIdAsync(model.Id);
             if (roles != null)
             {
                 foreach (var role in roles)
@@ -244,14 +243,14 @@ namespace Plato.Labels.Services
             
             var user = await _contextFacade.GetAuthenticatedUserAsync();
         
-            var LabelRole = new LabelRole()
+            var labelRole = new LabelRole()
             {
                 LabelId = model.Id,
                 RoleId = existingRole.Id,
                 CreatedUserId = user?.Id ?? 0
             };
 
-            var updatedLabelRole = await _LabelRoleStore.CreateAsync(LabelRole);
+            var updatedLabelRole = await _labelRoleStore.CreateAsync(labelRole);
             if (updatedLabelRole != null)
             {
                 return result.Success();
@@ -285,7 +284,7 @@ namespace Plato.Labels.Services
             }
             
             // Attempt to delete the role relationship
-            var success = await _LabelRoleStore.DeleteByRoleIdAndLabelIdAsync(role.Id, model.Id);
+            var success = await _labelRoleStore.DeleteByRoleIdAndLabelIdAsync(role.Id, model.Id);
             if (success)
             {
                 return result.Success();
@@ -316,7 +315,7 @@ namespace Plato.Labels.Services
                 return false;
             }
             
-            var roles = await _LabelRoleStore.GetByLabelIdAsync(model.Id);
+            var roles = await _labelRoleStore.GetByLabelIdAsync(model.Id);
             if (roles == null)
             {
                 return false;
@@ -337,7 +336,7 @@ namespace Plato.Labels.Services
         public async Task<IEnumerable<string>> GetRolesAsync(TLabel model)
         {
 
-            var roles = await _LabelRoleStore.GetByLabelIdAsync(model.Id);
+            var roles = await _labelRoleStore.GetByLabelIdAsync(model.Id);
             if (roles != null)
             {
                 return roles.Select(s => s.RoleName).ToArray();

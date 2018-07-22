@@ -29,19 +29,19 @@ namespace Plato.Labels
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Repositories
-            services.AddScoped<ILabelRepository<Label>, LabelRepository<Label>>();
+            services.AddScoped<ILabelRepository<LabelBase>, LabelRepository<LabelBase>>();
             services.AddScoped<ILabelDataRepository<LabelData>, LabelDataRepository>();
             services.AddScoped<ILabelRoleRepository<LabelRole>, LabelRoleRepository>();
             services.AddScoped<IEntityLabelRepository<EntityLabel>, EntityLabelRepository>();
 
             // Stores
-            services.AddScoped<ILabelStore<Label>, LabelStore<Label>>();
+            services.AddScoped<ILabelStore<LabelBase>, LabelStore<LabelBase>>();
             services.AddScoped<ILabelDataStore<LabelData>, LabelDataStore>();
             services.AddScoped<ILabelRoleStore<LabelRole>, LabelRoleStore>();
             services.AddScoped<IEntityLabelStore<EntityLabel>, EntityLabelStore>();
 
             // Managers
-            services.AddScoped<ILabelManager<Label>, LabelManager<Label>>();
+            services.AddScoped<ILabelManager<LabelBase>, LabelManager<LabelBase>>();
         
         }
 

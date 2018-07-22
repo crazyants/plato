@@ -2,24 +2,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Categories.Models;
-using Plato.Categories.Repositories;
-using Plato.Categories.Services;
-using Plato.Categories.Stores;
 using Plato.Discuss.Models;
-using Plato.Discuss.Tags.Models;
-using Plato.Discuss.Tags.ViewProviders;
-using Plato.Discuss.ViewModels;
+using Plato.Discuss.Labels.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Labels.Models;
 using Plato.Labels.Repositories;
 using Plato.Labels.Services;
 using Plato.Labels.Stores;
 
-namespace Plato.Discuss.Tags
+namespace Plato.Discuss.Labels
 {
     public class Startup : StartupBase
     {
@@ -37,21 +31,21 @@ namespace Plato.Discuss.Tags
             services.AddScoped<INavigationProvider, AdminMenu>();
             
             // Data stores
-            services.AddScoped<ILabelRepository<Tag>, LabelRepository<Tag>>();
-            services.AddScoped<ILabelStore<Tag>, LabelStore<Tag>>();
-            services.AddScoped<ILabelManager<Tag>, LabelManager<Tag>>();
+            services.AddScoped<ILabelRepository<Models.Label>, LabelRepository<Models.Label>>();
+            services.AddScoped<ILabelStore<Models.Label>, LabelStore<Models.Label>>();
+            services.AddScoped<ILabelManager<Models.Label>, LabelManager<Models.Label>>();
 
             // Discuss view providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, DiscussViewProvider>();
 
-            //// Channel view provider
+            //// Label view provider
             //services.AddScoped<IViewProviderManager<Channel>, ViewProviderManager<Channel>>();
             //services.AddScoped<IViewProvider<Channel>, ChannelViewProvider>();
 
-            //// Admin view providers
-            //services.AddScoped<IViewProviderManager<Category>, ViewProviderManager<Category>>();
-            //services.AddScoped<IViewProvider<Category>, AdminViewProvider>();
+            // Admin view providers
+            services.AddScoped<IViewProviderManager<LabelBase>, ViewProviderManager<LabelBase>>();
+            services.AddScoped<IViewProvider<LabelBase>, AdminViewProvider>();
 
             //// Register view adaptors
             //services.AddScoped<IViewAdaptorProvider, DiscussViewAdaptorProvider>();
@@ -64,11 +58,10 @@ namespace Plato.Discuss.Tags
             IServiceProvider serviceProvider)
         {
 
-
             routes.MapAreaRoute(
-                name: "DiscussChannel",
-                areaName: "Plato.Discuss.Channels",
-                template: "discuss/channel/{id}/{alias}",
+                name: "DiscussLabels",
+                areaName: "Plato.Discuss.Labels",
+                template: "discuss/label/{id}/{alias}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 

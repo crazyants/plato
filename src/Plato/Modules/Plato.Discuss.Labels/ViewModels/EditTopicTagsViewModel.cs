@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Plato.Discuss.Tags.ViewModels
+namespace Plato.Discuss.Labels.ViewModels
 {
     public class EditTopicTagsViewModel
     {

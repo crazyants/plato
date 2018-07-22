@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using Plato.Internal.Abstractions;
 
 namespace Plato.Labels.Models
 {
+
     public interface ILabel
     {
 
@@ -41,7 +41,6 @@ namespace Plato.Labels.Models
 
         IDictionary<Type, ISerializable> MetaData { get; }
         
-
         void AddOrUpdate<T>(T obj) where T : class;
 
         void AddOrUpdate(Type type, ISerializable obj);

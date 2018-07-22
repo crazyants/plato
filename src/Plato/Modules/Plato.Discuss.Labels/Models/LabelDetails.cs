@@ -1,8 +1,8 @@
 ﻿using Plato.Internal.Abstractions;
 
-namespace Plato.Discuss.Tags.Models
+namespace Plato.Discuss.Labels.Models
 {
-    public class TagDetails : Serializable
+    public class LabelDetails : Serializable
     {
         public int TotalTopics { get; set; }
 
