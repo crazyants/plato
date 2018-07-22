@@ -2,10 +2,10 @@
 
 namespace Plato.Discuss.Labels.ViewModels
 {
-    public class SelectTagsViewModel
+    public class SelectLabelsViewModel
     {
         
-        public IList<Selection<Models.Label>> SelectedChannels { get; set; }
+        public IList<Selection<Models.Label>> SelectedLabels { get; set; }
 
         public string HtmlName { get; set; }
 

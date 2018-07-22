@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Plato.Discuss.Labels.ViewModels
 {
-    public class EditTopicTagsViewModel
+    public class EditTopicLabelsViewModel
     {
      
         [Required]
-        [Display(Name = "channel")]
-        public IEnumerable<int> SelectedChannels { get; set; }
+        [Display(Name = "label")]
+        public IEnumerable<int> SelectedLabels { get; set; }
 
         public string HtmlName { get; set; }
 

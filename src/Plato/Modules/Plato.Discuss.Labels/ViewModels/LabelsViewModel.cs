@@ -5,6 +5,6 @@ namespace Plato.Discuss.Labels.ViewModels
 {
     public class LabelsViewModel
     {
-        public IEnumerable<LabelBase> Channels { get; set; }
+        public IEnumerable<LabelBase> Labels { get; set; }
     }
 }

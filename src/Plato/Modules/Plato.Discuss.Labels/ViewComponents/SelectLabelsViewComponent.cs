@@ -11,30 +11,30 @@ namespace Plato.Discuss.Labels.ViewComponents
 
     public class SelectLabelsViewComponent : ViewComponent
     {
-        private readonly ILabelStore<Models.Label> _tagStore;
+        private readonly ILabelStore<Models.Label> _labelStore;
         private readonly IContextFacade _contextFacade;
 
         public SelectLabelsViewComponent(
-            ILabelStore<Models.Label> tagStore, 
+            ILabelStore<Models.Label> labelStore, 
             IContextFacade contextFacade)
         {
-            _tagStore = tagStore;
+            _labelStore = labelStore;
             _contextFacade = contextFacade;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            IEnumerable<int> selectedChannels, 
+            IEnumerable<int> selectedLabels, 
             string htmlName)
         {
-            if (selectedChannels == null)
+            if (selectedLabels == null)
             {
-                selectedChannels = new int[0];
+                selectedLabels = new int[0];
             }
             
-            return View(new SelectTagsViewModel
+            return View(new SelectLabelsViewModel
             {
                 HtmlName = htmlName,
-                SelectedChannels = await BuildSelectionsAsync(selectedChannels)
+                SelectedLabels = await BuildSelectionsAsync(selectedLabels)
             });
 
         }
@@ -43,13 +43,13 @@ namespace Plato.Discuss.Labels.ViewComponents
             IEnumerable<int> selected)
         {
 
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
-            var channels = await _tagStore.GetByFeatureIdAsync(feature.Id);
-            
-            var selections = channels.Select(c => new Selection<Models.Label>
+            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Labels");
+            var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
+
+            var selections = labels?.Select(l => new Selection<Models.Label>
                 {
-                    IsSelected = selected.Any(v => v == c.Id),
-                    Value = c
+                    IsSelected = selected.Any(v => v == l.Id),
+                    Value = l
                 })
                 .OrderBy(s => s.Value.Name)
                 .ToList();

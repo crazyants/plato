@@ -5,10 +5,10 @@
         <h6 class="card-title">@T["Labels"]</h6>
     </card-title>
     <card-body>
-        @if (Model.Channels != null)
+        @if (Model.Labels != null)
         {
             <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var channel in Model.Channels)
+                @foreach (var channel in Model.Labels)
                 {
                     <li class="list-group-item">
                         
@@ -16,31 +16,22 @@
                             <i class="fal fa-pencil"></i>
                             @T["Edit"]
                         </a>
-
-                        @if (!String.IsNullOrEmpty(channel.IconCss))
-                        {
-                            <div class="float-left mt-3 mr-3">
-                                <span class="channel-icon channel-icon-md" style="background-color: @channel.BackColor; color: @channel.ForeColor">
-                                    <i class="@channel.IconCss"></i>
-                                </span>
-                            </div>
-                        }
                         
                         <div class="float-left">
                             <h6 class="d-md-inline align-middle">
-                                <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="font-weight-bold">
+                                <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="p-1 font-weight-bold"  style="background-color: @channel.BackColor; color: @channel.ForeColor">
                                     @channel.Name
                                 </a>
+                                @if (!String.IsNullOrEmpty(channel.Description))
+                                {
+                                    <span class="ml-3 text-muted">
+                                        @channel.Description
+                                    </span>
+                                }
                             </h6>
-                            @if (!String.IsNullOrEmpty(channel.Description))
-                            {
-                                <div class="text-muted">
-                                    @channel.Description
-                                </div>
-                            }
+                          
                         </div>
                
-
                     </li>
                 }
             </ul>

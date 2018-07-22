@@ -30173,6 +30173,7 @@ $(function (win, doc, $) {
             $labels: {}, // used to cache working labels
             $preview: null, // container for selection preview
             init: function ($caller, methodName) {
+
                 if (methodName) {
                     if (this[methodName]) {
                         this[methodName].apply(this, [$caller]);
@@ -30194,6 +30195,9 @@ $(function (win, doc, $) {
                 this.$preview = $caller.find(".select-dropdown-preview");
                 if (this.$preview.length === 0) {
                     this.$preview = $caller.next();
+                    if (!this.$preview.hasClass("select-dropdown-preview")) {
+                        throw new Error("A preview area coulod not be found for the select dropdown.")
+                    }
                 }
 
                 // Set empty preview selection text

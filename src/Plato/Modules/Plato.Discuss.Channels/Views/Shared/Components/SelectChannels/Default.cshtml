@@ -23,7 +23,7 @@
 
         @if (Model.SelectedChannels != null)
         {
-            <div class="list-group-flush select-dropdown" style="max-height: 300px; overflow: auto;">
+            <div class="list-group-flush select-dropdown">
                 @foreach (var channel in Model.SelectedChannels)
                 {
                     var check = @channel.IsSelected ? "checked" : "";

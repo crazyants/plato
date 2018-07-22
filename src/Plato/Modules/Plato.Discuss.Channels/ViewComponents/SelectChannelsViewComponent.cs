@@ -47,7 +47,7 @@ namespace Plato.Discuss.Channels.ViewComponents
             var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
             var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
             
-            var selections = channels.Select(c => new Selection<Channel>
+            var selections = channels?.Select(c => new Selection<Channel>
                 {
                     IsSelected = selected.Any(v => v == c.Id),
                     Value = c

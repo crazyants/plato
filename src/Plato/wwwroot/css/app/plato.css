@@ -427,6 +427,7 @@
 /* Select Dropdown */
 /* ------------------------- */
 
+.select-dropdown { max-height: 300px; overflow: auto; }
 .select-dropdown input { display: none; }
 .select-dropdown input + label {  cursor: pointer; }
 

@@ -1,0 +1,15 @@
+﻿@model EditTopicLabelsViewModel
+
+<card>
+    <card-body>
+        
+        @await DisplayAsync(new View("SelectLabels", new
+        {
+            selectedLabels = @Model.SelectedLabels,
+            htmlName = @Model.HtmlName
+        }))
+
+
+    </card-body>
+</card>
+

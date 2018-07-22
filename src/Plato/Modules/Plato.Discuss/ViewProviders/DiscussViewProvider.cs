@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Models;
@@ -7,7 +6,6 @@ using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
-using Plato.Internal.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
@@ -66,7 +64,7 @@ namespace Plato.Discuss.ViewProviders
             return Views(
                 View<HomeIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<HomeIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
-                View<HomeIndexViewModel>("Home.Index.Sidebar", model => viewModel).Zone("sidebar"),
+                View<HomeIndexViewModel>("Home.Index.Sidebar", model => viewModel).Zone("sidebar").Order(3),
                 View<HomeIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
             );
 

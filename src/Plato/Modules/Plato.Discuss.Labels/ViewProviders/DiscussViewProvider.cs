@@ -17,9 +17,9 @@ namespace Plato.Discuss.Labels.ViewProviders
     public class DiscussViewProvider : BaseViewProvider<Topic>
     {
 
-        private const string ChannelHtmlName = "channel";
+        private const string LabelHtmlName = "label";
 
-        private readonly ILabelStore<Models.Label> _tagStore;
+        private readonly ILabelStore<Models.Label> _labelStore;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
@@ -30,14 +30,14 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         public DiscussViewProvider(
             IContextFacade contextFacade,
-            ILabelStore<Models.Label> tagStore, 
+            ILabelStore<Models.Label> labelStore, 
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityLabelStore<EntityLabel> entityLabelStore,
             IStringLocalizer<DiscussViewProvider> stringLocalize)
         {
             _contextFacade = contextFacade;
-            _tagStore = tagStore;
+            _labelStore = labelStore;
             _entityStore = entityStore;
             _entityLabelStore = entityLabelStore;
             _request = httpContextAccessor.HttpContext.Request;
@@ -50,19 +50,19 @@ namespace Plato.Discuss.Labels.ViewProviders
         {
 
             // Ensure we explictly set the featureId
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Tags");
+            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Labels");
             if (feature == null)
             {
                 return default(IViewProviderResult);
             }
 
-            var tags = await _tagStore.GetByFeatureIdAsync(feature.Id);
+            var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(View<LabelsViewModel>("Discuss.Labels.Index.Sidebar", model =>
                 {
-                    model.Channels = tags;
+                    model.Labels = labels;
                     return model;
-                }).Zone("sidebar").Order(1)
+                }).Zone("sidebar").Order(2)
             );
             
 
@@ -77,12 +77,12 @@ namespace Plato.Discuss.Labels.ViewProviders
                 return default(IViewProviderResult);
             }
 
-            var categories = await _tagStore.GetByFeatureIdAsync(feature.Id);
+            var categories = await _labelStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(
-                View<LabelsViewModel>("Discuss.Index.Sidebar", model =>
+                View<LabelsViewModel>("Discuss.Labels.Index.Sidebar", model =>
                 {
-                    model.Channels = categories;
+                    model.Labels = categories;
                     return model;
                 }).Zone("sidebar").Order(1)
             );
@@ -92,14 +92,16 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IUpdateModel updater)
         {
-            var viewModel = new EditTopicTagsViewModel()
+            var viewModel = new EditTopicLabelsViewModel()
             {
-                HtmlName = ChannelHtmlName,
-                SelectedChannels = await GetLabelIdsByEntityIdAsync(topic.Id)
+                HtmlName = LabelHtmlName,
+                SelectedLabels = await GetLabelIdsByEntityIdAsync(topic.Id)
             };
 
             return Views(
-                View<EditTopicTagsViewModel>("Discuss.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
+                View<EditTopicLabelsViewModel>("Discuss.Labels.Edit.Sidebar", model => viewModel)
+                    .Zone("sidebar")
+                    .Order(2)
             );
 
         }
@@ -109,8 +111,8 @@ namespace Plato.Discuss.Labels.ViewProviders
         {
          
             // Build model
-            var model = new EditTopicTagsViewModel();
-            model.SelectedChannels = GetChannelsToAdd(); ;
+            var model = new EditTopicLabelsViewModel();
+            model.SelectedLabels = GetLabelsToAdd(); ;
          
             // Validate model
             return await updater.TryUpdateModelAsync(model);
@@ -131,22 +133,22 @@ namespace Plato.Discuss.Labels.ViewProviders
             {
                
                 // Get selected channels
-                var channelsToAdd = GetChannelsToAdd();
-                if (channelsToAdd != null)
+                var labelsToAdd = GetLabelsToAdd();
+                if (labelsToAdd != null)
                 {
 
                     // Build channels to remove
-                    var channelsToRemove = new List<int>();
+                    var labelsToRemove = new List<int>();
                     foreach (var role in await GetLabelIdsByEntityIdAsync(topic.Id))
                     {
-                        if (!channelsToAdd.Contains(role))
+                        if (!labelsToAdd.Contains(role))
                         {
-                            channelsToRemove.Add(role);
+                            labelsToRemove.Add(role);
                         }
                     }
 
                     // Remove channels
-                    foreach (var channelId in channelsToRemove)
+                    foreach (var channelId in labelsToRemove)
                     {
                         await _entityLabelStore.DeleteByEntityIdAndLabelId(topic.Id, channelId);
                     }
@@ -154,7 +156,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                     var user = await _contextFacade.GetAuthenticatedUserAsync();
 
                     // Add new entity categories
-                    foreach (var labelId in channelsToAdd)
+                    foreach (var labelId in labelsToAdd)
                     {
                         await _entityLabelStore.CreateAsync(new EntityLabel()
                         {
@@ -178,31 +180,31 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         #region "Private Methods"
         
-        List<int> GetChannelsToAdd()
+        List<int> GetLabelsToAdd()
         {
             // Build selected channels
-            List<int> channelsToAdd = null;
+            List<int> labelsToAdd = null;
             foreach (var key in _request.Form.Keys)
             {
-                if (key.StartsWith(ChannelHtmlName))
+                if (key.StartsWith(LabelHtmlName))
                 {
-                    if (channelsToAdd == null)
+                    if (labelsToAdd == null)
                     {
-                        channelsToAdd = new List<int>();
+                        labelsToAdd = new List<int>();
                     }
                     var values = _request.Form[key];
                     foreach (var value in values)
                     {
                         int.TryParse(value, out var id);
-                        if (!channelsToAdd.Contains(id))
+                        if (!labelsToAdd.Contains(id))
                         {
-                            channelsToAdd.Add(id);
+                            labelsToAdd.Add(id);
                         }
                     }
                 }
             }
 
-            return channelsToAdd;
+            return labelsToAdd;
         }
 
         async Task<IEnumerable<int>> GetLabelIdsByEntityIdAsync(int entityId)
@@ -214,11 +216,10 @@ namespace Plato.Discuss.Labels.ViewProviders
                 return new List<int>();
             }
 
-            var channels = await _entityLabelStore.GetByEntityId(entityId);
-            ;
-            if (channels != null)
+            var labels = await _entityLabelStore.GetByEntityId(entityId);
+            if (labels != null)
             {
-                return channels.Select(s => s.LabelId).ToArray();
+                return labels.Select(s => s.LabelId).ToArray();
             }
 
             return new List<int>();

@@ -1,8 +1,13 @@
 ﻿@model EditTopicChannelsViewModel
 
-@await DisplayAsync(new View("SelectChannels", new
-{
-    selectedChannels = @Model.SelectedChannels,
-    htmlName = @Model.HtmlName
-}))
+<card>
+    <card-body>
 
+        @await DisplayAsync(new View("SelectChannels", new
+        {
+            selectedChannels = @Model.SelectedChannels,
+            htmlName = @Model.HtmlName
+        }))
+    
+    </card-body>
+</card>

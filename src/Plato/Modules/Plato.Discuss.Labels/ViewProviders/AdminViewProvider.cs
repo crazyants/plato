@@ -146,7 +146,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             return new LabelsViewModel()
             {
-                Channels = categories
+                Labels = categories
             };
         }
         
