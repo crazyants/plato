@@ -1,8 +1,7 @@
 ﻿@model SelectChannelsViewModel
 
 <div class="dropdown" data-provide="select-dropdown">
-
-    <a class="list-group-item list-group-item-light list-group-item-action dropdown-toggle dropdown-toggle-no-caret" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fal fa-chevron-down p-1 float-right"></i>
         @T["Channel"]
     </a>
@@ -29,7 +28,7 @@
                     var check = @channel.IsSelected ? "checked" : "";
                     var uniqueId = "channel-" + channel.Value.Id;
                     var css = @channel.IsSelected ? "list-group-item dropdown-item active" : "list-group-item dropdown-item";
-                    <input name="@Model.HtmlName" type="checkbox" value="@channel.Value.Id" id="@uniqueId" @check/>
+                    <input name="@Model.HtmlName" type="radio" value="@channel.Value.Id" id="@uniqueId" @check/>
                     <label data-value="@channel.Value.Name" class="@css" for="@uniqueId">
                         <i class="fal mr-2 check-icon"></i>
                         @if (!String.IsNullOrWhiteSpace(channel.Value.IconCss))

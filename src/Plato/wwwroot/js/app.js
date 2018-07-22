@@ -30160,18 +30160,12 @@ $(function (win, doc, $) {
         var methods = {
             preview: {
                 template: '<li class="list-group-item">{text}</li>',
-                text: "No selection",
-                empty: function() {
+                empty: function ($caller) {
+                    var text = methods.getDropdownPreviewText($caller);
                     var html = methods.preview.template;
-                    return html.replace("{text}", methods.preview.text);
+                    return html.replace("{text}", text);
                 }
             },
-            $button: null, // the button that triggers the menu
-            $menu: null, // the dropdown menu
-            $input: null, // search input
-            $empty: null, // used to show no results
-            $labels: {}, // used to cache working labels
-            $preview: null, // container for selection preview
             init: function ($caller, methodName) {
 
                 if (methodName) {
@@ -30182,32 +30176,9 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-
-                this.$input = $caller.find('[type="search"]');
-                this.$button = $caller.find('[data-toggle="dropdown"]');
-                this.$menu = $caller.find('.dropdown-menu');
-                this.$labels = this.$menu.find("label");
-                this.$empty = $caller.find(".empty");
-
-                // Attempt to find a P tag within our .dropdown element
-                // If not found use the next element after the .dropdown 
-                // for the selection preview
-                this.$preview = $caller.find(".select-dropdown-preview");
-                if (this.$preview.length === 0) {
-                    this.$preview = $caller.next();
-                    if (!this.$preview.hasClass("select-dropdown-preview")) {
-                        throw new Error("A preview area coulod not be found for the select dropdown.")
-                    }
-                }
-
-                // Set empty preview selection text
-                if (this.$preview.length > 0) {
-                    this.preview.text = this.$preview.attr("data-empty-preview-text");
-                }
-
+                
                 // Bind events
                 methods.bind($caller);
-
 
             },
             bind: function ($caller) {
@@ -30216,62 +30187,69 @@ $(function (win, doc, $) {
 
                 if ($caller.hasClass("dropdown")) {
 
+                    var $menu = this.getDropdownMenu($caller),
+                        $input = this.getDropdownSearchInput($caller);
+
                     // On dropdown shown
                     $caller.on('shown.bs.dropdown',
                         function() {
-                            
                             // Set focus on search input by default
-                            self.$input.focus();
-
+                            $input.focus();
                         });
 
 
-                    this.$input.on('keyup',
+                    $input.on('keyup',
                         function(e) {
                             self.filterItems($caller);
                         });
-                    
-                    //If the user clicks on any item, set the title of the button as the text of the item
-                    this.$menu.on('click',
-                        '.dropdown-item',
-                        function (e) {
 
-                            // prevent dropdowns from closing when clicking within dropdowns
-                            e.stopPropagation();
 
-                            // Toggle active state on item click
-                            if (!$(this).hasClass("active")) {
-                                $(this).addClass("active");
-                            } else {
-                                $(this).removeClass("active");
-                            }
+                    $menu.on('change',
+                        'input[type="checkbox"], input[type="radio"]',
+                        function(e) {
+
+                            var $this = self.getDropdownSearchInput($caller);
+                            var $preview = self.getDropdownPreview($caller);
 
                             // Clear selection preview
-                            self.$preview.empty();
+                            $preview.empty();
+
+                            var $labels = [];
+                            $($menu).find('input:checked').each(function() {
+                                $labels.push($(this).next());
+                            });
 
                             // Update preview to reflect selected items
-                            var $active = $(self.$menu).find(".active");
-                            if ($active.length === 0) {
+                            //var $active = $($menu).find("input:checked");
+                            console.log($labels.length)
+                            if ($labels.length === 0) {
 
-                                var template = self.preview.template
-
-                                self.$preview
+                                $preview
                                     .empty()
-                                    .html(self.preview.empty());
+                                    .html(self.preview.empty($caller));
 
                             } else {
 
                                 var html = "";
-                                for (var i = 0; i < $active.length; i++) {
+                                for (var i = 0; i < $labels.length; i++) {
                                     html += '<div class="list-group-item">';
-                                    html += $($active[i]).html();
+                                    html += $($labels[i]).html();
                                     html += "</div>";
                                 }
 
-                                self.$preview.html(html);
-                                self.$preview.show();
+                                $preview.html(html);
+                                $preview.show();
                             }
-                            
+
+
+                        });
+
+                    //If the user clicks on any item, set the title of the button as the text of the item
+                    $menu.on('click',
+                        '.dropdown-item',
+                        function(e) {
+                            // prevent dropdowns from closing when clicking within dropdowns
+                            e.stopPropagation();
                         });
 
                 }
@@ -30279,18 +30257,20 @@ $(function (win, doc, $) {
             },
             filterItems: function($caller) {
 
-                var $input = $caller.find('[type="search"]'),
+                var $labels = this.getDropdownLabels($caller),
+                    $input = this.getDropdownSearchInput($caller),
+                    $noResults = this.getDropdownSearchNoResults($caller),
                     word = $input.val().trim(),
-                    length = this.$labels.length,
+                    length = $labels.length,
                     hidden = 0;
 
                 if (word.length === 0) {
-                    $(this.$labels.show());
+                    $($labels.show());
                 }
 
                 for (var i = 0; i < length; i++) {
 
-                    var $label = $(this.$labels[i]);
+                    var $label = $($labels[i]);
                     if ($label.length > 0 && $label.data("value")) {
                         if ($label.data("value").toLowerCase().startsWith(word)) {
                             $label.show();
@@ -30302,21 +30282,52 @@ $(function (win, doc, $) {
                     }
                    
                 }
-
+                
                 //If all items are hidden, show the empty view
                 if (hidden === length) {
-                    this.$empty.show();
+                    $noResults.show();
                 }
                 else {
-                    this.$empty.hide();
+                    $noResults.hide();
                 }
 
             },
-          
-            scrollTo: function ($caller) {
-
-           
-
+            getDropdownButton: function($caller) {
+                return $caller.find('[data-toggle="dropdown"]');
+            },
+            getDropdownMenu: function ($caller) {
+                return $caller.find(".dropdown-menu");
+            },
+            getDropdownLabels: function ($caller) {
+                var $menu = this.getDropdownMenu($caller);
+                return $menu.find("label");
+            },
+            getDropdownSearchInput: function ($caller) {
+                var $menu = this.getDropdownMenu($caller);
+                return $menu.find('[type="search"]');
+            },
+            getDropdownSearchNoResults: function($caller) {
+                return $caller.find(".empty");
+            },
+            getDropdownPreview: function($caller) {
+                // Attempt to find a P tag within our .dropdown element
+                // If not found use the next element after the .dropdown 
+                // for the selection preview
+                var $preview = $caller.find(".select-dropdown-preview");
+                if ($preview.length === 0) {
+                    $preview = $caller.next();
+                    if (!$preview.hasClass("select-dropdown-preview")) {
+                        throw new Error("A preview area coulod not be found for the select dropdown.")
+                    }
+                }
+                return $preview;
+            },
+            getDropdownPreviewText: function ($caller) {
+                var $preview = this.getDropdownPreview($caller);
+                if ($preview.length > 0) {
+                    return $preview.attr("data-empty-preview-text");
+                }
+                return "No selection";
             }
         }
 

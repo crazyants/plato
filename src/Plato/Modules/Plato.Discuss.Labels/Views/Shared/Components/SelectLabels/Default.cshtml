@@ -1,10 +1,9 @@
 ﻿@model SelectLabelsViewModel
 
 <div class="dropdown" data-provide="select-dropdown">
-
-    <a class="list-group-item list-group-item-light list-group-item-action dropdown-toggle dropdown-toggle-no-caret" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fal fa-chevron-down p-1 float-right"></i>
-        @T["Label"]
+        @T["Labels"]
     </a>
     <div class="dropdown-arrow dropdown-arrow-right"></div>
     <div class="dropdown-menu dropdown-menu-right" style="width: 400px;" aria-labelledby="channelDropdown">
@@ -32,13 +31,9 @@
                     <input name="@Model.HtmlName" type="checkbox" value="@label.Value.Id" id="@uniqueId" @check/>
                     <label data-value="@label.Value.Name" class="@css" for="@uniqueId">
                         <i class="fal mr-2 check-icon"></i>
-                        @if (!String.IsNullOrWhiteSpace(label.Value.IconCss))
-                        {
-                        <span class="channel-icon channel-icon-sm mr-2" style="background-color: @label.Value.BackColor; color: @label.Value.ForeColor">
-                            <i class="@label.Value.IconCss"></i>
+                        <span class="btn btn-sm" style="background-color: @label.Value.BackColor; color: @label.Value.ForeColor">
+                            @label.Value.Name
                         </span>
-                        }
-                        @label.Value.Name
                     </label>
                 }
             </div>
@@ -47,7 +42,7 @@
         {
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    @T["No channels available."]
+                    @T["No labels available."]
                 </li>
             </ul>
         }
@@ -61,26 +56,22 @@
 }
 @if (selectedLabels.Count > 0)
 {
-    <ul data-empty-preview-text="@T["No channels selected."]" class="list-group select-dropdown-preview">
-        @foreach (var channel in selectedLabels)
+    <ul data-empty-preview-text="@T["No labels selected."]" class="list-group select-dropdown-preview">
+        @foreach (var label in selectedLabels)
         {
-            <li class="list-group-item">
-                @if (!String.IsNullOrWhiteSpace(channel.Value.IconCss))
-                {
-                    <span class="channel-icon channel-icon-sm mr-2" style="background-color: @channel.Value.BackColor; color: @channel.Value.ForeColor">
-                        <i class="@channel.Value.IconCss"></i>
-                    </span>
-                }
-                @channel.Value.Name
-            </li>
+        <li class="list-group-item">
+            <span class="btn btn-sm" style="background-color: @label.Value.BackColor; color: @label.Value.ForeColor">
+                @label.Value.Name
+            </span>
+        </li>
         }
     </ul>
 }
 else
 {
-    <ul data-empty-preview-text="@T["No channels selected."]" class="list-group select-dropdown-preview">
+    <ul data-empty-preview-text="@T["No labels selected."]" class="list-group select-dropdown-preview">
         <li class="list-group-item">
-            @T["No channels selected."]
+            @T["No labels selected."]
         </li>
     </ul>
 }
