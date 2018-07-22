@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
-using Plato.Categories.Models;
-using Plato.Categories.Stores;
 using Plato.Discuss.Tags.Models;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Discuss.Models;
@@ -14,6 +12,7 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Labels.Models;
 using Plato.Labels.Stores;
 
 namespace Plato.Discuss.Tags.ViewProviders
@@ -23,12 +22,12 @@ namespace Plato.Discuss.Tags.ViewProviders
 
         private const string ChannelHtmlName = "channel";
 
-        private readonly IEntityCategoryStore<EntityCategory> _entityCategoryStore;
+        private readonly ILabelStore<Tag> _tagStore;
+        private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
-        private readonly ILabelStore<Tag> _tagStore;
         private readonly IStringLocalizer T;
-        private readonly IPostManager<Topic> _topicManager;
+
 
         private readonly HttpRequest _request;
 
@@ -37,17 +36,15 @@ namespace Plato.Discuss.Tags.ViewProviders
             ILabelStore<Tag> tagStore, 
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
-            IEntityCategoryStore<EntityCategory> entityCategoryStore,
-            IStringLocalizer<DiscussViewProvider> stringLocalize,
-            IPostManager<Topic> topicManager)
+            IEntityLabelStore<EntityLabel> entityLabelStore,
+            IStringLocalizer<DiscussViewProvider> stringLocalize)
         {
             _contextFacade = contextFacade;
             _tagStore = tagStore;
             _entityStore = entityStore;
-            _entityCategoryStore = entityCategoryStore;
+            _entityLabelStore = entityLabelStore;
             _request = httpContextAccessor.HttpContext.Request;
             T = stringLocalize;
-            _topicManager = topicManager;
         }
 
         #region "Implementation"
@@ -56,17 +53,17 @@ namespace Plato.Discuss.Tags.ViewProviders
         {
 
             // Ensure we explictly set the featureId
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
+            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Tags");
             if (feature == null)
             {
                 return default(IViewProviderResult);
             }
 
-            var categories = await _tagStore.GetByFeatureIdAsync(feature.Id);
+            var tags = await _tagStore.GetByFeatureIdAsync(feature.Id);
             
-            return Views(View<TagsViewModel>("Discuss.Index.Sidebar", model =>
+            return Views(View<TagsViewModel>("Discuss.Tags.Index.Sidebar", model =>
                 {
-                    model.Channels = categories;
+                    model.Channels = tags;
                     return model;
                 }).Zone("sidebar").Order(1)
             );
@@ -77,7 +74,7 @@ namespace Plato.Discuss.Tags.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
         {
 
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
+            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Tags");
             if (feature == null)
             {
                 return default(IViewProviderResult);
@@ -101,7 +98,7 @@ namespace Plato.Discuss.Tags.ViewProviders
             var viewModel = new EditTopicTagsViewModel()
             {
                 HtmlName = ChannelHtmlName,
-                SelectedChannels = await GetCategoryIdsByEntityIdAsync(topic.Id)
+                SelectedChannels = await GetLabelIdsByEntityIdAsync(topic.Id)
             };
 
             return Views(
@@ -143,7 +140,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
                     // Build channels to remove
                     var channelsToRemove = new List<int>();
-                    foreach (var role in await GetCategoryIdsByEntityIdAsync(topic.Id))
+                    foreach (var role in await GetLabelIdsByEntityIdAsync(topic.Id))
                     {
                         if (!channelsToAdd.Contains(role))
                         {
@@ -154,18 +151,18 @@ namespace Plato.Discuss.Tags.ViewProviders
                     // Remove channels
                     foreach (var channelId in channelsToRemove)
                     {
-                        await _entityCategoryStore.DeleteByEntityIdAndCategoryId(topic.Id, channelId);
+                        await _entityLabelStore.DeleteByEntityIdAndLabelId(topic.Id, channelId);
                     }
                     
                     var user = await _contextFacade.GetAuthenticatedUserAsync();
 
                     // Add new entity categories
-                    foreach (var channel in channelsToAdd)
+                    foreach (var labelId in channelsToAdd)
                     {
-                        await _entityCategoryStore.CreateAsync(new EntityCategory()
+                        await _entityLabelStore.CreateAsync(new EntityLabel()
                         {
                             EntityId = topic.Id,
-                            CategoryId = channel,
+                            LabelId = labelId,
                             CreatedUserId = user?.Id ?? 0,
                             ModifiedUserId = user?.Id ?? 0,
                         });
@@ -211,7 +208,7 @@ namespace Plato.Discuss.Tags.ViewProviders
             return channelsToAdd;
         }
 
-        async Task<IEnumerable<int>> GetCategoryIdsByEntityIdAsync(int entityId)
+        async Task<IEnumerable<int>> GetLabelIdsByEntityIdAsync(int entityId)
         {
 
             if (entityId == 0)
@@ -220,11 +217,11 @@ namespace Plato.Discuss.Tags.ViewProviders
                 return new List<int>();
             }
 
-            var channels = await _entityCategoryStore.GetByEntityId(entityId);
+            var channels = await _entityLabelStore.GetByEntityId(entityId);
             ;
             if (channels != null)
             {
-                return channels.Select(s => s.CategoryId).ToArray();
+                return channels.Select(s => s.LabelId).ToArray();
             }
 
             return new List<int>();
