@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Data;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Models.Annotations;
+using Plato.Internal.Models;
 
-namespace Plato.Internal.Models.Users
+namespace Plato.Media.Models
 {
-    
-    public class UserImage : IModel<UserImage>
+
+    public class Media : IModel<Media>
     {
 
         #region "Public Properties"
 
         public int Id { get; set; }
-
-        public int UserId { get; set; }
 
         public string Name { get; set; }
 
@@ -35,11 +33,11 @@ namespace Plato.Internal.Models.Users
 
         #region "constructor"
 
-        public UserImage()
+        public Media()
         {
         }
 
-        public UserImage(IDataReader reader)
+        public Media(IDataReader reader)
         {
             PopulateModel(reader);
         }
@@ -53,13 +51,10 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("id"))
                 this.Id = Convert.ToInt32(dr["Id"]);
-
-            if (dr.ColumnIsNotNull("UserId"))
-                this.UserId = Convert.ToInt32(dr["UserId"]);
-
+            
             if (dr.ColumnIsNotNull("Name"))
                 this.Name = Convert.ToString(dr["Name"]);
-            
+
             if (dr.ColumnIsNotNull("ContentBlob"))
                 this.ContentBlob = (byte[])(dr["ContentBlob"]);
 
@@ -86,5 +81,4 @@ namespace Plato.Internal.Models.Users
         #endregion
 
     }
-
 }

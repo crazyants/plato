@@ -30190,39 +30190,43 @@ $(function (win, doc, $) {
                     var $menu = this.getDropdownMenu($caller),
                         $input = this.getDropdownSearchInput($caller);
 
-                    // On dropdown shown
+                    // On dropdown shown focus search
                     $caller.on('shown.bs.dropdown',
                         function() {
-                            // Set focus on search input by default
                             $input.focus();
                         });
 
-
+                    // On keyup filter items
                     $input.on('keyup',
                         function(e) {
                             self.filterItems($caller);
                         });
 
-
+                    // On checkbox or radiobutton change update preview
                     $menu.on('change',
                         'input[type="checkbox"], input[type="radio"]',
                         function(e) {
 
                             var $this = self.getDropdownSearchInput($caller);
                             var $preview = self.getDropdownPreview($caller);
+                            var $labels = self.getDropdownLabels($caller);
 
+                            $labels.each(function () {
+                                $(this).removeClass("active");
+                            });
+                            
                             // Clear selection preview
                             $preview.empty();
 
-                            var $labels = [];
-                            $($menu).find('input:checked').each(function() {
-                                $labels.push($(this).next());
+                            // Get all checked labels
+                            var $selectedLabels = [];
+                            $($menu).find('input:checked').each(function () {
+                                var $localLabel = $(this).next();
+                                $localLabel.addClass("active");
+                                $selectedLabels.push($localLabel);
                             });
-
-                            // Update preview to reflect selected items
-                            //var $active = $($menu).find("input:checked");
-                            console.log($labels.length)
-                            if ($labels.length === 0) {
+                            
+                            if ($selectedLabels.length === 0) {
 
                                 $preview
                                     .empty()
@@ -30231,9 +30235,9 @@ $(function (win, doc, $) {
                             } else {
 
                                 var html = "";
-                                for (var i = 0; i < $labels.length; i++) {
+                                for (var i = 0; i < $selectedLabels.length; i++) {
                                     html += '<div class="list-group-item">';
-                                    html += $($labels[i]).html();
+                                    html += $($selectedLabels[i]).html();
                                     html += "</div>";
                                 }
 
@@ -30244,11 +30248,10 @@ $(function (win, doc, $) {
 
                         });
 
-                    //If the user clicks on any item, set the title of the button as the text of the item
+                    // Prevent bootstrap dropdowns from closing when clicking within dropdowns
                     $menu.on('click',
                         '.dropdown-item',
                         function(e) {
-                            // prevent dropdowns from closing when clicking within dropdowns
                             e.stopPropagation();
                         });
 
@@ -30384,8 +30387,7 @@ $(function (win, doc, $) {
         }
 
     }();
-
-
+    
     /* Register jQuery Plugins */
     $.fn.extend({
         scrollTo: scrollTo.init,

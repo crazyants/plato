@@ -1585,7 +1585,13 @@
     language: 'en',
     initialstate: 'editor',
     parser: null,
-    dropZoneOptions: null,
+    dropZoneOptions: {
+        url: 'api/upload',
+        fallbackClick: false,
+        autoProcessQueue: true,
+        disablePreview: true,
+        dictDefaultMessage: 'Drop images here or click to select'
+    },
     enableDropDataUri: false,
   
     /* Buttons Properties */

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models.Users;
@@ -22,6 +21,8 @@ namespace Plato.Users.Handlers
             _schemaBuilder = schemaBuilder;
             _userManager = userManager;
         }
+
+        #region "Implementation"
 
         public override async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
@@ -78,6 +79,10 @@ namespace Plato.Users.Handlers
             }
 
         }
+
+        #endregion
+
+        #region "Private Methods"
 
         void Configure(ISchemaBuilder builder)
         {
@@ -489,6 +494,8 @@ namespace Plato.Users.Handlers
 
 
         }
+
+        #endregion
 
     }
 

@@ -357,9 +357,7 @@ namespace Plato.Entities.Handlers
 
         public override Task InstalledAsync(IFeatureEventContext context)
         {
-         
             return Task.CompletedTask;
-
         }
 
         public override async Task UninstallingAsync(IFeatureEventContext context)
@@ -390,9 +388,6 @@ namespace Plato.Entities.Handlers
                     .DropDefaultProcedures(_entityReplies)
                     .DropProcedure(new SchemaProcedure("SelectEntityRepliesPaged", StoredProcedureType.SelectByKey));
                 
-
-
-
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
                 {
@@ -421,7 +416,6 @@ namespace Plato.Entities.Handlers
 
         public override Task UninstalledAsync(IFeatureEventContext context)
         {
-
             return Task.CompletedTask;
         }
 

@@ -13,18 +13,15 @@ namespace Plato.Internal.Stores.Files
     {
 
         private readonly IMemoryCache _memoryCache;
-        private readonly IDistributedCache _distributedCache;
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<FileStore> _logger;
       
         public FileStore(
             IMemoryCache memoryCache,
-            IDistributedCache distributedCache,
             IPlatoFileSystem fileSystem,
             ILogger<FileStore> logger)
         {
             _memoryCache = memoryCache;
-            _distributedCache = distributedCache;
             _fileSystem = fileSystem;
             _logger = logger;
         }

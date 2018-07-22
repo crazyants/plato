@@ -2,19 +2,22 @@
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Models.Users;
+using Plato.Internal.Data.Abstractions;
 
-namespace Plato.Internal.Repositories.Users
+namespace Plato.Media.Repositories
 {
-    public class UserPhotoRepository : IUserPhotoRepository<UserPhoto>
+
+    public class MediaRepository : IMediaRepository<Models.Media>
     {
         #region "Constructor"
 
-        public UserPhotoRepository(
+        private readonly IDbContext _dbContext;
+        private readonly ILogger<MediaRepository> _logger;
+
+        public MediaRepository(
             IDbContext dbContext,
-            ILogger<UserPhotoRepository> logger)
+            ILogger<MediaRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -22,26 +25,45 @@ namespace Plato.Internal.Repositories.Users
 
         #endregion
         
-        #region "Private Variables"
-
-        private readonly IDbContext _dbContext;
-        private readonly ILogger<UserPhotoRepository> _logger;
-
-        #endregion
-
         #region "Implementation"
-     
-        public Task<IPagedResults<UserPhoto>> SelectAsync(params object[] inputParams)
+
+        public async Task<IPagedResults<Models.Media>> SelectAsync(params object[] inputParams)
         {
-            // TODO
-            throw new NotImplementedException();
+            PagedResults<Models.Media> output = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectMediaPaged",
+                    inputParams);
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new PagedResults<Models.Media>();
+                    while (await reader.ReadAsync())
+                    {
+                        var entity = new Models.Media();
+                        entity.PopulateModel(reader);
+                        output.Data.Add(entity);
+                    }
+
+                    if (await reader.NextResultAsync())
+                    {
+                        await reader.ReadAsync();
+                        output.PopulateTotal(reader);
+                    }
+
+                }
+            }
+
+            return output;
+
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Deleting user photo with id: {id}");
+                _logger.LogInformation($"Deleting media with id: {id}");
             }
 
             var success = 0;
@@ -49,68 +71,48 @@ namespace Plato.Internal.Repositories.Users
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteUserPhotoById", id);
+                    "DeleteMediaById", id);
             }
 
             return success > 0 ? true : false;
         }
 
-        public async Task<UserPhoto> InsertUpdateAsync(UserPhoto photo)
+        public async Task<Models.Media> InsertUpdateAsync(Models.Media media)
         {
             var id = await InsertUpdateInternal(
-                photo.Id,
-                photo.UserId,
-                photo.Name,
-                photo.ContentBlob,
-                photo.ContentType,
-                photo.ContentLength,
-                photo.CreatedDate,
-                photo.CreatedUserId,
-                photo.ModifiedDate,
-                photo.ModifiedUserId);
+                media.Id,
+                media.Name,
+                media.ContentBlob,
+                media.ContentType,
+                media.ContentLength,
+                media.CreatedDate,
+                media.CreatedUserId,
+                media.ModifiedDate,
+                media.ModifiedUserId);
 
             if (id > 0)
                 return await SelectByIdAsync(id);
 
             return null;
         }
-   
-        public async Task<UserPhoto> SelectByIdAsync(int id)
+
+        public async Task<Models.Media> SelectByIdAsync(int id)
         {
-            UserPhoto photo = null;
+            Models.Media media = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectUserPhotoById", id);
+                    "SelectMediaById", id);
 
                 if ((reader != null) && reader.HasRows)
                 {
                     await reader.ReadAsync();
-                    photo = new UserPhoto(reader);
+                    media = new Models.Media(reader);
                 }
             }
 
-            return photo;
-        }
-
-        public async Task<UserPhoto> SelectByUserIdAsync(int userId)
-        {
-            UserPhoto photo = null;
-            using (var context = _dbContext)
-            {
-                var reader = await context.ExecuteReaderAsync(
-                    CommandType.StoredProcedure,
-                    "SelectUserPhotoByUserId", userId);
-
-                if ((reader != null) && reader.HasRows)
-                {
-                    await reader.ReadAsync();
-                    photo = new UserPhoto(reader);
-                }
-            }
-
-            return photo;
+            return media;
         }
 
         #endregion
@@ -119,7 +121,6 @@ namespace Plato.Internal.Repositories.Users
 
         private async Task<int> InsertUpdateInternal(
             int id,
-            int userId,
             string name,
             byte[] contentBlob,
             string contentType,
@@ -133,9 +134,8 @@ namespace Plato.Internal.Repositories.Users
             {
                 return await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "InsertUpdateUserPhoto",
+                    "InsertUpdateMedia",
                     id,
-                    userId,
                     name.ToEmptyIfNull().TrimToSize(255),
                     contentBlob ?? new byte[0], // don't allow nulls so we can determine parameter type
                     contentType.ToEmptyIfNull().TrimToSize(75),
@@ -148,7 +148,6 @@ namespace Plato.Internal.Repositories.Users
         }
 
         #endregion
-
-
+        
     }
 }

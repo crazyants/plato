@@ -24,7 +24,19 @@ namespace Plato.Markdown.Assets
                     },
                     new Asset()
                     {
+                        Url = $"/plato.markdown/content/js/dropzone.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
                         Url = $"/plato.markdown/content/css/markdown.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+                    new Asset()
+                    {
+                        Url = $"/plato.markdown/content/css/dropzone.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     }
@@ -41,7 +53,19 @@ namespace Plato.Markdown.Assets
                     },
                     new Asset()
                     {
+                        Url = $"/plato.markdown/content/js/dropzone.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
                         Url = $"/plato.markdown/content/css/markdown.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+                    new Asset()
+                    {
+                        Url = $"/plato.markdown/content/css/dropzone.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     }
@@ -58,7 +82,19 @@ namespace Plato.Markdown.Assets
                     },
                     new Asset()
                     {
+                        Url = $"/plato.markdown/content/js/dropzone.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
                         Url = $"/plato.markdown/content/css/markdown.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+                    new Asset()
+                    {
+                        Url = $"/plato.markdown/content/css/dropzone.css",
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     }
