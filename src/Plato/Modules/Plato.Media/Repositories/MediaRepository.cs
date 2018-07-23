@@ -138,7 +138,7 @@ namespace Plato.Media.Repositories
                     CommandType.StoredProcedure,
                     "InsertUpdateMedia",
                     id,
-                    name.ToEmptyIfNull().TrimToSize(255),
+                    name.ToEmptyIfNull().ToSafeFileName().TrimToSize(255),
                     contentBlob ?? new byte[0], // don't allow nulls so we can determine parameter type
                     contentType.ToEmptyIfNull().TrimToSize(75),
                     contentLength,

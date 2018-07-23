@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Plato.Media.ViewModels
+﻿namespace Plato.Media.ViewModels
 {
 
     public class UploadedFile
@@ -11,22 +7,13 @@ namespace Plato.Media.ViewModels
         public int Id { get; set; }
         
         public string Name { get; set; }
+     
+        public string FriendlySize { get; set; }
+
+        public bool IsImage { get; set; }
+
+        public bool IsFile { get; set; }
         
-        public string ContentType { get; set; }
-
-        public long Size { get; set; }
-
-        public UploadedFile()
-        {
-
-        }
-
-        public UploadedFile(string name, long size)
-        {
-            Name = name;
-            Size = size;
-        }
     }
-
-
+    
 }

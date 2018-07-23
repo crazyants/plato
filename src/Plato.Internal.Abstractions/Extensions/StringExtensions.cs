@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -165,7 +166,13 @@ namespace Plato.Internal.Abstractions.Extensions
             return input.Trim();
 
         }
-        
+
+        public static string ToSafeFileName(this string input)
+        {
+            return Path.GetInvalidFileNameChars()
+                .Aggregate(input, (current, c) => current.Replace(c.ToString(), string.Empty));
+        }
+
     }
 
 }

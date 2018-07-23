@@ -49,7 +49,9 @@
 
     </card-title>
     <card-body>
-        @Html.Raw(@Model.Entity.Html)
+        <div class="user-content">
+            @Html.Raw(@Model.Entity.Html)
+        </div>
     </card-body>
 </card>
 
@@ -66,8 +68,7 @@
             <div class="topic-reply-body">
                 <card>
                     <card-title>
-
-
+                        
                         <div class="card-title float-left">
                             <a href="#">
                                 @reply.CreatedBy.DisplayName

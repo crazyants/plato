@@ -36,7 +36,7 @@
     // End BC
 
     // Class Properties
-    this.$ns = 'i-markdown';
+    this.$ns = 'markdown';
     this.$element = $(element);
     this.$editable = {
       el: null,
@@ -115,7 +115,7 @@
                             : '',
                         dropdown = typeof button.dropdown !== 'undefined' ? button.dropdown : null;
 
-                    var $button = $('<button data-toggle="tooltip">');
+                    var $button = $('<button type="button" data-toggle="tooltip">');
                     $button.html(this.__localize(btnText))
                         .addClass('btn')
                         .addClass(btnClass);
@@ -130,8 +130,7 @@
                         'data-provider': ns,
                         'data-handler': buttonHandler
                     });
-
-
+                    
                     if (dropdown) {
                         $button.addClass("dropdown-toggle");
                         $button.attr('data-toggle', 'dropdown');
@@ -307,12 +306,18 @@
       } else {
         return src;
       }
+      },
+    __getPlatoOptions: function() {
+        if (!window.$.Plato.Options) {
+            throw new Error("$.Plato.Options is required!");
+        }
+        return window.$.Plato.Options;
     },
     setFullscreen: function (mode) {
 
-          var $editor = this.$editor,
-              $textarea = this.$textarea,
-              height = $textarea.height();
+        var $editor = this.$editor,
+            $textarea = this.$textarea,
+            height = $textarea.height();
 
         if (mode === true) {
 
@@ -357,7 +362,6 @@
         }
 
         this.$isFullscreen = mode;
-  
 
     },
     showEditor: function() {
@@ -382,8 +386,7 @@
 
         // Prepare the editor
         if (this.$editor === null) {
-
-
+            
             var editorId = (new Date()).getTime();
 
             // Create the panel
@@ -479,7 +482,7 @@
 
             var previewTabBody = $("<div/>",
                 {
-                    'class': 'tab-pane md-preview',
+                    'class': 'tab-pane md-preview user-content',
                     'role': 'tabpanel',
                     'id': 'previewTab' + editorId
                 });
@@ -621,7 +624,7 @@
                 handler.push(saveHandler);
                 callback.push(options.onSave);
 
-                editorFooter.append('<a class="btn btn-success" data-provider="' +
+                editorFooter.append('<button type="button" class="btn btn-success" data-provider="' +
                     ns +
                     '" data-handler="' +
                     saveHandler +
@@ -642,7 +645,7 @@
 
             // Set width
             if (options.width && options.width !== 'inherit') {
-                if (jQuery.isNumeric(options.width)) {
+                if ($.isNumeric(options.width)) {
                     editor.css('display', 'table');
                     textarea.css('width', options.width + 'px');
                 } else {
@@ -673,7 +676,7 @@
 
             // Set editor attributes, data short-hand API and listener
             this.$editor.attr('id', editorId);
-            this.$editor.on('click', '[data-provider="i-markdown"]', $.proxy(this.__handle, this));
+            this.$editor.on('click', '[data-provider="markdown"]', $.proxy(this.__handle, this));
             
             if (this.$element.is(':disabled') || this.$element.is('[readonly]')) {
                 this.$editor.addClass('md-editor-disabled');
@@ -701,63 +704,13 @@
                 this.setFullscreen(true);
             }
 
-            // grow and shrink accordingly
-            var maxRows = options.maxRows,
-                minRows = options.minRows;
-
-            var hasRows = typeof this.$textarea.attr('rows') !== 'undefined',
-                startRows = hasRows ? this.$textarea.attr('rows') : maxRows;
-            
             this.$textarea.on('keyup keypress paste',
                 function() {
                     if (!$("body").first().attr("data-page-is-dirty")) {
                         $("body").first().attr("data-page-is-dirty", true);
                     }
-                    //initRows($(this));
                 });
-
-            this.$textarea.on('focus',
-                function() {
-                    //initRows($(this));
-                });
-
-            function initRows($textArea) {
-
-                // No need to adjust rows in full screen as the editor
-                // takes up 100% of the screen space
-                if (instance.$isFullscreen) {
-                    return;
-                }
-
-                var lineHeight = 26,
-                    rows = startRows || minRows;
-
-                if ($textArea.val() !== "") {
-                    rows = $textArea.val().split("\n").length;
-                }
-                rows = Math.max(rows || minRows);
-                if (rows > maxRows) {
-                    rows = maxRows;
-                }
-                if (rows < minRows) {
-                    rows = minRows;
-                }
-                if (rows < startRows) {
-                    rows = startRows;
-                }
-
-                $textArea.attr("rows", null);
-
-                if (rows >= maxRows) {
-                    $textArea.css({ "height": lineHeight * rows + "px" });
-                } else {
-                    $textArea.css({ "height": lineHeight * rows + "px" });
-                }
-
-            }
-
-            //initRows(this.$textarea);
-
+            
         } else {
 
             this.$editor.show();
@@ -780,6 +733,12 @@
             if (this.$editor.dropzone) {
                 if (!options.dropZoneOptions.init) {
 
+                    // Get Plato options
+                    var platoOpts = this.__getPlatoOptions();
+
+                    // Combine base URL from Plato options with api URL
+                    options.dropZoneOptions.url = platoOpts.url + options.dropZoneOptions.url;
+                    
                     options.dropZoneOptions.init = function() {
 
                         var caretPos = 0,
@@ -831,13 +790,28 @@
                                             var result = response.result[i];
                                             if (result.id > 0) {
                                                 var text = textarea.val();
-                                                textarea.val(text.substring(0, caretPos) +
-                                                    '\n![' +
-                                                    result.name +
-                                                    '](/media/' +
-                                                    result.id +
-                                                    ')\n' +
-                                                    text.substring(caretPos));
+
+                                                if (result.isImage) {
+                                                    textarea.val(text.substring(0, caretPos) +
+                                                        '![' +
+                                                        result.name +
+                                                        '](/media/' +
+                                                        result.id +
+                                                        ')' +
+                                                        text.substring(caretPos));
+                                                } else {
+                                                    textarea.val(text.substring(0, caretPos) +
+                                                        '[' +
+                                                        result.name +
+                                                        '](/media/' +
+                                                        result.id +
+                                                        ') - ' +
+                                                        result.friendlySize +
+                                                        text.substring(caretPos));
+                                                }
+                                              
+
+
                                             }
                                         }
                                     }
@@ -845,14 +819,22 @@
                                 }
                               
                             });
+
                         this.on('error',
                             function(file, error, xhr) {
                                 console.log('Error:', error);
                             });
                     };
                 }
+
                 this.$editor.addClass('dropzone');
                 this.$editor.dropzone(options.dropZoneOptions);
+
+                // disable any links witin dropzone message area (i.e. Browse to select)
+                this.$editor.find(".dz-message").find("a").click(function (e) {
+                    e.preventDefault();
+                });
+
             } else {
                 console.log('dropZoneOptions was configured, but DropZone was not detected.');
             }
@@ -975,68 +957,14 @@
                     .empty()
                     .html(data.html);
             }
-
-
+            
         });
 
-
-
-  
-        
-        //var options = this.$options,
-        //  container = this.$textarea,
-        //  width = container.width(),
-        //  afterContainer = container.next(),
-        //  replacementContainer = $('<div/>', {
-        //    'class': 'md-preview',
-        //    'data-provider': 'markdown-preview'
-        //  }),
-        //  content,
-        //  callbackContent;
-        
         // Disable all buttons
         this.disableButtons('all');
 
         // Hide dropzone message
         this.$editor.find(".dz-message").hide();
-
-
-        //// Try to get the content from callback
-        //callbackContent = options.onPreview(this, replacementContainer);
-
-        //// Set the content based on the callback content if string, otherwise parse value from textarea
-        //content = typeof callbackContent == 'string' ? callbackContent : this.parseContent();
-
-        //// Build preview element
-        //replacementContainer.html(content);
-
-        //// constrain pre and tables to preview width
-        //replacementContainer.find("pre").css({ "max-width": width });
-        //replacementContainer.find("table").css({ "max-width": width });
-
-        //if (afterContainer && afterContainer.attr('class') == 'md-footer') {
-        //  // If there is footer element, insert the preview container before it
-        //  replacementContainer.insertBefore(afterContainer);
-        //} else {
-        //  // Otherwise, just append it after textarea
-        //  container.parent().append(replacementContainer);
-        //}
-
-        //// Set the preview element dimensions
-        //replacementContainer.css({
-        //  "min-height": container.outerHeight() + 'px',
-        //  "height": "auto"
-        //});
-
-        //if (this.$options.resize) {
-        //  replacementContainer.css('resize', this.$options.resize);
-        //}
-
-        //// Hide the last-active textarea
-        //container.hide();
-
-        //// Attach the editor instances
-        //replacementContainer.data('markdown', this);
 
         if (this.$element.is(':disabled') || this.$element.is('[readonly]')) {
           this.$editor.addClass('md-editor-disabled');
@@ -1073,11 +1001,7 @@
 
         // Perform any callbacks
         this.$options.onPreviewEnd(this);
-
-        //// Back to the editor
-        //this.$textarea.show();
-        //this.__setListener();
-
+        
         return this;
 
     },
@@ -1593,57 +1517,29 @@
     iconlibrary: 'fa',
     language: 'en',
     initialstate: 'editor',
-        parser: null,
-    allowedUploadExtensions: [ "png", "gif", "bmp", "jpg", "jpeg" ],
+    parser: null,
+        allowedUploadExtensions: [
+            "txt",
+            "html",
+            "zip",
+            "png",
+            "gif",
+            "bmp",
+            "jpg",
+            "jpeg"
+    ],
     dropZoneOptions: {
-        url: 'http://localhost:50439/api/media/streaming/upload',
+        url: 'api/media/streaming/upload',
         fallbackClick: false,
         autoProcessQueue: true,
         disablePreview: true,
-        dictDefaultMessage: 'Drop images here or click to select'
+        dictDefaultMessage: 'Attach files by dragging and dropping here, <a href="#">click to browse</a> or paste from the clipboard'
     },
     enableDropDataUri: false,
   
     /* Buttons Properties */
     buttons: [
       [
-          //{
-          //    name: 'groupUtil',
-          //    css: 'btn-group mr-1 md-tabs',
-          //    data: [
-          //        {
-          //            name: 'cmdWrite',
-          //            hotkey: 'Ctrl+P',
-          //            title: 'Write',
-          //            btnText: 'Write',
-          //            btnClass: 'btn md-btn-write selected',
-          //            callback: function(e) {
-          //                // Check the preview mode and toggle based on this flag
-          //                var isPreview = e.$isPreview,
-          //                    content;
-
-          //                if (isPreview === true) {
-          //                    e.hidePreview();
-          //                }
-          //            }
-          //        }, {
-          //            name: 'cmdPreview',
-          //            hotkey: 'Ctrl+P',
-          //            title: 'Preview',
-          //            btnText: 'Preview',
-          //            btnClass: 'btn md-btn-preview',
-          //            callback: function(e) {
-          //                // Check the preview mode and toggle based on this flag
-          //                var isPreview = e.$isPreview,
-          //                    content;
-
-          //                if (isPreview === false) {
-          //                    e.showPreview();
-          //                }
-          //            }
-          //        }
-          //    ]
-          //  },
           {
               name: 'groupFont',
               css: 'btn-group mr-1',

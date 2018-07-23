@@ -17,6 +17,7 @@ using Plato.Media.ViewModels;
 using Plato.WebApi.Controllers;
 using ContentDispositionHeaderValue = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue;
 using MediaTypeHeaderValue = Microsoft.Net.Http.Headers.MediaTypeHeaderValue;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Media.Controllers
 {
@@ -177,8 +178,9 @@ namespace Plato.Media.Controllers
                 {
                     Id = media.Id,
                     Name = media.Name,
-                    ContentType = media.ContentType,
-                    Size = media.ContentLength
+                    FriendlySize = media.ContentLength.ToFriendlyFileSize(),
+                    IsImage = IsSupportedImageContentType(media.ContentType),
+                    IsFile = IsSupportedfileContentType(media.ContentType),
                 });
             }
       
@@ -188,6 +190,61 @@ namespace Plato.Media.Controllers
 
         #endregion
 
+        bool IsSupportedImageContentType(string contentType)
+        {
+            if (String.IsNullOrEmpty(contentType))
+            {
+                return false;
+            }
+
+            var supportedContentTypes = new string[]
+            {
+                "image/jpeg",
+                "image/png",
+                "image/gif",
+                "image/jpg",
+                "image/bmp"
+            };
+            
+            foreach (var item in supportedContentTypes)
+            {
+                if (item.Equals(contentType, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+        
+        bool IsSupportedfileContentType(string contentType)
+        {
+            if (String.IsNullOrEmpty(contentType))
+            {
+                return false;
+            }
+
+            var supportedContentTypes = new string[]
+            {
+                "text/plain",
+                "text/html",
+                "application/octet-stream"
+            };
+
+            foreach (var item in supportedContentTypes)
+            {
+                if (item.Equals(contentType, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+
+        
         Encoding GetEncoding(MultipartSection section)
         {
             var hasMediaTypeHeader = MediaTypeHeaderValue.TryParse(section.ContentType, out var mediaType);

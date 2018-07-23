@@ -7,15 +7,18 @@
     border-radius: 0.25rem;
 }
 
-
 /* floated row to allow us to float tabs left and buttons right */
 
 .md-header-row {
     float: left;
     width: 100%;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #ddd;
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-style: solid;
 }
+
+.md-header-row,
+.dz-message { background-color: #fafafa; }
 
 .md-header-row .nav { 
     padding: .50rem .50rem 0 .50rem;
@@ -33,8 +36,9 @@
 
 /* Main border color */
 .md-editor,
-.md-editor .md-footer, 
+.md-editor > .md-footer, 
 .md-editor > .md-header,
+.md-editor .md-header-row,
 .md-editor > .dz-message {
      border-color:#ced4da;
 }
@@ -47,9 +51,9 @@
 }
 
 /* Disable some borders */
-.md-editor > .md-header  { border-width: 0; border-bottom-width: 1px;border-style: solid; }
+
 .md-editor > .md-footer,
-.md-editor > .dz-message  { border-top-width: 1px;border-style: solid; }
+.md-editor > .dz-message  { border-width: 0; border-top-width: 4px; border-style: dashed; }
 
 /* Style textarea and preview */
 .md-editor .md-textarea,

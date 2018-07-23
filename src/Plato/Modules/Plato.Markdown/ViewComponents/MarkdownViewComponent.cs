@@ -56,6 +56,7 @@ namespace Plato.Markdown.ViewComponents
         public bool AutoFocusw { get; set; }
         
         public int TabIndex { get; set; }
+
     }
 
 }

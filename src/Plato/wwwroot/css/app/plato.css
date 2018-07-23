@@ -6,6 +6,12 @@
 .hidden { display: none; }
 
 /* ------------------------- */
+/* User generated content */
+/* ------------------------- */
+
+.user-content img { max-width: 100%; } 
+
+/* ------------------------- */
 /* Grid system */
 /* ------------------------- */
 
