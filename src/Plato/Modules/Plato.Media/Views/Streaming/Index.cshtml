@@ -1,0 +1,80 @@
+﻿@Model UploadViewModel
+
+<h2>Upload files using Ajax and multipart/form-data</h2>
+
+
+<div>
+
+    <br/>
+    <input id="file" name="file" type="file" />
+   
+</div>
+
+<div>
+    <br/>
+    <button>Create User</button>
+</div>
+
+<div id="status">
+    <b><span ng-bind="uploadStatus"></span></b>
+</div>
+
+
+<script section="Footer">
+
+    //$(document).ready(function() {
+        
+    //    $("#file").on('change',
+    //        function (e) {
+    //            e.preventDefault();
+    //            upload($(this));
+    //        });
+
+    //});
+
+    //function upload($file) {
+        
+    //    var file = $file[0];
+
+    //    var dataBlocks = [];
+    //    for (var i = 0; i < files.length; i++) {
+    //        dataBlocks[i] = {
+    //            name: _this15._getParamName(i),
+    //            data: transformedFiles[i],
+    //            filename: files[i].upload.filename
+    //        };
+    //    }
+
+
+
+    //    if (file.files && file.files[0]) {
+
+    //    }
+
+    //    $("#status").show();
+        
+    //    alert(JSON.stringify(file.files));
+
+    //    var fd = new FormData();
+    //    fd.append('file', file.files[0]);
+
+    //    alert(JSON.stringify(fd));
+
+    //    return;
+
+    //    window.$.Plato.Http({
+    //        url: "api/media/streaming/upload",
+    //        method: "POST",
+    //        data: fd
+    //    }).done(function (data) {
+
+    //        alert(JSON.stringify(data));
+    //        alert(data.statusCode);
+
+    //        $("#status").hide();
+
+    //    });
+
+    //}
+
+</script>

@@ -49,9 +49,9 @@ namespace Plato.Media
 
             routes.MapAreaRoute(
                 name: "MediaWebApi",
-                areaName: "Plato.Follow",
+                areaName: "Plato.Media",
                 template: "api/media/{controller}/{action}/{id?}",
-                defaults: new { controller = "Follow", action = "Get" }
+                defaults: new { controller = "Upload", action = "Index" }
             );
 
         }

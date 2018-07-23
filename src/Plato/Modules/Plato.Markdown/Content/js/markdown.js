@@ -782,27 +782,32 @@
 
                     options.dropZoneOptions.init = function() {
 
-                        var caretPos = 0, allowedUploadExtensions = options.allowedUploadExtensions;
+                        var caretPos = 0,
+                            allowedUploadExtensions = options.allowedUploadExtensions;
+
                         this.on('addedfile',
                             function(file) {
 
+                                // Make a note of current caret position
                                 caretPos = textarea.prop('selectionStart');
 
+                                // Validate file extension
                                 var fileName = file.upload.filename;
                                 var allowed = false;
                                 if (fileName && allowedUploadExtensions) {
                                     var bits = fileName.split(".");
                                     var fileExtension = bits[bits.length - 1];
                                     for (var i = 0; i < allowedUploadExtensions.length; i++) {
-                                        var allowedExtension = allowedUploadExtensions[i].ext;
-                                        if (fileExtension === allowedExtension) {
+                                        var allowedExtension = allowedUploadExtensions[i];
+                                        if (fileExtension.toLowerCase() === allowedExtension.toLowerCase()) {
                                             allowed = true;
                                         }
                                     }
                                 }
 
+                                // Allowed?
                                 if (allowed === false) {
-                                    alert("File type is not allowed");
+                                    alert("File type is not allowed.\n\nAllowed types are " + allowedUploadExtensions.join(", "));
                                     this.removeFile(file);
                                     return false;
                                 }
@@ -1584,9 +1589,10 @@
     iconlibrary: 'fa',
     language: 'en',
     initialstate: 'editor',
-    parser: null,
+        parser: null,
+    allowedUploadExtensions: [ "png", "gif", "bmp", "jpg", "jpeg" ],
     dropZoneOptions: {
-        url: 'api/media/streaming/upload',
+        url: 'http://localhost:50439/api/media/streaming/upload',
         fallbackClick: false,
         autoProcessQueue: true,
         disablePreview: true,

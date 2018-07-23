@@ -5,3 +5,10 @@ WebSite: https://www.instantasp.co.uk/
 Category: Core
 PlatoVersion: 1.0.0
 Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.WebApi",
+		Version: "1.0.0"
+	}
+]

@@ -124,15 +124,17 @@ namespace Plato.Media.Repositories
             string name,
             byte[] contentBlob,
             string contentType,
-            float contentLength,
+            long contentLength,
             DateTime? createdDate,
             int createdUserId,
             DateTime? modifiedDate,
             int modifiedUserId)
         {
+
+            var mediaId = 0;
             using (var context = _dbContext)
             {
-                return await context.ExecuteScalarAsync<int>(
+                mediaId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateMedia",
                     id,
@@ -145,6 +147,9 @@ namespace Plato.Media.Repositories
                     modifiedDate.ToDateIfNull(),
                     modifiedUserId);
             }
+
+            return mediaId;
+
         }
 
         #endregion

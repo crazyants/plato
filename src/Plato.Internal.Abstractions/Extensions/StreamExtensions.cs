@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.IO;
 using System.Text;
 
@@ -20,17 +17,15 @@ namespace Plato.Internal.Abstractions.Extensions
                 return reader.ReadToEnd();
             }
         }
-
-
+        
         public static byte[] StreamToByteArray(this Stream stream)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
-            var fileData = new byte[(int)stream.Length - 1 + 1];
+            var fileData = new byte[(int)stream.Length];
             stream.Read(fileData, 0, fileData.Length);
             return fileData;
         }
-
 
     }
 }
