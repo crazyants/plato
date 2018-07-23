@@ -12,6 +12,8 @@ namespace Plato.Media.ViewModels
         
         public string Name { get; set; }
         
+        public string ContentType { get; set; }
+
         public long Size { get; set; }
 
         public UploadedFile()

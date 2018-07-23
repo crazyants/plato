@@ -47,12 +47,22 @@ namespace Plato.Media
             IServiceProvider serviceProvider)
         {
 
+            // api routes
             routes.MapAreaRoute(
                 name: "MediaWebApi",
                 areaName: "Plato.Media",
                 template: "api/media/{controller}/{action}/{id?}",
                 defaults: new { controller = "Upload", action = "Index" }
             );
+            
+            // serve media routes
+            routes.MapAreaRoute(
+                name: "ServeMedia",
+                areaName: "Plato.Media",
+                template: "media/{id?}",
+                defaults: new { controller = "Media", action = "Serve" }
+            );
+
 
         }
     }

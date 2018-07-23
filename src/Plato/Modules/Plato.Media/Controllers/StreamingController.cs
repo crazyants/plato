@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
@@ -23,7 +20,9 @@ using MediaTypeHeaderValue = Microsoft.Net.Http.Headers.MediaTypeHeaderValue;
 
 namespace Plato.Media.Controllers
 {
-    
+
+    // https://github.com/aspnet/Docs/tree/master/aspnetcore/mvc/models/file-uploads/sample/FileUploadSample
+
     public class UploadedData
     {
         public string FilePath { get; set; }
@@ -94,37 +93,24 @@ namespace Plato.Media.Controllers
             
             var name = string.Empty;
             var contentType = string.Empty;
-            long size = 0;
             var ms = new MemoryStream();
 
             var section = await reader.ReadNextSectionAsync();
             while (section != null)
             {
                 var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition);
-           
+            
                 if (hasContentDispositionHeader)
                 {
                     if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
                     {
-                        //targetFilePath = Path.GetTempFileName();
 
                         name = contentDisposition.FileName.ToString();
                         contentType = section.ContentType;
-                     
-                        if (contentDisposition.Size != null)
-                        {
-                            size = (long)contentDisposition.Size;
-                        }
                         
                         // Read the seciton into our memory stream
                         await section.Body.CopyToAsync(ms);
 
-                        //using (var targetStream = System.IO.File.Create(targetFilePath))
-                        //{
-                        //    await section.Body.CopyToAsync(targetStream);
-
-                        //    _logger.LogInformation($"Copied the uploaded file '{targetFilePath}'");
-                        //}
                     }
                     else if (MultipartRequestHelper.HasFormDataContentDisposition(contentDisposition))
                     {
@@ -163,14 +149,7 @@ namespace Plato.Media.Controllers
                 section = await reader.ReadNextSectionAsync();
             }
 
-            // Bind form data to a model
-         
-            //var formValueProvider = new FormValueProvider(
-            //    BindingSource.Form,
-            //    new FormCollection(formAccumulator.GetResults()),
-            //    CultureInfo.CurrentCulture);
-            
-            // Get btye array from stream for storage
+            // Get btye array from memory stream for storage
             var bytes =  ms.StreamToByteArray();
             if (bytes == null)
             {
@@ -184,7 +163,7 @@ namespace Plato.Media.Controllers
             {
                 Name = name,
                 ContentType = contentType,
-                ContentLength = bytes.Length,
+                ContentLength = ms.Length,
                 ContentBlob = bytes,
                 CreatedUserId = user.Id,
                 CreatedDate = DateTime.UtcNow,
@@ -198,6 +177,7 @@ namespace Plato.Media.Controllers
                 {
                     Id = media.Id,
                     Name = media.Name,
+                    ContentType = media.ContentType,
                     Size = media.ContentLength
                 });
             }

@@ -820,25 +820,30 @@
                             function(e) {
                                 caretPos = textarea.prop('selectionStart');
                             });
+
                         this.on('success',
-                            function(file, results) {
+                            function(file, response) {
 
-                                if (results) {
-                                    for (var i = 0; i < results.length; i++) {
-                                        var result = results[i];
-                                        var text = textarea.val();
-                                        textarea.val(text.substring(0, caretPos) +
-                                            '\n![' +
-                                            result.name +
-                                            '](' +
-                                            result.url +
-                                            ')\n' +
-                                            text.substring(caretPos));
+                                if (response.statusCode === 200) {
 
+                                    if (response && response.result) {
+                                        for (var i = 0; i < response.result.length; i++) {
+                                            var result = response.result[i];
+                                            if (result.id > 0) {
+                                                var text = textarea.val();
+                                                textarea.val(text.substring(0, caretPos) +
+                                                    '\n![' +
+                                                    result.name +
+                                                    '](/media/' +
+                                                    result.id +
+                                                    ')\n' +
+                                                    text.substring(caretPos));
+                                            }
+                                        }
                                     }
+
                                 }
-
-
+                              
                             });
                         this.on('error',
                             function(file, error, xhr) {
@@ -1469,8 +1474,7 @@
 
             e.replaceSelection(value + chunk);
             e.setSelection(cursor, cursor + chunk.length);
-
-
+            
         },
         insertContentLink: function(e, $target) {
 

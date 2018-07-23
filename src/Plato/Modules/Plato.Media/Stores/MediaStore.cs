@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Media.Repositories;
@@ -80,9 +79,8 @@ namespace Plato.Media.Stores
 
         public IQuery<Models.Media> QueryAsync()
         {
-            throw  new NotImplementedException();
-            //var query = new EmailQuery(this);
-            //return _dbQuery.ConfigureQuery<EmailMessage>(query); ;
+            var query = new MediaQuery(this);
+            return _dbQuery.ConfigureQuery<Models.Media>(query); ;
         }
 
         public async Task<IPagedResults<Models.Media>> SelectAsync(params object[] args)
@@ -93,7 +91,7 @@ namespace Plato.Media.Stores
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Selecting emails for key '{0}' with the following parameters: {1}",
+                    _logger.LogInformation("Selecting media for key '{0}' with the following parameters: {1}",
                         token.ToString(), args.Select(a => a));
                 }
 

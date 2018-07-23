@@ -1,24 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Abstractions.Extensions;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Razor.Language;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Media.Stores;
 
 namespace Plato.Media.Controllers
 {
-
-   
-
-
+    
     public class MediaController : Controller
     {
 
@@ -51,34 +44,7 @@ namespace Plato.Media.Controllers
         }
 
         #region "Actions"
-
-        // object results
-
-        //// POST api/upload
-        //[HttpPost]
-
-        //public Task<IEnumerable<FileDesc>> Post()
-        //{
-
-        //    if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
-        //    {
-        //        return BadRequest($"Expected a multipart request, but got {Request.ContentType}");
-        //    }
-
-        //    var output = UploadFile();
-        //    return output;
-        //}
-
-        //// PUT api/upload
-        //[HttpPut]
-        //public Task<IEnumerable<FileDesc>> Put()
-        //{
-        //    var output = UploadFile();
-        //    return output;
-        //}
         
-        // action results
-
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Upload(string returnUrl = null)
@@ -155,7 +121,7 @@ namespace Plato.Media.Controllers
             {
                 r.ContentType = media.ContentType;
                 r.Headers.Add("content-disposition", "filename=\"" + media.Name + "\"");
-                r.Headers.Add("content-length", Convert.ToString((int)media.ContentLength));
+                r.Headers.Add("content-length", Convert.ToString((long)media.ContentLength));
                 r.Body.Write(media.ContentBlob, 0, (int)media.ContentLength);
             }
             else
@@ -175,61 +141,7 @@ namespace Plato.Media.Controllers
         #endregion
 
         #region "Private Methods"
-
-
-        //private async Task<IEnumerable<FileDesc>> UploadFile()
-        //{
-
-           
-        //    var output = new List<FileDesc>();
-
-        //    var provider =
-        //        await
-        //            Request.Content.ReadAsMultipartAsync<InMemoryMultipartFormDataStreamProvider>(
-        //                new InMemoryMultipartFormDataStreamProvider());
-
-        //    //access form data
-        //    var formData = provider.FormData;
-
-        //    //access files
-        //    IList<HttpContent> files = provider.Files;
-
-        //    // virtual paths from app root
-        //    var virtualPath = "uploads\\images\\";
-        //    var virtualUrl = virtualPath.Replace("\\", "/");
-
-        //    foreach (var file in files)
-        //    {
-        //        var file1Stream = await file.ReadAsStreamAsync();
-        //        var fileName = file.Headers.ContentDisposition.FileName;
-        //        var extension = Path.GetExtension(fileName);
-
-              
-        //        //var newFileName = TagHelperMetadata.Common.Utils.FileUtils.SaveUniqueFile(
-        //        //    ref file1Stream,
-        //        //    extension,
-        //        //    fullPath);
-
-        //        long fileSize = 0;
-        //        if (file.Headers.ContentLength != null)
-        //        {
-        //            fileSize = file.Headers.ContentLength.Value;
-        //        }
-
-        //        output.Add(new FileDesc()
-        //        {
-        //            Name = fileName,
-        //            Url = fullUrl + newFileName,
-        //            Size = fileSize
-        //        });
-
-        //    }
-
-        //    return output;
-
-        //}
-
-
+        
         #endregion
 
     }
