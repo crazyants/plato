@@ -10,10 +10,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Media.Attributes;
-using Plato.Media.Filters;
 using Plato.Media.Services;
 using Plato.Media.Stores;
 using Plato.Media.ViewModels;
+using Plato.WebApi.Attributes;
 using Plato.WebApi.Controllers;
 using ContentDispositionHeaderValue = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue;
 using MediaTypeHeaderValue = Microsoft.Net.Http.Headers.MediaTypeHeaderValue;
@@ -31,8 +31,7 @@ namespace Plato.Media.Controllers
 
     public class StreamingController : BaseWebApiController
     {
-
-   
+        
         private readonly ILogger<StreamingController> _logger;
         private readonly IMediaStore<Models.Media> _mediaStore;
 
@@ -49,16 +48,14 @@ namespace Plato.Media.Controllers
         }
 
         [HttpGet]
-        [GenerateAntiforgeryTokenCookieForAjax]
         public IActionResult Index()
         {
             return View();
         }
 
         #region snippet1
-        
-        [HttpPost]
-        [DisableFormValueModelBinding]
+
+        [HttpPost, DisableFormValueModelBinding, ValidateWebApiAntiForgeryToken]
         /*[ValidateAntiForgeryToken]*/
         public async Task<IActionResult> Upload()
         {

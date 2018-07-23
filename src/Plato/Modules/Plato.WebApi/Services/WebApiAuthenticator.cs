@@ -57,7 +57,7 @@ namespace Plato.WebApi.Services
         {
 
             var headers = _httpContextAccessor.HttpContext.Request.Headers;
-            if (!headers.ContainsKey("Authorization"))
+            if (!headers.ContainsKey(HeaderName))
             {
                 return null;
             }

@@ -29970,7 +29970,8 @@ $(function (win, doc, $) {
         // set content type & API version
         config.headers = {
             'Content-Type': 'application/json',
-            'X-Api-Version': '1'
+            'X-Api-Version': '1',
+            "X-Xsrf-Token": opts.xsrfToken
         };
         
         var http = (function() {

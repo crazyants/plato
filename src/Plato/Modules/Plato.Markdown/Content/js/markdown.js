@@ -738,7 +738,8 @@
 
                     // Combine base URL from Plato options with api URL
                     options.dropZoneOptions.url = platoOpts.url + options.dropZoneOptions.url;
-                    
+
+             
                     options.dropZoneOptions.init = function() {
 
                         var caretPos = 0,
