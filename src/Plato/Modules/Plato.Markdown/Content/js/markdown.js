@@ -1586,7 +1586,7 @@
     initialstate: 'editor',
     parser: null,
     dropZoneOptions: {
-        url: 'api/upload',
+        url: 'api/media/streaming/upload',
         fallbackClick: false,
         autoProcessQueue: true,
         disablePreview: true,

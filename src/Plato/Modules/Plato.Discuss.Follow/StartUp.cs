@@ -4,17 +4,9 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Follow.ViewProviders;
 using Plato.Discuss.Models;
-using Plato.Entities.Models;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Follow.Assets;
-using Plato.Follow.Handlers;
-using Plato.Follow.Models;
-using Plato.Follow.Repositories;
-using Plato.Follow.Stores;
-using Plato.Internal.Assets.Abstractions;
 
 namespace Plato.Discuss.Follow
 {

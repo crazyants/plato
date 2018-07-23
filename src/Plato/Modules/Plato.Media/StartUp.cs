@@ -46,6 +46,14 @@ namespace Plato.Media
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            routes.MapAreaRoute(
+                name: "MediaWebApi",
+                areaName: "Plato.Follow",
+                template: "api/media/{controller}/{action}/{id?}",
+                defaults: new { controller = "Follow", action = "Get" }
+            );
+
         }
     }
 }

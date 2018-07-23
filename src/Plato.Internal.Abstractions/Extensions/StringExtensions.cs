@@ -46,8 +46,7 @@ namespace Plato.Internal.Abstractions.Extensions
                 return input;
             return input.Length > maxLength ? input.Substring(maxLength) : input;
         }
-
-
+        
         public static string TrimToAround(this string input, int length)
         {
 
@@ -102,9 +101,7 @@ namespace Plato.Internal.Abstractions.Extensions
             return sb.ToString();
 
         }
-
-
-
+        
         public static int[] ToIntArray(this string input, char delimiter = ',')
         {
 
@@ -168,8 +165,7 @@ namespace Plato.Internal.Abstractions.Extensions
             return input.Trim();
 
         }
-
-
+        
     }
 
 }
