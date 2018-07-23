@@ -232,10 +232,10 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // add modules as application parts
             var applicationPartManager = services.BuildServiceProvider().GetRequiredService<ApplicationPartManager>();
             var modules = moduleManager.LoadModulesAsync().Result;
-            foreach (var mpdule in modules)
+            foreach (var module in modules)
             {
                 // add modules as application parts
-                foreach (var assembly in mpdule.Assmeblies)
+                foreach (var assembly in module.Assmeblies)
                 {
                     applicationPartManager.ApplicationParts.Add(new AssemblyPart(assembly));
                 }

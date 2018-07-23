@@ -17,7 +17,6 @@ using Plato.Media.ViewModels;
 using Plato.WebApi.Controllers;
 using ContentDispositionHeaderValue = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue;
 using MediaTypeHeaderValue = Microsoft.Net.Http.Headers.MediaTypeHeaderValue;
-using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Media.Controllers
 {
@@ -57,13 +56,7 @@ namespace Plato.Media.Controllers
         }
 
         #region snippet1
-
-        // 1. Disable the form value model binding here to take control of handling 
-        //    potentially large files.
-        // 2. Typically antiforgery tokens are sent in request body, but since we 
-        //    do not want to read the request body early, the tokens are made to be 
-        //    sent via headers. The antiforgery token filter first looks for tokens
-        //    in the request header and then falls back to reading the body.
+        
         [HttpPost]
         [DisableFormValueModelBinding]
         /*[ValidateAntiForgeryToken]*/

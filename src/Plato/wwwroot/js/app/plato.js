@@ -19,6 +19,7 @@ $(function (win, doc, $) {
         debug: true,
         url: "",
         apiKey: "",
+        xsrfToken: "",
         // UI tooltips
         BSToolTipEnabled: true,
         BSToolTipSelector: "[data-toggle='tooltip']",

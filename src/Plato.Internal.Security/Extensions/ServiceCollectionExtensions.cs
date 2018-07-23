@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authorization;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Internal.Security.Extensions
@@ -11,9 +10,10 @@ namespace Plato.Internal.Security.Extensions
             this IServiceCollection services)
         {
 
+            // Permissions manager
             services.AddScoped<IPermissionsManager, PermissionsManager>();
-
-
+            
+            // Add core authorization services 
             services.AddAuthorization();
 
             return services;

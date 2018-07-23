@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -10,6 +11,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.WebApi.Configuration;
+using Plato.WebApi.Filters;
 using Plato.WebApi.Middleware;
 using Plato.WebApi.Services;
 using Plato.WebApi.ViewProviders;
@@ -43,7 +45,13 @@ namespace Plato.WebApi
             // Services
             services.AddScoped<IWebApiAuthenticator, WebApiAuthenticator>();
 
-            
+            // Add anti forgery token for web api requests
+            services.Configure<MvcOptions>((options) =>
+            {
+                options.Filters.Add(typeof(GenerateWebApiAntiforgeryTokenCookie));
+            });
+
+
         }
 
         public override void Configure(
