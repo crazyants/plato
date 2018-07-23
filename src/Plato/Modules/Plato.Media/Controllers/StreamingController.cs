@@ -15,28 +15,35 @@ using Plato.Media.Stores;
 using Plato.Media.ViewModels;
 using Plato.WebApi.Attributes;
 using Plato.WebApi.Controllers;
-using ContentDispositionHeaderValue = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue;
-using MediaTypeHeaderValue = Microsoft.Net.Http.Headers.MediaTypeHeaderValue;
 
 namespace Plato.Media.Controllers
 {
 
     // https://github.com/aspnet/Docs/tree/master/aspnetcore/mvc/models/file-uploads/sample/FileUploadSample
-
-    public class UploadedData
-    {
-        public string FilePath { get; set; }
-
-    }
-
     public class StreamingController : BaseWebApiController
     {
+
+        private static readonly string[] SupportedImageContentTypes = new string[]
+        {
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "image/jpg",
+            "image/bmp"
+        };
+        
+        private static readonly string[] SupportedBinaryContentTypes = new string[]
+        {
+            "text/plain",
+            "text/html",
+            "application/octet-stream"
+        };
         
         private readonly ILogger<StreamingController> _logger;
         private readonly IMediaStore<Models.Media> _mediaStore;
 
-        // Get the default form options so that we can use them to set the default limits for
-        // request body data
+        // Get the default form options so that we can use them
+        // to set the default limits for request body data
         private readonly FormOptions _defaultFormOptions = new FormOptions();
 
         public StreamingController(
@@ -47,15 +54,17 @@ namespace Plato.Media.Controllers
             _mediaStore = mediaStore;
         }
 
+        #region "Actions"
+
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
+        
 
-        #region snippet1
-
-        [HttpPost, DisableFormValueModelBinding, ValidateWebApiAntiForgeryToken]
+        [HttpPost, DisableFormValueModelBinding]
+        /*[ValidateWebApiAntiForgeryToken]*/
         /*[ValidateAntiForgeryToken]*/
         public async Task<IActionResult> Upload()
         {
@@ -75,7 +84,6 @@ namespace Plato.Media.Controllers
             // Used to accumulate all the form url
             // encoded key value pairs in the request.
             var formAccumulator = new KeyValueAccumulator();
-      
             var boundary = MultipartRequestHelper.GetBoundary(
                 MediaTypeHeaderValue.Parse(Request.ContentType),
                 _defaultFormOptions.MultipartBoundaryLengthLimit);
@@ -84,8 +92,9 @@ namespace Plato.Media.Controllers
             
             var name = string.Empty;
             var contentType = string.Empty;
-            var ms = new MemoryStream();
-
+            long contentLength = 0;
+            byte[] bytes = null;
+            
             var section = await reader.ReadNextSectionAsync();
             while (section != null)
             {
@@ -99,8 +108,18 @@ namespace Plato.Media.Controllers
                         name = contentDisposition.FileName.ToString();
                         contentType = section.ContentType;
                         
-                        // Read the seciton into our memory stream
-                        await section.Body.CopyToAsync(ms);
+                        // Create an in-memory stream to get the bytes and length
+                        using (var ms = new MemoryStream())
+                        {
+
+                            // Read the seciton into our memory stream
+                            await section.Body.CopyToAsync(ms);
+
+                            // get bytes and length
+                            bytes = ms.StreamToByteArray();
+                            contentLength = ms.Length;
+
+                        }
 
                     }
                     else if (MultipartRequestHelper.HasFormDataContentDisposition(contentDisposition))
@@ -141,20 +160,20 @@ namespace Plato.Media.Controllers
             }
 
             // Get btye array from memory stream for storage
-            var bytes =  ms.StreamToByteArray();
+          
+            var output = new List<UploadedFile>();
+
             if (bytes == null)
             {
-                throw new InvalidDataException("A problem occurred with the upload. Please try again.");
+                return BadRequest($"Could not obtain a byte array for the uploaded file.");
             }
-            
-            var output = new List<UploadedFile>();
-            
-            // Add media to database
+
+            // Store media
             var media = await _mediaStore.CreateAsync(new Models.Media
             {
                 Name = name,
                 ContentType = contentType,
-                ContentLength = ms.Length,
+                ContentLength = contentLength,
                 ContentBlob = bytes,
                 CreatedUserId = user.Id,
                 CreatedDate = DateTime.UtcNow,
@@ -162,6 +181,7 @@ namespace Plato.Media.Controllers
                 ModifiedDate = DateTime.UtcNow
             });
 
+            // Build friendly results
             if (media != null)
             {
                 output.Add(new UploadedFile()
@@ -169,62 +189,30 @@ namespace Plato.Media.Controllers
                     Id = media.Id,
                     Name = media.Name,
                     FriendlySize = media.ContentLength.ToFriendlyFileSize(),
-                    IsImage = IsSupportedImageContentType(media.ContentType),
-                    IsFile = IsSupportedfileContentType(media.ContentType),
+                    IsImage = IsContentTypeSupported(media.ContentType, SupportedImageContentTypes),
+                    IsBinary = IsContentTypeSupported(media.ContentType, SupportedBinaryContentTypes),
                 });
             }
-      
+
             return base.Result(output);
 
         }
 
         #endregion
 
-        bool IsSupportedImageContentType(string contentType)
-        {
-            if (String.IsNullOrEmpty(contentType))
-            {
-                return false;
-            }
-
-            var supportedContentTypes = new string[]
-            {
-                "image/jpeg",
-                "image/png",
-                "image/gif",
-                "image/jpg",
-                "image/bmp"
-            };
-            
-            foreach (var item in supportedContentTypes)
-            {
-                if (item.Equals(contentType, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-
-        }
+        #region "Private Methods"
         
-        bool IsSupportedfileContentType(string contentType)
+        bool IsContentTypeSupported(string contentType, string[] supportedTypes)
         {
+
             if (String.IsNullOrEmpty(contentType))
             {
                 return false;
             }
 
-            var supportedContentTypes = new string[]
+            foreach (var supportedType in supportedTypes)
             {
-                "text/plain",
-                "text/html",
-                "application/octet-stream"
-            };
-
-            foreach (var item in supportedContentTypes)
-            {
-                if (item.Equals(contentType, StringComparison.OrdinalIgnoreCase))
+                if (contentType.Equals(supportedType, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
@@ -233,7 +221,6 @@ namespace Plato.Media.Controllers
             return false;
 
         }
-
         
         Encoding GetEncoding(MultipartSection section)
         {
@@ -246,12 +233,9 @@ namespace Plato.Media.Controllers
             }
             return mediaType.Encoding;
         }
+
+        #endregion
+
     }
-
-
-
-
-
-
 
 }

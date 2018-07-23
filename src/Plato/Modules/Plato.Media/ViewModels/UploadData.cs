@@ -12,7 +12,7 @@
 
         public bool IsImage { get; set; }
 
-        public bool IsFile { get; set; }
+        public bool IsBinary { get; set; }
         
     }
     
