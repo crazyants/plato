@@ -12,13 +12,11 @@ namespace Plato.Internal.Shell.Extensions
     {
         public static IServiceCollection ConfigureShell(
             this IServiceCollection services,
-            string shellLocation,
-            string schemaLocation)
+            string shellLocation)
         {
             return services.Configure<ShellOptions>(options =>
             {
                 options.Location = shellLocation;
-                options.SchemaLocation = schemaLocation;
             });
         }
 

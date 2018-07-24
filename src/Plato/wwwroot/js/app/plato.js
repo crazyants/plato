@@ -19,12 +19,23 @@ $(function (win, doc, $) {
         debug: true,
         url: "",
         apiKey: "",
-        xsrfToken: "",
+        csrfHeaderName: "X-Csrf-Token",
+        csrfCookieName: "",
         // UI tooltips
         BSToolTipEnabled: true,
         BSToolTipSelector: "[data-toggle='tooltip']",
         MagnificSelector: "[data-toggle='dialog']",
         AvatarUploadSelector: "[data-upload='avatar']",
+        getCsrfCookieToken: function () {
+            if (this.csrfCookieName !== "") {
+                var storage = win.$.Plato.Storage;
+                var cookie = storage.getCookie(this.csrfCookieName);
+                if (cookie) {
+                    return cookie;
+                }
+            }
+            return "";
+        }
     };
 
     /* Simple logging */
@@ -33,16 +44,16 @@ $(function (win, doc, $) {
         warning: "Warning",
         error: "Error",
         prevLogDate: null,
-        logInfo: function (message) {
+        logInfo: function(message) {
             this.log(this.info, message);
         },
-        logWarning: function (message) {
+        logWarning: function(message) {
             this.log(this.warning, message);
         },
-        logError: function (message) {
+        logError: function(message) {
             this.log(this.error, message);
         },
-        log: function (level, message) {
+        log: function(level, message) {
             if (!$.Plato.Options.debug) {
                 return;
             }
@@ -58,11 +69,11 @@ $(function (win, doc, $) {
             }
             return 0;
         }
-    }
+    };
     
     // access to options & core functionality
     win.$.Plato.Context = {
-        options: function () {
+        options: function() {
             // Extend the options if external options exist
             if (typeof window.PlatoOptions !== "undefined") {
                 $.extend(true, $.Plato.Options, window.PlatoOptions);
@@ -70,31 +81,31 @@ $(function (win, doc, $) {
             return $.Plato.Options;
         },
         logger: $.Plato.Logger
-    }
+    };
 
     /* Client side localization */
     win.$.Plato.Locale = {
         lang: "en-US"
-    }
+    };
 
     /* Plato UI */
     win.$.Plato.UI = {
         context: win.$.Plato.Context,
-        init: function () {
-            
+        init: function() {
+
             // init
             this.initToolTips();
             this.initDropDowns();
             this.initAvatar();
 
         },
-        logInfo: function (message) {
+        logInfo: function(message) {
             this.context.logger.logInfo(message);
         },
-        logError: function (message) {
+        logError: function(message) {
             this.context.logger.logError(message);
         },
-        initToolTips: function () {
+        initToolTips: function() {
 
             this.logInfo("initToolTips()");
 
@@ -105,14 +116,14 @@ $(function (win, doc, $) {
             }
 
         },
-        initDropDowns: function () {
+        initDropDowns: function() {
 
             this.logInfo("initDropDowns()");
 
             // Enable
             // Enable nested dropdown support
             $("ul.dropdown-menu [data-toggle='dropdown']").on("click",
-                function (event) {
+                function(event) {
 
                     // Avoid following the href location when clicking
                     event.preventDefault();
@@ -127,21 +138,21 @@ $(function (win, doc, $) {
 
 
         },
-        initAvatar: function () {
+        initAvatar: function() {
 
             this.logInfo("initAvatar()");
 
             // Avatar upload selector with preview
-            $(this.context.options().AvatarUploadSelector).change(function () {
+            $(this.context.options().AvatarUploadSelector).change(function() {
                 function readUrl(input) {
                     if (input.files && input.files[0]) {
                         var reader = new FileReader();
-                        reader.onload = function (e) {
+                        reader.onload = function(e) {
                             var previewSelector = $(input).attr("data-upload-preview-selector");
                             $(previewSelector).css('background-image', ' url(' + e.target.result + ')');
                             $(previewSelector).hide();
                             $(previewSelector).fadeIn(650);
-                        }
+                        };
                         reader.readAsDataURL(input.files[0]);
                     }
                 }
@@ -150,7 +161,7 @@ $(function (win, doc, $) {
             });
 
         }
-    }
+    };
 
     /* Plato Http */
     win.$.Plato.Http = function(config) {
@@ -174,7 +185,7 @@ $(function (win, doc, $) {
             context.logger.logInfo("ApiKey: " + apiKey);
             config.beforeSend = function(xhr) {
                 xhr.setRequestHeader("Authorization", "Basic " + apiKey);
-            }
+            };
         } else {
             context.logger.logInfo("No api key was supplied");
         }
@@ -183,9 +194,9 @@ $(function (win, doc, $) {
         config.headers = {
             'Content-Type': 'application/json',
             'X-Api-Version': '1',
-            "X-Xsrf-Token": opts.xsrfToken
+            "X-Csrf-Token": opts.getCsrfCookieToken()
         };
-        
+
         var http = (function() {
 
             var onError = function(config, xhr, ajaxOptions, thrownError) {
@@ -195,7 +206,7 @@ $(function (win, doc, $) {
                             thrownError);
                     }
                 },
-                onAlways = function (xhr, textStatus) {
+                onAlways = function(xhr, textStatus) {
                     if (context) {
                         context.logger.logInfo("$.Plato.Http - Completed: " +
                             JSON.stringify(xhr, null, "     "));
@@ -216,7 +227,7 @@ $(function (win, doc, $) {
                                 onError(config, xhr, ajaxOptions, thrownError);
                             }
                         })
-                        .always(function (xhr, textStatus) {
+                        .always(function(xhr, textStatus) {
                             if (onAlways) {
                                 onAlways(xhr, textStatus);
                             }
@@ -224,12 +235,69 @@ $(function (win, doc, $) {
                 }
             };
         }());
-        
+
         context.logger.logInfo("$.Plato.Http - Starting Request: " + JSON.stringify(config, null, "     "));
 
         return http.promise(config);
 
-    }
+    };
+
+    /* Plato Storage */
+    win.$.Plato.Storage = {
+        setCookie: function (key, value, expireDays, toJson, path) {
+
+            toJson = toJson || false;
+            if (toJson) { value = encodeURIComponent(JSON.stringify(value)); }
+            if (!path) { path = "/"; }
+
+            var data = "";
+            if (expireDays) {
+                var dateExpires = new Date();
+                dateExpires.setTime(dateExpires.getTime() + 1000 * 60 * 60 * 24 * expireDays);
+                data = '; expires=' + dateExpires.toGMTString();
+            }
+            document.cookie = key + "=" + value + data + ";path=" + path;
+            return this;
+        },
+        getCookie: function (key) {
+            var ckName = key + "=";
+            var ckPos = document.cookie.indexOf(ckName);
+            if (ckPos !== -1) {
+                var ckStart = ckPos + ckName.length;
+                var ckEnd = document.cookie.indexOf(";", ckStart);
+                if (ckEnd === -1) { ckEnd = document.cookie.length; }
+                return unescape(document.cookie.substring(ckStart, ckEnd));
+            }
+            return null;
+        },
+        updateCookie: function (key, value, update, delimiter) {
+            // if update is false the value will be removed from the cookie
+            // if update is true the value will be appended to the cookie
+            var cookie = this.getCookie(key),
+                temp = new Array();
+            delimiter = delimiter || ",";
+            if (cookie) {
+                // read existing excluding value into temp array
+                var values = cookie.split(delimiter);
+                for (var i in values) {
+                    if (values.hasOwnProperty(i)) {
+                        if (values[i] !== value && values[i] !== "") {
+                            temp[temp.length] = values[i];
+                        }
+                    }
+                }
+            }
+            // should we append the current value?
+            if (update) { temp[temp.length] = value; }
+            // update the cookie
+            this.setCookie(key, temp.join(delimiter));
+            return this;
+        },
+        clearCookie: function (key) {
+            this.setCookie(key, null, -1);
+            return this;
+        }
+    };
 
     /* jQuery Plugins */
     /* ---------------------------------------------*/
@@ -247,7 +315,7 @@ $(function (win, doc, $) {
         };
 
         var methods = {
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
                 if (methodName) {
                     if (this[methodName]) {
                         this[methodName].apply(this, [$caller]);
@@ -260,12 +328,12 @@ $(function (win, doc, $) {
                 methods.bind($caller);
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 var event = $caller.data(dataKey).event;
                 if (event) {
                     $caller.on(event,
-                        function (e) {
+                        function(e) {
                             e.preventDefault();
                             methods.scrollTo($caller);
 
@@ -274,12 +342,12 @@ $(function (win, doc, $) {
                 }
 
             },
-            scrollTo: function ($caller) {
+            scrollTo: function($caller) {
 
                 jQuery.extend(jQuery.easing,
                     {
                         def: 'easeOutQuad',
-                        easeInOutExpo: function (x, t, b, c, d) {
+                        easeInOutExpo: function(x, t, b, c, d) {
                             if (t === 0) return b;
                             if (t === d) return b + c;
                             if ((t /= d / 2) < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
@@ -292,10 +360,11 @@ $(function (win, doc, $) {
                     var $target = $(href);
                     if ($target.length > 0) {
                         $('html, body').stop().animate({
-                            scrollTop: ($target.offset().top - 10)
-                        },
+                                scrollTop: $target.offset().top - 10
+                            },
                             250,
-                            'easeInOutExpo', function() {
+                            'easeInOutExpo',
+                            function() {
                                 $caller.data(dataKey).onComplete($caller, $target);
                             });
                         $caller.data(dataKey).onBeforeComplete($caller, $target);
@@ -303,34 +372,34 @@ $(function (win, doc, $) {
                 }
 
             }
-        }
+        };
 
         return {
-            init: function () {
+            init: function() {
 
                 var options = {};
                 var methodName = null;
                 for (var i = 0; i < arguments.length; ++i) {
                     var a = arguments[i];
                     switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
+                    case Object:
+                        $.extend(options, a);
+                        break;
+                    case String:
+                        methodName = a;
+                        break;
+                    case Boolean:
+                        break;
+                    case Number:
+                        break;
+                    case Function:
+                        break;
                     }
                 }
 
                 if (this.length > 0) {
                     // $(selector).markdownEditor
-                    return this.each(function () {
+                    return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                             $(this).data(dataIdKey, id);
@@ -355,7 +424,7 @@ $(function (win, doc, $) {
 
             }
 
-        }
+        };
 
     }();
 
@@ -374,13 +443,13 @@ $(function (win, doc, $) {
         var methods = {
             preview: {
                 template: '<li class="list-group-item">{text}</li>',
-                empty: function ($caller) {
+                empty: function($caller) {
                     var text = methods.getDropdownPreviewText($caller);
                     var html = methods.preview.template;
                     return html.replace("{text}", text);
                 }
             },
-            init: function ($caller, methodName) {
+            init: function($caller, methodName) {
 
                 if (methodName) {
                     if (this[methodName]) {
@@ -390,12 +459,12 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-                
+
                 // Bind events
                 methods.bind($caller);
 
             },
-            bind: function ($caller) {
+            bind: function($caller) {
 
                 var self = this;
 
@@ -425,21 +494,21 @@ $(function (win, doc, $) {
                             var $preview = self.getDropdownPreview($caller);
                             var $labels = self.getDropdownLabels($caller);
 
-                            $labels.each(function () {
+                            $labels.each(function() {
                                 $(this).removeClass("active");
                             });
-                            
+
                             // Clear selection preview
                             $preview.empty();
 
                             // Get all checked labels
                             var $selectedLabels = [];
-                            $($menu).find('input:checked').each(function () {
+                            $($menu).find('input:checked').each(function() {
                                 var $localLabel = $(this).next();
                                 $localLabel.addClass("active");
                                 $selectedLabels.push($localLabel);
                             });
-                            
+
                             if ($selectedLabels.length === 0) {
 
                                 $preview
@@ -470,7 +539,7 @@ $(function (win, doc, $) {
                         });
 
                 }
-            
+
             },
             filterItems: function($caller) {
 
@@ -491,20 +560,18 @@ $(function (win, doc, $) {
                     if ($label.length > 0 && $label.data("value")) {
                         if ($label.data("value").toLowerCase().startsWith(word)) {
                             $label.show();
-                        }
-                        else {
+                        } else {
                             $label.hide();
                             hidden++;
                         }
                     }
-                   
+
                 }
-                
+
                 //If all items are hidden, show the empty view
                 if (hidden === length) {
                     $noResults.show();
-                }
-                else {
+                } else {
                     $noResults.hide();
                 }
 
@@ -512,14 +579,14 @@ $(function (win, doc, $) {
             getDropdownButton: function($caller) {
                 return $caller.find('[data-toggle="dropdown"]');
             },
-            getDropdownMenu: function ($caller) {
+            getDropdownMenu: function($caller) {
                 return $caller.find(".dropdown-menu");
             },
-            getDropdownLabels: function ($caller) {
+            getDropdownLabels: function($caller) {
                 var $menu = this.getDropdownMenu($caller);
                 return $menu.find("label");
             },
-            getDropdownSearchInput: function ($caller) {
+            getDropdownSearchInput: function($caller) {
                 var $menu = this.getDropdownMenu($caller);
                 return $menu.find('[type="search"]');
             },
@@ -534,46 +601,46 @@ $(function (win, doc, $) {
                 if ($preview.length === 0) {
                     $preview = $caller.next();
                     if (!$preview.hasClass("select-dropdown-preview")) {
-                        throw new Error("A preview area coulod not be found for the select dropdown.")
+                        throw new Error("A preview area coulod not be found for the select dropdown.");
                     }
                 }
                 return $preview;
             },
-            getDropdownPreviewText: function ($caller) {
+            getDropdownPreviewText: function($caller) {
                 var $preview = this.getDropdownPreview($caller);
                 if ($preview.length > 0) {
                     return $preview.attr("data-empty-preview-text");
                 }
                 return "No selection";
             }
-        }
+        };
 
         return {
-            init: function () {
+            init: function() {
 
                 var options = {};
                 var methodName = null;
                 for (var i = 0; i < arguments.length; ++i) {
                     var a = arguments[i];
                     switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
+                    case Object:
+                        $.extend(options, a);
+                        break;
+                    case String:
+                        methodName = a;
+                        break;
+                    case Boolean:
+                        break;
+                    case Number:
+                        break;
+                    case Function:
+                        break;
                     }
                 }
 
                 if (this.length > 0) {
                     // $(selector).markdownEditor
-                    return this.each(function () {
+                    return this.each(function() {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                             $(this).data(dataIdKey, id);
@@ -598,7 +665,7 @@ $(function (win, doc, $) {
 
             }
 
-        }
+        };
 
     }();
     
@@ -624,7 +691,7 @@ $(function (win, doc, $) {
          * <a href="#somelement" data-provide="scroll"> */      
         $('[data-provide="scroll"]').scrollTo();
 
-
+        /* select dropdown */
         $('[data-provide="select-dropdown"]').selectDropdown();
 
     });

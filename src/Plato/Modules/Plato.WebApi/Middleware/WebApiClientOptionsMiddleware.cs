@@ -32,23 +32,27 @@ namespace Plato.WebApi.Middleware
         {
             
             var options = context.RequestServices.GetRequiredService<IOptions<WebApiOptions>>();
-            
+
+
+            var antiforgeryOptions = context.RequestServices.GetRequiredService<IOptions<AntiforgeryOptions>>();
+
             // Register client script to set-up $.Plato.Http
-            var script = "$(function (win) { win.PlatoOptions = { url: '{url}', apiKey: '{apiKey}', xsrfToken: '{xsrfToken}' } } (window));";
+            var script = "$(function (win) { win.PlatoOptions = { url: '{url}', apiKey: '{apiKey}', csrfHeaderName: '{csrfHeaderName}', csrfCookieName: '{csrfCookieName}' } } (window));";
             script = script.Replace("{url}", options.Value.Url);
             script = script.Replace("{apiKey}", options.Value.ApiKey);
-            script = script.Replace("{xsrfToken}", GetAntiforgeryToken(context));
-            
+            script = script.Replace("{csrfHeaderName}", antiforgeryOptions.Value.HeaderName);
+            script = script.Replace("{csrfCookieName}", antiforgeryOptions.Value.Cookie.Name);
+
             return new ScriptBlock(script, int.MinValue);
 
         }
 
-        string GetAntiforgeryToken(HttpContext context)
-        {
-            var antiforgery = context.RequestServices.GetService<IAntiforgery>();
-            var tokens = antiforgery.GetAndStoreTokens(context);
-            return tokens.RequestToken;
-        }
+        //string GetAntiforgeryToken(HttpContext context)
+        //{
+        //    var antiforgery = context.RequestServices.GetService<IAntiforgery>();
+        //    var tokens = antiforgery.GetAndStoreTokens(context);
+        //    return tokens.RequestToken;
+        //}
   
     }
 

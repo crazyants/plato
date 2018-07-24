@@ -735,10 +735,21 @@
 
                     // Get Plato options
                     var platoOpts = this.__getPlatoOptions();
+                    if (platoOpts) {
 
-                    // Combine base URL from Plato options with api URL
-                    options.dropZoneOptions.url = platoOpts.url + options.dropZoneOptions.url;
+                        // Configure dropzone requests from Plato options
+                        options.dropZoneOptions.url = platoOpts.url + options.dropZoneOptions.url;
 
+                        alert(platoOpts.getCsrfCookieToken())
+                        // Configure request headers
+
+                        options.dropZoneOptions.headers = {
+                            "Authorization": "Basic " + platoOpts.apiKey,
+                            "X-Csrf-Token": platoOpts.getCsrfCookieToken()
+                        };
+
+                    }
+                  
              
                     options.dropZoneOptions.init = function() {
 

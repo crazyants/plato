@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Hosting;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Core.Handlers;
 using Plato.Internal.Features.Abstractions;
@@ -14,10 +13,14 @@ namespace Plato.Core
     public class Startup : StartupBase
     {
         private readonly IShellSettings _shellSettings;
+        private readonly string _tenantPrefix;
+        private readonly string _cookieSuffix;
 
         public Startup(IShellSettings shellSettings)
         {
             _shellSettings = shellSettings;
+            _tenantPrefix = shellSettings.RequestedUrlPrefix;
+            _cookieSuffix = shellSettings.AuthCookieName;
         }
 
         public override void ConfigureServices(IServiceCollection services)
@@ -28,7 +31,7 @@ namespace Plato.Core
 
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
-
+            
         }
 
         public override void Configure(

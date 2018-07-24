@@ -11,8 +11,8 @@ namespace Plato.Internal.Data.Schemas.Extensions
             this IServiceCollection services)
         {
 
-            services.AddTransient<ISchemaLoader, SchemaLoader>();
-            services.AddTransient<ISchemaProvider, SchemaProvider>();
+            //services.AddTransient<ISchemaLoader, SchemaLoader>();
+            //services.AddTransient<ISchemaProvider, SchemaProvider>();
             services.AddTransient<ISchemaBuilder, SchemaBuilder>();
 
             return services;

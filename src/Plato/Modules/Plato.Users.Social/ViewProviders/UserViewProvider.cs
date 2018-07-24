@@ -29,12 +29,12 @@ namespace Plato.Users.Social.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
 
             var socialLinks = user.GetOrCreate<SocialLinks>();
 
-            return Views(
+            return Task.FromResult(Views(
                 View<EditSocialViewModel>("Social.Edit.Content", model =>
                 {
                     model.FacebookUrl = socialLinks.FacebookUrl;
@@ -42,7 +42,7 @@ namespace Plato.Users.Social.ViewProviders
                     model.YouTubeUrl = socialLinks.YouTubeUrl;
                     return model;
                 }).Order(10)
-            );
+            ));
 
         }
 

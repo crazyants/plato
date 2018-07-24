@@ -45,7 +45,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
         private object _cssClasses; 
 
-        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
 
             // Get default CSS classes
@@ -66,7 +66,8 @@ namespace Plato.Internal.Layout.TagHelpers
             }
             
             output.PreContent.SetHtmlContent(sb.ToString());
-           
+
+            return Task.CompletedTask;
 
         }
         

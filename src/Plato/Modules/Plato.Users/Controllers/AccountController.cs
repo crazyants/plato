@@ -48,7 +48,7 @@ namespace Plato.Users.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string returnUrl = null)
+        public Task<IActionResult> Login(string returnUrl = null)
         {
 
             var detail = new UserDetail()
@@ -99,7 +99,7 @@ namespace Plato.Users.Controllers
             model.Password = "";
 
             ViewData["ReturnUrl"] = returnUrl;
-            return View(model);
+            return Task.FromResult((IActionResult) View(model));
 
         }
 

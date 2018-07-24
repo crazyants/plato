@@ -5,11 +5,11 @@ namespace Plato.Internal.Security.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-
+        
         public static IServiceCollection AddPlatoSecurity(
             this IServiceCollection services)
         {
-
+            
             // Permissions manager
             services.AddScoped<IPermissionsManager, PermissionsManager>();
             

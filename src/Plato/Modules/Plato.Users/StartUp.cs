@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Abstractions.SetUp;
-using Plato.Internal.Hosting;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
@@ -97,8 +96,6 @@ namespace Plato.Users
             services.AddScoped<IViewProviderManager<UsersIndexViewModel>, ViewProviderManager<UsersIndexViewModel>>();
             services.AddScoped<IViewProvider<UsersIndexViewModel>, AdminIndexViewProvider>();
 
-            //services.AddScoped<IViewProvider<User>, UserViewProvider>();
-            
             // register view drivers
             services.AddScoped<IViewAdaptorProvider, UserListAdaptor>();
 

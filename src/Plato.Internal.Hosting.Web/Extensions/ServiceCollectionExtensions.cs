@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,6 +19,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Data.Extensions;
 using Plato.Internal.FileSystem;
 using Plato.Internal.FileSystem.Abstractions;
@@ -39,6 +41,7 @@ using Plato.Internal.Security.Extensions;
 using Plato.Internal.Logging.Extensions;
 using Plato.Internal.Messaging.Extensions;
 using Plato.Internal.Assets.Extensions;
+using Plato.Internal.Hosting.Web.Configuration;
 using Plato.Internal.Scripting.Extensions;
 using Plato.Internal.Tasks.Extensions;
 using Plato.Internal.Text.Extensions;
@@ -58,15 +61,13 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlato(this IServiceCollection services)
         {
-            
+         
             services.AddPlatoHost();
-            services.ConfigureShell("Sites", "Schemas");
+            services.ConfigureShell("Sites");
             services.AddPlatoSecurity();
             services.AddPlatoAuth();
             services.AddPlatoMvc();
-
-            services.AddPlatoViewAdaptors();
-
+            
             // allows us to display all registered services in development mode
             _services = services;
 
@@ -78,20 +79,23 @@ namespace Plato.Internal.Hosting.Web.Extensions
             return services.AddHPlatoTennetHost(internalServices =>
             {
 
-                internalServices.AddLogging();
-                internalServices.AddOptions();
-                internalServices.AddLocalization();
-                internalServices.AddPlatoCaching();
-                internalServices.AddPlatoText();
-
-                internalServices.AddPlatoModules();
-                internalServices.AddPlatoTheming();
-               
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+                
 
+                //internalServices.ConfigureAntiForgeryy();
+
+                internalServices.AddLogging();
+                internalServices.AddOptions();
+                internalServices.AddLocalization();
+
+                internalServices.AddPlatoCaching();
+                internalServices.AddPlatoText();
+                internalServices.AddPlatoModules();
+                internalServices.AddPlatoTheming();
+            
                 internalServices.AddPlatoViewFeature();
                 internalServices.AddPlatoTagHelpers();
                 internalServices.AddPlatoAssets();
@@ -106,6 +110,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddRepositories();
                 internalServices.AddStores();
                 
+
             });
 
         }
@@ -132,7 +137,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlatoAuth(this IServiceCollection services)
         {
-
+         
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
@@ -169,26 +174,32 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlatoMvc(this IServiceCollection services)
         {
+      
+            // Add mvc core services
+            // --------------
 
-            // add mvc core services
-
+            // localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-
+            
+            // Configure AntiForgery options
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<AntiforgeryOptions>, AntiForgeryOptionsConfiguration>());
+            
+            // Razor & Views
             var builder = services.AddMvcCore()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddViews()
                 .AddRazorViewEngine();
 
-            // add module mvc
+            // view adaptros
+            services.AddPlatoViewAdaptors();
 
+            // Add module mvc
             services.AddPlatoModuleMvc();
 
-            // add default framework parts
-
+            // Add default framework parts
             AddDefaultFrameworkParts(builder.PartManager);
             
-            // add json formatter
-
+            // Add json formatter
             builder.AddJsonFormatters();
 
             return services;

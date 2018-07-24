@@ -15,7 +15,7 @@ namespace Plato.Internal.Layout.Views
         private static readonly ConcurrentDictionary<string, ViewDescriptor> _views =
             new ConcurrentDictionary<string, ViewDescriptor>();
 
-        public async Task<ViewDescriptor> TryAdd(IView view)
+        public Task<ViewDescriptor> TryAdd(IView view)
         {
             
             var descriptor = new ViewDescriptor()
@@ -26,7 +26,7 @@ namespace Plato.Internal.Layout.Views
 
             _views.TryAdd(view.ViewName, descriptor);
 
-            return descriptor;
+            return Task.FromResult(descriptor);
 
         }
 

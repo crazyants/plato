@@ -13,7 +13,6 @@ using Plato.Media.Attributes;
 using Plato.Media.Services;
 using Plato.Media.Stores;
 using Plato.Media.ViewModels;
-using Plato.WebApi.Attributes;
 using Plato.WebApi.Controllers;
 
 namespace Plato.Media.Controllers
@@ -63,8 +62,8 @@ namespace Plato.Media.Controllers
         }
         
 
-        [HttpPost, DisableFormValueModelBinding]
-        /*[ValidateWebApiAntiForgeryToken]*/
+        [HttpPost, DisableFormValueModelBinding, ValidateAntiForgeryToken]
+        
         /*[ValidateAntiForgeryToken]*/
         public async Task<IActionResult> Upload()
         {

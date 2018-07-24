@@ -33,14 +33,6 @@ namespace Plato.WebApi.Controllers
             );
         }
 
-        public ObjectResult NotFound()
-        {
-            return Result(
-                HttpStatusCode.NotFound,
-                "The resource you requested could not be found. It could be the resource has since been deleted."
-            );
-        }
-
         public ObjectResult Result(object result)
         {
             return new ObjectResult(new

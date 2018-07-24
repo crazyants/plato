@@ -20,10 +20,10 @@ namespace Plato.Users.ViewAdaptors
         /// An example implementation of view adaptors
         /// </summary>
         /// <returns></returns>
-        public override async Task<IViewAdaptorResult> ConfigureAsync()
+        public override Task<IViewAdaptorResult> ConfigureAsync()
         {
 
-            return null;
+            return Task.FromResult(default(IViewAdaptorResult));
 
             // Adapt the default UserList view
             //return await Adapt("User.List",

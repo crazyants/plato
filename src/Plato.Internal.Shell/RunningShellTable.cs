@@ -80,8 +80,7 @@ namespace Plato.Internal.Shell
                 }
 
                 var hostAndPrefix = GetHostAndPrefix(host, appRelativePath);
-                IShellSettings result;
-                if (!_shellsByHostAndPrefix.TryGetValue(hostAndPrefix, out result))
+                if (!_shellsByHostAndPrefix.TryGetValue(hostAndPrefix, out var result))
                 {
                     var noHostAndPrefix = GetHostAndPrefix("", appRelativePath);
                     if (!_shellsByHostAndPrefix.TryGetValue(noHostAndPrefix, out result))

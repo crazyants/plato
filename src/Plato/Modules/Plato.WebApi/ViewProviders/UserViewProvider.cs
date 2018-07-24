@@ -34,16 +34,16 @@ namespace Plato.WebApi.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
          
-            return Views(
+            return Task.FromResult(Views(
                 View<EditUserViewModel>("User.Edit.Content", model =>
                 {
                     model.ApiKey = user.ApiKey;
                     return model;
                 }).Order(10)
-            );
+            ));
 
         }
 
