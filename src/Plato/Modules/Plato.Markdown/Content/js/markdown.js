@@ -740,7 +740,7 @@
                         // Configure dropzone requests from Plato options
                         options.dropZoneOptions.url = platoOpts.url + options.dropZoneOptions.url;
 
-                        alert(platoOpts.getCsrfCookieToken())
+                        alert(platoOpts.getCsrfCookieToken());
                         // Configure request headers
 
                         options.dropZoneOptions.headers = {

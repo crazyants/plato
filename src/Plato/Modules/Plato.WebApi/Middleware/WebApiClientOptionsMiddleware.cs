@@ -7,9 +7,17 @@ using Plato.Internal.Scripting.Abstractions;
 
 namespace Plato.WebApi.Middleware
 {
+
+    public static class PlatoAntiForgeryOptions
+    {
+        public static readonly string AjaxCsrfTokenCookieName = "plato_antiforgery_client";
+
+    }
+
     public class WebApiClientOptionsMiddleware
     {
 
+  
         private readonly RequestDelegate _next;
 
         public WebApiClientOptionsMiddleware(RequestDelegate next)
@@ -24,6 +32,14 @@ namespace Plato.WebApi.Middleware
             var scriptManager = context.RequestServices.GetRequiredService<IScriptManager>();
             scriptManager?.RegisterScriptBlock(BuildScriptBlock(context), ScriptSection.Footer);
 
+            // Add client side accessible cookie with our XSRF token, the value of this
+            // cookie is sent with API requests 
+            var antiforgeryOptions = context.RequestServices.GetRequiredService<IOptions<AntiforgeryOptions>>();
+            var antiforgery = context.RequestServices.GetService<IAntiforgery>();
+            var tokens = antiforgery.GetAndStoreTokens(context);
+            context.Response.Cookies.Append(PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName, tokens.RequestToken,
+                new CookieOptions() { HttpOnly = false });
+            
             await _next(context);
 
         }
@@ -31,17 +47,14 @@ namespace Plato.WebApi.Middleware
         ScriptBlock BuildScriptBlock(HttpContext context)
         {
             
-            var options = context.RequestServices.GetRequiredService<IOptions<WebApiOptions>>();
-
-
+            var webApiOptions = context.RequestServices.GetRequiredService<IOptions<WebApiOptions>>();
             var antiforgeryOptions = context.RequestServices.GetRequiredService<IOptions<AntiforgeryOptions>>();
 
             // Register client script to set-up $.Plato.Http
-            var script = "$(function (win) { win.PlatoOptions = { url: '{url}', apiKey: '{apiKey}', csrfHeaderName: '{csrfHeaderName}', csrfCookieName: '{csrfCookieName}' } } (window));";
-            script = script.Replace("{url}", options.Value.Url);
-            script = script.Replace("{apiKey}", options.Value.ApiKey);
-            script = script.Replace("{csrfHeaderName}", antiforgeryOptions.Value.HeaderName);
-            script = script.Replace("{csrfCookieName}", antiforgeryOptions.Value.Cookie.Name);
+            var script = "$(function (win) { win.PlatoOptions = { url: '{url}', apiKey: '{apiKey}', csrfCookieName: '{csrfCookieName}' } } (window));";
+            script = script.Replace("{url}", webApiOptions.Value.Url);
+            script = script.Replace("{apiKey}", webApiOptions.Value.ApiKey);
+            script = script.Replace("{csrfCookieName}", PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName);
 
             return new ScriptBlock(script, int.MinValue);
 
