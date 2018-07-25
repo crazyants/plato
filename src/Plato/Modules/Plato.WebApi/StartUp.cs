@@ -1,5 +1,7 @@
 ﻿using System;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,7 +56,19 @@ namespace Plato.WebApi
             
             // Register client options middleware 
             app.UseMiddleware<WebApiClientOptionsMiddleware>();
-
+            
+            // Add client accessible CSRF toekn for web api requests
+            app.Use(next => ctx =>
+            {
+                // ensure the cookie does not already exist
+                var cookie = ctx.Request.Cookies[PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName];
+                if (cookie == null)
+                {
+                    ctx.Response.Cookies.Append(PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName, System.Guid.NewGuid().ToString(),
+                        new CookieOptions() { HttpOnly = false });
+                }
+                return next(ctx);
+            });
         }
 
 

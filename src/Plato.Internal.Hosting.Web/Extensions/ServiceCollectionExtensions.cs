@@ -83,14 +83,11 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-                
-
-                //internalServices.ConfigureAntiForgeryy();
 
                 internalServices.AddLogging();
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
-
+                
                 internalServices.AddPlatoCaching();
                 internalServices.AddPlatoText();
                 internalServices.AddPlatoModules();
@@ -137,7 +134,11 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         public static IServiceCollection AddPlatoAuth(this IServiceCollection services)
         {
-         
+            
+            // Configure antiForgery options
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<AntiforgeryOptions>, AntiForgeryOptionsConfiguration>());
+
+            // Configure authenticaiton services
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
@@ -181,9 +182,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             
-            // Configure AntiForgery options
-            services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<AntiforgeryOptions>, AntiForgeryOptionsConfiguration>());
-            
+         
             // Razor & Views
             var builder = services.AddMvcCore()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -293,7 +292,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // add authentication middleware
 
             app.UseAuthentication();
-
+            
             // load static files
 
             app.UseStaticFiles();
@@ -317,8 +316,9 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // create uniuqe pipeline for each shell
 
             app.UseMiddleware<PlatoRouterMiddleware>();
-        
+            
             return app;
+
         }
 
         public static void AddThemingApplicationParts(

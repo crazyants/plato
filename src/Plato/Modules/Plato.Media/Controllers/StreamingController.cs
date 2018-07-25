@@ -20,6 +20,7 @@ namespace Plato.Media.Controllers
 {
 
     // https://github.com/aspnet/Docs/tree/master/aspnetcore/mvc/models/file-uploads/sample/FileUploadSample
+
     public class StreamingController : BaseWebApiController
     {
 
@@ -63,7 +64,7 @@ namespace Plato.Media.Controllers
         }
         
 
-        [HttpPost, DisableFormValueModelBinding, ValidateWebApiAntiForgeryToken]
+        [HttpPost, DisableFormValueModelBinding, ValidateClientAntiForgeryToken]
         
         /*[ValidateAntiForgeryToken]*/
         public async Task<IActionResult> Upload()

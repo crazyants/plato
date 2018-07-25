@@ -734,25 +734,28 @@
                 if (!options.dropZoneOptions.init) {
 
                     // Get Plato options
-                    var platoOpts = this.__getPlatoOptions();
+                    var platoOpts = instance.__getPlatoOptions();
                     if (platoOpts) {
+
+                        var csrfToken = platoOpts.getCsrfCookieToken();
+                        if (csrfToken === "") {
+                            alert("An error occurred. No valid CSRF token could be ontained for the request.");
+                        }
 
                         // Configure dropzone requests from Plato options
                         options.dropZoneOptions.url = platoOpts.url + options.dropZoneOptions.url;
 
-                        alert(platoOpts.getCsrfCookieToken());
+                        alert(csrfToken)
                         // Configure request headers
-
                         options.dropZoneOptions.headers = {
                             "Authorization": "Basic " + platoOpts.apiKey,
-                            "X-Csrf-Token": platoOpts.getCsrfCookieToken()
+                            "X-Csrf-Token": csrfToken
                         };
 
                     }
-                  
-             
+                    
                     options.dropZoneOptions.init = function() {
-
+                        
                         var caretPos = 0,
                             allowedUploadExtensions = options.allowedUploadExtensions;
 
@@ -1461,11 +1464,6 @@
 
             e.setSelection(cursor, cursor + chunk.length);
             
-            //// hide dropdown
-            //if ($target.data("dropdownCaller")) {
-            //    $target.data("dropdownCaller").idropdown("hide");
-            //}
-
         },
 
         // inserts markdown header syntax (H1 = #, H2 = ##, H3 = ### etc)
