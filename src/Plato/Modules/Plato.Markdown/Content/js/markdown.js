@@ -79,7 +79,7 @@
         }
       });
     },
-    __buildButtons: function(buttonsArray, container) {
+    __buildButtons: function(buttonsArray, container, editorId) {
 
         var i,
             ns = this.$ns,
@@ -113,7 +113,8 @@
                         hotkeyCaption = typeof jQuery.hotkeys !== 'undefined' && hotkey !== ''
                             ? ' (' + hotkey + ')'
                             : '',
-                        dropdown = typeof button.dropdown !== 'undefined' ? button.dropdown : null;
+                        dropdown = typeof button.dropdown !== 'undefined' ? button.dropdown : null,
+                        dropdownId =  editorId + "-" + y + "-" + z;
 
                     var $button = $('<button type="button" data-toggle="tooltip">');
                     $button.html(this.__localize(btnText))
@@ -134,6 +135,7 @@
                     if (dropdown) {
                         $button.addClass("dropdown-toggle");
                         $button.attr('data-toggle', 'dropdown');
+                        $button.attr("data-dropdown-target", dropdownId);
                     }
 
                     if (button.toggle === true) {
@@ -150,9 +152,17 @@
                     // dropdown
                     if (dropdown) {
 
-                        var $dropdown = $('<div class="btn-group" role="group">');
+                        var $dropdown = $('<div>',
+                            {
+                                "id": dropdownId,
+                                "class": "dropdown"
+                            });
 
-                        var $ul = $('<ul class="dropdown-menu">');
+                        var $ul = $('<ul>',
+                            {
+                                "class": "dropdown-menu"
+
+                            });
                         if (dropdown.css) {
                             $ul.addClass(dropdown.css);
                         }
@@ -202,7 +212,7 @@
                         } else {
 
                             $li = $("<li>");
-                            $li.append(dropdown.html.replace("{baseUrl}", this.$options.baseUrl));
+                            $li.append(dropdown.html);
                             $ul.append($li);
 
                         }
@@ -528,7 +538,7 @@
             
             // Build the buttons
             if (allBtnGroups.length > 0) {
-                editorButtons = this.__buildButtons([allBtnGroups], editorButtons);
+                editorButtons = this.__buildButtons([allBtnGroups], editorButtons, editorId);
             }
 
             if (options.fullscreen.enable) {
@@ -745,7 +755,6 @@
                         // Configure dropzone requests from Plato options
                         options.dropZoneOptions.url = platoOpts.url + options.dropZoneOptions.url;
 
-                        alert(csrfToken)
                         // Configure request headers
                         options.dropZoneOptions.headers = {
                             "Authorization": "Basic " + platoOpts.apiKey,
@@ -1788,6 +1797,68 @@
                                 e.setSelection(cursor, cursor + chunk.length);
 
                             }
+                        }
+                    },
+                    {
+                        name: 'cmdEmoji',
+                        title: 'Add Emoji',
+                        hotkey: 'Ctrl+Y',
+                        dropdown: {
+                            title: "Add Emoji",
+                            width: "500px",
+                            css: "dropdown",
+                            items: null,
+                            html:
+                                '<div class="emoji-dropdown"></div>'
+                        },
+                        icon: {
+                            glyph: 'glyphicon glyphicon-search',
+                            fa: 'fal fa-smile',
+                            'fa-3': 'icon-search',
+                            octicons: 'octicon octicon-search'
+                        },
+                        callback: function (editor, $target) {
+
+                            var placeholderText = editor.__localize("Enter a YouTube or Vimeo URL..."),
+                                buttonText = editor.__localize("Add Video");
+
+                            var $dropdown = editor.$editor.find("#" + $target.attr("data-dropdown-target"));
+                            if ($dropdown.length === 0) {
+                                return;
+                            }
+
+                            win.$.Plato.Http({
+                                url: "api/markdown/emoji/get",
+                                method: "GET"
+                            }).done(function (data) {
+                                
+                                if (data.statusCode === 200) {
+                                    if (data.result) {
+                                        
+                                        var $div = $dropdown.find(".emoji-dropdown");
+                                       
+                                        
+                                        for (var i = 0; i < data.result.length - 1; i++) {
+                                        
+                                            var $a = $("<a>",
+                                                {
+                                                    "href": "#",
+                                                    "class": "dropdown-item",
+                                                    "data-emoji-shortcode": data.result[i].key
+                                                });
+
+                                            $a.html(data.result[i].value);
+                                            $div.append($a);
+                                        }
+                                    }
+                                }
+
+                            });
+
+
+
+
+
                         }
                     },
                     {

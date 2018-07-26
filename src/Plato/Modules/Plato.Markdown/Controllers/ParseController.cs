@@ -6,6 +6,7 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Markdown.Services;
+using Plato.WebApi.Controllers;
 
 namespace Plato.Markdown.Controllers
 {
@@ -17,7 +18,7 @@ namespace Plato.Markdown.Controllers
     }
 
 
-    public class ParseController : Controller
+    public class ParseController : BaseWebApiController
     {
         private readonly IMarkdownParserFactory _markdownParserFactory;
 
@@ -42,14 +43,10 @@ namespace Plato.Markdown.Controllers
 
             var parser = _markdownParserFactory.GetParser();
             var html = await parser.ParseAsync(markdownInput.Markdown);
-            
-            return new ObjectResult(new
-            {
-                html,
-                StatusCode = HttpStatusCode.OK,
-                Message = "Markdown parsed successfully"
-            });
+
+            return base.Result(html);
 
         }
+
     }
 }
