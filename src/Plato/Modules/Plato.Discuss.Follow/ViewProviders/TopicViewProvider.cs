@@ -22,7 +22,14 @@ namespace Plato.Discuss.Follow.ViewProviders
             _contextFacade = contextFacade;
             _entityFollowStore = entityFollowStore;
         }
-        
+
+
+        public override Task<IViewProviderResult> BuildIndexAsync(Topic entity, IUpdateModel updater)
+        {
+            return Task.FromResult(default(IViewProviderResult));
+        }
+
+
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic entity, IUpdateModel updater)
         {
 
@@ -44,7 +51,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             }
             
             return Views(
-                View<FollowViewModel>("Topic.Sidebar", model =>
+                View<FollowViewModel>("Follow.Display.Sidebar", model =>
                 {
                     model.EntityId = entity.Id;
                     model.IsFollowing = isFollowing;
@@ -54,15 +61,34 @@ namespace Plato.Discuss.Follow.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Topic entity, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Topic entity, IUpdateModel updater)
         {
-            return Task.FromResult(default(IViewProviderResult));
-        }
+            if (entity == null)
+            {
+                return await BuildIndexAsync(new Topic(), updater);
+            }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Topic entity, IUpdateModel updater)
-        {
+            var isFollowing = false;
 
-            return Task.FromResult(default(IViewProviderResult));
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user != null)
+            {
+                var entityFollow = await _entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, entity.Id);
+                if (entityFollow != null)
+                {
+                    isFollowing = true;
+                }
+            }
+            
+            return Views(
+                View<FollowViewModel>("Follow.Edit.Sidebar", model =>
+                {
+                    model.EntityId = entity.Id;
+                    model.IsFollowing = isFollowing;
+                    return model;
+                }).Zone("sidebar").Order(2)
+            );
+
         }
 
         public override Task<IViewProviderResult> BuildUpdateAsync(Topic entity, IUpdateModel updater)

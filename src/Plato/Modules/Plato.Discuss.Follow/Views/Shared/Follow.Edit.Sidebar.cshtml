@@ -1,0 +1,61 @@
+﻿@model FollowViewModel
+
+<card>
+    <card-body>
+        
+        @if (Model.EntityId == 0)
+        {
+            <div class="text-muted">
+                @T["Subscribe to get notified via email when updates are posted..."]
+                <br /><br />
+            </div>
+
+            
+            <label for="follow" class="btn btn-block btn-secondary"  data-subscribe-text="@T["Subscribe"]" data-unsubscribe-text="@T["Unsubscribe"]" role="button">
+                <input type="checkbox" data-provide="follow-checkbox" class="hidden" id="follow" />
+               
+                <i class="fal fa-bell"></i>
+                <span>
+                    @T["Subscribe"]
+                </span>
+                
+            </label>
+        }
+        else
+        {
+            @if (!Model.IsFollowing)
+             {
+                 <div class="text-muted">
+                     @T["Subscribe to get notified via email when updates are posted..."]
+                     <br /><br />
+                 </div>
+                 <button class="btn btn-block btn-secondary" data-provide="follow-button" data-subscribe-text="@T["Subscribe"]" data-unsubscribe-text="@T["Unsubscribe"]" data-action="subscribe" data-entity-id="@Model.EntityId" role="button">
+                     <i class="fal fa-bell"></i> 
+                     <span>
+                         @T["Subscribe"]
+                     </span>
+                 </button>
+             }
+             else
+             {
+                 <div class="text-muted">
+                     @T["You are already subscribed to updates. Unsubscribe below..."]
+                     <br /><br />
+                 </div>
+                 <button class="btn btn-block btn-danger" data-provide="follow-button" data-subscribe-text="@T["Subscribe"]" data-unsubscribe-text="@T["Unsubscribe"]" data-action="unsubscribe" data-entity-id="@Model.EntityId" role="button">
+                     <i class="fal fa-bell-slash"></i> 
+                     <span>
+                         @T["Unsubscribe"]
+                     </span>
+                 </button>
+             }
+        }
+
+     
+
+
+    </card-body>
+</card>
+
+
+
