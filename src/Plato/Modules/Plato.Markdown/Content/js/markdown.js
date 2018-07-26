@@ -274,28 +274,28 @@
       }
     },
     __handle: function(e) {
-      var target = $(e.currentTarget),
-        handler = this.$handler,
-        callback = this.$callback,
-        handlerName = target.attr('data-handler'),
-        callbackIndex = handler.indexOf(handlerName),
-        callbackHandler = callback[callbackIndex];
+        var target = $(e.currentTarget),
+            handler = this.$handler,
+            callback = this.$callback,
+            handlerName = target.attr('data-handler'),
+            callbackIndex = handler.indexOf(handlerName),
+            callbackHandler = callback[callbackIndex];
 
-      // Trigger the focusin
-      $(e.currentTarget).focus();
+        // Trigger the focusin
+        $(e.currentTarget).focus();
 
-      callbackHandler(this, target);
+        callbackHandler(this, target);
 
-      // Trigger onChange for each button handle
-      this.change(this);
+        // Trigger onChange for each button handle
+        this.change(this);
+        
+        // Unless it was the save handler,
+        // focusin the textarea
+        if (handlerName.indexOf('cmdSave') < 0) {
+            this.$textarea.focus();
+        }
 
-      // Unless it was the save handler,
-      // focusin the textarea
-      if (handlerName.indexOf('cmdSave') < 0) {
-        this.$textarea.focus();
-      }
-
-      e.preventDefault();
+        e.preventDefault();
     },
     __localize: function(string) {
       var messages = $.fn.markdown.messages,
@@ -380,8 +380,6 @@
             textarea,
             ns = this.$ns,
             container = this.$element,
-            originalHeigth = container.css('height'),
-            originalWidth = container.css('width'),
             editable = this.$editable,
             handler = this.$handler,
             callback = this.$callback,
@@ -438,7 +436,8 @@
                     'href': '#writeTab' + editorId,
                     'text': 'Write',
                     'role': 'tab',
-                    'id': 'writeLink' + editorId
+                    'id': 'writeLink' + editorId,
+                    'data-editor-id': editorId
                 });
 
             writeLink.on("click", function(e) {
@@ -460,10 +459,12 @@
                     'href': '#previewTab' + editorId,
                     'text': 'Preview',
                     'role': 'tab',
-                    'id': 'previewLink' + editorId
+                    'id': 'previewLink' + editorId,
+                    'data-editor-id': editorId
                 });
 
             previewLink.on("click", function (e) {
+                var $ed
                 e.preventDefault();
                 instance.showPreview();
             });
@@ -599,7 +600,7 @@
                 // This is some arbitrary content that could be edited
                 textarea = $('<textarea/>',
                     {
-                        'class': 'i-input md-textarea',
+                        'class': 'form-control md-textarea',
                         'val': currentContent
                     });
 
@@ -687,6 +688,7 @@
             // Set editor attributes, data short-hand API and listener
             this.$editor.attr('id', editorId);
             this.$editor.on('click', '[data-provider="markdown"]', $.proxy(this.__handle, this));
+            
             
             if (this.$element.is(':disabled') || this.$element.is('[readonly]')) {
                 this.$editor.addClass('md-editor-disabled');
@@ -1741,16 +1743,18 @@
                             if ($dropdown.length === 0) {
                                 return;
                             }
-
+                            
                             var $menu = $dropdown.find(".dropdown-menu"),
                                 $input = $menu.find("input"),
                                 $btn = $menu.find("button");
 
                             $input.attr("placeholder", placeholderText);
                             $btn.text(buttonText);
-
+                            
                             $btn.unbind("click").bind("click",
                                 function(ev) {
+
+                                    e.focus();
 
                                     // Give [] surround the selection and prepend the link
                                     var chunk,
@@ -1773,9 +1777,10 @@
                                         // transform selection and set the cursor into chunked text
                                         e.replaceSelection('[' + chunk + '](' + sanitizedLink + ')');
                                         cursor = selected.start + 1;
-
+                                        
                                         // Set the cursor
                                         e.setSelection(cursor, cursor + chunk.length);
+                                        e.$textarea.focus();
                                     }
 
                                 });
@@ -1846,6 +1851,7 @@
 
                                         // Set the cursor
                                         e.setSelection(cursor, cursor + chunk.length);
+                                        e.$textarea.focus();
 
                                     }
 
@@ -1914,7 +1920,7 @@
                                                     if (selected.length === 0) {
                                                         chunk = $(this).attr("title");
                                                     } else {
-                                                        chunk = $(this).attr("title") + selected.text;
+                                                        chunk = $(this).attr("title") + " " + selected.text;
                                                     }
 
                                                     // replace selection
@@ -1922,7 +1928,8 @@
 
                                                     // Set the cursor
                                                     var cursor = selected.start + 1;
-                                                    e.setSelection(cursor, cursor + chunk.length);
+                                                    e.setSelection(cursor + chunk.length, cursor + chunk.length);
+                                                    e.$textarea.focus();
 
                                                 });
 
@@ -1998,6 +2005,7 @@
 
                                         // Set the cursor
                                         e.setSelection(cursor, cursor + chunk.length);
+                                        e.$textarea.focus();
                                     }
 
                                 });

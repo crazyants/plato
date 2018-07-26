@@ -33,7 +33,7 @@
 /* Buttons */
 .btn-toolbar > .btn-group > .btn,
 .btn-toolbar > .btn-group > .dropdown > .btn{ background: white; border: 1px solid #ddd; }
-.btn-toolbar > .btn-group > .btn.disabled { display: none; }
+.btn-toolbar .btn-group .btn.disabled { display: none; }
 
 /* Main border color */
 .md-editor,
