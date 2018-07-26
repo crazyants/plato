@@ -1805,7 +1805,8 @@
                         hotkey: 'Ctrl+Y',
                         dropdown: {
                             title: "Add Emoji",
-                            width: "500px",
+                            width: "440px",
+                            height: "250px",
                             css: "dropdown",
                             items: null,
                             html:
@@ -1817,47 +1818,64 @@
                             'fa-3': 'icon-search',
                             octicons: 'octicon octicon-search'
                         },
-                        callback: function (editor, $target) {
+                        callback: function (e, $target) {
 
-                            var placeholderText = editor.__localize("Enter a YouTube or Vimeo URL..."),
-                                buttonText = editor.__localize("Add Video");
-
-                            var $dropdown = editor.$editor.find("#" + $target.attr("data-dropdown-target"));
+                            var $dropdown = e.$editor.find("#" + $target.attr("data-dropdown-target"));
                             if ($dropdown.length === 0) {
                                 return;
                             }
 
-                            win.$.Plato.Http({
-                                url: "api/markdown/emoji/get",
-                                method: "GET"
-                            }).done(function (data) {
-                                
-                                if (data.statusCode === 200) {
-                                    if (data.result) {
-                                        
-                                        var $div = $dropdown.find(".emoji-dropdown");
-                                       
-                                        
-                                        for (var i = 0; i < data.result.length - 1; i++) {
-                                        
-                                            var $a = $("<a>",
-                                                {
-                                                    "href": "#",
-                                                    "class": "dropdown-item",
-                                                    "data-emoji-shortcode": data.result[i].key
+                            // Ensure we only load the emoji the first time
+                            if (!$dropdown.data("emojiLoaded")) {
+                                win.$.Plato.Http({
+                                    url: "api/markdown/emoji/get",
+                                    method: "GET"
+                                }).done(function(data) {
+                                    if (data.statusCode === 200) {
+                                        if (data.result) {
+
+                                            // Build emoji dropdown
+                                            var $div = $dropdown.find(".emoji-dropdown");
+                                            for (var i = 0; i < data.result.length - 1; i++) {
+                                                $div.append($("<button>",
+                                                    {
+                                                        "type": "button",
+                                                        "role": "button",
+                                                        "title": data.result[i].key,
+                                                        "class": "dropdown-item d-inline float-left px-1 text-center"
+                                                    }).html(data.result[i].value));
+                                            }
+                                            $dropdown.data("emojiLoaded", true);
+
+                                            // Bind click events for emoji buttons
+                                            $div.find("button").on("click",
+                                                function (ev) {
+
+                                                    ev.preventDefault();
+
+                                                    var chunk,
+                                                        code = $(this).attr("title"),
+                                                        selected = e.getSelection();
+
+                                                    if (selected.length === 0) {
+                                                        chunk = code;
+                                                    } else {
+                                                        chunk = code + selected.text;
+                                                    }
+
+                                                    // replace selection
+                                                    e.replaceSelection(chunk);
+
+                                                    // Set the cursor
+                                                    var cursor = selected.start + 1;
+                                                    e.setSelection(cursor, cursor + chunk.length);
+
                                                 });
 
-                                            $a.html(data.result[i].value);
-                                            $div.append($a);
                                         }
                                     }
-                                }
-
-                            });
-
-
-
-
+                                });
+                            }
 
                         }
                     },
@@ -1902,7 +1920,8 @@
                           'fa-3': 'icon-list-ul',
                           octicons: 'octicon octicon-list-unordered'
                       },
-                      callback: function(e) {
+                      callback: function (e) {
+
                           // Prepend/Give - surround the selection
                           var chunk,
                               cursor,

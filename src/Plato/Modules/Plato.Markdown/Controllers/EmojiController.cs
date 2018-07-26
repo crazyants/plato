@@ -10,13 +10,10 @@ namespace Plato.Markdown.Controllers
         
         private static readonly Dictionary<string, string> EmojiToUnicodeDefault = new Dictionary<string, string>()
         {
-            {":100:", "💯"},
-            {":1234:", "🔢"},
             {":smile:", "😄"},
             {":smiley:", "😃"},
             {":grinning:", "😀"},
             {":blush:", "😊"},
-            {":relaxed:", "☺️"},
             {":wink:", "😉"},
             {":heart_eyes:", "😍"},
             {":kissing_heart:", "😘"},
@@ -880,6 +877,9 @@ namespace Plato.Markdown.Controllers
             {":large_blue_diamond:", "🔷"},
             {":small_orange_diamond:", "🔸"},
             {":small_blue_diamond:", "🔹"},
+
+            {":100:", "💯"},
+            {":1234:", "🔢"},
 
             // Custom additions
             {":custom_arrow_left:", "←"},
