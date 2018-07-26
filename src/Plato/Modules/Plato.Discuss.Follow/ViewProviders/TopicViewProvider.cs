@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Models;
+using Plato.Entities.Stores;
 using Plato.Follow.Models;
 using Plato.Follow.Stores;
 using Plato.Follow.ViewModels;
@@ -12,15 +15,24 @@ namespace Plato.Discuss.Follow.ViewProviders
     public class TopicViewProvider : BaseViewProvider<Topic>
     {
 
+        private const string FollowHtmlName = "follow";
+
+
         private readonly IContextFacade _contextFacade;
         private readonly IEntityFollowStore<EntityFollow> _entityFollowStore;
-
+        private readonly IEntityStore<Topic> _entityStore;
+        private readonly HttpRequest _request;
+ 
         public TopicViewProvider(
             IContextFacade contextFacade,
-            IEntityFollowStore<EntityFollow> entityFollowStore)
+            IHttpContextAccessor httpContextAccessor,
+            IEntityFollowStore<EntityFollow> entityFollowStore,
+            IEntityStore<Topic> entityStore)
         {
             _contextFacade = contextFacade;
             _entityFollowStore = entityFollowStore;
+            _entityStore = entityStore;
+            _request = httpContextAccessor.HttpContext.Request;
         }
 
 
@@ -83,6 +95,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             return Views(
                 View<FollowViewModel>("Follow.Edit.Sidebar", model =>
                 {
+                    model.FollowHtmlName = FollowHtmlName;
                     model.EntityId = entity.Id;
                     model.IsFollowing = isFollowing;
                     return model;
@@ -91,10 +104,59 @@ namespace Plato.Discuss.Follow.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Topic entity, IUpdateModel updater)
-        {
-            return Task.FromResult(default(IViewProviderResult));
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IUpdateModel updater)
+        {  
+            
+            // Ensure entity exists before attempting to update
+            var entity = await _entityStore.GetByIdAsync(topic.Id);
+            if (entity == null)
+            {
+                return await BuildEditAsync(topic, updater);
+            }
+            
+            // Get the follow checkbox value
+            var follow = false;
+            foreach (var key in _request.Form.Keys)
+            {
+                if (key.StartsWith(FollowHtmlName))
+                {
+                    var values = _request.Form[key];
+                    foreach (var value in values)
+                    {
+                        bool.TryParse(value, out follow);
+                        if (follow)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Not following, no need to continue
+            if (!follow)
+            {
+                return await BuildEditAsync(topic, updater);
+                
+            }
+
+            // Add the follow
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+
+            }
+
+            // Add and return result
+            await _entityFollowStore.CreateAsync(new EntityFollow()
+            {
+                EntityId = entity.Id,
+                UserId = user.Id,
+                CreatedDate = DateTime.UtcNow
+            });
+
+            return await BuildEditAsync(topic, updater);
+
         }
-        
+
     }
 }

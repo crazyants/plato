@@ -187,7 +187,7 @@ $(function (win, doc, $) {
                 }).done(function(data) {
                     
                     if (data.statusCode === 200) {
-                        $caller.entityFollowToggle("enable");
+                        $caller.entityFollowToggler("enable");
                     }
                  
                 });
@@ -206,7 +206,7 @@ $(function (win, doc, $) {
                 }).done(function (data) {
 
                     if (data.statusCode === 200) {
-                        $caller.entityFollowToggle("disable");
+                        $caller.entityFollowToggler("disable");
                     }
 
                 });
@@ -460,7 +460,6 @@ $(function (win, doc, $) {
         }
 
     }();
-
     
     $.fn.extend({
         entityFollowButton: entityFollowButton.init,

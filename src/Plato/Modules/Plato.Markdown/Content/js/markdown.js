@@ -560,9 +560,9 @@
             }
             if (options.fullscreen.enable && options.fullscreen !== false) {
                 editorButtons.append('<div class="btn-group md-fullscreen-controls">' +
-                        '<div class="btn-group"><button class="btn md-exit-fullscreen" title="Exit fullscreen"><i class="' +
+                        '<button class="btn md-exit-fullscreen" title="Exit fullscreen"><i class="' +
                         this.__getIcon(options.fullscreen.icons.fullscreenOff) +
-                        '"></i></button></div>' +
+                        '"></i></button>' +
                         '</div>')
                     .on('click',
                         '.md-exit-fullscreen',

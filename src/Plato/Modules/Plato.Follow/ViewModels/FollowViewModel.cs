@@ -5,6 +5,8 @@
 
         public int EntityId { get; set; }
 
+        public string FollowHtmlName { get; set; }
+
         public bool IsFollowing { get; set; }
 
     }
