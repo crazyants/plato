@@ -966,7 +966,7 @@
             data: JSON.stringify({
                 markdown: $textarea.val()
             })
-        }).done(function (data) {
+        }).done(function (response) {
 
             // Update tabs
             $writeLink.removeClass("active");
@@ -975,11 +975,10 @@
             $previewLink.addClass("active");
             $previewTab.show();
 
-
-            if (data.statusCode === 200) {
+            if (response.statusCode === 200) {
                 $previewTab
                     .empty()
-                    .html(data.html);
+                    .html(response.result);
             }
             
         });
@@ -1719,84 +1718,140 @@
                         name: 'cmdLink',
                         title: 'Link To URL',
                         hotkey: 'Ctrl+L',
+                        dropdown: {
+                            title: "Link To URL",
+                            width: "450px",
+                            css: "dropdown",
+                            items: null,
+                            html:
+                                '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary"></button></fieldset></div>'
+                        },
                         icon: {
                             glyph: 'glyphicon glyphicon-link',
                             fa: 'fal fa-link',
                             'fa-3': 'icon-link',
                             octicons: 'octicon octicon-link'
                         },
-                        callback: function (e) {
+                        callback: function (e, $target) {
 
-                            // Give [] surround the selection and prepend the link
-                            var chunk,
-                                cursor,
-                                selected = e.getSelection(),
-                                content = e.getContent(),
-                                link = null;
+                            var placeholderText = e.__localize("https://"),
+                                buttonText = e.__localize("Add Link");
 
-                            if (selected.length === 0) {
-                                // Give extra word
-                                chunk = e.__localize('enter link description here');
-                            } else {
-                                chunk = selected.text;
+                            var $dropdown = e.$editor.find("#" + $target.attr("data-dropdown-target"));
+                            if ($dropdown.length === 0) {
+                                return;
                             }
 
-                            link = prompt(e.__localize('Insert Hyperlink'), 'http://');
+                            var $menu = $dropdown.find(".dropdown-menu"),
+                                $input = $menu.find("input"),
+                                $btn = $menu.find("button");
 
-                            //var urlRegex = new RegExp('^((http|https)://|(mailto:)|(//))[a-z0-9]', 'i');
-                            if (link !== null && link !== '' && link !== 'http://' && link !== 'https://') {
-                                var sanitizedLink = $('<div>' + link + '</div>').text();
+                            $input.attr("placeholder", placeholderText);
+                            $btn.text(buttonText);
 
-                                // transform selection and set the cursor into chunked text
-                                e.replaceSelection('[' + chunk + '](' + sanitizedLink + ')');
-                                cursor = selected.start + 1;
+                            $btn.unbind("click").bind("click",
+                                function(ev) {
 
-                                // Set the cursor
-                                e.setSelection(cursor, cursor + chunk.length);
-                            }
+                                    // Give [] surround the selection and prepend the link
+                                    var chunk,
+                                        cursor,
+                                        selected = e.getSelection(),
+                                        content = e.getContent(),
+                                        link = $input.val().trim();
+
+                                    if (selected.length === 0) {
+                                        // Give extra word
+                                        chunk = e.__localize('enter link description here');
+                                    } else {
+                                        chunk = selected.text;
+                                    }
+                                    
+                                    //var urlRegex = new RegExp('^((http|https)://|(mailto:)|(//))[a-z0-9]', 'i');
+                                    if (link !== null && link !== '' && link !== 'http://' && link !== 'https://') {
+                                        var sanitizedLink = $('<div>' + link + '</div>').text();
+
+                                        // transform selection and set the cursor into chunked text
+                                        e.replaceSelection('[' + chunk + '](' + sanitizedLink + ')');
+                                        cursor = selected.start + 1;
+
+                                        // Set the cursor
+                                        e.setSelection(cursor, cursor + chunk.length);
+                                    }
+
+                                });
+
+
                         }
                     }, {
                         name: 'cmdImage',
                         title: 'Link To Image',
                         hotkey: 'Ctrl+G',
+                        dropdown: {
+                            title: "Link To Image",
+                            width: "450px",
+                            css: "dropdown",
+                            items: null,
+                            html:
+                                '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary"></button></fieldset></div>'
+                        },
                         icon: {
                             glyph: 'glyphicon glyphicon-picture',
                             fa: 'fal fa-image',
                             'fa-3': 'icon-picture',
                             octicons: 'octicon octicon-file-media'
                         },
-                        callback: function (e) {
+                        callback: function (e, $target) {
 
-                            // Give ![] surround the selection and prepend the image link
-                            var chunk,
-                                cursor,
-                                selected = e.getSelection(),
-                                content = e.getContent();
-
-                            if (selected.length === 0) {
-                                // Give extra word
-                                chunk = e.__localize('enter image description here');
-                            } else {
-                                chunk = selected.text;
+                            var placeholderText = e.__localize("https://"),
+                                buttonText = e.__localize("Add Image");
+                              
+                            var $dropdown = e.$editor.find("#" + $target.attr("data-dropdown-target"));
+                            if ($dropdown.length === 0) {
+                                return;
                             }
 
-                            var link = prompt(e.__localize('Insert Image Hyperlink'), 'http://');
+                            var $menu = $dropdown.find(".dropdown-menu"),
+                                $input = $menu.find("input"),
+                                $btn = $menu.find("button");
 
-                            var urlRegex = new RegExp('^((http|https)://|(//))[a-z0-9]', 'i');
-                            if (link !== null && link !== '' && link !== 'http://' && urlRegex.test(link)) {
-                                var sanitizedLink = $('<div>' + link + '</div>').text();
+                            $input.attr("placeholder", placeholderText);
+                            $btn.text(buttonText);
+                            
+                            $btn.unbind("click").bind("click",
+                                function (ev) {
+                                    
+                                    // Give ![] surround the selection and prepend the image link
+                                    var chunk,
+                                        cursor,
+                                        selected = e.getSelection();
 
-                                // transform selection and set the cursor into chunked text
-                                e.replaceSelection('![' + chunk + '](' + sanitizedLink + ' "' + e.__localize('enter image title here') + '")');
-                                cursor = selected.start + 2;
+                                    if (selected.length === 0) {
+                                        // Give extra word
+                                        chunk = e.__localize('enter image description here');
+                                    } else {
+                                        chunk = selected.text;
+                                    }
 
-                                // Set the next tab
-                                e.setNextTab(e.__localize('enter image title here'));
+                                    var link = $input.val().trim();
 
-                                // Set the cursor
-                                e.setSelection(cursor, cursor + chunk.length);
+                                    var urlRegex = new RegExp('^((http|https)://|(//))[a-z0-9]', 'i');
+                                    if (link !== null && link !== '' && link !== 'http://' && urlRegex.test(link)) {
 
-                            }
+                                        var sanitizedLink = $('<div>' + link + '</div>').text();
+                                        e.replaceSelection('![' + chunk + '](' + sanitizedLink + ' "' + e.__localize('enter image title here') + '")');
+                                        cursor = selected.start + 2;
+
+                                        // Set the next tab
+                                        e.setNextTab(e.__localize('enter image title here'));
+
+                                        // Set the cursor
+                                        e.setSelection(cursor, cursor + chunk.length);
+
+                                    }
+
+                                });
+
+
                         }
                     },
                     {
@@ -1805,8 +1860,8 @@
                         hotkey: 'Ctrl+Y',
                         dropdown: {
                             title: "Add Emoji",
-                            width: "440px",
-                            height: "250px",
+                            width: "418px",
+                            height: "225px",
                             css: "dropdown",
                             items: null,
                             html:
@@ -1830,20 +1885,20 @@
                                 win.$.Plato.Http({
                                     url: "api/markdown/emoji/get",
                                     method: "GET"
-                                }).done(function(data) {
-                                    if (data.statusCode === 200) {
-                                        if (data.result) {
+                                }).done(function (response) {
+                                    if (response.statusCode === 200) {
+                                        if (response.result) {
 
                                             // Build emoji dropdown
                                             var $div = $dropdown.find(".emoji-dropdown");
-                                            for (var i = 0; i < data.result.length - 1; i++) {
+                                            for (var i = 0; i < response.result.length - 1; i++) {
                                                 $div.append($("<button>",
                                                     {
                                                         "type": "button",
                                                         "role": "button",
-                                                        "title": data.result[i].key,
+                                                        "title": response.result[i].key,
                                                         "class": "dropdown-item d-inline float-left px-1 text-center"
-                                                    }).html(data.result[i].value));
+                                                    }).html(response.result[i].value));
                                             }
                                             $dropdown.data("emojiLoaded", true);
 
@@ -1854,13 +1909,12 @@
                                                     ev.preventDefault();
 
                                                     var chunk,
-                                                        code = $(this).attr("title"),
                                                         selected = e.getSelection();
 
                                                     if (selected.length === 0) {
-                                                        chunk = code;
+                                                        chunk = $(this).attr("title");
                                                     } else {
-                                                        chunk = code + selected.text;
+                                                        chunk = $(this).attr("title") + selected.text;
                                                     }
 
                                                     // replace selection
@@ -1881,27 +1935,73 @@
                     },
                     {
                         name: 'cmdVideo',
-                        title: 'Embed Video',
+                        title: 'Add Video',
                         hotkey: 'Ctrl+Y',
                         dropdown: {
                             title: "Embed Video",
-                            width: "500px",
+                            width: "450px",
                             css: "dropdown",
                             items: null,
                             html:
-                                '<table class="i-table"><tr><td><div class="i-row"><input type="text" style="width: 100%;" class="i-input i-text-box"/></div><div class="i-row i-margin-top"><a href="#" class="btn btn-full btn-2x btn-primary"><span></span></a></div></td></tr></table>'
+                                '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary"></button></fieldset></div>'
                         },
                         icon: {
                             glyph: 'glyphicon glyphicon-search',
-                            fa: 'fal fa-play',
+                            fa: 'fal fa-film',
                             'fa-3': 'icon-search',
                             octicons: 'octicon octicon-search'
                         },
-                        callback: function (editor, $target) {
+                        callback: function (e, $target) {
 
-                            var placeholderText = editor.__localize("Enter a YouTube or Vimeo URL..."),
-                                buttonText = editor.__localize("Add Video");
+                            var title = e.__localize("Enter a YouTube or Vimeo URL..."),
+                                placeholderText = e.__localize("https://www.youtube.com/watch?v=mswPy5bt3TQ"),
+                                buttonText = e.__localize("Add Video"),
+                                notSupported =
+                                    e.__localize(
+                                        "You can only embed YouTube or Vimeo videos.");
 
+                            var $dropdown = e.$editor.find("#" + $target.attr("data-dropdown-target"));
+                            if ($dropdown.length === 0) {
+                                return;
+                            }
+
+                            var $menu = $dropdown.find(".dropdown-menu"),
+                                $input = $menu.find("input"),
+                                $btn = $menu.find("button");
+
+                            $input.attr("placeholder", placeholderText);
+                            $btn.text(buttonText);
+
+                            $btn.unbind("click").bind("click",
+                                function(ev) {
+                                    
+                                    var chunk = null,
+                                        cursor,
+                                        selected = e.getSelection(),
+                                        link = $input.val().trim() || "";
+                                    
+                                    if (link.toLowerCase().indexOf("youtube.com") > 0) { chunk = "Video1"; }
+                                    if (link.toLowerCase().indexOf("vimeo.com") > 0) { chunk = "Video2"; }
+
+                                    // Url not supported
+                                    if (chunk == null) {
+                                        ev.stopPropagation();
+                                        alert(notSupported);
+                                        $input.focus();
+                                        return;
+                                    }
+
+                                    if (link !== "" && link !== "http://" && link !== "https://") {
+
+                                        var sanitizedLink = $('<div>' + link + '</div>').text();
+                                        e.replaceSelection('![' + chunk + '](' + sanitizedLink + ')');
+                                        cursor = selected.start + 1;
+
+                                        // Set the cursor
+                                        e.setSelection(cursor, cursor + chunk.length);
+                                    }
+
+                                });
 
                         }
                     }
