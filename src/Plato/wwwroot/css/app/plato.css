@@ -10,6 +10,14 @@
 /* ------------------------- */
 
 .user-content img { max-width: 100%; } 
+.user-content blockquote p { padding: 0.75rem; }
+.user-content blockquote p,
+.user-content blockquote p.primary{ border: 1px solid #D9DDE7; border-left: 4px solid #007bff; background: #F3F7FF; }
+.user-content blockquote p.secondary { border: 1px solid #eee; border-left: 4px solid #ccc; background: #f8f8f8; }
+.user-content blockquote p.success { border: 1px solid #D9DDE7; border-left: 4px solid #08B735; background: #EFFFF3; }
+.user-content blockquote p.info { border: 1px solid #E0E9E8; border-left: 4px solid #299E97; background: #F9FFFF; }
+.user-content blockquote p.warning { border: 1px solid #E6DFD8; border-left: 4px solid #F6A800; background: #FFF8F1; }
+.user-content blockquote p.danger { border: 1px solid #E8D8D8; border-left: 4px solid red; background: #FFF0F0; }
 
 /* ------------------------- */
 /* Grid system */

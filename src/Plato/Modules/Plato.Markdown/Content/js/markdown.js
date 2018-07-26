@@ -189,7 +189,7 @@
                                     itemHotkey = item.hotkey || "",
                                     itemValue = item.value || "";
 
-                                var $a = $('<a href="#" class="dropdown-item">');
+                                var $a = $('<button role="button" type="button" class="dropdown-item">');
                                 $a.html(item.text)
                                     .attr({
                                         'title': item.tooltip ? this.__localize(item.tooltip) + itemHotkey : "",
@@ -1724,7 +1724,7 @@
                             css: "dropdown",
                             items: null,
                             html:
-                                '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary"></button></fieldset></div>'
+                                '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary mt-2"></button></fieldset></div>'
                         },
                         icon: {
                             glyph: 'glyphicon glyphicon-link',
@@ -1792,7 +1792,7 @@
                             css: "dropdown",
                             items: null,
                             html:
-                                '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary"></button></fieldset></div>'
+                                '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary mt-2"></button></fieldset></div>'
                         },
                         icon: {
                             glyph: 'glyphicon glyphicon-picture',
@@ -1943,7 +1943,7 @@
                             css: "dropdown",
                             items: null,
                             html:
-                                '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary"></button></fieldset></div>'
+                                '<div class="m-2"><fieldset><input type="link" class="form-control"/><button role="button" type="button" class="btn btn-block btn-primary mt-2"></button></fieldset></div>'
                         },
                         icon: {
                             glyph: 'glyphicon glyphicon-search',
@@ -1953,8 +1953,7 @@
                         },
                         callback: function (e, $target) {
 
-                            var title = e.__localize("Enter a YouTube or Vimeo URL..."),
-                                placeholderText = e.__localize("https://www.youtube.com/watch?v=mswPy5bt3TQ"),
+                            var placeholderText = e.__localize("https://www.youtube.com/watch?v=mswPy5bt3TQ"),
                                 buttonText = e.__localize("Add Video"),
                                 notSupported =
                                     e.__localize(
@@ -1984,7 +1983,7 @@
                                     if (link.toLowerCase().indexOf("vimeo.com") > 0) { chunk = "Video2"; }
 
                                     // Url not supported
-                                    if (chunk == null) {
+                                    if (link !== "" && chunk == null) {
                                         ev.stopPropagation();
                                         alert(notSupported);
                                         $input.focus();
@@ -2134,14 +2133,14 @@
                       dropdown: {
                           title: "Blockquote",
                           width: "200px",
-                          css: "dropdown md-blockquote-dropdown",
+                          css: "dropdown quote-dropdown user-content",
                           items: [
                               {
                                   name: 'cmdBlockquotePrimary',
                                   hotkey: "",
                                   text:
-                                      '<blockquote class="i-blockquote i-blockquote-primary"><p>Primary</p></blockquote>',
-                                  value: "> {primary} ",
+                                      '<blockquote><p class="primary">Primary</p></blockquote>',
+                                  value: '> {class="primary"} ',
                                   callback: function(e, $target) {
                                       $.fn.markdown.handlers.insertQuote(e, $target);
                                   }
@@ -2149,8 +2148,8 @@
                               {
                                   name: 'cmdBlockquoteDefault',
                                   text:
-                                      '<blockquote class="i-blockquote i-blockquote-default"><p>Default</p></blockquote>',
-                                  value: "> {default} ",
+                                      '<blockquote><p class="secondary">Secondary</p></blockquote>',
+                                  value: '> {class="secondary"} ',
                                   callback: function(e, $target) {
                                       $.fn.markdown.handlers.insertQuote(e, $target);
                                   }
@@ -2158,16 +2157,16 @@
                               {
                                   name: 'cmdBlockquoteSuccess',
                                   text:
-                                      '<blockquote class="i-blockquote i-blockquote-success"><p>Success</p></blockquote>',
-                                  value: "> {success} ",
+                                      '<blockquote><p class="success">Success</p></blockquote>',
+                                  value: '> {class="success"} ',
                                   callback: function(e, $target) {
                                       $.fn.markdown.handlers.insertQuote(e, $target);
                                   }
                               },
                               {
                                   name: 'cmdBlockquoteInfo',
-                                  text: '<blockquote class="i-blockquote i-blockquote-info"><p>Info</p></blockquote>',
-                                  value: "> {info} ",
+                                  text: '<blockquote><p class="info">Info</p></blockquote>',
+                                  value: '> {class="info"} ',
                                   callback: function(e, $target) {
                                       $.fn.markdown.handlers.insertQuote(e, $target);
                                   }
@@ -2175,8 +2174,8 @@
                               {
                                   name: 'cmdBlockquoteWarning',
                                   text:
-                                      '<blockquote class="i-blockquote i-blockquote-warning"><p>Warning</p></blockquote>',
-                                  value: "> {warning} ",
+                                      '<blockquote><p class="warning">Warning</p></blockquote>',
+                                  value: '> {class="warning"} ',
                                   callback: function(e, $target) {
                                       $.fn.markdown.handlers.insertQuote(e, $target);
                                   }
@@ -2184,8 +2183,8 @@
                               {
                                   name: 'cmdBlockquoteDanger',
                                   text:
-                                      '<blockquote class="i-blockquote i-blockquote-danger"><p>Danger</p></blockquote>',
-                                  value: "> {danger} ",
+                                      '<blockquote><p class="danger">Danger</p></blockquote>',
+                                  value: '> {class="danger"} ',
                                   callback: function(e, $target) {
                                       $.fn.markdown.handlers.insertQuote(e, $target);
                                   }
@@ -2246,68 +2245,6 @@
 
                           // Set the cursor
                           e.setSelection(cursor, cursor + chunk.length);
-                      }
-                  }
-              ]
-          }, {
-              name: 'groupEmbed',
-              css: 'btn-group mr-1',
-              data: [
-                  {
-                      name: 'cmdLinkContent',
-                      title: 'Link To Article',
-                      hotkey: 'Ctrl+L',
-                      dropdown: {
-                          title: "Link To Article",
-                          width: "600px",
-                          css: "dropdown",
-                          items: null,
-                          html:
-                              '<table class="i-table"><tr><td><div class="i-input-group i-dropdown"><input type="text" style="width: 100%;" class="i-input i-text-box" data-autocomplete-url="{baseUrl}api/search?page_index={pageIndex}&page_size={pageSize}" data-autocomplete-page-size="10" data-dropdown-arrow="false"/><ul class="i-dropdown-menu"><li style="height: 100%;"><div class="i-loader-jumbo"><div class="i-loader i-loader-inverted i-loader-2x"></div></div></li></ul></div></td></tr></table>'
-                      },
-                      icon: {
-                          glyph: 'glyphicon glyphicon-search',
-                          fa: 'fal fa-hashtag',
-                          'fa-3': 'icon-search',
-                          octicons: 'octicon octicon-search'
-                      },
-                      callback: function(editor, $target) {
-
-                          var placeholderText = editor.__localize("Search for articles to link to...");
-
-
-                      }
-                  },
-                  {
-                      name: 'cmdCannedReply',
-                      title: 'Canned Replies',
-                      hotkey: 'Ctrl+L',
-                      dropdown: {
-                          title: "Canned Replies",
-                          width: "250px",
-                          height: "350px",
-                          css: "dropdown-right",
-                          items: null,
-                          html:
-                              '<div class="i-loader-jumbo"><div class="i-loader i-loader-2x i-loader-inverted"></div></div>',
-                      },
-                      icon: {
-                          glyph: 'glyphicon glyphicon-search',
-                          fa: 'fal fa-edit',
-                          'fa-3': 'icon-search',
-                          octicons: 'octicon octicon-search'
-                      },
-                      callback: function(editor, $target) {
-
-                          var ajaxUrl = editor.$textarea.data("standardReplyUrl");
-                          if (ajaxUrl) {
-                              
-
-                          } else {
-                              alert("No data-standard-reply-url has been defined on the editor.$textarea");
-                          }
-
-
                       }
                   }
               ]
