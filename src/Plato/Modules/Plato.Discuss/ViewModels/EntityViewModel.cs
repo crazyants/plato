@@ -6,8 +6,6 @@ namespace Plato.Discuss.ViewModels
     public class EditEntityViewModel : NewEntityReplyViewModel
     {
 
-        public int EntityId { get; set; }
-
         [Required]
         [MinLength(4)]
         [MaxLength(255)]
@@ -19,6 +17,8 @@ namespace Plato.Discuss.ViewModels
     public class NewEntityReplyViewModel
     {
     
+        public int EntityId { get; set; }
+
         [Required]
         [MinLength(5)]
         [Display(Name = "message")]
@@ -27,6 +27,5 @@ namespace Plato.Discuss.ViewModels
         public string EditorHtmlName { get; set; }
 
     }
-
-
+    
 }

@@ -101,7 +101,7 @@ namespace Plato.Discuss.ViewProviders
                 View<HomeTopicViewModel>("Home.Topic.Content", model => topivViewModel).Zone("content"),
                 View<NewEntityReplyViewModel>("Home.Topic.Footer", model => new NewEntityReplyViewModel()
                 {
-                    
+                    EntityId = topic.Id,
                     EditorHtmlName = EditorHtmlName
                 }).Zone("footer")
             );

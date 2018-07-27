@@ -26,16 +26,12 @@
 }
 
 /* disable avatar column for smaller devices */
-/* below 1024px */
 @media only screen and (max-width : 1124px) 
 {   
-
     .topic-reply-left { display: none; }
     .topic-reply-left + .topic-reply-body { margin-left: 0; }
-
     .topic-reply-right { display: none; }
     .topic-reply-right + .topic-reply-body { margin-right: 0; }
-
 }
 
 /* add reaction drop down */

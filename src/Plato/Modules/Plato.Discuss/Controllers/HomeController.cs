@@ -26,10 +26,10 @@ namespace Plato.Discuss.Controllers
 
         #region "Constructor"
         
-        private readonly IViewProviderManager<Topic> _discussViewProvider;
-        private readonly ISiteSettingsStore _settingsStore;
+        private readonly IViewProviderManager<Topic> _topicViewProvider;
         private readonly IEntityStore<Topic> _entityStore;
-      
+        private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
+
         private readonly IPostManager<Topic> _postManager;
         private readonly IAlerter _alerter;
         
@@ -37,17 +37,15 @@ namespace Plato.Discuss.Controllers
         
         public HomeController(
             IHtmlLocalizer<HomeController> localizer,
-            ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IEntityStore<Topic> entityStore,
-            IViewProviderManager<Topic> discussViewProvider,
+            IViewProviderManager<Topic> topicViewProvider,
             IPostManager<Topic> postManager,
             IAlerter alerter)
         {
-            _settingsStore = settingsStore;
             _postManager = postManager;
             _entityStore = entityStore;
-            _discussViewProvider = discussViewProvider;
+            _topicViewProvider = topicViewProvider;
             _alerter = alerter;
             T = localizer;
         }
@@ -80,7 +78,7 @@ namespace Plato.Discuss.Controllers
             this.RouteData.Values.Add("page", pagerOptions.Page);
          
             // Build view
-            var result = await _discussViewProvider.ProvideIndexAsync(new Topic(), this);
+            var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);
 
             // Return view
             return View(result);
@@ -91,7 +89,7 @@ namespace Plato.Discuss.Controllers
         public async Task<IActionResult> Create()
         {
             
-            var result = await _discussViewProvider.ProvideEditAsync(new Topic(), this);
+            var result = await _topicViewProvider.ProvideEditAsync(new Topic(), this);
 
             // Return view
             return View(result);
@@ -105,7 +103,7 @@ namespace Plato.Discuss.Controllers
         {
             
             // Validate model state within all view providers
-            if (await _discussViewProvider.IsModelStateValid(new Topic()
+            if (await _topicViewProvider.IsModelStateValid(new Topic()
             {
                 Title = model.Title,
                 Message = model.Message
@@ -125,7 +123,7 @@ namespace Plato.Discuss.Controllers
                 {
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _discussViewProvider.ProvideUpdateAsync(topic.Response, this);
+                    await _topicViewProvider.ProvideUpdateAsync(topic.Response, this);
 
                     // Everything was OK
                     _alerter.Success(T["Topic Created Successfully!"]);
@@ -192,7 +190,7 @@ namespace Plato.Discuss.Controllers
             
 
             // Build view
-            var result = await _discussViewProvider.ProvideDisplayAsync(topic, this);
+            var result = await _topicViewProvider.ProvideDisplayAsync(topic, this);
 
             // Return view
             return View(result);
@@ -210,7 +208,7 @@ namespace Plato.Discuss.Controllers
                 return NotFound();
             }
             
-            var result = await _discussViewProvider.ProvideUpdateAsync(topic, this);
+            var result = await _topicViewProvider.ProvideUpdateAsync(topic, this);
 
             if (!ModelState.IsValid)
             {
@@ -232,7 +230,7 @@ namespace Plato.Discuss.Controllers
                 return NotFound();
             }
 
-            var result = await _discussViewProvider.ProvideEditAsync(topic, this);
+            var result = await _topicViewProvider.ProvideEditAsync(topic, this);
 
             // Return view
             return View(result);
@@ -246,7 +244,7 @@ namespace Plato.Discuss.Controllers
         {
 
             // Validate model state within all view providers
-            if (await _discussViewProvider.IsModelStateValid(new Topic()
+            if (await _topicViewProvider.IsModelStateValid(new Topic()
             {
                 Title = model.Title,
                 Message = model.Message
@@ -266,7 +264,7 @@ namespace Plato.Discuss.Controllers
                 {
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _discussViewProvider.ProvideUpdateAsync(topic.Response, this);
+                    await _topicViewProvider.ProvideUpdateAsync(topic.Response, this);
 
                     // Everything was OK
                     _alerter.Success(T["Topic Created Successfully!"]);
