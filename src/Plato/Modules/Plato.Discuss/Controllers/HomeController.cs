@@ -209,15 +209,14 @@ namespace Plato.Discuss.Controllers
         {
             
             // Validate model state within all view providers
-            if (await _topicViewProvider.IsModelStateValid(new Topic()
+            if (await _replyViewProvider.IsModelStateValid(new Reply()
             {
                 Id = model.EntityId,
                 Message = model.Message
             }, this))
             {
 
-                // add new reply
-                // We need to first add the entity so we have a nuique entity Id
+                // We need to first add the reply so we have a nuique Id
                 // for all ProvideUpdateAsync methods within any involved view provider
                 var reply = await _replyManager.CreateAsync(new Reply()
                 {
