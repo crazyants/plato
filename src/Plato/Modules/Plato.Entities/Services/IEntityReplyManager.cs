@@ -18,6 +18,6 @@ namespace Plato.Entities.Services
         Task<IActivityResult<TModel>> UpdateAsync(TModel reply);
 
         Task<IActivityResult<TModel>> DeleteAsync(int id);
-
+        
     }
 }

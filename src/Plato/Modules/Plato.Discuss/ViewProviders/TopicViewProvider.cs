@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
-using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -77,15 +76,13 @@ namespace Plato.Discuss.ViewProviders
 
             var pagerOptions = new PagerOptions();
             pagerOptions.Page = GetPageIndex(updater);
-
-
+            
             var topic = await _entityStore.GetByIdAsync(viewModel.Id);
             if (topic == null)
             {
                 return await BuildIndexAsync(viewModel, updater);
             }
-
-
+            
             var replies = await GetEntityReplies(topic.Id, filterOptions, pagerOptions);
             
 
@@ -99,7 +96,7 @@ namespace Plato.Discuss.ViewProviders
                 View<HomeTopicViewModel>("Home.Topic.Tools", model => topivViewModel).Zone("tools"),
                 View<HomeTopicViewModel>("Home.Topic.Sidebar", model => topivViewModel).Zone("sidebar"),
                 View<HomeTopicViewModel>("Home.Topic.Content", model => topivViewModel).Zone("content"),
-                View<NewEntityReplyViewModel>("Home.Topic.Footer", model => new NewEntityReplyViewModel()
+                View<EditReplyViewModel>("Home.Topic.Footer", model => new EditReplyViewModel()
                 {
                     EntityId = topic.Id,
                     EditorHtmlName = EditorHtmlName
@@ -124,18 +121,18 @@ namespace Plato.Discuss.ViewProviders
                 }
             }
           
-            var viewModel = new EditEntityViewModel()
+            var viewModel = new EditTopicViewModel()
             {
-                EntityId = topic.Id,
+                Id = topic.Id,
                 Title = topic.Title,
                 EditorHtmlName = EditorHtmlName,
                 Message = message
             };
      
             return Task.FromResult(Views(
-                View<EditEntityViewModel>("Home.Edit.Header", model => viewModel).Zone("header"),
-                View<EditEntityViewModel>("Home.Edit.Content", model => viewModel).Zone("content"),
-                View<EditEntityViewModel>("Home.Edit.Footer", model => viewModel).Zone("Footer")
+                View<EditTopicViewModel>("Home.Edit.Header", model => viewModel).Zone("header"),
+                View<EditTopicViewModel>("Home.Edit.Content", model => viewModel).Zone("content"),
+                View<EditTopicViewModel>("Home.Edit.Footer", model => viewModel).Zone("Footer")
             ));
 
         }
@@ -143,7 +140,7 @@ namespace Plato.Discuss.ViewProviders
         public override async Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
 
-            var model = new EditEntityViewModel();
+            var model = new EditTopicViewModel();
             model.Title = topic.Title;
             model.Message = topic.Message;
 
@@ -254,11 +251,9 @@ namespace Plato.Discuss.ViewProviders
             return page;
 
         }
-
-
+        
         #endregion
         
-
     }
 
 }

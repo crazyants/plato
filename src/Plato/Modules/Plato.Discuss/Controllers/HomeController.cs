@@ -10,9 +10,9 @@ using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
-using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -25,11 +25,12 @@ namespace Plato.Discuss.Controllers
     {
 
         #region "Constructor"
-        
-        private readonly IViewProviderManager<Topic> _topicViewProvider;
-        private readonly IEntityStore<Topic> _entityStore;
-        private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
 
+        private readonly IEntityReplyManager<Reply> _replyManager;
+        private readonly IViewProviderManager<Topic> _topicViewProvider;
+        private readonly IViewProviderManager<Reply> _replyViewProvider;
+        private readonly IEntityStore<Topic> _entityStore;
+        private readonly IEntityReplyStore<Reply> _entityReplyStore;
         private readonly IPostManager<Topic> _postManager;
         private readonly IAlerter _alerter;
         
@@ -40,13 +41,18 @@ namespace Plato.Discuss.Controllers
             IContextFacade contextFacade,
             IEntityStore<Topic> entityStore,
             IViewProviderManager<Topic> topicViewProvider,
+            IEntityReplyStore<Reply> entityReplyStore,
+            IViewProviderManager<Reply> replyViewProvider,
             IPostManager<Topic> postManager,
-            IAlerter alerter)
+            IAlerter alerter, IEntityReplyManager<Reply> replyManager)
         {
             _postManager = postManager;
             _entityStore = entityStore;
             _topicViewProvider = topicViewProvider;
             _alerter = alerter;
+            _replyManager = replyManager;
+            _entityReplyStore = entityReplyStore;
+            _replyViewProvider = replyViewProvider;
             T = localizer;
         }
 
@@ -99,7 +105,7 @@ namespace Plato.Discuss.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName(nameof(Create))]
-        public async Task<IActionResult> CreatePost(EditEntityViewModel model)
+        public async Task<IActionResult> CreatePost(EditTopicViewModel model)
         {
             
             // Validate model state within all view providers
@@ -199,25 +205,82 @@ namespace Plato.Discuss.Controllers
         
         [HttpPost]
         [ActionName(nameof(Topic))]
-        public async Task<IActionResult> TopicPost(int id)
+        public async Task<IActionResult> TopicPost(EditReplyViewModel model)
         {
-
-            var topic = await _entityStore.GetByIdAsync(id);
-            if (topic == null)
-            {
-                return NotFound();
-            }
             
-            var result = await _topicViewProvider.ProvideUpdateAsync(topic, this);
-
-            if (!ModelState.IsValid)
+            // Validate model state within all view providers
+            if (await _topicViewProvider.IsModelStateValid(new Topic()
             {
-                return View(result);
+                Id = model.EntityId,
+                Message = model.Message
+            }, this))
+            {
+
+                // add new reply
+                // We need to first add the entity so we have a nuique entity Id
+                // for all ProvideUpdateAsync methods within any involved view provider
+                var reply = await _replyManager.CreateAsync(new Reply()
+                {
+                    EntityId = model.EntityId,
+                    Message = model.Message
+                });
+
+                // Ensure the insert was successful
+                if (reply.Succeeded)
+                {
+
+                    // Execute view providers ProvideUpdateAsync method
+                    await _replyViewProvider.ProvideUpdateAsync(reply.Response, this);
+
+                    // Everything was OK
+                    _alerter.Success(T["Reply Added Successfully!"]);
+
+                    // Redirect to topic
+                    return RedirectToAction(nameof(Topic), new { Id = reply.Response.EntityId });
+
+                }
+                else
+                {
+                    // Errors that may have occurred whilst creating the entity
+                    foreach (var error in reply.Errors)
+                    {
+                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                
             }
 
-            _alerter.Success(T["Reply Added Successfully!"]);
+            // if we reach this point some view model validation
+            // failed within a view provider, display model state errors
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
+                }
+            }
 
-            return RedirectToAction(nameof(Topic));
+            return await Create();
+
+
+
+
+            //var topic = await _entityStore.GetByIdAsync(id);
+            //if (topic == null)
+            //{
+            //    return NotFound();
+            //}
+            
+            //var result = await _topicViewProvider.ProvideUpdateAsync(topic, this);
+
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(result);
+            //}
+
+            //_alerter.Success(T["Reply Added Successfully!"]);
+
+            //return RedirectToAction(nameof(Topic));
             
         }
 
@@ -240,7 +303,7 @@ namespace Plato.Discuss.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName(nameof(Edit))]
-        public async Task<IActionResult> EditPost(EditEntityViewModel model)
+        public async Task<IActionResult> EditPost(EditTopicViewModel model)
         {
 
             // Validate model state within all view providers

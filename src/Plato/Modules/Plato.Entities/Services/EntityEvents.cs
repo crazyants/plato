@@ -55,32 +55,32 @@
 
         public delegate void Handler(object sender, EntityReplyEventArgs<TModel> e);
 
-        protected virtual void OnCreating(EntityReplyEventArgs<TModel> e)
+        public virtual void OnCreating(EntityReplyEventArgs<TModel> e)
         {
             Creating?.Invoke(this, e);
         }
 
-        protected virtual void OnCreated(EntityReplyEventArgs<TModel> e)
+        public virtual void OnCreated(EntityReplyEventArgs<TModel> e)
         {
             Created?.Invoke(this, e);
         }
 
-        protected virtual void OnUpdating(EntityReplyEventArgs<TModel> e)
+        public virtual void OnUpdating(EntityReplyEventArgs<TModel> e)
         {
             Updating?.Invoke(this, e);
         }
 
-        protected virtual void OnUpdated(EntityReplyEventArgs<TModel> e)
+        public virtual void OnUpdated(EntityReplyEventArgs<TModel> e)
         {
             Updated?.Invoke(this, e);
         }
 
-        protected virtual void OnDeleting(EntityReplyEventArgs<TModel> e)
+        public virtual void OnDeleting(EntityReplyEventArgs<TModel> e)
         {
             Deleting?.Invoke(this, e);
         }
 
-        protected virtual void OnDeleted(EntityReplyEventArgs<TModel> e)
+        public virtual void OnDeleted(EntityReplyEventArgs<TModel> e)
         {
             Deleted?.Invoke(this, e);
         }

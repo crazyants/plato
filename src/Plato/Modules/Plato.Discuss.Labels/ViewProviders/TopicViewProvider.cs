@@ -24,8 +24,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IStringLocalizer T;
-
-
+        
         private readonly HttpRequest _request;
 
         public TopicViewProvider(
@@ -88,8 +87,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             );
 
         }
-
-
+        
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IUpdateModel updater)
         {
             var viewModel = new EditTopicLabelsViewModel()
@@ -105,8 +103,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             );
 
         }
-
-
+        
         public override async Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
          

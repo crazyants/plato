@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Discuss.Models;
-using Plato.Entities.Models;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Abstractions;
@@ -19,9 +18,9 @@ namespace Plato.Discuss.Services
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
 
         public ReplyManager(
-            IEntityReplyManager<Reply> entityReplyManager,
+            IEntityStore<Topic> entityStore,
             IEntityReplyStore<Reply> entityReplyStore,
-            IEntityStore<Topic> entityStore)
+            IEntityReplyManager<Reply> entityReplyManager)
         {
             _entityReplyManager = entityReplyManager;
             _entityReplyStore = entityReplyStore;
@@ -30,7 +29,7 @@ namespace Plato.Discuss.Services
 
         public async Task<IActivityResult<Reply>> CreateAsync(Reply model)
         {
-
+            
             //_entityReplyManager.Created += async (sender, args) =>
             //{
 
@@ -115,7 +114,6 @@ namespace Plato.Discuss.Services
          
         }
         
-
         public async Task<IActivityResult<Reply>> DeleteAsync(Reply model)
         {
 
