@@ -9,19 +9,19 @@ namespace Plato.Entities.Stores
 {
     #region "EntityReplyQuery"
 
-    public class EntityReplyQuery : DefaultQuery<EntityReply>
+    public class EntityReplyQuery<TModel> : DefaultQuery<TModel> where TModel : class
     {
 
-        private readonly IStore<EntityReply> _store;
+        private readonly IStore<TModel> _store;
 
-        public EntityReplyQuery(IStore<EntityReply> store)
+        public EntityReplyQuery(IStore<TModel> store)
         {
             _store = store;
         }
 
         public EntityReplyQueryParams Params { get; set; }
 
-        public override IQuery<EntityReply> Select<TParams>(Action<TParams> configure)
+        public override IQuery<TModel> Select<TParams>(Action<TParams> configure)
         {
             var defaultParams = new TParams();
             configure(defaultParams);
@@ -29,9 +29,9 @@ namespace Plato.Entities.Stores
             return this;
         }
         
-        public override async Task<IPagedResults<EntityReply>> ToList()
+        public override async Task<IPagedResults<TModel>> ToList()
         {
-            var builder = new EntityReplyQueryBuilder(this);
+            var builder = new EntityReplyQueryBuilder<TModel>(this);
             var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
@@ -148,16 +148,16 @@ namespace Plato.Entities.Stores
 
     #region "EntityReplyQueryBuilder"
 
-    public class EntityReplyQueryBuilder : IQueryBuilder
+    public class EntityReplyQueryBuilder<TModel> : IQueryBuilder where TModel : class
     {
         #region "Constructor"
 
         private readonly string _entityRepliesTableName;
         private readonly string _usersTableName;
 
-        private readonly EntityReplyQuery _query;
+        private readonly EntityReplyQuery<TModel> _query;
 
-        public EntityReplyQueryBuilder(EntityReplyQuery query)
+        public EntityReplyQueryBuilder(EntityReplyQuery<TModel> query)
         {
             _query = query;
             _entityRepliesTableName = GetTableNameWithPrefix("EntityReplies");

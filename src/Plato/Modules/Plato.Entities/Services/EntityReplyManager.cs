@@ -9,23 +9,23 @@ using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Entities.Services
 {
-    public class EntityReplyManager : IEntityReplyManager<EntityReply>
+    public class EntityReplyManager<TReply> : IEntityReplyManager<TReply> where TReply : class, IEntityReply
     {
 
-        public event EntityReplyEvents.Handler Creating;
-        public event EntityReplyEvents.Handler Created;
-        public event EntityReplyEvents.Handler Updating;
-        public event EntityReplyEvents.Handler Updated;
-        public event EntityReplyEvents.Handler Deleting;
-        public event EntityReplyEvents.Handler Deleted;
+        public event EntityReplyEvents<TReply>.Handler Creating;
+        public event EntityReplyEvents<TReply>.Handler Created;
+        public event EntityReplyEvents<TReply>.Handler Updating;
+        public event EntityReplyEvents<TReply>.Handler Updated;
+        public event EntityReplyEvents<TReply>.Handler Deleting;
+        public event EntityReplyEvents<TReply>.Handler Deleted;
      
         private readonly IBroker _broker;
         private readonly IEntityStore<Entity> _entityStore;
-        private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
+        private readonly IEntityReplyStore<TReply> _entityReplyStore;
         private readonly IContextFacade _contextFacade;
 
         public EntityReplyManager(
-            IEntityReplyStore<EntityReply> entityReplyStore, 
+            IEntityReplyStore<TReply> entityReplyStore, 
             IBroker broker, IContextFacade contextFacade,
             IEntityStore<Entity> entityStore)
         {
@@ -35,10 +35,10 @@ namespace Plato.Entities.Services
             _broker = broker;
         }
 
-        public async Task<IActivityResult<EntityReply>> CreateAsync(EntityReply reply)
+        public async Task<IActivityResult<TReply>> CreateAsync(TReply reply)
         {
             
-            var result = new ActivityResult<EntityReply>();
+            var result = new ActivityResult<TReply>();
 
           
             if (reply.EntityId <= 0)
@@ -77,10 +77,10 @@ namespace Plato.Entities.Services
             reply.Abstract = await ParseAbstract(reply.Message);
             
             // Raise creating event
-            Creating?.Invoke(this, new EntityReplyEventArgs(entity, reply));
+            Creating?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, reply));
 
             // Publish EntityReplyCreating event
-            await _broker.Pub<EntityReply>(this, new MessageOptions()
+            await _broker.Pub<TReply>(this, new MessageOptions()
             {
                 Key = "EntityReplyCreating"
             }, reply);
@@ -89,10 +89,10 @@ namespace Plato.Entities.Services
             if (newReply != null)
             {
                 // Raise created event
-                Created?.Invoke(this, new EntityReplyEventArgs(entity, newReply));
+                Created?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, newReply));
 
                 // Publish EntityReplyCreated event
-                await _broker.Pub<EntityReply>(this, new MessageOptions()
+                await _broker.Pub<TReply>(this, new MessageOptions()
                 {
                     Key = "EntityReplyCreated"
                 }, newReply);
@@ -104,10 +104,10 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IActivityResult<EntityReply>> UpdateAsync(EntityReply reply)
+        public async Task<IActivityResult<TReply>> UpdateAsync(TReply reply)
         {
 
-            var result = new ActivityResult<EntityReply>();
+            var result = new ActivityResult<TReply>();
 
             if (reply.Id <= 0)
             {
@@ -138,10 +138,10 @@ namespace Plato.Entities.Services
             reply.Abstract = await ParseAbstract(reply.Message);
             
             // Raise updating event
-            Updating?.Invoke(this, new EntityReplyEventArgs(entity, reply));
+            Updating?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, reply));
 
             // Publish EntityReplyUpdating event
-            await _broker.Pub<EntityReply>(this, new MessageOptions()
+            await _broker.Pub<TReply>(this, new MessageOptions()
             {
                 Key = "EntityReplyUpdating"
             }, reply);
@@ -150,10 +150,10 @@ namespace Plato.Entities.Services
             if (updatedReply != null)
             {
                 // Raise Updated event
-                Updated?.Invoke(this, new EntityReplyEventArgs(entity, updatedReply));
+                Updated?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, updatedReply));
 
                 // Publish EntityReplyUpdated event
-                await _broker.Pub<EntityReply>(this, new MessageOptions()
+                await _broker.Pub<TReply>(this, new MessageOptions()
                 {
                     Key = "EntityReplyUpdated"
                 }, updatedReply);
@@ -165,10 +165,10 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IActivityResult<EntityReply>> DeleteAsync(int id)
+        public async Task<IActivityResult<TReply>> DeleteAsync(int id)
         {
 
-            var result = new ActivityResult<EntityReply>();
+            var result = new ActivityResult<TReply>();
 
             var reply = await _entityReplyStore.GetByIdAsync(id);
             if (reply == null)
@@ -177,10 +177,10 @@ namespace Plato.Entities.Services
             }
 
             // Raise Deleting event
-            Deleting?.Invoke(this, new EntityReplyEventArgs(null, reply));
+            Deleting?.Invoke(this, new EntityReplyEventArgs<TReply>(null, reply));
 
             // Publish EntityReplyDeleting event
-            await _broker.Pub<EntityReply>(this, new MessageOptions()
+            await _broker.Pub<TReply>(this, new MessageOptions()
             {
                 Key = "EntityReplyDeleting"
             }, reply);
@@ -190,10 +190,10 @@ namespace Plato.Entities.Services
             {
 
                 // Raise Deleted event
-                Deleted?.Invoke(this, new EntityReplyEventArgs(null, reply));
+                Deleted?.Invoke(this, new EntityReplyEventArgs<TReply>(null, reply));
 
                 // Publish EntityReplyDeleted event
-                await _broker.Pub<EntityReply>(this, new MessageOptions()
+                await _broker.Pub<TReply>(this, new MessageOptions()
                 {
                     Key = "EntityReplyDeleted"
                 }, reply);

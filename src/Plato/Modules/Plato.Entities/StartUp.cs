@@ -41,13 +41,12 @@ namespace Plato.Entities
             // Stores
             services.AddScoped<IEntityStore<Entity>, EntityStore<Entity>>();
             services.AddScoped<IEntityDataStore<IEntityData>, EntityDataStore>();
-
             services.AddScoped<IEntityDataItemStore<EntityData>, EntityDataItemStore<EntityData>>();
-            services.AddScoped<IEntityReplyStore<EntityReply>, EntityReplyStore>();
+            services.AddScoped<IEntityReplyStore<EntityReply>, EntityReplyStore<EntityReply>>();
 
             // Managers
             services.AddScoped<IEntityManager<Entity>, EntityManager<Entity>>();
-            services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager>();
+            services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager<EntityReply>>();
 
             //services.AddScoped<IEntityDetailsStore<EntityDetails>, EntityDetailsStore>();
 

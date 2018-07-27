@@ -41,13 +41,17 @@ namespace Plato.Discuss
             services.AddScoped<INavigationProvider, SiteMenu>();
 
             // Stores
-            services.AddScoped<IEntityStore<Topic>, EntityStore<Topic>>();
             services.AddScoped<IEntityRepository<Topic>, EntityRepository<Topic>>();
+            services.AddScoped<IEntityStore<Topic>, EntityStore<Topic>>();
             services.AddScoped<IEntityManager<Topic>, EntityManager<Topic>>();
+
+            services.AddScoped<IEntityReplyRepository<Reply>, EntityReplyRepository<Reply>>();
+            services.AddScoped<IEntityReplyStore<Reply>, EntityReplyStore<Reply>>();
+            services.AddScoped<IEntityReplyManager<Reply>, EntityReplyManager<Reply>>();
 
             // Register data access
             services.AddScoped<IPostManager<Topic>, TopicManager>();
-            services.AddScoped<IPostManager<EntityReply>, ReplyManager>();
+            services.AddScoped<IPostManager<Reply>, ReplyManager>();
             
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();

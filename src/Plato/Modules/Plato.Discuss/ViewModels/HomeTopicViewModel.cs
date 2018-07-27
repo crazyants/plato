@@ -1,5 +1,4 @@
 ﻿using Plato.Discuss.Models;
-using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
 
@@ -14,7 +13,7 @@ namespace Plato.Discuss.ViewModels
         }
 
         public HomeTopicViewModel(
-            IPagedResults<EntityReply> results,
+            IPagedResults<Reply> results,
             PagerOptions pagerOptions)
         {
             this.Results = results;
@@ -24,13 +23,12 @@ namespace Plato.Discuss.ViewModels
 
         public PagerOptions PagerOpts { get; set; }
 
-        public IPagedResults<EntityReply> Results { get; set; }
+        public IPagedResults<Reply> Results { get; set; }
         
         public FilterOptions FilterOpts { get; set; }
         
         public Topic Entity { get; set; }
         
-
     }
 
 }

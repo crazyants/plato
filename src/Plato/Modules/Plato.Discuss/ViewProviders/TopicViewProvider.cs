@@ -21,18 +21,18 @@ namespace Plato.Discuss.ViewProviders
 
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<Topic> _entityStore;
-        private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
+        private readonly IEntityReplyStore<Reply> _entityReplyStore;
 
         private readonly IPostManager<Topic> _topicManager;
-        private readonly IPostManager<EntityReply> _replyManager;
+        private readonly IPostManager<Reply> _replyManager;
         private readonly IActionContextAccessor _actionContextAccessor;
 
         private readonly HttpRequest _request;
         
         public TopicViewProvider(
             IHttpContextAccessor httpContextAccessor,
-            IPostManager<EntityReply> replyManager,
-            IEntityReplyStore<EntityReply> entityReplyStore,
+            IPostManager<Reply> replyManager,
+            IEntityReplyStore<Reply> entityReplyStore,
             IActionContextAccessor actionContextAccessor,
             IContextFacade contextFacade,
             IEntityStore<Topic> entityStore,
@@ -221,7 +221,7 @@ namespace Plato.Discuss.ViewProviders
 
         #region "Private Methods"
         
-        async Task<IPagedResults<EntityReply>> GetEntityReplies(
+        async Task<IPagedResults<Reply>> GetEntityReplies(
             int entityId,
             FilterOptions filterOptions,
             PagerOptions pagerOptions)

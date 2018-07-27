@@ -6,12 +6,12 @@ namespace Plato.Entities.Services
     public interface IEntityReplyManager<TModel> where TModel : class
     {
 
-        event EntityReplyEvents.Handler Creating;
-        event EntityReplyEvents.Handler Created;
-        event EntityReplyEvents.Handler Updating;
-        event EntityReplyEvents.Handler Updated;
-        event EntityReplyEvents.Handler Deleting;
-        event EntityReplyEvents.Handler Deleted;
+        event EntityReplyEvents<TModel>.Handler Creating;
+        event EntityReplyEvents<TModel>.Handler Created;
+        event EntityReplyEvents<TModel>.Handler Updating;
+        event EntityReplyEvents<TModel>.Handler Updated;
+        event EntityReplyEvents<TModel>.Handler Deleting;
+        event EntityReplyEvents<TModel>.Handler Deleted;
 
         Task<IActivityResult<TModel>> CreateAsync(TModel reply);
 

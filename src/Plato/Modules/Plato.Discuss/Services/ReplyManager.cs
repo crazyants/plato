@@ -11,24 +11,24 @@ using Plato.Internal.Models.Users;
 namespace Plato.Discuss.Services
 {
 
-    public class ReplyManager : IPostManager<EntityReply>
+    public class ReplyManager : IPostManager<Reply>
     {
 
-        private readonly IEntityStore<Entity> _entityStore;
-        private readonly IEntityReplyManager<EntityReply> _entityReplyManager;
-        private readonly IEntityReplyStore<EntityReply> _entityReplyStore;
+        private readonly IEntityStore<Topic> _entityStore;
+        private readonly IEntityReplyManager<Reply> _entityReplyManager;
+        private readonly IEntityReplyStore<Reply> _entityReplyStore;
 
         public ReplyManager(
-            IEntityReplyManager<EntityReply> entityReplyManager,
-            IEntityReplyStore<EntityReply> entityReplyStore,
-            IEntityStore<Entity> entityStore)
+            IEntityReplyManager<Reply> entityReplyManager,
+            IEntityReplyStore<Reply> entityReplyStore,
+            IEntityStore<Topic> entityStore)
         {
             _entityReplyManager = entityReplyManager;
             _entityReplyStore = entityReplyStore;
             _entityStore = entityStore;
         }
 
-        public async Task<IActivityResult<EntityReply>> CreateAsync(EntityReply model)
+        public async Task<IActivityResult<Reply>> CreateAsync(Reply model)
         {
 
             //_entityReplyManager.Created += async (sender, args) =>
@@ -103,7 +103,7 @@ namespace Plato.Discuss.Services
 
         }
 
-        public async Task<IActivityResult<EntityReply>> UpdateAsync(EntityReply model)
+        public async Task<IActivityResult<Reply>> UpdateAsync(Reply model)
         {
 
             _entityReplyManager.Updated += (sender, args) =>
@@ -116,7 +116,7 @@ namespace Plato.Discuss.Services
         }
         
 
-        public async Task<IActivityResult<EntityReply>> DeleteAsync(EntityReply model)
+        public async Task<IActivityResult<Reply>> DeleteAsync(Reply model)
         {
 
             _entityReplyManager.Updated += (sender, args) =>
