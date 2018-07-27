@@ -14,7 +14,7 @@ using Plato.Discuss.Models;
 
 namespace Plato.Discuss.Labels.ViewProviders
 {
-    public class DiscussViewProvider : BaseViewProvider<Topic>
+    public class TopicViewProvider : BaseViewProvider<Topic>
     {
 
         private const string LabelHtmlName = "label";
@@ -28,13 +28,13 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         private readonly HttpRequest _request;
 
-        public DiscussViewProvider(
+        public TopicViewProvider(
             IContextFacade contextFacade,
             ILabelStore<Models.Label> labelStore, 
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityLabelStore<EntityLabel> entityLabelStore,
-            IStringLocalizer<DiscussViewProvider> stringLocalize)
+            IStringLocalizer<TopicViewProvider> stringLocalize)
         {
             _contextFacade = contextFacade;
             _labelStore = labelStore;

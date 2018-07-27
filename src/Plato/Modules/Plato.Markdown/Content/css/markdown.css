@@ -31,9 +31,10 @@
 }
 
 /* Buttons */
-.btn-toolbar > .btn-group > .btn,
-.btn-toolbar > .btn-group > .dropdown > .btn{ background: white; border: 1px solid #ddd; }
-.btn-toolbar .btn-group .btn.disabled { display: none; }
+.md-editor .btn-toolbar > .btn-group > .btn,
+.md-editor .btn-toolbar > .btn-group > .dropdown > .btn{ background: white; border: 1px solid #ddd; }
+.md-editor .btn-toolbar .btn-group .btn.disabled { display: none; }
+.md-editor .btn-toolbar > .btn-group > .dropdown { margin-left: -1px; }
 
 /* Main border color */
 .md-editor,
@@ -173,4 +174,29 @@
     border-right-color: transparent !important;
     border-bottom-color: transparent !important;
     background-color: transparent !important; 
+}
+
+/* ------------------------ */
+/* Media queries to enable responsive button groups */
+/* ------------------------ */
+
+/* below 1124px */
+@media only screen and (max-width : 1124px) {
+    .md-editor .btn-toolbar > .btn-group-lists { display: none; }
+}
+
+/* below 1024px */
+@media only screen and (max-width : 1024px) {
+    .md-editor .btn-toolbar > .btn-group-quotes,
+    .md-editor .btn-toolbar > .btn-group-code { display: none; }
+}
+
+/* below 768px */
+@media only screen and (max-width : 768px) {
+    .md-editor .btn-toolbar > .btn-group > .dropdown { display: none; }
+}
+
+/* below 348px */
+@media only screen and (max-width : 348px) {
+    .md-editor .btn-toolbar > .btn-group { display: none; }
 }

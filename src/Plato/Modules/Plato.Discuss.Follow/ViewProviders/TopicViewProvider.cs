@@ -118,16 +118,13 @@ namespace Plato.Discuss.Follow.ViewProviders
             var follow = false;
             foreach (var key in _request.Form.Keys)
             {
-                if (key.StartsWith(FollowHtmlName))
+                if (key == FollowHtmlName)
                 {
                     var values = _request.Form[key];
-                    foreach (var value in values)
+                    if (!String.IsNullOrEmpty(values))
                     {
-                        bool.TryParse(value, out follow);
-                        if (follow)
-                        {
-                            break;
-                        }
+                        follow = true;
+                        break;
                     }
                 }
             }
@@ -141,18 +138,18 @@ namespace Plato.Discuss.Follow.ViewProviders
 
             // Add the follow
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user == null)
-            {
 
+            // We always need a user to follow entities
+            if (user != null)
+            {
+                // Add and return result
+                await _entityFollowStore.CreateAsync(new EntityFollow()
+                {
+                    EntityId = entity.Id,
+                    UserId = user.Id,
+                    CreatedDate = DateTime.UtcNow
+                });
             }
-
-            // Add and return result
-            await _entityFollowStore.CreateAsync(new EntityFollow()
-            {
-                EntityId = entity.Id,
-                UserId = user.Id,
-                CreatedDate = DateTime.UtcNow
-            });
 
             return await BuildEditAsync(topic, updater);
 

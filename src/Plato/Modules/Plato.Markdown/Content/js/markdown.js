@@ -1714,7 +1714,7 @@
               ]
             }, {
                 name: 'groupInsert',
-                css: 'btn-group mr-1',
+                css: 'btn-group btn-group-insert mr-1',
                 data: [
                     {
                         name: 'cmdLink',
@@ -2015,7 +2015,7 @@
                 ]
             }, {
               name: 'groupLists',
-              css: 'btn-group mr-1',
+              css: 'btn-group btn-group-lists mr-1',
               data: [
                   {
                       name: 'cmdList',
@@ -2132,7 +2132,7 @@
               ]
           }, {
               name: 'groupBlocks',
-              css: 'btn-group mr-1',
+              css: 'btn-group btn-group-quotes mr-1',
               data: [
                   {
                       name: 'cmdBlockquote',
@@ -2208,55 +2208,61 @@
                       callback: function(e, $target) {
                        
                       }
-                  }, {
-                      name: 'cmdCode',
-                      hotkey: 'Ctrl+K',
-                      title: 'Code',
-                      icon: {
-                          glyph: 'glyphicon glyphicon-console',
-                          fa: 'fal fa-code',
-                          'fa-3': 'icon-code',
-                          octicons: 'octicon octicon-code'
-                      },
-                      callback: function(e) {
-                          // Give/remove ** surround the selection
-                          var chunk,
-                              cursor,
-                              selected = e.getSelection(),
-                              content = e.getContent();
-
-                          if (selected.length === 0) {
-                              // Give extra word
-                              chunk = e.__localize('code text here');
-                          } else {
-                              chunk = selected.text;
-                          }
-
-                          // transform selection and set the cursor into chunked text
-                          if (content.substr(selected.start - 4, 4) === '```\n' &&
-                              content.substr(selected.end, 4) === '\n```') {
-                              e.setSelection(selected.start - 4, selected.end + 4);
-                              e.replaceSelection(chunk);
-                              cursor = selected.start - 4;
-                          } else if (content.substr(selected.start - 1, 1) === '`' &&
-                              content.substr(selected.end, 1) === '`') {
-                              e.setSelection(selected.start - 1, selected.end + 1);
-                              e.replaceSelection(chunk);
-                              cursor = selected.start - 1;
-                          } else if (content.indexOf('\n') > -1) {
-                              e.replaceSelection('```\n' + chunk + '\n```');
-                              cursor = selected.start + 4;
-                          } else {
-                              e.replaceSelection('`' + chunk + '`');
-                              cursor = selected.start + 1;
-                          }
-
-                          // Set the cursor
-                          e.setSelection(cursor, cursor + chunk.length);
-                      }
                   }
               ]
-          }
+            }, {
+                name: 'groupCode',
+                css: 'btn-group btn-group-code mr-1',
+                data: [
+                    {
+                        name: 'cmdCode',
+                        hotkey: 'Ctrl+K',
+                        title: 'Code',
+                        icon: {
+                            glyph: 'glyphicon glyphicon-console',
+                            fa: 'fal fa-code',
+                            'fa-3': 'icon-code',
+                            octicons: 'octicon octicon-code'
+                        },
+                        callback: function (e) {
+                            // Give/remove ** surround the selection
+                            var chunk,
+                                cursor,
+                                selected = e.getSelection(),
+                                content = e.getContent();
+
+                            if (selected.length === 0) {
+                                // Give extra word
+                                chunk = e.__localize('code text here');
+                            } else {
+                                chunk = selected.text;
+                            }
+
+                            // transform selection and set the cursor into chunked text
+                            if (content.substr(selected.start - 4, 4) === '```\n' &&
+                                content.substr(selected.end, 4) === '\n```') {
+                                e.setSelection(selected.start - 4, selected.end + 4);
+                                e.replaceSelection(chunk);
+                                cursor = selected.start - 4;
+                            } else if (content.substr(selected.start - 1, 1) === '`' &&
+                                content.substr(selected.end, 1) === '`') {
+                                e.setSelection(selected.start - 1, selected.end + 1);
+                                e.replaceSelection(chunk);
+                                cursor = selected.start - 1;
+                            } else if (content.indexOf('\n') > -1) {
+                                e.replaceSelection('```\n' + chunk + '\n```');
+                                cursor = selected.start + 4;
+                            } else {
+                                e.replaceSelection('`' + chunk + '`');
+                                cursor = selected.start + 1;
+                            }
+
+                            // Set the cursor
+                            e.setSelection(cursor, cursor + chunk.length);
+                        }
+                    }
+                ]
+            }
       ]
     ],
     customIcons: {},

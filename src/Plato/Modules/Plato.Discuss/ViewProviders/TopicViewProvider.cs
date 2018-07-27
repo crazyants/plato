@@ -14,7 +14,7 @@ using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.ViewProviders
 {
-    public class DiscussViewProvider : BaseViewProvider<Topic>
+    public class TopicViewProvider : BaseViewProvider<Topic>
     {
 
         private const string EditorHtmlName = "message";
@@ -29,7 +29,7 @@ namespace Plato.Discuss.ViewProviders
 
         private readonly HttpRequest _request;
         
-        public DiscussViewProvider(
+        public TopicViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IPostManager<EntityReply> replyManager,
             IEntityReplyStore<EntityReply> entityReplyStore,
@@ -126,6 +126,7 @@ namespace Plato.Discuss.ViewProviders
           
             var viewModel = new EditEntityViewModel()
             {
+                EntityId = topic.Id,
                 Title = topic.Title,
                 EditorHtmlName = EditorHtmlName,
                 Message = message

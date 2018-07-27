@@ -1,7 +1,17 @@
 ﻿@model EditEntityViewModel
 
-<h4>@T["Post Topic"]</h4>
-<span class="text-muted">@T["Start a new conversaton."]</span>
-<hr />
+@if (Model.EntityId == 0)
+{
+    <h4>@T["Post Topic"]</h4>
+    <span class="text-muted">@T["Start a new conversaton."]</span>
+    <hr />
+}
+else
+{
+    <h4>@T["Edit Topic"]</h4>
+    <span class="text-muted">@T["Edit the post below."]</span>
+    <hr />
+}
+
 
 

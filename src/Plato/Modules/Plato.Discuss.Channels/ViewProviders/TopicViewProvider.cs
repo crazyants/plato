@@ -17,7 +17,7 @@ using Plato.Internal.Layout.ModelBinding;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
-    public class DiscussViewProvider : BaseViewProvider<Topic>
+    public class TopicViewProvider : BaseViewProvider<Topic>
     {
 
         private const string ChannelHtmlName = "channel";
@@ -31,13 +31,13 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         private readonly HttpRequest _request;
 
-        public DiscussViewProvider(
+        public TopicViewProvider(
             IContextFacade contextFacade,
             ICategoryStore<Channel> channelStore, 
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
-            IStringLocalizer<DiscussViewProvider> stringLocalize,
+            IStringLocalizer<TopicViewProvider> stringLocalize,
             IPostManager<Topic> topicManager)
         {
             _contextFacade = contextFacade;

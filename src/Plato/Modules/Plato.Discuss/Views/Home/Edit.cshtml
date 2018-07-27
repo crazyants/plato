@@ -1,6 +1,6 @@
 ﻿@model LayoutViewModel
 @{
-    ViewData["Title"] = "Edit Topic";
+    ViewData["Title"] = "Post Topic";
 }
 
 <form asp-controller="Home" asp-action="Create" method="post" enctype="multipart/form-data">
@@ -43,7 +43,7 @@
                     @if (Model.Actions != null || Model.Footer != null)
                     {
                         <div class="layout-footer">
-                        
+
                             <card>
                                 <card-body>
                                     @if (Model.Actions != null)
@@ -54,13 +54,13 @@
                                     }
                                     @if (Model.Footer != null)
                                     {
-                                        <div class="float-left layout-footer-item">
+                                        <div class="layout-footer-item">
                                             <view model="@Model.Footer"></view>
                                         </div>
                                     }
                                 </card-body>
                             </card>
-                         
+
                         </div>
                     }
                 </div>
@@ -87,7 +87,7 @@
                                 @if (Model.Actions != null)
                                 {
                                     <div class="float-right layout-actions">
-                                        <view model="@Model.Actions"/>
+                                        <view model="@Model.Actions" />
                                     </div>
                                 }
                                 @if (Model.Footer != null)
