@@ -85,7 +85,6 @@ namespace Plato.Discuss.ViewProviders
             
             var replies = await GetEntityReplies(topic.Id, filterOptions, pagerOptions);
             
-
             var topivViewModel = new HomeTopicViewModel(replies, pagerOptions)
             {
                 Entity = topic
