@@ -18,7 +18,7 @@ namespace Plato.Discuss.Labels.Controllers
 
         #region "Constructor"
         
-        private readonly IViewProviderManager<Label> _channelViewProvider;
+        private readonly IViewProviderManager<Label> _labelViewProvider;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly ILabelStore<Label> _channelStore;
         private readonly IAlerter _alerter;
@@ -26,7 +26,7 @@ namespace Plato.Discuss.Labels.Controllers
         public IHtmlLocalizer T { get; }
         
         public HomeController(
-            IViewProviderManager<Label> channelViewProvider,
+            IViewProviderManager<Label> labelViewProvider,
             IHtmlLocalizer<HomeController> localizer,
             ILabelStore<Label> channelStore,
             ISiteSettingsStore settingsStore,
@@ -35,7 +35,7 @@ namespace Plato.Discuss.Labels.Controllers
         {
             _settingsStore = settingsStore;
             _channelStore = channelStore;
-            _channelViewProvider = channelViewProvider;
+            _labelViewProvider = labelViewProvider;
             _alerter = alerter;
             T = localizer;
         }
@@ -61,7 +61,7 @@ namespace Plato.Discuss.Labels.Controllers
             this.RouteData.Values.Add("page", pagerOptions.Page);
     
             // Build view
-            var result = await _channelViewProvider.ProvideIndexAsync(category, this);
+            var result = await _labelViewProvider.ProvideIndexAsync(category, this);
 
             // Return view
             return View(result);

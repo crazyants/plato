@@ -18,9 +18,9 @@ namespace Plato.Discuss.Channels.Controllers
     public class AdminController : Controller, IUpdateModel
     {
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<Category> _categoryStore;
-        private readonly ICategoryManager<Category> _categoryManager;
-        private readonly IViewProviderManager<Category> _viewProvider;
+        private readonly ICategoryStore<CategoryBase> _categoryStore;
+        private readonly ICategoryManager<CategoryBase> _categoryManager;
+        private readonly IViewProviderManager<CategoryBase> _viewProvider;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
 
@@ -32,11 +32,11 @@ namespace Plato.Discuss.Channels.Controllers
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
             IContextFacade contextFacade,
-            ICategoryStore<Category> categoryStore,
-            IViewProviderManager<Category> viewProvider,
+            ICategoryStore<CategoryBase> categoryStore,
+            IViewProviderManager<CategoryBase> viewProvider,
             IBreadCrumbManager breadCrumbManager,
             IAlerter alerter, 
-            ICategoryManager<Category> categoryManager)
+            ICategoryManager<CategoryBase> categoryManager)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
@@ -65,7 +65,7 @@ namespace Plato.Discuss.Channels.Controllers
                 ).Add(S["Channels"]);
             });
             
-            var model = await _viewProvider.ProvideIndexAsync(new Category(), this);
+            var model = await _viewProvider.ProvideIndexAsync(new CategoryBase(), this);
             return View(model);
         }
 
@@ -84,7 +84,7 @@ namespace Plato.Discuss.Channels.Controllers
             });
             
             // We need to pass along the featureId
-            var model = await _viewProvider.ProvideEditAsync(new Category
+            var model = await _viewProvider.ProvideEditAsync(new CategoryBase
             {
                 FeatureId = await GetFeatureIdAsync() 
 
@@ -109,7 +109,7 @@ namespace Plato.Discuss.Channels.Controllers
                 iconCss = viewModel.IconPrefix + iconCss;
             }
 
-            var category =  new Category()
+            var category =  new CategoryBase()
             {
                 FeatureId = await GetFeatureIdAsync(),
                 Name = viewModel.Name,

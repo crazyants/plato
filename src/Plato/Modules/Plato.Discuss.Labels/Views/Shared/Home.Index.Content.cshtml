@@ -1,0 +1,7 @@
+﻿@model LabelIndexViewModel
+
+@await DisplayAsync(new View("TopicList", new
+{
+    filterOpts = @Model.FilterOpts,
+    pagerOpts = @Model.PagerOpts
+}))

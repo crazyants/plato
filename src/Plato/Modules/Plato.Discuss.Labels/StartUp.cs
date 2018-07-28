@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Models;
 using Plato.Discuss.Labels.ViewProviders;
 using Plato.Internal.Models.Shell;
@@ -39,17 +40,17 @@ namespace Plato.Discuss.Labels
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
 
-            //// Label view provider
-            //services.AddScoped<IViewProviderManager<Channel>, ViewProviderManager<Channel>>();
-            //services.AddScoped<IViewProvider<Channel>, ChannelViewProvider>();
-
             // Admin view providers
             services.AddScoped<IViewProviderManager<LabelBase>, ViewProviderManager<LabelBase>>();
             services.AddScoped<IViewProvider<LabelBase>, AdminViewProvider>();
 
+            // Labels view providers
+            services.AddScoped<IViewProviderManager<Label>, ViewProviderManager<Label>>();
+            services.AddScoped<IViewProvider<Label>, LabelsViewProvider>();
+            
             //// Register view adaptors
             //services.AddScoped<IViewAdaptorProvider, DiscussViewAdaptorProvider>();
-            
+
         }
 
         public override void Configure(

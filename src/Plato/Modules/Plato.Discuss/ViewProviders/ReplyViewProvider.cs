@@ -14,7 +14,7 @@ namespace Plato.Discuss.ViewProviders
     public class ReplyViewProvider : BaseViewProvider<Reply>
     {
 
-        private const string LabelHtmlName = "message";
+        private const string EditorHtmlName = "message";
         
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
@@ -46,9 +46,36 @@ namespace Plato.Discuss.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Reply model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Reply reply, IUpdateModel updater)
         {
-            return Task.FromResult(default(IViewProviderResult));
+
+            // Ensures we persist the message between post backs
+            var message = reply.Message;
+            if (_request.Method == "POST")
+            {
+                foreach (string key in _request.Form.Keys)
+                {
+                    if (key == EditorHtmlName)
+                    {
+                        message = _request.Form[key];
+                    }
+                }
+            }
+
+            var viewModel = new EditReplyViewModel()
+            {
+                Id = reply.Id,
+                EditorHtmlName = EditorHtmlName,
+                Message = message
+            };
+
+            return Task.FromResult(Views(
+                View<EditReplyViewModel>("Home.Edit.Reply.Header", model => viewModel).Zone("header"),
+                View<EditReplyViewModel>("Home.Edit.Reply.Content", model => viewModel).Zone("content"),
+                View<EditReplyViewModel>("Home.Edit.Reply.Footer", model => viewModel).Zone("Footer")
+            ));
+
+
         }
 
         public override async Task<bool> ValidateModelAsync(Reply reply, IUpdateModel updater)

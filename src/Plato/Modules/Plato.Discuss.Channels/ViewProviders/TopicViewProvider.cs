@@ -63,7 +63,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
             
-            return Views(View<ChannelsViewModel>("Discuss.Index.Sidebar", model =>
+            return Views(View<ChannelsViewModel>("Discuss.Channels.Index.Sidebar", model =>
                 {
                     model.Channels = categories;
                     return model;
@@ -85,7 +85,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(
-                View<ChannelsViewModel>("Discuss.Index.Sidebar", model =>
+                View<ChannelsViewModel>("Discuss.Channels.Index.Sidebar", model =>
                 {
                     model.Channels = categories;
                     return model;
@@ -93,8 +93,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             );
 
         }
-
-
+        
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IUpdateModel updater)
         {
             var viewModel = new EditTopicChannelsViewModel()
@@ -104,12 +103,11 @@ namespace Plato.Discuss.Channels.ViewProviders
             };
 
             return Views(
-                View<EditTopicChannelsViewModel>("Discuss.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
+                View<EditTopicChannelsViewModel>("Discuss.Channels.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
             );
 
         }
-
-
+        
         public override async Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
          

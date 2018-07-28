@@ -80,13 +80,13 @@
                         <ul class="nav nav-h navbar p-0 float-right">
                             <li class="nav-item dropdown">
                                 <a class="nav-link text-muted" href="#postReply" data-provide="postQuote" role="button">
-                                    <span title="@T["Quote"]" data-toggle="tooltip">
-                                        <i class="fal fa-quote-left"></i>
+                                    <span title="@T["Reply"]" data-toggle="tooltip">
+                                        <i class="fal fa-reply"></i>
                                     </span>
                                 </a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link text-muted" href="#" role="button">
+                                <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="EditReply" asp-route-id="@reply.Id" class="nav-link text-muted" role="button">
                                     <span title="@T["Edit"]" data-toggle="tooltip">
                                         <i class="fal fa-pencil"></i>
                                     </span>
@@ -124,6 +124,20 @@
                                     </div>
 
                                 </div>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span title="@T["More"]" data-toggle="tooltip">
+                                            <i class="fal fa-ellipsis-h "></i>
+                                        </span>
+                                    </a>
+                                    <div class="dropdown-arrow"></div>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Reply" class="dropdown-item">Edit</a>
+                                        <a class="dropdown-item" href="#">Hide</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">Delete</a>
+                                    </div>
+                                </li>
                             </li>
                         </ul>
 

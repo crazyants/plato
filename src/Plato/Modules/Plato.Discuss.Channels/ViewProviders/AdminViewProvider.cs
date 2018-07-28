@@ -11,17 +11,17 @@ using Plato.Internal.Models.Shell;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
-    public class AdminViewProvider : BaseViewProvider<Category>
+    public class AdminViewProvider : BaseViewProvider<CategoryBase>
     {
         
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<Category> _categoryStore;
-        private readonly ICategoryManager<Category> _categoryManager;
+        private readonly ICategoryStore<CategoryBase> _categoryStore;
+        private readonly ICategoryManager<CategoryBase> _categoryManager;
 
         public AdminViewProvider(
             IContextFacade contextFacade,
-            ICategoryStore<Category> categoryStore,
-            ICategoryManager<Category> categoryManager)
+            ICategoryStore<CategoryBase> categoryStore,
+            ICategoryManager<CategoryBase> categoryManager)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
@@ -30,7 +30,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Category viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(CategoryBase viewModel, IUpdateModel updater)
         {
             var indexViewModel = await GetIndexModel();
          
@@ -42,19 +42,19 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Category viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(CategoryBase viewModel, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(Category category, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(CategoryBase categoryBase, IUpdateModel updater)
         {
 
             var defaultIcons = new DefaultIcons();
 
             EditChannelViewModel editChannelViewModel = null;
-            if (category.Id == 0)
+            if (categoryBase.Id == 0)
             {
                 editChannelViewModel = new EditChannelViewModel()
                 {
@@ -67,12 +67,12 @@ namespace Plato.Discuss.Channels.ViewProviders
             {
                 editChannelViewModel = new EditChannelViewModel()
                 {
-                    Id = category.Id,
-                    Name = category.Name,
-                    Description = category.Description,
-                    ForeColor = category.ForeColor,
-                    BackColor = category.BackColor,
-                    IconCss = category.IconCss,
+                    Id = categoryBase.Id,
+                    Name = categoryBase.Name,
+                    Description = categoryBase.Description,
+                    ForeColor = categoryBase.ForeColor,
+                    BackColor = categoryBase.BackColor,
+                    IconCss = categoryBase.IconCss,
                     IconPrefix = defaultIcons.Prefix,
                     ChannelIcons = defaultIcons
                 };
@@ -86,14 +86,14 @@ namespace Plato.Discuss.Channels.ViewProviders
             ));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Category category, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(CategoryBase categoryBase, IUpdateModel updater)
         {
 
             var model = new EditChannelViewModel();
 
             if (!await updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(category, updater);
+                return await BuildEditAsync(categoryBase, updater);
             }
 
             model.Name = model.Name?.Trim();
@@ -110,10 +110,10 @@ namespace Plato.Discuss.Channels.ViewProviders
                     iconCss = model.IconPrefix + iconCss;
                 }
 
-                var result = await _categoryManager.UpdateAsync(new Category()
+                var result = await _categoryManager.UpdateAsync(new CategoryBase()
                 {
-                    Id = category.Id,
-                    FeatureId = category.FeatureId,
+                    Id = categoryBase.Id,
+                    FeatureId = categoryBase.FeatureId,
                     Name = model.Name,
                     Description = model.Description,
                     ForeColor = model.ForeColor,
@@ -128,7 +128,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             }
 
-            return await BuildEditAsync(category, updater);
+            return await BuildEditAsync(categoryBase, updater);
 
 
         }

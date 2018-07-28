@@ -8,7 +8,7 @@ using Plato.Internal.Models;
 
 namespace Plato.Categories.Models
 {
-    public class Category  : IModel<Category>, ICategory
+    public class CategoryBase  : IModel<CategoryBase>, ICategory
     {
 
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
@@ -46,7 +46,7 @@ namespace Plato.Categories.Models
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
         
-        public Category()
+        public CategoryBase()
         {
             _metaData = new ConcurrentDictionary<Type, ISerializable>();
         }

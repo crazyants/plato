@@ -91,6 +91,8 @@ namespace Plato.Discuss.Controllers
             
 
         }
+        
+        // post new topic
 
         public async Task<IActionResult> Create(int channel)
         {
@@ -106,7 +108,7 @@ namespace Plato.Discuss.Controllers
             return View(result);
 
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName(nameof(Create))]
@@ -168,6 +170,8 @@ namespace Plato.Discuss.Controllers
             
         }
 
+        // display topic
+
         public async Task<IActionResult> Topic(
             int id,
             FilterOptions filterOptions,
@@ -208,6 +212,8 @@ namespace Plato.Discuss.Controllers
             
         }
         
+        // reply to topic
+
         [HttpPost]
         [ActionName(nameof(Topic))]
         public async Task<IActionResult> TopicPost(EditReplyViewModel model)
@@ -297,6 +303,8 @@ namespace Plato.Discuss.Controllers
             
         }
 
+        // edit topic
+
         public async Task<IActionResult> Edit(int id)
         {
 
@@ -374,7 +382,77 @@ namespace Plato.Discuss.Controllers
 
         }
 
+        // edit reply
 
+        public async Task<IActionResult> EditReply(int id)
+        {
+
+            var reply = await _entityReplyStore.GetByIdAsync(id);
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _replyViewProvider.ProvideEditAsync(reply, this);
+
+            // Return view
+            return View(result);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName(nameof(EditReply))]
+        public async Task<IActionResult> EditReplyPost(EditReplyViewModel model)
+        {
+
+            // Ensure the reply exists
+            var reply = await _entityReplyStore.GetByIdAsync(model.Id);
+            if (reply == null)
+            {
+                return NotFound();
+            }
+
+            // Validate model state within all view providers
+            if (await _replyViewProvider.IsModelStateValid(new Reply()
+            {
+                EntityId = model.EntityId,
+                Message = model.Message
+            }, this))
+            {
+
+                // get entity for reply
+                var topic = await _entityStore.GetByIdAsync(reply.EntityId);
+
+                // Execute view providers ProvideUpdateAsync method
+                await _replyViewProvider.ProvideUpdateAsync(reply, this);
+
+                // Everything was OK
+                _alerter.Success(T["Topic Created Successfully!"]);
+
+                // Redirect to topic
+                return RedirectToAction(nameof(Topic), new
+                {
+                    Id = topic.Id,
+                    Alias = topic.Alias
+                });
+                
+            }
+
+            // if we reach this point some view model validation
+            // failed within a view provider, display model state errors
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
+                }
+            }
+
+            return await Create(0);
+
+        }
+        
         #endregion
 
         #region "Private Methods"

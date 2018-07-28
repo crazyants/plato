@@ -9,6 +9,8 @@ namespace Plato.Discuss.ViewModels
     public class EditReplyViewModel
     {
 
+        public int Id { get; set; }
+
         public int EntityId { get; set; }
 
         [Required]
