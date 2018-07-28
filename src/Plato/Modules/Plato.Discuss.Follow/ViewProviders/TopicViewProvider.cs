@@ -16,8 +16,7 @@ namespace Plato.Discuss.Follow.ViewProviders
     {
 
         private const string FollowHtmlName = "follow";
-
-
+        
         private readonly IContextFacade _contextFacade;
         private readonly IEntityFollowStore<EntityFollow> _entityFollowStore;
         private readonly IEntityStore<Topic> _entityStore;
@@ -68,7 +67,7 @@ namespace Plato.Discuss.Follow.ViewProviders
                     model.EntityId = entity.Id;
                     model.IsFollowing = isFollowing;
                     return model;
-                }).Zone("sidebar").Order(2)
+                }).Zone("sidebar").Order(3)
             );
 
         }
@@ -113,7 +112,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             {
                 return await BuildEditAsync(topic, updater);
             }
-            
+    
             // Get the follow checkbox value
             var follow = false;
             foreach (var key in _request.Form.Keys)
@@ -129,18 +128,14 @@ namespace Plato.Discuss.Follow.ViewProviders
                 }
             }
 
-            // Not following, no need to continue
-            if (!follow)
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
             {
                 return await BuildEditAsync(topic, updater);
-                
             }
 
             // Add the follow
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            // We always need a user to follow entities
-            if (user != null)
+            if (follow)
             {
                 // Add and return result
                 await _entityFollowStore.CreateAsync(new EntityFollow()
@@ -149,6 +144,16 @@ namespace Plato.Discuss.Follow.ViewProviders
                     UserId = user.Id,
                     CreatedDate = DateTime.UtcNow
                 });
+            }
+            else
+            {
+                // Delete the follow
+                var existingFollow =
+                    await _entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, entity.Id);
+                if (existingFollow != null)
+                {
+                    await _entityFollowStore.DeleteAsync(existingFollow);
+                }
             }
 
             return await BuildEditAsync(topic, updater);
