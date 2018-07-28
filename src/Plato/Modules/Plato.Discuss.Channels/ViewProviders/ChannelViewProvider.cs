@@ -49,11 +49,17 @@ namespace Plato.Discuss.Channels.ViewProviders
                 category = await _categoryStore.GetByIdAsync(channel.Id);
             }
 
-            var filterOptions = new FilterOptions();
+            // filter options
+            var filterOptions = new FilterOptions
+            {
+                ChannelId = category?.Id ?? 0
+            };
 
-            var pagerOptions = new PagerOptions();
-            pagerOptions.Page = GetPageIndex(updater);
-
+            // paging otptions
+            var pagerOptions = new PagerOptions
+            {
+                Page = GetPageIndex(updater)
+            };
 
             var indexViewModel = new ChannelIndexViewModel
             {

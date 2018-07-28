@@ -159,17 +159,24 @@ namespace Plato.Discuss.Channels.ViewProviders
                     var user = await _contextFacade.GetAuthenticatedUserAsync();
 
                     // Add new entity categories
-                    foreach (var channel in channelsToAdd)
+                    foreach (var channelId in channelsToAdd)
                     {
                         await _entityCategoryStore.CreateAsync(new EntityCategory()
                         {
                             EntityId = topic.Id,
-                            CategoryId = channel,
+                            CategoryId = channelId,
                             CreatedUserId = user?.Id ?? 0,
                             ModifiedUserId = user?.Id ?? 0,
                         });
                     }
 
+                    // Update primary category
+                    foreach (var channelId in channelsToAdd)
+                    {
+                        topic.CategoryId = channelId;
+                        await _entityStore.UpdateAsync(topic);
+                    }
+                    
                 }
 
             }

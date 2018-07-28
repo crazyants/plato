@@ -24,12 +24,23 @@ namespace Plato.Discuss
 
             builder
                 .Add(T["Discuss"], configuration => configuration
-
-                    .Add(T["Home"], "10", installed => installed
+                    .Add(T["Latest"], "2", installed => installed
                         .Action("Index", "Home", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ));
+                    )
+                    .Add(T["Trending"], "2", installed => installed
+                        .Action("Index", "Home", "Plato.Discuss")
+                        //.Permission(Permissions.ManageRoles)
+                        .LocalNav()
+                    )
+                    .Add(T["Following"], "2", installed => installed
+                        .Action("Index", "Home", "Plato.Discuss")
+                        //.Permission(Permissions.ManageRoles)
+                        .LocalNav()
+                    )
+                );
+
         }
     }
 

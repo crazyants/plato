@@ -77,7 +77,7 @@ namespace Plato.Discuss.Controllers
                 pagerOptions = new PagerOptions();
             }
 
-            await CreateSampleData();
+            //await CreateSampleData();
 
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
@@ -207,7 +207,14 @@ namespace Plato.Discuss.Controllers
         [ActionName(nameof(Topic))]
         public async Task<IActionResult> TopicPost(EditReplyViewModel model)
         {
-            
+            // We always need an entity to reply to
+            var topic = await _entityStore.GetByIdAsync(model.EntityId);
+            if (topic == null)
+            {
+                return NotFound();
+            }
+
+
             // Validate model state within all view providers
             if (await _replyViewProvider.IsModelStateValid(new Reply()
             {
@@ -235,7 +242,11 @@ namespace Plato.Discuss.Controllers
                     _alerter.Success(T["Reply Added Successfully!"]);
 
                     // Redirect to topic
-                    return RedirectToAction(nameof(Topic), new { Id = reply.Response.EntityId });
+                    return RedirectToAction(nameof(Topic), new
+                    {
+                        Id = topic.Id,
+                        Alias = topic.Alias
+                    });
 
                 }
                 else

@@ -70,11 +70,20 @@ namespace Plato.Discuss
             IServiceProvider serviceProvider)
         {
 
+            // discuss home
             routes.MapAreaRoute(
                 name: "Discuss",
                 areaName: "Plato.Discuss",
                 template: "discuss",
                 defaults: new { controller = "Home", action = "Index" }
+            );
+
+            // discuss topic
+            routes.MapAreaRoute(
+                name: "DiscussTopic",
+                areaName: "Plato.Discuss",
+                template: "discuss/topic/{id}/{alias}",
+                defaults: new { controller = "Home", action = "Topic" }
             );
 
         }
