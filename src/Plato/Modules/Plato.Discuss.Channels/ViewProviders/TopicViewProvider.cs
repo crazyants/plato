@@ -100,7 +100,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             var viewModel = new EditTopicChannelsViewModel()
             {
                 HtmlName = ChannelHtmlName,
-                SelectedChannels = await GetCategoryIdsByEntityIdAsync(topic.Id)
+                SelectedChannels = await GetCategoryIdsByEntityIdAsync(topic)
             };
 
             return Views(
@@ -142,7 +142,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
                     // Build channels to remove
                     var channelsToRemove = new List<int>();
-                    foreach (var role in await GetCategoryIdsByEntityIdAsync(topic.Id))
+                    foreach (var role in await GetCategoryIdsByEntityIdAsync(topic))
                     {
                         if (!channelsToAdd.Contains(role))
                         {
@@ -217,16 +217,26 @@ namespace Plato.Discuss.Channels.ViewProviders
             return channelsToAdd;
         }
 
-        async Task<IEnumerable<int>> GetCategoryIdsByEntityIdAsync(int entityId)
+        async Task<IEnumerable<int>> GetCategoryIdsByEntityIdAsync(Topic entity)
         {
 
-            if (entityId == 0)
+            // When creating a new topic use the categoryId set on the toic
+            if (entity.Id == 0)
             {
-                // return empty collection for new topics
+                if (entity.CategoryId > 0)
+                {
+                    // return empty collection for new topics
+                    return new List<int>()
+                    {
+                        entity.CategoryId
+                    };
+                }
+
                 return new List<int>();
+
             }
 
-            var channels = await _entityCategoryStore.GetByEntityId(entityId);
+            var channels = await _entityCategoryStore.GetByEntityId(entity.Id);
             ;
             if (channels != null)
             {

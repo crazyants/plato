@@ -50,8 +50,9 @@ namespace Plato.Discuss.ViewComponents
             PagerOptions pagerOptions)
         {
 
-            // Get current feature (i.e. Plato.Discuss) from area
-            var feature = await _contextFacade.GetFeatureByAreaAsync();
+            // Explictly get Plato.Discuss feature, this view component can be 
+            // used in different areas (i.e. Plat.Discuss.Channels) s dn't get by area name
+            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss");
 
             return await _entityStore.QueryAsync()
                 .Take(pagerOptions.Page, pagerOptions.PageSize)

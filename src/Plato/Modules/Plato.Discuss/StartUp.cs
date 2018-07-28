@@ -86,6 +86,15 @@ namespace Plato.Discuss
                 defaults: new { controller = "Home", action = "Topic" }
             );
 
+            // discuss new topic
+            routes.MapAreaRoute(
+                name: "DiscussNewTopic",
+                areaName: "Plato.Discuss",
+                template: "discuss/new/{channel?}",
+                defaults: new { controller = "Home", action = "Create" }
+            );
+
+
         }
     }
 }

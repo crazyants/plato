@@ -92,10 +92,15 @@ namespace Plato.Discuss.Controllers
 
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int channel)
         {
-            
-            var result = await _topicViewProvider.ProvideEditAsync(new Topic(), this);
+            var topic = new Topic();
+            if (channel > 0)
+            {
+                topic.CategoryId = channel;
+            }
+
+            var result = await _topicViewProvider.ProvideEditAsync(topic, this);
 
             // Return view
             return View(result);
@@ -159,7 +164,7 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            return await Create();
+            return await Create(0);
             
         }
 
@@ -270,10 +275,8 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            return await Create();
-
-
-
+            return await Create(0);
+            
 
             //var topic = await _entityStore.GetByIdAsync(id);
             //if (topic == null)
@@ -367,7 +370,7 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            return await Create();
+            return await Create(0);
 
         }
 
