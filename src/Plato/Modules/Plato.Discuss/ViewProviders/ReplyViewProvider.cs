@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
+using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
+using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
@@ -15,22 +17,26 @@ namespace Plato.Discuss.ViewProviders
     {
 
         private const string EditorHtmlName = "message";
-        
-        private readonly IEntityStore<Topic> _entityStore;
-        private readonly IContextFacade _contextFacade;
+
+
+        private readonly IEntityReplyStore<Reply> _replyStore;
+        private readonly IPostManager<Reply> _replyManager;
+ 
         private readonly IStringLocalizer T;
 
         private readonly HttpRequest _request;
 
         public ReplyViewProvider(
-            IContextFacade contextFacade,
-            IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
-            IStringLocalizer<TopicViewProvider> stringLocalize)
+            IStringLocalizer<TopicViewProvider> stringLocalize,
+            IPostManager<Reply> replyManager, 
+            IEntityReplyStore<Reply> replyStore)
         {
-            _contextFacade = contextFacade;
-            _entityStore = entityStore;
+
+            _replyManager = replyManager;
+            _replyStore = replyStore;
             _request = httpContextAccessor.HttpContext.Request;
+
             T = stringLocalize;
         }
 
@@ -65,6 +71,7 @@ namespace Plato.Discuss.ViewProviders
             var viewModel = new EditReplyViewModel()
             {
                 Id = reply.Id,
+                EntityId = reply.EntityId,
                 EditorHtmlName = EditorHtmlName,
                 Message = message
             };
@@ -82,6 +89,7 @@ namespace Plato.Discuss.ViewProviders
         {
             // Build model
             var model = new EditReplyViewModel();
+            model.Id = reply.Id;
             model.EntityId = reply.EntityId;
             model.Message = reply.Message;
 
@@ -90,9 +98,35 @@ namespace Plato.Discuss.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Reply model, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Reply reply, IUpdateModel updater)
         {
-            return Task.FromResult(default(IViewProviderResult));
+          
+            // Ensure the reply exists
+            if (await _replyStore.GetByIdAsync(reply.Id) == null)
+            {
+                return await BuildIndexAsync(reply, updater);
+            }
+
+            // Validate model
+            if (await ValidateModelAsync(reply, updater))
+            {
+
+                // Update reply
+                var result = await _replyManager.UpdateAsync(reply);
+
+                // Was there a problem updating the reply?
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        updater.ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+
+            }
+
+            return await BuildEditAsync(reply, updater);
+
         }
 
     }

@@ -40,17 +40,17 @@ namespace Plato.Entities.Services
             
             var result = new ActivityResult<TReply>();
 
-          
-            if (reply.EntityId <= 0)
-            {
-                return result.Failed(new ActivityError($"{nameof(reply.EntityId)} must must be greater than zero"));
-            }
-            
+
             if (reply.Id > 0)
             {
                 return result.Failed(new ActivityError($"{nameof(reply.Id)} cannot be greater than zero when creating a reply"));
             }
-            
+
+            if (reply.EntityId <= 0)
+            {
+                return result.Failed(new ActivityError($"{nameof(reply.EntityId)} must must be greater than zero"));
+            }
+        
             if (String.IsNullOrWhiteSpace(reply.Message))
             {
                 return result.Failed(new ActivityError($"{nameof(reply.Message)} is required"));
@@ -68,10 +68,7 @@ namespace Plato.Entities.Services
                 reply.CreatedUserId = user.Id;
                 reply.ModifiedUserId = user.Id;
             }
-           
-            reply.CreatedDate = DateTime.UtcNow;
-            reply.ModifiedDate = DateTime.UtcNow;
-
+     
             // Parse Html and message abstract
             reply.Html = await ParseMarkdown(reply.Message);
             reply.Abstract = await ParseAbstract(reply.Message);
@@ -125,6 +122,7 @@ namespace Plato.Entities.Services
                 return result.Failed(new ActivityError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
             
+            // Update modified details
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
             {

@@ -171,40 +171,6 @@ namespace Plato.Discuss.ViewProviders
                         updater.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
-              
-                //if (model.EntityId == 0)
-                //{
-
-                //    //var result = await _topicManager.CreateAsync(new Topic()
-                //    //{
-                //    //    Title = model.Title,
-                //    //    Message = message
-                //    //});
-
-
-                //    //foreach (var error in result.Errors)
-                //    //{
-                //    //    updater.ModelState.AddModelError(string.Empty, error.Description);
-                //    //}
-
-                //}
-                //else
-                //{
-
-                //    var result = await _replyManager.CreateAsync(new EntityReply
-                //    {
-                //        EntityId = model.EntityId,
-                //        Message = message.Trim()
-                //    });
-
-                //    foreach (var error in result.Errors)
-                //    {
-                //        updater.ModelState.AddModelError(string.Empty, error.Description);
-                //    }
-
-                //    return await BuildDisplayAsync(viewModel, updater);
-
-                //}
 
             }
 
@@ -231,6 +197,9 @@ namespace Plato.Discuss.ViewProviders
                     {
                         q.Keywords.IsIn(filterOptions.Search);
                     }
+                    q.IsSpam.False();
+                    q.IsPrivate.False();
+                    q.IsDeleted.False();
                 })
                 .OrderBy("CreatedDate", OrderBy.Asc)
                 .ToList();

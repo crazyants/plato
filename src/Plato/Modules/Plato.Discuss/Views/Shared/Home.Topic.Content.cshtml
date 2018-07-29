@@ -74,7 +74,9 @@
                                 @reply.CreatedBy.DisplayName
                             </a>
                             @T["posted "]
-                            @reply.CreatedDate.ToPrettyDate()
+                            <span data-toggle="tooltip" title=" @reply.CreatedDate">
+                                @reply.CreatedDate.ToPrettyDate()
+                            </span>
                         </div>
 
                         <ul class="nav nav-h navbar p-0 float-right">

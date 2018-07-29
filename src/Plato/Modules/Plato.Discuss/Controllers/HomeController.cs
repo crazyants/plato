@@ -92,7 +92,7 @@ namespace Plato.Discuss.Controllers
 
         }
         
-        // post new topic
+        // add new topic
 
         public async Task<IActionResult> Create(int channel)
         {
@@ -283,24 +283,6 @@ namespace Plato.Discuss.Controllers
 
             return await Create(0);
             
-
-            //var topic = await _entityStore.GetByIdAsync(id);
-            //if (topic == null)
-            //{
-            //    return NotFound();
-            //}
-            
-            //var result = await _topicViewProvider.ProvideUpdateAsync(topic, this);
-
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(result);
-            //}
-
-            //_alerter.Success(T["Reply Added Successfully!"]);
-
-            //return RedirectToAction(nameof(Topic));
-            
         }
 
         // edit topic
@@ -326,6 +308,12 @@ namespace Plato.Discuss.Controllers
         [ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(EditTopicViewModel model)
         {
+            // Get entity we are editing 
+            var topic = await _entityStore.GetByIdAsync(model.Id);
+            if (topic == null)
+            {
+                return NotFound();
+            }
 
             // Validate model state within all view providers
             if (await _topicViewProvider.IsModelStateValid(new Topic()
@@ -335,36 +323,22 @@ namespace Plato.Discuss.Controllers
             }, this))
             {
 
-                // We need to first add the entity so we have a nuique entity Id
-                // for all ProvideUpdateAsync methods within any involved view provider
-                var topic = await _postManager.CreateAsync(new Topic()
+                // Update title & message
+                topic.Title = model.Title;
+                topic.Message = model.Message;
+
+                // Execute view providers ProvideUpdateAsync method
+                await _topicViewProvider.ProvideUpdateAsync(topic, this);
+
+                // Everything was OK
+                _alerter.Success(T["Topic Updated Successfully!"]);
+
+                // Redirect to topic
+                return RedirectToAction(nameof(Topic), new
                 {
-                    Title = model.Title,
-                    Message = model.Message
+                    Id = topic.Id,
+                    Alias = topic.Alias
                 });
-
-                // Ensure the insert was successful
-                if (topic.Succeeded)
-                {
-
-                    // Execute view providers ProvideUpdateAsync method
-                    await _topicViewProvider.ProvideUpdateAsync(topic.Response, this);
-
-                    // Everything was OK
-                    _alerter.Success(T["Topic Created Successfully!"]);
-
-                    // Redirect to topic
-                    return RedirectToAction(nameof(Topic), new { Id = topic.Response.Id });
-
-                }
-                else
-                {
-                    // Errors that may have occurred whilst creating the entity
-                    foreach (var error in topic.Errors)
-                    {
-                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
 
             }
 
@@ -413,22 +387,25 @@ namespace Plato.Discuss.Controllers
                 return NotFound();
             }
 
-            // Validate model state within all view providers
-            if (await _replyViewProvider.IsModelStateValid(new Reply()
+            // Ensure the entity exists
+            var topic = await _entityStore.GetByIdAsync(reply.EntityId);
+            if (topic == null)
             {
-                EntityId = model.EntityId,
-                Message = model.Message
-            }, this))
-            {
+                return NotFound();
+            }
 
-                // get entity for reply
-                var topic = await _entityStore.GetByIdAsync(reply.EntityId);
+            // Update the message
+            reply.Message = model.Message;
+       
+            // Validate model state within all view providers
+            if (await _replyViewProvider.IsModelStateValid(reply, this))
+            {
 
                 // Execute view providers ProvideUpdateAsync method
                 await _replyViewProvider.ProvideUpdateAsync(reply, this);
 
                 // Everything was OK
-                _alerter.Success(T["Topic Created Successfully!"]);
+                _alerter.Success(T["Reply Updated Successfully!"]);
 
                 // Redirect to topic
                 return RedirectToAction(nameof(Topic), new

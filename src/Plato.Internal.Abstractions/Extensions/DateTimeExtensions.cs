@@ -7,7 +7,7 @@ namespace Plato.Internal.Abstractions.Extensions
 
         public static DateTime ToDateIfNull(this DateTime? input)
         {
-            return input ?? System.DateTime.Now;
+            return input ?? System.DateTime.UtcNow;
         }
 
 

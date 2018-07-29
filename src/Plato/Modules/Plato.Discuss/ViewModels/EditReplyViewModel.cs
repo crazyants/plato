@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Plato.Discuss.ViewModels
 {
@@ -9,8 +6,10 @@ namespace Plato.Discuss.ViewModels
     public class EditReplyViewModel
     {
 
+      
         public int Id { get; set; }
 
+        [Required]
         public int EntityId { get; set; }
 
         [Required]
