@@ -61,7 +61,7 @@ namespace Plato.Markdown.Services
         private async Task<string> ParseAbstractAsync(string markdown)
         {
             var html = await ParseMarkdownAsync(markdown);
-            return html.StripHtml().TrimToAround(500);
+            return html.PlainTextulize().TrimToAround(500);
         }
         
         public void Dispose()

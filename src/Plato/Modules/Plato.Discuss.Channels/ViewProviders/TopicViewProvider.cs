@@ -171,8 +171,13 @@ namespace Plato.Discuss.Channels.ViewProviders
                     // Update primary category
                     foreach (var channelId in channelsToAdd)
                     {
-                        topic.CategoryId = channelId;
-                        await _entityStore.UpdateAsync(topic);
+                        if (channelId > 0)
+                        {
+                            topic.CategoryId = channelId;
+                            await _entityStore.UpdateAsync(topic);
+                            break;
+                        }
+                      
                     }
                     
                 }

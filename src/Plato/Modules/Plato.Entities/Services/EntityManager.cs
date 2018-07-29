@@ -261,7 +261,7 @@ namespace Plato.Entities.Services
                 return await handler.Invoke(new Message<string>(message, this));
             }
 
-            return message.StripHtml().TrimToAround(500);
+            return message.PlainTextulize().TrimToAround(500);
 
         }
 

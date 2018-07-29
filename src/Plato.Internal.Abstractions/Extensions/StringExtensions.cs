@@ -41,15 +41,31 @@ namespace Plato.Internal.Abstractions.Extensions
             return input ?? string.Empty;
         }
         
-        public static string TrimToSize(this string input, int maxLength)
+        public static string TrimToSize(this string input, int length)
         {
-            if (string.IsNullOrEmpty(input))
-                return input;
-            return input.Length > maxLength ? input.Substring(maxLength) : input;
+
+            if (length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+
+            if (input == null)
+            {
+                return string.Empty;
+            }
+                
+            return input.Length >= length 
+                ? input.Substring(0, length) 
+                : input;
         }
         
         public static string TrimToAround(this string input, int length)
         {
+
+            if (length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
 
             if (input == null)
             {
@@ -82,7 +98,7 @@ namespace Plato.Internal.Abstractions.Extensions
                 }
             }
 
-            var sb = new System.Text.StringBuilder();
+            var sb = new StringBuilder();
             for (var i = 0; i <= output.Count - 1; i++)
             {
                 sb.Append((string) output[i]);
@@ -96,7 +112,11 @@ namespace Plato.Internal.Abstractions.Extensions
 
             if (input.Length >= length)
             {
-                return sb.ToString().Trim() + "...";
+                if (String.IsNullOrWhiteSpace(sb.ToString()))
+                {
+                    return string.Empty;
+                }
+                return sb.ToString() + "...";
             }
 
             return sb.ToString();
@@ -144,6 +164,24 @@ namespace Plato.Internal.Abstractions.Extensions
             return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json));
         }
 
+        public static string PlainTextulize(this string input)
+        {
+            return input.StripNewLines().StripHtml();
+        }
+
+
+        public static string StripNewLines(this string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
+
+            input = input.Replace(System.Environment.NewLine, "");
+            input = Regex.Replace(input, @"\r\n?|\n", "");
+            return input;
+        }
+
         public static string StripHtml(this string input)
         {
 
@@ -152,12 +190,12 @@ namespace Plato.Internal.Abstractions.Extensions
                 return string.Empty;
             }
 
-            if (input.IndexOf(char.Parse("<")) >= 0)
+            if (input.IndexOf('<') >= 0 && input.IndexOf('>') >= 0)
             {
                 input = Regex.Replace(input, "<[^>]*.>", " ");
             }
 
-            if (input.IndexOf(char.Parse("&")) >= 0)
+            if (input.IndexOf('&') >= 0)
             {
                 input = Regex.Replace(input, "&nbsp;", "", RegexOptions.IgnoreCase);
                 input = Regex.Replace(input, "&amp;", "&", RegexOptions.IgnoreCase);
@@ -172,6 +210,7 @@ namespace Plato.Internal.Abstractions.Extensions
             return Path.GetInvalidFileNameChars()
                 .Aggregate(input, (current, c) => current.Replace(c.ToString(), string.Empty));
         }
+
 
     }
 
