@@ -21,7 +21,7 @@ namespace Plato.Users.Controllers
     {
 
         private readonly IViewProviderManager<User> _userViewProvider;
-        private readonly IViewProviderManager<UsersIndexViewModel> _userListViewProvider;
+        
         private readonly IPlatoUserStore<User> _ploatUserStore;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -36,7 +36,7 @@ namespace Plato.Users.Controllers
             IStringLocalizer<AdminController> stringLocalizer,
             IPlatoUserStore<User> platoUserStore, 
             IViewProviderManager<User> userViewProvider,
-            IViewProviderManager<UsersIndexViewModel> userListViewProvider,
+            //IViewProviderManager<UsersIndexViewModel> userListViewProvider,
             IBreadCrumbManager breadCrumbManager,
             UserManager<User> userManager,
             IAlerter alerter)
@@ -44,7 +44,7 @@ namespace Plato.Users.Controllers
 
             _ploatUserStore = platoUserStore;
             _userViewProvider = userViewProvider;
-            _userListViewProvider = userListViewProvider;
+            //_userListViewProvider = userListViewProvider;
             _userManager = userManager;
             _breadCrumbManager = breadCrumbManager;
             _alerter = alerter;
@@ -87,32 +87,26 @@ namespace Plato.Users.Controllers
                 pagerOptions = new PagerOptions();
             }
 
+            //// Maintain previous route data when generating page links
+            //var routeData = new RouteData();
+            //routeData.Values.Add("Options.Search", filterOptions.Search);
+            //routeData.Values.Add("Options.Order", filterOptions.Order);
 
-            //if (!string.IsNullOrWhiteSpace(filterOptions.Search))
-            //{
-            //    //users = users.Where(u => u.NormalizedUserName.Contains(options.Search) || u.NormalizedEmail.Contains(options.Search));
-            //}
+            this.RouteData.Values.Add("page", pagerOptions.Page);
 
-            //switch (filterOptions.Order)
+
+            //var viewModel = new UsersIndexViewModel()
             //{
-            //    case UsersOrder.Username:
-            //        //users = users.OrderBy(u => u.NormalizedUserName);
-            //        break;
-            //    case UsersOrder.Email:
-            //        //users = users.OrderBy(u => u.NormalizedEmail);
-            //        break;
-            //}
-            
-            // Maintain previous route data when generating page links
-            var routeData = new RouteData();
-            routeData.Values.Add("Options.Search", filterOptions.Search);
-            routeData.Values.Add("Options.Order", filterOptions.Order);
-            
-            // Get model
-            var model = await GetPagedModel(filterOptions, pagerOptions);
+            //    FilterOpts = filterOptions,
+            //    PagerOpts = pagerOptions
+            //};
+
+
+            //// Get model
+            //var model = await GetPagedModel(filterOptions, pagerOptions);
 
             // Build view
-            var result = await _userListViewProvider.ProvideIndexAsync(model, this);
+            var result = await _userViewProvider.ProvideIndexAsync(new User(), this);
 
             // Return view
             return View(result);
@@ -221,37 +215,37 @@ namespace Plato.Users.Controllers
 
         #region "Private Methods"
 
-        private async Task<UsersIndexViewModel> GetPagedModel(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-            var users = await GetUsers(filterOptions, pagerOptions);
-            return new UsersIndexViewModel(
-                users,
-                filterOptions,
-                pagerOptions);
-        }
+        //private async Task<UsersIndexViewModel> GetPagedModel(
+        //    FilterOptions filterOptions,
+        //    PagerOptions pagerOptions)
+        //{
+        //    var users = await GetUsers(filterOptions, pagerOptions);
+        //    return new UsersIndexViewModel(
+        //        users,
+        //        filterOptions,
+        //        pagerOptions);
+        //}
 
-        public async Task<IPagedResults<User>> GetUsers(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-            return await _ploatUserStore.QueryAsync()
-                .Take(pagerOptions.Page, pagerOptions.PageSize)
-                .Select<UserQueryParams>(q =>
-                {
-                    if (!string.IsNullOrEmpty(filterOptions.Search))
-                    {
-                        q.UserName.IsIn(filterOptions.Search).Or();
-                        q.Email.IsIn(filterOptions.Search);
-                    }
-                    // q.UserName.IsIn("Admin,Mark").Or();
-                    // q.Email.IsIn("email440@address.com,email420@address.com");
-                    // q.Id.Between(1, 5);
-                })
-                .OrderBy("Id", OrderBy.Asc)
-                .ToList();
-        }
+        //public async Task<IPagedResults<User>> GetUsers(
+        //    FilterOptions filterOptions,
+        //    PagerOptions pagerOptions)
+        //{
+        //    return await _ploatUserStore.QueryAsync()
+        //        .Take(pagerOptions.Page, pagerOptions.PageSize)
+        //        .Select<UserQueryParams>(q =>
+        //        {
+        //            if (!string.IsNullOrEmpty(filterOptions.Search))
+        //            {
+        //                q.UserName.IsIn(filterOptions.Search).Or();
+        //                q.Email.IsIn(filterOptions.Search);
+        //            }
+        //            // q.UserName.IsIn("Admin,Mark").Or();
+        //            // q.Email.IsIn("email440@address.com,email420@address.com");
+        //            // q.Id.Between(1, 5);
+        //        })
+        //        .OrderBy("Id", OrderBy.Asc)
+        //        .ToList();
+        //}
         
         #endregion
 

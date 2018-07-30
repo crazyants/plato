@@ -10,6 +10,7 @@ using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.ViewModels;
 
@@ -19,7 +20,6 @@ namespace Plato.Users.ViewProviders
     {
 
         private readonly UserManager<User> _userManager;
-        private readonly IActionContextAccessor _actionContextAccesor;
         private readonly IHostingEnvironment _hostEnvironment;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
         private readonly IUrlHelper _urlHelper;
@@ -34,15 +34,28 @@ namespace Plato.Users.ViewProviders
             _userManager = userManager;
             _hostEnvironment = hostEnvironment;
             _userPhotoStore = userPhotoStore;
-            _actionContextAccesor = actionContextAccesor;
-            _urlHelper = urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
+            _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
         }
+
+        #region "Implementation"
 
         public override Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
         {
-            return Task.FromResult(Views(
-                View<User>("User.List", model => user).Zone("header").Order(3)
-            ));
+
+
+            var filterOptions = new FilterOptions();
+
+            var pagerOptions = new PagerOptions();
+            pagerOptions.Page = GetPageIndex(updater);
+
+            var viewModel = new UsersIndexViewModel();
+
+            return Task.FromResult(
+                Views(
+                    View<UsersIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header"),
+                    View<UsersIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools"),
+                    View<UsersIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content")
+                ));
 
         }
 
@@ -134,6 +147,10 @@ namespace Plato.Users.ViewProviders
 
         }
 
+        #endregion
+
+        #region "Private Methods"
+
         async Task UpdateUserPhoto(User user, IFormFile file)
         {
 
@@ -178,7 +195,24 @@ namespace Plato.Users.ViewProviders
                 userPhoto = await _userPhotoStore.CreateAsync(userPhoto);
             
         }
-        
+
+        int GetPageIndex(IUpdateModel updater)
+        {
+
+            var page = 1;
+            var routeData = updater.RouteData;
+            var found = routeData.Values.TryGetValue("page", out object value);
+            if (found)
+            {
+                int.TryParse(value.ToString(), out page);
+            }
+
+            return page;
+
+        }
+
+        #endregion
 
     }
+
 }

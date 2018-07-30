@@ -1,21 +1,9 @@
 ﻿@model UsersIndexViewModel
 
-<card class="card card-body-flush">
-    <card-title>
-        <h6 class="card-title">@T["Users"]</h6>
-    </card-title>
-    <card-body>
-        <ul class="list-group list-group-flush list-group-hover">
-            @foreach (var user in Model.Results.Data)
-            {
-                @await DisplayAsync(new View("Admin.Index.Content.Item", user))
-            }
-        </ul>
-    </card-body>
-</card>
-
-<div class="mt-4 mb-4">
-    <pager model="@Model.PagerOpts"></pager>
-</div>
+@await DisplayAsync(new View("UserList", new
+{
+    filterOpts = @Model.FilterOpts,
+    pagerOpts = @Model.PagerOpts
+}))
 
 
