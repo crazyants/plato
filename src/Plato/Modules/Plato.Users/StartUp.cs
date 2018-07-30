@@ -19,6 +19,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Users.ViewAdaptors;
 using Plato.Users.Handlers;
+using Plato.Users.Models;
 using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
 
@@ -88,10 +89,13 @@ namespace Plato.Users
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
-            // register view proviers
-
+            // Admin view proviers
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
             services.AddScoped<IViewProvider<User>, AdminViewProvider>();
+          
+            // Profile view proviers
+            services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
+            services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
             
             // register view drivers
             services.AddScoped<IViewAdaptorProvider, UserListAdaptor>();
@@ -105,9 +109,8 @@ namespace Plato.Users
         {
 
             // load tag helpers
-            serviceProvider.AddTagHelpers(typeof(PagerTagHelper).Assembly);
-
-
+            //serviceProvider.AddTagHelpers(typeof(PagerTagHelper).Assembly);
+            
             // add authentication middleware
             app.UseAuthentication();
 
@@ -139,7 +142,6 @@ namespace Plato.Users
                 defaults: new { controller = "Admin", action = "Display" }
             );
 
-
             routes.MapAreaRoute(
                 name: "Admin-CreateUser",
                 areaName: "Plato.Users",
@@ -153,16 +155,7 @@ namespace Plato.Users
                 template: "admin/users/edit",
                 defaults: new { controller = "Admin", action = "EditAsync" }
             );
-
-
-            //routes.MapAreaRoute(
-            //    viewName: "Users",
-            //    area: "Plato.Users",
-            //    template: "users/{controller}/{action}/{id?}",
-            //    controller: "Account",
-            //    action: "Login"
-            //);
-
+            
 
         }
     }

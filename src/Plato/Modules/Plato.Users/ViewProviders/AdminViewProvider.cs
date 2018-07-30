@@ -42,7 +42,6 @@ namespace Plato.Users.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
         {
 
-
             var filterOptions = new FilterOptions();
 
             var pagerOptions = new PagerOptions();
@@ -79,38 +78,21 @@ namespace Plato.Users.ViewProviders
         public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
 
+            var viewModel = new EditUserViewModel()
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email
+            };
+
             return Task.FromResult(
                 Views(
                     View<User>("Admin.Edit.Header", model => user).Zone("header"),
                     View<User>("Admin.Edit.Meta", model => user).Zone("meta"),
-                    View<EditUserViewModel>("Admin.Edit.Content", model =>
-                    {
-                        model.Id = user.Id;
-                        model.UserName = user.UserName;
-                        model.Email = user.Email;
-                        return model;
-                    }).Zone("content"),
-                    View<EditUserViewModel>("Admin.Edit.Sidebar", model =>
-                    {
-                        model.Id = user.Id;
-                        model.UserName = user.UserName;
-                        model.Email = user.Email;
-                        return model;
-                    }).Zone("sidebar"),
-                    View<EditUserViewModel>("Admin.Edit.Footer", model =>
-                    {
-                        model.Id = user.Id;
-                        model.UserName = user.UserName;
-                        model.Email = user.Email;
-                        return model;
-                    }).Zone("footer"),
-                    View<EditUserViewModel>("Admin.Edit.Actions", model =>
-                    {
-                        model.Id = user.Id;
-                        model.UserName = user.UserName;
-                        model.Email = user.Email;
-                        return model;
-                    }).Zone("actions")
+                    View<EditUserViewModel>("Admin.Edit.Content", model => viewModel).Zone("content"),
+                    View<EditUserViewModel>("Admin.Edit.Sidebar", model => viewModel).Zone("sidebar"),
+                    View<EditUserViewModel>("Admin.Edit.Footer", model => viewModel).Zone("footer"),
+                    View<EditUserViewModel>("Admin.Edit.Actions", model => viewModel).Zone("actions")
                 ));
 
         }

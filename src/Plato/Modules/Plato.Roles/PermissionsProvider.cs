@@ -35,7 +35,7 @@ namespace Plato.Roles
             {
                 new DefaultPermissions
                 {
-                    Name = "Administrator",
+                    RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
                         ManageRoles,

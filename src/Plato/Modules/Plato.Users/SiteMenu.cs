@@ -23,13 +23,13 @@ namespace Plato.Users
             }
 
             builder
-                .Add(T["Users 1"], configuration => configuration
-                    .Add(T["Users 2"], "5", security => security
-                        .Add(T["Users 3"], "10", installed => installed
-                            .Action("Index", "Admin", "Plato.Users")
-                            //.Permission(Permissions.ManageRoles)
-                            .LocalNav()
-                        )));
+                .Add(T["Users"], configuration => configuration
+
+                    .Add(T["Member List"], "1", installed => installed
+                        .Action("Index", "Home", "Plato.Users")
+                        //.Permission(Permissions.ManageRoles)
+                        .LocalNav()
+                    ));
         }
     }
 

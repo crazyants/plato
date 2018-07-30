@@ -10,7 +10,9 @@ using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Internal.Stores.Roles
 {
-    public class RoleStore : IRoleStore<Role>, IRoleClaimStore<Role>
+    public class RoleStore :
+        IRoleStore<Role>, 
+        IRoleClaimStore<Role>
     {
 
         private readonly IPlatoRoleStore _platoRoleStore;

@@ -1,0 +1,9 @@
+﻿@model UsersIndexViewModel
+
+@await DisplayAsync(new View("UserList", new
+{
+    filterOpts = @Model.FilterOpts,
+    pagerOpts = @Model.PagerOpts
+}))
+
+

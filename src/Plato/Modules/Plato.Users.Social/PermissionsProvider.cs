@@ -27,7 +27,7 @@ namespace Plato.Users.Social
             {
                 new DefaultPermissions
                 {
-                    Name = "Administrator",
+                    RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
                         EditSocial,
@@ -36,7 +36,7 @@ namespace Plato.Users.Social
                 },
                 new DefaultPermissions
                 {
-                    Name = "Members",
+                    RoleName = DefaultRoles.Member,
                     Permissions = new[]
                     {
                         ViewSocial

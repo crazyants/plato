@@ -75,8 +75,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
-
-
+        
         public override Task<IViewProviderResult> BuildEditAsync(Label model, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
@@ -86,8 +85,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
-
-
+        
         #endregion
 
         #region "Private Methods"
@@ -106,11 +104,8 @@ namespace Plato.Discuss.Labels.ViewProviders
             return page;
 
         }
-
-
+        
         #endregion
-
-
 
     }
 }

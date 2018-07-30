@@ -17,6 +17,7 @@ using Plato.Roles.ViewProviders;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Roles.Handlers;
 using Plato.Internal.Stores.Roles;
+using Plato.Roles.Services;
 
 namespace Plato.Roles
 {
@@ -41,6 +42,10 @@ namespace Plato.Roles
             services.TryAddScoped<IRoleStore<Role>, RoleStore>();
             services.TryAddScoped<IRoleClaimStore<Role>, RoleStore>();
 
+            // register default role manager
+            
+            services.TryAddScoped<IDefaultRolesManager, DefaultRolesManager>();
+            
             // register role manager
 
             services.TryAddScoped<RoleManager<Role>>();
