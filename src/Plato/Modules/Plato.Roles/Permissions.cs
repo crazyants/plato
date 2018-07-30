@@ -3,7 +3,7 @@ using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Roles
 {
-    public class PermissionsProvider : IPermissionsProvider
+    public class Permissions : IPermissionsProvider
     {
 
         public static readonly Permission ManageRoles =

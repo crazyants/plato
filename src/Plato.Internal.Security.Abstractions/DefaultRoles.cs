@@ -7,16 +7,13 @@
         public const string Member = "Member";
         public const string Guest = "Guest";
 
-        public static string[] ToList()
+        public static string[] ToList() => new[]
         {
-            return new string[]
-            {
-                Administrator,
-                Employee,
-                Member,
-                Guest
-            };
-        }
+            Administrator,
+            Employee,
+            Member,
+            Guest
+        };
 
     }
 }

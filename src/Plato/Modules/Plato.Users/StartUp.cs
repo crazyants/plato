@@ -17,6 +17,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.TagHelpers;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
+using Plato.Internal.Stores.Roles;
 using Plato.Users.ViewAdaptors;
 using Plato.Users.Handlers;
 using Plato.Users.Models;
@@ -48,6 +49,12 @@ namespace Plato.Users
           
             // register set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
+
+            // register role manager
+
+            services.TryAddScoped<IRoleStore<Role>, RoleStore>();
+            services.TryAddScoped<IRoleClaimStore<Role>, RoleStore>();
+            services.TryAddScoped<RoleManager<Role>>();
 
             // Adds the default token providers used to generate tokens for reset passwords, change email
             // and change telephone number operations, and for two factor authentication token generation.
