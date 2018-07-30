@@ -105,15 +105,9 @@ namespace Plato.Users.Controllers
             };
 
             if (id > 0)
-                userPhoto = await _userPhotoStore.UpdateAsync(userPhoto);
+                await _userPhotoStore.UpdateAsync(userPhoto);
             else
-                userPhoto = await _userPhotoStore.CreateAsync(userPhoto);
-
-            //// update user
-            //user.Detail.ModifiedUserId = user.Id;
-            //user.Detail.ModifiedDate = DateTime.UtcNow;
-
-            //await _platoUserStore.UpdateAsync(user);
+                await _userPhotoStore.CreateAsync(userPhoto);
 
             return View();
         }
