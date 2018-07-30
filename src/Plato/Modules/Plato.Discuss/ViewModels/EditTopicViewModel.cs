@@ -21,6 +21,8 @@ namespace Plato.Discuss.ViewModels
         
         public string EditorHtmlName { get; set; }
 
+        public string Alias { get; set; }
+
     }
 
 }

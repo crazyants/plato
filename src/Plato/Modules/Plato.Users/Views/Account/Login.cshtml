@@ -10,12 +10,9 @@
         <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
             <h4>@T["Use a local account to log in."]</h4>
             <hr />
+
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="@Model.Email" class="font-weight-bold"></label>
-                <span asp-validation-for="@Model.Email" class="text-danger float-xl-right"></span>
-                <input asp-for="@Model.Email" value="@Model.Email" placeholder="@T["email@address.com"]" class="form-control d-block" />
-            </div>
+         
             <div class="form-group">
                 <label asp-for="@Model.UserName" class="col-form-label font-weight-bold"></label>
                 <span asp-validation-for="@Model.UserName" class="text-danger float-xl-right"></span>

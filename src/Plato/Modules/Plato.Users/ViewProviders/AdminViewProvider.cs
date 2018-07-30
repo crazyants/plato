@@ -15,7 +15,7 @@ using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
 {
-    public class UserViewProvider : BaseViewProvider<User>
+    public class AdminViewProvider : BaseViewProvider<User>
     {
 
         private readonly UserManager<User> _userManager;
@@ -24,7 +24,7 @@ namespace Plato.Users.ViewProviders
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
         private readonly IUrlHelper _urlHelper;
 
-        public UserViewProvider(
+        public AdminViewProvider(
             UserManager<User> userManager,
             IActionContextAccessor actionContextAccesor,
             IHostingEnvironment hostEnvironment,
@@ -37,7 +37,15 @@ namespace Plato.Users.ViewProviders
             _actionContextAccesor = actionContextAccesor;
             _urlHelper = urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
         }
-        
+
+        public override Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
+        {
+            return Task.FromResult(Views(
+                View<User>("User.List", model => user).Zone("header").Order(3)
+            ));
+
+        }
+
         public override Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
         {
 
@@ -50,15 +58,7 @@ namespace Plato.Users.ViewProviders
                 ));
 
         }
-
-        public override Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
-        {
-            return Task.FromResult(Views(
-                View<User>("User.List", model => user).Zone("header").Order(3)
-            ));
-
-        }
-
+        
         public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
 

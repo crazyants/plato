@@ -1,10 +1,12 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models;
 using Plato.Internal.Models.Users;
@@ -13,37 +15,22 @@ using Plato.Internal.Stores.Abstract;
 namespace Plato.Users.Controllers
 {
 
-    //public class TestDocument2 : BaseDocument
-    //{
-
-    //    public string Title { get; set; }
-
-    //    public string Body { get; set; }
-        
-    //}
-    
+  
     public class AccountController : Controller
     {
-
+        
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ISchemaBuilder _schemaBuilder;
-
-        public readonly IDocumentStore _documentStore;
-     
+        private readonly ILogger<AccountController> _logger;
+        
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManage,
-            IHttpContextAccessor httpContextAccessor, 
-            ISchemaBuilder schemaBuilder,
-            IDocumentStore documentStore)
+            ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManage;
-            _httpContextAccessor = httpContextAccessor;
-            _schemaBuilder = schemaBuilder;
-            _documentStore = documentStore;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -92,14 +79,9 @@ namespace Plato.Users.Controllers
 
             //var user = _httpContextAccessor.HttpContext.User;
             //var claims = user.Claims;
-
-            var model = new LoginViewModel();
-            model.Email = "";
-            model.UserName = "";
-            model.Password = "";
-
+            
             ViewData["ReturnUrl"] = returnUrl;
-            return Task.FromResult((IActionResult) View(model));
+            return Task.FromResult((IActionResult) View(new LoginViewModel()));
 
         }
 
@@ -123,17 +105,7 @@ namespace Plato.Users.Controllers
                     lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-
-                    //var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                    //identity.AddClaim(new Claim(ClaimTypes.ViewName, model.UserName));
-
-                    ////context.Authenticate | Challenge | SignInAsync("scheme"); // Calls 2.0 auth stack
-
-                    //await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    //    new ClaimsPrincipal(identity));
-                    
-
-                    //_logger.LogInformation(1, "User logged in.");
+                    _logger.LogInformation(1, "User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -146,12 +118,9 @@ namespace Plato.Users.Controllers
                 }
                 if (result.IsLockedOut)
                 {
-                    //_logger.LogWarning(2, "User account locked out.");
-                    //return View("Lockout");
-
+                    _logger.LogWarning(2, "User account locked out.");
                     ModelState.AddModelError(string.Empty, "Account Locked out.");
                     return View(model);
-
                 }
                 else
                 {
@@ -168,8 +137,7 @@ namespace Plato.Users.Controllers
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
-
-   
+            
             var model = new RegisterViewModel
             {
                 Email = "admin@admin.com",
@@ -243,8 +211,51 @@ namespace Plato.Users.Controllers
             }
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Lockout()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model, bool rememberMe, string returnUrl = null)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
 
+            var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+            var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User with ID {UserId} logged in with 2fa.", user.Id);
+                return RedirectToLocal(returnUrl);
+            }
+            else if (result.IsLockedOut)
+            {
+                _logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
+                return RedirectToAction(nameof(Lockout));
+            }
+            else
+            {
+                _logger.LogWarning("Invalid authenticator code entered for user with ID {UserId}.", user.Id);
+                ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
+                return View();
+            }
+        }
+        
     }
+
 }

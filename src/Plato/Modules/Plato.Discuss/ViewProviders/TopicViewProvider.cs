@@ -124,8 +124,9 @@ namespace Plato.Discuss.ViewProviders
             {
                 Id = topic.Id,
                 Title = topic.Title,
+                Message = message,
                 EditorHtmlName = EditorHtmlName,
-                Message = message
+                Alias = topic.Alias
             };
      
             return Task.FromResult(Views(

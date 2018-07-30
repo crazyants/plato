@@ -91,7 +91,7 @@ namespace Plato.Users
             // register view proviers
 
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
-            services.AddScoped<IViewProvider<User>, UserViewProvider>();
+            services.AddScoped<IViewProvider<User>, AdminViewProvider>();
 
             services.AddScoped<IViewProviderManager<UsersIndexViewModel>, ViewProviderManager<UsersIndexViewModel>>();
             services.AddScoped<IViewProvider<UsersIndexViewModel>, AdminIndexViewProvider>();

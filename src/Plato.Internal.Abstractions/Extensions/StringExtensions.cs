@@ -168,8 +168,7 @@ namespace Plato.Internal.Abstractions.Extensions
         {
             return input.StripNewLines().StripHtml();
         }
-
-
+        
         public static string StripNewLines(this string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -210,8 +209,7 @@ namespace Plato.Internal.Abstractions.Extensions
             return Path.GetInvalidFileNameChars()
                 .Aggregate(input, (current, c) => current.Replace(c.ToString(), string.Empty));
         }
-
-
+        
     }
 
 }
