@@ -12,15 +12,6 @@ using Plato.Internal.Security.Abstractions;
 namespace Plato.Roles.Services
 {
 
-
-    public interface IDefaultRolesManager
-    {
-        Task InstallDefaultRolesFromPermissionProviders();
-
-        Task UninstallDefaultRolesFromPermissionProviders();
-
-    }
-
     public class DefaultRolesManager : IDefaultRolesManager
     {
 
@@ -37,7 +28,7 @@ namespace Plato.Roles.Services
         }
 
 
-        public async Task InstallDefaultRolesFromPermissionProviders()
+        public async Task InstallDefaultRolesAsync()
         {
       
             // Iterate through all permission providers
@@ -87,9 +78,17 @@ namespace Plato.Roles.Services
 
         }
 
-        public Task UninstallDefaultRolesFromPermissionProviders()
+        public async Task UninstallDefaultRolesAsync()
         {
-            throw new NotImplementedException();
+            foreach (var roleName in DefaultRoles.ToList())
+            {
+                var role = await _roleManager.FindByNameAsync(roleName);
+                if (role != null)
+                {
+                    await _roleManager.DeleteAsync(role);
+                }
+            }
         }
+
     }
 }

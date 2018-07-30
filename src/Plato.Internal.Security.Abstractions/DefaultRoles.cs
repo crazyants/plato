@@ -6,5 +6,17 @@
         public const string Employee = "Employee";
         public const string Member = "Member";
         public const string Guest = "Guest";
+
+        public static string[] ToList()
+        {
+            return new string[]
+            {
+                Administrator,
+                Employee,
+                Member,
+                Guest
+            };
+        }
+
     }
 }

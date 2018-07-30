@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Categories.Models;
 using Plato.Internal.Abstractions.SetUp;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Shell;
@@ -33,18 +34,11 @@ namespace Plato.Roles
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            // register set-up event handler
-
-            services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-
+     
             // register role stores
 
             services.TryAddScoped<IRoleStore<Role>, RoleStore>();
             services.TryAddScoped<IRoleClaimStore<Role>, RoleStore>();
-
-            // register default role manager
-            
-            services.TryAddScoped<IDefaultRolesManager, DefaultRolesManager>();
             
             // register role manager
 
@@ -73,6 +67,16 @@ namespace Plato.Roles
 
             // register permissions provider
             services.AddScoped<IPermissionsProvider, PermissionsProvider>();
+
+            // register default role manager
+
+            services.TryAddScoped<IDefaultRolesManager, DefaultRolesManager>();
+
+            // register feature & set-up event handler
+
+            services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
 
         }
 

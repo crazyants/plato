@@ -6,25 +6,33 @@ using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models.Users;
+using Plato.Roles.Services;
 
 namespace Plato.Roles.Handlers
 {
     public class SetUpEventHandler : BaseSetUpEventHandler
     {
 
+        public const string Version = "1.0.0";
+
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly UserManager<User> _userManager;
+        private readonly IDefaultRolesManager _defaultRolesManager;
 
         public SetUpEventHandler(
             ISchemaBuilder schemaBuilder,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            IDefaultRolesManager defaultRolesManager)
         {
             _schemaBuilder = schemaBuilder;
             _userManager = userManager;
+            _defaultRolesManager = defaultRolesManager;
         }
 
         public override async Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
+
+            // Build schema
 
             using (var builder = _schemaBuilder)
             {
@@ -50,6 +58,9 @@ namespace Plato.Roles.Handlers
 
             }
 
+            // Add default roles
+            await _defaultRolesManager.InstallDefaultRolesAsync();
+
         }
         
         void Configure(ISchemaBuilder builder)
@@ -59,7 +70,7 @@ namespace Plato.Roles.Handlers
                 .Configure(options =>
                 {
                     options.ModuleName = base.ModuleId;
-                    options.Version = "1.0.0";
+                    options.Version = Version;
                 });
 
         }

@@ -33,7 +33,6 @@ namespace Plato.Users.ViewProviders
                     View<UsersIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
                 ));
 
-
         }
         
         public override Task<IViewProviderResult> BuildDisplayAsync(UserProfile user, IUpdateModel updater)
