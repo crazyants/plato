@@ -29,38 +29,9 @@ namespace Plato.Roles.Handlers
             _defaultRolesManager = defaultRolesManager;
         }
 
-        public override async Task SetUp(SetUpContext context, Action<string, string> reportError)
+        public override Task SetUp(SetUpContext context, Action<string, string> reportError)
         {
-
-            //// Build schema
-
-            //using (var builder = _schemaBuilder)
-            //{
-
-            //    // configure
-            //    Configure(builder);
-
-            //    // roles 
-            //    Roles(builder);
-
-            //    // user roles 
-            //    UserRoles(builder);
-                
-            //    var result = await builder.ApplySchemaAsync();
-            //    if (result.Errors.Count > 0)
-            //    {
-            //        foreach (var error in result.Errors)
-            //        {
-            //            reportError(error.Message, error.StackTrace);
-            //        }
-
-            //    }
-
-            //}
-
-            //// Add default roles
-            //await _defaultRolesManager.InstallDefaultRolesAsync();
-
+            return Task.CompletedTask;
         }
         
         //void Configure(ISchemaBuilder builder)

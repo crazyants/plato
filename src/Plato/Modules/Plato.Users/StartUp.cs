@@ -50,10 +50,11 @@ namespace Plato.Users
             // register set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
 
-            // register role manager
-
-            services.TryAddScoped<IRoleStore<Role>, RoleStore>();
-            services.TryAddScoped<IRoleClaimStore<Role>, RoleStore>();
+            // Register dummy role stores
+            // These are replaced by real stores once Plato.Roles is enabled.
+        
+            services.TryAddScoped<IRoleStore<Role>, DummyRoleStore>();
+            services.TryAddScoped<IRoleClaimStore<Role>, DummyRoleStore>();
             services.TryAddScoped<RoleManager<Role>>();
 
             // Adds the default token providers used to generate tokens for reset passwords, change email

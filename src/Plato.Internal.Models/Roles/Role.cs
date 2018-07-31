@@ -22,15 +22,15 @@ namespace Plato.Internal.Models.Roles
         public string Description { get; set;  }
 
         public List<RoleClaim> RoleClaims { get; } = new List<RoleClaim>();
-        
-        public DateTime? CreatedDate { get; set; }
 
         public int CreatedUserId { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         public int ModifiedUserId { get; set; }
-        
+
+        public DateTime? ModifiedDate { get; set; }
+
         #endregion
 
         #region "Constructor"

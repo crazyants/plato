@@ -254,7 +254,6 @@ namespace Plato.Roles.Handlers
                 .CreateDefaultProcedures(userRoles);
 
             builder
-
                 .CreateProcedure(
                     new SchemaProcedure("SelectRolesByUserId", @"
                             SELECT * FROM {prefix}_Roles WITH (nolock) WHERE Id IN (
