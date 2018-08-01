@@ -19,6 +19,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Roles.Handlers;
 using Plato.Internal.Stores.Roles;
 using Plato.Roles.Services;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Roles
 {
@@ -33,47 +34,41 @@ namespace Plato.Roles
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-     
-            // register role stores
-
-            services.TryAddScoped<IRoleStore<Role>, RoleStore>();
-            services.TryAddScoped<IRoleClaimStore<Role>, RoleStore>();
             
-            // register role manager
+            // Replace dummy role stores registered via User StartUp with real implementations
+            services.Replace<IRoleStore<Role>, RoleStore>(ServiceLifetime.Scoped);
+            services.Replace<IRoleClaimStore<Role>, RoleStore>(ServiceLifetime.Scoped);
 
+            // Register role manager
             services.TryAddScoped<RoleManager<Role>>();
 
-            // user view providers
-
+            // User view providers
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
 
-            // category view providers
+            // Category view providers
             services.AddScoped<IViewProviderManager<CategoryBase>, ViewProviderManager<CategoryBase>>();
             services.AddScoped<IViewProvider<CategoryBase>, CategoryViewProvider>();
             
-            // role view providers
+            // Role index view providers
             services.AddScoped<IViewProviderManager<RolesIndexViewModel>, ViewProviderManager<RolesIndexViewModel>>();
             services.AddScoped<IViewProvider<RolesIndexViewModel>, AdminIndexViewProvider>();
 
+            // Role view provider
             services.AddScoped<IViewProviderManager<Role>, ViewProviderManager<Role>>();
             services.AddScoped<IViewProvider<Role>, RoleViewProvider>();
             
-            // register navigation provider
-
+            // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
-            // register permissions provider
+            // Register permissions provider
             services.AddScoped<IPermissionsProvider, Permissions>();
 
-            // register default role manager
-
+            // Register default role manager
             services.TryAddScoped<IDefaultRolesManager, DefaultRolesManager>();
 
-            // register feature & set-up event handler
-
+            // Register feature & set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 

@@ -14,8 +14,97 @@ namespace Plato.Roles.Handlers
     {
 
         public string Version { get; } = "1.0.0";
-        
 
+        // Roles schema
+        private readonly SchemaTable _roles = new SchemaTable()
+        {
+            Name = "Roles",
+            Columns = new List<SchemaColumn>()
+            {
+                new SchemaColumn()
+                {
+                    PrimaryKey = true,
+                    Name = "Id",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "[Name]",
+                    Length = "255",
+                    DbType = DbType.String
+                },
+                new SchemaColumn()
+                {
+                    Name = "NormalizedName",
+                    Length = "255",
+                    DbType = DbType.String
+                },
+                new SchemaColumn()
+                {
+                    Name = "Description",
+                    Length = "255",
+                    DbType = DbType.String
+                },
+                new SchemaColumn()
+                {
+                    Name = "Claims",
+                    Length = "max",
+                    DbType = DbType.String
+                },
+                new SchemaColumn()
+                {
+                    Name = "CreatedDate",
+                    DbType = DbType.DateTime2
+                },
+                new SchemaColumn()
+                {
+                    Name = "CreatedUserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedDate",
+                    DbType = DbType.DateTime2
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedUserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "ConcurrencyStamp",
+                    Length = "255",
+                    DbType = DbType.String
+                }
+            }
+        };
+
+        // User Roles Schema
+        private readonly SchemaTable _userRoles = new SchemaTable()
+        {
+            Name = "UserRoles",
+            Columns = new List<SchemaColumn>()
+            {
+                new SchemaColumn()
+                {
+                    PrimaryKey = true,
+                    Name = "Id",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "UserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "RoleId",
+                    DbType = DbType.Int32
+                }
+            }
+        };
+        
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly UserManager<User> _userManager;
         private readonly IDefaultRolesManager _defaultRolesManager;
@@ -29,8 +118,7 @@ namespace Plato.Roles.Handlers
             _userManager = userManager;
             _defaultRolesManager = defaultRolesManager;
         }
-
-
+        
         #region "Implementation"
 
         public override async Task InstallingAsync(IFeatureEventContext context)
@@ -58,8 +146,7 @@ namespace Plato.Roles.Handlers
                         context.Logger.LogInformation(statement);
                     }
                 }
-
-
+                
                 var result = await builder.ApplySchemaAsync();
                 if (result.Errors.Count > 0)
                 {
@@ -71,7 +158,7 @@ namespace Plato.Roles.Handlers
                 }
 
             }
-            
+
         }
 
         public override async Task InstalledAsync(IFeatureEventContext context)
@@ -102,6 +189,8 @@ namespace Plato.Roles.Handlers
                 {
                     options.ModuleName = base.ModuleId;
                     options.Version = Version;
+                    options.DropTablesBeforeCreate = true;
+                    options.DropProceduresBeforeCreate = true;
                 });
 
         }
@@ -109,82 +198,18 @@ namespace Plato.Roles.Handlers
         void Roles(ISchemaBuilder builder)
         {
 
-            var roles = new SchemaTable()
-            {
-                Name = "Roles",
-                Columns = new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        PrimaryKey = true,
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Name]",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "NormalizedName",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Description",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Claims",
-                        Length = "max",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTime2
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedDate",
-                        DbType = DbType.DateTime2
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ConcurrencyStamp",
-                        Length = "255",
-                        DbType = DbType.String
-                    }
-                }
-            };
-
             // create tables and default procedures
             builder
                 // Create tables
-                .CreateTable(roles)
+                .CreateTable(_roles)
                 // Create basic default CRUD procedures
-                .CreateDefaultProcedures(roles)
+                .CreateDefaultProcedures(_roles)
 
-            // create unique stored procedures
+                // create unique stored procedures
 
                 .CreateProcedure(
                     new SchemaProcedure("SelectRoleByName", StoredProcedureType.SelectByKey)
-                        .ForTable(roles)
+                        .ForTable(_roles)
                         .WithParameter(new SchemaColumn()
                         {
                             Name = "[Name]",
@@ -193,7 +218,7 @@ namespace Plato.Roles.Handlers
                         }))
                 .CreateProcedure(
                     new SchemaProcedure("SelectRoleByNameNormalized", StoredProcedureType.SelectByKey)
-                        .ForTable(roles)
+                        .ForTable(_roles)
                         .WithParameter(new SchemaColumn()
                         {
                             Name = "NormalizedName",
@@ -201,20 +226,20 @@ namespace Plato.Roles.Handlers
                             Length = "255"
                         }))
                 .CreateProcedure(new SchemaProcedure("SelectRolesPaged", StoredProcedureType.SelectPaged)
-                    .ForTable(roles)
+                    .ForTable(_roles)
                     .WithParameters(new List<SchemaColumn>()
                     {
-                            new SchemaColumn()
-                            {
-                                Name = "Id",
-                                DbType = DbType.Int32
-                            },
-                            new SchemaColumn()
-                            {
-                                Name = "[Name]",
-                                DbType = DbType.String,
-                                Length = "255"
-                            }
+                        new SchemaColumn()
+                        {
+                            Name = "Id",
+                            DbType = DbType.Int32
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "[Name]",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
                     }));
 
         }
@@ -222,36 +247,12 @@ namespace Plato.Roles.Handlers
         void UserRoles(ISchemaBuilder builder)
         {
 
-            var userRoles = new SchemaTable()
-            {
-                Name = "UserRoles",
-                Columns = new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        PrimaryKey = true,
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "UserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "RoleId",
-                        DbType = DbType.Int32
-                    }
-                }
-            };
-
             // create tables and default procedures
             builder
                 // Create tables
-                .CreateTable(userRoles)
+                .CreateTable(_userRoles)
                 // Create basic default CRUD procedures
-                .CreateDefaultProcedures(userRoles);
+                .CreateDefaultProcedures(_userRoles);
 
             builder
                 .CreateProcedure(
@@ -271,7 +272,7 @@ namespace Plato.Roles.Handlers
 
                 .CreateProcedure(
                     new SchemaProcedure("SelectUserRolesByUserId", StoredProcedureType.SelectByKey)
-                        .ForTable(userRoles)
+                        .ForTable(_userRoles)
                         .WithParameter(new SchemaColumn()
                         {
                             Name = "UserId",
@@ -280,7 +281,7 @@ namespace Plato.Roles.Handlers
 
                 .CreateProcedure(
                     new SchemaProcedure("DeleteUserRolesByUserId", StoredProcedureType.DeleteByKey)
-                        .ForTable(userRoles)
+                        .ForTable(_userRoles)
                         .WithParameter(new SchemaColumn()
                         {
                             Name = "UserId",
@@ -288,7 +289,7 @@ namespace Plato.Roles.Handlers
                         }))
                 .CreateProcedure(
                     new SchemaProcedure("DeleteUserRoleByUserIdAndRoleId", StoredProcedureType.DeleteByKey)
-                        .ForTable(userRoles)
+                        .ForTable(_userRoles)
                         .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn()
