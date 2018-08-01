@@ -36,9 +36,9 @@ namespace Plato.Roles
         {
             
             // Replace dummy role stores registered via User StartUp with real implementations
-            services.Replace<IRoleStore<Role>, RoleStore>(ServiceLifetime.Scoped);
-            services.Replace<IRoleClaimStore<Role>, RoleStore>(ServiceLifetime.Scoped);
-
+            services.TryAddScoped<IRoleStore<Role>, RoleStore>();
+            services.TryAddScoped<IRoleClaimStore<Role>, RoleStore>();
+       
             // Register role manager
             services.TryAddScoped<RoleManager<Role>>();
 

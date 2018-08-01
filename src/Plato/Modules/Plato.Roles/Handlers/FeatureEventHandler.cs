@@ -106,16 +106,13 @@ namespace Plato.Roles.Handlers
         };
         
         private readonly ISchemaBuilder _schemaBuilder;
-        private readonly UserManager<User> _userManager;
         private readonly IDefaultRolesManager _defaultRolesManager;
 
         public FeatureEventHandler(
             ISchemaBuilder schemaBuilder,
-            UserManager<User> userManager,
             IDefaultRolesManager defaultRolesManager)
         {
             _schemaBuilder = schemaBuilder;
-            _userManager = userManager;
             _defaultRolesManager = defaultRolesManager;
         }
         
@@ -167,9 +164,52 @@ namespace Plato.Roles.Handlers
             await _defaultRolesManager.InstallDefaultRolesAsync();
         }
 
-        public override Task UninstallingAsync(IFeatureEventContext context)
+        public override async Task UninstallingAsync(IFeatureEventContext context)
         {
-            return Task.CompletedTask;
+
+            using (var builder = _schemaBuilder)
+            {
+                
+                // drop roles
+                builder
+                    .DropTable(_roles)
+                    .DropDefaultProcedures(_roles)
+                    .DropProcedure(new SchemaProcedure("SelectRoleByName"))
+                    .DropProcedure(new SchemaProcedure("SelectRoleByNameNormalized"))
+                    .DropProcedure(new SchemaProcedure("SelectRolesPaged"));
+
+                // drop user roles
+                builder
+                    .DropTable(_userRoles)
+                    .DropDefaultProcedures(_userRoles)
+                    .DropProcedure(new SchemaProcedure("SelectRolesByUserId"))
+                    .DropProcedure(new SchemaProcedure("SelectUserRolesByUserId"))
+                    .DropProcedure(new SchemaProcedure("DeleteUserRolesByUserId"))
+                    .DropProcedure(new SchemaProcedure("DeleteUserRoleByUserIdAndRoleId"));
+                
+                // Log statements to execute
+                if (context.Logger.IsEnabled(LogLevel.Information))
+                {
+                    context.Logger.LogInformation($"The following SQL statements will be executed...");
+                    foreach (var statement in builder.Statements)
+                    {
+                        context.Logger.LogInformation(statement);
+                    }
+                }
+
+                var result = await builder.ApplySchemaAsync();
+                if (result.Errors.Count > 0)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        context.Errors.Add(error.Message, $"InstallingAsync within {this.GetType().FullName}");
+                    }
+
+                }
+
+            }
+
+
         }
 
         public override Task UninstalledAsync(IFeatureEventContext context)
@@ -305,8 +345,7 @@ namespace Plato.Roles.Handlers
                         }));
 
         }
-
-
+        
         #endregion
 
     }

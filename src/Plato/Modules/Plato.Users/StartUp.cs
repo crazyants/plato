@@ -23,6 +23,7 @@ using Plato.Users.Handlers;
 using Plato.Users.Models;
 using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Users
 {
@@ -53,9 +54,13 @@ namespace Plato.Users
             // Register dummy role stores
             // These are replaced by real stores once Plato.Roles is enabled.
         
-            services.TryAddScoped<IRoleStore<Role>, DummyRoleStore>();
-            services.TryAddScoped<IRoleClaimStore<Role>, DummyRoleStore>();
-            services.TryAddScoped<RoleManager<Role>>();
+            //services.TryAddScoped<IRoleStore<Role>, DummyRoleStore>();
+            //services.TryAddScoped<IRoleClaimStore<Role>, DummyRoleStore>();
+
+            //services.Replace<IRoleStore<Role>, DummyRoleStore>(ServiceLifetime.Scoped);
+            //services.Replace<IRoleClaimStore<Role>, DummyRoleStore>(ServiceLifetime.Scoped);
+            
+            //services.TryAddScoped<RoleManager<Role>>();
 
             // Adds the default token providers used to generate tokens for reset passwords, change email
             // and change telephone number operations, and for two factor authentication token generation.

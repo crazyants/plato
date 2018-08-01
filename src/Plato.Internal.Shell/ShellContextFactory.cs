@@ -103,7 +103,7 @@ namespace Plato.Internal.Shell
             descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Core"});
             descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Admin"});
             descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Users"});
-            //descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Roles"});
+            descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Roles"});
             descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Settings"});
             descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Features"});
             return descriptor;
