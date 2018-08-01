@@ -45,9 +45,12 @@ namespace Plato.Internal.Stores.Roles
 
             if (role == null)
                 throw new ArgumentNullException(nameof(role));
-            
+
             if (await _platoRoleStore.DeleteAsync(role))
+            {
                 return IdentityResult.Success;
+            }
+                
 
             return IdentityResult.Failed();
         }

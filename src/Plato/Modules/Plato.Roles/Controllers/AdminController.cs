@@ -15,6 +15,7 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Internal.Stores.Roles;
+using Plato.Roles.Services;
 using Plato.Roles.ViewModels;
 
 namespace Plato.Roles.Controllers
@@ -32,6 +33,8 @@ namespace Plato.Roles.Controllers
         private readonly RoleManager<Role> _roleManager;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IDefaultRolesManager _defaultRolesManager;
+
 
         public IHtmlLocalizer T { get; }
 
@@ -46,7 +49,8 @@ namespace Plato.Roles.Controllers
             IViewProviderManager<Role> roleViewProvider,
             RoleManager<Role> roleManager, IAlerter alerter,
             IAuthorizationService authorizationService,
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager,
+            IDefaultRolesManager defaultRolesManager)
         {
             _roleIndexViewProvider = roleIndexViewProvider;
             _platoRoleStore = platoRoleStore;
@@ -55,6 +59,7 @@ namespace Plato.Roles.Controllers
             _alerter = alerter;
             _authorizationService = authorizationService;
             _breadCrumbManager = breadCrumbManager;
+            _defaultRolesManager = defaultRolesManager;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -69,6 +74,12 @@ namespace Plato.Roles.Controllers
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
+
+
+            await _defaultRolesManager.UninstallDefaultRolesAsync();
+
+            // Add default roles
+            //await _defaultRolesManager.InstallDefaultRolesAsync();
 
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
             //{

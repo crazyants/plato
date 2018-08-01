@@ -43,8 +43,7 @@
             <div class="text-center my-4 text-muted">
                 @T["Create channels to help you organize your discussions"]
                 <br/><br/>
-                <a asp-area="Plato.Discuss.Channels" asp-controller="Admin" asp-action="Index" target="_blank" class="btn btn-primary" role="button">
-                    <i class="fal fa-external-link"></i>
+                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index">
                     @T["Manage Channels"]
                 </a>
             </div>
