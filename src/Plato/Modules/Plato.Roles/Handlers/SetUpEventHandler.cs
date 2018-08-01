@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
-using Plato.Internal.Models.Users;
 using Plato.Roles.Services;
 
 namespace Plato.Roles.Handlers
@@ -14,8 +12,7 @@ namespace Plato.Roles.Handlers
     {
 
         public const string Version = "1.0.0";
-
-
+        
         // Roles schema
         private readonly SchemaTable _roles = new SchemaTable()
         {
