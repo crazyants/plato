@@ -76,10 +76,10 @@ namespace Plato.Roles.Controllers
         {
 
 
-            await _defaultRolesManager.UninstallDefaultRolesAsync();
+            //await _defaultRolesManager.UninstallDefaultRolesAsync();
 
             // Add default roles
-            //await _defaultRolesManager.InstallDefaultRolesAsync();
+            await _defaultRolesManager.InstallDefaultRolesAsync();
 
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
             //{

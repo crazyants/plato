@@ -24,6 +24,7 @@ using Plato.Users.Models;
 using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Users
 {
@@ -99,7 +100,10 @@ namespace Plato.Users
             // Profile view proviers
             services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
             services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
-            
+
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider, Permissions>();
+
             // register view drivers
             services.AddScoped<IViewAdaptorProvider, UserListAdaptor>();
 

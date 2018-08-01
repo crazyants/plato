@@ -81,7 +81,9 @@ namespace Plato.Internal.Models.Roles
                 if (claims != null)
                 {
                     foreach (var claim in claims)
+                    {
                         this.RoleClaims.Add(claim);
+                    }
                 }
             }
 

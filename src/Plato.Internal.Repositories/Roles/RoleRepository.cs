@@ -88,8 +88,11 @@ namespace Plato.Internal.Repositories.Roles
 
         public async Task<Role> InsertUpdateAsync(Role role)
         {
+
             if (role == null)
+            {
                 throw new ArgumentNullException(nameof(role));
+            }
 
             var claims = "";
             if (role.RoleClaims != null)

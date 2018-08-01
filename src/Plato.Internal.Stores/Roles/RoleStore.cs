@@ -30,13 +30,54 @@ namespace Plato.Internal.Stores.Roles
             cancellationToken.ThrowIfCancellationRequested();
 
             if (role == null)
+            {
                 throw new ArgumentNullException(nameof(role));
+            }
 
             var newRole = await _platoRoleStore.CreateAsync(role);
             if ((newRole != null) && (newRole.Id > 0))
+            {
                 return IdentityResult.Success;
+            }
+                
+            return IdentityResult.Failed();
+
+        }
+        
+        public async Task<IdentityResult> UpdateAsync(Role role, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (role == null)
+            {
+                throw new ArgumentNullException(nameof(role));
+            }
+
+            // If we don't have a role Id attempt to get the role Id to update from the supplied role name
+            if (role.Id == 0)
+            {
+                var roleByNormalizedName = await _platoRoleStore.GetByNormalizedNameAsync(role.NormalizedName);
+                if (roleByNormalizedName != null)
+                {
+                    role.Id = roleByNormalizedName.Id;
+                }
+            }
+
+            // We always need an existing role to update
+            // Throw exception if we've not been able to locate the role
+            if (role.Id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(role.Id));
+            }
+
+            var updatedRole = await _platoRoleStore.UpdateAsync(role);
+            if ((updatedRole != null) && (updatedRole.Id > 0))
+            {
+                return IdentityResult.Success;
+            }
 
             return IdentityResult.Failed();
+
         }
 
         public async Task<IdentityResult> DeleteAsync(Role role, CancellationToken cancellationToken)
@@ -44,15 +85,17 @@ namespace Plato.Internal.Stores.Roles
             cancellationToken.ThrowIfCancellationRequested();
 
             if (role == null)
+            {
                 throw new ArgumentNullException(nameof(role));
-
+            }
+                
             if (await _platoRoleStore.DeleteAsync(role))
             {
                 return IdentityResult.Success;
             }
                 
-
             return IdentityResult.Failed();
+
         }
 
         public void Dispose()
@@ -61,13 +104,19 @@ namespace Plato.Internal.Stores.Roles
 
         public async Task<Role> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (!int.TryParse(roleId, out var id))
+            {
                 throw new ArgumentException("roleId must be of type int");
+            }
+                
             return await _platoRoleStore.GetByIdAsync(id);
         }
 
         public async Task<Role> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return await _platoRoleStore.GetByNormalizedNameAsync(normalizedRoleName);
         }
 
@@ -76,7 +125,10 @@ namespace Plato.Internal.Stores.Roles
             cancellationToken.ThrowIfCancellationRequested();
 
             if (role == null)
+            {
                 throw new ArgumentNullException(nameof(role));
+            }
+                
 
             return Task.FromResult(role.NormalizedName);
         }
@@ -86,8 +138,10 @@ namespace Plato.Internal.Stores.Roles
             cancellationToken.ThrowIfCancellationRequested();
 
             if (role == null)
+            {
                 throw new ArgumentNullException(nameof(role));
-
+            }
+                
             return Task.FromResult(role.Id.ToString());
         }
 
@@ -96,8 +150,10 @@ namespace Plato.Internal.Stores.Roles
             cancellationToken.ThrowIfCancellationRequested();
 
             if (role == null)
+            {
                 throw new ArgumentNullException(nameof(role));
-
+            }
+                
             return Task.FromResult(role.Name);
         }
 
@@ -106,8 +162,10 @@ namespace Plato.Internal.Stores.Roles
             cancellationToken.ThrowIfCancellationRequested();
 
             if (role == null)
+            {
                 throw new ArgumentNullException(nameof(role));
-
+            }
+                
             role.NormalizedName = normalizedName;
 
             return Task.CompletedTask;
@@ -118,25 +176,13 @@ namespace Plato.Internal.Stores.Roles
             cancellationToken.ThrowIfCancellationRequested();
 
             if (role == null)
+            {
                 throw new ArgumentNullException(nameof(role));
-
+            }
+                
             role.Name = roleName;
 
             return Task.CompletedTask;
-        }
-
-        public async Task<IdentityResult> UpdateAsync(Role role, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (role == null)
-                throw new ArgumentNullException(nameof(role));
-
-            var updatedRole = await _platoRoleStore.CreateAsync(role);
-            if ((updatedRole != null) && (updatedRole.Id > 0))
-                return IdentityResult.Success;
-
-            return IdentityResult.Failed();
         }
 
         #endregion

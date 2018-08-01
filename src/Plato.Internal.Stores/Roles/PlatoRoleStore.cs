@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Cache;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Roles;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Roles;
 using Plato.Internal.Stores.Abstractions.Roles;
 
@@ -130,7 +131,7 @@ namespace Plato.Internal.Stores.Roles
 
         public async Task<IList<Role>> GetRolesByUserIdAsync(int userId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), "ByUserId", userId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), "ByUser", userId);
             return await _cacheManager.GetOrCreateAsync(token,
                 async (cacheEntry) => await _roleRepository.SelectByUserIdAsync(userId));
         }
@@ -153,9 +154,9 @@ namespace Plato.Internal.Stores.Roles
             return roles.Select(r => r.Id).OrderBy(r => r).ToList();
         }
 
-        void ClearCache(int userId)
+        void ClearCache(User user)
         {
-            _cacheManager.CancelTokens(this.GetType(), "ByUserId", userId);
+            _cacheManager.CancelTokens(this.GetType(), "ByUser", user.Id);
         }
         
         void ClearCache(Role role)
