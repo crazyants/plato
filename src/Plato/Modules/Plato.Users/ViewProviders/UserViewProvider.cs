@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
 using Plato.Users.ViewModels;
 
@@ -9,6 +11,14 @@ namespace Plato.Users.ViewProviders
 {
     public class UserViewProvider : BaseViewProvider<UserProfile>
     {
+
+        private readonly IPlatoUserStore<User> _platoUserStore;
+
+        public UserViewProvider(
+            IPlatoUserStore<User> platoUserStore)
+        {
+            _platoUserStore = platoUserStore;
+        }
 
         #region "Implementation"
 
@@ -35,14 +45,36 @@ namespace Plato.Users.ViewProviders
 
         }
         
-        public override Task<IViewProviderResult> BuildDisplayAsync(UserProfile user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(UserProfile userProfile, IUpdateModel updater)
         {
-            return Task.FromResult(default(IViewProviderResult));
+
+            var user = await _platoUserStore.GetByIdAsync(userProfile.Id);
+            if (user == null)
+            {
+                return await BuildIndexAsync(userProfile, updater);
+            }
+
+            return Views(
+                View<User>("Home.Display.Header", model => user).Zone("header"),
+                View<User>("Home.Display.Tools", model => user).Zone("tools"),
+                View<User>("Home.Display.Content", model => user).Zone("content")
+            );
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(UserProfile user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(UserProfile userProfile, IUpdateModel updater)
         {
-            return Task.FromResult(default(IViewProviderResult));
+            var user = await _platoUserStore.GetByIdAsync(userProfile.Id);
+            if (user == null)
+            {
+                return await BuildIndexAsync(userProfile, updater);
+            }
+
+            return Views(
+                View<User>("Home.Edit.Header", model => user).Zone("header"),
+                View<User>("Home.Edit.Tools", model => user).Zone("tools"),
+                View<User>("Home.Edit.Content", model => user).Zone("content")
+            );
+
         }
 
         public override Task<IViewProviderResult> BuildUpdateAsync(UserProfile user, IUpdateModel updater)

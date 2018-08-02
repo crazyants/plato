@@ -14,7 +14,6 @@ using Plato.Internal.Stores.Abstract;
 
 namespace Plato.Users.Controllers
 {
-
   
     public class AccountController : Controller
     {

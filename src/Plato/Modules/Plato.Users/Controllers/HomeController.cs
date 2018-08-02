@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
 using Plato.Users.ViewModels;
 
@@ -13,11 +15,17 @@ namespace Plato.Users.Controllers
     {
 
         private readonly IViewProviderManager<UserProfile> _userViewProvider;
+        private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IContextFacade _contextFacade;
 
         public HomeController(
-            IViewProviderManager<UserProfile> userViewProvider)
+            IViewProviderManager<UserProfile> userViewProvider,
+            IPlatoUserStore<User> platoUserStore,
+            IContextFacade contextFacade)
         {
             _userViewProvider = userViewProvider;
+            _platoUserStore = platoUserStore;
+            _contextFacade = contextFacade;
         }
 
         public async Task<IActionResult> Index(
@@ -61,6 +69,46 @@ namespace Plato.Users.Controllers
 
         }
 
+
+        public async Task<IActionResult> Display(int id)
+        {
+
+            var user = await _platoUserStore.GetByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Build view
+            var result = await _userViewProvider.ProvideDisplayAsync(new UserProfile()
+            {
+                Id = user.Id
+            }, this);
+
+            // Return view
+            return View(result);
+
+        }
+        
+        public async Task<IActionResult> Edit(int id)
+        {
+
+            var user = id > 0
+                ? await _platoUserStore.GetByIdAsync(id)
+                : await _contextFacade.GetAuthenticatedUserAsync();
+            
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Build view
+            var result = await _userViewProvider.ProvideEditAsync(new UserProfile(), this);
+
+            // Return view
+            return View(result);
+
+        }
 
     }
 }

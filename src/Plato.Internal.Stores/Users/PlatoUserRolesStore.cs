@@ -15,9 +15,7 @@ namespace Plato.Internal.Stores.Users
 {
     public class PlatoUserRolesStore : IPlatoUserRoleStore<UserRole>
     {
-
-        private const string  Key = "UserRoles";
-
+        
         private readonly IPlatoRoleStore _platoRoleStore;
         private readonly IUserRolesRepository<UserRole> _userRolesRepository;
         private readonly ILogger<PlatoUserRolesStore> _logger;
@@ -89,6 +87,7 @@ namespace Plato.Internal.Stores.Users
             }
 
             return userRole;
+
         }
 
         public async Task<bool> DeleteAsync(UserRole model)
@@ -110,8 +109,6 @@ namespace Plato.Internal.Stores.Users
                 _cacheManager.CancelTokens(typeof(PlatoRoleStore), "ByUser", userRole.UserId);
             }
             return success;
-
-           
 
         }
 
@@ -160,21 +157,12 @@ namespace Plato.Internal.Stores.Users
             //return _dbQuery.ConfigureQuery<EntityReply>(query); ;
             throw new NotImplementedException();
         }
-
-        public Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public Task<IPagedResults<UserRole>> SelectAsync(params object[] args)
         {
             throw new NotImplementedException();
         }
 
-        private string GetCacheKey(int userId)
-        {
-            return $"{Key}_{userId.ToString()}";
-        }
         
     }
 }
