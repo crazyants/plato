@@ -68,12 +68,13 @@ namespace Plato.Users.Controllers
             return View(result);
 
         }
-
-
+        
         public async Task<IActionResult> Display(int id)
         {
 
-            var user = await _platoUserStore.GetByIdAsync(id);
+            var user = id > 0
+                ? await _platoUserStore.GetByIdAsync(id)
+                : await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
                 return NotFound();
@@ -96,14 +97,16 @@ namespace Plato.Users.Controllers
             var user = id > 0
                 ? await _platoUserStore.GetByIdAsync(id)
                 : await _contextFacade.GetAuthenticatedUserAsync();
-            
             if (user == null)
             {
                 return NotFound();
             }
 
             // Build view
-            var result = await _userViewProvider.ProvideEditAsync(new UserProfile(), this);
+            var result = await _userViewProvider.ProvideEditAsync(new UserProfile()
+            {
+                Id = user.Id
+            }, this);
 
             // Return view
             return View(result);

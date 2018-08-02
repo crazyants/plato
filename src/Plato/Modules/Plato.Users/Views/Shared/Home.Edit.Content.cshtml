@@ -1,3 +1,115 @@
 ﻿@model User
 
-<h1>User Profile Here </h1>
+
+<div class="row">
+    <div class="col-3">
+        
+        <div class="bg-secondary text-light py-4">
+            <div class="text-center py-4">
+                <i class="fal fa-4x fa-badge mb-2"></i>
+                <h4>New Member</h4>
+                Just getting started
+            </div>
+
+        </div>
+        
+        <div class="list-group list-group-flush list-group-hover">
+
+            <a class="list-group-item list-group-item-action" href="#">
+                Personal Details
+            </a>
+            <a class="list-group-item list-group-item-action active" href="#">
+                Reset Password
+            </a>
+            <a class="list-group-item list-group-item-action" href="#">
+                Active
+            </a>
+            <a class="list-group-item list-group-item-action" href="#">
+                Active
+            </a>
+            <a class="list-group-item list-group-item-action" href="#">
+                Active
+            </a>
+            <a class="list-group-item list-group-item-action" href="#">
+                Active
+            </a>
+            
+        </div>
+
+    </div>
+    <div class="col-9">
+
+        <h4>@T["Personal Details"]</h4>
+        <span class="text-muted">
+            @T["Update your personal details below."]
+        </span>
+        <hr />
+
+        <div class="row">
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="UserName">
+                        <label asp-for="UserName"><strong>@T["Name"]</strong></label>
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                        <input asp-for="UserName" class="form-control" autofocus />
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Email">
+                        <label for="Email"><strong>@T["Email"]</strong></label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <input asp-for="Email" class="form-control" type="email" />
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="UserName">
+                        <label asp-for="UserName"><strong>@T["Email Address"]</strong></label>
+                        <div class="text-muted">
+                            @Model.Email
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-6 text-right">
+
+                <a href="#">
+                    <i class="fal fa-envelope"></i>
+                    @T["Update my email address"]
+                </a>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="UserName">
+                        <label asp-for="UserName"><strong>@T["Password"]</strong></label>
+                        <div class="text-muted">
+                            ********************
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-6 text-right">
+
+                <a href="#">
+                    <i class="fal fa-lock"></i>
+                    @T["Reset my password"]
+                </a>
+            </div>
+        </div>
+
+
+    </div>
+</div>
