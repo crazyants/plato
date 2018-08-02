@@ -41,7 +41,7 @@ namespace Plato.Categories.Stores
 
         #region "Implementation"
 
-        public async Task<TCategory> CreateAsync(TCategory model)
+        public virtual async Task<TCategory> CreateAsync(TCategory model)
         {
 
             // transform meta data
@@ -63,7 +63,7 @@ namespace Plato.Categories.Stores
 
         }
 
-        public async Task<TCategory> UpdateAsync(TCategory model)
+        public virtual async Task<TCategory> UpdateAsync(TCategory model)
         {
 
             // transform meta data
@@ -86,7 +86,7 @@ namespace Plato.Categories.Stores
 
         }
 
-        public async Task<bool> DeleteAsync(TCategory model)
+        public virtual async Task<bool> DeleteAsync(TCategory model)
         {
 
             var success = await _categoryRepository.DeleteAsync(model.Id);
@@ -104,7 +104,7 @@ namespace Plato.Categories.Stores
 
         }
 
-        public async Task<TCategory> GetByIdAsync(int id)
+        public virtual async Task<TCategory> GetByIdAsync(int id)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -114,13 +114,13 @@ namespace Plato.Categories.Stores
             });
         }
 
-        public IQuery<TCategory> QueryAsync()
+        public virtual IQuery<TCategory> QueryAsync()
         {
             var query = new CategoryQuery<TCategory>(this);
             return _dbQuery.ConfigureQuery<TCategory>(query); ;
         }
 
-        public async Task<IPagedResults<TCategory>> SelectAsync(params object[] args)
+        public virtual async Task<IPagedResults<TCategory>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -143,7 +143,7 @@ namespace Plato.Categories.Stores
             });
         }
 
-        public async Task<IEnumerable<TCategory>> GetByFeatureIdAsync(int featureId)
+        public virtual async Task<IEnumerable<TCategory>> GetByFeatureIdAsync(int featureId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), featureId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>

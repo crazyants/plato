@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
+using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -15,13 +16,13 @@ namespace Plato.Discuss.Channels.ViewProviders
     {
         
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<CategoryBase> _categoryStore;
-        private readonly ICategoryManager<CategoryBase> _categoryManager;
+        private readonly ICategoryStore<Channel> _categoryStore;
+        private readonly ICategoryManager<Channel> _categoryManager;
 
         public AdminViewProvider(
             IContextFacade contextFacade,
-            ICategoryStore<CategoryBase> categoryStore,
-            ICategoryManager<CategoryBase> categoryManager)
+            ICategoryStore<Channel> categoryStore,
+            ICategoryManager<Channel> categoryManager)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
@@ -110,7 +111,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                     iconCss = model.IconPrefix + iconCss;
                 }
 
-                var result = await _categoryManager.UpdateAsync(new CategoryBase()
+                var result = await _categoryManager.UpdateAsync(new Channel()
                 {
                     Id = categoryBase.Id,
                     FeatureId = categoryBase.FeatureId,

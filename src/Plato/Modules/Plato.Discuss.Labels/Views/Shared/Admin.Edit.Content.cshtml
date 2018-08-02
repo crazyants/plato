@@ -26,7 +26,7 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="col-4">
+            <div class="col-5">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="Description">
                         <label asp-for="Name"><strong>@T["Description"]</strong></label>
@@ -35,26 +35,7 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="col-1">
-                <fieldset>
-                    <div class="form-group" asp-validation-class-for="Icon">
-
-                        <label asp-for="Name"><strong>@T["Icon"]</strong></label>
-                        <br />
-                        <button type="button" href="#selectIconModal" id="selectIconTrigger" data-toggle="modal" data-target="#selectIconModal" class="btn btn-secondary text-muted" role="button">
-                            @if (String.IsNullOrEmpty(Model.IconCss))
-                            {
-                                <i class="fal fa-plus"></i>
-                            }
-                            else
-                            {
-                                <i class="@Model.IconCss"></i>
-                            }
-                        </button>
-
-                    </div>
-                </fieldset>
-            </div>
+          
             <div class="col-2">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="Icon">

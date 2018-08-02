@@ -54,6 +54,7 @@ namespace Plato.Internal.Stores.Roles
             }
 
             // If we don't have a role Id attempt to get the role Id to update from the supplied role name
+            // This covers an edge case during initial set-up of default roles within DefaultRolesManager
             if (role.Id == 0)
             {
                 var roleByNormalizedName = await _platoRoleStore.GetByNormalizedNameAsync(role.NormalizedName);
