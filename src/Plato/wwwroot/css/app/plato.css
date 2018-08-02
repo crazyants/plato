@@ -285,6 +285,9 @@
 /* Admin */
 /* ------------------------- */
 
+.main-container > .container:last-child,
+.main-container > .container-fluid:last-child { padding-bottom: 6rem; }
+
 @media (min-width: 992px) {
 
     .layout-nav-side {
@@ -309,11 +312,14 @@
         padding: 1.5rem;
         width: 264px;
         height: 100vh;
-        overflow-y: auto;
+        overflow-y: scroll;
         -ms-overflow-style: none;
         flex-direction: column;
         align-items: flex-start;
     }
+
+    .layout-nav-side > .navbar::-webkit-scrollbar { display: none; }
+    .layout-nav-side > .navbar .navbar-brand { margin-bottom: 3rem; }
 
     .layout-nav-side > .navbar .navbar-collapse {
         align-items: flex-start;
@@ -322,15 +328,41 @@
         padding-bottom: 1.5rem;
     }
 
+    .layout-nav-side > .navbar .navbar-nav {
+        flex-direction: column;
+        width: 100%;
+    }
+
     .layout-nav-side .main-container {
         overflow: hidden;
         flex: 1;
         max-width: calc(100vw - 264px);
     }
-    
+
+    .layout-nav-side .main-container > .container {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+    .layout-sidebar .main-container {
+        display: flex;
+        flex-direction: row-reverse;
+        height: calc(100vh - 59px);
+        overflow: hidden;
+    }
+
+    .layout-sidebar .main-container .content-container {
+        height: 100%;
+        overflow-y: scroll;
+        -ms-overflow-style: none;
+        flex: 1;
+    }
+
+    .layout-sidebar .main-container .content-container::-webkit-scrollbar { display: none; }
+    .layout-sidebar .main-container .content-container > .container:last-child { padding-bottom: 4.5rem; }
+
 } 
 
-.nav-link[data-toggle="collapse"]::after {
+.nav-link[data-toggle="collapse"]:after {
     width: 0;
     height: 0;
     margin-left: 0.255em;
@@ -901,8 +933,8 @@
 }
 
 .switch input:checked + .switch-slider:before {
-    -webkit-transform: translateX(-30px);
     -ms-transform: translateX(-30px);
+    -webkit-transform: translateX(-30px);
     transform: translateX(-30px);
 }
 

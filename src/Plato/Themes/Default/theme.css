@@ -20,7 +20,7 @@
 
 /* Hover state for lists-groups */
 .list-group-hover .list-group-item:not(.active):hover {
-    background-color: #F6F7F5;
+    background-color: #DBE8FF;
 }
 
 .list-group-check-list input:checked + label {
