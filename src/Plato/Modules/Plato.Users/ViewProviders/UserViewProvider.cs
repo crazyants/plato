@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -12,12 +16,17 @@ namespace Plato.Users.ViewProviders
     public class UserViewProvider : BaseViewProvider<UserProfile>
     {
 
+        private readonly UserManager<User> _userManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
 
         public UserViewProvider(
-            IPlatoUserStore<User> platoUserStore)
+            IPlatoUserStore<User> platoUserStore,
+            UserManager<User> userManager, IUserPhotoStore<UserPhoto> userPhotoStore)
         {
             _platoUserStore = platoUserStore;
+            _userManager = userManager;
+            _userPhotoStore = userPhotoStore;
         }
 
         #region "Implementation"
@@ -70,12 +79,17 @@ namespace Plato.Users.ViewProviders
                 return await BuildIndexAsync(userProfile, updater);
             }
 
+
+            var details = user.GetOrCreate<UserDetail>();
+            
             var viewModel = new EditUserViewModel()
             {
                 Id = user.Id,
                 DisplayName = user.DisplayName,
                 UserName = user.UserName,
-                Email = user.Email
+                Email = user.Email,
+                Location = details.Profile.Location,
+                Bio = details.Profile.Bio
             };
 
             return Views(
@@ -88,14 +102,88 @@ namespace Plato.Users.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(UserProfile user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(UserProfile user, IUpdateModel updater)
         {
-            return Task.FromResult(default(IViewProviderResult));
+
+            var model = new EditUserViewModel();
+
+            if (!await updater.TryUpdateModelAsync(model))
+            {
+                return await BuildEditAsync(user, updater);
+            }
+
+            if (updater.ModelState.IsValid)
+            {
+
+                if (model.AvatarFile != null)
+                {
+                    await UpdateUserPhoto(user, model.AvatarFile);
+                }
+
+                await _userManager.SetUserNameAsync(user, model.UserName);
+                await _userManager.SetEmailAsync(user, model.Email);
+
+                var result = await _userManager.UpdateAsync(user);
+                foreach (var error in result.Errors)
+                {
+                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+            }
+
+            return await BuildEditAsync(user, updater);
+            
         }
 
         #endregion
 
         #region "Private Methods"
+
+        async Task UpdateUserPhoto(User user, IFormFile file)
+        {
+
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
+            byte[] bytes = null;
+            var stream = file.OpenReadStream();
+            if (stream != null)
+            {
+                bytes = stream.StreamToByteArray();
+            }
+            if (bytes == null)
+            {
+                return;
+            }
+
+            var id = 0;
+            var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
+            if (existingPhoto != null)
+            {
+                id = existingPhoto.Id;
+            }
+
+            var userPhoto = new UserPhoto
+            {
+                Id = id,
+                UserId = user.Id,
+                Name = file.FileName,
+                ContentType = file.ContentType,
+                ContentLength = file.Length,
+                ContentBlob = bytes,
+                CreatedUserId = user.Id,
+                CreatedDate = DateTime.UtcNow
+            };
+
+            if (id > 0)
+                userPhoto = await _userPhotoStore.UpdateAsync(userPhoto);
+            else
+                userPhoto = await _userPhotoStore.CreateAsync(userPhoto);
+
+        }
+
 
         int GetPageIndex(IUpdateModel updater)
         {

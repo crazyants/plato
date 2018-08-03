@@ -1,4 +1,5 @@
-﻿using Plato.Internal.Models.Users;
+﻿using Plato.Internal.Abstractions;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Users.Models
 {
@@ -9,4 +10,5 @@ namespace Plato.Users.Models
         // a separate view provider for the front-end profile pages
         // This class should not contain any code
     }
+
 }

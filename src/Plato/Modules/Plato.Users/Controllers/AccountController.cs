@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Data.Schemas.Abstractions;
-using Plato.Internal.Models;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Stores.Abstract;
 
 namespace Plato.Users.Controllers
 {
-  
+
     public class AccountController : Controller
     {
         
@@ -37,10 +32,10 @@ namespace Plato.Users.Controllers
         public Task<IActionResult> Login(string returnUrl = null)
         {
 
-            var detail = new UserDetail()
-            {
-                IsEmailConfirmed = true
-            };
+            //var detail = new UserDetail()
+            //{
+            //    IsEmailConfirmed = true
+            //};
 
 
             //var doc = new TestDocument2()
