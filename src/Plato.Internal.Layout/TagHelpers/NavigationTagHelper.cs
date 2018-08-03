@@ -27,6 +27,14 @@ namespace Plato.Internal.Layout.TagHelpers
         private readonly IActionContextAccessor _actionContextAccesor;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        public string LinkCssClass { get; set; } = "nav-link";
+
+        public string LiCssClass { get; set; } = "nav-item";
+
+        public bool EnableChildList { get; set; } = true;
+
+        public string ChildUlCssClass { get; set; } = "nav-item";
+        
         private static readonly string NewLine = Environment.NewLine;
         private int _level = 0;
         private int _index = 0;
@@ -83,9 +91,7 @@ namespace Plato.Internal.Layout.TagHelpers
             var ulClass = _cssClasses;
             if (_level > 0)
             {
-                ulClass = this.Collaspsable
-                    ? "nav nav-small flex-column "
-                    : "dropdown-menu";
+                ulClass = this.ChildUlCssClass;
             }
                
             sb.Append(NewLine);
@@ -99,10 +105,14 @@ namespace Plato.Internal.Layout.TagHelpers
                     .Append("\">");
             }
 
-            sb.Append("<ul class=\"")
-                .Append(ulClass)
-                .Append("\">")
-                .Append(NewLine);
+            if (this.EnableChildList)
+            {
+                sb.Append("<ul class=\"")
+                    .Append(ulClass)
+                    .Append("\">")
+                    .Append(NewLine);
+            }
+         
 
             var index = 0;
             foreach (var item in items)
@@ -110,12 +120,16 @@ namespace Plato.Internal.Layout.TagHelpers
                 
                 AddTabs(_level + 1, sb);
 
-                sb.Append("<li class=\"")
-                    .Append(GetListItemClass(items, item, index))
-                    .Append("\">");
-                
+                if (this.EnableChildList)
+                {
+                    sb.Append("<li class=\"")
+                        .Append(GetListItemClass(items, item, index))
+                        .Append("\">");
+                }
+
+
                 var linkClass = _level == 0  | this.Collaspsable
-                    ? "nav-link" 
+                    ? LinkCssClass
                     : "dropdown-item";
 
                 if (item.Items.Count > 0)
@@ -165,15 +179,21 @@ namespace Plato.Internal.Layout.TagHelpers
                     _level--;
                 }
 
-                sb.Append("</li>")
-                    .Append(NewLine);
+                if (this.EnableChildList)
+                {
+                    sb.Append("</li>")
+                        .Append(NewLine);
+                }
 
                 index += 1;
             }
 
             AddTabs(_level, sb);
-            sb.Append("</ul>")
-                .Append(NewLine);
+            if (this.EnableChildList)
+            {
+                sb.Append("</ul>")
+                    .Append(NewLine);
+            }
 
             if (_level > 0 && this.Collaspsable)
             {
@@ -192,7 +212,7 @@ namespace Plato.Internal.Layout.TagHelpers
         {
 
             var sb = new StringBuilder();
-            sb.Append("nav-item");
+            sb.Append(this.LiCssClass);
 
             if (item.Items.Count > 0)
             {

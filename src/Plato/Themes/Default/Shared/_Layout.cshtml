@@ -29,11 +29,14 @@
                     @T["Plato"]
                 </a>
                 <div class="float-right">
-                    <navigation name="site" class="nav nav-h nav-pills float-left" />
+
+                    <navigation name="site"
+                                class="nav nav-pills float-left"
+                                child-ul-css-class="dropdown-menu"/>
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <form asp-route-area="Plato.Users" asp-controller="Account" asp-action="LogOff" method="post" class="d-inline">
+                        <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="d-inline">
                             <ul class="nav nav-pills float-right">
                                 <li class="nav-item dropdown">
 
