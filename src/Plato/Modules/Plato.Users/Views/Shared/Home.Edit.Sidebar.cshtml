@@ -1,6 +1,6 @@
 ﻿@model User
 
-<div class="bg-secondary text-light py-4">
+<div class="bg-info text-light py-4 flex-column">
     <div class="text-center py-4">
         <i class="fal fa-4x fa-badge mb-2"></i>
         <h4>New Member</h4>
@@ -9,35 +9,50 @@
 
 </div>
 
-<navigation
-    name="admin"
-    collaspsable="true"
-    enable-child-list="false"
-    class="list-group list-group-hover"
-    link-css-class="nav-link list-group-item list-group-item-action"/>
+<div class="nav-v">
 
+    <div class="navbar navbar-expand-lg bg-dark navbar-dark">
 
-<!--
-<div class="list-group list-group-hover">
+        <div class="d-flex align-items-center">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
 
-    <a class="list-group-item list-group-item-action" href="#">
-        Personal Details
-    </a>
-    <a class="list-group-item list-group-item-action active" href="#">
-        Reset Password
-    </a>
-    <a class="list-group-item list-group-item-action" href="#">
-        Active
-    </a>
-    <a class="list-group-item list-group-item-action" href="#">
-        Active
-    </a>
-    <a class="list-group-item list-group-item-action" href="#">
-        Active
-    </a>
-    <a class="list-group-item list-group-item-action" href="#">
-        Active
-    </a>
-            
+        <div class="collapse navbar-collapse flex-column" id="navbar-collapse" role="navigation">
+          
+                <navigation name="admin"
+                            collaspsable="true"
+                            class="navbar-nav d-lg-block"
+                            child-ul-css-class="nav flex-column"
+                            link-css-class="nav-link" />
+           
+        </div>
+    </div>
 </div>
--->
+
+
+    <!--
+    <div class="list-group list-group-hover">
+
+        <a class="list-group-item list-group-item-action" href="#">
+            Personal Details
+        </a>
+        <a class="list-group-item list-group-item-action active" href="#">
+            Reset Password
+        </a>
+        <a class="list-group-item list-group-item-action" href="#">
+            Active
+        </a>
+        <a class="list-group-item list-group-item-action" href="#">
+            Active
+        </a>
+        <a class="list-group-item list-group-item-action" href="#">
+            Active
+        </a>
+        <a class="list-group-item list-group-item-action" href="#">
+            Active
+        </a>
+
+    </div>
+    -->

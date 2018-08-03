@@ -33,7 +33,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
         public bool EnableChildList { get; set; } = true;
 
-        public string ChildUlCssClass { get; set; } = "nav-item";
+        public string ChildUlCssClass { get; set; } = "nav flex-column";
         
         private static readonly string NewLine = Environment.NewLine;
         private int _level = 0;

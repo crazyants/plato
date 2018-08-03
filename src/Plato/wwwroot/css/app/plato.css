@@ -243,16 +243,17 @@
 .main-container > .container-fluid:last-child { padding-bottom: 6rem; }
 
 @media (min-width: 992px) {
-
-    .layout-nav-side {
+    
+    .nav-v {
         display: flex;
     }
 
-    .layout-nav-side > .navbar .nav-link {
+    .nav-v > .navbar .nav-link 
+    {
         padding-left: 0;
     }
 
-    .layout-nav-side > .navbar .navbar-nav {
+    .nav-v > .navbar .navbar-nav {
         flex-direction: column;
         width: 100%;
     }
@@ -262,38 +263,43 @@
         flex-basis: auto;
     }
     
-    .layout-nav-side > .navbar {
+
+    .nav-v > .navbar {
+        width: 100%;
         padding: 1.5rem;
-        width: 264px;
-        height: 100vh;
-        overflow-y: scroll;
-        -ms-overflow-style: none;
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .layout-nav-side > .navbar::-webkit-scrollbar { display: none; }
-    .layout-nav-side > .navbar .navbar-brand { margin-bottom: 3rem; }
+    .nav-asides > .navbar {
+        width: 264px;
+        height: 100vh;
+        overflow-y: scroll;
+        -ms-overflow-style: none;
+    }
 
-    .layout-nav-side > .navbar .navbar-collapse {
+    .nav-v > .navbar::-webkit-scrollbar { display: none; }
+    .nav-v > .navbar .navbar-brand { margin-bottom: 3rem; }
+
+    .nav-v > .navbar .navbar-collapse {
         align-items: flex-start;
         width: 100%;
         flex-shrink: 0;
         padding-bottom: 1.5rem;
     }
 
-    .layout-nav-side > .navbar .navbar-nav {
+    .nav-v > .navbar .navbar-nav {
         flex-direction: column;
         width: 100%;
     }
 
-    .layout-nav-side .main-container {
+    .nav-v .main-container {
         overflow: hidden;
         flex: 1;
         max-width: calc(100vw - 264px);
     }
 
-    .layout-nav-side .main-container > .container {
+    .nav-v .main-container > .container {
         padding-left: 3rem;
         padding-right: 3rem;
     }
@@ -417,8 +423,6 @@
 /* ------------------------- */
 /* Lists */
 /* ------------------------- */
-
-.list-group > .list-group-item > .nav-link { padding: 0; }
 
 .list-left { float: left; }
 .list-left + .list-body { margin-left: 56px; }
