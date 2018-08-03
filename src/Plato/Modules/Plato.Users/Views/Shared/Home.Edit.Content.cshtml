@@ -1,72 +1,80 @@
 ﻿@model User
 
-<h4>@T["Personal Details"]</h4>
-<span class="text-muted">
-    @T["Update your personal details below."]
-</span>
-<hr />
+<card>
+    <card-title>
+        <h6 class="card-title">
+            <i class="fal fa-user"></i>
+            Personal Details
+        </h6>
+    </card-title>
+    <card-body>
 
-<div class="row">
-    <div class="col-6">
-        <fieldset>
-            <div class="form-group" asp-validation-class-for="UserName">
-                <label asp-for="UserName"><strong>@T["Name"]</strong></label>
-                <span asp-validation-for="UserName" class="text-danger"></span>
-                <input asp-for="UserName" class="form-control" autofocus />
+        <div class="row">
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="DisplayName">
+                        <label asp-for="DisplayName"><strong>@T["Display Name"]</strong></label>
+                        <span asp-validation-for="DisplayName" class="text-danger"></span>
+                        <input asp-for="DisplayName" class="form-control" autofocus/>
+                    </div>
+                </fieldset>
             </div>
-        </fieldset>
-    </div>
-    <div class="col-6">
-        <fieldset>
-            <div class="form-group" asp-validation-class-for="Email">
-                <label for="Email"><strong>@T["Email"]</strong></label>
-                <span asp-validation-for="Email" class="text-danger"></span>
-                <input asp-for="Email" class="form-control" type="email" />
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="UserName">
+                        <label for="UserName"><strong>@T["Username"]</strong></label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <input asp-for="UserName" class="form-control" type="text"/>
+                    </div>
+                </fieldset>
             </div>
-        </fieldset>
-    </div>
-</div>
+        </div>
 
-<hr />
+    </card-body>
+</card>
 
-<div class="row">
-    <div class="col-6">
-        <fieldset>
-            <div class="form-group" asp-validation-class-for="UserName">
-                <label asp-for="UserName"><strong>@T["Email Address"]</strong></label>
-                <div class="text-muted">
-                    @Model.Email
-                </div>
-            </div>
-        </fieldset>
-    </div>
-    <div class="col-6 text-right">
-
-        <a href="#">
+<card>
+    <card-title>
+        <h6 class="card-title">
             <i class="fal fa-envelope"></i>
-            @T["Update my email address"]
-        </a>
-    </div>
-</div>
+            Email Address
+        </h6>
+    </card-title>
+    <card-body>
 
-<hr />
-
-<div class="row">
-    <div class="col-6">
-        <fieldset>
-            <div class="form-group" asp-validation-class-for="UserName">
-                <label asp-for="UserName"><strong>@T["Password"]</strong></label>
-                <div class="text-muted">
-                    ********************
-                </div>
+        <div class="row">
+            <div class="col-6 text-muted">
+                @Model.Email
             </div>
-        </fieldset>
-    </div>
-    <div class="col-6 text-right">
+            <div class="col-6 text-right">
+                <a href="#">
+                    @T["Update my email address"]
+                </a>
+            </div>
+        </div>
 
-        <a href="#">
+    </card-body>
+</card>
+
+<card>
+    <card-title>
+        <h6 class="card-title">
             <i class="fal fa-lock"></i>
-            @T["Reset my password"]
-        </a>
-    </div>
-</div>
+            Security
+        </h6>
+    </card-title>
+    <card-body>
+
+        <div class="row">
+            <div class="col-6 text-muted">
+                ********************
+            </div>
+            <div class="col-6 text-right">
+                <a href="#">
+                    @T["Reset my password"]
+                </a>
+            </div>
+        </div>
+
+    </card-body>
+</card>

@@ -2,8 +2,9 @@
 
 <div class="bg-info text-light py-4 flex-column">
     <div class="text-center py-4">
-        <i class="fal fa-4x fa-badge mb-2"></i>
-        <h4>New Member</h4>
+        
+        <avatar class="avatar avatar-lg avatar-round" user-id="@Model.Id"/>
+        <h6 class="mt-4">New Member</h6>
         Just getting started
     </div>
 
@@ -20,39 +21,12 @@
         </div>
 
         <div class="collapse navbar-collapse flex-column" id="navbar-collapse" role="navigation">
-          
-                <navigation name="admin"
-                            collaspsable="true"
-                            class="navbar-nav d-lg-block"
-                            child-ul-css-class="nav flex-column"
-                            link-css-class="nav-link" />
-           
+            <navigation name="admin"
+                        collaspsable="true"
+                        class="navbar-nav d-lg-block"
+                        child-ul-css-class="nav flex-column"
+                        link-css-class="nav-link" />
         </div>
     </div>
 </div>
 
-
-    <!--
-    <div class="list-group list-group-hover">
-
-        <a class="list-group-item list-group-item-action" href="#">
-            Personal Details
-        </a>
-        <a class="list-group-item list-group-item-action active" href="#">
-            Reset Password
-        </a>
-        <a class="list-group-item list-group-item-action" href="#">
-            Active
-        </a>
-        <a class="list-group-item list-group-item-action" href="#">
-            Active
-        </a>
-        <a class="list-group-item list-group-item-action" href="#">
-            Active
-        </a>
-        <a class="list-group-item list-group-item-action" href="#">
-            Active
-        </a>
-
-    </div>
-    -->

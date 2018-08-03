@@ -178,6 +178,14 @@
     height: 28px;
 }
 
+.avatar-lg {
+    width: 110px;
+    height: 110px;
+}
+
+.avatar-round { border-radius: 50%; }
+
+
 /* --------------------------- */
 /* Avatar Upload */
 /* --------------------------- */
@@ -262,7 +270,6 @@
         display: flex !important;
         flex-basis: auto;
     }
-    
 
     .nav-v > .navbar {
         width: 100%;
