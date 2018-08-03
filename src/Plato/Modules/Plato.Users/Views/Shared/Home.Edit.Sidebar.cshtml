@@ -1,10 +1,10 @@
-﻿@model User
+﻿@model EditUserViewModel
 
 <div class="bg-info text-light py-4 flex-column">
     <div class="text-center py-4">
         
         <avatar class="avatar avatar-lg avatar-round" user-id="@Model.Id"/>
-        <h6 class="mt-4">New Member</h6>
+        <h6 class="mt-4">@Model.DisplayName</h6>
         Just getting started
     </div>
 

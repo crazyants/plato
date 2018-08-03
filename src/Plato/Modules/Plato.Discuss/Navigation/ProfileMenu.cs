@@ -1,38 +1,39 @@
 ﻿using Microsoft.Extensions.Localization;
 using System;
+using System.Collections.Generic;
+using System.Text;
 using Plato.Internal.Navigation;
 
-namespace Plato.Discuss
+namespace Plato.Discuss.Navigation
 {
-    public class AdminMenu : INavigationProvider
+    public class ProfileMenu : INavigationProvider
     {
-        public AdminMenu(IStringLocalizer<AdminMenu> localizer)
+
+        public IStringLocalizer T { get; set; }
+        
+        public ProfileMenu(IStringLocalizer<AdminMenu> localizer)
         {
             T = localizer;
         }
-
-        public IStringLocalizer T { get; set; }
-
+        
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
-            if (!String.Equals(name, "admin", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "userprofile", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
             builder
-                .Add(T["Discuss"], 1, users => users
-                    .Add(T["Latest"], 1, manage => manage
+                .Add(T["Discuss"], 2, discuss => discuss
+                    .Add(T["Topics"], 1, topics => topics
                         .Action("Index", "Admin", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ).Add(T["settings"], 999, create => create
+                    ).Add(T["Favourites"], 999, favourites => favourites
                         .Action("Channels", "Admin", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ));
-            
-
         }
     }
 

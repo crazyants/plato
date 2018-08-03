@@ -7,10 +7,9 @@ using Plato.Internal.Navigation;
 using Plato.Discuss.Handlers;
 using Plato.Discuss.Assets;
 using Plato.Discuss.Models;
+using Plato.Discuss.Navigation;
 using Plato.Discuss.Services;
-using Plato.Discuss.ViewModels;
 using Plato.Discuss.ViewProviders;
-using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
@@ -39,6 +38,7 @@ namespace Plato.Discuss
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
+            services.AddScoped<INavigationProvider, ProfileMenu>();
 
             // Stores
             services.AddScoped<IEntityRepository<Topic>, EntityRepository<Topic>>();

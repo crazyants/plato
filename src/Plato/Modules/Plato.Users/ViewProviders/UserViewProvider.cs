@@ -70,12 +70,20 @@ namespace Plato.Users.ViewProviders
                 return await BuildIndexAsync(userProfile, updater);
             }
 
+            var viewModel = new EditUserViewModel()
+            {
+                Id = user.Id,
+                DisplayName = user.DisplayName,
+                UserName = user.UserName,
+                Email = user.Email
+            };
+
             return Views(
-                View<User>("Home.Edit.Header", model => user).Zone("header"),
-                View<User>("Home.Edit.Tools", model => user).Zone("tools"),
-                View<User>("Home.Edit.Content", model => user).Zone("content"),
-                View<User>("Home.Edit.Footer", model => user).Zone("footer"),
-                View<User>("Home.Edit.Sidebar", model => user).Zone("sidebar")
+                View<EditUserViewModel>("Home.Edit.Header", model => viewModel).Zone("header"),
+                View<EditUserViewModel>("Home.Edit.Tools", model => viewModel).Zone("tools"),
+                View<EditUserViewModel>("Home.Edit.Content", model => viewModel).Zone("content"),
+                View<EditUserViewModel>("Home.Edit.Footer", model => viewModel).Zone("footer"),
+                View<EditUserViewModel>("Home.Edit.Sidebar", model => viewModel).Zone("sidebar")
             );
 
         }
