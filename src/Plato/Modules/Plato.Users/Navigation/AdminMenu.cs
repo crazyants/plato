@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Plato.Internal.Navigation;
 
-namespace Plato.Users
+namespace Plato.Users.Navigation
 {
     public class AdminMenu : INavigationProvider
     {

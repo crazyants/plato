@@ -25,6 +25,7 @@ using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Security.Abstractions;
+using Plato.Users.Navigation;
 
 namespace Plato.Users
 {
@@ -92,6 +93,8 @@ namespace Plato.Users
             // register navigation providers
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
+            services.AddScoped<INavigationProvider, UserMenu>();
+            services.AddScoped<INavigationProvider, ProfileMenu>();
 
             // Admin view proviers
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();

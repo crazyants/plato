@@ -11,7 +11,7 @@ namespace Plato.Users.ViewAdaptors
         public IStringLocalizer T { get; set; }
         
         public UserListAdaptor(
-            IStringLocalizer<AdminMenu> localizer)
+            IStringLocalizer<UserListAdaptor> localizer)
         {
             T = localizer;
         }
