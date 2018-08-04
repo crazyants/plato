@@ -1,9 +1,16 @@
-﻿using System;
-using Plato.Internal.Abstractions;
+﻿using Plato.Internal.Abstractions;
+using Plato.Internal.Models.Users;
 
-namespace Plato.Internal.Models.Users
+namespace Plato.Users.Models
 {
     
+    public class UserProfile : User
+    {
+        // UserProfile is simply a marker class so we can use
+        // a separate view provider for the front-end profile pages
+        // This class should not contain any code
+    }
+
     public class UserDetail : Serializable
     {
 
@@ -11,12 +18,6 @@ namespace Plato.Internal.Models.Users
 
         public ProfileData Profile { get; set; } = new ProfileData();
 
-        //public bool IsEmailConfirmed { get; set; }
-
-        //public int ModifiedUserId { get; set; }
-
-        //public DateTime? ModifiedDate { get; set; }
-        
     }
 
     public class SettingsData : Serializable
@@ -27,7 +28,6 @@ namespace Plato.Internal.Models.Users
 
     }
 
-
     public class ProfileData : Serializable
     {
 
@@ -36,5 +36,6 @@ namespace Plato.Internal.Models.Users
         public string Bio { get; set; }
 
     }
+
 
 }
