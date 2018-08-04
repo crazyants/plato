@@ -4,12 +4,12 @@ using Plato.Internal.Navigation;
 
 namespace Plato.Users.Navigation
 {
-    public class UserMenu : INavigationProvider
+    public class EditProfileMenu : INavigationProvider
     {
 
         public IStringLocalizer T { get; set; }
         
-        public UserMenu(IStringLocalizer<AdminMenu> localizer)
+        public EditProfileMenu(IStringLocalizer<AdminMenu> localizer)
         {
             T = localizer;
         }
@@ -23,15 +23,15 @@ namespace Plato.Users.Navigation
 
             builder
                 .Add(T["Profile"], 1, profile => profile
-                    .Action("EditProfile", "Home", "Plato.Users")
+                    .Action("EditProfile", "Profile", "Plato.Users")
                     //.Permission(Permissions.ManageUsers)
                     .LocalNav()
                 ).Add(T["Account"], 2, profile => profile
-                    .Action("EditAccount", "Home", "Plato.Users")
+                    .Action("EditAccount", "Profile", "Plato.Users")
                     //.Permission(Permissions.ManageUsers)
                     .LocalNav()
                 ).Add(T["Settings"], int.MaxValue, profile => profile
-                    .Action("EditSettings", "Home", "Plato.Users")
+                    .Action("EditSettings", "Profile", "Plato.Users")
                     //.Permission(Permissions.ManageUsers)
                     .LocalNav()
                 );

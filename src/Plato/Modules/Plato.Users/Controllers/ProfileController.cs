@@ -20,6 +20,7 @@ namespace Plato.Users.Controllers
 
         private readonly IViewProviderManager<EditProfileViewModel> _editProfileViewProvider;
         private readonly IViewProviderManager<EditAccountViewModel> _editAccountViewProvider;
+        private readonly IViewProviderManager<EditSettingsViewModel> _editSettingsViewProvider;
 
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly UserManager<User> _userManager;
@@ -33,6 +34,7 @@ namespace Plato.Users.Controllers
         public ProfileController(
             IViewProviderManager<EditProfileViewModel> editProfileViewProvider,
             IViewProviderManager<EditAccountViewModel> editAccountViewProvider,
+            IViewProviderManager<EditSettingsViewModel> editSettingsViewProvider,
             IHtmlLocalizer<HomeController> htmlLocalizer,
             IStringLocalizer<HomeController> stringLocalizer,
             IPlatoUserStore<User> platoUserStore,
@@ -43,15 +45,19 @@ namespace Plato.Users.Controllers
 
             _editProfileViewProvider = editProfileViewProvider;
             _editAccountViewProvider = editAccountViewProvider;
+            _editSettingsViewProvider = editSettingsViewProvider;
             _platoUserStore = platoUserStore;
             _contextFacade = contextFacade;
             _userManager = userManager;
             _alerter = alerter;
-   
+            
+
 
             T = htmlLocalizer;
             S = stringLocalizer;
         }
+
+        // Edit Profile
 
         public async Task<IActionResult> EditProfile()
         {
@@ -121,6 +127,8 @@ namespace Plato.Users.Controllers
 
         }
         
+        // Edit Account
+
         public async Task<IActionResult> EditAccount()
         {
             var user = await _contextFacade.GetAuthenticatedUserAsync();
@@ -164,6 +172,69 @@ namespace Plato.Users.Controllers
                 if (ModelState.IsValid)
                 {
                     _alerter.Success(T["Account Updated Successfully!"]);
+                    return RedirectToAction(nameof(EditProfile));
+                }
+
+            }
+
+            // if we reach this point some view model validation
+            // failed within a view provider, display model state errors
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
+                }
+            }
+
+            return await EditProfile();
+
+        }
+
+
+        // Edit Settings
+
+        public async Task<IActionResult> EditSettings()
+        {
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new EditSettingsViewModel()
+            {
+                Id = user.Id
+            };
+
+            // Build view
+            var result = await _editSettingsViewProvider.ProvideEditAsync(viewModel, this);
+
+            // Return view
+            return View(result);
+
+        }
+
+        [HttpPost]
+        [ActionName(nameof(EditSettings))]
+        public async Task<IActionResult> EditSettingsPost(EditSettingsViewModel model)
+        {
+
+            var user = await _userManager.FindByIdAsync(model.Id.ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Validate model state within all view providers
+            if (await _editSettingsViewProvider.IsModelStateValid(model, this))
+            {
+                await _editSettingsViewProvider.ProvideUpdateAsync(model, this);
+
+                // Ensure modelstate is still valid after view providers have executed
+                if (ModelState.IsValid)
+                {
+                    _alerter.Success(T["Settings Updated Successfully!"]);
                     return RedirectToAction(nameof(EditProfile));
                 }
 
