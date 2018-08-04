@@ -1,0 +1,56 @@
+﻿@model EditProfileViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">
+            @T["Personal Details"]
+        </h6>
+    </card-title>
+    <card-body>
+
+        <div class="row">
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="DisplayName">
+                        <label asp-for="DisplayName"><strong>@T["Display Name"]</strong></label>
+                        <span asp-validation-for="DisplayName" class="text-danger"></span>
+                        <input asp-for="DisplayName" class="form-control" autofocus />
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Location">
+                        <label for="Location"><strong>@T["Location"]</strong></label>
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                        <input asp-for="Location" class="form-control" type="text" />
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </card-body>
+</card>
+
+
+<card>
+    <card-title>
+        <h6 class="card-title">
+            @T["Bio"]
+        </h6>
+    </card-title>
+    <card-body>
+        
+        <div class="row">
+            <div class="col-12">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Bio">
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                        <input asp-for="Bio" class="form-control" multiple="true" style="height: 75px;" type="text" />
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </card-body>
+</card>
+
+<input type="hidden" asp-for="Id" />

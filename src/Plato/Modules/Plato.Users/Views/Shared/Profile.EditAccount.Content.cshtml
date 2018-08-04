@@ -1,0 +1,35 @@
+﻿@model EditAccountViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">
+            @T["Account Details"]
+        </h6>
+    </card-title>
+    <card-body>
+
+        <div class="row">
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="UserName">
+                        <label asp-for="UserName"><strong>@T["UserName"]</strong></label>
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                        <input asp-for="UserName" class="form-control" autofocus />
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-6">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Email">
+                        <label for="Email"><strong>@T["Email"]</strong></label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <input asp-for="Email" class="form-control" type="text" />
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </card-body>
+</card>
+
+
+<input type="hidden" asp-for="Id" />

@@ -19,6 +19,8 @@ namespace Plato.Users.Controllers
     {
 
         private readonly IViewProviderManager<UserProfile> _userViewProvider;
+
+
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
@@ -110,7 +112,6 @@ namespace Plato.Users.Controllers
 
         }
         
-
         public async Task<IActionResult> Edit()
         {
 
@@ -130,8 +131,7 @@ namespace Plato.Users.Controllers
             return View(result);
 
         }
-
-
+        
         [HttpPost]
         [ActionName(nameof(Edit))]
         public async Task<IActionResult> EditPost(EditUserViewModel model)
@@ -178,6 +178,27 @@ namespace Plato.Users.Controllers
             return await Edit();
 
         }
+        
+
+        public async Task<IActionResult> EditAccount()
+        {
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Build view
+            var result = await _userViewProvider.ProvideEditAsync(new UserProfile()
+            {
+                Id = user.Id
+            }, this);
+
+            // Return view
+            return View(result);
+
+        }
+
 
     }
 }
