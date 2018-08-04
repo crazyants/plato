@@ -317,12 +317,19 @@ namespace Plato.Internal.Stores.Users
 
         void ClearCache(User user)
         {
+
+            // Expire user cache
             _cacheManager.CancelTokens(this.GetType());
             _cacheManager.CancelTokens(this.GetType(), user.Id);
             _cacheManager.CancelTokens(this.GetType(), user.UserName);
             _cacheManager.CancelTokens(this.GetType(), user.Email);
             _cacheManager.CancelTokens(this.GetType(), user.NormalizedUserName);
             _cacheManager.CancelTokens(this.GetType(), user.ApiKey);
+
+            // Expire user data cache
+            _cacheManager.CancelTokens(typeof(UserDataStore));
+            _cacheManager.CancelTokens(typeof(UserDataStore), "ByUser", user.Id);
+
         }
 
         #endregion

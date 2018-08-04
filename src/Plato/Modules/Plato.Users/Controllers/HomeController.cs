@@ -1,6 +1,10 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -16,16 +20,31 @@ namespace Plato.Users.Controllers
 
         private readonly IViewProviderManager<UserProfile> _userViewProvider;
         private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
+        private readonly IAlerter _alerter;
+
+        public IHtmlLocalizer T { get; }
+
+        public IStringLocalizer S { get; }
 
         public HomeController(
+            IHtmlLocalizer<HomeController> htmlLocalizer,
+            IStringLocalizer<HomeController> stringLocalizer,
             IViewProviderManager<UserProfile> userViewProvider,
             IPlatoUserStore<User> platoUserStore,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade, 
+            UserManager<User> userManager, 
+            IAlerter alerter)
         {
             _userViewProvider = userViewProvider;
             _platoUserStore = platoUserStore;
             _contextFacade = contextFacade;
+            _userManager = userManager;
+            _alerter = alerter;
+
+            T = htmlLocalizer;
+            S = stringLocalizer;
         }
 
         public async Task<IActionResult> Index(
@@ -91,12 +110,11 @@ namespace Plato.Users.Controllers
 
         }
         
-        public async Task<IActionResult> Edit(int id)
+
+        public async Task<IActionResult> Edit()
         {
 
-            var user = id > 0
-                ? await _platoUserStore.GetByIdAsync(id)
-                : await _contextFacade.GetAuthenticatedUserAsync();
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user == null)
             {
                 return NotFound();
@@ -110,6 +128,54 @@ namespace Plato.Users.Controllers
 
             // Return view
             return View(result);
+
+        }
+
+
+        [HttpPost]
+        [ActionName(nameof(Edit))]
+        public async Task<IActionResult> EditPost(EditUserViewModel model)
+        {
+
+            var user = await _userManager.FindByIdAsync(model.Id.ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var profile = new UserProfile()
+            {
+                Id = model.Id,
+                DisplayName = model.DisplayName,
+                UserName = model.UserName,
+                Email = model.Email
+            };
+
+            // Validate model state within all view providers
+            if (await _userViewProvider.IsModelStateValid(profile, this))
+            {
+                var result = await _userViewProvider.ProvideUpdateAsync(profile, this);
+
+                // Ensure modelstate is still valid after view providers have executed
+                if (ModelState.IsValid)
+                {
+                    _alerter.Success(T["Profile Updated Successfully!"]);
+                    return RedirectToAction(nameof(Edit));
+                }
+
+            }
+            
+            // if we reach this point some view model validation
+            // failed within a view provider, display model state errors
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
+                }
+            }
+
+            return await Edit();
 
         }
 

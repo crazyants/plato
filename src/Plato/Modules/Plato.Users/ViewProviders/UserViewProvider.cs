@@ -73,12 +73,12 @@ namespace Plato.Users.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(UserProfile userProfile, IUpdateModel updater)
         {
+
             var user = await _platoUserStore.GetByIdAsync(userProfile.Id);
             if (user == null)
             {
                 return await BuildIndexAsync(userProfile, updater);
             }
-
 
             var details = user.GetOrCreate<UserDetail>();
             
@@ -101,24 +101,50 @@ namespace Plato.Users.ViewProviders
             );
 
         }
-
-        public override async Task<IViewProviderResult> BuildUpdateAsync(UserProfile user, IUpdateModel updater)
+        
+        public override async Task<bool> ValidateModelAsync(UserProfile user, IUpdateModel updater)
         {
+            return await updater.TryUpdateModelAsync(new EditUserViewModel
+            {
+                DisplayName = user.DisplayName,
+                UserName = user.UserName,
+                Email = user.Email
+            });
+        }
 
+        public override async Task<IViewProviderResult> BuildUpdateAsync(UserProfile userProfile, IUpdateModel updater)
+        {
+            var user = await _platoUserStore.GetByIdAsync(userProfile.Id);
+            if (user == null)
+            {
+                return await BuildIndexAsync(userProfile, updater);
+            }
+            
             var model = new EditUserViewModel();
 
             if (!await updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(user, updater);
+                return await BuildEditAsync(userProfile, updater);
             }
 
             if (updater.ModelState.IsValid)
             {
 
+                // Update user data
+
+                var details = user.GetOrCreate<UserDetail>();
+                details.Profile.Location = model.Location;
+                details.Profile.Bio = model.Bio;
+                user.AddOrUpdate<UserDetail>(details);
+
+                // Update user avatar
+
                 if (model.AvatarFile != null)
                 {
                     await UpdateUserPhoto(user, model.AvatarFile);
                 }
+
+                // Update user
 
                 await _userManager.SetUserNameAsync(user, model.UserName);
                 await _userManager.SetEmailAsync(user, model.Email);
@@ -130,9 +156,9 @@ namespace Plato.Users.ViewProviders
                 }
 
             }
-
-            return await BuildEditAsync(user, updater);
             
+            return await BuildEditAsync(userProfile, updater);
+
         }
 
         #endregion

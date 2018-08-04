@@ -37,13 +37,6 @@ namespace Plato.Internal.Modules
                 }
             }
             
-            // await BuildTypedProvider();
-    
-            //if (_modules.TryGetValue(dependency, out var module))
-            //{
-            //    return module;
-            //}
-
             throw new InvalidOperationException($"Could not resolve module for type {dependency.Name}");
         }
 

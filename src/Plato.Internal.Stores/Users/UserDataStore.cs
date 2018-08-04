@@ -79,6 +79,7 @@ namespace Plato.Internal.Stores.Users
                 }
 
                 _cacheManager.CancelTokens(this.GetType());
+
             }
 
             return success;
@@ -111,7 +112,7 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<IEnumerable<UserData>> GetByUserIdAsync(int userId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), userId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), "ByUser", userId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _userDataRepository.SelectByUserIdAsync(userId));
         }
     }

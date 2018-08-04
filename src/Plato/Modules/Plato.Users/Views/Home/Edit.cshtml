@@ -7,12 +7,6 @@
     <div class="layout">
 
         <div class="layout-header">
-            @if (Model.Alerts != null)
-            {
-                <div class="layout-alerts">
-                    <view model="@Model.Alerts"></view>
-                </div>
-            }
             @if (Model.Tools != null)
             {
                 <div class="float-right layout-tools">
@@ -43,6 +37,12 @@
                     }
                 </div>
                 <div class="col-lg-9">
+                    @if (Model.Alerts != null)
+                    {
+                        <div class="layout-alerts">
+                            <view model="@Model.Alerts"></view>
+                        </div>
+                    }
                     @if (Model.Content != null)
                     {
                         <view model="@Model.Content"></view>
@@ -51,7 +51,7 @@
                         @if (Model.Actions != null)
                         {
                             <div class="float-right layout-actions">
-                                <view model="@Model.Actions" />
+                                <view model="@Model.Actions"/>
                             </div>
                         }
                         @if (Model.Footer != null)
@@ -66,6 +66,12 @@
         }
         else
         {
+            @if (Model.Alerts != null)
+             {
+                 <div class="layout-alerts">
+                     <view model="@Model.Alerts"></view>
+                 </div>
+             }
             @if (Model.Content != null)
              {
                  <view model="@Model.Content"></view>
