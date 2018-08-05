@@ -79,6 +79,9 @@ namespace Plato.Internal.Navigation
             // Compute Url and RouteValues properties to Href
             menuItems = ComputeHref(menuItems, actionContext);
 
+            // Set selected item based on matching Url
+            menuItems = SetSelected(menuItems, actionContext);
+
             // Keep only menu items with an Href, or that have child items with an Href
             menuItems = Reduce(menuItems);
 
@@ -158,7 +161,55 @@ namespace Plato.Internal.Navigation
 
             return menuItems;
         }
-        
+
+        List<MenuItem> SetSelected(List<MenuItem> menuItems, ActionContext actionContext)
+        {
+            foreach (var menuItem in menuItems)
+            {
+                menuItem.Selected = IsHrefCurrentUrl(menuItem.Url, menuItem.RouteValues, actionContext);
+                menuItem.Items = SetSelected(menuItem.Items, actionContext);
+            }
+
+            return menuItems;
+        }
+
+        bool IsHrefCurrentUrl(string menuItemUrl, RouteValueDictionary routeValueDictionary, ActionContext actionContext)
+        {
+
+       
+            if (routeValueDictionary == null || routeValueDictionary.Count == 0)
+            {
+                
+            }
+            else
+            {
+
+                var routeValues = actionContext.RouteData.Values;
+                var currentAction = routeValues["action"].ToString();
+                var currentController = routeValues["controller"].ToString();
+                var menuItemController = routeValueDictionary["controller"].ToString();
+                var menuItemAction = routeValueDictionary["action"].ToString();
+
+                var isController = currentController == menuItemController;
+                var isAction = currentAction == menuItemAction;
+
+                if (isController & isAction)
+                {
+                    return true;
+                }
+
+                //if (_urlHelper == null)
+                //{
+                //    _urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
+                //}
+
+                //url = _urlHelper.RouteUrl(new UrlRouteContext { Values = routeValueDictionary });
+            }
+
+
+            return false;
+        }
+
         string GetUrl(string menuItemUrl, RouteValueDictionary routeValueDictionary, ActionContext actionContext)
         {
             string url;

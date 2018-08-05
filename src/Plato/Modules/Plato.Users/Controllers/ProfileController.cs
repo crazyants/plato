@@ -21,7 +21,6 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<EditProfileViewModel> _editProfileViewProvider;
         private readonly IViewProviderManager<EditAccountViewModel> _editAccountViewProvider;
         private readonly IViewProviderManager<EditSettingsViewModel> _editSettingsViewProvider;
-
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
@@ -50,14 +49,13 @@ namespace Plato.Users.Controllers
             _contextFacade = contextFacade;
             _userManager = userManager;
             _alerter = alerter;
-            
-
 
             T = htmlLocalizer;
             S = stringLocalizer;
         }
 
         // Edit Profile
+        // --------------------------
 
         public async Task<IActionResult> EditProfile()
         {
@@ -126,8 +124,9 @@ namespace Plato.Users.Controllers
             return await EditProfile();
 
         }
-        
+
         // Edit Account
+        // --------------------------
 
         public async Task<IActionResult> EditAccount()
         {
@@ -191,8 +190,8 @@ namespace Plato.Users.Controllers
 
         }
 
-
         // Edit Settings
+        // --------------------------
 
         public async Task<IActionResult> EditSettings()
         {
@@ -253,7 +252,6 @@ namespace Plato.Users.Controllers
             return await EditProfile();
 
         }
-
-
+        
     }
 }

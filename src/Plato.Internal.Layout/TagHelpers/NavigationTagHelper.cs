@@ -150,6 +150,12 @@ namespace Plato.Internal.Layout.TagHelpers
                     }
                 }
 
+                if (item.Selected)
+                {
+                    linkClass += " active";
+                }
+                
+
                 var targetEvent = "";
                 var targetCss = " data-toggle=\"dropdown\"";
                 if (this.Collaspsable)
