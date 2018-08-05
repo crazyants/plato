@@ -15,13 +15,13 @@ namespace Plato.Users.ViewModels
 
         public string Location { get; set; }
 
+        [DataType(DataType.Url)]
+        public string Url { get; set; }
 
         public string Bio { get; set; }
-
-
+        
         [DataType(DataType.Upload)]
         public IFormFile AvatarFile { get; set; }
-
-
+        
     }
 }

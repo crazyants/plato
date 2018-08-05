@@ -14,14 +14,19 @@ namespace Plato.Users.ViewModels
         [Required]
         public string UserName { get; set; }
 
-        public string Location { get; set; }
-
-        public string Bio { get; set; }
-        
         [Required]
         [EmailAddress]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+
+        public string Location { get; set; }
+
+        public string Bio { get; set; }
+
+        [DataType(DataType.Url)]
+        public string Url { get; set; }
+
 
         [DataType(DataType.Password)]
         public string Password { get; set; }

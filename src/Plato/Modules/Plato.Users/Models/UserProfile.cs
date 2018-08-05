@@ -35,6 +35,9 @@ namespace Plato.Users.Models
 
         public string Bio { get; set; }
 
+        public string Url { get; set; }
+
+
     }
 
 

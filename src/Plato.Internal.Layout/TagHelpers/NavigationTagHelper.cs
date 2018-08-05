@@ -155,7 +155,6 @@ namespace Plato.Internal.Layout.TagHelpers
                     linkClass += " active";
                 }
                 
-
                 var targetEvent = "";
                 var targetCss = " data-toggle=\"dropdown\"";
                 if (this.Collaspsable)

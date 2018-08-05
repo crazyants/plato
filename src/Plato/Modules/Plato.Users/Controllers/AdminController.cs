@@ -18,9 +18,9 @@ namespace Plato.Users.Controllers
     {
 
         private readonly IViewProviderManager<User> _adminViewProvider;
-        private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly UserManager<User> _userManager;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -35,7 +35,6 @@ namespace Plato.Users.Controllers
             IAlerter alerter)
         {
             _adminViewProvider = adminViewProvider;
-            //_userListViewProvider = userListViewProvider;
             _userManager = userManager;
             _breadCrumbManager = breadCrumbManager;
             _alerter = alerter;
@@ -153,7 +152,7 @@ namespace Plato.Users.Controllers
             });
 
             var currentUser = await _userManager.FindByIdAsync(id);
-            if (!(currentUser is User))
+            if (currentUser == null)
             {
                 return NotFound();
             }
@@ -175,15 +174,26 @@ namespace Plato.Users.Controllers
             
             var result = await _adminViewProvider.ProvideUpdateAsync((User)currentUser, this);
 
-            if (!ModelState.IsValid)
+            // Ensure modelstate is still valid after view providers have executed
+            if (ModelState.IsValid)
             {
-                return View(result);
+                _alerter.Success(T["User Updated Successfully!"]);
+                return RedirectToAction(nameof(Index));
             }
 
-            _alerter.Success(T["User Updated Successfully!"]);
+            // if we reach this point some view model validation
+            // failed within a view provider, display model state errors
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
+                }
+            }
 
-            return RedirectToAction(nameof(Index));
-            
+            return await Edit(currentUser.Id.ToString());
+
+
         }
 
         #endregion

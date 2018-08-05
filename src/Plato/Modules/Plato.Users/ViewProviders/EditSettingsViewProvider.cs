@@ -76,7 +76,7 @@ namespace Plato.Users.ViewProviders
                 return await BuildIndexAsync(viewModel, updater);
             }
 
-            var model = new EditAccountViewModel();
+            var model = new EditSettingsViewModel();;
 
             if (!await updater.TryUpdateModelAsync(model))
             {
@@ -85,6 +85,12 @@ namespace Plato.Users.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
+
+                // Update user settings
+                var data = user.GetOrCreate<UserDetail>();
+                data.Settings.TimeZoneOffset = model.TimeZoneOffSet;
+                data.Settings.Culture = model.Culture;
+                user.AddOrUpdate<UserDetail>(data);
 
                 // Update user
                 var result = await _userManager.UpdateAsync(user);

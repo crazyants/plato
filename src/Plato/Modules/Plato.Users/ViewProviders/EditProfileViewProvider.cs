@@ -61,11 +61,12 @@ namespace Plato.Users.ViewProviders
 
         public override async Task<bool> ValidateModelAsync(EditProfileViewModel viewModel, IUpdateModel updater)
         {
-            return await updater.TryUpdateModelAsync(new EditUserViewModel
+            return await updater.TryUpdateModelAsync(new EditProfileViewModel()
             {
                 DisplayName = viewModel.DisplayName,
                 Location = viewModel.Location,
-                Bio = viewModel.Bio
+                Bio = viewModel.Bio,
+                Url = viewModel.Url
             });
         }
 
@@ -84,15 +85,19 @@ namespace Plato.Users.ViewProviders
                 return await BuildEditAsync(userProfile, updater);
             }
 
+     
             if (updater.ModelState.IsValid)
             {
 
                 // Update user data
 
-                var details = user.GetOrCreate<UserDetail>();
-                details.Profile.Location = model.Location;
-                details.Profile.Bio = model.Bio;
-                user.AddOrUpdate<UserDetail>(details);
+                user.DisplayName = model.DisplayName.Trim();
+            
+                var data = user.GetOrCreate<UserDetail>();
+                data.Profile.Location = model.Location;
+                data.Profile.Bio = model.Bio;
+                data.Profile.Url = model.Url;
+                user.AddOrUpdate<UserDetail>(data);
 
                 // Update user avatar
 

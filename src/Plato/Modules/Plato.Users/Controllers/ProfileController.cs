@@ -66,17 +66,17 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
             
-            var details = user.GetOrCreate<UserDetail>();
+            var data = user.GetOrCreate<UserDetail>();
 
             var editProfileViewModel = new EditProfileViewModel()
             {
                 Id = user.Id,
                 DisplayName = user.DisplayName,
-                Location = details.Profile.Location,
-                Bio = details.Profile.Bio
+                Location = data.Profile.Location,
+                Bio = data.Profile.Bio,
+                Url = data.Profile.Url
             };
-
-
+            
             // Build view
             var result = await _editProfileViewProvider.ProvideEditAsync(editProfileViewModel, this);
 
@@ -171,7 +171,7 @@ namespace Plato.Users.Controllers
                 if (ModelState.IsValid)
                 {
                     _alerter.Success(T["Account Updated Successfully!"]);
-                    return RedirectToAction(nameof(EditProfile));
+                    return RedirectToAction(nameof(EditAccount));
                 }
 
             }
@@ -186,7 +186,7 @@ namespace Plato.Users.Controllers
                 }
             }
 
-            return await EditProfile();
+            return await EditAccount();
 
         }
 
@@ -200,10 +200,14 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
+            
+            var data = user.GetOrCreate<UserDetail>();
 
             var viewModel = new EditSettingsViewModel()
             {
-                Id = user.Id
+                Id = user.Id,
+                TimeZoneOffSet = data.Settings.TimeZoneOffset,
+                Culture = data.Settings.Culture
             };
 
             // Build view
@@ -234,7 +238,7 @@ namespace Plato.Users.Controllers
                 if (ModelState.IsValid)
                 {
                     _alerter.Success(T["Settings Updated Successfully!"]);
-                    return RedirectToAction(nameof(EditProfile));
+                    return RedirectToAction(nameof(EditSettings));
                 }
 
             }
@@ -249,7 +253,7 @@ namespace Plato.Users.Controllers
                 }
             }
 
-            return await EditProfile();
+            return await EditSettings();
 
         }
         

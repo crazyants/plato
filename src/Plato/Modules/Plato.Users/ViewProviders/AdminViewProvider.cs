@@ -12,6 +12,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Users.Models;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
@@ -74,15 +75,31 @@ namespace Plato.Users.ViewProviders
                 ));
 
         }
-        
+
+        public override async Task<bool> ValidateModelAsync(User user, IUpdateModel updater)
+        {
+            return await updater.TryUpdateModelAsync(new EditUserViewModel
+            {
+                DisplayName = user.DisplayName,
+                UserName = user.UserName,
+                Email = user.Email
+            });
+        }
+
         public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
+
+            var details = user.GetOrCreate<UserDetail>();
 
             var viewModel = new EditUserViewModel()
             {
                 Id = user.Id,
+                DisplayName = user.DisplayName,
                 UserName = user.UserName,
-                Email = user.Email
+                Email = user.Email,
+                Location = details.Profile.Location,
+                Url = details.Profile.Url,
+                Bio = details.Profile.Bio
             };
 
             return Task.FromResult(
