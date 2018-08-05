@@ -201,17 +201,16 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
             
+            // Get user data
             var data = user.GetOrCreate<UserDetail>();
-
-            var viewModel = new EditSettingsViewModel()
+            
+            // Build view
+            var result = await _editSettingsViewProvider.ProvideEditAsync(new EditSettingsViewModel()
             {
                 Id = user.Id,
                 TimeZoneOffSet = data.Settings.TimeZoneOffset,
                 Culture = data.Settings.Culture
-            };
-
-            // Build view
-            var result = await _editSettingsViewProvider.ProvideEditAsync(viewModel, this);
+            }, this);
 
             // Return view
             return View(result);

@@ -1,32 +1,36 @@
 ﻿@model User
 
-<div class="bg-info text-light py-4 flex-column">
-    <div class="text-center py-4">
-        
-        <avatar class="avatar avatar-lg avatar-round" user-id="@Model.Id"/>
-        <h6 class="mt-4">New Member</h6>
-        Just getting started
+@{
+    var details = Model.GetOrCreate<UserDetail>();
+}
+
+<div class="vcard form-group">
+
+    <div class="profile-avatar vcard-photo">
+        <div class="avatar-preview">
+            <avatar id="avatarPreview" user-id="@Model.Id"/>
+        </div>
     </div>
+
+    <ul class="vcard-details">
+        <li class="vcard-username text-muted">
+            @@@Model.UserName
+        </li>
+        <li class="vcard-location">
+            <i class="fal fa-map-marker"></i> @details.Profile.Location
+        </li>
+        @if (!String.IsNullOrWhiteSpace(details.Profile.Url))
+        {
+            <li  class="vcard-url">
+                <i class="fal fa-link"></i>
+                <a href="@details.Profile.Url">
+                    @details.Profile.Url
+                </a>
+            </li>
+        }
+    </ul>
 
 </div>
 
-<div class="nav-v">
 
-    <div class="navbar navbar-expand-lg bg-dark navbar-dark">
-
-        <div class="d-flex align-items-center">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-
-        <div class="collapse navbar-collapse flex-column" id="navbar-collapse" role="navigation">
-            <navigation name="userprofile"
-                        collaspsable="true"
-                        class="navbar-nav d-lg-block"
-                        child-ul-css-class="nav flex-column"
-                        link-css-class="nav-link" />
-        </div>
-    </div>
-</div>
 

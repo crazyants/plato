@@ -36,13 +36,30 @@
 }
 
 /* ------------------------- */
-/* Cards */
+/* Card */
 /* ------------------------- */
 
 .card-title { margin: 0.50rem 0; }
 
 .card-body-flush .card-body { padding: 0; }
 .card-body-sm-gutter .card-body { padding: 0.5rem; }
+
+/* ------------------------- */
+/* VCard */
+/* ------------------------- */
+
+.vcard { display: block; text-align: center; }
+
+.vcard-display-name {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    margin: 1rem 0;
+}
+
+.vcard-details { list-style: none; margin: 1rem 0; padding: 0; }
+.vcard-details li { margin: 0; padding: 0; padding-bottom: 0.50rem; }
+.vcard-details li i { vertical-align: middle; }
 
 /* ------------------------- */
 /* Drop downs */
@@ -189,21 +206,21 @@
 /* Avatar Upload */
 /* --------------------------- */
 
-.avatar-upload {
+.profile-avatar {
     position: relative;
     max-width: 250px;
-    margin: 25px auto;
+    margin: 0 auto;
 }
-.avatar-upload .avatar-edit {
+.profile-avatar .avatar-edit {
     position: absolute;
     right: 0;
     z-index: 1;
     top: 0;
 }
-.avatar-upload .avatar-edit input {
+.profile-avatar .avatar-edit input {
     display: none;
 }
-.avatar-upload .avatar-edit input + label {
+.profile-avatar .avatar-edit input + label {
     display: inline-block;
     width: 42px;
     height: 42px;
@@ -213,7 +230,7 @@
     font-weight: normal;
     transition: all 0.2s ease-in-out;
 }
-.avatar-upload .avatar-edit input + label i {
+.profile-avatar .avatar-edit input + label i {
     color: #fff;
     position: absolute;
     top: 10px;
@@ -222,12 +239,13 @@
     text-align: center;
     margin: auto;
 }
-.avatar-upload .avatar-preview {
+.profile-avatar .avatar-preview {
     width: 250px;
     height: 250px;
     position: relative;
 }
-.avatar-upload .avatar-preview > span {
+
+.profile-avatar .avatar-preview > span {
     width: 100%;
     height: 100%;
     display: block;

@@ -61,11 +61,7 @@ namespace Plato.Users.ViewProviders
 
         public override async Task<bool> ValidateModelAsync(EditSettingsViewModel viewModel, IUpdateModel updater)
         {
-            return await updater.TryUpdateModelAsync(new EditSettingsViewModel
-            {
-                TimeZoneOffSet = viewModel.TimeZoneOffSet,
-                Culture = viewModel.Culture
-            });
+            return await updater.TryUpdateModelAsync(viewModel);
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(EditSettingsViewModel viewModel, IUpdateModel updater)
