@@ -17,13 +17,13 @@ namespace Plato.Discuss.Labels.ViewProviders
     {
         
         private readonly IContextFacade _contextFacade;
-        private readonly ILabelStore<LabelBase> _labelStore;
-        private readonly ILabelManager<LabelBase> _labelManager;
+        private readonly ILabelStore<Label> _labelStore;
+        private readonly ILabelManager<Label> _labelManager;
 
         public AdminViewProvider(
             IContextFacade contextFacade,
-            ILabelStore<LabelBase> labelStore,
-            ILabelManager<LabelBase> labelManager)
+            ILabelStore<Label> labelStore,
+            ILabelManager<Label> labelManager)
         {
             _contextFacade = contextFacade;
             _labelStore = labelStore;
@@ -32,7 +32,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(LabelBase viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(LabelBase label, IUpdateModel updater)
         {
             var indexViewModel = await GetIndexModel();
          
@@ -44,19 +44,19 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(LabelBase viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(LabelBase label, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(LabelBase category, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(LabelBase label, IUpdateModel updater)
         {
 
             var defaultIcons = new DefaultIcons();
 
             EditLabelViewModel editLabelViewModel = null;
-            if (category.Id == 0)
+            if (label.Id == 0)
             {
                 editLabelViewModel = new EditLabelViewModel()
                 {
@@ -69,12 +69,12 @@ namespace Plato.Discuss.Labels.ViewProviders
             {
                 editLabelViewModel = new EditLabelViewModel()
                 {
-                    Id = category.Id,
-                    Name = category.Name,
-                    Description = category.Description,
-                    ForeColor = category.ForeColor,
-                    BackColor = category.BackColor,
-                    IconCss = category.IconCss,
+                    Id = label.Id,
+                    Name = label.Name,
+                    Description = label.Description,
+                    ForeColor = label.ForeColor,
+                    BackColor = label.BackColor,
+                    IconCss = label.IconCss,
                     IconPrefix = defaultIcons.Prefix,
                     ChannelIcons = defaultIcons
                 };
@@ -88,14 +88,14 @@ namespace Plato.Discuss.Labels.ViewProviders
             ));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(LabelBase category, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(LabelBase label, IUpdateModel updater)
         {
 
             var model = new EditLabelViewModel();
 
             if (!await updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(category, updater);
+                return await BuildEditAsync(label, updater);
             }
 
             model.Name = model.Name?.Trim();
@@ -114,8 +114,8 @@ namespace Plato.Discuss.Labels.ViewProviders
 
                 var result = await _labelManager.UpdateAsync(new Label()
                 {
-                    Id = category.Id,
-                    FeatureId = category.FeatureId,
+                    Id = label.Id,
+                    FeatureId = label.FeatureId,
                     Name = model.Name,
                     Description = model.Description,
                     ForeColor = model.ForeColor,
@@ -130,7 +130,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             }
 
-            return await BuildEditAsync(category, updater);
+            return await BuildEditAsync(label, updater);
 
 
         }
