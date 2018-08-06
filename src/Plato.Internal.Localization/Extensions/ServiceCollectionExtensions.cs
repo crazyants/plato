@@ -10,7 +10,7 @@ namespace Plato.Internal.Localization.Extensions
             this IServiceCollection services)
         {
 
-            services.AddSingleton<ITimeZoneProvider<TimeZone>, TimeZoneProvider<TimeZone>>();
+            services.AddSingleton<ITimeZoneProvider, TimeZoneProvider>();
             
             return services;
 

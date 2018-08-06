@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,6 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
 using Plato.Users.ViewModels;
-using TimeZone = Plato.Internal.Localization.Abstractions.TimeZone;
 
 namespace Plato.Users.Controllers
 {
@@ -28,7 +28,7 @@ namespace Plato.Users.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAlerter _alerter;
-        private readonly ITimeZoneProvider<TimeZone> _timeZoneProvider;
+        private readonly ITimeZoneProvider _timeZoneProvider;
 
         public IHtmlLocalizer T { get; }
 
@@ -40,7 +40,7 @@ namespace Plato.Users.Controllers
             IViewProviderManager<EditSettingsViewModel> editSettingsViewProvider,
             IHtmlLocalizer<HomeController> htmlLocalizer,
             IStringLocalizer<HomeController> stringLocalizer,
-            ITimeZoneProvider<TimeZone> timeZoneProvider,
+            ITimeZoneProvider timeZoneProvider,
             IPlatoUserStore<User> platoUserStore,
             IContextFacade contextFacade, 
             UserManager<User> userManager, 
@@ -217,7 +217,7 @@ namespace Plato.Users.Controllers
             var result = await _editSettingsViewProvider.ProvideEditAsync(new EditSettingsViewModel()
             {
                 Id = user.Id,
-                TimeZoneOffSet = data.Settings.TimeZoneOffset,
+                TimeZone = data.Settings.TimeZone,
                 Culture = data.Settings.Culture,
                 AvailableTimeZones = await GetAvailableTimeZonesAsync()
             }, this);

@@ -22,7 +22,7 @@ namespace Plato.Users.Models
 
     public class SettingsData : Serializable
     {
-        public double TimeZoneOffset { get; set; } = 0.0;
+        public string TimeZone { get; set; }
 
         public string Culture { get; set; }
 

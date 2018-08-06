@@ -8,7 +8,7 @@ namespace Plato.Users.ViewModels
 
         public int Id { get; set; }
 
-        public double TimeZoneOffSet { get; set; }
+        public string TimeZone { get; set; }
 
         public string Culture { get; set; }
         

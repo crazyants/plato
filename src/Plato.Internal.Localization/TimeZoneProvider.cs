@@ -1,41 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Localization;
 using Plato.Internal.Localization.Abstractions;
-using TimeZone = Plato.Internal.Localization.Abstractions.TimeZone;
 
 namespace Plato.Internal.Localization
 {
-    
-    public class TimeZoneProvider<TTimeZone> : ITimeZoneProvider<TTimeZone> where TTimeZone : class, ITimeZone
+
+    public class TimeZoneProvider : ITimeZoneProvider
     {
-
-        private static IEnumerable<TimeZone> _timeZones;
-
-        public IStringLocalizer S { get; }
-
-        public TimeZoneProvider(
-            IStringLocalizer<TimeZoneProvider<TTimeZone>> stringLocalizer)
-        {
-            S = stringLocalizer;
-      
-        }
-        
-        public Task<IEnumerable<TTimeZone>> GetTimeZonesAsync()
+        private static ReadOnlyCollection<TimeZoneInfo> _timeZones;
+   
+        public Task<ReadOnlyCollection<TimeZoneInfo>> GetTimeZonesAsync()
         {
 
             if (_timeZones == null)
             {
-                var timeZones = new List<TimeZone>();
+                var timeZones = new List<TimeZoneInfo>();
                 foreach (var z in TimeZoneInfo.GetSystemTimeZones())
                 {
-                    timeZones.Add(new TimeZone(z.Id, z.DisplayName, z.BaseUtcOffset));
+                    timeZones.Add(z);
                 }
-                _timeZones = timeZones;
+                _timeZones = new ReadOnlyCollection<TimeZoneInfo>(timeZones);
             }
 
-            return Task.FromResult((IEnumerable<TTimeZone>) _timeZones);
+            return Task.FromResult(_timeZones);
 
         }
 

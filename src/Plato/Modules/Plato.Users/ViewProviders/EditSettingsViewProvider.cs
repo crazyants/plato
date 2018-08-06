@@ -84,7 +84,7 @@ namespace Plato.Users.ViewProviders
 
                 // Update user settings
                 var data = user.GetOrCreate<UserDetail>();
-                data.Settings.TimeZoneOffset = model.TimeZoneOffSet;
+                data.Settings.TimeZone = model.TimeZone;
                 data.Settings.Culture = model.Culture;
                 user.AddOrUpdate<UserDetail>(data);
 

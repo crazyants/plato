@@ -8,8 +8,15 @@
     </card-title>
     <card-body>
         
-        <select class="form-control" asp-for="TimeZoneOffSet"
-                asp-items="@Model.AvailableTimeZones"></select>
+        <div class="form-group" asp-validation-class-for="TimeZone">
+            <label asp-for="TimeZone"><strong>@T["TimeZone"]</strong></label>
+            <span asp-validation-for="TimeZone" class="text-danger"></span>
+            <select class="form-control" 
+                    asp-for="TimeZone"
+                    asp-items="@Model.AvailableTimeZones"></select>
+        </div>
+
+
      
     </card-body>
 </card>
