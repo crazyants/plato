@@ -62,6 +62,8 @@ namespace Plato.Users.Controllers
             S = stringLocalizer;
         }
 
+        #region "Actions"
+
         // Edit Profile
         // --------------------------
 
@@ -218,6 +220,7 @@ namespace Plato.Users.Controllers
             {
                 Id = user.Id,
                 TimeZone = data.Settings.TimeZone,
+                ObserveDst = data.Settings.ObserveDst,
                 Culture = data.Settings.Culture,
                 AvailableTimeZones = await GetAvailableTimeZonesAsync()
             }, this);
@@ -265,7 +268,11 @@ namespace Plato.Users.Controllers
             return await EditSettings();
 
         }
-        
+
+        #endregion
+
+        #region "Private Methods"
+
         async Task<IEnumerable<SelectListItem>> GetAvailableTimeZonesAsync()
         {
             // Build timezones 
@@ -288,5 +295,8 @@ namespace Plato.Users.Controllers
 
             return timeZones;
         }
+
+        #endregion
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Localization.Abstractions;
 
@@ -11,7 +12,26 @@ namespace Plato.Internal.Localization
     {
         private static ReadOnlyCollection<TimeZoneInfo> _timeZones;
    
-        public Task<ReadOnlyCollection<TimeZoneInfo>> GetTimeZonesAsync()
+        public async Task<ReadOnlyCollection<TimeZoneInfo>> GetTimeZonesAsync()
+        {
+            await PopulateTimeZones();
+            return _timeZones;
+        }
+
+        public async Task<TimeZoneInfo> GetTimeZoneByIdAsync(string id)
+        {
+
+            if (String.IsNullOrEmpty(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            await PopulateTimeZones();
+            return _timeZones.FirstOrDefault(tz => tz.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+
+        }
+
+        static Task PopulateTimeZones()
         {
 
             if (_timeZones == null)
@@ -24,11 +44,12 @@ namespace Plato.Internal.Localization
                 _timeZones = new ReadOnlyCollection<TimeZoneInfo>(timeZones);
             }
 
-            return Task.FromResult(_timeZones);
+            return Task.CompletedTask;
 
         }
-
     }
+
+        
 
 
   

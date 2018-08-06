@@ -7,17 +7,23 @@
         </h6>
     </card-title>
     <card-body>
-        
+
         <div class="form-group" asp-validation-class-for="TimeZone">
-            <label asp-for="TimeZone"><strong>@T["TimeZone"]</strong></label>
+            <label asp-for="TimeZone"><strong>@T["Your Time Zone"]</strong></label>
             <span asp-validation-for="TimeZone" class="text-danger"></span>
-            <select class="form-control" 
+            <select class="form-control"
                     asp-for="TimeZone"
                     asp-items="@Model.AvailableTimeZones"></select>
         </div>
 
+        <div class="form-check">
+            <label asp-for="ObserveDst">
+                <input asp-for="ObserveDst" />
+                @T["Observe Daylight Savings"]
+            </label>
+        </div>
 
-     
+
     </card-body>
 </card>
 

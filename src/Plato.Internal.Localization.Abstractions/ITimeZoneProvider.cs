@@ -7,6 +7,9 @@ namespace Plato.Internal.Localization.Abstractions
     public interface ITimeZoneProvider
     {
         Task<ReadOnlyCollection<TimeZoneInfo>> GetTimeZonesAsync();
+
+        Task<TimeZoneInfo> GetTimeZoneByIdAsync(string id);
+
     }
 
 }

@@ -1,11 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Settings.ViewModels;
@@ -22,6 +25,7 @@ namespace Plato.Settings.Controllers
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly ITimeZoneProvider _timeZoneProvider;
 
         public IHtmlLocalizer T { get; }
 
@@ -34,11 +38,13 @@ namespace Plato.Settings.Controllers
             IAuthorizationService authorizationService,
             IAlerter alerter,
             ISiteSettingsStore siteSettingsStore,
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager,
+            ITimeZoneProvider timeZoneProvider)
         {
             _alerter = alerter;
             _siteSettingsStore = siteSettingsStore;
             _breadCrumbManager = breadCrumbManager;
+            _timeZoneProvider = timeZoneProvider;
             _authorizationService = authorizationService;
 
             T = htmlLocalizer;
@@ -109,6 +115,8 @@ namespace Plato.Settings.Controllers
             var settings = new SiteSettings()
             {
                 SiteName = viewModel.SiteName,
+                TimeZone = viewModel.TimeZone,
+                ObserveDst = viewModel.ObserveDst,
                 ApiKey = viewModel.ApiKey
             };
             
@@ -134,12 +142,14 @@ namespace Plato.Settings.Controllers
         {
 
             var settings = await _siteSettingsStore.GetAsync();
-
             if (settings != null)
             {
                 return new SiteSettingsViewModel()
                 {
-                    SiteName = settings.SiteName
+                    SiteName = settings.SiteName,
+                    TimeZone = settings.TimeZone,
+                    ObserveDst = settings.ObserveDst,
+                    AvailableTimeZones = await GetAvailableTimeZonesAsync()
                 };
             }
             
@@ -150,8 +160,35 @@ namespace Plato.Settings.Controllers
             };
 
         }
-        
+
         #endregion
-        
+
+        #region "Private Methods"
+
+        async Task<IEnumerable<SelectListItem>> GetAvailableTimeZonesAsync()
+        {
+            // Build timezones 
+            var timeZones = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = S["-"],
+                    Value = ""
+                }
+            };
+            foreach (var z in await _timeZoneProvider.GetTimeZonesAsync())
+            {
+                timeZones.Add(new SelectListItem
+                {
+                    Text = z.DisplayName,
+                    Value = z.Id
+                });
+            }
+
+            return timeZones;
+        }
+
+        #endregion
+
     }
 }

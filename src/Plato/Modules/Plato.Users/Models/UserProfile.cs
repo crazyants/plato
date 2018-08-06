@@ -24,6 +24,8 @@ namespace Plato.Users.Models
     {
         public string TimeZone { get; set; }
 
+        public bool ObserveDst { get; set; }
+
         public string Culture { get; set; }
 
     }
@@ -36,8 +38,7 @@ namespace Plato.Users.Models
         public string Bio { get; set; }
 
         public string Url { get; set; }
-
-
+        
     }
 
 

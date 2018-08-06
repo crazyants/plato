@@ -25,7 +25,9 @@ namespace Plato.Internal.Abstractions.Settings
         public string SuperUser { get; set; }
 
         public string TimeZone { get; set; }
-        
+
+        public bool ObserveDst { get; set; }
+
         public string BaseUrl { get; set; }
 
         public bool UseCdn { get; set; }

@@ -19,6 +19,8 @@ namespace Plato.Internal.Abstractions.Settings
 
         string TimeZone { get; set; }
 
+        bool ObserveDst { get; set; }
+
         //ResourceDebugMode ResourceDebugMode { get; set; }
 
         bool UseCdn { get; set; }
