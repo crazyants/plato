@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
@@ -37,11 +38,11 @@ namespace Plato.Internal.Navigation
             IUrlHelperFactory urlHelperFactory,
             IAuthorizationService authorizationService)
         {
-            _navigationProviders = navigationProviders;
-            _logger = logger;
-            _shellSettings = shellSettings;
-            _urlHelperFactory = urlHelperFactory;
             _authorizationService = authorizationService;
+            _navigationProviders = navigationProviders;
+            _urlHelperFactory = urlHelperFactory;
+            _shellSettings = shellSettings;
+            _logger = logger;
         }
 
         #endregion
@@ -179,31 +180,37 @@ namespace Plato.Internal.Navigation
        
             if (routeValueDictionary == null || routeValueDictionary.Count == 0)
             {
-                
+                if (String.IsNullOrEmpty(menuItemUrl))
+                {
+                    return false;
+                }
+                else
+                {
+                    if (actionContext.HttpContext != null)
+                    {
+                        return menuItemUrl == actionContext.HttpContext.Request.GetDisplayUrl();
+                    }
+                }
             }
             else
             {
 
                 var routeValues = actionContext.RouteData.Values;
+                var currentArea = routeValues["area"].ToString();
                 var currentAction = routeValues["action"].ToString();
                 var currentController = routeValues["controller"].ToString();
+                var menuItemArea = routeValueDictionary["area"].ToString();
                 var menuItemController = routeValueDictionary["controller"].ToString();
                 var menuItemAction = routeValueDictionary["action"].ToString();
 
+                var isArea = currentArea == menuItemArea;
                 var isController = currentController == menuItemController;
                 var isAction = currentAction == menuItemAction;
 
-                if (isController & isAction)
+                if (isArea && isController & isAction)
                 {
                     return true;
                 }
-
-                //if (_urlHelper == null)
-                //{
-                //    _urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
-                //}
-
-                //url = _urlHelper.RouteUrl(new UrlRouteContext { Values = routeValueDictionary });
             }
 
 

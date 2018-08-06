@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -7,11 +10,13 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
 using Plato.Users.ViewModels;
+using TimeZone = Plato.Internal.Localization.Abstractions.TimeZone;
 
 namespace Plato.Users.Controllers
 {
@@ -25,6 +30,7 @@ namespace Plato.Users.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;
         private readonly IAlerter _alerter;
+        private readonly ITimeZoneProvider<TimeZone> _timeZoneProvider;
 
         public IHtmlLocalizer T { get; }
 
@@ -36,19 +42,23 @@ namespace Plato.Users.Controllers
             IViewProviderManager<EditSettingsViewModel> editSettingsViewProvider,
             IHtmlLocalizer<HomeController> htmlLocalizer,
             IStringLocalizer<HomeController> stringLocalizer,
+            ITimeZoneProvider<TimeZone> timeZoneProvider,
             IPlatoUserStore<User> platoUserStore,
             IContextFacade contextFacade, 
             UserManager<User> userManager, 
-            IAlerter alerter)
+            IAlerter alerter
+           )
         {
 
             _editProfileViewProvider = editProfileViewProvider;
             _editAccountViewProvider = editAccountViewProvider;
             _editSettingsViewProvider = editSettingsViewProvider;
             _platoUserStore = platoUserStore;
+            _timeZoneProvider = timeZoneProvider;
             _contextFacade = contextFacade;
             _userManager = userManager;
             _alerter = alerter;
+            
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -204,12 +214,24 @@ namespace Plato.Users.Controllers
             // Get user data
             var data = user.GetOrCreate<UserDetail>();
             
+            // Get available timezones
+            var availableTimeZones = await _timeZoneProvider.GetTimeZones();
+
+            // Convert timezones to dictionary for view model
+            var timeZones = availableTimeZones
+                .OrderBy(tz => tz.UtcOffSet)
+                .ToDictionary(
+                    tz => tz.Name.ToString() + tz.Region.ToString(),
+                    tz => tz.UtcOffSet,
+                    StringComparer.OrdinalIgnoreCase);
+
             // Build view
             var result = await _editSettingsViewProvider.ProvideEditAsync(new EditSettingsViewModel()
             {
                 Id = user.Id,
                 TimeZoneOffSet = data.Settings.TimeZoneOffset,
-                Culture = data.Settings.Culture
+                Culture = data.Settings.Culture,
+                AvailableTimeZones = timeZones
             }, this);
 
             // Return view

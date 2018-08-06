@@ -8,7 +8,8 @@
     </card-title>
     <card-body>
         
-        XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        <select asp-for="TimeZoneOffSet"
+                asp-items="@Model.AvailableTimeZones"></select>
      
     </card-body>
 </card>

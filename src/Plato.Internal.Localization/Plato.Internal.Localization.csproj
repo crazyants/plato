@@ -11,4 +11,17 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Plato.Internal.Localization.Abstractions\Plato.Internal.Localization.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>..\..\..\..\..\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Localization.Abstractions">
+      <HintPath>..\..\..\..\..\.nuget\packages\microsoft.extensions.localization.abstractions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Localization.Abstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
