@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Plato.Users.ViewModels
 {
@@ -11,7 +12,7 @@ namespace Plato.Users.ViewModels
 
         public string Culture { get; set; }
         
-        public IDictionary<string, double> AvailableTimeZones { get; set; }
+        public IEnumerable<SelectListItem> AvailableTimeZones { get; set; }
 
     }
 }

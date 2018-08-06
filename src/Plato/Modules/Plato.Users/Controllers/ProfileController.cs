@@ -1,10 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
@@ -12,7 +11,6 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
 using Plato.Users.ViewModels;
@@ -210,28 +208,18 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
-            
+
+
             // Get user data
             var data = user.GetOrCreate<UserDetail>();
             
-            // Get available timezones
-            var availableTimeZones = await _timeZoneProvider.GetTimeZones();
-
-            // Convert timezones to dictionary for view model
-            var timeZones = availableTimeZones
-                .OrderBy(tz => tz.UtcOffSet)
-                .ToDictionary(
-                    tz => tz.Name.ToString() + tz.Region.ToString(),
-                    tz => tz.UtcOffSet,
-                    StringComparer.OrdinalIgnoreCase);
-
-            // Build view
+            // Build view model
             var result = await _editSettingsViewProvider.ProvideEditAsync(new EditSettingsViewModel()
             {
                 Id = user.Id,
                 TimeZoneOffSet = data.Settings.TimeZoneOffset,
                 Culture = data.Settings.Culture,
-                AvailableTimeZones = timeZones
+                AvailableTimeZones = await GetAvailableTimeZonesAsync()
             }, this);
 
             // Return view
@@ -278,5 +266,27 @@ namespace Plato.Users.Controllers
 
         }
         
+        async Task<IEnumerable<SelectListItem>> GetAvailableTimeZonesAsync()
+        {
+            // Build timezones 
+            var timeZones = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = S["-"],
+                    Value = ""
+                }
+            };
+            foreach (var z in await _timeZoneProvider.GetTimeZonesAsync())
+            {
+                timeZones.Add(new SelectListItem
+                {
+                    Text = z.DisplayName,
+                    Value = z.Id
+                });
+            }
+
+            return timeZones;
+        }
     }
 }

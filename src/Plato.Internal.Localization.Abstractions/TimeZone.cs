@@ -1,18 +1,20 @@
-﻿namespace Plato.Internal.Localization.Abstractions
+﻿using System;
+
+namespace Plato.Internal.Localization.Abstractions
 {
     public class TimeZone : ITimeZone
     {
 
-        public string Name { get; set; }
+        public string Id { get; set; }
 
-        public string Region { get; set; }
+        public string DisplayName { get; set; }
 
-        public double UtcOffSet { get; set; }
+        public TimeSpan UtcOffSet { get; set; }
 
-        public TimeZone(string name, string region, double utcOffSet)
+        public TimeZone(string id, string displayName, TimeSpan utcOffSet)
         {
-            Name = name;
-            Region = region;
+            Id = id;
+            DisplayName = displayName;
             UtcOffSet = utcOffSet;
         }
 
@@ -20,12 +22,11 @@
 
     public interface ITimeZone
     {
-        string Name { get; set; }
+        string Id { get; set; }
 
-        string Region { get; set; }
+        string DisplayName { get; set; }
 
-        double UtcOffSet { get; set; }
+        TimeSpan UtcOffSet { get; set; }
     }
-
-
+    
 }
