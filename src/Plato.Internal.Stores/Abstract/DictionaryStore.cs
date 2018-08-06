@@ -92,8 +92,10 @@ namespace Plato.Internal.Stores.Abstract
             var settings = await _dictionaryRepository.SelectEntries();
             if (settings != null)
             {
-                foreach (var setting in settings)                
-                   output.Add(setting);  
+                foreach (var setting in settings)
+                {
+                    output.Add(setting);
+                }
             }
             return output;
         }

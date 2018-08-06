@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Cache;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstract;
@@ -15,22 +14,22 @@ namespace Plato.Internal.Stores.Shell
     public class ShellDescriptorStore : IShellDescriptorStore
     {
 
-        private readonly string _key = CacheKeys.ShellDescriptor.ToString();
+        private const string Key = "ShellDescriptor";
 
         private readonly IDictionaryStore _dictionaryStore;
-        private readonly IMemoryCache _memoryCache;
         private readonly ILogger<ShellDescriptorStore> _logger;
         private readonly IShellFeatureStore<ShellFeature> _shellFeatureStore;
+        private readonly ICacheManager _cacheManager;
 
         public ShellDescriptorStore(
             IShellFeatureStore<ShellFeature> shellFeatureStore,
             IDictionaryStore dictionaryStore,
-            IMemoryCache memoryCache, 
-            ILogger<ShellDescriptorStore> logger)
+            ILogger<ShellDescriptorStore> logger,
+            ICacheManager cacheManager)
         {
             _dictionaryStore = dictionaryStore;
-            _memoryCache = memoryCache;
             _logger = logger;
+            _cacheManager = cacheManager;
             _shellFeatureStore = shellFeatureStore;
         }
 
@@ -38,14 +37,9 @@ namespace Plato.Internal.Stores.Shell
 
         public async Task<IShellDescriptor> GetAsync()
         {
-            if (!_memoryCache.TryGetValue(_key, out IShellDescriptor descriptor))
-            {
-                descriptor = await _dictionaryStore.GetAsync<ShellDescriptor>(_key);
-                if (descriptor != null)
-                    _memoryCache.Set(_key, descriptor);
-            }
-
-            return descriptor;
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), Key);
+            return await _cacheManager.GetOrCreateAsync(token,
+                async (cacheEntry) => await _dictionaryStore.GetAsync<ShellDescriptor>(Key));
         }
 
         public async Task<IShellDescriptor> SaveAsync(IShellDescriptor shellDescriptor)
@@ -56,10 +50,15 @@ namespace Plato.Internal.Stores.Shell
             shellDescriptor.Modules = features.ToList();
             
             // Update descriptor
-            var descriptor = await _dictionaryStore.UpdateAsync<ShellDescriptor>(_key, shellDescriptor);
+            var descriptor = await _dictionaryStore.UpdateAsync<ShellDescriptor>(Key, shellDescriptor);
             if (descriptor != null)
             {
-                _memoryCache.Set(_key, descriptor);
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation($"Shell descriptor updated successfully");
+                }
+                // Expire cache
+                _cacheManager.CancelTokens(this.GetType(), Key);
             }
 
             return descriptor;
@@ -67,8 +66,12 @@ namespace Plato.Internal.Stores.Shell
 
         public async Task<bool> DeleteAsync()
         {
-            var result = await _dictionaryStore.DeleteAsync(_key);
-            _memoryCache.Remove(_key);
+            var result = await _dictionaryStore.DeleteAsync(Key);
+            if (result)
+            {
+                // Expire cache
+                _cacheManager.CancelTokens(this.GetType(), Key);
+            }
             return result;
         }
 
@@ -76,7 +79,7 @@ namespace Plato.Internal.Stores.Shell
 
         #region "Private Methods"
 
-        private async Task<IEnumerable<ShellModule>> AddAndGetFeaturesAsync(IEnumerable<ShellModule> modulesToAdd)
+        async Task<IEnumerable<ShellModule>> AddAndGetFeaturesAsync(IEnumerable<ShellModule> modulesToAdd)
         {
 
             // Ensure we have a distinct list of features to save
@@ -132,8 +135,7 @@ namespace Plato.Internal.Stores.Shell
         }
 
         #endregion
-
-
+        
     }
 
 }

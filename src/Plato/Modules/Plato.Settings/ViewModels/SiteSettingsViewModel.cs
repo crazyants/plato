@@ -16,17 +16,14 @@ namespace Plato.Settings.ViewModels
         [Display(Name = "time zone")]
         public string TimeZone { get; set; }
         
-        [Display(Name = "time zone")]
         public bool ObserveDst { get; set; }
         
-        [Required]
-        [StringLength(255)]
-        [Display(Name = "api key")]
-        public string ApiKey { get; set; }
+        //[Required]
+        //[StringLength(255)]
+        //[Display(Name = "api key")]
+        //public string ApiKey { get; set; }
         
-
         public IEnumerable<SelectListItem> AvailableTimeZones { get; set; }
-
-
+        
     }
 }

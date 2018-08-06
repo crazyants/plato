@@ -109,17 +109,36 @@ namespace Plato.Settings.Controllers
             
             if (!ModelState.IsValid)
             {
+                foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        _alerter.Danger(T[error.ErrorMessage]);
+                    }
+                }
                 return View(await GetModel());
             }
-            
-            var settings = new SiteSettings()
+
+            // Update existing settings
+            var settings = await _siteSettingsStore.GetAsync();
+            if (settings != null)
             {
-                SiteName = viewModel.SiteName,
-                TimeZone = viewModel.TimeZone,
-                ObserveDst = viewModel.ObserveDst,
-                ApiKey = viewModel.ApiKey
-            };
-            
+                settings.SiteName = viewModel.SiteName;
+                settings.TimeZone = viewModel.TimeZone;
+                settings.ObserveDst = viewModel.ObserveDst;
+            }
+            else
+            {
+                // Create new settings
+                settings = new SiteSettings()
+                {
+                    SiteName = viewModel.SiteName,
+                    TimeZone = viewModel.TimeZone,
+                    ObserveDst = viewModel.ObserveDst
+                };
+            }
+        
+            // Update settings
             var result = await _siteSettingsStore.SaveAsync(settings);
             if (result != null)
             {

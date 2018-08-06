@@ -13,7 +13,7 @@ namespace Plato.Internal.Stores.Users
     public class UserBannerStore : IUserBannerStore<UserBanner>
     {
 
-        private readonly string _key = CacheKeys.UserBanners.ToString();
+        private readonly string _key = "UserBanner";
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
         private readonly IUserBannerRepository<UserBanner> _userBannerRepository;

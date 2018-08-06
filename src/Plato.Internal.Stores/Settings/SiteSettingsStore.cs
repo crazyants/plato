@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Settings;
+using Plato.Internal.Cache;
 using Plato.Internal.Stores.Abstract;
 using Plato.Internal.Stores.Abstractions.Settings;
 
@@ -10,45 +12,49 @@ namespace Plato.Internal.Stores.Settings
     public class SiteSettingsStore : ISiteSettingsStore
     {
 
-        private readonly string _key = CacheKeys.SiteSettings.ToString();
+        private const string Key = "SiteSettings";
 
         private readonly IDictionaryStore _dictionaryStore;
-        private readonly IMemoryCache _memoryCache;
+        private readonly ICacheManager _cacheManager;
+        private readonly ILogger<SiteSettingsStore> _logger;
 
         public SiteSettingsStore(
             IDictionaryStore dictionaryStore,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            ICacheManager cacheManager,
+            ILogger<SiteSettingsStore> logger)
         {
             _dictionaryStore = dictionaryStore;
-            _memoryCache = memoryCache;
+            _cacheManager = cacheManager;
+            _logger = logger;
         }
 
         public async Task<ISiteSettings> GetAsync()
         {
-            if (!_memoryCache.TryGetValue(_key, out SiteSettings siteSettings))
-            {
-                siteSettings = await _dictionaryStore.GetAsync<SiteSettings>(_key);
-                if (siteSettings != null)
-                    _memoryCache.Set(_key, siteSettings);
-            }
-
-            return siteSettings;
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), Key);
+            return await _cacheManager.GetOrCreateAsync(token,
+                async (cacheEntry) => await _dictionaryStore.GetAsync<SiteSettings>(Key));
         }
 
         public async Task<ISiteSettings> SaveAsync(ISiteSettings siteSettings)
         {
 
-            // Auto populate API key if one if not present
+            // Automatically generate an API key if one is not supplied
             if (String.IsNullOrWhiteSpace(siteSettings.ApiKey))
             {
                 siteSettings.ApiKey = System.Guid.NewGuid().ToString();
             }
 
-            var settings = await _dictionaryStore.UpdateAsync<SiteSettings>(_key, siteSettings);
+            // Update settings
+            var settings = await _dictionaryStore.UpdateAsync<SiteSettings>(Key, siteSettings);
             if (settings != null)
             {
-                // Update cache
-                _memoryCache.Set(_key, settings);
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation($"Settings for site '{settings.SiteName}' updated successfully");
+                }
+                // Expire cache
+                _cacheManager.CancelTokens(this.GetType(), Key);
             }
 
             return settings;
@@ -56,8 +62,13 @@ namespace Plato.Internal.Stores.Settings
 
         public async Task<bool> DeleteAsync()
         {
-            var result =  await _dictionaryStore.DeleteAsync(_key);
-            _memoryCache.Remove(_key);
+            var result =  await _dictionaryStore.DeleteAsync(Key);
+            if (result)
+            {
+                // Expire cache
+                _cacheManager.CancelTokens(this.GetType(), Key);
+            }
+            
             return result;
         }
 

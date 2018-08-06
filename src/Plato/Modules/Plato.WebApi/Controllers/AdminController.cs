@@ -96,7 +96,6 @@ namespace Plato.WebApi.Controllers
             return RedirectToAction(nameof(Index));
         }
         
-
         [HttpPost]
         [ActionName(nameof(Index))]
         public async Task<IActionResult> IndexPost(EditSettingsViewModel viewModel)
@@ -113,12 +112,23 @@ namespace Plato.WebApi.Controllers
             {
                 return View(await GetModel());
             }
-            
-            var settings = new SiteSettings()
+
+            // Update existing settings
+            var settings = await _siteSettingsStore.GetAsync();
+            if (settings != null)
             {
-                ApiKey = viewModel.ApiKey
-            };
+                settings.ApiKey = viewModel.ApiKey;
+            }
+            else
+            {
+                // Create new settings
+                settings = new SiteSettings()
+                {
+                    ApiKey = viewModel.ApiKey
+                };
+            }
             
+            // Update settings
             var result = await _siteSettingsStore.SaveAsync(settings);
             if (result != null)
             {
