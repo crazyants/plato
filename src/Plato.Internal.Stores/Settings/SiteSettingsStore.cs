@@ -47,6 +47,7 @@ namespace Plato.Internal.Stores.Settings
                 siteSettings.ApiKey = System.Guid.NewGuid().ToString();
             }
 
+            // Use default homepage route if a default route is not explictly specified
             if (siteSettings.HomeRoute == null)
             {
                 siteSettings.HomeRoute = new DefaultHomePageRoute();

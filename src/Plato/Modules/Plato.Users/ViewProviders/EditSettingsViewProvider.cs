@@ -81,14 +81,10 @@ namespace Plato.Users.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-
-                // Update user settings
-                var data = user.GetOrCreate<UserDetail>();
-                data.Settings.TimeZone = model.TimeZone;
-                data.Settings.ObserveDst = model.ObserveDst;
-                data.Settings.Culture = model.Culture;
-                user.AddOrUpdate<UserDetail>(data);
-
+                user.TimeZone = model.TimeZone;
+                user.ObserveDst = model.ObserveDst;
+                user.Culture = model.Culture;
+           
                 // Update user
                 var result = await _userManager.UpdateAsync(user);
                 foreach (var error in result.Errors)

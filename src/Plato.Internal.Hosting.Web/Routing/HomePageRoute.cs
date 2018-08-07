@@ -2,9 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions.Routing;
-using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
-
 
 namespace Plato.Internal.Hosting.Web.Routing
 {
@@ -32,13 +30,14 @@ namespace Plato.Internal.Hosting.Web.Routing
 
             var siteSettings = await _siteSettings.GetAsync();
 
-            // We may have site settings but no homepage route specified
+            // We may have settings but no homepage route specified
+            // In this instance to avoid a 404 use default homepage route
             if (siteSettings != null && siteSettings.HomeRoute == null)
             {
                 siteSettings.HomeRoute = new DefaultHomePageRoute();
             }
 
-            // Use homepage route
+            // Use specified homepage route
             if (siteSettings?.HomeRoute != null)
             {
                 foreach (var entry in siteSettings.HomeRoute)

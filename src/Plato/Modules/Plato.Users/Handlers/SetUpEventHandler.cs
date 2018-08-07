@@ -154,6 +154,24 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "FirstName",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "LastName",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Alias",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "SamAccountName",
                         Length = "255",
                         DbType = DbType.String
@@ -207,6 +225,45 @@ namespace Plato.Users.Handlers
                         Name = "ApiKey",
                         DbType = DbType.String,
                         Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TimeZone",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ObserveDst",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Culture",
+                        DbType = DbType.String,
+                        Length = "50"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV4Address",
+                        DbType = DbType.String,
+                        Length = "20"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV6Address",
+                        DbType = DbType.String,
+                        Length = "50"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTime,
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "LastLoginDate",
+                        DbType = DbType.DateTime,
                     }
                 }
             };

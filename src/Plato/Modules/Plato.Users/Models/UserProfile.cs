@@ -22,11 +22,11 @@ namespace Plato.Users.Models
 
     public class SettingsData : Serializable
     {
-        public string TimeZone { get; set; }
+        //public string TimeZone { get; set; }
 
-        public bool ObserveDst { get; set; }
+        //public bool ObserveDst { get; set; }
 
-        public string Culture { get; set; }
+        //public string Culture { get; set; }
 
     }
 

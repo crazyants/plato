@@ -59,6 +59,9 @@ namespace Plato.Internal.Repositories.Users
                 user.NormalizedEmail,
                 user.EmailConfirmed,
                 user.DisplayName,
+                user.FirstName,
+                user.LastName,
+                user.Alias,
                 user.SamAccountName,
                 user.PasswordHash,
                 user.SecurityStamp,
@@ -69,6 +72,13 @@ namespace Plato.Internal.Repositories.Users
                 user.LockoutEnabled,
                 user.AccessFailedCount,
                 user.ApiKey,
+                user.TimeZone,
+                user.ObserveDst,
+                user.Culture,
+                user.IpV4Address,
+                user.IpV6Address,
+                user.CreatedDate,
+                user.LastLoginDate,
                 user.Data);
 
             if (userId > 0)
@@ -373,6 +383,9 @@ namespace Plato.Internal.Repositories.Users
             string normalizedEmail,
             bool emailConfirmed,
             string displayName,
+            string firstName,
+            string lastName,
+            string alias,
             string samAccountName,
             string passwordHash,
             string securityStamp,
@@ -383,6 +396,13 @@ namespace Plato.Internal.Repositories.Users
             bool lockoutEnabled,
             int accessFailedCount,
             string apiKey,
+            string timeZone,
+            bool observeDst,
+            string culture,
+            string ipv4Address,
+            string ipv6Address,
+            DateTime? createdDate,
+            DateTime? lastLoginDate,
             IEnumerable<UserData> data)
         {
      
@@ -401,6 +421,9 @@ namespace Plato.Internal.Repositories.Users
                     normalizedEmail.ToEmptyIfNull().TrimToSize(255),
                     emailConfirmed,
                     displayName.ToEmptyIfNull().TrimToSize(255),
+                    firstName.ToEmptyIfNull().TrimToSize(255),
+                    lastName.ToEmptyIfNull().TrimToSize(255),
+                    alias.ToEmptyIfNull().TrimToSize(255),
                     samAccountName.ToEmptyIfNull().TrimToSize(255),
                     passwordHash.ToEmptyIfNull().TrimToSize(255),
                     securityStamp.ToEmptyIfNull().TrimToSize(255),
@@ -410,7 +433,14 @@ namespace Plato.Internal.Repositories.Users
                     lockoutEnd,
                     lockoutEnabled,
                     accessFailedCount,
-                    apiKey.ToEmptyIfNull().TrimToSize(255)
+                    apiKey.ToEmptyIfNull().TrimToSize(255),
+                    timeZone.ToEmptyIfNull().TrimToSize(255),
+                    observeDst,
+                    culture.ToEmptyIfNull().TrimToSize(50),
+                    ipv4Address.ToEmptyIfNull().TrimToSize(20),
+                    ipv6Address.ToEmptyIfNull().TrimToSize(50),
+                    createdDate.ToDateIfNull(),
+                    lastLoginDate.ToDateIfNull()
                 );
             }
 

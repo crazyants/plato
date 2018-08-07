@@ -9,15 +9,17 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Models.Users
 {
-    
+
     public class User : IdentityUser<int>, IModel<User>
     {
-        
+
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
 
         private string _displayName;
 
         #region "Public Properties"
+
+        public int PrimaryRoleId { get; set; }
 
         public string DisplayName
         {
@@ -25,18 +27,36 @@ namespace Plato.Internal.Models.Users
             set => _displayName = value;
         }
 
-        public int PrimaryRoleId { get; set; }
+        public string FirstName { get; set; }
 
-        public string SamAccountName { get; set;  }
-          
+        public string LastName { get; set; }
+
+        public string Alias { get; set; }
+
+        public string SamAccountName { get; set; }
+
         public string ApiKey { get; set; }
+
+        public string TimeZone { get; set; }
+
+        public bool ObserveDst { get; set; }
+
+        public string Culture { get; set; }
+
+        public string IpV4Address { get; set; }
+
+        public string IpV6Address { get; set; }
+
+        public DateTime? CreatedDate { get; set; }
+
+        public DateTime? LastLoginDate { get; set; }
 
         public IEnumerable<string> RoleNames { get; set; } = new List<string>();
 
         public IEnumerable<Role> UserRoles { get; } = new List<Role>();
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
-        
+
         public IEnumerable<UserData> Data { get; set; } = new List<UserData>();
 
         #endregion
@@ -51,16 +71,16 @@ namespace Plato.Internal.Models.Users
         #endregion
 
         #region "Public Methods"
-        
+
         public void AddOrUpdate<T>(T obj) where T : class
         {
             if (_metaData.ContainsKey(typeof(T)))
             {
-                _metaData.TryUpdate(typeof(T), (ISerializable)obj, _metaData[typeof(T)]);
+                _metaData.TryUpdate(typeof(T), (ISerializable) obj, _metaData[typeof(T)]);
             }
             else
             {
-                _metaData.TryAdd(typeof(T), (ISerializable)obj);
+                _metaData.TryAdd(typeof(T), (ISerializable) obj);
             }
         }
 
@@ -68,7 +88,7 @@ namespace Plato.Internal.Models.Users
         {
             if (_metaData.ContainsKey(type))
             {
-                _metaData.TryUpdate(type, (ISerializable)obj, _metaData[type]);
+                _metaData.TryUpdate(type, (ISerializable) obj, _metaData[type]);
             }
             else
             {
@@ -80,7 +100,7 @@ namespace Plato.Internal.Models.Users
         {
             if (_metaData.ContainsKey(typeof(T)))
             {
-                return (T)_metaData[typeof(T)];
+                return (T) _metaData[typeof(T)];
             }
 
             return ActivateInstanceOf<T>.Instance();
@@ -88,7 +108,7 @@ namespace Plato.Internal.Models.Users
         }
 
         #endregion
-        
+
         #region "Implementation"
 
         public void PopulateModel(IDataReader dr)
@@ -105,22 +125,31 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("NormalizedUserName"))
                 this.NormalizedUserName = Convert.ToString(dr["NormalizedUserName"]);
-            
+
             if (dr.ColumnIsNotNull("Email"))
                 this.Email = Convert.ToString(dr["Email"]);
 
             if (dr.ColumnIsNotNull("NormalizedEmail"))
                 this.NormalizedEmail = Convert.ToString(dr["NormalizedEmail"]);
-            
+
             if (dr.ColumnIsNotNull("EmailConfirmed"))
                 this.EmailConfirmed = Convert.ToBoolean(dr["EmailConfirmed"]);
 
-            if (dr.ColumnIsNotNull("DisplayName"))            
+            if (dr.ColumnIsNotNull("DisplayName"))
                 this.DisplayName = Convert.ToString(dr["DisplayName"]);
+
+            if (dr.ColumnIsNotNull("FirstName"))
+                this.FirstName = Convert.ToString(dr["FirstName"]);
+
+            if (dr.ColumnIsNotNull("LastName"))
+                this.LastName = Convert.ToString(dr["LastName"]);
+
+            if (dr.ColumnIsNotNull("Alias"))
+                this.Alias = Convert.ToString(dr["Alias"]);
 
             if (dr.ColumnIsNotNull("SamAccountName"))
                 this.SamAccountName = Convert.ToString(dr["SamAccountName"]);
-       
+
             if (dr.ColumnIsNotNull("PasswordHash"))
                 this.PasswordHash = Convert.ToString(dr["PasswordHash"]);
 
@@ -144,14 +173,35 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("AccessFailedCount"))
                 this.AccessFailedCount = Convert.ToInt32(dr["AccessFailedCount"]);
-            
+
             if (dr.ColumnIsNotNull("ApiKey"))
                 this.ApiKey = Convert.ToString(dr["ApiKey"]);
+            
+            if (dr.ColumnIsNotNull("TimeZone"))
+                this.TimeZone = Convert.ToString(dr["TimeZone"]);
+
+            if (dr.ColumnIsNotNull("ObserveDst"))
+                this.ObserveDst = Convert.ToBoolean(dr["ObserveDst"]);
+
+            if (dr.ColumnIsNotNull("Culture"))
+                this.Culture = Convert.ToString(dr["Culture"]);
+
+            if (dr.ColumnIsNotNull("IpV4Address"))
+                this.IpV4Address = Convert.ToString(dr["IpV4Address"]);
+
+            if (dr.ColumnIsNotNull("IpV6Address"))
+                this.IpV6Address = Convert.ToString(dr["IpV6Address"]);
+
+            if (dr.ColumnIsNotNull("CreatedDate"))
+                this.CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+
+            if (dr.ColumnIsNotNull("LastLoginDate"))
+                this.LastLoginDate = Convert.ToDateTime(dr["LastLoginDate"]);
 
         }
 
         #endregion
 
     }
-       
+
 }

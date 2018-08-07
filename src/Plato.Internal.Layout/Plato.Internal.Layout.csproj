@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plato.Internal.Localization\Plato.Internal.Localization.csproj" />
     <ProjectReference Include="..\Plato.Internal.Navigation\Plato.Internal.Navigation.csproj" />
     <ProjectReference Include="..\Plato.Internal.Assets\Plato.Internal.Assets.csproj" />
     <ProjectReference Include="..\Plato.Internal.Scripting.Abstractions\Plato.Internal.Scripting.Abstractions.csproj" />

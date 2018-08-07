@@ -20,7 +20,6 @@
     <ProjectReference Include="..\Plato.Internal.FileSystem\Plato.Internal.FileSystem.csproj" />
     <ProjectReference Include="..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
-    <ProjectReference Include="..\Plato.Internal.Localization\Plato.Internal.Localization.csproj" />
     <ProjectReference Include="..\Plato.Internal.Logging\Plato.Internal.Logging.csproj" />
     <ProjectReference Include="..\Plato.Internal.Messaging\Plato.Internal.Messaging.csproj" />
     <ProjectReference Include="..\Plato.Internal.Models\Plato.Internal.Models.csproj" />

@@ -3,8 +3,10 @@ using System.Linq;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Scaffolding.Internal;
+using Microsoft.Extensions.DependencyModel;
 using Plato.Internal.Models.Modules;
 using Plato.Internal.Modules.Abstractions;
 
@@ -69,6 +71,20 @@ namespace Plato.Internal.Modules
 
         public async Task<Type> GetTypeCandidateAsync(string typeName, Type baseType)
         {
+
+            //var assemblies = DependencyContext.Default.RuntimeLibraries;
+            //foreach (var candidate in assemblies
+            //    .Where(a => baseType.IsAssignableFrom())
+            //    .Select(t => t.Key.GetTypeInfo()))
+            //{
+            //    if (candidate.GetTypeInfo().FullName == typeName)
+            //    {
+            //        return candidate.AsType();
+            //    }
+            //}
+
+            // If type is not found within DI attempt to 
+            // locate the type within dynamically loaded modules
 
             await BuildTypedProvider();
 

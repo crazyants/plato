@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -219,9 +218,9 @@ namespace Plato.Users.Controllers
             var result = await _editSettingsViewProvider.ProvideEditAsync(new EditSettingsViewModel()
             {
                 Id = user.Id,
-                TimeZone = data.Settings.TimeZone,
-                ObserveDst = data.Settings.ObserveDst,
-                Culture = data.Settings.Culture,
+                TimeZone = user.TimeZone,
+                ObserveDst = user.ObserveDst,
+                Culture = user.Culture,
                 AvailableTimeZones = await GetAvailableTimeZonesAsync()
             }, this);
 
