@@ -102,6 +102,7 @@ namespace Plato.WebApi.Controllers
         {
 
 
+            // TODO: Impelement security
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
             //{
             //    return Unauthorized();

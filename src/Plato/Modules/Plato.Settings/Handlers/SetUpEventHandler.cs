@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
+using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
@@ -40,13 +41,7 @@ namespace Plato.Settings.Handlers
                 siteSettings.ApiKey = System.Guid.NewGuid().ToString();
 
                 // add default route for set-up site
-                siteSettings.HomeRoute = new RouteValueDictionary()
-                {
-                    { "Area", "Plato.Users" },
-                    { "Controller", "Account" },
-                    { "Action", "Login" }
-
-                };
+                siteSettings.HomeRoute = new DefaultHomePageRoute();
 
                 await _siteSettingsStore.SaveAsync(siteSettings);
             }

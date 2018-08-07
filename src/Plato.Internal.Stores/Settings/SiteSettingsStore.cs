@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Cache;
 using Plato.Internal.Stores.Abstract;
@@ -45,6 +47,11 @@ namespace Plato.Internal.Stores.Settings
                 siteSettings.ApiKey = System.Guid.NewGuid().ToString();
             }
 
+            if (siteSettings.HomeRoute == null)
+            {
+                siteSettings.HomeRoute = new DefaultHomePageRoute();
+            }
+            
             // Update settings
             var settings = await _dictionaryStore.UpdateAsync<SiteSettings>(Key, siteSettings);
             if (settings != null)
@@ -71,6 +78,6 @@ namespace Plato.Internal.Stores.Settings
             
             return result;
         }
-
+        
     }
 }

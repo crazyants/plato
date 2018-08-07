@@ -102,6 +102,7 @@ namespace Plato.Settings.Controllers
         public async Task<IActionResult> IndexPost(SiteSettingsViewModel viewModel)
         {
             
+            // TODO: Implement security
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
             //{
             //    return Unauthorized();
