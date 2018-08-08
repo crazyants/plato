@@ -19,7 +19,7 @@ namespace Plato.Internal.Abstractions.Settings
 
         string TimeZone { get; set; }
 
-        bool ObserveDst { get; set; }
+        string DateTimeFormat { get; set; }
 
         //ResourceDebugMode ResourceDebugMode { get; set; }
 

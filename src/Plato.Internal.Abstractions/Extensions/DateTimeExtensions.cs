@@ -26,7 +26,7 @@ namespace Plato.Internal.Abstractions.Extensions
         public static string ToPrettyDate(this DateTime d)
         {
             
-            var s = DateTime.Now.Subtract(d);
+            var s = DateTime.UtcNow.Subtract(d);
             var dayDiff = (int)s.TotalDays;
             var secDiff = (int)s.TotalSeconds;
 

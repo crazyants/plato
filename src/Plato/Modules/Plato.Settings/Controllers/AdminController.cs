@@ -126,7 +126,7 @@ namespace Plato.Settings.Controllers
             {
                 settings.SiteName = viewModel.SiteName;
                 settings.TimeZone = viewModel.TimeZone;
-                settings.ObserveDst = viewModel.ObserveDst;
+                settings.DateTimeFormat = viewModel.DateTimeFormat;
             }
             else
             {
@@ -135,7 +135,7 @@ namespace Plato.Settings.Controllers
                 {
                     SiteName = viewModel.SiteName,
                     TimeZone = viewModel.TimeZone,
-                    ObserveDst = viewModel.ObserveDst
+                    DateTimeFormat = viewModel.DateTimeFormat
                 };
             }
         
@@ -168,8 +168,9 @@ namespace Plato.Settings.Controllers
                 {
                     SiteName = settings.SiteName,
                     TimeZone = settings.TimeZone,
-                    ObserveDst = settings.ObserveDst,
-                    AvailableTimeZones = await GetAvailableTimeZonesAsync()
+                    DateTimeFormat = settings.DateTimeFormat,
+                    AvailableTimeZones = await GetAvailableTimeZonesAsync(),
+                    AvailableDateTimeFormat = GetAvaialbleDateTimeFormats()
                 };
             }
             
@@ -184,6 +185,31 @@ namespace Plato.Settings.Controllers
         #endregion
 
         #region "Private Methods"
+        
+        IEnumerable<SelectListItem> GetAvaialbleDateTimeFormats()
+        {
+            
+            var formats = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = S["-"],
+                    Value = ""
+                }
+            };
+
+            foreach (var value in DateTimeFormats.Defaults)
+            {
+                formats.Add(new SelectListItem
+                {
+                    Text = System.DateTime.UtcNow.ToString(value),
+                    Value = value
+                });
+            }
+
+            return formats;
+
+        }
 
         async Task<IEnumerable<SelectListItem>> GetAvailableTimeZonesAsync()
         {

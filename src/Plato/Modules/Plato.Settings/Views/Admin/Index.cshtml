@@ -27,21 +27,25 @@
                 </div>
                 <div class="form-group" asp-validation-class-for="TimeZone">
                     <label asp-for="TimeZone">
-                        <strong>@T["Server Time Zone"]</strong>
+                        <strong>@T["Time Zone"]</strong>
                         <span asp-validation-for="TimeZone" class="text-danger"></span>
                         <br />
-                        <span class="text-muted">@T["Specify the time zone for the server hosting Plato."]</span>
+                        <span class="text-muted">@T["Specify the time zone for the web server(s) hosting your Plato installation."]</span>
                     </label>
                     <select class="form-control"
                             asp-for="TimeZone"
                             asp-items="@Model.AvailableTimeZones"></select>
                 </div>
-
-                <div class="form-check">
-                    <label asp-for="ObserveDst">
-                        <input asp-for="ObserveDst" />
-                        @T["Observe Daylight Savings"]
+                <div class="form-group" asp-validation-class-for="TimeZone">
+                    <label asp-for="DateTimeFormat">
+                        <strong>@T["Date Format"]</strong>
+                        <span asp-validation-for="DateTimeFormat" class="text-danger"></span>
+                        <br />
+                        <span class="text-muted">@T["Customize the default format to display dates within Plato."]</span>
                     </label>
+                    <select class="form-control"
+                            asp-for="DateTimeFormat"
+                            asp-items="@Model.AvailableDateTimeFormat"></select>
                 </div>
             </fieldset>
             

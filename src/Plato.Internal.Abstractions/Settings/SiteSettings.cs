@@ -26,7 +26,7 @@ namespace Plato.Internal.Abstractions.Settings
 
         public string TimeZone { get; set; }
 
-        public bool ObserveDst { get; set; }
+        public string DateTimeFormat { get; set; } = "G";
 
         public string BaseUrl { get; set; }
 
