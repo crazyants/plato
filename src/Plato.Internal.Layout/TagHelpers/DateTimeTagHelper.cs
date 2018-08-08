@@ -3,154 +3,160 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Logging;
+using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Localization.Abstractions;
+using Plato.Internal.Models.Users;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
+
+    // https://docs.microsoft.com/en-us/dotnet/standard/datetime/converting-between-time-zones
 
     [HtmlTargetElement("datetime")]
     public class DateTimeTagHelper : TagHelper
     {
 
+        public const string UtcId = "UTC";
+
         public DateTime? Value { get; set;  }
+
+        public bool EnablePrettyDate { get; set; } = true;
 
         private readonly IContextFacade _contextFacade;
         private readonly ITimeZoneProvider _timeZoneProvider;
-    
+        private readonly ILogger<DateTimeTagHelper> _logger;
 
         public DateTimeTagHelper(
             IContextFacade contextFacade, 
-            ITimeZoneProvider timeZoneProvider)
+            ITimeZoneProvider timeZoneProvider,
+            ILogger<DateTimeTagHelper> logger)
         {
             _contextFacade = contextFacade;
             _timeZoneProvider = timeZoneProvider;
+            _logger = logger;
         }
         
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
 
-            if (this.Value == null)
-            {
-                throw new ArgumentNullException(nameof(this.Value));
-            }
-            
             output.TagName = "span";
             output.TagMode = TagMode.StartTagAndEndTag;
-
-            var localDateTime = await GetLocalDateTime();
+            
             var builder = new HtmlContentBuilder();
-
-            var htmlContentBuilder = builder.AppendHtml(localDateTime.ToString(CultureInfo.InvariantCulture));
+            var htmlContentBuilder = builder.AppendHtml(await GetDisplayValue());
        
             output.Content.SetHtmlContent(htmlContentBuilder);
             
         }
 
-        async Task<DateTime> GetLocalDateTime()
+        async Task<string> GetDisplayValue()
+        {
+
+            if (this.Value == null) return "-";
+
+            var localDateTime = await GetLocalDateTime();
+
+            return this.EnablePrettyDate
+                ? localDateTime.Date.ToPrettyDate()
+                : localDateTime.ToString(CultureInfo.InvariantCulture);
+
+        }
+
+        async Task<DateTimeOffset> GetLocalDateTime()
         {
 
             if (this.Value == null)
             {
                 throw new ArgumentNullException(nameof(this.Value));
             }
-
+            
+            // Supplied date to convert
             var date = (DateTime)this.Value;
-            var serverTimeZoneId = "UTC";
-            var userTimeZoneId = "UTC";
-                
-            var settings = await _contextFacade.GetSiteSettingsAsync();
-            if (settings != null)
-            {
-                if (!String.IsNullOrEmpty(settings.TimeZone))
-                {
-                    serverTimeZoneId = settings.TimeZone;
-                }
-            }
 
+            // Client & server
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user != null)
-            {
-                if (!String.IsNullOrEmpty(user.TimeZone))
-                {
-                    userTimeZoneId = user.TimeZone;
-                }
-            }
+            var settings = await _contextFacade.GetSiteSettingsAsync();
 
-            // Get timezones taking DST into account
-
-            TimeZoneInfo serverTimeZone;
-            TimeZoneInfo userTimeZone;
-
+            // Default client & server to UTC
+            string serverTimeZone = GetServerTimeZone(settings), 
+                clientTimeZone = GetClientTimeZone(user);
+                
+            // Get timezones 
+            var serverTimeZoneInfo = await GetTimeZoneInfoAsync(serverTimeZone);
+            var  userTimeZoneInfo = await GetTimeZoneInfoAsync(clientTimeZone);
+          
+            // Get UTC offsets
+            var offset = new DateTimeOffset(date);
+            var serverOffset = serverTimeZoneInfo.GetUtcOffset(offset);
+            var userOffset = userTimeZoneInfo.GetUtcOffset(offset);
+          
             try
             {
-                // Get specified time zone
-                serverTimeZone = await _timeZoneProvider.GetTimeZoneByIdAsync(serverTimeZoneId);
-                if (serverTimeZone != null)
+
+                // Convert date to servers offset
+                var serverTime = offset.ToOffset(serverOffset);
+
+                // If user is authenticated, convert
+                // servers offset to users local offset
+                if (user != null)
                 {
-                    // Get timezone for adjusted daylight savings
-                    if (serverTimeZone.SupportsDaylightSavingTime)
-                    {
-                        serverTimeZone = TimeZoneInfo.FindSystemTimeZoneById(serverTimeZone.IsDaylightSavingTime(date)
-                            ? serverTimeZone.DaylightName
-                            : serverTimeZone.StandardName);
-                    }
+                    return serverTime.ToOffset(userOffset);
                 }
+
+                return serverTime;
+
             }
-            catch (TimeZoneNotFoundException)
+            catch (FormatException)
             {
-                throw new Exception($"The registry does not define the '{serverTimeZoneId}' time zone.");
-            }
-            catch (InvalidTimeZoneException)
-            {
-                throw new Exception($"Registry data on the '{serverTimeZoneId}' time zone has been corrupted.");
-            }
-            
-            try
-            {
-                // Get specified time zone
-                userTimeZone = await _timeZoneProvider.GetTimeZoneByIdAsync(userTimeZoneId);
-                if (userTimeZone != null)
+                // Sink exceptions but log
+                if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    if (userTimeZone.SupportsDaylightSavingTime)
-                    {
-                        // Get timezones for adjusted daylight savings
-                        userTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
-                            userTimeZone.IsDaylightSavingTime(date)
-                                ? userTimeZone.DaylightName
-                                : userTimeZone.StandardName);
-                    }
+                    _logger.LogCritical($"A error occurred applying the offset for '{date}' with the following time zones '{serverTimeZone}' and '{clientTimeZone}'.");
                 }
-            
-            }
-            catch (TimeZoneNotFoundException)
-            {
-                throw new Exception($"The registry does not define the {serverTimeZoneId}Time zone.");
-            }
-            catch (InvalidTimeZoneException)
-            {
-                throw new Exception($"Registry data on the '{serverTimeZoneId}' time zone has been corrupted.");
-            }
-
-            if (serverTimeZone == null)
-            {
-                throw new Exception($"A system timezone for the Id '{serverTimeZoneId}' could not be found");
-            }
-
-            if (userTimeZone == null)
-            {
-                throw new Exception($"A system timezone for the Id '{userTimeZoneId}' could not be found");
-            }
-
-            // Return local date time
-            if (serverTimeZone.Id != userTimeZone.Id)
-            {
-                return TimeZoneInfo.ConvertTime(date, serverTimeZone, userTimeZone);
             }
 
             return date;
 
         }
 
+
+        async Task<TimeZoneInfo> GetTimeZoneInfoAsync(string id)
+        {
+            var timeZoneInfo = await _timeZoneProvider.GetTimeZoneByIdAsync(id);
+            if (timeZoneInfo == null)
+            {
+                throw new Exception($"A system time zone for the Id '{id}' could not be found");
+            }
+
+            return timeZoneInfo;
+
+        }
+        string GetServerTimeZone(ISiteSettings settings)
+        {
+            if (settings != null)
+            {
+                if (!String.IsNullOrEmpty(settings.TimeZone))
+                {
+                    return settings.TimeZone;
+                }
+            }
+            return UtcId;
+        }
+
+        string GetClientTimeZone(User user)
+        {
+            if (user != null)
+            {
+                if (!String.IsNullOrEmpty(user.TimeZone))
+                {
+                    return user.TimeZone;
+                }
+            }
+            return UtcId;
+        }
+        
     }
 }
