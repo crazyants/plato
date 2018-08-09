@@ -176,9 +176,9 @@ namespace Plato.Entities.Repositories
             int entityId,
             string key,
             string value,
-            DateTime? createdDate,
+            DateTimeOffset? createdDate,
             int createdUserId,
-            DateTime? modifiedDate,
+            DateTimeOffset? modifiedDate,
             int modifiedUserId)
         {
 

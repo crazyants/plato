@@ -21,7 +21,7 @@ namespace Plato.Internal.Layout.TagHelpers
         // Properties
 
         [HtmlAttributeName("utc")]
-        public DateTimeOffset Utc { get; set;  }
+        public DateTimeOffset? Utc { get; set;  }
 
         [HtmlAttributeName("pretty")]
         public bool Pretty { get; set; } = true;
@@ -50,7 +50,7 @@ namespace Plato.Internal.Layout.TagHelpers
             // Get local date time, only apply client offset if user is authenticated
             var localDateTime = await _localDateTimeProvider.GetLocalDateTimeAsync(new LocalDateTimeOptions()
             {
-                UtcDateTime = Utc,
+                UtcDateTime = Utc ?? DateTimeOffset.UtcNow,
                 ServerTimeZone = settings?.TimeZone,
                 ClientTimeZone = user?.TimeZone,
                 ApplyClientTimeZoneOffset = user != null

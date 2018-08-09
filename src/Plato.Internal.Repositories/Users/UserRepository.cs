@@ -401,8 +401,8 @@ namespace Plato.Internal.Repositories.Users
             string culture,
             string ipv4Address,
             string ipv6Address,
-            DateTime? createdDate,
-            DateTime? lastLoginDate,
+            DateTimeOffset? createdDate,
+            DateTimeOffset? lastLoginDate,
             IEnumerable<UserData> data)
         {
      

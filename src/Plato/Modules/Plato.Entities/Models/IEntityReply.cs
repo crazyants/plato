@@ -39,11 +39,11 @@ namespace Plato.Entities.Models
 
         int CreatedUserId { get; set; }
 
-        DateTime? CreatedDate { get; set; }
+        DateTimeOffset? CreatedDate { get; set; }
 
         int ModifiedUserId { get; set; }
 
-        DateTime? ModifiedDate { get; set; }
+        DateTimeOffset? ModifiedDate { get; set; }
 
         SimpleUser CreatedBy { get; set; }
 

@@ -162,9 +162,9 @@ namespace Plato.Entities.Repositories
           bool isDeleted,
           bool isClosed,
           int createdUserId,
-          DateTime? createdDate,
+          DateTimeOffset? createdDate,
           int modifiedUserId,
-          DateTime? modifiedDate,
+          DateTimeOffset? modifiedDate,
           IEnumerable<EntityData> data)
         {
 

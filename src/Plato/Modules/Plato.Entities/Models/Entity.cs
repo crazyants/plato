@@ -61,11 +61,11 @@ namespace Plato.Entities.Models
 
         public int CreatedUserId { get; set; }
 
-        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
         public int ModifiedUserId { get; set; }
 
-        public DateTimeOffset ModifiedDate { get; set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
 
         public SimpleUser CreatedBy { get; private set; } = new SimpleUser();
 
@@ -184,12 +184,8 @@ namespace Plato.Entities.Models
             }
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-            {
-                var value = Convert.ToString((dr["CreatedDate"]));
-                CreatedDate = DateTimeOffset.Parse(value);
-            }
-              
-
+                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
+            
             if (dr.ColumnIsNotNull("ModifiedUserId"))
                 ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
 
@@ -211,12 +207,8 @@ namespace Plato.Entities.Models
             }
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-            {
-                var value = Convert.ToString((dr["ModifiedDate"]));
-                ModifiedDate = DateTimeOffset.Parse(value);
-            }
-                //ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
-
+                ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
+            
         }
         
     }

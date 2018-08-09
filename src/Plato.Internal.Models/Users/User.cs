@@ -47,9 +47,9 @@ namespace Plato.Internal.Models.Users
 
         public string IpV6Address { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
 
-        public DateTime? LastLoginDate { get; set; }
+        public DateTimeOffset LastLoginDate { get; set; }
 
         public IEnumerable<string> RoleNames { get; set; } = new List<string>();
 
@@ -115,88 +115,88 @@ namespace Plato.Internal.Models.Users
         {
 
             if (dr.ColumnIsNotNull("Id"))
-                this.Id = Convert.ToInt32(dr["Id"]);
+                Id = Convert.ToInt32(dr["Id"]);
 
             if (dr.ColumnIsNotNull("PrimaryRoleId"))
-                this.PrimaryRoleId = Convert.ToInt32(dr["PrimaryRoleId"]);
+                PrimaryRoleId = Convert.ToInt32(dr["PrimaryRoleId"]);
 
             if (dr.ColumnIsNotNull("UserName"))
-                this.UserName = Convert.ToString(dr["UserName"]);
+                UserName = Convert.ToString(dr["UserName"]);
 
             if (dr.ColumnIsNotNull("NormalizedUserName"))
-                this.NormalizedUserName = Convert.ToString(dr["NormalizedUserName"]);
+                NormalizedUserName = Convert.ToString(dr["NormalizedUserName"]);
 
             if (dr.ColumnIsNotNull("Email"))
-                this.Email = Convert.ToString(dr["Email"]);
+                Email = Convert.ToString(dr["Email"]);
 
             if (dr.ColumnIsNotNull("NormalizedEmail"))
-                this.NormalizedEmail = Convert.ToString(dr["NormalizedEmail"]);
+                NormalizedEmail = Convert.ToString(dr["NormalizedEmail"]);
 
             if (dr.ColumnIsNotNull("EmailConfirmed"))
-                this.EmailConfirmed = Convert.ToBoolean(dr["EmailConfirmed"]);
+                EmailConfirmed = Convert.ToBoolean(dr["EmailConfirmed"]);
 
             if (dr.ColumnIsNotNull("DisplayName"))
-                this.DisplayName = Convert.ToString(dr["DisplayName"]);
+                DisplayName = Convert.ToString(dr["DisplayName"]);
 
             if (dr.ColumnIsNotNull("FirstName"))
-                this.FirstName = Convert.ToString(dr["FirstName"]);
+                FirstName = Convert.ToString(dr["FirstName"]);
 
             if (dr.ColumnIsNotNull("LastName"))
-                this.LastName = Convert.ToString(dr["LastName"]);
+                LastName = Convert.ToString(dr["LastName"]);
 
             if (dr.ColumnIsNotNull("Alias"))
-                this.Alias = Convert.ToString(dr["Alias"]);
+                Alias = Convert.ToString(dr["Alias"]);
 
             if (dr.ColumnIsNotNull("SamAccountName"))
-                this.SamAccountName = Convert.ToString(dr["SamAccountName"]);
+                SamAccountName = Convert.ToString(dr["SamAccountName"]);
 
             if (dr.ColumnIsNotNull("PasswordHash"))
-                this.PasswordHash = Convert.ToString(dr["PasswordHash"]);
+                PasswordHash = Convert.ToString(dr["PasswordHash"]);
 
             if (dr.ColumnIsNotNull("SecurityStamp"))
-                this.SecurityStamp = Convert.ToString(dr["SecurityStamp"]);
+                SecurityStamp = Convert.ToString(dr["SecurityStamp"]);
 
             if (dr.ColumnIsNotNull("PhoneNumber"))
-                this.PhoneNumber = Convert.ToString(dr["PhoneNumber"]);
+                PhoneNumber = Convert.ToString(dr["PhoneNumber"]);
 
             if (dr.ColumnIsNotNull("PhoneNumberConfirmed"))
-                this.PhoneNumberConfirmed = Convert.ToBoolean(dr["PhoneNumberConfirmed"]);
+                PhoneNumberConfirmed = Convert.ToBoolean(dr["PhoneNumberConfirmed"]);
 
             if (dr.ColumnIsNotNull("TwoFactorEnabled"))
-                this.TwoFactorEnabled = Convert.ToBoolean(dr["TwoFactorEnabled"]);
+                TwoFactorEnabled = Convert.ToBoolean(dr["TwoFactorEnabled"]);
 
             if (dr.ColumnIsNotNull("LockoutEnd"))
-                this.LockoutEnd = Convert.ToDateTime(dr["LockoutEnd"]);
+                LockoutEnd = Convert.ToDateTime(dr["LockoutEnd"]);
 
             if (dr.ColumnIsNotNull("LockoutEnabled"))
-                this.LockoutEnabled = Convert.ToBoolean(dr["LockoutEnabled"]);
+                LockoutEnabled = Convert.ToBoolean(dr["LockoutEnabled"]);
 
             if (dr.ColumnIsNotNull("AccessFailedCount"))
-                this.AccessFailedCount = Convert.ToInt32(dr["AccessFailedCount"]);
+                AccessFailedCount = Convert.ToInt32(dr["AccessFailedCount"]);
 
             if (dr.ColumnIsNotNull("ApiKey"))
-                this.ApiKey = Convert.ToString(dr["ApiKey"]);
+                ApiKey = Convert.ToString(dr["ApiKey"]);
             
             if (dr.ColumnIsNotNull("TimeZone"))
-                this.TimeZone = Convert.ToString(dr["TimeZone"]);
+                TimeZone = Convert.ToString(dr["TimeZone"]);
 
             if (dr.ColumnIsNotNull("ObserveDst"))
-                this.ObserveDst = Convert.ToBoolean(dr["ObserveDst"]);
+                ObserveDst = Convert.ToBoolean(dr["ObserveDst"]);
 
             if (dr.ColumnIsNotNull("Culture"))
-                this.Culture = Convert.ToString(dr["Culture"]);
+                Culture = Convert.ToString(dr["Culture"]);
 
             if (dr.ColumnIsNotNull("IpV4Address"))
-                this.IpV4Address = Convert.ToString(dr["IpV4Address"]);
+                IpV4Address = Convert.ToString(dr["IpV4Address"]);
 
             if (dr.ColumnIsNotNull("IpV6Address"))
-                this.IpV6Address = Convert.ToString(dr["IpV6Address"]);
+                IpV6Address = Convert.ToString(dr["IpV6Address"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                this.CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
 
             if (dr.ColumnIsNotNull("LastLoginDate"))
-                this.LastLoginDate = Convert.ToDateTime(dr["LastLoginDate"]);
+                LastLoginDate = DateTimeOffset.Parse(Convert.ToString((dr["LastLoginDate"])));
 
         }
 

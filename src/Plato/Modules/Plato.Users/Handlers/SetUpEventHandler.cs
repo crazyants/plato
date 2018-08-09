@@ -258,12 +258,12 @@ namespace Plato.Users.Handlers
                     new SchemaColumn()
                     {
                         Name = "CreatedDate",
-                        DbType = DbType.DateTime,
+                        DbType = DbType.DateTimeOffset,
                     },
                     new SchemaColumn()
                     {
                         Name = "LastLoginDate",
-                        DbType = DbType.DateTime,
+                        DbType = DbType.DateTimeOffset,
                     }
                 }
             };

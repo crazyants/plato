@@ -221,9 +221,9 @@ namespace Plato.Entities.Repositories
             int meanFollows,
             int meanReports,
             int createdUserId,
-            DateTimeOffset createdDate,
+            DateTimeOffset? createdDate,
             int modifiedUserId,
-            DateTimeOffset modifiedDate,
+            DateTimeOffset? modifiedDate,
             IEnumerable<IEntityData> data)
         {
 
@@ -271,9 +271,9 @@ namespace Plato.Entities.Repositories
                     meanFollows,
                     meanReports,
                     createdUserId,
-                    createdDate,
+                    createdDate.ToDateIfNull(),
                     modifiedUserId,
-                    modifiedDate);
+                    modifiedDate.ToDateIfNull());
             }
 
             // Add entity data
