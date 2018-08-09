@@ -61,7 +61,7 @@
     {
         <div class="topic-reply">
             <div class="topic-reply-left">
-                <a href="#" class="avatar-link">
+                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@reply.CreatedUserId" asp-route-alias="@reply.CreatedBy.Alias" class="avatar-link">
                     <avatar data-toggle="tooltip" title="@reply.CreatedBy.DisplayName" class="avatar" user-id="@reply.CreatedBy.Id" />
                 </a>
             </div>
@@ -70,7 +70,7 @@
                     <card-title>
                         
                         <div class="card-title float-left">
-                            <a href="#">
+                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@reply.CreatedUserId" asp-route-alias="@reply.CreatedBy.Alias" class="avatar-link">
                                 @reply.CreatedBy.DisplayName
                             </a>
                             @T["posted "]

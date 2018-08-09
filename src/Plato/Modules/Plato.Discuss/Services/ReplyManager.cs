@@ -115,13 +115,15 @@ namespace Plato.Discuss.Services
                         }
                     }
                     postDetails.Participants = participants;
-                    added.Clear();
-                    participants.Clear();
                 }
 
+                // Add updated data to entity
                 entity.AddOrUpdate<PostDetails>(postDetails);
 
+                // Persist the updates
                 await _entityStore.UpdateAsync(entity);
+               
+
             }
             
             return result;
