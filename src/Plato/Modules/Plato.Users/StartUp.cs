@@ -178,6 +178,19 @@ namespace Plato.Users
                 defaults: new { controller = "Admin", action = "EditAsync" }
             );
             
+            routes.MapAreaRoute(
+                name: "Home-Users",
+                areaName: "Plato.Users",
+                template: "users",
+                defaults: new { controller = "Home", action = "Index" }
+            );
+            
+            routes.MapAreaRoute(
+                name: "Home-User",
+                areaName: "Plato.Users",
+                template: "users/{id}/{alias?}",
+                defaults: new { controller = "Home", action = "Display" }
+            );
 
         }
     }

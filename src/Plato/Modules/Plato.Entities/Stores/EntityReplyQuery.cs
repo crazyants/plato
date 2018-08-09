@@ -216,13 +216,18 @@ namespace Plato.Entities.Stores
         {
             var sb = new StringBuilder();
             sb.Append("r.*,")
-                .Append("u.UserName AS CreatedUserName,")
-                .Append("u.NormalizedUserName AS CreatedNormalizedUserName,")
-                .Append("u.DisplayName AS CreatedDisplayName,")
+                .Append("c.UserName AS CreatedUserName,")
+                .Append("c.NormalizedUserName AS CreatedNormalizedUserName,")
+                .Append("c.DisplayName AS CreatedDisplayName,")
+                .Append("c.FirstName AS CreatedFirstName,")
+                .Append("c.LastName AS CreatedLastName,")
+                .Append("c.Alias AS CreatedAlias,")
                 .Append("m.UserName AS ModifiedUserName,")
                 .Append("m.NormalizedUserName AS ModifiedNormalizedUserName,")
-                .Append("m.DisplayName AS ModifiedDisplayName");
-
+                .Append("m.DisplayName AS ModifiedDisplayName,")
+                .Append("m.FirstName AS ModifiedFirstName,")
+                .Append("m.LastName AS ModifiedLastName,")
+                .Append("m.Alias AS ModifiedAlias");
             return sb.ToString();
 
         }
@@ -238,7 +243,7 @@ namespace Plato.Entities.Stores
             // join created user
             sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
-                .Append(" u ON r.CreatedUserId = u.Id ");
+                .Append(" c ON r.CreatedUserId = c.Id ");
             
             sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)

@@ -5,9 +5,6 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<h1><datetime value="@System.DateTime.UtcNow" /></h1>
-<h1><datetime value="@System.DateTime.UtcNow" enable-pretty-date="false" /></h1>
-
 <div class="row">
     <div class="col-md-6">
         <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">

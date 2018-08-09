@@ -148,7 +148,7 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "CreatedDate",
-                        DbType = DbType.DateTime
+                        DbType = DbType.DateTimeOffset
                     },
                     new SchemaColumn()
                     {
@@ -158,7 +158,7 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "ModifiedDate",
-                        DbType = DbType.DateTime
+                        DbType = DbType.DateTimeOffset
                     }
                 }
         };
@@ -454,9 +454,15 @@ namespace Plato.Entities.Handlers
                                     c.UserName AS CreatedUserName, 
                                     c.NormalizedUserName AS CreatedNormalizedUserName,
                                     c.DisplayName AS CreatedDisplayName,
+                                    c.FirstName AS CreatedFirstName,
+                                    c.LastName AS CreatedLastName,
+                                    c.Alias AS CreatedAlias,
                                     m.UserName AS ModifiedUserName, 
                                     m.NormalizedUserName AS ModifiedNormalizedUserName,
-                                    m.DisplayName AS ModifiedDisplayName
+                                    m.DisplayName AS ModifiedDisplayName,
+                                    m.FirstName AS ModifiedFirstName,
+                                    m.LastName AS ModifiedLastName,
+                                    m.Alias AS ModifiedAlias
                                 FROM {prefix}_Entities e WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users c ON e.CreatedUserId = c.Id
                                     LEFT OUTER JOIN {prefix}_Users m ON e.ModifiedUserId = m.Id
@@ -526,9 +532,15 @@ namespace Plato.Entities.Handlers
                                     c.UserName AS CreatedUserName, 
                                     c.NormalizedUserName AS CreatedNormalizedUserName,
                                     c.DisplayName AS CreatedDisplayName,
+                                    c.FirstName AS CreatedFirstName,
+                                    c.LastName AS CreatedLastName,
+                                    c.Alias AS CreatedAlias,
                                     m.UserName AS ModifiedUserName, 
                                     m.NormalizedUserName AS ModifiedNormalizedUserName,
-                                    m.DisplayName AS ModifiedDisplayName
+                                    m.DisplayName AS ModifiedDisplayName,
+                                    m.FirstName AS ModifiedFirstName,
+                                    m.LastName AS ModifiedLastName,
+                                    m.Alias AS ModifiedAlias
                                 FROM {prefix}_EntityReplies r WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users c ON r.CreatedUserId = c.Id
                                     LEFT OUTER JOIN {prefix}_Users m ON r.ModifiedUserId = m.Id

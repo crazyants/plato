@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Plato.Internal.Layout.TagHelpers
 {
     [HtmlTargetElement("card-body", ParentTag = "card")]
-    public class PanelBodyTagHelper : TagHelper
+    public class CardBodyTagHelper : TagHelper
     {
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {

@@ -10,8 +10,11 @@ namespace Plato.Internal.Localization.Extensions
             this IServiceCollection services)
         {
 
+            // Available time zones provider
             services.AddSingleton<ITimeZoneProvider, TimeZoneProvider>();
-            services.AddScoped<ILocalDateTime, LocalDateTime>();
+
+            // Local date time provider
+            services.AddScoped<ILocalDateTimeProvider, LocalDateTimeProvider>();
 
             return services;
 

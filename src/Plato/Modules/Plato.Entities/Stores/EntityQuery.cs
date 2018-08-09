@@ -259,9 +259,15 @@ namespace Plato.Entities.Stores
                 .Append("c.UserName AS CreatedUserName, ")
                 .Append("c.NormalizedUserName AS CreatedNormalizedUserName,")
                 .Append("c.DisplayName AS CreatedDisplayName,")
+                .Append("c.FirstName AS CreatedFirstName,")
+                .Append("c.LastName AS CreatedLastName,")
+                .Append("c.Alias AS CreatedAlias,")
                 .Append("m.UserName AS ModifiedUserName, ")
                 .Append("m.NormalizedUserName AS ModifiedNormalizedUserName,")
-                .Append("m.DisplayName AS ModifiedDisplayName");
+                .Append("m.DisplayName AS ModifiedDisplayName,")
+                .Append("m.FirstName AS ModifiedFirstName,")
+                .Append("m.LastName AS ModifiedLastName,")
+                .Append("m.Alias AS ModifiedAlias");
             return sb.ToString();
 
         }

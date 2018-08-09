@@ -1,6 +1,11 @@
 ﻿@using Plato.Discuss.Models
 @model HomeIndexViewModel
 
+@System.DateTime.UtcNow
+
+<h1><date utc="@System.DateTime.UtcNow" pretty="false" itemprop="createdDate" data-toggle="tooltip" /></h1>
+<h1><date utc="@System.DateTime.UtcNow" itemprop="createdDate" data-toggle="tooltip" /></h1>
+
 <card class="card card-body-flush">
     <card-title>
         <h6 class="card-title float-left">@T["Topics"]</h6>
@@ -44,7 +49,7 @@
                         }
 
                         <div class="list-left">
-                            <a href="#">
+                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@entity.CreatedUserId" asp-route-alias="@entity.CreatedBy.Alias">
                                 <avatar data-toggle="tooltip" title="@entity.CreatedBy.DisplayName" class="avatar" user-id="@entity.CreatedBy.Id" />
                             </a>
                         </div>
@@ -58,7 +63,7 @@
                             }
 
                             <h5>
-                                <a asp-area="Plato.Discuss" asp-controller="Home" asp-action="Topic" asp-route-id="@entity.Id" asp-route-alias="@entity.Alias">
+                                <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@entity.Id" asp-route-alias="@entity.Alias">
                                     @entity.Title
                                 </a>
                             </h5>
@@ -71,15 +76,18 @@
                                     <div class="avatar-group float-right">
                                         @foreach (var participant in detail.Participants)
                                         {
-                                            <a href="#">
+                                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@participant.Id" asp-route-alias="@participant.Alias">
                                                 <avatar data-toggle="tooltip" title="@participant.DisplayName" class="avatar avatar-sm" user-id="@participant.Id" />
                                             </a>
                                         }
                                     </div>
                                 }
-                                By <a href="#">@entity.CreatedBy.DisplayName</a>, <span title="@entity.CreatedDate">@entity.CreatedDate.ToPrettyDate()</span>
+                                @T["By"] 
+                                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@entity.CreatedUserId" asp-route-alias="@entity.CreatedBy.Alias">
+                                    @entity.CreatedBy.DisplayName
+                                </a>, 
+                                <date utc="@entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
                             </p>
-
 
                         </div>
 

@@ -12,6 +12,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Repositories.Users;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Internal.Stores.Users
 {
@@ -27,6 +28,7 @@ namespace Plato.Internal.Stores.Users
         private readonly IUserRepository<User> _userRepository;
         private readonly ILogger<PlatoUserStore> _logger;
         private readonly ITypedModuleProvider _typedModuleProvider;
+        private readonly IAliasCreator _aliasCreator;
 
         #endregion
 
@@ -40,7 +42,8 @@ namespace Plato.Internal.Stores.Users
             ICacheManager cacheManager, 
             ITypedModuleProvider typedModuleProvider,
             IUserDataItemStore<UserData> userDataItemStore, 
-            IUserDataStore<UserData> userDataStore)
+            IUserDataStore<UserData> userDataStore,
+            IAliasCreator aliasCreator)
         {
             _dbQuery = dbQuery;
             _userRepository = userRepository;
@@ -49,6 +52,7 @@ namespace Plato.Internal.Stores.Users
             _typedModuleProvider = typedModuleProvider;
             _userDataItemStore = userDataItemStore;
             _userDataStore = userDataStore;
+            _aliasCreator = aliasCreator;
         }
 
         #endregion
@@ -66,6 +70,9 @@ namespace Plato.Internal.Stores.Users
             {
                 throw new ArgumentOutOfRangeException(nameof(user.Id));
             }
+
+            // Create alias
+            user.Alias = _aliasCreator.Create(user.DisplayName);
 
             // transform meta data
             user.Data = await SerializeMetaDataAsync(user);
@@ -103,7 +110,10 @@ namespace Plato.Internal.Stores.Users
             {
                 user.ApiKey = System.Guid.NewGuid().ToString() + user.Id.ToString();
             }
-           
+
+            // Update alias
+            user.Alias = _aliasCreator.Create(user.DisplayName);
+            
             // transform meta data
             user.Data = await SerializeMetaDataAsync(user);
 

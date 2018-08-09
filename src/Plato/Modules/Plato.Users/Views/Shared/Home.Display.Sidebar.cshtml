@@ -16,9 +16,12 @@
         <li class="vcard-username text-muted">
             @@@Model.UserName
         </li>
-        <li class="vcard-location">
-            <i class="fal fa-map-marker"></i> @details.Profile.Location
-        </li>
+        @if (!String.IsNullOrEmpty(details.Profile.Location))
+        {
+            <li class="vcard-location">
+                <i class="fal fa-map-marker"></i> @details.Profile.Location
+            </li>
+        }
         @if (!String.IsNullOrWhiteSpace(details.Profile.Url))
         {
             <li  class="vcard-url">

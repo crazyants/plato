@@ -40,13 +40,13 @@ namespace Plato.Internal.Data.Schemas.Abstractions
                     case DbType.String:
                         return "''";
                     case DbType.Date:
-                        return "GetDate()";
+                        return "GETUTCDATE()";
                     case DbType.DateTime2:
                         return "NULL";
                     case DbType.DateTime:
-                        return "GetDate()";
+                        return "GETUTCDATE()";
                     case DbType.DateTimeOffset:
-                        return "GetDate()";
+                        return "GETUTCDATE()";
                     case DbType.Binary:
                         return "NULL";
                     case DbType.Decimal:

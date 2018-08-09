@@ -11,31 +11,33 @@ using Plato.Internal.Localization;
 namespace Plato.Internal.Layout.TagHelpers
 {
 
-    [HtmlTargetElement("datetime")]
-    public class DateTimeTagHelper : TagHelper
+    [HtmlTargetElement("date")]
+    public class LocalDateTimeTagHelper : TagHelper
     {
 
         // Defaults
         public const string DefaultDateTimeFormat = "G";
-        
+
         // Properties
-        public DateTime? Value { get; set;  }
 
-        public bool EnablePrettyDate { get; set; } = true;
+        [HtmlAttributeName("utc")]
+        public DateTimeOffset Utc { get; set;  }
 
-        // DI
+        [HtmlAttributeName("pretty")]
+        public bool Pretty { get; set; } = true;
+
         private readonly IContextFacade _contextFacade;
-        private readonly ILocalDateTime _localDateTime;
-        private readonly ILogger<DateTimeTagHelper> _logger;
+        private readonly ILocalDateTimeProvider _localDateTimeProvider;
+        private readonly ILogger<LocalDateTimeTagHelper> _logger;
 
-        public DateTimeTagHelper(
+        public LocalDateTimeTagHelper(
             IContextFacade contextFacade, 
-            ILogger<DateTimeTagHelper> logger,
-            ILocalDateTime localDateTime)
+            ILogger<LocalDateTimeTagHelper> logger,
+            ILocalDateTimeProvider localDateTimeProvider)
         {
             _contextFacade = contextFacade;
             _logger = logger;
-            _localDateTime = localDateTime;
+            _localDateTimeProvider = localDateTimeProvider;
         }
         
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -46,9 +48,9 @@ namespace Plato.Internal.Layout.TagHelpers
             var settings = await _contextFacade.GetSiteSettingsAsync();
 
             // Get local date time, only apply client offset if user is authenticated
-            var localDateTime = await _localDateTime.GetLocalDateTimeAsync(new LocalDateTimeOptions()
+            var localDateTime = await _localDateTimeProvider.GetLocalDateTimeAsync(new LocalDateTimeOptions()
             {
-                UtcDateTime = Value ?? System.DateTime.UtcNow,
+                UtcDateTime = Utc,
                 ServerTimeZone = settings?.TimeZone,
                 ClientTimeZone = user?.TimeZone,
                 ApplyClientTimeZoneOffset = user != null
@@ -64,7 +66,8 @@ namespace Plato.Internal.Layout.TagHelpers
             output.TagName = "span";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("title", formattedDateTime);
-            output.Content.SetHtmlContent(this.EnablePrettyDate
+          
+            output.Content.SetHtmlContent(this.Pretty
                 ? builder.AppendHtml(localDateTime.DateTime.ToPrettyDate())
                 : builder.AppendHtml(formattedDateTime));
 

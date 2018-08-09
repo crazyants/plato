@@ -25,7 +25,7 @@ namespace Plato.Users.Navigation
             builder
                 .Add(T["Users"], configuration => configuration
 
-                    .Add(T["Member List"], "1", installed => installed
+                    .Add(T["All Users"], "1", installed => installed
                         .Action("Index", "Home", "Plato.Users")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

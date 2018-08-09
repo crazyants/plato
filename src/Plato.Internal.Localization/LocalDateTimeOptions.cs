@@ -4,14 +4,44 @@ namespace Plato.Internal.Localization
 {
     public class LocalDateTimeOptions
     {
-        // Defaults
+        // Consts
         public const string DefaultTimeZone = "UTC";
 
-        public DateTime? UtcDateTime { get; set; }
+        // Backing fields
+        private string _serverTimeZone;
+        private string _clientTimeZone;
+        
+        // Properties
 
-        public string ServerTimeZone { get; set; } = DefaultTimeZone;
+        public DateTimeOffset UtcDateTime { get; set; }
+        
+        public string ServerTimeZone
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(_serverTimeZone))
+                {
+                    return _serverTimeZone;
+                }
 
-        public string ClientTimeZone { get; set; } = DefaultTimeZone;
+                return DefaultTimeZone;
+            }
+            set => _serverTimeZone = value;
+        }
+
+        public string ClientTimeZone
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(_clientTimeZone))
+                {
+                    return _clientTimeZone;
+                }
+
+                return DefaultTimeZone;
+            }
+            set => _clientTimeZone = value;
+        }
         
         public bool ApplyClientTimeZoneOffset { get; set; }
         
