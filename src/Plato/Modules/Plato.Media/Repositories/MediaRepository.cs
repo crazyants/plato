@@ -125,9 +125,9 @@ namespace Plato.Media.Repositories
             byte[] contentBlob,
             string contentType,
             long contentLength,
-            DateTime? createdDate,
+            DateTimeOffset? createdDate,
             int createdUserId,
-            DateTime? modifiedDate,
+            DateTimeOffset? modifiedDate,
             int modifiedUserId)
         {
 

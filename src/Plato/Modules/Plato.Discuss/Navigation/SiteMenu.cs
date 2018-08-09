@@ -28,12 +28,12 @@ namespace Plato.Discuss.Navigation
                         .LocalNav()
                     )
                     .Add(T["Trending"], "2", installed => installed
-                        .Action("Index", "Home", "Plato.Discuss")
+                        .Action("Trending", "Home", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     )
                     .Add(T["Following"], "2", installed => installed
-                        .Action("Index", "Home", "Plato.Discuss")
+                        .Action("Following", "Home", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     )

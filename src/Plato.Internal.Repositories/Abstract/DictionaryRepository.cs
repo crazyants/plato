@@ -191,9 +191,9 @@ namespace Plato.Internal.Repositories.Abstract
             int id,   
             string key,
             string value,
-            DateTime? createdDate,
+            DateTimeOffset? createdDate,
             int createdUserId,
-            DateTime? modifiedDate,
+            DateTimeOffset? modifiedDate,
             int modifiedUserId
             )
         {
@@ -222,8 +222,7 @@ namespace Plato.Internal.Repositories.Abstract
             }
             
         }
-
-
+        
         #endregion
 
     }

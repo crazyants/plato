@@ -190,7 +190,7 @@ namespace Plato.Follow.Repositories
             int entityId,
             int userId,
             string cancellationGuid,
-            DateTime createdDate)
+            DateTimeOffset createdDate)
         {
 
             var output = 0;

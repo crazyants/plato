@@ -91,9 +91,9 @@ namespace Plato.Internal.Repositories.Abstract
             int id,
             string type,
             string value,
-            DateTime? createdDate,
+            DateTimeOffset? createdDate,
             int createdUserId,
-            DateTime? modifiedDate,
+            DateTimeOffset? modifiedDate,
             int modifiedUserId
         )
         {

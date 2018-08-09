@@ -53,5 +53,6 @@ namespace Plato.Discuss.Services
         {
             return await _entityManager.DeleteAsync(model);
         }
+
     }
 }

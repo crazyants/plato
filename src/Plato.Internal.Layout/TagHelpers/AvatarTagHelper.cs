@@ -1,10 +1,14 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
+using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
@@ -15,9 +19,10 @@ namespace Plato.Internal.Layout.TagHelpers
 
         public int UserId { get; set; }
         
+        public ISimpleUser User { get; set; } 
+
         private readonly IUrlHelper _urlHelper;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IActionContextAccessor _actionContextAccesor;
 
         public AvatarTagHelper(
             IUrlHelperFactory urlHelperFactory,
@@ -25,8 +30,7 @@ namespace Plato.Internal.Layout.TagHelpers
             IActionContextAccessor actionContextAccesor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _actionContextAccesor = actionContextAccesor;
-            _urlHelper = urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
+            _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
         }
 
 
@@ -46,8 +50,11 @@ namespace Plato.Internal.Layout.TagHelpers
             
             output.TagName = "span";
             output.TagMode = TagMode.StartTagAndEndTag;
-            output.Attributes.Add("style", $"background-image: url('{url}');");
-            
+  
+            var img = new TagBuilder("span");
+            img.Attributes.Add("style", $"background-image: url('{url}');");
+            output.Content.SetHtmlContent(img.ToHtmlString());
+
             return Task.CompletedTask;
 
         }

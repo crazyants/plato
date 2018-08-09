@@ -29937,9 +29937,10 @@ $(function (win, doc, $) {
                         var reader = new FileReader();
                         reader.onload = function(e) {
                             var previewSelector = $(input).attr("data-upload-preview-selector");
-                            $(previewSelector).css('background-image', ' url(' + e.target.result + ')');
-                            $(previewSelector).hide();
-                            $(previewSelector).fadeIn(650);
+                            var $preview = $(previewSelector).find("span");
+                            $preview.css('background-image', ' url(' + e.target.result + ')');
+                            $preview.hide()
+                                .fadeIn(650);
                         };
                         reader.readAsDataURL(input.files[0]);
                     }

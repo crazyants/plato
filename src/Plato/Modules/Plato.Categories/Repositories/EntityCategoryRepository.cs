@@ -199,9 +199,9 @@ namespace Plato.Categories.Repositories
             int entityId,
             int categoryId,
             int createdUserId,
-            DateTime? createdDate,
+            DateTimeOffset? createdDate,
             int modifiedUserId,
-            DateTime? modifiedDate)
+            DateTimeOffset? modifiedDate)
         {
 
             var output = 0;

@@ -24,13 +24,13 @@ namespace Plato.Discuss.Controllers
     {
 
         #region "Constructor"
-
-        private readonly IEntityReplyManager<Reply> _replyManager;
+        
         private readonly IViewProviderManager<Topic> _topicViewProvider;
         private readonly IViewProviderManager<Reply> _replyViewProvider;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
         private readonly IPostManager<Topic> _postManager;
+        private readonly IPostManager<Reply> _replyManager;
         private readonly IAlerter _alerter;
         
         public IHtmlLocalizer T { get; }
@@ -43,15 +43,16 @@ namespace Plato.Discuss.Controllers
             IEntityReplyStore<Reply> entityReplyStore,
             IViewProviderManager<Reply> replyViewProvider,
             IPostManager<Topic> postManager,
-            IAlerter alerter, IEntityReplyManager<Reply> replyManager)
+            IPostManager<Reply> replyManager,
+            IAlerter alerter)
         {
-            _postManager = postManager;
-            _entityStore = entityStore;
             _topicViewProvider = topicViewProvider;
-            _alerter = alerter;
-            _replyManager = replyManager;
-            _entityReplyStore = entityReplyStore;
             _replyViewProvider = replyViewProvider;
+            _entityStore = entityStore;
+            _entityReplyStore = entityReplyStore;
+            _postManager = postManager;
+            _replyManager = replyManager;
+            _alerter = alerter;
             T = localizer;
         }
 
@@ -76,7 +77,7 @@ namespace Plato.Discuss.Controllers
                 pagerOptions = new PagerOptions();
             }
 
-            await CreateSampleData();
+            //await CreateSampleData();
 
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
@@ -88,7 +89,6 @@ namespace Plato.Discuss.Controllers
             // Return view
             return View(result);
             
-
         }
         
         // add new topic
@@ -214,6 +214,7 @@ namespace Plato.Discuss.Controllers
         // reply to topic
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [ActionName(nameof(Topic))]
         public async Task<IActionResult> TopicPost(EditReplyViewModel model)
         {
@@ -223,8 +224,7 @@ namespace Plato.Discuss.Controllers
             {
                 return NotFound();
             }
-
-
+            
             // Validate model state within all view providers
             if (await _replyViewProvider.IsModelStateValid(new Reply()
             {
@@ -280,7 +280,7 @@ namespace Plato.Discuss.Controllers
                 }
             }
 
-            return await Create(0);
+            return await Topic(topic.Id, null, null);
             
         }
 

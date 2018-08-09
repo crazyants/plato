@@ -199,9 +199,9 @@ namespace Plato.Categories.Repositories
             string backColor,
             int sortOrder,
             int createdUserId,
-            DateTime? createdDate,
+            DateTimeOffset? createdDate,
             int modifiedUserId,
-            DateTime? modifiedDate,
+            DateTimeOffset? modifiedDate,
             IEnumerable<CategoryData> data)
         {
 

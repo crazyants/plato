@@ -17,7 +17,7 @@ namespace Plato.Follow.Models
 
         public string CancellationGuid { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
 
         public SimpleUser User { get; set; } = new SimpleUser();
 
@@ -55,7 +55,7 @@ namespace Plato.Follow.Models
                 CancellationGuid = Convert.ToString(dr["CancellationGuid"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
 
         }
     }

@@ -15,11 +15,11 @@ namespace Plato.Internal.Models.Abstract
 
         public string Value { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
         public int CreatedUserId { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
 
         public int ModifiedUserId { get; set; }
 
@@ -31,25 +31,25 @@ namespace Plato.Internal.Models.Abstract
         {
 
             if (dr.ColumnIsNotNull("Id"))
-                this.Id = Convert.ToInt32(dr["Id"]);
+                Id = Convert.ToInt32(dr["Id"]);
 
             if (dr.ColumnIsNotNull("Type"))
-                this.Type = Convert.ToString((dr["Type"]));
+                Type = Convert.ToString((dr["Type"]));
 
             if (dr.ColumnIsNotNull("Value"))
-                this.Value = Convert.ToString((dr["Value"]));
+                Value = Convert.ToString((dr["Value"]));
+            
+            if (dr.ColumnIsNotNull("CreatedUserId"))
+                CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                this.CreatedDate = Convert.ToDateTime((dr["CreatedDate"]));
+                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
 
-            if (dr.ColumnIsNotNull("CreatedUserId"))
-                this.CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
-
-            if (dr.ColumnIsNotNull("ModifiedDate"))
-                this.ModifiedDate = Convert.ToDateTime((dr["ModifiedDate"]));
+            if (dr.ColumnIsNotNull("ModifiedUserId"))
+                ModifiedUserId = Convert.ToInt32((dr["ModifiedUserId"]));
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                this.ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
+                ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
 
         }
 

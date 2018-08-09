@@ -176,9 +176,9 @@ namespace Plato.Categories.Repositories
             int categoryId,
             string key,
             string value,
-            DateTime? createdDate,
+            DateTimeOffset? createdDate,
             int createdUserId,
-            DateTime? modifiedDate,
+            DateTimeOffset? modifiedDate,
             int modifiedUserId)
         {
 

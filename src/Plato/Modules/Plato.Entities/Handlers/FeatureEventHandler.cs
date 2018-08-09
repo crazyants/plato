@@ -283,7 +283,7 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "CreatedDate",
-                        DbType = DbType.DateTime
+                        DbType = DbType.DateTimeOffset
                     },
                     new SchemaColumn()
                     {
@@ -293,7 +293,7 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "ModifiedDate",
-                        DbType = DbType.DateTime
+                        DbType = DbType.DateTimeOffset
                     }
                 }
         };

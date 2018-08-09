@@ -25,11 +25,11 @@ namespace Plato.Internal.Models.Roles
 
         public int CreatedUserId { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
         public int ModifiedUserId { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
 
         #endregion
 
@@ -88,13 +88,13 @@ namespace Plato.Internal.Models.Roles
             }
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
 
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
+                ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
 
             if (dr.ColumnIsNotNull("ModifiedUserId"))
                 ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);

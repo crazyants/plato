@@ -43,7 +43,7 @@ namespace Plato.Follow.Handlers
                     new SchemaColumn()
                     {
                         Name = "CreatedDate",
-                        DbType = DbType.DateTime
+                        DbType = DbType.DateTimeOffset
                     },
                 }
         };
@@ -248,8 +248,6 @@ namespace Plato.Follow.Handlers
         }
         
         #endregion
-
-
-
+        
     }
 }

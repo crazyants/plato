@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Plato.Discuss.Models;
 using Plato.Entities.Services;
@@ -26,6 +28,8 @@ namespace Plato.Discuss.Services
             _entityReplyStore = entityReplyStore;
             _entityStore = entityStore;
         }
+
+        #region "Implementation"
 
         public async Task<IActivityResult<Reply>> CreateAsync(Reply model)
         {
@@ -68,29 +72,51 @@ namespace Plato.Discuss.Services
             {
 
                 var entity = await _entityStore.GetByIdAsync(result.Response.EntityId);
-
-                var postDetails = entity.GetOrCreate<PostDetails>();
-                postDetails.TotalReplies = (postDetails.TotalReplies + 1);
-
-                // Get last 5 participants
-
+                if (entity == null)
+                {
+                    throw new Exception($"An entity for the reply could not be found!");
+                }
+                
+                // Get last 20 public replies & total public reply count
                 var replies = await _entityReplyStore.QueryAsync()
-                    .Take(1, 5)
+                    .Take(1, 20)
                     .Select<EntityReplyQueryParams>(q =>
                     {
                         q.EntityId.Equals(result.Response.EntityId);
+                        q.IsPrivate.False();
+                        q.IsSpam.False();
+                        q.IsDeleted.False();
                     })
                     .OrderBy("ModifiedDate", OrderBy.Desc)
                     .ToList();
+                
+                // Get entity details to update
+                var postDetails = entity.GetOrCreate<PostDetails>();
 
+                // Update total public reply count
+                postDetails.TotalReplies = replies.Total + 1;
+                
                 if (replies?.Data != null)
                 {
+
+                    const int max = 5;
+                    var added = new List<int>();
                     var participants = new List<SimpleUser>();
                     foreach (var reply in replies.Data)
                     {
-                        participants.Add(reply.CreatedBy);
+                        if (!added.Contains(reply.CreatedBy.Id))
+                        {
+                            added.Add(reply.CreatedBy.Id);
+                            participants.Add(reply.CreatedBy);
+                        }
+                        if (added.Count >= max)
+                        {
+                            break;
+                        }
                     }
                     postDetails.Participants = participants;
+                    added.Clear();
+                    participants.Clear();
                 }
 
                 entity.AddOrUpdate<PostDetails>(postDetails);
@@ -125,6 +151,12 @@ namespace Plato.Discuss.Services
             return await _entityReplyManager.DeleteAsync(model.Id);
             
         }
+
+        #endregion
+
+        #region "Private Methods"
+
+        #endregion
 
 
     }

@@ -18,12 +18,11 @@ namespace Plato.Categories.Models
 
         public int CreatedUserId { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
-
-
+        public DateTimeOffset? CreatedDate { get; set; }
+        
         public int ModifiedUserId { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
         
         public void PopulateModel(IDataReader dr)
         {
@@ -44,13 +43,13 @@ namespace Plato.Categories.Models
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
+                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
 
             if (dr.ColumnIsNotNull("ModifiedUserId"))
                 ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
+                ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
 
         }
 

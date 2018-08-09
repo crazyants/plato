@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Plato.Internal.Models.Users
+﻿namespace Plato.Internal.Models.Users
 {
-    public class SimpleUser
+    
+    public class SimpleUser : ISimpleUser
     {
 
         public int Id { get; set; }

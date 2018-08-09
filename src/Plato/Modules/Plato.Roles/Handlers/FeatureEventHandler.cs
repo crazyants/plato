@@ -54,7 +54,7 @@ namespace Plato.Roles.Handlers
                 new SchemaColumn()
                 {
                     Name = "CreatedDate",
-                    DbType = DbType.DateTime2
+                    DbType = DbType.DateTimeOffset
                 },
                 new SchemaColumn()
                 {
@@ -64,7 +64,7 @@ namespace Plato.Roles.Handlers
                 new SchemaColumn()
                 {
                     Name = "ModifiedDate",
-                    DbType = DbType.DateTime2
+                    DbType = DbType.DateTimeOffset
                 },
                 new SchemaColumn()
                 {

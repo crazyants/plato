@@ -35,9 +35,9 @@ namespace Plato.Internal.Repositories.Roles
             string nameNormalized,
             string description,
             string claims,
-            DateTime? createdDate,
+            DateTimeOffset? createdDate,
             int createdUserId,
-            DateTime? modifiedDate,
+            DateTimeOffset? modifiedDate,
             int modifiedUserId,
             string concurrencyStamp)
         {

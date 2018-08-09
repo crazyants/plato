@@ -19,11 +19,11 @@ namespace Plato.Categories.Models
 
         public string Value { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
         public int CreatedUserId { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
 
         public int ModifiedUserId { get; set; }
 
@@ -49,28 +49,28 @@ namespace Plato.Categories.Models
         {
 
             if (dr.ColumnIsNotNull("Id"))
-                this.Id = Convert.ToInt32(dr["Id"]);
+                Id = Convert.ToInt32(dr["Id"]);
 
             if (dr.ColumnIsNotNull("CategoryId"))
-                this.CategoryId = Convert.ToInt32(dr["CategoryId"]);
+                CategoryId = Convert.ToInt32(dr["CategoryId"]);
 
             if (dr.ColumnIsNotNull("Key"))
-                this.Key = Convert.ToString(dr["Key"]);
+                Key = Convert.ToString(dr["Key"]);
 
             if (dr.ColumnIsNotNull("Value"))
-                this.Value = Convert.ToString(dr["Value"]);
-
-            if (dr.ColumnIsNotNull("CreatedDate"))
-                this.CreatedDate = Convert.ToDateTime((dr["CreatedDate"]));
-
+                Value = Convert.ToString(dr["Value"]);
+            
             if (dr.ColumnIsNotNull("CreatedUserId"))
-                this.CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
+                CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
+            
+            if (dr.ColumnIsNotNull("CreatedDate"))
+                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
+
+            if (dr.ColumnIsNotNull("ModifiedUserId"))
+                ModifiedUserId = Convert.ToInt32((dr["ModifiedUserId"]));
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                this.ModifiedDate = Convert.ToDateTime((dr["ModifiedDate"]));
-
-            if (dr.ColumnIsNotNull("ModifiedDate"))
-                this.ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
+                ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
 
         }
 
