@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Data;
+using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Models;
 
 namespace Plato.Reactions.Models
 {
-    public class Reaction
+    public class Reaction : IModel<Reaction>
     {
         public int Id { get; set; }
 
@@ -22,5 +23,23 @@ namespace Plato.Reactions.Models
 
         public bool IsNegative { get; set; }
 
+        public bool IsDisabled { get; set; }
+
+        public void PopulateModel(IDataReader dr)
+        {
+
+            if (dr.ColumnIsNotNull("Id"))
+                Id = Convert.ToInt32(dr["Id"]);
+
+            if (dr.ColumnIsNotNull("FeatureId"))
+                FeatureId = Convert.ToInt32(dr["FeatureId"]);
+            
+            if (dr.ColumnIsNotNull("Name"))
+                Name = Convert.ToString(dr["Name"]);
+
+            if (dr.ColumnIsNotNull("Description"))
+                Description = Convert.ToString(dr["Description"]);
+
+        }
     }
 }

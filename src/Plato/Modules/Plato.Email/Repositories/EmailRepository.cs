@@ -29,8 +29,10 @@ namespace Plato.Email.Repositories
         {
 
             if (email == null)
+            {
                 throw new ArgumentNullException(nameof(email));
-
+            }
+                
             var id = await InsertUpdateInternal(
                 email.Id,
                 email.To,

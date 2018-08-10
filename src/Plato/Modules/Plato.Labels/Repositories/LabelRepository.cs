@@ -23,11 +23,11 @@ namespace Plato.Labels.Repositories
         public LabelRepository(
             IDbContext dbContext,
             ILogger<LabelRepository<TLabel>> logger,
-            ILabelDataRepository<LabelData> LabelDataRepository)
+            ILabelDataRepository<LabelData> labelDataRepository)
         {
             _dbContext = dbContext;
             _logger = logger;
-            _LabelDataRepository = LabelDataRepository;
+            _LabelDataRepository = labelDataRepository;
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace Plato.Labels.Repositories
         public async Task<TLabel> SelectByIdAsync(int id)
         {
 
-            TLabel Label = null;
+            TLabel label = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -78,13 +78,13 @@ namespace Plato.Labels.Repositories
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
-                    Label = ActivateInstanceOf<TLabel>.Instance();
-                    Label.PopulateModel(reader);
+                    label = ActivateInstanceOf<TLabel>.Instance();
+                    label.PopulateModel(reader);
                 }
 
             }
 
-            return Label;
+            return label;
 
         }
 
@@ -172,9 +172,9 @@ namespace Plato.Labels.Repositories
                     output = new List<TLabel>();
                     while (await reader.ReadAsync())
                     {
-                        var Label = ActivateInstanceOf<TLabel>.Instance();
-                        Label.PopulateModel(reader);
-                        output.Add(Label);
+                        var label = ActivateInstanceOf<TLabel>.Instance();
+                        label.PopulateModel(reader);
+                        output.Add(label);
                     }
 
                 }
@@ -205,7 +205,7 @@ namespace Plato.Labels.Repositories
             IEnumerable<LabelData> data)
         {
 
-            var LabelId = 0;
+            var labelId = 0;
             using (var context = _dbContext)
             {
 
@@ -219,7 +219,7 @@ namespace Plato.Labels.Repositories
                     throw args.Exception;
                 };
 
-                LabelId = await context.ExecuteScalarAsync<int>(
+                labelId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateLabel",
                     id,
@@ -239,20 +239,20 @@ namespace Plato.Labels.Repositories
             }
 
             // Add Label data
-            if (LabelId > 0)
+            if (labelId > 0)
             {
                 if (data != null)
                 {
                     foreach (var item in data)
                     {
-                        item.LabelId = LabelId;
+                        item.LabelId = labelId;
                         await _LabelDataRepository.InsertUpdateAsync(item);
                     }
                 }
 
             }
 
-            return LabelId;
+            return labelId;
 
         }
 
