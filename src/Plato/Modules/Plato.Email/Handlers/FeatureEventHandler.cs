@@ -80,8 +80,8 @@ namespace Plato.Email.Handlers
                     new SchemaColumn()
                     {
                         Name = "CreatedDate",
-                        DbType = DbType.DateTime
-                    },
+                        DbType = DbType.DateTimeOffset
+                    }
                 }
         };
         

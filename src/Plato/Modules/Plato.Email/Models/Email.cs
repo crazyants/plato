@@ -29,7 +29,7 @@ namespace Plato.Email.Models
 
         public int CreatedUserId { get; set; }
 
-        public System.DateTime CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
         public EmailMessage()
         {

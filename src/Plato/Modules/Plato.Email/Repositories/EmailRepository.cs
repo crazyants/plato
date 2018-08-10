@@ -142,7 +142,7 @@ namespace Plato.Email.Repositories
             short priority,
             short sendAttempts,
             int createdUserId,
-            DateTime createdDate)
+            DateTimeOffset? createdDate)
         {
 
             var emailId = 0;
@@ -161,7 +161,7 @@ namespace Plato.Email.Repositories
                     priority,
                     sendAttempts,
                     createdUserId,
-                    createdDate);
+                    createdDate.ToDateIfNull());
             }
 
             return emailId;

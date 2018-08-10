@@ -8,8 +8,7 @@ using Plato.Reactions.Models;
 
 namespace Plato.Reactions.Repositories
 {
-
-
+    
     public class ReactionRepository : IReactionRepository<Reaction>
     {
 
@@ -42,7 +41,11 @@ namespace Plato.Reactions.Repositories
                 reaction.IsPositive,
                 reaction.IsNeutral,
                 reaction.IsNegative,
-                reaction.IsDisabled);
+                reaction.IsDisabled,
+                reaction.CreatedUserId,
+                reaction.CreatedDate,
+                reaction.ModifiedUserId,
+                reaction.ModifiedDate);
 
             if (id > 0)
             {
@@ -73,14 +76,54 @@ namespace Plato.Reactions.Repositories
             return reaction;
         }
 
-        public Task<IPagedResults<Reaction>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<Reaction>> SelectAsync(params object[] inputParams)
         {
-            throw new NotImplementedException();
+            PagedResults<Reaction> output = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectReactionsPaged",
+                    inputParams);
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new PagedResults<Reaction>();
+                    while (await reader.ReadAsync())
+                    {
+                        var reaction = new Reaction();
+                        reaction.PopulateModel(reader);
+                        output.Data.Add(reaction);
+                    }
+
+                    if (await reader.NextResultAsync())
+                    {
+                        await reader.ReadAsync();
+                        output.PopulateTotal(reader);
+                    }
+
+                }
+            }
+
+            return output;
+
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Deleting email with id: {id}");
+            }
+
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteReactionById", id);
+            }
+
+            return success > 0 ? true : false;
         }
         
         #endregion
@@ -96,7 +139,11 @@ namespace Plato.Reactions.Repositories
             bool isPositive,
             bool isNeutral,
             bool isNegative,
-            bool isDeisabled)
+            bool isDeisabled,
+            int createdUserId,
+            DateTimeOffset? createdDate,
+            int modifiedUserId,
+            DateTimeOffset? modifiedDate)
         {
 
             var emailId = 0;
@@ -106,13 +153,18 @@ namespace Plato.Reactions.Repositories
                     CommandType.StoredProcedure,
                     "InsertUpdateReaction",
                     id,
+                    featureId,
                     name.ToEmptyIfNull().TrimToSize(255),
                     description.ToEmptyIfNull().TrimToSize(255),
-                    emoji.ToEmptyIfNull().TrimToSize(255),
+                    emoji.ToEmptyIfNull().TrimToSize(20),
                     isPositive,
                     isNeutral,
                     isNegative,
-                    isDeisabled);
+                    isDeisabled,
+                    createdUserId,
+                    createdDate.ToDateIfNull(),
+                    modifiedUserId,
+                    modifiedDate.ToDateIfNull());
             }
 
             return emailId;
@@ -120,7 +172,6 @@ namespace Plato.Reactions.Repositories
         }
 
         #endregion
-
-
+        
     }
 }

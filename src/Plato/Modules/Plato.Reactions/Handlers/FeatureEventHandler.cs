@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Data.Schemas.Abstractions;
@@ -14,10 +12,10 @@ namespace Plato.Reactions.Handlers
 
         public string Version { get; } = "1.0.0";
 
-        // Email table
+        // Reactions table
         private readonly SchemaTable _reactions = new SchemaTable()
         {
-            Name = "Emails",
+            Name = "Reactions",
             Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -45,37 +43,29 @@ namespace Plato.Reactions.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "Bcc",
-                        Length = "255",
+                        Name = "Emoji",
+                        Length = "20",
                         DbType = DbType.String
                     },
                     new SchemaColumn()
                     {
-                        Name = "[From]",
-                        Length = "255",
-                        DbType = DbType.String
+                        Name = "IsPositive",
+                        DbType = DbType.Boolean
                     },
                     new SchemaColumn()
                     {
-                        Name = "Subject",
-                        Length = "255",
-                        DbType = DbType.String
+                        Name = "IsNeutral",
+                        DbType = DbType.Boolean
                     },
                     new SchemaColumn()
                     {
-                        Name = "[Body]",
-                        Length = "max",
-                        DbType = DbType.String
+                        Name = "IsNegative",
+                        DbType = DbType.Boolean
                     },
                     new SchemaColumn()
                     {
-                        Name = "Priority",
-                        DbType = DbType.Int16
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "SendAttempts",
-                        DbType = DbType.Int16
+                        Name = "IsDisabled",
+                        DbType = DbType.Boolean
                     },
                     new SchemaColumn()
                     {
@@ -85,8 +75,18 @@ namespace Plato.Reactions.Handlers
                     new SchemaColumn()
                     {
                         Name = "CreatedDate",
-                        DbType = DbType.DateTime
+                        DbType = DbType.DateTimeOffset
                     },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTimeOffset
+                    }
                 }
         };
 
@@ -112,8 +112,8 @@ namespace Plato.Reactions.Handlers
                 // configure
                 Configure(builder);
 
-                // Emails schema
-                Emails(builder);
+                // Reactions schema
+                Reactions(builder);
 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -158,7 +158,7 @@ namespace Plato.Reactions.Handlers
                 builder
                     .DropTable(_reactions)
                     .DropDefaultProcedures(_reactions)
-                    .DropProcedure(new SchemaProcedure("SelectEmailsPaged", StoredProcedureType.SelectByKey));
+                    .DropProcedure(new SchemaProcedure("SelectReactionsPaged", StoredProcedureType.SelectByKey));
 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -209,14 +209,14 @@ namespace Plato.Reactions.Handlers
 
         }
 
-        void Emails(ISchemaBuilder builder)
+        void Reactions(ISchemaBuilder builder)
         {
 
             builder
                 .CreateTable(_reactions)
                 .CreateDefaultProcedures(_reactions);
 
-            builder.CreateProcedure(new SchemaProcedure("SelectEmailsPaged", StoredProcedureType.SelectPaged)
+            builder.CreateProcedure(new SchemaProcedure("SelectReactionsPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_reactions)
                 .WithParameters(new List<SchemaColumn>()
                 {

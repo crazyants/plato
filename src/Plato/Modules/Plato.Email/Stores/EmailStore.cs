@@ -17,7 +17,11 @@ namespace Plato.Email.Stores
         private readonly ILogger<EmailStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
 
-        public EmailStore(IEmailRepository<EmailMessage> emailRepository, ICacheManager cacheManager, ILogger<EmailStore> logger, IDbQueryConfiguration dbQuery)
+        public EmailStore(
+            IEmailRepository<EmailMessage> emailRepository,
+            ICacheManager cacheManager,
+            ILogger<EmailStore> logger,
+            IDbQueryConfiguration dbQuery)
         {
             _emailRepository = emailRepository;
             _cacheManager = cacheManager;
