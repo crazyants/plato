@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
+using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
@@ -18,8 +19,8 @@ namespace Plato.Discuss.Channels.Controllers
     public class AdminController : Controller, IUpdateModel
     {
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<CategoryBase> _categoryStore;
-        private readonly ICategoryManager<CategoryBase> _categoryManager;
+        private readonly ICategoryStore<Channel> _categoryStore;
+        private readonly ICategoryManager<Channel> _categoryManager;
         private readonly IViewProviderManager<CategoryBase> _viewProvider;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -32,11 +33,11 @@ namespace Plato.Discuss.Channels.Controllers
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
             IContextFacade contextFacade,
-            ICategoryStore<CategoryBase> categoryStore,
+            ICategoryStore<Channel> categoryStore,
             IViewProviderManager<CategoryBase> viewProvider,
             IBreadCrumbManager breadCrumbManager,
             IAlerter alerter, 
-            ICategoryManager<CategoryBase> categoryManager)
+            ICategoryManager<Channel> categoryManager)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
@@ -109,8 +110,9 @@ namespace Plato.Discuss.Channels.Controllers
                 iconCss = viewModel.IconPrefix + iconCss;
             }
 
-            var category =  new CategoryBase()
+            var category =  new Channel()
             {
+                ParentId = viewModel.ParentId,
                 FeatureId = await GetFeatureIdAsync(),
                 Name = viewModel.Name,
                 Description = viewModel.Description,

@@ -14,28 +14,19 @@
         }
     </card-title>
     <card-body>
+
+
         <div class="row">
-            <div class="col-3">
-                <fieldset>
-                    <div class="form-group" asp-validation-class-for="Name">
-                        <label asp-for="Name"><strong>@T["Name"]</strong></label>
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                        <div class="input-group">
-                            <input placeholder="@T["name your channel"]" asp-for="Name" class="form-control" autofocus />
-                        </div>
+            <div class="col-6">
+                <div class="form-group" asp-validation-class-for="Name">
+                    <label asp-for="Name"><strong>@T["Name"]</strong></label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                    <div class="input-group">
+                        <input placeholder="@T["name your channel"]" asp-for="Name" class="form-control" autofocus />
                     </div>
-                </fieldset>
+                </div>
             </div>
-            <div class="col-4">
-                <fieldset>
-                    <div class="form-group" asp-validation-class-for="Description">
-                        <label asp-for="Name"><strong>@T["Description"]</strong></label>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                        <input type="text" placeholder="@T["optional channel description"]" asp-for="Description" rows="2" class="form-control" />
-                    </div>
-                </fieldset>
-            </div>
-            <div class="col-1">
+            <div class="col-2">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="Icon">
 
@@ -68,7 +59,7 @@
                                 </div>
                                 <input type="text" asp-for="BackColor" class="form-control" style="width: 95px;" />
                             </div>
-                            
+
                         </div>
 
                     </div>
@@ -80,7 +71,7 @@
 
                         <label asp-for="Name"><strong>@T["Colors"]</strong></label>
                         <div class="input-group">
-                            
+
                             <div asp-color-picker="ForeColor" class="input-group-prepend">
                                 <div class="input-group-text" data-toggle="tooltip" title="@T["Text Color"]" style="cursor: pointer;">
                                     <i class="fa fa-square" style="color: @Model.ForeColor"></i>
@@ -94,6 +85,27 @@
                 </fieldset>
             </div>
         </div>
+
+        <fieldset>
+
+            <div class="form-group" asp-validation-class-for="Description">
+                <label asp-for="Name"><strong>@T["Description"]</strong></label>
+                <span asp-validation-for="Description" class="text-danger"></span>
+                <textarea placeholder="@T["optional channel description"]" asp-for="Description" rows="2" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <div asp-validation-class-for="ParentId">
+                    <label asp-for="ParentId"><strong>@T["Parent"]</strong></label>
+                    <span asp-validation-for="ParentId" class="text-danger"></span>
+                    <div class="input-group">
+                        <select class="form-control"
+                                asp-for="ParentId"
+                                asp-items="@Model.AvailableChannels"></select>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
     </card-body>
 </card>
 

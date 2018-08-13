@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
@@ -19,14 +22,21 @@ namespace Plato.Discuss.Channels.ViewProviders
         private readonly ICategoryStore<Channel> _categoryStore;
         private readonly ICategoryManager<Channel> _categoryManager;
 
+        public IStringLocalizer S { get; }
+
+
         public AdminViewProvider(
             IContextFacade contextFacade,
             ICategoryStore<Channel> categoryStore,
-            ICategoryManager<Channel> categoryManager)
+            ICategoryManager<Channel> categoryManager,
+            IStringLocalizer<AdminViewProvider> stringLocalizer)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
             _categoryManager = categoryManager;
+
+            S = stringLocalizer;
+
         }
 
         #region "Implementation"
@@ -49,7 +59,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(CategoryBase categoryBase, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(CategoryBase categoryBase, IUpdateModel updater)
         {
 
             var defaultIcons = new DefaultIcons();
@@ -61,7 +71,8 @@ namespace Plato.Discuss.Channels.ViewProviders
                 {
                     IconPrefix = defaultIcons.Prefix,
                     ChannelIcons = defaultIcons,
-                    IsNewChannel = true
+                    IsNewChannel = true,
+                    AvailableChannels = await GetAvailableChannels()
                 };
             }
             else
@@ -69,22 +80,24 @@ namespace Plato.Discuss.Channels.ViewProviders
                 editChannelViewModel = new EditChannelViewModel()
                 {
                     Id = categoryBase.Id,
+                    ParentId = categoryBase.ParentId,
                     Name = categoryBase.Name,
                     Description = categoryBase.Description,
                     ForeColor = categoryBase.ForeColor,
                     BackColor = categoryBase.BackColor,
                     IconCss = categoryBase.IconCss,
                     IconPrefix = defaultIcons.Prefix,
-                    ChannelIcons = defaultIcons
+                    ChannelIcons = defaultIcons,
+                    AvailableChannels = await GetAvailableChannels()
                 };
             }
             
-            return Task.FromResult(Views(
+            return Views(
                 View<EditChannelViewModel>("Admin.Edit.Header", model => editChannelViewModel).Zone("header").Order(1),
                 View<EditChannelViewModel>("Admin.Edit.Content", model => editChannelViewModel).Zone("content").Order(1),
                 View<EditChannelViewModel>("Admin.Edit.Actions", model => editChannelViewModel).Zone("actions").Order(1),
                 View<EditChannelViewModel>("Admin.Edit.Footer", model => editChannelViewModel).Zone("footer").Order(1)
-            ));
+            );
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(CategoryBase categoryBase, IUpdateModel updater)
@@ -99,7 +112,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             model.Name = model.Name?.Trim();
             model.Description = model.Description?.Trim();
-            
+  
             //Category category = null;
 
             if (updater.ModelState.IsValid)
@@ -115,6 +128,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                 {
                     Id = categoryBase.Id,
                     FeatureId = categoryBase.FeatureId,
+                    ParentId = model.ParentId,
                     Name = model.Name,
                     Description = model.Description,
                     ForeColor = model.ForeColor,
@@ -137,6 +151,32 @@ namespace Plato.Discuss.Channels.ViewProviders
         #endregion
 
         #region "Private Methods"
+
+        async Task<IEnumerable<SelectListItem>> GetAvailableChannels()
+        {
+            var feature = await GetcurrentFeature();
+
+            // Build timezones 
+            var timeZones = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = S["root channel"],
+                    Value = "0"
+                }
+            };
+            foreach (var c in await _categoryStore.GetByFeatureIdAsync(feature.Id))
+            {
+                timeZones.Add(new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                });
+            }
+
+            return timeZones;
+        }
+
 
         async Task<ChannelsViewModel> GetIndexModel()
         {

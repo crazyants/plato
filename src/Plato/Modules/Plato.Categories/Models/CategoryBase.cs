@@ -46,6 +46,9 @@ namespace Plato.Categories.Models
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
         
+        public IList<ICategory> Children { get; set; } = new List<ICategory>();
+        public int Depth { get; set; }
+
         public CategoryBase()
         {
             _metaData = new ConcurrentDictionary<Type, ISerializable>();

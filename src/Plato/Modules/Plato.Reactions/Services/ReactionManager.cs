@@ -96,7 +96,7 @@ namespace Plato.Reactions.Services
             var result = new ActivityResult<Reaction>();
 
             // Attempt to persist
-            var reaction = await _reactionStore.CreateAsync(model);
+            var reaction = await _reactionStore.UpdateAsync(model);
             if (reaction != null)
             {
                 return result.Success(reaction);

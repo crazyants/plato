@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Plato.Categories.Models;
 
 namespace Plato.Discuss.Channels.ViewModels
@@ -9,6 +11,11 @@ namespace Plato.Discuss.Channels.ViewModels
         public bool IsNewChannel { get; set; }
 
         public int Id { get; set; }
+
+        [Required]
+        public int ParentId { get; set; }
+
+        public IEnumerable<SelectListItem> AvailableChannels { get; set; }
 
         [Required]
         [StringLength(255)]

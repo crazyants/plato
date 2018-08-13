@@ -1,4 +1,5 @@
-﻿@model ChannelsViewModel
+﻿@using Plato.Categories.Services
+@model ChannelsViewModel
 
 <card class="card card-body-flush">
     <card-title>
@@ -8,7 +9,7 @@
         @if (Model.Channels != null)
         {
             <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var channel in Model.Channels)
+                @foreach (var channel in Model.Channels.Where(c => c.ParentId == 0))
                 {
                     <li class="list-group-item">
                         
@@ -38,9 +39,23 @@
                                     @channel.Description
                                 </div>
                             }
+                            @if (channel.Children.Count > 0)
+                            {
+                                <ul class="list-inline">
+                                    @foreach (var child in channel.Children)
+                                    {
+                                        <li>
+                                            <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@child.Id">
+                                                @child.Name
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+
                         </div>
                
-
+                      
                     </li>
                 }
             </ul>

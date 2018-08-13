@@ -8,6 +8,7 @@ namespace Plato.Categories.Stores
     public interface ICategoryStore<TModel> : IStore<TModel> where TModel : class
     {
         Task<IEnumerable<TModel>> GetByFeatureIdAsync(int featureId);
+        
     }
     
 }

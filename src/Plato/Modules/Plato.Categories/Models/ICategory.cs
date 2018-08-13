@@ -40,7 +40,10 @@ namespace Plato.Categories.Models
         IEnumerable<CategoryData> Data { get; set; } 
 
         IDictionary<Type, ISerializable> MetaData { get; }
-        
+
+        IList<ICategory> Children { get; set; }
+
+        int Depth { get; set; }
 
         void AddOrUpdate<T>(T obj) where T : class;
 

@@ -226,8 +226,6 @@ namespace Plato.Email.Handlers
         }
         
         #endregion
-
-
-
+        
     }
 }

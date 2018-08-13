@@ -209,7 +209,17 @@ namespace Plato.Internal.Abstractions.Extensions
             return Path.GetInvalidFileNameChars()
                 .Aggregate(input, (current, c) => current.Replace(c.ToString(), string.Empty));
         }
-        
+
+        public static string Repeat(this string input, int times)
+        {
+            var sb = new StringBuilder(times);
+            for (var i = 1; i <= times; i++)
+            {
+                sb.Append(input);
+            }
+            return sb.ToString();
+        }
+
     }
 
 }
