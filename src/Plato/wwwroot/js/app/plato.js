@@ -507,12 +507,7 @@ $(function (win, doc, $) {
                             // Get all checked labels
                             var $selectedLabels = [];
                             $($menu).find('input:checked').each(function () {
-
-                                var $localLabel = $(this).next(),
-                                    collapseSelector = $localLabel.attr("data-collapse-target"),
-                                    $collapse = $(collapseSelector);
-                              
-                                $collapse.addClass("show");
+                                var $localLabel = $(this).next();
                                 $localLabel.addClass("active");
                                 $selectedLabels.push($localLabel);
                             });
@@ -685,7 +680,10 @@ $(function (win, doc, $) {
         var defaults = {
             event: "click",
             toggleSelector: '[data-toggle="tree"]',
+            linkSelector: ".tree-link",
+            enableCheckBoxes: true,
             onBeforeComplete: function () { },
+            onClick: function (a) {},
             onComplete: function () { }
         };
 
@@ -707,23 +705,51 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
 
-                var selector = $caller.data(dataKey).toggleSelector,
+                var linkSelector = $caller.data(dataKey).linkSelector,
+                    toggleSelector = $caller.data(dataKey).toggleSelector,
+                    onClick = $caller.data(dataKey).onClick,
                     event = $caller.data(dataKey).event;
 
-                $(selector).unbind(event).bind(event,
-                    function () {
+                // Bind toggler events
+                $(toggleSelector).unbind(event).bind(event,
+                    function (e) {
+                        e.preventDefault();
                         methods.toggleNode($caller, $(this).attr("data-node-id"));
                     });
                 
+                // Check / Uncheck child inputs
+                $caller.on('change',
+                    'input[type="checkbox"], input[type="radio"]',
+                    function (e) {
+                        var nodeId = $(this).attr("data-node-id"),
+                            $li = methods.getNodeListItem($caller, nodeId),
+                            $firstChild = $li.find("ul"),
+                            $inputs = $firstChild.find('[type="checkbox"]');
+                        if ($inputs.length > 0) {
+                            if ($(this).is(":checked")) {
+                                $inputs.prop("checked", true);
+                            } else {
+                                $inputs.prop("checked", false);
+                            }
+                        }
+                    });
+
+                // Bind link click events
+                $caller.find(linkSelector).unbind(event).bind(event,
+                    function(e) {
+                        if (onClick) {
+                            onClick($(this));
+                        }
+                    });
+
+
             },
             toggleNode: function ($caller, nodeId) {
 
                 var $toggler = methods.getNodeToggler($caller, nodeId),
                     $li = methods.getNodeListItem($caller, nodeId),
                     $child = $li.find("ul").first();
-
-                console.log($child.length);
-
+                
                 if (!$child.is(":visible")) {
                     $child.slideDown("fast");
                     $toggler.removeClass("fa-chevron-right")
@@ -739,7 +765,13 @@ $(function (win, doc, $) {
                 return $caller.find("#" + nodeId);
             },
             getNodeToggler: function($caller, nodeId) {
-                return $caller.find('[data-node-id="' + nodeId + '"]');
+                var $toggler = $caller.find('[data-node-id="' + nodeId + '"]');
+                if ($toggler.length > 0) {
+                    if ($toggler[0].tagName === "I") {
+                        return $toggler;
+                    }
+                    return $toggler.find("i");
+                }
             }
         };
 

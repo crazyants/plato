@@ -866,10 +866,6 @@
     overflow: hidden;
 }
 
-
-
-
-
 /* ------------------------- */
 /* toggle switch */
 /* ------------------------- */
@@ -923,3 +919,12 @@
 .switch-round .switch-slider:before {
     border-radius: 50%;
 }
+
+/* ------------------------- */
+/* tree view */
+/* ------------------------- */
+
+.tree ul { margin: 0; padding: 0; padding-left: 1.7rem; list-style: none; }
+.tree > ul { padding: 0; }
+.tree > ul .toggler { width: 22px; padding: 0; margin-right: 0.25rem; text-align: center; vertical-align: middle; }
+.tree > ul .toggler i { display: inline-block; margin: 0; padding: 0; }

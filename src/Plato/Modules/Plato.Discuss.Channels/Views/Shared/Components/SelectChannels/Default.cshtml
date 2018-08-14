@@ -3,8 +3,15 @@
 
 @functions {
 
+    string BuildChannels(SelectChannelsViewModel model)
+    {
+        var output = BuildChannelsRecursivly(model.SelectedChannels, model.HtmlName);
+        return output;
+    }
+
     string BuildChannelsRecursivly(
         IList<Selection<Channel>> channels,
+        string htmlName,
         System.Text.StringBuilder sb = null,
         int id = 0)
     {
@@ -15,7 +22,7 @@
         }
 
         var style = id == 0 ? "display:block" : "display:none";
-    
+
 
         sb.Append("<ul style=\"")
             .Append(style)
@@ -24,6 +31,7 @@
         foreach (var channel in Model.SelectedChannels)
         {
             var nodeId = "node-" + channel.Value.Id;
+            var checkId = "check-" + channel.Value.Id;
             if (channel.Value.ParentId == id)
             {
                 sb.Append("<li id=\"")
@@ -31,14 +39,34 @@
                     .Append("\">");
                 if (channel.Value.Children.Count > 0)
                 {
-                    sb.Append("<i data-node-id=\"")
+                    sb.Append("<a class=\"btn toggler\" data-node-id=\"")
                         .Append(nodeId)
-                        .Append("\" data-toggle=\"tree\" class=\"fal fa-chevron-right mr-2\"></i>");
+                        .Append("\" data-toggle=\"tree\" href=\"#\">");
+                    sb.Append("<i class=\"fal fa-chevron-right\"></i>");
+                    sb.Append("</a>");
                 }
+                
+            
+
+                sb.Append("<label class=\"tree-link\" for=\"")
+                    .Append(checkId)
+                    .Append("\">");
+
+                sb.Append("<input type=\"checkbox\" id=\"")
+                    .Append(checkId)
+                    .Append("\" name=\"")
+                    .Append(htmlName)
+                    .Append("\" value=\"")
+                    .Append(channel.Value.Id)
+                    .Append("\" data-node-id=\"")
+                    .Append(nodeId)
+                    .Append("\" />");
+
                 sb.Append(channel.Value.Name);
+                sb.Append("</label>");
 
                 // Recuse
-                BuildChannelsRecursivly(channels, sb, channel.Value.Id);
+                BuildChannelsRecursivly(channels, htmlName, sb, channel.Value.Id);
 
                 sb.Append("</li>");
 
@@ -58,10 +86,10 @@
 
 
 @{
-    var output = BuildChannelsRecursivly(Model.SelectedChannels);
+    var output = BuildChannels(Model);
 }
 
-<div data-provide="tree">
+<div class="tree" data-provide="tree">
     @Html.Raw(output)
 </div>
 
