@@ -1,4 +1,69 @@
-﻿@model SelectChannelsViewModel
+﻿@using Microsoft.CodeAnalysis
+@model SelectChannelsViewModel
+
+@functions {
+
+    string BuildChannelsRecursivly(
+        IList<Selection<Channel>> channels,
+        System.Text.StringBuilder sb = null,
+        int id = 0)
+    {
+
+        if (sb == null)
+        {
+            sb = new System.Text.StringBuilder();
+        }
+
+        var style = id == 0 ? "display:block" : "display:none";
+    
+
+        sb.Append("<ul style=\"")
+            .Append(style)
+            .Append("\">");
+
+        foreach (var channel in Model.SelectedChannels)
+        {
+            var nodeId = "node-" + channel.Value.Id;
+            if (channel.Value.ParentId == id)
+            {
+                sb.Append("<li id=\"")
+                    .Append(nodeId)
+                    .Append("\">");
+                if (channel.Value.Children.Count > 0)
+                {
+                    sb.Append("<i data-node-id=\"")
+                        .Append(nodeId)
+                        .Append("\" data-toggle=\"tree\" class=\"fal fa-chevron-right mr-2\"></i>");
+                }
+                sb.Append(channel.Value.Name);
+
+                // Recuse
+                BuildChannelsRecursivly(channels, sb, channel.Value.Id);
+
+                sb.Append("</li>");
+
+            }
+
+
+        }
+
+        sb.Append("</ul>");
+
+        return sb.ToString();
+
+
+    }
+
+}
+
+
+@{
+    var output = BuildChannelsRecursivly(Model.SelectedChannels);
+}
+
+<div data-provide="tree">
+    @Html.Raw(output)
+</div>
 
 <div class="dropdown" data-provide="select-dropdown">
     <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -28,17 +93,33 @@
                     var check = @channel.IsSelected ? "checked" : "";
                     var uniqueId = "channel-" + channel.Value.Id;
                     var css = @channel.IsSelected ? "list-group-item dropdown-item active" : "list-group-item dropdown-item";
-                    <input name="@Model.HtmlName" type="radio" value="@channel.Value.Id" id="@uniqueId" @check/>
-                    <label data-value="@channel.Value.Name" class="@css" for="@uniqueId">
-                        <i class="fal mr-2 check-icon"></i>
-                        @if (!String.IsNullOrWhiteSpace(channel.Value.IconCss))
-                        {
-                        <span class="channel-icon channel-icon-sm mr-2" style="background-color: @channel.Value.BackColor; color: @channel.Value.ForeColor">
-                            <i class="@channel.Value.IconCss"></i>
-                        </span>
-                        }
-                        @channel.Value.Name
-                    </label>
+                    
+                    var collapseId = "child-" + channel.Value.ParentId.ToString();
+                    var collapseStyle = channel.Value.ParentId > 0 ? "display: none;" : "display: block;";
+
+                    <div style="@collapseStyle" id="@collapseId">
+                        <input name="@Model.HtmlName" type="radio" value="@channel.Value.Id" id="@uniqueId" @check/>
+                        <label data-value="@channel.Value.Name" data-category-id="@channel.Value.Id" data-category-parent-id="@channel.Value.ParentId" data-collapse-target="#@collapseId" class="@css" for="@uniqueId">
+                            @{
+                                var indent = "&nbsp;".Repeat(channel.Value.Depth);
+                            }
+                            @Html.Raw(indent)
+                            @if (channel.Value.Children.Count > 0)
+                            {
+                                <i class="fal mr-2 fa-chevron-right"></i>
+                            }
+                            <i class="fal mr-2 check-icon"></i>
+                            @if (!String.IsNullOrWhiteSpace(channel.Value.IconCss))
+                            {
+                                <span class="channel-icon channel-icon-sm mr-2" style="background-color: @channel.Value.BackColor; color: @channel.Value.ForeColor">
+                                    <i class="@channel.Value.IconCss"></i>
+                                </span>
+                            }
+                            @channel.Value.Name
+                        </label>
+                    </div>
+
+
                 }
             </div>
         }

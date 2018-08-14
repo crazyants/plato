@@ -52,7 +52,7 @@ namespace Plato.Discuss.Channels.ViewComponents
                     IsSelected = selected.Any(v => v == c.Id),
                     Value = c
                 })
-                .OrderBy(s => s.Value.Name)
+                //.OrderBy(s => s.Value.Name)
                 .ToList();
 
             return selections;

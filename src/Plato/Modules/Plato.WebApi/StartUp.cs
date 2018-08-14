@@ -65,6 +65,15 @@ namespace Plato.WebApi
                     ctx.Response.Cookies.Append(PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName, System.Guid.NewGuid().ToString(),
                         new CookieOptions() { HttpOnly = false });
                 }
+                else
+                {
+                    // Delete any existing cookie
+                    ctx.Response.Cookies.Delete(cookie);
+
+                    // Create new cookie
+                    ctx.Response.Cookies.Append(PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName, System.Guid.NewGuid().ToString(),
+                        new CookieOptions() { HttpOnly = false });
+                }
                 return next(ctx);
             });
         }

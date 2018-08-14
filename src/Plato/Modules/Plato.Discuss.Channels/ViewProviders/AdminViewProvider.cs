@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
@@ -8,6 +9,7 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
@@ -154,10 +156,9 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         async Task<IEnumerable<SelectListItem>> GetAvailableChannels()
         {
-            var feature = await GetcurrentFeature();
 
             // Build timezones 
-            var timeZones = new List<SelectListItem>
+            var output = new List<SelectListItem>
             {
                 new SelectListItem
                 {
@@ -165,16 +166,50 @@ namespace Plato.Discuss.Channels.ViewProviders
                     Value = "0"
                 }
             };
-            foreach (var c in await _categoryStore.GetByFeatureIdAsync(feature.Id))
+            
+            var feature = await GetcurrentFeature();
+            var channels = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+            var items = await RecurseChannels(channels);
+            foreach (var item in items)
             {
-                timeZones.Add(new SelectListItem
+                output.Add(item);
+            }
+          
+            return output;
+        }
+
+        Task<IList<SelectListItem>> RecurseChannels(
+            IEnumerable<ICategory> input,
+            IList<SelectListItem> output = null,
+            int id = 0)
+        {
+
+            if (output == null)
+            {
+                output = new List<SelectListItem>();
+            }
+            
+            var categories = input.ToList();
+            foreach (var category in categories)
+            {
+                if (category.ParentId == id)
                 {
-                    Text = c.Name,
-                    Value = c.Id.ToString()
-                });
+                    var indent = "-".Repeat(category.Depth);
+                    if (!string.IsNullOrEmpty(indent))
+                    {
+                        indent += " ";
+                    }
+                    output.Add(new SelectListItem
+                    {
+                        Text = indent + category.Name,
+                        Value = category.Id.ToString()
+                    });
+                    RecurseChannels(categories, output, category.Id);
+                }
             }
 
-            return timeZones;
+            return Task.FromResult(output);
+
         }
 
 

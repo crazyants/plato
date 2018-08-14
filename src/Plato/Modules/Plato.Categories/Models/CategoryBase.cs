@@ -45,8 +45,11 @@ namespace Plato.Categories.Models
         public IEnumerable<CategoryData> Data { get; set; } = new List<CategoryData>();
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
-        
+
         public IList<ICategory> Children { get; set; } = new List<ICategory>();
+
+        public ICategory Parent { get; set; }
+
         public int Depth { get; set; }
 
         public CategoryBase()

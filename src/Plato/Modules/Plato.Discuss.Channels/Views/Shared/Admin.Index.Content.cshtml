@@ -44,7 +44,7 @@
                                 <ul class="list-inline">
                                     @foreach (var child in channel.Children)
                                     {
-                                        <li>
+                                        <li class="float-left mr-2">
                                             <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@child.Id">
                                                 @child.Name
                                             </a>

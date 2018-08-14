@@ -491,12 +491,14 @@ $(function (win, doc, $) {
                         'input[type="checkbox"], input[type="radio"]',
                         function(e) {
 
-                            var $this = self.getDropdownSearchInput($caller);
-                            var $preview = self.getDropdownPreview($caller);
-                            var $labels = self.getDropdownLabels($caller);
+                            var $preview = self.getDropdownPreview($caller),
+                                $labels = self.getDropdownLabels($caller);
 
                             $labels.each(function() {
                                 $(this).removeClass("active");
+                                var collapseSelector = $(this).attr("data-collapse-target"),
+                                    $collapse = $(collapseSelector);
+                                $collapse.addClass("hidden");
                             });
 
                             // Clear selection preview
@@ -504,8 +506,13 @@ $(function (win, doc, $) {
 
                             // Get all checked labels
                             var $selectedLabels = [];
-                            $($menu).find('input:checked').each(function() {
-                                var $localLabel = $(this).next();
+                            $($menu).find('input:checked').each(function () {
+
+                                var $localLabel = $(this).next(),
+                                    collapseSelector = $localLabel.attr("data-collapse-target"),
+                                    $collapse = $(collapseSelector);
+                              
+                                $collapse.addClass("show");
                                 $localLabel.addClass("active");
                                 $selectedLabels.push($localLabel);
                             });
@@ -529,13 +536,12 @@ $(function (win, doc, $) {
                                 $preview.show();
                             }
 
-
                         });
 
                     // Prevent bootstrap dropdowns from closing when clicking within dropdowns
                     $menu.on('click',
                         '.dropdown-item',
-                        function(e) {
+                        function (e) {
                             e.stopPropagation();
                         });
 
@@ -669,11 +675,134 @@ $(function (win, doc, $) {
         };
 
     }();
-    
+
+    /* treeView */
+    var treeView = function () {
+
+        var dataKey = "treeView",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            event: "click",
+            toggleSelector: '[data-toggle="tree"]',
+            onBeforeComplete: function () { },
+            onComplete: function () { }
+        };
+
+        var methods = {
+            init: function ($caller, methodName) {
+
+                if (methodName) {
+                    if (this[methodName]) {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                // Bind events
+                methods.bind($caller);
+
+            },
+            bind: function ($caller) {
+
+                var selector = $caller.data(dataKey).toggleSelector,
+                    event = $caller.data(dataKey).event;
+
+                $(selector).unbind(event).bind(event,
+                    function () {
+                        methods.toggleNode($caller, $(this).attr("data-node-id"));
+                    });
+                
+            },
+            toggleNode: function ($caller, nodeId) {
+
+                var $toggler = methods.getNodeToggler($caller, nodeId),
+                    $li = methods.getNodeListItem($caller, nodeId),
+                    $child = $li.find("ul").first();
+
+                console.log($child.length);
+
+                if (!$child.is(":visible")) {
+                    $child.slideDown("fast");
+                    $toggler.removeClass("fa-chevron-right")
+                        .addClass("fa-chevron-down");
+                } else {
+                    $child.slideUp("fast");
+                    $toggler.removeClass("fa-chevron-down")
+                        .addClass("fa-chevron-right");
+                }
+
+            },
+            getNodeListItem: function ($caller, nodeId) {
+                return $caller.find("#" + nodeId);
+            },
+            getNodeToggler: function($caller, nodeId) {
+                return $caller.find('[data-node-id="' + nodeId + '"]');
+            }
+        };
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).markdownEditor
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().markdownEditor 
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+
+
     /* Register jQuery Plugins */
     $.fn.extend({
         scrollTo: scrollTo.init,
-        selectDropdown: selectDropdown.init
+        selectDropdown: selectDropdown.init,
+        treeView: treeView.init
 
     });
     
@@ -694,6 +823,9 @@ $(function (win, doc, $) {
 
         /* select dropdown */
         $('[data-provide="select-dropdown"]').selectDropdown();
+
+        /* treeView */
+        $('[data-provide="tree"]').treeView();
 
     });
 

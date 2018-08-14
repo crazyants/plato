@@ -163,7 +163,7 @@ namespace Plato.Categories.Stores
                 if (results != null)
                 {
                     results = await MergeCategoryData(results.ToList());
-                    results = await PrepareChildren(results.ToLookup(c => c.ParentId), new List<TCategory>(), null);
+                    results = await PrepareChildren(results.ToLookup(c => c.ParentId));
                 }
 
                 return results;
@@ -286,23 +286,39 @@ namespace Plato.Categories.Stores
         
         async Task<IList<TCategory>> PrepareChildren(
             ILookup<int, TCategory> lookup,
-            IList<TCategory> output,
-            TCategory parent,
+            IList<TCategory> output = null,
+            TCategory parent = null,
             int id = 0,
             int depth = 0)
         {
-
+        
             if (lookup == null)
             {
                 throw new ArgumentNullException(nameof(lookup));
             }
 
+            if (output == null)
+            {
+                output = new List<TCategory>();
+            }
+
+            if (id == 0)
+            {
+                depth = 0;
+            }
+
             foreach (var category in lookup[id])
             {
 
-                category.Depth = depth;
+                if (parent != null)
+                {
+                    depth++;
+                }
 
+                category.Depth = depth;
+                category.Parent = parent;
                 parent?.Children.Add(category);
+                   
                 output.Add(category);
 
                 // recurse
@@ -311,7 +327,7 @@ namespace Plato.Categories.Stores
                     output,
                     category,
                     category.Id,
-                    depth++);
+                    depth);
             }
             return output;
         }

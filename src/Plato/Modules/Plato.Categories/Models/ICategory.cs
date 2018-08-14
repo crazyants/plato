@@ -43,6 +43,8 @@ namespace Plato.Categories.Models
 
         IList<ICategory> Children { get; set; }
 
+        ICategory Parent { get; set; }
+
         int Depth { get; set; }
 
         void AddOrUpdate<T>(T obj) where T : class;

@@ -40,8 +40,7 @@ namespace Plato.WebApi.Middleware
         {
             
             var webApiOptions = context.RequestServices.GetRequiredService<IOptions<WebApiOptions>>();
-            //var antiforgeryOptions = context.RequestServices.GetRequiredService<IOptions<AntiforgeryOptions>>();
-
+      
             // Register client options for $.Plato.Http
             var script = "$(function (win) { win.PlatoOptions = { url: '{url}', apiKey: '{apiKey}', csrfCookieName: '{csrfCookieName}' } } (window));";
             script = script.Replace("{url}", webApiOptions.Value.Url);

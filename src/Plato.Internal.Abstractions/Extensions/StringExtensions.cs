@@ -212,6 +212,12 @@ namespace Plato.Internal.Abstractions.Extensions
 
         public static string Repeat(this string input, int times)
         {
+
+            if (times <= 0)
+            {
+                return string.Empty;
+            }
+
             var sb = new StringBuilder(times);
             for (var i = 1; i <= times; i++)
             {
