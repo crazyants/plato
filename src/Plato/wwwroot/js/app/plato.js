@@ -496,9 +496,6 @@ $(function (win, doc, $) {
 
                             $labels.each(function() {
                                 $(this).removeClass("active");
-                                var collapseSelector = $(this).attr("data-collapse-target"),
-                                    $collapse = $(collapseSelector);
-                                $collapse.addClass("hidden");
                             });
 
                             // Clear selection preview
@@ -535,7 +532,7 @@ $(function (win, doc, $) {
 
                     // Prevent bootstrap dropdowns from closing when clicking within dropdowns
                     $menu.on('click',
-                        '.dropdown-item',
+                        'label, a',
                         function (e) {
                             e.stopPropagation();
                         });
@@ -683,8 +680,7 @@ $(function (win, doc, $) {
             linkSelector: ".tree-link",
             enableCheckBoxes: true,
             onBeforeComplete: function () { },
-            onClick: function (a) {},
-            onComplete: function () { }
+            onClick: function (a) {}
         };
 
         var methods = {
@@ -719,7 +715,7 @@ $(function (win, doc, $) {
                 
                 // Check / Uncheck child inputs
                 $caller.on('change',
-                    'input[type="checkbox"], input[type="radio"]',
+                    'input[type="checkbox"]',
                     function (e) {
                         var nodeId = $(this).attr("data-node-id"),
                             $li = methods.getNodeListItem($caller, nodeId),
@@ -746,18 +742,15 @@ $(function (win, doc, $) {
             },
             toggleNode: function ($caller, nodeId) {
 
-                var $toggler = methods.getNodeToggler($caller, nodeId),
-                    $li = methods.getNodeListItem($caller, nodeId),
+                var $li = methods.getNodeListItem($caller, nodeId),
                     $child = $li.find("ul").first();
                 
                 if (!$child.is(":visible")) {
-                    $child.slideDown("fast");
-                    $toggler.removeClass("fa-chevron-right")
-                        .addClass("fa-chevron-down");
+                    $li.addClass("show");
+                    $child.slideDown("fast");                  
                 } else {
+                    $li.removeClass("show");
                     $child.slideUp("fast");
-                    $toggler.removeClass("fa-chevron-down")
-                        .addClass("fa-chevron-right");
                 }
 
             },
