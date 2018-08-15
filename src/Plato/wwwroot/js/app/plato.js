@@ -478,6 +478,7 @@ $(function (win, doc, $) {
                     $caller.on('shown.bs.dropdown',
                         function() {
                             $input.focus();
+                            $caller.treeView("expandSelected");
                         });
 
                     // On keyup filter items
@@ -504,9 +505,14 @@ $(function (win, doc, $) {
                             // Get all checked labels
                             var $selectedLabels = [];
                             $($menu).find('input:checked').each(function () {
-                                var $localLabel = $(this).next();
-                                $localLabel.addClass("active");
-                                $selectedLabels.push($localLabel);
+                                var checkId = $(this).attr("id");
+                                var $lbl = $('[for="' + checkId + '"]');
+                                // ensure label to display in preview is added
+                                if ($lbl.length > 0) {
+                                    var $listItem = $lbl.closest(".list-group-item");
+                                    $listItem.addClass("active");
+                                    $selectedLabels.push($lbl);
+                                }
                             });
 
                             if ($selectedLabels.length === 0) {
@@ -575,13 +581,10 @@ $(function (win, doc, $) {
                                 $label.hide();
                                 hidden++;
                             }
-                        
                         }
                     }
-
                 }
-
-
+                
                 //If all items are hidden, show the empty view
                 if (hidden === length) {
                     $noResults.show();
@@ -732,18 +735,17 @@ $(function (win, doc, $) {
                 $caller.on('change',
                     'input[type="checkbox"], input[type="radio"]',
                     function (e) {
-
-                        $caller.find("li").each(function () {
+                        $caller.find(".list-group-item").each(function () {
                             $(this).removeClass("active");
                         });
-
-                        var nodeId = $(this).attr("data-node-id"),
-                            $li = methods.getNodeListItem($caller, nodeId);
-                        if ($(this).is(":checked")) {
-                            $li.addClass("active");
-                        } 
-
-
+                        $caller.find('input:checked').each(function () {
+                            var checkId = $(this).attr("id");
+                            var $lbl = $('[for="' + checkId + '"]');
+                            if ($lbl.length > 0) {
+                                var $item = $lbl.closest(".list-group-item");
+                                $item.addClass("active");
+                            }
+                        });
                     });
 
                 // Check / Uncheck child inputs
@@ -771,7 +773,6 @@ $(function (win, doc, $) {
                         }
                     });
 
-
             },
             expand: function ($caller) {
                 var nodeId = $caller.data(dataKey).selectedNodeId;
@@ -792,17 +793,20 @@ $(function (win, doc, $) {
                 }
             },
             toggle: function ($caller) {
-
                 if ($caller.hasClass("show")) {
                     methods.collapse($caller);
                 } else {
                     methods.expand($caller);
                 }
-
             },
             expandAll: function ($caller) {
                 $caller.find(".list-group-item").each(function() {
                     methods._expand($caller, $(this).attr("id"));
+                });
+            },
+            expandSelected: function($caller) {
+                $caller.find(".active").each(function () {
+                    methods._expandParents($caller, $(this).attr("id"));
                 });
             },
             collapseAll: function ($caller) {
@@ -811,31 +815,38 @@ $(function (win, doc, $) {
                 });
             },
             _toggleNode: function ($caller, nodeId) {
-
-                var $li = methods.getNodeListItem($caller, nodeId);
-                if ($li.hasClass("show")) {
-                    methods._collapse($caller, nodeId);
+                var $item = methods.getNodeListItem($caller, nodeId);
+                if ($item.hasClass("show")) {
+                    methods._collapse($caller, nodeId, true);
                 } else {
-                    methods._expand($caller, nodeId);
+                    methods._expand($caller, nodeId, true);
                 }
-              
             },
-            _toggleNodeAndParents: function($caller, nodeId) {
-                methods._toggleNode($caller, nodeId);
-            },
-            _expand: function ($caller, nodeId) {
-
+            _expand: function ($caller, nodeId, slide) {
                 var $li = methods.getNodeListItem($caller, nodeId),
                     $child = $li.find("ul").first();
                 $li.addClass("show");
-                $child.slideDown("fast");  
-
+                if (slide) {
+                    $child.slideDown("fast");
+                } else {
+                    $child.show();
+                }
             },
-            _collapse: function ($caller, nodeId) {
+            _expandParents: function($caller, nodeId) {
+                var $li = methods.getNodeListItem($caller, nodeId);
+                $li.parents(".list-group-item").each(function() {
+                    methods._expand($caller, $(this).attr("id"), false);
+                });
+            },
+            _collapse: function ($caller, nodeId, slide) {
                 var $li = methods.getNodeListItem($caller, nodeId),
                     $child = $li.find("ul").first();
                 $li.removeClass("show");
-                $child.slideUp("fast");
+                if (slide) {
+                    $child.slideUp("fast");
+                } else {
+                    $child.hide();
+                }
             },
             getNodeListItem: function ($caller, nodeId) {
                 return $caller.find("#" + nodeId);
