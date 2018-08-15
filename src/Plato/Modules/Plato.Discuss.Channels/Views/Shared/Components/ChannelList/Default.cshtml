@@ -1,0 +1,75 @@
+﻿@using Plato.Categories.Services
+@model ChannelsViewModel
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">@T["Channels"]</h6>
+    </card-title>
+    <card-body>
+        @if (Model.Channels != null)
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                @foreach (var channel in Model.Channels)
+                {
+                    <li class="list-group-item">
+
+                        <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
+                            <i class="fal fa-pencil"></i>
+                            @T["Edit"]
+                        </a>
+
+                        @if (!String.IsNullOrEmpty(channel.IconCss))
+                        {
+                            <div class="float-left mt-3 mr-3">
+                                <span class="channel-icon channel-icon-md" style="background-color: @channel.BackColor; color: @channel.ForeColor">
+                                    <i class="@channel.IconCss"></i>
+                                </span>
+                            </div>
+                        }
+
+                        <div class="float-left">
+                            <h6 class="d-md-inline align-middle">
+                                <a asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@channel.Id" class="font-weight-bold">
+                                    @channel.Name
+                                </a>
+                            </h6>
+                            @if (!String.IsNullOrEmpty(channel.Description))
+                            {
+                                <div class="text-muted">
+                                    @channel.Description
+                                </div>
+                            }
+                            @if (channel.Children.Count > 0)
+                            {
+                                <ul class="list-inline">
+                                    @foreach (var child in channel.Children)
+                                    {
+                                        <li class="float-left mr-2">
+                                            <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@child.Id">
+                                                @child.Name
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+
+                        </div>
+
+
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    <h6>@T["No channels found"]</h6>
+                </li>
+            </ul>
+
+        }
+    </card-body>
+</card>
+
+

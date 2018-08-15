@@ -1,5 +1,11 @@
 ﻿@model ChannelIndexViewModel
 
+
+@await DisplayAsync(new View("ChannelList", new
+{
+    filterOpts = @Model.FilterOpts
+}))
+
 @await DisplayAsync(new View("TopicList", new
 {
     filterOpts = @Model.FilterOpts,

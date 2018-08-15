@@ -79,10 +79,10 @@ namespace Plato.Discuss.Channels.Controllers
                 else
                 {
                     builder.Add(S["Channels"], channels => channels
-                        .Action("Index", "Admin", "Plato.Discuss.Channels")
+                        .Action("Index", "Admin", "Plato.Discuss.Channels", new RouteValueDictionary { ["Id"] = 0 })
                         .LocalNav()
                     );
-                    foreach (var parent in parents)
+                    foreach (var parent in parents.Reverse())
                     {
                         builder.Add(S[parent.Name], channel => channel
                             .Action("Index", "Admin", "Plato.Discuss.Channels", new RouteValueDictionary { ["Id"] = parent.Id })

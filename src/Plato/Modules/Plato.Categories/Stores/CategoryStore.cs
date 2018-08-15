@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -164,6 +165,7 @@ namespace Plato.Categories.Stores
                 {
                     results = await MergeCategoryData(results.ToList());
                     results = await PrepareChildren(results.ToLookup(c => c.ParentId));
+                    results = results.OrderBy(r => r.SortOrder);
                 }
 
                 return results;
@@ -321,40 +323,22 @@ namespace Plato.Categories.Stores
         }
         
         async Task<IList<TCategory>> PrepareChildren(
-            ILookup<int, TCategory> lookup,
+            ILookup<int, TCategory> categories,
             IList<TCategory> output = null,
             TCategory parent = null,
-            int id = 0,
+            int parentId = 0,
             int depth = 0)
         {
         
-            if (lookup == null)
-            {
-                throw new ArgumentNullException(nameof(lookup));
-            }
+            if (categories == null) throw new ArgumentNullException(nameof(categories));
+            if (output == null) output = new List<TCategory>();
+            if (parentId == 0) depth = 0;
 
-            if (output == null)
-            {
-                output = new List<TCategory>();
-            }
-
-            if (id == 0)
-            {
-                depth = 0;
-            }
-
-            foreach (var category in lookup[id])
+            foreach (var category in categories[parentId])
             {
 
-                if (depth < 0)
-                {
-                    depth = 0;
-                }
-
-                if (parent != null)
-                {
-                    depth++;
-                }
+                if (depth < 0) depth = 0;
+                if (parent != null) depth++;
 
                 category.Depth = depth;
                 category.Parent = parent;
@@ -363,14 +347,11 @@ namespace Plato.Categories.Stores
                 output.Add(category);
 
                 // recurse
-                await PrepareChildren(
-                    lookup,
-                    output,
-                    category,
-                    category.Id,
-                    depth--);
+                await PrepareChildren(categories, output, category, category.Id, depth--);
             }
+
             return output;
+
         }
 
         private IEnumerable<TCategory> RecurseParents(

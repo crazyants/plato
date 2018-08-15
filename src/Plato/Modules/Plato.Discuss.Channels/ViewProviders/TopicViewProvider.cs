@@ -65,7 +65,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             
             return Views(View<ChannelsViewModel>("Discuss.Channels.Index.Sidebar", model =>
                 {
-                    model.Channels = categories;
+                    model.Channels = categories.Where(c => c.ParentId == 0);
                     return model;
                 }).Zone("sidebar").Order(1)
             );

@@ -47,7 +47,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         {
             var indexViewModel = await GetIndexModel(category?.Id ?? 0);
             return Views(
-                View<ChannelsViewModel>("Admin.Index.Header", model => indexViewModel).Zone("header").Order(1),
+                View<CategoryBase>("Admin.Index.Header", model => category).Zone("header").Order(1),
                 View<ChannelsViewModel>("Admin.Index.Tools", model => indexViewModel).Zone("tools").Order(1),
                 View<ChannelsViewModel>("Admin.Index.Content", model => indexViewModel).Zone("content").Order(1)
             );
