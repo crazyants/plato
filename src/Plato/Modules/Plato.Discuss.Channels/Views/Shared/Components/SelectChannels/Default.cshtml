@@ -29,17 +29,27 @@
         {
             var nodeId = htmlName + "-node-" + channel.Value.Id;
             var checkId = htmlName + "-check-" + channel.Value.Id;
-            var css = @channel.IsSelected ? "active" : "";
+            var css = @channel.IsSelected ? "list-group-item active" : "list-group-item";
+            var check = channel.IsSelected ? " checked" : string.Empty;
 
             if (channel.Value.ParentId == id)
             {
                 sb.Append("<li id=\"")
                     .Append(nodeId)
                     .Append("\" class=\"")
-                    .Append("list-group-item")
+                    .Append(css)
+                    .Append("\" data-filter-value=\"")
+                    .Append(channel.Value.Name)
                     .Append("\">");
 
-                sb.Append("<div class=\"p-2\">");
+                sb.Append("<div class=\"p-2\"");
+                if (channel.Value.Depth > 0)
+                {
+                    sb.Append(" style=\"margin-left: ")
+                        .Append(channel.Value.Depth)
+                        .Append("rem;\"");
+                }
+                sb.Append("\">");
 
                 if (channel.Value.Children.Count > 0)
                 {
@@ -48,6 +58,12 @@
                         .Append("\" data-toggle=\"tree\" href=\"#\">");
                     sb.Append("<i class=\"fal fa-chevron-right\"></i>");
                     sb.Append("</a>");
+                }
+                else
+                {
+                    sb.Append("<span class=\"btn toggler\">")
+                        .Append("<i class=\"fal\"></i>")
+                        .Append("</span>");
                 }
 
                 sb.Append("<input type=\"radio\" id=\"")
@@ -58,23 +74,33 @@
                     .Append(channel.Value.Id)
                     .Append("\" data-node-id=\"")
                     .Append(nodeId)
-                    .Append("\" />");
+                    .Append("\"")
+                    .Append(check)
+                    .Append("/>");
 
-                sb.Append("<label class=\"")
-                    .Append(css)
-                    .Append("\" for=\"")
+                sb.Append("<label for=\"")
                     .Append(checkId)
-                    .Append("\" data-value=\"")
-                    .Append(channel.Value.Name)
                     .Append("\">");
 
                 sb.Append("<i class=\"fal mr-2 check-icon\"></i>");
 
+                var foreColor = channel.Value.ForeColor;
+                if (String.IsNullOrEmpty(foreColor))
+                {
+                    foreColor = "#fff";
+                }
+
+                var bgColor = channel.Value.BackColor;
+                if (String.IsNullOrEmpty(bgColor))
+                {
+                    bgColor = "rgba(125, 125, 125, .5)";
+                }
+
                 sb.Append("<span class=\"channel-icon channel-icon-sm mr-2\" style=\"background-color: ")
-                    .Append(channel.Value.BackColor)
+                    .Append(bgColor)
                     .Append("; color: ")
-                    .Append(channel.Value.ForeColor)
-                    .Append("\">")
+                    .Append(foreColor)
+                    .Append(";\">")
                     .Append("<i class=\"")
                     .Append(channel.Value.IconCss)
                     .Append("\"></i>")
@@ -89,7 +115,7 @@
                 // Recuse
                 BuildChannelsRecursivly(channels, htmlName, sb, channel.Value.Id);
 
-              
+
                 sb.Append("</li>");
 
             }
@@ -105,16 +131,14 @@
     }
 
 }
-@{
-    var output = BuildChannels(Model);
-}
+
+
 
 <div class="dropdown" data-provide="select-dropdown">
     <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fal fa-cog float-right"></i>
         @T["Channel"]
     </a>
-    <div class="dropdown-arrow dropdown-arrow-right"></div>
     <div class="dropdown-menu dropdown-menu-right" style="width: 475px;" aria-labelledby="channelDropdown">
         <div class="dropdown-header">
             <a href="#" class="text-muted float-right" data-toggle="dropdown">
@@ -131,9 +155,9 @@
 
         @if (Model.SelectedChannels != null)
         {
-        
+      
             <div class="tree select-dropdown" data-provide="tree">
-                @Html.Raw(output)
+                @Html.Raw(BuildChannels(Model))
             </div>
 
                 @*@foreach (var channel in Model.SelectedChannels)

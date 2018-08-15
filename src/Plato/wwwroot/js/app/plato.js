@@ -492,9 +492,9 @@ $(function (win, doc, $) {
                         function(e) {
 
                             var $preview = self.getDropdownPreview($caller),
-                                $labels = self.getDropdownLabels($caller);
+                                $items = self.getDropdownListGroupItems($caller);
 
-                            $labels.each(function() {
+                            $items.each(function() {
                                 $(this).removeClass("active");
                             });
 
@@ -542,30 +542,45 @@ $(function (win, doc, $) {
             },
             filterItems: function($caller) {
 
-                var $labels = this.getDropdownLabels($caller),
+                var $items = this.getDropdownListGroupItems($caller),
                     $input = this.getDropdownSearchInput($caller),
                     $noResults = this.getDropdownSearchNoResults($caller),
                     word = $input.val().trim(),
-                    length = $labels.length,
+                    length = $items.length,
                     hidden = 0;
-
+                
                 if (word.length === 0) {
-                    $($labels.show());
+                    $items.show();
+                    $caller.treeView("collapseAll");
+                } 
+
+                var i = 0, $label = null;
+
+                // first ensure all matches are visible
+                for (i = 0; i < length; i++) {
+                    $label = $($items[i]);
+                    if ($label.length > 0 && $label.data("filterValue")) {
+                        if ($label.data("filterValue").toLowerCase().startsWith(word)) {
+                            $label.parent(".list-group").show();
+                            $label.show();
+                        }}
                 }
 
-                for (var i = 0; i < length; i++) {
-
-                    var $label = $($labels[i]);
-                    if ($label.length > 0 && $label.data("value")) {
-                        if ($label.data("value").toLowerCase().startsWith(word)) {
-                            $label.show();
-                        } else {
-                            $label.hide();
-                            hidden++;
+                // Next hide all others if children are not visible
+                for (i = 0; i < length; i++) {
+                    $label = $($items[i]);
+                    if ($label.length > 0 && $label.data("filterValue")) {
+                        if (!$label.data("filterValue").toLowerCase().startsWith(word)) {
+                            if (!$label.find(".list-group").is(":visible")) {
+                                $label.hide();
+                                hidden++;
+                            }
+                        
                         }
                     }
 
                 }
+
 
                 //If all items are hidden, show the empty view
                 if (hidden === length) {
@@ -581,9 +596,9 @@ $(function (win, doc, $) {
             getDropdownMenu: function($caller) {
                 return $caller.find(".dropdown-menu");
             },
-            getDropdownLabels: function($caller) {
+            getDropdownListGroupItems: function($caller) {
                 var $menu = this.getDropdownMenu($caller);
-                return $menu.find("label");
+                return $menu.find(".list-group-item");
             },
             getDropdownSearchInput: function($caller) {
                 var $menu = this.getDropdownMenu($caller);
@@ -675,6 +690,7 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
+            selectedNodeId: null,
             event: "click",
             toggleSelector: '[data-toggle="tree"]',
             linkSelector: ".tree-link",
@@ -694,7 +710,7 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-
+                
                 // Bind events
                 methods.bind($caller);
 
@@ -710,7 +726,7 @@ $(function (win, doc, $) {
                 $(toggleSelector).unbind(event).bind(event,
                     function (e) {
                         e.preventDefault();
-                        methods.toggleNode($caller, $(this).attr("data-node-id"));
+                        methods._toggleNode($caller, $(this).attr("data-node-id"));
                     });
 
                 $caller.on('change',
@@ -757,19 +773,69 @@ $(function (win, doc, $) {
 
 
             },
-            toggleNode: function ($caller, nodeId) {
+            expand: function ($caller) {
+                var nodeId = $caller.data(dataKey).selectedNodeId;
+                if (!nodeId) {
+                    return;
+                }
+                if (!$caller.hasClass("show")) {
+                    methods._expand($caller, nodeId);
+                }
+            },
+            collapse: function ($caller) {
+                var nodeId = $caller.data(dataKey).selectedNodeId;
+                if (!nodeId) {
+                    return;
+                }
+                if ($caller.hasClass("show")) {
+                    methods._collapse($caller, nodeId);
+                }
+            },
+            toggle: function ($caller) {
+
+                if ($caller.hasClass("show")) {
+                    methods.collapse($caller);
+                } else {
+                    methods.expand($caller);
+                }
+
+            },
+            expandAll: function ($caller) {
+                $caller.find(".list-group-item").each(function() {
+                    methods._expand($caller, $(this).attr("id"));
+                });
+            },
+            collapseAll: function ($caller) {
+                $caller.find(".list-group-item").each(function () {
+                    methods._collapse($caller, $(this).attr("id"));
+                });
+            },
+            _toggleNode: function ($caller, nodeId) {
+
+                var $li = methods.getNodeListItem($caller, nodeId);
+                if ($li.hasClass("show")) {
+                    methods._collapse($caller, nodeId);
+                } else {
+                    methods._expand($caller, nodeId);
+                }
+              
+            },
+            _toggleNodeAndParents: function($caller, nodeId) {
+                methods._toggleNode($caller, nodeId);
+            },
+            _expand: function ($caller, nodeId) {
 
                 var $li = methods.getNodeListItem($caller, nodeId),
                     $child = $li.find("ul").first();
-                
-                if (!$child.is(":visible")) {
-                    $li.addClass("show");
-                    $child.slideDown("fast");                  
-                } else {
-                    $li.removeClass("show");
-                    $child.slideUp("fast");
-                }
+                $li.addClass("show");
+                $child.slideDown("fast");  
 
+            },
+            _collapse: function ($caller, nodeId) {
+                var $li = methods.getNodeListItem($caller, nodeId),
+                    $child = $li.find("ul").first();
+                $li.removeClass("show");
+                $child.slideUp("fast");
             },
             getNodeListItem: function ($caller, nodeId) {
                 return $caller.find("#" + nodeId);

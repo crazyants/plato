@@ -310,6 +310,11 @@ namespace Plato.Categories.Stores
             foreach (var category in lookup[id])
             {
 
+                if (depth < 0)
+                {
+                    depth = 0;
+                }
+
                 if (parent != null)
                 {
                     depth++;
@@ -327,7 +332,7 @@ namespace Plato.Categories.Stores
                     output,
                     category,
                     category.Id,
-                    depth);
+                    depth--);
             }
             return output;
         }

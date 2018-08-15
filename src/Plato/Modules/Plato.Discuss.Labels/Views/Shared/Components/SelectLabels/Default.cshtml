@@ -22,14 +22,14 @@
 
         @if (Model.SelectedLabels != null)
         {
-            <div class="list-group-flush select-dropdown">
+            <div class="list-group-flush tree select-dropdown">
                 @foreach (var label in Model.SelectedLabels)
                 {
                     var check = label.IsSelected ? "checked" : "";
                     var uniqueId = "label-" + label.Value.Id;
                     var css = label.IsSelected ? "list-group-item dropdown-item active" : "list-group-item dropdown-item";
                     <input name="@Model.HtmlName" type="checkbox" value="@label.Value.Id" id="@uniqueId" @check/>
-                    <label data-value="@label.Value.Name" class="@css" for="@uniqueId">
+                    <label data-filter-value="@label.Value.Name" class="@css" for="@uniqueId">
                         <i class="fal mr-2 check-icon"></i>
                         <span class="btn btn-sm" style="background-color: @label.Value.BackColor; color: @label.Value.ForeColor">
                             @label.Value.Name
