@@ -467,8 +467,6 @@
 
 .select-dropdown-preview i.check-icon { display: none; }
 
-.dropdown-item:hover > a.toggler { color: #fff; }
-
 /* ------------------------- */
 /* Plato Layout */
 /* ------------------------- */
@@ -925,11 +923,12 @@
 /* tree view */
 /* ------------------------- */
 
+.tree > ul { margin: 0; padding: 0;  list-style: none; }
+.tree li.list-group-item {  padding: 0 !important; border: 0; border-top: 1px solid rgba(0, 0, 0, 0.125); }
+.tree li.list-group-item > ul { border-top-width: 1px;  color: initial; }
 
-.tree ul { margin: 0; padding: 0;  list-style: none; }
-.tree > ul { padding: 0; }
-.tree > ul li > a.toggler { width: 22px; padding: 0; margin-right: 0.25rem; transform: rotate(0); text-align: center; vertical-align: middle; transition: transform .15s ease-in; }
-.tree > ul li.show > a.toggler { transform: rotate(90deg); }
-.tree > ul .toggler i { display: inline-block; margin: 0; padding: 0; }
+.tree li > div > a.toggler { color: inherit; width: 22px; padding: 0; margin-right: 0.25rem; transform: rotate(0); text-align: center; vertical-align: middle; transition: transform .15s ease-in; }
+.tree li.show > div > a.toggler { transform: rotate(90deg); }
 
-.select-dropdown.tree ul { padding: 0; }
+.tree .list-group-item.active > a.toggler,
+.tree .list-group-item.active > a.toggler:hover { color: #fff; }

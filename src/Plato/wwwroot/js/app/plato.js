@@ -712,7 +712,24 @@ $(function (win, doc, $) {
                         e.preventDefault();
                         methods.toggleNode($caller, $(this).attr("data-node-id"));
                     });
-                
+
+                $caller.on('change',
+                    'input[type="checkbox"], input[type="radio"]',
+                    function (e) {
+
+                        $caller.find("li").each(function () {
+                            $(this).removeClass("active");
+                        });
+
+                        var nodeId = $(this).attr("data-node-id"),
+                            $li = methods.getNodeListItem($caller, nodeId);
+                        if ($(this).is(":checked")) {
+                            $li.addClass("active");
+                        } 
+
+
+                    });
+
                 // Check / Uncheck child inputs
                 $caller.on('change',
                     'input[type="checkbox"]',

@@ -26,6 +26,7 @@
     background-color: #F8F9FF;
 }
 
+.tree a.tree-link.active,
 .list-group-check-list input:checked + label {
     color: white;
     background-color: #007bff;
