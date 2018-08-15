@@ -8,12 +8,14 @@ using Plato.Internal.Models;
 
 namespace Plato.Categories.Models
 {
-    public class CategoryBase  : IModel<CategoryBase>, ICategory
+    public class CategoryBase :
+        IComparable<ICategory>,
+        IModel<ICategory>,
+        ICategory
     {
 
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
-
-
+        
         public int Id { get; set; }
 
         public int ParentId { get; set; }
@@ -138,6 +140,19 @@ namespace Plato.Categories.Models
                 ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
         }
 
+        public int CompareTo(ICategory other)
+        {
+            if (other == null)
+                return 1;
+            var sortOrderCompare = other.SortOrder;
+            if (this.SortOrder == sortOrderCompare)
+                return 0;
+            if (this.SortOrder < sortOrderCompare)
+                return -1;
+            if (this.SortOrder > sortOrderCompare)
+                return 1;
+            return 0;
+        }
     }
 
 }

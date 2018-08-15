@@ -43,10 +43,9 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(CategoryBase viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(CategoryBase category, IUpdateModel updater)
         {
-            var indexViewModel = await GetIndexModel();
-         
+            var indexViewModel = await GetIndexModel(category?.Id ?? 0);
             return Views(
                 View<ChannelsViewModel>("Admin.Index.Header", model => indexViewModel).Zone("header").Order(1),
                 View<ChannelsViewModel>("Admin.Index.Tools", model => indexViewModel).Zone("tools").Order(1),
@@ -213,13 +212,13 @@ namespace Plato.Discuss.Channels.ViewProviders
         }
 
 
-        async Task<ChannelsViewModel> GetIndexModel()
+        async Task<ChannelsViewModel> GetIndexModel(int parentId)
         {
             var feature = await GetcurrentFeature();
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             return new ChannelsViewModel()
             {
-                Channels = categories
+                Channels = categories.Where(c => c.ParentId == parentId)
             };
         }
         

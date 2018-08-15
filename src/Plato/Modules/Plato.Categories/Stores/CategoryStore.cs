@@ -171,6 +171,42 @@ namespace Plato.Categories.Stores
             });
         }
 
+        public async Task<IEnumerable<TCategory>> GetParentsByIdAsync(int categoryId)
+        {
+            var category = await GetByIdAsync(categoryId);
+            if (category == null)
+            {
+                return null;
+            }
+
+            var categories = await GetByFeatureIdAsync(category.FeatureId);
+            if (categories == null)
+            {
+                return null;
+            }
+
+            return RecurseParents(categories.ToList(), category.Id);
+
+        }
+
+        public async Task<IEnumerable<TCategory>> GetChildrenByIdAsync(int categoryId)
+        {
+            var category = await GetByIdAsync(categoryId);
+            if (category == null)
+            {
+                return null;
+            }
+
+            var categories = await GetByFeatureIdAsync(category.FeatureId);
+            if (categories == null)
+            {
+                return null;
+            }
+
+            return RecurseChildren(categories.ToList(), category.Id);
+            
+        }
+
         #endregion
 
         #region "Private Methods"
@@ -337,9 +373,62 @@ namespace Plato.Categories.Stores
             return output;
         }
 
+        private IEnumerable<TCategory> RecurseParents(
+            IList<TCategory> categories,
+            int rootId,
+            IList<TCategory> output = null)
+        {
+            if (output == null)
+            {
+                output = new List<TCategory>();
+            }
+            
+            foreach (var category in categories)
+            {
+                if (category.Id == rootId)
+                {
+                    if (category.ParentId > 0)
+                    {
+                        output.Add(category);
+                        RecurseParents(categories, category.ParentId, output);
+                    }
+                    else
+                    {
+                        output.Add(category);
+                    }
+                }
+            }
 
+            return output;
+            
+        }
+
+        private IEnumerable<TCategory> RecurseChildren(
+            IList<TCategory> categories,
+            int rootId,
+            IList<TCategory> output = null)
+        {
+
+            if (output == null)
+            {
+                output = new List<TCategory>();
+            }
+            
+            foreach (var category in categories)
+            {
+                if (category.ParentId == rootId)
+                {
+                    output.Add(category);
+                    RecurseChildren(categories, category.Id, output);
+                }
+            }
+
+            return output;
+
+        }
+        
         #endregion
 
-    }
+        }
     
 }

@@ -9,7 +9,7 @@
         @if (Model.Channels != null)
         {
             <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var channel in Model.Channels.Where(c => c.ParentId == 0))
+                @foreach (var channel in Model.Channels)
                 {
                     <li class="list-group-item">
                         
@@ -29,7 +29,7 @@
                         
                         <div class="float-left">
                             <h6 class="d-md-inline align-middle">
-                                <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="font-weight-bold">
+                                <a asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@channel.Id" class="font-weight-bold">
                                     @channel.Name
                                 </a>
                             </h6>

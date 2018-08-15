@@ -70,7 +70,7 @@ namespace Plato.Discuss.Labels.Controllers
             var model = await _viewProvider.ProvideIndexAsync(new LabelBase(), this);
             return View(model);
         }
-
+        
         public async Task<IActionResult> Create()
         {
 

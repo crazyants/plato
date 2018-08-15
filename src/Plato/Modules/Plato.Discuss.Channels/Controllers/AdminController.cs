@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
@@ -12,6 +15,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Channels.Controllers
@@ -50,26 +54,52 @@ namespace Plato.Discuss.Channels.Controllers
             S = stringLocalizer;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id)
         {
 
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
             //{
             //    return Unauthorized();
             //}
-            
+
+       
+            var parents = await _categoryStore.GetParentsByIdAsync(id);
+
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Admin", "Plato.Admin")
                     .LocalNav()
-                ).Add(S["Channels"]);
+                );
+
+                if (parents == null)
+                {
+                    builder.Add(S["Channels"]);
+                }
+                else
+                {
+                    builder.Add(S["Channels"], channels => channels
+                        .Action("Index", "Admin", "Plato.Discuss.Channels")
+                        .LocalNav()
+                    );
+                    foreach (var parent in parents)
+                    {
+                        builder.Add(S[parent.Name], channel => channel
+                            .Action("Index", "Admin", "Plato.Discuss.Channels", new RouteValueDictionary { ["Id"] = parent.Id })
+                            .LocalNav()
+                        );
+                    }
+                }
+
+
+
             });
-            
-            var model = await _viewProvider.ProvideIndexAsync(new CategoryBase(), this);
+
+            var category = await _categoryStore.GetByIdAsync(id);
+            var model = await _viewProvider.ProvideIndexAsync(category, this);
             return View(model);
         }
-
+        
         public async Task<IActionResult> Create()
         {
 
@@ -85,9 +115,10 @@ namespace Plato.Discuss.Channels.Controllers
             });
             
             // We need to pass along the featureId
+            var feature = await GetcurrentFeature();
             var model = await _viewProvider.ProvideEditAsync(new CategoryBase
             {
-                FeatureId = await GetFeatureIdAsync() 
+                FeatureId = feature.Id
 
             }, this);
             return View(model);
@@ -110,10 +141,11 @@ namespace Plato.Discuss.Channels.Controllers
                 iconCss = viewModel.IconPrefix + iconCss;
             }
 
+            var feature = await GetcurrentFeature();
             var category =  new Channel()
             {
                 ParentId = viewModel.ParentId,
-                FeatureId = await GetFeatureIdAsync(),
+                FeatureId = feature.Id,
                 Name = viewModel.Name,
                 Description = viewModel.Description,
                 ForeColor = viewModel.ForeColor,
@@ -163,7 +195,7 @@ namespace Plato.Discuss.Channels.Controllers
             return View(model);
 
         }
-
+        
         [HttpPost]
         [ActionName(nameof(Edit))]
         public  async Task<IActionResult> EditPost(int id)
@@ -219,20 +251,18 @@ namespace Plato.Discuss.Channels.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-
-
-        async Task<int> GetFeatureIdAsync()
+        
+        async Task<ShellModule> GetcurrentFeature()
         {
-            var feature = await _contextFacade.GetFeatureByAreaAsync();
-            if (feature != null)
+            var featureId = "Plato.Discuss.Channels";
+            var feature = await _contextFacade.GetFeatureByModuleIdAsync(featureId);
+            if (feature == null)
             {
-                return feature.Id;
+                throw new Exception($"No feature could be found for the Id '{featureId}'");
             }
-
-            throw new Exception($"Could not find required feture registration for Plato.Discuss.Channels");
+            return feature;
         }
-
+        
     }
 
 }
