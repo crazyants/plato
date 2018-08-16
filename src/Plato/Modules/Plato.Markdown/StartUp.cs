@@ -9,6 +9,7 @@ using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Markdown.Assets;
 using Plato.Markdown.Services;
+using Plato.Markdown.Subscribers;
 using Plato.Markdown.ViewAdaptors;
 
 namespace Plato.Markdown
@@ -34,7 +35,7 @@ namespace Plato.Markdown
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
 
-            // Register message broker subscriber
+            // Register message broker subscribers
             services.AddSingleton<IBrokerSubscriber, MarkdownSubscriber>();
 
         }

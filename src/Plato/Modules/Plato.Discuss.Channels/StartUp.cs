@@ -16,6 +16,8 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Channels.Navigation;
+using Plato.Discuss.Channels.Subscribers;
+using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Discuss.Channels
 {
@@ -54,7 +56,10 @@ namespace Plato.Discuss.Channels
 
             // Register view adaptors
             services.AddScoped<IViewAdaptorProvider, DiscussViewAdaptorProvider>();
-            
+
+            // Register message broker subscribers
+            services.AddSingleton<IBrokerSubscriber, EntitySubscriber<Topic>>();
+
         }
 
         public override void Configure(
@@ -62,6 +67,11 @@ namespace Plato.Discuss.Channels
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            // Initialize message broker subscriptions
+            var subscriber = app.ApplicationServices.GetRequiredService<IBrokerSubscriber>();
+            subscriber?.Subscribe();
+
             routes.MapAreaRoute(
                 name: "HomeDiscussChannels",
                 areaName: "Plato.Discuss.Channels",
