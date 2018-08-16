@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Stores;
@@ -28,27 +27,27 @@ namespace Plato.Discuss.Channels.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            FilterOptions filterOptions)
+            FilterOptions filterOpts)
         {
 
-            if (filterOptions == null)
+            if (filterOpts == null)
             {
-                filterOptions = new FilterOptions();
+                filterOpts = new FilterOptions();
             }
 
-            var model = await GetIndexModel(filterOptions);
+            var model = await GetIndexModel(filterOpts);
             return View(model);
 
         }
 
 
-        async Task<ChannelsViewModel> GetIndexModel(FilterOptions filterOptionsd)
+        async Task<ChannelsViewModel> GetIndexModel(FilterOptions filterOpts)
         {
             var feature = await GetcurrentFeature();
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
             return new ChannelsViewModel()
             {
-                Channels = categories.Where(c => c.ParentId == filterOptionsd.ChannelId)
+                Channels = categories.Where(c => c.ParentId == filterOpts.ChannelId)
             };
         }
 
@@ -75,7 +74,6 @@ namespace Plato.Discuss.Channels.ViewComponents
                     IsSelected = selected.Any(v => v == c.Id),
                     Value = c
                 })
-                //.OrderBy(s => s.Value.Name)
                 .ToList();
 
             return selections;

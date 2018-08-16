@@ -46,8 +46,6 @@ namespace Plato.Discuss.ViewModels
         Username,
         Email
     }
-
-
-
+    
 
 }

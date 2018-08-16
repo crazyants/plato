@@ -210,8 +210,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             return Task.FromResult(output);
 
         }
-
-
+        
         async Task<ChannelsViewModel> GetIndexModel(int parentId)
         {
             var feature = await GetcurrentFeature();
