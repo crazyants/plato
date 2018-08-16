@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Internal.Hosting.Abstractions;
@@ -32,10 +33,14 @@ namespace Plato.Discuss.Controllers
         private readonly IPostManager<Topic> _postManager;
         private readonly IPostManager<Reply> _replyManager;
         private readonly IAlerter _alerter;
-        
+        private readonly IBreadCrumbManager _breadCrumbManager;
+
         public IHtmlLocalizer T { get; }
+
+        public IStringLocalizer S { get; }
         
         public HomeController(
+            IStringLocalizer<HomeController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
             IContextFacade contextFacade,
             IEntityStore<Topic> entityStore,
@@ -44,7 +49,7 @@ namespace Plato.Discuss.Controllers
             IViewProviderManager<Reply> replyViewProvider,
             IPostManager<Topic> postManager,
             IPostManager<Reply> replyManager,
-            IAlerter alerter)
+            IAlerter alerter, IBreadCrumbManager breadCrumbManager)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -53,7 +58,11 @@ namespace Plato.Discuss.Controllers
             _postManager = postManager;
             _replyManager = replyManager;
             _alerter = alerter;
+            _breadCrumbManager = breadCrumbManager;
+
             T = localizer;
+            S = stringLocalizer;
+
         }
 
         #endregion
@@ -76,6 +85,17 @@ namespace Plato.Discuss.Controllers
             {
                 pagerOptions = new PagerOptions();
             }
+            
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"]);
+              
+            });
+            
 
             //await CreateSampleData();
 

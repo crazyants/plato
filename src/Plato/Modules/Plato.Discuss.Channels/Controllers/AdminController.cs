@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -26,8 +25,8 @@ namespace Plato.Discuss.Channels.Controllers
         private readonly ICategoryStore<Channel> _categoryStore;
         private readonly ICategoryManager<Channel> _categoryManager;
         private readonly IViewProviderManager<CategoryBase> _viewProvider;
-        private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
