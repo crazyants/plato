@@ -31,6 +31,7 @@
                 {
                     foreach (var child in channel.Children)
                     {
+                        var details = channel.GetOrCreate<ChannelDetails>();
                         var childBgColor = !String.IsNullOrEmpty(channel.BackColor) ? channel.BackColor : "#666";
                         var childForeColor = !String.IsNullOrEmpty(channel.ForeColor) ? channel.ForeColor : "#fff";
                         <li class="list-group-item">
@@ -45,7 +46,7 @@
                             else
                             {
                                 <div class="float-right ml-2">
-                                    <avatar class="avatar" user-id="1"/>
+                                    <avatar class="avatar" user-id="@details.LatestTopic.CreatedUserId"/>
                                 </div>
                                 <div class="float-right text-right">
                                     <ol class="list-inline text-muted">
@@ -61,7 +62,7 @@
                                         </li>
                                     </ol>
                                     <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
-                                        12 minutes ago
+                                        <date utc="@details.LatestTopic.CreatedDate"></date>
                                     </a>
                                 </div>
                             }

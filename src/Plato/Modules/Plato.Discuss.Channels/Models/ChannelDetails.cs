@@ -9,7 +9,7 @@ namespace Plato.Discuss.Channels.Models
 
         public int TotalReplies { get; set; }
 
-        public LatestEntity LatestTopic { get; set; } 
+        public LatestEntity LatestTopic { get; set; }  = new LatestEntity();
 
     }
 

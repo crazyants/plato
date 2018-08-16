@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstractions.Settings;
 
@@ -136,7 +137,14 @@ namespace Plato.Internal.Hosting.Web.Routing
 
             // Use router
             appBuilder.UseRouter(router);
-
+            
+            // Activate all message broker subscriptions
+            var subscribers = serviceProvider.GetServices<IBrokerSubscriber>();
+            foreach (var subscriber in subscribers)
+            {
+                subscriber?.Subscribe();
+            }
+            
             // Return new pipline
             var pipeline = appBuilder.Build();
             return pipeline;

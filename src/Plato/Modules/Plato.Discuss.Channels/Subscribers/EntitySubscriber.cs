@@ -6,6 +6,11 @@ using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Discuss.Channels.Subscribers
 {
+
+    /// <summary>
+    /// Updates category meta data whenever an entity is created.
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
 
@@ -22,7 +27,6 @@ namespace Plato.Discuss.Channels.Subscribers
 
         public void Subscribe()
         {
-            // Add a subscription to convert markdown to html
             _broker.Sub<TEntity>(new MessageOptions()
             {
                 Key = "EntityCreated"
@@ -40,7 +44,26 @@ namespace Plato.Discuss.Channels.Subscribers
 
         async Task EntityCreated(TEntity entity)
         {
-         
+          
+            // No need to update cateogry for private entities
+            if (entity.IsPrivate)
+            {
+                return;
+            }
+
+            // No need to update cateogry for soft deleted entities
+            if (entity.IsDeleted)
+            {
+                return;
+            }
+
+            // No need to update cateogry for entities flagged as spam
+            if (entity.IsSpam)
+            {
+                return;
+            }
+
+
             // Ensure we have a categoryId for the newly created entity
             if (entity.CategoryId <= 0)
             {
@@ -55,18 +78,10 @@ namespace Plato.Discuss.Channels.Subscribers
             }
 
             // Update details with latest entity
-
             var details = channel.GetOrCreate<ChannelDetails>();
-
-            if (details.LatestTopic == null)
-            {
-                details.LatestTopic = new LatestEntity();
-            }
-
             details.LatestTopic.Id = entity.Id;
             details.LatestTopic.CreatedUserId = entity.CreatedUserId;
             details.LatestTopic.CreatedDate = entity.CreatedDate;
-
             channel.AddOrUpdate<ChannelDetails>(details);
 
             // Save the update details 
