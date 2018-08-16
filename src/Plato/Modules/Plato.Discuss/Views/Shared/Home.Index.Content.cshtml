@@ -1,10 +1,5 @@
 ﻿@model HomeIndexViewModel
 
-@await DisplayAsync(new View("ChannelList", new
-{
-    parentId = 0
-}))
-
 @await DisplayAsync(new View("TopicList", new
 {
     filterOpts = @Model.FilterOpts,

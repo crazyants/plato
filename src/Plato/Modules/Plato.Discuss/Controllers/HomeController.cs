@@ -12,7 +12,6 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Models;
-using Plato.Entities.Services;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -97,7 +96,7 @@ namespace Plato.Discuss.Controllers
             });
             
 
-            //await CreateSampleData();
+            await CreateSampleData();
 
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
@@ -460,6 +459,7 @@ namespace Plato.Discuss.Controllers
             var topic = new Topic()
             {
                 Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
+                CategoryId = rnd.Next(1, 6),
                 Message = @"Hi There, 
 
 # header 1

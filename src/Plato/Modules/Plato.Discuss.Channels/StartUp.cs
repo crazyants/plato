@@ -15,6 +15,7 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Discuss.Channels.Navigation;
 
 namespace Plato.Discuss.Channels
 {
@@ -32,7 +33,8 @@ namespace Plato.Discuss.Channels
 
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
-            
+            services.AddScoped<INavigationProvider, SiteMenu>();
+
             // Data stores
             services.AddScoped<ICategoryRepository<Channel>, CategoryRepository<Channel>>();
             services.AddScoped<ICategoryStore<Channel>, CategoryStore<Channel>>();
@@ -60,14 +62,20 @@ namespace Plato.Discuss.Channels
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-
-
             routes.MapAreaRoute(
-                name: "DiscussChannel",
+                name: "HomeDiscussChannels",
                 areaName: "Plato.Discuss.Channels",
-                template: "discuss/channel/{id}/{alias}",
+                template: "discuss/channels",
                 defaults: new { controller = "Home", action = "Index" }
             );
+
+            routes.MapAreaRoute(
+                name: "HomeDiscussChannel",
+                areaName: "Plato.Discuss.Channels",
+                template: "discuss/channels/{id}/{alias}",
+                defaults: new { controller = "Home", action = "Index" }
+            );
+
 
         }
     }

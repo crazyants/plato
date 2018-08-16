@@ -28,7 +28,7 @@ namespace Plato.Categories.Models
         string BackColor { get; set; }
 
         int SortOrder { get; set; }
-
+        
         int CreatedUserId { get; set; }
 
         DateTimeOffset? CreatedDate { get; set; }

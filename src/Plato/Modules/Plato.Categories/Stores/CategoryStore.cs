@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -17,6 +16,9 @@ namespace Plato.Categories.Stores
 
     public class CategoryStore<TCategory> : ICategoryStore<TCategory> where TCategory : class, ICategory
     {
+
+        public const string ById = "ById";
+        public const string ByFeatureId = "ByFeatureId";
 
         private readonly ICategoryRepository<TCategory> _categoryRepository;
         private readonly ICategoryDataStore<CategoryData> _categoryDataStore;
@@ -58,7 +60,8 @@ namespace Plato.Categories.Stores
                 }
 
                 _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), newCategory.Id);
+                _cacheManager.CancelTokens(this.GetType(), ById, newCategory.Id);
+                _cacheManager.CancelTokens(this.GetType(), ByFeatureId, newCategory.FeatureId);
 
             }
 
@@ -82,7 +85,8 @@ namespace Plato.Categories.Stores
                 }
 
                 _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), updatedCategory.Id);
+                _cacheManager.CancelTokens(this.GetType(), ById, updatedCategory.Id);
+                _cacheManager.CancelTokens(this.GetType(), ByFeatureId, updatedCategory.FeatureId);
 
             }
 
@@ -101,8 +105,10 @@ namespace Plato.Categories.Stores
                     _logger.LogInformation("Deleted category '{0}' with id {1}",
                         model.Name, model.Id);
                 }
+
                 _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), model.Id);
+                _cacheManager.CancelTokens(this.GetType(), ById, model.Id);
+                _cacheManager.CancelTokens(this.GetType(), ByFeatureId, model.FeatureId);
             }
 
             return success;
@@ -111,7 +117,7 @@ namespace Plato.Categories.Stores
 
         public virtual async Task<TCategory> GetByIdAsync(int id)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var category = await _categoryRepository.SelectByIdAsync(id);
@@ -122,7 +128,8 @@ namespace Plato.Categories.Stores
         public virtual IQuery<TCategory> QueryAsync()
         {
             var query = new CategoryQuery<TCategory>(this);
-            return _dbQuery.ConfigureQuery<TCategory>(query); ;
+            return _dbQuery.ConfigureQuery<TCategory>(query);
+            ;
         }
 
         public virtual async Task<IPagedResults<TCategory>> SelectAsync(params object[] args)
@@ -150,7 +157,7 @@ namespace Plato.Categories.Stores
 
         public virtual async Task<IEnumerable<TCategory>> GetByFeatureIdAsync(int featureId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), featureId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByFeatureId, featureId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
@@ -187,7 +194,7 @@ namespace Plato.Categories.Stores
                 return null;
             }
 
-            return RecurseParents(categories.ToList(), category.Id);
+            return RecurseParents(categories.ToList(), category.Id).Reverse();
 
         }
 
@@ -206,7 +213,7 @@ namespace Plato.Categories.Stores
             }
 
             return RecurseChildren(categories.ToList(), category.Id);
-            
+
         }
 
         #endregion
@@ -309,7 +316,7 @@ namespace Plato.Categories.Stores
                 if (type != null)
                 {
                     var obj = JsonConvert.DeserializeObject(data.Value, type);
-                    category.AddOrUpdate(type, (ISerializable)obj);
+                    category.AddOrUpdate(type, (ISerializable) obj);
                 }
             }
 
@@ -321,7 +328,7 @@ namespace Plato.Categories.Stores
         {
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
-        
+
         async Task<IList<TCategory>> PrepareChildren(
             ILookup<int, TCategory> categories,
             IList<TCategory> output = null,
@@ -329,7 +336,7 @@ namespace Plato.Categories.Stores
             int parentId = 0,
             int depth = 0)
         {
-        
+
             if (categories == null) throw new ArgumentNullException(nameof(categories));
             if (output == null) output = new List<TCategory>();
             if (parentId == 0) depth = 0;
@@ -343,7 +350,7 @@ namespace Plato.Categories.Stores
                 category.Depth = depth;
                 category.Parent = parent;
                 parent?.Children.Add(category);
-                   
+
                 output.Add(category);
 
                 // recurse
@@ -354,7 +361,7 @@ namespace Plato.Categories.Stores
 
         }
 
-        private IEnumerable<TCategory> RecurseParents(
+        IEnumerable<TCategory> RecurseParents(
             IList<TCategory> categories,
             int rootId,
             IList<TCategory> output = null)
@@ -363,7 +370,7 @@ namespace Plato.Categories.Stores
             {
                 output = new List<TCategory>();
             }
-            
+
             foreach (var category in categories)
             {
                 if (category.Id == rootId)
@@ -381,10 +388,10 @@ namespace Plato.Categories.Stores
             }
 
             return output;
-            
+
         }
 
-        private IEnumerable<TCategory> RecurseChildren(
+        IEnumerable<TCategory> RecurseChildren(
             IList<TCategory> categories,
             int rootId,
             IList<TCategory> output = null)
@@ -394,7 +401,7 @@ namespace Plato.Categories.Stores
             {
                 output = new List<TCategory>();
             }
-            
+
             foreach (var category in categories)
             {
                 if (category.ParentId == rootId)
@@ -407,9 +414,9 @@ namespace Plato.Categories.Stores
             return output;
 
         }
-        
+
         #endregion
 
-        }
-    
+    }
+
 }

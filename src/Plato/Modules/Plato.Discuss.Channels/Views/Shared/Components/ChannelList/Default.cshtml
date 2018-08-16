@@ -3,13 +3,27 @@
 
 @foreach (var channel in Model.Channels)
 {
+    var bgColor = !String.IsNullOrEmpty(channel.BackColor) ? channel.BackColor : "#666";
+    var foreColor = !String.IsNullOrEmpty(channel.ForeColor) ? channel.ForeColor : "#fff";
     <card class="card card-body-flush">
         <card-title>
-            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
-                <i class="fal fa-pencil"></i>
-                @T["Edit"]
-            </a>
+            
+            @if (Model.EnableEditOptions)
+            {
+                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
+                    <i class="fal fa-pencil"></i>
+                    @T["Edit"]
+                </a>
+            }
+
             <h6 class="card-title">@channel.Name</h6>
+            @if (!String.IsNullOrEmpty(@channel.Description))
+            {
+                <span class="text-muted">
+                    @channel.Description
+                </span>
+            }
+
         </card-title>
         <card-body>
             
@@ -18,17 +32,46 @@
                 {
                     foreach (var child in channel.Children)
                     {
+                        var childBgColor = !String.IsNullOrEmpty(channel.BackColor) ? channel.BackColor : "#666";
+                        var childForeColor = !String.IsNullOrEmpty(channel.ForeColor) ? channel.ForeColor : "#fff";
                         <li class="list-group-item">
-                            
-                            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@child.Id" class="btn btn-secondary float-right">
-                                <i class="fal fa-pencil"></i>
-                                @T["Edit"]
-                            </a>
+
+                            @if (Model.EnableEditOptions)
+                            {
+                                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@child.Id" class="btn btn-secondary float-right">
+                                    <i class="fal fa-pencil"></i>
+                                    @T["Edit"]
+                                </a>
+                            }
+                            else
+                            {
+                                <div class="float-right ml-2">
+                                    <avatar class="avatar" user-id="1"/>
+                                </div>
+                                <div class="float-right text-right">
+                                    <ol class="list-inline text-muted">
+                                        <li class="list-inline-item">
+                                            <span title="@T["Topics"]" data-toggle="tooltip">
+                                                24 <i class="fal fa-comment-alt-lines"></i>
+                                            </span>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <span title="@T["Replies"]" data-toggle="tooltip">
+                                                56 <i class="fal fa-comment-alt fa-flip-horizontal"></i>
+                                            </span>
+                                        </li>
+                                    </ol>
+                                    <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
+                                        12 minutes ago
+                                    </a>
+                                </div>
+                            }
+
 
                             @if (!String.IsNullOrEmpty(child.IconCss))
                             {
                                 <div class="float-left mt-3 mr-3">
-                                    <span class="channel-icon channel-icon-md" style="background-color: @child.BackColor; color: @child.ForeColor">
+                                    <span class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
                                         <i class="@child.IconCss"></i>
                                     </span>
                                 </div>
@@ -36,9 +79,18 @@
 
                             <div class="float-left">
                                 <h6 class="d-md-inline align-middle">
-                                    <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@channel.Id" class="font-weight-bold">
-                                        @child.Name
-                                    </a>
+                                    @if (Model.EnableEditOptions)
+                                    {
+                                        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@channel.Id" class="font-weight-bold">
+                                            @child.Name
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@channel.Id" class="font-weight-bold">
+                                            @child.Name
+                                        </a>
+                                    }
                                 </h6>
                                 @if (!String.IsNullOrEmpty(channel.Description))
                                 {
@@ -52,9 +104,18 @@
                                         @foreach (var subchannel in child.Children)
                                         {
                                             <li class="float-left mr-2">
-                                                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                                                    @subchannel.Name
-                                                </a>
+                                                @if (Model.EnableEditOptions)
+                                                {
+                                                    <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
+                                                        @subchannel.Name
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
+                                                        @subchannel.Name
+                                                    </a>
+                                                }
                                             </li>
                                         }
                                     </ul>

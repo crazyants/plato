@@ -54,45 +54,64 @@ namespace Plato.Discuss.Channels.Controllers
 
         #region "Actions"
 
+
         public async Task<IActionResult> Index(
             int id,
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
 
-            var category = await _channelStore.GetByIdAsync(id);
-            if (category == null)
+            var category = new Channel();
+            if (id > 0)
             {
-                return NotFound();
+                category = await _channelStore.GetByIdAsync(id);
+                if (category == null)
+                {
+                    return NotFound();
+                }
             }
-
+         
             // Check permissions
 
             // Build breadcrumb
             var parents = await _channelStore.GetParentsByIdAsync(id);
             _breadCrumbManager.Configure(builder =>
             {
+
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"], home => home
+                    .Action("Index", "Home", "Plato.Discuss")
                     .LocalNav()
                 );
 
                 if (parents == null)
                 {
-                    builder.Add(S["Discuss"]);
+                    builder.Add(S["Channels"]);
                 }
                 else
                 {
-                    builder.Add(S["Discuss"], channels => channels
-                        .Action("Index", "Home", "Plato.Discuss", new RouteValueDictionary { ["Id"] = 0 })
+
+                    builder.Add(S["Channels"], channels => channels
+                        .Action("Index", "Home", "Plato.Discuss.Channels")
                         .LocalNav()
                     );
+
                     foreach (var parent in parents)
                     {
-                        builder.Add(S[parent.Name], channel => channel
-                            .Action("Index", "Admin", "Plato.Discuss.Channels", new RouteValueDictionary { ["Id"] = parent.Id })
-                            .LocalNav()
-                        );
+                        if (parent.Id != id)
+                        {
+                            builder.Add(S[parent.Name], channel => channel
+                                .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary { ["Id"] = parent.Id })
+                                .LocalNav()
+                            );
+                        }
+                        else
+                        {
+                            builder.Add(S[parent.Name]);
+                        }
+                      
                     }
                 }
                 

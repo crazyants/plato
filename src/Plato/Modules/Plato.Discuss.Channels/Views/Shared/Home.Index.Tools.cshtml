@@ -1,6 +1,16 @@
 ﻿@model Plato.Categories.Models.CategoryBase
 
-<a asp-controller="Home" asp-area="Plato.Discuss" asp-action="Create" asp-route-channel="@Model.Id" class="btn btn-primary" title="Reply">
-    <i class="fal fa-fw fa-plus"></i>
-    @T["New Topic"]
-</a>
+@if (Model != null)
+{
+    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Create" asp-route-channel="@Model.Id" class="btn btn-primary" title="Reply">
+        <i class="fal fa-fw fa-plus"></i>
+        @T["New Topic"]
+    </a>
+}
+else
+{
+    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Create" class="btn btn-primary" title="Reply">
+        <i class="fal fa-fw fa-plus"></i>
+        @T["New Topic"]
+    </a>
+}
