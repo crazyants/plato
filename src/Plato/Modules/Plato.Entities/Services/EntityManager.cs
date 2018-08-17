@@ -112,7 +112,7 @@ namespace Plato.Entities.Services
                 await _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityCreated"
-                }, model);
+                }, entity);
 
                 // Return success
                 return result.Success(entity);
@@ -176,7 +176,7 @@ namespace Plato.Entities.Services
                 await _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityUpdated"
-                }, model);
+                }, entity);
 
                 return result.Success(entity);
             }

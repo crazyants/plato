@@ -44,13 +44,14 @@ namespace Plato.Internal.Layout.TagHelpers
         {
 
             // Client & server
+            var utcDateTime = Utc ?? DateTimeOffset.UtcNow;
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             var settings = await _contextFacade.GetSiteSettingsAsync();
 
             // Get local date time, only apply client offset if user is authenticated
             var localDateTime = await _localDateTimeProvider.GetLocalDateTimeAsync(new LocalDateTimeOptions()
             {
-                UtcDateTime = Utc ?? DateTimeOffset.UtcNow,
+                UtcDateTime = utcDateTime,
                 ServerTimeZone = settings?.TimeZone,
                 ClientTimeZone = user?.TimeZone,
                 ApplyClientTimeZoneOffset = user != null
@@ -68,7 +69,7 @@ namespace Plato.Internal.Layout.TagHelpers
             output.Attributes.Add("title", formattedDateTime);
           
             output.Content.SetHtmlContent(this.Pretty
-                ? builder.AppendHtml(localDateTime.DateTime.ToPrettyDate())
+                ? builder.AppendHtml(utcDateTime.DateTime.ToPrettyDate())
                 : builder.AppendHtml(formattedDateTime));
 
         }

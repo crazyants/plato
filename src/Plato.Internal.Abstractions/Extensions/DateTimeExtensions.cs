@@ -13,15 +13,8 @@ namespace Plato.Internal.Abstractions.Extensions
 
         public static string ToPrettyDate(this DateTime? d)
         {
-            if (d == null)
-            {
-                return string.Empty;
-            }
-
-            return ToPrettyDate((DateTime) d);
-
+            return d == null ? string.Empty : ToPrettyDate((DateTime) d);
         }
-
 
         public static string ToPrettyDate(this DateTime d)
         {

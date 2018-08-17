@@ -24,7 +24,7 @@ namespace Plato.Internal.Abstractions.Extensions
                 return string.Empty;
             }
 
-            return ((DateTimeOffset)d).DateTime.ToPrettyDate();
+            return ToPrettyDate((DateTimeOffset)d);
         }
 
         public static string ToPrettyDate(this DateTimeOffset d)

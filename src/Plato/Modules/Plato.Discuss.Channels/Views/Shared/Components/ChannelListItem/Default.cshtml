@@ -22,17 +22,15 @@ else
         <ol class="list-inline text-muted">
             <li class="list-inline-item">
                 <span title="@T["Topics"]" data-toggle="tooltip">
-                    @details.TotalTopics <i class="fal fa-comment-alt-lines"></i>
+                    @details.TotalTopics.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
                 </span>
             </li>
             <li class="list-inline-item">
                 <span title="@T["Replies"]" data-toggle="tooltip">
-                    @details.TotalReplies <i class="fal fa-comment-alt fa-flip-horizontal"></i>
+                    @details.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt fa-flip-horizontal"></i>
                 </span>
             </li>
         </ol>
-
-        <h1>@details.LatestTopic.Id</h1>
 
         <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
             <date utc="@details.LatestTopic.CreatedDate"></date>

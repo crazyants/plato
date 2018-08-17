@@ -39,21 +39,15 @@ namespace Plato.Discuss.Channels.Subscribers
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
-
-            // Updated
-            _broker.Sub<TEntity>(new MessageOptions()
-            {
-                Key = "EntityUpdated"
-            }, async message => await EntityUpdated(message.What));
-
+            
         }
 
         public void Unsubscribe()
         {
             _broker.Unsub<TEntity>(new MessageOptions()
             {
-                Key = "EntityUpdated"
-            }, async message => await EntityUpdated(message.What));
+                Key = "EntityCreated"
+            }, async message => await EntityCreated(message.What));
 
         }
         
@@ -103,49 +97,6 @@ namespace Plato.Discuss.Channels.Subscribers
             // Update details with latest entity details
             var details = channel.GetOrCreate<ChannelDetails>();
             details.TotalTopics = details.TotalTopics + 1;
-            channel.AddOrUpdate<ChannelDetails>(details);
-
-            // Save the updated details 
-            await _channelManager.UpdateAsync(channel);
-
-        }
-        
-        async Task EntityUpdated(TEntity entity)
-        {
-          
-            // No need to update cateogry for private entities
-            if (entity.IsPrivate)
-            {
-                return;
-            }
-
-            // No need to update cateogry for soft deleted entities
-            if (entity.IsDeleted)
-            {
-                return;
-            }
-
-            // No need to update cateogry for entities flagged as spam
-            if (entity.IsSpam)
-            {
-                return;
-            }
-            
-            // Ensure we have a categoryId for the newly created entity
-            if (entity.CategoryId <= 0)
-            {
-                return;
-            }
-            
-            // Ensure we found the category
-            var channel = await _channelStore.GetByIdAsync(entity.CategoryId);
-            if (channel == null)
-            {
-                return;
-            }
-
-            // Update category details with updated entity details
-            var details = channel.GetOrCreate<ChannelDetails>();
             details.LatestTopic.Id = entity.Id;
             details.LatestTopic.CreatedUserId = entity.CreatedUserId;
             details.LatestTopic.CreatedDate = entity.CreatedDate;
@@ -153,9 +104,10 @@ namespace Plato.Discuss.Channels.Subscribers
 
             // Save the updated details 
             await _channelManager.UpdateAsync(channel);
-            
-        }
 
+        }
+        
+   
         #endregion
 
     }
