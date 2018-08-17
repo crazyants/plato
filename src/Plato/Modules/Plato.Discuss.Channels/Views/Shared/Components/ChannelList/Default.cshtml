@@ -1,216 +1,82 @@
-﻿@model ChannelsViewModel
+﻿@model ChannelListViewModel
 
-@foreach (var channel in Model.Channels)
+@if (Model.SelectedChannelId == 0)
 {
-    var bgColor = !String.IsNullOrEmpty(channel.BackColor) ? channel.BackColor : "#666";
-    var foreColor = !String.IsNullOrEmpty(channel.ForeColor) ? channel.ForeColor : "#fff";
-    <card class="card card-body-flush">
-        <card-title>
-            
-            @if (Model.EnableEditOptions)
-            {
-                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
-                    <i class="fal fa-pencil"></i>
-                    @T["Edit"]
-                </a>
-            }
+    @foreach (var channel in Model.Channels)
+    {
+        <card class="card card-body-flush">
+            <card-title>
 
-            <h6 class="card-title">@channel.Name</h6>
-            @if (!String.IsNullOrEmpty(@channel.Description))
-            {
-                <span class="text-muted">
-                    @channel.Description
-                </span>
-            }
-
-        </card-title>
-        <card-body>
-            
-            <ul class="list-group list-group-flush list-group-hover">
-                @if (channel.Children.Count > 0)
+                @if (Model.EnableEditOptions)
                 {
-                    foreach (var child in channel.Children)
+                    <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
+                        <i class="fal fa-pencil"></i>
+                        @T["Edit"]
+                    </a>
+                }
+
+                <h6 class="card-title">@channel.Name</h6>
+                @if (!String.IsNullOrEmpty(@channel.Description))
+                {
+                    <span class="text-muted">
+                        @channel.Description
+                    </span>
+                }
+
+            </card-title>
+            <card-body>
+
+                <ul class="list-group list-group-flush list-group-hover">
+                    @if (channel.Children.Count > 0)
                     {
-                        var details = channel.GetOrCreate<ChannelDetails>();
-                        var childBgColor = !String.IsNullOrEmpty(channel.BackColor) ? channel.BackColor : "#666";
-                        var childForeColor = !String.IsNullOrEmpty(channel.ForeColor) ? channel.ForeColor : "#fff";
-                        <li class="list-group-item">
-
-                            @if (Model.EnableEditOptions)
-                            {
-                                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@child.Id" class="btn btn-secondary float-right">
-                                    <i class="fal fa-pencil"></i>
-                                    @T["Edit"]
-                                </a>
-                            }
-                            else
-                            {
-                                <div class="float-right ml-2">
-                                    <avatar class="avatar" user-id="@details.LatestTopic.CreatedUserId"/>
-                                </div>
-                                <div class="float-right text-right">
-                                    <ol class="list-inline text-muted">
-                                        <li class="list-inline-item">
-                                            <span title="@T["Topics"]" data-toggle="tooltip">
-                                                24 <i class="fal fa-comment-alt-lines"></i>
-                                            </span>
-                                        </li>
-                                        <li class="list-inline-item">
-                                            <span title="@T["Replies"]" data-toggle="tooltip">
-                                                56 <i class="fal fa-comment-alt fa-flip-horizontal"></i>
-                                            </span>
-                                        </li>
-                                    </ol>
-                                    <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
-                                        <date utc="@details.LatestTopic.CreatedDate"></date>
-                                    </a>
-                                </div>
-                            }
-
-
-                            @if (!String.IsNullOrEmpty(child.IconCss))
-                            {
-                                <div class="float-left mt-3 mr-3">
-                                    <span class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
-                                        <i class="@child.IconCss"></i>
-                                    </span>
-                                </div>
-                            }
-
-                            <div class="float-left">
-                                <h6 class="d-md-inline align-middle">
-                                    @if (Model.EnableEditOptions)
-                                    {
-                                        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@channel.Id" class="font-weight-bold">
-                                            @child.Name
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@channel.Id" class="font-weight-bold">
-                                            @child.Name
-                                        </a>
-                                    }
-                                </h6>
-                                @if (!String.IsNullOrEmpty(channel.Description))
-                                {
-                                    <div class="text-muted">
-                                        @channel.Description
-                                    </div>
-                                }
-                                @if (child.Children.Count > 0)
-                                {
-                                    <ul class="list-inline">
-                                        @foreach (var subchannel in child.Children)
-                                        {
-                                            <li class="float-left mr-2">
-                                                @if (Model.EnableEditOptions)
-                                                {
-                                                    <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                                                        @subchannel.Name
-                                                    </a>
-                                                }
-                                                else
-                                                {
-                                                    <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                                                        @subchannel.Name
-                                                    </a>
-                                                }
-                                            </li>
-                                        }
-                                    </ul>
-                                }
-
-                            </div>
-
-                        </li>
-                    }
-                }
-                else
-                {
-
-                    <li class="list-group-item">
-                        <h6>@T["No child channels"]</h6>
-                    </li>
-
-                }
-            </ul>
-
-
-        </card-body>
-    </card>
-
-}
-
-@*<card class="card card-body-flush">
-    <card-title>
-        <h6 class="card-title">@T["Channels"]</h6>
-    </card-title>
-    <card-body>
-        @if (Model.Channels.Any())
-        {
-            <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var channel in Model.Channels)
-                {
-                    <li class="list-group-item">
-
-
-                        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
-                            <i class="fal fa-pencil"></i>
-                            @T["Edit"]
-                        </a>
-
-                        @if (!String.IsNullOrEmpty(channel.IconCss))
+                        foreach (var child in channel.Children)
                         {
-                            <div class="float-left mt-3 mr-3">
-                                <span class="channel-icon channel-icon-md" style="background-color: @channel.BackColor; color: @channel.ForeColor">
-                                    <i class="@channel.IconCss"></i>
-                                </span>
-                            </div>
+                            <li class="list-group-item">
+                                @await DisplayAsync(new View("ChannelListItem", new
+                                {
+                                    Channel = child,
+                                    enableEditOptions = Model.EnableEditOptions
+                                }))
+                            </li>
                         }
+                    }
+                    else
+                    {
 
-                        <div class="float-left">
-                            <h6 class="d-md-inline align-middle">
-                                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@channel.Id" class="font-weight-bold">
-                                    @channel.Name
-                                </a>
-                            </h6>
-                            @if (!String.IsNullOrEmpty(channel.Description))
-                            {
-                                <div class="text-muted">
-                                    @channel.Description
-                                </div>
-                            }
-                            @if (channel.Children.Count > 0)
-                            {
-                                <ul class="list-inline">
-                                    @foreach (var child in channel.Children)
-                                    {
-                                        <li class="float-left mr-2">
-                                            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@child.Id">
-                                                @child.Name
-                                            </a>
-                                        </li>
-                                    }
-                                </ul>
-                            }
+                        <li class="list-group-item">
+                            <h6>@T["No child channels"]</h6>
+                        </li>
 
-                        </div>
-
-                    </li>
-                }
-            </ul>
-        }
-        else
-        {
-            <ul class="list-group list-group-flush list-group-hover">
-                <li class="list-group-item">
-                    <h6>@T["No channels found"]</h6>
-                </li>
-            </ul>
-
-        }
-    </card-body>
-</card>*@
+                    }
+                </ul>
+            </card-body>
+        </card>
+    }
+}
+else
+{
+    @if (Model.Channels.Any())
+     {
+         <card class="card card-body-flush">
+             <card-title>
+                 <h6 class="card-title">@T["Child Channels"]</h6>
+             </card-title>
+             <card-body>
+                 <ul class="list-group list-group-flush list-group-hover">
+                     @foreach (var channel in Model.Channels)
+                     {
+                         <li class="list-group-item">
+                             @await DisplayAsync(new View("ChannelListItem", new
+                             {
+                                 Channel = channel,
+                                 enableEditOptions = Model.EnableEditOptions
+                             }))
+                         </li>
+                     }
+                 </ul>
+             </card-body>
+         </card>
+     }
+}
 
 

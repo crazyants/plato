@@ -1,0 +1,95 @@
+﻿@model ChannelListItemViewModel
+
+@{
+    var details = Model.Channel.GetOrCreate<ChannelDetails>();
+    var childBgColor = !String.IsNullOrEmpty(Model.Channel.BackColor) ? Model.Channel.BackColor : "#666";
+    var childForeColor = !String.IsNullOrEmpty(Model.Channel.ForeColor) ? Model.Channel.ForeColor : "#fff";
+}
+
+@if (Model.EnableEditOptions)
+{
+    <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Channel.Id" class="btn btn-secondary float-right">
+        <i class="fal fa-pencil"></i>
+        @T["Edit"]
+    </a>
+}
+else
+{
+    <div class="float-right ml-2">
+        <avatar class="avatar" user-id="@details.LatestTopic.CreatedUserId" />
+    </div>
+    <div class="float-right text-right">
+        <ol class="list-inline text-muted">
+            <li class="list-inline-item">
+                <span title="@T["Topics"]" data-toggle="tooltip">
+                    @details.TotalTopics <i class="fal fa-comment-alt-lines"></i>
+                </span>
+            </li>
+            <li class="list-inline-item">
+                <span title="@T["Replies"]" data-toggle="tooltip">
+                    @details.TotalReplies <i class="fal fa-comment-alt fa-flip-horizontal"></i>
+                </span>
+            </li>
+        </ol>
+        <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
+            <date utc="@details.LatestTopic.CreatedDate"></date>
+        </a>
+    </div>
+}
+
+@if (!String.IsNullOrEmpty(Model.Channel.IconCss))
+{
+    <div class="float-left mt-3 mr-3">
+        <span class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
+            <i class="@Model.Channel.IconCss"></i>
+        </span>
+    </div>
+}
+
+    <div class="float-left">
+        <h6 class="d-md-inline align-middle">
+            @if (Model.EnableEditOptions)
+            {
+                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
+                    @Model.Channel.Name
+                </a>
+            }
+            else
+            {
+                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
+                    @Model.Channel.Name
+                </a>
+            }
+        </h6>
+        @if (!String.IsNullOrEmpty(Model.Channel.Description))
+        {
+            <div class="text-muted">
+                @Model.Channel.Description
+            </div>
+        }
+        @if (Model.Channel.Children.Count > 0)
+        {
+            <ul class="list-inline">
+                @foreach (var subchannel in Model.Channel.Children)
+                {
+                    <li class="float-left mr-2">
+                        @if (Model.EnableEditOptions)
+                        {
+                            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
+                                @subchannel.Name
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
+                                @subchannel.Name
+                            </a>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+
+    </div>
+
+

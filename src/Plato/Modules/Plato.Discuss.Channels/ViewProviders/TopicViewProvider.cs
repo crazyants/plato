@@ -63,7 +63,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
             
-            return Views(View<ChannelsViewModel>("Discuss.Channels.Index.Sidebar", model =>
+            return Views(View<ChannelListViewModel>("Discuss.Channels.Index.Sidebar", model =>
                 {
                     model.Channels = categories.Where(c => c.ParentId == 0);
                     return model;
@@ -85,7 +85,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(
-                View<ChannelsViewModel>("Discuss.Channels.Index.Sidebar", model =>
+                View<ChannelListViewModel>("Discuss.Channels.Index.Sidebar", model =>
                 {
                     model.Channels = categories;
                     return model;
@@ -156,7 +156,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                     
                     var user = await _contextFacade.GetAuthenticatedUserAsync();
 
-                    // Add new entity categories
+                    // Add new entity category relationship
                     foreach (var channelId in channelsToAdd)
                     {
                         await _entityCategoryStore.CreateAsync(new EntityCategory()
@@ -174,7 +174,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                         if (channelId > 0)
                         {
                             topic.CategoryId = channelId;
-                            await _entityStore.UpdateAsync(topic);
+                            await _topicManager.UpdateAsync(topic);
                             break;
                         }
                       

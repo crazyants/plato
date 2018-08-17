@@ -25,24 +25,89 @@ namespace Plato.Discuss.Channels.Subscribers
             _channelStore = channelStore;
         }
 
+        #region "Implementation"
+
         public void Subscribe()
         {
+
+            // Created
             _broker.Sub<TEntity>(new MessageOptions()
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
+
+            // Updated
+            _broker.Sub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityUpdated"
+            }, async message => await EntityUpdated(message.What));
+
         }
 
         public void Unsubscribe()
         {
             _broker.Unsub<TEntity>(new MessageOptions()
             {
-                Key = "EntityCreated"
-            }, async message => await EntityCreated(message.What));
+                Key = "EntityUpdated"
+            }, async message => await EntityUpdated(message.What));
+
+        }
+        
+        public void Dispose()
+        {
+            Unsubscribe();
+        }
+
+        #endregion
+
+        #region "Private Methods"
+
+        async Task EntityCreated(TEntity entity)
+        {
+
+            // No need to update cateogry for private entities
+            if (entity.IsPrivate)
+            {
+                return;
+            }
+
+            // No need to update cateogry for soft deleted entities
+            if (entity.IsDeleted)
+            {
+                return;
+            }
+
+            // No need to update cateogry for entities flagged as spam
+            if (entity.IsSpam)
+            {
+                return;
+            }
+
+            // Ensure we have a categoryId for the newly created entity
+            if (entity.CategoryId <= 0)
+            {
+                return;
+            }
+
+            // Ensure we found the category
+            var channel = await _channelStore.GetByIdAsync(entity.CategoryId);
+            if (channel == null)
+            {
+                return;
+            }
+
+            // Update details with latest entity details
+            var details = channel.GetOrCreate<ChannelDetails>();
+            details.TotalTopics = details.TotalTopics + 1;
+            channel.AddOrUpdate<ChannelDetails>(details);
+
+            // Save the updated details 
+            await _channelStore.UpdateAsync(channel);
 
         }
 
-        async Task EntityCreated(TEntity entity)
+
+        async Task EntityUpdated(TEntity entity)
         {
           
             // No need to update cateogry for private entities
@@ -62,8 +127,7 @@ namespace Plato.Discuss.Channels.Subscribers
             {
                 return;
             }
-
-
+            
             // Ensure we have a categoryId for the newly created entity
             if (entity.CategoryId <= 0)
             {
@@ -77,22 +141,20 @@ namespace Plato.Discuss.Channels.Subscribers
                 return;
             }
 
-            // Update details with latest entity
+            // Update category details with updated entity details
             var details = channel.GetOrCreate<ChannelDetails>();
             details.LatestTopic.Id = entity.Id;
             details.LatestTopic.CreatedUserId = entity.CreatedUserId;
             details.LatestTopic.CreatedDate = entity.CreatedDate;
             channel.AddOrUpdate<ChannelDetails>(details);
 
-            // Save the update details 
+            // Save the updated details 
             await _channelStore.UpdateAsync(channel);
             
         }
 
-        public void Dispose()
-        {
-            Unsubscribe();
-        }
+        #endregion
+
     }
 
 }

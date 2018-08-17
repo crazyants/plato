@@ -48,8 +48,8 @@ namespace Plato.Discuss.Channels.ViewProviders
             var indexViewModel = await GetIndexModel(category?.Id ?? 0);
             return Views(
                 View<CategoryBase>("Admin.Index.Header", model => category).Zone("header").Order(1),
-                View<ChannelsViewModel>("Admin.Index.Tools", model => indexViewModel).Zone("tools").Order(1),
-                View<ChannelsViewModel>("Admin.Index.Content", model => indexViewModel).Zone("content").Order(1)
+                View<ChannelListViewModel>("Admin.Index.Tools", model => indexViewModel).Zone("tools").Order(1),
+                View<ChannelListViewModel>("Admin.Index.Content", model => indexViewModel).Zone("content").Order(1)
             );
 
         }
@@ -211,11 +211,11 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
         
-        async Task<ChannelsViewModel> GetIndexModel(int parentId)
+        async Task<ChannelListViewModel> GetIndexModel(int parentId)
         {
             var feature = await GetcurrentFeature();
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            return new ChannelsViewModel()
+            return new ChannelListViewModel()
             {
                 Channels = categories.Where(c => c.ParentId == parentId)
             };

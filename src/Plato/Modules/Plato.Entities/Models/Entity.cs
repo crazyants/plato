@@ -2,7 +2,6 @@
 using System.Data;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Globalization;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
@@ -124,6 +123,9 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("FeatureId"))
                 FeatureId = Convert.ToInt32(dr["FeatureId"]);
 
+            if (dr.ColumnIsNotNull("CategoryId"))
+                CategoryId = Convert.ToInt32(dr["CategoryId"]);
+            
             if (dr.ColumnIsNotNull("Title"))
                 Title = Convert.ToString(dr["Title"]);
 

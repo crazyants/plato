@@ -46,10 +46,6 @@ namespace Plato.Markdown
             IServiceProvider serviceProvider)
         {
 
-            // set-up parsing event listeners
-            //var subscriber = app.ApplicationServices.GetRequiredService<IBrokerSubscriber>();
-            //subscriber?.Subscribe();
-            
             routes.MapAreaRoute(
                 name: "PlatoMarkdownWebApi",
                 areaName: "Plato.Markdown",

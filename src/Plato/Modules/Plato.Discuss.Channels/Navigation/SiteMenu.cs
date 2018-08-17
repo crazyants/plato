@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Localization;
 using System;
+using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Channels.Navigation
@@ -23,7 +24,11 @@ namespace Plato.Discuss.Channels.Navigation
             builder
                 .Add(T["Discuss"], configuration => configuration
                     .Add(T["Channels"], int.MinValue, installed => installed
-                        .Action("Index", "Home", "Plato.Discuss.Channels")
+                        .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary()
+                        {
+                            ["id"] = "",
+                            ["alias"] = ""
+                        })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     )

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,26 +68,17 @@ namespace Plato.Discuss.Channels
             IServiceProvider serviceProvider)
         {
 
-            //var subscribers = app.ApplicationServices.GetServices<IBrokerSubscriber>();
-            //foreach (var subscriber in subscribers)
-            //{
-            //    subscriber?.Subscribe();
-            //}
-
-            // Initialize message broker subscriptions
-            //IEnumerable<IBrokerSubscriber> subscriber = app.ApplicationServices.GetRequiredService<IBrokerSubscriber>();
-           
-            routes.MapAreaRoute(
-                name: "HomeDiscussChannels",
-                areaName: "Plato.Discuss.Channels",
-                template: "discuss/channels",
-                defaults: new { controller = "Home", action = "Index" }
-            );
+            //routes.MapAreaRoute(
+            //    name: "HomeDiscussChannels",
+            //    areaName: "Plato.Discuss.Channels",
+            //    template: "discuss/channels",
+            //    defaults: new { controller = "Home", action = "Index" }
+            //);
 
             routes.MapAreaRoute(
                 name: "HomeDiscussChannel",
                 areaName: "Plato.Discuss.Channels",
-                template: "discuss/channels/{id}/{alias}",
+                template: "discuss/channels/{id?}/{alias?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 

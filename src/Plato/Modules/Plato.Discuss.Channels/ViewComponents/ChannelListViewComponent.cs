@@ -36,16 +36,17 @@ namespace Plato.Discuss.Channels.ViewComponents
             }
 
             var model = await GetIndexModel(filterOpts);
+            model.SelectedChannelId = filterOpts.ChannelId;
             return View(model);
 
         }
 
 
-        async Task<ChannelsViewModel> GetIndexModel(FilterOptions filterOpts)
+        async Task<ChannelListViewModel> GetIndexModel(FilterOptions filterOpts)
         {
             var feature = await GetcurrentFeature();
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
-            return new ChannelsViewModel()
+            return new ChannelListViewModel()
             {
                 Channels = categories.Where(c => c.ParentId == filterOpts.ChannelId)
             };
