@@ -95,8 +95,7 @@ namespace Plato.Discuss.Controllers
               
             });
             
-
-            //await CreateSampleData();
+            await CreateSampleData();
 
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
@@ -119,6 +118,21 @@ namespace Plato.Discuss.Controllers
             {
                 topic.CategoryId = channel;
             }
+            
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Discuss")
+                    .LocalNav()
+                ).Add(S["Post Topic"], post => post
+                    .LocalNav()
+                );
+            });
+
 
             var result = await _topicViewProvider.ProvideEditAsync(topic, this);
 
@@ -208,6 +222,21 @@ namespace Plato.Discuss.Controllers
                 filterOptions = new FilterOptions();
             }
 
+
+
+            // Build breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Discuss")
+                    .LocalNav()
+                ).Add(S[topic.Title], post => post
+                    .LocalNav()
+                );
+            });
 
             // default pager
             if (pagerOptions == null)

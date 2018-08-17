@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
@@ -13,6 +14,7 @@ using Plato.Entities.Stores;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
@@ -25,27 +27,36 @@ namespace Plato.Discuss.Channels.ViewProviders
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly ICategoryStore<Channel> _channelStore;
-        private readonly IStringLocalizer T;
         private readonly IPostManager<Topic> _topicManager;
-
+        private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly HttpRequest _request;
 
+        public IStringLocalizer T;
+
+        public IStringLocalizer S { get; }
+
+
         public TopicViewProvider(
+            IStringLocalizer<TopicViewProvider> stringLocalizer,
             IContextFacade contextFacade,
             ICategoryStore<Channel> channelStore, 
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
             IStringLocalizer<TopicViewProvider> stringLocalize,
-            IPostManager<Topic> topicManager)
+            IPostManager<Topic> topicManager,
+            IBreadCrumbManager breadCrumbManager)
         {
             _contextFacade = contextFacade;
             _channelStore = channelStore;
             _entityStore = entityStore;
             _entityCategoryStore = entityCategoryStore;
             _request = httpContextAccessor.HttpContext.Request;
-            T = stringLocalize;
             _topicManager = topicManager;
+            _breadCrumbManager = breadCrumbManager;
+
+            T = stringLocalize;
+            S = stringLocalizer;
         }
 
         #region "Implementation"
@@ -72,17 +83,58 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic topic, IUpdateModel updater)
         {
 
+            // Override breadcrumb configuration within base discuss controller 
+            var parents = await _channelStore.GetParentsByIdAsync(topic.CategoryId);
+            _breadCrumbManager.Configure(builder =>
+            {
+
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"], home => home
+                    .Action("Index", "Home", "Plato.Discuss")
+                    .LocalNav()
+                );
+
+                if (parents != null)
+                {
+                    builder.Add(S["Channels"], channels => channels
+                        .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary()
+                        {
+                            ["id"] = "",
+                            ["alias"] = ""
+                        })
+                        .LocalNav()
+                    );
+                    foreach (var parent in parents)
+                    {
+                        builder.Add(S[parent.Name], channel => channel
+                            .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary
+                            {
+                                ["id"] = parent.Id,
+                                ["alias"] = parent.Alias,
+                            })
+                            .LocalNav()
+                        );
+                    }
+                }
+
+                builder.Add(S[topic.Title]);
+
+            });
+            
+            // Get current feature
             var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
             if (feature == null)
             {
                 return default(IViewProviderResult);
             }
 
+            // Get all categories & return views
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
-            
             return Views(
                 View<ChannelListViewModel>("Discuss.Channels.Index.Sidebar", model =>
                 {
@@ -95,6 +147,49 @@ namespace Plato.Discuss.Channels.ViewProviders
         
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IUpdateModel updater)
         {
+
+            // Override breadcrumb configuration within base discuss controller 
+            var parents = await _channelStore.GetParentsByIdAsync(topic.CategoryId);
+            _breadCrumbManager.Configure(builder =>
+            {
+
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Discuss"], home => home
+                    .Action("Index", "Home", "Plato.Discuss")
+                    .LocalNav()
+                );
+
+                if (parents != null)
+                {
+                    builder.Add(S["Channels"], channels => channels
+                        .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary()
+                        {
+                            ["id"] = "",
+                            ["alias"] = ""
+                        })
+                        .LocalNav()
+                    );
+                    foreach (var parent in parents)
+                    {
+                        builder.Add(S[parent.Name], channel => channel
+                            .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary
+                            {
+                                ["id"] = parent.Id,
+                                ["alias"] = parent.Alias,
+                            })
+                            .LocalNav()
+                        );
+                    }
+                }
+
+                builder.Add(S["Post New Topic"]);
+
+            });
+
+
+
             var viewModel = new EditTopicChannelsViewModel()
             {
                 HtmlName = ChannelHtmlName,
