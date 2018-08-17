@@ -119,12 +119,19 @@ namespace Plato.Categories.Stores
 
         public virtual async Task<TCategory> GetByIdAsync(int id)
         {
+            
+            if (id <= 0)
+            {
+                return null;
+            }
+
             var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var category = await _categoryRepository.SelectByIdAsync(id);
                 return await MergeCategoryData(category);
             });
+
         }
 
         public virtual IQuery<TCategory> QueryAsync()
@@ -266,7 +273,7 @@ namespace Plato.Categories.Stores
                 return null;
             }
 
-            // Get all entity data matching supplied entity ids
+            // Get all category data matching supplied category ids
             var results = await _categoryDataStore.QueryAsync()
                 .Select<CategoryDataQueryParams>(q => { q.CategoryId.IsIn(categories.Select(e => e.Id).ToArray()); })
                 .ToList();

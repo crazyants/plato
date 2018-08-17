@@ -403,6 +403,22 @@ namespace Plato.Categories.Handlers
                 .CreateTable(_categories)
                 .CreateDefaultProcedures(_categories);
 
+            // Overwrite our SelectCategoryById created via CreateDefaultProcedures
+            // above to also return all CategoryData within a second result set
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        $"SelectCategoryById",
+                        @"SELECT * FROM {prefix}_Categories WITH (nolock) 
+                                WHERE (
+                                   Id = @Id
+                                )
+                                SELECT * FROM {prefix}_CategoryData WITH (nolock) 
+                                WHERE (
+                                   CategoryId = @Id
+                                )")
+                    .ForTable(_categories)
+                    .WithParameter(_categories.PrimaryKeyColumn));
+
             builder
                 .CreateProcedure(new SchemaProcedure("SelectCategoriesByFeatureId", StoredProcedureType.SelectByKey)
                     .ForTable(_categories)

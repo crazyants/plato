@@ -16,7 +16,7 @@
 else
 {
     <div class="float-right ml-2">
-        <avatar class="avatar" user-id="@details.LatestTopic.CreatedUserId" />
+        <avatar class="avatar" user-id="@details.LatestEntity.CreatedUserId" />
     </div>
     <div class="float-right text-right">
         <ol class="list-inline text-muted">
@@ -33,7 +33,7 @@ else
         </ol>
 
         <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
-            <date utc="@details.LatestTopic.CreatedDate"></date>
+            <date utc="@details.LatestEntity.CreatedDate"></date>
         </a>
     </div>
 }

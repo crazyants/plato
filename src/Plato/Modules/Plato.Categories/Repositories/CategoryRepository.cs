@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Categories.Models;
@@ -75,13 +76,7 @@ namespace Plato.Categories.Repositories
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectCategoryById", id);
-                if ((reader != null) && (reader.HasRows))
-                {
-                    await reader.ReadAsync();
-                    category = ActivateInstanceOf<TCategory>.Instance();
-                    category.PopulateModel(reader);
-                }
-
+                category = await BuildCategoryFromResultSets(reader);
             }
 
             return category;
@@ -186,6 +181,42 @@ namespace Plato.Categories.Repositories
         #endregion
 
         #region "Private Methods"
+
+        async Task<TCategory> BuildCategoryFromResultSets(DbDataReader reader)
+        {
+
+            TCategory model = null;
+            if ((reader != null) && (reader.HasRows))
+            {
+
+                // Category
+                model = ActivateInstanceOf<TCategory>.Instance();
+                await reader.ReadAsync();
+                if (reader.HasRows)
+                {
+                    model.PopulateModel(reader);
+                }
+
+                // Data
+                if (await reader.NextResultAsync())
+                {
+                    if (reader.HasRows)
+                    {
+                        var data = new List<CategoryData>();
+                        while (await reader.ReadAsync())
+                        {
+                            data.Add(new CategoryData(reader));
+                        }
+                        model.Data = data;
+                    }
+
+                }
+
+            }
+
+            return model;
+        }
+
 
         async Task<int> InsertUpdateInternal(
             int id,

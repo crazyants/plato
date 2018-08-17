@@ -97,9 +97,9 @@ namespace Plato.Discuss.Channels.Subscribers
             // Update details with latest entity details
             var details = channel.GetOrCreate<ChannelDetails>();
             details.TotalTopics = details.TotalTopics + 1;
-            details.LatestTopic.Id = entity.Id;
-            details.LatestTopic.CreatedUserId = entity.CreatedUserId;
-            details.LatestTopic.CreatedDate = entity.CreatedDate;
+            details.LatestEntity.Id = entity.Id;
+            details.LatestEntity.CreatedUserId = entity.CreatedUserId;
+            details.LatestEntity.CreatedDate = entity.CreatedDate;
             channel.AddOrUpdate<ChannelDetails>(details);
 
             // Save the updated details 
