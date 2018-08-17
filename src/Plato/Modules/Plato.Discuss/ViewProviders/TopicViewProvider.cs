@@ -139,12 +139,30 @@ namespace Plato.Discuss.ViewProviders
         
         public override async Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
+            return await updater.TryUpdateModelAsync(new EditTopicViewModel
+            {
+                Title = topic.Title,
+                Message = topic.Message
+            });
+        }
 
-            var model = new EditTopicViewModel();
-            model.Title = topic.Title;
-            model.Message = topic.Message;
+        public override async Task ComposeTypeAsync(Topic topic, IUpdateModel updater)
+        {
 
-            return await updater.TryUpdateModelAsync(model);
+            var model = new EditTopicViewModel
+            {
+                Title = topic.Title,
+                Message = topic.Message
+            };
+
+            await updater.TryUpdateModelAsync(model);
+
+            if (updater.ModelState.IsValid)
+            {
+
+                topic.Title = model.Title;
+                topic.Message = model.Message;
+            }
 
         }
         

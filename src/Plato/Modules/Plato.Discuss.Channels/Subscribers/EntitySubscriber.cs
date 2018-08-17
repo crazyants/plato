@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Entities.Models;
@@ -16,13 +17,16 @@ namespace Plato.Discuss.Channels.Subscribers
 
         private readonly IBroker _broker;
         private readonly ICategoryStore<Channel> _channelStore;
+        private readonly ICategoryManager<Channel> _channelManager;
 
         public EntitySubscriber(
             IBroker broker,
-            ICategoryStore<Channel> channelStore)
+            ICategoryStore<Channel> channelStore,
+            ICategoryManager<Channel> channelManager)
         {
             _broker = broker;
             _channelStore = channelStore;
+            _channelManager = channelManager;
         }
 
         #region "Implementation"
@@ -102,11 +106,10 @@ namespace Plato.Discuss.Channels.Subscribers
             channel.AddOrUpdate<ChannelDetails>(details);
 
             // Save the updated details 
-            await _channelStore.UpdateAsync(channel);
+            await _channelManager.UpdateAsync(channel);
 
         }
-
-
+        
         async Task EntityUpdated(TEntity entity)
         {
           
@@ -149,7 +152,7 @@ namespace Plato.Discuss.Channels.Subscribers
             channel.AddOrUpdate<ChannelDetails>(details);
 
             // Save the updated details 
-            await _channelStore.UpdateAsync(channel);
+            await _channelManager.UpdateAsync(channel);
             
         }
 

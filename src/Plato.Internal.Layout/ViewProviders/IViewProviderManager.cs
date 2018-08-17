@@ -3,7 +3,7 @@ using Plato.Internal.Layout.ModelBinding;
 
 namespace Plato.Internal.Layout.ViewProviders
 {
-    public interface IViewProviderManager<in TModel> where TModel : class
+    public interface IViewProviderManager<TModel> where TModel : class
     {
 
         Task<IViewProviderResult> ProvideDisplayAsync(TModel model, IUpdateModel updater);
@@ -16,6 +16,8 @@ namespace Plato.Internal.Layout.ViewProviders
 
         Task<bool> IsModelStateValid(TModel model, IUpdateModel updater);
 
+        Task<TModel> GetComposedType(IUpdateModel updater);
+
     }
-    
+
 }

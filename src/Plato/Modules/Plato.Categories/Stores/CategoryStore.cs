@@ -60,8 +60,8 @@ namespace Plato.Categories.Stores
                 }
 
                 _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ById, newCategory.Id);
                 _cacheManager.CancelTokens(this.GetType(), ByFeatureId, newCategory.FeatureId);
+                _cacheManager.CancelTokens(typeof(CategoryDataStore));
 
             }
 
@@ -87,6 +87,7 @@ namespace Plato.Categories.Stores
                 _cacheManager.CancelTokens(this.GetType());
                 _cacheManager.CancelTokens(this.GetType(), ById, updatedCategory.Id);
                 _cacheManager.CancelTokens(this.GetType(), ByFeatureId, updatedCategory.FeatureId);
+                _cacheManager.CancelTokens(typeof(CategoryDataStore));
 
             }
 
@@ -109,6 +110,7 @@ namespace Plato.Categories.Stores
                 _cacheManager.CancelTokens(this.GetType());
                 _cacheManager.CancelTokens(this.GetType(), ById, model.Id);
                 _cacheManager.CancelTokens(this.GetType(), ByFeatureId, model.FeatureId);
+                _cacheManager.CancelTokens(typeof(CategoryDataStore));
             }
 
             return success;

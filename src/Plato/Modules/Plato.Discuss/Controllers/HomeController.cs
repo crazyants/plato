@@ -141,32 +141,32 @@ namespace Plato.Discuss.Controllers
             }, this))
             {
 
-                // We need to first add the entity so we have a nuique entity Id
-                // for all ProvideUpdateAsync methods within any involved view provider
-                var topic = await _postManager.CreateAsync(new Topic()
-                {
-                    Title = model.Title,
-                    Message = model.Message
-                });
+                // Get fully composed type from all involved view providers
+                var topic = await _topicViewProvider.GetComposedType(this);
+
+                // We need to first add the fully composed type
+                // so we have a nuique entity Id for all ProvideUpdateAsync
+                // methods within any involved view provider
+                var newTopic = await _postManager.CreateAsync(topic);
 
                 // Ensure the insert was successful
-                if (topic.Succeeded)
+                if (newTopic.Succeeded)
                 {
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _topicViewProvider.ProvideUpdateAsync(topic.Response, this);
+                    await _topicViewProvider.ProvideUpdateAsync(newTopic.Response, this);
 
                     // Everything was OK
                     _alerter.Success(T["Topic Created Successfully!"]);
 
                     // Redirect to topic
-                    return RedirectToAction(nameof(Topic), new {Id = topic.Response.Id});
+                    return RedirectToAction(nameof(Topic), new {Id = newTopic.Response.Id});
                     
                 }
                 else
                 {
                     // Errors that may have occurred whilst creating the entity
-                    foreach (var error in topic.Errors)
+                    foreach (var error in newTopic.Errors)
                     {
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }

@@ -17,6 +17,8 @@ namespace Plato.Internal.Layout.ViewProviders
 
         Task<bool> ValidateModelAsync(TModel model, IUpdateModel updater);
 
+        Task ComposeTypeAsync(TModel model, IUpdateModel updater);
+
     }
 
 }

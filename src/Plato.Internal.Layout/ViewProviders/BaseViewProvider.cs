@@ -30,6 +30,11 @@ namespace Plato.Internal.Layout.ViewProviders
             return Task.FromResult(true);
         }
 
+        public virtual Task ComposeTypeAsync(TModel model, IUpdateModel updater)
+        {
+            return Task.CompletedTask;
+        }
+
         #endregion
 
         #region "Helper Methods"

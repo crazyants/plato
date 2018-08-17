@@ -13,7 +13,7 @@ namespace Plato.Internal.Abstractions
 
         static Func<T> Creator()
         {
-            Type t = typeof(T);
+            var t = typeof(T);
             if (t == typeof(string))
             {
                 return Expression.Lambda<Func<T>>(Expression.Constant(string.Empty)).Compile();

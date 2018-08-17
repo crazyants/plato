@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 
 namespace Plato.Internal.Layout.ViewProviders
@@ -119,7 +120,7 @@ namespace Plato.Internal.Layout.ViewProviders
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, $"An exception occurred within the view providers IsModelStateValid method. Please review the IsModelStateValid method within your view provider and try again. {e.Message}");
+                    _logger.LogError(e, $"An exception occurred within the view providers IsModelStateValid method. Please review the ValidateModelAsync method within your view provider and try again. {e.Message}");
                     throw;
                 }
             }
@@ -128,5 +129,23 @@ namespace Plato.Internal.Layout.ViewProviders
 
         }
 
+        public async Task<TModel> GetComposedType(IUpdateModel updater)
+        {
+            var model = ActivateInstanceOf<TModel>.Instance();
+            foreach (var provider in _providers)
+            {
+                try
+                {
+                    await provider.ComposeTypeAsync(model, updater);
+
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, $"An exception occurred within the view providers GetComposedModel method. Please review the ComposedModel method within your view provider and try again. {e.Message}");
+                    throw;
+                }
+            }
+            return model;
+        }
     }
 }

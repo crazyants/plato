@@ -13,6 +13,9 @@ namespace Plato.Categories.Stores
     public class CategoryDataStore : ICategoryDataStore<CategoryData>
     {
 
+        public const string ById = "ById";
+        public const string ByCategoryId = "ByCategoryId";
+
         private readonly ICacheManager _cacheManager;
         private readonly ICategoryDataRepository<CategoryData> _categoryDataRepository;
         private readonly ILogger<CategoryDataStore> _logger;
@@ -50,6 +53,7 @@ namespace Plato.Categories.Stores
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
+                _cacheManager.CancelTokens(this.GetType(), ById, result.Id);
             }
 
             return result;
@@ -67,6 +71,7 @@ namespace Plato.Categories.Stores
                 }
 
                 _cacheManager.CancelTokens(this.GetType());
+                _cacheManager.CancelTokens(this.GetType(), ById, model.Id);
             }
 
             return success;
@@ -74,7 +79,7 @@ namespace Plato.Categories.Stores
 
         public async Task<CategoryData> GetByIdAsync(int id)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ById, id);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _categoryDataRepository.SelectByIdAsync(id));
         }
 
@@ -90,10 +95,10 @@ namespace Plato.Categories.Stores
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _categoryDataRepository.SelectAsync(args));
         }
 
-        public async Task<IEnumerable<CategoryData>> GetByCategoryIdAsync(int entityId)
+        public async Task<IEnumerable<CategoryData>> GetByCategoryIdAsync(int categoryId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), entityId);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _categoryDataRepository.SelectByCategoryIdAsync(entityId));
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByCategoryId, categoryId);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _categoryDataRepository.SelectByCategoryIdAsync(categoryId));
         }
 
     }

@@ -31,6 +31,9 @@ else
                 </span>
             </li>
         </ol>
+
+        <h1>@details.LatestTopic.Id</h1>
+
         <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
             <date utc="@details.LatestTopic.CreatedDate"></date>
         </a>
@@ -46,50 +49,50 @@ else
     </div>
 }
 
-    <div class="float-left">
-        <h6 class="d-md-inline align-middle">
-            @if (Model.EnableEditOptions)
-            {
-                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
-                    @Model.Channel.Name
-                </a>
-            }
-            else
-            {
-                <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
-                    @Model.Channel.Name
-                </a>
-            }
-        </h6>
-        @if (!String.IsNullOrEmpty(Model.Channel.Description))
+<div class="float-left">
+    <h6 class="d-md-inline align-middle">
+        @if (Model.EnableEditOptions)
         {
-            <div class="text-muted">
-                @Model.Channel.Description
-            </div>
+            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
+                @Model.Channel.Name
+            </a>
         }
-        @if (Model.Channel.Children.Count > 0)
+        else
         {
-            <ul class="list-inline">
-                @foreach (var subchannel in Model.Channel.Children)
-                {
-                    <li class="float-left mr-2">
-                        @if (Model.EnableEditOptions)
-                        {
-                            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                                @subchannel.Name
-                            </a>
-                        }
-                        else
-                        {
-                            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                                @subchannel.Name
-                            </a>
-                        }
-                    </li>
-                }
-            </ul>
+            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
+                @Model.Channel.Name
+            </a>
         }
+    </h6>
+    @if (!String.IsNullOrEmpty(Model.Channel.Description))
+    {
+        <div class="text-muted">
+            @Model.Channel.Description
+        </div>
+    }
+    @if (Model.Channel.Children.Count > 0)
+    {
+        <ul class="list-inline">
+            @foreach (var subchannel in Model.Channel.Children)
+            {
+                <li class="float-left mr-2">
+                    @if (Model.EnableEditOptions)
+                    {
+                        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
+                            @subchannel.Name
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
+                            @subchannel.Name
+                        </a>
+                    }
+                </li>
+            }
+        </ul>
+    }
 
-    </div>
+</div>
 
 
