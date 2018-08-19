@@ -50,13 +50,13 @@ namespace Plato.Internal.Messaging
             {
                 if (handler != null)
                 {
-                    // wrap our action delegate within a func with a false return type to allow for deferred exceution
+                    // wrap our action delegate within a func delegate with a dummy
+                    // return type to allow for deferred exceution within the caller
                     ourput.Add(new Func<Message<T>, Task<T>>((Message<T> input) =>
                     {
                         handler.Invoke(payload);
-                        return Task.FromResult((T) input.What);
+                        return Task.FromResult(payload.What);
                     }));
-                    handler.Invoke(payload);
                 }         
               
             }
@@ -97,14 +97,17 @@ namespace Plato.Internal.Messaging
         {
             var describedDelegate = new DescribedDelegate(options, subscription);
 
-            var delegates = _subscribers.ContainsKey(typeof(T)) ?
-                _subscribers[typeof(T)] : new List<DescribedDelegate>();
+            var delegates = _subscribers.ContainsKey(typeof(T)) 
+                ? _subscribers[typeof(T)] 
+                : new List<DescribedDelegate>();
 
             if (!delegates.Contains(describedDelegate))
             {
                 delegates.Add(describedDelegate);
             }
+
             _subscribers[typeof(T)] = delegates;
+
         }
 
         public void Unsub<T>(MessageOptions options, Action<Message<T>> subscription) where T : class
