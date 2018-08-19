@@ -91,34 +91,39 @@ namespace Plato.Discuss.Services
                     .ToList();
                 
                 // Get entity details to update
-                var postDetails = entity.GetOrCreate<PostDetails>();
-
-                // Update total public reply count
-                postDetails.TotalReplies = replies.Total + 1;
-                
+                var details = entity.GetOrCreate<PostDetails>();
                 if (replies?.Data != null)
                 {
 
                     const int max = 5;
                     var added = new List<int>();
-                    var participants = new List<SimpleUser>();
+                    var simpleReplies = new List<SimpleReply>();
                     foreach (var reply in replies.Data)
                     {
-                        if (!added.Contains(reply.CreatedBy.Id))
+                        if (!added.Contains(reply.Id))
                         {
-                            added.Add(reply.CreatedBy.Id);
-                            participants.Add(reply.CreatedBy);
+                            added.Add(reply.Id);
+                            simpleReplies.Add(new SimpleReply()
+                            {
+                                Id = reply.Id,
+                                CreatedBy = reply.CreatedBy,
+                                CreatedDate = reply.CreatedDate
+                            });
                         }
                         if (added.Count >= max)
                         {
                             break;
                         }
                     }
-                    postDetails.Participants = participants;
+                    details.LatestReplies = simpleReplies;
                 }
 
+                details.LatestReply.Id = result.Response.Id;
+                details.LatestReply.CreatedBy = result.Response.CreatedBy;
+                details.LatestReply.CreatedDate = result.Response.CreatedDate;
+
                 // Add updated data to entity
-                entity.AddOrUpdate<PostDetails>(postDetails);
+                entity.AddOrUpdate<PostDetails>(details);
 
                 // Persist the updates
                 await _entityStore.UpdateAsync(entity);

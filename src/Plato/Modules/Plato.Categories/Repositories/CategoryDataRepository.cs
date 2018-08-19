@@ -109,7 +109,10 @@ namespace Plato.Categories.Repositories
                 data.ModifiedDate.ToDateIfNull(),
                 data.ModifiedUserId);
             if (id > 0)
+            {
                 return await SelectByIdAsync(id);
+            }
+                
             return null;
         }
 
@@ -138,13 +141,10 @@ namespace Plato.Categories.Repositories
             PagedResults<CategoryData> output = null;
             using (var context = _dbContext)
             {
-
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectCategoryDatumPaged",
-                    inputParams
-                );
-
+                    inputParams);
                 if ((reader != null) && (reader.HasRows))
                 {
                     output = new PagedResults<CategoryData>();
@@ -189,11 +189,16 @@ namespace Plato.Categories.Repositories
                     : $"Updating category data with id: {id}");
             }
 
+            var output = 0;
             using (var context = _dbContext)
             {
+
                 if (context == null)
-                    return 0;
-                return await context.ExecuteScalarAsync<int>(
+                {
+                    return output;
+                }
+                    
+                output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateCategoryDatum",
                     id,
@@ -205,6 +210,8 @@ namespace Plato.Categories.Repositories
                     modifiedDate.ToDateIfNull(),
                     modifiedUserId);
             }
+
+            return output;
 
         }
 

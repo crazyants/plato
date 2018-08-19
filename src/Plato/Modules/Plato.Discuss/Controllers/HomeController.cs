@@ -29,7 +29,7 @@ namespace Plato.Discuss.Controllers
         private readonly IViewProviderManager<Reply> _replyViewProvider;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
-        private readonly IPostManager<Topic> _postManager;
+        private readonly IPostManager<Topic> _topicManager;
         private readonly IPostManager<Reply> _replyManager;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
@@ -46,7 +46,7 @@ namespace Plato.Discuss.Controllers
             IViewProviderManager<Topic> topicViewProvider,
             IEntityReplyStore<Reply> entityReplyStore,
             IViewProviderManager<Reply> replyViewProvider,
-            IPostManager<Topic> postManager,
+            IPostManager<Topic> topicManager,
             IPostManager<Reply> replyManager,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager)
         {
@@ -54,7 +54,7 @@ namespace Plato.Discuss.Controllers
             _replyViewProvider = replyViewProvider;
             _entityStore = entityStore;
             _entityReplyStore = entityReplyStore;
-            _postManager = postManager;
+            _topicManager = topicManager;
             _replyManager = replyManager;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
@@ -161,7 +161,7 @@ namespace Plato.Discuss.Controllers
                 // We need to first add the fully composed type
                 // so we have a nuique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var newTopic = await _postManager.CreateAsync(topic);
+                var newTopic = await _topicManager.CreateAsync(topic);
 
                 // Ensure the insert was successful
                 if (newTopic.Succeeded)
@@ -481,15 +481,12 @@ namespace Plato.Discuss.Controllers
 
         #region "Private Methods"
 
-        private async Task<string> CreateSampleData()
-        { 
 
-            var rnd = new Random();
-            var topic = new Topic()
-            {
-                Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
-                CategoryId = rnd.Next(1, 6),
-                Message = @"Hi There, 
+        private string GetSampleMarkDown(int number)
+        {
+            return number.ToString() + @"
+
+Hi There, 
 
 # header 1
 
@@ -523,120 +520,39 @@ Test message Test message Test message Test message Test
 - list 2
 - list 3
 
-message Test message  " + rnd.Next(0, 100000).ToString(),
-};
+message Test message  " + number.ToString();
 
-            var topicDetails = new PostDetails()
+        }
+
+        private async Task CreateSampleData()
+        { 
+
+            var rnd = new Random();
+            var topic = new Topic()
             {
-                SomeNewValue = "Example Value 123",
-                Participants = new List<SimpleUser>()
-                            {
-                                new SimpleUser()
-                                {
-                                    Id = 1,
-                                    UserName = "Test"
-
-                                },
-                                new SimpleUser()
-                                {
-                                    Id = 2,
-                                    UserName = "Mike Jones"
-                                },
-                                new SimpleUser()
-                                {
-                                    Id = 3,
-                                    UserName = "Sarah Smith"
-                                },
-                                new SimpleUser()
-                                {
-                                    Id = 4,
-                                    UserName = "Mark Williams"
-                                },
-                                new SimpleUser()
-                                {
-                                    Id = 5,
-                                    UserName = "Marcus"
-                                }
-                            }
+                Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
+                CategoryId = rnd.Next(1, 6),
+                Message = GetSampleMarkDown(rnd.Next(0, 100000))
             };
-
-            topic.AddOrUpdate<PostDetails>(topicDetails);
-
-            var sb = new StringBuilder();
-
-            var data = await _postManager.CreateAsync(topic);
+            
+            // create topic
+            var data = await _topicManager.CreateAsync(topic);
             if (data.Succeeded)
             {
-                if (data.Response is Entity newTopic)
+
+                for (var i = 0; i < 5; i++)
                 {
-
-                    sb
-                        .Append("<h1>New Topic</h1>")
-                        .Append("<strong>Title</strong>")
-                        .Append("<br>")
-                        .Append(newTopic.Title)
-                        .Append("<br>")
-                        .Append("<strong>ID</strong>")
-                        .Append(newTopic.Id);
-
-                    var details = newTopic.GetOrCreate<PostDetails>();
-                    if (details?.Participants != null)
+                    var reply = new Reply()
                     {
-
-                        sb.Append("<h5>Some Value</h5>")
-                            .Append(details.SomeNewValue)
-                            .Append("<br>");
-
-                        sb.Append("<h5>Participants</h5>");
-
-                        foreach (var user in details.Participants)
-                        {
-                            sb.Append(user.UserName)
-                                .Append("<br>");
-                        }
-
-
-                    }
+                        EntityId = data.Response.Id,
+                        Message = GetSampleMarkDown(i),
+                        CreatedUserId = rnd.Next(0, 10)
+                    };
+                    var newReply = await _replyManager.CreateAsync(reply);
                 }
+              
             }
-
-            var existingTopic = await _entityStore.GetByIdAsync(142);
-            if (existingTopic != null)
-            {
-
-                sb
-                    .Append("<h1>Existing Topic</h1>")
-                    .Append("<strong>Title </strong>")
-                    .Append("<br>")
-                    .Append(existingTopic.Title)
-                    .Append("<br>")
-                    .Append("<strong>ID </strong>")
-                    .Append(existingTopic.Id);
-
-                // random details
-                var existingDetails = existingTopic.GetOrCreate<PostDetails>();
-                if (existingDetails?.Participants != null)
-                {
-
-                    sb.Append("<h5>Some Value</h5>")
-                        .Append(existingDetails.SomeNewValue)
-                        .Append("<br>");
-
-                    sb.Append("<h5>Participants</h5>");
-
-                    foreach (var user in existingDetails.Participants)
-                    {
-                        sb.Append(user.UserName)
-                            .Append("<br>");
-                    }
-
-                }
-
-            }
-
-
-            return sb.ToString();
-
+            
         }
 
         #endregion

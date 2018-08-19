@@ -1,0 +1,63 @@
+﻿@model TopicListItemViewModel
+@{
+    var details = Model.Topic.GetOrCreate<PostDetails>();
+}
+
+<div class="list-left">
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.CreatedUserId" asp-route-alias="@Model.Topic.CreatedBy.Alias">
+        <avatar data-toggle="tooltip" title="@Model.Topic.CreatedBy.DisplayName" class="avatar" user-id="@Model.Topic.CreatedBy.Id" />
+    </a>
+</div>
+<div class="list-body">
+
+    @if (details != null)
+    {
+        <div class="float-right text-right">
+            <ol class="list-inline text-muted">
+                <li class="list-inline-item">
+                    <span title="@T["Replies"]" data-toggle="tooltip">
+                        @Model.Topic.TotalReplies <i class="fal fa-comment-alt-lines"></i>
+                    </span>
+                </li>
+                <li class="list-inline-item">
+                    <span title="@T["Views"]" data-toggle="tooltip">
+                        @Model.Topic.TotalViews.ToPrettyInt() <i class="fal fa-eye"></i>
+                    </span>
+                </li>
+            </ol>
+
+            <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
+                <date utc="@details.LatestReply.CreatedDate"></date>
+            </a>
+        </div>
+
+
+    }
+    
+    <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@Model.Topic.Id" asp-route-alias="@Model.Topic.Alias" class="font-weight-bold">
+        @Model.Topic.Title
+    </a>
+ 
+    <div class="text-muted">
+        @Model.Topic.Abstract
+    </div>
+    <div>
+        @if (details != null)
+        {
+            <div class="avatar-group float-right">
+                @foreach (var reply in details.LatestReplies)
+                {
+                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@reply.CreatedBy.Id" asp-route-alias="@reply.CreatedBy.Alias">
+                        <avatar data-toggle="tooltip" title="@reply.CreatedBy.DisplayName" class="avatar avatar-sm" user-id="@reply.CreatedBy.Id" />
+                    </a>
+                }
+            </div>
+        }
+        @T["By"]
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.CreatedUserId" asp-route-alias="@Model.Topic.CreatedBy.Alias">
+            @Model.Topic.CreatedBy.DisplayName
+        </a>,
+        <date utc="@Model.Topic.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
+    </div>
+
+</div>

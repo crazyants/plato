@@ -58,7 +58,8 @@ namespace Plato.Discuss.Channels
             services.AddScoped<IViewAdaptorProvider, DiscussViewAdaptorProvider>();
 
             // Register message broker subscribers
-            services.AddSingleton<IBrokerSubscriber, EntitySubscriber<Topic>>();
+            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
+            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
 
         }
 
@@ -67,21 +68,13 @@ namespace Plato.Discuss.Channels
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-
-            //routes.MapAreaRoute(
-            //    name: "HomeDiscussChannels",
-            //    areaName: "Plato.Discuss.Channels",
-            //    template: "discuss/channels",
-            //    defaults: new { controller = "Home", action = "Index" }
-            //);
-
+            
             routes.MapAreaRoute(
                 name: "HomeDiscussChannel",
                 areaName: "Plato.Discuss.Channels",
                 template: "discuss/channels/{id?}/{alias?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
-
 
         }
     }

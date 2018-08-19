@@ -9,15 +9,17 @@ namespace Plato.Discuss.Channels.Models
 
         public int TotalReplies { get; set; }
 
-        public LatestEntity LatestEntity { get; set; }  = new LatestEntity();
-
+        public LastPost LastPost { get; set; } = new LastPost();
+        
     }
 
-    public class LatestEntity
+    public class LastPost
     {
 
-        public int Id { get; set; }
+        public int EntityId { get; set; }
         
+        public int EntityReplyId { get; set; }
+
         public DateTimeOffset? CreatedDate { get; set; }
 
         public int CreatedUserId { get; set; }

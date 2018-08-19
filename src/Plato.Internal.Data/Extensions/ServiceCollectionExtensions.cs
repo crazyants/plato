@@ -17,7 +17,7 @@ namespace Plato.Internal.Data.Extensions
             // DbContextOptions is overriden for each tennet within ShellContainerFactory
             services.AddScoped<IDbContextOptions, DbContextOptions>();
             services.AddSingleton<IConfigureOptions<DbContextOptions>, DbContextOptionsConfigure>();
-            services.AddScoped<IDbContext, DbContext>();
+            services.AddTransient<IDbContext, DbContext>();
             
             // Add schemas
             services.AddDataSchemas();

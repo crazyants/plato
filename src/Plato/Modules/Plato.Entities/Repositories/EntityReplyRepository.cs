@@ -35,7 +35,9 @@ namespace Plato.Entities.Repositories
         public async Task<TModel> InsertUpdateAsync(TModel reply)
         {
             if (reply == null)
+            {
                 throw new ArgumentNullException(nameof(reply));
+            }
 
             var id = await InsertUpdateInternal(
                 reply.Id,
@@ -53,7 +55,6 @@ namespace Plato.Entities.Repositories
                 reply.ModifiedUserId,
                 reply.ModifiedDate,
                 null);
-
             if (id > 0)
             {
                 // return
@@ -65,14 +66,18 @@ namespace Plato.Entities.Repositories
 
         public async Task<TModel> SelectByIdAsync(int id)
         {
+
+            TModel output = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntityReplyById", id);
-
-                return await BuildObjectFromResultSets(reader);
+                output = await BuildObjectFromResultSets(reader);
             }
+
+            return output;
+
         }
         
 
@@ -145,8 +150,10 @@ namespace Plato.Entities.Repositories
                 {
                     reply.PopulateModel(reader);
                 }
-                }
+            }
+
             return reply;
+
         }
 
 

@@ -92,15 +92,6 @@ namespace Plato.Internal.Data
 
         #region "Implementation"
 
-        //public IDataReader ExecuteReader(CommandType commandType, string sql, params object[] commandParams)
-        //{
-        //    if (_provider == null)
-        //        return null;
-        //    if (commandType == CommandType.StoredProcedure)
-        //        sql = GenerateExecuteStoredProcedureSql(sql, commandParams);
-        //    return _provider.ExecuteReader(sql, commandParams);
-        //}
-
         public async Task<DbDataReader> ExecuteReaderAsync(
             CommandType commandType,
             string sql,

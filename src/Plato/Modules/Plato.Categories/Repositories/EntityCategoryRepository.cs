@@ -42,7 +42,6 @@ namespace Plato.Categories.Repositories
 
             if (id > 0)
             {
-                // return
                 return await SelectByIdAsync(id);
             }
 
@@ -192,8 +191,7 @@ namespace Plato.Categories.Repositories
         #endregion
 
         #region "Private Methods"
-
-
+        
         async Task<int> InsertUpdateInternal(
             int id,
             int entityId,

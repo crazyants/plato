@@ -70,10 +70,8 @@ namespace Plato.Entities.Repositories
                 entity.ModifiedUserId,
                 entity.ModifiedDate,
                 entity.Data);
-
             if (id > 0)
             {
-                // return
                 return await SelectByIdAsync(id);
             }
 
@@ -168,27 +166,22 @@ namespace Plato.Entities.Repositories
             if ((reader != null) && (reader.HasRows))
             {
                 model = ActivateInstanceOf<TModel>.Instance();
+               
+                // Entity
                 await reader.ReadAsync();
-                if (reader.HasRows)
-                {
-                    model.PopulateModel(reader);
-                }
+                model.PopulateModel(reader);
 
-                // data
-
+                // Data
                 if (await reader.NextResultAsync())
                 {
-                    if (reader.HasRows)
+                    var data = new List<EntityData>();
+                    while (await reader.ReadAsync())
                     {
-                        var data = new List<EntityData>();
-                        while (await reader.ReadAsync())
-                        {
-                            var entityData = new EntityData(reader);
-                            data.Add(entityData);
-                        }
-                        model.Data = data;
+                        var entityData = new EntityData(reader);
+                        data.Add(entityData);
                     }
 
+                    model.Data = data;
                 }
 
             }

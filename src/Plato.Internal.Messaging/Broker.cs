@@ -72,8 +72,10 @@ namespace Plato.Internal.Messaging
         {
             var describedDelegate = new DescribedDelegate(options, subscription);
 
-            var delegates = _subscribers.ContainsKey(typeof(T)) ?
-                _subscribers[typeof(T)] : new List<DescribedDelegate>();
+            var delegates = _subscribers.ContainsKey(typeof(T))
+                ? _subscribers[typeof(T)]
+                : new List<DescribedDelegate>();
+
             if (!delegates.Contains(describedDelegate))
             {
                 delegates.Add(describedDelegate);

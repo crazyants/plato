@@ -60,6 +60,7 @@ namespace Plato.Internal.Data.Providers
         {
             if (_dbConnection != null)
             {
+                _dbConnection.Close();
                 _dbConnection.Dispose();
                 _dbConnection = null;
             }
@@ -75,7 +76,7 @@ namespace Plato.Internal.Data.Providers
             SqlDataReader reader;
             try
             {
-                await OpenAsync();           
+                await OpenAsync();
                 using (var command = CreateCommand(_dbConnection, sql, args))
                 {
                     reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
@@ -87,7 +88,7 @@ namespace Plato.Internal.Data.Providers
                 HandleException(exception);
                 throw;
             }
-
+           
             return reader;
 
         }

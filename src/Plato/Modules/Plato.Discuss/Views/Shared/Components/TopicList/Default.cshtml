@@ -1,5 +1,4 @@
-﻿@using Plato.Discuss.Models
-@model HomeIndexViewModel
+﻿@model HomeIndexViewModel
 
 <card class="card card-body-flush">
     <card-title>
@@ -35,58 +34,13 @@
         @if (Model.Results != null)
         {
             <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var entity in Model.Results.Data)
+                @foreach (var topic in Model.Results.Data)
                 {
                     <li class="list-group-item pt-4">
-
-                        @{
-                            var detail = entity.GetOrCreate<PostDetails>();
-                        }
-
-                        <div class="list-left">
-                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@entity.CreatedUserId" asp-route-alias="@entity.CreatedBy.Alias">
-                                <avatar data-toggle="tooltip" title="@entity.CreatedBy.DisplayName" class="avatar" user-id="@entity.CreatedBy.Id" />
-                            </a>
-                        </div>
-                        <div class="list-body">
-
-                            @if (detail != null)
-                            {
-                                <div title="@T["Replies"]" data-toggle="tooltip" class="float-right text-muted">
-                                    <i class="fal fa-comment-alt"></i>
-                                    @detail.TotalReplies
-                                </div>
-                            }
-
-                            <h5>
-                                <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@entity.Id" asp-route-alias="@entity.Alias">
-                                    @entity.Title
-                                </a>
-                            </h5>
-                            @*<p class="text-muted">
-                                @entity.Abstract
-                            </p>*@
-                            <p>
-                                @if (detail != null)
-                                {
-                                    <div class="avatar-group float-right">
-                                        @foreach (var participant in detail.Participants)
-                                        {
-                                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@participant.Id" asp-route-alias="@participant.Alias">
-                                                <avatar data-toggle="tooltip" title="@participant.DisplayName" class="avatar avatar-sm" user-id="@participant.Id" />
-                                            </a>
-                                        }
-                                    </div>
-                                }
-                                @T["By"] 
-                                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@entity.CreatedUserId" asp-route-alias="@entity.CreatedBy.Alias">
-                                    @entity.CreatedBy.DisplayName
-                                </a>, 
-                                <date utc="@entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
-                            </p>
-
-                        </div>
-
+                        @await DisplayAsync(new View("TopicListItem", new
+                        {
+                            Topic = topic
+                        }))
                     </li>
 
                 }
@@ -96,7 +50,7 @@
         {
             <ul class="list-group list-group-flush list-group-hover">
                 <li class="list-group-item">
-                    <h6>@T["No discussions found"]</h6>
+                    <h6>@T["No topics found"]</h6>
                 </li>
             </ul>
         }

@@ -94,20 +94,29 @@ namespace Plato.Discuss.Channels.Subscribers
                 return;
             }
 
-            // Update details with latest entity details
-            var details = channel.GetOrCreate<ChannelDetails>();
-            details.TotalTopics = details.TotalTopics + 1;
-            details.LatestEntity.Id = entity.Id;
-            details.LatestEntity.CreatedUserId = entity.CreatedUserId;
-            details.LatestEntity.CreatedDate = entity.CreatedDate;
-            channel.AddOrUpdate<ChannelDetails>(details);
+            // Get current channel and all parent channels
+            var parents = await _channelStore.GetParentsByIdAsync(channel.Id);
 
-            // Save the updated details 
-            await _channelManager.UpdateAsync(channel);
+            // Update details within current and all parents
+            foreach (var parent in parents)
+            {
+
+                // Update details with latest entity details
+                var details = parent.GetOrCreate<ChannelDetails>();
+                details.TotalTopics = details.TotalTopics + 1;
+                details.LastPost.EntityId = entity.Id;
+                details.LastPost.CreatedUserId = entity.CreatedUserId;
+                details.LastPost.CreatedDate = entity.CreatedDate;
+                parent.AddOrUpdate<ChannelDetails>(details);
+
+                // Save the updated details 
+                await _channelManager.UpdateAsync(parent);
+
+            }
 
         }
-        
-   
+  
+
         #endregion
 
     }

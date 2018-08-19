@@ -16,7 +16,7 @@
 else
 {
     <div class="float-right ml-2">
-        <avatar class="avatar" user-id="@details.LatestEntity.CreatedUserId" />
+        <avatar class="avatar" user-id="@details.LastPost.CreatedUserId" />
     </div>
     <div class="float-right text-right">
         <ol class="list-inline text-muted">
@@ -33,14 +33,14 @@ else
         </ol>
 
         <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
-            <date utc="@details.LatestEntity.CreatedDate"></date>
+            <date utc="@details.LastPost.CreatedDate"></date>
         </a>
     </div>
 }
 
 @if (!String.IsNullOrEmpty(Model.Channel.IconCss))
 {
-    <div class="float-left mt-3 mr-3">
+    <div class="float-left mr-3">
         <span class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
             <i class="@Model.Channel.IconCss"></i>
         </span>
@@ -48,20 +48,20 @@ else
 }
 
 <div class="float-left">
-    <h6 class="d-md-inline align-middle">
-        @if (Model.EnableEditOptions)
-        {
-            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
-                @Model.Channel.Name
-            </a>
-        }
-        else
-        {
-            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
-                @Model.Channel.Name
-            </a>
-        }
-    </h6>
+  
+    @if (Model.EnableEditOptions)
+    {
+        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
+            @Model.Channel.Name
+        </a>
+    }
+    else
+    {
+        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
+            @Model.Channel.Name
+        </a>
+    }
+  
     @if (!String.IsNullOrEmpty(Model.Channel.Description))
     {
         <div class="text-muted">

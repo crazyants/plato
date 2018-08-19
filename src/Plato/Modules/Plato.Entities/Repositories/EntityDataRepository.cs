@@ -109,7 +109,10 @@ namespace Plato.Entities.Repositories
                 data.ModifiedDate.ToDateIfNull(),
                 data.ModifiedUserId);
             if (id > 0)
+            {
                 return await SelectByIdAsync(id);
+            }
+                
             return null;
         }
         
