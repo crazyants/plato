@@ -33,39 +33,12 @@ namespace Plato.Discuss.Services
 
         public async Task<IActivityResult<Reply>> CreateAsync(Reply model)
         {
-            
-            //_entityReplyManager.Created += async (sender, args) =>
-            //{
 
-            //    // Get last 5 participants
+            _entityReplyManager.Created += async (sender, args) =>
+            {
 
-            //   var replies = await _entityReplyStore.QueryAsync()
-            //       .Page(1, 5)
-            //       .Select<EntityReplyQueryParams>(q =>
-            //       {
-            //           q.EntityId.Equals(args.Entity.Id);
-            //       })
-            //       .OrderBy("ModifiedDate", OrderBy.Desc)
-            //       .ToList();
 
-            //    var postDetails = args.Entity.TryGet<PostDetails>() ?? new PostDetails();
-            //    postDetails.TotalReplies = postDetails.TotalReplies + 1;
-
-            //    if (replies?.Data != null)
-            //    {
-            //        var participants = new List<EntityUser>();
-            //        foreach (var reply in replies.Data)
-            //        {
-            //            participants.Add(reply.CreatedBy);
-            //        }
-            //        postDetails.Participants = participants;
-            //    }
-
-            //    args.Entity.AddOrUpdate<PostDetails>(postDetails);
-
-            //    await _entityStore.UpdateAsync(args.Entity);
-
-            //};
+            };
 
             var result =  await _entityReplyManager.CreateAsync(model);
             if (result.Succeeded)
@@ -76,22 +49,15 @@ namespace Plato.Discuss.Services
                 {
                     throw new Exception($"An entity for the reply could not be found!");
                 }
-                
-                // Get last 20 public replies & total public reply count
-                var replies = await _entityReplyStore.QueryAsync()
-                    .Take(1, 20)
-                    .Select<EntityReplyQueryParams>(q =>
-                    {
-                        q.EntityId.Equals(result.Response.EntityId);
-                        q.IsPrivate.False();
-                        q.IsSpam.False();
-                        q.IsDeleted.False();
-                    })
-                    .OrderBy("ModifiedDate", OrderBy.Desc)
-                    .ToList();
-                
+
+                // Increment reply count
+                entity.TotalReplies = entity.TotalReplies + 1;
+
                 // Get entity details to update
                 var details = entity.GetOrCreate<PostDetails>();
+                
+                // Get last 20 public replies & total public reply count
+                var replies = await GetLatestReplies(result);
                 if (replies?.Data != null)
                 {
 
@@ -127,12 +93,27 @@ namespace Plato.Discuss.Services
 
                 // Persist the updates
                 await _entityStore.UpdateAsync(entity);
-               
+
 
             }
-            
+
             return result;
 
+        }
+
+        private async Task<IPagedResults<Reply>> GetLatestReplies(IActivityResult<Reply> result)
+        {
+            return await _entityReplyStore.QueryAsync()
+                .Take(1, 20)
+                .Select<EntityReplyQueryParams>(q =>
+                {
+                    q.EntityId.Equals(result.Response.EntityId);
+                    q.IsPrivate.False();
+                    q.IsSpam.False();
+                    q.IsDeleted.False();
+                })
+                .OrderBy("ModifiedDate", OrderBy.Desc)
+                .ToList();
         }
 
         public async Task<IActivityResult<Reply>> UpdateAsync(Reply model)

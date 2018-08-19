@@ -149,7 +149,12 @@ namespace Plato.Discuss.Channels.ViewProviders
         {
 
             // Override breadcrumb configuration within base discuss controller 
-            var parents = await _channelStore.GetParentsByIdAsync(topic.CategoryId);
+            IEnumerable<Channel> parents = null;
+            if (topic.CategoryId > 0)
+            {
+                parents = await _channelStore.GetParentsByIdAsync(topic.CategoryId);
+
+            }
             _breadCrumbManager.Configure(builder =>
             {
 

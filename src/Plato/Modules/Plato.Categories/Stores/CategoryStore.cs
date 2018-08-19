@@ -181,7 +181,7 @@ namespace Plato.Categories.Stores
                 {
                     results = await MergeCategoryData(results.ToList());
                     results = PrepareChildren(results.ToLookup(c => c.ParentId));
-                    //results = results.OrderBy(r => r.SortOrder);
+                    results = results.OrderBy(r => r.SortOrder);
                 }
 
                 return results;

@@ -92,11 +92,7 @@ namespace Plato.Discuss.Channels.Subscribers
             {
                 return;
             }
-
-            // Update total replies for entity
-            entity.TotalReplies = entity.TotalReplies + 1;
-            await _topicStore.UpdateAsync(entity);
-
+            
             // Ensure we have a categoryId for the newly created entity
             if (entity.CategoryId <= 0)
             {
@@ -132,8 +128,7 @@ namespace Plato.Discuss.Channels.Subscribers
             }
 
         }
-
-
+        
         #endregion
 
     }
