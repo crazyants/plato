@@ -57,7 +57,6 @@ namespace Plato.Entities.Repositories
                 null);
             if (id > 0)
             {
-                // return
                 return await SelectByIdAsync(id);
             }
 
@@ -86,13 +85,10 @@ namespace Plato.Entities.Repositories
             PagedResults<TModel> output = null;
             using (var context = _dbContext)
             {
-
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntityRepliesPaged",
-                    inputParams
-                );
-
+                    inputParams);
                 if ((reader != null) && (reader.HasRows))
                 {
                     output = new PagedResults<TModel>();
@@ -143,15 +139,10 @@ namespace Plato.Entities.Repositories
             TModel reply = null;
             if ((reader != null) && (reader.HasRows))
             {
-
                 reply = ActivateInstanceOf<TModel>.Instance();
                 await reader.ReadAsync();
-                if (reader.HasRows)
-                {
-                    reply.PopulateModel(reader);
-                }
+                reply.PopulateModel(reader);
             }
-
             return reply;
 
         }

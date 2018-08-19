@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -540,23 +541,20 @@ message Test message  " + number.ToString();
             if (data.Succeeded)
             {
 
-                for (var i = 0; i < 5; i++)
+                var reply = new Reply()
                 {
-                    var reply = new Reply()
-                    {
-                        EntityId = data.Response.Id,
-                        Message = GetSampleMarkDown(i),
-                        CreatedUserId = rnd.Next(0, 10)
-                    };
-                    var newReply = await _replyManager.CreateAsync(reply);
-                }
-              
-            }
-            
-        }
+                    EntityId = data.Response.Id,
+                    Message = GetSampleMarkDown(rnd.Next(1, 6))
+                };
+                var newReply = await _replyManager.CreateAsync(reply);
 
+
+
+            }
+
+        }
         #endregion
-        
+
     }
     
 }

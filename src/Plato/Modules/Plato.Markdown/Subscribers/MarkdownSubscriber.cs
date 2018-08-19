@@ -40,7 +40,6 @@ namespace Plato.Markdown.Subscribers
 
         public void Unsubscribe()
         {
-
             _broker.Unsub<string>(new MessageOptions()
             {
                 Key = "ParseMarkdown"
@@ -50,7 +49,6 @@ namespace Plato.Markdown.Subscribers
             {
                 Key = "ParseAbstract"
             }, async message => await ParseAbstractAsync(message.What));
-
         }
         
         private async Task<string> ParseMarkdownAsync(string markdown)

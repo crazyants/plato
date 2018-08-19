@@ -108,11 +108,19 @@ namespace Plato.Entities.Services
                 // Raise created event
                 Created?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
-                // Publish EntityCreated event
-                await _broker.Pub<TEntity>(this, new MessageOptions()
+                foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityCreated"
-                }, entity);
+                }, entity))
+                {
+                    entity = await handler.Invoke(new Message<TEntity>(entity, this));
+                }
+
+                //// Publish EntityCreated event
+                //await _broker.Pub<TEntity>(this, new MessageOptions()
+                //{
+                //    Key = "EntityCreated"
+                //}, entity);
 
                 // Return success
                 return result.Success(entity);

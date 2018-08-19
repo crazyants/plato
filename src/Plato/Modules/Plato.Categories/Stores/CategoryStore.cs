@@ -180,8 +180,8 @@ namespace Plato.Categories.Stores
                 if (results != null)
                 {
                     results = await MergeCategoryData(results.ToList());
-                    results = await PrepareChildren(results.ToLookup(c => c.ParentId));
-                    results = results.OrderBy(r => r.SortOrder);
+                    results = PrepareChildren(results.ToLookup(c => c.ParentId));
+                    //results = results.OrderBy(r => r.SortOrder);
                 }
 
                 return results;
@@ -191,12 +191,23 @@ namespace Plato.Categories.Stores
 
         public async Task<IEnumerable<TCategory>> GetParentsByIdAsync(int categoryId)
         {
+
+            if (categoryId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(categoryId));
+            }
+
             var category = await GetByIdAsync(categoryId);
             if (category == null)
             {
                 return null;
             }
 
+            if (category.FeatureId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(category.FeatureId));
+            }
+            
             var categories = await GetByFeatureIdAsync(category.FeatureId);
             if (categories == null)
             {
@@ -338,7 +349,7 @@ namespace Plato.Categories.Stores
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
 
-        async Task<IList<TCategory>> PrepareChildren(
+        IList<TCategory> PrepareChildren(
             ILookup<int, TCategory> categories,
             IList<TCategory> output = null,
             TCategory parent = null,
@@ -363,7 +374,7 @@ namespace Plato.Categories.Stores
                 output.Add(category);
 
                 // recurse
-                await PrepareChildren(categories, output, category, category.Id, depth--);
+                PrepareChildren(categories, output, category, category.Id, depth--);
             }
 
             return output;

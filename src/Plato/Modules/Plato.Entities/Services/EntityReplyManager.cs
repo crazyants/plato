@@ -88,11 +88,19 @@ namespace Plato.Entities.Services
                 // Raise created event
                 Created?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, newReply));
 
-                // Publish EntityReplyCreated event
-                await _broker.Pub<TReply>(this, new MessageOptions()
+                foreach (var handler in await _broker.Pub<TReply>(this, new MessageOptions()
                 {
                     Key = "EntityReplyCreated"
-                }, newReply);
+                }, newReply))
+                {
+                    newReply = await handler.Invoke(new Message<TReply>(newReply, this));
+                }
+                
+                //// Publish EntityReplyCreated event
+                //await _broker.Pub<TReply>(this, new MessageOptions()
+                //{
+                //    Key = "EntityReplyCreated"
+                //}, newReply);
 
                 return result.Success(newReply);
             }
@@ -149,7 +157,7 @@ namespace Plato.Entities.Services
             {
                 // Raise Updated event
                 Updated?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, updatedReply));
-
+                
                 // Publish EntityReplyUpdated event
                 await _broker.Pub<TReply>(this, new MessageOptions()
                 {

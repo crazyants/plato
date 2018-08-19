@@ -141,13 +141,10 @@ namespace Plato.Entities.Repositories
             PagedResults<IEntityData> output = null;
             using (var context = _dbContext)
             {
-             
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntityDatumPaged",
-                    inputParams
-                );
-
+                    inputParams);
                 if ((reader != null) && (reader.HasRows))
                 {
                     output = new PagedResults<IEntityData>();

@@ -33,13 +33,11 @@ namespace Plato.Discuss.Channels.Subscribers
 
         public void Subscribe()
         {
-
             // Created
             _broker.Sub<TEntity>(new MessageOptions()
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
-            
         }
 
         public void Unsubscribe()
@@ -48,7 +46,6 @@ namespace Plato.Discuss.Channels.Subscribers
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
-
         }
         
         public void Dispose()
@@ -60,38 +57,38 @@ namespace Plato.Discuss.Channels.Subscribers
 
         #region "Private Methods"
 
-        async Task EntityCreated(TEntity entity)
+        async Task<TEntity> EntityCreated(TEntity entity)
         {
 
             // No need to update cateogry for private entities
             if (entity.IsPrivate)
             {
-                return;
+                return entity;
             }
 
             // No need to update cateogry for soft deleted entities
             if (entity.IsDeleted)
             {
-                return;
+                return entity;
             }
 
             // No need to update cateogry for entities flagged as spam
             if (entity.IsSpam)
             {
-                return;
+                return entity;
             }
 
             // Ensure we have a categoryId for the newly created entity
             if (entity.CategoryId <= 0)
             {
-                return;
+                return entity;
             }
 
             // Ensure we found the category
             var channel = await _channelStore.GetByIdAsync(entity.CategoryId);
             if (channel == null)
             {
-                return;
+                return entity;
             }
 
             // Get current channel and all parent channels
@@ -113,6 +110,8 @@ namespace Plato.Discuss.Channels.Subscribers
                 await _channelManager.UpdateAsync(parent);
 
             }
+
+            return entity;
 
         }
   

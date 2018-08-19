@@ -48,7 +48,17 @@ namespace Plato.Internal.Messaging
                 .Where(d => d.Options.Key == options.Key)
                 .Select(s => s.Subscription as Action<Message<T>>))
             {
-                handler?.Invoke(payload);
+                if (handler != null)
+                {
+                    // wrap our action delegate within a func with a false return type to allow for deferred exceution
+                    ourput.Add(new Func<Message<T>, Task<T>>((Message<T> input) =>
+                    {
+                        handler.Invoke(payload);
+                        return Task.FromResult((T) input.What);
+                    }));
+                    handler.Invoke(payload);
+                }         
+              
             }
 
             // Iterate through func delegates and return 

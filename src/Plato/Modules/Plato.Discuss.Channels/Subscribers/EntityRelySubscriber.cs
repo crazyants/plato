@@ -13,8 +13,8 @@ namespace Plato.Discuss.Channels.Subscribers
     /// <summary>
     /// Updates category meta data whenever an entity reply is created.
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    public class EntityReplySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntityReply
+    /// <typeparam name="TEntityReply"></typeparam>
+    public class EntityReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
 
         private readonly IBroker _broker;
@@ -40,7 +40,7 @@ namespace Plato.Discuss.Channels.Subscribers
         {
 
             // Created
-            _broker.Sub<TEntity>(new MessageOptions()
+            _broker.Sub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyCreated"
             }, async message => await EntityReplyCreated(message.What));
@@ -49,7 +49,7 @@ namespace Plato.Discuss.Channels.Subscribers
 
         public void Unsubscribe()
         {
-            _broker.Unsub<TEntity>(new MessageOptions()
+            _broker.Unsub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyCreated"
             }, async message => await EntityReplyCreated(message.What));
@@ -65,67 +65,69 @@ namespace Plato.Discuss.Channels.Subscribers
 
         #region "Private Methods"
 
-        async Task EntityReplyCreated(TEntity reply)
+        async Task<TEntityReply> EntityReplyCreated(TEntityReply reply)
         {
 
             // No need to update cateogry for private entities
             if (reply.IsPrivate)
             {
-                return;
+                return reply;
             }
 
             // No need to update cateogry for soft deleted entities
             if (reply.IsDeleted)
             {
-                return;
+                return reply;
             }
 
             // No need to update cateogry for entities flagged as spam
             if (reply.IsSpam)
             {
-                return;
+                return reply;
             }
 
             // Get the entity we are replying to
             var entity = await _topicStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
-                return;
+                return reply;
             }
 
             // Ensure we have a categoryId for the newly created entity
             if (entity.CategoryId <= 0)
             {
-                return;
+                return reply;
             }
 
             // Ensure we found the category
             var channel = await _channelStore.GetByIdAsync(entity.CategoryId);
             if (channel == null)
             {
-                return;
+                return reply;
             }
 
-            //// Get current channel and all parent channels
-            //var parents = await _channelStore.GetParentsByIdAsync(channel.Id);
+            // Get current channel and all parent channels
+            var parents = await _channelStore.GetParentsByIdAsync(channel.Id);
 
-            //// Update details within current and all parents
-            //foreach (var parent in parents)
-            //{
+            // Update details within current and all parents
+            foreach (var parent in parents)
+            {
 
-            //    // Update details with latest entity details
-            //    var details = parent.GetOrCreate<ChannelDetails>();
-            //    details.TotalReplies = details.TotalReplies + 1;
-            //    details.LastPost.EntityId = reply.EntityId;
-            //    details.LastPost.EntityReplyId = reply.Id;
-            //    details.LastPost.CreatedUserId = reply.CreatedUserId;
-            //    details.LastPost.CreatedDate = reply.CreatedDate;
-            //    parent.AddOrUpdate<ChannelDetails>(details);
+                // Update details with latest entity details
+                var details = parent.GetOrCreate<ChannelDetails>();
+                details.TotalReplies = details.TotalReplies + 1;
+                details.LastPost.EntityId = reply.EntityId;
+                details.LastPost.EntityReplyId = reply.Id;
+                details.LastPost.CreatedUserId = reply.CreatedUserId;
+                details.LastPost.CreatedDate = reply.CreatedDate;
+                parent.AddOrUpdate<ChannelDetails>(details);
 
-            //    // Save the updated details 
-            //    await _channelManager.UpdateAsync(parent);
+                // Save the updated details 
+                await _channelManager.UpdateAsync(parent);
 
-            //}
+            }
+
+            return reply;
 
         }
         

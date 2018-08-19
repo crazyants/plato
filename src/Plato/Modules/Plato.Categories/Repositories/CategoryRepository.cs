@@ -98,7 +98,6 @@ namespace Plato.Categories.Repositories
                     "SelectCategoriesPaged",
                     inputParams
                 );
-
                 if ((reader != null) && (reader.HasRows))
                 {
                     output = new PagedResults<TCategory>();
@@ -147,19 +146,10 @@ namespace Plato.Categories.Repositories
             List<TCategory> output = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectCategoriesByFeatureId",
-                    featureId
-                );
-
+                    featureId);
                 if ((reader != null) && (reader.HasRows))
                 {
                     output = new List<TCategory>();
@@ -169,11 +159,11 @@ namespace Plato.Categories.Repositories
                         category.PopulateModel(reader);
                         output.Add(category);
                     }
-
                 }
             }
 
             return output;
+
         }
 
         #endregion
