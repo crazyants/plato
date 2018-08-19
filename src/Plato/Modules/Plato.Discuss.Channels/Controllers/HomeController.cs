@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
@@ -74,7 +75,11 @@ namespace Plato.Discuss.Channels.Controllers
             // Check permissions
 
             // Build breadcrumb
-            var parents = await _channelStore.GetParentsByIdAsync(id);
+            IEnumerable<Channel> parents = null;
+            if (id > 0)
+            {
+                parents = await _channelStore.GetParentsByIdAsync(id);
+            }
             _breadCrumbManager.Configure(builder =>
             {
 

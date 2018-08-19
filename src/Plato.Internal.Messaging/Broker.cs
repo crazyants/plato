@@ -43,15 +43,14 @@ namespace Plato.Internal.Messaging
 
             var payload = new Message<T>(message, sender);
 
-            // Iterate through action delegates and invoke
+            // Iterate through action delegates, converting to funcs and adding to collection
             foreach (var handler in delegates
                 .Where(d => d.Options.Key == options.Key)
                 .Select(s => s.Subscription as Action<Message<T>>))
             {
                 if (handler != null)
                 {
-                    // wrap our action delegate within a func delegate with a dummy
-                    // return type to allow for deferred exceution within the caller
+                    // wrap any action delegate within a dummy func delegate to add to our collection
                     ourput.Add(new Func<Message<T>, Task<T>>((Message<T> input) =>
                     {
                         handler.Invoke(payload);
@@ -68,7 +67,7 @@ namespace Plato.Internal.Messaging
             {
                 if (handler != null)
                 {
-                    // wrapper to convert delegates generic argument type
+                    // convert delegates generic argument type
                     // to concrete type (object) to allow for deferred execurtion
                     ourput.Add(new Func<Message<T>, Task<T>>((Message<T> input) => handler(input)));
                 }
