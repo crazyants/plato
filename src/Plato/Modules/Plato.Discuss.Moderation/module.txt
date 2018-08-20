@@ -1,0 +1,13 @@
+Name: Plato Discuss Moderation
+Description: Adds moderation support for discussions.
+Category: Discussions
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Discuss",
+		Version: "1.0.0"
+	}
+]

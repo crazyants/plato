@@ -33,8 +33,6 @@ namespace Plato.Roles.Controllers
         private readonly RoleManager<Role> _roleManager;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        private readonly IDefaultRolesManager _defaultRolesManager;
-
 
         public IHtmlLocalizer T { get; }
 
@@ -49,8 +47,7 @@ namespace Plato.Roles.Controllers
             IViewProviderManager<Role> roleViewProvider,
             RoleManager<Role> roleManager, IAlerter alerter,
             IAuthorizationService authorizationService,
-            IBreadCrumbManager breadCrumbManager,
-            IDefaultRolesManager defaultRolesManager)
+            IBreadCrumbManager breadCrumbManager)
         {
             _roleIndexViewProvider = roleIndexViewProvider;
             _platoRoleStore = platoRoleStore;
@@ -59,7 +56,6 @@ namespace Plato.Roles.Controllers
             _alerter = alerter;
             _authorizationService = authorizationService;
             _breadCrumbManager = breadCrumbManager;
-            _defaultRolesManager = defaultRolesManager;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -74,17 +70,17 @@ namespace Plato.Roles.Controllers
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
-
-
+            
             //await _defaultRolesManager.UninstallDefaultRolesAsync();
 
             // Add default roles
-            await _defaultRolesManager.InstallDefaultRolesAsync();
+            //await _defaultRolesManager.InstallDefaultRolesAsync();
 
-            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            //{
-            //    return Unauthorized();
-            //}
+            // Ensuer we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageRoles))
+            {
+                return Unauthorized();
+            }
 
             _breadCrumbManager.Configure(builder =>
             {
@@ -127,6 +123,12 @@ namespace Plato.Roles.Controllers
         public async Task<IActionResult> Create()
         {
 
+            // Ensuer we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.AddRoles))
+            {
+                return Unauthorized();
+            }
+            
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
@@ -164,6 +166,12 @@ namespace Plato.Roles.Controllers
         public async Task<IActionResult> Edit(string id)
         {
 
+            // Ensuer we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.EditRoles))
+            {
+                return Unauthorized();
+            }
+            
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
@@ -227,16 +235,22 @@ namespace Plato.Roles.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-      
+            
+            // Ensuer we have permission
+            if (!await _authorizationService.AuthorizeAsync(User, Permissions.DeleteRoles))
+            {
+                return Unauthorized();
+            }
+            
+            // Ensure we found the role to delete
             var currentRole = await _roleManager.FindByIdAsync(id);
-
             if (currentRole == null)
             {
                 return NotFound();
             }
 
+            // Attempt to delete the role
             var result = await _roleManager.DeleteAsync(currentRole);
-
             if (result.Succeeded)
             {
                 _alerter.Success(T["Role Deleted Successfully"]);
@@ -245,7 +259,6 @@ namespace Plato.Roles.Controllers
             {
 
                 _alerter.Danger(T["Could not delete the role"]);
-
                 foreach (var error in result.Errors)
                 {
                     _alerter.Danger(T[error.Description]);
@@ -253,6 +266,7 @@ namespace Plato.Roles.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+
         }
         
         #endregion

@@ -95,12 +95,15 @@ namespace Plato.Entities.Services
             // Raise creating event
             Creating?.Invoke(this, new EntityEventArgs<TEntity>(model));
 
-            // Publish EntityCreating event
-            await _broker.Pub<TEntity>(this, new MessageOptions()
+            // Invoke EntityCreating subscriptions
+            foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
             {
-                Key = "EntityCreating"
-            }, model);
-
+                Key = "EntityCreated"
+            }, model))
+            {
+                model = await handler.Invoke(new Message<TEntity>(model, this));
+            }
+            
             var entity = await _entityStore.CreateAsync(model);
             if (entity != null)
             {
@@ -108,6 +111,7 @@ namespace Plato.Entities.Services
                 // Raise created event
                 Created?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
+                // Invoke EntityCreated subscriptions
                 foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityCreated"
@@ -115,12 +119,6 @@ namespace Plato.Entities.Services
                 {
                     entity = await handler.Invoke(new Message<TEntity>(entity, this));
                 }
-
-                //// Publish EntityCreated event
-                //await _broker.Pub<TEntity>(this, new MessageOptions()
-                //{
-                //    Key = "EntityCreated"
-                //}, entity);
 
                 // Return success
                 return result.Success(entity);
@@ -167,11 +165,14 @@ namespace Plato.Entities.Services
             // Raise Updating event
             Updating?.Invoke(this, new EntityEventArgs<TEntity>(model));
 
-            // Publish EntityUpdating event
-            await _broker.Pub<TEntity>(this, new MessageOptions()
+            // Invoke EntityUpdating subscriptions
+            foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
             {
                 Key = "EntityUpdating"
-            }, model);
+            }, model))
+            {
+                model = await handler.Invoke(new Message<TEntity>(model, this));
+            }
 
             var entity = await _entityStore.UpdateAsync(model);
             if (entity != null)
@@ -180,12 +181,15 @@ namespace Plato.Entities.Services
                 // Raise Updated event
                 Updated?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
-                // Publish EntityUpdated event
-                await _broker.Pub<TEntity>(this, new MessageOptions()
+                // Invoke EntityUpdated subscriptions
+                foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityUpdated"
-                }, entity);
-
+                }, entity))
+                {
+                    entity = await handler.Invoke(new Message<TEntity>(entity, this));
+                }
+                
                 return result.Success(entity);
             }
 
@@ -212,11 +216,14 @@ namespace Plato.Entities.Services
             // Raise Deleting event
             Deleting?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
-            // Publish EntityDeleting event
-            await _broker.Pub<TEntity>(this, new MessageOptions()
+            // Invoke EntityDeleting subscriptions
+            foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
             {
                 Key = "EntityDeleting"
-            }, entity);
+            }, entity))
+            {
+                entity = await handler.Invoke(new Message<TEntity>(entity, this));
+            }
 
             var success = await _entityStore.DeleteAsync(entity);
             if (success)
@@ -225,11 +232,14 @@ namespace Plato.Entities.Services
                 // Raise Deleted event
                 Deleted?.Invoke(this, new EntityEventArgs<TEntity>(entity, true));
 
-                // Publish EntityDeleted event
-                await _broker.Pub<TEntity>(this, new MessageOptions()
+                // Invoke EntityDeleted subscriptions
+                foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityDeleted"
-                }, entity);
+                }, entity))
+                {
+                    entity = await handler.Invoke(new Message<TEntity>(entity, this));
+                }
 
                 return result.Success(entity);
             }
@@ -237,8 +247,7 @@ namespace Plato.Entities.Services
             return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create an eneity."));
 
         }
-
-
+        
         #endregion
 
         #region "Private Methods"
@@ -246,46 +255,47 @@ namespace Plato.Entities.Services
         private async Task<string> ParseMarkdown(string message)
         {
 
+            var output = string.Empty;
             foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
             {
                 Key = "ParseMarkdown"
             }, message))
             {
-                return await handler.Invoke(new Message<string>(message, this));
+                output = await handler.Invoke(new Message<string>(message, this));
             }
 
-            return message;
+            return output;
 
         }
 
         private async Task<string> ParseAbstract(string message)
         {
-
+            var output = message.PlainTextulize().TrimToAround(225);
             foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
             {
                 Key = "ParseAbstract"
             }, message))
             {
-                return await handler.Invoke(new Message<string>(message, this));
+                output = await handler.Invoke(new Message<string>(message, this));
             }
 
-            return message.PlainTextulize().TrimToAround(225);
+            return output;
 
         }
 
         private async Task<string> ParseAlias(string input)
         {
 
+            var output = _aliasCreator.Create(input);
             foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
             {
                 Key = "ParseEntityAlias"
             }, input))
             {
-                return await handler.Invoke(new Message<string>(input, this));
+                output = await handler.Invoke(new Message<string>(input, this));
             }
 
-            // No subscription found, use default alias creator
-            return _aliasCreator.Create(input);
+            return output;
 
         }
 

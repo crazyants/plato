@@ -88,7 +88,6 @@ namespace Plato.Roles.ViewProviders
                 role.Name = model.RoleName?.Trim();
                 
                 var result = await _roleManager.CreateAsync(role);
-
                 foreach (var error in result.Errors)
                 {
                     updater.ModelState.AddModelError(string.Empty, error.Description);

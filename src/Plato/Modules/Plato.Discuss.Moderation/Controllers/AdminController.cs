@@ -8,13 +8,13 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 
-namespace Plato.Discuss.Controllers
+namespace Plato.Discuss.Moderation.Controllers
 {
     public class AdminController : Controller
     {
         private readonly IContextFacade _contextFacade;
         private readonly ISiteSettingsStore _settingsStore;
-   
+     
         public AdminController(
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade)
@@ -25,9 +25,9 @@ namespace Plato.Discuss.Controllers
         
         public Task<IActionResult> Index()
         {
+            
             return Task.FromResult((IActionResult)View());
         }
-
         
 
     }

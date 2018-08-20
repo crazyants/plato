@@ -13,10 +13,12 @@
                     <li class="list-group-item">
 
                         <h6 class="d-inline-block">
-                            @role.Name
+                            <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@role.Id" class="font-weight-bold">
+                                @role.Name
+                            </a>
                         </h6>
 
-                        <a asp-controller="Admin" asp-action="Edit" asp-route-id="@role.Id" class="btn btn-secondary float-right">
+                        <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@role.Id" class="btn btn-secondary float-right">
                             <i class="fal fa-pencil"></i>
                             @T["Edit"]
                         </a>

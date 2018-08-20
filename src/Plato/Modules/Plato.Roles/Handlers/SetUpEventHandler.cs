@@ -140,8 +140,7 @@ namespace Plato.Roles.Handlers
                     }
 
                 }
-
-
+                
             }
 
             // Add default roles

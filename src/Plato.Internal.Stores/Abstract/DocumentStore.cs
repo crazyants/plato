@@ -29,13 +29,13 @@ namespace Plato.Internal.Stores.Abstract
 
         #region "Implemention"
         
-        public async Task<TModel> GetAsync<TModel>() where TModel : class
+        public virtual async Task<TModel> GetAsync<TModel>() where TModel : class
         {
             var entry = await GetEntryByDocumentType(typeof(TModel));
             return await GetDocumentFromEntryAsync<TModel>(entry);
         }
 
-        public async Task<TModel> SaveAsync<TModel>(IDocument document) where TModel : class
+        public virtual async Task<TModel> SaveAsync<TModel>(IDocument document) where TModel : class
         {
 
             // Attempt to get existing document entry or create a new one
@@ -79,7 +79,7 @@ namespace Plato.Internal.Stores.Abstract
 
         }
 
-        public async Task<bool> DeleteAsync<TModel>() where TModel: class
+        public virtual async Task<bool> DeleteAsync<TModel>() where TModel: class
         {
             var success = false;
             // Ensure we have an entry for the type
