@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
@@ -72,6 +73,8 @@ namespace Plato.Roles
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
+            // Register additional authorization handler for implied permissions
+            services.AddScoped<IAuthorizationHandler, RolesPermissionsHandler>();
 
         }
 

@@ -18,7 +18,6 @@ namespace Plato.Internal.Security.Abstractions
 
         public IEnumerable<Permission> ImpliedBy { get; set; }
 
-
         public Permission(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));

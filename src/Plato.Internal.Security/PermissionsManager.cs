@@ -110,15 +110,22 @@ namespace Plato.Internal.Security
                 ? "UserAuthType" 
                 : null;
 
+            // Dummy identity
             var identity = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Role, role.Name)
             }, authType);
-                
-            var principal = new ClaimsPrincipal(identity);
-            var result = new List<string>();
-            var permissions = GetPermissions();
 
+            // Dummy principal
+            var principal = new ClaimsPrincipal(identity);
+          
+            // Permissions grouped by feature
+            var categorizedPermissions = await GetCategorizedPermissionsAsync();
+
+            // Get flat permissions list from categorized permissions
+            var permissions = categorizedPermissions.SelectMany(x => x.Value);
+
+            var result = new List<string>();
             foreach (var permission in permissions)
             {
                 if (await _authorizationService.AuthorizeAsync(principal,  permission))

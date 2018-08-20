@@ -15,7 +15,6 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Internal.Stores.Roles;
-using Plato.Roles.Services;
 using Plato.Roles.ViewModels;
 
 namespace Plato.Roles.Controllers
@@ -71,16 +70,11 @@ namespace Plato.Roles.Controllers
             PagerOptions pagerOptions)
         {
             
-            //await _defaultRolesManager.UninstallDefaultRolesAsync();
-
-            // Add default roles
-            //await _defaultRolesManager.InstallDefaultRolesAsync();
-
             // Ensuer we have permission
-            if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageRoles))
-            {
-                return Unauthorized();
-            }
+            //if (!await _authorizationService.AuthorizeAsync(User, Permissions.ManageRoles))
+            //{
+            //    return Unauthorized();
+            //}
 
             _breadCrumbManager.Configure(builder =>
             {
@@ -167,10 +161,10 @@ namespace Plato.Roles.Controllers
         {
 
             // Ensuer we have permission
-            if (!await _authorizationService.AuthorizeAsync(User, Permissions.EditRoles))
-            {
-                return Unauthorized();
-            }
+            //if (!await _authorizationService.AuthorizeAsync(User, Permissions.EditRoles))
+            //{
+            //    return Unauthorized();
+            //}
             
             _breadCrumbManager.Configure(builder =>
             {

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -51,7 +52,7 @@ namespace Plato.Roles.ViewProviders
 
         public override async Task<IViewProviderResult> BuildEditAsync(Role role, IUpdateModel updater)
         {
-            
+        
             var editRoleViewModel = new EditRoleViewModel()
             {
                 Id = role.Id,
