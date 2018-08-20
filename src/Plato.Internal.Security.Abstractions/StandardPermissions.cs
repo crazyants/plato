@@ -3,7 +3,10 @@
     public class StandardPermissions
     {
 
-        public static readonly Permission Administrator = new Permission("Administrator", "Administrator Access");
+        public const string CategoryName = "Plato";
+
+        public static readonly Permission Administrator = 
+            new Permission("AdministratorAccess", "Can access administrator control panel", CategoryName);
 
     }
 }

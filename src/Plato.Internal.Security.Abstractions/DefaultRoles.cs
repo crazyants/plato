@@ -2,17 +2,18 @@
 {
     public static class DefaultRoles
     {
-        public const string Administrator = "Administrator";
-        public const string Employee = "Employee";
-        public const string Member = "Member";
-        public const string Guest = "Guest";
 
+        public const string Anonymous = "Anonymous";
+        public const string Member = "Member";
+        public const string Employee = "Employee";
+        public const string Administrator = "Administrator";
+        
         public static string[] ToList() => new[]
         {
-            Administrator,
-            Employee,
+            Anonymous,
             Member,
-            Guest
+            Employee,
+            Administrator
         };
 
     }

@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.Roles
+namespace Plato.Roles.Navigation
 {
     public class AdminMenu : INavigationProvider
     {

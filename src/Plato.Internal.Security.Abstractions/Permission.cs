@@ -23,13 +23,15 @@ namespace Plato.Internal.Security.Abstractions
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
-        public Permission(string name, string description)
+        public Permission(string name, string description) : this(name)
         {
-            this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.Description = description;
         }
 
-
+        public Permission(string name, string description, string category) : this(name, description)
+        {
+            this.Category = category;
+        }
 
     }
 

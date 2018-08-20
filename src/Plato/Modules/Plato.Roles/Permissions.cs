@@ -25,7 +25,8 @@ namespace Plato.Roles
                 ManageRoles,
                 AddRoles,
                 EditRoles,
-                DeleteRoles
+                DeleteRoles,
+                StandardPermissions.Administrator
             };
         }
 
@@ -41,7 +42,8 @@ namespace Plato.Roles
                         ManageRoles,
                         AddRoles,
                         EditRoles,
-                        DeleteRoles
+                        DeleteRoles,
+                        StandardPermissions.Administrator
                     }
                 }
             };

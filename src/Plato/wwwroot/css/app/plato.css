@@ -907,6 +907,9 @@
     border-radius: 50%;
 }
 
+.switch-disabled,
+.switch-disabled .switch-slider{ opacity: 0.7; cursor:no-drop !important; }
+
 /* ------------------------- */
 /* tree view */
 /* ------------------------- */

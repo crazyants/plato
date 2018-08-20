@@ -28,12 +28,14 @@
                             </th>
                         </tr>
                         </thead>
+                        <tbody>
+
                         <tr>
                             <td class="col-10 font-weight-bold">@T["Permission"]</td>
                             <td class="col-1 font-weight-bold text-center">@T["Allow"]</td>
-                            <td class="col-1 font-weight-bold text-center">@T["Enabled"]</td>
+                            <td class="col-1 font-weight-bold text-center">@T["Effective"]</td>
                         </tr>
-                        <tbody>
+
                         @foreach (var permission in Model.CategorizedPermissions[category])
                         {
 
@@ -48,7 +50,13 @@
                                     </label>
                                 </td>
                                 <td class="col-1 text-center">
-                                    <input type="checkbox" disabled="disabled" name="Effective.@permission.Name" checked="@(Model.EnabledPermissions.Contains(permission.Name))"/>
+                                    
+                                    <label>
+                                        <span class="switch switch-round switch-disabled">
+                                            <input type="checkbox" disabled="disabled" name="Effective.@permission.Name" checked="@(Model.EnabledPermissions.Contains(permission.Name))" />
+                                            <span class="switch-slider"></span>
+                                        </span>
+                                    </label>
                                 </td>
                             </tr>
                         }

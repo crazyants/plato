@@ -106,7 +106,7 @@ namespace Plato.Internal.Security
             
             // If the role is anonymous set the authtype to
             // null to ensure IsAuthenticated is set to false
-            var authType = role.Name != "Anonymous"
+            var authType = role.Name != DefaultRoles.Anonymous
                 ? "UserAuthType" 
                 : null;
 

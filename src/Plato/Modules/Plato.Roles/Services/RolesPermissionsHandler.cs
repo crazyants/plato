@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -34,11 +33,11 @@ namespace Plato.Roles.Services
             PermissionNames(requirement.Permission, grantingNames);
 
             // Determine what set of roles should be examined by the access check
-            var rolesToExamine = new List<string> { "Anonymous" };
+            var rolesToExamine = new List<string> { DefaultRoles.Anonymous };
 
             if (context.User.Identity.IsAuthenticated)
             {
-                rolesToExamine.Add("Authenticated");
+                rolesToExamine.Add(DefaultRoles.Member);
                 // Add roles from the user
                 foreach (var claim in context.User.Claims)
                 {

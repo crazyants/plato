@@ -2,11 +2,11 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.Roles
+namespace Plato.Roles.Navigation
 {
     public class SiteMenu : INavigationProvider
     {
-        public SiteMenu(IStringLocalizer<AdminMenu> localizer)
+        public SiteMenu(IStringLocalizer<SiteMenu> localizer)
         {
             T = localizer;
         }
