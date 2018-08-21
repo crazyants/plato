@@ -1,32 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using Plato.Internal.Abstractions.Settings;
 using System.Threading.Tasks;
-using Plato.Entities.Models;
-using Plato.Entities.Repositories;
+using Plato.Discuss.Moderation.Models;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Stores.Abstractions;
-using Plato.Internal.Stores.Abstractions.Settings;
+using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
 
 namespace Plato.Discuss.Moderation.Controllers
 {
-    public class AdminController : Controller
+
+    public class AdminController : Controller, IUpdateModel
     {
         private readonly IContextFacade _contextFacade;
-        private readonly ISiteSettingsStore _settingsStore;
-     
+        private readonly IViewProviderManager<Moderator> _viewProvider;
+
         public AdminController(
-            ISiteSettingsStore settingsStore,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            IViewProviderManager<Moderator> viewProvider)
         {
-            _settingsStore = settingsStore;
             _contextFacade = contextFacade;
+            _viewProvider = viewProvider;
         }
         
-        public Task<IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             
-            return Task.FromResult((IActionResult)View());
+            var model = await _viewProvider.ProvideIndexAsync(new Moderator(), this);
+            return View(model);
+
         }
         
 
