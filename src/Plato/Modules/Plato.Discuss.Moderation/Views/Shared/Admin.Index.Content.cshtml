@@ -1,0 +1,45 @@
+﻿@model ModeratorIndexViewModel
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title">@T["Moderators"]</h6>
+    </card-title>
+    <card-body>
+        @if (Model.Moderators != null)
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                @foreach (var moderator in Model.Moderators)
+                {
+                    <li class="list-group-item">
+                        
+                        <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@moderator.Id" class="btn btn-secondary float-right">
+                            <i class="fal fa-pencil"></i>
+                            @T["Edit"]
+                        </a>
+                        
+                        <div class="float-left">
+                            <h6 class="d-md-inline align-middle">
+                                <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@moderator.Id" class="p-1 font-weight-bold">
+                                    @moderator.UserId
+                                </a>
+                               
+                            </h6>
+                          
+                        </div>
+               
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    <h6>@T["No moderators found"]</h6>
+                </li>
+            </ul>
+        }
+    </card-body>
+</card>
+
+

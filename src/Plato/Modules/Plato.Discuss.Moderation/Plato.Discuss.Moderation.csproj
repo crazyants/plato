@@ -11,9 +11,5 @@
 		<ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />    
 		<ProjectReference Include="..\Plato.Discuss\Plato.Discuss.csproj" />
 	</ItemGroup>
-  
-	<ItemGroup>
-	  <Folder Include="Views\Shared\" />
-	</ItemGroup>
 	
 </Project>
