@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -14,7 +17,7 @@ namespace Plato.Internal.Stores.Users
     {
 
         private readonly IStore<User> _store;
-        
+
         public UserQuery(IStore<User> store) 
         {
             _store = store;
@@ -37,7 +40,7 @@ namespace Plato.Internal.Stores.Users
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
 
-            var users = await _store.SelectAsync(
+            return await _store.SelectAsync(
                 PageIndex,
                 PageSize,
                 startSql,
@@ -45,10 +48,7 @@ namespace Plato.Internal.Stores.Users
                 countSql,
                 Params.Id.Value,
                 Params.UserName.Value,
-                Params.Email.Value
-            );
-
-            return users;
+                Params.Email.Value);
         }
     }
 
@@ -59,9 +59,12 @@ namespace Plato.Internal.Stores.Users
     public class UserQueryParams
     {
 
-        private WhereString _email;
         private WhereInt _id;
+        private WhereString _email;
         private WhereString _userName;
+        private WhereString _firstName;
+        private WhereString _lastName;
+        private WhereString _displayName;
         private WhereInt _roleId;
         private WhereString _roleName;
 
@@ -75,6 +78,24 @@ namespace Plato.Internal.Stores.Users
         {
             get => _userName ?? (_userName = new WhereString());
             set => _userName = value;
+        }
+
+        public WhereString FirstName
+        {
+            get => _firstName ?? (_firstName = new WhereString());
+            set => _firstName = value;
+        }
+
+        public WhereString LastName
+        {
+            get => _lastName ?? (_lastName = new WhereString());
+            set => _lastName = value;
+        }
+
+        public WhereString DisplayName
+        {
+            get => _displayName ?? (_displayName = new WhereString());
+            set => _displayName = value;
         }
 
         public WhereString Email
@@ -103,6 +124,7 @@ namespace Plato.Internal.Stores.Users
 
     public class UserQueryBuilder : IQueryBuilder
     {
+        
         #region "Constructor"
 
         private readonly string _tableName;
@@ -137,9 +159,6 @@ namespace Plato.Internal.Stores.Users
 
         public string BuildSqlPopulate()
         {
-
-            var tablePrefix = _query.TablePrefix;
-
             var whereClause = BuildWhereClauseForStartId();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
@@ -192,7 +211,6 @@ namespace Plato.Internal.Stores.Users
         {
             var sb = new StringBuilder();
          
-
             if (_query.Params.Id.Value > 0)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -200,14 +218,15 @@ namespace Plato.Internal.Stores.Users
                 sb.Append(_query.Params.Id.ToSqlString("Id"));
             }
 
-            if (!string.IsNullOrEmpty(_query.Params.UserName.Value))
+            if (!String.IsNullOrEmpty(_query.Params.UserName.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.UserName.Operator);
                 sb.Append(_query.Params.UserName.ToSqlString("UserName"));
             }
 
-            if (!string.IsNullOrEmpty(_query.Params.Email.Value))
+        
+            if (!String.IsNullOrEmpty(_query.Params.Email.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Email.Operator);

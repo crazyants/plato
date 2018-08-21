@@ -40,15 +40,9 @@ namespace Plato.Follow.Models
                 if (dr.ColumnIsNotNull("UserName"))
                     User.UserName = Convert.ToString(dr["UserName"]);
 
-                if (dr.ColumnIsNotNull("Email"))
-                    User.Email = Convert.ToString(dr["Email"]);
-
                 if (dr.ColumnIsNotNull("DisplayName"))
                     User.DisplayName = Convert.ToString(dr["DisplayName"]);
-
-                if (dr.ColumnIsNotNull("NormalizedUserName"))
-                    User.NormalizedUserName = Convert.ToString(dr["NormalizedUserName"]);
-
+                
             }
 
             if (dr.ColumnIsNotNull("CancellationGuid"))

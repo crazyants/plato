@@ -4,12 +4,8 @@
     {
 
         int Id { get; set; }
-
-        string Email { get; set; }
-
+        
         string UserName { get; set; }
-
-        string NormalizedUserName { get; set; }
 
         string DisplayName { get; set; }
 

@@ -34,7 +34,7 @@ namespace Plato.Internal.Assets.Abstractions
                         Type = AssetType.IncludeCss,
                         Section = AssetSection.Header
                     },
-
+              
                     /* JavaScript */
 
                     new Asset()
@@ -58,6 +58,12 @@ namespace Plato.Internal.Assets.Abstractions
                     new Asset()
                     {
                         Url = "/js/app/plato.js",
+                        Type = AssetType.IncludeJavaScript,
+                        Section = AssetSection.Footer
+                    },
+                    new Asset()
+                    {
+                        Url = "/js/app/plato-ui.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }

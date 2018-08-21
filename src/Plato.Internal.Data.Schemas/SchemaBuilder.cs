@@ -655,8 +655,8 @@ namespace Plato.Internal.Data.Schemas
                     .Append("   ")
                     .Append("@")
                     .Append(parameter.NameNormalized)
-                    .Append(" = ")
-                    .Append(parameter.DefaultValueNormalizsed)
+                    .Append(" = @")
+                    .Append(parameter.NameNormalized)
                     .Append(i < procedure.Parameters.Count - 1 ? "," : ";")
                     .Append(_newLine);
                 i += 1;
@@ -689,8 +689,8 @@ namespace Plato.Internal.Data.Schemas
                     .Append("   ")
                     .Append("@")
                     .Append(parameter.NameNormalized)
-                    .Append(" = ")
-                    .Append(parameter.DefaultValueNormalizsed)
+                    .Append(" = @")
+                    .Append(parameter.NameNormalized)
                     .Append(i < procedure.Parameters.Count - 1 ? "," : ";")
                     .Append(_newLine);
                 i += 1;
@@ -717,8 +717,8 @@ namespace Plato.Internal.Data.Schemas
                     .Append("   ")
                     .Append("@")
                     .Append(parameter.NameNormalized)
-                    .Append(" = ")
-                    .Append(parameter.DefaultValueNormalizsed)
+                    .Append(" = @")
+                    .Append(parameter.NameNormalized)
                     .Append(i < procedure.Parameters.Count - 1 ? "," : ";")
                     .Append(_newLine);
                 i += 1;

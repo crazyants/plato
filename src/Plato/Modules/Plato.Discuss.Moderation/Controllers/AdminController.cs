@@ -29,7 +29,14 @@ namespace Plato.Discuss.Moderation.Controllers
 
         }
         
+        public async Task<IActionResult> Create()
+        {
+         
+            var model = await _viewProvider.ProvideEditAsync(new Moderator(), this);
+            return View(model);
 
+        }
+        
     }
 
 }

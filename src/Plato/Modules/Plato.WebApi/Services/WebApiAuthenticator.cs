@@ -10,7 +10,6 @@ namespace Plato.WebApi.Services
 
     public class WebApiAuthenticator : IWebApiAuthenticator
     {
-
         
         private const string HeaderName = "Authorization";
         private const string Token = "Basic ";

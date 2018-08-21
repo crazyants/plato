@@ -61,5 +61,16 @@ namespace Plato.WebApi.Controllers
             });
         }
 
+
+        public ObjectResult NoResults()
+        {
+            return new ObjectResult(new
+            {
+                StatusCode = HttpStatusCode.OK,
+                Message = "No results found."
+            });
+        }
+
+
     }
 }

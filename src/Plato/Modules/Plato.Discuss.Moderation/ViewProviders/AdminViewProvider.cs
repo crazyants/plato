@@ -44,13 +44,16 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         public override Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IUpdateModel updater)
         {
-            return Task.FromResult(default(IViewProviderResult));
-            //return Task.FromResult(Views(
-            //    View<EditLabelViewModel>("Admin.Edit.Header", model => editLabelViewModel).Zone("header").Order(1),
-            //    View<EditLabelViewModel>("Admin.Edit.Content", model => editLabelViewModel).Zone("content").Order(1),
-            //    View<EditLabelViewModel>("Admin.Edit.Actions", model => editLabelViewModel).Zone("actions").Order(1),
-            //    View<EditLabelViewModel>("Admin.Edit.Footer", model => editLabelViewModel).Zone("footer").Order(1)
-            //));
+
+            var viewModel = new EditModeratorViewModel();
+            viewModel.IsNewModerator = moderator.Id == 0;
+            
+            return Task.FromResult(Views(
+                View<EditModeratorViewModel>("Admin.Edit.Header", model => viewModel).Zone("header").Order(1),
+                View<EditModeratorViewModel>("Admin.Edit.Content", model => viewModel).Zone("content").Order(1),
+                View<EditModeratorViewModel>("Admin.Edit.Actions", model => viewModel).Zone("actions").Order(1),
+                View<EditModeratorViewModel>("Admin.Edit.Footer", model => viewModel).Zone("footer").Order(1)
+            ));
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator moderator, IUpdateModel updater)

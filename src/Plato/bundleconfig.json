@@ -134,6 +134,18 @@
     },
     "sourceMap": false
   },
+  /* plato UI */
+  {
+    "inputFiles": [
+      "wwwroot/js/app/plato-ui.js"
+    ],
+    "outputFileName": "wwwroot/js/app/plato-ui.min.js",
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
   /* site css */
   {
     "inputFiles": [

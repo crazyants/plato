@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Discuss.Models;
 using Plato.Discuss.Moderation.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
@@ -14,8 +13,10 @@ using Plato.Discuss.Moderation.ViewProviders;
 
 namespace Plato.Discuss.Moderation
 {
+
     public class Startup : StartupBase
     {
+
         private readonly IShellSettings _shellSettings;
 
         public Startup(IShellSettings shellSettings)
@@ -36,7 +37,6 @@ namespace Plato.Discuss.Moderation
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
    
-
         }
 
         public override void Configure(
@@ -45,8 +45,7 @@ namespace Plato.Discuss.Moderation
             IServiceProvider serviceProvider)
         {
 
-     
-
         }
+
     }
 }

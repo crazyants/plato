@@ -173,8 +173,6 @@ namespace Plato.Entities.Models
                 CreatedBy.Id = CreatedUserId;
                 if (dr.ColumnIsNotNull("CreatedUserName"))
                     CreatedBy.UserName = Convert.ToString(dr["CreatedUserName"]);
-                if (dr.ColumnIsNotNull("CreatedNormalizedUserName"))
-                    CreatedBy.NormalizedUserName = Convert.ToString(dr["CreatedNormalizedUserName"]);
                 if (dr.ColumnIsNotNull("CreatedDisplayName"))
                     CreatedBy.DisplayName = Convert.ToString(dr["CreatedDisplayName"]);
                 if (dr.ColumnIsNotNull("CreatedFirstName"))
@@ -196,8 +194,6 @@ namespace Plato.Entities.Models
                 ModifiedBy.Id = ModifiedUserId;
                 if (dr.ColumnIsNotNull("ModifiedUserName"))
                     ModifiedBy.UserName = Convert.ToString(dr["ModifiedUserName"]);
-                if (dr.ColumnIsNotNull("ModifiedNormalizedUserName"))
-                    ModifiedBy.NormalizedUserName = Convert.ToString(dr["ModifiedNormalizedUserName"]);
                 if (dr.ColumnIsNotNull("ModifiedDisplayName"))
                     ModifiedBy.DisplayName = Convert.ToString(dr["ModifiedDisplayName"]);
                 if (dr.ColumnIsNotNull("ModifiedFirstName"))

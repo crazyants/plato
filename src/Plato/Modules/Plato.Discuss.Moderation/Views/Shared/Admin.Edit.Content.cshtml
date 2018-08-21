@@ -1,0 +1,31 @@
+﻿@model EditModeratorViewModel
+
+<card>
+    <card-title>
+        @if (Model.Moderator == null)
+        {
+        <h6 class="card-title">@T["Add Moderator"]</h6>
+        }
+        else
+        {
+        <h6 class="card-title">@T["Edit Moderator"]</h6>
+        }
+    </card-title>
+    <card-body>
+        <div class="row">
+            <div class="col-3">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Name">
+                        <label asp-for="Moderator.UserId"><strong>@T["Name"]</strong></label>
+                        <span asp-validation-for="Moderator.UserId" class="text-danger"></span>
+                        <div class="input-group">
+                            <input placeholder="@T["name your channel"]" asp-for="Moderator.UserId" class="form-control" type="text" data-provider="autoComplete" />
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+     
+         
+        </div>
+    </card-body>
+</card>

@@ -23,6 +23,7 @@ namespace Plato.Internal.Stores.Abstractions
     public class WhereString
     {
         private readonly StringBuilder _builder;
+
         private QueryOperator _operator = QueryOperator.And;
 
         public WhereString()
@@ -30,9 +31,18 @@ namespace Plato.Internal.Stores.Abstractions
             _builder = new StringBuilder();
         }
 
+        public WhereString(int parameterIndex)
+        {
+            _builder = new StringBuilder();
+            ParameterIndex = parameterIndex;
+        }
+
+
         public string Value { get; private set; }
 
         public string Operator => _operator == QueryOperator.And ? " AND " : " OR ";
+
+        public int ParameterIndex { get; }
 
         public WhereString Or()
         {
@@ -49,7 +59,7 @@ namespace Plato.Internal.Stores.Abstractions
         public WhereString Equals(string value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
-                _builder.Append(" OR ");
+                _builder.Append(this.Operator);
             Value = value;
             _builder.Append("{0} = @{0}");
             return this;
@@ -58,7 +68,7 @@ namespace Plato.Internal.Stores.Abstractions
         public WhereString StartsWith(string value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
-                _builder.Append(" OR ");
+                _builder.Append(this.Operator);
             Value = value;
             _builder.Append("{0} LIKE '%' + @{0}");
             return this;
@@ -67,7 +77,7 @@ namespace Plato.Internal.Stores.Abstractions
         public WhereString Endsith(string value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))
-                _builder.Append(" OR ");
+                _builder.Append(this.Operator);
             Value = value;
             _builder.Append("{0} LIKE @{0} + '%'");
             return this;
@@ -90,14 +100,16 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
             Value = value;
-            _builder.Append("{0} LIKE '%' + @{0}");
+            _builder.Append("{0} LIKE '%' + @{0} + '%'");
             return this;
         }
-
+        
         public string ToSqlString(string parameterName)
         {
             return _builder.ToString().Replace("{0}", parameterName);
         }
+
+
     }
 
     #endregion

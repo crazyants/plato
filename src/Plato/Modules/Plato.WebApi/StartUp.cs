@@ -69,13 +69,21 @@ namespace Plato.WebApi
                 {
                     // Delete any existing cookie
                     ctx.Response.Cookies.Delete(cookie);
-
                     // Create new cookie
                     ctx.Response.Cookies.Append(PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName, System.Guid.NewGuid().ToString(),
                         new CookieOptions() { HttpOnly = false });
                 }
                 return next(ctx);
             });
+
+            // Api routes
+            routes.MapAreaRoute(
+                name: "WebApiRoute",
+                areaName: "Plato.WebApi",
+                template: "api/{controller}/{action}/{id?}",
+                defaults: new { controller = "Users", action = "Get" }
+            );
+
         }
 
 

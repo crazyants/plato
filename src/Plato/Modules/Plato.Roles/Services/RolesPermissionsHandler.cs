@@ -61,8 +61,7 @@ namespace Plato.Roles.Services
                             continue;
                         }
 
-                        string permissionName = claim.ClaimValue;
-
+                        var permissionName = claim.ClaimValue;
                         if (grantingNames.Contains(permissionName))
                         {
                             context.Succeed(requirement);
