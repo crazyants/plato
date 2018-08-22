@@ -11,6 +11,17 @@ using Plato.Internal.Stores.Users;
 
 namespace Plato.WebApi.Controllers
 {
+
+    public class SearchResult
+    {
+        public string Text { get; set; }
+
+        public string Url { get; set; }
+
+        public int Rank { get; set; }
+
+    }
+
     public class UsersController : BaseWebApiController
     {
         private readonly IPlatoUserStore<User> _ploatUserStore;
@@ -22,7 +33,7 @@ namespace Plato.WebApi.Controllers
         }
 
 
-        [Authorize(Policy = "ManageStore"), HttpGet]
+        [HttpGet]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Search(
             int page = 1,
@@ -48,16 +59,21 @@ namespace Plato.WebApi.Controllers
                 .ToList();
 
 
-            PagedResults<SimpleUser> output = null;
+            PagedResults<SearchResult> output = null;
             if (users != null)
             {
-                output = new PagedResults<SimpleUser>
+                output = new PagedResults<SearchResult>
                 {
                     Total = users.Total
                 };
                 foreach (var user in users.Data)
                 {
-                    output.Data.Add(new SimpleUser(user));
+                    output.Data.Add(new SearchResult()
+                    {
+                        Text = user.DisplayName,
+                        Url = "http://test.com/",
+                        Rank = 0
+                    });
                 }
             }
 

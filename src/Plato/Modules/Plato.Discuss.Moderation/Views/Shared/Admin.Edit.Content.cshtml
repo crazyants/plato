@@ -19,7 +19,7 @@
                 <span asp-validation-for="Moderator.UserId" class="text-danger"></span>
              
                     <div class="dropdown">
-                        <input placeholder="@T["name your channel"]" asp-for="Moderator.UserId" class="form-control" type="text" data-provide="autoComplete" data-autocomplete-url="/api/users/search" data-autocomplete-value-field="username" />
+                        <input placeholder="@T["name your channel"]" asp-for="Moderator.UserId" class="form-control" type="text" data-provide="autoComplete" data-autocomplete-url="api/users/search?page={page}&pageSize={pageSize}" data-autocomplete-value-field="username" />
                         <div class="dropdown-menu col-12">
                             <p class="text-center">
                                 <i class="fal fa-spinner fa-spin"></i>
