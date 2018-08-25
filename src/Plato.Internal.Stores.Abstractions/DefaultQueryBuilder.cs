@@ -70,7 +70,7 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(this.Operator);
             Value = value;
-            _builder.Append("{0} LIKE '%' + @{0}");
+            _builder.Append("{0} LIKE @{0} + '%'");
             return this;
         }
 
@@ -79,7 +79,7 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(this.Operator);
             Value = value;
-            _builder.Append("{0} LIKE @{0} + '%'");
+            _builder.Append("{0} LIKE '%' + @{0}");
             return this;
         }
 

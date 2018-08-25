@@ -29965,8 +29965,21 @@ $(function (win, doc, $) {
             throw new Error("Plato.Http requires a valid Plato.Options object");
         }
 
-        // update URL to include absolute URL
-        config.url = opts.url + config.url;
+        var baseUrl = opts.url,
+            virtualUrl = config.url;
+   
+        // Remove forward slash suffix from base url
+        if (baseUrl.substring(baseUrl.length - 1, baseUrl.length) === "/") {
+            baseUrl = baseUrl.substring(opts.url.length - 1);
+        }
+
+        // prefix a forward slash if non is provided for our end point
+        if (virtualUrl.substring(0, 1) !== "/") {
+            virtualUrl = "/" + virtualUrl;
+        }
+
+        // update to absolute URL
+        config.url = baseUrl + virtualUrl;
 
         // add basic authentication headers
         var apiKey = opts.apiKey;

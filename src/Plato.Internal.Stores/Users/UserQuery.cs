@@ -199,10 +199,11 @@ namespace Plato.Internal.Stores.Users
                     : "Id >= @start_id_in");
                 break;
             }
-
+            
             var where = BuildWhereClause();
             if (!string.IsNullOrEmpty(where))
-                sb.Append(" AND ").Append(where);
+                sb.Append(" AND ")
+                    .Append(where);
 
             return sb.ToString();
 

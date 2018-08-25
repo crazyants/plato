@@ -58,6 +58,24 @@ namespace Plato.Internal.Abstractions.Extensions
 
         }
 
+        public static int ToSafeCeilingDivision(this int input, int divideBy)
+        {
+            
+            if (input <= 0)
+            {
+                return 0;
+            }
+
+            if (divideBy <= 0)
+            {
+                return input;
+            }
+
+            var size = decimal.Divide(input, divideBy);
+            return System.Convert.ToInt32(System.Math.Ceiling(size));
+            
+        }
+
 
     }
 }

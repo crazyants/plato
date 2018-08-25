@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
@@ -16,6 +17,21 @@ using Plato.Internal.Stores.Users;
 
 namespace Plato.WebApi.Controllers
 {
+
+    public class SearchResults
+    {
+
+        public int Page { get; set; }
+
+        public int PageSize { get; set; }
+
+        public int Total { get; set; }
+
+        public int TotalPages { get; set; }
+        
+        public IEnumerable<SearchResult> Data { get; set; }
+
+    }
 
     public class SearchResult
     {
@@ -29,8 +45,7 @@ namespace Plato.WebApi.Controllers
 
     public class UsersController : BaseWebApiController
     {
-
-      
+        
         private readonly IPlatoUserStore<User> _ploatUserStore;
         private readonly IContextFacade _contextFacade;
    
@@ -42,16 +57,15 @@ namespace Plato.WebApi.Controllers
             _ploatUserStore = platoUserStore;
             _contextFacade = contextFacade;
         }
-
-
+        
         [HttpGet]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Search(
             int page = 1,
             int pageSize = 10,
-            string sortBy = "Id",
             string username = "",
-            OrderBy sortOrder = OrderBy.Asc)
+            string sortBy = "Id",
+            OrderBy sortOrder = OrderBy.Desc)
         {
 
             var users = await GetUsers(
@@ -60,11 +74,11 @@ namespace Plato.WebApi.Controllers
                 username,
                 sortBy,
                 sortOrder);
-
-            PagedResults<SearchResult> output = null;
+            
+            PagedResults<SearchResult> results = null;
             if (users != null)
             {
-                output = new PagedResults<SearchResult>
+                results = new PagedResults<SearchResult>
                 {
                     Total = users.Total
                 };
@@ -82,7 +96,7 @@ namespace Plato.WebApi.Controllers
                         ["Alias"] = user.Alias
                     });
 
-                    output.Data.Add(new SearchResult()
+                    results.Data.Add(new SearchResult()
                     {
                         Text = user.DisplayName,
                         Url = profileUrl,
@@ -91,20 +105,34 @@ namespace Plato.WebApi.Controllers
                 }
             }
 
+            SearchResults output = null;
+            if (results != null)
+            {
+                var totalPages = results.Total.ToSafeCeilingDivision(pageSize);
+                output = new SearchResults()
+                {
+                    Page = page,
+                    PageSize = pageSize,
+                    Total = results.Total,
+                    TotalPages = totalPages,
+                    Data = results.Data
+                };
+            }
+
             return output != null
                 ? base.Result(output)
                 : base.NoResults();
 
         }
         
-
         async Task<IPagedResults<User>> GetUsers(
-            int page = 1,
-            int pageSize = 10,
-            string username = "",
-            string sortBy = "LastLoginDate",
-            OrderBy sortOrder = OrderBy.Desc)
+            int page,
+            int pageSize,
+            string username,
+            string sortBy,
+            OrderBy sortOrder)
         {
+
             return await _ploatUserStore.QueryAsync()
                 .Take(page, pageSize)
                 .Select<UserQueryParams>(q =>
@@ -120,8 +148,6 @@ namespace Plato.WebApi.Controllers
 
         }
 
-
-
-
     }
+
 }
