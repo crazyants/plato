@@ -29,20 +29,17 @@ namespace Plato.WebApi.Controllers
     public class UsersController : BaseWebApiController
     {
 
-        private readonly IActionContextAccessor _actionContextAccesor;
+      
         private readonly IPlatoUserStore<User> _ploatUserStore;
-        private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IContextFacade _contextFacade;
-        private IUrlHelper _urlHelper;
-
+   
         public UsersController(
             IPlatoUserStore<User> platoUserStore,
-            IUrlHelperFactory urlHelperFactory, IContextFacade contextFacade, IActionContextAccessor actionContextAccesor)
+            IUrlHelperFactory urlHelperFactory,
+            IContextFacade contextFacade)
         {
             _ploatUserStore = platoUserStore;
-            _urlHelperFactory = urlHelperFactory;
             _contextFacade = contextFacade;
-            _actionContextAccesor = actionContextAccesor;
         }
 
 
@@ -80,10 +77,19 @@ namespace Plato.WebApi.Controllers
                     Total = users.Total
                 };
                 
-                var baseUrl = await _contextFacade.GetBaseUrl();
+                var baseUrl = await _contextFacade.GetBaseUrlAsync();
                 foreach (var user in users.Data)
                 {
-                    var profileUrl = baseUrl + GetUrl(user);
+
+                    var profileUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    {
+                        ["Area"] = "Plato.Users",
+                        ["Controller"] = "Home",
+                        ["Action"] = "Display",
+                        ["Id"] = user.Id,
+                        ["Alias"] = user.Alias
+                    });
+
                     output.Data.Add(new SearchResult()
                     {
                         Text = user.DisplayName,
@@ -132,27 +138,6 @@ namespace Plato.WebApi.Controllers
 
 
 
-        string GetUrl(User user)
-        {
-
-            if (_urlHelper == null)
-            {
-                _urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
-            }
-
-            return _urlHelper.RouteUrl(new UrlRouteContext
-            {
-                Values = new RouteValueDictionary()
-                {
-                    ["Area"] = "Plato.Users",
-                    ["Controller"] = "Home",
-                    ["Action"] = "Display",
-                    ["Id"] = user.Id,
-                    ["Alias"] = user.Alias
-                }
-            });
-
-        }
 
 
     }

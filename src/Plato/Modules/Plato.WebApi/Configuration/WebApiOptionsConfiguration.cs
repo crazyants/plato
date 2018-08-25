@@ -30,7 +30,7 @@ namespace Plato.WebApi.Configuration
         
         async Task<string> GetUrl()
         {
-            return await _contextFacade.GetBaseUrl();
+            return await _contextFacade.GetBaseUrlAsync();
         }
 
         async Task<string> GetApiKey()

@@ -2,7 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -20,18 +23,25 @@ namespace Plato.Internal.Hosting.Web
         private readonly IActionContextAccessor _actionContextAccessor;
         private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly ISiteSettingsStore _siteSettingsStore; 
+        private readonly ISiteSettingsStore _siteSettingsStore;
+        private readonly IUrlHelperFactory _urlHelperFactory;
+
+        private IUrlHelper _urlHelper;
 
         public ContextFacade(
             IHttpContextAccessor httpContextAccessor,
             IPlatoUserStore<User> platoUserStore,
-            IShellDescriptorManager shellDescriptorManager, IActionContextAccessor actionContextAccessor, ISiteSettingsStore siteSettingsStore)
+            IShellDescriptorManager shellDescriptorManager,
+            IActionContextAccessor actionContextAccessor,
+            ISiteSettingsStore siteSettingsStore,
+            IUrlHelperFactory urlHelperFactory)
         {
             _httpContextAccessor = httpContextAccessor;
             _platoUserStore = platoUserStore;
             _shellDescriptorManager = shellDescriptorManager;
             _actionContextAccessor = actionContextAccessor;
             _siteSettingsStore = siteSettingsStore;
+            _urlHelperFactory = urlHelperFactory;
         }
         
         public async Task<User> GetAuthenticatedUserAsync()
@@ -75,7 +85,7 @@ namespace Plato.Internal.Hosting.Web
             return await _siteSettingsStore.GetAsync();
         }
 
-        public async Task<string> GetBaseUrl()
+        public async Task<string> GetBaseUrlAsync()
         {
 
             var settings = await GetSiteSettingsAsync();
@@ -91,6 +101,15 @@ namespace Plato.Internal.Hosting.Web
             var request = _httpContextAccessor.HttpContext.Request;
             return $"{request.Scheme}://{request.Host}{request.PathBase}";
             
+        }
+
+        public string GetRouteUrl(RouteValueDictionary routeValues)
+        {
+            if (_urlHelper == null)
+            {
+                _urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
+            }
+            return _urlHelper.RouteUrl(new UrlRouteContext {Values = routeValues});
         }
 
     }
