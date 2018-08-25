@@ -81,15 +81,15 @@ namespace Plato.Internal.Hosting.Web
             var settings = await GetSiteSettingsAsync();
             if (!String.IsNullOrWhiteSpace(settings.BaseUrl))
             {
-                if (settings.BaseUrl.EndsWith("/"))
-                {
-                    return settings.BaseUrl;
-                }
-                return settings.BaseUrl + "/";
+                // trim tailing forward slash
+                var lastSlash = settings.BaseUrl.LastIndexOf('/');
+                return (lastSlash > -1)
+                    ? settings.BaseUrl.Substring(0, lastSlash)
+                    : settings.BaseUrl;
             }
-            
+
             var request = _httpContextAccessor.HttpContext.Request;
-            return $"{request.Scheme}://{request.Host}{request.PathBase}/";
+            return $"{request.Scheme}://{request.Host}{request.PathBase}";
             
         }
 

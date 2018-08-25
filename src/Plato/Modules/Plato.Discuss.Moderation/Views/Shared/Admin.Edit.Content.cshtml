@@ -37,25 +37,24 @@
                 <input type="text" id="tagItStore"/>
                 
                 <hr/>
-
-                <ul class="tagit form-control list-inline" data-provide="tagIt" data-tagit-store="#tagItStore">
-
-                    <li class="tagit-list-item-input">
-                        <div class="dropdown">
+                
+                <div class="dropdown">
+                    <ul class="tagit form-control list-inline" data-provide="tagIt" data-tagit-store="#tagItStore">
+                        <li class="tagit-list-item-input">
                             <input type="text"
                                    autocomplete="off"
+                                   data-autocomplete-target="#moderators"
                                    data-autocomplete-url="api/users/search?page={page}&pageSize={pageSize}"
                                    data-autocomplete-value-field="username"
                                    placeholder="search by name, email, company or phone number">
-                            <div class="dropdown-menu col-12" role="menu">
-                                <p class="text-center">
-                                    <i class="fal fa-spinner fa-spin"></i>
-                                </p>
-                            </div>
-                        </div>
-                    </li>
-
-                </ul>
+                        </li>
+                    </ul>
+                    <div id="moderators" class="dropdown-menu col-12" role="menu">
+                        <p class="text-center">
+                            <i class="fal fa-spinner fa-spin"></i>
+                        </p>
+                    </div>
+                </div>
 
             </div>
 

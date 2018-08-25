@@ -467,13 +467,10 @@
 /* Tagit */
 /* ------------------- */
 
-.tagit { display: block; }
-.tagit li { display: inline-block; border-radius: 0.15rem; margin-right: 0.50rem; }
-
-.tagit li.bg-warning { background-color: #FFF389 !important; }
-
-.tagit-list-item-input { width: 100%; }
+.tagit li.tagit-list-item { display: inline-block; border-radius: 0.15rem; margin-right: 0.50rem; }
+.tagit-list-item-input { width: 100%; display: inline-block; }
 .tagit-list-item-input input { width: 100%; outline: none; border: 0; background: transparent; }
+.tagit li.bg-warning { background-color: #FFF389 !important; }
 
 /* --------------------------- */
 /* animations */

@@ -3,8 +3,12 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
@@ -24,12 +28,21 @@ namespace Plato.WebApi.Controllers
 
     public class UsersController : BaseWebApiController
     {
+
+        private readonly IActionContextAccessor _actionContextAccesor;
         private readonly IPlatoUserStore<User> _ploatUserStore;
+        private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly IContextFacade _contextFacade;
+        private IUrlHelper _urlHelper;
 
         public UsersController(
-            IPlatoUserStore<User> platoUserStore)
+            IPlatoUserStore<User> platoUserStore,
+            IUrlHelperFactory urlHelperFactory, IContextFacade contextFacade, IActionContextAccessor actionContextAccesor)
         {
             _ploatUserStore = platoUserStore;
+            _urlHelperFactory = urlHelperFactory;
+            _contextFacade = contextFacade;
+            _actionContextAccesor = actionContextAccesor;
         }
 
 
@@ -66,12 +79,15 @@ namespace Plato.WebApi.Controllers
                 {
                     Total = users.Total
                 };
+                
+                var baseUrl = await _contextFacade.GetBaseUrl();
                 foreach (var user in users.Data)
                 {
+                    var profileUrl = baseUrl + GetUrl(user);
                     output.Data.Add(new SearchResult()
                     {
                         Text = user.DisplayName,
-                        Url = "http://test.com/",
+                        Url = profileUrl,
                         Rank = 0
                     });
                 }
@@ -99,8 +115,8 @@ namespace Plato.WebApi.Controllers
                 {
                     if (!String.IsNullOrEmpty(username))
                     {
-                        q.UserName.Equals(username).Or();
-                        //q.FirstName.Equals(username).Or();
+                        q.UserName.StartsWith(username).Or();
+                        q.Email.StartsWith(username).Or();
                         //q.LastName.Equals(username).Or();
                         //q.DisplayName.Equals(username).Or();
                     }
@@ -113,6 +129,31 @@ namespace Plato.WebApi.Controllers
                 : base.NoResults();
 
         }
+
+
+
+        string GetUrl(User user)
+        {
+
+            if (_urlHelper == null)
+            {
+                _urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccesor.ActionContext);
+            }
+
+            return _urlHelper.RouteUrl(new UrlRouteContext
+            {
+                Values = new RouteValueDictionary()
+                {
+                    ["Area"] = "Plato.Users",
+                    ["Controller"] = "Home",
+                    ["Action"] = "Display",
+                    ["Id"] = user.Id,
+                    ["Alias"] = user.Alias
+                }
+            });
+
+        }
+
 
     }
 }
