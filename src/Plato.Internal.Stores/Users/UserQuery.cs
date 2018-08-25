@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.XPath;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Models.Users;
@@ -18,7 +19,7 @@ namespace Plato.Internal.Stores.Users
 
         private readonly IStore<User> _store;
 
-        public UserQuery(IStore<User> store) 
+        public UserQuery(IStore<User> store)
         {
             _store = store;
         }
@@ -29,10 +30,10 @@ namespace Plato.Internal.Stores.Users
         {
             var defaultParams = new TParams();
             configure(defaultParams);
-            Params = (UserQueryParams) Convert.ChangeType(defaultParams, typeof(UserQueryParams));
+            Params = (UserQueryParams)Convert.ChangeType(defaultParams, typeof(UserQueryParams));
             return this;
         }
-        
+
         public override async Task<IPagedResults<User>> ToList()
         {
             var builder = new UserQueryBuilder(this);
@@ -115,7 +116,7 @@ namespace Plato.Internal.Stores.Users
             get => _roleName ?? (_roleName = new WhereString());
             set => _roleName = value;
         }
-        
+
     }
 
     #endregion
@@ -124,7 +125,7 @@ namespace Plato.Internal.Stores.Users
 
     public class UserQueryBuilder : IQueryBuilder
     {
-        
+
         #region "Constructor"
 
         private readonly string _tableName;
@@ -184,7 +185,7 @@ namespace Plato.Internal.Stores.Users
 
         #region "Private Methods"
 
-        private string BuildWhereClauseForStartId()
+        string BuildWhereClauseForStartId()
         {
             var sb = new StringBuilder();
             // default to ascending
@@ -206,11 +207,11 @@ namespace Plato.Internal.Stores.Users
             return sb.ToString();
 
         }
-        
-        private string BuildWhereClause()
+
+        string BuildWhereClause()
         {
             var sb = new StringBuilder();
-         
+
             if (_query.Params.Id.Value > 0)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -225,7 +226,7 @@ namespace Plato.Internal.Stores.Users
                 sb.Append(_query.Params.UserName.ToSqlString("UserName"));
             }
 
-        
+
             if (!String.IsNullOrEmpty(_query.Params.Email.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -236,12 +237,12 @@ namespace Plato.Internal.Stores.Users
             return sb.ToString();
         }
 
-        private string BuildOrderBy()
+        string BuildOrderBy()
         {
             if (_query.SortColumns.Count == 0) return null;
             var sb = new StringBuilder();
             var i = 0;
-            foreach (var sortColumn in _query.SortColumns)
+            foreach (var sortColumn in GetSafeSortColumns())
             {
                 sb.Append(sortColumn.Key);
                 if (sortColumn.Value != OrderBy.Asc)
@@ -250,7 +251,52 @@ namespace Plato.Internal.Stores.Users
                     sb.Append(", ");
                 i += 1;
             }
+
             return sb.ToString();
+        }
+
+        IDictionary<string, OrderBy> GetSafeSortColumns()
+        {
+            var ourput = new Dictionary<string, OrderBy>();
+            foreach (var sortColumn in _query.SortColumns)
+            {
+                var columnName = GetSortColumn(sortColumn.Key);
+                if (!String.IsNullOrEmpty(columnName))
+                {
+                    ourput.Add(columnName, sortColumn.Value);
+                }
+            }
+            return ourput;
+        }
+        
+        string GetSortColumn(string columnName)
+        {
+
+            if (String.IsNullOrEmpty(columnName))
+            {
+                return string.Empty;
+            }
+
+            switch (columnName.ToLower())
+            {
+                case "id":
+                    return "Id";
+                case "username":
+                    return "UserName";
+                case "email":
+                    return "Email";
+                case "firstname":
+                    return "FirstName";
+                case "lastname":
+                    return "LastName";
+                case "createddate":
+                    return "CreatedDate";
+                case "lastlogindate":
+                    return "LastLoginDate";
+            }
+
+            return string.Empty;
+            
         }
 
         #endregion

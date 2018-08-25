@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Cache;
 using Plato.Internal.Data.Abstractions;
@@ -37,7 +36,6 @@ namespace Plato.Internal.Stores.Users
         public PlatoUserStore(
             IDbQueryConfiguration dbQuery,
             IUserRepository<User> userRepository,
-            IMemoryCache memoryCache,
             ILogger<PlatoUserStore> logger,
             ICacheManager cacheManager, 
             ITypedModuleProvider typedModuleProvider,
@@ -45,14 +43,14 @@ namespace Plato.Internal.Stores.Users
             IUserDataStore<UserData> userDataStore,
             IAliasCreator aliasCreator)
         {
-            _dbQuery = dbQuery;
-            _userRepository = userRepository;
-            _logger = logger;
-            _cacheManager = cacheManager;
             _typedModuleProvider = typedModuleProvider;
             _userDataItemStore = userDataItemStore;
+            _userRepository = userRepository;
+            _cacheManager = cacheManager;
             _userDataStore = userDataStore;
             _aliasCreator = aliasCreator;
+            _dbQuery = dbQuery;
+            _logger = logger;
         }
 
         #endregion
@@ -194,8 +192,7 @@ namespace Plato.Internal.Stores.Users
             var query = new UserQuery(this);
             return _dbQuery.ConfigureQuery(query); ;
         }
-
-    
+        
         public async Task<IPagedResults<User>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);

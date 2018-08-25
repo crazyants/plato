@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -53,21 +54,12 @@ namespace Plato.WebApi.Controllers
             OrderBy sortOrder = OrderBy.Asc)
         {
 
-            var users = await _ploatUserStore.QueryAsync()
-                .Take(page, pageSize)
-                .Select<UserQueryParams>(q =>
-                {
-                    if (!String.IsNullOrEmpty(username))
-                    {
-                        q.UserName.Equals(username).Or();
-                        //q.FirstName.Equals(username).Or();
-                        //q.LastName.Equals(username).Or();
-                        //q.DisplayName.Equals(username).Or();
-                    }
-                })
-                .OrderBy(sortBy, sortOrder)
-                .ToList();
-
+            var users = await GetUsers(
+                page,
+                pageSize,
+                username,
+                sortBy,
+                sortOrder);
 
             PagedResults<SearchResult> output = null;
             if (users != null)
@@ -105,17 +97,15 @@ namespace Plato.WebApi.Controllers
 
         }
         
-        [Authorize(Policy = "ManageStore"), HttpGet]
-        [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Get(
-            int page = 1, 
-            int pageSize = 10,
-            string sortBy = "Id",
-            string username = "",
-            OrderBy sortOrder = OrderBy.Asc)
-        {
 
-            var users = await _ploatUserStore.QueryAsync()
+        async Task<IPagedResults<User>> GetUsers(
+            int page = 1,
+            int pageSize = 10,
+            string username = "",
+            string sortBy = "LastLoginDate",
+            OrderBy sortOrder = OrderBy.Desc)
+        {
+            return await _ploatUserStore.QueryAsync()
                 .Take(page, pageSize)
                 .Select<UserQueryParams>(q =>
                 {
@@ -123,19 +113,12 @@ namespace Plato.WebApi.Controllers
                     {
                         q.UserName.StartsWith(username).Or();
                         q.Email.StartsWith(username).Or();
-                        //q.LastName.Equals(username).Or();
-                        //q.DisplayName.Equals(username).Or();
                     }
                 })
                 .OrderBy(sortBy, sortOrder)
                 .ToList();
-            
-            return users != null
-                ? base.Result(users)
-                : base.NoResults();
 
         }
-
 
 
 
