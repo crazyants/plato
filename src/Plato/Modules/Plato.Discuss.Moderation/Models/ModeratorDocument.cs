@@ -9,7 +9,7 @@ namespace Plato.Discuss.Moderation.Models
 
         public int Id { get; set; }
 
-        public IEnumerable<Moderator> Moderators { get; set; }
+        public IEnumerable<OldModerator> Moderators { get; set; }
 
     }
 }

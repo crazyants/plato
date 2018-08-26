@@ -73,7 +73,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
             
-            return Views(View<ChannelListViewModel>("Discuss.Channels.Index.Sidebar", model =>
+            return Views(View<ChannelListViewModel>("Topic.Channels.Index.Sidebar", model =>
                 {
                     model.Channels = categories.Where(c => c.ParentId == 0);
                     return model;
@@ -136,7 +136,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             // Get all categories & return views
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
             return Views(
-                View<ChannelListViewModel>("Discuss.Channels.Index.Sidebar", model =>
+                View<ChannelListViewModel>("Topic.Channels.Index.Sidebar", model =>
                 {
                     model.Channels = categories;
                     return model;
@@ -202,7 +202,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             };
 
             return Views(
-                View<EditTopicChannelsViewModel>("Discuss.Channels.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
+                View<EditTopicChannelsViewModel>("Topic.Channels.Edit.Sidebar", model => viewModel).Zone("sidebar").Order(1)
             );
 
         }

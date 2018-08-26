@@ -5,13 +5,13 @@ namespace Plato.Internal.Security.Abstractions
 {
     public class PermissionRequirement : IAuthorizationRequirement
     {
-        public PermissionRequirement(Permission permission)
+        public PermissionRequirement(IPermission permission)
         {
             Permission = permission ??
                          throw new ArgumentNullException(nameof(permission));
         }
 
-        public Permission Permission { get; set; }
+        public IPermission Permission { get; set; }
     }
 
 }

@@ -72,7 +72,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                 View<CategoryBase>("Home.Index.Header", model => categoryBase).Zone("header").Order(1),
                 View<CategoryBase>("Home.Index.Tools", model => categoryBase).Zone("tools").Order(1),
                 View<ChannelIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
-                View<ChannelListViewModel>("Discuss.Channels.Index.Sidebar", model =>
+                View<ChannelListViewModel>("Topic.Channels.Index.Sidebar", model =>
                 {
                     model.SelectedChannelId = channel?.Id ?? 0;
                     model.Channels = categories;

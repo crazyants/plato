@@ -18,6 +18,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Channels.Navigation;
 using Plato.Discuss.Channels.Subscribers;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Channels
 {
@@ -54,6 +55,10 @@ namespace Plato.Discuss.Channels
             services.AddScoped<IViewProviderManager<CategoryBase>, ViewProviderManager<CategoryBase>>();
             services.AddScoped<IViewProvider<CategoryBase>, AdminViewProvider>();
 
+            // Moderation view providers
+            services.AddScoped<IViewProviderManager<Moderator>, ViewProviderManager<Moderator>>();
+            services.AddScoped<IViewProvider<Moderator>, ModeratorViewProvider>();
+            
             // Register view adaptors
             services.AddScoped<IViewAdaptorProvider, DiscussViewAdaptorProvider>();
 

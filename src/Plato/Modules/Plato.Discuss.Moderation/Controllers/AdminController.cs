@@ -4,6 +4,7 @@ using Plato.Discuss.Moderation.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Moderation.Controllers
 {

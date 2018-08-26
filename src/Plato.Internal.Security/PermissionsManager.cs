@@ -138,7 +138,135 @@ namespace Plato.Internal.Security
 
         }
     }
-    
+
+
+
+    public class PermissionsManager2<TPermission> : IPermissionsManager2<TPermission> where TPermission : class, IPermission
+    {
+
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IEnumerable<IPermissionsProvider2<TPermission>> _providers;
+        private readonly ILogger<PermissionsManager2<TPermission>> _logger;
+        private readonly ITypedModuleProvider _typedModuleProvider;
+
+        public PermissionsManager2(
+            IEnumerable<IPermissionsProvider2<TPermission>> providers,
+            ILogger<PermissionsManager2<TPermission>> logger,
+            ITypedModuleProvider typedModuleProvider,
+            IAuthorizationService authorizationService)
+        {
+            _providers = providers;
+            _typedModuleProvider = typedModuleProvider;
+            _authorizationService = authorizationService;
+            _logger = logger;
+        }
+
+        private IEnumerable<TPermission> _permissions;
+
+        public IEnumerable<TPermission> GetPermissions()
+        {
+
+            // Ensure permissions are only loaded once per scope
+            if (_permissions == null)
+            {
+                var permissions = new List<TPermission>();
+                foreach (var provider in _providers)
+                {
+                    try
+                    {
+                        permissions.AddRange(provider.GetPermissions());
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e,
+                            $"An exception occurred within the permissions provider. Please review your permission provider and try again. {e.Message}");
+                        throw;
+                    }
+                }
+
+                _permissions = permissions;
+            }
+
+            return _permissions;
+
+        }
+
+        public async Task<IDictionary<string, IEnumerable<TPermission>>> GetCategorizedPermissionsAsync()
+        {
+
+            var output = new Dictionary<string, IEnumerable<TPermission>>();
+
+            foreach (var provider in _providers)
+            {
+
+                var module = await _typedModuleProvider.GetModuleForDependency(provider.GetType());
+                var name = module.Descriptor.Name;
+                var permissions = provider.GetPermissions();
+                foreach (var permission in permissions)
+                {
+                    var category = permission.Category;
+                    var title = String.IsNullOrWhiteSpace(category) ?
+                        name :
+                        category;
+
+                    if (output.ContainsKey(title))
+                    {
+                        output[title] = output[title].Concat(new[] { permission });
+                    }
+                    else
+                    {
+                        output.Add(title, new[] { permission });
+                    }
+                }
+            }
+
+            return output;
+        }
+
+        public async Task<IEnumerable<string>> GetEnabledRolePermissionsAsync(Role role)
+        {
+
+            // We can only obtain enabled permissions for existing roles
+            // Return an empty list for new roles to avoid additional null checks
+            if (role.Id == 0)
+            {
+                return new List<string>();
+            }
+
+            // If the role is anonymous set the authtype to
+            // null to ensure IsAuthenticated is set to false
+            var authType = role.Name != DefaultRoles.Anonymous
+                ? "UserAuthType"
+                : null;
+
+            // Dummy identity
+            var identity = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Role, role.Name)
+            }, authType);
+
+            // Dummy principal
+            var principal = new ClaimsPrincipal(identity);
+
+            // Permissions grouped by feature
+            var categorizedPermissions = await GetCategorizedPermissionsAsync();
+
+            // Get flat permissions list from categorized permissions
+            var permissions = categorizedPermissions.SelectMany(x => x.Value);
+
+            var result = new List<string>();
+            foreach (var permission in permissions)
+            {
+                if (await _authorizationService.AuthorizeAsync(principal, permission))
+                {
+                    result.Add(permission.Name);
+                }
+            }
+
+            return result;
+
+        }
+    }
 
 
 }

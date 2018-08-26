@@ -1,17 +1,20 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
+using Plato.Internal.Stores.Roles;
 using Plato.Roles.ViewModels;
 
 namespace Plato.Roles.ViewProviders
 {
-    public class RoleViewProvider : BaseViewProvider<Role>
+    public class AdminViewProvider : BaseViewProvider<Role>
     {
 
         private readonly RoleManager<Role> _roleManager;
@@ -19,7 +22,7 @@ namespace Plato.Roles.ViewProviders
         private readonly IPlatoRoleStore _platoRoleStore;
         private readonly IPermissionsManager _permissionsManager;
 
-        public RoleViewProvider(
+        public AdminViewProvider(
             UserManager<User> userManager,
             IPlatoRoleStore platoRoleStore,
             RoleManager<Role> roleManager, 
@@ -45,9 +48,26 @@ namespace Plato.Roles.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Role role, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Role role, IUpdateModel updater)
         {
-            return Task.FromResult(default(IViewProviderResult));
+
+            var filterOptions = new FilterOptions();
+
+            var pagerOptions = new PagerOptions
+            {
+                Page = GetPageIndex(updater)
+            };
+
+            var viewModel = await GetPagedModel(
+                filterOptions,
+                pagerOptions);
+
+            return Views(
+                View<RolesIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header"),
+                View<RolesIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools"),
+                View<RolesIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content")
+            );
+
         }
 
         public override async Task<IViewProviderResult> BuildEditAsync(Role role, IUpdateModel updater)
@@ -100,10 +120,57 @@ namespace Plato.Roles.ViewProviders
 
         }
 
-        private async Task<bool> IsNewRole(int roleId)
+        async Task<bool> IsNewRole(int roleId)
         {
             return await _roleManager.FindByIdAsync(roleId.ToString()) == null;
         }
+        
+        async Task<RolesIndexViewModel> GetPagedModel(
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
+        {
+            var roles = await GetRoles(filterOptions, pagerOptions);
+            return new RolesIndexViewModel(
+                roles,
+                filterOptions,
+                pagerOptions);
+        }
 
+        async Task<IPagedResults<Role>> GetRoles(
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
+        {
+            return await _platoRoleStore.QueryAsync()
+                .Take(pagerOptions.Page, pagerOptions.PageSize)
+                .Select<RoleQueryParams>(q =>
+                {
+                    if (filterOptions.RoleId > 0)
+                    {
+                        q.Id.Equals(filterOptions.RoleId);
+                    }
+                    if (!string.IsNullOrEmpty(filterOptions.Search))
+                    {
+                        q.RoleName.IsIn(filterOptions.Search);
+                    }
+                })
+                .OrderBy("Id", OrderBy.Desc)
+                .ToList();
+        }
+
+
+        int GetPageIndex(IUpdateModel updater)
+        {
+
+            var page = 1;
+            var routeData = updater.RouteData;
+            var found = routeData.Values.TryGetValue("page", out object value);
+            if (found)
+            {
+                int.TryParse(value.ToString(), out page);
+            }
+
+            return page;
+
+        }
     }
 }

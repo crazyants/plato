@@ -6,6 +6,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Shell;
+using Plato.Moderation.Models;
 
 
 namespace Plato.Discuss.Moderation.ViewProviders
@@ -24,7 +25,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Moderator moderator, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Moderator oldModerator, IUpdateModel updater)
         {
             var viewModel = await GetIndexModel();
 
@@ -36,17 +37,17 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Moderator moderator, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Moderator oldModerator, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Moderator oldModerator, IUpdateModel updater)
         {
 
             var viewModel = new EditModeratorViewModel();
-            viewModel.IsNewModerator = moderator.Id == 0;
+            viewModel.IsNewModerator = oldModerator.Id == 0;
             
             return Task.FromResult(Views(
                 View<EditModeratorViewModel>("Admin.Edit.Header", model => viewModel).Zone("header").Order(1),
@@ -56,7 +57,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
             ));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator moderator, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator oldModerator, IUpdateModel updater)
         {
 
          
@@ -99,7 +100,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
             //}
 
-            return await BuildEditAsync(moderator, updater);
+            return await BuildEditAsync(oldModerator, updater);
 
 
         }

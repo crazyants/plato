@@ -26,7 +26,7 @@ namespace Plato.Roles.Controllers
         #region "Constructor"
 
         private readonly IAuthorizationService _authorizationService;
-        private readonly IViewProviderManager<RolesIndexViewModel> _roleIndexViewProvider;
+
         private readonly IViewProviderManager<Role> _roleViewProvider;
         private readonly IPlatoRoleStore _platoRoleStore;
         private readonly RoleManager<Role> _roleManager;
@@ -41,14 +41,14 @@ namespace Plato.Roles.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
-            IViewProviderManager<RolesIndexViewModel> roleIndexViewProvider,
+         
             IPlatoRoleStore platoRoleStore, 
             IViewProviderManager<Role> roleViewProvider,
             RoleManager<Role> roleManager, IAlerter alerter,
             IAuthorizationService authorizationService,
             IBreadCrumbManager breadCrumbManager)
         {
-            _roleIndexViewProvider = roleIndexViewProvider;
+        
             _platoRoleStore = platoRoleStore;
             _roleViewProvider = roleViewProvider;
             _roleManager = roleManager;
@@ -104,11 +104,9 @@ namespace Plato.Roles.Controllers
             routeData.Values.Add("Options.RoleName", filterOptions.Search);
             routeData.Values.Add("Options.Order", filterOptions.Order);
 
-            var model = await GetPagedModel(
-                filterOptions,
-                pagerOptions);
+           
             
-            var result = await _roleIndexViewProvider.ProvideIndexAsync(model, this);
+            var result = await _roleViewProvider.ProvideIndexAsync(new Role(), this);
 
             return View(result);
 
@@ -267,38 +265,6 @@ namespace Plato.Roles.Controllers
 
         #region "Private Methods"
 
-        private async Task<RolesIndexViewModel> GetPagedModel(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-            var roles = await GetRoles(filterOptions, pagerOptions);
-            return new RolesIndexViewModel(
-                roles,
-                filterOptions,
-                pagerOptions);
-        }
-
-
-        public async Task<IPagedResults<Role>> GetRoles(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-            return await _platoRoleStore.QueryAsync()
-                .Take(pagerOptions.Page, pagerOptions.PageSize)
-                .Select<RoleQueryParams>(q =>
-                {
-                    if (filterOptions.RoleId > 0)
-                    {
-                        q.Id.Equals(filterOptions.RoleId);
-                    }
-                    if (!string.IsNullOrEmpty(filterOptions.Search))
-                    {
-                        q.RoleName.IsIn(filterOptions.Search);
-                    }
-                })
-                .OrderBy("Id", OrderBy.Desc)
-                .ToList();
-        }
 
         #endregion
         

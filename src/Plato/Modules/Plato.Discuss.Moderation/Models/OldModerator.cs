@@ -5,7 +5,7 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Discuss.Moderation.Models
 {
-    public class Moderator
+    public class OldModerator
     {
 
         public int Id { get; set; }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Discuss.Moderation.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
@@ -10,6 +9,8 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Moderation.Navigation;
 using Plato.Discuss.Moderation.Stores;
 using Plato.Discuss.Moderation.ViewProviders;
+using Plato.Moderation.Models;
+using ModeratorDocument = Plato.Discuss.Moderation.Models.ModeratorDocument;
 
 namespace Plato.Discuss.Moderation
 {

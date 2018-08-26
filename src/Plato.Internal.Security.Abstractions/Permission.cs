@@ -4,8 +4,20 @@ using System.Text;
 
 namespace Plato.Internal.Security.Abstractions
 {
-    
-    public class Permission
+    public interface IPermission
+    {
+        string Name { get; set; }
+
+        string Description { get; set; }
+
+        string Category { get; set; }
+
+        IEnumerable<IPermission> ImpliedBy { get; set; }
+
+    }
+
+
+    public class Permission : IPermission
     {
 
         public const string ClaimType = "Permission";
@@ -16,7 +28,7 @@ namespace Plato.Internal.Security.Abstractions
 
         public string Category { get; set; }
 
-        public IEnumerable<Permission> ImpliedBy { get; set; }
+        public IEnumerable<IPermission> ImpliedBy { get; set; }
 
         public Permission(string name)
         {

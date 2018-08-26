@@ -36,7 +36,7 @@
             <div class="form-group" asp-validation-class-for="Users">
                 <input asp-for="Users" type="text" id="tagItStore" />
                 <hr />
-                <label asp-for="Moderator.UserId">
+                <label asp-for="OldModerator.UserId">
                     <strong>@T["Username"]</strong>
                     <span asp-validation-for="Users" class="text-danger"></span><br />
                     <span class="text-muted">@T["Find a user to add as a moderator..."]</span>

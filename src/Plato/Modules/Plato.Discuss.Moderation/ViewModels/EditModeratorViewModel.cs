@@ -11,11 +11,14 @@ namespace Plato.Discuss.Moderation.ViewModels
         [Display(Name = "username")]
         public string Users { get; set; }
 
+
+
+
         public bool EditAnyPost { get; set; }
 
         public bool DeleteAnyPost { get; set; }
         
-        public Moderator Moderator { get; set; } = new Moderator();
+        public OldModerator OldModerator { get; set; } = new OldModerator();
 
         public bool IsNewModerator { get; set; }
 

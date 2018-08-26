@@ -72,7 +72,7 @@ namespace Plato.Roles.Services
             }
         }
 
-        private static void PermissionNames(Permission permission, HashSet<string> stack)
+        private static void PermissionNames(IPermission permission, HashSet<string> stack)
         {
             // The given name is tested
             stack.Add(permission.Name);
