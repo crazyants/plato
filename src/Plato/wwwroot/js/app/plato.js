@@ -1,6 +1,11 @@
 ﻿// <reference path="~/js/vendors/jquery.js" />
 // <reference path="~/js/vendors/bootstrap.js" />
 
+/*======================================================================*/
+// Plato
+// © InstantASP Ltd.
+/*======================================================================*/
+
 if (typeof jQuery === "undefined") {
     throw new Error("Plato requires jQuery");
 }

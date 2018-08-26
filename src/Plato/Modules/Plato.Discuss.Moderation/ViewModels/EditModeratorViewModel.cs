@@ -1,12 +1,23 @@
-﻿using Plato.Discuss.Moderation.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using Plato.Discuss.Moderation.Models;
 
 namespace Plato.Discuss.Moderation.ViewModels
 {
     public class EditModeratorViewModel
     {
 
-        public Moderator Moderator { get; set; }
+
+        [Required]
+        [Display(Name = "username")]
+        public string Users { get; set; }
+
+        public bool EditAnyPost { get; set; }
+
+        public bool DeleteAnyPost { get; set; }
+        
+        public Moderator Moderator { get; set; } = new Moderator();
 
         public bool IsNewModerator { get; set; }
+
     }
 }

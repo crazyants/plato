@@ -2,7 +2,7 @@
 
 <card>
     <card-title>
-        @if (Model.Moderator == null)
+        @if (Model.IsNewModerator)
         {
         <h6 class="card-title">@T["Add Moderator"]</h6>
         }
@@ -14,30 +14,33 @@
     <card-body>
 
         <fieldset>
-            <div class="form-group" asp-validation-class-for="Name">
-                <label asp-for="Moderator.UserId"><strong>@T["Name"]</strong></label>
-                <span asp-validation-for="Moderator.UserId" class="text-danger"></span>
 
-                <div class="dropdown">
-                    <input placeholder="@T["name your channel"]" asp-for="Moderator.UserId" class="form-control" type="text"
-                           data-provide="autoComplete"
-                           data-autocomplete-url="api/users/search?page={page}&pageSize={pageSize}"
-                           data-autocomplete-value-field="username" />
-                    <div class="dropdown-menu col-12" role="menu">
-                        <p class="text-center">
-                            <i class="fal fa-spinner fa-spin"></i>
-                        </p>
-                    </div>
+            @*<div class="form-group" asp-validation-class-for="Name">
+            <label asp-for="Moderator.UserId"><strong>@T["Name"]</strong></label>
+            <span asp-validation-for="Moderator.UserId" class="text-danger"></span>
+
+            <div class="dropdown">
+                <input placeholder="@T["name your channel"]" asp-for="Moderator.UserId" class="form-control" type="text"
+                       data-provide="autoComplete"
+                       data-autocomplete-url="api/users/search?page={page}&pageSize={pageSize}"
+                       data-autocomplete-value-field="username" />
+                <div class="dropdown-menu col-12" role="menu">
+                    <p class="text-center">
+                        <i class="fal fa-spinner fa-spin"></i>
+                    </p>
                 </div>
-                
             </div>
-            
-            <div class="form-group">
-                
-                <input type="text" id="tagItStore"/>
-                
-                <hr/>
-                
+
+        </div>*@
+
+            <div class="form-group" asp-validation-class-for="Users">
+                <input asp-for="Users" type="text" id="tagItStore" />
+                <hr />
+                <label asp-for="Moderator.UserId">
+                    <strong>@T["Username"]</strong>
+                    <span asp-validation-for="Users" class="text-danger"></span><br />
+                    <span class="text-muted">@T["Find a user to add as a moderator..."]</span>
+                </label>
                 <div class="dropdown">
                     <ul class="tagit form-control list-inline" data-provide="tagIt" data-tagit-store="#tagItStore">
                         <li class="tagit-list-item-input">
@@ -46,7 +49,7 @@
                                    data-autocomplete-target="#moderators"
                                    data-autocomplete-url="api/users/search?page={page}&pageSize=5&username={username}"
                                    data-autocomplete-value-field="username"
-                                   placeholder="search by name, email, company or phone number">
+                                   placeholder="@T["Search by username or email..."]">
                         </li>
                     </ul>
                     <div id="moderators" class="dropdown-menu col-12" role="menu">
@@ -55,7 +58,39 @@
                         </p>
                     </div>
                 </div>
+            </div>
 
+            <div class="form-group" asp-validation-class-for="EditAnyPost">
+                
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-action">
+                        <label class="d-block" asp-for="EditAnyPost">
+                            <span class="float-left">
+                                @T["Edit Any Post"]
+                            </span>
+                            <span class="float-right">
+                                <span class="switch switch-round">
+                                    <input class="form-check-input" asp-for="EditAnyPost" />
+                                    <span class="switch-slider"></span>
+                                </span>
+                            </span>
+                        </label>
+                    </li>
+                    <li class="list-group-item list-group-item-action">
+                        <label class="d-block" asp-for="DeleteAnyPost">
+                            <span class="float-left">
+                                @T["Delete Any Post"]
+                            </span>
+                            <span class="float-right">
+                                <span class="switch switch-round">
+                                    <input class="form-check-input" asp-for="DeleteAnyPost" />
+                                    <span class="switch-slider"></span>
+                                </span>
+                            </span>
+                        </label>
+                    </li>
+                </ul>
+              
             </div>
 
         </fieldset>

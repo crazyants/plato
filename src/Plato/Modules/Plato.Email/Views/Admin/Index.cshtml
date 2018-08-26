@@ -79,7 +79,6 @@
                                 <br/>
                                 <span class="text-muted">@T["If authentication is required provided your username."]</span>
                             </label>
-                            
                             <input placeholder="email@address.com" asp-for="@Model.SmtpSettings.UserName" class="form-control" />
                         </div>
                     </fieldset>
@@ -136,7 +135,6 @@
                                 <br />
                                 <span class="text-muted">@T["The interval in seconds to poll the queue."]</span>
                             </label>
-                            
                             <input placeholder="4" asp-for="@Model.SmtpSettings.PollInterval" class="form-control"/>
                         </div>
                     </fieldset>

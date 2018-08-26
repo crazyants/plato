@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -60,9 +61,12 @@ namespace Plato.Discuss.Channels.Controllers
             //{
             //    return Unauthorized();
             //}
-
-       
-            var parents = await _categoryStore.GetParentsByIdAsync(id);
+            
+            IEnumerable<Channel> parents = null;
+            if (id > 0)
+            {
+                parents = await _categoryStore.GetParentsByIdAsync(id);
+            }
 
             _breadCrumbManager.Configure(builder =>
             {

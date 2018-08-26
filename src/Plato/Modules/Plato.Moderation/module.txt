@@ -1,0 +1,6 @@
+Name: Plato Moderation
+Description: Add core mooderation services for Plato.
+Category: Core
+Author: InstantASP
+Version: 1.0.0
+PlatoVersion: 1.0.0

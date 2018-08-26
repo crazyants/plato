@@ -1,18 +1,14 @@
 ﻿using System.Security.Claims;
 using Newtonsoft.Json;
 
-namespace Plato.Internal.Models.Roles
+namespace Plato.Moderation.Models
 {
-    public class RoleClaim
+ 
+    public class ModeratorClaim
     {
-        /// <summary>
-        /// Gets or sets the claim type for this claim.
-        /// </summary>
+      
         public string ClaimType { get; set; }
-
-        /// <summary>
-        /// Gets or sets the claim value for this claim.
-        /// </summary>
+        
         public string ClaimValue { get; set; }
 
         public Claim ToClaim()

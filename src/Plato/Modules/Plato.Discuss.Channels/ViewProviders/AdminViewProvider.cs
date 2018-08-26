@@ -57,7 +57,6 @@ namespace Plato.Discuss.Channels.ViewProviders
         public override Task<IViewProviderResult> BuildDisplayAsync(CategoryBase viewModel, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
-
         }
         
         public override async Task<IViewProviderResult> BuildEditAsync(CategoryBase categoryBase, IUpdateModel updater)
