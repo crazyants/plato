@@ -9,6 +9,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Moderation.Navigation;
 using Plato.Discuss.Moderation.Stores;
 using Plato.Discuss.Moderation.ViewProviders;
+using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
 using ModeratorDocument = Plato.Discuss.Moderation.Models.ModeratorDocument;
 
@@ -35,6 +36,9 @@ namespace Plato.Discuss.Moderation
             services.AddScoped<IViewProviderManager<Moderator>, ViewProviderManager<Moderator>>();
             services.AddScoped<IViewProvider<Moderator>, AdminViewProvider>();
 
+            // Register permissions provider
+            services.AddScoped<IPermissionsProvider2<ModeratorPermission>, ModeratorPermissions>();
+            
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
    

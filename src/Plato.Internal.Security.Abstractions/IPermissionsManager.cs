@@ -5,6 +5,7 @@ using Plato.Internal.Models.Roles;
 
 namespace Plato.Internal.Security.Abstractions
 {
+
     public interface IPermissionsManager
     {
 

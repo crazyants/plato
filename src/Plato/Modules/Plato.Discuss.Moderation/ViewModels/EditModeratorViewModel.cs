@@ -14,7 +14,7 @@ namespace Plato.Discuss.Moderation.ViewModels
         [Display(Name = "username")]
         public string Users { get; set; }
 
-        public IDictionary<string, IEnumerable<Permission>> CategorizedPermissions { get; set; }
+        public IDictionary<string, IEnumerable<ModeratorPermission>> CategorizedPermissions { get; set; }
         
         public IEnumerable<string> EnabledPermissions { get; set; }
         

@@ -51,10 +51,9 @@ namespace Plato.Roles.Services
             foreach (var roleName in rolesToExamine)
             {
                 var role = await _roleManager.FindByNameAsync(roleName);
-
                 if (role != null)
                 {
-                    foreach (var claim in ((Role)role).RoleClaims)
+                    foreach (var claim in role.RoleClaims)
                     {
                         if (!String.Equals(claim.ClaimType, Permission.ClaimType, StringComparison.OrdinalIgnoreCase))
                         {
@@ -72,7 +71,9 @@ namespace Plato.Roles.Services
             }
         }
 
-        private static void PermissionNames(IPermission permission, HashSet<string> stack)
+        private static void PermissionNames(
+            IPermission permission, 
+            HashSet<string> stack)
         {
             // The given name is tested
             stack.Add(permission.Name);

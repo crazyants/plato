@@ -39,7 +39,9 @@ namespace Plato.Roles.ViewProviders
             _permissionsManager = permissionsManager;
             _authorizationService = authorizationService;
         }
-        
+
+        #region "Implementation"
+
         public override Task<IViewProviderResult> BuildDisplayAsync(Role role, IUpdateModel updater)
         {
 
@@ -125,6 +127,9 @@ namespace Plato.Roles.ViewProviders
 
         }
 
+        #endregion
+
+        #region "Private Methods"
 
         async Task<bool> IsNewRole(int roleId)
         {
@@ -221,5 +226,8 @@ namespace Plato.Roles.ViewProviders
             return page;
 
         }
+
+        #endregion
+
     }
 }
