@@ -32,7 +32,13 @@ namespace Plato.Internal.Stores.Abstract
         public virtual async Task<TModel> GetAsync<TModel>() where TModel : class
         {
             var entry = await GetEntryByDocumentType(typeof(TModel));
-            return await GetDocumentFromEntryAsync<TModel>(entry);
+            if (entry != null)
+            {
+                return await GetDocumentFromEntryAsync<TModel>(entry);
+            }
+
+            return null;
+
         }
 
         public virtual async Task<TModel> SaveAsync<TModel>(IDocument document) where TModel : class

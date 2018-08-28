@@ -11,7 +11,6 @@ using Plato.Discuss.Moderation.Stores;
 using Plato.Discuss.Moderation.ViewProviders;
 using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
-using ModeratorDocument = Plato.Discuss.Moderation.Models.ModeratorDocument;
 
 namespace Plato.Discuss.Moderation
 {

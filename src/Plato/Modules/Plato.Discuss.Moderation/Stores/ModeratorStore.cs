@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Models;
 using Plato.Internal.Stores.Abstract;
 
@@ -28,7 +29,8 @@ namespace Plato.Discuss.Moderation.Stores
 
         public async Task<TDocument> GetAsync()
         {
-            return await _documentStore.GetAsync<TDocument>();
+            return await _documentStore.GetAsync<TDocument>()
+                   ?? ActivateInstanceOf<TDocument>.Instance();
         }
 
         public async Task<TDocument> SaveAsync(IDocument document)

@@ -13,16 +13,16 @@ namespace Plato.Discuss.Moderation.ViewModels
         [Required]
         [Display(Name = "username")]
         public string Users { get; set; }
-
+        
         public IDictionary<string, IEnumerable<ModeratorPermission>> CategorizedPermissions { get; set; }
         
         public IEnumerable<string> EnabledPermissions { get; set; }
-        
 
-        public bool EditAnyPost { get; set; }
+        [Required]
+        [Display(Name = "channel")]
+        public IEnumerable<int> SelectedChannels { get; set; }
 
-        public bool DeleteAnyPost { get; set; }
-        
+
         public OldModerator OldModerator { get; set; } = new OldModerator();
 
         public bool IsNewModerator { get; set; }

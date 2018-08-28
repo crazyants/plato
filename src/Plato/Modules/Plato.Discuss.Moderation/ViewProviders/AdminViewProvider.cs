@@ -4,14 +4,18 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Plato.Discuss.Moderation.Models;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Plato.Discuss.Moderation.Stores;
 using Plato.Discuss.Moderation.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Moderation.Models;
 
 
@@ -23,15 +27,24 @@ namespace Plato.Discuss.Moderation.ViewProviders
         private readonly IContextFacade _contextFacade;
         private readonly IPermissionsManager2<ModeratorPermission> _permissionsManager;
         private readonly IAuthorizationService _authorizationService;
-        
+        private readonly IModeratorStore<ModeratorDocument> _moderatorStore;
+        private readonly IPlatoUserStore<User> _userStore;
+        private readonly HttpRequest _request;
+
         public AdminViewProvider(
             IContextFacade contextFacade,
             IPermissionsManager2<ModeratorPermission> permissionsManager,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IHttpContextAccessor httpContextAccessor,
+            IModeratorStore<ModeratorDocument> moderatorStore, 
+            IPlatoUserStore<User> userStore)
         {
             _contextFacade = contextFacade;
             _permissionsManager = permissionsManager;
             _authorizationService = authorizationService;
+            _moderatorStore = moderatorStore;
+            _userStore = userStore;
+            _request = httpContextAccessor.HttpContext.Request;
         }
 
         #region "Implementation"
@@ -72,49 +85,88 @@ namespace Plato.Discuss.Moderation.ViewProviders
             );
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator oldModerator, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator moderator, IUpdateModel updater)
         {
             
-            //var model = new EditLabelViewModel();
+            var model = new EditModeratorViewModel();
 
-            //if (!await updater.TryUpdateModelAsync(model))
-            //{
-            //    return await BuildEditAsync(label, updater);
-            //}
+            if (!await updater.TryUpdateModelAsync(model))
+            {
+                return await BuildEditAsync(moderator, updater);
+            }
+            
+            if (updater.ModelState.IsValid)
+            {
+                
+                // Build a list of users to effect
+                var users = new List<User>();
+                var items = JsonConvert.DeserializeObject<IEnumerable<TagItItem>>(model.Users);
+                foreach (var item in items)
+                {
+                    if (!String.IsNullOrEmpty(item.Value))
+                    {
+                        var user = await _userStore.GetByUserNameAsync(item.Value);
+                        if (user != null)
+                        {
+                            users.Add(user);
+                        }
+                    }
+                }
+                
+                // Build a list of claims to add or update
+                var moderatorClaims = new List<ModeratorClaim>();
+                foreach (var key in _request.Form.Keys)
+                {
+                    if (key.StartsWith("Checkbox.") && _request.Form[key] == "true")
+                    {
+                        var permissionName = key.Substring("Checkbox.".Length);
+                        moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimType, ClaimValue = permissionName });
+                    }
+                }
+                
+                // Build a collection of all existing moderators
+                var document = await _moderatorStore.GetAsync();
+                var moderators = new List<Moderator>();
+                foreach (var existing in document.Moderators)
+                {
+                    moderators.Add(existing);
+                }
+              
+                // Iterate each user provided
+                foreach (var user in users)
+                {
 
-            //model.Name = model.Name?.Trim();
-            //model.Description = model.Description?.Trim();
+                    // obtain existing entry or create a new one
+                    var moderatorToUpdate = document.Moderators.FirstOrDefault(m => m.UserId == user.Id) 
+                        ?? new Moderator();
 
-            ////Category category = null;
+                    // Update claims
+                    moderatorToUpdate.ModeratorClaims.RemoveAll(c => c.ClaimType == ModeratorPermission.ClaimType);
+                    moderatorToUpdate.ModeratorClaims.AddRange(moderatorClaims);
 
-            //if (updater.ModelState.IsValid)
-            //{
+                    // Update collection
+                    moderators.RemoveAll(m => m.UserId == user.Id);
+                    moderators.Add(moderatorToUpdate);
+                }
 
-            //    var iconCss = model.IconCss;
-            //    if (!string.IsNullOrEmpty(iconCss))
-            //    {
-            //        iconCss = model.IconPrefix + iconCss;
-            //    }
+                // Update document
+                document.Moderators = moderators;
 
-            //    var result = await _labelManager.UpdateAsync(new Label()
-            //    {
-            //        Id = label.Id,
-            //        FeatureId = label.FeatureId,
-            //        Name = model.Name,
-            //        Description = model.Description,
-            //        ForeColor = model.ForeColor,
-            //        BackColor = model.BackColor,
-            //        IconCss = iconCss
-            //    });
+                // Persist document
+                var result = await _moderatorStore.SaveAsync(document);
+                if (result == null)
+                {
+                    updater.ModelState.AddModelError(string.Empty, "An unknown error occurred whilst attempting to update the moderator");
+                }
 
-            //    foreach (var error in result.Errors)
-            //    {
-            //        updater.ModelState.AddModelError(string.Empty, error.Description);
-            //    }
+                //foreach (var error in result.Errors)
+                //{
+                //    updater.ModelState.AddModelError(string.Empty, error.Description);
+                //}
+                
+            }
 
-            //}
-
-            return await BuildEditAsync(oldModerator, updater);
+            return await BuildEditAsync(moderator, updater);
 
 
         }
@@ -122,6 +174,8 @@ namespace Plato.Discuss.Moderation.ViewProviders
         #endregion
 
         #region "Private Methods"
+
+   
 
         async Task<ModeratorIndexViewModel> GetIndexModel()
         {
@@ -192,4 +246,11 @@ namespace Plato.Discuss.Moderation.ViewProviders
         #endregion
 
     }
+    
+    public class TagItItem
+    {
+        public string Value { get; set; }
+    }
+
+
 }

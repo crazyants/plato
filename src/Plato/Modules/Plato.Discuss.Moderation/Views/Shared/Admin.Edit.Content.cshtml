@@ -13,7 +13,6 @@
     </card-title>
     <card-body>
 
-        <fieldset>
 
             @*<div class="form-group" asp-validation-class-for="Name">
             <label asp-for="Moderator.UserId"><strong>@T["Name"]</strong></label>
@@ -33,7 +32,8 @@
 
         </div>*@
 
-            <div class="form-group" asp-validation-class-for="Users">
+        <div class="form-group" asp-validation-class-for="Users">
+            <fieldset>
                 <input asp-for="Users" type="text" id="tagItStore" />
                 <hr />
                 <label asp-for="OldModerator.UserId">
@@ -58,99 +58,64 @@
                         </p>
                     </div>
                 </div>
-            </div>
+            </fieldset>
+        </div>
 
-            <div class="form-group" asp-validation-class-for="EditAnyPost">
-
-
-                <fieldset>
-                    @foreach (var category in Model.CategorizedPermissions.Keys)
-                    {
-                        <fieldset class="role-permissions">
-
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th colspan="3" class="col-12 bg-light">
-                                            <h6>@category</h6>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    <tr>
-                                        <td class="col-10 font-weight-bold">@T["Permission"]</td>
-                                        <td class="col-1 font-weight-bold text-center">@T["Allow"]</td>
-                                        <td class="col-1 font-weight-bold text-center">@T["Effective"]</td>
-                                    </tr>
-
-                                    @foreach (var permission in Model.CategorizedPermissions[category])
-                                    {
-
-                                        <tr data-text="@permission.Description">
-                                            <td class="col-10">@permission.Description</td>
-                                            <td class="col-1 text-center">
-                                                <label>
-                                                    <span class="switch switch-round">
-                                                        <input class="form-check-input" type="checkbox" value="true" name="Checkbox.@permission.Name" checked="@(Model.Moderator?.ModeratorClaims?.Any(x => x.ClaimValue == permission.Name))" />
-                                                        <span class="switch-slider"></span>
-                                                    </span>
-                                                </label>
-                                            </td>
-                                            <td class="col-1 text-center">
-
-                                                <label>
-                                                    <span class="switch switch-round switch-disabled">
-                                                        <input type="checkbox" disabled="disabled" name="Effective.@permission.Name" checked="@(Model.EnabledPermissions.Contains(permission.Name))" />
-                                                        <span class="switch-slider"></span>
-                                                    </span>
-                                                </label>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </fieldset>
-                    }
-                </fieldset>
+        <div class="form-group" asp-validation-class-for="EditAnyPost">
 
 
+            <fieldset>
+                @foreach (var category in Model.CategorizedPermissions.Keys)
+                {
+                    <fieldset class="role-permissions">
 
-                <ul class="list-group">
-                    <li class="list-group-item list-group-item-action">
-                        <label class="d-block" asp-for="EditAnyPost">
-                            <span class="float-left">
-                                @T["Edit Any Post"]
-                            </span>
-                            <span class="float-right">
-                                <span class="switch switch-round">
-                                    <input class="form-check-input" asp-for="EditAnyPost" />
-                                    <span class="switch-slider"></span>
-                                </span>
-                            </span>
-                        </label>
-                    </li>
-                    <li class="list-group-item list-group-item-action">
-                        <label class="d-block" asp-for="DeleteAnyPost">
-                            <span class="float-left">
-                                @T["Delete Any Post"]
-                            </span>
-                            <span class="float-right">
-                                <span class="switch switch-round">
-                                    <input class="form-check-input" asp-for="DeleteAnyPost" />
-                                    <span class="switch-slider"></span>
-                                </span>
-                            </span>
-                        </label>
-                    </li>
-                </ul>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th colspan="3" class="col-12 bg-light">
+                                    <h6>@category</h6>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-            </div>
+                            <tr>
+                                <td class="col-10 font-weight-bold">@T["Permission"]</td>
+                                <td class="col-1 font-weight-bold text-center">@T["Allow"]</td>
+                                <td class="col-1 font-weight-bold text-center">@T["Effective"]</td>
+                            </tr>
 
-        </fieldset>
+                            @foreach (var permission in Model.CategorizedPermissions[category])
+                            {
+
+                                <tr data-text="@permission.Description">
+                                    <td class="col-10">@permission.Description</td>
+                                    <td class="col-1 text-center">
+                                        <label>
+                                            <span class="switch switch-round">
+                                                <input class="form-check-input" type="checkbox" value="true" name="Checkbox.@permission.Name" checked="@(Model.Moderator?.ModeratorClaims?.Any(x => x.ClaimValue == permission.Name))" />
+                                                <span class="switch-slider"></span>
+                                            </span>
+                                        </label>
+                                    </td>
+                                    <td class="col-1 text-center">
+
+                                        <label>
+                                            <span class="switch switch-round switch-disabled">
+                                                <input type="checkbox" disabled="disabled" name="Effective.@permission.Name" checked="@(Model.EnabledPermissions.Contains(permission.Name))" />
+                                                <span class="switch-slider"></span>
+                                            </span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </fieldset>
+                }
+            </fieldset>
+                
+        </div>
   
-     
-         
-     
     </card-body>
 </card>
