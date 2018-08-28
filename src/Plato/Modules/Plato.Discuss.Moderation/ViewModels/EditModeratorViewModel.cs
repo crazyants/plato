@@ -1,5 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Plato.Discuss.Moderation.Models;
+using Plato.Internal.Security.Abstractions;
+using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Moderation.ViewModels
 {
@@ -11,8 +14,10 @@ namespace Plato.Discuss.Moderation.ViewModels
         [Display(Name = "username")]
         public string Users { get; set; }
 
-
-
+        public IDictionary<string, IEnumerable<Permission>> CategorizedPermissions { get; set; }
+        
+        public IEnumerable<string> EnabledPermissions { get; set; }
+        
 
         public bool EditAnyPost { get; set; }
 
@@ -21,6 +26,8 @@ namespace Plato.Discuss.Moderation.ViewModels
         public OldModerator OldModerator { get; set; } = new OldModerator();
 
         public bool IsNewModerator { get; set; }
+
+        public Moderator Moderator { get; set; }
 
     }
 }

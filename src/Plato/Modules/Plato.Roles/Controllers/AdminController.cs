@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -14,7 +13,6 @@ using Plato.Internal.Models.Roles;
 using Plato.Internal.Navigation;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
-using Plato.Internal.Stores.Roles;
 using Plato.Roles.ViewModels;
 
 namespace Plato.Roles.Controllers
@@ -41,7 +39,6 @@ namespace Plato.Roles.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
-         
             IPlatoRoleStore platoRoleStore, 
             IViewProviderManager<Role> roleViewProvider,
             RoleManager<Role> roleManager, IAlerter alerter,

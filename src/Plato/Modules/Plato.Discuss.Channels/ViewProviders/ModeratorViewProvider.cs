@@ -16,12 +16,12 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         public override Task<IViewProviderResult> BuildDisplayAsync(Moderator moderator, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(Moderator moderator, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IUpdateModel updater)
@@ -43,7 +43,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         public override Task<IViewProviderResult> BuildUpdateAsync(Moderator moderator, IUpdateModel updater)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(default(IViewProviderResult));
         }
     }
 }

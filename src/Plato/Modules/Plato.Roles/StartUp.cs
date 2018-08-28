@@ -16,7 +16,6 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Roles;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Roles.ViewModels;
 using Plato.Roles.ViewProviders;
 using Plato.Roles.Handlers;
 using Plato.Roles.Navigation;
@@ -61,7 +60,7 @@ namespace Plato.Roles
             services.AddScoped<INavigationProvider, SiteMenu>();
 
             // Register permissions provider
-            services.AddScoped<IPermissionsProvider, Permissions>();
+            services.AddScoped<IPermissionsProvider2<Permission>, Permissions>();
 
             // Register default role manager
             services.TryAddScoped<IDefaultRolesManager, DefaultRolesManager>();

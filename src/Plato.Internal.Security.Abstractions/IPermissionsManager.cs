@@ -23,12 +23,7 @@ namespace Plato.Internal.Security.Abstractions
         IEnumerable<TPermission> GetPermissions();
 
         Task<IDictionary<string, IEnumerable<TPermission>>> GetCategorizedPermissionsAsync();
-
-        Task<IEnumerable<string>> GetEnabledRolePermissionsAsync(Role role);
-
+        
     }
-
-
-
 
 }

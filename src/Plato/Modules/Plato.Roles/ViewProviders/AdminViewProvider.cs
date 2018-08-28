@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
@@ -20,19 +23,21 @@ namespace Plato.Roles.ViewProviders
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly IPlatoRoleStore _platoRoleStore;
-        private readonly IPermissionsManager _permissionsManager;
+        private readonly IPermissionsManager2<Permission> _permissionsManager;
+        private readonly IAuthorizationService _authorizationService;
 
         public AdminViewProvider(
             UserManager<User> userManager,
             IPlatoRoleStore platoRoleStore,
-            RoleManager<Role> roleManager, 
-            IPermissionsManager permissionsManager)
+            RoleManager<Role> roleManager,
+            IPermissionsManager2<Permission> permissionsManager, 
+            IAuthorizationService authorizationService)
         {
             _userManager = userManager;
             _platoRoleStore = platoRoleStore;
             _roleManager = roleManager;
             _permissionsManager = permissionsManager;
-        
+            _authorizationService = authorizationService;
         }
         
         public override Task<IViewProviderResult> BuildDisplayAsync(Role role, IUpdateModel updater)
@@ -79,7 +84,7 @@ namespace Plato.Roles.ViewProviders
                 RoleName = role.Name,
                 Role = role,
                 IsNewRole = await IsNewRole(role.Id),
-                EnabledPermissions = await _permissionsManager.GetEnabledRolePermissionsAsync(role),
+                EnabledPermissions = await GetEnabledRolePermissionsAsync(role),
                 CategorizedPermissions = await _permissionsManager.GetCategorizedPermissionsAsync()
             };
 
@@ -120,6 +125,7 @@ namespace Plato.Roles.ViewProviders
 
         }
 
+
         async Task<bool> IsNewRole(int roleId)
         {
             return await _roleManager.FindByIdAsync(roleId.ToString()) == null;
@@ -157,6 +163,49 @@ namespace Plato.Roles.ViewProviders
                 .ToList();
         }
 
+        async Task<IEnumerable<string>> GetEnabledRolePermissionsAsync(Role role)
+        {
+
+            // We can only obtain enabled permissions for existing roles
+            // Return an empty list for new roles to avoid additional null checks
+            if (role.Id == 0)
+            {
+                return new List<string>();
+            }
+
+            // If the role is anonymous set the authtype to
+            // null to ensure IsAuthenticated is set to false
+            var authType = role.Name != DefaultRoles.Anonymous
+                ? "UserAuthType"
+                : null;
+
+            // Dummy identity
+            var identity = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Role, role.Name)
+            }, authType);
+
+            // Dummy principal
+            var principal = new ClaimsPrincipal(identity);
+
+            // Permissions grouped by feature
+            var categorizedPermissions = await _permissionsManager.GetCategorizedPermissionsAsync();
+
+            // Get flat permissions list from categorized permissions
+            var permissions = categorizedPermissions.SelectMany(x => x.Value);
+
+            var result = new List<string>();
+            foreach (var permission in permissions)
+            {
+                if (await _authorizationService.AuthorizeAsync(principal, permission))
+                {
+                    result.Add(permission.Name);
+                }
+            }
+
+            return result;
+
+        }
 
         int GetPageIndex(IUpdateModel updater)
         {

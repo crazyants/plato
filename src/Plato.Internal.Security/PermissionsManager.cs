@@ -223,49 +223,6 @@ namespace Plato.Internal.Security
             return output;
         }
 
-        public async Task<IEnumerable<string>> GetEnabledRolePermissionsAsync(Role role)
-        {
-
-            // We can only obtain enabled permissions for existing roles
-            // Return an empty list for new roles to avoid additional null checks
-            if (role.Id == 0)
-            {
-                return new List<string>();
-            }
-
-            // If the role is anonymous set the authtype to
-            // null to ensure IsAuthenticated is set to false
-            var authType = role.Name != DefaultRoles.Anonymous
-                ? "UserAuthType"
-                : null;
-
-            // Dummy identity
-            var identity = new ClaimsIdentity(new[]
-            {
-                new Claim(ClaimTypes.Role, role.Name)
-            }, authType);
-
-            // Dummy principal
-            var principal = new ClaimsPrincipal(identity);
-
-            // Permissions grouped by feature
-            var categorizedPermissions = await GetCategorizedPermissionsAsync();
-
-            // Get flat permissions list from categorized permissions
-            var permissions = categorizedPermissions.SelectMany(x => x.Value);
-
-            var result = new List<string>();
-            foreach (var permission in permissions)
-            {
-                if (await _authorizationService.AuthorizeAsync(principal, permission))
-                {
-                    result.Add(permission.Name);
-                }
-            }
-
-            return result;
-
-        }
     }
 
 
