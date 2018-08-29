@@ -95,28 +95,22 @@ namespace Plato.Discuss.Moderation.Controllers
                 foreach (var user in users)
                 {
 
-                    // Validate model state within all view providers
-                    if (await _viewProvider.IsModelStateValid(new Moderator()
+                    var newModerator = new Moderator()
                     {
                         UserId = user.Id
-                    }, this))
+                    };
+
+                    // Validate model state within all view providers
+                    if (await _viewProvider.IsModelStateValid(newModerator, this))
                     {
-
-                        // Get fully composed type from all involved view providers
-                        var moderator = await _viewProvider.GetComposedType(this);
-
-
-
-
-                        // Update moderator
-                        await _viewProvider.ProvideUpdateAsync(moderator, this);
-
-                        // Was there a problem updating the entity?
+                        // Create moderator
+                        var moderator = await _moderatorStore.CreateAsync(newModerator);
                         if (moderator != null)
                         {
+                            // Update moderator within various view providers
+                            await _viewProvider.ProvideUpdateAsync(moderator, this);
                             isValid = true;
                         }
-
                     }
                 }
 

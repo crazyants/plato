@@ -15,7 +15,7 @@ namespace Plato.Moderation.Models
 
         public int CategoryId { get; set; }
 
-        public List<ModeratorClaim> Claims { get; } = new List<ModeratorClaim>();
+        public List<ModeratorClaim> Claims { get; set;  } = new List<ModeratorClaim>();
 
         public int CreatedUserId { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Channels.ViewModels;
@@ -7,6 +8,7 @@ using Plato.Discuss.Moderation.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Moderation.Models;
+using Plato.Moderation.Stores;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
@@ -15,12 +17,15 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         private const string ChannelHtmlName = "channel";
 
+        private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly HttpRequest _request;
 
 
         public ModeratorViewProvider(
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor, 
+            IModeratorStore<Moderator> moderatorStore)
         {
+            _moderatorStore = moderatorStore;
             _request = httpContextAccessor.HttpContext.Request;
         }
 
@@ -54,16 +59,18 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         public override async Task<bool> ValidateModelAsync(Moderator moderator, IUpdateModel updater)
         {
-            return await updater.TryUpdateModelAsync(new EditTopicChannelsViewModel()
+            var valid = await updater.TryUpdateModelAsync(new EditTopicChannelsViewModel()
             {
                 SelectedChannels = GetChannelsToAdd()
             });
+
+            return valid;
         }
 
         public override async Task ComposeTypeAsync(Moderator moderator, IUpdateModel updater)
         {
 
-            var model = new EditModeratorViewModel
+            var model = new EditTopicChannelsViewModel
             {
                 SelectedChannels = GetChannelsToAdd()
             };
@@ -72,14 +79,36 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-                //moderator.CategoryIds = model.SelectedChannels;
+                moderator.CategoryId = model.SelectedChannels.FirstOrDefault();
             }
 
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Moderator moderator, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator model, IUpdateModel updater)
         {
-            return Task.FromResult(default(IViewProviderResult));
+
+            var moderator = await _moderatorStore.GetByIdAsync(model.Id);
+            if (moderator == null)
+            {
+                return await BuildIndexAsync(model, updater);
+            }
+
+
+            // Validate model
+            if (await ValidateModelAsync(model, updater))
+            {
+
+                var selectedChannels = GetChannelsToAdd();
+
+                // Update channel
+                moderator.CategoryId = selectedChannels.FirstOrDefault();
+
+                // Persist moderator
+                await _moderatorStore.UpdateAsync(moderator);
+
+            }
+
+            return default(IViewProviderResult);
         }
 
         #endregion

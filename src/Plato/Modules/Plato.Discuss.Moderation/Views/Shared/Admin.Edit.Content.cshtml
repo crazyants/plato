@@ -36,7 +36,7 @@
             <fieldset>
                 <input asp-for="Users" type="text" id="tagItStore" />
                 <hr />
-                <label asp-for="OldModerator.UserId">
+                <label asp-for="UserId">
                     <strong>@T["Username"]</strong>
                     <span asp-validation-for="Users" class="text-danger"></span><br />
                     <span class="text-muted">@T["Find a user to add as a moderator..."]</span>
@@ -93,7 +93,7 @@
                                     <td class="col-1 text-center">
                                         <label>
                                             <span class="switch switch-round">
-                                                <input class="form-check-input" type="checkbox" value="true" name="Checkbox.@permission.Name" checked="@(Model.Moderator?.ModeratorClaims?.Any(x => x.ClaimValue == permission.Name))" />
+                                                <input class="form-check-input" type="checkbox" value="true" name="Checkbox.@permission.Name" checked="@(Model.Moderator?.Claims?.Any(x => x.ClaimValue == permission.Name))" />
                                                 <span class="switch-slider"></span>
                                             </span>
                                         </label>

@@ -86,10 +86,12 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         public override async Task<bool> ValidateModelAsync(Moderator moderator, IUpdateModel updater)
         {
-            return await updater.TryUpdateModelAsync(new EditModeratorViewModel()
+            var valid = await updater.TryUpdateModelAsync(new EditModeratorViewModel()
             {
                 UserId = moderator.UserId
             });
+
+            return valid;
         }
 
         public override async Task ComposeTypeAsync(Moderator moderator, IUpdateModel updater)
@@ -109,15 +111,18 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator moderator, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator model, IUpdateModel updater)
         {
 
 
-            
-            var model = new EditModeratorViewModel();
-
-            // Validate 
-            if (await ValidateModelAsync(moderator, updater))
+            var moderator = await _moderatorStore.GetByIdAsync(model.Id);
+            if (moderator == null)
+            {
+                return await BuildIndexAsync(model, updater);
+            }
+          
+            // Validate model
+            if (await ValidateModelAsync(model, updater))
             {
 
                 // Build a list of claims to add or update
@@ -130,44 +135,12 @@ namespace Plato.Discuss.Moderation.ViewProviders
                         moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimType, ClaimValue = permissionName });
                     }
                 }
-
-                //// Build a collection of all existing moderators
-                //var document = await _moderatorStore.GetAsync();
-                //var moderators = new List<Moderator>();
-                //moderators.AddRange(document.Moderators);
-
-                //foreach (var categoryId in moderator.CategoryIds)
-                //{
-
-                //    // obtain existing user entry or create a new one
-                //    var moderatorToUpdate =
-                //        document.Moderators.FirstOrDefault(m => m.UserId == moderator.UserId && m.CategoryIds.Contains(categoryId))
-                //        ?? new Moderator();
-
-                //    // Update user claims
-                //    moderatorToUpdate.Claims.RemoveAll(c => c.ClaimType == ModeratorPermission.ClaimType);
-                //    moderatorToUpdate.Claims.AddRange(moderatorClaims);
-
-                //    // Update collection
-                //    moderators.RemoveAll(m => m.UserId == moderator.UserId && m.CategoryId == categoryId);
-                //    moderators.Add(moderatorToUpdate);
-
-                //}
-       
-                //// Update document
-                //document.Moderators = moderators;
-
-                //// Persist document
-                //var result = await _moderatorStore.SaveAsync(document);
-                //if (result == null)
-                //{
-                //    updater.ModelState.AddModelError(string.Empty, "An unknown error occurred whilst attempting to update the moderator");
-                //}
-
-                //foreach (var error in result.Errors)
-                //{
-                //    updater.ModelState.AddModelError(string.Empty, error.Description);
-                //}
+                
+                // Update claims
+                moderator.Claims = moderatorClaims;
+                
+                // Persist moderator
+                await _moderatorStore.UpdateAsync(moderator);
 
             }
 
