@@ -267,7 +267,8 @@ namespace Plato.Discuss.Moderation.ViewProviders
         #endregion
 
     }
-    
+
+    [DataContract]
     public class TagItItem
     {
 
