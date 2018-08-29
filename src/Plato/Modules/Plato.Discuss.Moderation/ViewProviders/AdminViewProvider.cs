@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Moderation.ViewModels;
 using Plato.Discuss.ViewModels;
-using Plato.Entities.Stores;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -60,10 +61,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
             //pagerOptions.Page = GetPageIndex(updater);
 
             var viewModel = await GetIndexModel(filterOptions, pagerOptions);
-
-
-
-
+            
             return Views(
                 View<ModeratorIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header").Order(1),
                 View<ModeratorIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
@@ -78,13 +76,27 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Moderator oldModerator, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IUpdateModel updater)
         {
+
+            var users = "";
+            var items = new List<TagItItem>()
+            {
+                new TagItItem()
+                {
+                    Text = moderator.User.DisplayName,
+                    Value = moderator.User.UserName
+                }
+            };
+
+            users = items.Serialize();
 
             var viewModel = new EditModeratorViewModel
             {
-                IsNewModerator = oldModerator.UserId == 0,
-                EnabledPermissions = await GetEnabledRolePermissionsAsync(new Role()),
+                Users = users,
+                Moderator =  moderator,
+                IsNewModerator = moderator.UserId == 0,
+                EnabledPermissions = await GetEnabledModeratorPermissionsAsync(new Role()),
                 CategorizedPermissions = await _permissionsManager.GetCategorizedPermissionsAsync()
             };
 
@@ -167,26 +179,19 @@ namespace Plato.Discuss.Moderation.ViewProviders
         #endregion
 
         #region "Private Methods"
-
-   
-
+        
         async Task<ModeratorIndexViewModel> GetIndexModel(
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
         {
-
-           
-
             //var feature = await GetcurrentFeature();
-
             var moderators = await GetModerators(filterOptions, pagerOptions);
             return new ModeratorIndexViewModel()
             {
-                Moderators = moderators.Data
+                Moderators = moderators?.Data
             };
         }
-
-
+        
         async Task<IPagedResults<Moderator>> GetModerators(        
             FilterOptions filterOptions,
             PagerOptions pagerOptions)
@@ -203,9 +208,8 @@ namespace Plato.Discuss.Moderation.ViewProviders
                 .OrderBy("CreatedDate", OrderBy.Asc)
                 .ToList();
         }
-
-
-        async Task<IEnumerable<string>> GetEnabledRolePermissionsAsync(Role role)
+        
+        async Task<IEnumerable<string>> GetEnabledModeratorPermissionsAsync(Role role)
         {
 
             // We can only obtain enabled permissions for existing roles
@@ -248,8 +252,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
             return result;
 
         }
-
-
+        
         async Task<ShellModule> GetcurrentFeature()
         {
             var featureId = "Plato.Discuss.Labels";
@@ -268,8 +271,10 @@ namespace Plato.Discuss.Moderation.ViewProviders
     public class TagItItem
     {
 
+        [DataMember(Name = "text")]
         public string Text { get; set; }
 
+        [DataMember(Name = "value")]
         public string Value { get; set; }
     }
 

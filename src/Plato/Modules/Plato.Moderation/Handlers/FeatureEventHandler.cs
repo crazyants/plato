@@ -190,7 +190,26 @@ namespace Plato.Moderation.Handlers
             builder
                 .CreateTable(_moderators)
                 .CreateDefaultProcedures(_moderators);
-            
+
+            // Overwrite our SelectModeratorById created via CreateDefaultProcedures
+            // above to also return simple user data representing the moderator
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        $"SelectModeratorById",
+                        @" SELECT m.*, 
+                                    u.UserName,                                
+                                    u.DisplayName,
+                                    u.FirstName,
+                                    u.LastName,
+                                    u.Alias                                  
+                                FROM {prefix}_Moderators m WITH (nolock) 
+                                    LEFT OUTER JOIN {prefix}_Users u ON m.UserId = u.Id
+                                WHERE (
+                                   m.Id = @Id
+                                )")
+                    .ForTable(_moderators)
+                    .WithParameter(_moderators.PrimaryKeyColumn));
+
             builder.CreateProcedure(new SchemaProcedure("SelectModeratorsPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_moderators)
                 .WithParameters(new List<SchemaColumn>()

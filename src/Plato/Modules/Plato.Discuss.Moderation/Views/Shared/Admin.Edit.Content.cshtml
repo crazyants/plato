@@ -34,11 +34,12 @@
 
         <div class="form-group" asp-validation-class-for="Users">
             <fieldset>
-                <input asp-for="Users" type="hidden" id="tagItStore" />
-              
+                
+                <input asp-for="Users" type="text" id="tagItStore"/>
+
                 <label asp-for="Users">
                     <strong>@T["Username"]</strong>
-                    <span asp-validation-for="Users" class="text-danger"></span><br />
+                    <span asp-validation-for="Users" class="text-danger"></span><br/>
                     <span class="text-muted">@T["Find a user to add as a moderator..."]</span>
                 </label>
                 <div class="dropdown">

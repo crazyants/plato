@@ -192,9 +192,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                 builder.Add(S["Post New Topic"]);
 
             });
-
-
-
+            
             var viewModel = new EditTopicChannelsViewModel()
             {
                 HtmlName = ChannelHtmlName,

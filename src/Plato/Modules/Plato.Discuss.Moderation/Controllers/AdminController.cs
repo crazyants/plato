@@ -48,18 +48,18 @@ namespace Plato.Discuss.Moderation.Controllers
             S = stringLocalizer;
 
         }
-        
+
         public async Task<IActionResult> Index()
         {
-            
+
             var model = await _viewProvider.ProvideIndexAsync(new Moderator(), this);
             return View(model);
 
         }
-        
+
         public async Task<IActionResult> Create()
         {
-         
+
             var model = await _viewProvider.ProvideEditAsync(new Moderator(), this);
             return View(model);
 
@@ -69,7 +69,7 @@ namespace Plato.Discuss.Moderation.Controllers
         [ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditModeratorViewModel model)
         {
-        
+
             // Build users to effect
             var users = new List<User>();
 
@@ -126,10 +126,10 @@ namespace Plato.Discuss.Moderation.Controllers
                     _alerter.Success(T["Moderator Created Successfully!"]);
 
                     // Redirect to topic
-                    return RedirectToAction(nameof(Index), new { Id = 0 });
+                    return RedirectToAction(nameof(Index), new {Id = 0});
 
                 }
-               
+
                 // if we reach this point some view model validation
                 // failed within a view provider, display model state errors
                 foreach (var modelState in ViewData.ModelState.Values)
@@ -150,6 +150,45 @@ namespace Plato.Discuss.Moderation.Controllers
             }
 
             return await Create();
+
+        }
+
+
+        public async Task<IActionResult> Edit(int id)
+        {
+
+            var moderator = await _moderatorStore.GetByIdAsync(id);
+            if (moderator == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _viewProvider.ProvideEditAsync(moderator, this);
+            return View(result);
+        }
+        
+        [HttpPost]
+        [ActionName(nameof(Edit))]
+        public async Task<IActionResult> EditPost(int id)
+        {
+
+            var moderator = await _moderatorStore.GetByIdAsync(id);
+            if (moderator == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _viewProvider.ProvideUpdateAsync(moderator, this);
+
+            if (!ModelState.IsValid)
+            {
+                return View(result);
+            }
+
+            _alerter.Success(T["Moderator Updated Successfully!"]);
+
+            return RedirectToAction(nameof(Index));
+
 
         }
 

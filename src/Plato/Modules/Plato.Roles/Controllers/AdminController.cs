@@ -173,7 +173,6 @@ namespace Plato.Roles.Controllers
             });
 
             var role = await _roleManager.FindByIdAsync(id);
-
             if (role == null)
             {
                 return NotFound();

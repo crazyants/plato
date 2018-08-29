@@ -89,6 +89,7 @@ namespace Plato.Moderation.Stores
         #region "Constructor"
 
         private readonly string _ModeratorsTableName;
+        private readonly string _usersTableName;
 
         private readonly ModeratorQuery _query;
 
@@ -96,6 +97,7 @@ namespace Plato.Moderation.Stores
         {
             _query = query;
             _ModeratorsTableName = GetTableNameWithPrefix("Moderators");
+            _usersTableName = GetTableNameWithPrefix("Users");
 
         }
 
@@ -108,7 +110,7 @@ namespace Plato.Moderation.Stores
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = e.Id FROM ")
+            sb.Append("SELECT @start_id_out = m.Id FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -140,7 +142,7 @@ namespace Plato.Moderation.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(e.Id) FROM ")
+            sb.Append("SELECT COUNT(m.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -150,7 +152,13 @@ namespace Plato.Moderation.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("e.*");
+            sb.Append("m.*, ")
+                .Append("u.UserName,")
+                .Append("u.DisplayName,")
+                .Append("u.FirstName,")
+                .Append("u.LastName,")
+                .Append("u.Alias");
+
             return sb.ToString();
 
         }
@@ -161,8 +169,13 @@ namespace Plato.Moderation.Stores
             var sb = new StringBuilder();
 
             sb.Append(_ModeratorsTableName)
-                .Append(" e ");
+                .Append(" m ");
 
+            // join users to obtain simple moderator details
+            sb.Append("LEFT OUTER JOIN ")
+                .Append(_usersTableName)
+                .Append(" u ON m.UserId = u.Id ");
+            
             return sb.ToString();
 
         }
@@ -183,13 +196,13 @@ namespace Plato.Moderation.Stores
             var sb = new StringBuilder();
             // default to ascending
             if (_query.SortColumns.Count == 0)
-                sb.Append("e.Id >= @start_id_in");
+                sb.Append("m.Id >= @start_id_in");
             // set start operator based on first order by
             foreach (var sortColumn in _query.SortColumns)
             {
                 sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "e.Id <= @start_id_in"
-                    : "e.Id >= @start_id_in");
+                    ? "m.Id <= @start_id_in"
+                    : "m.Id >= @start_id_in");
                 break;
             }
 
@@ -210,7 +223,7 @@ namespace Plato.Moderation.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("e.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("m.Id"));
             }
 
 
@@ -228,7 +241,7 @@ namespace Plato.Moderation.Stores
 
             return columnName.IndexOf('.') >= 0
                 ? columnName
-                : "e." + columnName;
+                : "m." + columnName;
         }
 
         private string BuildOrderBy()
@@ -245,7 +258,9 @@ namespace Plato.Moderation.Stores
                     sb.Append(", ");
                 i += 1;
             }
+
             return sb.ToString();
+
         }
 
         #endregion

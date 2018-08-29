@@ -20,13 +20,13 @@ namespace Plato.Email.Stores
             _store = store;
         }
 
-        public EntityQueryParams Params { get; set; }
+        public EmailQueryParams Params { get; set; }
 
         public override IQuery<EmailMessage> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
-            Params = (EntityQueryParams)Convert.ChangeType(defaultParams, typeof(EntityQueryParams));
+            Params = (EmailQueryParams)Convert.ChangeType(defaultParams, typeof(EmailQueryParams));
             return this;
         }
 
@@ -57,7 +57,7 @@ namespace Plato.Email.Stores
 
     #region "EmailQueryParams"
 
-    public class EntityQueryParams
+    public class EmailQueryParams
     {
 
 

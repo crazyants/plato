@@ -47,7 +47,10 @@ namespace Plato.Discuss.Channels.ViewProviders
             var viewModel = new EditTopicChannelsViewModel()
             {
                 HtmlName = ChannelHtmlName,
-                SelectedChannels = null
+                SelectedChannels = new List<int>
+                {
+                    moderator.CategoryId
+                }
             };
 
             return Task.FromResult(Views(

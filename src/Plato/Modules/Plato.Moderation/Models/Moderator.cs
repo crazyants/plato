@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Moderation.Models
 {
@@ -12,6 +13,8 @@ namespace Plato.Moderation.Models
         public int Id { get; set; }
     
         public int UserId { get; set; }
+
+        public SimpleUser User { get; set; } = new SimpleUser();
 
         public int CategoryId { get; set; }
 
@@ -32,6 +35,21 @@ namespace Plato.Moderation.Models
 
             if (dr.ColumnIsNotNull("UserId"))
                 UserId = Convert.ToInt32(dr["UserId"]);
+
+            if (UserId > 0)
+            {
+                User.Id = UserId;
+                if (dr.ColumnIsNotNull("UserName"))
+                    User.UserName = Convert.ToString(dr["UserName"]);
+                if (dr.ColumnIsNotNull("DisplayName"))
+                    User.DisplayName = Convert.ToString(dr["DisplayName"]);
+                if (dr.ColumnIsNotNull("FirstName"))
+                    User.FirstName = Convert.ToString(dr["FirstName"]);
+                if (dr.ColumnIsNotNull("LastName"))
+                    User.LastName = Convert.ToString(dr["LastName"]);
+                if (dr.ColumnIsNotNull("Alias"))
+                    User.Alias = Convert.ToString(dr["Alias"]);
+            }
 
             if (dr.ColumnIsNotNull("CategoryId"))
                 CategoryId = Convert.ToInt32(dr["CategoryId"]);
