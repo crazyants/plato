@@ -72,7 +72,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-                moderator.CategoryIds = model.SelectedChannels;
+                //moderator.CategoryIds = model.SelectedChannels;
             }
 
         }

@@ -96,11 +96,7 @@ namespace Plato.Discuss.Moderation.Controllers
                     // Validate model state within all view providers
                     if (await _viewProvider.IsModelStateValid(new Moderator()
                     {
-                        UserId = user.Id,
-                        CategoryIds = new List<int>()
-                        {
-                            0
-                        }
+                        UserId = user.Id
                     }, this))
                     {
 

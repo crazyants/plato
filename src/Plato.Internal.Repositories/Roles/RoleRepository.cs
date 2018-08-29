@@ -27,44 +27,7 @@ namespace Plato.Internal.Repositories.Roles
 
         #endregion
 
-        #region "Private Methods"
 
-        private async Task<int> InsertUpdateInternal(
-            int id,
-            string name,
-            string nameNormalized,
-            string description,
-            string claims,
-            DateTimeOffset? createdDate,
-            int createdUserId,
-            DateTimeOffset? modifiedDate,
-            int modifiedUserId,
-            string concurrencyStamp)
-        {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
-
-            using (var context = _dbContext)
-            {
-                return await context.ExecuteScalarAsync<int>(
-                    CommandType.StoredProcedure,
-                    "InsertUpdateRole",
-                    id,
-                    name.TrimToSize(255),
-                    nameNormalized.ToEmptyIfNull().TrimToSize(255),
-                    description.ToEmptyIfNull().TrimToSize(255),
-                    claims.ToEmptyIfNull(),
-                    createdDate.ToDateIfNull(),
-                    createdUserId,
-                    modifiedDate.ToDateIfNull(),
-                    modifiedUserId,
-                    concurrencyStamp.ToEmptyIfNull().TrimToSize(255)
-                );
-            }
-        }
-
-        #endregion
-        
         #region "Implementation"
 
         public async Task<bool> DeleteAsync(int id)
@@ -73,7 +36,7 @@ namespace Plato.Internal.Repositories.Roles
             {
                 _logger.LogInformation($"Deleting role with id: {id}");
             }
-            
+
             var success = 0;
             using (var context = _dbContext)
             {
@@ -99,7 +62,7 @@ namespace Plato.Internal.Repositories.Roles
             {
                 claims = role.RoleClaims.Serialize();
             }
-                
+
             var id = await InsertUpdateInternal(
                 role.Id,
                 role.Name.ToEmptyIfNull().TrimToSize(255),
@@ -201,11 +164,11 @@ namespace Plato.Internal.Repositories.Roles
 
                 }
             }
-            
+
             return output;
 
         }
-        
+
         public async Task<IPagedResults<T>> SelectAsync<T>(params object[] inputParams) where T : class
         {
             PagedResults<T> output = null;
@@ -224,7 +187,7 @@ namespace Plato.Internal.Repositories.Roles
                     {
                         var role = new Role();
                         role.PopulateModel(reader);
-                        output.Data.Add((T)Convert.ChangeType(role, typeof(T)));
+                        output.Data.Add((T) Convert.ChangeType(role, typeof(T)));
                     }
 
                     if (await reader.NextResultAsync())
@@ -291,12 +254,51 @@ namespace Plato.Internal.Repositories.Roles
                     }
                 }
             }
-            
+
             return output;
 
         }
 
         #endregion
 
+        #region "Private Methods"
+
+        private async Task<int> InsertUpdateInternal(
+            int id,
+            string name,
+            string nameNormalized,
+            string description,
+            string claims,
+            DateTimeOffset? createdDate,
+            int createdUserId,
+            DateTimeOffset? modifiedDate,
+            int modifiedUserId,
+            string concurrencyStamp)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            using (var context = _dbContext)
+            {
+                return await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "InsertUpdateRole",
+                    id,
+                    name.TrimToSize(255),
+                    nameNormalized.ToEmptyIfNull().TrimToSize(255),
+                    description.ToEmptyIfNull().TrimToSize(255),
+                    claims.ToEmptyIfNull(),
+                    createdDate.ToDateIfNull(),
+                    createdUserId,
+                    modifiedDate.ToDateIfNull(),
+                    modifiedUserId,
+                    concurrencyStamp.ToEmptyIfNull().TrimToSize(255)
+                );
+            }
+        }
+
+        #endregion
+
     }
+
 }

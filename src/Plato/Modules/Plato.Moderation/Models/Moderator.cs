@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Text;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
 
@@ -10,7 +8,6 @@ namespace Plato.Moderation.Models
 {
     public class Moderator : IModel<Moderator>
     {
-
         
         public int Id { get; set; }
     
