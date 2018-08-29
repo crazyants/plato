@@ -7,8 +7,9 @@
   <ItemGroup>
 
     <ProjectReference Include="..\Plato.Categories\Plato.Categories.csproj" />
+
+    <ProjectReference Include="..\Plato.Discuss.Moderation\Plato.Discuss.Moderation.csproj" />
     <ProjectReference Include="..\Plato.Discuss\Plato.Discuss.csproj" />
-    <ProjectReference Include="..\Plato.Moderation\Plato.Moderation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

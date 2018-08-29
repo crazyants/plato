@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Channels.ViewModels;
+using Plato.Discuss.Moderation.ViewModels;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Moderation.Models;
@@ -11,7 +12,6 @@ namespace Plato.Discuss.Channels.ViewProviders
 {
     public class ModeratorViewProvider : BaseViewProvider<Moderator>
     {
-
 
         private const string ChannelHtmlName = "channel";
 
@@ -23,6 +23,8 @@ namespace Plato.Discuss.Channels.ViewProviders
         {
             _request = httpContextAccessor.HttpContext.Request;
         }
+
+        #region "Implementation"
 
         public override Task<IViewProviderResult> BuildDisplayAsync(Moderator moderator, IUpdateModel updater)
         {
@@ -37,7 +39,6 @@ namespace Plato.Discuss.Channels.ViewProviders
         public override Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IUpdateModel updater)
         {
 
-
             var viewModel = new EditTopicChannelsViewModel()
             {
                 HtmlName = ChannelHtmlName,
@@ -48,14 +49,21 @@ namespace Plato.Discuss.Channels.ViewProviders
                 View<EditTopicChannelsViewModel>("Moderation.Channels.Edit.Content", model => viewModel).Zone("sidebar").Order(1)
             ));
 
-
         }
 
+
+        public override async Task<bool> ValidateModelAsync(Moderator moderator, IUpdateModel updater)
+        {
+            return await updater.TryUpdateModelAsync(new EditTopicChannelsViewModel()
+            {
+                SelectedChannels = GetChannelsToAdd()
+            });
+        }
 
         public override async Task ComposeTypeAsync(Moderator moderator, IUpdateModel updater)
         {
 
-            var model = new EditTopicChannelsViewModel
+            var model = new EditModeratorViewModel
             {
                 SelectedChannels = GetChannelsToAdd()
             };
@@ -64,10 +72,19 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-             
+                moderator.CategoryIds = model.SelectedChannels;
             }
 
         }
+
+        public override Task<IViewProviderResult> BuildUpdateAsync(Moderator moderator, IUpdateModel updater)
+        {
+            return Task.FromResult(default(IViewProviderResult));
+        }
+
+        #endregion
+        
+        #region "Private Methods"
 
         List<int> GetChannelsToAdd()
         {
@@ -96,14 +113,8 @@ namespace Plato.Discuss.Channels.ViewProviders
             return channelsToAdd;
         }
 
-
-
-        public override Task<IViewProviderResult> BuildUpdateAsync(Moderator moderator, IUpdateModel updater)
-        {
-            return Task.FromResult(default(IViewProviderResult));
-        }
-
-
-
+        #endregion
+        
     }
+
 }

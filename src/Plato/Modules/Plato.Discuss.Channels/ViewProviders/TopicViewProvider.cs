@@ -213,6 +213,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             {
                 SelectedChannels = GetChannelsToAdd()
             });
+
         }
 
         public override async Task ComposeTypeAsync(Topic topic, IUpdateModel updater)

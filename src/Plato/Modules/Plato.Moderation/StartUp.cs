@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Security;
 using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
+using Plato.Moderation.Handlers;
 
 namespace Plato.Moderation
 {
@@ -23,6 +25,10 @@ namespace Plato.Moderation
 
         public override void ConfigureServices(IServiceCollection services)
         {
+
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
 
             // Register moderator permissions manager
             services.AddScoped<IPermissionsManager2<ModeratorPermission>, PermissionsManager2<ModeratorPermission>>();

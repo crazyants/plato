@@ -72,7 +72,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
             var viewModel = new EditModeratorViewModel
             {
-                IsNewModerator = oldModerator.Id == 0,
+                IsNewModerator = oldModerator.UserId == 0,
                 EnabledPermissions = await GetEnabledRolePermissionsAsync(new Role()),
                 CategorizedPermissions = await _permissionsManager.GetCategorizedPermissionsAsync()
             };
@@ -85,34 +85,42 @@ namespace Plato.Discuss.Moderation.ViewProviders
             );
         }
 
+
+        public override async Task<bool> ValidateModelAsync(Moderator moderator, IUpdateModel updater)
+        {
+            return await updater.TryUpdateModelAsync(new EditModeratorViewModel()
+            {
+                UserId = moderator.UserId,
+                CategoryIds = moderator.CategoryIds
+            });
+        }
+
+        public override async Task ComposeTypeAsync(Moderator moderator, IUpdateModel updater)
+        {
+
+            var model = new EditModeratorViewModel
+            {
+                UserId = moderator.UserId
+            };
+
+            await updater.TryUpdateModelAsync(model);
+
+            if (updater.ModelState.IsValid)
+            {
+                moderator.UserId = model.UserId;
+            }
+
+        }
+
         public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator moderator, IUpdateModel updater)
         {
             
             var model = new EditModeratorViewModel();
 
-            if (!await updater.TryUpdateModelAsync(model))
+            // Validate 
+            if (await ValidateModelAsync(moderator, updater))
             {
-                return await BuildEditAsync(moderator, updater);
-            }
-            
-            if (updater.ModelState.IsValid)
-            {
-                
-                // Build a list of users to effect
-                var users = new List<User>();
-                var items = JsonConvert.DeserializeObject<IEnumerable<TagItItem>>(model.Users);
-                foreach (var item in items)
-                {
-                    if (!String.IsNullOrEmpty(item.Value))
-                    {
-                        var user = await _userStore.GetByUserNameAsync(item.Value);
-                        if (user != null)
-                        {
-                            users.Add(user);
-                        }
-                    }
-                }
-                
+
                 // Build a list of claims to add or update
                 var moderatorClaims = new List<ModeratorClaim>();
                 foreach (var key in _request.Form.Keys)
@@ -123,32 +131,30 @@ namespace Plato.Discuss.Moderation.ViewProviders
                         moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimType, ClaimValue = permissionName });
                     }
                 }
-                
+
                 // Build a collection of all existing moderators
                 var document = await _moderatorStore.GetAsync();
                 var moderators = new List<Moderator>();
-                foreach (var existing in document.Moderators)
-                {
-                    moderators.Add(existing);
-                }
-              
-                // Iterate each user provided
-                foreach (var user in users)
+                moderators.AddRange(document.Moderators);
+
+                foreach (var categoryId in moderator.CategoryIds)
                 {
 
-                    // obtain existing entry or create a new one
-                    var moderatorToUpdate = document.Moderators.FirstOrDefault(m => m.UserId == user.Id) 
+                    // obtain existing user entry or create a new one
+                    var moderatorToUpdate =
+                        document.Moderators.FirstOrDefault(m => m.UserId == moderator.UserId && m.CategoryIds.Contains(categoryId))
                         ?? new Moderator();
 
-                    // Update claims
+                    // Update user claims
                     moderatorToUpdate.ModeratorClaims.RemoveAll(c => c.ClaimType == ModeratorPermission.ClaimType);
                     moderatorToUpdate.ModeratorClaims.AddRange(moderatorClaims);
 
                     // Update collection
-                    moderators.RemoveAll(m => m.UserId == user.Id);
+                    moderators.RemoveAll(m => m.UserId == moderator.UserId && m.CategoryIds.Contains(categoryId));
                     moderators.Add(moderatorToUpdate);
-                }
 
+                }
+       
                 // Update document
                 document.Moderators = moderators;
 
@@ -163,7 +169,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
                 //{
                 //    updater.ModelState.AddModelError(string.Empty, error.Description);
                 //}
-                
+
             }
 
             return await BuildEditAsync(moderator, updater);
@@ -249,6 +255,9 @@ namespace Plato.Discuss.Moderation.ViewProviders
     
     public class TagItItem
     {
+
+        public string Text { get; set; }
+
         public string Value { get; set; }
     }
 
