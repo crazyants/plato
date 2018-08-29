@@ -92,12 +92,12 @@ namespace Plato.Discuss.Channels.ViewProviders
             {
                 return await BuildIndexAsync(model, updater);
             }
-
-
+            
             // Validate model
             if (await ValidateModelAsync(model, updater))
             {
 
+                // Get selected channels
                 var selectedChannels = GetChannelsToAdd();
 
                 // Update channel

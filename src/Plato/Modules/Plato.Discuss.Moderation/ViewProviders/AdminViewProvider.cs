@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Moderation.ViewModels;
+using Plato.Discuss.ViewModels;
+using Plato.Entities.Stores;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Moderation.Models;
@@ -49,7 +53,16 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         public override async Task<IViewProviderResult> BuildIndexAsync(Moderator moderator, IUpdateModel updater)
         {
-            var viewModel = await GetIndexModel();
+
+            var filterOptions = new FilterOptions();
+
+            var pagerOptions = new PagerOptions();
+            //pagerOptions.Page = GetPageIndex(updater);
+
+            var viewModel = await GetIndexModel(filterOptions, pagerOptions);
+
+
+
 
             return Views(
                 View<ModeratorIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header").Order(1),
@@ -111,6 +124,8 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         }
 
+
+
         public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator model, IUpdateModel updater)
         {
 
@@ -155,15 +170,40 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
    
 
-        async Task<ModeratorIndexViewModel> GetIndexModel()
+        async Task<ModeratorIndexViewModel> GetIndexModel(
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
         {
-            var feature = await GetcurrentFeature();
-            
+
+           
+
+            //var feature = await GetcurrentFeature();
+
+            var moderators = await GetModerators(filterOptions, pagerOptions);
             return new ModeratorIndexViewModel()
             {
-             
+                Moderators = moderators.Data
             };
         }
+
+
+        async Task<IPagedResults<Moderator>> GetModerators(        
+            FilterOptions filterOptions,
+            PagerOptions pagerOptions)
+        {
+            return await _moderatorStore.QueryAsync()
+                .Take(pagerOptions.Page, pagerOptions.PageSize)
+                .Select<ModeratorQueryParams>(q =>
+                {
+                    if (!string.IsNullOrEmpty(filterOptions.Search))
+                    {
+                        q.Keywords.IsIn(filterOptions.Search);
+                    }
+                })
+                .OrderBy("CreatedDate", OrderBy.Asc)
+                .ToList();
+        }
+
 
         async Task<IEnumerable<string>> GetEnabledRolePermissionsAsync(Role role)
         {

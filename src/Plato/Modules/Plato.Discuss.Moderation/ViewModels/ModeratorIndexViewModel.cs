@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Plato.Discuss.Moderation.Models;
+﻿using System.Collections.Generic;
+using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Moderation.ViewModels
 {
     public class ModeratorIndexViewModel
     {
 
-        public IEnumerable<OldModerator> Moderators { get; set; }
+        public IEnumerable<Moderator> Moderators { get; set; }
 
     }
 }

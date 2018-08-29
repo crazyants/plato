@@ -55,11 +55,13 @@ namespace Plato.Discuss.ViewProviders
 
             var pagerOptions = new PagerOptions();
             pagerOptions.Page = GetPageIndex(updater);
-            
-            var viewModel = new HomeIndexViewModel();
-            viewModel.FilterOpts = filterOptions;
-            viewModel.PagerOpts = pagerOptions;
-            
+
+            var viewModel = new HomeIndexViewModel
+            {
+                FilterOpts = filterOptions,
+                PagerOpts = pagerOptions
+            };
+
             return Task.FromResult(Views(
                 View<HomeIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<HomeIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),

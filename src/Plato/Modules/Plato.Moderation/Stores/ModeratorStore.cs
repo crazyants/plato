@@ -81,9 +81,8 @@ namespace Plato.Moderation.Stores
 
         public IQuery<Moderator> QueryAsync()
         {
-            throw new NotImplementedException();
-            //var query = new EmailQuery(this);
-            //return _dbQuery.ConfigureQuery<Moderator>(query); ;
+            var query = new ModeratorQuery(this);
+            return _dbQuery.ConfigureQuery<Moderator>(query); ;
         }
 
         public async Task<IPagedResults<Moderator>> SelectAsync(params object[] args)

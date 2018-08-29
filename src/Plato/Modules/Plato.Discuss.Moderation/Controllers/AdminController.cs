@@ -72,17 +72,22 @@ namespace Plato.Discuss.Moderation.Controllers
         
             // Build users to effect
             var users = new List<User>();
-            var items = JsonConvert.DeserializeObject<IEnumerable<TagItItem>>(model.Users);
-            foreach (var item in items)
+
+            if (!String.IsNullOrEmpty(model.Users))
             {
-                if (!String.IsNullOrEmpty(item.Value))
+                var items = JsonConvert.DeserializeObject<IEnumerable<TagItItem>>(model.Users);
+                foreach (var item in items)
                 {
-                    var user = await _userStore.GetByUserNameAsync(item.Value);
-                    if (user != null)
+                    if (!String.IsNullOrEmpty(item.Value))
                     {
-                        users.Add(user);
+                        var user = await _userStore.GetByUserNameAsync(item.Value);
+                        if (user != null)
+                        {
+                            users.Add(user);
+                        }
                     }
                 }
+
             }
 
             // Ensure we have users
@@ -136,7 +141,7 @@ namespace Plato.Discuss.Moderation.Controllers
                 }
 
                 return await Create();
-             
+
 
             }
             else
@@ -144,7 +149,7 @@ namespace Plato.Discuss.Moderation.Controllers
                 _alerter.Danger(T["You must specify at least 1 user!"]);
             }
 
-            return RedirectToAction(nameof(Index));
+            return await Create();
 
         }
 
