@@ -5,8 +5,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Plato.Discuss.Moderation.Stores;
 using Plato.Discuss.Moderation.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -17,7 +15,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Moderation.Models;
-
+using Plato.Moderation.Stores;
 
 namespace Plato.Discuss.Moderation.ViewProviders
 {
@@ -27,7 +25,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
         private readonly IContextFacade _contextFacade;
         private readonly IPermissionsManager2<ModeratorPermission> _permissionsManager;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IModeratorStore<ModeratorDocument> _moderatorStore;
+        private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly IPlatoUserStore<User> _userStore;
         private readonly HttpRequest _request;
 
@@ -36,7 +34,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
             IPermissionsManager2<ModeratorPermission> permissionsManager,
             IAuthorizationService authorizationService,
             IHttpContextAccessor httpContextAccessor,
-            IModeratorStore<ModeratorDocument> moderatorStore, 
+            IModeratorStore<Moderator> moderatorStore, 
             IPlatoUserStore<User> userStore)
         {
             _contextFacade = contextFacade;

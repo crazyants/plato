@@ -26,8 +26,7 @@ namespace Plato.Internal.Repositories.Roles
         }
 
         #endregion
-
-
+        
         #region "Implementation"
 
         public async Task<bool> DeleteAsync(int id)

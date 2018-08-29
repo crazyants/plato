@@ -7,7 +7,6 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Moderation.Navigation;
-using Plato.Discuss.Moderation.Stores;
 using Plato.Discuss.Moderation.ViewProviders;
 using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
@@ -27,9 +26,6 @@ namespace Plato.Discuss.Moderation
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            
-            // Data stores
-            services.AddScoped<IModeratorStore<ModeratorDocument>, ModeratorStore<ModeratorDocument>>();
             
             // Admin view providers
             services.AddScoped<IViewProviderManager<Moderator>, ViewProviderManager<Moderator>>();

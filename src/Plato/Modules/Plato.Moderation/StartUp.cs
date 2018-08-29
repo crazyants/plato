@@ -9,6 +9,8 @@ using Plato.Internal.Security;
 using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
 using Plato.Moderation.Handlers;
+using Plato.Moderation.Repositories;
+using Plato.Moderation.Stores;
 
 namespace Plato.Moderation
 {
@@ -28,6 +30,12 @@ namespace Plato.Moderation
 
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
+            // Repositories
+            services.AddScoped<IModeratorRepository<Moderator>, ModeratorRepository>();
+
+            // Stores
+            services.AddScoped<IModeratorStore<Moderator>, ModeratorStore>();
 
 
             // Register moderator permissions manager

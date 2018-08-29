@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
-using Plato.Discuss.Moderation.Models;
 using Plato.Discuss.Moderation.ViewModels;
 using Plato.Discuss.Moderation.ViewProviders;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Moderation.Models;
+using Plato.Moderation.Stores;
 
 namespace Plato.Discuss.Moderation.Controllers
 {
@@ -24,6 +23,7 @@ namespace Plato.Discuss.Moderation.Controllers
         private readonly IViewProviderManager<Moderator> _viewProvider;
         private readonly IPlatoUserStore<User> _userStore;
         private readonly IAlerter _alerter;
+        private readonly IModeratorStore<Moderator> _moderatorStore;
 
         public IHtmlLocalizer T { get; }
 
@@ -34,13 +34,15 @@ namespace Plato.Discuss.Moderation.Controllers
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
             IViewProviderManager<Moderator> viewProvider,
-            IAlerter alerter,
-            IPlatoUserStore<User> userStore)
+            IModeratorStore<Moderator> moderatorStore,
+            IPlatoUserStore<User> userStore,
+            IAlerter alerter)
         {
 
             _viewProvider = viewProvider;
             _alerter = alerter;
             _userStore = userStore;
+            _moderatorStore = moderatorStore;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -102,6 +104,9 @@ namespace Plato.Discuss.Moderation.Controllers
 
                         // Get fully composed type from all involved view providers
                         var moderator = await _viewProvider.GetComposedType(this);
+
+
+
 
                         // Update moderator
                         await _viewProvider.ProvideUpdateAsync(moderator, this);
