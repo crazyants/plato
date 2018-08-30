@@ -45,8 +45,10 @@ namespace Plato.Users.ViewProviders
 
             var filterOptions = new FilterOptions();
 
-            var pagerOptions = new PagerOptions();
-            pagerOptions.Page = GetPageIndex(updater);
+            var pagerOptions = new PagerOptions
+            {
+                Page = GetPageIndex(updater)
+            };
 
             var viewModel = new UsersIndexViewModel()
             {

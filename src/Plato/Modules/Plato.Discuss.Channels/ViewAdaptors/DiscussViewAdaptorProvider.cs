@@ -27,5 +27,6 @@ namespace Plato.Discuss.Channels.ViewAdaptors
 
 
         }
+
     }
 }

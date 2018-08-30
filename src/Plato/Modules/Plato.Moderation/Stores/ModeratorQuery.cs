@@ -37,6 +37,7 @@ namespace Plato.Moderation.Stores
             var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
+            var keywords = Params?.Keywords?.Value ?? string.Empty;
 
             var data = await _store.SelectAsync(
                 PageIndex,
@@ -44,7 +45,7 @@ namespace Plato.Moderation.Stores
                 startSql,
                 populateSql,
                 countSql,
-                Params.Keywords.Value
+                keywords
             );
 
             return data;
@@ -216,6 +217,12 @@ namespace Plato.Moderation.Stores
 
         private string BuildWhereClause()
         {
+
+            if (_query.Params == null)
+            {
+                return string.Empty;
+            }
+
             var sb = new StringBuilder();
 
             // Id

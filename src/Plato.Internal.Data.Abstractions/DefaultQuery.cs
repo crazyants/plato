@@ -12,9 +12,9 @@ namespace Plato.Internal.Data.Abstractions
 
         public IDictionary<string, OrderBy> SortColumns => _sortColumns;
 
-        public int PageIndex { get; private set; }
+        public int PageIndex { get; private set; } = 1;
 
-        public int PageSize { get; private set; }
+        public int PageSize { get; private set; } = int.MaxValue;
 
         public string TablePrefix { get; set; }
 

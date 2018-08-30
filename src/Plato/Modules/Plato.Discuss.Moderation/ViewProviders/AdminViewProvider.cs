@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Moderation.ViewModels;
-using Plato.Discuss.ViewModels;
+
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -192,7 +192,9 @@ namespace Plato.Discuss.Moderation.ViewProviders
                 Moderators = moderators?.Data
             };
         }
-        
+
+
+
         async Task<IPagedResults<Moderator>> GetModerators(        
             FilterOptions filterOptions,
             PagerOptions pagerOptions)

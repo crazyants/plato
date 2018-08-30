@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Html;
 
 namespace Plato.Internal.Layout.ViewAdaptors
@@ -71,12 +76,49 @@ namespace Plato.Internal.Layout.ViewAdaptors
                 throw new NullReferenceException(nameof(alteration));
             }
 
+        
             // wrapper to convert delegates generic argument type
             // to concrete type (object) for storage within adaptor result
-            var typedDelegate = new Func<object, object>((object input) => alteration((TModel)input));
+            var typedDelegate = new Func<object, object>((object input) =>
+            {
+                // View components use an anonymous type for the parameters argument
+                // this anonymous type is emitted as an actual type by the compiler but
+                // marked with the CompilerGeneratedAttribute. If we find this attribute
+                // on the model we'll treat this view as a ViewComponent and invoke accordingly
+                if (IsViewModelAnonymousType(input))
+                {
+                    var args = new List<object>();
+                    var properties = TypeDescriptor.GetProperties(input);
+                    foreach (PropertyDescriptor property in properties)
+                    {
+                        args.Add(property.GetValue(input));
+                    }
+                    return alteration((TModel)args[0]);
+                }
+
+                return alteration((TModel) input);
+
+            });
 
             _viewAdaptorResult.ModelAlterations.Add(typedDelegate);
             return this;
+        }
+
+
+
+        bool IsViewModelAnonymousType(object model)
+        {
+
+            // We need a model to inspect
+            if (model == null)
+            {
+                return false;
+            }
+
+            return model
+                .GetType()
+                .GetCustomAttributes(typeof(CompilerGeneratedAttribute), true).Any();
+
         }
 
     }
