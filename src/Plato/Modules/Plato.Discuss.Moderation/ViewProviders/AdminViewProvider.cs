@@ -80,16 +80,17 @@ namespace Plato.Discuss.Moderation.ViewProviders
         {
 
             var users = "";
-            var items = new List<TagItItem>()
+            if (moderator.UserId > 0)
             {
-                new TagItItem()
+                users = new List<TagItItem>()
                 {
-                    Text = moderator.User.DisplayName,
-                    Value = moderator.User.UserName
-                }
-            };
-
-            users = items.Serialize();
+                    new TagItItem()
+                    {
+                        Text = moderator.User.DisplayName,
+                        Value = moderator.User.UserName
+                    }
+                }.Serialize();
+            }
 
             var viewModel = new EditModeratorViewModel
             {

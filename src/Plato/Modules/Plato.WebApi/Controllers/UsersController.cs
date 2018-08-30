@@ -36,11 +36,11 @@ namespace Plato.WebApi.Controllers
     public class SearchResult
     {
 
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
-        public string DisplayName { get; set; }
+        public string Text { get; set; }
 
-        public string Username { get; set; }
+        public string Value { get; set; }
 
         public string Url { get; set; }
 
@@ -103,9 +103,9 @@ namespace Plato.WebApi.Controllers
 
                     results.Data.Add(new SearchResult()
                     {
-                        UserId = user.Id,
-                        Username = user.UserName,
-                        DisplayName = user.DisplayName,
+                        Id = user.Id,
+                        Text = user.DisplayName,
+                        Value = user.UserName,
                         Url = profileUrl,
                         Rank = 0
                     });
