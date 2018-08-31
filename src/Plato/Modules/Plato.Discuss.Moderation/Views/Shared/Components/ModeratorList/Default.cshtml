@@ -5,89 +5,49 @@
         <h6 class="card-title">@T["Moderators"]</h6>
     </card-title>
     <card-body>
-
-        <fieldset>
-            @if (Model.CategorizedModerators != null)
-            {
-                @foreach (var user in Model.CategorizedModerators.Keys)
-                {
-                    <fieldset>
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <td class="col-12 bg-light">
-                                        <h6 class="d-inline-block">
-                                            <avatar class="avatar" user-id="@user.Id" />
-                                            @user.DisplayName
-                                        </h6>
-                                        <span class="text-muted">
-                                            @@@user.UserName
-                                        </span>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                                @foreach (var moderator in Model.CategorizedModerators[user])
-                                {
-                                    <tr>
-                                        <td class="col-12">
-                                            @await DisplayAsync(new View("ModeratorListItem", new
-                                            {
-                                                moderator = moderator
-                                            }))
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </fieldset>
-                }
-            }
-            else
-            {
-                <ul class="list-group list-group-flush list-group-hover">
-                    <li class="list-group-item">
-                        <h6>@T["No moderators found"]</h6>
-                    </li>
-                </ul>
-            }
-        </fieldset>
-
-
-
-        @*@if (Model.Moderators != null)
+        @if (Model.CategorizedModerators != null)
         {
-            <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var moderator in Model.Moderators)
-                {
-                    <li class="list-group-item">
+            @foreach (var user in Model.CategorizedModerators.Keys)
+             {
+                 var collapsableId = "user-" + user.Id;
 
-                        <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@moderator.Id" class="btn btn-secondary float-right">
-                            <i class="fal fa-pencil"></i>
-                            @T["Edit"]
-                        </a>
+                 <ul class="list-group list-group-flush list-group-hover">
+                     <li class="list-group-item">
+                         
+                         <a href="#" class="btn btn-danger float-right">
+                             <i class="fal fa-trash"></i>
+                             Delete
+                         </a>
 
-                        <div class="float-right">
-                            Channel
-                        </div>
+                         <a class="btn" data-toggle="collapse" href="#@collapsableId" aria-expanded="false"  aria-controls="@collapsableId">
+                             <i class="fal fa-chevron-right"></i>
+                         </a>
 
-                        <h6 class="d-inline-block">
-                            <avatar class="avatar" user-id="@moderator.UserId" />
-                            <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@moderator.Id" class="p-1 font-weight-bold">
-                                @moderator.User.DisplayName
-                            </a>
-                        </h6>
+                         <h6 class="d-inline-block">
+                             <avatar class="avatar" user-id="@user.Id" />
+                             @user.DisplayName
+                         </h6>
 
-                        <span class="text-muted">
-                            @@@moderator.User.UserName
-                        </span>
+                         <span class="text-muted">
+                             @@@user.UserName
+                         </span>
 
-
-                    </li>
-                }
-            </ul>
+                     </li>
+                 </ul>
+                 <div id="@collapsableId" class="collapse">
+                     <ul class="list-group list-group-flush list-group-hover">
+                         @foreach (var moderator in Model.CategorizedModerators[user])
+                         {
+                             <li class="list-group-item">
+                                 @await DisplayAsync(new View("ModeratorListItem", new
+                                 {
+                                     moderator = moderator
+                                 }))
+                             </li>
+                         }
+                     </ul>
+                 </div>
+             }
         }
         else
         {
@@ -96,10 +56,7 @@
                     <h6>@T["No moderators found"]</h6>
                 </li>
             </ul>
-        }*@
-        
-        
-
+        }
     </card-body>
 </card>
 

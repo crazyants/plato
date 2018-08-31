@@ -94,8 +94,6 @@ namespace Plato.Discuss.Channels.Controllers
                     }
                 }
 
-
-
             });
 
             var category = await _categoryStore.GetByIdAsync(id);

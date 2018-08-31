@@ -1,7 +1,10 @@
 ﻿@model Moderator
 
-<a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="Id" class="btn btn-secondary float-right">
+<a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary float-right">
     <i class="fal fa-pencil"></i>
     @T["Edit"]
 </a>
-@Model.CategoryName
+
+<a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id">
+    @Model.CategoryName
+</a>

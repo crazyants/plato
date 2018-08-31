@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Internal.Layout.ViewAdaptors;
@@ -21,22 +24,39 @@ namespace Plato.Discuss.Channels.ViewAdaptors
         public override Task<IViewAdaptorResult> ConfigureAsync()
         {
 
-            // lato.Discuss.Moderation does not have a dependency on Plato.Discuss.Channels
+            // Plato.Discuss.Moderation does not have a dependency on Plato.Discuss.Channels
             // Instead we update the moderator view here via our view adaptor
             // This way the channel name is only ever populated if the channels feature is enabled
             return Adapt("ModeratorListItem",  v =>
             {
                 v.AdaptModel<Moderator>(model =>
                 {
-                    Channel channel = null;
+
+
+                    IEnumerable<Channel> parents = null;
                     if (model.CategoryId > 0)
                     {
-                        channel = _channelStore.GetByIdAsync(model.CategoryId).GetAwaiter().GetResult();
+                        parents = _channelStore.GetParentsByIdAsync(model.CategoryId)
+                            .GetAwaiter()
+                            .GetResult();
                     }
-                    if (channel != null)
+
+                    var sb = new StringBuilder();
+                    if (parents != null)
                     {
-                        model.CategoryName = channel.Name;
+                        var i = 0;
+                        var parentList = parents.ToList();
+                        foreach (var parent in parentList)
+                        {
+                            sb.Append(parent.Name);
+                            if (i < parentList.Count - 1)
+                            {
+                                sb.Append(" / ");
+                            }
+                            i += 1;
+                        }
                     }
+                    model.CategoryName = sb.ToString();
                     // Ensure we return an anonymous type
                     // as we are adapting a view component
                     return new

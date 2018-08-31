@@ -11,6 +11,7 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
@@ -22,8 +23,9 @@ namespace Plato.Discuss.Moderation.Controllers
     {
         private readonly IViewProviderManager<Moderator> _viewProvider;
         private readonly IPlatoUserStore<User> _userStore;
-        private readonly IAlerter _alerter;
         private readonly IModeratorStore<Moderator> _moderatorStore;
+        private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
 
@@ -36,13 +38,15 @@ namespace Plato.Discuss.Moderation.Controllers
             IViewProviderManager<Moderator> viewProvider,
             IModeratorStore<Moderator> moderatorStore,
             IPlatoUserStore<User> userStore,
+            IBreadCrumbManager breadCrumbManager,
             IAlerter alerter)
         {
 
             _viewProvider = viewProvider;
-            _alerter = alerter;
             _userStore = userStore;
             _moderatorStore = moderatorStore;
+            _breadCrumbManager = breadCrumbManager;
+            _alerter = alerter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -52,6 +56,14 @@ namespace Plato.Discuss.Moderation.Controllers
         public async Task<IActionResult> Index()
         {
 
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Moderators"]);
+            });
+
             var model = await _viewProvider.ProvideIndexAsync(new Moderator(), this);
             return View(model);
 
@@ -60,7 +72,19 @@ namespace Plato.Discuss.Moderation.Controllers
         public async Task<IActionResult> Create()
         {
 
-            var model = await _viewProvider.ProvideEditAsync(new Moderator(), this);
+
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Moderators"], moderators => moderators
+                    .Action("Index", "Admin", "Plato.Discuss.Moderation")
+                    .LocalNav()
+                ).Add(S["Add Moderator"]); ;
+            });
+            
+                var model = await _viewProvider.ProvideEditAsync(new Moderator(), this);
             return View(model);
 
         }
@@ -162,6 +186,18 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 return NotFound();
             }
+            
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Admin", "Plato.Admin")
+                    .LocalNav()
+                ).Add(S["Moderators"], moderators => moderators
+                    .Action("Index", "Admin", "Plato.Discuss.Moderation")
+                    .LocalNav()
+                ).Add(S["Edit Moderator"]);
+            });
+
 
             var result = await _viewProvider.ProvideEditAsync(moderator, this);
             return View(result);

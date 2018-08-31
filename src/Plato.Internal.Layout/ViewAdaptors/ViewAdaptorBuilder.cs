@@ -81,10 +81,7 @@ namespace Plato.Internal.Layout.ViewAdaptors
             // to concrete type (object) for storage within adaptor result
             var typedDelegate = new Func<object, object>((object input) =>
             {
-                // View components use an anonymous type for the parameters argument
-                // this anonymous type is emitted as an actual type by the compiler but
-                // marked with the CompilerGeneratedAttribute. If we find this attribute
-                // on the model we'll treat this view as a ViewComponent and invoke accordingly
+                // use first argument from anonymous type as mdoel
                 if (IsViewModelAnonymousType(input))
                 {
                     var args = new List<object>();
