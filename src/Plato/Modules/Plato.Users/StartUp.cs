@@ -148,46 +148,33 @@ namespace Plato.Users
             );
 
             routes.MapAreaRoute(
-                name: "Admin-ManageUsers",
+                name: "Admin-Users",
                 areaName: "Plato.Users",
-                template: "admin/users",
+                template: "admin/users/{action}/{id?}",
                 defaults: new { controller = "Admin", action = "Index" }
             );
 
-            routes.MapAreaRoute(
-                name: "Admin-DisplayUser",
-                areaName: "Plato.Users",
-                template: "admin/users/display",
-                defaults: new { controller = "Admin", action = "Display" }
-            );
-
-            routes.MapAreaRoute(
-                name: "Admin-CreateUser",
-                areaName: "Plato.Users",
-                template: "admin/users/create",
-                defaults: new { controller = "Admin", action = "Create" }
-            );
-            
-            routes.MapAreaRoute(
-                name: "Admin-EditUser",
-                areaName: "Plato.Users",
-                template: "admin/users/edit",
-                defaults: new { controller = "Admin", action = "EditAsync" }
-            );
-            
             routes.MapAreaRoute(
                 name: "Home-Users",
                 areaName: "Plato.Users",
                 template: "users",
                 defaults: new { controller = "Home", action = "Index" }
             );
-            
+
+            routes.MapAreaRoute(
+                name: "ServePhoto",
+                areaName: "Plato.Users",
+                template: "users/photo/{id}",
+                defaults: new { controller = "Photo", action = "Serve" }
+            );
+
             routes.MapAreaRoute(
                 name: "Home-User",
                 areaName: "Plato.Users",
                 template: "users/{id}/{alias?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
+
 
         }
     }

@@ -42,17 +42,20 @@ namespace Plato.Users.ViewModels
         [DataType(DataType.Password)]
         public string PasswordConfirmation { get; set; }
 
-        public bool DisplayPasswordFields { get; set; }
-        
         [DataType(DataType.Upload)]
         public IFormFile AvatarFile { get; set; }
 
         public IEnumerable<string> RoleNames { get; set; }
 
-        public bool IsNewUser { get; set; }
-
         public DateTimeOffset? LastLoginDate { get; set; }
+
+        // -------
+        
+        public bool IsNewUser { get; set; }
+        
+        public bool DisplayPasswordFields { get; set; }
 
 
     }
+
 }

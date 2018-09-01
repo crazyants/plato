@@ -20,6 +20,21 @@
             <span asp-validation-for="Email" class="text-danger"></span>
             <input asp-for="Email" placeholder="@T["email@address.com"]" class="form-control" />
         </div>
+        @if (Model.DisplayPasswordFields)
+        {
+            <div class="form-group" asp-validation-class-for="Password">
+                <label asp-for="Password"><strong>@T["Password"]</strong></label>
+                <span asp-validation-for="Password" class="text-danger"></span>
+                <input asp-for="Password" type="password" class="form-control" />
+            </div>
+
+            <div class="form-group" asp-validation-class-for="PasswordConfirmation">
+                <label asp-for="PasswordConfirmation"><strong>@T["Password Confirmation"]</strong></label>
+                <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
+                <input asp-for="PasswordConfirmation" type="password" class="form-control" />
+            </div>
+        }
+
         @if (!Model.IsNewUser)
         {
             <div class="form-group" asp-validation-class-for="Location">

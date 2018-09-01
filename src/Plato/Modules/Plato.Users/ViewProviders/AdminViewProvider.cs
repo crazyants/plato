@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
@@ -25,17 +26,22 @@ namespace Plato.Users.ViewProviders
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
         private readonly IUrlHelper _urlHelper;
 
+        private readonly IStringLocalizer T;
+
         public AdminViewProvider(
             UserManager<User> userManager,
             IActionContextAccessor actionContextAccesor,
             IHostingEnvironment hostEnvironment,
             IUrlHelperFactory urlHelperFactory,
-            IUserPhotoStore<UserPhoto> userPhotoStore)
+            IUserPhotoStore<UserPhoto> userPhotoStore,
+            IStringLocalizer<AdminViewProvider> stringLocalizer)
         {
             _userManager = userManager;
             _hostEnvironment = hostEnvironment;
             _userPhotoStore = userPhotoStore;
             _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
+
+            T = stringLocalizer;
         }
 
         #region "Implementation"
@@ -93,7 +99,8 @@ namespace Plato.Users.ViewProviders
                 Url = details.Profile.Url,
                 Bio = details.Profile.Bio,
                 LastLoginDate = user.LastLoginDate,
-                IsNewUser = user.Id == 0
+                IsNewUser = user.Id == 0,
+                DisplayPasswordFields = user.Id == 0
             };
 
             return Task.FromResult(
@@ -133,12 +140,24 @@ namespace Plato.Users.ViewProviders
 
         public override async Task<bool> ValidateModelAsync(User user, IUpdateModel updater)
         {
-            var valid = await updater.TryUpdateModelAsync(new EditUserViewModel
+
+            var model = new EditUserViewModel
             {
                 DisplayName = user.DisplayName,
                 UserName = user.UserName,
                 Email = user.Email
-            });
+            };
+
+            if (await IsNewUser(user.Id.ToString()))
+            {
+                if (model.Password != model.PasswordConfirmation)
+                {
+                    updater.ModelState.AddModelError(nameof(model.PasswordConfirmation), T["Password and Password Confirmation do not match"]);
+                }
+            }
+
+            var valid = await updater.TryUpdateModelAsync(model);
+
             return valid;
         }
 
@@ -247,6 +266,11 @@ namespace Plato.Users.ViewProviders
 
             return page;
 
+        }
+
+        public async Task<bool> IsNewUser(string userId)
+        {
+            return await _userManager.FindByIdAsync(userId) == null;
         }
 
         #endregion

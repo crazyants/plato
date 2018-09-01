@@ -139,7 +139,8 @@ namespace Plato.Users.Controllers
             {
                 DisplayName = model.DisplayName,
                 UserName = model.UserName,
-                Email = model.Email
+                Email = model.Email,
+
             }, this))
             {
 
