@@ -88,15 +88,9 @@ namespace Plato.Discuss.Moderation.ViewComponents
                 return null;
             }
 
-            // Conver to list to prevent multiple enumerations
-            var userList = users.Values.ToList();
-
-            // Order our distinct users
-            var sortedUsers= userList.OrderBy(u => u.DisplayName);
-
             // Add moderator entries for each user
             var output = new ConcurrentDictionary<SimpleUser, IEnumerable<Moderator>>();
-            foreach (var user in sortedUsers)
+            foreach (var user in users.Values)
             {
                 var entires = moderators.Data
                     .Where(m => m.UserId == user.Id)

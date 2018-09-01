@@ -78,16 +78,6 @@ namespace Plato.Users.ViewProviders
 
         }
 
-        public override async Task<bool> ValidateModelAsync(User user, IUpdateModel updater)
-        {
-            return await updater.TryUpdateModelAsync(new EditUserViewModel
-            {
-                DisplayName = user.DisplayName,
-                UserName = user.UserName,
-                Email = user.Email
-            });
-        }
-
         public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
 
@@ -101,13 +91,15 @@ namespace Plato.Users.ViewProviders
                 Email = user.Email,
                 Location = details.Profile.Location,
                 Url = details.Profile.Url,
-                Bio = details.Profile.Bio
+                Bio = details.Profile.Bio,
+                LastLoginDate = user.LastLoginDate,
+                IsNewUser = user.Id == 0
             };
 
             return Task.FromResult(
                 Views(
-                    View<User>("Admin.Edit.Header", model => user).Zone("header"),
-                    View<User>("Admin.Edit.Meta", model => user).Zone("meta"),
+                    View<EditUserViewModel>("Admin.Edit.Header", model => viewModel).Zone("header"),
+                    View<EditUserViewModel>("Admin.Edit.Meta", model => viewModel).Zone("meta"),
                     View<EditUserViewModel>("Admin.Edit.Content", model => viewModel).Zone("content"),
                     View<EditUserViewModel>("Admin.Edit.Sidebar", model => viewModel).Zone("sidebar"),
                     View<EditUserViewModel>("Admin.Edit.Footer", model => viewModel).Zone("footer"),
@@ -115,6 +107,40 @@ namespace Plato.Users.ViewProviders
                 ));
 
         }
+
+
+        public override async Task ComposeTypeAsync(User user, IUpdateModel updater)
+        {
+
+            var model = new EditUserViewModel
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                DisplayName = user.DisplayName
+            };
+
+            await updater.TryUpdateModelAsync(model);
+
+            if (updater.ModelState.IsValid)
+            {
+
+                user.UserName = model.UserName;
+                user.Email = model.Email;
+                user.DisplayName = model.DisplayName;
+            }
+
+        }
+
+        public override async Task<bool> ValidateModelAsync(User user, IUpdateModel updater)
+        {
+            return await updater.TryUpdateModelAsync(new EditUserViewModel
+            {
+                DisplayName = user.DisplayName,
+                UserName = user.UserName,
+                Email = user.Email
+            });
+        }
+
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IUpdateModel updater)
         {

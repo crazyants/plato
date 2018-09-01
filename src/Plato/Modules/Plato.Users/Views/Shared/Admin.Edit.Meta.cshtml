@@ -1,8 +1,18 @@
-﻿@model Plato.Internal.Models.Users.User
+﻿@model EditUserViewModel
 
-<span class="text-muted">
-    @T["Last login"] @Model.UserName
-</span>
+@if (Model.IsNewUser)
+{
+    <span class="text-muted">
+        @T["Create a new user account."]
+    </span>
+}
+else
+{
+    <span class="text-muted">
+        @@@Model.UserName, @T["Last login"]
+        <date utc="@Model.LastLoginDate"></date>
+    </span>
+}
 <hr />
 
 

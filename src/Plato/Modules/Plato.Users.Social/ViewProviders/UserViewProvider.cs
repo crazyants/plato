@@ -32,8 +32,13 @@ namespace Plato.Users.Social.ViewProviders
         public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
 
-            var socialLinks = user.GetOrCreate<SocialLinks>();
+            // Don't adapt the view when creating new users
+            if (user.Id == 0)
+            {
+                return Task.FromResult(default(IViewProviderResult));
+            }
 
+            var socialLinks = user.GetOrCreate<SocialLinks>();
             return Task.FromResult(Views(
                 View<EditSocialViewModel>("Social.Edit.Content", model =>
                 {

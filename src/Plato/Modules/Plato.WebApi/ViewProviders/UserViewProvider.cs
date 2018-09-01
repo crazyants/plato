@@ -36,7 +36,13 @@ namespace Plato.WebApi.ViewProviders
 
         public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
-         
+
+            // Don't adapt the view when creating new users
+            if (user.Id == 0)
+            {
+                return Task.FromResult(default(IViewProviderResult));
+            }
+            
             return Task.FromResult(Views(
                 View<EditUserViewModel>("User.Edit.Content", model =>
                 {

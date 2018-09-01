@@ -9,7 +9,6 @@ using Plato.Internal.Models.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Users.Controllers
 {
@@ -130,7 +129,69 @@ namespace Plato.Users.Controllers
             var result = await _adminViewProvider.ProvideEditAsync(new User(), this);
             return View(result);
         }
-        
+
+        [HttpPost]
+        [ActionName(nameof(Create))]
+        public async Task<IActionResult> CreatePost(EditUserViewModel model)
+        {
+            
+            // Validate model state within all view providers
+            if (await _adminViewProvider.IsModelStateValid(new User()
+            {
+                UserName = model.UserName,
+                Email = model.Email
+            }, this))
+            {
+
+                // Get fully composed type from all involved view providers
+                var user = await _adminViewProvider.GetComposedType(this);
+
+                // We need to first add the fully composed type
+                // so we have a nuique entity Id for all ProvideUpdateAsync
+                // methods within any involved view provider
+                var result = await _userManager.CreateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    var newUser = await _userManager.FindByEmailAsync(user.Email);
+
+                    // Execute view providers ProvideUpdateAsync method
+                    await _adminViewProvider.ProvideUpdateAsync(newUser, this);
+
+                    // Everything was OK
+                    _alerter.Success(T["Topic Created Successfully!"]);
+
+                    // Redirect to index
+                    return RedirectToAction(nameof(Index));
+
+                }
+                else
+                {
+                    // Errors that may have occurred whilst creating the entity
+                    foreach (var error in result.Errors)
+                    {
+                        ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                
+            }
+            
+            // if we reach this point some view model validation
+            // failed within a view provider, display model state errors
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
+                }
+            }
+
+            return await Create();
+
+
+        }
+
+
         public async Task<IActionResult> Edit(string id)
         {
 

@@ -1,6 +1,14 @@
-﻿@model Plato.Internal.Models.Users.User
+﻿@model EditUserViewModel
 
-<h4>@T["Edit profile for"] @Model.UserName</h4>
+@if (Model.IsNewUser)
+{
+    <h4>@T["Add User"]</h4>
+}
+else
+{
+    <h4>@T["Edit User"] @Model.DisplayName</h4>
+}
+
 
 
 

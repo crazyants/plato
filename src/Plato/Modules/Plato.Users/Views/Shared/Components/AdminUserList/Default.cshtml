@@ -12,9 +12,12 @@
                     <h6 class="d-inline-block">
                         <avatar class="avatar" user-id="@user.Id" />
                         <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" class="font-weight-bold">
-                            @user.UserName
+                            @user.DisplayName
                         </a>
                     </h6>
+                    <span class="text-muted">
+                        @@@user.UserName
+                    </span>
                     <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-secondary float-right">
                         <i class="fal fa-pencil"></i>
                         @T["Edit"]

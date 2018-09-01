@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
@@ -40,6 +41,11 @@ namespace Plato.Users.ViewModels
         public IFormFile AvatarFile { get; set; }
 
         public IEnumerable<string> RoleNames { get; set; }
+
+        public bool IsNewUser { get; set; }
+
+        public DateTimeOffset? LastLoginDate { get; set; }
+
 
     }
 }
