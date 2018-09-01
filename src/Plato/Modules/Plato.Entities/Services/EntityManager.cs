@@ -98,7 +98,7 @@ namespace Plato.Entities.Services
             // Invoke EntityCreating subscriptions
             foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
             {
-                Key = "EntityCreated"
+                Key = "EntityCreating"
             }, model))
             {
                 model = await handler.Invoke(new Message<TEntity>(model, this));

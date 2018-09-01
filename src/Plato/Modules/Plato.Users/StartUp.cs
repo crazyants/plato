@@ -21,7 +21,9 @@ using Plato.Users.Models;
 using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
 using Plato.Internal.Security.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Navigation;
+using Plato.Users.Services;
 
 namespace Plato.Users
 {
@@ -73,6 +75,10 @@ namespace Plato.Users
             services.TryAddScoped<UserManager<User>>();
             services.TryAddScoped<SignInManager<User>>();
 
+            // Custom User Manager
+            services.AddScoped<IPlatoUserManager<User>, PlatoUserManager<User>>();
+
+            // Context facade
             services.AddSingleton<IContextFacade, ContextFacade>();
             
             // Configurate authentication cookie

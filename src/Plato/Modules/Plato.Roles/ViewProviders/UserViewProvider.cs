@@ -50,6 +50,12 @@ namespace Plato.Roles.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
         {
 
+            // Don't display roles when adding new users
+            if (user.Id == 0)
+            {
+                return default(IViewProviderResult);
+            }
+
             var selectedRoles = await _platoRoleStore.GetRoleNamesByUserIdAsync(user.Id);
 
             return Views(

@@ -9,6 +9,8 @@ using Plato.Internal.Models.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Security.Abstractions;
+using Plato.Users.Services;
 
 namespace Plato.Users.Controllers
 {
@@ -19,6 +21,7 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<User> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly UserManager<User> _userManager;
+        private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly IAlerter _alerter;
 
         public IHtmlLocalizer T { get; }
@@ -31,12 +34,14 @@ namespace Plato.Users.Controllers
             IViewProviderManager<User> viewProvider,
             IBreadCrumbManager breadCrumbManager,
             UserManager<User> userManager,
-            IAlerter alerter)
+            IAlerter alerter,
+            IPlatoUserManager<User> platoUserManager)
         {
             _viewProvider = viewProvider;
             _userManager = userManager;
             _breadCrumbManager = breadCrumbManager;
             _alerter = alerter;
+            _platoUserManager = platoUserManager;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -140,17 +145,25 @@ namespace Plato.Users.Controllers
                 DisplayName = model.DisplayName,
                 UserName = model.UserName,
                 Email = model.Email,
-
             }, this))
             {
 
                 // Get fully composed type from all involved view providers
                 var user = await _viewProvider.GetComposedType(this);
-
+                
                 // We need to first add the fully composed type
                 // so we have a nuique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
-                var result = await _userManager.CreateAsync(user);
+                var result = await _platoUserManager.CreateAsync(
+                    model.UserName,
+                    model.DisplayName,
+                    model.Email,
+                    model.Password,
+                    new string[]
+                    {
+                        DefaultRoles.Member
+                    }, 
+                    (key, message) => ModelState.AddModelError(key, message));
 
                 if (result.Succeeded)
                 {

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 
@@ -7,11 +9,9 @@ namespace Plato.Users.Services
 {
 
     public interface IPlatoUserManager<TUser> where TUser : class
-
     {
-        Task<IActivityResult<TUser>> CreateAsync(string userName, string email, string[] roleNames, string password, Action<string, string> reportError);
 
-        Task<IActivityResult<TUser>> CreateAsync(TUser model, Action<string, string> reportError);
+        Task<IActivityResult<TUser>> CreateAsync(string userName, string displayName, string email, string password, string[] roleNames, Action<string, string> reportError);
 
         Task<IActivityResult<TUser>> UpdateAsync(TUser model, Action<string, string> reportError);
 
