@@ -133,12 +133,13 @@ namespace Plato.Users.ViewProviders
 
         public override async Task<bool> ValidateModelAsync(User user, IUpdateModel updater)
         {
-            return await updater.TryUpdateModelAsync(new EditUserViewModel
+            var valid = await updater.TryUpdateModelAsync(new EditUserViewModel
             {
                 DisplayName = user.DisplayName,
                 UserName = user.UserName,
                 Email = user.Email
             });
+            return valid;
         }
 
 
@@ -154,18 +155,24 @@ namespace Plato.Users.ViewProviders
 
             model.UserName = model.UserName?.Trim();
             model.Email = model.Email?.Trim();
+            model.DisplayName = model?.DisplayName.Trim();
 
             if (updater.ModelState.IsValid)
             {
+                // Update display name. Username and email address are update via UserManager
+                user.DisplayName = model.DisplayName;
 
+                // Update photo
                 if (model.AvatarFile != null)
                 {
                     await UpdateUserPhoto(user, model.AvatarFile);
                 }
 
+                // Update username and email
                 await _userManager.SetUserNameAsync(user, model.UserName);
                 await _userManager.SetEmailAsync(user, model.Email);
 
+                // Persist changes
                 var result = await _userManager.UpdateAsync(user);
                 foreach (var error in result.Errors)
                 {

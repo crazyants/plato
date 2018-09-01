@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -17,6 +16,15 @@ namespace Plato.Internal.Layout.TagHelpers
     public class AvatarTagHelper : TagHelper
     {
 
+        private const string AreaAttributeName = "Area";
+        private const string ControllerAttributeName = "Controller";
+        private const string ActionAttributeName = "Action";
+        private const string IdAttributeName = "Id";
+
+        public const string Area = "Plato.Users";
+        public const string Controller = "Photo";
+        public const string Action = "Serve";
+        
         public int UserId { get; set; }
         
         public ISimpleUser User { get; set; } 
@@ -32,8 +40,7 @@ namespace Plato.Internal.Layout.TagHelpers
             _httpContextAccessor = httpContextAccessor;
             _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
         }
-
-
+        
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
 
@@ -41,10 +48,10 @@ namespace Plato.Internal.Layout.TagHelpers
             {
                 Values = new RouteValueDictionary()
                 {
-                    {"Area", "Plato.Users"},
-                    {"Controller", "Photo"},
-                    {"Action", "Serve"},
-                    {"Id", this.UserId}
+                    {AreaAttributeName, Area},
+                    {ControllerAttributeName, Controller},
+                    {ActionAttributeName, Action},
+                    {IdAttributeName, this.UserId}
                 }
             });
             

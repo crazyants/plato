@@ -16,7 +16,7 @@ namespace Plato.Users.Controllers
     public class AdminController : Controller, IUpdateModel
     {
 
-        private readonly IViewProviderManager<User> _adminViewProvider;
+        private readonly IViewProviderManager<User> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly UserManager<User> _userManager;
         private readonly IAlerter _alerter;
@@ -28,12 +28,12 @@ namespace Plato.Users.Controllers
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
             IStringLocalizer<AdminController> stringLocalizer,
-            IViewProviderManager<User> adminViewProvider,
+            IViewProviderManager<User> viewProvider,
             IBreadCrumbManager breadCrumbManager,
             UserManager<User> userManager,
             IAlerter alerter)
         {
-            _adminViewProvider = adminViewProvider;
+            _viewProvider = viewProvider;
             _userManager = userManager;
             _breadCrumbManager = breadCrumbManager;
             _alerter = alerter;
@@ -79,13 +79,12 @@ namespace Plato.Users.Controllers
             this.RouteData.Values.Add("page", pagerOptions.Page);
 
             // Build view
-            var result = await _adminViewProvider.ProvideIndexAsync(new User(), this);
+            var result = await _viewProvider.ProvideIndexAsync(new User(), this);
 
             // Return view
             return View(result);
 
         }
-        
         
         public async Task<IActionResult> Display(string id)
         {
@@ -102,7 +101,7 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
 
-            var result = await _adminViewProvider.ProvideDisplayAsync(currentUser, this);
+            var result = await _viewProvider.ProvideDisplayAsync(currentUser, this);
             return View(result);
         }
 
@@ -126,7 +125,7 @@ namespace Plato.Users.Controllers
                 ).Add(S["Add User"]);
             });
 
-            var result = await _adminViewProvider.ProvideEditAsync(new User(), this);
+            var result = await _viewProvider.ProvideEditAsync(new User(), this);
             return View(result);
         }
 
@@ -136,15 +135,16 @@ namespace Plato.Users.Controllers
         {
             
             // Validate model state within all view providers
-            if (await _adminViewProvider.IsModelStateValid(new User()
+            if (await _viewProvider.IsModelStateValid(new User()
             {
+                DisplayName = model.DisplayName,
                 UserName = model.UserName,
                 Email = model.Email
             }, this))
             {
 
                 // Get fully composed type from all involved view providers
-                var user = await _adminViewProvider.GetComposedType(this);
+                var user = await _viewProvider.GetComposedType(this);
 
                 // We need to first add the fully composed type
                 // so we have a nuique entity Id for all ProvideUpdateAsync
@@ -153,13 +153,15 @@ namespace Plato.Users.Controllers
 
                 if (result.Succeeded)
                 {
+
+                    // Get new user
                     var newUser = await _userManager.FindByEmailAsync(user.Email);
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _adminViewProvider.ProvideUpdateAsync(newUser, this);
+                    await _viewProvider.ProvideUpdateAsync(newUser, this);
 
                     // Everything was OK
-                    _alerter.Success(T["Topic Created Successfully!"]);
+                    _alerter.Success(T["User Created Successfully!"]);
 
                     // Redirect to index
                     return RedirectToAction(nameof(Index));
@@ -188,10 +190,8 @@ namespace Plato.Users.Controllers
 
             return await Create();
 
-
         }
-
-
+        
         public async Task<IActionResult> Edit(string id)
         {
 
@@ -218,7 +218,7 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
             
-            var result = await _adminViewProvider.ProvideEditAsync(currentUser, this);
+            var result = await _viewProvider.ProvideEditAsync(currentUser, this);
             return View(result);
 
         }
@@ -233,7 +233,7 @@ namespace Plato.Users.Controllers
                 return NotFound();
             }
             
-            var result = await _adminViewProvider.ProvideUpdateAsync((User)currentUser, this);
+            var result = await _viewProvider.ProvideUpdateAsync((User)currentUser, this);
 
             // Ensure modelstate is still valid after view providers have executed
             if (ModelState.IsValid)

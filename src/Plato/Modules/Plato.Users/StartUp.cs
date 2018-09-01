@@ -11,19 +11,15 @@ using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Hosting.Web;
-using Plato.Internal.Hosting.Web.Extensions;
 using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Layout.TagHelpers;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
-using Plato.Internal.Stores.Roles;
 using Plato.Users.ViewAdaptors;
 using Plato.Users.Handlers;
 using Plato.Users.Models;
 using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Security.Abstractions;
 using Plato.Users.Navigation;
 
@@ -70,15 +66,16 @@ namespace Plato.Users
             services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<User>>();
             services.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, Role>>();
 
+            // Stores
             services.TryAddScoped<IUserStore<User>, UserStore>();
      
+            // Managers
             services.TryAddScoped<UserManager<User>>();
             services.TryAddScoped<SignInManager<User>>();
 
             services.AddSingleton<IContextFacade, ContextFacade>();
             
-            // configurate authentication cookie
-
+            // Configurate authentication cookie
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.Name = "plato_" + _cookieSuffix.ToLower();
@@ -90,7 +87,7 @@ namespace Plato.Users
                 options.SlidingExpiration = true;
             });
 
-            // register navigation providers
+            // Navigation providers
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
             services.AddScoped<INavigationProvider, EditProfileMenu>();
