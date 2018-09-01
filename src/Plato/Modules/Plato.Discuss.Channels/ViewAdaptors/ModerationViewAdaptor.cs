@@ -57,8 +57,7 @@ namespace Plato.Discuss.Channels.ViewAdaptors
                         }
                     }
                     model.CategoryName = sb.ToString();
-                    // Ensure we return an anonymous type
-                    // as we are adapting a view component
+                    // Return an anonymous type, we are adapting a view component
                     return new
                     {
                         moderator = model

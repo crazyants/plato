@@ -34,14 +34,36 @@
 
         @if (Model.SideBar != null)
         {
-            <div class="row layout-content">
-                <div class="col-md-9">
+            <div class="row gutter-sm layout-content">
+                <div class="col-md-8">
                     @if (Model.Content != null)
                     {
                         <view model="@Model.Content"></view>
                     }
+                    @if (Model.Actions != null || Model.Footer != null)
+                    {
+                        <div class="layout-footer">
+                            <card>
+                                <card-body>
+                                    @if (Model.Actions != null)
+                                    {
+                                        <div class="float-right layout-actions">
+                                            <view model="@Model.Actions"/>
+                                        </div>
+                                    }
+                                    @if (Model.Footer != null)
+                                    {
+                                        <div class="layout-footer-item">
+                                            <view model="@Model.Footer"></view>
+                                        </div>
+                                    }
+                                </card-body>
+                            </card>
+
+                        </div>
+                    }
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     @if (Model.SideBar != null)
                     {
                         <view model="@Model.SideBar"></view>
@@ -55,23 +77,31 @@
             {
                 <view model="@Model.Content"></view>
             }
+            @if (Model.Actions != null || Model.Footer != null)
+             {
+                 <div class="layout-footer">
+                     <card>
+                         <card-body>
+                             @if (Model.Actions != null)
+                             {
+                                 <div class="float-right layout-actions">
+                                     <view model="@Model.Actions"/>
+                                 </div>
+                             }
+                             @if (Model.Footer != null)
+                             {
+                                 <div class="layout-footer-item">
+                                     <view model="@Model.Footer"></view>
+                                 </div>
+                             }
+                         </card-body>
+                     </card>
+
+                 </div>
+             }
         }
-
-        <div class="layout-footer">
-            @if (Model.Actions != null)
-            {
-                <div class="float-right layout-actions">
-                    <view model="@Model.Actions" />
-                </div>
-            }
-            @if (Model.Footer != null)
-            {
-                <div class="layout-footer-item">
-                    <view model="@Model.Footer"></view>
-                </div>
-            }
-        </div>
-
+        
+ 
     </div>
 </form>
 

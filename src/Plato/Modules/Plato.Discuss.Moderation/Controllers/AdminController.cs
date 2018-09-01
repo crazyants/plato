@@ -71,8 +71,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
         public async Task<IActionResult> Create()
         {
-
-
+            
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
@@ -197,8 +196,7 @@ namespace Plato.Discuss.Moderation.Controllers
                     .LocalNav()
                 ).Add(S["Edit Moderator"]);
             });
-
-
+            
             var result = await _viewProvider.ProvideEditAsync(moderator, this);
             return View(result);
         }

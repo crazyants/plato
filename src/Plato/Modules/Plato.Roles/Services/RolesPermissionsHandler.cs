@@ -19,6 +19,8 @@ namespace Plato.Roles.Services
             _roleManager = roleManager;
         }
 
+        #region "Implementation"
+
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
             if (context.HasSucceeded)
@@ -71,7 +73,11 @@ namespace Plato.Roles.Services
             }
         }
 
-        private static void PermissionNames(
+        #endregion
+
+        #region "Private Methods"
+
+        static void PermissionNames(
             IPermission permission, 
             HashSet<string> stack)
         {
@@ -97,5 +103,8 @@ namespace Plato.Roles.Services
             // Administrator permission grants them all
             stack.Add(StandardPermissions.Administrator.Name);
         }
+
+        #endregion
+
     }
 }

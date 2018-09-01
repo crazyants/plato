@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Moderation.ViewModels;
-
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
@@ -60,7 +57,11 @@ namespace Plato.Discuss.Moderation.ViewProviders
             var pagerOptions = new PagerOptions();
             //pagerOptions.Page = GetPageIndex(updater);
 
-            var viewModel = await GetIndexModel(filterOptions, pagerOptions);
+            var viewModel = new ModeratorIndexViewModel()
+            {
+                FilterOpts = filterOptions,
+                PagerOpts = pagerOptions
+            };
             
             return Views(
                 View<ModeratorIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header").Order(1),
@@ -79,6 +80,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IUpdateModel updater)
         {
 
+            // Serialize tagIt model 
             var users = "";
             if (moderator.UserId > 0)
             {
@@ -97,7 +99,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
                 Users = users,
                 Moderator =  moderator,
                 IsNewModerator = moderator.UserId == 0,
-                EnabledPermissions = await GetEnabledModeratorPermissionsAsync(new Role()),
+                EnabledPermissions = await GetEnabledModeratorPermissionsAsync(moderator),
                 CategorizedPermissions = await _permissionsManager.GetCategorizedPermissionsAsync()
             };
 
@@ -108,8 +110,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
                 View<EditModeratorViewModel>("Admin.Edit.Footer", model => viewModel).Zone("footer").Order(1)
             );
         }
-
-
+        
         public override async Task<bool> ValidateModelAsync(Moderator moderator, IUpdateModel updater)
         {
             var valid = await updater.TryUpdateModelAsync(new EditModeratorViewModel()
@@ -136,9 +137,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
             }
 
         }
-
-
-
+        
         public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator model, IUpdateModel updater)
         {
 
@@ -181,57 +180,26 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         #region "Private Methods"
         
-        async Task<ModeratorIndexViewModel> GetIndexModel(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-            //var feature = await GetcurrentFeature();
-            var moderators = await GetModerators(filterOptions, pagerOptions);
-            return new ModeratorIndexViewModel()
-            {
-                Moderators = moderators?.Data
-            };
-        }
-
-
-
-        async Task<IPagedResults<Moderator>> GetModerators(        
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
-        {
-            return await _moderatorStore.QueryAsync()
-                .Take(pagerOptions.Page, pagerOptions.PageSize)
-                .Select<ModeratorQueryParams>(q =>
-                {
-                    if (!string.IsNullOrEmpty(filterOptions.Search))
-                    {
-                        q.Keywords.IsIn(filterOptions.Search);
-                    }
-                })
-                .OrderBy("CreatedDate", OrderBy.Asc)
-                .ToList();
-        }
-        
-        async Task<IEnumerable<string>> GetEnabledModeratorPermissionsAsync(Role role)
+        async Task<IEnumerable<string>> GetEnabledModeratorPermissionsAsync(Moderator moderator)
         {
 
             // We can only obtain enabled permissions for existing roles
             // Return an empty list for new roles to avoid additional null checks
-            if (role.Id == 0)
+            if (moderator.Id == 0)
             {
                 return new List<string>();
             }
 
             // If the role is anonymous set the authtype to
             // null to ensure IsAuthenticated is set to false
-            var authType = role.Name != DefaultRoles.Anonymous
+            var authType = moderator.CategoryId != 0
                 ? "UserAuthType"
                 : null;
 
             // Dummy identity
             var identity = new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.Role, role.Name)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, moderator.User.UserName)
             }, authType);
 
             // Dummy principal
@@ -246,7 +214,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
             var result = new List<string>();
             foreach (var permission in permissions)
             {
-                if (await _authorizationService.AuthorizeAsync(principal, permission))
+                if (await _authorizationService.AuthorizeAsync(principal, moderator.CategoryId, permission))
                 {
                     result.Add(permission.Name);
                 }

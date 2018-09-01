@@ -12,8 +12,6 @@ namespace Plato.Discuss.Moderation.ViewModels
 
         public FilterOptions FilterOpts { get; set; }
 
-        public IEnumerable<Moderator> Moderators { get; set; }
-        
         public IDictionary<SimpleUser, IEnumerable<Moderator>> CategorizedModerators { get; set; }
 
     }
@@ -21,7 +19,6 @@ namespace Plato.Discuss.Moderation.ViewModels
     public class FilterOptions
     {
         public string Search { get; set; }
-
 
     }
 

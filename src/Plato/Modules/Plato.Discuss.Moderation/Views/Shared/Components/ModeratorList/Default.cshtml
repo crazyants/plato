@@ -7,22 +7,21 @@
     <card-body>
         @if (Model.CategorizedModerators != null)
         {
-            @foreach (var user in Model.CategorizedModerators.Keys)
+            @foreach (var user in Model.CategorizedModerators.Keys.OrderBy(u => u.DisplayName))
              {
                  var collapsableId = "user-" + user.Id;
-
                  <ul class="list-group list-group-flush list-group-hover">
                      <li class="list-group-item">
                          
-                         <a href="#" class="btn btn-danger float-right">
+                         <a role="button" href="#" class="btn btn-danger float-right">
                              <i class="fal fa-trash"></i>
                              Delete
                          </a>
-
-                         <a class="btn" data-toggle="collapse" href="#@collapsableId" aria-expanded="false"  aria-controls="@collapsableId">
+                         
+                         <a role="button" class="btn btn-expand" title="@T["Channels"]" data-toggle="collapse" href="#@collapsableId" aria-expanded="false"  aria-controls="@collapsableId">
                              <i class="fal fa-chevron-right"></i>
                          </a>
-
+                         
                          <h6 class="d-inline-block">
                              <avatar class="avatar" user-id="@user.Id" />
                              @user.DisplayName
@@ -59,6 +58,18 @@
         }
     </card-body>
 </card>
+
+<script section="Footer">
+    $(document).ready(function() {
+        $(".btn-expand").click(function () {
+            if ($(this).hasClass("active")) {
+                $(this).removeClass("active");
+            } else {
+                $(this).addClass("active");
+            }
+        });
+    });
+</script>
 
 
 

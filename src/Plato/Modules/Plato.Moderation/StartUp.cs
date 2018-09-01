@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using Plato.Internal.Security.Abstractions;
 using Plato.Moderation.Models;
 using Plato.Moderation.Handlers;
 using Plato.Moderation.Repositories;
+using Plato.Moderation.Services;
 using Plato.Moderation.Stores;
 
 namespace Plato.Moderation
@@ -40,6 +42,9 @@ namespace Plato.Moderation
 
             // Register moderator permissions manager
             services.AddScoped<IPermissionsManager2<ModeratorPermission>, PermissionsManager2<ModeratorPermission>>();
+          
+            // Register additional authorization handler for implied permissions
+            services.AddScoped<IAuthorizationHandler, ModeratorPermissionsHandler>();
             
         }
 
