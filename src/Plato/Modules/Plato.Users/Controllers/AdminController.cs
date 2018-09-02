@@ -149,7 +149,7 @@ namespace Plato.Users.Controllers
             {
 
                 // Get fully composed type from all involved view providers
-                var user = await _viewProvider.GetComposedType(this);
+                //var user = await _viewProvider.GetComposedType(this);
                 
                 // We need to first add the fully composed type
                 // so we have a nuique Id for all ProvideUpdateAsync
@@ -164,7 +164,7 @@ namespace Plato.Users.Controllers
                 {
 
                     // Get new user
-                    var newUser = await _userManager.FindByEmailAsync(user.Email);
+                    var newUser = await _userManager.FindByEmailAsync(model.Email);
 
                     // Execute view providers ProvideUpdateAsync method
                     await _viewProvider.ProvideUpdateAsync(newUser, this);

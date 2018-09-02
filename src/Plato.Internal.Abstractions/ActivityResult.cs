@@ -4,8 +4,7 @@ using System.Linq;
 
 namespace Plato.Internal.Abstractions
 {
-
-
+    
     public class ActivityResult<TResponse> : IActivityResult<TResponse> where TResponse : class
     {
 
@@ -44,26 +43,25 @@ namespace Plato.Internal.Abstractions
 
         public ActivityResult<TResponse> Failed(string message)
         {
-            var entityResult = new ActivityResult<TResponse>()
+            var result = new ActivityResult<TResponse>()
             {
                 Succeeded = false
             };
 
-            entityResult._errors.Add(new ActivityError(message));
+            result._errors.Add(new ActivityError(message));
 
-            return entityResult;
+            return result;
         }
-
-
+        
         public ActivityResult<TResponse> Failed(params ActivityError[] errors)
         {
-            var entityResult = new ActivityResult<TResponse>()
+            var result = new ActivityResult<TResponse>()
             {
                 Succeeded = false
             };
             if (errors != null)
-                entityResult._errors.AddRange((IEnumerable<ActivityError>)errors);
-            return entityResult;
+                result._errors.AddRange((IEnumerable<ActivityError>)errors);
+            return result;
         }
 
         public override string ToString()
@@ -78,6 +76,5 @@ namespace Plato.Internal.Abstractions
         }
 
     }
-
 
 }

@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions;
@@ -45,10 +44,10 @@ namespace Plato.Users.Services
         {
             _httpContextAccessor = httpContextAccessor;
             _identityOptions = identityOptions;
-            _userManager = userManager;
-            _broker = broker;
             _siteSettingsStore = siteSettingsStore;
             _platoUserStore = platoUserStore;
+            _userManager = userManager;
+            _broker = broker;
 
             T = stringLocalizer;
 
@@ -71,7 +70,7 @@ namespace Plato.Users.Services
 
             if (String.IsNullOrEmpty(userName) || String.IsNullOrWhiteSpace(userName))
             {
-                return result.Failed(new ActivityError("Username", T["A username is required"]));
+                return result.Failed(new ActivityError("UserMame", T["A username is required"]));
             }
 
             if (String.IsNullOrEmpty(email) || String.IsNullOrWhiteSpace(email))
@@ -96,21 +95,21 @@ namespace Plato.Users.Services
             // Is this a unique username?
             if (await _userManager.FindByNameAsync(userName.Normalize()) != null)
             {
-                return result.Failed(new ActivityError("Username", T["The username already exists"]));
+                return result.Failed(new ActivityError("UserMame", T["The username already exists"]));
             }
 
             // -------------------------
 
-            // Get site settings to populate user defaults
+            // Get site settings to populate some user defaults
             var settings = await _siteSettingsStore.GetAsync();
             
-            // Build model
+            // Build user
             var user = ActivateInstanceOf<TUser>.Instance();
             user.UserName = userName;
             user.DisplayName = displayName;
             user.Email = email;
             user.RoleNames = new List<string>(roleNames ?? new string[] { DefaultRoles.Member });
-            user.TimeZone = settings.TimeZone;
+            user.TimeZone = settings?.TimeZone ?? string.Empty;
             user.IpV4Address = GetIpV4Address();
             user.IpV6Address = GetIpV6Address();
           
@@ -134,7 +133,6 @@ namespace Plato.Users.Services
 
             // Persist the user
             var identityResult = await _userManager.CreateAsync(user, password);
-
             if (identityResult.Succeeded)
             {
 
@@ -163,16 +161,92 @@ namespace Plato.Users.Services
 
         }
 
-        public Task<IActivityResult<TUser>> UpdateAsync(TUser model)
+        public async Task<IActivityResult<TUser>> UpdateAsync(TUser model)
         {
-            throw new NotImplementedException();
+
+            var result = new ActivityResult<TUser>();
+            
+            // Validate
+            // -------------------------
+            
+            if (model.Id <= 0)
+            {
+                return result.Failed(new ActivityError("Id", T["You must specify a user id to update"]));
+            }
+            
+            if (String.IsNullOrEmpty(model.UserName) || String.IsNullOrWhiteSpace(model.UserName))
+            {
+                return result.Failed(new ActivityError("UserMame", T["A username is required"]));
+            }
+
+            if (String.IsNullOrEmpty(model.Email) || String.IsNullOrWhiteSpace(model.Email))
+            {
+                return result.Failed(new ActivityError("Email", T["A email is required"]));
+            }
+
+            // Check Uniqueness
+            // -------------------------
+
+            // Is this a unique email?
+            var userByEmail = await _userManager.FindByEmailAsync(model.Email);
+            if (userByEmail != null)
+            {
+                // found another account with same email
+                if (userByEmail.Id != model.Id)
+                {
+                    return result.Failed(new ActivityError("Email", T["The email already exists"]));
+                }
+            }
+
+            // Is this a unique username?
+            var userByUserName = await _userManager.FindByNameAsync(model.UserName.Normalize());
+            if (userByUserName != null)
+            {
+                // found another account with same username
+                if (userByUserName.Id != model.Id)
+                {
+                    return result.Failed(new ActivityError("UserMame", T["The username already exists"]));
+                }
+            }
+
+            // -------------------------
+            
+            var identityResult = await _userManager.UpdateAsync(model);
+            if (identityResult.Succeeded)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                return result.Success(user);
+            }
+
+            var errors = new List<ActivityError>();
+            foreach (var error in identityResult.Errors)
+            {
+                errors.Add(new ActivityError(error.Code, T[error.Description]));
+            }
+            return result.Failed(errors.ToArray());
+
         }
 
-        public Task<IActivityResult<TUser>> DeleteAsync(TUser model)
+        public async Task<IActivityResult<TUser>> DeleteAsync(TUser model)
         {
-            throw new NotImplementedException();
+
+            var result = new ActivityResult<TUser>();
+
+            var identityResult = await _userManager.DeleteAsync(model);
+            if (identityResult.Succeeded)
+            {
+                return result.Success();
+            }
+            
+            var errors = new List<ActivityError>();
+            foreach (var error in identityResult.Errors)
+            {
+                errors.Add(new ActivityError(error.Code, T[error.Description]));
+            }
+            return result.Failed(errors.ToArray());
+
         }
-        
+
         public async Task<IActivityResult<TUser>> ChangePasswordAsync(TUser user, string currentPassword, string newPassword)
         {
 
@@ -347,14 +421,8 @@ namespace Plato.Users.Services
         private async Task<TUser> FindByUsernameOrEmailAsync(string userIdentifier)
         {
             userIdentifier = userIdentifier.Normalize();
-
-            var user = await _userManager.FindByNameAsync(userIdentifier);
-            if (user == null)
-            {
-                user = await _userManager.FindByEmailAsync(userIdentifier);
-            }
-
-            return user;
+            return await _userManager.FindByNameAsync(userIdentifier) ??
+                   await _userManager.FindByEmailAsync(userIdentifier);
         }
 
         #endregion
