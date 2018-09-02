@@ -21,7 +21,7 @@
 
         }
 
-        public SimpleUser(User user)
+        public SimpleUser(IUser user)
         {
             Id = user.Id;
             UserName = user.UserName;

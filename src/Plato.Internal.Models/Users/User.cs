@@ -9,8 +9,8 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Models.Users
 {
-
-    public class User : IdentityUser<int>, ISimpleUser, IModel<User>
+ 
+    public class User : IdentityUser<int>, IUser, IModel<User>
     {
 
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
@@ -52,7 +52,9 @@ namespace Plato.Internal.Models.Users
         public DateTimeOffset? LastLoginDate { get; set; }
 
         public IEnumerable<string> RoleNames { get; set; } = new List<string>();
-
+        
+        public string ResetToken { get; set; }
+        
         public IEnumerable<Role> UserRoles { get; } = new List<Role>();
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;

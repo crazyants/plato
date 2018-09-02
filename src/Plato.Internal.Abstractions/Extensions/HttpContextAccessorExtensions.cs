@@ -6,7 +6,8 @@ namespace Plato.Internal.Abstractions.Extensions
     public static class HttpContextAccessorExtensions
     {
 
-        public static T GetRequestHeaderValueAs<T>(this IHttpContextAccessor httpContextAccessor, 
+        public static T GetRequestHeaderValueAs<T>(
+            this IHttpContextAccessor httpContextAccessor, 
             string headerName)
         {
             if (httpContextAccessor.HttpContext?.Request?.Headers?.TryGetValue(headerName, out var values) ?? false)

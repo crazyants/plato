@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions;
@@ -13,30 +14,41 @@ using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Security.Abstractions;
+using Plato.Internal.Stores.Abstractions.Settings;
+using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Users.Services
 {
 
-    public class PlatoUserManager<TUser> : IPlatoUserManager<TUser> where TUser : class
+    public class PlatoUserManager<TUser> : IPlatoUserManager<TUser> where TUser : class, IUser
     {
 
-        private readonly UserManager<User> _userManager;
+        public const string ForwardForHeader = "X-Forwarded-For";
+        public const string RemoteAddrHeader = "REMOTE_ADDR";
+
+        private readonly UserManager<TUser> _userManager;
         private readonly IOptions<IdentityOptions> _identityOptions;
         private readonly IStringLocalizer<PlatoUserManager<TUser>> T;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IBroker _broker;
+        private readonly ISiteSettingsStore _siteSettingsStore;
+        private readonly IPlatoUserStore<TUser> _platoUserStore;
 
         public PlatoUserManager(
-            UserManager<User> userManager,
             IOptions<IdentityOptions> identityOptions,
             IStringLocalizer<PlatoUserManager<TUser>> stringLocalizer,
+            UserManager<TUser> userManager,
             IHttpContextAccessor httpContextAccessor,
+            ISiteSettingsStore siteSettingsStore,
+            IPlatoUserStore<TUser> platoUserStore,
             IBroker broker)
         {
-            _userManager = userManager;
-            _identityOptions = identityOptions;
             _httpContextAccessor = httpContextAccessor;
+            _identityOptions = identityOptions;
+            _userManager = userManager;
             _broker = broker;
+            _siteSettingsStore = siteSettingsStore;
+            _platoUserStore = platoUserStore;
 
             T = stringLocalizer;
 
@@ -55,6 +67,7 @@ namespace Plato.Users.Services
             var result = new ActivityResult<TUser>();
 
             // Validate
+            // -------------------------
 
             if (String.IsNullOrEmpty(userName) || String.IsNullOrWhiteSpace(userName))
             {
@@ -72,67 +85,81 @@ namespace Plato.Users.Services
             }
 
             // Check Uniqueness
+            // -------------------------
 
             // Is this a unique email?
             if (await _userManager.FindByEmailAsync(email) != null)
             {
                 return result.Failed(new ActivityError("Email", T["The email already exists"]));
+            }       
+            
+            // Is this a unique username?
+            if (await _userManager.FindByNameAsync(userName.Normalize()) != null)
+            {
+                return result.Failed(new ActivityError("Username", T["The username already exists"]));
             }
 
-            var roles = new List<string>(roleNames ?? new string[] {DefaultRoles.Member});
+            // -------------------------
 
+            // Get site settings to populate user defaults
+            var settings = await _siteSettingsStore.GetAsync();
+            
             // Build model
-            var user = new User
-            {
-                UserName = userName,
-                DisplayName = displayName,
-                Email = email,
-                RoleNames = roles,
-                IpV4Address = GetIpV4Address(),
-                IpV6Address = GetIpV6Address()
-            };
+            var user = ActivateInstanceOf<TUser>.Instance();
+            user.UserName = userName;
+            user.DisplayName = displayName;
+            user.Email = email;
+            user.RoleNames = new List<string>(roleNames ?? new string[] { DefaultRoles.Member });
+            user.TimeZone = settings.TimeZone;
+            user.IpV4Address = GetIpV4Address();
+            user.IpV6Address = GetIpV6Address();
+          
+            // Add new roles
+            //foreach (var role in roles)
+            //{
+            //    if (!await _userManager.IsInRoleAsync(user, role))
+            //    {
+            //        await _userManager.AddToRoleAsync(user, role);
+            //    }
+            //}
 
             // Invoke UserCreating subscriptions
-            foreach (var handler in await _broker.Pub<User>(this, new MessageOptions()
+            foreach (var handler in await _broker.Pub<TUser>(this, new MessageOptions()
             {
                 Key = "UserCreating"
             }, user))
             {
-                user = await handler.Invoke(new Message<User>(user, this));
+                user = await handler.Invoke(new Message<TUser>(user, this));
             }
 
+            // Persist the user
             var identityResult = await _userManager.CreateAsync(user, password);
-            if (!identityResult.Succeeded)
+
+            if (identityResult.Succeeded)
             {
-                var errors = new List<ActivityError>();
-                foreach (var error in identityResult.Errors)
+
+                // Invoke UserCreated subscriptions
+                foreach (var handler in await _broker.Pub<TUser>(this, new MessageOptions()
                 {
-                    errors.Add(new ActivityError(error.Code, T[error.Description]));
+                    Key = "UserCreated"
+                }, user))
+                {
+                    user = await handler.Invoke(new Message<TUser>(user, this));
                 }
 
-                return result.Failed(errors.ToArray());
+                // Return success
+                return result.Success(user);
+
             }
 
-            // Add new roles
-            foreach (var role in roles)
+            // User could not be created, accumulate errors
+            var errors = new List<ActivityError>();
+            foreach (var error in identityResult.Errors)
             {
-                if (!await _userManager.IsInRoleAsync(user, role))
-                {
-                    await _userManager.AddToRoleAsync(user, role);
-                }
+                errors.Add(new ActivityError(error.Code, T[error.Description]));
             }
 
-            // Invoke UserCreated subscriptions
-            foreach (var handler in await _broker.Pub<User>(this, new MessageOptions()
-            {
-                Key = "UserCreated"
-            }, user))
-            {
-                user = await handler.Invoke(new Message<User>(user, this));
-            }
-
-            // Return success
-            return result.Success(user);
+            return result.Failed(errors.ToArray());
 
         }
 
@@ -145,106 +172,139 @@ namespace Plato.Users.Services
         {
             throw new NotImplementedException();
         }
-
-        public Task<IActivityResult<TUser>> ChangePasswordAsync(TUser user, string currentPassword, string newPassword)
+        
+        public async Task<IActivityResult<TUser>> ChangePasswordAsync(TUser user, string currentPassword, string newPassword)
         {
-            throw new NotImplementedException();
+
+            var result = new ActivityResult<TUser>();
+            
+            var identityResult = await _userManager.ChangePasswordAsync(
+                user, 
+                currentPassword,
+                newPassword);
+
+            if (!identityResult.Succeeded)
+            {
+                var errors = new List<ActivityError>();
+                foreach (var error in identityResult.Errors)
+                {
+                    errors.Add(new ActivityError(error.Code, T[error.Description]));
+                }
+
+                return result.Failed(errors.ToArray());
+            }
+
+            return result.Success();
+
         }
 
-        public Task<IActivityResult<TUser>> GetAuthenticatedUserAsync(ClaimsPrincipal principal)
+        public async Task<IActivityResult<TUser>> GetAuthenticatedUserAsync(ClaimsPrincipal principal)
         {
-            throw new NotImplementedException();
+            var result = new ActivityResult<TUser>();
+            var identity = principal?.Identity;
+            if ((identity != null) && (identity.IsAuthenticated))
+            {
+                var user = await _platoUserStore.GetByUserNameAsync(identity.Name);
+                return result.Success(user);
+            }
+            return result.Failed();
         }
 
-        public Task<IActivityResult<TUser>> GetForgotPasswordUserAsync(string userIdentifier)
+        public async Task<IActivityResult<TUser>> GetForgotPasswordUserAsync(string userIdentifier)
         {
-            throw new NotImplementedException();
+
+            var result = new ActivityResult<TUser>();
+
+            if (string.IsNullOrWhiteSpace(userIdentifier))
+            {
+                return result.Failed();
+            }
+
+            var user = await FindByUsernameOrEmailAsync(userIdentifier);
+            if (user == null)
+            {
+                return result.Failed();
+            }
+
+            user.ResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            return result.Success(user);
+
+
         }
 
-        public Task<IActivityResult<TUser>> ResetPasswordAsync(string userIdentifier, string resetToken,
+        public async Task<IActivityResult<TUser>> ResetPasswordAsync(
+            string userIdentifier, string resetToken,
             string newPassword)
         {
-            throw new NotImplementedException();
+
+            var result = new ActivityResult<TUser>();
+
+
+            if (string.IsNullOrWhiteSpace(userIdentifier))
+            {
+                return result.Failed(new ActivityError("UserName", T["A user name or email is required"]));
+            }
+
+            if (string.IsNullOrWhiteSpace(newPassword))
+            {
+                return result.Failed(new ActivityError("Password", T["A password is required"]));
+            }
+
+            if (string.IsNullOrWhiteSpace(resetToken))
+            {
+                return result.Failed(new ActivityError("Token", T["A token is required."]));
+            }
+            
+            var user = await FindByUsernameOrEmailAsync(userIdentifier);
+            if (user == null)
+            {
+                return result.Failed();
+            }
+
+            var identityResult = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+
+            if (!identityResult.Succeeded)
+            {
+                var errors = new List<ActivityError>();
+                foreach (var error in identityResult.Errors)
+                {
+                    errors.Add(new ActivityError(error.Code, T[error.Description]));
+                }
+
+                return result.Failed(errors.ToArray());
+            }
+
+            return result.Success();
+
         }
 
         #endregion
 
         #region "Private Methods"
-
-        //private void ProcessValidationErrors(IEnumerable<IdentityError> errors, User user, Action<string, string> reportError)
-        //{
-        //    foreach (var error in errors)
-        //    {
-        //        switch (error.Code)
-        //        {
-        //             Password
-        //            case "PasswordRequiresDigit":
-        //                reportError("Password", T["Passwords must have at least one digit ('0'-'9')."]);
-        //        break;
-        //            case "PasswordRequiresLower":
-        //                reportError("Password", T["Passwords must have at least one lowercase ('a'-'z')."]);
-        //        break;
-        //            case "PasswordRequiresUpper":
-        //                reportError("Password", T["Passwords must have at least one uppercase('A'-'Z')."]);
-        //        break;
-        //            case "PasswordRequiresNonAlphanumeric":
-        //                reportError("Password", T["Passwords must have at least one non letter or digit character."]);
-        //        break;
-        //            case "PasswordTooShort":
-        //                reportError("Password", T["Passwords must be at least {0} characters.", _identityOptions.Value.Password.RequiredLength]);
-        //        break;
-        //            case "PasswordRequiresUniqueChars":
-        //                reportError("Password", T["Passwords must contain at least {0} unique characters.", _identityOptions.Value.Password.RequiredUniqueChars]);
-        //        break;
-
-        //        CurrentPassword
-        //            case "PasswordMismatch":
-        //                reportError("CurrentPassword", T["Incorrect password."]);
-        //        break;
-
-        //        User name
-        //            case "InvalidUserName":
-        //                reportError("UserName", T["User name '{0}' is invalid, can only contain letters or digits.", user.UserName]);
-        //        break;
-        //            case "DuplicateUserName":
-        //                reportError("UserName", T["User name '{0}' is already used.", user.UserName]);
-        //        break;
-
-        //        Email
-        //            case "InvalidEmail":
-        //                reportError("Email", T["Email '{0}' is invalid.", user.Email]);
-        //        break;
-        //        default:
-        //                reportError(string.Empty, T["Unexpected error: '{0}'.", error.Code]);
-        //        break;
-        //    }
-        //}
-        // }
-
+        
         string GetIpV4Address(bool tryUseXForwardHeader = true)
         {
 
-            //const string localIpAddress = ":::1";
-            const string forwardForHeader = "X-Forwarded-For";
-            const string remoteAddrHeader = "REMOTE_ADDR";
             var value = string.Empty;
 
             // Check X-Forwarded-For
             // Is the request forwarded via a proxy server?
             if (tryUseXForwardHeader)
             {
-                value = _httpContextAccessor.GetRequestHeaderValueAs<string>(forwardForHeader)?.Split(',').FirstOrDefault();
+                value = _httpContextAccessor.GetRequestHeaderValueAs<string>(ForwardForHeader)?.Split(',').FirstOrDefault();
             }
 
-            // Get REMOTE_ADDR header
-            if (value == string.Empty)
+            // If no "X-Forwarded-For" header, get REMOTE_ADDR header instead
+            if (String.IsNullOrEmpty(value))
             {
-                value = _httpContextAccessor.GetRequestHeaderValueAs<string>(remoteAddrHeader);
+                value = _httpContextAccessor.GetRequestHeaderValueAs<string>(RemoteAddrHeader);
             }
 
-            // Nothing yet, check .NET core implementation
-            if (value == string.Empty)
+            // Nothing yet, check .NET core implementation (HttpContext.Connection)
+            if (String.IsNullOrEmpty(value))
             {
+                // This can sometimes be null in earlier versions of .NET core
                 if (_httpContextAccessor?.HttpContext?.Connection?.RemoteIpAddress != null)
                 {
                     value = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -255,18 +315,15 @@ namespace Plato.Users.Services
             IPAddress ip = null;
             if (!String.IsNullOrEmpty(value))
             {
-
                 // Attempt to parse IP address
                 IPAddress.TryParse(value, out ip);
-
                 // If we got an IPV6 address, then we need to ask the network for the IPV4 address 
                 // This usually only happens when the browser is on the same machine as the server.
                 if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
                 {
-                    ip = System.Net.Dns.GetHostEntry(ip).AddressList
+                    ip = Dns.GetHostEntry(ip).AddressList
                         .First(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
                 }
-
             }
 
             return ip == null ? string.Empty : ip.ToString();
@@ -275,11 +332,30 @@ namespace Plato.Users.Services
 
         string GetIpV6Address()
         {
-
-            return string.Empty;
-
+            var ip = GetIpV4Address();
+            if (!String.IsNullOrEmpty(ip))
+            {
+                var addressList = Dns.GetHostEntry(ip).AddressList;
+                if (addressList != null)
+                {
+                    ip = addressList.FirstOrDefault()?.ToString();
+                }
+            }
+            return ip;
         }
-        
+
+        private async Task<TUser> FindByUsernameOrEmailAsync(string userIdentifier)
+        {
+            userIdentifier = userIdentifier.Normalize();
+
+            var user = await _userManager.FindByNameAsync(userIdentifier);
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(userIdentifier);
+            }
+
+            return user;
+        }
 
         #endregion
 
