@@ -47,9 +47,9 @@ namespace Plato.Internal.Models.Users
 
         public string IpV6Address { get; set; }
 
-        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
-        public DateTimeOffset LastLoginDate { get; set; }
+        public DateTimeOffset? LastLoginDate { get; set; }
 
         public IEnumerable<string> RoleNames { get; set; } = new List<string>();
 

@@ -152,18 +152,13 @@ namespace Plato.Users.Controllers
                 var user = await _viewProvider.GetComposedType(this);
                 
                 // We need to first add the fully composed type
-                // so we have a nuique entity Id for all ProvideUpdateAsync
+                // so we have a nuique Id for all ProvideUpdateAsync
                 // methods within any involved view provider
                 var result = await _platoUserManager.CreateAsync(
                     model.UserName,
                     model.DisplayName,
                     model.Email,
-                    model.Password,
-                    new string[]
-                    {
-                        DefaultRoles.Member
-                    }, 
-                    (key, message) => ModelState.AddModelError(key, message));
+                    model.Password);
 
                 if (result.Succeeded)
                 {

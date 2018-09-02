@@ -12,6 +12,11 @@ namespace Plato.Internal.Abstractions.Extensions
                 return DateTimeOffset.UtcNow;
             }
 
+            if (d.Value == DateTimeOffset.MinValue)
+            {
+                return DateTimeOffset.UtcNow;
+            }
+
             return (DateTimeOffset)d;
 
         }
