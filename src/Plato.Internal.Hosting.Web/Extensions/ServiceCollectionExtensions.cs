@@ -41,6 +41,8 @@ using Plato.Internal.Security.Extensions;
 using Plato.Internal.Logging.Extensions;
 using Plato.Internal.Messaging.Extensions;
 using Plato.Internal.Assets.Extensions;
+using Plato.Internal.Features;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Web.Configuration;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Scripting.Extensions;
@@ -85,7 +87,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
+                
                 internalServices.AddLogging();
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
@@ -201,7 +203,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
             
             // Add json formatter
             builder.AddJsonFormatters();
-
+            
             return services;
 
         }

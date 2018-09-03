@@ -38,13 +38,11 @@ namespace Plato.Discuss.Channels.Subscribers
 
         public void Subscribe()
         {
-
             // Created
             _broker.Sub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyCreated"
             }, async message => await EntityReplyCreated(message.What));
-            
         }
 
         public void Unsubscribe()
@@ -53,7 +51,6 @@ namespace Plato.Discuss.Channels.Subscribers
             {
                 Key = "EntityReplyCreated"
             }, async message => await EntityReplyCreated(message.What));
-
         }
         
         public void Dispose()

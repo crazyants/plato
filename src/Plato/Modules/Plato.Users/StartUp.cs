@@ -80,7 +80,7 @@ namespace Plato.Users
             services.AddScoped<IPlatoUserManager<User>, PlatoUserManager<User>>();
 
             // Context facade
-            services.AddSingleton<IContextFacade, ContextFacade>();
+            //services.TryAddScoped<IContextFacade, ContextFacade>();
             
             // Configurate authentication cookie
             services.ConfigureApplicationCookie(options =>

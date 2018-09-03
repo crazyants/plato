@@ -2,6 +2,17 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Models.Shell;
+using Plato.Internal.Navigation;
+using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewAdaptors;
+using Plato.Internal.Layout.ViewProviders;
+using Plato.Discuss.Channels.Navigation;
+using Plato.Discuss.Channels.Subscribers;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
+using Plato.Moderation.Models;
+
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
 using Plato.Categories.Services;
@@ -10,15 +21,7 @@ using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewAdaptors;
 using Plato.Discuss.Channels.ViewProviders;
 using Plato.Discuss.Models;
-using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ViewAdaptors;
-using Plato.Internal.Layout.ViewProviders;
-using Plato.Discuss.Channels.Navigation;
-using Plato.Discuss.Channels.Subscribers;
-using Plato.Internal.Messaging.Abstractions;
-using Plato.Moderation.Models;
+using Plato.Discuss.Channels.Handlers;
 
 namespace Plato.Discuss.Channels
 {
@@ -33,6 +36,10 @@ namespace Plato.Discuss.Channels
 
         public override void ConfigureServices(IServiceCollection services)
         {
+
+       
+            //// Feature event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
@@ -58,7 +65,7 @@ namespace Plato.Discuss.Channels
             // Moderation view providers
             services.AddScoped<IViewProviderManager<Moderator>, ViewProviderManager<Moderator>>();
             services.AddScoped<IViewProvider<Moderator>, ModeratorViewProvider>();
-            
+       
             // Register view adaptors
             services.AddScoped<IViewAdaptorProvider, ModerationViewAdaptorProvider>();
 

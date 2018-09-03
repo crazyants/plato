@@ -386,9 +386,6 @@ namespace Plato.Internal.Features
             var httpContext = _httpContextAccessor.HttpContext;
             var shellSettings = _runningShellTable.Match(httpContext);
 
-            // Recycle shell
-            //RecycleShell();
-
             // Build descriptor to ensure correct feature event handlers are available within DI
             var descriptor = new ShellDescriptor();
             foreach (var feature in features)
