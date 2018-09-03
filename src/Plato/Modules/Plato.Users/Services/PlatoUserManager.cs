@@ -85,15 +85,15 @@ namespace Plato.Users.Services
 
             // Check Uniqueness
             // -------------------------
-
+            
             // Is this a unique email?
             if (await _userManager.FindByEmailAsync(email) != null)
             {
                 return result.Failed(new ActivityError("Email", T["The email already exists"]));
-            }       
-            
+            }
+   
             // Is this a unique username?
-            if (await _userManager.FindByNameAsync(userName.Normalize()) != null)
+                if (await _userManager.FindByNameAsync(userName.Normalize()) != null)
             {
                 return result.Failed(new ActivityError("UserMame", T["The username already exists"]));
             }
@@ -209,8 +209,12 @@ namespace Plato.Users.Services
                 }
             }
 
+            // Update IP addresses
+            model.IpV4Address = GetIpV4Address();
+            model.IpV6Address = GetIpV6Address();
+
             // -------------------------
-            
+
             var identityResult = await _userManager.UpdateAsync(model);
             if (identityResult.Succeeded)
             {

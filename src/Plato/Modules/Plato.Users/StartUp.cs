@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -22,6 +23,8 @@ using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Users.Filters;
+using Plato.Users.Middleware;
 using Plato.Users.Navigation;
 using Plato.Users.Services;
 
@@ -92,7 +95,7 @@ namespace Plato.Users
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
                 options.SlidingExpiration = true;
             });
-
+            
             // Navigation providers
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
@@ -133,11 +136,15 @@ namespace Plato.Users
             IServiceProvider serviceProvider)
         {
 
-            // load tag helpers
-            //serviceProvider.AddTagHelpers(typeof(PagerTagHelper).Assembly);
-            
             // add authentication middleware
             app.UseAuthentication();
+
+            // Register authenticated user middleware
+            // Must be registered after .NET authentication middleware has been registered
+            // i.e. after app.UseAuthentication() above
+            app.UseMiddleware<AuthenticatedUserMiddleware>();
+          
+            // Routes
 
             routes.MapAreaRoute(
                 name: "Login",
@@ -181,7 +188,8 @@ namespace Plato.Users
                 defaults: new { controller = "Home", action = "Display" }
             );
 
-
         }
+
     }
+
 }

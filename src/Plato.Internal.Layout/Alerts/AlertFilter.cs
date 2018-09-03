@@ -16,12 +16,12 @@ namespace Plato.Internal.Layout.Alerts
     public class AlertFilter : IActionFilter, IAsyncResultFilter
     {
 
-        internal const string CookiePrefix = "plato_alerts";
-        private bool _deleteCookie = false;
         readonly string _tenantPath;
+        internal const string CookieName = "plato_alerts";
+        private bool _deleteCookie = false;
         private IList<AlertInfo> _alerts = new List<AlertInfo>();
 
-        private readonly HtmlEncoder _htmlEncoder;
+        readonly HtmlEncoder _htmlEncoder;
         readonly ILayoutUpdater _layoutUpdater;
         readonly ILogger<AlertFilter> _logger;
         readonly IAlerter _alerter;
@@ -47,7 +47,7 @@ namespace Plato.Internal.Layout.Alerts
             
             // 1.
             var json = Convert.ToString(
-                context.HttpContext.Request.Cookies[CookiePrefix]
+                context.HttpContext.Request.Cookies[CookieName]
             );
 
             if (String.IsNullOrEmpty(json))
@@ -100,7 +100,7 @@ namespace Plato.Internal.Layout.Alerts
             if (!(context.Result is ViewResult) && _alerts.Count > 0)
             {
                 context.HttpContext.Response.Cookies.Append(
-                    CookiePrefix,
+                    CookieName,
                     SerializeAlerts(_alerts),
                     new CookieOptions
                     {
@@ -230,7 +230,7 @@ namespace Plato.Internal.Layout.Alerts
         void DeleteCookies(ResultExecutingContext context)
         {
             context.HttpContext.Response.Cookies.Delete(
-                CookiePrefix,
+                CookieName,
                 new CookieOptions
                 {
                     Path = _tenantPath

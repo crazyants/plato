@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Modules.Abstractions;
@@ -13,6 +13,8 @@ namespace Plato.Internal.Security
     public class PermissionsManager<TPermission> : IPermissionsManager<TPermission> where TPermission : class, IPermission
     {
 
+        private IEnumerable<TPermission> _permissions;
+        
         private readonly IAuthorizationService _authorizationService;
         private readonly IEnumerable<IPermissionsProvider<TPermission>> _providers;
         private readonly ILogger<PermissionsManager<TPermission>> _logger;
@@ -29,9 +31,7 @@ namespace Plato.Internal.Security
             _authorizationService = authorizationService;
             _logger = logger;
         }
-
-        private IEnumerable<TPermission> _permissions;
-
+        
         public IEnumerable<TPermission> GetPermissions()
         {
 

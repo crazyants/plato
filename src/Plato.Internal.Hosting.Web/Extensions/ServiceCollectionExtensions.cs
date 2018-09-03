@@ -110,7 +110,6 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddRepositories();
                 internalServices.AddStores();
                 
-
             });
 
         }
@@ -185,7 +184,6 @@ namespace Plato.Internal.Hosting.Web.Extensions
             // localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             
-         
             // Razor & Views
             var builder = services.AddMvcCore()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)

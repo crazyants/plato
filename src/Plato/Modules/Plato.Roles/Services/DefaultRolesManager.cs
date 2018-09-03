@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Security.Abstractions;
@@ -9,9 +9,11 @@ using Plato.Internal.Security.Abstractions;
 namespace Plato.Roles.Services
 {
 
+    /// <summary>
+    /// Adds the default roles required by Plato.
+    /// </summary>
     public class DefaultRolesManager : IDefaultRolesManager
     {
-
         
         private readonly IEnumerable<IPermissionsProvider<Permission>> _permissionProviders;
         private readonly RoleManager<Role> _roleManager;
@@ -23,8 +25,7 @@ namespace Plato.Roles.Services
             _permissionProviders = permissionProviders;
             _roleManager = roleManager;
         }
-
-
+        
         public async Task InstallDefaultRolesAsync()
         {
       

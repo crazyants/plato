@@ -91,10 +91,8 @@ namespace Plato.Internal.Shell
 
         private void AddCoreServices(IServiceCollection tenantServiceCollection)
         {
-
             tenantServiceCollection.AddTransient<IShellFeatureManager, ShellFeatureManager>();
             tenantServiceCollection.AddTransient<IShellDescriptorManager, ShellDescriptorManager>();
-
         }
 
 
