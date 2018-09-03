@@ -23,7 +23,6 @@ using Plato.Users.ViewModels;
 using Plato.Users.ViewProviders;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Users.Filters;
 using Plato.Users.Middleware;
 using Plato.Users.Navigation;
 using Plato.Users.Services;
@@ -45,7 +44,6 @@ namespace Plato.Users
             _tenantName = shellSettings.Name;
             _cookieSuffix = shellSettings.AuthCookieName;
             _tenantPrefix = shellSettings.RequestedUrlPrefix;
-      
         }
 
         public override void ConfigureServices(IServiceCollection services)

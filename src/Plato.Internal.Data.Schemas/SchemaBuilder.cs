@@ -486,7 +486,7 @@ namespace Plato.Internal.Data.Schemas
                 )
                 AS
 
-                DECLARE @first_id int, 
+                DECLARE @first_id sql_variant, 
 	                @start_row int
 
                 DECLARE @SqlParams nvarchar(max) = '@Id int, @UserName nvarchar(255), @Email nvarchar(255)';
@@ -505,7 +505,7 @@ namespace Plato.Internal.Data.Schemas
                 DECLARE @parms nvarchar(100);
 
                 -- get the first Id
-                SET @parms = '@start_id_out int OUTPUT,' + + @SqlParams;  
+                SET @parms = '@start_id_out sql_variant OUTPUT,' + + @SqlParams;  
                 EXECUTE sp_executesql  @SqlStartId, @parms, 
 	                @start_id_out = @first_id OUTPUT,
 	                @Id = 1,
@@ -516,7 +516,7 @@ namespace Plato.Internal.Data.Schemas
                 SET ROWCOUNT @PageSize
 
                 -- add our start parameter to the start
-                SET @SqlParams = '@start_id_in int,' + @SqlParams;
+                SET @SqlParams = '@start_id_in sql_variant,' + @SqlParams;
 
                 -- get all records >= @first_id
                 EXECUTE sp_executesql @SqlPopulate, @SqlParams, 
@@ -588,7 +588,7 @@ namespace Plato.Internal.Data.Schemas
                 .Append(_newLine)
                 .Append(_newLine);
 
-            sb.Append("DECLARE @first_id int, ")
+            sb.Append("DECLARE @first_id sql_variant, ")
                 .Append("@start_row int")
                 .Append(_newLine)
                 .Append(_newLine);
@@ -635,13 +635,13 @@ namespace Plato.Internal.Data.Schemas
                 .Append(_newLine)
                 .Append("SET ROWCOUNT @start_row;")
                 .Append(_newLine)
-                .Append("DECLARE @parms nvarchar(100);")
+                .Append("DECLARE @parms nvarchar(max);")
                 .Append(_newLine)
                 .Append(_newLine);
             
             sb.Append("-- get the first Id")
                 .Append(_newLine)
-                .Append("SET @parms = '@start_id_out int OUTPUT,' + @SqlParams;")
+                .Append("SET @parms = '@start_id_out sql_variant OUTPUT,' + @SqlParams;")
                 .Append(_newLine)
                 .Append("EXECUTE sp_executesql  @SqlStartId, @parms, ")
                 .Append(_newLine)
@@ -671,7 +671,7 @@ namespace Plato.Internal.Data.Schemas
 
             sb.Append("-- add our start parameter to the start")
                 .Append(_newLine)
-                .Append("SET @SqlParams = '@start_id_in int,' + @SqlParams;")
+                .Append("SET @SqlParams = '@start_id_in sql_variant,' + @SqlParams;")
                 .Append(_newLine)
                 .Append(_newLine);
 

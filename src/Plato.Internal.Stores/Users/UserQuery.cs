@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.XPath;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Models.Users;
@@ -147,10 +144,14 @@ namespace Plato.Internal.Stores.Users
 
         public string BuildSqlStartId()
         {
+            var startIdComparer = GetStartIdComparer();
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = Id FROM ").Append(_tableName);
+            sb.Append("SELECT @start_id_out = ")
+                .Append(startIdComparer)
+                .Append(" FROM ")
+                .Append(_tableName);
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             if (!string.IsNullOrEmpty(orderBy))
@@ -187,27 +188,73 @@ namespace Plato.Internal.Stores.Users
 
         string BuildWhereClauseForStartId()
         {
+
+            var startIdComparer = GetStartIdComparer();
             var sb = new StringBuilder();
             // default to ascending
             if (_query.SortColumns.Count == 0)
-                sb.Append("Id >= @start_id_in");
-            // set start operator based on first order by
-            foreach (var sortColumn in _query.SortColumns)
             {
-                sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "Id <= @start_id_in"
-                    : "Id >= @start_id_in");
-                break;
+                sb.Append(startIdComparer)
+                    .Append(" >= @start_id_in");
             }
-            
+            else
+            {
+                // set start operator based on first order by
+                foreach (var sortColumn in _query.SortColumns)
+                {
+                    sb.Append(startIdComparer)
+                        .Append(sortColumn.Value != OrderBy.Asc
+                        ? " <= @start_id_in"
+                        : " >= @start_id_in");
+                    break;
+                }
+            }
+     
             var where = BuildWhereClause();
             if (!string.IsNullOrEmpty(where))
-                sb.Append(" AND ")
-                    .Append(where);
-
+            {
+                sb.Append(" AND ").Append(where);
+            }
+            
             return sb.ToString();
 
         }
+
+        private string GetStartIdComparer()
+        {
+
+            var output = "Id";
+            if (_query.SortColumns.Count > 0)
+            {
+                foreach (var sortColumn in _query.SortColumns)
+                {
+                    output = GetSortColumn(sortColumn.Key);
+                }
+            }
+
+            return output;
+
+            //if (_args.SortBy != RankColumn)
+            //{
+            //    var sortQualified = "LastPosterDate";
+            //    if (_args.SortBy != RankColumn)
+            //    {
+            //        if (!string.IsNullOrEmpty(_args.SortBy))
+            //            sortQualified = "t." + _args.SortBy;
+            //    }
+            //    sortColumn = Common.Utils.Filter.InputFilter(sortQualified, Common.Enumerations.EnumInputFilter.FilterAttack);
+            //}
+            //else
+            //{
+            //    var rankSelect = BuildSqlRankSelect();
+            //    if (!string.IsNullOrEmpty(rankSelect))
+            //        sortColumn = rankSelect;
+            //}
+
+            //return sortColumn;
+
+        }
+
 
         string BuildWhereClause()
         {

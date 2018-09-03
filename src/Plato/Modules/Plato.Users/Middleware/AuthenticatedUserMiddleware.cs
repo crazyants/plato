@@ -25,14 +25,14 @@ namespace Plato.Users.Middleware
         {
             
             // Attempt to update last login date
-            await UpdateLastLoginDate(context);
+            await UpdateAuthenticatedUsersLastLoginDateAsync(context);
 
             // Return next delegate
             await _next(context);
 
         }
 
-        async Task UpdateLastLoginDate(HttpContext context)
+        async Task UpdateAuthenticatedUsersLastLoginDateAsync(HttpContext context)
         {
 
             var cookie = context.Request.Cookies[CookieName];
@@ -54,14 +54,14 @@ namespace Plato.Users.Middleware
                 return;
             }
 
+            user.LastLoginDate = DateTimeOffset.UtcNow;
+
             var userManager = context.RequestServices.GetRequiredService<IPlatoUserManager<User>>();
             if (userManager == null)
             {
                 return;
             }
-
-            user.LastLoginDate = DateTimeOffset.UtcNow;
-
+            
             var managerResult = await userManager.UpdateAsync(user);
             if (managerResult.Succeeded)
             {

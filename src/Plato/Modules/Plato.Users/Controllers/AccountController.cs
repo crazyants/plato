@@ -6,13 +6,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Users;
+using Plato.Users.Services;
 
 namespace Plato.Users.Controllers
 {
 
     public class AccountController : Controller
     {
-        
+
+        private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
@@ -20,62 +22,41 @@ namespace Plato.Users.Controllers
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManage,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger, 
+            IPlatoUserManager<User> platoUserManager)
         {
             _userManager = userManager;
             _signInManager = signInManage;
             _logger = logger;
+            _platoUserManager = platoUserManager;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public Task<IActionResult> Login(string returnUrl = null)
+        public async Task<IActionResult> Login(string returnUrl = null)
         {
+            
+            for (var i = 0; i < 250; i++)
+            {
 
-            //var detail = new UserDetail()
-            //{
-            //    IsEmailConfirmed = true
-            //};
+                var displayName = "New User " + i;
+                var userNAme = "newuser" + i;
+                var email = "email@address" + i + ".com";
+                var password = "34Fdckf#343";
 
+                var result = await _platoUserManager.CreateAsync(
+                    userNAme,
+                    displayName,
+                    email,
+                    password);
 
-            //var doc = new TestDocument2()
-            //{
-            //    Title = "test 123 123 ",
-            //    Body = "testing 123 123 123 "
-            //};
-
-            //var existingDoc = await _documentStore.GetAsync<TestDocument2>();
-            //if (existingDoc != null)
-            //{
-            //    var newDoc = await _documentStore.SaveAsync<TestDocument2>(existingDoc);
-
-            //    var sb = new StringBuilder();
-
-            //    sb.Append("Id: " + newDoc.Id);
-            //    sb.Append("<br>");
-            //    sb.Append("Title: " + newDoc.Title);
-            //    sb.Append("<br>");
-            //    sb.Append("Body: " + newDoc.Body);
-
-            //    ViewBag.docs = sb.ToString();
-            //}
-
-            //for (var i = 0; i < 500; i++)
-            //{
-            //    var password = "pAs5word#" + i;
-            //    var result = await _userManager.CreateAsync(new User()
-            //    {
-            //        UserName = "Username" + i,
-            //        Email = "email" + i + "@address.com"
-
-            //    }, password);
-            //}
+            }
 
             //var user = _httpContextAccessor.HttpContext.User;
             //var claims = user.Claims;
-            
+
             ViewData["ReturnUrl"] = returnUrl;
-            return Task.FromResult((IActionResult) View(new LoginViewModel()));
+            return View(new LoginViewModel());
 
         }
 
