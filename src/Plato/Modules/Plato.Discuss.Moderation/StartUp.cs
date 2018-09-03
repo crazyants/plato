@@ -32,7 +32,7 @@ namespace Plato.Discuss.Moderation
             services.AddScoped<IViewProvider<Moderator>, AdminViewProvider>();
 
             // Register permissions provider
-            services.AddScoped<IPermissionsProvider2<ModeratorPermission>, ModeratorPermissions>();
+            services.AddScoped<IPermissionsProvider<ModeratorPermission>, ModeratorPermissions>();
             
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();

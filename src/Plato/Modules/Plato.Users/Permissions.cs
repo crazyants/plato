@@ -3,7 +3,7 @@ using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Users
 {
-    public class Permissions : IPermissionsProvider
+    public class Permissions : IPermissionsProvider<Permission>
     {
 
         public static readonly Permission ManageUsers =
@@ -29,11 +29,11 @@ namespace Plato.Users
             };
         }
 
-        public IEnumerable<DefaultPermissions> GetDefaultPermissions()
+        public IEnumerable<DefaultPermissions<Permission>> GetDefaultPermissions()
         {
             return new[]
             {
-                new DefaultPermissions
+                new DefaultPermissions<Permission>
                 {
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]

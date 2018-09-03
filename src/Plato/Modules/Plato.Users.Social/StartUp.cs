@@ -28,7 +28,7 @@ namespace Plato.Users.Social
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
 
             // Module permissions
-            services.AddScoped<IPermissionsProvider, PermissionsProvider>();
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
         }
 

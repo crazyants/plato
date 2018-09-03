@@ -118,9 +118,9 @@ namespace Plato.Users
             // Edit user settings view provider
             services.AddScoped<IViewProviderManager<EditSettingsViewModel>, ViewProviderManager<EditSettingsViewModel>>();
             services.AddScoped<IViewProvider<EditSettingsViewModel>, EditSettingsViewProvider>();
-            
+
             // Register permissions provider
-            services.AddScoped<IPermissionsProvider, Permissions>();
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
             // register view drivers
             services.AddScoped<IViewAdaptorProvider, UserListAdaptor>();

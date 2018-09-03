@@ -25,7 +25,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
     {
 
         private readonly IContextFacade _contextFacade;
-        private readonly IPermissionsManager2<ModeratorPermission> _permissionsManager;
+        private readonly IPermissionsManager<ModeratorPermission> _permissionsManager;
         private readonly IAuthorizationService _authorizationService;
         private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly IPlatoUserStore<User> _userStore;
@@ -33,7 +33,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         public AdminViewProvider(
             IContextFacade contextFacade,
-            IPermissionsManager2<ModeratorPermission> permissionsManager,
+            IPermissionsManager<ModeratorPermission> permissionsManager,
             IAuthorizationService authorizationService,
             IHttpContextAccessor httpContextAccessor,
             IModeratorStore<Moderator> moderatorStore, 

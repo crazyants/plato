@@ -11,8 +11,7 @@ namespace Plato.Internal.Security.Extensions
         {
             
             // Permissions manager
-            services.AddScoped<IPermissionsManager, PermissionsManager>();
-            services.AddScoped<IPermissionsManager2<Permission>, PermissionsManager2<Permission>>();
+            services.AddScoped<IPermissionsManager<Permission>, PermissionsManager<Permission>>();
 
             // Add core authorization services 
             services.AddAuthorization();

@@ -13,11 +13,11 @@ namespace Plato.Roles.Services
     {
 
         
-        private readonly IEnumerable<IPermissionsProvider> _permissionProviders;
+        private readonly IEnumerable<IPermissionsProvider<Permission>> _permissionProviders;
         private readonly RoleManager<Role> _roleManager;
 
         public DefaultRolesManager(
-            IEnumerable<IPermissionsProvider> permissionProviders,
+            IEnumerable<IPermissionsProvider<Permission>> permissionProviders,
             RoleManager<Role> roleManager)
         {
             _permissionProviders = permissionProviders;

@@ -138,19 +138,29 @@ namespace Plato.Users.Controllers
         [ActionName(nameof(Create))]
         public async Task<IActionResult> CreatePost(EditUserViewModel model)
         {
-            
-            // Validate model state within all view providers
-            if (await _viewProvider.IsModelStateValid(new User()
+
+            // Validate model state within view providers
+            var valid = await _viewProvider.IsModelStateValid(new User()
             {
                 DisplayName = model.DisplayName,
                 UserName = model.UserName,
                 Email = model.Email,
-            }, this))
-            {
+            }, this);
 
+            // Ensure password fields match
+            if (model.Password != model.PasswordConfirmation)
+            {
+                ViewData.ModelState.AddModelError(nameof(model.PasswordConfirmation), "Password and Password Confirmation do not match");
+                valid = false;
+            }
+            
+            // Validate model state within all view providers
+            if (valid)
+            {
+             
                 // Get fully composed type from all involved view providers
                 //var user = await _viewProvider.GetComposedType(this);
-                
+
                 // We need to first add the fully composed type
                 // so we have a nuique Id for all ProvideUpdateAsync
                 // methods within any involved view provider

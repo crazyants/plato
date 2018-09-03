@@ -60,7 +60,7 @@ namespace Plato.Roles
             services.AddScoped<INavigationProvider, SiteMenu>();
 
             // Register moderation permissions provider
-            services.AddScoped<IPermissionsProvider2<Permission>, Permissions>();
+            services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
             // Register default role manager
             services.TryAddScoped<IDefaultRolesManager, DefaultRolesManager>();

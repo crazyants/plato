@@ -23,14 +23,14 @@ namespace Plato.Roles.ViewProviders
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
         private readonly IPlatoRoleStore _platoRoleStore;
-        private readonly IPermissionsManager2<Permission> _permissionsManager;
+        private readonly IPermissionsManager<Permission> _permissionsManager;
         private readonly IAuthorizationService _authorizationService;
 
         public AdminViewProvider(
             UserManager<User> userManager,
             IPlatoRoleStore platoRoleStore,
             RoleManager<Role> roleManager,
-            IPermissionsManager2<Permission> permissionsManager, 
+            IPermissionsManager<Permission> permissionsManager, 
             IAuthorizationService authorizationService)
         {
             _userManager = userManager;

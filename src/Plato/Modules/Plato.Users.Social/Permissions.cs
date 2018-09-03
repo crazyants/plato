@@ -3,7 +3,7 @@ using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Users.Social
 {
-    public class PermissionsProvider : IPermissionsProvider
+    public class Permissions : IPermissionsProvider<Permission>
     {
 
         public static readonly Permission EditSocial = 
@@ -21,11 +21,11 @@ namespace Plato.Users.Social
             };
         }
 
-        public IEnumerable<DefaultPermissions> GetDefaultPermissions()
+        public IEnumerable<DefaultPermissions<Permission>> GetDefaultPermissions()
         {
             return new[]
             {
-                new DefaultPermissions
+                new DefaultPermissions<Permission>
                 {
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
@@ -34,7 +34,7 @@ namespace Plato.Users.Social
                         ViewSocial
                     }
                 },
-                new DefaultPermissions
+                new DefaultPermissions<Permission>
                 {
                     RoleName = DefaultRoles.Member,
                     Permissions = new[]

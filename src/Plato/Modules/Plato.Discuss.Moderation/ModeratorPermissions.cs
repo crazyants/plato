@@ -6,7 +6,7 @@ using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Moderation
 {
-    public class ModeratorPermissions : IPermissionsProvider2<ModeratorPermission>
+    public class ModeratorPermissions : IPermissionsProvider<ModeratorPermission>
     {
 
         public static readonly ModeratorPermission EditTopics =
@@ -33,11 +33,11 @@ namespace Plato.Discuss.Moderation
             };
         }
 
-        public IEnumerable<DefaultPermissions2<ModeratorPermission>> GetDefaultPermissions()
+        public IEnumerable<DefaultPermissions<ModeratorPermission>> GetDefaultPermissions()
         {
             return new[]
             {
-                new DefaultPermissions2<ModeratorPermission>
+                new DefaultPermissions<ModeratorPermission>
                 {
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
