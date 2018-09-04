@@ -482,14 +482,11 @@ namespace Plato.Internal.Features
 
                     }
 
-                    //// Deactivate all message broker subscriptions for descriptor features
-                    //// These will be activated again via BuildTenantPipeline within
-                    //// Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware
-                    //var subscribers = scope.ServiceProvider.GetServices<IBrokerSubscriber>();
-                    //foreach (var subscriber in subscribers)
-                    //{
-                    //    subscriber?.Unsubscribe();
-                    //}
+                    // Deactivate all message broker subscriptions 
+                    // These will be activated again via BuildTenantPipeline within
+                    // Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware
+                    var broker = scope.ServiceProvider.GetService<IBroker>();
+                    broker.Dispose();
 
                 }
 

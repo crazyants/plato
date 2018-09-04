@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Plato.Internal.Messaging.Abstractions
 {
     
-    public interface IBroker : IDisposable
+    public interface IBroker 
     {
 
         Task<IEnumerable<Func<Message<T>, Task<T>>>> Pub<T>(object sender, MessageOptions opts, T message) where T : class;
@@ -18,6 +18,7 @@ namespace Plato.Internal.Messaging.Abstractions
 
         void Unsub<T>(MessageOptions opts, Func<Message<T>, Task<T>> subscription) where T : class;
 
+        void Dispose();
     }
 
 }
