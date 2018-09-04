@@ -101,7 +101,7 @@ namespace Plato.Internal.Hosting
                     _shellContexts = null;
                 context.Dispose();
             }
-
+            
             // Recreate
             GetOrCreateShellContext(settings);
 

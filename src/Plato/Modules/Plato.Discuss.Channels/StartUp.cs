@@ -45,8 +45,14 @@ namespace Plato.Discuss.Channels
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
-            // Data stores
+            // Repositories
+            services.AddScoped<ICategoryDataRepository<CategoryData>, CategoryDataRepository>();
+            services.AddScoped<ICategoryRoleRepository<CategoryRole>, CategoryRoleRepository>();
             services.AddScoped<ICategoryRepository<Channel>, CategoryRepository<Channel>>();
+
+            // Stores
+            services.AddScoped<ICategoryDataStore<CategoryData>, CategoryDataStore>();
+            services.AddScoped<ICategoryRoleStore<CategoryRole>, CategoryRoleStore>();
             services.AddScoped<ICategoryStore<Channel>, CategoryStore<Channel>>();
             services.AddScoped<ICategoryManager<Channel>, CategoryManager<Channel>>();
 

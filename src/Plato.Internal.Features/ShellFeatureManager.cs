@@ -11,6 +11,7 @@ using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstractions.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
@@ -83,7 +84,7 @@ namespace Plato.Internal.Features
         public async Task<IEnumerable<IFeatureEventContext>> DisableFeatureAsync(string featureId)
         {
 
-            // Get features to enable
+            // Get feature to disable
             var feature = await _shellDescriptorManager.GetFeatureAsync(featureId);
 
             // Ensure we also disable enabled dependent features
@@ -400,7 +401,7 @@ namespace Plato.Internal.Features
                 {
                 
                     var handlers = scope.ServiceProvider.GetServices<IFeatureEventHandler>();
-
+                    
                     var handlersList = handlers.ToList();
 
                     // Interate through each feature we wish to invoke
@@ -469,6 +470,15 @@ namespace Plato.Internal.Features
 
                     }
                     
+                    // Deactivate all message broker subscriptions
+                    // These will be activated again when the shell is created
+                    var subscribers = scope.ServiceProvider.GetServices<IBrokerSubscriber>();
+                    foreach (var subscriber in subscribers)
+                    {
+                        subscriber?.Unsubscribe();
+                    }
+
+
                 }
 
             }

@@ -27,11 +27,11 @@ namespace Plato.Categories
             
             //// Feature event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
-          
+
             // Repositories
-            services.AddScoped<ICategoryRepository<CategoryBase>, CategoryRepository<CategoryBase>>();
             services.AddScoped<ICategoryDataRepository<CategoryData>, CategoryDataRepository>();
             services.AddScoped<ICategoryRoleRepository<CategoryRole>, CategoryRoleRepository>();
+            services.AddScoped<ICategoryRepository<CategoryBase>, CategoryRepository<CategoryBase>>();
             services.AddScoped<IEntityCategoryRepository<EntityCategory>, EntityCategoryRepository>();
 
             // Stores

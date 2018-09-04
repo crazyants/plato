@@ -2,53 +2,73 @@
 
 @if (Model.SelectedChannelId == 0)
 {
-    @foreach (var channel in Model.Channels)
+    if (Model.Channels != null)
+    {
+        @foreach (var channel in Model.Channels)
+         {
+             <card class="card card-body-flush">
+                 <card-title>
+
+                     @if (Model.EnableEditOptions)
+                     {
+                         <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
+                             <i class="fal fa-pencil"></i>
+                             @T["Edit"]
+                         </a>
+                     }
+
+                     <h6 class="card-title">@channel.Name</h6>
+                     @if (!String.IsNullOrEmpty(@channel.Description))
+                     {
+                         <span class="text-muted">
+                             @channel.Description
+                         </span>
+                     }
+
+                 </card-title>
+                 <card-body>
+
+                     <ul class="list-group list-group-flush list-group-hover">
+                         @if (channel.Children.Count > 0)
+                         {
+                             foreach (var child in channel.Children)
+                             {
+                                 <li class="list-group-item">
+                                     @await DisplayAsync(new View("ChannelListItem", new
+                                     {
+                                         Channel = child,
+                                         enableEditOptions = Model.EnableEditOptions
+                                     }))
+                                 </li>
+                             }
+                         }
+                         else
+                         {
+
+                             <li class="list-group-item">
+                                 <h6>@T["No child channels"]</h6>
+                             </li>
+
+                         }
+                     </ul>
+                 </card-body>
+             </card>
+         }
+    }
+    else
     {
         <card class="card card-body-flush">
             <card-title>
-
-                @if (Model.EnableEditOptions)
-                {
-                    <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
-                        <i class="fal fa-pencil"></i>
-                        @T["Edit"]
-                    </a>
-                }
-
-                <h6 class="card-title">@channel.Name</h6>
-                @if (!String.IsNullOrEmpty(@channel.Description))
-                {
-                    <span class="text-muted">
-                        @channel.Description
-                    </span>
-                }
-
+                <h6 class="card-title">@T["Channels"]</h6>
             </card-title>
             <card-body>
-
+                
                 <ul class="list-group list-group-flush list-group-hover">
-                    @if (channel.Children.Count > 0)
-                    {
-                        foreach (var child in channel.Children)
-                        {
-                            <li class="list-group-item">
-                                @await DisplayAsync(new View("ChannelListItem", new
-                                {
-                                    Channel = child,
-                                    enableEditOptions = Model.EnableEditOptions
-                                }))
-                            </li>
-                        }
-                    }
-                    else
-                    {
-
-                        <li class="list-group-item">
-                            <h6>@T["No child channels"]</h6>
-                        </li>
-
-                    }
+                    <li class="list-group-item">
+                        @T["No channels found"]
+                    </li>
                 </ul>
+             
             </card-body>
         </card>
     }
