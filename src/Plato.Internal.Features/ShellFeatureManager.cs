@@ -196,11 +196,11 @@ namespace Plato.Internal.Features
             if (!errors.Any())
             {
                 // Update descriptor within database
-                var descriptor = await AddFeaturesAndSave(featureIds);
+                await AddFeaturesAndSave(featureIds);
             }
             
             // dispose current shell context
-                RecycleShell();
+            RecycleShell();
 
             // Return all execution contexts
             return results.Values;
@@ -382,7 +382,7 @@ namespace Plato.Internal.Features
 
             // Holds the results of all our event executation contexts
             var contexts = new ConcurrentDictionary<string, IFeatureEventContext>();
-            
+
             // Get setting before recycle
             var httpContext = _httpContextAccessor.HttpContext;
             var shellSettings = _runningShellTable.Match(httpContext);
@@ -391,17 +391,25 @@ namespace Plato.Internal.Features
             var descriptor = new ShellDescriptor();
             foreach (var feature in features)
             {
+                // Add dependencies for feature
+                if (feature.Dependencies.Any())
+                {
+                    foreach (var dependency in feature.Dependencies)
+                    {
+                        descriptor.Modules.Add(new ShellModule(dependency.ModuleId, dependency.Version));
+                    }
+                }
                 descriptor.Modules.Add(new ShellModule(feature.ModuleId, feature.Version));
             }
-            
+
             // Create a new shell context with features we need to enable / disable
             using (var shellContext = _shellContextFactory.CreateDescribedContext(shellSettings, descriptor))
             {
                 using (var scope = shellContext.ServiceProvider.CreateScope())
                 {
-                
+
                     var handlers = scope.ServiceProvider.GetServices<IFeatureEventHandler>();
-                    
+
                     var handlersList = handlers.ToList();
 
                     // Interate through each feature we wish to invoke
@@ -422,12 +430,12 @@ namespace Plato.Internal.Features
                             ServiceProvider = scope.ServiceProvider,
                             Logger = _logger
                         };
-                        
+
                         // get event handler for feature we are invoking
                         var featureHandler = handlersList.FirstOrDefault(h => h.ModuleId == feature.ModuleId);
                         if (featureHandler != null)
                         {
-                      
+
                             // Invoke handler
                             var handlerContexts = await invoker(context, featureHandler);
                             foreach (var handlerContext in handlerContexts)
@@ -438,20 +446,22 @@ namespace Plato.Internal.Features
                                     {
                                         v.Errors.Add(error.Key, error.Value);
                                     }
+
                                     return v;
                                 });
 
                             }
-                            
+
                             // Log any errors
                             if (context.Errors.Count > 0)
                             {
                                 foreach (var error in context.Errors)
                                 {
-                                    _logger.LogCritical(error.Value, $"An error occurred whilst invoking within {this.GetType().FullName}");
+                                    _logger.LogCritical(error.Value,
+                                        $"An error occurred whilst invoking within {this.GetType().FullName}");
                                 }
                             }
-                            
+
                         }
                         else
                         {
@@ -463,13 +473,14 @@ namespace Plato.Internal.Features
                                 {
                                     v.Errors.Add(error.Key, error.Value);
                                 }
+
                                 return v;
                             });
 
                         }
 
                     }
-                    
+
                     // Deactivate all message broker subscriptions
                     // These will be activated again when the shell is created
                     var subscribers = scope.ServiceProvider.GetServices<IBrokerSubscriber>();
@@ -486,7 +497,7 @@ namespace Plato.Internal.Features
             return contexts;
 
         }
-        
+
         void DisposeShell(IShellSettings shellSettings)
         {
             _platoHost.DisposeShellContext(shellSettings);
