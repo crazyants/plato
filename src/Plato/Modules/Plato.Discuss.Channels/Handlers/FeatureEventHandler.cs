@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 
@@ -7,10 +8,13 @@ namespace Plato.Discuss.Channels.Handlers
 
     public class FeatureEventHandler : BaseFeatureEventHandler
     {
-  
-        public FeatureEventHandler(IBrokerSubscriber brokerSubscriber)
+
+        private readonly IEnumerable<IBrokerSubscriber> _brokerSubscribers;
+
+        public FeatureEventHandler(
+           IEnumerable<IBrokerSubscriber> brokerSubscribers1)
         {
-    
+            _brokerSubscribers = brokerSubscribers1;
         }
         
         #region "Implementation"
@@ -22,8 +26,6 @@ namespace Plato.Discuss.Channels.Handlers
 
         public override Task InstalledAsync(IFeatureEventContext context)
         {
-            // Ensure subscriptions are acttivated
-       
             return Task.CompletedTask;
         }
 
@@ -35,7 +37,10 @@ namespace Plato.Discuss.Channels.Handlers
         public override Task UninstalledAsync(IFeatureEventContext context)
         {
             // Dispose active subscriptions
-     
+            foreach (var subscriber in _brokerSubscribers)
+            {
+                subscriber?.Unsubscribe();
+            }
             return Task.CompletedTask;
         }
 

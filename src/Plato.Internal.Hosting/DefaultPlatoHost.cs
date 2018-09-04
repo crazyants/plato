@@ -19,8 +19,8 @@ namespace Plato.Internal.Hosting
         readonly IShellContextFactory _shellContextFactory;
         readonly IRunningShellTable _runningShellTable;
         readonly ILogger _logger;
-   
-        static readonly object _syncLock = new object();
+
+        static readonly object SyncLock = new object();
         ConcurrentDictionary<string, ShellContext> _shellContexts;
 
         #endregion
@@ -130,7 +130,7 @@ namespace Plato.Internal.Hosting
 
             if (_shellContexts == null)
             {
-                lock (_syncLock)
+                lock (SyncLock)
                 {
                     if (_shellContexts == null)
                     {

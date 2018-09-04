@@ -9,6 +9,7 @@ using Plato.Users.Services;
 
 namespace Plato.Users.Middleware
 {
+
     public class AuthenticatedUserMiddleware
     {
 

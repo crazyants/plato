@@ -55,15 +55,15 @@ namespace Plato.Internal.Hosting.Web.Routing
                     _pipelines.Remove(shellSettings.Name);
                 }
             }
+            
+            RequestDelegate pipeline;
 
             // Building a pipeline can't be done by two requests
-            RequestDelegate pipeline;
             lock (_pipelines)
             {
                 if (!_pipelines.TryGetValue(shellSettings.Name, out pipeline))
                 {
                     pipeline = BuildTenantPipeline(shellSettings, httpContext.RequestServices);
-
                     if (shellSettings.State == TenantState.Running)
                     {
                         _pipelines.Add(shellSettings.Name, pipeline);
@@ -80,6 +80,7 @@ namespace Plato.Internal.Hosting.Web.Routing
             ShellSettings shellSettings, 
             IServiceProvider serviceProvider)
         {
+
             var startups = serviceProvider.GetServices<IStartup>();
             var inlineConstraintResolver = serviceProvider.GetService<IInlineConstraintResolver>();
             var appBuilder = new ApplicationBuilder(serviceProvider);

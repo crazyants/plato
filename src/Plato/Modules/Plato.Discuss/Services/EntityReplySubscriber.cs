@@ -15,35 +15,30 @@ namespace Plato.Discuss.Services
 
         public void Subscribe()
         {
-            // Subscribe to EntityReplyCreated event
-            _broker.Sub<EntityReply>(new MessageOptions()
-            {
-                Key = "EntityReplyCreated"
-            }, (entityReply) =>
-            {
 
+            //// Subscribe to EntityReplyCreated event
+            //_broker.Sub<EntityReply>(new MessageOptions()
+            //{
+            //    Key = "EntityReplyCreated"
+            //}, (entityReply) =>
+            //{
+            //});
 
-            });
-
-            // Subscribe to EntityReplyUpdated event
-            _broker.Sub<EntityReply>(new MessageOptions()
-            {
-                Key = "EntityReplyUpdated"
-            }, (entityReply) =>
-            {
-
-
-            });
+            //// Subscribe to EntityReplyUpdated event
+            //_broker.Sub<EntityReply>(new MessageOptions()
+            //{
+            //    Key = "EntityReplyUpdated"
+            //}, (entityReply) =>
+            //{
+            //});
             
-            // Subscribe to EntityReplyDeeted event
-            _broker.Sub<EntityReply>(new MessageOptions()
-            {
-                Key = "EntityReplyDeeted"
-            }, (entityReply) =>
-            {
-
-
-            });
+            //// Subscribe to EntityReplyDeeted event
+            //_broker.Sub<EntityReply>(new MessageOptions()
+            //{
+            //    Key = "EntityReplyDeeted"
+            //}, (entityReply) =>
+            //{
+            //});
 
         }
 
@@ -55,7 +50,7 @@ namespace Plato.Discuss.Services
 
         public void Dispose()
         {
-       
+            Unsubscribe();
         }
 
     }

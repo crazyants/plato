@@ -119,12 +119,26 @@ namespace Plato.Internal.Messaging
             var describedDelegate = new DescribedDelegate(options, subscription);
 
             if (!_subscribers.ContainsKey(typeof(T))) return;
-            var delegates = _subscribers[typeof(T)];
-            if (delegates.Contains(describedDelegate))
+
+            // Get delegates for our type
+            var typeDelegates = _subscribers[typeof(T)];
+
+            // Get delegates for type matching our key
+            var matchingKey = typeDelegates.Where(d => d.Options.Key == options.Key);
+
+            // Get delegates matching our subscription target
+            var matchingDelegates = matchingKey.Where(d => d.Subscription.Target.Equals(subscription.Target));
+
+            // Remove
+            foreach (var matchingDelegate in matchingDelegates)
             {
-                delegates.Remove(describedDelegate);
+                if (typeDelegates.Contains(matchingDelegate))
+                {
+                    typeDelegates.Remove(matchingDelegate);
+                }
             }
-            if (delegates.Count == 0)
+            
+            if (typeDelegates.Count == 0)
             {
                 _subscribers.TryRemove(typeof(T), out List<DescribedDelegate> method);
             }
@@ -136,12 +150,26 @@ namespace Plato.Internal.Messaging
             var describedDelegate = new DescribedDelegate(options, subscription);
 
             if (!_subscribers.ContainsKey(typeof(T))) return;
-            var delegates = _subscribers[typeof(T)];
-            if (delegates.Contains(describedDelegate))
+
+            // Get delegates for our type
+            var typeDelegates = _subscribers[typeof(T)];
+
+            // Get delegates for type matching our key
+            var matchingKey = typeDelegates.Where(d => d.Options.Key == options.Key);
+
+            // Get delegates matching our subscription target
+            var matchingDelegates = matchingKey.Where(d => d.Subscription.Target.Equals(subscription.Target));
+            
+            // Remove
+            foreach (var matchingDelegate in matchingDelegates)
             {
-                delegates.Remove(describedDelegate);
+                if (typeDelegates.Contains(matchingDelegate))
+                {
+                    typeDelegates.Remove(matchingDelegate);
+                }
             }
-            if (delegates.Count == 0)
+
+            if (typeDelegates.Count == 0)
             {
                 _subscribers.TryRemove(typeof(T), out List<DescribedDelegate> method);
             }

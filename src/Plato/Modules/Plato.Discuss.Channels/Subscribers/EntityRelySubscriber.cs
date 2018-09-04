@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
@@ -36,9 +37,13 @@ namespace Plato.Discuss.Channels.Subscribers
 
         #region "Implementation"
 
+        private static Action<Message<TEntityReply>> _subscription;
+
         public void Subscribe()
         {
             // Created
+            //_subscription = async message => await EntityReplyCreated(message.What);
+
             _broker.Sub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyCreated"

@@ -216,7 +216,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
             return new ChannelListViewModel()
             {
-                Channels = categories.Where(c => c.ParentId == parentId)
+                Channels = categories?.Where(c => c.ParentId == parentId)
             };
         }
         

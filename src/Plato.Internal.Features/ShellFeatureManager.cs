@@ -270,7 +270,7 @@ namespace Plato.Internal.Features
                         {
 
                             // Update descriptor within database
-                            var descriptor = await RemoveFeaturesAndSave(featureIds);
+                            await RemoveFeaturesAndSave(featureIds);
                            
                             try
                             {
@@ -387,11 +387,13 @@ namespace Plato.Internal.Features
             var httpContext = _httpContextAccessor.HttpContext;
             var shellSettings = _runningShellTable.Match(httpContext);
 
-            // Build descriptor to ensure correct feature event handlers are available within DI
+            // Build temporary shell descriptor to ensure feature event handlers are available
+            // The feature may also reference dependencies via DI so ensure we also
+            // add any dependencies for the features to our temporary shell descrioptor
             var descriptor = new ShellDescriptor();
             foreach (var feature in features)
             {
-                // Add dependencies for feature
+                // Add dependencies for feature to descriptor
                 if (feature.Dependencies.Any())
                 {
                     foreach (var dependency in feature.Dependencies)
@@ -409,7 +411,6 @@ namespace Plato.Internal.Features
                 {
 
                     var handlers = scope.ServiceProvider.GetServices<IFeatureEventHandler>();
-
                     var handlersList = handlers.ToList();
 
                     // Interate through each feature we wish to invoke
@@ -481,14 +482,14 @@ namespace Plato.Internal.Features
 
                     }
 
-                    // Deactivate all message broker subscriptions
-                    // These will be activated again when the shell is created
-                    var subscribers = scope.ServiceProvider.GetServices<IBrokerSubscriber>();
-                    foreach (var subscriber in subscribers)
-                    {
-                        subscriber?.Unsubscribe();
-                    }
-
+                    //// Deactivate all message broker subscriptions for descriptor features
+                    //// These will be activated again via BuildTenantPipeline within
+                    //// Plato.Internal.Hosting.Web.Routing.PlatoRouterMiddleware
+                    //var subscribers = scope.ServiceProvider.GetServices<IBrokerSubscriber>();
+                    //foreach (var subscriber in subscribers)
+                    //{
+                    //    subscriber?.Unsubscribe();
+                    //}
 
                 }
 
