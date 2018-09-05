@@ -1,0 +1,12 @@
+﻿@model SelectChannelsViewModel
+
+<select id="@Model.HtmlName" name="@Model.HtmlName" multiple="multiple" class="form-control" style="min-height: 150px;" >
+    @for (var i = 0; i < Model.SelectedChannels.Count; i++)
+    {
+        var role = Model.SelectedChannels[i];
+        <option value="@role.Value" selected="@role.IsSelected">
+            @role.Value.Name
+        </option>
+    }
+</select>
+
