@@ -124,10 +124,14 @@ namespace Plato.Internal.Messaging
             var typeDelegates = _subscribers[typeof(T)];
 
             // Get delegates for type matching our key
-            var matchingKey = typeDelegates.Where(d => d.Options.Key == options.Key);
+            var matchingKey = typeDelegates
+                .Where(d => d.Options.Key == options.Key)
+                .ToList();
 
             // Get delegates matching our subscription target
-            var matchingDelegates = matchingKey.Where(d => d.Subscription.Target.Equals(subscription.Target));
+            var matchingDelegates = matchingKey
+                .Where(d => d.Subscription.Target.Equals(subscription.Target))
+                .ToList();
 
             // Remove
             foreach (var matchingDelegate in matchingDelegates)
@@ -155,10 +159,14 @@ namespace Plato.Internal.Messaging
             var typeDelegates = _subscribers[typeof(T)];
 
             // Get delegates for type matching our key
-            var matchingKey = typeDelegates.Where(d => d.Options.Key == options.Key);
+            var matchingKey = typeDelegates
+                .Where(d => d.Options.Key == options.Key)
+                .ToList();
 
             // Get delegates matching our subscription target
-            var matchingDelegates = matchingKey.Where(d => d.Subscription.Target.Equals(subscription.Target));
+            var matchingDelegates = matchingKey
+                .Where(d => d.Subscription.Target.Equals(subscription.Target))
+                .ToList();
             
             // Remove
             foreach (var matchingDelegate in matchingDelegates)

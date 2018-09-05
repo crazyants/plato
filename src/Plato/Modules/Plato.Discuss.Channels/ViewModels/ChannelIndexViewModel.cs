@@ -35,5 +35,7 @@ namespace Plato.Discuss.Channels.ViewModels
 
         public int ChannelId { get; set; }
 
+        public bool EnableEdit { get; set; }
+
     }
 }

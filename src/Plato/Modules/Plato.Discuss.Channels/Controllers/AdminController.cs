@@ -85,19 +85,32 @@ namespace Plato.Discuss.Channels.Controllers
                         .Action("Index", "Admin", "Plato.Discuss.Channels", new RouteValueDictionary { ["Id"] = 0 })
                         .LocalNav()
                     );
-                    foreach (var parent in parents.Reverse())
+                    foreach (var parent in parents)
                     {
-                        builder.Add(S[parent.Name], channel => channel
-                            .Action("Index", "Admin", "Plato.Discuss.Channels", new RouteValueDictionary { ["Id"] = parent.Id })
-                            .LocalNav()
-                        );
+                        if (parent.Id != id)
+                        {
+                            builder.Add(S[parent.Name], channel => channel
+                                .Action("Index", "Admin", "Plato.Discuss.Channels", new RouteValueDictionary { ["Id"] = parent.Id })
+                                .LocalNav()
+                            );
+                        }
+                        else
+                        {
+                            builder.Add(S[parent.Name]);
+                        }
+                     
                     }
                 }
 
             });
 
-            var category = await _categoryStore.GetByIdAsync(id);
-            var model = await _viewProvider.ProvideIndexAsync(category, this);
+            Channel currentChannel = null;
+            if (id > 0)
+            {
+                currentChannel = await _categoryStore.GetByIdAsync(id);
+            }
+            
+            var model = await _viewProvider.ProvideIndexAsync(currentChannel ?? new Channel(), this);
             return View(model);
         }
         

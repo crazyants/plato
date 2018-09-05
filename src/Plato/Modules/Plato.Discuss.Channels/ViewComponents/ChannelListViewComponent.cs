@@ -36,6 +36,7 @@ namespace Plato.Discuss.Channels.ViewComponents
 
             var model = await GetIndexModel(viewOpts);
             model.SelectedChannelId = viewOpts.ChannelId;
+            model.ViewOpts = viewOpts;
             return View(model);
 
         }
@@ -61,22 +62,6 @@ namespace Plato.Discuss.Channels.ViewComponents
             return feature;
         }
 
-        private async Task<IList<Selection<Channel>>> BuildSelectionsAsync(
-            IEnumerable<int> selected)
-        {
-
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
-            var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
-
-            var selections = channels?.Select(c => new Selection<Channel>
-                {
-                    IsSelected = selected.Any(v => v == c.Id),
-                    Value = c
-                })
-                .ToList();
-
-            return selections;
-        }
     }
 
 

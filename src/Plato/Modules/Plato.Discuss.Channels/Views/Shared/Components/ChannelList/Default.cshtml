@@ -9,7 +9,7 @@
              <card class="card card-body-flush">
                  <card-title>
 
-                     @if (Model.EnableEditOptions)
+                     @if (Model.ViewOpts.EnableEdit)
                      {
                          <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
                              <i class="fal fa-pencil"></i>
@@ -37,7 +37,7 @@
                                      @await DisplayAsync(new View("ChannelListItem", new
                                      {
                                          Channel = child,
-                                         enableEditOptions = Model.EnableEditOptions
+                                         ViewOpts = Model.ViewOpts
                                      }))
                                  </li>
                              }
@@ -88,8 +88,8 @@ else
                          <li class="list-group-item">
                              @await DisplayAsync(new View("ChannelListItem", new
                              {
-                                 Channel = channel,
-                                 enableEditOptions = Model.EnableEditOptions
+                                 channel = channel,
+                                 viewOpts = Model.ViewOpts
                              }))
                          </li>
                      }

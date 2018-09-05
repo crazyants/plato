@@ -43,20 +43,24 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(CategoryBase category, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(CategoryBase category, IUpdateModel updater)
         {
-            var indexViewModel = await GetIndexModel(category?.Id ?? 0);
+            //var indexViewModel = await GetIndexModel(category?.Id ?? 0);
 
             var viewModel = new ChannelIndexViewModel()
             {
-
+                ChannelViewOpts = new ViewOptions()
+                {
+                    ChannelId = category?.Id ?? 0,
+                    EnableEdit = true
+                }
             };
-            
-            return Views(
+
+            return Task.FromResult(Views(
                 View<CategoryBase>("Admin.Index.Header", model => category).Zone("header").Order(1),
                 View<ChannelIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
                 View<ChannelIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
-            );
+            ));
 
         }
 
@@ -161,7 +165,6 @@ namespace Plato.Discuss.Channels.ViewProviders
         async Task<IEnumerable<SelectListItem>> GetAvailableChannels()
         {
 
-            // Build timezones 
             var output = new List<SelectListItem>
             {
                 new SelectListItem
@@ -220,15 +223,15 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
         
-        async Task<ChannelListViewModel> GetIndexModel(int parentId)
-        {
-            var feature = await GetcurrentFeature();
-            var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            return new ChannelListViewModel()
-            {
-                Channels = categories?.Where(c => c.ParentId == parentId)
-            };
-        }
+        //async Task<ChannelListViewModel> GetIndexModel(int parentId)
+        //{
+        //    var feature = await GetcurrentFeature();
+        //    var categories = await _categoryStore.GetByFeatureIdAsync(feature.Id);
+        //    return new ChannelListViewModel()
+        //    {
+        //        Channels = categories?.Where(c => c.ParentId == parentId)
+        //    };
+        //}
         
         async Task<ShellModule> GetcurrentFeature()
         {
