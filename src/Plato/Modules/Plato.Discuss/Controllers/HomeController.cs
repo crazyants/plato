@@ -12,7 +12,6 @@ using Plato.Discuss.Services;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Discuss.ViewModels;
-using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -70,14 +69,14 @@ namespace Plato.Discuss.Controllers
         #region "Actions"
 
         public async Task<IActionResult> Index(
-            FilterOptions filterOptions,
+            ViewOptions viewOptions,
             PagerOptions pagerOptions)
         {
             
             // default options
-            if (filterOptions == null)
+            if (viewOptions == null)
             {
-                filterOptions = new FilterOptions();
+                viewOptions = new ViewOptions();
             }
 
             // default pager
@@ -207,7 +206,7 @@ namespace Plato.Discuss.Controllers
 
         public async Task<IActionResult> Topic(
             int id,
-            FilterOptions filterOptions,
+            ViewOptions viewOptions,
             PagerOptions pagerOptions)
         {
 
@@ -218,13 +217,11 @@ namespace Plato.Discuss.Controllers
             }
             
             // default options
-            if (filterOptions == null)
+            if (viewOptions == null)
             {
-                filterOptions = new FilterOptions();
+                viewOptions = new ViewOptions();
             }
-
-
-
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -247,8 +244,8 @@ namespace Plato.Discuss.Controllers
             
             // Maintain previous route data when generating page links
             var routeData = new RouteData();
-            routeData.Values.Add("Options.Search", filterOptions.Search);
-            routeData.Values.Add("Options.Order", filterOptions.Order);
+            routeData.Values.Add("Options.Search", viewOptions.Search);
+            routeData.Values.Add("Options.Order", viewOptions.Order);
             routeData.Values.Add("page", pagerOptions.Page);
             
 

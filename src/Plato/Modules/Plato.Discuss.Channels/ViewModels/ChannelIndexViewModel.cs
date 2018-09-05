@@ -1,5 +1,4 @@
 ﻿using Plato.Discuss.Models;
-using Plato.Discuss.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
 
@@ -12,8 +11,10 @@ namespace Plato.Discuss.Channels.ViewModels
 
         public PagerOptions PagerOpts { get; set; }
 
-        public FilterOptions FilterOpts { get; set; }
+        public ViewOptions ChannelViewOpts { get; set; }
 
+        public Discuss.ViewModels.ViewOptions TopicViewOpts { get; set; }
+        
         public ChannelIndexViewModel()
         {
         }
@@ -27,5 +28,12 @@ namespace Plato.Discuss.Channels.ViewModels
             this.PagerOpts.SetTotal(results?.Total ?? 0);
         }
         
+    }
+
+    public class ViewOptions
+    {
+
+        public int ChannelId { get; set; }
+
     }
 }

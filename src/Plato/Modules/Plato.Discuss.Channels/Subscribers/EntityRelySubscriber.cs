@@ -37,13 +37,8 @@ namespace Plato.Discuss.Channels.Subscribers
 
         #region "Implementation"
 
-        private static Action<Message<TEntityReply>> _subscription;
-
         public void Subscribe()
         {
-            // Created
-            //_subscription = async message => await EntityReplyCreated(message.What);
-
             _broker.Sub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyCreated"

@@ -5,11 +5,11 @@ using Plato.Discuss.Labels.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Settings;
-using Plato.Discuss.ViewModels;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Labels.Stores;
+using Plato.Discuss.Labels.ViewModels;
 
 namespace Plato.Discuss.Labels.Controllers
 {
@@ -46,7 +46,7 @@ namespace Plato.Discuss.Labels.Controllers
 
         public async Task<IActionResult> Index(
             int id,
-            FilterOptions filterOptions,
+            ViewOptions viewOptions,
             PagerOptions pagerOptions)
         {
 

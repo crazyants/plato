@@ -22,31 +22,42 @@ namespace Plato.Discuss.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            FilterOptions filterOpts,
+            ViewOptions viewOpts,
             PagerOptions pagerOpts)
         {
-       
-            var model = await GetIndexViewModel(filterOpts, pagerOpts);
+
+            if (viewOpts == null)
+            {
+                viewOpts = new ViewOptions();
+            }
+
+            if (pagerOpts == null)
+            {
+                pagerOpts = new PagerOptions();
+            }
+
+
+            var model = await GetIndexViewModel(viewOpts, pagerOpts);
 
             return View(model);
         }
 
 
 
-        async Task<HomeIndexViewModel> GetIndexViewModel(
-            FilterOptions filterOptions,
+        async Task<TopicIndexViewModel> GetIndexViewModel(
+            ViewOptions viewOptions,
             PagerOptions pagerOptions)
         {
-            var topics = await GetEntities(filterOptions, pagerOptions);
-            return new HomeIndexViewModel(
+            var topics = await GetEntities(viewOptions, pagerOptions);
+            return new TopicIndexViewModel(
                 topics,
-                filterOptions,
+                viewOptions,
                 pagerOptions);
         }
 
 
         async Task<IPagedResults<Topic>> GetEntities(
-            FilterOptions filterOpts,
+            ViewOptions viewOpts,
             PagerOptions pagerOptions)
         {
 
@@ -64,9 +75,9 @@ namespace Plato.Discuss.ViewComponents
                         q.FeatureId.Equals(feature.Id);
                     }
 
-                    if (filterOpts.ChannelId > 0)
+                    if (viewOpts.ChannelId > 0)
                     {
-                        q.CategoryId.Equals(filterOpts.ChannelId);
+                        q.CategoryId.Equals(viewOpts.ChannelId);
                     }
                     
                     q.HideSpam.True();

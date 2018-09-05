@@ -51,22 +51,22 @@ namespace Plato.Discuss.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(Topic topic, IUpdateModel updater)
         {
 
-            var filterOptions = new FilterOptions();
+            var viewOptions = new ViewOptions();
 
             var pagerOptions = new PagerOptions();
             pagerOptions.Page = GetPageIndex(updater);
 
-            var viewModel = new HomeIndexViewModel
+            var viewModel = new TopicIndexViewModel
             {
-                FilterOpts = filterOptions,
+                ViewOpts = viewOptions,
                 PagerOpts = pagerOptions
             };
 
             return Task.FromResult(Views(
-                View<HomeIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
-                View<HomeIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
-                View<HomeIndexViewModel>("Home.Index.Sidebar", model => viewModel).Zone("sidebar").Order(3),
-                View<HomeIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
+                View<TopicIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
+                View<TopicIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
+                View<TopicIndexViewModel>("Home.Index.Sidebar", model => viewModel).Zone("sidebar").Order(3),
+                View<TopicIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
             ));
 
         }
@@ -74,7 +74,7 @@ namespace Plato.Discuss.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
         {
            
-            var filterOptions = new FilterOptions();
+            var filterOptions = new ViewOptions();
 
             var pagerOptions = new PagerOptions();
             pagerOptions.Page = GetPageIndex(updater);
@@ -200,13 +200,12 @@ namespace Plato.Discuss.ViewProviders
         }
 
         #endregion
-
-
+        
         #region "Private Methods"
         
         async Task<IPagedResults<Reply>> GetEntityReplies(
             int entityId,
-            FilterOptions filterOptions,
+            ViewOptions viewOptions,
             PagerOptions pagerOptions)
         {
             return await _entityReplyStore.QueryAsync()
@@ -214,9 +213,9 @@ namespace Plato.Discuss.ViewProviders
                 .Select<EntityReplyQueryParams>(q =>
                 {
                     q.EntityId.Equals(entityId);
-                    if (!string.IsNullOrEmpty(filterOptions.Search))
+                    if (!string.IsNullOrEmpty(viewOptions.Search))
                     {
-                        q.Keywords.IsIn(filterOptions.Search);
+                        q.Keywords.IsIn(viewOptions.Search);
                     }
                     q.IsSpam.False();
                     q.IsPrivate.False();

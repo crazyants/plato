@@ -1,8 +1,8 @@
-﻿@model HomeIndexViewModel
+﻿@model TopicIndexViewModel
 
 @await DisplayAsync(new View("TopicList", new
 {
-    filterOpts = @Model.FilterOpts,
+    filterOpts = @Model.ViewOpts,
     pagerOpts = @Model.PagerOpts
 }))
 

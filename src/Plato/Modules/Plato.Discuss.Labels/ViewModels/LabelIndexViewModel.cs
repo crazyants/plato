@@ -1,5 +1,4 @@
 ﻿using Plato.Discuss.Models;
-using Plato.Discuss.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
 
@@ -12,7 +11,7 @@ namespace Plato.Discuss.Labels.ViewModels
 
         public PagerOptions PagerOpts { get; set; }
 
-        public FilterOptions FilterOpts { get; set; }
+        public ViewOptions ViewOpts { get; set; }
 
         public LabelIndexViewModel()
         {
@@ -28,4 +27,10 @@ namespace Plato.Discuss.Labels.ViewModels
         }
         
     }
+
+    public class ViewOptions
+    {
+        public int LabelId { get; set; }
+    }
+
 }

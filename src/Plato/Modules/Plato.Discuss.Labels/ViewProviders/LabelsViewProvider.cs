@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
-using Plato.Discuss.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -31,9 +30,9 @@ namespace Plato.Discuss.Labels.ViewProviders
         {
 
             // filter options
-            var filterOptions = new FilterOptions
+            var filterOptions = new ViewOptions
             {
-                ChannelId = label?.Id ?? 0
+                LabelId = label?.Id ?? 0
             };
 
             // paging otptions
@@ -44,7 +43,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             var indexViewModel = new LabelIndexViewModel
             {
-                FilterOpts = filterOptions,
+                ViewOpts = filterOptions,
                 PagerOpts = pagerOptions
             };
 

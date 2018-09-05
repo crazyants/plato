@@ -10,6 +10,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
+using ViewOptions = Plato.Discuss.Channels.ViewModels.ViewOptions;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
@@ -50,12 +51,18 @@ namespace Plato.Discuss.Channels.ViewProviders
                 categoryBase = await _categoryStore.GetByIdAsync(channel.Id);
             }
 
-            // filter options
-            var filterOptions = new FilterOptions
+            // channel filter options
+            var channelViewOpts = new ViewOptions
             {
                 ChannelId = categoryBase?.Id ?? 0
             };
 
+            // topic filter options
+            var topicViewOpts = new Discuss.ViewModels.ViewOptions
+            {
+                ChannelId = categoryBase?.Id ?? 0
+            };
+            
             // paging otptions
             var pagerOptions = new PagerOptions
             {
@@ -64,7 +71,8 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             var indexViewModel = new ChannelIndexViewModel
             {
-                FilterOpts = filterOptions,
+                ChannelViewOpts = channelViewOpts,
+                TopicViewOpts = topicViewOpts,
                 PagerOpts = pagerOptions
             };
 

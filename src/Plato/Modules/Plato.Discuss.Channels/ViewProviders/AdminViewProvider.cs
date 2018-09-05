@@ -46,10 +46,16 @@ namespace Plato.Discuss.Channels.ViewProviders
         public override async Task<IViewProviderResult> BuildIndexAsync(CategoryBase category, IUpdateModel updater)
         {
             var indexViewModel = await GetIndexModel(category?.Id ?? 0);
+
+            var viewModel = new ChannelIndexViewModel()
+            {
+
+            };
+            
             return Views(
                 View<CategoryBase>("Admin.Index.Header", model => category).Zone("header").Order(1),
-                View<ChannelListViewModel>("Admin.Index.Tools", model => indexViewModel).Zone("tools").Order(1),
-                View<ChannelListViewModel>("Admin.Index.Content", model => indexViewModel).Zone("content").Order(1)
+                View<ChannelIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
+                View<ChannelIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
             );
 
         }
@@ -167,13 +173,17 @@ namespace Plato.Discuss.Channels.ViewProviders
             
             var feature = await GetcurrentFeature();
             var channels = await _categoryStore.GetByFeatureIdAsync(feature.Id);
-            var items = await RecurseChannels(channels);
-            foreach (var item in items)
+            if (channels != null)
             {
-                output.Add(item);
+                var items = await RecurseChannels(channels);
+                foreach (var item in items)
+                {
+                    output.Add(item);
+                }
             }
           
             return output;
+
         }
 
         Task<IList<SelectListItem>> RecurseChannels(

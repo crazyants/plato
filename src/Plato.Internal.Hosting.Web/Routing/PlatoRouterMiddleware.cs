@@ -139,7 +139,7 @@ namespace Plato.Internal.Hosting.Web.Routing
             // Use router
             appBuilder.UseRouter(router);
             
-            // Activate all message broker subscriptions
+            // Activate all registered message broker subscriptions
             var subscribers = serviceProvider.GetServices<IBrokerSubscriber>();
             foreach (var subscriber in subscribers)
             {
