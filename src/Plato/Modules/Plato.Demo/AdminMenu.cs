@@ -20,12 +20,12 @@ namespace Plato.Demo
                 return;
             }
 
-            builder
-                .Add(T["Demo Page"], "1", 1, home => home
-                    .Action("Index", "Admin", "Plato.Discussions")
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
-                );
+            //builder
+            //    .Add(T["Demo Page"], "1", 1, home => home
+            //        .Action("Index", "Admin", "Plato.Discussions")
+            //        //.Permission(Permissions.ManageRoles)
+            //        .LocalNav()
+            //    );
 
 
         }

@@ -20,12 +20,12 @@ namespace Plato.Media
                 return;
             }
 
-            builder
-                .Add(T["Media"], "1", 1, home => home
-                    .Action("Index", "Admin", "Plato.Media")
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
-                );
+            //builder
+            //    .Add(T["Media"], "1", 1, home => home
+            //        .Action("Index", "Admin", "Plato.Media")
+            //        //.Permission(Permissions.ManageRoles)
+            //        .LocalNav()
+            //    );
 
 
         }

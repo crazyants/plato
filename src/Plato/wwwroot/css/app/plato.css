@@ -284,6 +284,38 @@
 .main-container > .container:last-child,
 .main-container > .container-fluid:last-child { padding-bottom: 6rem; }
 
+
+.nav-v > .navbar .navbar-nav { padding-top: 1rem; }
+.nav-asides hr { margin: 0.5rem 0 1rem 0; display: none; }
+
+.nav-asides > .navbar .nav-link 
+{
+    padding: 0.5rem 1rem;
+    border-radius: 0.20rem;
+}
+
+.nav-link[data-toggle="collapse"]:after {
+    width: 0;
+    height: 0;
+    margin: 0.5rem 0.25rem;
+    vertical-align: 0.255em;
+    content: "";
+    float: right;
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+}
+
+.nav-link[data-toggle="collapse"][aria-expanded="false"]:after {
+    transform: rotate(-90deg);
+}
+
+.nav-link[data-toggle="collapse"]:after {
+    transition: transform .35s ease, opacity .35s ease;
+    opacity: .5;
+}
+
 @media (min-width: 992px) {
     
     .nav-v {
@@ -316,7 +348,7 @@
     }
 
     .nav-v > .navbar::-webkit-scrollbar { display: none; }
-    .nav-v > .navbar .navbar-brand {  padding: 0.5rem 1rem; margin-bottom: 1rem; }
+    .nav-v > .navbar .navbar-brand {  padding: 1rem 1rem;  }
 
     .nav-v > .navbar .navbar-collapse {
         align-items: flex-start;
@@ -327,6 +359,7 @@
     .nav-v > .navbar .navbar-nav {
         flex-direction: column;
         width: 100%;
+        padding-top: 0;
     }
 
     .nav-v .main-container {
@@ -339,38 +372,10 @@
         padding-left: 3rem;
         padding-right: 3rem;
     }
+
+    .nav-asides hr { width: 100%; display: block; }
    
 } 
-
-.nav-v > .navbar .navbar-nav { padding-top: 1rem; }
-
-.nav-asides > .navbar .nav-link 
-{
-    padding: 0.5rem 1rem;
-    border-radius: 0.20rem;
-}
-
-.nav-link[data-toggle="collapse"]:after {
-    width: 0;
-    height: 0;
-    margin: 0.5rem 0.25rem;
-    vertical-align: 0.255em;
-    content: "";
-    float: right;
-    border-top: 0.3em solid;
-    border-right: 0.3em solid transparent;
-    border-bottom: 0;
-    border-left: 0.3em solid transparent;
-}
-
-.nav-link[data-toggle="collapse"][aria-expanded="false"]:after {
-    transform: rotate(-90deg);
-}
-
-.nav-link[data-toggle="collapse"]:after {
-    transition: transform .35s ease, opacity .35s ease;
-    opacity: .5;
-}
 
 /* ------------------------- */
 /* Forms */

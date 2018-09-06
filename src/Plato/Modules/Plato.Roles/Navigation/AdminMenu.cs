@@ -34,13 +34,13 @@ namespace Plato.Roles.Navigation
                     ));
 
 
-            builder
-                .Add(T["Settings"], 9999, settings => settings
-                    .Add(T["Role Settings"], 4, roles => roles
-                        .Action("Index", "Admin", "Plato.Roles")
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    ));
+            //builder
+            //    .Add(T["Settings"], 9999, settings => settings
+            //        .Add(T["Role Settings"], 4, roles => roles
+            //            .Action("Index", "Admin", "Plato.Roles")
+            //            //.Permission(Permissions.ManageRoles)
+            //            .LocalNav()
+            //        ));
         }
     }
 
