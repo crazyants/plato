@@ -64,8 +64,9 @@ namespace Plato.Users.ViewComponents
                 {
                     if (!string.IsNullOrEmpty(viewOptions.Search))
                     {
-                        q.UserName.IsIn(viewOptions.Search).Or();
-                        q.Email.IsIn(viewOptions.Search);
+                        q.UserName.StartsWith(viewOptions.Search).Or();
+                        q.Email.StartsWith(viewOptions.Search).Or();
+                        q.FirstName.StartsWith(viewOptions.Search);
                     }
                     // q.UserName.IsIn("Admin,Mark").Or();
                     // q.Email.IsIn("email440@address.com,email420@address.com");

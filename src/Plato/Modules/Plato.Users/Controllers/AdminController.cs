@@ -9,7 +9,6 @@ using Plato.Internal.Models.Users;
 using Plato.Users.ViewModels;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Security.Abstractions;
 using Plato.Users.Services;
 
 namespace Plato.Users.Controllers
@@ -51,8 +50,8 @@ namespace Plato.Users.Controllers
         #region "Action Methods"
 
         public async Task<IActionResult> Index(
-            ViewOptions viewOptions,
-            PagerOptions pagerOptions)
+            ViewOptions viewOpts,
+            PagerOptions pagerOpts)
         {
 
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
@@ -70,18 +69,19 @@ namespace Plato.Users.Controllers
             });
             
             // default options
-            if (viewOptions == null)
+            if (viewOpts == null)
             {
-                viewOptions = new ViewOptions();
+                viewOpts = new ViewOptions();
             }
 
             // default pager
-            if (pagerOptions == null)
+            if (pagerOpts == null)
             {
-                pagerOptions = new PagerOptions();
+                pagerOpts = new PagerOptions();
             }
 
-            this.RouteData.Values.Add("page", pagerOptions.Page);
+            this.RouteData.Values.Add("page", pagerOpts.Page);
+            this.RouteData.Values.Add("search", viewOpts.Search);
 
             // Build view
             var result = await _viewProvider.ProvideIndexAsync(new User(), this);
@@ -90,7 +90,8 @@ namespace Plato.Users.Controllers
             return View(result);
 
         }
-        
+
+        [HttpGet]
         public async Task<IActionResult> Display(string id)
         {
 

@@ -34,14 +34,19 @@ namespace Plato.Users.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(UserProfile user, IUpdateModel updater)
         {
 
-            var filterOptions = new ViewOptions();
+            var viewOptions = new ViewOptions
+            {
+                Search = GetKeywords(updater)
+            };
 
-            var pagerOptions = new PagerOptions();
-            pagerOptions.Page = GetPageIndex(updater);
+            var pagerOptions = new PagerOptions
+            {
+                Page = GetPageIndex(updater)
+            };
 
             var viewModel = new UsersIndexViewModel()
             {
-                ViewOpts = filterOptions,
+                ViewOpts = viewOptions,
                 PagerOpts = pagerOptions
             };
 
@@ -209,8 +214,7 @@ namespace Plato.Users.ViewProviders
                 userPhoto = await _userPhotoStore.CreateAsync(userPhoto);
 
         }
-
-
+        
         int GetPageIndex(IUpdateModel updater)
         {
 
@@ -223,6 +227,21 @@ namespace Plato.Users.ViewProviders
             }
 
             return page;
+
+        }
+
+        string GetKeywords(IUpdateModel updater)
+        {
+
+            var keywords = string.Empty;
+            var routeData = updater.RouteData;
+            var found = routeData.Values.TryGetValue("search", out object value);
+            if (found)
+            {
+                keywords = value.ToString();
+            }
+
+            return keywords;
 
         }
 

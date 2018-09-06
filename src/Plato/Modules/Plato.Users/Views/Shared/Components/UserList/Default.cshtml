@@ -5,36 +5,47 @@
         <h6 class="card-title">@T["Users"]</h6>
     </card-title>
     <card-body>
-        <ul class="list-group list-group-flush list-group-hover">
-            @foreach (var user in Model.Results.Data)
-            {
-                <li class="list-group-item">
-                    
-                    @if (Model.ViewOpts.EnableEdit)
-                    {
-                        <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-secondary float-right">
-                            <i class="fal fa-pencil"></i>
-                            @T["Edit"]
-                        </a>
-                    }
-                    <h6 class="d-inline-block">
-                        <avatar class="avatar" user-id="@user.Id"/>
+        @if (Model.Results?.Data != null)
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                @foreach (var user in Model.Results.Data)
+                {
+                    <li class="list-group-item">
+
                         @if (Model.ViewOpts.EnableEdit)
                         {
-                            <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" class="font-weight-bold">
-                                @user.DisplayName
+                            <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-secondary float-right">
+                                <i class="fal fa-pencil"></i>
+                                @T["Edit"]
                             </a>
                         }
-                        else
-                        {
-                            <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@user.Id" class="font-weight-bold">
-                                @user.DisplayName
-                            </a>
-                        }
-                    </h6>
+                        <h6 class="d-inline-block">
+                            <avatar class="avatar" user-id="@user.Id" />
+                            @if (Model.ViewOpts.EnableEdit)
+                            {
+                                <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" class="font-weight-bold">
+                                    @user.DisplayName
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@user.Id" class="font-weight-bold">
+                                    @user.DisplayName
+                                </a>
+                            }
+                        </h6>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    @T["No users found"]
                 </li>
-            }
-        </ul>
+            </ul>
+        }
     </card-body>
 </card>
 

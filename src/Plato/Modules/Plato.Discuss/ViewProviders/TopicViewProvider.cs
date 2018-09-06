@@ -52,6 +52,7 @@ namespace Plato.Discuss.ViewProviders
         {
 
             var viewOptions = new ViewOptions();
+            viewOptions.Search = GetKeywords(updater);
 
             var pagerOptions = new PagerOptions();
             pagerOptions.Page = GetPageIndex(updater);
@@ -239,9 +240,24 @@ namespace Plato.Discuss.ViewProviders
             return page;
 
         }
-        
+
+        string GetKeywords(IUpdateModel updater)
+        {
+
+            var keywords = string.Empty;
+            var routeData = updater.RouteData;
+            var found = routeData.Values.TryGetValue("search", out object value);
+            if (found)
+            {
+                keywords = value.ToString();
+            }
+
+            return keywords;
+
+        }
+
         #endregion
-        
+
     }
 
 }

@@ -28,7 +28,7 @@
         {
             var nodeId = htmlName + "-node-" + channel.Value.Id;
             var checkId = htmlName + "-check-" + channel.Value.Id;
-            var css = @channel.IsSelected ? "list-group-item active" : "list-group-item";
+            var css = @channel.IsSelected ? "list-group-item active checked" : "list-group-item";
             var check = channel.IsSelected ? " checked" : string.Empty;
 
             if (channel.Value.ParentId == id)

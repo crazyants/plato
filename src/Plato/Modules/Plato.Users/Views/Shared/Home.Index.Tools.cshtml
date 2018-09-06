@@ -19,8 +19,9 @@
     </ul>
     -->
 
-    <form class="form-inline">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <form class="form-inline" asp-route-controller="Admin" asp-route-action="Index">
+        <input class="form-control mr-sm-2" asp-for="ViewOpts.Search" type="search" placeholder="Search" aria-label="Search">
+        <input type="hidden" asp-for="PagerOpts.Page" value="1"/>
         <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
     </form>
  

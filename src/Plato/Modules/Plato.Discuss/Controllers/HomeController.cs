@@ -100,7 +100,8 @@ namespace Plato.Discuss.Controllers
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
             this.RouteData.Values.Add("page", pagerOptions.Page);
-         
+            this.RouteData.Values.Add("search", viewOptions.Search);
+
             // Build view
             var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);
 

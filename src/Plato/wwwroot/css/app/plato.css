@@ -285,7 +285,7 @@
 .main-container > .container-fluid:last-child { padding-bottom: 6rem; }
 
 
-.nav-v > .navbar .navbar-nav { padding-top: 1rem; }
+.nav-v > .navbar .navbar-nav { padding: 1rem 0; }
 .nav-asides hr { margin: 0.5rem 0 1rem 0; display: none; }
 
 .nav-asides > .navbar .nav-link 
@@ -359,7 +359,7 @@
     .nav-v > .navbar .navbar-nav {
         flex-direction: column;
         width: 100%;
-        padding-top: 0;
+        padding: 0;
     }
 
     .nav-v .main-container {

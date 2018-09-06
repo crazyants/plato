@@ -49,8 +49,11 @@ namespace Plato.Users.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
         {
 
-            var viewOptions = new ViewOptions();
-            viewOptions.EnableEdit = true;
+            var viewOptions = new ViewOptions
+            {
+                Search = GetKeywords(updater),
+                EnableEdit = true
+            };
 
             var pagerOptions = new PagerOptions
             {
@@ -266,6 +269,21 @@ namespace Plato.Users.ViewProviders
             }
 
             return page;
+
+        }
+
+        string GetKeywords(IUpdateModel updater)
+        {
+
+            var keywords = string.Empty;
+            var routeData = updater.RouteData;
+            var found = routeData.Values.TryGetValue("search", out object value);
+            if (found && value != null)
+            {
+                keywords = value.ToString();
+            }
+
+            return keywords;
 
         }
 
