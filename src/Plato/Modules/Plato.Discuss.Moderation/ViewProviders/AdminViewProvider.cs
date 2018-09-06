@@ -49,7 +49,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Moderator moderator, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Moderator moderator, IUpdateModel updater)
         {
 
             var filterOptions = new FilterOptions();
@@ -62,12 +62,12 @@ namespace Plato.Discuss.Moderation.ViewProviders
                 FilterOpts = filterOptions,
                 PagerOpts = pagerOptions
             };
-            
-            return Views(
+
+            return Task.FromResult(Views(
                 View<ModeratorIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header").Order(1),
                 View<ModeratorIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
                 View<ModeratorIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
-            );
+            ));
 
         }
 

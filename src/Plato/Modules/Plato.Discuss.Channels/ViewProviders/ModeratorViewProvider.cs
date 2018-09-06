@@ -25,8 +25,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         private readonly ICategoryStore<Channel> _channelStore;
         private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly HttpRequest _request;
-
-
+    
         public ModeratorViewProvider(
             IHttpContextAccessor httpContextAccessor, 
             IModeratorStore<Moderator> moderatorStore,
@@ -109,12 +108,45 @@ namespace Plato.Discuss.Channels.ViewProviders
             if (await ValidateModelAsync(model, updater))
             {
 
+                // Get all moderators
+                var moderators = await _moderatorStore
+                    .QueryAsync()
+                    .ToList();
+
                 // Get selected channels
-                var selectedChannels = GetChannelsToAdd();
+                var selectedCategories = GetChannelsToAdd();
 
-                // Update channel
-                moderator.CategoryId = selectedChannels.FirstOrDefault();
+                var output = new List<Moderator>();
+                foreach (var categoryId in selectedCategories)
+                {
 
+                    // Does the moderator already exists for the category?
+                    var existingModerator =
+                        moderators.Data.FirstOrDefault(m =>
+                            m.UserId == moderator.UserId && m.CategoryId == categoryId);
+
+                    Moderator newOrUpdatedModerator = null;
+                    moderator.CategoryId = categoryId;
+
+                    // IF so update existing moderator
+                    if (existingModerator != null)
+                    {
+                        moderator.Id = existingModerator.Id;
+                        newOrUpdatedModerator = await _moderatorStore.UpdateAsync(moderator);
+                    }
+                    else
+                    {
+                        moderator.Id = 0;
+                        newOrUpdatedModerator = await _moderatorStore.CreateAsync(moderator);
+                    }
+
+                    if (newOrUpdatedModerator != null)
+                    {
+                        output.Add(newOrUpdatedModerator);
+                    }
+
+                }
+                
                 // Persist moderator
                 await _moderatorStore.UpdateAsync(moderator);
 

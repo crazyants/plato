@@ -9,12 +9,12 @@ namespace Plato.Discuss.Channels.Handlers
     public class FeatureEventHandler : BaseFeatureEventHandler
     {
 
-        private readonly IEnumerable<IBrokerSubscriber> _brokerSubscribers;
+        //private readonly IEnumerable<IBrokerSubscriber> _brokerSubscribers;
 
         public FeatureEventHandler(
            IEnumerable<IBrokerSubscriber> brokerSubscribers1)
         {
-            _brokerSubscribers = brokerSubscribers1;
+            //_brokerSubscribers = brokerSubscribers1;
         }
         
         #region "Implementation"
@@ -37,10 +37,10 @@ namespace Plato.Discuss.Channels.Handlers
         public override Task UninstalledAsync(IFeatureEventContext context)
         {
             // Dispose active subscriptions
-            foreach (var subscriber in _brokerSubscribers)
-            {
-                subscriber?.Unsubscribe();
-            }
+            //foreach (var subscriber in _brokerSubscribers)
+            //{
+            //    subscriber?.Unsubscribe();
+            //}
             return Task.CompletedTask;
         }
 

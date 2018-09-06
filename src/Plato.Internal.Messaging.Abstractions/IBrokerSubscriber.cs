@@ -3,7 +3,7 @@
 namespace Plato.Internal.Messaging.Abstractions
 {
 
-    public interface IBrokerSubscriber : IDisposable
+    public interface IBrokerSubscriber 
     {
 
         void Subscribe();

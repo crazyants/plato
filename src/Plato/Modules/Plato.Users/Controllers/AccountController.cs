@@ -36,7 +36,7 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Login(string returnUrl = null)
         {
             
-            for (var i = 0; i < 250; i++)
+            for (var i = 0; i < 1; i++)
             {
 
                 var displayName = "New User " + i;

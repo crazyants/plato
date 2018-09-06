@@ -1,16 +1,14 @@
 ﻿@model EditTopicChannelsViewModel
 
 <card>
+    <card-title>
+        <h6 class="card-title">
+            @T["Channels"]
+        </h6>
+    </card-title>
     <card-body>
 
-        @await DisplayAsync(new View("ChannelsDropDown", new
-        {
-            selectedChannels = @Model.SelectedChannels,
-            htmlName = @Model.HtmlName
-        }))
-    
-        
-        @await DisplayAsync(new View("ChannelsSelect", new
+        @await DisplayAsync(new View("SelectChannel", new
         {
             selectedChannels = @Model.SelectedChannels,
             htmlName = @Model.HtmlName

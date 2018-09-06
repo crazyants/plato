@@ -13,12 +13,12 @@ using Plato.Internal.Hosting.Abstractions;
 namespace Plato.Discuss.Channels.ViewComponents
 {
 
-    public class ChannelsSelectViewComponent : ViewComponent
+    public class SelectChannelViewComponent : ViewComponent
     {
         private readonly ICategoryStore<Channel> _channelStore;
         private readonly IContextFacade _contextFacade;
 
-        public ChannelsSelectViewComponent(
+        public SelectChannelViewComponent(
             ICategoryStore<Channel> channelStore,
             IContextFacade contextFacade)
         {

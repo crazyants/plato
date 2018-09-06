@@ -71,7 +71,7 @@ namespace Plato.Discuss.Moderation.Controllers
 
         public async Task<IActionResult> Create()
         {
-            
+
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
@@ -80,10 +80,11 @@ namespace Plato.Discuss.Moderation.Controllers
                 ).Add(S["Moderators"], moderators => moderators
                     .Action("Index", "Admin", "Plato.Discuss.Moderation")
                     .LocalNav()
-                ).Add(S["Add Moderator"]); ;
+                ).Add(S["Add Moderator"]);
+                ;
             });
-            
-                var model = await _viewProvider.ProvideEditAsync(new Moderator(), this);
+
+            var model = await _viewProvider.ProvideEditAsync(new Moderator(), this);
             return View(model);
 
         }
@@ -112,6 +113,7 @@ namespace Plato.Discuss.Moderation.Controllers
                 }
 
             }
+
 
             // Ensure we have users
             if (users.Count > 0)
@@ -175,8 +177,7 @@ namespace Plato.Discuss.Moderation.Controllers
             return await Create();
 
         }
-
-
+        
         public async Task<IActionResult> Edit(int id)
         {
 

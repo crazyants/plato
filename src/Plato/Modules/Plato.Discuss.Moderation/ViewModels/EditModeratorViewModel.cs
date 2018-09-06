@@ -16,13 +16,11 @@ namespace Plato.Discuss.Moderation.ViewModels
         public IDictionary<string, IEnumerable<ModeratorPermission>> CategorizedPermissions { get; set; }
         
         public IEnumerable<string> EnabledPermissions { get; set; }
-
-       
-
-
+        
         public bool IsNewModerator { get; set; }
 
         public Moderator Moderator { get; set; }
 
+        public IEnumerable<int> CategoryIds { get; set; }
     }
 }

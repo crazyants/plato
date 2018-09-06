@@ -48,11 +48,6 @@ namespace Plato.Discuss.Channels.Subscribers
             }, async message => await EntityCreated(message.What));
         }
         
-        public void Dispose()
-        {
-            Unsubscribe();
-        }
-
         #endregion
 
         #region "Private Methods"
