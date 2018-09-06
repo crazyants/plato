@@ -1,8 +1,8 @@
 ﻿@model UsersIndexViewModel
 
-@await DisplayAsync(new View("AdminUserList", new
+@await DisplayAsync(new View("UserList", new
 {
-    filterOpts = @Model.FilterOpts,
+    viewOpts = @Model.ViewOpts,
     pagerOpts = @Model.PagerOpts
 }))
 

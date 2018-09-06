@@ -34,14 +34,14 @@ namespace Plato.Users.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(UserProfile user, IUpdateModel updater)
         {
 
-            var filterOptions = new FilterOptions();
+            var filterOptions = new ViewOptions();
 
             var pagerOptions = new PagerOptions();
             pagerOptions.Page = GetPageIndex(updater);
 
             var viewModel = new UsersIndexViewModel()
             {
-                FilterOpts = filterOptions,
+                ViewOpts = filterOptions,
                 PagerOpts = pagerOptions
             };
 

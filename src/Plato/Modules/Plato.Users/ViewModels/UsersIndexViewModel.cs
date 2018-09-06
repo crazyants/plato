@@ -22,11 +22,11 @@ namespace Plato.Users.ViewModels
 
         public UsersIndexViewModel(
             IPagedResults<User> results,
-            FilterOptions filterOptions,
+            ViewOptions viewOptions,
             PagerOptions pagerOptions)
         {
             this.Results = results;
-            this.FilterOpts = filterOptions;
+            this.ViewOpts = viewOptions;
             this.PagerOpts = pagerOptions;
             this.PagerOpts.SetTotal(results?.Total ?? 0);
         }
@@ -35,13 +35,15 @@ namespace Plato.Users.ViewModels
 
         public PagerOptions PagerOpts { get; set; }
 
-        public FilterOptions FilterOpts { get; set; }
+        public ViewOptions ViewOpts { get; set; }
     
     }
 
-    public class FilterOptions
+    public class ViewOptions
     {
         public string Search { get; set; }
+
+        public bool EnableEdit { get; set; }
 
         public UsersOrder Order { get; set; }
 

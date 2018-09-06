@@ -2,10 +2,13 @@
 
 <card class="card card-body-flush">
     <card-title>
-        <h6 class="card-title">@T["Channels"]</h6>
+        <a data-toggle="tooltip" title="@T["All Channels"]" asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="" asp-route-alias="" class="float-right text-muted">
+            <i class="fal fa-ellipsis-h fa-2x"></i>
+        </a>
+        <h6 class="card-title float-left">@T["Channels"]</h6>
     </card-title>
     <card-body>
-      
+
         @if (Model.Channels != null)
         {
             <div class="list-group list-group-flush">
@@ -26,13 +29,13 @@
                         @channel.Name
 
                         @*@{
-                    var detail = channel.GetOrCreate<ChannelDetails>();
-                }
-                @if (detail != null)
-                {
-                    @detail.TotalTopics
-                }
-                <span class="badge badge-primary badge-pill float-right">14</span>*@
+                            var detail = channel.GetOrCreate<ChannelDetails>();
+                        }
+                        @if (detail != null)
+                        {
+                            @detail.TotalTopics
+                        }
+                        <span class="badge badge-primary badge-pill float-right">14</span>*@
                     </a>
                 }
             </div>
@@ -42,17 +45,14 @@
         {
             <div class="text-center my-4 text-muted">
                 @T["Channels help you organize your conversations"]
-                <br/><br/>
+                <br /><br />
                 <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index">
                     @T["Manage Channels"]
                 </a>
             </div>
         }
-        
+
     </card-body>
 </card>
 
-<a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="" asp-route-alias="" class="btn btn-block btn-secondary mt-2">
-    @T["All Channels"]
-</a>
 

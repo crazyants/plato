@@ -9,11 +9,28 @@
             @foreach (var user in Model.Results.Data)
             {
                 <li class="list-group-item">
-                    <h6 class="d-inline-block">
-                        <avatar class="avatar" user-id="@user.Id" />
-                        <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@user.Id" class="font-weight-bold">
-                            @user.DisplayName
+                    
+                    @if (Model.ViewOpts.EnableEdit)
+                    {
+                        <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-secondary float-right">
+                            <i class="fal fa-pencil"></i>
+                            @T["Edit"]
                         </a>
+                    }
+                    <h6 class="d-inline-block">
+                        <avatar class="avatar" user-id="@user.Id"/>
+                        @if (Model.ViewOpts.EnableEdit)
+                        {
+                            <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" class="font-weight-bold">
+                                @user.DisplayName
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@user.Id" class="font-weight-bold">
+                                @user.DisplayName
+                            </a>
+                        }
                     </h6>
                 </li>
             }

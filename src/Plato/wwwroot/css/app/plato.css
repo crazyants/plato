@@ -476,9 +476,8 @@
 
 .layout { margin-bottom: 2rem; }
 .layout-content .card,
-.layout-sidebar .card { margin-top: 1.25rem; }
-.layout-content > div > .card:first-child,
-.layout-sidebar > div > .card:first-child { margin-top: 0; }
+.layout-sidebar .card { margin-bottom: 1.25rem; }
+
 
 /* ------------------- */
 /* Tagit */

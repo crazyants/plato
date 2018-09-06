@@ -49,7 +49,8 @@ namespace Plato.Users.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
         {
 
-            var filterOptions = new FilterOptions();
+            var viewOptions = new ViewOptions();
+            viewOptions.EnableEdit = true;
 
             var pagerOptions = new PagerOptions
             {
@@ -58,7 +59,7 @@ namespace Plato.Users.ViewProviders
 
             var viewModel = new UsersIndexViewModel()
             {
-                FilterOpts = filterOptions,
+                ViewOpts = viewOptions,
                 PagerOpts = pagerOptions
             };
 

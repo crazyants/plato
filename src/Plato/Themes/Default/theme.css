@@ -70,15 +70,14 @@
 /* Tree */
 /* ------------------- */
 
-.tree ul > li.list-group-item:hover,
-.tree ul > li.list-group-item:focus { background-color: #007bff; color: #fff; }
+.tree ul li.list-group-item-hover { background-color: #007bff; color: #fff; }
 
 /* expand / collapse button */
 .tree .list-group-item.active > a.toggler,
 .tree .list-group-item.active > a.toggler:hover { color: #fff; }
 
 /* ------------------- */
-/* Nav */
+/* Admin Nav */
 /* ------------------- */
 
 .navbar-dark .navbar-nav .show > .nav-link,

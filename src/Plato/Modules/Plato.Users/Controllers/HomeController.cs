@@ -50,7 +50,7 @@ namespace Plato.Users.Controllers
         }
 
         public async Task<IActionResult> Index(
-            FilterOptions filterOptions,
+            ViewOptions viewOptions,
             PagerOptions pagerOptions)
         {
 
@@ -69,9 +69,9 @@ namespace Plato.Users.Controllers
             //});
 
             // default options
-            if (filterOptions == null)
+            if (viewOptions == null)
             {
-                filterOptions = new FilterOptions();
+                viewOptions = new ViewOptions();
             }
 
             // default pager

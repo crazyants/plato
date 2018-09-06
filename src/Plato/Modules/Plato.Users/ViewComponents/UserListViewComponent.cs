@@ -25,13 +25,13 @@ namespace Plato.Users.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            FilterOptions filterOpts,
+            ViewOptions viewOpts,
             PagerOptions pagerOpts)
         {
 
-            if (filterOpts == null)
+            if (viewOpts == null)
             {
-                filterOpts = new FilterOptions();
+                viewOpts = new ViewOptions();
             }
             
             if (pagerOpts == null)
@@ -39,33 +39,33 @@ namespace Plato.Users.ViewComponents
                 pagerOpts = new PagerOptions();
             }
 
-            var model = await GetIndexViewModel(filterOpts, pagerOpts);
+            var model = await GetIndexViewModel(viewOpts, pagerOpts);
             return View(model);
         }
         
         private async Task<UsersIndexViewModel> GetIndexViewModel(
-            FilterOptions filterOptions,
+            ViewOptions viewOptions,
             PagerOptions pagerOptions)
         {
-            var users = await GetUsers(filterOptions, pagerOptions);
+            var users = await GetUsers(viewOptions, pagerOptions);
             return new UsersIndexViewModel(
                 users,
-                filterOptions,
+                viewOptions,
                 pagerOptions);
         }
 
         public async Task<IPagedResults<User>> GetUsers(
-            FilterOptions filterOptions,
+            ViewOptions viewOptions,
             PagerOptions pagerOptions)
         {
             return await _ploatUserStore.QueryAsync()
                 .Take(pagerOptions.Page, pagerOptions.PageSize)
                 .Select<UserQueryParams>(q =>
                 {
-                    if (!string.IsNullOrEmpty(filterOptions.Search))
+                    if (!string.IsNullOrEmpty(viewOptions.Search))
                     {
-                        q.UserName.IsIn(filterOptions.Search).Or();
-                        q.Email.IsIn(filterOptions.Search);
+                        q.UserName.IsIn(viewOptions.Search).Or();
+                        q.Email.IsIn(viewOptions.Search);
                     }
                     // q.UserName.IsIn("Admin,Mark").Or();
                     // q.Email.IsIn("email440@address.com,email420@address.com");
