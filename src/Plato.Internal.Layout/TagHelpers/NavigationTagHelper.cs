@@ -36,8 +36,9 @@ namespace Plato.Internal.Layout.TagHelpers
         public string ChildUlCssClass { get; set; } = "nav flex-column";
         
         private static readonly string NewLine = Environment.NewLine;
-        private int _level = 0;
-        private int _index = 0;
+        private int _level;
+        private int _index;
+        private object _cssClasses;
 
         public NavigationTagHelper(
             INavigationManager navigationManager,
@@ -50,9 +51,7 @@ namespace Plato.Internal.Layout.TagHelpers
             _actionContextAccesor = actionContextAccesor;
             _httpContextAccessor = httpContextAccessor;
         }
-
-        private object _cssClasses; 
-
+        
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
 
@@ -79,11 +78,31 @@ namespace Plato.Internal.Layout.TagHelpers
 
         }
         
+        bool IsChildSelected(List<MenuItem> items)
+        {
+            foreach (var item in items)
+            {
+                if (item.Selected) return true;
+                if (item.Items.Count > 0) IsChildSelected(item.Items);
+            }
+            return false;
+        }
+
+        bool IsChildSelected(MenuItem menuItem)
+        {
+            foreach (var item in menuItem.Items)
+            {
+                if (item.Selected) return true;
+                if (item.Items.Count > 0) IsChildSelected(item);
+            }
+            return false;
+        }
+
         string BuildNavigationRecursivly(
             List<MenuItem> items, 
             StringBuilder sb)
         {
-
+            
             // reset index
             if (_level == 0)
                 _index = 0;
@@ -96,10 +115,13 @@ namespace Plato.Internal.Layout.TagHelpers
                
             sb.Append(NewLine);
             AddTabs(_level, sb);
-
+            
             if (_level > 0 && this.Collaspsable)
             {
-                sb.Append("<div class=\"collapse\" id=\"")
+                var collapseCss = IsChildSelected(items) ? "collapse show" : "collapse";
+                sb.Append("<div class=\"")
+                    .Append(collapseCss)
+                    .Append("\" id=\"")
                     .Append("menu-")
                     .Append(_level > 0 ? (_index - 1).ToString() : "root")
                     .Append("\">");
@@ -113,11 +135,10 @@ namespace Plato.Internal.Layout.TagHelpers
                     .Append(NewLine);
             }
          
-
             var index = 0;
             foreach (var item in items)
             {
-                
+               
                 AddTabs(_level + 1, sb);
 
                 if (this.EnableChildList)
@@ -170,7 +191,7 @@ namespace Plato.Internal.Layout.TagHelpers
                     .Append("\"")
                     .Append(item.Items.Count > 0 ? targetEvent : "")
                     .Append(item.Items.Count > 0 ? targetCss : "")
-                    .Append(" aria-expanded=\"false\">")
+                    .Append(" aria-expanded=\"").Append(IsChildSelected(item).ToString().ToLower()).Append("\">")
                     .Append(item.Text.Value)
                     .Append("</a>");
 
@@ -270,4 +291,5 @@ namespace Plato.Internal.Layout.TagHelpers
         }
 
     }
+
 }

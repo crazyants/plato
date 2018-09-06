@@ -1549,7 +1549,7 @@
             "jpeg"
     ],
     dropZoneOptions: {
-        url: 'api/media/streaming/upload',
+        url: '/api/media/streaming/upload',
         fallbackClick: false,
         autoProcessQueue: true,
         disablePreview: true,

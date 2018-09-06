@@ -22,7 +22,7 @@ namespace Plato.Discuss.Moderation.Navigation
 
             builder
                 .Add(T["Discuss"], 1, users => users
-                    .Add(T["Moderators"], 1, manage => manage
+                    .Add(T["Moderators"], 2, manage => manage
                         .Action("Index", "Admin", "Plato.Discuss.Moderation")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

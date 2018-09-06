@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.Discuss.Labels
+namespace Plato.Discuss.Labels.Navigation
 {
     public class AdminMenu : INavigationProvider
     {
@@ -22,7 +22,7 @@ namespace Plato.Discuss.Labels
 
             builder
                 .Add(T["Discuss"], 1, users => users
-                    .Add(T["Labels"], 2, manage => manage
+                    .Add(T["Labels"], 3, manage => manage
                         .Action("Index", "Admin", "Plato.Discuss.Labels")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

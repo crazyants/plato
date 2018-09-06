@@ -22,7 +22,7 @@ namespace Plato.Discuss.Channels.Navigation
 
             builder
                 .Add(T["Discuss"], 1, users => users
-                    .Add(T["Channels"], 2, manage => manage
+                    .Add(T["Channels"], 1, manage => manage
                         .Action("Index", "Admin", "Plato.Discuss.Channels")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

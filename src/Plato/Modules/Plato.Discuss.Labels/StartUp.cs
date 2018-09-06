@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Discuss.Labels.Models;
-using Plato.Discuss.Models;
-using Plato.Discuss.Labels.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
@@ -13,6 +10,10 @@ using Plato.Labels.Models;
 using Plato.Labels.Repositories;
 using Plato.Labels.Services;
 using Plato.Labels.Stores;
+using Plato.Discuss.Models;
+using Plato.Discuss.Labels.Navigation;
+using Plato.Discuss.Labels.Models;
+using Plato.Discuss.Labels.ViewProviders;
 
 namespace Plato.Discuss.Labels
 {
