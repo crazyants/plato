@@ -64,10 +64,10 @@ namespace Plato.Users.ViewComponents
                 {
                     if (!string.IsNullOrEmpty(viewOptions.Search))
                     {
-                        q.UserName.StartsWith(viewOptions.Search).Or();
-                        q.Email.StartsWith(viewOptions.Search).Or();
-                        q.FirstName.StartsWith(viewOptions.Search).Or();
-                        q.LastName.StartsWith(viewOptions.Search).Or();
+                        q.UserName.Like(viewOptions.Search).Or();
+                        q.Email.Like(viewOptions.Search).Or();
+                        q.FirstName.Like(viewOptions.Search).Or();
+                        q.LastName.Like(viewOptions.Search).Or();
                     }
                     // q.UserName.IsIn("Admin,Mark").Or();
                     // q.Email.IsIn("email440@address.com,email420@address.com");

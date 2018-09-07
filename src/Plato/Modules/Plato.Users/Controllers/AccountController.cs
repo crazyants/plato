@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Localization.Locator;
 using Plato.Internal.Models.Users;
 using Plato.Users.Services;
 
@@ -18,24 +20,39 @@ namespace Plato.Users.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
-        
+        private readonly ILocaleLocator _localeLocator;
+
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManage,
             ILogger<AccountController> logger, 
-            IPlatoUserManager<User> platoUserManager)
+            IPlatoUserManager<User> platoUserManager,
+            ILocaleLocator localeLocator)
         {
             _userManager = userManager;
             _signInManager = signInManage;
             _logger = logger;
             _platoUserManager = platoUserManager;
+            _localeLocator = localeLocator;
         }
 
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
+
+            var locales = await _localeLocator.LocateLocalesAsync(new[] {"Locales"});
+
+            var sb = new StringBuilder();
             
+            foreach (var locale in locales)
+            {
+                sb.Append(locale.Id);
+            }
+
+            ViewData["Locales"] = sb.ToString();
+            
+
             for (var i = 0; i < 1; i++)
             {
 

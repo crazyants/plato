@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Localization.Abstractions;
+using Plato.Internal.Localization.Locator;
 
 namespace Plato.Internal.Localization.Extensions
 {
@@ -15,6 +16,9 @@ namespace Plato.Internal.Localization.Extensions
 
             // Local date time provider
             services.AddScoped<ILocalDateTimeProvider, LocalDateTimeProvider>();
+            
+            // Locales
+            services.AddScoped<ILocaleLocator, LocaleLocator>();
 
             return services;
 

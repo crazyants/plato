@@ -78,10 +78,15 @@ namespace Plato.Internal.Shell
         {
 
             if (shellSettings == null)
+            {
                 throw new ArgumentNullException(nameof(shellSettings));
+            }
+
             if (string.IsNullOrEmpty(shellSettings.Name))
+            {
                 throw new ArgumentNullException(nameof(shellSettings.Name));
-                     
+            }
+                
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogInformation("Saving ShellSettings for tenant '{0}'", shellSettings.Name);

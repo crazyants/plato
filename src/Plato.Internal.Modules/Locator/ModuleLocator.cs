@@ -29,8 +29,6 @@ namespace Plato.Internal.Modules.Locator
         private const string BaseThemeSection = "basetheme";
         private const string DependenciesSection = "dependencies";
    
-
-
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<ModuleLocator> _logger;
 
@@ -38,7 +36,9 @@ namespace Plato.Internal.Modules.Locator
 
         #region "Constructor"
 
-        public ModuleLocator(IPlatoFileSystem fileSystem, ILogger<ModuleLocator> logger)
+        public ModuleLocator(
+            IPlatoFileSystem fileSystem,
+            ILogger<ModuleLocator> logger)
         {
             _fileSystem = fileSystem;
             _logger = logger;
@@ -55,8 +55,10 @@ namespace Plato.Internal.Modules.Locator
             bool manifestIsOptional)
         {
 
-            if (paths == null)            
+            if (paths == null)
+            {
                 throw new ArgumentNullException(nameof(paths));
+            }       
             
             var descriptors = new List<ModuleDescriptor>();
             foreach (var path in paths)
