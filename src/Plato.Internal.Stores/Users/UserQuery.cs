@@ -46,7 +46,10 @@ namespace Plato.Internal.Stores.Users
                 countSql,
                 Params.Id.Value,
                 Params.UserName.Value,
-                Params.Email.Value);
+                Params.Email.Value,
+                Params.DisplayName.Value,
+                Params.FirstName.Value,
+                Params.LastName.Value);
         }
     }
 
@@ -101,7 +104,7 @@ namespace Plato.Internal.Stores.Users
             get => _email ?? (_email = new WhereString());
             set => _email = value;
         }
-
+        
         public WhereInt RoleId
         {
             get => _roleId ?? (_roleId = new WhereInt());
@@ -234,28 +237,8 @@ namespace Plato.Internal.Stores.Users
 
             return output;
 
-            //if (_args.SortBy != RankColumn)
-            //{
-            //    var sortQualified = "LastPosterDate";
-            //    if (_args.SortBy != RankColumn)
-            //    {
-            //        if (!string.IsNullOrEmpty(_args.SortBy))
-            //            sortQualified = "t." + _args.SortBy;
-            //    }
-            //    sortColumn = Common.Utils.Filter.InputFilter(sortQualified, Common.Enumerations.EnumInputFilter.FilterAttack);
-            //}
-            //else
-            //{
-            //    var rankSelect = BuildSqlRankSelect();
-            //    if (!string.IsNullOrEmpty(rankSelect))
-            //        sortColumn = rankSelect;
-            //}
-
-            //return sortColumn;
-
         }
-
-
+        
         string BuildWhereClause()
         {
             var sb = new StringBuilder();
@@ -273,13 +256,26 @@ namespace Plato.Internal.Stores.Users
                     sb.Append(_query.Params.UserName.Operator);
                 sb.Append(_query.Params.UserName.ToSqlString("UserName"));
             }
-
-
+            
             if (!String.IsNullOrEmpty(_query.Params.Email.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Email.Operator);
                 sb.Append(_query.Params.Email.ToSqlString("Email"));
+            }
+
+            if (!String.IsNullOrEmpty(_query.Params.FirstName.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.FirstName.Operator);
+                sb.Append(_query.Params.FirstName.ToSqlString("FirstName"));
+            }
+
+            if (!String.IsNullOrEmpty(_query.Params.LastName.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.LastName.Operator);
+                sb.Append(_query.Params.LastName.ToSqlString("LastName"));
             }
 
             return sb.ToString();

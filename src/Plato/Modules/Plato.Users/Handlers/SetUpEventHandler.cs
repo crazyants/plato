@@ -222,6 +222,12 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "ResetToken",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "ApiKey",
                         DbType = DbType.String,
                         Length = "255"
@@ -359,6 +365,25 @@ namespace Plato.Users.Handlers
                             }
                         }))
 
+                .CreateProcedure(
+                    new SchemaProcedure("SelectUserByResetToken", @"
+                            DECLARE @Id int;
+                            SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
+                                WHERE (
+                                   ResetToken = @ResetToken
+                            ))
+                            EXEC {prefix}_SelectUserById @id;")
+                        .ForTable(users)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "ResetToken",
+                                DbType = DbType.String,
+                                Length = "255"
+                            }
+                        }))
+                        
                 .CreateProcedure(new SchemaProcedure("SelectUsersPaged", StoredProcedureType.SelectPaged)
                     .ForTable(users)
                     .WithParameters(new List<SchemaColumn>()
@@ -377,6 +402,25 @@ namespace Plato.Users.Handlers
                         new SchemaColumn()
                         {
                             Name = "Email",
+                            DbType = DbType.String,
+                            Length = "255"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "DisplayName",
+                            DbType = DbType.String,
+                            Length = "255"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "FirstName",
+                            DbType = DbType.String,
+                            Length = "255"
+                        }
+                        ,
+                        new SchemaColumn()
+                        {
+                            Name = "LastName",
                             DbType = DbType.String,
                             Length = "255"
                         }

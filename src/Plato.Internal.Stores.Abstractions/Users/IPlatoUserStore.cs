@@ -11,6 +11,8 @@ namespace Plato.Internal.Stores.Abstractions.Users
 
         Task<T> GetByEmailAsync(string email);
 
+        Task<T> GetByResetToken(string resetToken);
+
         Task<T> GetByApiKeyAsync(string apiKey);
 
     }

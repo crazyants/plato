@@ -71,6 +71,7 @@ namespace Plato.Internal.Repositories.Users
                 user.LockoutEnd,
                 user.LockoutEnabled,
                 user.AccessFailedCount,
+                user.ResetToken,
                 user.ApiKey,
                 user.TimeZone,
                 user.ObserveDst,
@@ -157,8 +158,10 @@ namespace Plato.Internal.Repositories.Users
         public async Task<User> SelectByUserNameAsync(string userName)
         {
             if (string.IsNullOrEmpty(userName))
+            {
                 throw new ArgumentNullException(nameof(userName));
-
+            }
+                
             User user = null;
             using (var context = _dbContext)
             {
@@ -226,6 +229,26 @@ namespace Plato.Internal.Repositories.Users
                     email.TrimToSize(255),
                     password.TrimToSize(255));
 
+                user = await BuildUserFromResultSets(reader);
+            }
+
+            return user;
+        }
+
+        public async Task<User> SelectByResetTokenAsync(string resetToken)
+        {
+            if (string.IsNullOrEmpty(resetToken))
+            {
+                throw new ArgumentNullException(nameof(resetToken));
+            }
+
+            User user = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectUserByResetToken",
+                    resetToken.TrimToSize(255));
                 user = await BuildUserFromResultSets(reader);
             }
 
@@ -346,6 +369,7 @@ namespace Plato.Internal.Repositories.Users
             DateTimeOffset? lockoutEnd,
             bool lockoutEnabled,
             int accessFailedCount,
+            string resetToken,
             string apiKey,
             string timeZone,
             bool observeDst,
@@ -384,6 +408,7 @@ namespace Plato.Internal.Repositories.Users
                     lockoutEnd,
                     lockoutEnabled,
                     accessFailedCount,
+                    resetToken.ToEmptyIfNull().TrimToSize(255),
                     apiKey.ToEmptyIfNull().TrimToSize(255),
                     timeZone.ToEmptyIfNull().TrimToSize(255),
                     observeDst,

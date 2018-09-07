@@ -247,7 +247,7 @@ namespace Plato.Discuss.ViewProviders
             var keywords = string.Empty;
             var routeData = updater.RouteData;
             var found = routeData.Values.TryGetValue("search", out object value);
-            if (found)
+            if (found && value != null)
             {
                 keywords = value.ToString();
             }

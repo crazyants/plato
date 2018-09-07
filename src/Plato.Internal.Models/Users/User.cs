@@ -35,6 +35,8 @@ namespace Plato.Internal.Models.Users
 
         public string SamAccountName { get; set; }
 
+        public string ResetToken { get; set; }
+
         public string ApiKey { get; set; }
 
         public string TimeZone { get; set; }
@@ -52,8 +54,6 @@ namespace Plato.Internal.Models.Users
         public DateTimeOffset? LastLoginDate { get; set; }
 
         public IEnumerable<string> RoleNames { get; set; } = new List<string>();
-        
-        public string ResetToken { get; set; }
         
         public IEnumerable<Role> UserRoles { get; } = new List<Role>();
 

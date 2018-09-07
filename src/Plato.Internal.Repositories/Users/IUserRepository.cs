@@ -14,6 +14,8 @@ namespace Plato.Internal.Repositories.Users
 
         Task<T> SelectByEmailAndPasswordAsync(string email, string password);
 
+        Task<T> SelectByResetTokenAsync(string resetToken);
+        
         Task<T> SelectByApiKeyAsync(string apiKey);
         
     }

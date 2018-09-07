@@ -177,6 +177,16 @@ namespace Plato.Internal.Stores.Users
             });
         }
 
+        public async Task<User> GetByResetToken(string resetToken)
+        {
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), resetToken);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+                var user = await _userRepository.SelectByResetTokenAsync(resetToken);
+                return await MergeUserData(user);
+            });
+        }
+
         public async Task<User> GetByApiKeyAsync(string apiKey)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), apiKey);
