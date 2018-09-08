@@ -1,38 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.FileSystem.Abstractions;
-using Plato.Internal.Localization.Models;
+using Plato.Internal.Localization.Abstractions;
+using Plato.Internal.Localization.Abstractions.Models;
+using Plato.Internal.Localization.Resources;
+using Plato.Internal.Yaml.Extensions;
+
 
 namespace Plato.Internal.Localization.Locator
 {
-
-    public interface ILocaleLocator
-    {
-        Task<IEnumerable<LocaleDescriptor>> LocateLocalesAsync(IEnumerable<string> paths);
-
-    }
-
+    
     public class LocaleLocator : ILocaleLocator
     {
-
+        
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<LocaleLocator> _logger;
-
-        public LocaleLocator(IPlatoFileSystem fileSystem, ILogger<LocaleLocator> logger)
+   
+        public LocaleLocator(
+            IPlatoFileSystem fileSystem,
+            ILogger<LocaleLocator> logger, 
+            ILocaleCompositionStrategy localeCompositionStrategy)
         {
             _fileSystem = fileSystem;
             _logger = logger;
         }
-
-
+        
         #region "Implementation"
-
-
+        
         public async Task<IEnumerable<LocaleDescriptor>> LocateLocalesAsync(IEnumerable<string> paths)
         {
 
@@ -44,27 +43,24 @@ namespace Plato.Internal.Localization.Locator
             var descriptors = new List<LocaleDescriptor>();
             foreach (var path in paths)
             {
-                descriptors.AddRange(await AvailableLocales(path)
-                );
+                descriptors.AddRange(await AvailableLocales(path));
             }
 
             return descriptors;
 
         }
-
-
+        
         #endregion
 
         #region "Private Methods"
 
-        private async Task<IEnumerable<LocaleDescriptor>> AvailableLocales(string path)
+        async Task<IEnumerable<LocaleDescriptor>> AvailableLocales(string path)
         {
             var locales = await AvailableLocalesInFolder(path);
             return locales.ToReadOnlyCollection();
-
         }
 
-        private async Task<IList<LocaleDescriptor>> AvailableLocalesInFolder(string path)
+        async Task<IList<LocaleDescriptor>> AvailableLocalesInFolder(string path)
         {
             var localList = new List<LocaleDescriptor>();
 
@@ -86,6 +82,7 @@ namespace Plato.Internal.Localization.Locator
                         localePath);
                     if (descriptor == null)
                         continue;
+                    descriptor.DirectoryInfo = subfolder;
                     localList.Add(descriptor);
                 }
                 catch (Exception e)
@@ -99,7 +96,7 @@ namespace Plato.Internal.Localization.Locator
 
         }
 
-        private async Task<LocaleDescriptor> GetLocaleDescriptorAsync(
+        async Task<LocaleDescriptor> GetLocaleDescriptorAsync(
             string localeId,
             string localePath)
         {
@@ -108,23 +105,26 @@ namespace Plato.Internal.Localization.Locator
             var files = _fileSystem.ListFiles(localePath);
             foreach (var file in files)
             {
-                var filePath = _fileSystem.Combine(localePath, file.Name);
-                resources.Add(new LocaleResource()
-                {
-                    FileName = file.Name,
-                    FilePath = filePath,
-                    Contents = await _fileSystem.ReadFileAsync(filePath)
 
-            });
+                var filePath = _fileSystem.Combine(localePath, file.Name);
+                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(file.Name);
+
+                var resource = new LocaleResource()
+                {
+                    Name = file.Name,
+                    Path = filePath,
+                    FileInfo = file,
+                    Contents = await _fileSystem.ReadFileAsync(filePath)
+                };
+                resources.Add(resource);
             }
-            
+
             return new LocaleDescriptor()
             {
-                Id = localeId,
-                FullPath = localePath,
+                Name = localeId,
+                Path = localePath,
                 Resources = resources
             };
-
 
         }
 

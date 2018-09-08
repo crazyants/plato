@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Locator;
+using Plato.Internal.Localization.Resources;
 
 namespace Plato.Internal.Localization.Extensions
 {
@@ -19,6 +20,8 @@ namespace Plato.Internal.Localization.Extensions
             
             // Locales
             services.AddScoped<ILocaleLocator, LocaleLocator>();
+            services.AddScoped<ILocaleCompositionStrategy, LocaleCompositionStrategy>();
+            services.AddScoped<ILocaleManager, LocaleManager>();
 
             return services;
 

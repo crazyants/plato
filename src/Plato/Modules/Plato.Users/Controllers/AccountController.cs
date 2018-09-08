@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
@@ -6,7 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Localization;
+using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Locator;
+using Plato.Internal.Localization.Serializers;
 using Plato.Internal.Models.Users;
 using Plato.Users.Services;
 
@@ -20,20 +24,20 @@ namespace Plato.Users.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
-        private readonly ILocaleLocator _localeLocator;
+        private readonly ILocaleManager _localeManager;
 
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManage,
             ILogger<AccountController> logger, 
             IPlatoUserManager<User> platoUserManager,
-            ILocaleLocator localeLocator)
+            ILocaleManager localeManager)
         {
             _userManager = userManager;
             _signInManager = signInManage;
             _logger = logger;
             _platoUserManager = platoUserManager;
-            _localeLocator = localeLocator;
+            _localeManager = localeManager;
         }
 
         [HttpGet]
@@ -41,18 +45,38 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Login(string returnUrl = null)
         {
 
-            var locales = await _localeLocator.LocateLocalesAsync(new[] {"Locales"});
+            var locales = await _localeManager.Locales();
 
             var sb = new StringBuilder();
             
-            foreach (var locale in locales)
+            foreach (var locale in locales.Where(l => l.Descriptor.Name == "en-US"))
             {
-                sb.Append(locale.Id);
+                sb.Append(locale.Descriptor.Name).Append(" - ").Append(locale.Descriptor.Path);
+                sb.Append("<BR>");
+
+                foreach (var resource in locale.Resources.Where(r => r.Type == typeof(EmailTemplate)))
+                {
+
+                    var email = (EmailTemplate) resource.Model;
+
+                    sb.Append("---- ");
+                    sb.Append(resource.Model.ToString()).Append(" - ").Append(resource.LocaleResource.Path);
+                    sb.Append("<BR>");
+
+                    sb.Append("To: ").Append(email.To);
+                    sb.Append("<BR>");
+                    sb.Append("Subject: ").Append(email.Subject);
+                    sb.Append("<BR>");
+
+                    //sb.Append(resource.LocaleResource.Contents);
+                    sb.Append("<BR>");
+
+                }
+
             }
 
             ViewData["Locales"] = sb.ToString();
             
-
             for (var i = 0; i < 1; i++)
             {
 

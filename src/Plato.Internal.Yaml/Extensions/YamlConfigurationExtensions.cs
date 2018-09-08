@@ -51,9 +51,7 @@ namespace Plato.Internal.Yaml.Extensions
 
         public static string Get(this IConfigurationProvider provider, string key)
         {
-            string value;
-
-            if (!provider.TryGet(key, out value))
+            if (!provider.TryGet(key, out var value))
             {
                 throw new InvalidOperationException("Key not found");
             }
