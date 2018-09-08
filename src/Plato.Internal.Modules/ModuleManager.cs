@@ -30,9 +30,7 @@ namespace Plato.Internal.Modules
         #endregion
 
         #region "Public ReadOnly Propertoes"
-
-   
-
+        
         public IEnumerable<IModuleEntry> AvailableModules => _moduleEntries;
 
         public IEnumerable<Assembly> AllAvailableAssemblies => _loadedAssemblies.Values;

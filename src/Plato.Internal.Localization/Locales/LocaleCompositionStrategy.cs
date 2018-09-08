@@ -20,7 +20,7 @@ namespace Plato.Internal.Localization.Locales
 
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<LocaleCompositionStrategy> _logger;
-
+        
         public LocaleCompositionStrategy(
             IPlatoFileSystem fileSystem, 
             ILogger<LocaleCompositionStrategy> logger)
@@ -79,12 +79,12 @@ namespace Plato.Internal.Localization.Locales
             {
                 case EmailsFileName:
                 {
-                    composedLocaleResource.Compose<EmailTemplates>(model => EmailSerializer.Parse(config));
+                    composedLocaleResource.Compose<LocaleEmails>(model => LocaleEmailsSerializer.Parse(config));
                     break;
                 }
                 default:
                 {
-                    composedLocaleResource.Compose<KeyValuePair>(model => KeyValuePairSerializer.Parse(config));
+                    composedLocaleResource.Compose<LocaleStrings>(model => LocaleStringSerializer.Parse(config));
                     break;
                 }
             }

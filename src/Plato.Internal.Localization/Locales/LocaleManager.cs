@@ -10,6 +10,7 @@ namespace Plato.Internal.Localization.Locales
     {
 
         private static IEnumerable<LocaleDescriptor> _localeDescriptors;
+        private static IEnumerable<ComposedLocaleDescriptor> _composedLocaleDescriptors;
 
         private readonly ILocaleLocator _localeLocator;
         private readonly ILocaleCompositionStrategy _compositionStrategy;
@@ -25,23 +26,36 @@ namespace Plato.Internal.Localization.Locales
         public async Task<IEnumerable<ComposedLocaleDescriptor>> Locales(IEnumerable<string> paths = null)
         {
 
-            var output = new List<ComposedLocaleDescriptor>();
-            foreach (var localeDescriptor in await AvailableLocales(paths))
+            // Ensure local descriptors are only composed once 
+            if (_composedLocaleDescriptors == null)
             {
-                output.Add(await _compositionStrategy.ComposeDescriptorAsync(localeDescriptor));
+
+                // Compose locales
+                var output = new List<ComposedLocaleDescriptor>();
+                foreach (var localeDescriptor in await GetAvailableLocales(paths))
+                {
+                    output.Add(await _compositionStrategy.ComposeDescriptorAsync(localeDescriptor));
+                }
+
+                _composedLocaleDescriptors = output;
+
             }
-            
-            return output;
+
+
+            return _composedLocaleDescriptors;
 
         }
         
-        async Task<IEnumerable<LocaleDescriptor>> AvailableLocales(IEnumerable<string> paths = null)
+
+
+        async Task<IEnumerable<LocaleDescriptor>> GetAvailableLocales(IEnumerable<string> paths = null)
         {
             if (paths == null)
             {
                 paths = new[] {"Locales"};
             }
 
+            // Ensure local descriptors are only loaded once 
             return _localeDescriptors ?? (_localeDescriptors = await _localeLocator.LocateLocalesAsync(paths));
         }
 

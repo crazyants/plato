@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Localization.Abstractions;
+using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.LocaleSerializers;
 using Plato.Internal.Models.Users;
 using Plato.Users.Services;
@@ -52,10 +53,10 @@ namespace Plato.Users.Controllers
                 sb.Append(locale.Descriptor.Name).Append(" - ").Append(locale.Descriptor.Path);
                 sb.Append("<BR>");
 
-                foreach (var resource in locale.Resources.Where(r => r.Type == typeof(EmailTemplates)))
+                foreach (var resource in locale.Resources.Where(r => r.Type == typeof(LocaleEmails)))
                 {
 
-                    var emails = (EmailTemplates) resource.Model;
+                    var emails = (LocaleEmails) resource.Model;
                   
                     sb.Append("Templates: ").Append(emails.Templates.Count());
                     sb.Append("<BR>");
@@ -67,17 +68,30 @@ namespace Plato.Users.Controllers
                         sb.Append("Subject: ").Append(email.Subject);
                         sb.Append("<BR>");
                     }
-
-                    sb.Append("---- ");
-                    sb.Append(resource.Model.ToString()).Append(" - ").Append(resource.LocaleResource.Path);
-                    sb.Append("<BR>");
-
-               
-
+                  
                     //sb.Append(resource.LocaleResource.Contents);
                     sb.Append("<BR>");
 
                 }
+
+                foreach (var resource in locale.Resources.Where(r => r.Type == typeof(LocaleStrings)))
+                {
+                    var kvps = (LocaleStrings)resource.Model;
+
+                    sb.Append("Locales: ").Append(kvps.KeyValues.Count());
+                    sb.Append("<BR>");
+
+                    foreach (var kvp in kvps.KeyValues)
+                    {
+                        sb.Append("Key: ").Append(kvp.Key);
+                        sb.Append("<BR>");
+                        sb.Append("Value: ").Append(kvp.Value);
+                        sb.Append("<BR>");
+                    }
+
+
+                }
+
 
             }
 

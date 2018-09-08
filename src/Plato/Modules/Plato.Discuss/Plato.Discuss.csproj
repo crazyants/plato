@@ -14,10 +14,18 @@
 
   <ItemGroup>
     <None Remove="Content\css\discuss.css" />
+    <None Remove="Locales\en-US\emails.json" />
+    <None Remove="Locales\en-US\strings.json" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Content\css\discuss.css">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Locales\en-US\emails.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Locales\en-US\strings.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
