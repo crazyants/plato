@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
-using Plato.Internal.Localization.Resources;
-using Plato.Internal.Yaml.Extensions;
 
-
-namespace Plato.Internal.Localization.Locator
+namespace Plato.Internal.Localization.Locales
 {
-    
+
     public class LocaleLocator : ILocaleLocator
     {
         
@@ -113,6 +109,7 @@ namespace Plato.Internal.Localization.Locator
                 {
                     Name = file.Name,
                     Path = filePath,
+                    Location = localePath,
                     FileInfo = file,
                     Contents = await _fileSystem.ReadFileAsync(filePath)
                 };

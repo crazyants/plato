@@ -7,14 +7,17 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
-using Plato.Internal.Localization.Serializers;
+using Plato.Internal.Localization.LocaleSerializers;
 using Plato.Internal.Yaml.Extensions;
 
-namespace Plato.Internal.Localization.Resources
+namespace Plato.Internal.Localization.Locales
 {
 
     public class LocaleCompositionStrategy : ILocaleCompositionStrategy
     {
+
+        internal const string EmailsFileName = "emails";
+
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<LocaleCompositionStrategy> _logger;
 
@@ -54,13 +57,17 @@ namespace Plato.Internal.Localization.Resources
                 return null;
             }
 
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Compsing locale file found at '{0}', attempting to load.", resource.Path);
+            }
+
             var configurationContainer =
                 new ConfigurationBuilder()
                     .SetBasePath(_fileSystem.RootPath)
-                    .AddJsonFile(_fileSystem.Combine(resource.Path, fileNameWithoutExtension + ".json"), true)
-                    .AddXmlFile(_fileSystem.Combine(resource.Path, fileNameWithoutExtension + ".xml"), true)
-                    .AddYamlFile(_fileSystem.Combine(resource.Path, fileNameWithoutExtension + ".txt"), true);
-
+                    .AddJsonFile(_fileSystem.Combine(resource.Location, fileNameWithoutExtension + ".json"), false)
+                    .AddXmlFile(_fileSystem.Combine(resource.Location, fileNameWithoutExtension + ".xml"), true)
+                    .AddYamlFile(_fileSystem.Combine(resource.Location, fileNameWithoutExtension + ".txt"), true);
             var config = configurationContainer.Build();
 
             var composedLocaleResource = new ComposedLocaleResource
@@ -70,17 +77,23 @@ namespace Plato.Internal.Localization.Resources
 
             switch (fileNameWithoutExtension.ToLower())
             {
-                case "resources":
+                case EmailsFileName:
+                {
+                    composedLocaleResource.Compose<EmailTemplates>(model => EmailSerializer.Parse(config));
+                    break;
+                }
+                default:
                 {
                     composedLocaleResource.Compose<KeyValuePair>(model => KeyValuePairSerializer.Parse(config));
                     break;
                 }
-                case "emails":
-                {
-                    composedLocaleResource.Compose<EmailTemplate>(model => EmailSerializer.Parse(config));
-                    break;
-                }
             }
+            
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Completed compsing locale files found in '{0}'.", resource.Path);
+            }
+
 
             return Task.FromResult(composedLocaleResource);
 

@@ -1,9 +1,0 @@
-{
-  "id": "ResetPassword",
-  "to": "{RecipientEmail}",
-  "cc": "",
-  "bcc":  "",
-  "from":  "{ApplicationEmail}",
-  "subject": "Reset Your Password",
-  "message": "Dear {UserName},"
-}

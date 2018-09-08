@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
 
-namespace Plato.Internal.Localization
+namespace Plato.Internal.Localization.Locales
 {
 
     public class LocaleManager : ILocaleManager

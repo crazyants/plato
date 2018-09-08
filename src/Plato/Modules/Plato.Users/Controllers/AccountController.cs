@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Localization;
 using Plato.Internal.Localization.Abstractions;
-using Plato.Internal.Localization.Locator;
-using Plato.Internal.Localization.Serializers;
+using Plato.Internal.Localization.LocaleSerializers;
 using Plato.Internal.Models.Users;
 using Plato.Users.Services;
 
@@ -49,24 +47,32 @@ namespace Plato.Users.Controllers
 
             var sb = new StringBuilder();
             
-            foreach (var locale in locales.Where(l => l.Descriptor.Name == "en-US"))
+            foreach (var locale in locales)
             {
                 sb.Append(locale.Descriptor.Name).Append(" - ").Append(locale.Descriptor.Path);
                 sb.Append("<BR>");
 
-                foreach (var resource in locale.Resources.Where(r => r.Type == typeof(EmailTemplate)))
+                foreach (var resource in locale.Resources.Where(r => r.Type == typeof(EmailTemplates)))
                 {
 
-                    var email = (EmailTemplate) resource.Model;
+                    var emails = (EmailTemplates) resource.Model;
+                  
+                    sb.Append("Templates: ").Append(emails.Templates.Count());
+                    sb.Append("<BR>");
+
+                    foreach (var email in emails.Templates)
+                    {
+                        sb.Append("To: ").Append(email.To);
+                        sb.Append("<BR>");
+                        sb.Append("Subject: ").Append(email.Subject);
+                        sb.Append("<BR>");
+                    }
 
                     sb.Append("---- ");
                     sb.Append(resource.Model.ToString()).Append(" - ").Append(resource.LocaleResource.Path);
                     sb.Append("<BR>");
 
-                    sb.Append("To: ").Append(email.To);
-                    sb.Append("<BR>");
-                    sb.Append("Subject: ").Append(email.Subject);
-                    sb.Append("<BR>");
+               
 
                     //sb.Append(resource.LocaleResource.Contents);
                     sb.Append("<BR>");

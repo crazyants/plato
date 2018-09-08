@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Localization.Abstractions;
-using Plato.Internal.Localization.Locator;
-using Plato.Internal.Localization.Resources;
+using Plato.Internal.Localization.Locales;
 
 namespace Plato.Internal.Localization.Extensions
 {

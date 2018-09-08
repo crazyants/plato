@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace Plato.Internal.Localization.Serializers
+namespace Plato.Internal.Localization.LocaleSerializers
 {
 
     public class KeyValuePair

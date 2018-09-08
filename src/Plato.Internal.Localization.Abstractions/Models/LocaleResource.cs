@@ -10,6 +10,8 @@ namespace Plato.Internal.Localization.Abstractions.Models
 
         public string Path { get; set; }
 
+        public string Location { get; set; }
+
         public IFileInfo FileInfo { get; set; }
 
         public string Contents { get; set; }
