@@ -20,6 +20,7 @@ namespace Plato.Internal.Localization.Extensions
             // Locales
             services.AddScoped<ILocaleLocator, LocaleLocator>();
             services.AddScoped<ILocaleCompositionStrategy, LocaleCompositionStrategy>();
+            services.AddScoped<ILocaleProvider, LocaleProvider>();
             services.AddScoped<ILocaleManager, LocaleManager>();
 
             return services;

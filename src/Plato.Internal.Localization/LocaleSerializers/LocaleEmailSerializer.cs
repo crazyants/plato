@@ -8,29 +8,32 @@ namespace Plato.Internal.Localization.LocaleSerializers
     public class LocaleEmailsSerializer
     {
 
-        public static LocaleEmails Parse(IConfigurationRoot configuration)
+        private const string SectionName = "Emails";
+
+        public static IEnumerable<LocaleEmail> Parse(IConfigurationRoot configuration)
         {
 
             var templates = new List<LocaleEmail>();
-            var emails = configuration.GetSection("Emails");
-            var children = emails.GetChildren();
-            foreach (var child in children)
+            var section = configuration.GetSection(SectionName);
+            if (section != null)
             {
-                templates.Add(new LocaleEmail
+                var children = section.GetChildren();
+                foreach (var child in children)
                 {
-                    To = child.GetValue<string>("To"),
-                    From = child["From"],
-                    Cc = child["Cc"],
-                    Bcc = child["Bcc"],
-                    Subject = child["Subject"],
-                    Message = child["Message"]
-                });
+                    templates.Add(new LocaleEmail
+                    {
+                        To = child["To"],
+                        From = child["From"],
+                        Cc = child["Cc"],
+                        Bcc = child["Bcc"],
+                        Subject = child["Subject"],
+                        Message = child["Message"]
+                    });
+                }
+
             }
 
-            return new LocaleEmails()
-            {
-                Templates = templates
-            };
+            return templates;
 
         }
 

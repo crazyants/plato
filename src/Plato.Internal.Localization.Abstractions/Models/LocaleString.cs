@@ -1,15 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace Plato.Internal.Localization.Abstractions.Models
+﻿namespace Plato.Internal.Localization.Abstractions.Models
 {
-
-    public class LocaleStrings
-    {
-
-        public IEnumerable<LocaleString> KeyValues { get; set; } = new List<LocaleString>();
-    }
-
-
+    
     public class LocaleString
     {
 
@@ -18,6 +9,5 @@ namespace Plato.Internal.Localization.Abstractions.Models
         public string Value { get; set; }
 
     }
-
 
 }

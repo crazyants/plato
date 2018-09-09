@@ -29,13 +29,13 @@ namespace Plato.Internal.Localization.Locales
             _logger = logger;
         }
 
-        public async Task<ComposedLocaleDescriptor> ComposeDescriptorAsync(LocaleDescriptor descriptor)
+        public virtual async Task<ComposedLocaleDescriptor> ComposeLocaleDescriptorAsync(LocaleDescriptor descriptor)
         {
 
             var resources = new List<ComposedLocaleResource>();
             foreach (var resource in descriptor.Resources)
             {
-                resources.Add(await ComposeResourceAsync(resource));
+                resources.Add(await ComposeLocaleResourceAsync(resource));
             }
 
             return new ComposedLocaleDescriptor
@@ -46,12 +46,10 @@ namespace Plato.Internal.Localization.Locales
 
         }
         
-        Task<ComposedLocaleResource> ComposeResourceAsync(LocaleResource resource)
+        public virtual Task<ComposedLocaleResource> ComposeLocaleResourceAsync(LocaleResource resource)
         {
 
-            var filePath = _fileSystem.Combine(resource.Path, resource.Name);
             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(resource.Name);
-
             if (String.IsNullOrEmpty(fileNameWithoutExtension))
             {
                 return null;
@@ -79,12 +77,20 @@ namespace Plato.Internal.Localization.Locales
             {
                 case EmailsFileName:
                 {
-                    composedLocaleResource.Compose<LocaleEmails>(model => LocaleEmailsSerializer.Parse(config));
+                    composedLocaleResource.Configure<LocaleEmail>(model => new LocaleResourceValues<LocaleEmail>
+                    {
+                        Resource = resource,
+                        Values = LocaleEmailsSerializer.Parse(config)
+                    });
                     break;
                 }
                 default:
                 {
-                    composedLocaleResource.Compose<LocaleStrings>(model => LocaleStringSerializer.Parse(config));
+                    composedLocaleResource.Configure<LocaleString>(model => new LocaleResourceValues<LocaleString>
+                    {
+                        Resource = resource,
+                        Values = LocaleStringSerializer.Parse(config)
+                    });
                     break;
                 }
             }
@@ -93,10 +99,8 @@ namespace Plato.Internal.Localization.Locales
             {
                 _logger.LogInformation("Completed compsing locale files found in '{0}'.", resource.Path);
             }
-
-
+            
             return Task.FromResult(composedLocaleResource);
-
 
         }
 

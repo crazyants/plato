@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Plato.Internal.FileSystem.Abstractions\Plato.Internal.FileSystem.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Localization.Abstractions\Plato.Internal.Localization.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.Internal.Modules.Abstractions\Plato.Internal.Modules.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Yaml\Plato.Internal.Yaml.csproj" />
   </ItemGroup>
 

@@ -30,6 +30,8 @@ namespace Plato.Internal.Models.Modules
 
         string VirtualPathToBin { get; set; }
 
+        string VirtualPathToModule { get; set; }
+
         IEnumerable<ModuleDependency> Dependencies { get; set; }
         
     }

@@ -7,7 +7,7 @@ namespace Plato.Internal.Localization.Abstractions
     public interface ILocaleCompositionStrategy
     {
 
-        Task<ComposedLocaleDescriptor> ComposeDescriptorAsync(LocaleDescriptor descriptor);
+        Task<ComposedLocaleDescriptor> ComposeLocaleDescriptorAsync(LocaleDescriptor descriptor);
 
     }
 

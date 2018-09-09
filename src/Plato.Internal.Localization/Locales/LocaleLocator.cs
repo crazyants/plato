@@ -98,22 +98,17 @@ namespace Plato.Internal.Localization.Locales
         {
 
             var resources = new List<LocaleResource>();
-            var files = _fileSystem.ListFiles(localePath);
-            foreach (var file in files)
+            foreach (var file in _fileSystem.ListFiles(localePath))
             {
-
                 var filePath = _fileSystem.Combine(localePath, file.Name);
-                var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(file.Name);
-
-                var resource = new LocaleResource()
+                resources.Add(new LocaleResource()
                 {
                     Name = file.Name,
                     Path = filePath,
                     Location = localePath,
                     FileInfo = file,
                     Contents = await _fileSystem.ReadFileAsync(filePath)
-                };
-                resources.Add(resource);
+                });
             }
 
             return new LocaleDescriptor()

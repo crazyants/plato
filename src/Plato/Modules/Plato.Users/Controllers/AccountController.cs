@@ -44,56 +44,176 @@ namespace Plato.Users.Controllers
         public async Task<IActionResult> Login(string returnUrl = null)
         {
 
-            var locales = await _localeManager.Locales();
-
             var sb = new StringBuilder();
-            
-            foreach (var locale in locales)
+
+            sb.Append("<br>")
+                .Append("<strong>Email Resources</strong>")
+                .Append("<br>");
+
+            var resourceValues1 = await _localeManager.GetResourcesAsync<LocaleEmail>("en-US");
+            foreach (var resource in resourceValues1)
             {
-                sb.Append(locale.Descriptor.Name).Append(" - ").Append(locale.Descriptor.Path);
-                sb.Append("<BR>");
+                sb.Append("<strong>File Name:</strong> ")
+                    .Append(resource.Resource.Name)
+                    .Append("<BR>");
+                sb.Append("<strong>Location:</strong>")
+                    .Append(resource.Resource.Location)
+                    .Append("<BR>");
 
-                foreach (var resource in locale.Resources.Where(r => r.Type == typeof(LocaleEmails)))
+                foreach (var template in resource.Values)
                 {
-
-                    var emails = (LocaleEmails) resource.Model;
-                  
-                    sb.Append("Templates: ").Append(emails.Templates.Count());
+                    sb.Append("To: ").Append(template.To);
                     sb.Append("<BR>");
-
-                    foreach (var email in emails.Templates)
-                    {
-                        sb.Append("To: ").Append(email.To);
-                        sb.Append("<BR>");
-                        sb.Append("Subject: ").Append(email.Subject);
-                        sb.Append("<BR>");
-                    }
-                  
-                    //sb.Append(resource.LocaleResource.Contents);
+                    sb.Append("Subject: ").Append(template.Subject);
                     sb.Append("<BR>");
-
                 }
-
-                foreach (var resource in locale.Resources.Where(r => r.Type == typeof(LocaleStrings)))
-                {
-                    var kvps = (LocaleStrings)resource.Model;
-
-                    sb.Append("Locales: ").Append(kvps.KeyValues.Count());
-                    sb.Append("<BR>");
-
-                    foreach (var kvp in kvps.KeyValues)
-                    {
-                        sb.Append("Key: ").Append(kvp.Key);
-                        sb.Append("<BR>");
-                        sb.Append("Value: ").Append(kvp.Value);
-                        sb.Append("<BR>");
-                    }
-
-
-                }
-
-
             }
+
+            sb.Append("<br>")
+                .Append("-------------------------------------------------")
+                .Append("<br>");
+
+            sb.Append("<br>")
+                .Append("<strong>String Resources</strong>")
+                .Append("<br>");
+
+            var resourceValues = await _localeManager.GetResourcesAsync<LocaleString>("en-US");
+            foreach (var resourceValue in resourceValues)
+            {
+                sb.Append("<strong>File Name:</strong> ")
+                    .Append(resourceValue.Resource.Name)
+                    .Append("<BR>");
+                sb.Append("<strong>Location:</strong>")
+                    .Append(resourceValue.Resource.Location)
+                    .Append("<BR>");
+
+                foreach (var keyValue in resourceValue.Values)
+                {
+                    sb.Append("Key: ").Append(keyValue.Key);
+                    sb.Append("<BR>");
+                    sb.Append("Value: ").Append(keyValue.Value);
+                    sb.Append("<BR>");
+                }
+            }
+
+            sb.Append("<br>")
+                .Append("-------------------------------------------------")
+                .Append("<br>");
+
+
+            //sb.Append("<br>")
+            //    .Append("<strong>LocaleEmails Resources</strong>")
+            //    .Append("<br>");
+
+            //var resources2 = await _localeManager.GetResourcesAsync<LocaleEmails>("en-GB");
+            //foreach (var resource in resources2)
+            //{
+            //    foreach (var template in resource.Templates)
+            //    {
+            //        sb.Append("To: ").Append(template.To);
+            //        sb.Append("<BR>");
+            //        sb.Append("Subject: ").Append(template.Subject);
+            //        sb.Append("<BR>");
+            //    }
+            //}
+
+            //sb.Append("<br>")
+            //    .Append("-------------------------------------------------")
+            //    .Append("<br>");
+
+            
+            //var currentLocale = await _localeManager.GetResourcesAsync("en-US");
+            //foreach (var resource in currentLocale.Resources.Where(r => r.Type == typeof(LocaleEmails)))
+            //{
+
+            //    var emails = (LocaleEmails) resource.Model;
+
+            //    sb.Append("Templates: ").Append(emails.Templates.Count());
+            //    sb.Append("<BR>");
+
+            //    foreach (var email in emails.Templates)
+            //    {
+            //        sb.Append("To: ").Append(email.To);
+            //        sb.Append("<BR>");
+            //        sb.Append("Subject: ").Append(email.Subject);
+            //        sb.Append("<BR>");
+            //    }
+
+            //}
+
+            //sb.Append("<br>")
+            //    .Append("-------------------------------------------------")
+            //    .Append("<br>");
+
+
+            // -----------
+
+
+            //    var locales = await _localeManager.GetLocalesAsync();
+
+          
+            //foreach (var locale in locales)
+            //{
+
+            //    sb
+            //        .Append("<strong>Name:</strong> ")
+            //        .Append(locale.Descriptor.Name)
+            //        .Append("<br>")
+            //        .Append("<strong>Path:</strong> ")
+            //        .Append(locale.Descriptor.Path);
+              
+                
+            //    foreach (var resource in locale.Resources.Where(r => r.Type == typeof(LocaleEmails)))
+            //    {
+                    
+            //        sb
+            //            .Append("<br>")
+            //            .Append("<strong>LocaleEmails</strong> ")
+            //            .Append("<br>");
+
+            //        var emails = (LocaleEmails) resource.Model;
+                  
+            //        sb.Append("Templates: ").Append(emails.Templates.Count());
+            //        sb.Append("<BR>");
+
+            //        foreach (var email in emails.Templates)
+            //        {
+            //            sb.Append("To: ").Append(email.To);
+            //            sb.Append("<BR>");
+            //            sb.Append("Subject: ").Append(email.Subject);
+            //            sb.Append("<BR>");
+            //        }
+                  
+            //    }
+
+            //    foreach (var resource in locale.Resources.Where(r => r.Type == typeof(LocaleStrings)))
+            //    {
+
+            //        sb
+            //            .Append("<br>")
+            //            .Append("<strong>LocaleStrings</strong> ")
+            //            .Append("<br>");
+
+            //        var kvps = (LocaleStrings)resource.Model;
+
+            //        sb.Append("Locales: ").Append(kvps.KeyValues.Count());
+            //        sb.Append("<BR>");
+
+            //        foreach (var kvp in kvps.KeyValues)
+            //        {
+            //            sb.Append("Key: ").Append(kvp.Key);
+            //            sb.Append("<BR>");
+            //            sb.Append("Value: ").Append(kvp.Value);
+            //            sb.Append("<BR>");
+            //        }
+
+
+            //    }
+
+
+            //    sb.Append("<hr>");
+
+            //}
 
             ViewData["Locales"] = sb.ToString();
             

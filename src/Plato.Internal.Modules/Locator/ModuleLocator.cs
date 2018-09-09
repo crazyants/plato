@@ -175,11 +175,13 @@ namespace Plato.Internal.Modules.Locator
 
             var manifest = ParseManifest(manifestText);            
             var virtualPathToBin = _fileSystem.Combine(rootPath, moduleId, "Bin");
-      
-            var moduleDescriptor = new ModuleDescriptor
+            var virtualPathToModule = _fileSystem.Combine(rootPath, moduleId);
+            
+            return new ModuleDescriptor
             {
                 Location = rootPath,
                 VirtualPathToBin = virtualPathToBin.Replace("/", "\\"),
+                VirtualPathToModule = virtualPathToModule.Replace("/", "\\"),
                 Id = moduleId,
                 ModuleType = moduleType,
                 Name = GetValue(manifest, NameSection) ?? moduleId,
@@ -190,11 +192,8 @@ namespace Plato.Internal.Modules.Locator
                 Author = GetValue(manifest, AuthorSection),
                 WebSite = GetValue(manifest, WebsiteSection),
                 Tags = GetValue(manifest, TagsSection),
+                Dependencies = GetModuleDependencies(manifest, DependenciesSection),
             };
-
-            moduleDescriptor.Dependencies = GetModuleDependencies(manifest, DependenciesSection);
-
-            return moduleDescriptor;
 
         }
 

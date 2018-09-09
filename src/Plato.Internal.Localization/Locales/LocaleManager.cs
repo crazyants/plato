@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
@@ -8,56 +10,55 @@ namespace Plato.Internal.Localization.Locales
 
     public class LocaleManager : ILocaleManager
     {
+        
+        private readonly ILocaleProvider _localeProvider;
 
-        private static IEnumerable<LocaleDescriptor> _localeDescriptors;
-        private static IEnumerable<ComposedLocaleDescriptor> _composedLocaleDescriptors;
-
-        private readonly ILocaleLocator _localeLocator;
-        private readonly ILocaleCompositionStrategy _compositionStrategy;
-
-        public LocaleManager(
-            ILocaleLocator localeLocator,
-            ILocaleCompositionStrategy compositionStrategy)
+        public LocaleManager(ILocaleProvider localeProvider)
         {
-            _localeLocator = localeLocator;
-            _compositionStrategy = compositionStrategy;
+            _localeProvider = localeProvider;
         }
     
-        public async Task<IEnumerable<ComposedLocaleDescriptor>> Locales(IEnumerable<string> paths = null)
+        public async Task<IEnumerable<LocaleResourceValues<TModel>>> GetResourcesAsync<TModel>(string cultureCode) where TModel : class
         {
 
-            // Ensure local descriptors are only composed once 
-            if (_composedLocaleDescriptors == null)
+            var resources = new List<LocaleResourceValues<TModel>>();
+            var locale = await GetResourcesAsync(cultureCode);
+            if (locale != null)
             {
-
-                // Compose locales
-                var output = new List<ComposedLocaleDescriptor>();
-                foreach (var localeDescriptor in await GetAvailableLocales(paths))
+                foreach (var resource in locale.Resources.Where(r => r.Type == typeof(TModel)))
                 {
-                    output.Add(await _compositionStrategy.ComposeDescriptorAsync(localeDescriptor));
+                    resources.Add((LocaleResourceValues<TModel>) resource.Model);
                 }
-
-                _composedLocaleDescriptors = output;
-
             }
 
-
-            return _composedLocaleDescriptors;
+            return resources;
 
         }
         
-
-
-        async Task<IEnumerable<LocaleDescriptor>> GetAvailableLocales(IEnumerable<string> paths = null)
+        public async Task<LocaleResources> GetResourcesAsync(string cultureCode)
         {
-            if (paths == null)
+
+            var resources = new List<ComposedLocaleResource>();
+            foreach (var locale in await _localeProvider.GetLocalesAsync())
             {
-                paths = new[] {"Locales"};
+                if (locale.Descriptor.Name.Equals(cultureCode, StringComparison.OrdinalIgnoreCase))
+                {
+                    resources.AddRange(locale.Resources);
+                }
             }
 
-            // Ensure local descriptors are only loaded once 
-            return _localeDescriptors ?? (_localeDescriptors = await _localeLocator.LocateLocalesAsync(paths));
+            if (resources.Count == 0)
+            {
+                return null;
+            }
+
+            return new LocaleResources()
+            {
+                Resources = resources
+            };
+
         }
 
     }
+
 }

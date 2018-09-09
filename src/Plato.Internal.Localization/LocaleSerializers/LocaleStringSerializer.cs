@@ -7,7 +7,7 @@ namespace Plato.Internal.Localization.LocaleSerializers
 
     public class LocaleStringSerializer
     {
-        public static LocaleStrings Parse(IConfigurationRoot configuration)
+        public static IEnumerable<LocaleString> Parse(IConfigurationRoot configuration)
         {
      
             var values = new List<LocaleString>();
@@ -24,10 +24,7 @@ namespace Plato.Internal.Localization.LocaleSerializers
                 }
             }
 
-            return new LocaleStrings()
-            {
-                KeyValues = values
-            };
+            return values;
 
         }
 

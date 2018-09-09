@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Plato.Internal.Localization.Abstractions.Models
+﻿namespace Plato.Internal.Localization.Abstractions.Models
 {
-
-    public class LocaleEmails
-    {
-        public IEnumerable<LocaleEmail> Templates { get; set; } = new List<LocaleEmail>();
-
-    }
 
     public class LocaleEmail
     {
@@ -29,6 +19,5 @@ namespace Plato.Internal.Localization.Abstractions.Models
         public string Message { get; set; }
 
     }
-
 
 }
