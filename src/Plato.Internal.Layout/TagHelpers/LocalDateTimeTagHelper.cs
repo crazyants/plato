@@ -7,6 +7,7 @@ using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Localization;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
 {

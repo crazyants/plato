@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Users.Services;
 
 namespace Plato.Users.Middleware

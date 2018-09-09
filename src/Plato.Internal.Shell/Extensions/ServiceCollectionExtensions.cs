@@ -47,15 +47,6 @@ namespace Plato.Internal.Shell.Extensions
             return services;
         }
         
-        //public static IServiceCollection AddSetFeaturesDescriptor(
-        //    this IServiceCollection services,
-        //    IEnumerable<ShellModule> shellFeatures)
-        //{
-        //    services.AddSingleton<IShellDescriptorStore>(new SetShellDescriptorManager(shellFeatures));
-
-        //    return services;
-        //}
-        
     }
 
 }

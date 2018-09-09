@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Labels.Stores;
 
 namespace Plato.Discuss.Labels.ViewComponents

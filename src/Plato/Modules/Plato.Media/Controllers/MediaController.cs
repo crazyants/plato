@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Abstractions.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Media.Stores;
 

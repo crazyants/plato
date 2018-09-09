@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 

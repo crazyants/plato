@@ -7,6 +7,7 @@ using Plato.Discuss.Moderation.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
 

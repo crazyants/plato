@@ -7,6 +7,7 @@ using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
 using Microsoft.AspNetCore.Hosting;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
 

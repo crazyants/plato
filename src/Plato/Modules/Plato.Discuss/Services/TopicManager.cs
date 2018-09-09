@@ -3,6 +3,7 @@ using Plato.Discuss.Models;
 using Plato.Entities.Services;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Services
 {

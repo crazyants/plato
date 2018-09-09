@@ -17,6 +17,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.Controllers
 {

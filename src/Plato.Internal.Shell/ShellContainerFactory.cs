@@ -11,6 +11,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Features;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Shell
 {

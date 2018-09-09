@@ -9,6 +9,7 @@ using Plato.Follow.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Follow.ViewProviders
 {

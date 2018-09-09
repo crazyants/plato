@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Layout.Alerts;
+using Plato.Internal.Layout.Localizers;
 using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.Theming;
@@ -60,7 +63,11 @@ namespace Plato.Internal.Layout.Extensions
 
             // alerter - scoped to ensure alerter is only alive for each request
             services.AddScoped<IAlerter, Alerter>();
-            
+
+            // Localizers
+            services.AddScoped<IStringLocalizer, LocaleStringLocalizer>();
+            services.AddScoped<IHtmlLocalizer, LocaleHtmlLocalizer>();
+
             return services;
 
         }

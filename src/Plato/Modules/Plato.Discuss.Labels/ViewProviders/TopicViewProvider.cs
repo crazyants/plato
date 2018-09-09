@@ -11,6 +11,7 @@ using Plato.Labels.Models;
 using Plato.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Discuss.Models;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Labels.ViewProviders
 {

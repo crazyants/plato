@@ -5,24 +5,26 @@ using Microsoft.Extensions.Localization;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
+using Plato.Internal.Shell.Abstractions;
 
-namespace Plato.Internal.Localization
+namespace Plato.Internal.Layout.Localizers
 {
-
     public class LocaleStringLocalizer : IStringLocalizer
     {
 
-        private string _cultureCode = "en-US"; 
+        private string _cultureCode = "en-US";
 
         private readonly ILocaleManager _localeManager;
         private readonly ICacheManager _cacheManager;
 
         public LocaleStringLocalizer(
             ILocaleManager localeManager,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IContextFacade contextFacade)
         {
             _localeManager = localeManager;
             _cacheManager = cacheManager;
+            //_cultureCode = contextFacade.GetCurrentCulture();
         }
 
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
@@ -66,10 +68,12 @@ namespace Plato.Internal.Localization
             get
             {
                 var strings = GetAllStrings(false);
-                var format  = strings.FirstOrDefault(s => s.Name == name);
+                var format = strings.FirstOrDefault(s => s.Name == name);
                 var value = string.Format(format ?? name, arguments);
                 return new LocalizedString(name, value, resourceNotFound: format == null);
             }
         }
     }
+
+
 }

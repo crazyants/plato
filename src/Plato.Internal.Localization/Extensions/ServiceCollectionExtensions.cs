@@ -19,13 +19,11 @@ namespace Plato.Internal.Localization.Extensions
             services.AddScoped<ILocalDateTimeProvider, LocalDateTimeProvider>();
             
             // Locales
-            services.AddScoped<ILocaleLocator, LocaleLocator>();
-            services.AddScoped<ILocaleCompositionStrategy, LocaleCompositionStrategy>();
-            services.AddScoped<ILocaleProvider, LocaleProvider>();
-            services.AddScoped<ILocaleManager, LocaleManager>();
-
-            services.AddScoped<IStringLocalizer, LocaleStringLocalizer>();
-
+            services.AddSingleton<ILocaleLocator, LocaleLocator>();
+            services.AddSingleton<ILocaleCompositionStrategy, LocaleCompositionStrategy>();
+            services.AddSingleton<ILocaleProvider, LocaleProvider>();
+            services.AddSingleton<ILocaleManager, LocaleManager>();
+            
             return services;
 
         }

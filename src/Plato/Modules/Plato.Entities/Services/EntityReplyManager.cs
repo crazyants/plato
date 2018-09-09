@@ -6,6 +6,7 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Entities.Services
 {

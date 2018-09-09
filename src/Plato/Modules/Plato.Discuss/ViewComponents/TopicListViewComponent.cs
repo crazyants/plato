@@ -6,6 +6,7 @@ using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.ViewComponents
 {

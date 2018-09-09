@@ -13,6 +13,7 @@ using Plato.Discuss.ViewModels;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.Controllers
 {

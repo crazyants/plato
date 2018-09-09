@@ -15,6 +15,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {

@@ -10,6 +10,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Labels.Controllers
 {

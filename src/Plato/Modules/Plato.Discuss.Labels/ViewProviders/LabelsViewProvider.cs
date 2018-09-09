@@ -5,6 +5,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Labels.Stores;
 
 namespace Plato.Discuss.Labels.ViewProviders

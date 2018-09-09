@@ -9,6 +9,7 @@ using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.ViewComponents
 {

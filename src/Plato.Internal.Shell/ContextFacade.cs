@@ -12,6 +12,7 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Stores.Abstractions.Users;
 

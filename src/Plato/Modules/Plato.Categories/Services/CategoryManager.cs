@@ -7,6 +7,7 @@ using Plato.Categories.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Internal.Text.Abstractions;
 

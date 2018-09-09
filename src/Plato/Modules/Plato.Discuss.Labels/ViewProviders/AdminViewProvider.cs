@@ -7,6 +7,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Shell;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Labels.Models;
 using Plato.Labels.Services;
 using Plato.Labels.Stores;

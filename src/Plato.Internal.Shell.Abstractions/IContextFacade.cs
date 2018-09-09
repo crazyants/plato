@@ -1,11 +1,14 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Internal.Hosting.Abstractions
+namespace Plato.Internal.Shell.Abstractions
 {
     public interface IContextFacade
     {
@@ -17,7 +20,7 @@ namespace Plato.Internal.Hosting.Abstractions
         Task<ShellModule> GetFeatureByModuleIdAsync(string areaName);
 
         Task<ISiteSettings> GetSiteSettingsAsync();
-        
+
         Task<string> GetBaseUrlAsync();
 
         string GetRouteUrl(RouteValueDictionary routeValues);
@@ -25,4 +28,5 @@ namespace Plato.Internal.Hosting.Abstractions
         Task<CultureInfo> GetCurrentCulture();
 
     }
+
 }
