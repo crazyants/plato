@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Cache;
+using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Modules.Abstractions;

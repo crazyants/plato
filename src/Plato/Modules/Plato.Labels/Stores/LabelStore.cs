@@ -8,6 +8,7 @@ using Plato.Labels.Models;
 using Plato.Labels.Repositories;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Cache;
+using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Modules.Abstractions;
 

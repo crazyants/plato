@@ -7,6 +7,7 @@ using Plato.Email.Stores;
 using Plato.Follow.Models;
 using Plato.Follow.Repositories;
 using Plato.Internal.Cache;
+using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Follow.Stores

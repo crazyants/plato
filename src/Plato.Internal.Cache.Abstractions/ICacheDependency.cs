@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Primitives;
 
-namespace Plato.Internal.Cache
+namespace Plato.Internal.Cache.Abstractions
 {
 
     public interface ICacheDependency

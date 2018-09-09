@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Plato.Internal.Cache
+namespace Plato.Internal.Cache.Abstractions
 {
     
     public class CacheToken : IEquatable<CacheToken>

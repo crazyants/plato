@@ -10,11 +10,14 @@ namespace Plato.Internal.Localization.Locales
     public class LocaleProvider : ILocaleProvider
     {
 
+        // Default folder containing localizations
         private const string LocaleFolderName = "Locales";
 
+        // Local storage
         private static IEnumerable<ComposedLocaleDescriptor> _composedLocaleDescriptors;
         private static IEnumerable<LocaleDescriptor> _localeDescriptors;
         
+        // Dependencies
         private readonly ILocaleCompositionStrategy _compositionStrategy;
         private readonly IModuleManager _moduleManager;
         private readonly ILocaleLocator _localeLocator;
@@ -71,7 +74,7 @@ namespace Plato.Internal.Localization.Locales
                 LocaleFolderName
             };
 
-            // Append module locations to paths
+            // Append additional module locations to paths
             var moduleDescriptors = await _moduleManager.LoadModulesAsync();
             foreach (var module in moduleDescriptors)
             {

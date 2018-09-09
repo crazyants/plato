@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Plato.Internal.Cache
+namespace Plato.Internal.Cache.Abstractions
 {
 
     public interface ICacheManager

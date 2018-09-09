@@ -1,10 +1,10 @@
 ﻿using System.Threading;
 using Microsoft.Extensions.Primitives;
 
-namespace Plato.Internal.Cache
+namespace Plato.Internal.Cache.Abstractions
 {
 
-    internal class CacheDependencyInfo
+    public class CacheDependencyInfo
     {
 
         public IChangeToken ChangeToken { get; set; }

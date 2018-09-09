@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Cache;
+using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Stores.Abstract;
 using Plato.Internal.Stores.Abstractions.Settings;
 

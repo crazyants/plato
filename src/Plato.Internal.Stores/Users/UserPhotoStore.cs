@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Repositories.Users;
 using Plato.Internal.Cache;
+using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 

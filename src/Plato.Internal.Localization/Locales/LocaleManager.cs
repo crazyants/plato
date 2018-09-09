@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
 
@@ -12,22 +13,24 @@ namespace Plato.Internal.Localization.Locales
     {
         
         private readonly ILocaleProvider _localeProvider;
+     
 
         public LocaleManager(ILocaleProvider localeProvider)
         {
             _localeProvider = localeProvider;
+
         }
     
-        public async Task<IEnumerable<LocaleResourceValues<TModel>>> GetResourcesAsync<TModel>(string cultureCode) where TModel : class
+        public async Task<IEnumerable<LocaleValues<TModel>>> GetResourcesAsync<TModel>(string cultureCode) where TModel : class
         {
 
-            var resources = new List<LocaleResourceValues<TModel>>();
+            var resources = new List<LocaleValues<TModel>>();
             var locale = await GetResourcesAsync(cultureCode);
             if (locale != null)
             {
-                foreach (var resource in locale.Resources.Where(r => r.Type == typeof(TModel)))
+                foreach (var resource in locale.Where(r => r.Type == typeof(TModel)))
                 {
-                    resources.Add((LocaleResourceValues<TModel>) resource.Model);
+                    resources.Add((LocaleValues<TModel>) resource.Model);
                 }
             }
 
@@ -35,9 +38,10 @@ namespace Plato.Internal.Localization.Locales
 
         }
         
-        public async Task<LocaleResources> GetResourcesAsync(string cultureCode)
+        public async Task<IEnumerable<ComposedLocaleResource>> GetResourcesAsync(string cultureCode)
         {
 
+            // Combine all composed resources from locale matching our cultureCode
             var resources = new List<ComposedLocaleResource>();
             foreach (var locale in await _localeProvider.GetLocalesAsync())
             {
@@ -46,16 +50,8 @@ namespace Plato.Internal.Localization.Locales
                     resources.AddRange(locale.Resources);
                 }
             }
-
-            if (resources.Count == 0)
-            {
-                return null;
-            }
-
-            return new LocaleResources()
-            {
-                Resources = resources
-            };
+            
+            return resources;
 
         }
 

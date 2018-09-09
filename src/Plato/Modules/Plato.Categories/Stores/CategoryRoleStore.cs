@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
 using Plato.Internal.Cache;
+using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Categories.Stores

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading;
 using Microsoft.Extensions.Primitives;
+using Plato.Internal.Cache.Abstractions;
 
 namespace Plato.Internal.Cache
 {

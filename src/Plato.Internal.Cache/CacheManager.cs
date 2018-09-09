@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Cache.Abstractions;
 
 namespace Plato.Internal.Cache
 {
