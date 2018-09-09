@@ -3,7 +3,7 @@
 namespace Plato.Internal.Localization.Abstractions.Models
 {
 
-    public class LocaleValues<TModel> where TModel : class
+    public class LocaleValues<TModel> where TModel : class, ILocaleValue
     {
         public LocaleResource Resource { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Globalization;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Models.Shell;
@@ -20,6 +21,8 @@ namespace Plato.Internal.Hosting.Abstractions
         Task<string> GetBaseUrlAsync();
 
         string GetRouteUrl(RouteValueDictionary routeValues);
+
+        Task<CultureInfo> GetCurrentCulture();
 
     }
 }

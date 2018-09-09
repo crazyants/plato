@@ -12,7 +12,7 @@ namespace Plato.Internal.Localization.Abstractions.Models
 
         public Type Type { get; set; }
 
-        public void Configure<TModel>(Func<TModel, LocaleValues<TModel>> configure) where TModel : class
+        public void Configure<TModel>(Func<TModel, LocaleValues<TModel>> configure) where TModel : class, ILocaleValue
         {
             this.Model = configure(default(TModel));
             this.Type = typeof(TModel);

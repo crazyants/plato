@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plato.Internal.Cache.Abstractions\Plato.Internal.Cache.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.FileSystem.Abstractions\Plato.Internal.FileSystem.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Localization.Abstractions\Plato.Internal.Localization.Abstractions.csproj" />
     <ProjectReference Include="..\Plato.Internal.Modules.Abstractions\Plato.Internal.Modules.Abstractions.csproj" />

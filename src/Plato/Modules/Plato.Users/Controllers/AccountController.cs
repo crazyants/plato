@@ -6,6 +6,8 @@ using Plato.Users.ViewModels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
@@ -25,7 +27,14 @@ namespace Plato.Users.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly ILocaleManager _localeManager;
 
+        public IHtmlLocalizer T { get; }
+
+        public IStringLocalizer S { get; }
+
+
         public AccountController(
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             UserManager<User> userManager,
             SignInManager<User> signInManage,
             ILogger<AccountController> logger, 
@@ -37,6 +46,11 @@ namespace Plato.Users.Controllers
             _logger = logger;
             _platoUserManager = platoUserManager;
             _localeManager = localeManager;
+
+
+            T = htmlLocalizer;
+            S = stringLocalizer;
+
         }
 
         [HttpGet]

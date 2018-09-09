@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -112,6 +113,20 @@ namespace Plato.Internal.Shell
             return _urlHelper.RouteUrl(new UrlRouteContext {Values = routeValues});
         }
 
+        public async Task<CultureInfo> GetCurrentCulture()
+        {
+
+            var user = await GetAuthenticatedUserAsync();
+            var settings = await GetSiteSettingsAsync();
+
+            if (user != null)
+            {
+                return new CultureInfo(user.Culture);
+            }
+
+            return new CultureInfo(settings.Culture);
+
+        }
     }
 
 }

@@ -8,23 +8,14 @@ namespace Plato.Internal.Cache
 
     public class CacheDependency : ICacheDependency
     {
-        #region "Private Variables"
-
+    
         private readonly ConcurrentDictionary<string, CacheDependencyInfo> _dependencies;
-
-        #endregion
-
-        #region "Constructor"
-
+        
         public CacheDependency()
         {
             _dependencies = new ConcurrentDictionary<string, CacheDependencyInfo>();
         }
-
-        #endregion
-
-        #region "Implementation"
-
+        
         public IChangeToken GetToken(string key)
         {
             return _dependencies.GetOrAdd(key, _ =>
@@ -46,9 +37,7 @@ namespace Plato.Internal.Cache
                 changeTokenInfo.CancellationToken.Cancel();
             }
         }
-
-        #endregion
-
+        
     }
     
 }

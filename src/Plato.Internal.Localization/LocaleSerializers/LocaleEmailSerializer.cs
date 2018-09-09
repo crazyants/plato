@@ -22,6 +22,7 @@ namespace Plato.Internal.Localization.LocaleSerializers
                 {
                     templates.Add(new LocaleEmail
                     {
+                        Key = child["Id"],
                         To = child["To"],
                         From = child["From"],
                         Cc = child["Cc"],

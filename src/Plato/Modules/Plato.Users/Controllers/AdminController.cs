@@ -28,8 +28,8 @@ namespace Plato.Users.Controllers
         public IStringLocalizer S { get; }
         
         public AdminController(
-            IHtmlLocalizer<AdminController> htmlLocalizer,
-            IStringLocalizer<AdminController> stringLocalizer,
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             IViewProviderManager<User> viewProvider,
             IBreadCrumbManager breadCrumbManager,
             UserManager<User> userManager,
