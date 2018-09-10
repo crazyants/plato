@@ -25,7 +25,7 @@ namespace Plato.Users.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
-        private readonly ILocaleManager _localeManager;
+        private readonly ILocaleStore _localeStore;
 
         public IHtmlLocalizer T { get; }
 
@@ -38,13 +38,13 @@ namespace Plato.Users.Controllers
             SignInManager<User> signInManage,
             ILogger<AccountController> logger, 
             IPlatoUserManager<User> platoUserManager,
-            ILocaleManager localeManager)
+            ILocaleStore localeStore)
         {
             _userManager = userManager;
             _signInManager = signInManage;
             _logger = logger;
             _platoUserManager = platoUserManager;
-            _localeManager = localeManager;
+            _localeStore = localeStore;
 
 
             T = htmlLocalizer;
@@ -63,7 +63,7 @@ namespace Plato.Users.Controllers
                 .Append("<strong>Email Resources</strong>")
                 .Append("<br>");
 
-            var resourceValues1 = await _localeManager.GetResourcesAsync<LocaleEmail>("en-US");
+            var resourceValues1 = await _localeStore.GetResourcesAsync<LocaleEmail>("en-US");
             foreach (var resource in resourceValues1)
             {
                 sb.Append("<strong>File Name:</strong> ")
@@ -90,7 +90,7 @@ namespace Plato.Users.Controllers
                 .Append("<strong>String Resources</strong>")
                 .Append("<br>");
 
-            var resourceValues = await _localeManager.GetResourcesAsync<LocaleString>("en-US");
+            var resourceValues = await _localeStore.GetResourcesAsync<LocaleString>("en-US");
             foreach (var resourceValue in resourceValues)
             {
                 sb.Append("<strong>File Name:</strong> ")

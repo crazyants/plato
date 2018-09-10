@@ -1,22 +1,13 @@
 {
   "Emails": [
     {
-      "Id": "ResetPassword",
+      "Id": "TestEmail",
       "To": "{RecipientEmail}",
       "Cc": "",
       "Bcc": "",
       "From": "{AppEmail}",
-      "Subject": "{AppName} -Reset Your Password",
-      "Message": "Dear {UserName}, Please use the link below to reset your password.\n\n{ResetPasswordUrl}"
-    },
-    {
-      "Id": "VerifyEmail",
-      "To": "{RecipientEmail}",
-      "Cc": "",
-      "Bcc": "",
-      "From": "{AppEmail}",
-      "Subject": "{AppName} - Verfiy Your Account",
-      "Message": "Dear {UserName}, Please use the link below to verfiy your new accunt.\n\n{VerifyAccuntUrl}"
+      "Subject": "{AppName} - Test Email",
+      "Message": "Dear {UserName}, This email is sent as a test to verify your outbound emails are configured correctly."
     }
   ]
 }

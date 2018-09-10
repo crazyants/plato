@@ -9,8 +9,12 @@
       "Value": "Use a local account to log in."
     },
     {
-      "Key": "Localized String",
-      "Value": "String From Locale File"
+      "Key": "Register",
+      "Value": "Register"
+    },
+    {
+      "Key": "Create a new account.",
+      "Value": "Create a new account."
     }
   ]
 }

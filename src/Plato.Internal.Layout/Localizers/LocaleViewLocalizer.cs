@@ -16,10 +16,10 @@ namespace Plato.Internal.Layout.Localizers
         public ViewContext ViewContext;
 
         public LocaleViewLocalizer(
-            ILocaleManager localeManager,
+            ILocaleStore localeStore,
             ICacheManager cacheManager,
             IContextFacade contextFacade)
-            : base(localeManager, cacheManager, contextFacade)
+            : base(localeStore, cacheManager, contextFacade)
         {
         }
 

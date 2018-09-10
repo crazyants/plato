@@ -15,16 +15,16 @@ namespace Plato.Internal.Layout.Localizers
 
         private string _cultureCode;
 
-        private readonly ILocaleManager _localeManager;
+        private readonly ILocaleStore _localeStore;
         private readonly ICacheManager _cacheManager;
         private readonly IContextFacade _contextFacade;
 
         public LocaleStringLocalizer(
-            ILocaleManager localeManager,
+            ILocaleStore localeStore,
             ICacheManager cacheManager,
             IContextFacade contextFacade1)
         {
-            _localeManager = localeManager;
+            _localeStore = localeStore;
             _cacheManager = cacheManager;
             _contextFacade = contextFacade1;
         }
@@ -37,20 +37,9 @@ namespace Plato.Internal.Layout.Localizers
                 _cultureCode = _contextFacade.GetCurrentCulture();
             }
 
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), _cultureCode);
-            return _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-            {
-
-                var localizedStrings = new List<LocalizedString>();
-                foreach (var localeValue in await _localeManager.GetResourcesAsync<LocaleString>(_cultureCode))
-                {
-                    localizedStrings.AddRange(localeValue.Values.Select(item =>
-                        new LocalizedString(item.Key, item.Value, true)));
-                }
-
-                return localizedStrings;
-
-            }).GetAwaiter().GetResult();
+            return _localeStore.GetAllStringsAsync(_cultureCode)
+                .GetAwaiter()
+                .GetResult();
 
         }
 

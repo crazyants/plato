@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Shell.Abstractions;
@@ -20,6 +18,8 @@ namespace Plato.Internal.Shell
 {
     public class ContextFacade : IContextFacade
     {
+
+        public const string DefaultCulture = "en-US";
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionContextAccessor;
@@ -119,15 +119,26 @@ namespace Plato.Internal.Shell
         public async Task<string> GetCurrentCultureAsync()
         {
 
+            // Get users culture
             var user = await GetAuthenticatedUserAsync();
-            var settings = await GetSiteSettingsAsync();
-
             if (user != null)
             {
-                return user.Culture;
+                if (!String.IsNullOrEmpty(user.Culture))
+                {
+                    return user.Culture;
+                }
+                
             }
 
-            return settings.Culture;
+            // Get application culture
+            var settings = await GetSiteSettingsAsync();
+            if (!String.IsNullOrEmpty(settings.Culture))
+            {
+                return settings.Culture;
+            }
+
+            // Return en-US default
+            return DefaultCulture;
 
         }
 

@@ -22,7 +22,7 @@ namespace Plato.Internal.Localization.Extensions
             services.AddSingleton<ILocaleLocator, LocaleLocator>();
             services.AddSingleton<ILocaleCompositionStrategy, LocaleCompositionStrategy>();
             services.AddSingleton<ILocaleProvider, LocaleProvider>();
-            services.AddSingleton<ILocaleManager, LocaleManager>();
+            services.AddSingleton<ILocaleStore, LocaleStore>();
             
             return services;
 
