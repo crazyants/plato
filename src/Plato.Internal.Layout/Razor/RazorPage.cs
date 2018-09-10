@@ -26,7 +26,6 @@ namespace Plato.Internal.Layout.Razor
                     _t = ViewContext.HttpContext.RequestServices.GetRequiredService<IViewLocalizer>();
                     ((IViewContextAware) _t).Contextualize(this.ViewContext);
                 }
-
                 return _t;
             }
         }

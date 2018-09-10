@@ -31,7 +31,6 @@ namespace Plato.Users.Controllers
 
         public IStringLocalizer S { get; }
 
-
         public AccountController(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,

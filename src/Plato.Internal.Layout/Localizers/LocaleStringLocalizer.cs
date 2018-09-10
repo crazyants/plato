@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.Extensions.Localization;
@@ -12,32 +13,38 @@ namespace Plato.Internal.Layout.Localizers
     public class LocaleStringLocalizer : IStringLocalizer
     {
 
-        private string _cultureCode = "en-US";
+        private string _cultureCode;
 
         private readonly ILocaleManager _localeManager;
         private readonly ICacheManager _cacheManager;
+        private readonly IContextFacade _contextFacade;
 
         public LocaleStringLocalizer(
             ILocaleManager localeManager,
             ICacheManager cacheManager,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade1)
         {
             _localeManager = localeManager;
             _cacheManager = cacheManager;
-            //_cultureCode = contextFacade.GetCurrentCulture();
+            _contextFacade = contextFacade1;
         }
 
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
         {
+            
+            if (String.IsNullOrEmpty(_cultureCode))
+            {
+                _cultureCode = _contextFacade.GetCurrentCulture();
+            }
 
             var token = _cacheManager.GetOrCreateToken(this.GetType(), _cultureCode);
             return _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
                 var localizedStrings = new List<LocalizedString>();
-                foreach (var localValue in await _localeManager.GetResourcesAsync<LocaleString>(_cultureCode))
+                foreach (var localeValue in await _localeManager.GetResourcesAsync<LocaleString>(_cultureCode))
                 {
-                    localizedStrings.AddRange(localValue.Values.Select(item =>
+                    localizedStrings.AddRange(localeValue.Values.Select(item =>
                         new LocalizedString(item.Key, item.Value, true)));
                 }
 

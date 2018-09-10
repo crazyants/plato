@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Models.Shell;
@@ -25,7 +21,9 @@ namespace Plato.Internal.Shell.Abstractions
 
         string GetRouteUrl(RouteValueDictionary routeValues);
 
-        Task<CultureInfo> GetCurrentCulture();
+        Task<string> GetCurrentCultureAsync();
+
+        string GetCurrentCulture();
 
     }
 

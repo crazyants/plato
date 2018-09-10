@@ -45,7 +45,7 @@ namespace Plato.Internal.Shell
             _siteSettingsStore = siteSettingsStore;
             _urlHelperFactory = urlHelperFactory;
         }
-        
+
         public async Task<User> GetAuthenticatedUserAsync()
         {
             var user = _httpContextAccessor.HttpContext.User;
@@ -54,13 +54,14 @@ namespace Plato.Internal.Shell
             {
                 return await _platoUserStore.GetByUserNameAsync(identity.Name);
             }
+
             return null;
         }
 
         public async Task<ShellModule> GetFeatureByAreaAsync()
         {
             // Current area name
-            var areaName =(string) _actionContextAccessor.ActionContext
+            var areaName = (string) _actionContextAccessor.ActionContext
                 .RouteData.Values["area"];
             return await GetFeatureByModuleIdAsync(areaName);
         }
@@ -102,7 +103,7 @@ namespace Plato.Internal.Shell
 
             var request = _httpContextAccessor.HttpContext.Request;
             return $"{request.Scheme}://{request.Host}{request.PathBase}";
-            
+
         }
 
         public string GetRouteUrl(RouteValueDictionary routeValues)
@@ -111,10 +112,11 @@ namespace Plato.Internal.Shell
             {
                 _urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);
             }
+
             return _urlHelper.RouteUrl(new UrlRouteContext {Values = routeValues});
         }
 
-        public async Task<CultureInfo> GetCurrentCulture()
+        public async Task<string> GetCurrentCultureAsync()
         {
 
             var user = await GetAuthenticatedUserAsync();
@@ -122,12 +124,20 @@ namespace Plato.Internal.Shell
 
             if (user != null)
             {
-                return new CultureInfo(user.Culture);
+                return user.Culture;
             }
 
-            return new CultureInfo(settings.Culture);
+            return settings.Culture;
 
         }
+
+        public string GetCurrentCulture()
+        {
+            return GetCurrentCultureAsync()
+                .GetAwaiter()
+                .GetResult();
+        }
+
     }
 
 }

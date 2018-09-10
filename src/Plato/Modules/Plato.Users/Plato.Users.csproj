@@ -12,6 +12,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Locales\en-US\emails.json" />
+    <None Remove="Locales\en-US\strings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Locales\en-US\emails.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Locales\en-US\strings.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Plato.Internal.Abstractions\Plato.Internal.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting.Web\Plato.Internal.Hosting.Web.csproj" />

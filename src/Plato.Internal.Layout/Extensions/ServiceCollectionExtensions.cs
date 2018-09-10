@@ -67,7 +67,8 @@ namespace Plato.Internal.Layout.Extensions
             // Localizers
             services.AddScoped<IStringLocalizer, LocaleStringLocalizer>();
             services.AddScoped<IHtmlLocalizer, LocaleHtmlLocalizer>();
-
+            services.AddScoped<IViewLocalizer, LocaleViewLocalizer>();
+            
             return services;
 
         }

@@ -1,0 +1,16 @@
+{
+  "Strings": [
+    {
+      "Key": "Login",
+      "Value": "Login 123"
+    },
+    {
+      "Key": "Use a local account to log in.",
+      "Value": "Use a local account to log in."
+    },
+    {
+      "Key": "Localized String",
+      "Value": "String From Locale File"
+    }
+  ]
+}
