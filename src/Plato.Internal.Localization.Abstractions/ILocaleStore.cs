@@ -15,7 +15,9 @@ namespace Plato.Internal.Localization.Abstractions
 
         Task<LocaleValues<TModel>> GetByKeyAsync<TModel>(string cultureCode, string key) where TModel : class, ILocaleValue;
 
-        Task<IEnumerable<LocalizedString>> GetAllStringsAsync(string cultureCode, bool includeParentCultures = false);
+        Task<IEnumerable<LocalizedString>> GetAllStringsAsync(string cultureCode);
+
+        Task MonitorChanges();
 
     }
 

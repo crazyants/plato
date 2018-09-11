@@ -40,11 +40,12 @@ namespace Plato.Internal.Cache
 
                 // Create ICacheEntry
                 var entry = _memoryCache.CreateEntry(key);
+             
                 obj = (object) await factory(entry);
 
-                // Set expiration token
+                // Set expiration tokens
                 entry.ExpirationTokens.Add(_cacheDependency.GetToken(key));
-
+          
                 entry.SetValue(obj);
                 entry.Dispose();
             
@@ -65,14 +66,14 @@ namespace Plato.Internal.Cache
         
         public CacheToken GetOrCreateToken(Type type, params object[] varyBy)
         {
-            var key = new CacheToken(type, varyBy);
-            if (Tokens.ContainsKey(key))
+            var cacheToken = new CacheToken(type, varyBy);
+            if (Tokens.ContainsKey(cacheToken))
             {
-                return key;
+                return Tokens.FirstOrDefault(t => t.Key == cacheToken).Key;
             }
 
-            Tokens.TryAdd(key, type);
-            return key;
+            Tokens.TryAdd(cacheToken, type);
+            return cacheToken;
         }
         
         public void CancelTokens(Type type)

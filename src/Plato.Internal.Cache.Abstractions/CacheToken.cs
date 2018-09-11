@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Microsoft.Extensions.Primitives;
 
 namespace Plato.Internal.Cache.Abstractions
 {
@@ -75,6 +76,8 @@ namespace Plato.Internal.Cache.Abstractions
         {
             return $"{_type}_{GetHashCode()}";
         }
+
+  
     }
 
 }
