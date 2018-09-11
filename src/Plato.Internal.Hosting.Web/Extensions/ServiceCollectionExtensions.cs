@@ -296,16 +296,16 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
             app.UseAuthentication();
             
-            // load static files
-
+            // Load static files
             app.UseStaticFiles();
 
-            // allow static files within modules
-            
+            // Monitor changes to locale directories
+            app.UsePlatoLocalization();
+
+            // Allow static files within modules
             app.UseModuleStaticFiles(env);
 
-            // allow static files within current theme
-
+            // Allow static files within current theme
             app.UseThemeStaticFiles(env);
 
             // add custom features

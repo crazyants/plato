@@ -57,7 +57,7 @@ namespace Plato.Internal.Localization.Locales
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation("Compsing locale file found at '{0}', attempting to load.", resource.Path);
+                _logger.LogInformation("Composing locale file found at '{0}', attempting to load.", resource.Path);
             }
 
             var configurationContainer =
@@ -97,7 +97,7 @@ namespace Plato.Internal.Localization.Locales
             
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation("Completed compsing locale files found in '{0}'.", resource.Path);
+                _logger.LogInformation("Completed composing locale files found in '{0}'.", resource.Path);
             }
             
             return Task.FromResult(composedLocaleResource);

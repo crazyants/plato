@@ -8,7 +8,7 @@ namespace Plato.Internal.Localization.Abstractions
     {
         Task<IEnumerable<ComposedLocaleDescriptor>> GetLocalesAsync();
 
-        void RefreshLocales();
+        void ReloadLocales();
 
     }
 

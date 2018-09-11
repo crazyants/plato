@@ -155,13 +155,13 @@ namespace Plato.Internal.Hosting
             // Load all tenants, and activate their shell.
             if (allSettings.Any())
             {
-                Parallel.ForEach(allSettings, settings =>
-                {
-                //foreach (var settings in allSettings)
+                //Parallel.ForEach(allSettings, settings =>
                 //{
+                foreach (var settings in allSettings)
+                {
                     GetOrCreateShellContext(settings);
-                //}
-                });
+                }
+                //});
             } 
             else
             {

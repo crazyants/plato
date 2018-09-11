@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Primitives;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Localization.Abstractions;
@@ -15,21 +14,20 @@ namespace Plato.Internal.Localization.Locales
 
     public class LocaleStore : ILocaleStore
     {
-
-        private static IEnumerable<IChangeToken> _expirationTokens;
-
+   
         private readonly ILocaleProvider _localeProvider;
         private readonly ICacheManager _cacheManager;
-        private readonly IPlatoFileSystem _fileSystem;
+        private readonly ILogger<LocaleStore> _logger;
 
         public LocaleStore(
             ILocaleProvider localeProvider,
             ICacheManager cacheManager,
-            IPlatoFileSystem fileSystem)
+            IPlatoFileSystem fileSystem,
+            ILogger<LocaleStore> logger)
         {
             _localeProvider = localeProvider;
             _cacheManager = cacheManager;
-            _fileSystem = fileSystem;
+            _logger = logger;
         }
 
         /// <summary>
@@ -44,9 +42,7 @@ namespace Plato.Internal.Localization.Locales
             {
                 throw new ArgumentNullException(nameof(cultureCode));
             }
-
-            await MonitorChanges();
-
+            
             var token = _cacheManager.GetOrCreateToken(typeof(ComposedLocaleResource), cultureCode);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
@@ -59,11 +55,7 @@ namespace Plato.Internal.Localization.Locales
                         resources.AddRange(locale.Resources);
                     }
                 }
-
-                foreach (var expirationToken in _expirationTokens)
-                {
-                    cacheEntry.ExpirationTokens.Add(expirationToken);
-                }
+                
                 
                 return resources;
 
@@ -83,8 +75,6 @@ namespace Plato.Internal.Localization.Locales
             {
                 throw new ArgumentNullException(nameof(cultureCode));
             }
-
-            await MonitorChanges();
             
             var token = _cacheManager.GetOrCreateToken(typeof(LocalizedString), cultureCode);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -96,12 +86,7 @@ namespace Plato.Internal.Localization.Locales
                     localizedStrings.AddRange(localeValue.Values.Select(item =>
                         new LocalizedString(item.Key, item.Value, true)));
                 }
-                
-                foreach (var expirationToken in _expirationTokens)
-                {
-                    cacheEntry.ExpirationTokens.Add(expirationToken);
-                }
-
+            
                 return localizedStrings;
 
             });
@@ -175,59 +160,27 @@ namespace Plato.Internal.Localization.Locales
 
         }
 
-        public async Task RefreshLocalesAsync()
+        public async Task ClearCache()
         {
-
-            _localeProvider.RefreshLocales();
 
             var locales = await _localeProvider.GetLocalesAsync();
             if (locales != null)
             {
                 foreach (var locale in locales)
                 {
-                    _cacheManager.CancelTokens(this.GetType(), locale.Descriptor.Name);
                     _cacheManager.CancelTokens(typeof(ComposedLocaleResource), locale.Descriptor.Name);
                     _cacheManager.CancelTokens(typeof(LocalizedString), locale.Descriptor.Name);
-                }
-            }
 
-        }
-
-
-        public async Task MonitorChanges()
-        {
-
-            if (_expirationTokens == null)
-            {
-                var expirationTokens = new List<IChangeToken>();
-                var locales = await _localeProvider.GetLocalesAsync();
-                if (locales != null)
-                {
-                    foreach (var locale in locales)
+                    if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        foreach (var resource in locale.Resources)
-                        {
-                            var path = resource.LocaleResource.FileInfo.PhysicalPath;
-                            var changeToken = _fileSystem.Watch(path);
-                            ChangeToken.OnChange(
-                                () => _fileSystem.Watch(path),
-                                async () =>
-                                {
-                                    await RefreshLocalesAsync();
-                                });
-                            expirationTokens.Add(changeToken);
-                        }
+                        _logger.LogInformation("Deleted cache for locale resources at '{0}'", locale.Descriptor.DirectoryInfo.FullName);
                     }
+
                 }
-
-                _expirationTokens = expirationTokens;
-
-
             }
-
-
+            
         }
-
+        
 
     }
 

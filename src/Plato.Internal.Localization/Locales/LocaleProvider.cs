@@ -36,8 +36,8 @@ namespace Plato.Internal.Localization.Locales
         {
 
             // Ensure local descriptors are only composed once 
-            //if (_composedLocaleDescriptors == null)
-            //{
+            if (_composedLocaleDescriptors == null)
+            {
 
                 // Compose locales
                 var output = new List<ComposedLocaleDescriptor>();
@@ -46,12 +46,12 @@ namespace Plato.Internal.Localization.Locales
                     output.Add(await _compositionStrategy.ComposeLocaleDescriptorAsync(localeDescriptor));
                 }
 
-            return output;
-            //    _composedLocaleDescriptors = output;
 
-            //}
+                _composedLocaleDescriptors = output;
 
-            //return _composedLocaleDescriptors;
+            }
+
+            return _composedLocaleDescriptors;
 
         }
 
@@ -62,11 +62,11 @@ namespace Plato.Internal.Localization.Locales
             var paths = await GetLocaleDescriptorPathsToSearch();
 
             // Load descriptors or reuse if already loaded
-            return await _localeLocator.LocateLocalesAsync(paths);
+            return _localeDescriptors ?? (_localeDescriptors = await _localeLocator.LocateLocalesAsync(paths));
 
         }
 
-        public void RefreshLocales()
+        public void ReloadLocales()
         {
             _composedLocaleDescriptors = null;
             _localeDescriptors = null;

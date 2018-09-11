@@ -19,8 +19,7 @@ namespace Plato.Internal.Localization.Locales
    
         public LocaleLocator(
             IPlatoFileSystem fileSystem,
-            ILogger<LocaleLocator> logger, 
-            ILocaleCompositionStrategy localeCompositionStrategy)
+            ILogger<LocaleLocator> logger)
         {
             _fileSystem = fileSystem;
             _logger = logger;

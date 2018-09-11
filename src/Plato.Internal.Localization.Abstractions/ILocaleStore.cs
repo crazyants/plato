@@ -17,8 +17,8 @@ namespace Plato.Internal.Localization.Abstractions
 
         Task<IEnumerable<LocalizedString>> GetAllStringsAsync(string cultureCode);
 
-        Task MonitorChanges();
-
+        Task ClearCache();
+        
     }
 
 }
