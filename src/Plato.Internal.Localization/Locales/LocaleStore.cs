@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Cache.Abstractions;
@@ -160,6 +160,10 @@ namespace Plato.Internal.Localization.Locales
 
         }
 
+        /// <summary>
+        /// Froms all locale resources from in-memory cache.
+        /// </summary>
+        /// <returns></returns>
         public async Task ClearCache()
         {
 
@@ -173,7 +177,8 @@ namespace Plato.Internal.Localization.Locales
 
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        _logger.LogInformation("Deleted cache for locale resources at '{0}'", locale.Descriptor.DirectoryInfo.FullName);
+                        _logger.LogInformation("Deleted cache for locale '{0}' located at '{1}'",
+                            locale.Descriptor.Name, locale.Descriptor.DirectoryInfo.FullName);
                     }
 
                 }

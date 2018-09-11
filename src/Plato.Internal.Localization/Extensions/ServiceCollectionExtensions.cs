@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Locales;
 
@@ -19,12 +18,12 @@ namespace Plato.Internal.Localization.Extensions
             services.AddScoped<ILocalDateTimeProvider, LocalDateTimeProvider>();
             
             // Locales
-            services.AddScoped<ILocaleLocator, LocaleLocator>();
-            services.AddScoped<ILocaleCompositionStrategy, LocaleCompositionStrategy>();
-            services.AddScoped<ILocaleProvider, LocaleProvider>();
-            services.AddScoped<ILocaleStore, LocaleStore>();
-            services.AddScoped<ILocaleWatcher, LocaleWatcher>();
-
+            services.AddSingleton<ILocaleLocator, LocaleLocator>();
+            services.AddSingleton<ILocaleCompositionStrategy, LocaleCompositionStrategy>();
+            services.AddSingleton<ILocaleProvider, LocaleProvider>();
+            services.AddSingleton<ILocaleWatcher, LocaleWatcher>();
+            services.AddSingleton<ILocaleStore, LocaleStore>();
+         
             return services;
 
         }

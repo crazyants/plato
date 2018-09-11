@@ -46,7 +46,6 @@ namespace Plato.Internal.Localization.Locales
                     output.Add(await _compositionStrategy.ComposeLocaleDescriptorAsync(localeDescriptor));
                 }
 
-
                 _composedLocaleDescriptors = output;
 
             }
@@ -76,12 +75,12 @@ namespace Plato.Internal.Localization.Locales
         {
 
             // Initialize with root "Locales" folder
-            var output = new List<string>()
+            var pathsToSearch = new List<string>()
             {
                 LocaleFolderName
             };
 
-            // Append additional module locations to paths
+            // Append additional module locations to paths to search
             var moduleDescriptors = await _moduleManager.LoadModulesAsync();
             foreach (var module in moduleDescriptors)
             {
@@ -90,10 +89,10 @@ namespace Plato.Internal.Localization.Locales
                 {
                     modulePath += "\\";
                 }
-                output.Add(modulePath + LocaleFolderName);
+                pathsToSearch.Add(modulePath + LocaleFolderName);
             }
 
-            return output.ToArray();
+            return pathsToSearch.ToArray();
 
         }
 
