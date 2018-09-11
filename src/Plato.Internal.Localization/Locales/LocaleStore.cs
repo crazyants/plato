@@ -149,15 +149,22 @@ namespace Plato.Internal.Localization.Locales
             {
                 foreach (var value in localeValue.Values)
                 {
-                    if (value.Key.Equals(key, StringComparison.OrdinalIgnoreCase))
+                    if (value.Key == key)
                     {
                         return localeValue;
                     }
                 }
             }
 
-            return new LocaleValues<TModel>();
+            return null;
 
+        }
+
+        public async Task<TModel> GetFirstOrDefaultByKeyAsync<TModel>(string cultureCode, string key)
+            where TModel : class, ILocaleValue
+        {
+            var emails = await GetByKeyAsync<TModel>(cultureCode, key);
+            return emails?.Values.FirstOrDefault();
         }
 
         /// <summary>

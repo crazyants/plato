@@ -32,6 +32,11 @@ namespace Plato.Email.Configuration
                 .GetAwaiter()
                 .GetResult();
 
+            if (settings == null)
+            {
+                return;
+            }
+
             var smtpSettings = settings.SmtpSettings;
 
             // Set options

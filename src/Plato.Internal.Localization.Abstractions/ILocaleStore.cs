@@ -15,6 +15,8 @@ namespace Plato.Internal.Localization.Abstractions
 
         Task<LocaleValues<TModel>> GetByKeyAsync<TModel>(string cultureCode, string key) where TModel : class, ILocaleValue;
 
+        Task<TModel> GetFirstOrDefaultByKeyAsync<TModel>(string cultureCode, string key) where TModel : class, ILocaleValue;
+
         Task<IEnumerable<LocalizedString>> GetAllStringsAsync(string cultureCode);
 
         Task ClearCache();

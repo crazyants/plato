@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Users.ViewModels;
@@ -7,12 +8,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
-using Plato.Internal.Localization.LocaleSerializers;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Shell.Abstractions;
 using Plato.Users.Services;
 
 namespace Plato.Users.Controllers
@@ -26,6 +29,8 @@ namespace Plato.Users.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly ILocaleStore _localeStore;
+        private readonly IContextFacade _contextFacade;
+        private readonly IEmailManager _emailManager;
 
         public IHtmlLocalizer T { get; }
 
@@ -38,13 +43,15 @@ namespace Plato.Users.Controllers
             SignInManager<User> signInManage,
             ILogger<AccountController> logger, 
             IPlatoUserManager<User> platoUserManager,
-            ILocaleStore localeStore)
+            ILocaleStore localeStore, IContextFacade contextFacade, IEmailManager emailManager)
         {
             _userManager = userManager;
             _signInManager = signInManage;
             _logger = logger;
             _platoUserManager = platoUserManager;
             _localeStore = localeStore;
+            _contextFacade = contextFacade;
+            _emailManager = emailManager;
 
 
             T = htmlLocalizer;
@@ -380,6 +387,102 @@ namespace Plato.Users.Controllers
             }
         }
 
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            //if (!(await _siteService.GetSiteSettingsAsync()).As<RegistrationSettings>().EnableLostPassword)
+            //{
+            //    return NotFound();
+            //}
+
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            //if (!(await _siteService.GetSiteSettingsAsync()).As<RegistrationSettings>().EnableLostPassword)
+            //{
+            //    return NotFound();
+            //}
+
+            if (ModelState.IsValid)
+            {
+                var result = await _platoUserManager.GetForgotPasswordUserAsync(model.UserIdentifier);
+                if (result.Succeeded)
+                {
+                    var user = (User)result.Response;
+                    if (user != null)
+                    {
+                        user.ResetToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.ResetToken));
+                        await SendResetTokenAsync(user);
+                    }
+                }
+               
+            }
+
+            // returns to confirmation page anyway: we don't want to let scrapers know if a username or an email exist
+            return RedirectToLocal(Url.Action("ForgotPasswordConfirmation"));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string code = null)
+        {
+            //if (!(await _siteService.GetSiteSettingsAsync()).As<RegistrationSettings>().EnableLostPassword)
+            //{
+            //    return NotFound();
+            //}
+            if (code == null)
+            {
+                //"A code must be supplied for password reset.";
+            }
+            return View(new ResetPasswordViewModel { ResetToken = code });
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            //if (!(await _siteService.GetSiteSettingsAsync()).As<RegistrationSettings>().EnableLostPassword)
+            //{
+            //    return NotFound();
+            //}
+
+            if (ModelState.IsValid)
+            {
+                var result = await _platoUserManager.ResetPasswordAsync(model.Email,
+                    Encoding.UTF8.GetString(Convert.FromBase64String(model.ResetToken)), model.NewPassword);
+                if (result.Succeeded)
+                {
+                    return RedirectToLocal(Url.Action("ResetPasswordConfirmation"));
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Lockout()
@@ -424,7 +527,69 @@ namespace Plato.Users.Controllers
                 return View();
             }
         }
-        
+
+        protected async Task<bool> SendResetTokenAsync(User user)
+        {
+            
+            // Get reset password email
+            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>("en-US", "ResetPassword");
+            if (email != null)
+            {
+
+                // Build reset password link
+                var baseUrl = await _contextFacade.GetBaseUrlAsync();
+                var callbackUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                {
+                    ["Area"] = "Plato.Users",
+                    ["Controller"] = "Accountt",
+                    ["Action"] = "ResetPassword",
+                    ["Core"] = user.ResetToken
+                });
+
+                var body = string.Format(email.Message, user.DisplayName, callbackUrl);
+
+                var message = new MailMessage()
+                {
+                    Subject = email.Subject,
+                    Body = WebUtility.HtmlDecode(body),
+                    IsBodyHtml = true
+                };
+
+                message.To.Add(user.Email);
+
+                // send email
+                var result = await _emailManager.SaveAsync(message);
+
+                return result.Succeeded;
+
+            }
+
+            throw new NotImplementedException();
+
+            //var viewName = "TemplateUserLostPassword";
+            //var model = Arguments.From(new { User = user, LostPasswordUrl = Url.Action("ResetPassword", "Account", new { code = user.ResetToken }, HttpContext.Request.Scheme) });
+
+            //var options = ControllerContext.HttpContext.RequestServices.GetRequiredService<IOptions<MvcViewOptions>>();
+            //ControllerContext.RouteData.Values["action"] = viewName;
+            //ControllerContext.RouteData.Values["controller"] = "";
+            //var viewEngineResult = options.Value.ViewEngines.Select(x => x.FindView(ControllerContext, viewName, true)).FirstOrDefault(x => x != null);
+            //var displayContext = new DisplayContext()
+            //{
+            //    ServiceProvider = ControllerContext.HttpContext.RequestServices,
+            //    Value = await _shapeFactory.CreateAsync(viewName, model),
+            //    ViewContext = new ViewContext(ControllerContext, viewEngineResult.View, ViewData, TempData, new StringWriter(), new HtmlHelperOptions())
+            //};
+            //var htmlContent = await _displayManager.ExecuteAsync(displayContext);
+
+            //var message = new MailMessage() { Body = WebUtility.HtmlDecode(htmlContent.ToString()), IsBodyHtml = true, Subject = T["Reset your password"] };
+            //message.To.Add(user.Email);
+
+            //// send email
+            //var result = await _smtpService.SendAsync(message);
+
+            //return result.Succeeded;
+        }
+
     }
 
 }

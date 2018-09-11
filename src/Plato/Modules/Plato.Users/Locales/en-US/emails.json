@@ -6,8 +6,8 @@
       "Cc": "",
       "Bcc": "",
       "From": "{AppEmail}",
-      "Subject": "{AppName} -Reset Your Password",
-      "Message": "Dear {UserName}, Please use the link below to reset your password.\n\n{ResetPasswordUrl}"
+      "Subject": "{AppName} - Reset Your Password",
+      "Message": "Dear {0}, Please use the link below to reset your account password.\n\n{1}"
     },
     {
       "Id": "VerifyEmail",

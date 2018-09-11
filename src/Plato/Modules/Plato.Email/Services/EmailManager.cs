@@ -1,14 +1,17 @@
 ﻿using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Plato.Email.Models;
 using Plato.Email.Stores;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Emails.Abstractions;
 
 namespace Plato.Email.Services
 {
     
     public class EmailManager : IEmailManager
     {
+
         private readonly SmtpSettings _smtpSettings;
         private readonly IEmailStore<EmailMessage> _emailStore;
         private readonly ISmtpService _smtpService;
@@ -16,11 +19,11 @@ namespace Plato.Email.Services
         public EmailManager(
             IEmailStore<EmailMessage> emailStore,
             ISmtpService smtpService,
-            SmtpSettings smtpSettings)
+            IOptions<SmtpSettings> smtpSettings)
         {
             _emailStore = emailStore;
             _smtpService = smtpService;
-            _smtpSettings = smtpSettings;
+            _smtpSettings = smtpSettings.Value;
         }
         
         public async Task<IActivityResult<EmailMessage>> SaveAsync(MailMessage message)

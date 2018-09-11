@@ -4,7 +4,7 @@ using System.Net.Mail;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
 
-namespace Plato.Email.Models
+namespace Plato.Internal.Emails.Abstractions
 {
     public class EmailMessage : IModel<EmailMessage>
     {

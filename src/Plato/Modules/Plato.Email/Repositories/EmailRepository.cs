@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Emails.Abstractions;
 
 namespace Plato.Email.Repositories
 {

@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Plato.Email.Models;
 using Plato.Internal.Abstractions;
 
@@ -17,10 +18,10 @@ namespace Plato.Email.Services
         private readonly ILogger<SmtpService> _logger;
         
         public SmtpService(
-            SmtpSettings smtpSettings, 
+            IOptions<SmtpSettings> smtpSettings, 
             ILogger<SmtpService> logger)
         {
-            _smtpSettings = smtpSettings;
+            _smtpSettings = smtpSettings.Value;
             _logger = logger;
         }
         

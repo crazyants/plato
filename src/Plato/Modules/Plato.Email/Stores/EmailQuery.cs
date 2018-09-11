@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Email.Models;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Email.Stores

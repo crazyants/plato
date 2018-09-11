@@ -4,76 +4,37 @@
 }
 
 <h2>@ViewData["Title"]</h2>
-
 <div class="row">
     <div class="col-md-6">
         <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
             <h4>@T["Use a local account to log in."]</h4>
             <hr />
-
             <div asp-validation-summary="All" class="text-danger"></div>
-
             <div class="form-group">
-                <label asp-for="@Model.UserName" class="col-form-label font-weight-bold"></label>
+                <label class="col-form-label font-weight-bold">@T["Username"]</label>
                 <span asp-validation-for="@Model.UserName" class="text-danger float-xl-right"></span>
                 <input asp-for="@Model.UserName" value="@Model.UserName" placeholder="@T["Username"]" class="form-control" />
 
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Password" class="col-form-label font-weight-bold"></label>
+                <label class="col-form-label font-weight-bold">@T["Password"]</label>
                 <span asp-validation-for="@Model.Password" class="text-danger float-xl-right"></span>
                 <input asp-for="@Model.Password" class="form-control" placeholder="@T["Password"]" />
             </div>
-            <div class="form-check">
+            <div class="form-group form-check">
                 <label asp-for="@Model.RememberMe">
                     <input asp-for="@Model.RememberMe" />
                     @T["Remember me"]
                 </label>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-lg btn-primary btn-block">@T["Login"]</button>
+                <button type="submit" role="button" class="btn btn-lg btn-primary btn-block">@T["Login"]</button>
             </div>
             <p>
-                <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["Register as a new user?"]</a>
+                <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["Create a new account"]</a> @T["or"] 
+                <a asp-action="ForgotPassword" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["Forgot your password"]</a>
             </p>
-            @*<p>
-                <a asp-action="ForgotPassword">@T["Forgot your password?"]</a>
-                </p>*@
         </form>
     </div>
-
-    @*<div class="col-md-4">
-            <section>
-                <h4>Use another service to log in.</h4>
-                <hr />
-                @{
-                    var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
-                    if (loginProviders.Count == 0)
-                    {
-                        <div>
-                            <p>
-                                There are no external authentication services configured. See <a href="http://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                                for details on setting up this ASP.NET application to support logging in via external services.
-                            </p>
-                        </div>
-                    }
-                    else
-                    {
-                        <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                            <div>
-                                <p>
-                                    @foreach (var provider in loginProviders)
-                                    {
-                                        <button type="submit" class="btn btn-default" viewName="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
-                                    }
-                                </p>
-                            </div>
-                        </form>
-                    }
-                }
-            </section>
-        </div>*@
-
-
 </div>
 

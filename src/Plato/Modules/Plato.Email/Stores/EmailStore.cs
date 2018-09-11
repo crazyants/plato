@@ -5,6 +5,7 @@ using Plato.Email.Models;
 using Plato.Email.Repositories;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Emails.Abstractions;
 
 namespace Plato.Email.Stores
 {

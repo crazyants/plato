@@ -13,6 +13,7 @@ using Plato.Email.Models;
 using Plato.Email.Repositories;
 using Plato.Email.Services;
 using Plato.Email.Stores;
+using Plato.Internal.Emails.Abstractions;
 
 namespace Plato.Email
 {
@@ -39,6 +40,7 @@ namespace Plato.Email
 
             // Stores
             services.AddScoped<IEmailSettingsStore<EmailSettings>, EmailSettingsStore>();
+            services.AddScoped<IEmailStore<EmailMessage>, EmailStore>();
 
             // Email manager
             services.AddSingleton<IEmailManager, EmailManager>();

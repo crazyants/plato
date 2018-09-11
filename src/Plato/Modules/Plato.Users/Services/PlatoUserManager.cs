@@ -308,7 +308,6 @@ namespace Plato.Users.Services
 
             return result.Success(user);
 
-
         }
 
         public async Task<IActivityResult<TUser>> ResetPasswordAsync(

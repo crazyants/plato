@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Shell.Abstractions;
