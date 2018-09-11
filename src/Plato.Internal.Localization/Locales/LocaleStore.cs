@@ -163,8 +163,8 @@ namespace Plato.Internal.Localization.Locales
         public async Task<TModel> GetFirstOrDefaultByKeyAsync<TModel>(string cultureCode, string key)
             where TModel : class, ILocaleValue
         {
-            var emails = await GetByKeyAsync<TModel>(cultureCode, key);
-            return emails?.Values.FirstOrDefault();
+            var localeValues = await GetByKeyAsync<TModel>(cultureCode, key);
+            return localeValues?.Values.FirstOrDefault();
         }
 
         /// <summary>

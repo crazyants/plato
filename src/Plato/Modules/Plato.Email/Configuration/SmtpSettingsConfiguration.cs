@@ -32,6 +32,7 @@ namespace Plato.Email.Configuration
                 .GetAwaiter()
                 .GetResult();
 
+            // We have no settings to configure
             if (settings == null)
             {
                 return;
@@ -39,7 +40,6 @@ namespace Plato.Email.Configuration
 
             var smtpSettings = settings.SmtpSettings;
 
-            // Set options
             options.DefaultFrom = smtpSettings.DefaultFrom;
             options.DeliveryMethod = smtpSettings.DeliveryMethod;
             options.PickupDirectoryLocation = smtpSettings.PickupDirectoryLocation;

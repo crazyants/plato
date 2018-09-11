@@ -157,6 +157,35 @@ namespace Plato.Users
                 template: "register",
                 defaults: new { controller = "Account", action = "Register" }
             );
+            
+            routes.MapAreaRoute(
+                name: "ForgotPassword",
+                areaName: "Plato.Users",
+                template: "account/forgotpassword",
+                defaults: new { controller = "Account", action = "ForgotPassword" }
+            );
+            
+            routes.MapAreaRoute(
+                name: "ForgotPasswordConfirmation",
+                areaName: "Plato.Users",
+                template: "account/forgotpassword/confirm",
+                defaults: new { controller = "Account", action = "ForgotPasswordConfirmation" }
+            );
+
+            routes.MapAreaRoute(
+                name: "ResetPassword",
+                areaName: "Plato.Users",
+                template: "account/resetpassword/{code?}",
+                defaults: new { controller = "Account", action = "ResetPassword" }
+            );
+
+            routes.MapAreaRoute(
+                name: "ResetPasswordConfirmation",
+                areaName: "Plato.Users",
+                template: "account/resetpassword/confirm",
+                defaults: new { controller = "Account", action = "ResetPasswordConfirmation" }
+            );
+
 
             routes.MapAreaRoute(
                 name: "Admin-Users",

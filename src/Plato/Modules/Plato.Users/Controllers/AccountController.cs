@@ -266,9 +266,7 @@ namespace Plato.Users.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
-            
-             // ----------
-
+     
              ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
@@ -386,9 +384,7 @@ namespace Plato.Users.Controllers
                 return Redirect("~/");
             }
         }
-
-
-
+        
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -398,11 +394,12 @@ namespace Plato.Users.Controllers
             //    return NotFound();
             //}
 
-            return View();
+            return View(new ForgotPasswordViewModel());
         }
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             //if (!(await _siteService.GetSiteSettingsAsync()).As<RegistrationSettings>().EnableLostPassword)
@@ -543,7 +540,7 @@ namespace Plato.Users.Controllers
                     ["Area"] = "Plato.Users",
                     ["Controller"] = "Accountt",
                     ["Action"] = "ResetPassword",
-                    ["Core"] = user.ResetToken
+                    ["Code"] = user.ResetToken
                 });
 
                 var body = string.Format(email.Message, user.DisplayName, callbackUrl);
@@ -564,7 +561,7 @@ namespace Plato.Users.Controllers
 
             }
 
-            throw new NotImplementedException();
+            return false;
 
             //var viewName = "TemplateUserLostPassword";
             //var model = Arguments.From(new { User = user, LostPasswordUrl = Url.Action("ResetPassword", "Account", new { code = user.ResetToken }, HttpContext.Request.Scheme) });

@@ -3,14 +3,6 @@
     {
       "Key": "Plato",
       "Value": "Plato"
-    },
-    {
-      "Key": "Discuss",
-      "Value": "Discuss"
-    },
-    {
-      "Key": "Localized String",
-      "Value": "String From Locale File"
     }
   ]
 }

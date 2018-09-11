@@ -100,8 +100,8 @@ namespace Plato.Internal.Emails.Abstractions
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
             
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
-            
+                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
+
         }
 
     }
