@@ -48,10 +48,8 @@ namespace Plato.Internal.Localization.Locales
 
                         watcher.Changed += async (sender, args) =>
                         {
-                            // Clear statics in local provider
-                            _localeProvider.ReloadLocales();
-                            // Clear cache in locale store
-                            await _localeStore.ClearCache();
+                            _localeProvider.Dispose();
+                            _localeStore.Dispose();
                         };
                       
                         watcher.EnableRaisingEvents = true;

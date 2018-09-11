@@ -84,7 +84,7 @@ namespace Plato.Internal.Localization.Locales
                 foreach (var localeValue in await GetResourcesAsync<LocaleString>(cultureCode))
                 {
                     localizedStrings.AddRange(localeValue.Values.Select(item =>
-                        new LocalizedString(item.Key, item.Value, true)));
+                        new LocalizedString(item.Name, item.Value, true)));
                 }
             
                 return localizedStrings;
@@ -92,108 +92,62 @@ namespace Plato.Internal.Localization.Locales
             });
 
         }
-
-
+        
         /// <summary>
         /// Returns all locale values of a given type matching the supplied culture.
         /// </summary>
         /// <typeparam name="TModel"></typeparam>
         /// <param name="cultureCode"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<LocaleValues<TModel>>> GetResourcesAsync<TModel>(string cultureCode)
-            where TModel : class, ILocaleValue
+        public async Task<IEnumerable<LocalizedValues<TModel>>> GetResourcesAsync<TModel>(string cultureCode)
+            where TModel : class, ILocalizedValue
         {
-
-            if (String.IsNullOrEmpty(cultureCode))
-            {
-                throw new ArgumentNullException(nameof(cultureCode));
-            }
-
-            var localeValues = new List<LocaleValues<TModel>>();
+            
+            var localizedValues = new List<LocalizedValues<TModel>>();
             var locale = await GetResourcesAsync(cultureCode);
             if (locale != null)
             {
                 foreach (var resource in locale.Where(r => r.Type == typeof(TModel)))
                 {
-                    localeValues.Add((LocaleValues<TModel>) resource.Model);
+                    localizedValues.Add((LocalizedValues<TModel>)resource.Model);
                 }
             }
 
-            return localeValues;
+            return localizedValues;
 
-
-        }
-        
-        /// <summary>
-        /// Returns a locale value of a given type and given key matching the supplied culture.
-        /// </summary>
-        /// <typeparam name="TModel"></typeparam>
-        /// <param name="cultureCode"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public async Task<LocaleValues<TModel>> GetByKeyAsync<TModel>(string cultureCode, string key)
-            where TModel : class, ILocaleValue
-        {
-
-            if (String.IsNullOrEmpty(cultureCode))
-            {
-                throw new ArgumentNullException(nameof(cultureCode));
-            }
-
-            if (String.IsNullOrEmpty(key))
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
-            foreach (var localeValue in await GetResourcesAsync<TModel>(cultureCode))
-            {
-                foreach (var value in localeValue.Values)
-                {
-                    if (value.Key == key)
-                    {
-                        return localeValue;
-                    }
-                }
-            }
-
-            return null;
-
-        }
-
-        public async Task<TModel> GetFirstOrDefaultByKeyAsync<TModel>(string cultureCode, string key)
-            where TModel : class, ILocaleValue
-        {
-            var localeValues = await GetByKeyAsync<TModel>(cultureCode, key);
-            return localeValues?.Values.FirstOrDefault();
         }
 
         /// <summary>
         /// Froms all locale resources from in-memory cache.
         /// </summary>
         /// <returns></returns>
-        public async Task ClearCache()
+        public void Dispose()
         {
 
-            var locales = await _localeProvider.GetLocalesAsync();
-            if (locales != null)
+            var locales = _localeProvider.GetLocalesAsync()
+                .GetAwaiter()
+                .GetResult();
+
+            if (locales == null)
             {
-                foreach (var locale in locales)
-                {
-                    _cacheManager.CancelTokens(typeof(ComposedLocaleResource), locale.Descriptor.Name);
-                    _cacheManager.CancelTokens(typeof(LocalizedString), locale.Descriptor.Name);
-
-                    if (_logger.IsEnabled(LogLevel.Information))
-                    {
-                        _logger.LogInformation("Deleted cache for locale '{0}' located at '{1}'",
-                            locale.Descriptor.Name, locale.Descriptor.DirectoryInfo.FullName);
-                    }
-
-                }
+                return;
             }
-            
+
+            foreach (var locale in locales)
+            {
+                _cacheManager.CancelTokens(typeof(ComposedLocaleResource), locale.Descriptor.Name);
+                _cacheManager.CancelTokens(typeof(LocalizedString), locale.Descriptor.Name);
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Deleted cache for locale '{0}' located at '{1}'",
+                        locale.Descriptor.Name, locale.Descriptor.DirectoryInfo.FullName);
+                }
+
+            }
+
         }
         
-
     }
 
 }

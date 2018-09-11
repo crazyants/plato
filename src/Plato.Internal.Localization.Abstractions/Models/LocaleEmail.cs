@@ -1,10 +1,10 @@
 ﻿namespace Plato.Internal.Localization.Abstractions.Models
 {
 
-    public class LocaleEmail : ILocaleValue
+    public class LocaleEmail : ILocalizedValue
     {
 
-        public string Key { get; set; }
+        public string Name { get; set; }
 
         public string To { get; set; }
 

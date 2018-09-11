@@ -65,7 +65,7 @@ namespace Plato.Internal.Localization.Locales
 
         }
 
-        public void ReloadLocales()
+        public void Dispose()
         {
             _composedLocaleDescriptors = null;
             _localeDescriptors = null;

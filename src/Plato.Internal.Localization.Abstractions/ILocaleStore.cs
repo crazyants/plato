@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Internal.Localization.Abstractions.Models;
-using Microsoft.Extensions.Localization;
+using LocalizedString = Microsoft.Extensions.Localization.LocalizedString;
 
 namespace Plato.Internal.Localization.Abstractions
 {
@@ -11,15 +11,11 @@ namespace Plato.Internal.Localization.Abstractions
   
         Task<IEnumerable<ComposedLocaleResource>> GetResourcesAsync(string cultureCode);
 
-        Task<IEnumerable<LocaleValues<TModel>>> GetResourcesAsync<TModel>(string cultureCode) where TModel : class, ILocaleValue;
-
-        Task<LocaleValues<TModel>> GetByKeyAsync<TModel>(string cultureCode, string key) where TModel : class, ILocaleValue;
-
-        Task<TModel> GetFirstOrDefaultByKeyAsync<TModel>(string cultureCode, string key) where TModel : class, ILocaleValue;
+        Task<IEnumerable<LocalizedValues<TModel>>> GetResourcesAsync<TModel>(string cultureCode) where TModel : class, ILocalizedValue;
 
         Task<IEnumerable<LocalizedString>> GetAllStringsAsync(string cultureCode);
 
-        Task ClearCache();
+        void Dispose();
         
     }
 

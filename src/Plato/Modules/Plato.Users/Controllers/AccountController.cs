@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
+using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Users.Services;
@@ -109,7 +110,7 @@ namespace Plato.Users.Controllers
 
                 foreach (var keyValue in resourceValue.Values)
                 {
-                    sb.Append("Key: ").Append(keyValue.Key);
+                    sb.Append("Key: ").Append(keyValue.Name);
                     sb.Append("<BR>");
                     sb.Append("Value: ").Append(keyValue.Value);
                     sb.Append("<BR>");
@@ -563,28 +564,6 @@ namespace Plato.Users.Controllers
 
             return false;
 
-            //var viewName = "TemplateUserLostPassword";
-            //var model = Arguments.From(new { User = user, LostPasswordUrl = Url.Action("ResetPassword", "Account", new { code = user.ResetToken }, HttpContext.Request.Scheme) });
-
-            //var options = ControllerContext.HttpContext.RequestServices.GetRequiredService<IOptions<MvcViewOptions>>();
-            //ControllerContext.RouteData.Values["action"] = viewName;
-            //ControllerContext.RouteData.Values["controller"] = "";
-            //var viewEngineResult = options.Value.ViewEngines.Select(x => x.FindView(ControllerContext, viewName, true)).FirstOrDefault(x => x != null);
-            //var displayContext = new DisplayContext()
-            //{
-            //    ServiceProvider = ControllerContext.HttpContext.RequestServices,
-            //    Value = await _shapeFactory.CreateAsync(viewName, model),
-            //    ViewContext = new ViewContext(ControllerContext, viewEngineResult.View, ViewData, TempData, new StringWriter(), new HtmlHelperOptions())
-            //};
-            //var htmlContent = await _displayManager.ExecuteAsync(displayContext);
-
-            //var message = new MailMessage() { Body = WebUtility.HtmlDecode(htmlContent.ToString()), IsBodyHtml = true, Subject = T["Reset your password"] };
-            //message.To.Add(user.Email);
-
-            //// send email
-            //var result = await _smtpService.SendAsync(message);
-
-            //return result.Succeeded;
         }
 
     }

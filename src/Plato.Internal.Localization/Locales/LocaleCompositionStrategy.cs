@@ -77,7 +77,7 @@ namespace Plato.Internal.Localization.Locales
             {
                 case EmailsFileName:
                 {
-                    composedLocaleResource.Configure<LocaleEmail>(model => new LocaleValues<LocaleEmail>
+                    composedLocaleResource.Configure<LocaleEmail>(model => new LocalizedValues<LocaleEmail>
                     {
                         Resource = resource,
                         Values = LocaleEmailsSerializer.Parse(config)
@@ -86,7 +86,7 @@ namespace Plato.Internal.Localization.Locales
                 }
                 default:
                 {
-                    composedLocaleResource.Configure<LocaleString>(model => new LocaleValues<LocaleString>
+                    composedLocaleResource.Configure<LocaleString>(model => new LocalizedValues<LocaleString>
                     {
                         Resource = resource,
                         Values = LocaleStringSerializer.Parse(config)
