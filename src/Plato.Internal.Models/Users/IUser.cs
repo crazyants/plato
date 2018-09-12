@@ -21,6 +21,7 @@ namespace Plato.Internal.Models.Users
 
         string ResetToken { get; set; }
 
+        string ConfirmationToken { get; set; }
     }
 
 }

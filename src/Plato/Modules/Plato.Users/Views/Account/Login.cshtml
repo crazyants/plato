@@ -33,6 +33,10 @@
             <p>
                 <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["Create a new account"]</a> @T["or"] 
                 <a asp-action="ForgotPassword" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["Forgot your password"]</a>
+               
+                <br /><br />
+                @T["Before you can login you must first"] <a asp-action="ConfirmEmail" asp-route-returnurl="@ViewData["ReturnUrl"]">@T["confirm your email address"]</a>
+
             </p>
         </form>
     </div>

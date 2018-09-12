@@ -11,12 +11,14 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Shell.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Services;
 
 namespace Plato.Users.Controllers
@@ -30,6 +32,7 @@ namespace Plato.Users.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly ILocaleStore _localeStore;
+        private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IContextFacade _contextFacade;
         private readonly IEmailManager _emailManager;
 
@@ -44,7 +47,10 @@ namespace Plato.Users.Controllers
             SignInManager<User> signInManage,
             ILogger<AccountController> logger, 
             IPlatoUserManager<User> platoUserManager,
-            ILocaleStore localeStore, IContextFacade contextFacade, IEmailManager emailManager)
+            ILocaleStore localeStore,
+            IContextFacade contextFacade,
+            IEmailManager emailManager,
+            IPlatoUserStore<User> platoUserStore)
         {
             _userManager = userManager;
             _signInManager = signInManage;
@@ -53,6 +59,7 @@ namespace Plato.Users.Controllers
             _localeStore = localeStore;
             _contextFacade = contextFacade;
             _emailManager = emailManager;
+            _platoUserStore = platoUserStore;
 
 
             T = htmlLocalizer;
@@ -385,45 +392,144 @@ namespace Plato.Users.Controllers
                 return Redirect("~/");
             }
         }
-        
+
+
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ForgotPassword()
+        public IActionResult ConfirmEmail()
         {
-            //if (!(await _siteService.GetSiteSettingsAsync()).As<RegistrationSettings>().EnableLostPassword)
-            //{
-            //    return NotFound();
-            //}
-
-            return View(new ForgotPasswordViewModel());
+            return View(new ConfirmEmailViewModel());
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailViewModel model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var result = await _platoUserManager.GetEmailConfirmationUserAsync(model.UserIdentifier);
+                if (result.Succeeded)
+                {
+                    var user = result.Response;
+                    if (user != null)
+                    {
+                        user.ConfirmationToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.ConfirmationToken));
+                        var emailResult = await SendEmailConfirmationTokenAsync(user);
+                        if (!emailResult.Succeeded)
+                        {
+                            foreach (var error in emailResult.Errors)
+                            {
+                                ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                            }
+
+                            return View(model);
+                        }
+                    }
+                }
+            }
+            
+            return RedirectToLocal(Url.Action("ConfirmEmailConfirmation"));
+        }
+        
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ConfirmEmailConfirmation()
+        {
+            return View();
+        }
+        
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> EmailConfirmed(string code = null)
+        {
+
+            var isValidConfirmationToken = false;
+            if (!String.IsNullOrEmpty(code))
+            {
+                var user = await _platoUserStore.GetByConfirmationToken(Encoding.UTF8.GetString(Convert.FromBase64String(code)));
+                if (user != null)
+                {
+                    isValidConfirmationToken = true;
+                }
+            }
+
+            return View(new EmailConfirmedViewModel
+            {
+                IsValidConfirmationToken = isValidConfirmationToken,
+                ConfirmationToken = code
+            });
+
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EmailConfirmed(EmailConfirmedViewModel model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var result = await _platoUserManager.ConfirmEmailAsync(model.Email,
+                    Encoding.UTF8.GetString(Convert.FromBase64String(model.ConfirmationToken)));
+                if (result.Succeeded)
+                {
+                    return RedirectToLocal(Url.Action("EmailConfirmedConfirmation"));
+                }
+            }
+
+            return View(model);
+        }
+        
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult EmailConfirmedConfirmation()
+        {
+            return View();
+        }
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View(new ForgotPasswordViewModel());
+        }
+        
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            //if (!(await _siteService.GetSiteSettingsAsync()).As<RegistrationSettings>().EnableLostPassword)
-            //{
-            //    return NotFound();
-            //}
-
+          
             if (ModelState.IsValid)
             {
                 var result = await _platoUserManager.GetForgotPasswordUserAsync(model.UserIdentifier);
                 if (result.Succeeded)
                 {
-                    var user = (User)result.Response;
+                    var user = result.Response;
                     if (user != null)
                     {
-                        user.ResetToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.ResetToken));
-                        await SendResetTokenAsync(user);
+                        // Ensure account has been confirmed
+                        if (await _userManager.IsEmailConfirmedAsync(user))
+                        {
+                            user.ResetToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(user.ResetToken));
+                            var emailResult = await SendPasswordResetTokenAsync(user);
+                            if (!emailResult.Succeeded)
+                            {
+                                foreach (var error in emailResult.Errors)
+                                {
+                                    ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                                }
+
+                                return View(model);
+                            }
+                        }
                     }
                 }
-               
             }
-
-            // returns to confirmation page anyway: we don't want to let scrapers know if a username or an email exist
+            
             return RedirectToLocal(Url.Action("ForgotPasswordConfirmation"));
         }
 
@@ -436,17 +542,24 @@ namespace Plato.Users.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword(string code = null)
+        public async Task<IActionResult> ResetPassword(string code = null)
         {
-            //if (!(await _siteService.GetSiteSettingsAsync()).As<RegistrationSettings>().EnableLostPassword)
-            //{
-            //    return NotFound();
-            //}
-            if (code == null)
+
+            var isValidResetToken = false;
+            if (!String.IsNullOrEmpty(code))
             {
-                //"A code must be supplied for password reset.";
+                var user = await _platoUserStore.GetByResetToken(Encoding.UTF8.GetString(Convert.FromBase64String(code)));
+                if (user != null)
+                {
+                    isValidResetToken = true;
+                }
             }
-            return View(new ResetPasswordViewModel { ResetToken = code });
+
+            return View(new ResetPasswordViewModel
+            {
+                IsValidResetToken = isValidResetToken,
+                ResetToken = code
+            });
         }
 
 
@@ -455,11 +568,7 @@ namespace Plato.Users.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            //if (!(await _siteService.GetSiteSettingsAsync()).As<RegistrationSettings>().EnableLostPassword)
-            //{
-            //    return NotFound();
-            //}
-
+         
             if (ModelState.IsValid)
             {
                 var result = await _platoUserManager.ResetPasswordAsync(model.Email,
@@ -526,11 +635,12 @@ namespace Plato.Users.Controllers
             }
         }
 
-        protected async Task<bool> SendResetTokenAsync(User user)
+        protected async Task<IActivityResult<EmailMessage>> SendPasswordResetTokenAsync(User user)
         {
             
             // Get reset password email
-            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>("en-US", "ResetPassword");
+            var culture = await _contextFacade.GetCurrentCultureAsync();
+            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, "ResetPassword");
             if (email != null)
             {
 
@@ -556,15 +666,55 @@ namespace Plato.Users.Controllers
                 message.To.Add(user.Email);
 
                 // send email
-                var result = await _emailManager.SaveAsync(message);
+                return await _emailManager.SaveAsync(message);
+                
+            }
 
-                return result.Succeeded;
+            var result = new ActivityResult<EmailMessage>();
+            return result.Failed();
+
+        }
+        
+        protected async Task<IActivityResult<EmailMessage>> SendEmailConfirmationTokenAsync(User user)
+        {
+
+            // Get reset password email
+            var culture = await _contextFacade.GetCurrentCultureAsync();
+            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, "ConfirmEmail");
+            if (email != null)
+            {
+
+                // Build email confirmation link
+                var baseUrl = await _contextFacade.GetBaseUrlAsync();
+                var callbackUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                {
+                    ["Area"] = "Plato.Users",
+                    ["Controller"] = "Account",
+                    ["Action"] = "EmailConfirmed",
+                    ["Code"] = user.ResetToken
+                });
+
+                var body = string.Format(email.Message, user.DisplayName, callbackUrl);
+
+                var message = new MailMessage()
+                {
+                    Subject = email.Subject,
+                    Body = WebUtility.HtmlDecode(body),
+                    IsBodyHtml = true
+                };
+
+                message.To.Add(user.Email);
+
+                // send email
+                return await _emailManager.SaveAsync(message);
 
             }
 
-            return false;
+            var result = new ActivityResult<EmailMessage>();
+            return result.Failed();
 
         }
+
 
     }
 

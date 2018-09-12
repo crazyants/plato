@@ -72,6 +72,7 @@ namespace Plato.Internal.Repositories.Users
                 user.LockoutEnabled,
                 user.AccessFailedCount,
                 user.ResetToken,
+                user.ConfirmationToken,
                 user.ApiKey,
                 user.TimeZone,
                 user.ObserveDst,
@@ -278,6 +279,26 @@ namespace Plato.Internal.Repositories.Users
             return user;
         }
 
+        public async Task<User> SelectByConfirmationTokenAsync(string confirmationToken)
+        {
+            if (string.IsNullOrEmpty(confirmationToken))
+            {
+                throw new ArgumentNullException(nameof(confirmationToken));
+            }
+
+            User user = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectUserByConfirmationToken",
+                    confirmationToken.TrimToSize(255));
+                user = await BuildUserFromResultSets(reader);
+            }
+
+            return user;
+        }
+
         public async Task<User> SelectByApiKeyAsync(string apiKey)
         {
             if (String.IsNullOrEmpty(apiKey))
@@ -393,6 +414,7 @@ namespace Plato.Internal.Repositories.Users
             bool lockoutEnabled,
             int accessFailedCount,
             string resetToken,
+            string confirmationToken,
             string apiKey,
             string timeZone,
             bool observeDst,
@@ -432,6 +454,7 @@ namespace Plato.Internal.Repositories.Users
                     lockoutEnabled,
                     accessFailedCount,
                     resetToken.ToEmptyIfNull().TrimToSize(255),
+                    confirmationToken.ToEmptyIfNull().TrimToSize(255),
                     apiKey.ToEmptyIfNull().TrimToSize(255),
                     timeZone.ToEmptyIfNull().TrimToSize(255),
                     observeDst,

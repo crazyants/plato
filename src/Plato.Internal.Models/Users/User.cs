@@ -37,6 +37,8 @@ namespace Plato.Internal.Models.Users
 
         public string ResetToken { get; set; }
 
+        public string ConfirmationToken { get; set; }
+
         public string ApiKey { get; set; }
 
         public string TimeZone { get; set; }
@@ -157,6 +159,12 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("SecurityStamp"))
                 SecurityStamp = Convert.ToString(dr["SecurityStamp"]);
+            
+            if (dr.ColumnIsNotNull("ResetToken"))
+                ResetToken = Convert.ToString(dr["ResetToken"]);
+
+            if (dr.ColumnIsNotNull("ConfirmationToken"))
+                ConfirmationToken = Convert.ToString(dr["ConfirmationToken"]);
 
             if (dr.ColumnIsNotNull("PhoneNumber"))
                 PhoneNumber = Convert.ToString(dr["PhoneNumber"]);
@@ -200,6 +208,11 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("LastLoginDate"))
                 LastLoginDate = DateTimeOffset.Parse(Convert.ToString((dr["LastLoginDate"])));
 
+        }
+        
+        public override string ToString()
+        {
+            return this.UserName;
         }
 
         #endregion

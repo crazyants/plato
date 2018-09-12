@@ -304,20 +304,57 @@ namespace Plato.Users.Services
                 return result.Failed();
             }
 
+            // Generate password reset token
             user.ResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            return result.Success(user);
+            // Persist the password reset token
+            var updatedUser = await _platoUserStore.UpdateAsync(user);
+            if (updatedUser != null)
+            {
+                return result.Success(updatedUser);
+            }
+            
+            return result.Failed();
+
+        }
+
+        public async Task<IActivityResult<TUser>> GetEmailConfirmationUserAsync(string userIdentifier)
+        {
+            var result = new ActivityResult<TUser>();
+
+            if (string.IsNullOrWhiteSpace(userIdentifier))
+            {
+                return result.Failed();
+            }
+
+            var user = await FindByUsernameOrEmailAsync(userIdentifier);
+            if (user == null)
+            {
+                return result.Failed();
+            }
+
+            // Generate email confirmation reset token
+            user.ConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            // Persist the email confirmation token
+            var updatedUser = await _platoUserStore.UpdateAsync(user);
+            if (updatedUser != null)
+            {
+                return result.Success(updatedUser);
+            }
+
+            return result.Failed();
 
         }
 
         public async Task<IActivityResult<TUser>> ResetPasswordAsync(
-            string userIdentifier, string resetToken,
+            string userIdentifier,
+            string resetToken,
             string newPassword)
         {
 
             var result = new ActivityResult<TUser>();
-
-
+            
             if (string.IsNullOrWhiteSpace(userIdentifier))
             {
                 return result.Failed(new ActivityError("UserName", T["A user name or email is required"]));
@@ -356,10 +393,49 @@ namespace Plato.Users.Services
 
         }
 
+        public async Task<IActivityResult<TUser>> ConfirmEmailAsync(
+            string userIdentifier,
+            string confirmationToken)
+        {
+            var result = new ActivityResult<TUser>();
+
+            if (string.IsNullOrWhiteSpace(userIdentifier))
+            {
+                return result.Failed(new ActivityError("UserName", T["A user name or email is required"]));
+            }
+
+            if (string.IsNullOrWhiteSpace(confirmationToken))
+            {
+                return result.Failed(new ActivityError("Token", T["A token is required."]));
+            }
+
+            var user = await FindByUsernameOrEmailAsync(userIdentifier);
+            if (user == null)
+            {
+                return result.Failed();
+            }
+
+            var identityResult = await _userManager.ConfirmEmailAsync(user, confirmationToken);
+
+            if (!identityResult.Succeeded)
+            {
+                var errors = new List<ActivityError>();
+                foreach (var error in identityResult.Errors)
+                {
+                    errors.Add(new ActivityError(error.Code, T[error.Description]));
+                }
+
+                return result.Failed(errors.ToArray());
+            }
+
+            return result.Success();
+
+        }
+
         #endregion
 
         #region "Private Methods"
-        
+
         string GetIpV4Address(bool tryUseXForwardHeader = true)
         {
 

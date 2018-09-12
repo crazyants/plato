@@ -52,8 +52,7 @@ namespace Plato.Users
             // register set-up event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
             
-            // Adds the default token providers used to generate tokens for reset passwords, change email
-            // and change telephone number operations, and for two factor authentication token generation.
+            // Adds default token providers
             new IdentityBuilder(typeof(User), typeof(Role), services).AddDefaultTokenProviders();
         
             // --------
@@ -175,7 +174,7 @@ namespace Plato.Users
             routes.MapAreaRoute(
                 name: "ResetPassword",
                 areaName: "Plato.Users",
-                template: "account/resetpassword/{code?}",
+                template: "account/resetpassword",
                 defaults: new { controller = "Account", action = "ResetPassword" }
             );
 

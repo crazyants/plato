@@ -26,8 +26,12 @@ namespace Plato.Users.Services
 
         Task<IActivityResult<TUser>> GetForgotPasswordUserAsync(string userIdentifier);
 
+        Task<IActivityResult<TUser>> GetEmailConfirmationUserAsync(string userIdentifier);
+        
         Task<IActivityResult<TUser>> ResetPasswordAsync(string userIdentifier, string resetToken, string newPassword);
 
+        Task<IActivityResult<TUser>> ConfirmEmailAsync(string userIdentifier, string confirmationToken);
+        
     }
 
 

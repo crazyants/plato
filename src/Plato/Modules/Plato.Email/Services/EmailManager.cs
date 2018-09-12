@@ -1,5 +1,6 @@
 ﻿using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Plato.Email.Models;
 using Plato.Email.Stores;
@@ -15,14 +16,17 @@ namespace Plato.Email.Services
         private readonly SmtpSettings _smtpSettings;
         private readonly IEmailStore<EmailMessage> _emailStore;
         private readonly ISmtpService _smtpService;
+        private readonly ILogger<EmailManager> _logger;
 
         public EmailManager(
             IEmailStore<EmailMessage> emailStore,
             ISmtpService smtpService,
-            IOptions<SmtpSettings> smtpSettings)
+            IOptions<SmtpSettings> smtpSettings,
+            ILogger<EmailManager> logger)
         {
             _emailStore = emailStore;
             _smtpService = smtpService;
+            _logger = logger;
             _smtpSettings = smtpSettings.Value;
         }
         
@@ -33,7 +37,9 @@ namespace Plato.Email.Services
 
             if (_smtpSettings?.DefaultFrom == null)
             {
+                
                 return result.Failed("SMTP settings must be configured before an email can be saved to the queue.");
+
             }
 
             if (message.From == null)

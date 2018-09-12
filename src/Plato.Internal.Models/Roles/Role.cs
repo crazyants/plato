@@ -106,9 +106,13 @@ namespace Plato.Internal.Models.Roles
         {
             action(this);
         }
-
-
-        #endregion
         
+        public override string ToString()
+        {
+            return this.Name;
+        }
+        
+        #endregion
+
     }
 }

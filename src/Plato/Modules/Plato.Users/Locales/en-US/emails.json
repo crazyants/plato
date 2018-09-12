@@ -10,13 +10,13 @@
       "Message": "Hi {0},\n\nPlease use the link below to reset your account password.\n\n{1}\n\n[AppName]\n[AppUrl]"
     },
     {
-      "Id": "VerifyEmail",
+      "Id": "ConfirmEmail",
       "To": "[RecipientEmail]",
       "Cc": "",
       "Bcc": "",
       "From": "[AppEmail]",
-      "Subject": "[AppName] - Verfiy Your Account",
-      "Message": "Hi {0},\n\nPlease use the link below to verfiy your new accunt.\n\n{1}\n\n[AppName]\n[AppUrl]"
+      "Subject": "[AppName] - Confirm Your Email",
+      "Message": "Hi {0},\n\nPlease visit the link below to confirm your email address and activate your new accunt.\n\n{1}\n\n[AppName]\n[AppUrl]"
     }
   ]
 }

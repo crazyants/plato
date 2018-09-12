@@ -106,8 +106,8 @@ namespace Plato.Internal.Shell
             descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Roles"});
             descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Settings"});
             descriptor.Modules.Add(new ShellModule {ModuleId = "Plato.Features"});
+            descriptor.Modules.Add(new ShellModule { ModuleId = "Plato.Email" });
             return descriptor;
-
         }
         
     }

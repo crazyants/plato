@@ -132,12 +132,15 @@ namespace Plato.Internal.Shell
 
             // Get application culture
             var settings = await GetSiteSettingsAsync();
-            if (!String.IsNullOrEmpty(settings.Culture))
+            if (settings != null)
             {
-                return settings.Culture;
+                if (!String.IsNullOrEmpty(settings.Culture))
+                {
+                    return settings.Culture;
+                }
             }
-
-            // Return en-US default
+       
+            // Return en-US default culture
             return DefaultCulture;
 
         }

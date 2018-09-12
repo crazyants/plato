@@ -13,6 +13,7 @@ using Plato.Email.Models;
 using Plato.Email.Repositories;
 using Plato.Email.Services;
 using Plato.Email.Stores;
+using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Emails.Abstractions;
 
 namespace Plato.Email
@@ -31,6 +32,7 @@ namespace Plato.Email
 
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+            services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
 
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();

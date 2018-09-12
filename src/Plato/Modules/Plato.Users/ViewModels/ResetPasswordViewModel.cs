@@ -19,6 +19,8 @@ namespace Plato.Users.ViewModels
         [DataType(DataType.Password)]
         public string PasswordConfirmation { get; set; }
 
+        public bool IsValidResetToken { get; set; }
+
         public string ResetToken { get; set; }
     }
 }

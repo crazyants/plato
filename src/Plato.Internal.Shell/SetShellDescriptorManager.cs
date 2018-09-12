@@ -6,6 +6,7 @@ using Plato.Internal.Stores.Abstractions.Shell;
 
 namespace Plato.Internal.Shell
 {
+
     public class SetShellDescriptorManager : IShellDescriptorStore
 
     {

@@ -63,7 +63,8 @@ namespace Plato.Users.Handlers
                 var result =  await _userManager.CreateAsync(new User()
                 {
                     Email = context.AdminEmail,
-                    UserName = context.AdminUsername
+                    UserName = context.AdminUsername,
+                    EmailConfirmed = true
                 }, context.AdminPassword);
                 if (!result.Succeeded)
                 {
@@ -228,6 +229,12 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "ConfirmationToken",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "ApiKey",
                         DbType = DbType.String,
                         Length = "255"
@@ -325,17 +332,7 @@ namespace Plato.Users.Handlers
                             EXEC {prefix}_SelectUserById @id;")
                     .ForTable(users)
                     .WithParameter(new SchemaColumn() {Name = "UserName", DbType = DbType.String, Length = "255"}))
-                    
-                .CreateProcedure(new SchemaProcedure("SelectUserByApiKey", @"
-                            DECLARE @Id int;
-                            SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
-                                WHERE (
-                                   ApiKey = @ApiKey
-                            ))
-                            EXEC {prefix}_SelectUserById @id;")
-                    .ForTable(users)
-                    .WithParameter(new SchemaColumn() { Name = "ApiKey", DbType = DbType.String, Length = "255" }))
-                    
+              
                 .CreateProcedure(
                     new SchemaProcedure("SelectUserByUserNameNormalized", @"
                             DECLARE @Id int;
@@ -351,6 +348,17 @@ namespace Plato.Users.Handlers
                             DbType = DbType.String,
                             Length = "255"
                         }))
+
+
+                .CreateProcedure(new SchemaProcedure("SelectUserByApiKey", @"
+                            DECLARE @Id int;
+                            SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
+                                WHERE (
+                                   ApiKey = @ApiKey
+                            ))
+                            EXEC {prefix}_SelectUserById @id;")
+                    .ForTable(users)
+                    .WithParameter(new SchemaColumn() { Name = "ApiKey", DbType = DbType.String, Length = "255" }))
 
                 .CreateProcedure(
                     new SchemaProcedure("SelectUserByEmailAndPassword", @"
@@ -391,6 +399,25 @@ namespace Plato.Users.Handlers
                             new SchemaColumn()
                             {
                                 Name = "ResetToken",
+                                DbType = DbType.String,
+                                Length = "255"
+                            }
+                        }))
+
+                    .CreateProcedure(
+                    new SchemaProcedure("SelectUserByConfirmationToken", @"
+                            DECLARE @Id int;
+                            SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
+                                WHERE (
+                                   ConfirmationToken = @ConfirmationToken
+                            ))
+                            EXEC {prefix}_SelectUserById @id;")
+                        .ForTable(users)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "ConfirmationToken",
                                 DbType = DbType.String,
                                 Length = "255"
                             }
