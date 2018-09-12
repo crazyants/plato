@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Cache;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Users;
@@ -20,6 +19,11 @@ namespace Plato.Internal.Stores.Users
     {
 
         #region "Private Variables"
+
+        private const string ByUsername = "ByUsername";
+        private const string ByUsernameNormalized = "ByUsernameNormalized";
+        private const string ByEmail = "ByEmail";
+        private const string ByEmailNormalized = "ByEmailNormalized";
 
         private readonly IUserDataItemStore<UserData> _userDataItemStore;
         private readonly IUserDataStore<UserData> _userDataStore;
@@ -150,7 +154,7 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<User> GetByUserNameNormalizedAsync(string userNameNormalized)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), userNameNormalized);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByUsernameNormalized, userNameNormalized);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByUserNameNormalizedAsync(userNameNormalized);
@@ -160,7 +164,7 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<User> GetByUserNameAsync(string userName)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), userName);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByUsername, userName);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByUserNameAsync(userName);
@@ -170,10 +174,20 @@ namespace Plato.Internal.Stores.Users
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), email);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByEmail, email);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
                 var user = await _userRepository.SelectByEmailAsync(email);
+                return await MergeUserData(user);
+            });
+        }
+
+        public async Task<User> GetByEmailNormalizedAsync(string emailNormalized)
+        {
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByEmailNormalized, emailNormalized);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+                var user = await _userRepository.SelectByEmailNormalizedAsync(emailNormalized);
                 return await MergeUserData(user);
             });
         }
@@ -339,9 +353,10 @@ namespace Plato.Internal.Stores.Users
             // Expire user cache
             _cacheManager.CancelTokens(this.GetType());
             _cacheManager.CancelTokens(this.GetType(), user.Id);
-            _cacheManager.CancelTokens(this.GetType(), user.UserName);
-            _cacheManager.CancelTokens(this.GetType(), user.Email);
-            _cacheManager.CancelTokens(this.GetType(), user.NormalizedUserName);
+            _cacheManager.CancelTokens(this.GetType(), ByUsernameNormalized, user.NormalizedUserName);
+            _cacheManager.CancelTokens(this.GetType(), ByUsername, user.UserName);
+            _cacheManager.CancelTokens(this.GetType(), ByEmailNormalized, user.NormalizedEmail);
+            _cacheManager.CancelTokens(this.GetType(), ByEmail, user.Email);
             _cacheManager.CancelTokens(this.GetType(), user.ApiKey);
 
             // Expire user data cache

@@ -5,7 +5,7 @@ using Plato.Internal.Localization.Abstractions.Models;
 namespace Plato.Internal.Localization.LocaleSerializers
 {
 
-    public class LocaleEmailsSerializer
+    public class EmailsSerializer
     {
 
         private const string SectionName = "Emails";

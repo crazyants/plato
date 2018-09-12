@@ -10,6 +10,8 @@ namespace Plato.Internal.Repositories.Users
 
         Task<T> SelectByEmailAsync(string email);
 
+        Task<T> SelectByEmailNormalizedAsync(string emailNormalized);
+
         Task<T> SelectByUserNameAndPasswordAsync(string userName, string password);
 
         Task<T> SelectByEmailAndPasswordAsync(string email, string password);

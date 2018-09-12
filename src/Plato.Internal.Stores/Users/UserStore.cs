@@ -121,7 +121,7 @@ namespace Plato.Internal.Stores.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return await _platoUserStore.GetByUserNameAsync(normalizedUserName);
+            return await _platoUserStore.GetByUserNameNormalizedAsync(normalizedUserName);
         }
 
         public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
@@ -316,7 +316,7 @@ namespace Plato.Internal.Stores.Users
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return _platoUserStore.GetByEmailAsync(normalizedEmail);
+            return _platoUserStore.GetByEmailNormalizedAsync(normalizedEmail);
         }
 
         public Task<string> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
@@ -80,7 +80,7 @@ namespace Plato.Internal.Localization.Locales
                     composedLocaleResource.Configure<LocaleEmail>(model => new LocalizedValues<LocaleEmail>
                     {
                         Resource = resource,
-                        Values = LocaleEmailsSerializer.Parse(config)
+                        Values = EmailsSerializer.Parse(config)
                     });
                     break;
                 }
@@ -89,7 +89,7 @@ namespace Plato.Internal.Localization.Locales
                     composedLocaleResource.Configure<LocaleString>(model => new LocalizedValues<LocaleString>
                     {
                         Resource = resource,
-                        Values = LocaleStringSerializer.Parse(config)
+                        Values = StringSerializer.Parse(config)
                     });
                     break;
                 }

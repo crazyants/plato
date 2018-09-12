@@ -424,7 +424,7 @@ namespace Plato.Users.Services
         private async Task<TUser> FindByUsernameOrEmailAsync(string userIdentifier)
         {
             userIdentifier = userIdentifier.Normalize();
-            return await _userManager.FindByNameAsync(userIdentifier) ??
+            return await _userManager.FindByNameAsync(userIdentifier) ?? 
                    await _userManager.FindByEmailAsync(userIdentifier);
         }
 

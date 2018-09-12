@@ -138,8 +138,10 @@ namespace Plato.Internal.Repositories.Users
         public async Task<User> SelectByEmailAsync(string email)
         {
             if (string.IsNullOrEmpty(email))
+            {
                 throw new ArgumentNullException(nameof(email));
-
+            }
+                
             User user = null;
             using (var context = _dbContext)
             {
@@ -153,6 +155,27 @@ namespace Plato.Internal.Repositories.Users
 
             return user;
 
+        }
+
+        public async Task<User> SelectByEmailNormalizedAsync(string emailNormalized)
+        {
+            if (string.IsNullOrEmpty(emailNormalized))
+            {
+                throw new ArgumentNullException(nameof(emailNormalized));
+            }
+
+            User user = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectUserByEmailNormalized",
+                    emailNormalized.TrimToSize(255));
+
+                user = await BuildUserFromResultSets(reader);
+            }
+
+            return user;
         }
 
         public async Task<User> SelectByUserNameAsync(string userName)

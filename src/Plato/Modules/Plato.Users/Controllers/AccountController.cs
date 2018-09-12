@@ -539,7 +539,7 @@ namespace Plato.Users.Controllers
                 var callbackUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
                     ["Area"] = "Plato.Users",
-                    ["Controller"] = "Accountt",
+                    ["Controller"] = "Account",
                     ["Action"] = "ResetPassword",
                     ["Code"] = user.ResetToken
                 });

@@ -303,7 +303,19 @@ namespace Plato.Users.Handlers
                             EXEC {prefix}_SelectUserById @id;")
                     .ForTable(users)
                     .WithParameter(new SchemaColumn() {Name = "Email", DbType = DbType.String, Length = "255"}))
-                    
+
+
+                .CreateProcedure(new SchemaProcedure("SelectUserByEmailNormalized", @"
+                            DECLARE @Id int;
+                            SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
+                                WHERE (
+                                   NormalizedEmail = @NormalizedEmail
+                            ))
+                            EXEC {prefix}_SelectUserById @id;")
+                    .ForTable(users)
+                    .WithParameter(new SchemaColumn() { Name = "NormalizedEmail", DbType = DbType.String, Length = "255" }))
+
+
                 .CreateProcedure(new SchemaProcedure("SelectUserByUserName", @"
                             DECLARE @Id int;
                             SET @Id = (SELECT Id FROM {prefix}_Users WITH (nolock) 
