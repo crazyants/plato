@@ -2,56 +2,56 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Email.Models;
+using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Stores.Abstract;
-using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Email.Stores
 {
 
-    public interface IEmailSettingsStore<T> : ISettingsStore<T> where T : class
-    {
-
-    }
-
     public class EmailSettingsStore : IEmailSettingsStore<EmailSettings>
     {
 
-        const string _key = "EmailSettings";
+        private const string SettingsKey = "EmailSettings";
 
-        readonly IDictionaryStore _dictionaryStore;
-        readonly ILogger<EmailSettingsStore> _logger;
-        readonly IMemoryCache _memoryCache;
+        private readonly IDictionaryStore _dictionaryStore;
+        private readonly ILogger<EmailSettingsStore> _logger;
+        private readonly ICacheManager _cacheManager;
 
         public EmailSettingsStore(
             IDictionaryStore dictionaryStore,
             ILogger<EmailSettingsStore> logger,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            ICacheManager cacheManager)
         {
             _dictionaryStore = dictionaryStore;
+            _cacheManager = cacheManager;
             _logger = logger;
-            _memoryCache = memoryCache;
         }
 
         public async Task<EmailSettings> GetAsync()
         {
-
-            if (!_memoryCache.TryGetValue(_key, out EmailSettings settings))
-            {
-                settings = await _dictionaryStore.GetAsync<EmailSettings>(_key);
-                if (settings != null)
-                    _memoryCache.Set(_key, settings);
-            }
-            return settings;
-
+            var token = _cacheManager.GetOrCreateToken(this.GetType());
+            return await _cacheManager.GetOrCreateAsync(token,
+                async (cacheEntry) => await _dictionaryStore.GetAsync<EmailSettings>(SettingsKey));
         }
 
         public async Task<EmailSettings> SaveAsync(EmailSettings model)
         {
 
-            var settings = await _dictionaryStore.UpdateAsync<EmailSettings>(_key, model);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Email settings updating");
+            }
+
+            var settings = await _dictionaryStore.UpdateAsync<EmailSettings>(SettingsKey, model);
             if (settings != null)
             {
-                _memoryCache.Set(_key, settings);
+                _cacheManager.CancelTokens(this.GetType());
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Email settings updated");
+                }
+
             }
 
             return settings;
@@ -59,9 +59,18 @@ namespace Plato.Email.Stores
 
         public async Task<bool> DeleteAsync()
         {
-            var result = await _dictionaryStore.DeleteAsync(_key);
-            _memoryCache.Remove(_key);
+            var result = await _dictionaryStore.DeleteAsync(SettingsKey);
+            if (result)
+            {
+                _cacheManager.CancelTokens(this.GetType());
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Email settings deleted");
+                }
+            }
+
             return result;
+
         }
 
     }

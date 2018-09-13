@@ -671,7 +671,7 @@ namespace Plato.Users.Controllers
             }
 
             var result = new ActivityResult<EmailMessage>();
-            return result.Failed();
+            return result.Failed("An error occurred whilst attempting to send the password reset token email.");
 
         }
         
@@ -711,7 +711,7 @@ namespace Plato.Users.Controllers
             }
 
             var result = new ActivityResult<EmailMessage>();
-            return result.Failed();
+            return result.Failed("An error occurred whilst attempting to send the email confirmation email.");
 
         }
 

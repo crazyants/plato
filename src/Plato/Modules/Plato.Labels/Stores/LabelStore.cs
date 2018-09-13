@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using Plato.Labels.Models;
 using Plato.Labels.Repositories;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Cache;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Modules.Abstractions;
@@ -26,17 +25,18 @@ namespace Plato.Labels.Stores
         private readonly ICacheManager _cacheManager;
 
         public LabelStore(
-            ILabelRepository<TLabel> LabelRepository,
+            ILabelRepository<TLabel> labelRepository,
             ICacheManager cacheManager,
             ILogger<LabelStore<TLabel>> logger,
             IDbQueryConfiguration dbQuery,
-            ILabelDataStore<LabelData> LabelDataStore, ITypedModuleProvider typedModuleProvider)
+            ILabelDataStore<LabelData> labelDataStore,
+            ITypedModuleProvider typedModuleProvider)
         {
-            _LabelRepository = LabelRepository;
+            _LabelRepository = labelRepository;
             _cacheManager = cacheManager;
             _logger = logger;
             _dbQuery = dbQuery;
-            _LabelDataStore = LabelDataStore;
+            _LabelDataStore = labelDataStore;
             _typedModuleProvider = typedModuleProvider;
         }
 
@@ -110,8 +110,8 @@ namespace Plato.Labels.Stores
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
-                var Label = await _LabelRepository.SelectByIdAsync(id);
-                return await MergeLabelData(Label);
+                var label = await _LabelRepository.SelectByIdAsync(id);
+                return await MergeLabelData(label);
             });
         }
 

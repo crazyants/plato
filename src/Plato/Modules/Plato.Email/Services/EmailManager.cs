@@ -37,9 +37,7 @@ namespace Plato.Email.Services
 
             if (_smtpSettings?.DefaultFrom == null)
             {
-                
-                return result.Failed("SMTP settings must be configured before an email can be saved to the queue.");
-
+                return result.Failed("Email settings must be configured before an email can be sent.");
             }
 
             if (message.From == null)
