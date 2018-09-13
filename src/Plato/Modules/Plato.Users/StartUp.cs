@@ -81,7 +81,7 @@ namespace Plato.Users
             // Context facade
             //services.TryAddScoped<IContextFacade, ContextFacade>();
             
-            // Configurate authentication cookie
+            // Configurate authentication cookie options
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.Name = "plato_" + _cookieSuffix.ToLower();
@@ -92,7 +92,14 @@ namespace Plato.Users
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
                 options.SlidingExpiration = true;
             });
-            
+
+            // Configure IdentityOptions
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = true;
+                options.User.RequireUniqueEmail = true;
+            });
+
             // Navigation providers
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
@@ -156,7 +163,35 @@ namespace Plato.Users
                 template: "register",
                 defaults: new { controller = "Account", action = "Register" }
             );
-            
+
+            routes.MapAreaRoute(
+                name: "ConfirmEmail",
+                areaName: "Plato.Users",
+                template: "account/confirm",
+                defaults: new { controller = "Account", action = "ConfirmEmail" }
+            );
+
+            routes.MapAreaRoute(
+                name: "ConfirmEmailConfirmation",
+                areaName: "Plato.Users",
+                template: "account/confirm/success",
+                defaults: new { controller = "Account", action = "ConfirmEmailConfirmation" }
+            );
+
+            routes.MapAreaRoute(
+                name: "ActivateAccount",
+                areaName: "Plato.Users",
+                template: "account/activate",
+                defaults: new { controller = "Account", action = "ActivateAccount" }
+            );
+
+            routes.MapAreaRoute(
+                name: "ActivateAccountConfirmation",
+                areaName: "Plato.Users",
+                template: "account/activate/success",
+                defaults: new { controller = "Account", action = "ActivateAccountConfirmation" }
+            );
+
             routes.MapAreaRoute(
                 name: "ForgotPassword",
                 areaName: "Plato.Users",

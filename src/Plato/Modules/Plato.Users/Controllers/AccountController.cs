@@ -278,6 +278,7 @@ namespace Plato.Users.Controllers
              ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(
@@ -298,6 +299,8 @@ namespace Plato.Users.Controllers
                     return View(model);
 
                 }
+
+            
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning(2, "User account locked out.");
@@ -442,7 +445,7 @@ namespace Plato.Users.Controllers
         
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> EmailConfirmed(string code = null)
+        public async Task<IActionResult> ActivateAccount(string code = null)
         {
 
             var isValidConfirmationToken = false;
@@ -455,7 +458,7 @@ namespace Plato.Users.Controllers
                 }
             }
 
-            return View(new EmailConfirmedViewModel
+            return View(new ActivateAccountViewModel
             {
                 IsValidConfirmationToken = isValidConfirmationToken,
                 ConfirmationToken = code
@@ -466,30 +469,46 @@ namespace Plato.Users.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EmailConfirmed(EmailConfirmedViewModel model)
+        public async Task<IActionResult> ActivateAccount(ActivateAccountViewModel model)
         {
 
             if (ModelState.IsValid)
             {
-                var result = await _platoUserManager.ConfirmEmailAsync(model.Email,
-                    Encoding.UTF8.GetString(Convert.FromBase64String(model.ConfirmationToken)));
-                if (result.Succeeded)
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null)
                 {
-                    return RedirectToLocal(Url.Action("EmailConfirmedConfirmation"));
+                    // Ensure the user account matches the confirmation token
+                    var confirmationToken = Encoding.UTF8.GetString(Convert.FromBase64String(model.ConfirmationToken));
+                    if (user.ConfirmationToken == confirmationToken)
+                    {
+                        var result = await _platoUserManager.ConfirmEmailAsync(model.Email, confirmationToken);
+                        if (result.Succeeded)
+                        {
+                            return RedirectToLocal(Url.Action("ActivateAccountConfirmation"));
+                        }
+                        else
+                        {
+                            foreach (var error in result.Errors)
+                            {
+                                ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                            }
+                        }
+                    }
                 }
             }
 
-            return View(model);
+            // If we reach this point the found user's confirmation token does not match the supplied confirmation code
+            ViewData.ModelState.AddModelError(string.Empty, "The email address does not match the confirmation token");
+            return await ActivateAccount(model.ConfirmationToken);
         }
         
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult EmailConfirmedConfirmation()
+        public IActionResult ActivateAccountConfirmation()
         {
             return View();
         }
-
-
+        
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -690,8 +709,8 @@ namespace Plato.Users.Controllers
                 {
                     ["Area"] = "Plato.Users",
                     ["Controller"] = "Account",
-                    ["Action"] = "EmailConfirmed",
-                    ["Code"] = user.ResetToken
+                    ["Action"] = "ActivateAccount",
+                    ["Code"] = user.ConfirmationToken
                 });
 
                 var body = string.Format(email.Message, user.DisplayName, callbackUrl);

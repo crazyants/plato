@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Plato.Users.ViewModels
 {
-    public class EmailConfirmedViewModel
+    public class ActivateAccountViewModel
     {
 
         [Required]

@@ -1,6 +1,6 @@
-﻿@model EmailConfirmedViewModel
+﻿@model ActivateAccountViewModel
 @{
-    ViewData["Title"] = T["Confirm Email"];
+    ViewData["Title"] = T["Activate Account"];
 }
 
 @if (Model.IsValidConfirmationToken)
@@ -8,14 +8,14 @@
     <h2>@ViewData["Title"]</h2>
     <div class="row">
         <div class="col-md-6">
-            <form asp-controller="Account" asp-action="EmailConfirmed" method="post" class="form-horizontal">
+            <form asp-controller="Account" asp-action="ActivateAccount" method="post" class="form-horizontal">
                 <h4>@T["Enter your email address below to activate your account"]</h4>
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
 
                 <div class="form-group">
                     <label asp-for="Email" class="col-form-label font-weight-bold">@T["Email"]</label>
-                    <input asp-for="Email" class="form-control" autofocus />
+                    <input asp-for="Email" class="form-control" placeholder="@T["email@address.com"]" autofocus />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <input asp-for="ConfirmationToken" type="hidden" />

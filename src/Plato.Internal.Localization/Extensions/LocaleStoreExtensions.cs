@@ -50,7 +50,10 @@ namespace Plato.Internal.Localization.Extensions
                 {
                     if (value.Name == key)
                     {
-                        return localeValue;
+                        return new LocalizedValues<TModel>(localeValue.Resource, new List<TModel>()
+                        {
+                            value
+                        });
                     }
                 }
             }

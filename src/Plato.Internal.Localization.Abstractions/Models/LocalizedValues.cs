@@ -9,6 +9,15 @@ namespace Plato.Internal.Localization.Abstractions.Models
 
         public IEnumerable<TModel> Values { get; set; } = new List<TModel>();
 
+        public LocalizedValues()
+        {
+        }
+
+        public LocalizedValues(LocaleResource resource, IEnumerable<TModel> values)
+        {
+            this.Resource = resource;
+            this.Values = values;
+        }
     }
 
 }
