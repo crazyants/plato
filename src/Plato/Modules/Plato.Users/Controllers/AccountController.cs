@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
@@ -60,8 +61,7 @@ namespace Plato.Users.Controllers
             _contextFacade = contextFacade;
             _emailManager = emailManager;
             _platoUserStore = platoUserStore;
-
-
+            
             T = htmlLocalizer;
             S = stringLocalizer;
 
@@ -384,19 +384,6 @@ namespace Plato.Users.Controllers
             return Redirect("~/");
         }
 
-        private IActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return Redirect("~/");
-            }
-        }
-
-
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ConfirmEmail()
@@ -451,10 +438,14 @@ namespace Plato.Users.Controllers
             var isValidConfirmationToken = false;
             if (!String.IsNullOrEmpty(code))
             {
-                var user = await _platoUserStore.GetByConfirmationToken(Encoding.UTF8.GetString(Convert.FromBase64String(code)));
-                if (user != null)
+                if (code.IsBase64String())
                 {
-                    isValidConfirmationToken = true;
+                    var user = await _platoUserStore.GetByConfirmationToken(
+                        Encoding.UTF8.GetString(Convert.FromBase64String(code)));
+                    if (user != null)
+                    {
+                        isValidConfirmationToken = true;
+                    }
                 }
             }
 
@@ -567,10 +558,13 @@ namespace Plato.Users.Controllers
             var isValidResetToken = false;
             if (!String.IsNullOrEmpty(code))
             {
-                var user = await _platoUserStore.GetByResetToken(Encoding.UTF8.GetString(Convert.FromBase64String(code)));
-                if (user != null)
+                if (code.IsBase64String())
                 {
-                    isValidResetToken = true;
+                    var user = await _platoUserStore.GetByResetToken(Encoding.UTF8.GetString(Convert.FromBase64String(code)));
+                    if (user != null)
+                    {
+                        isValidResetToken = true;
+                    }
                 }
             }
 
@@ -580,8 +574,7 @@ namespace Plato.Users.Controllers
                 ResetToken = code
             });
         }
-
-
+        
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -590,15 +583,35 @@ namespace Plato.Users.Controllers
          
             if (ModelState.IsValid)
             {
-                var result = await _platoUserManager.ResetPasswordAsync(model.Email,
-                    Encoding.UTF8.GetString(Convert.FromBase64String(model.ResetToken)), model.NewPassword);
-                if (result.Succeeded)
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null)
                 {
-                    return RedirectToLocal(Url.Action("ResetPasswordConfirmation"));
+                    // Ensure the user account matches the reset token
+                    var resetToken = Encoding.UTF8.GetString(Convert.FromBase64String(model.ResetToken));
+                    if (user.ResetToken == resetToken)
+                    {
+                        var result = await _platoUserManager.ResetPasswordAsync(
+                            model.Email,
+                            resetToken,
+                            model.NewPassword);
+                        if (result.Succeeded)
+                        {
+                            return RedirectToLocal(Url.Action("ResetPasswordConfirmation"));
+                        }
+                        else
+                        {
+                            foreach (var error in result.Errors)
+                            {
+                                ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                            }
+                        }
+                    }
                 }
             }
 
-            return View(model);
+            // If we reach this point the found user's reset token does not match the supplied reset token
+            ViewData.ModelState.AddModelError(string.Empty, "The email address does not match the reset token");
+            return await ResetPassword(model.ResetToken);
         }
 
         [HttpGet]
@@ -607,8 +620,7 @@ namespace Plato.Users.Controllers
         {
             return View();
         }
-
-
+        
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Lockout()
@@ -653,8 +665,20 @@ namespace Plato.Users.Controllers
                 return View();
             }
         }
-
-        protected async Task<IActivityResult<EmailMessage>> SendPasswordResetTokenAsync(User user)
+        
+        IActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return Redirect("~/");
+            }
+        }
+        
+        async Task<IActivityResult<EmailMessage>> SendPasswordResetTokenAsync(User user)
         {
             
             // Get reset password email
@@ -694,7 +718,7 @@ namespace Plato.Users.Controllers
 
         }
         
-        protected async Task<IActivityResult<EmailMessage>> SendEmailConfirmationTokenAsync(User user)
+        async Task<IActivityResult<EmailMessage>> SendEmailConfirmationTokenAsync(User user)
         {
 
             // Get reset password email
@@ -733,8 +757,7 @@ namespace Plato.Users.Controllers
             return result.Failed("An error occurred whilst attempting to send the email confirmation email.");
 
         }
-
-
+        
     }
 
 }

@@ -226,6 +226,38 @@ namespace Plato.Internal.Abstractions.Extensions
             return sb.ToString();
         }
 
+        public static bool IsBase64String(this string value)
+        {
+
+            if (string.IsNullOrEmpty(value) || value.Length % 4 != 0
+                                            || value.Contains(' ') || value.Contains('\t') || value.Contains('\r') ||
+                                            value.Contains('\n'))
+            {
+                return false;
+            }
+                
+            var index = value.Length - 1;
+            if (value[index] == '=')
+            {
+                index--;
+            }
+               
+            if (value[index] == '=')
+            {
+                index--;
+            }
+               
+            for (var i = 0; i <= index; i++)
+            {
+                if (((char)value[i]).IsValidBase64Char())
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
     }
 
 }
