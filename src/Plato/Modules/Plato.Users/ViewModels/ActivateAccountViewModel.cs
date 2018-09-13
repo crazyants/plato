@@ -10,6 +10,8 @@ namespace Plato.Users.ViewModels
 
         [Required]
         [DataType(DataType.EmailAddress)]
+        [Display(Name = "email")]
+        [StringLength(255, MinimumLength = 4)]
         public string Email { get; set; }
 
         public bool IsValidConfirmationToken { get; set; }

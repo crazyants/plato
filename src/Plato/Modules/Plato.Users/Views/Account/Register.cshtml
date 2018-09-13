@@ -11,31 +11,29 @@
             <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
                 <h4>@T["Create a new account"]</h4>
                 <hr />
-                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="@Model.UserName" class="col-md-2 form-control-label font-weight-bold"></label>
-                    <span asp-validation-for="@Model.UserName" class="text-danger float-xs-right"></span>
-                    <input asp-for="@Model.UserName" class="form-control" />
+                    <label asp-for="UserName" class="col-form-label font-weight-bold">@T["Username"]</label>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                    <input asp-for="UserName" placeholder="@T["Username"]" class="form-control" autofocus />
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.Email" class="col-md-2 form-control-label font-weight-bold"></label>
-                    <span asp-validation-for="@Model.Email" class="text-danger float-xs-right"></span>
-                    <input asp-for="@Model.Email" class="form-control" />
+                    <label class="col-form-label font-weight-bold">@T["Email"]</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <input asp-for="Email" placeholder="@T["email@address.com"]" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.Password" class="col-md-2 form-control-label font-weight-bold"></label>
-                    <span asp-validation-for="@Model.Password" class="text-danger float-xs-right"></span>
-                    <input asp-for="@Model.Password" class="form-control" />
+                    <label asp-for="Password" class="col-form-label font-weight-bold">@T["Password"]</label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <input asp-for="Password" placeholder="@T["Password"]" class="form-control" />
                     
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.ConfirmPassword" class="col-md-2 form-control-label font-weight-bold"></label>
-                    <span asp-validation-for="@Model.ConfirmPassword" class="text-danger float-xs-right"></span>
-                    <input asp-for="@Model.ConfirmPassword" class="form-control" />
-                    
+                    <label asp-for="ConfirmPassword" class="col-form-label font-weight-bold">@T["Confirm Password"]</label>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    <input asp-for="ConfirmPassword" placeholder="@T["Confirm Password"]" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-lg btn-primary btn-block">@T["Register"]</button>
+                    <button type="submit" role="button" class="btn btn-lg btn-primary btn-block">@T["Register"]</button>
                 </div>
             </form>
         </section>

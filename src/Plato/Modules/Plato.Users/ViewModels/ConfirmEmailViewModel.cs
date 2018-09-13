@@ -5,6 +5,8 @@ namespace Plato.Users.ViewModels
     public class ConfirmEmailViewModel
     {
         [Required]
+        [Display(Name = "email or username")]
+        [StringLength(255, ErrorMessage = "The {0} must be at max {1} characters long.")]
         public string UserIdentifier { get; set; }
     }
 }

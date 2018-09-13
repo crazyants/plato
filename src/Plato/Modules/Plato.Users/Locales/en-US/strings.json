@@ -41,6 +41,14 @@
       "Value": "If registered an email has been sent to the account email address."
     },
     {
+      "Key": "If you don't receive the email please ensure you've first",
+      "Value": "If you don't receive the email please ensure you've first"
+    },
+    {
+      "Key": "confirmed your email address",
+      "Value": "confirmed your email address"
+    },
+    {
       "Key": "Reset Password",
       "Value": "Reset Password"
     },

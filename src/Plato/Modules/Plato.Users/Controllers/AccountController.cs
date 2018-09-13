@@ -322,17 +322,8 @@ namespace Plato.Users.Controllers
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
-            
-            var model = new RegisterViewModel
-            {
-                Email = "admin@admin.com",
-                UserName = "admin@Adm1in.com",
-                Password = "admin@Adm1in.com"
-            };
-
             ViewData["ReturnUrl"] = returnUrl;
-            return View(model);
-
+            return View(new RegisterViewModel());
         }
 
         [HttpPost]

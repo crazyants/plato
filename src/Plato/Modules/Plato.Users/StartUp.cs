@@ -195,28 +195,28 @@ namespace Plato.Users
             routes.MapAreaRoute(
                 name: "ForgotPassword",
                 areaName: "Plato.Users",
-                template: "account/forgotpassword",
+                template: "account/forgot",
                 defaults: new { controller = "Account", action = "ForgotPassword" }
             );
             
             routes.MapAreaRoute(
                 name: "ForgotPasswordConfirmation",
                 areaName: "Plato.Users",
-                template: "account/forgotpassword/confirm",
+                template: "account/forgot/success",
                 defaults: new { controller = "Account", action = "ForgotPasswordConfirmation" }
             );
 
             routes.MapAreaRoute(
                 name: "ResetPassword",
                 areaName: "Plato.Users",
-                template: "account/resetpassword",
+                template: "account/reset",
                 defaults: new { controller = "Account", action = "ResetPassword" }
             );
 
             routes.MapAreaRoute(
                 name: "ResetPasswordConfirmation",
                 areaName: "Plato.Users",
-                template: "account/resetpassword/confirm",
+                template: "account/reset/success",
                 defaults: new { controller = "Account", action = "ResetPasswordConfirmation" }
             );
 

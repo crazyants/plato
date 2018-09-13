@@ -16,7 +16,7 @@
       "Bcc": "",
       "From": "[AppEmail]",
       "Subject": "[AppName] - Confirm Your Email",
-      "Message": "Hi {0},\n\nPlease visit the link below to confirm your email address and activate your new accunt.\n\n{1}\n\n[AppName]\n[AppUrl]"
+      "Message": "Hi {0},\n\nPlease use the link below to confirm your email address and activate your account.\n\n{1}\n\n[AppName]\n[AppUrl]"
     }
   ]
 }
