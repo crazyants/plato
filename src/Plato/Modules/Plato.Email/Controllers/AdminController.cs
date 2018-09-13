@@ -3,13 +3,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using Plato.Email.Configuration;
 using Plato.Email.Models;
 using Plato.Email.Stores;
 using Plato.Email.ViewModels;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation;
+using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Models.Shell;
 
 namespace Plato.Email.Controllers
 {
@@ -23,7 +30,9 @@ namespace Plato.Email.Controllers
         private readonly IEmailSettingsStore<EmailSettings> _emailSettingsStore;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
-        
+        private readonly IShellSettings _shellSettings;
+        private readonly IPlatoHost _platoHost;
+
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -33,14 +42,16 @@ namespace Plato.Email.Controllers
             IStringLocalizer<AdminController> stringLocalizer,
             IAuthorizationService authorizationService,
             IEmailSettingsStore<EmailSettings> emailSettingsStore,
-            IAlerter alerter,
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager,
+            IAlerter alerter, IShellSettings shellSettings, IPlatoHost platoHost)
         {
        
-            _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _authorizationService = authorizationService;
             _emailSettingsStore = emailSettingsStore;
+            _alerter = alerter;
+            _shellSettings = shellSettings;
+            _platoHost = platoHost;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -113,6 +124,8 @@ namespace Plato.Email.Controllers
             var result = await _emailSettingsStore.SaveAsync(settings);
             if (result != null)
             {
+                // Recycle shell context to ensure changes take effect
+                _platoHost.RecycleShellContext(_shellSettings);
                 _alerter.Success(T["Settings Updated Successfully!"]);
             }
             else

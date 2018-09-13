@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 

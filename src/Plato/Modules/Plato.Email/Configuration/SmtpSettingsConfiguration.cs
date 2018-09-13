@@ -39,29 +39,33 @@ namespace Plato.Email.Configuration
             }
 
             var smtpSettings = settings.SmtpSettings;
-
-            options.DefaultFrom = smtpSettings.DefaultFrom;
-            options.DeliveryMethod = smtpSettings.DeliveryMethod;
-            options.PickupDirectoryLocation = smtpSettings.PickupDirectoryLocation;
-            options.Host = smtpSettings.Host;
-            options.Port = smtpSettings.Port;
-            options.EnableSsl = smtpSettings.EnableSsl;
-            options.RequireCredentials = smtpSettings.RequireCredentials;
-            options.UseDefaultCredentials = smtpSettings.UseDefaultCredentials;
-            options.UserName = smtpSettings.UserName;
-
-            // Decrypt the password
-            if (!String.IsNullOrWhiteSpace(smtpSettings.Password))
+            if (smtpSettings != null)
             {
-                try
+
+                options.DefaultFrom = smtpSettings.DefaultFrom;
+                options.DeliveryMethod = smtpSettings.DeliveryMethod;
+                options.PickupDirectoryLocation = smtpSettings.PickupDirectoryLocation;
+                options.Host = smtpSettings.Host;
+                options.Port = smtpSettings.Port;
+                options.EnableSsl = smtpSettings.EnableSsl;
+                options.RequireCredentials = smtpSettings.RequireCredentials;
+                options.UseDefaultCredentials = smtpSettings.UseDefaultCredentials;
+                options.UserName = smtpSettings.UserName;
+
+                // Decrypt the password
+                if (!String.IsNullOrWhiteSpace(smtpSettings.Password))
                 {
-                    var protector = _dataProtectionProvider.CreateProtector(nameof(SmtpSettingsConfiguration));
-                    options.Password = protector.Unprotect(smtpSettings.Password);
+                    try
+                    {
+                        var protector = _dataProtectionProvider.CreateProtector(nameof(SmtpSettingsConfiguration));
+                        options.Password = protector.Unprotect(smtpSettings.Password);
+                    }
+                    catch
+                    {
+                        _logger.LogError("There was a problem decrypting the SMTP password.");
+                    }
                 }
-                catch
-                {
-                    _logger.LogError("There was a problem decrypting the SMTP password.");
-                }
+
             }
 
         }

@@ -52,7 +52,7 @@ namespace Plato.Internal.Layout.Extensions
             services.AddSingleton<IApplicationFeatureProvider<ViewsFeature>, ThemingViewsFeatureProvider>();
 
             // action filters
-            services.Configure<MvcOptions>((options) =>
+            services.Configure<MvcOptions>(options =>
             {
                 options.Filters.Add(typeof(ModelBinderAccessorFilter));
                 options.Filters.Add(typeof(AlertFilter));

@@ -21,13 +21,13 @@ namespace Plato.Email.Services
         public EmailManager(
             IEmailStore<EmailMessage> emailStore,
             ISmtpService smtpService,
-            IOptions<SmtpSettings> smtpSettings,
+            IOptions<SmtpSettings> options,
             ILogger<EmailManager> logger)
         {
             _emailStore = emailStore;
             _smtpService = smtpService;
             _logger = logger;
-            _smtpSettings = smtpSettings.Value;
+            _smtpSettings = options.Value;
         }
         
         public async Task<IActivityResult<EmailMessage>> SaveAsync(MailMessage message)
@@ -35,16 +35,19 @@ namespace Plato.Email.Services
             
             var result = new ActivityResult<EmailMessage>();
 
+            // Ensure we've configured required email settings
             if (_smtpSettings?.DefaultFrom == null)
             {
                 return result.Failed("Email settings must be configured before an email can be sent.");
             }
 
+            // Use application email if no from is specified
             if (message.From == null)
             {
                 message.From = new MailAddress(_smtpSettings.DefaultFrom);
             }
 
+            // Persist the message
             var email = await _emailStore.CreateAsync(new EmailMessage(message));
             if (email != null)
             {
@@ -58,16 +61,20 @@ namespace Plato.Email.Services
         public async Task<IActivityResult<MailMessage>> SendAsync(MailMessage message)
         {
             var result = new SmtpResult();
+
+            // Ensure we've configured required email settings
             if (_smtpSettings?.DefaultFrom == null)
             {
-                return result.Failed("SMTP settings must be configured before an email can be sent.");
+                return result.Failed("Email settings must be configured before an email can be sent.");
             }
 
+            // Use application email if no from is specified
             if (message.From == null)
             {
                 message.From = new MailAddress(_smtpSettings.DefaultFrom);
             }
             
+            // Attempt to send the email
             return await _smtpService.SendAsync(message);
 
         }

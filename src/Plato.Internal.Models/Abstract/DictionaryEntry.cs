@@ -58,6 +58,11 @@ namespace Plato.Internal.Models.Abstract
             model(this);
         }
 
+        public override string ToString()
+        {
+            return this.Key;
+        }
+
         #endregion
         
     }
