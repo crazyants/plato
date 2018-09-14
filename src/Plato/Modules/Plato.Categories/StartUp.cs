@@ -50,6 +50,15 @@ namespace Plato.Categories
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            // wen api routes
+            routes.MapAreaRoute(
+                name: "CategoriesApi",
+                areaName: "Plato.Categories",
+                template: "api/categories/{action}/{featureId?}",
+                defaults: new { controller = "Categories", action = "Get" }
+            );
+
         }
     }
 }

@@ -143,3 +143,20 @@ else
 }
 
 
+<Br />
+-----------------------------------------------------------------
+<Br />
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Edit Channels"]</h6>
+    </card-title>
+    <card-body>
+        @await DisplayAsync(new View("CategoryTree", new
+        {
+            selectedChannels = new List<int>(),
+            htmlName = "test",
+
+        }))
+    </card-body>
+</card>

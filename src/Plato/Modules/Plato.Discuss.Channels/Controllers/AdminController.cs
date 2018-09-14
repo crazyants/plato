@@ -115,7 +115,7 @@ namespace Plato.Discuss.Channels.Controllers
             return View(model);
         }
         
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int id = 0)
         {
 
             _breadCrumbManager.Configure(builder =>
@@ -133,6 +133,7 @@ namespace Plato.Discuss.Channels.Controllers
             var feature = await GetcurrentFeature();
             var model = await _viewProvider.ProvideEditAsync(new CategoryBase
             {
+                ParentId = id,
                 FeatureId = feature.Id
 
             }, this);

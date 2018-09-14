@@ -83,6 +83,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                     IconPrefix = defaultIcons.Prefix,
                     ChannelIcons = defaultIcons,
                     IsNewChannel = true,
+                    ParentId = categoryBase.ParentId,
                     AvailableChannels = await GetAvailableChannels()
                 };
             }

@@ -1,0 +1,28 @@
+﻿@model CategoryBase
+
+<div class="dropdown float-right">
+    <a class="btn btn-secondary dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        @T["Edit"]
+    </a>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" class="dropdown-item">
+            @T["Edit Channel"]
+        </a>
+        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
+            @T["Add Child Channel"]
+        </a>
+        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
+            @T["Sort Channel"]
+        </a>
+        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
+            @T["Close Channel"]
+        </a>
+        <div class="dropdown-divider"></div>
+        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
+            @T["Delete Channel"]
+        </a>
+    </div>
+</div>
+
+
+                    

@@ -8,9 +8,9 @@
 @if (Model.ChannelViewOpts.ChannelId != 0)
 {
     @await DisplayAsync(new View("TopicList", new
-{
-    viewOpts = @Model.TopicViewOpts,
-    pagerOpts = @Model.PagerOpts
-}))
+    {
+        viewOpts = @Model.TopicViewOpts,
+        pagerOpts = @Model.PagerOpts
+    }))
 }
 

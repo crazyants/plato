@@ -1,0 +1,148 @@
+﻿@using Microsoft.AspNetCore.Html
+@model CategoryTreeViewModel
+@functions {
+
+    string BuildChannels(CategoryTreeViewModel model)
+    {
+        var output = BuildChannelsRecursivly(model.SelectedChannels, model.HtmlName);
+        return output;
+    }
+
+    string BuildChannelsRecursivly(
+        IList<Selection<CategoryBase>> channels,
+        string htmlName,
+        System.Text.StringBuilder sb = null,
+        int id = 0)
+    {
+
+        if (sb == null)
+        {
+            sb = new System.Text.StringBuilder();
+        }
+
+        var style = id == 0 ? "display:block" : "display:none";
+        sb.Append("<ul style=\"")
+            .Append(style)
+            .Append("\" class=\"list-group list-group-flush\">");
+
+        foreach (var channel in Model.SelectedChannels)
+        {
+            var nodeId = htmlName + "-node-" + channel.Value.Id;
+            var checkId = htmlName + "-check-" + channel.Value.Id;
+            var css = @channel.IsSelected ? "list-group-item active checked" : "list-group-item";
+            var check = channel.IsSelected ? " checked" : string.Empty;
+
+            if (channel.Value.ParentId == id)
+            {
+                sb.Append("<li id=\"")
+                    .Append(nodeId)
+                    .Append("\" class=\"")
+                    .Append(css)
+                    .Append("\" data-filter-value=\"")
+                    .Append(channel.Value.Name)
+                    .Append("\">");
+
+                sb.Append("<div class=\"p-2\"");
+                if (channel.Value.Depth > 0)
+                {
+                    sb.Append(" style=\"margin-left: ")
+                        .Append(channel.Value.Depth)
+                        .Append("rem;\"");
+                }
+                sb.Append("\">");
+
+                if (channel.Value.Children.Count > 0)
+                {
+                    sb.Append("<a class=\"btn toggler mr-2\" data-node-id=\"")
+                        .Append(nodeId)
+                        .Append("\" data-toggle=\"tree\" href=\"#\">");
+                    sb.Append("<i class=\"fal fa-chevron-right\"></i>");
+                    sb.Append("</a>");
+                }
+                else
+                {
+
+                    sb.Append("<span class=\"btn toggler mr-2\">")
+                        .Append("<i class=\"fal\"></i>")
+                        .Append("</span>");
+
+                }
+
+                sb.Append("<input type=\"radio\" id=\"")
+                    .Append(checkId)
+                    .Append("\" name=\"")
+                    .Append(htmlName)
+                    .Append("\" value=\"")
+                    .Append(channel.Value.Id)
+                    .Append("\" data-node-id=\"")
+                    .Append(nodeId)
+                    .Append("\"")
+                    .Append(check)
+                    .Append("/>");
+
+                sb.Append("<label for=\"")
+                    .Append(checkId)
+                    .Append("\">");
+
+                if (@Model.EnableCheckBoxes)
+                {
+                    sb.Append("<i class=\"fal mr-2 check-icon\"></i>");
+                }
+
+                var foreColor = channel.Value.ForeColor;
+                if (String.IsNullOrEmpty(foreColor))
+                {
+                    foreColor = "#fff";
+                }
+
+                var bgColor = channel.Value.BackColor;
+                if (String.IsNullOrEmpty(bgColor))
+                {
+                    bgColor = "rgba(125, 125, 125, .5)";
+                }
+
+                sb.Append("<span class=\"channel-icon channel-icon-sm mr-2\" style=\"background-color: ")
+                    .Append(bgColor)
+                    .Append("; color: ")
+                    .Append(foreColor)
+                    .Append(";\">")
+                    .Append("<i class=\"")
+                    .Append(channel.Value.IconCss)
+                    .Append("\"></i>")
+                    .Append("</span>");
+
+                sb.Append(channel.Value.Name);
+
+                sb.Append("</label>");
+                
+                sb.Append(DisplayAsync(new View("EditChannelMenu", new
+                {
+                    categoryId = channel.Value.Id
+                })).GetAwaiter().GetResult().ToHtmlString());
+               
+                sb.Append("</div>");
+
+                // Recuse
+                BuildChannelsRecursivly(channels, htmlName, sb, channel.Value.Id);
+
+                sb.Append("</li>");
+
+            }
+
+
+        }
+
+        sb.Append("</ul>");
+
+        return sb.ToString();
+
+
+    }
+
+}
+
+
+
+<div class="tree" data-provide="tree">
+    @Html.Raw(BuildChannels(Model))
+</div>
