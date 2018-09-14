@@ -19,6 +19,7 @@ namespace Plato.Internal.Messaging.Abstractions
         void Unsub<T>(MessageOptions opts, Func<Message<T>, Task<T>> subscription) where T : class;
 
         void Dispose();
+
     }
 
 }

@@ -8,7 +8,6 @@
         <h6 class="card-title float-left">@T["Channels"]</h6>
     </card-title>
     <card-body>
-
         @if (Model.Channels != null)
         {
             <div class="list-group list-group-flush">
@@ -25,21 +24,10 @@
                                 </span>
                             </div>
                         }
-
                         @channel.Name
-
-                        @*@{
-                            var detail = channel.GetOrCreate<ChannelDetails>();
-                        }
-                        @if (detail != null)
-                        {
-                            @detail.TotalTopics
-                        }
-                        <span class="badge badge-primary badge-pill float-right">14</span>*@
                     </a>
                 }
             </div>
-
         }
         else
         {
@@ -51,8 +39,5 @@
                 </a>
             </div>
         }
-
     </card-body>
 </card>
-
-

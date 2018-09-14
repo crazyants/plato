@@ -54,9 +54,7 @@
             </div>
         }
         @T["By"]
-        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.CreatedUserId" asp-route-alias="@Model.Topic.CreatedBy.Alias">
-            @Model.Topic.CreatedBy.DisplayName
-        </a>,
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.CreatedUserId" asp-route-alias="@Model.Topic.CreatedBy.Alias">@Model.Topic.CreatedBy.DisplayName</a>,
         <date utc="@Model.Topic.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
     </div>
 

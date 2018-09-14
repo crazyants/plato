@@ -105,15 +105,17 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         }
         
-        public override async Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
+        public override Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
-         
-            // Build model
-            var model = new EditTopicLabelsViewModel();
-            model.SelectedLabels = GetLabelsToAdd(); ;
-         
+
+            // ensure labels are optional
+            return Task.FromResult(true);
+
             // Validate model
-            return await updater.TryUpdateModelAsync(model);
+            //return await updater.TryUpdateModelAsync(new EditTopicLabelsViewModel
+            //{
+            //    SelectedLabels = GetLabelsToAdd()
+            //});
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IUpdateModel updater)

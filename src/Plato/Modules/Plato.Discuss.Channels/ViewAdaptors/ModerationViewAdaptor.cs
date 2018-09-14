@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Internal.Layout.ViewAdaptors;
@@ -14,11 +15,15 @@ namespace Plato.Discuss.Channels.ViewAdaptors
     {
 
         private readonly ICategoryStore<Channel> _channelStore;
-      
 
-        public ModerationViewAdaptorProvider(ICategoryStore<Channel> channelStore)
+        private IHtmlLocalizer T { get; }
+        
+        public ModerationViewAdaptorProvider(
+            ICategoryStore<Channel> channelStore,
+            IHtmlLocalizer htmlLocalizer)
         {
             _channelStore = channelStore;
+            T = htmlLocalizer;
         }
 
         public override Task<IViewAdaptorResult> ConfigureAsync()
@@ -31,7 +36,6 @@ namespace Plato.Discuss.Channels.ViewAdaptors
             {
                 v.AdaptModel<Moderator>(model =>
                 {
-
 
                     IEnumerable<Channel> parents = null;
                     if (model.CategoryId > 0)
@@ -55,13 +59,19 @@ namespace Plato.Discuss.Channels.ViewAdaptors
                             }
                             i += 1;
                         }
+                        model.CategoryName = sb.ToString();
                     }
-                    model.CategoryName = sb.ToString();
+                    else
+                    {
+                        model.CategoryName = T["All Channels"].Value.ToString();
+                    }
+                    
                     // Return an anonymous type, we are adapting a view component
                     return new
                     {
                         moderator = model
                     };
+
                 });
             });
             

@@ -11,7 +11,6 @@
 
                      @if (Model.ViewOpts.EnableEdit)
                      {
-                   
                          <ul class="nav navbar p-0 float-right">
                              <li class="nav-item dropdown">
                                  <a class="btn btn-secondary float-right dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -39,9 +38,8 @@
                              </li>
                          </ul>
 
-
                      }
-
+                   
                      <h6 class="card-title">@channel.Name</h6>
                      @if (!String.IsNullOrEmpty(@channel.Description))
                      {

@@ -1,12 +1,23 @@
 ﻿@model SelectChannelsViewModel
 
-<select id="@Model.HtmlName" name="@Model.HtmlName" multiple="multiple" class="form-control" style="min-height: 150px;" >
-    @for (var i = 0; i < Model.SelectedChannels.Count; i++)
-    {
-        var item = Model.SelectedChannels[i];
-        <option value="@item.Value.Id" selected="@item.IsSelected">
-            @item.Value.Name
-        </option>
-    }
-</select>
-
+@if (Model.SelectedChannels != null)
+{
+    <select id="@Model.HtmlName" name="@Model.HtmlName" multiple="multiple" class="form-control" style="min-height: 150px;">
+        @for (var i = 0; i < Model.SelectedChannels.Count; i++)
+        {
+            var item = Model.SelectedChannels[i];
+            <option value="@item.Value.Id" selected="@item.IsSelected">
+                @item.Value.Name
+            </option>
+        }
+    </select>
+}
+else
+{
+    <span class="text-muted">
+        @T["No channels have been created. Add channels to assign additional privledges for moderators within specific channels."]
+        <br /><br />
+        <a class="btn btn-secondary" role="button" asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index">@T["Manage Channels"]</a>
+    </span>
+    <input id="@Model.HtmlName" name="@Model.HtmlName" type="hidden" value="0"/>
+}

@@ -141,8 +141,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
         
         public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator model, IUpdateModel updater)
         {
-
-
+            
             var moderator = await _moderatorStore.GetByIdAsync(model.Id);
             if (moderator == null)
             {

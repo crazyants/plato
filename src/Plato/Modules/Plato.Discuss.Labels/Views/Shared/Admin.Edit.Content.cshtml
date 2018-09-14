@@ -4,7 +4,7 @@
 
 <card>
     <card-title>
-        @if (Model.IsNewChannel)
+        @if (Model.IsNewLabel)
         {
         <h6 class="card-title">@T["Add Label"]</h6>
         }
@@ -15,7 +15,7 @@
     </card-title>
     <card-body>
         <div class="row">
-            <div class="col-3">
+            <div class="col-6">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="Name">
                         <label asp-for="Name"><strong>@T["Name"]</strong></label>
@@ -26,16 +26,6 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="col-5">
-                <fieldset>
-                    <div class="form-group" asp-validation-class-for="Description">
-                        <label asp-for="Name"><strong>@T["Description"]</strong></label>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                        <input type="text" placeholder="@T["optional channel description"]" asp-for="Description" rows="2" class="form-control" />
-                    </div>
-                </fieldset>
-            </div>
-          
             <div class="col-2">
                 <fieldset>
                     <div class="form-group" asp-validation-class-for="Icon">
@@ -71,6 +61,17 @@
 
                         </div>
 
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="Description">
+                        <label asp-for="Name"><strong>@T["Description"]</strong></label>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <input type="text" placeholder="@T["optional channel description"]" asp-for="Description" rows="2" class="form-control" />
                     </div>
                 </fieldset>
             </div>

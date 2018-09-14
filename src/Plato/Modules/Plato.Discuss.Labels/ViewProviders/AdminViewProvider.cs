@@ -63,7 +63,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                 {
                     IconPrefix = defaultIcons.Prefix,
                     ChannelIcons = defaultIcons,
-                    IsNewChannel = true
+                    IsNewLabel = true
                 };
             }
             else

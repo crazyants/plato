@@ -5,13 +5,11 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
-using Plato.Discuss.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
 using Plato.Internal.Shell.Abstractions;
-using ViewOptions = Plato.Discuss.Channels.ViewModels.ViewOptions;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
@@ -19,13 +17,13 @@ namespace Plato.Discuss.Channels.ViewProviders
     {
 
         private readonly IContextFacade _contextFacade;
-        private readonly ICategoryStore<CategoryBase> _categoryStore;
-        private readonly ICategoryManager<CategoryBase> _categoryManager;
+        private readonly ICategoryStore<Channel> _categoryStore;
+        private readonly ICategoryManager<Channel> _categoryManager;
 
         public ChannelViewProvider(
             IContextFacade contextFacade,
-            ICategoryStore<CategoryBase> categoryStore,
-            ICategoryManager<CategoryBase> categoryManager)
+            ICategoryStore<Channel> categoryStore,
+            ICategoryManager<Channel> categoryManager)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;

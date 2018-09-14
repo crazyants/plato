@@ -3,12 +3,16 @@
 @if (Model.IsNewModerator)
 {
     <h4>@T["Add Moderator"]</h4>
-    <span class="text-muted">@T["Create a moderator to help manage discussions"]</span>
+    <span class="text-muted">
+        @T["Moderators can have additional privileges to help manage conversations."]
+    </span>
 }
 else
 {
     <h4>@T["Edit Moderator"]</h4>
-    <span class="text-muted">@T["Edit an existing moderator."]</span>
+    <span class="text-muted">
+        @T["Edit an existing moderator."]
+    </span>
 }
 
 <hr />

@@ -6,8 +6,6 @@ namespace Plato.Discuss.Labels.ViewModels
     public class EditLabelViewModel
     {
 
-        public bool IsNewChannel { get; set; }
-
         public int Id { get; set; }
 
         [Required]
@@ -30,8 +28,9 @@ namespace Plato.Discuss.Labels.ViewModels
         [StringLength(255)]
         public string IconCss { get; set; }
         
-     
         public DefaultIcons ChannelIcons { get; set; }
+
+        public bool IsNewLabel { get; set; }
 
 
     }
