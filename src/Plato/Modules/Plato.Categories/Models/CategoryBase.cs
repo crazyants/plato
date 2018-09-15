@@ -48,7 +48,7 @@ namespace Plato.Categories.Models
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
 
-        public IList<ICategory> Children { get; set; } = new List<ICategory>();
+        public IEnumerable<ICategory> Children { get; set; } = new List<ICategory>();
 
         public ICategory Parent { get; set; }
 

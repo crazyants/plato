@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Html
-@model CategoryTreeViewModel
+﻿@model CategoryTreeViewModel
 @functions {
 
     string BuildChannels(CategoryTreeViewModel model)
@@ -51,7 +50,7 @@
                 }
                 sb.Append("\">");
 
-                if (channel.Value.Children.Count > 0)
+                if (channel.Value.Children.Any())
                 {
                     sb.Append("<a class=\"btn toggler mr-2\" data-node-id=\"")
                         .Append(nodeId)
@@ -68,17 +67,20 @@
 
                 }
 
-                sb.Append("<input type=\"radio\" id=\"")
-                    .Append(checkId)
-                    .Append("\" name=\"")
-                    .Append(htmlName)
-                    .Append("\" value=\"")
-                    .Append(channel.Value.Id)
-                    .Append("\" data-node-id=\"")
-                    .Append(nodeId)
-                    .Append("\"")
-                    .Append(check)
-                    .Append("/>");
+                if (@Model.EnableCheckBoxes)
+                {
+                    sb.Append("<input type=\"radio\" id=\"")
+                        .Append(checkId)
+                        .Append("\" name=\"")
+                        .Append(htmlName)
+                        .Append("\" value=\"")
+                        .Append(channel.Value.Id)
+                        .Append("\" data-node-id=\"")
+                        .Append(nodeId)
+                        .Append("\"")
+                        .Append(check)
+                        .Append("/>");
+                }
 
                 sb.Append("<label for=\"")
                     .Append(checkId)
@@ -136,12 +138,9 @@
 
         return sb.ToString();
 
-
     }
 
 }
-
-
 
 <div class="tree" data-provide="tree">
     @Html.Raw(BuildChannels(Model))

@@ -11,8 +11,11 @@
         <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
             @T["Add Child Channel"]
         </a>
-        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
-            @T["Sort Channel"]
+        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="MoveUp" asp-route-id="@Model.Id" class="dropdown-item">
+            @T["Move Up"]
+        </a>
+        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="MoveDown" asp-route-id="@Model.Id" class="dropdown-item">
+            @T["Move Down"]
         </a>
         <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Create" asp-route-id="@Model.Id" class="dropdown-item">
             @T["Close Channel"]

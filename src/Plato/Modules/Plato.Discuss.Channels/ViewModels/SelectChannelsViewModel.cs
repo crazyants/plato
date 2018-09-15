@@ -8,6 +8,8 @@ namespace Plato.Discuss.Channels.ViewModels
         
         public IList<Selection<Channel>> SelectedChannels { get; set; }
 
+        public IEnumerable<int> SelectedChannelIds { get; set; }
+        
         public string HtmlName { get; set; }
 
     }

@@ -23,20 +23,20 @@ namespace Plato.Categories.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            IEnumerable<int> selectedChannels,
+            IEnumerable<int> selectedCategories,
             string htmlName,
             bool enableCheckBoxes)
         {
-            if (selectedChannels == null)
+            if (selectedCategories == null)
             {
-                selectedChannels = new int[0];
+                selectedCategories = new int[0];
             }
 
             return View(new CategoryTreeViewModel
             {
                 HtmlName = htmlName,
                 EnableCheckBoxes = enableCheckBoxes,
-                SelectedChannels = await BuildSelectionsAsync(selectedChannels)
+                SelectedChannels = await BuildSelectionsAsync(selectedCategories)
             });
 
         }

@@ -80,7 +80,13 @@ namespace Plato.Categories.Services
             
             model.CreatedDate = DateTime.UtcNow;
             model.Alias = await ParseAlias(model.Name);
-          
+            
+            // Get the next available sort order when adding new categories
+            if (model.SortOrder == 0)
+            {
+                model.SortOrder = await GetNextAvailableSortOrder(model);
+            }
+            
             // Publish CategoryCreating event
             await _broker.Pub<TCategory>(this, new MessageOptions()
             {
@@ -156,7 +162,7 @@ namespace Plato.Categories.Services
                 return result.Success(category);
             }
 
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to update the category"));
+            return result.Failed("An unknown error occurred whilst attempting to update the category");
             
         }
 
@@ -348,11 +354,108 @@ namespace Plato.Categories.Services
 
         }
 
+        public async Task<IActivityResult<TCategory>> Move(TCategory model, MoveDirection direction)
+        {
+
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            // Our result
+            var result = new ActivityResult<TCategory>();
+            
+            // All categories for supplied category feature
+            var categories = await _categoryStore.GetByFeatureIdAsync(model.FeatureId);
+            if (categories == null)
+            {
+                return result.Failed($"No categirues was forumd for matching FeatureId '{model.FeatureId}'");
+            }
+
+
+            var currentSortOrder = model.SortOrder;
+            switch (direction)
+            {
+
+                case MoveDirection.Up:
+
+                    // Find category above the supplied category
+                    TCategory above = null;
+                    foreach (var category in categories.Where(c => c.ParentId == model.ParentId))
+                    {
+                        if (category.SortOrder < currentSortOrder)
+                        {
+                            above = (TCategory)category;
+                        }
+                    }
+
+                    // Swap sort orders
+                    if (above != null)
+                    {
+                        await UpdateSortOrder(model, above.SortOrder);
+                        await UpdateSortOrder(above, currentSortOrder);
+                    }
+
+                    break;
+
+                case MoveDirection.Down:
+                    
+                    // Find category below the supplied category
+                    TCategory below = null;
+                    var children = categories
+                        .Where(c => c.ParentId == model.ParentId)
+                        .ToList();
+                    for (var i = children.Count - 1; i >= 0; i--)
+                    {
+                        if (children[i].SortOrder > currentSortOrder)
+                        {
+                            below = (TCategory)children[i];
+                        }
+                    }
+                    
+                    // Swap sort orders
+                    if (below != null)
+                    {
+                        await UpdateSortOrder(model, below.SortOrder);
+                        await UpdateSortOrder(below, currentSortOrder);
+                    }
+
+                    break;
+
+            }
+
+            return result.Success();
+
+        }
+        
         #endregion
 
         #region "Private Methods"
+        
+        async Task<int> GetNextAvailableSortOrder(TCategory model)
+        {
 
-        private async Task<string> ParseAlias(string input)
+            var sortOrder = 0;
+            var categories = await _categoryStore.GetByFeatureIdAsync(model.FeatureId);
+            if (categories != null)
+            {
+                foreach (var category in categories.Where(c => c.ParentId == model.ParentId))
+                {
+                    sortOrder = category.SortOrder;
+                }
+            }
+
+            return sortOrder + 1;
+
+        }
+
+        async Task<IActivityResult<TCategory>> UpdateSortOrder(TCategory model, int sortOrder)
+        {
+            model.SortOrder = sortOrder;
+            return await UpdateAsync(model);
+        }
+
+        async Task<string> ParseAlias(string input)
         {
 
             foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()

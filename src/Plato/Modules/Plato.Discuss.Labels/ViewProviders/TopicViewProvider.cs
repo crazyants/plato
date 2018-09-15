@@ -58,7 +58,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
             
-            return Views(View<LabelsViewModel>("Discuss.Labels.Index.Sidebar", model =>
+            return Views(View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
                 {
                     model.Labels = labels;
                     return model;
@@ -71,7 +71,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
         {
 
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Tags");
+            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Labels");
             if (feature == null)
             {
                 return default(IViewProviderResult);
@@ -80,7 +80,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             var categories = await _labelStore.GetByFeatureIdAsync(feature.Id);
             
             return Views(
-                View<LabelsViewModel>("Discuss.Labels.Index.Sidebar", model =>
+                View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
                 {
                     model.Labels = categories;
                     return model;
@@ -98,7 +98,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             };
 
             return Views(
-                View<EditTopicLabelsViewModel>("Discuss.Labels.Edit.Sidebar", model => viewModel)
+                View<EditTopicLabelsViewModel>("Topic.Labels.Edit.Sidebar", model => viewModel)
                     .Zone("sidebar")
                     .Order(2)
             );

@@ -33,8 +33,14 @@
 /* ------------------- */
 
 /* Hover state for lists-groups */
-.list-group-hover .list-group-item:not(.active):hover {
-    background-color: #F8F9FF;
+.list-group-hover .list-group-item-action:not(.active):hover {
+    background-color: #007bff;
+}
+
+.list-group-hover .list-group-item-action:not(.active):hover,
+.list-group-hover .list-group-item-action:not(.active):hover .text-muted,
+.list-group-hover .list-group-item-action:not(.active):hover a:not(.btn) {
+    color: #fff !important;
 }
 
 .tree a.tree-link.active,

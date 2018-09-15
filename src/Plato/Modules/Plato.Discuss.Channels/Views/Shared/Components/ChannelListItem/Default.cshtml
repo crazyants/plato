@@ -62,13 +62,15 @@ else
         </a>
     }
   
+    SortOrder: @Model.Channel.SortOrder
+
     @if (!String.IsNullOrEmpty(Model.Channel.Description))
     {
         <div class="text-muted">
             @Model.Channel.Description
         </div>
     }
-    @if (Model.Channel.Children.Count > 0)
+    @if (Model.Channel.Children.Any())
     {
         <ul class="list-inline">
             @foreach (var subchannel in Model.Channel.Children)

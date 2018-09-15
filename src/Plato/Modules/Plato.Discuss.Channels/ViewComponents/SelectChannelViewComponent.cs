@@ -2,13 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.ViewComponents
@@ -35,19 +33,17 @@ namespace Plato.Discuss.Channels.ViewComponents
             {
                 selectedChannels = new int[0];
             }
-
-            var selected = await BuildRoleSelectionsAsync(selectedChannels);
-
+            ;
             var model = new SelectChannelsViewModel
             {
                 HtmlName = htmlName,
-                SelectedChannels = selected
+                SelectedChannels = await BuildChannelSelectionsAsync(selectedChannels)
             };
 
             return View(model);
         }
 
-        private async Task<IList<Selection<Channel>>> BuildRoleSelectionsAsync(
+        private async Task<IList<Selection<Channel>>> BuildChannelSelectionsAsync(
             IEnumerable<int> selectedChannels)
         {
             

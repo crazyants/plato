@@ -8,7 +8,7 @@
 
         @if (Model.Labels != null)
         {
-            <div class="list-group list-group-flush">
+            <div class="list-group list-group-flush list-group-hover">
                 @foreach (var channel in Model.Labels)
                 {
                     var css = channel.Id == Model.SelectedLabelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";

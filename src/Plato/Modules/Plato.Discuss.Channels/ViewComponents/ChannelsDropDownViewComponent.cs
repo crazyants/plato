@@ -32,11 +32,13 @@ namespace Plato.Discuss.Channels.ViewComponents
             {
                 selectedChannels = new int[0];
             }
-            
+
+            var selectedChannelsList = selectedChannels.ToList();
             return View(new SelectChannelsViewModel
             {
                 HtmlName = htmlName,
-                SelectedChannels = await BuildSelectionsAsync(selectedChannels)
+                SelectedChannelIds = selectedChannelsList,
+                SelectedChannels = await BuildSelectionsAsync(selectedChannelsList)
             });
 
         }

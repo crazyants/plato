@@ -13,6 +13,8 @@ namespace Plato.Categories.Stores
 
         Task<IEnumerable<TModel>> GetChildrenByIdAsync(int categoryId);
 
+
     }
+
 
 }

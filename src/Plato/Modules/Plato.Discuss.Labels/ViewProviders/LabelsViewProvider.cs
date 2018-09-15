@@ -61,7 +61,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                 View<Label>("Home.Index.Header", model => label).Zone("header").Order(1),
                 View<Label>("Home.Index.Tools", model => label).Zone("tools").Order(1),
                 View<LabelIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
-                View<LabelsViewModel>("Discuss.Labels.Index.Sidebar", model =>
+                View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
                 {
                     model.SelectedLabelId = label?.Id ?? 0;
                     model.Labels = labels;

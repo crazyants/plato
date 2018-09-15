@@ -267,7 +267,60 @@ namespace Plato.Discuss.Channels.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        
+
+
+        public async Task<IActionResult> MoveUp(int id)
+        {
+
+            var category = await _categoryStore.GetByIdAsync(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _categoryManager.Move(category, MoveDirection.Up);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Channel Updated Successfully"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        public async Task<IActionResult> MoveDown(int id)
+        {
+
+            var category = await _categoryStore.GetByIdAsync(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _categoryManager.Move(category, MoveDirection.Down);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["Channel Updated Successfully"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
+
         async Task<ShellModule> GetcurrentFeature()
         {
             var featureId = "Plato.Discuss.Channels";

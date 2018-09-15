@@ -52,11 +52,11 @@
                  <card-body>
 
                      <ul class="list-group list-group-flush list-group-hover">
-                         @if (channel.Children.Count > 0)
+                         @if (channel.Children.Any())
                          {
                              foreach (var child in channel.Children)
                              {
-                                 <li class="list-group-item">
+                                 <li class="list-group-item list-group-item-action">
                                      @await DisplayAsync(new View("ChannelListItem", new
                                      {
                                          Channel = child,
@@ -108,7 +108,7 @@ else
                  <ul class="list-group list-group-flush list-group-hover">
                      @foreach (var channel in Model.Channels)
                      {
-                         <li class="list-group-item">
+                         <li class="list-group-item list-group-item-action">
                              @await DisplayAsync(new View("ChannelListItem", new
                              {
                                  channel = channel,
@@ -142,21 +142,3 @@ else
     }
 }
 
-
-<Br />
------------------------------------------------------------------
-<Br />
-
-<card>
-    <card-title>
-        <h6 class="card-title">@T["Edit Channels"]</h6>
-    </card-title>
-    <card-body>
-        @await DisplayAsync(new View("CategoryTree", new
-        {
-            selectedChannels = new List<int>(),
-            htmlName = "test",
-
-        }))
-    </card-body>
-</card>

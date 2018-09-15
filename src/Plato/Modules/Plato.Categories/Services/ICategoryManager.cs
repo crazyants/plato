@@ -21,6 +21,15 @@ namespace Plato.Categories.Services
         
         Task<IEnumerable<string>> GetRolesAsync(TCategory model);
 
+
+        Task<IActivityResult<TCategory>> Move(TCategory model, MoveDirection direction);
+
+    }
+
+    public enum MoveDirection
+    {
+        Up,
+        Down
     }
 
 }

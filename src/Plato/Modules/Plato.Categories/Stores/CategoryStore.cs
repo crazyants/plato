@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using Plato.Categories.Models;
 using Plato.Categories.Repositories;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Cache;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Modules.Abstractions;
@@ -237,10 +236,11 @@ namespace Plato.Categories.Stores
 
         }
 
+     
         #endregion
 
         #region "Private Methods"
-
+        
         async Task<IEnumerable<CategoryData>> SerializeMetaDataAsync(TCategory category)
         {
 
@@ -370,8 +370,18 @@ namespace Plato.Categories.Stores
 
                 category.Depth = depth;
                 category.Parent = parent;
-                parent?.Children.Add(category);
 
+                //parent?.Children.Add(category);
+                if (parent != null)
+                {
+                    var children = new List<ICategory>() { category };
+                    if (parent.Children != null)
+                    {
+                        children.AddRange(parent.Children);
+                    }
+                    parent.Children = children.OrderBy(c => c.SortOrder);;
+                }
+         
                 output.Add(category);
 
                 // recurse
