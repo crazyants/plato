@@ -13,6 +13,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Shell.Abstractions;
+using Plato.Search.ViewModels;
 using Plato.WebApi.Controllers;
 
 namespace Plato.Search.Controllers
@@ -51,9 +52,15 @@ namespace Plato.Search.Controllers
 
         #region "Actions"
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            SearchIndexViewModel model = null)
         {
-            
+
+            if (model == null)
+            {
+                model = new SearchIndexViewModel();
+            }
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -64,6 +71,7 @@ namespace Plato.Search.Controllers
               
             });
 
+            this.RouteData.Values.Add("search", model.Keywords);
 
             // Build view
             //var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);

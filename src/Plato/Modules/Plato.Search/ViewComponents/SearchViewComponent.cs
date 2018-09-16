@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Search.ViewModels;
 
 namespace Plato.Search.ViewComponents
 {
@@ -11,9 +12,16 @@ namespace Plato.Search.ViewComponents
 
         }
 
-        public Task<IViewComponentResult> InvokeAsync()
+        public Task<IViewComponentResult> InvokeAsync(
+            string value)
         {
-            return Task.FromResult((IViewComponentResult)View());
+
+            var model = new SearchIndexViewModel()
+            {
+                Keywords = value
+            };
+
+            return Task.FromResult((IViewComponentResult)View(model));
         }
 
     }

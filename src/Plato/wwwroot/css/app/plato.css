@@ -6,7 +6,24 @@
 .hidden { display: none; }
 
 /* ------------------------- */
-/* SEarch Bar */
+/* Main app navigation */
+/* ------------------------- */
+
+.app-nav li > a { text-align: center; }
+.app-nav li > a:before { font-family: "Font Awesome 5 Pro"; text-indent: 0; display: block;  }
+
+.app-nav li.search > a:before { content: "\f002";  }
+.app-nav li.discuss > a:before { content: "\f27a";  }
+.app-nav li.users > a:before { content: "\f500";  }
+.app-nav li.account > a:before { content: "\f007";  }
+.app-nav li.roles > a:before { content: "\f1cd";  }
+
+.app-nav li.login > a:before { content: "\f30d";  }
+.app-nav li.register > a:before { content: "\f084";  }
+
+
+/* ------------------------- */
+/* Search bar */
 /* ------------------------- */
 
 
@@ -288,7 +305,8 @@
 /* Nav */
 /* ------------------------- */
 
-.nav-v .show { width: 100%; }
+.nav-v .collapse,
+.nav-v .collapsing{ width: 100%; }
 
 .nav-link[data-toggle="collapse"]:after {
     width: 0;
@@ -301,6 +319,7 @@
     border-right: 0.3em solid transparent;
     border-bottom: 0;
     border-left: 0.3em solid transparent;
+    clear: both;
 }
 
 .nav-link[data-toggle="collapse"][aria-expanded="false"]:after {
@@ -312,7 +331,6 @@
     opacity: .5;
 }
 
-
 /* ------------------------- */
 /* Admin Nav */
 /* ------------------------- */
@@ -320,7 +338,6 @@
 .main-container > .container:last-child,
 .main-container > .container-fluid:last-child { padding-bottom: 6rem; }
 
-.nav-asides .nav-v > .navbar .navbar-nav { padding: 1rem 0; }
 .nav-asides hr { margin: 0.5rem 0 1rem 0; display: none; }
 .nav-asides > .navbar .nav-link 
 {
@@ -328,14 +345,13 @@
     border-radius: 0.20rem;
 }
 
-
 @media (min-width: 992px) {
     
-    .nav-v {
+    .nav-asides {
         display: flex;
     }
 
-    .nav-v > .navbar .navbar-nav {
+    .nav-asides > .navbar .navbar-nav {
         flex-direction: column;
         width: 100%;
         padding-top: 0;
@@ -346,7 +362,7 @@
         flex-basis: auto;
     }
 
-    .nav-v > .navbar {
+    .nav-asides > .navbar {
         width: 100%;
         flex-direction: column;
         align-items: flex-start;
@@ -360,29 +376,29 @@
         -ms-overflow-style: none;
     }
 
-    .nav-v > .navbar::-webkit-scrollbar { display: none; }
-    .nav-v > .navbar .navbar-brand {  padding: 1rem 1rem;  }
+    .nav-asides > .navbar::-webkit-scrollbar { display: none; }
+    .nav-asides > .navbar .navbar-brand {  padding: 1rem 1rem;  }
 
  
-    .nav-v > .navbar .navbar-collapse {
+    .nav-asides > .navbar .navbar-collapse {
         align-items: flex-start;
         width: 100%;
         flex-shrink: 0;
     }
 
-    .nav-v > .navbar .navbar-nav {
+    .nav-asides > .navbar .navbar-nav {
         flex-direction: column;
         width: 100%;
         padding: 0;
     }
 
-    .nav-v .main-container {
+    .nav-asides .main-container {
         overflow: hidden;
         flex: 1;
         max-width: calc(100vw - 264px);
     }
 
-    .nav-v .main-container > .container {
+    .nav-asides .main-container > .container {
         padding-left: 3rem;
         padding-right: 3rem;
     }

@@ -19,7 +19,7 @@ namespace Plato.Users.Middleware
 
         public AuthenticatedUserMiddleware(RequestDelegate next)
         {
-            _next = next;
+            _next = next ?? throw new ArgumentNullException(nameof(next));
         }
 
         public async Task InvokeAsync(HttpContext context)

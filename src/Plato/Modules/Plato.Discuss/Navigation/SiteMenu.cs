@@ -1,12 +1,13 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Navigation
 {
     public class SiteMenu : INavigationProvider
     {
-        public SiteMenu(IStringLocalizer<AdminMenu> localizer)
+        public SiteMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -36,7 +37,7 @@ namespace Plato.Discuss.Navigation
                         .Action("Following", "Home", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    )
+                    ), new List<string>() { "discuss" }
                 );
 
         }

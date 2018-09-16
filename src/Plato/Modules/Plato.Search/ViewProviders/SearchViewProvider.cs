@@ -11,8 +11,11 @@ namespace Plato.Search.ViewProviders
      
         public override Task<IViewProviderResult> BuildIndexAsync(SearchResult searchResult, IUpdateModel updater)
         {
-            var viewModel = new SearchIndexViewModel();
-
+            var viewModel = new SearchIndexViewModel
+            {
+                Keywords = GetKeywords(updater)
+            };
+            
             return Task.FromResult(Views(
                 View<SearchIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<SearchIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
@@ -37,5 +40,23 @@ namespace Plato.Search.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
+
+        string GetKeywords(IUpdateModel updater)
+        {
+
+            var keywords = string.Empty;
+            var routeData = updater.RouteData;
+            var found = routeData.Values.TryGetValue("search", out object value);
+            if (found && value != null)
+            {
+                keywords = value.ToString();
+            }
+
+            return keywords;
+
+        }
+
+
+
     }
 }

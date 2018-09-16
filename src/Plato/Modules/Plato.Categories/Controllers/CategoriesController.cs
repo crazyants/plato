@@ -33,7 +33,7 @@ namespace Plato.Categories.Controllers
         
         [HttpPost]
         [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Post([FromBody] CategoryBase category)
+        public Task<IActionResult> Post([FromBody] CategoryBase category)
         {
      
             throw new NotImplementedException();
@@ -82,7 +82,7 @@ namespace Plato.Categories.Controllers
         
         [HttpDelete]
         [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Delete([FromBody] CategoryBase category)
+        public Task<IActionResult> Delete([FromBody] CategoryBase category)
         {
 
             throw new NotImplementedException();

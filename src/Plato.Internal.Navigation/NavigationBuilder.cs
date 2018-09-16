@@ -34,7 +34,6 @@ namespace Plato.Internal.Navigation
             IEnumerable<string> classes = null)
         {
             var childBuilder = new NavigationItemBuilder();
-
             childBuilder.Caption(caption);
             childBuilder.Position(position);
             childBuilder.Order(order);
@@ -44,7 +43,9 @@ namespace Plato.Internal.Navigation
             if (classes != null)
             {
                 foreach (var className in classes)
+                {
                     childBuilder.AddClass(className);
+                }
             }
 
             return this;

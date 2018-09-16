@@ -31,14 +31,14 @@
                 <div class="float-right">
 
                     <navigation name="site"
-                                class="nav nav-pills float-left"
-                                child-ul-css-class="dropdown-menu"/>
+                            class="nav nav-pills float-left app-nav"
+                            child-ul-css-class="dropdown-menu"/>
 
                     @if (User.Identity.IsAuthenticated)
                     {
                         <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="d-inline">
-                            <ul class="nav nav-pills float-right">
-                                <li class="nav-item dropdown">
+                            <ul class="nav nav-pills float-right app-nav">
+                                <li class="nav-item dropdown account">
 
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                         @User.Identity.Name
@@ -62,11 +62,11 @@
                     }
                     else
                     {
-                        <ul class="nav nav-pills float-right">
-                            <li class="nav-item">
+                        <ul class="nav nav-pills float-right app-nav">
+                            <li class="nav-item login">
                                 <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">@T["Login"]</a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item register">
                                 <a class="nav-link" asp-route-area="Plato.Users" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Context.Request.Path">@T["Register"]</a>
                             </li>
                         </ul>

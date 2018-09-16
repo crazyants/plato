@@ -59,8 +59,7 @@ namespace Plato.Internal.Layout.Razor
 
             return builder;
         }
-
-
+        
         public async Task<User> GetAuthenticatedUserAsync()
         {
             if (User.Identity.IsAuthenticated)
@@ -71,6 +70,8 @@ namespace Plato.Internal.Layout.Razor
 
             return null;
         }
+
+
 
     }
 

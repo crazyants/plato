@@ -1,14 +1,13 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
 
-namespace Plato.Users.Navigation
+namespace Plato.Search.Navigation
 {
     public class SiteMenu : INavigationProvider
     {
-        public SiteMenu(IStringLocalizer<AdminMenu> localizer)
+        public SiteMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -23,11 +22,12 @@ namespace Plato.Users.Navigation
             }
 
             builder
-                .Add(T["Users"], "1", installed => installed
-                        .Action("Index", "Home", "Plato.Users")
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    , new List<string>() {"users"});
+                .Add(T["Search"], int.MaxValue, installed => installed
+                    .Action("Index", "Home", "Plato.Search")
+                    //.Permission(Permissions.ManageRoles)
+                    .LocalNav()
+                , new List<string>() { "search"});
+
         }
     }
 

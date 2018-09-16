@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Navigation;
+using Plato.Search.Navigation;
 using Plato.Search.ViewProviders;
 using Plato.WebApi.Controllers;
 
@@ -23,6 +25,10 @@ namespace Plato.Search
 
         public override void ConfigureServices(IServiceCollection services)
         {
+
+            // Navigation
+            services.AddScoped<INavigationProvider, SearchMenu>();
+            services.AddScoped<INavigationProvider, SiteMenu>();
 
             // Search Discuss view providers
             services.AddScoped<IViewProviderManager<SearchResult>, ViewProviderManager<SearchResult>>();

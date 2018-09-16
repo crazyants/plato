@@ -9,6 +9,7 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Models\Plato.Internal.Models.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
+    <ProjectReference Include="..\Plato.Categories\Plato.Categories.csproj" />
     <ProjectReference Include="..\Plato.Entities\Plato.Entities.csproj" />
     <ProjectReference Include="..\Plato.WebApi\Plato.WebApi.csproj" />
   </ItemGroup>

@@ -275,6 +275,24 @@ namespace Plato.Internal.Layout.TagHelpers
                 sb.Append("last");
             }
 
+            if (item.Classes != null)
+            {
+                int count = item.Classes.Count - 1, i = 0;
+                foreach (var className in item.Classes)
+                {
+                    if (!string.IsNullOrEmpty(sb.ToString()))
+                    {
+                        sb.Append(" ");
+                    }
+                    sb.Append(className);
+                    if (i < count)
+                    {
+                        sb.Append(" ");
+                    }
+                    i++;
+                }
+            }
+
             return sb.ToString();
 
         }
