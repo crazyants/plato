@@ -1,24 +1,24 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Navigation
 {
-    public class ProfileMenu : INavigationProvider
+    public class SearchMenu : INavigationProvider
     {
 
         public IStringLocalizer T { get; set; }
-        
-        public ProfileMenu(IStringLocalizer<AdminMenu> localizer)
+
+        public SearchMenu(IStringLocalizer<AdminMenu> localizer)
         {
             T = localizer;
         }
-        
+
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
-            if (!String.Equals(name, "profile", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "search", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }

@@ -1,5 +1,11 @@
 ﻿@model Plato.Categories.Models.CategoryBase
 
+
+@await DisplayAsync(new View("BaseSearch", new
+{
+    
+}))
+
 @if (Model != null)
 {
     <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Create" asp-route-channel="@Model.Id" class="btn btn-primary" title="Reply">

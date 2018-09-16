@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -9,14 +6,12 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Controllers

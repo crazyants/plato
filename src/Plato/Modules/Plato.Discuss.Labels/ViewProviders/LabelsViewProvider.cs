@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;

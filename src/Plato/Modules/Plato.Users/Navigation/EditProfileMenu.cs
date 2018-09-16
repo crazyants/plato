@@ -16,7 +16,7 @@ namespace Plato.Users.Navigation
         
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
-            if (!String.Equals(name, "user", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "editprofile", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }

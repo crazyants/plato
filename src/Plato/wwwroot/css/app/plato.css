@@ -6,6 +6,14 @@
 .hidden { display: none; }
 
 /* ------------------------- */
+/* SEarch Bar */
+/* ------------------------- */
+
+
+.layout-tools #search > input { width: 300px; }
+.layout-tools #search .dropdown-menu { width: 600px; }
+
+/* ------------------------- */
 /* User generated content */
 /* ------------------------- */
 
@@ -276,23 +284,11 @@
     background-position: center;
 }
 
-
 /* ------------------------- */
-/* Admin */
+/* Nav */
 /* ------------------------- */
 
-.main-container > .container:last-child,
-.main-container > .container-fluid:last-child { padding-bottom: 6rem; }
-
-
-.nav-v > .navbar .navbar-nav { padding: 1rem 0; }
-.nav-asides hr { margin: 0.5rem 0 1rem 0; display: none; }
-
-.nav-asides > .navbar .nav-link 
-{
-    padding: 0.5rem 1rem;
-    border-radius: 0.20rem;
-}
+.nav-v .show { width: 100%; }
 
 .nav-link[data-toggle="collapse"]:after {
     width: 0;
@@ -315,6 +311,23 @@
     transition: transform .35s ease, opacity .35s ease;
     opacity: .5;
 }
+
+
+/* ------------------------- */
+/* Admin Nav */
+/* ------------------------- */
+
+.main-container > .container:last-child,
+.main-container > .container-fluid:last-child { padding-bottom: 6rem; }
+
+.nav-asides .nav-v > .navbar .navbar-nav { padding: 1rem 0; }
+.nav-asides hr { margin: 0.5rem 0 1rem 0; display: none; }
+.nav-asides > .navbar .nav-link 
+{
+    padding: 0.5rem 1rem;
+    border-radius: 0.20rem;
+}
+
 
 @media (min-width: 992px) {
     
@@ -350,6 +363,7 @@
     .nav-v > .navbar::-webkit-scrollbar { display: none; }
     .nav-v > .navbar .navbar-brand {  padding: 1rem 1rem;  }
 
+ 
     .nav-v > .navbar .navbar-collapse {
         align-items: flex-start;
         width: 100%;

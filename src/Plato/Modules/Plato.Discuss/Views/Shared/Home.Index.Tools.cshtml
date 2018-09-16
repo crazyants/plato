@@ -1,70 +1,92 @@
 ﻿@model TopicIndexViewModel
 
+<nav class="navbar navbar-expand-lg navbar-light p-0">
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#toolsNavBar" aria-controls="toolsNavBar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-<a asp-controller="Home" asp-action="Create" class="btn btn-primary" title="Reply">
-    <i class="fal fa-fw fa-plus"></i>
-    @T["New Topic"]
-</a>
+    <div class="collapse navbar-collapse" id="toolsNavBar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                
 
+                @await DisplayAsync(new View("BaseSearch", new
+                {
 
-@*<a href="#modal-new" class="btn btn-primary" data-toggle="modal" data-target="#modal-new" title="Reply">
-        <i class="fal fa-fw fa-plus"></i>
-        @T["New Topic"]
-    </a>
+                }))
+            </li>
+            <li class="nav-item">
+                <a asp-controller="Home" asp-action="Create" class="btn btn-primary" title="Reply">
+                    <i class="fal fa-fw fa-plus"></i>
+                    @T["New Topic"]
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-    <div class="modal fade" id="modal-new" role="dialog" aria-hidden="true">
-
-        <div class="modal-dialog modal-right modal-3x bg-light p-2 border-left" role="document">
-
-            <div class="modal-content">
-                <form asp-controller="Home" asp-action="Index" method="post" enctype="multipart/form-data">
-
-                    <input asp-for="EntityId" type="hidden" />
-
-                    <card>
-                        <card-title>
-                            @T["Start a new topic..."]
-                        </card-title>
-                        <card-body>
-
-                            <fieldset>
-                                <div class="form-group">
-
-                                    <span asp-validation-for="Title" class="text-danger"></span>
-                                    <input asp-for="Title" placeholder="@T["Title"]" class="form-control" autofocus/>
-
-                                </div>
-                                <div class="form-group">
-
-                                    @await DisplayAsync(new View("Editor", new
-                                    {
-                                        value = string.Empty,
-                                        placeHolderText = T["Add your comments here"],
-                                        htmlName = @Model.EditorHtmlName
-                                    }))
+ 
 
 
-                                    <textarea asp-for="Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>
+    @*<a href="#modal-new" class="btn btn-primary" data-toggle="modal" data-target="#modal-new" title="Reply">
+            <i class="fal fa-fw fa-plus"></i>
+            @T["New Topic"]
+        </a>
+
+        <div class="modal fade" id="modal-new" role="dialog" aria-hidden="true">
+
+            <div class="modal-dialog modal-right modal-3x bg-light p-2 border-left" role="document">
+
+                <div class="modal-content">
+                    <form asp-controller="Home" asp-action="Index" method="post" enctype="multipart/form-data">
+
+                        <input asp-for="EntityId" type="hidden" />
+
+                        <card>
+                            <card-title>
+                                @T["Start a new topic..."]
+                            </card-title>
+                            <card-body>
+
+                                <fieldset>
+                                    <div class="form-group">
+
+                                        <span asp-validation-for="Title" class="text-danger"></span>
+                                        <input asp-for="Title" placeholder="@T["Title"]" class="form-control" autofocus/>
+
+                                    </div>
+                                    <div class="form-group">
+
+                                        @await DisplayAsync(new View("Editor", new
+                                        {
+                                            value = string.Empty,
+                                            placeHolderText = T["Add your comments here"],
+                                            htmlName = @Model.EditorHtmlName
+                                        }))
 
 
-                                </div>
-                                <div class="form-group mt-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        @T["Post"]
-                                    </button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                        @T["Cancel"]
-                                    </button>
-                                </div>
-                            </fieldset>
-                        </card-body>
-                    </card>
+                                        <textarea asp-for="Message" class="form-control md-textarea" placeholder="@T["Post your comments here..."]" rows="12"></textarea>
 
-                </form>
+
+                                    </div>
+                                    <div class="form-group mt-4">
+                                        <button type="submit" class="btn btn-primary">
+                                            @T["Post"]
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                            @T["Cancel"]
+                                        </button>
+                                    </div>
+                                </fieldset>
+                            </card-body>
+                        </card>
+
+                    </form>
+                </div>
+
             </div>
 
         </div>
 
-    </div>
-
-*@
+    *@

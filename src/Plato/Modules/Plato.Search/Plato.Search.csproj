@@ -13,9 +13,5 @@
     <ProjectReference Include="..\Plato.WebApi\Plato.WebApi.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
   
 </Project>
