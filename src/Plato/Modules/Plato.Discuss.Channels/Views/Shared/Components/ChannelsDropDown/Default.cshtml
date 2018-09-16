@@ -15,7 +15,7 @@
         <div class="my-2 mx-3">
             <input type="search" class="form-control" placeholder="@T["Search..."]" />
         </div>
-        <div class="dropdown-header hidden empty">
+        <div class="dropdown-header hidden">
             @T["No channel found"]
         </div>
 
@@ -23,10 +23,12 @@
         {
             @await DisplayAsync(new View("CategoryTree", new
             {
-                selectedCategories = Model.SelectedChannelIds,
-                htmlName = Model.HtmlName,
-                enableCheckBoxes = true
-            }))
+                options = new CategoryTreeOptions()
+                {
+                    SelectedCategories = Model.SelectedChannelIds,
+                    HtmlName = Model.HtmlName,
+                    EnableCheckBoxes = true
+                }}))
         }
         else
         {

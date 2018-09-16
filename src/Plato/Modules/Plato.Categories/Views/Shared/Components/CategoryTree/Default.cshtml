@@ -3,7 +3,7 @@
 
     string BuildChannels(CategoryTreeViewModel model)
     {
-        var output = BuildChannelsRecursivly(model.SelectedChannels, model.HtmlName);
+        var output = BuildChannelsRecursivly(model.SelectedCategories, model.HtmlName);
         return output;
     }
 
@@ -24,11 +24,11 @@
             .Append(style)
             .Append("\" class=\"list-group list-group-flush\">");
 
-        foreach (var channel in Model.SelectedChannels)
+        foreach (var channel in Model.SelectedCategories)
         {
             var nodeId = htmlName + "-node-" + channel.Value.Id;
             var checkId = htmlName + "-check-" + channel.Value.Id;
-            var css = @channel.IsSelected ? "list-group-item active checked" : "list-group-item";
+            var css = @channel.IsSelected ? "list-group-item list-group-item-action active checked" : "list-group-item list-group-item-action";
             var check = channel.IsSelected ? " checked" : string.Empty;
 
             if (channel.Value.ParentId == id)
@@ -116,12 +116,15 @@
                 sb.Append(channel.Value.Name);
 
                 sb.Append("</label>");
-                
-                sb.Append(DisplayAsync(new View("EditChannelMenu", new
+
+                if (!String.IsNullOrEmpty(Model.EditMenuViewName))
                 {
-                    categoryId = channel.Value.Id
-                })).GetAwaiter().GetResult().ToHtmlString());
-               
+                    sb.Append(DisplayAsync(new View("EditChannelMenu", new
+                    {
+                        categoryId = channel.Value.Id
+                    })).GetAwaiter().GetResult().ToHtmlString());
+                }
+       
                 sb.Append("</div>");
 
                 // Recuse

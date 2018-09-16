@@ -23,20 +23,25 @@ namespace Plato.Categories.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            IEnumerable<int> selectedCategories,
-            string htmlName,
-            bool enableCheckBoxes)
+            CategoryTreeOptions options)
         {
-            if (selectedCategories == null)
+
+            if (options == null)
             {
-                selectedCategories = new int[0];
+                options = new CategoryTreeOptions();
+            }
+
+            if (options.SelectedCategories == null)
+            {
+                options.SelectedCategories = new int[0];
             }
 
             return View(new CategoryTreeViewModel
             {
-                HtmlName = htmlName,
-                EnableCheckBoxes = enableCheckBoxes,
-                SelectedChannels = await BuildSelectionsAsync(selectedCategories)
+                HtmlName = options.HtmlName,
+                EnableCheckBoxes = options.EnableCheckBoxes,
+                EditMenuViewName = options.EditMenuViewName,
+                SelectedCategories = await BuildSelectionsAsync(options.SelectedCategories)
             });
 
         }
@@ -47,16 +52,13 @@ namespace Plato.Categories.ViewComponents
 
             var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
             var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
-
-            var selections = channels?.Select(c => new Selection<CategoryBase>
+            return channels?.Select(c => new Selection<CategoryBase>
                 {
                     IsSelected = selected.Any(v => v == c.Id),
                     Value = c
                 })
-                //.OrderBy(s => s.Value.Name)
                 .ToList();
 
-            return selections;
         }
     }
 

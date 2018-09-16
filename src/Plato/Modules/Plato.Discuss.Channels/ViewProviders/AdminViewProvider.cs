@@ -125,8 +125,6 @@ namespace Plato.Discuss.Channels.ViewProviders
             model.Name = model.Name?.Trim();
             model.Description = model.Description?.Trim();
   
-            //Category category = null;
-
             if (updater.ModelState.IsValid)
             {
 
@@ -145,7 +143,8 @@ namespace Plato.Discuss.Channels.ViewProviders
                     Description = model.Description,
                     ForeColor = model.ForeColor,
                     BackColor = model.BackColor,
-                    IconCss = iconCss
+                    IconCss = iconCss,
+                    SortOrder = categoryBase.SortOrder
                 });
 
                 foreach (var error in result.Errors)
@@ -156,8 +155,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             }
 
             return await BuildEditAsync(categoryBase, updater);
-
-
+            
         }
 
         #endregion

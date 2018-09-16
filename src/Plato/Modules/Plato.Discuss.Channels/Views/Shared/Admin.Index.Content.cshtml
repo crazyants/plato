@@ -1,20 +1,17 @@
 ﻿@model ChannelIndexViewModel
 
-@*@await DisplayAsync(new View("ChannelList", new
-{
-    viewOpts = @Model.ChannelViewOpts
-}))*@
-
 <card>
     <card-title>
-        <h6 class="card-title">@T["Edit Channels"]</h6>
+        <h6 class="card-title">@T["Channels"]</h6>
     </card-title>
     <card-body>
         @await DisplayAsync(new View("CategoryTree", new
         {
-            selectedChannels = new List<int>(),
-            htmlName = "test",
-
+            options = new CategoryTreeOptions()
+            {
+                SelectedCategories = new List<int>(),
+                EditMenuViewName = "EditChannelMenu"
+            }
         }))
     </card-body>
 </card>

@@ -10,7 +10,7 @@
             <ul class="list-group list-group-flush list-group-hover">
                 @foreach (var role in Model.Results.Data)
                 {
-                    <li class="list-group-item">
+                    <li class="list-group-item list-group-item-action">
 
                         <h6 class="d-inline-block">
                             <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@role.Id" class="font-weight-bold">

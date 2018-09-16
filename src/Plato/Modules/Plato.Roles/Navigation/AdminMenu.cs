@@ -22,7 +22,7 @@ namespace Plato.Roles.Navigation
 
 
             builder
-                .Add(T["Roles"], 9998, roles => roles
+                .Add(T["Roles"], 9997, roles => roles
                     .Add(T["Manage"], 3, manage => manage
                         .Action("Index", "Admin", "Plato.Roles")
                         //.Permission(Permissions.ManageRoles)

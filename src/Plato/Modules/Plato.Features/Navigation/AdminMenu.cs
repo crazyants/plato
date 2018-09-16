@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.Features
+namespace Plato.Features.Navigation
 {
     public class AdminMenu : INavigationProvider
     {
@@ -21,7 +21,7 @@ namespace Plato.Features
             }
 
             builder
-                .Add(T["Features"], "1", features => features
+                .Add(T["Features"], 9998, features => features
                     .Add(T["Manage Features"], "15", manage => manage
                         .Action("Index", "Admin", "Plato.Features")
                         //.Permission(Permissions.ManageRoles)
