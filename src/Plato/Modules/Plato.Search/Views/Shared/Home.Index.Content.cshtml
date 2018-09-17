@@ -1,6 +1,5 @@
 ﻿@model SearchIndexViewModel
 
-
 <card>
     <card-title>
         <h6 class="card-title">@T["Search"]</h6>
@@ -8,13 +7,13 @@
     <card-body>
         @await DisplayAsync(new View("Search", new
         {
-            value = Model.Keywords
+            viewOpts = @Model.ViewOpts,
         }))
     </card-body>
 </card>
 
 @await DisplayAsync(new View("SearchList", new
 {
-    filterOpts = @Model.ViewOpts,
+    viewOpts = @Model.ViewOpts,
     pagerOpts = @Model.PagerOpts
 }))

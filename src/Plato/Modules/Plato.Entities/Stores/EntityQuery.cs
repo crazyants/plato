@@ -37,19 +37,18 @@ namespace Plato.Entities.Stores
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
 
-            var data = await _store.SelectAsync(
+            return await _store.SelectAsync(
                 PageIndex,
                 PageSize,
                 startSql,
                 populateSql,
                 countSql,
-                Params.Keywords.Value
+                Params.Title.Value,
+                Params.Message.Value,
+                Params.Html.Value
             );
-
-            return data;
         }
-
-
+        
     }
 
     #endregion
@@ -63,7 +62,9 @@ namespace Plato.Entities.Stores
         private WhereInt _id;
         private WhereInt _featureId;
         private WhereInt _categoryId;
-        private WhereString _keywords;
+        private WhereString _title;
+        private WhereString _message;
+        private WhereString _html;
         private WhereBool _showPrivate;
         private WhereBool _hidePrivate;
         private WhereBool _showSpam;
@@ -97,11 +98,24 @@ namespace Plato.Entities.Stores
         }
 
 
-        public WhereString Keywords
+        public WhereString Title
         {
-            get => _keywords ?? (_keywords = new WhereString());
-            set => _keywords = value;
+            get => _title ?? (_title = new WhereString());
+            set => _title = value;
         }
+
+        public WhereString Message
+        {
+            get => _message ?? (_message = new WhereString());
+            set => _message = value;
+        }
+
+        public WhereString Html
+        {
+            get => _html ?? (_html = new WhereString());
+            set => _html = value;
+        }
+
 
         public WhereBool ShowPrivate
         {
@@ -352,15 +366,7 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.CategoryId.Operator);
                 sb.Append(_query.Params.CategoryId.ToSqlString("CategoryId"));
             }
-
-            // Keywords
-            if (!string.IsNullOrEmpty(_query.Params.Keywords.Value))
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Keywords"));
-            }
-            
+          
             // -----------------
             // private 
             // -----------------
@@ -421,10 +427,54 @@ namespace Plato.Entities.Stores
                 sb.Append("IsPinned = 1");
             }
             
+            // -----------------
+            // Keywords 
+            // -----------------
+            
+            var keywordWhereClause = BuildKeywordWhereClause();
+            if (!string.IsNullOrEmpty(keywordWhereClause))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(" AND ");
+                sb.Append("(")
+                    .Append(keywordWhereClause)
+                    .Append(")");
+            }
+     
             return sb.ToString();
 
         }
 
+        string BuildKeywordWhereClause()
+        {
+
+            var sb = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(_query.Params.Title.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Title.Operator);
+                sb.Append(_query.Params.Title.ToSqlString("Title"));
+            }
+
+            if (!string.IsNullOrEmpty(_query.Params.Message.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Message.Operator);
+                sb.Append(_query.Params.Message.ToSqlString("Message"));
+            }
+
+            if (!string.IsNullOrEmpty(_query.Params.Html.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Html.Operator);
+                sb.Append(_query.Params.Html.ToSqlString("Html"));
+            }
+
+
+            return sb.ToString();
+
+        }
 
         string GetQualifiedColumnName(string columnName)
         {

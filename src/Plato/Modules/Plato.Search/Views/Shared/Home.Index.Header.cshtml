@@ -1,7 +1,15 @@
 ﻿@model SearchIndexViewModel
 
-<h4>@T["Search Results"]</h4>
-<span class="text-muted">@T["Results for the search term "] @Model.Keywords</span>
+@if (!String.IsNullOrEmpty(Model.ViewOpts.Search))
+{
+    <h4>@T["Search Results"]</h4>
+    <span class="text-muted">@T["Results for the search term "] <strong>@Model.ViewOpts.Search</strong></span>
+}
+else
+{
+    <h4>@T["Search"]</h4>
+    <span class="text-muted">@T["Search by keywords below."]</span>
+}
 <hr />
 
 

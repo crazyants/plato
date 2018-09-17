@@ -24,11 +24,18 @@ namespace Plato.Search.ViewComponents
 
         public Task<IViewComponentResult> InvokeAsync(
             Entity entity,
-            bool enableEditOptions)
+            ViewOptions viewOpts)
         {
+
+            if (viewOpts == null)
+            {
+                viewOpts = new ViewOptions();
+            }
+
             var model = new SearchListItemViewModel()
             {
-                Entity = entity
+                Entity = entity,
+                ViewOptions = viewOpts
             };
 
             return Task.FromResult((IViewComponentResult)View(model));

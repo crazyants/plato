@@ -13,7 +13,6 @@ namespace Plato.Internal.Repositories.Users
     public class UserRepository : IUserRepository<User>
     {
 
-
         #region "Private Variables"
 
         private readonly IUserDataRepository<UserData> _userDataRepository;

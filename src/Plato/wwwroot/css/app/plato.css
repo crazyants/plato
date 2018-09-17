@@ -27,8 +27,8 @@
 /* ------------------------- */
 
 
-.layout-tools #search > input { width: 300px; }
-.layout-tools #search .dropdown-menu { width: 600px; }
+#search > input { width: 300px; }
+#search .dropdown-menu { width: 600px; }
 
 /* ------------------------- */
 /* User generated content */

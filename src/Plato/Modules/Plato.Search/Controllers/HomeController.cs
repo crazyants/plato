@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Search.ViewModels;
 using Plato.WebApi.Controllers;
@@ -30,7 +25,7 @@ namespace Plato.Search.Controllers
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
-        
+
         public HomeController(
             IStringLocalizer<HomeController> stringLocalizer,
             IHtmlLocalizer<HomeController> localizer,
@@ -38,7 +33,7 @@ namespace Plato.Search.Controllers
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
             IViewProviderManager<SearchResult> viewProvider)
         {
-         
+
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _viewProvider = viewProvider;
@@ -52,15 +47,24 @@ namespace Plato.Search.Controllers
 
         #region "Actions"
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index(
-            SearchIndexViewModel model = null)
+            ViewOptions viewOptions,
+            PagerOptions pagerOptions)
         {
 
-            if (model == null)
+            // default options
+            if (viewOptions == null)
             {
-                model = new SearchIndexViewModel();
+                viewOptions = new ViewOptions();
             }
 
+            // default pager
+            if (pagerOptions == null)
+            {
+                pagerOptions = new PagerOptions();
+            }
+            
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -68,13 +72,10 @@ namespace Plato.Search.Controllers
                     .Action("Index", "Home", "Plato.Search")
                     .LocalNav()
                 ).Add(S["Search"]);
-              
             });
 
-            this.RouteData.Values.Add("search", model.Keywords);
-
-            // Build view
-            //var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);
+            this.RouteData.Values.Add("search", viewOptions.Search);
+            this.RouteData.Values.Add("page", pagerOptions.Page);
 
             // Build view
             var result = await _viewProvider.ProvideIndexAsync(new SearchResult(), this);
@@ -83,9 +84,9 @@ namespace Plato.Search.Controllers
             return View(result);
 
         }
-        
+
         #endregion
-        
+
     }
-    
+
 }

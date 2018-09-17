@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Localization.Abstractions;
-using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Shell.Abstractions;
 using LocalizedString = Microsoft.Extensions.Localization.LocalizedString;
 

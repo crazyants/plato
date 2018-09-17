@@ -38,22 +38,20 @@ namespace Plato.Search.ViewComponents
             {
                 pagerOpts = new PagerOptions();
             }
-
-
+            
             var model = await GetIndexViewModel(viewOpts, pagerOpts);
 
             return View(model);
+
         }
-
-
-
+        
         async Task<SearchIndexViewModel> GetIndexViewModel(
             ViewOptions viewOptions,
             PagerOptions pagerOptions)
         {
-            var topics = await GetEntities(viewOptions, pagerOptions);
+            var results = await GetEntities(viewOptions, pagerOptions);
             return new SearchIndexViewModel(
-                topics,
+                results,
                 viewOptions,
                 pagerOptions);
         }
@@ -82,19 +80,18 @@ namespace Plato.Search.ViewComponents
                     {
                         q.CategoryId.Equals(viewOpts.ChannelId);
                     }
+
+                    if (!string.IsNullOrEmpty(viewOpts.Search))
+                    {
+                        q.Title.Like(viewOpts.Search).Or();
+                        q.Message.Like(viewOpts.Search).Or();
+                        q.Html.Like(viewOpts.Search).Or();
+                    }
                     
                     q.HideSpam.True();
                     q.HidePrivate.True();
                     q.HideDeleted.True();
-
-                    //q.IsPinned.True();
-
-
-                    //if (!string.IsNullOrEmpty(filterOptions.Search))
-                    //{
-                    //    q.UserName.IsIn(filterOptions.Search).Or();
-                    //    q.Email.IsIn(filterOptions.Search);
-                    //}
+               
                     // q.UserName.IsIn("Admin,Mark").Or();
                     // q.Email.IsIn("email440@address.com,email420@address.com");
                     // q.Id.Between(1, 5);

@@ -482,10 +482,22 @@ namespace Plato.Entities.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "Keywords",
+                        Name = "Title",
                         DbType = DbType.String,
                         Length = "255"
-                    }
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Message",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Html",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
                 }));
 
         }

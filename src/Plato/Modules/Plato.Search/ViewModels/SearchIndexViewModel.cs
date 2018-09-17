@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Plato.Entities.Models;
+﻿using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
 
@@ -10,16 +7,12 @@ namespace Plato.Search.ViewModels
     public class SearchIndexViewModel
     {
 
-        public string Keywords { get; set; }
-
-
-        public PagerOptions PagerOpts { get; set; }
-
-        public ViewOptions ViewOpts { get; set; }
-
         public IPagedResults<Entity> Results { get; }
 
+        public PagerOptions PagerOpts { get; set; } = new PagerOptions();
 
+        public ViewOptions ViewOpts { get; set; } = new ViewOptions();
+        
         public SearchIndexViewModel()
         {
 

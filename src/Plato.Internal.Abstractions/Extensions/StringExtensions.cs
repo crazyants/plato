@@ -257,6 +257,51 @@ namespace Plato.Internal.Abstractions.Extensions
             
             return true;
         }
+        
+        public static string HighlightTerms(this string input, string words)
+        {
+      
+            // ensure we have keywords to highlight
+            if (String.IsNullOrEmpty(words))
+            {
+                return input;
+            }
+
+            const string startTag = "<span class=\"text-highlight\">";
+            const string endTag = "</span>";
+
+            // strip junk from words            
+            words = Regex.Replace(words, "([^\\w+\\s\\'\\-.])", "");
+
+            // split terms to highlight
+            var terms = words.Trim().Split(' ');
+            for (var i = 0; i <= terms.Length - 1; i++)
+            {
+
+                var term = terms.GetValue(i).ToString();
+                if (!String.IsNullOrEmpty(term))
+                {
+                    term = term.Trim();
+                }
+
+                // find the word to highlight ensuring we search outside of HTML tags 
+                // if the word is 2 or fewer charactersensure we use word boundaries
+                var searchPattern = term.Length <= 2
+                    ? "(?!<.*?)\\b(" + Regex.Escape(term) + ")\\b(?![^<>]*?>)"
+                    : "(?!<.*?)(" + Regex.Escape(term) + ")(?![^<>]*?>)";
+                
+                input = Regex.Replace(
+                    input,
+                    searchPattern,
+                    startTag + "$1" + endTag,
+                    RegexOptions.IgnoreCase);
+
+            }
+
+            return input;
+
+        }
+
 
     }
 

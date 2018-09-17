@@ -2,7 +2,7 @@
 
 <card class="card card-body-flush">
     <card-title>
-        <h6 class="card-title float-left">@T["Topics"]</h6>
+        <h6 class="card-title float-left">@T["Results"]</h6>
         <ul class="nav navbar p-0 float-right">
             <li class="nav-item dropdown">
                 <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -39,7 +39,8 @@
                     <li class="list-group-item  list-group-item-action pt-4">
                         @await DisplayAsync(new View("SearchListItem", new
                         {
-                            entity = entity
+                            entity = entity,
+                            viewOpts = Model.ViewOpts
                         }))
                     </li>
 

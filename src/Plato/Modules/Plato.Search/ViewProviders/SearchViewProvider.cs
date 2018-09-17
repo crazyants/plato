@@ -13,9 +13,12 @@ namespace Plato.Search.ViewProviders
         {
             var viewModel = new SearchIndexViewModel
             {
-                Keywords = GetKeywords(updater)
+                ViewOpts =
+                {
+                    Search = GetKeywords(updater)
+                }
             };
-            
+
             return Task.FromResult(Views(
                 View<SearchIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<SearchIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
