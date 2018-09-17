@@ -87,7 +87,6 @@ namespace Plato.Search.Controllers
         public async Task<IActionResult> IndexPost(SearchSettingsViewModel viewModel)
         {
 
-
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
             //{
             //    return Unauthorized();

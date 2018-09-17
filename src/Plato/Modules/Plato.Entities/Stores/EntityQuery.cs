@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -207,6 +208,7 @@ namespace Plato.Entities.Stores
 
         private readonly string _entitiesTableName;
         private readonly string _usersTableName;
+        private readonly string _entityRepliesTableName;
 
         private readonly EntityQuery<TModel> _query;
 
@@ -215,6 +217,7 @@ namespace Plato.Entities.Stores
             _query = query;
             _entitiesTableName = GetTableNameWithPrefix("Entities");
             _usersTableName = GetTableNameWithPrefix("Users");
+            _entityRepliesTableName = GetTableNameWithPrefix("EntityReplies");
         }
 
         #endregion
@@ -223,10 +226,13 @@ namespace Plato.Entities.Stores
 
         public string BuildSqlStartId()
         {
+            var startIdComparer = GetStartIdComparer();
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = e.Id FROM ")
+            sb.Append("SELECT @start_id_out = ")
+                .Append(startIdComparer)
+                .Append(" FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -318,16 +324,23 @@ namespace Plato.Entities.Stores
 
         private string BuildWhereClauseForStartId()
         {
+            var startIdComparer = GetStartIdComparer();
             var sb = new StringBuilder();
             // default to ascending
             if (_query.SortColumns.Count == 0)
-                sb.Append("e.Id >= @start_id_in");
+            {
+                sb.Append(startIdComparer)
+                    .Append(" >= @start_id_in");
+            }
+               
             // set start operator based on first order by
             foreach (var sortColumn in _query.SortColumns)
             {
-                sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "e.Id <= @start_id_in"
-                    : "e.Id >= @start_id_in");
+                sb
+                    .Append(startIdComparer)
+                    .Append(sortColumn.Value != OrderBy.Asc
+                        ? " <= @start_id_in"
+                        : " >= @start_id_in");
                 break;
             }
 
@@ -431,7 +444,7 @@ namespace Plato.Entities.Stores
             // Keywords 
             // -----------------
             
-            var keywordWhereClause = BuildKeywordWhereClause();
+            var keywordWhereClause = BuildEntityKeywordWhereClause();
             if (!string.IsNullOrEmpty(keywordWhereClause))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -439,13 +452,26 @@ namespace Plato.Entities.Stores
                 sb.Append("(")
                     .Append(keywordWhereClause)
                     .Append(")");
+                
+                if (!string.IsNullOrEmpty(_query.Params.Html.Value))
+                {
+                    if (!string.IsNullOrEmpty(sb.ToString()))
+                        sb.Append(" AND ");
+                    sb.Append("e.Id IN (SELECT EntityId FROM ")
+                        .Append(_entityRepliesTableName)
+                        .Append(" WHERE ")
+                        .Append(BuildEntityRepliesKeywordWhereClause())
+                        .Append(")");
+                }
+
+
             }
-     
+
             return sb.ToString();
 
         }
 
-        string BuildKeywordWhereClause()
+        string BuildEntityKeywordWhereClause()
         {
 
             var sb = new StringBuilder();
@@ -471,10 +497,41 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.Html.ToSqlString("Html"));
             }
 
+            // Include entity replies
+
+            
 
             return sb.ToString();
 
         }
+
+        string BuildEntityRepliesKeywordWhereClause()
+        {
+
+            var sb = new StringBuilder();
+            
+            if (!string.IsNullOrEmpty(_query.Params.Message.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Message.Operator);
+                sb.Append(_query.Params.Message.ToSqlString("Message"));
+            }
+
+            if (!string.IsNullOrEmpty(_query.Params.Html.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Html.Operator);
+                sb.Append(_query.Params.Html.ToSqlString("Html"));
+            }
+
+            // Include entity replies
+
+
+
+            return sb.ToString();
+
+        }
+
 
         string GetQualifiedColumnName(string columnName)
         {
@@ -493,7 +550,7 @@ namespace Plato.Entities.Stores
             if (_query.SortColumns.Count == 0) return null;
             var sb = new StringBuilder();
             var i = 0;
-            foreach (var sortColumn in _query.SortColumns)
+            foreach (var sortColumn in GetSafeSortColumns())
             {
                 sb.Append(GetQualifiedColumnName(sortColumn.Key));
                 if (sortColumn.Value != OrderBy.Asc)
@@ -504,6 +561,63 @@ namespace Plato.Entities.Stores
             }
             return sb.ToString();
         }
+
+        IDictionary<string, OrderBy> GetSafeSortColumns()
+        {
+            var ourput = new Dictionary<string, OrderBy>();
+            foreach (var sortColumn in _query.SortColumns)
+            {
+                var columnName = GetSortColumn(sortColumn.Key);
+                if (!String.IsNullOrEmpty(columnName))
+                {
+                    ourput.Add(columnName, sortColumn.Value);
+                }
+            }
+            return ourput;
+        }
+
+        private string GetStartIdComparer()
+        {
+
+            var output = "Id";
+            if (_query.SortColumns.Count > 0)
+            {
+                foreach (var sortColumn in _query.SortColumns)
+                {
+                    output = GetSortColumn(sortColumn.Key);
+                }
+            }
+
+            return output;
+
+        }
+
+        string GetSortColumn(string columnName)
+        {
+
+            if (String.IsNullOrEmpty(columnName))
+            {
+                return string.Empty;
+            }
+
+            switch (columnName.ToLower())
+            {
+                case "id":
+                    return "e.Id";
+                case "title":
+                    return "e.Title";
+                case "message":
+                    return "e.[Message]";
+                case "createddate":
+                    return "e.CreatedDate";
+                case "modifieddate":
+                    return "e.ModifiedDate";
+            }
+
+            return string.Empty;
+
+        }
+
 
         #endregion
     }

@@ -97,7 +97,7 @@ namespace Plato.Discuss.ViewComponents
                     // q.Email.IsIn("email440@address.com,email420@address.com");
                     // q.Id.Between(1, 5);
                 })
-                .OrderBy("Id", OrderBy.Desc)
+                .OrderBy("ModifiedDate", OrderBy.Desc)
                 .ToList();
         }
         

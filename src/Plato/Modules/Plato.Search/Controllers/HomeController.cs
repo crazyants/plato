@@ -64,15 +64,33 @@ namespace Plato.Search.Controllers
             {
                 pagerOptions = new PagerOptions();
             }
-            
-            // Build breadcrumb
-            _breadCrumbManager.Configure(builder =>
+
+            if (string.IsNullOrEmpty(viewOptions.Search))
             {
-                builder.Add(S["Home"], home => home
-                    .Action("Index", "Home", "Plato.Search")
-                    .LocalNav()
-                ).Add(S["Search"]);
-            });
+                // Build breadcrumb
+                _breadCrumbManager.Configure(builder =>
+                {
+                    builder.Add(S["Home"], home => home
+                        .Action("Index", "Home", "Plato.Core")
+                        .LocalNav()
+                    ).Add(S["Search"]);
+                });
+            }
+            else
+            {
+                // Build breadcrumb
+                _breadCrumbManager.Configure(builder =>
+                {
+                    builder.Add(S["Home"], home => home
+                            .Action("Index", "Home", "Plato.Core")
+                            .LocalNav()
+                        ).Add(S["Home"], home => home
+                            .Action("Index", "Home", "Plato.Search")
+                            .LocalNav())
+                        .Add(S["Results"]);
+                });
+            }
+
 
             this.RouteData.Values.Add("search", viewOptions.Search);
             this.RouteData.Values.Add("page", pagerOptions.Page);

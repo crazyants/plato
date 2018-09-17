@@ -207,8 +207,8 @@ namespace Plato.Internal.Stores.Users
                 {
                     sb.Append(startIdComparer)
                         .Append(sortColumn.Value != OrderBy.Asc
-                        ? " <= @start_id_in"
-                        : " >= @start_id_in");
+                            ? " <= @start_id_in"
+                            : " >= @start_id_in");
                     break;
                 }
             }
