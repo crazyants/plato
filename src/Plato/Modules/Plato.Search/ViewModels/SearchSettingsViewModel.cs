@@ -11,7 +11,7 @@ namespace Plato.Search.ViewModels
     {
 
         [Required]
-        public int SearchMethod { get; set; }
+        public string SearchMethod { get; set; }
 
         public IEnumerable<SelectListItem> AvailableSearchMethods { get; set; }
 

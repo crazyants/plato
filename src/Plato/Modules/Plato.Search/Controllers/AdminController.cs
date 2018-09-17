@@ -152,8 +152,8 @@ namespace Plato.Search.Controllers
             {
                 output.Add(new SelectListItem
                 {
-                    Text = searchMethod.Value.Name,
-                    Value = searchMethod.Key.ToString()
+                    Text = searchMethod.Name,
+                    Value = searchMethod.Id
                 });
             }
 
