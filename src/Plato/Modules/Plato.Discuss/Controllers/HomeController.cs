@@ -91,7 +91,7 @@ namespace Plato.Discuss.Controllers
               
             });
             
-            //await CreateSampleData();
+            await CreateSampleData();
 
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
@@ -541,12 +541,11 @@ message Test message  " + number.ToString();
                     Message = GetSampleMarkDown(rnd.Next(1, 6))
                 };
                 var newReply = await _replyManager.CreateAsync(reply);
-
-
-
+                
             }
 
         }
+
         #endregion
 
     }

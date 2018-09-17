@@ -10,7 +10,6 @@
         <form asp-controller="Account" asp-action="ConfirmEmail" method="post">
             <h4>@T["We'll send you an email confirmation link"]</h4>
             <hr />
-
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="UserIdentifier" class="col-form-label font-weight-bold">@T["Email or username"]</label>

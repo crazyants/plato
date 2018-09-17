@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Plato.Email.Models
+namespace Plato.Search.ViewModels
 {
-    public class Pop3Settings 
-    {
-    }
 
+    public class SearchSettingsViewModel
+    {
+
+    }
 
 }

@@ -177,6 +177,10 @@ namespace Plato.Users.Controllers
                     // Get new user
                     var newUser = await _userManager.FindByEmailAsync(model.Email);
 
+                    // Mark admin created users as confirmed
+                    newUser.EmailConfirmed = true;
+                    await _userManager.UpdateAsync(newUser);
+
                     // Execute view providers ProvideUpdateAsync method
                     await _viewProvider.ProvideUpdateAsync(newUser, this);
 

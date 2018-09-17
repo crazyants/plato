@@ -16,6 +16,11 @@ namespace Plato.Search.ViewProviders
                 ViewOpts =
                 {
                     Search = GetKeywords(updater)
+                },
+                PagerOpts =
+                {
+                    Page = GetPageIndex(updater)
+
                 }
             };
 
@@ -42,6 +47,21 @@ namespace Plato.Search.ViewProviders
         public override Task<IViewProviderResult> BuildUpdateAsync(SearchResult model, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
+        }
+
+        int GetPageIndex(IUpdateModel updater)
+        {
+
+            var page = 1;
+            var routeData = updater.RouteData;
+            var found = routeData.Values.TryGetValue("page", out object value);
+            if (found)
+            {
+                int.TryParse(value.ToString(), out page);
+            }
+
+            return page;
+
         }
 
         string GetKeywords(IUpdateModel updater)

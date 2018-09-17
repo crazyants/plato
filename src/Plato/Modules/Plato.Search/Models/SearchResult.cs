@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Plato.Entities.Models;
+﻿using Plato.Entities.Models;
 
 namespace Plato.Search.Models
 {
+ 
     public class SearchResultt : Entity
     {
-
+        // A marker class for our view provider
     }
 }

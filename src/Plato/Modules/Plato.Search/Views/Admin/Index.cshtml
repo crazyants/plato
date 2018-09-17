@@ -1,0 +1,48 @@
+﻿@model SearchSettingsViewModel
+@{
+    ViewData["Title"] = "Search Settings";
+}
+
+<h4>@T["Search Settings"]</h4>
+<span class="text-muted">@T["Manage default search settings."]</span>
+<hr/>
+
+<form asp-action="Index" method="post" enctype="multipart/form-data">
+    
+    <card>
+        <card-title>
+            <h6 class="card-title">@T["General"]</h6>
+        </card-title>
+        <card-body>
+
+        </card-body>
+    </card>
+
+    <card  class="card mt-4">
+        <card-title>
+            <h6 class="card-title">@T["SMTP Server"]</h6>
+        </card-title>
+        <card-body>
+
+            
+        </card-body>
+    </card>
+
+    <card class="card mt-4">
+        <card-title>
+            <h6 class="card-title">@T["Polling Options"]</h6>
+        </card-title>
+        <card-body>
+          
+
+        </card-body>
+ 
+    </card>
+    
+    <card class="card mt-4">
+        <card-footer>
+            <button class="btn btn-primary" type="submit">@T["Save"]</button>
+        </card-footer>
+    </card>
+
+</form>

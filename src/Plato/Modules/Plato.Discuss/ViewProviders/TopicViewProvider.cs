@@ -52,11 +52,15 @@ namespace Plato.Discuss.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(Topic topic, IUpdateModel updater)
         {
 
-            var viewOptions = new ViewOptions();
-            viewOptions.Search = GetKeywords(updater);
+            var viewOptions = new ViewOptions
+            {
+                Search = GetKeywords(updater)
+            };
 
-            var pagerOptions = new PagerOptions();
-            pagerOptions.Page = GetPageIndex(updater);
+            var pagerOptions = new PagerOptions
+            {
+                Page = GetPageIndex(updater)
+            };
 
             var viewModel = new TopicIndexViewModel
             {

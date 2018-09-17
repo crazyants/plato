@@ -1,30 +1,10 @@
 ﻿@model TopicIndexViewModel
 
-<nav class="navbar navbar-expand-lg navbar-light p-0">
-    
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#toolsNavBar" aria-controls="toolsNavBar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<a asp-controller="Home" asp-action="Create" class="btn btn-primary" title="Reply">
+    <i class="fal fa-fw fa-plus"></i>
+    @T["New Topic"]
+</a>
 
-    <div class="collapse navbar-collapse" id="toolsNavBar">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                @await DisplayAsync(new View("BaseSearch", new
-                {
-
-                }))
-            </li>
-            <li class="nav-item">
-                <a asp-controller="Home" asp-action="Create" class="btn btn-primary" title="Reply">
-                    <i class="fal fa-fw fa-plus"></i>
-                    @T["New Topic"]
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
- 
 
 
     @*<a href="#modal-new" class="btn btn-primary" data-toggle="modal" data-target="#modal-new" title="Reply">

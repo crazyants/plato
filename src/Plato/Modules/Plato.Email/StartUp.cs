@@ -11,6 +11,7 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Email.Handlers;
 using Plato.Email.Models;
+using Plato.Email.Navigation;
 using Plato.Email.Repositories;
 using Plato.Email.Services;
 using Plato.Email.Stores;

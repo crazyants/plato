@@ -6,7 +6,9 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
+using Plato.Search.Models;
 using Plato.Search.Navigation;
+using Plato.Search.Stores;
 using Plato.Search.ViewProviders;
 using Plato.WebApi.Controllers;
 
@@ -25,6 +27,8 @@ namespace Plato.Search
 
         public override void ConfigureServices(IServiceCollection services)
         {
+            // Stores
+            services.AddScoped<ISearchSettingsStore<SearchSettings>, SearchSettingsStore>();
 
             // Navigation
             services.AddScoped<INavigationProvider, SearchMenu>();
@@ -33,9 +37,8 @@ namespace Plato.Search
             // Search Discuss view providers
             services.AddScoped<IViewProviderManager<SearchResult>, ViewProviderManager<SearchResult>>();
             services.AddScoped<IViewProvider<SearchResult>, SearchViewProvider>();
+            services.AddScoped<INavigationProvider, AdminMenu>();
             
-
-
         }
 
         public override void Configure(

@@ -12,8 +12,12 @@
     </card-body>
 </card>
 
-@await DisplayAsync(new View("SearchList", new
+@if (!String.IsNullOrEmpty(Model.ViewOpts.Search))
 {
-    viewOpts = @Model.ViewOpts,
-    pagerOpts = @Model.PagerOpts
-}))
+    @await DisplayAsync(new View("SearchList", new
+    {
+        viewOpts = @Model.ViewOpts,
+        pagerOpts = @Model.PagerOpts
+    }))
+}
+
