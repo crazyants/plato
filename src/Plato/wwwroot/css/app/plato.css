@@ -5,6 +5,8 @@
 
 .hidden { display: none; }
 
+.bg-highlight { background-color: rgba(255, 240, 0, 0.5); font-weight: bold; }
+
 /* ------------------------- */
 /* Main app navigation */
 /* ------------------------- */

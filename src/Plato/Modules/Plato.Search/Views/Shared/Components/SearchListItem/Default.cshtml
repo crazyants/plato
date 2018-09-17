@@ -7,14 +7,13 @@
     </a>
 </div>
 <div class="list-body">
-
-  
+    
     <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@Model.Entity.Id" asp-route-alias="@Model.Entity.Alias" class="font-weight-bold">
-        @Model.Entity.Title
+        @Html.Raw(Model.Entity.Title.HighlightTerms(Model.ViewOptions.Search))
     </a>
  
     <div class="text-muted">
-        @Model.Entity.Abstract.HighlightTerms(Model.ViewOptions.Search)
+        @Html.Raw(Model.Entity.Abstract.HighlightTerms(Model.ViewOptions.Search))
     </div>
     <div>
      

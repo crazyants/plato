@@ -267,7 +267,7 @@ namespace Plato.Internal.Abstractions.Extensions
                 return input;
             }
 
-            const string startTag = "<span class=\"text-highlight\">";
+            const string startTag = "<span class=\"bg-highlight\">";
             const string endTag = "</span>";
 
             // strip junk from words            
