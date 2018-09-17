@@ -8,8 +8,13 @@
     <card-body>
         @await DisplayAsync(new View("Search", new
         {
-            value = Model.Keywords   
+            value = Model.Keywords
         }))
     </card-body>
 </card>
 
+@await DisplayAsync(new View("SearchList", new
+{
+    filterOpts = @Model.ViewOpts,
+    pagerOpts = @Model.PagerOpts
+}))

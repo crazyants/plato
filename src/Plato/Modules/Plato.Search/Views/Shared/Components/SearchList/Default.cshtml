@@ -1,0 +1,62 @@
+﻿@model SearchIndexViewModel
+
+<card class="card card-body-flush">
+    <card-title>
+        <h6 class="card-title float-left">@T["Topics"]</h6>
+        <ul class="nav navbar p-0 float-right">
+            <li class="nav-item dropdown">
+                <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Filter
+                </a>
+                <div class="dropdown-arrow"></div>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sort By
+                </a>
+                <div class="dropdown-arrow"></div>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+        </ul>
+    </card-title>
+    <card-body>
+        @if (Model.Results != null)
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                @foreach (var entity in Model.Results.Data)
+                {
+                    <li class="list-group-item  list-group-item-action pt-4">
+                        @await DisplayAsync(new View("SearchListItem", new
+                        {
+                            entity = entity
+                        }))
+                    </li>
+
+                }
+            </ul>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    <h6>@T["No results found"]</h6>
+                </li>
+            </ul>
+        }
+    </card-body>
+</card>
+
+<div class="mt-4 mb-4">
+    <pager model="@Model.PagerOpts"></pager>
+</div>

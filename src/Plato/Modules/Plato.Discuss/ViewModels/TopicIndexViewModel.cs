@@ -7,6 +7,12 @@ namespace Plato.Discuss.ViewModels
     public class TopicIndexViewModel
     {
 
+        public IPagedResults<Topic> Results { get; }
+
+        public PagerOptions PagerOpts { get; set; }
+        
+        public ViewOptions ViewOpts { get; set; }
+        
         public TopicIndexViewModel()
         {
 
@@ -23,11 +29,6 @@ namespace Plato.Discuss.ViewModels
             this.PagerOpts.SetTotal(results?.Total ?? 0);
         }
 
-        public IPagedResults<Topic> Results { get; }
-
-        public PagerOptions PagerOpts { get; set; }
-        
-        public ViewOptions ViewOpts { get; set; }
 
     }
 
