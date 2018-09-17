@@ -1,17 +1,13 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Options;
-
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Search.Models;
@@ -75,7 +71,7 @@ namespace Plato.Search.Controllers
                 builder.Add(S["Home"], home => home
                     .Action("Index", "Admin", "Plato.Admin")
                     .LocalNav()
-                ).Add(S["Settings"], channels => channels
+                ).Add(S["Settings"], settings => settings
                     .Action("Index", "Admin", "Plato.Settings")
                     .LocalNav()
                 ).Add(S["Search Settings"]);
@@ -101,10 +97,10 @@ namespace Plato.Search.Controllers
             {
                 return View(await GetModel());
             }
-            
+
             var settings = new SearchSettings()
             {
-             
+                SearchMethod = viewModel.SearchMethod
             };
             
             var result = await _searchSettingsStore.SaveAsync(settings);
@@ -127,7 +123,7 @@ namespace Plato.Search.Controllers
 
         #region "Private Methods"
 
-        private async Task<SearchSettingsViewModel> GetModel()
+        async Task<SearchSettingsViewModel> GetModel()
         {
 
             var settings = await _searchSettingsStore.GetAsync();
@@ -135,18 +131,35 @@ namespace Plato.Search.Controllers
             {
                 return new SearchSettingsViewModel()
                 {
-                 
+                    SearchMethod = settings.SearchMethod,
+                    AvailableSearchMethods = GetAvailableSearchMMethods()
                 };
             }
-            
+
             // return default settings
             return new SearchSettingsViewModel()
             {
-            
+                AvailableSearchMethods = GetAvailableSearchMMethods()
             };
 
         }
 
+        IEnumerable<SelectListItem> GetAvailableSearchMMethods()
+        {
+
+            var output = new List<SelectListItem>();
+            foreach (var searchMethod in SearchDefaults.AvailableSearchMethods)
+            {
+                output.Add(new SelectListItem
+                {
+                    Text = searchMethod.Value.Name,
+                    Value = searchMethod.Key.ToString()
+                });
+            }
+
+            return output;
+
+        }
 
         #endregion
 

@@ -4,7 +4,8 @@ namespace Plato.Search.Models
 {
     public class SearchSettings : Serializable
     {
+        public int SearchMethod { get; set; }
 
-        public bool SearchMedia { get; set; }
     }
+ 
 }

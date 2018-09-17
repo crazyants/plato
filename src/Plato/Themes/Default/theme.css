@@ -39,7 +39,8 @@
 
 .list-group-hover .list-group-item-action:not(.active):hover,
 .list-group-hover .list-group-item-action:not(.active):hover .text-muted,
-.list-group-hover .list-group-item-action:not(.active):hover a:not(.btn) {
+.list-group-hover .list-group-item-action:not(.active):hover a:not(.btn),
+.list-group-hover .list-group-item-action:not(.active):hover a.btn-expand {
     color: #fff !important;
 }
 

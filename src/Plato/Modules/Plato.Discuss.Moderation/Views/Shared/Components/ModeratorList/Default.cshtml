@@ -11,12 +11,11 @@
              {
                  var collapsableId = "user-" + user.Id;
                  <ul class="list-group list-group-flush list-group-hover">
-                     <li class="list-group-item">
-                         
-                         <a role="button" class="btn btn-secondary btn-expand  float-right" title="@T["Channels"]" data-toggle="collapse" href="#@collapsableId" aria-expanded="false"  aria-controls="@collapsableId">
+                    <li class="list-group-item list-group-item-action">
+                     
+                         <div role="button" class="btn btn-expand" title="@T["Channels"]" data-toggle="collapse" href="#@collapsableId" aria-expanded="false"  aria-controls="@collapsableId">
                              <i class="fal fa-chevron-right"></i>
-                             @T["Edit"]
-                         </a>
+                         </div>
                          
                          <h6 class="d-inline-block">
                              <avatar class="avatar" user-id="@user.Id" />
@@ -33,7 +32,7 @@
                      <ul class="list-group list-group-flush list-group-hover">
                          @foreach (var moderator in Model.CategorizedModerators[user])
                          {
-                             <li class="list-group-item">
+                             <li class="list-group-item list-group-item-action">
                                  @await DisplayAsync(new View("ModeratorListItem", new
                                  {
                                      moderator = moderator

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Internal.Models.Users;
 using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Moderation.ViewComponents

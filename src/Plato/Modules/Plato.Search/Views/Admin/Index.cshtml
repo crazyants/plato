@@ -15,30 +15,16 @@
         </card-title>
         <card-body>
 
+            <label asp-for="SearchMethod" class="col-form-label font-weight-bold">@T["Search Method"]</label>
+            <span asp-validation-for="SearchMethod" class="text-danger"></span>
+            <select class="form-control"
+                    asp-for="SearchMethod"
+                    asp-items="@Model.AvailableSearchMethods"></select>
+
         </card-body>
     </card>
 
-    <card  class="card mt-4">
-        <card-title>
-            <h6 class="card-title">@T["SMTP Server"]</h6>
-        </card-title>
-        <card-body>
 
-            
-        </card-body>
-    </card>
-
-    <card class="card mt-4">
-        <card-title>
-            <h6 class="card-title">@T["Polling Options"]</h6>
-        </card-title>
-        <card-body>
-          
-
-        </card-body>
- 
-    </card>
-    
     <card class="card mt-4">
         <card-footer>
             <button class="btn btn-primary" type="submit">@T["Save"]</button>
