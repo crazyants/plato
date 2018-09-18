@@ -48,7 +48,7 @@ namespace Plato.Discuss.Labels.ViewComponents
             IEnumerable<int> selected)
         {
 
-            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
             var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
 
             var selections = labels?.Select(l => new Selection<Models.Label>

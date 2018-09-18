@@ -55,7 +55,7 @@ namespace Plato.Categories.ViewComponents
             IEnumerable<int> selected)
         {
 
-            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Channels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
             var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
             return channels?.Select(c => new Selection<CategoryBase>
                 {

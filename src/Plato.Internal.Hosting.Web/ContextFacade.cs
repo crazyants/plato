@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Settings;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Settings;
@@ -21,29 +20,24 @@ namespace Plato.Internal.Hosting.Web
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IShellDescriptorManager _shellDescriptorManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly IFeatureFacade _featureFacade; 
-
+  
         private IUrlHelper _urlHelper;
 
         public ContextFacade(
             IHttpContextAccessor httpContextAccessor,
             IPlatoUserStore<User> platoUserStore,
-            IShellDescriptorManager shellDescriptorManager,
             IActionContextAccessor actionContextAccessor,
             ISiteSettingsStore siteSettingsStore,
-            IUrlHelperFactory urlHelperFactory, IFeatureFacade featureFacade)
+            IUrlHelperFactory urlHelperFactory)
         {
             _httpContextAccessor = httpContextAccessor;
             _platoUserStore = platoUserStore;
-            _shellDescriptorManager = shellDescriptorManager;
             _actionContextAccessor = actionContextAccessor;
             _siteSettingsStore = siteSettingsStore;
             _urlHelperFactory = urlHelperFactory;
-            _featureFacade = featureFacade;
         }
 
         public async Task<User> GetAuthenticatedUserAsync()

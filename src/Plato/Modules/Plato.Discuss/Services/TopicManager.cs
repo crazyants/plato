@@ -30,7 +30,7 @@ namespace Plato.Discuss.Services
         {
             if (model.FeatureId == 0)
             {
-                var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss");
+                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
                 if (feature != null)
                 {
                     model.FeatureId = feature.Id;
@@ -45,7 +45,7 @@ namespace Plato.Discuss.Services
 
             if (model.FeatureId == 0)
             {
-                var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss");
+                var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
                 if (feature != null)
                 {
                     model.FeatureId = feature.Id;

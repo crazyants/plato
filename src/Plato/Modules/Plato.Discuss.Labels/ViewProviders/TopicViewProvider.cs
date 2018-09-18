@@ -54,7 +54,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         {
 
             // Ensure we explictly set the featureId
-            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
             if (feature == null)
             {
                 return default(IViewProviderResult);
@@ -75,7 +75,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
         {
 
-            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
             if (feature == null)
             {
                 return default(IViewProviderResult);

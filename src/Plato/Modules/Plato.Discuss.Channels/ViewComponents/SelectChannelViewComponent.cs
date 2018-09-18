@@ -52,7 +52,7 @@ namespace Plato.Discuss.Channels.ViewComponents
             IEnumerable<int> selectedChannels)
         {
             
-            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Channels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
             var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
             if (channels != null)
             {

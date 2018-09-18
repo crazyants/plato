@@ -227,7 +227,7 @@ namespace Plato.Discuss.Labels.Controllers
         
         async Task<int> GetFeatureIdAsync()
         {
-            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
             if (feature != null)
             {
                 return feature.Id;

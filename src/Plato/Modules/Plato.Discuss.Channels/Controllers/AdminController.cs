@@ -16,6 +16,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Shell.Abstractions;
@@ -324,10 +325,10 @@ namespace Plato.Discuss.Channels.Controllers
 
         }
 
-        async Task<IShellModule> GetcurrentFeature()
+        async Task<IShellFeature> GetcurrentFeature()
         {
             var featureId = "Plato.Discuss.Channels";
-            var feature = await _featureFacade.GetModuleByIdAsync(featureId);
+            var feature = await _featureFacade.GetFeatureByIdAsync(featureId);
             if (feature == null)
             {
                 throw new Exception($"No feature could be found for the Id '{featureId}'");

@@ -6,9 +6,7 @@ namespace Plato.Internal.Features.Abstractions
 {
     public interface IFeatureFacade
     {
-
-        Task<IShellModule> GetModuleByIdAsync(string moduleId);
-
+        
         Task<IShellFeature> GetFeatureByIdAsync(string moduleId);
     }
 

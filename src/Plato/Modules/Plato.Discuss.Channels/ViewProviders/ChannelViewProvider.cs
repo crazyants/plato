@@ -40,7 +40,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         {
 
             // Ensure we explictly set the featureId
-            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Channels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
             if (feature == null)
             {
                 return default(IViewProviderResult);
