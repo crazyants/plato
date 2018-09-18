@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Repositories.Shell;
@@ -14,15 +16,21 @@ namespace Plato.Internal.Stores.Shell
 
     public class ShellFeatureStore : IShellFeatureStore<ShellFeature>
     {
+        private readonly ICacheManager _cacheManager;
         private readonly IShellFeatureRepository<ShellFeature> _featureRepository;
         private readonly ILogger<ShellFeatureStore> _logger;
-        
+        private readonly IDbQueryConfiguration _dbQuery;
+
         public ShellFeatureStore(
             ILogger<ShellFeatureStore> logger, 
-            IShellFeatureRepository<ShellFeature> featureRepository)
+            IShellFeatureRepository<ShellFeature> featureRepository,
+            ICacheManager cacheManager,
+            IDbQueryConfiguration dbQuery)
         {
             _logger = logger;
             _featureRepository = featureRepository;
+            _cacheManager = cacheManager;
+            _dbQuery = dbQuery;
         }
 
         public async Task<ShellFeature> CreateAsync(ShellFeature feature)
@@ -38,7 +46,13 @@ namespace Plato.Internal.Stores.Shell
                 feature.Settings = await feature.FeatureSettings.SerializeAsync();
             }
 
-            return await _featureRepository.InsertUpdateAsync(feature);
+            var newFeature = await _featureRepository.InsertUpdateAsync(feature);
+            if (newFeature != null)
+            {
+                _cacheManager.CancelTokens(this.GetType());
+            }
+
+            return newFeature;
 
         }
 
@@ -55,9 +69,16 @@ namespace Plato.Internal.Stores.Shell
             {
                 feature.Settings = await feature.FeatureSettings.SerializeAsync();
             }
+            
+            var updatedFeature = await _featureRepository.InsertUpdateAsync(feature);
 
+            if (updatedFeature != null)
+            {
+                _cacheManager.CancelTokens(this.GetType());
+            }
 
-            return await _featureRepository.InsertUpdateAsync(feature);
+            return updatedFeature;
+
         }
 
         public async Task<bool> DeleteAsync(ShellFeature feature)
@@ -65,7 +86,7 @@ namespace Plato.Internal.Stores.Shell
             var success = await _featureRepository.DeleteAsync(feature.Id);
             if (success)
             {
-                //_cacheDependency.CancelToken(CacheKey.GetRolesByUserIdCacheKey(model.UserId));
+                _cacheManager.CancelTokens(this.GetType());
             }
 
             return success;
@@ -84,32 +105,53 @@ namespace Plato.Internal.Stores.Shell
 
         public IQuery<ShellFeature> QueryAsync()
         {
-            throw new NotImplementedException();
+            var query = new ShellFeatureQuery(this);
+            return _dbQuery.ConfigureQuery<ShellFeature>(query); ;
         }
         
-        public Task<IPagedResults<ShellFeature>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<ShellFeature>> SelectAsync(params object[] args)
         {
-            throw new NotImplementedException();
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Selecting features with args: '{0}'}",
+                         args.Select(a => a));
+                }
+
+                return await _featureRepository.SelectAsync(args);
+
+            });
         }
 
         public async Task<IEnumerable<ShellFeature>> SelectFeatures()
         {
 
-            IList<ShellFeature> output = null;
-            var features = await _featureRepository.SelectFeatures();
-            if (features != null)
+            var token = _cacheManager.GetOrCreateToken(this.GetType());
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
-                output = new List<ShellFeature>();
-                foreach (var feature in features)
+
+                IList<ShellFeature> output = null;
+                var features = await _featureRepository.SelectFeatures();
+                if (features != null)
                 {
-                    feature.FeatureSettings = await feature.Settings.DeserializeAsync<ShellFeatureSettings>();
-                    output.Add(feature);
+                    // Deserialize before storing in cache
+                    output = new List<ShellFeature>();
+                    foreach (var feature in features)
+                    {
+                        feature.FeatureSettings = await feature.Settings.DeserializeAsync<ShellFeatureSettings>();
+                        output.Add(feature);
+                    }
                 }
-            }
 
-            return output;
+                return output;
 
+            });
 
         }
+
     }
+
 }

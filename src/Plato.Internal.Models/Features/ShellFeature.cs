@@ -95,6 +95,7 @@ namespace Plato.Internal.Models.Features
 
             if (dr.ColumnIsNotNull("Settings"))
                 Settings = Convert.ToString(dr["Settings"]);
+
         }
     }
 

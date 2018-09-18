@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Features.Abstractions;
@@ -36,9 +37,9 @@ namespace Plato.Search.Handlers
         public override async Task InstalledAsync(IFeatureEventContext context)
         {
 
-            // Update default feature settings
+            // Add default feature settings
             var features = await _shellFeatureStore.SelectFeatures();
-            var feature = features.FirstOrDefault(f => f.ModuleId == context.Feature.ModuleId);
+            var feature = features.FirstOrDefault(f => f.ModuleId.Equals(context.Feature.ModuleId, StringComparison.OrdinalIgnoreCase));
             if (feature != null)
             {
                 feature.FeatureSettings = new ShellFeatureSettings()

@@ -1,39 +1,39 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Moderation.Models;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models.Features;
 using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Moderation.Stores
+namespace Plato.Internal.Stores.Shell
 {
+    #region "ShellFeatureQuery"
 
-    #region "ModeratorQuery"
-
-    public class ModeratorQuery : DefaultQuery<Moderator>
+    public class ShellFeatureQuery : DefaultQuery<ShellFeature>
     {
 
-        private readonly IStore<Moderator> _store;
+        private readonly IStore<ShellFeature> _store;
 
-        public ModeratorQuery(IStore<Moderator> store)
+        public ShellFeatureQuery(IStore<ShellFeature> store)
         {
             _store = store;
         }
 
-        public ModeratorQueryParams Params { get; set; }
+        public ShellFeatureQueryParams Params { get; set; }
 
-        public override IQuery<Moderator> Select<T>(Action<T> configure)
+        public override IQuery<ShellFeature> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
-            Params = (ModeratorQueryParams)Convert.ChangeType(defaultParams, typeof(ModeratorQueryParams));
+            Params = (ShellFeatureQueryParams)Convert.ChangeType(defaultParams, typeof(ShellFeatureQueryParams));
             return this;
         }
 
-        public override async Task<IPagedResults<Moderator>> ToList()
+        public override async Task<IPagedResults<ShellFeature>> ToList()
         {
 
-            var builder = new ModeratorQueryBuilder(this);
+            var builder = new ShellFeatureQueryBuilder(this);
             var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
@@ -56,9 +56,9 @@ namespace Plato.Moderation.Stores
 
     #endregion
 
-    #region "ModeratorQueryParams"
+    #region "ShellFeatureQueryParams"
 
-    public class ModeratorQueryParams
+    public class ShellFeatureQueryParams
     {
 
 
@@ -83,22 +83,20 @@ namespace Plato.Moderation.Stores
 
     #endregion
 
-    #region "ModeratorQueryBuilder"
+    #region "ShellFeatureQueryBuilder"
 
-    public class ModeratorQueryBuilder : IQueryBuilder
+    public class ShellFeatureQueryBuilder : IQueryBuilder
     {
         #region "Constructor"
 
-        private readonly string _moderatorsTableName;
-        private readonly string _usersTableName;
+        private readonly string _shellFeaturesTableName;
+  
+        private readonly ShellFeatureQuery _query;
 
-        private readonly ModeratorQuery _query;
-
-        public ModeratorQueryBuilder(ModeratorQuery query)
+        public ShellFeatureQueryBuilder(ShellFeatureQuery query)
         {
             _query = query;
-            _moderatorsTableName = GetTableNameWithPrefix("Moderators");
-            _usersTableName = GetTableNameWithPrefix("Users");
+            _shellFeaturesTableName = GetTableNameWithPrefix("ShellFeatures");
 
         }
 
@@ -111,7 +109,7 @@ namespace Plato.Moderation.Stores
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = m.Id FROM ")
+            sb.Append("SELECT @start_id_out = f.Id FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -143,7 +141,7 @@ namespace Plato.Moderation.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(m.Id) FROM ")
+            sb.Append("SELECT COUNT(f.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -153,13 +151,7 @@ namespace Plato.Moderation.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("m.*, ")
-                .Append("u.UserName,")
-                .Append("u.DisplayName,")
-                .Append("u.FirstName,")
-                .Append("u.LastName,")
-                .Append("u.Alias");
-
+            sb.Append("f.* ");
             return sb.ToString();
 
         }
@@ -169,13 +161,8 @@ namespace Plato.Moderation.Stores
 
             var sb = new StringBuilder();
 
-            sb.Append(_moderatorsTableName)
-                .Append(" m ");
-
-            // join users to obtain simple moderator details
-            sb.Append("LEFT OUTER JOIN ")
-                .Append(_usersTableName)
-                .Append(" u ON m.UserId = u.Id ");
+            sb.Append(_shellFeaturesTableName)
+                .Append(" f ");
             
             return sb.ToString();
 
@@ -197,13 +184,13 @@ namespace Plato.Moderation.Stores
             var sb = new StringBuilder();
             // default to ascending
             if (_query.SortColumns.Count == 0)
-                sb.Append("m.Id >= @start_id_in");
+                sb.Append("f.Id >= @start_id_in");
             // set start operator based on first order by
             foreach (var sortColumn in _query.SortColumns)
             {
                 sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "m.Id <= @start_id_in"
-                    : "m.Id >= @start_id_in");
+                    ? "f.Id <= @start_id_in"
+                    : "f.Id >= @start_id_in");
                 break;
             }
 
@@ -230,7 +217,7 @@ namespace Plato.Moderation.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("m.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("f.Id"));
             }
 
 
@@ -248,7 +235,7 @@ namespace Plato.Moderation.Stores
 
             return columnName.IndexOf('.') >= 0
                 ? columnName
-                : "m." + columnName;
+                : "f." + columnName;
         }
 
         private string BuildOrderBy()
