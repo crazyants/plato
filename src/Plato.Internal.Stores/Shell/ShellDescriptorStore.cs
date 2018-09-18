@@ -99,10 +99,10 @@ namespace Plato.Internal.Stores.Shell
             // Get all currently registered features
             var currentFeatures = await _shellFeatureStore.SelectFeatures();
             
-            // Conver to list
+            // Convert to list
             var currentFeaturesList = currentFeatures.ToList();
 
-            // Delete any featur not in our current list of features to add
+            // Delete any feature not in our current list of features to add
             foreach (var feature in currentFeaturesList)
             {
                 if (featuresToAdd.FirstOrDefault(f => f.ModuleId == feature.ModuleId) == null)
@@ -120,7 +120,8 @@ namespace Plato.Internal.Stores.Shell
                                       ?? new ShellFeature()
                                       {
                                           ModuleId = feature.ModuleId,
-                                          Version = feature.Version
+                                          Version = feature.Version,
+                                          FeatureSettings = new ShellFeatureSettings()
                                       };
 
                 var newOrUpdatedFeature = await _shellFeatureStore.CreateAsync(existingFeature);

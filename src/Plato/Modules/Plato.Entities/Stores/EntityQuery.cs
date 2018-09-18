@@ -447,23 +447,29 @@ namespace Plato.Entities.Stores
             var keywordWhereClause = BuildEntityKeywordWhereClause();
             if (!string.IsNullOrEmpty(keywordWhereClause))
             {
+
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(" AND ");
+                sb.Append("(");
+
+                // Entities
+
                 sb.Append("(")
                     .Append(keywordWhereClause)
                     .Append(")");
-                
-                if (!string.IsNullOrEmpty(_query.Params.Html.Value))
-                {
-                    if (!string.IsNullOrEmpty(sb.ToString()))
-                        sb.Append(" AND ");
-                    sb.Append("e.Id IN (SELECT EntityId FROM ")
-                        .Append(_entityRepliesTableName)
-                        .Append(" WHERE ")
-                        .Append(BuildEntityRepliesKeywordWhereClause())
-                        .Append(")");
-                }
 
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(" OR ");
+
+                // Entity Replies
+                
+                sb.Append("(e.Id IN (SELECT EntityId FROM ")
+                    .Append(_entityRepliesTableName)
+                    .Append(" WHERE (")
+                    .Append(BuildEntityRepliesKeywordWhereClause())
+                    .Append(")))");
+
+                sb.Append(")");
 
             }
 

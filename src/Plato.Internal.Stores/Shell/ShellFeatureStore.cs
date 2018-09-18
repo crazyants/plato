@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Repositories.Shell;
@@ -31,6 +32,12 @@ namespace Plato.Internal.Stores.Shell
                 throw new ArgumentNullException(nameof(feature));
             }
 
+            // Serialize feature settings
+            if (feature.FeatureSettings != null)
+            {
+                feature.Settings = await feature.FeatureSettings.SerializeAsync();
+            }
+
             return await _featureRepository.InsertUpdateAsync(feature);
 
         }
@@ -42,7 +49,14 @@ namespace Plato.Internal.Stores.Shell
             {
                 throw new ArgumentNullException(nameof(feature));
             }
-            
+
+            // Serialize feature settings
+            if (feature.FeatureSettings != null)
+            {
+                feature.Settings = await feature.FeatureSettings.SerializeAsync();
+            }
+
+
             return await _featureRepository.InsertUpdateAsync(feature);
         }
 
@@ -72,12 +86,7 @@ namespace Plato.Internal.Stores.Shell
         {
             throw new NotImplementedException();
         }
-
-        public Task<IPagedResults<T>> SelectAsync<T>(params object[] args) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public Task<IPagedResults<ShellFeature>> SelectAsync(params object[] args)
         {
             throw new NotImplementedException();
@@ -85,7 +94,22 @@ namespace Plato.Internal.Stores.Shell
 
         public async Task<IEnumerable<ShellFeature>> SelectFeatures()
         {
-            return await _featureRepository.SelectFeatures();
+
+            IList<ShellFeature> output = null;
+            var features = await _featureRepository.SelectFeatures();
+            if (features != null)
+            {
+                output = new List<ShellFeature>();
+                foreach (var feature in features)
+                {
+                    feature.FeatureSettings = await feature.Settings.DeserializeAsync<ShellFeatureSettings>();
+                    output.Add(feature);
+                }
+            }
+
+            return output;
+
+
         }
     }
 }

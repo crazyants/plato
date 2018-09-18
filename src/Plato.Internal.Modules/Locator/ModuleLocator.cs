@@ -192,7 +192,7 @@ namespace Plato.Internal.Modules.Locator
                 Author = GetValue(manifest, AuthorSection),
                 WebSite = GetValue(manifest, WebsiteSection),
                 Tags = GetValue(manifest, TagsSection),
-                Dependencies = GetModuleDependencies(manifest, DependenciesSection),
+                Dependencies = GetModuleDependencies(manifest, DependenciesSection)
             };
 
         }

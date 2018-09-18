@@ -65,9 +65,9 @@ namespace Plato.Search.Controllers
                 pagerOptions = new PagerOptions();
             }
 
+            // Build breadcrumb
             if (string.IsNullOrEmpty(viewOptions.Search))
             {
-                // Build breadcrumb
                 _breadCrumbManager.Configure(builder =>
                 {
                     builder.Add(S["Home"], home => home
@@ -78,13 +78,12 @@ namespace Plato.Search.Controllers
             }
             else
             {
-                // Build breadcrumb
                 _breadCrumbManager.Configure(builder =>
                 {
                     builder.Add(S["Home"], home => home
                             .Action("Index", "Home", "Plato.Core")
                             .LocalNav()
-                        ).Add(S["Home"], home => home
+                        ).Add(S["Search"], home => home
                             .Action("Index", "Home", "Plato.Search")
                             .LocalNav())
                         .Add(S["Results"]);

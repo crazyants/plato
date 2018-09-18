@@ -12,6 +12,39 @@ namespace Plato.Features.Handlers
         
         public string Version { get; } = "1.0.0";
 
+        private readonly SchemaTable _shellFeatures = new SchemaTable()
+        {
+            Name = "ShellFeatures",
+            Columns = new List<SchemaColumn>()
+            {
+                new SchemaColumn()
+                {
+                    PrimaryKey = true,
+                    Name = "Id",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModuleId",
+                    DbType = DbType.String,
+                    Length = "255"
+                },
+                new SchemaColumn()
+                {
+                    Name = "[Version]",
+                    DbType = DbType.String,
+                    Length = "10"
+                },
+                new SchemaColumn()
+                {
+                    Name = "Settings",
+                    DbType = DbType.String,
+                    Length = "max"
+                }
+            }
+        };
+
+
         private readonly ISchemaBuilder _schemaBuilder;
     
         public SetUpEventHandler(
@@ -72,39 +105,13 @@ namespace Plato.Features.Handlers
 
         void Features(ISchemaBuilder builder)
         {
-
-            var shellFeatures = new SchemaTable()
-            {
-                Name = "ShellFeatures",
-                Columns = new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        PrimaryKey = true,
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModuleId",
-                        DbType = DbType.String,
-                        Length = "255"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Version",
-                        DbType = DbType.String,
-                        Length = "10"
-                    }
-                }
-            };
-
+         
             builder
-                .CreateTable(shellFeatures)
-                .CreateDefaultProcedures(shellFeatures)
+                .CreateTable(_shellFeatures)
+                .CreateDefaultProcedures(_shellFeatures)
 
                 .CreateProcedure(new SchemaProcedure("SelectShellFeaturesPaged", StoredProcedureType.SelectPaged)
-                    .ForTable(shellFeatures)
+                    .ForTable(_shellFeatures)
                     .WithParameters(new List<SchemaColumn>()
                     {
                         new SchemaColumn()

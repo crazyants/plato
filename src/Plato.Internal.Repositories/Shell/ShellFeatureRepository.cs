@@ -65,16 +65,17 @@ namespace Plato.Internal.Repositories.Shell
         {
 
             if (feature == null)
+            {
                 throw new ArgumentNullException(nameof(feature));
-
+            }
+                
             var id = await InsertUpdateInternal(
                 feature.Id,
                 feature.ModuleId,
-                feature.Version);
-
+                feature.Version,
+                feature.Settings);
             if (id > 0)
             {
-                // return
                 return await SelectByIdAsync(id);
             }
 
@@ -138,8 +139,7 @@ namespace Plato.Internal.Repositories.Shell
 
             return output;
         }
-
-
+        
         public async Task<IPagedResults<ShellFeature>> SelectAsync(params object[] inputParams)
         {
             PagedResults<ShellFeature> output = null;
@@ -194,9 +194,9 @@ namespace Plato.Internal.Repositories.Shell
                     {
                         while (await reader.ReadAsync())
                         {
-                            var userData = new ShellFeature();
-                            userData.PopulateModel(reader);
-                            data.Add(userData);
+                            var item = new ShellFeature();
+                            item.PopulateModel(reader);
+                            data.Add(item);
                         }
                     }
                 }
@@ -228,7 +228,8 @@ namespace Plato.Internal.Repositories.Shell
         private async Task<int> InsertUpdateInternal(
             int id,
             string moduleId,
-            string version)
+            string version,
+            string settings)
         {
 
             // We always need a ModuleId
@@ -260,7 +261,8 @@ namespace Plato.Internal.Repositories.Shell
                     "InsertUpdateShellFeature",
                     id,
                     moduleId.ToEmptyIfNull(),
-                    version.ToEmptyIfNull());
+                    version.ToEmptyIfNull(),
+                    settings.ToEmptyIfNull());
 
             }
         }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -11,6 +12,7 @@ using Plato.Search.Navigation;
 using Plato.Search.Stores;
 using Plato.Search.ViewProviders;
 using Plato.WebApi.Controllers;
+using Plato.Search.Handlers;
 
 namespace Plato.Search
 {
@@ -27,6 +29,10 @@ namespace Plato.Search
 
         public override void ConfigureServices(IServiceCollection services)
         {
+
+            // Feature installation event handler
+            services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+            
             // Stores
             services.AddScoped<ISearchSettingsStore<SearchSettings>, SearchSettingsStore>();
 

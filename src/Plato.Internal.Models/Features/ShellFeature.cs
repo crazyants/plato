@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Modules;
 using Plato.Internal.Models.Shell;
 
 namespace Plato.Internal.Models.Features
 {
-  
+
+    public class ShellFeatureSettings : Serializable
+    {
+
+        public string DisplayText { get; set; }
+
+    }
 
     public class ShellFeature : IShellFeature, IModel<ShellFeature>
     {
@@ -25,6 +32,10 @@ namespace Plato.Internal.Models.Features
         public bool IsRequired { get; set; }
 
         public string Version { get; set; }
+
+        public string Settings { get; set; }
+
+        public ShellFeatureSettings FeatureSettings { get; set; } = new ShellFeatureSettings();
 
         public IEnumerable<IShellFeature> FeatureDependencies { get; set; } = new List<ShellFeature>();
 
@@ -82,6 +93,8 @@ namespace Plato.Internal.Models.Features
             if (dr.ColumnIsNotNull("Version"))
                 Version = Convert.ToString(dr["Version"]);
 
+            if (dr.ColumnIsNotNull("Settings"))
+                Settings = Convert.ToString(dr["Settings"]);
         }
     }
 
