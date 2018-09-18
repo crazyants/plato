@@ -95,10 +95,7 @@ namespace Plato.Internal.Shell
         {
             tenantServiceCollection.AddTransient<IShellFeatureManager, ShellFeatureManager>();
             tenantServiceCollection.AddTransient<IShellDescriptorManager, ShellDescriptorManager>();
-
-            tenantServiceCollection.AddTransient<IContextFacade, ContextFacade>();
-
-
+            
         }
 
 

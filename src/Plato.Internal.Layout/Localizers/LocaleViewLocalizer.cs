@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Plato.Internal.Cache.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 

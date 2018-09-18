@@ -10,6 +10,8 @@ using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Shell;
@@ -23,6 +25,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         private readonly IContextFacade _contextFacade;
         private readonly ICategoryStore<Channel> _categoryStore;
         private readonly ICategoryManager<Channel> _categoryManager;
+        private readonly IFeatureFacade _featureFacade;
 
         public IStringLocalizer S { get; }
 
@@ -31,14 +34,15 @@ namespace Plato.Discuss.Channels.ViewProviders
             IContextFacade contextFacade,
             ICategoryStore<Channel> categoryStore,
             ICategoryManager<Channel> categoryManager,
-            IStringLocalizer<AdminViewProvider> stringLocalizer)
+            IStringLocalizer<AdminViewProvider> stringLocalizer,
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
             _categoryManager = categoryManager;
 
             S = stringLocalizer;
-
+            _featureFacade = featureFacade;
         }
 
         #region "Implementation"
@@ -232,10 +236,10 @@ namespace Plato.Discuss.Channels.ViewProviders
         //    };
         //}
         
-        async Task<ShellModule> GetcurrentFeature()
+        async Task<IShellModule> GetcurrentFeature()
         {
             var featureId = "Plato.Discuss.Channels";
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync(featureId);
+            var feature = await _featureFacade.GetModuleByIdAsync(featureId);
             if (feature == null)
             {
                 throw new Exception($"No feature could be found for the Id '{featureId}'");

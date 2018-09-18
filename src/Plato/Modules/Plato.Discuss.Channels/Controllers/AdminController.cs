@@ -11,6 +11,7 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -29,6 +30,7 @@ namespace Plato.Discuss.Channels.Controllers
         private readonly IViewProviderManager<CategoryBase> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
+        private readonly IFeatureFacade _featureFacade;
 
         public IHtmlLocalizer T { get; }
 
@@ -42,13 +44,14 @@ namespace Plato.Discuss.Channels.Controllers
             IViewProviderManager<CategoryBase> viewProvider,
             IBreadCrumbManager breadCrumbManager,
             IAlerter alerter, 
-            ICategoryManager<Channel> categoryManager)
+            ICategoryManager<Channel> categoryManager, IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
             _viewProvider = viewProvider;
             _alerter = alerter;
             _categoryManager = categoryManager;
+            _featureFacade = featureFacade;
             _breadCrumbManager = breadCrumbManager;
 
             T = htmlLocalizer;
@@ -321,10 +324,10 @@ namespace Plato.Discuss.Channels.Controllers
 
         }
 
-        async Task<ShellModule> GetcurrentFeature()
+        async Task<IShellModule> GetcurrentFeature()
         {
             var featureId = "Plato.Discuss.Channels";
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync(featureId);
+            var feature = await _featureFacade.GetModuleByIdAsync(featureId);
             if (feature == null)
             {
                 throw new Exception($"No feature could be found for the Id '{featureId}'");

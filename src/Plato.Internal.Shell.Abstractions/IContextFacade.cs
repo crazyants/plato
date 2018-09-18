@@ -6,25 +6,23 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Internal.Shell.Abstractions
 {
-    public interface IContextFacade
-    {
+    //public interface IContextFacade
+    //{
 
-        Task<User> GetAuthenticatedUserAsync();
+    //    Task<User> GetAuthenticatedUserAsync();
 
-        Task<ShellModule> GetFeatureByAreaAsync();
+    //    Task<IShellModule> GetFeatureByModuleIdAsync(string moduleId);
 
-        Task<ShellModule> GetFeatureByModuleIdAsync(string areaName);
+    //    Task<ISiteSettings> GetSiteSettingsAsync();
 
-        Task<ISiteSettings> GetSiteSettingsAsync();
+    //    Task<string> GetBaseUrlAsync();
 
-        Task<string> GetBaseUrlAsync();
+    //    string GetRouteUrl(RouteValueDictionary routeValues);
 
-        string GetRouteUrl(RouteValueDictionary routeValues);
+    //    Task<string> GetCurrentCultureAsync();
 
-        Task<string> GetCurrentCultureAsync();
+    //    string GetCurrentCulture();
 
-        string GetCurrentCulture();
-
-    }
+    //}
 
 }

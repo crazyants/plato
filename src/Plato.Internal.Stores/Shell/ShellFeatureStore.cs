@@ -141,7 +141,7 @@ namespace Plato.Internal.Stores.Shell
                     output = new List<ShellFeature>();
                     foreach (var feature in features)
                     {
-                        feature.FeatureSettings = await feature.Settings.DeserializeAsync<ShellFeatureSettings>();
+                        feature.FeatureSettings = await feature.Settings.DeserializeAsync<FeatureSettings>();
                         output.Add(feature);
                     }
                 }

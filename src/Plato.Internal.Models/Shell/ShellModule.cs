@@ -2,7 +2,18 @@
 
 namespace Plato.Internal.Models.Shell
 {
-    public class ShellModule
+
+    public interface IShellModule
+    {
+        int Id { get; set; }
+
+        string ModuleId { get; set; }
+
+        string Version { get; set; }
+
+    }
+
+    public class ShellModule : IShellModule
     {
  
         public int Id { get; set; }

@@ -121,7 +121,7 @@ namespace Plato.Internal.Stores.Shell
                                       {
                                           ModuleId = feature.ModuleId,
                                           Version = feature.Version,
-                                          FeatureSettings = new ShellFeatureSettings()
+                                          FeatureSettings = new FeatureSettings()
                                       };
 
                 var newOrUpdatedFeature = await _shellFeatureStore.CreateAsync(existingFeature);

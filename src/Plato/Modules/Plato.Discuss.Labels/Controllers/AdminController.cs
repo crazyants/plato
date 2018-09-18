@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Categories.Models;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -26,6 +27,7 @@ namespace Plato.Discuss.Labels.Controllers
         private readonly IViewProviderManager<LabelBase> _viewProvider;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IFeatureFacade _featureFacade;
 
         public IHtmlLocalizer T { get; }
 
@@ -39,13 +41,15 @@ namespace Plato.Discuss.Labels.Controllers
             IViewProviderManager<LabelBase> viewProvider,
             IBreadCrumbManager breadCrumbManager,
             IAlerter alerter,
-            ILabelManager<LabelBase> labelManager)
+            ILabelManager<LabelBase> labelManager,
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _labelStore = labelStore;
             _viewProvider = viewProvider;
             _alerter = alerter;
             _labelManager = labelManager;
+            _featureFacade = featureFacade;
             _breadCrumbManager = breadCrumbManager;
 
             T = htmlLocalizer;
@@ -223,7 +227,7 @@ namespace Plato.Discuss.Labels.Controllers
         
         async Task<int> GetFeatureIdAsync()
         {
-            var feature = await _contextFacade.GetFeatureByAreaAsync();
+            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Labels");
             if (feature != null)
             {
                 return feature.Id;

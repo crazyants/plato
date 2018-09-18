@@ -11,11 +11,11 @@ using Plato.Discuss.Channels.ViewModels;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Entities.Stores;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Navigation;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.ViewProviders
 {
@@ -31,7 +31,8 @@ namespace Plato.Discuss.Channels.ViewProviders
         private readonly IPostManager<Topic> _topicManager;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly HttpRequest _request;
-
+        private readonly IFeatureFacade _featureFacade;
+    
         public IStringLocalizer T;
 
         public IStringLocalizer S { get; }
@@ -46,7 +47,8 @@ namespace Plato.Discuss.Channels.ViewProviders
             IEntityCategoryStore<EntityCategory> entityCategoryStore,
             IStringLocalizer<TopicViewProvider> stringLocalize,
             IPostManager<Topic> topicManager,
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager,
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _channelStore = channelStore;
@@ -55,6 +57,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             _request = httpContextAccessor.HttpContext.Request;
             _topicManager = topicManager;
             _breadCrumbManager = breadCrumbManager;
+            _featureFacade = featureFacade;
 
             T = stringLocalize;
             S = stringLocalizer;
@@ -66,7 +69,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         {
 
             // Ensure we explictly set the featureId
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
+            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Channels");
             if (feature == null)
             {
                 return default(IViewProviderResult);
@@ -127,7 +130,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             });
             
             // Get current feature
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
+            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Channels");
             if (feature == null)
             {
                 return default(IViewProviderResult);

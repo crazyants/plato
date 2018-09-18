@@ -4,6 +4,7 @@ using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Shell.Abstractions;
@@ -15,11 +16,16 @@ namespace Plato.Discuss.ViewComponents
 
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<Topic> _entityStore;
-        
-        public TopicListViewComponent(IContextFacade contextFacade, IEntityStore<Topic> entityStore)
+        private readonly IFeatureFacade _featureFacade;
+
+        public TopicListViewComponent(
+            IContextFacade contextFacade, 
+            IEntityStore<Topic> entityStore, 
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _entityStore = entityStore;
+            _featureFacade = featureFacade;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -64,7 +70,7 @@ namespace Plato.Discuss.ViewComponents
 
             // Explictly get Plato.Discuss feature, this view component can be 
             // used in different areas (i.e. Plat.Discuss.Channels) s dn't get by area name
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss");
+            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss");
 
             return await _entityStore.QueryAsync()
                 .Take(pagerOptions.Page, pagerOptions.PageSize)

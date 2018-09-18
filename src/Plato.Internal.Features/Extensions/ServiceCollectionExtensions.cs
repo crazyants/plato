@@ -12,6 +12,7 @@ namespace Plato.Internal.Features.Extensions
         {
             
             services.TryAddScoped<IFeatureEventManager, FeatureEventManager>();
+            services.TryAddScoped<IFeatureFacade, FeatureFacade>();
 
             return services;
 

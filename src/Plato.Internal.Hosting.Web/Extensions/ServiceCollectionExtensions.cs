@@ -87,7 +87,8 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-                
+                internalServices.AddTransient<IContextFacade, ContextFacade>();
+
                 internalServices.AddLogging();
                 internalServices.AddOptions();
                 internalServices.AddLocalization();

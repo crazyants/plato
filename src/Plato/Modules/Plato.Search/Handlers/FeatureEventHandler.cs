@@ -16,8 +16,7 @@ namespace Plato.Search.Handlers
 
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly IShellFeatureStore<ShellFeature> _shellFeatureStore;
-
-
+   
         public FeatureEventHandler(
             ISchemaBuilder schemaBuilder,
             IShellFeatureStore<ShellFeature> shellFeatureStore)
@@ -37,14 +36,18 @@ namespace Plato.Search.Handlers
         public override async Task InstalledAsync(IFeatureEventContext context)
         {
 
-            // Add default feature settings
+            // Initialize default feature settings
+            // ----------------------------------
+
             var features = await _shellFeatureStore.SelectFeatures();
             var feature = features.FirstOrDefault(f => f.ModuleId.Equals(context.Feature.ModuleId, StringComparison.OrdinalIgnoreCase));
             if (feature != null)
             {
-                feature.FeatureSettings = new ShellFeatureSettings()
+                feature.FeatureSettings = new FeatureSettings()
                 {
-                    DisplayText = "Search"
+                    Title = "Search",
+                    Description = "Search Help & Support",
+                    IconCss = "fal fa-search"
                 };
 
                 // Persist changes

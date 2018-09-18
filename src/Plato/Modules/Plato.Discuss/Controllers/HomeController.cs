@@ -9,6 +9,7 @@ using Plato.Discuss.Services;
 using Plato.Internal.Navigation;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;

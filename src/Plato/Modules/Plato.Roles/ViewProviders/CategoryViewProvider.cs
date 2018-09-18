@@ -3,14 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Roles.ViewModels;
@@ -171,17 +169,6 @@ namespace Plato.Roles.ViewProviders
             return await BuildEditAsync(categoryBase, updater);
 
         }
-
-        async Task<ShellModule> GetcurrentFeature()
-        {
-            var feature = await _contextFacade.GetFeatureByAreaAsync();
-            if (feature == null)
-            {
-                throw new Exception("No feature could be found");
-            }
-            return feature;
-        }
-
 
     }
 }

@@ -11,6 +11,7 @@ using Plato.Labels.Models;
 using Plato.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Discuss.Models;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Labels.ViewProviders
@@ -25,7 +26,8 @@ namespace Plato.Discuss.Labels.ViewProviders
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IStringLocalizer T;
-        
+        private readonly IFeatureFacade _featureFacade;
+
         private readonly HttpRequest _request;
 
         public TopicViewProvider(
@@ -34,7 +36,8 @@ namespace Plato.Discuss.Labels.ViewProviders
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityLabelStore<EntityLabel> entityLabelStore,
-            IStringLocalizer<TopicViewProvider> stringLocalize)
+            IStringLocalizer<TopicViewProvider> stringLocalize,
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _labelStore = labelStore;
@@ -42,6 +45,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             _entityLabelStore = entityLabelStore;
             _request = httpContextAccessor.HttpContext.Request;
             T = stringLocalize;
+            _featureFacade = featureFacade;
         }
 
         #region "Implementation"
@@ -50,7 +54,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         {
 
             // Ensure we explictly set the featureId
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Labels");
             if (feature == null)
             {
                 return default(IViewProviderResult);
@@ -71,7 +75,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
         {
 
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Labels");
             if (feature == null)
             {
                 return default(IViewProviderResult);

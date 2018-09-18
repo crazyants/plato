@@ -7,6 +7,8 @@ using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.ViewComponents
@@ -16,13 +18,16 @@ namespace Plato.Discuss.Channels.ViewComponents
     {
         private readonly ICategoryStore<Channel> _channelStore;
         private readonly IContextFacade _contextFacade;
+        private readonly IFeatureFacade _featureFacade;
 
         public SelectChannelViewComponent(
             ICategoryStore<Channel> channelStore,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade, 
+            IFeatureFacade featureFacade)
         {
             _channelStore = channelStore;
             _contextFacade = contextFacade;
+            _featureFacade = featureFacade;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -47,7 +52,7 @@ namespace Plato.Discuss.Channels.ViewComponents
             IEnumerable<int> selectedChannels)
         {
             
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
+            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Channels");
             var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
             if (channels != null)
             {

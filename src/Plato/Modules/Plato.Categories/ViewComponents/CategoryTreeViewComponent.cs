@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Categories.Models;
 using Plato.Categories.Stores;
 using Plato.Categories.ViewModels;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Categories.ViewComponents
@@ -13,13 +15,16 @@ namespace Plato.Categories.ViewComponents
     {
         private readonly ICategoryStore<CategoryBase> _channelStore;
         private readonly IContextFacade _contextFacade;
+        private readonly IFeatureFacade _featureFacade;
 
         public CategoryTreeViewComponent(
             ICategoryStore<CategoryBase> channelStore,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade, 
+            IFeatureFacade featureFacade)
         {
             _channelStore = channelStore;
             _contextFacade = contextFacade;
+            _featureFacade = featureFacade;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -50,7 +55,7 @@ namespace Plato.Categories.ViewComponents
             IEnumerable<int> selected)
         {
 
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
+            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Channels");
             var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
             return channels?.Select(c => new Selection<CategoryBase>
                 {

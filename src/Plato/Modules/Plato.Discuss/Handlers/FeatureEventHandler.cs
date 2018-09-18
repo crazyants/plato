@@ -49,9 +49,10 @@ namespace Plato.Discuss.Handlers
             var feature = features.FirstOrDefault(f => f.ModuleId == base.ModuleId);
             if (feature != null)
             {
-                feature.FeatureSettings = new ShellFeatureSettings()
+                feature.FeatureSettings = new FeatureSettings()
                 {
-                    DisplayText = "Discuss"
+                    Title = "Discuss",
+                    Description = ""
                 };
 
                 // Persist changes

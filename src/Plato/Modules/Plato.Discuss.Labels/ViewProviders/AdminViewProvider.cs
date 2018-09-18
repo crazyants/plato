@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Plato.Categories.Models;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
@@ -20,15 +21,18 @@ namespace Plato.Discuss.Labels.ViewProviders
         private readonly IContextFacade _contextFacade;
         private readonly ILabelStore<Label> _labelStore;
         private readonly ILabelManager<Label> _labelManager;
+        private readonly IFeatureFacade _featureFacade;
 
         public AdminViewProvider(
             IContextFacade contextFacade,
             ILabelStore<Label> labelStore,
-            ILabelManager<Label> labelManager)
+            ILabelManager<Label> labelManager,
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _labelStore = labelStore;
             _labelManager = labelManager;
+            _featureFacade = featureFacade;
         }
 
         #region "Implementation"
@@ -151,10 +155,10 @@ namespace Plato.Discuss.Labels.ViewProviders
             };
         }
         
-        async Task<ShellModule> GetcurrentFeature()
+        async Task<IShellModule> GetcurrentFeature()
         {
             var featureId = "Plato.Discuss.Labels";
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync(featureId);
+            var feature = await _featureFacade.GetModuleByIdAsync(featureId);
             if (feature == null)
             {
                 throw new Exception($"No feature could be found for the module '{featureId}'");

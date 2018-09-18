@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Plato.Internal.Models.Features
 {
@@ -20,6 +18,10 @@ namespace Plato.Internal.Models.Features
         bool IsRequired { get; set; }
         
         string Version { get; set; }
+
+        string Settings { get; set; }
+
+        IFeatureSettings FeatureSettings { get; set; }
 
         IEnumerable<IShellFeature> FeatureDependencies { get; set; }
 

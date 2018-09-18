@@ -2,6 +2,7 @@
 using Plato.Discuss.Models;
 using Plato.Entities.Services;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 
@@ -12,20 +13,24 @@ namespace Plato.Discuss.Services
 
         private readonly IEntityManager<Topic> _entityManager;
         private readonly IContextFacade _contextFacade;
+        private readonly IFeatureFacade _featureFacade;
+
 
         public TopicManager(
             IEntityManager<Topic> entityManager, 
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            IFeatureFacade featureFacade)
         {
             _entityManager = entityManager;
             _contextFacade = contextFacade;
+            _featureFacade = featureFacade;
         }
 
         public async Task<IActivityResult<Topic>> CreateAsync(Topic model)
         {
             if (model.FeatureId == 0)
             {
-                var feature = await _contextFacade.GetFeatureByAreaAsync();
+                var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss");
                 if (feature != null)
                 {
                     model.FeatureId = feature.Id;
@@ -40,7 +45,7 @@ namespace Plato.Discuss.Services
 
             if (model.FeatureId == 0)
             {
-                var feature = await _contextFacade.GetFeatureByAreaAsync();
+                var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss");
                 if (feature != null)
                 {
                     model.FeatureId = feature.Id;

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Labels.ViewModels;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Labels.Stores;
@@ -14,13 +15,16 @@ namespace Plato.Discuss.Labels.ViewComponents
     {
         private readonly ILabelStore<Models.Label> _labelStore;
         private readonly IContextFacade _contextFacade;
+        private readonly IFeatureFacade _featureFacade;
 
         public SelectLabelsViewComponent(
             ILabelStore<Models.Label> labelStore, 
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            IFeatureFacade featureFacade)
         {
             _labelStore = labelStore;
             _contextFacade = contextFacade;
+            _featureFacade = featureFacade;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -44,7 +48,7 @@ namespace Plato.Discuss.Labels.ViewComponents
             IEnumerable<int> selected)
         {
 
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Labels");
             var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
 
             var selections = labels?.Select(l => new Selection<Models.Label>

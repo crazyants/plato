@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
@@ -14,13 +16,16 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         private readonly ILabelStore<Models.Label> _labelStore;
         private readonly IContextFacade _contextFacade;
+        private readonly IFeatureFacade _featureFacade;
 
         public LabelsViewProvider(
             ILabelStore<Label> labelStore,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            IFeatureFacade featureFacade)
         {
             _labelStore = labelStore;
             _contextFacade = contextFacade;
+            _featureFacade = featureFacade;
         }
         
         #region "Imlementation"
@@ -48,7 +53,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             };
 
             // Ensure we explictly set the featureId
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Labels");
             if (feature == null)
             {
                 return default(IViewProviderResult);

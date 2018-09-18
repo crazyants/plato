@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Moderation.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
@@ -31,6 +32,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
         private readonly IModeratorStore<Moderator> _moderatorStore;
         private readonly IPlatoUserStore<User> _userStore;
         private readonly HttpRequest _request;
+        private readonly IFeatureFacade _featureFacade;
 
         public AdminViewProvider(
             IContextFacade contextFacade,
@@ -38,13 +40,15 @@ namespace Plato.Discuss.Moderation.ViewProviders
             IAuthorizationService authorizationService,
             IHttpContextAccessor httpContextAccessor,
             IModeratorStore<Moderator> moderatorStore, 
-            IPlatoUserStore<User> userStore)
+            IPlatoUserStore<User> userStore, 
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _permissionsManager = permissionsManager;
             _authorizationService = authorizationService;
             _moderatorStore = moderatorStore;
             _userStore = userStore;
+            _featureFacade = featureFacade;
             _request = httpContextAccessor.HttpContext.Request;
         }
 
@@ -224,10 +228,10 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         }
         
-        async Task<ShellModule> GetcurrentFeature()
+        async Task<IShellModule> GetcurrentFeature()
         {
             var featureId = "Plato.Discuss.Labels";
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync(featureId);
+            var feature = await _featureFacade.GetModuleByIdAsync(featureId);
             if (feature == null)
             {
                 throw new Exception($"No feature could be found for the module '{featureId}'");

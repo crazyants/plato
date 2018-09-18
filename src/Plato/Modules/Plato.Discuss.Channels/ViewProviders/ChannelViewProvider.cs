@@ -5,6 +5,7 @@ using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -19,15 +20,18 @@ namespace Plato.Discuss.Channels.ViewProviders
         private readonly IContextFacade _contextFacade;
         private readonly ICategoryStore<Channel> _categoryStore;
         private readonly ICategoryManager<Channel> _categoryManager;
+        private readonly IFeatureFacade _featureFacade;
 
         public ChannelViewProvider(
             IContextFacade contextFacade,
             ICategoryStore<Channel> categoryStore,
-            ICategoryManager<Channel> categoryManager)
+            ICategoryManager<Channel> categoryManager,
+            IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
             _categoryManager = categoryManager;
+            _featureFacade = featureFacade;
         }
 
         #region "Implementation"
@@ -36,7 +40,7 @@ namespace Plato.Discuss.Channels.ViewProviders
         {
 
             // Ensure we explictly set the featureId
-            var feature = await _contextFacade.GetFeatureByModuleIdAsync("Plato.Discuss.Channels");
+            var feature = await _featureFacade.GetModuleByIdAsync("Plato.Discuss.Channels");
             if (feature == null)
             {
                 return default(IViewProviderResult);

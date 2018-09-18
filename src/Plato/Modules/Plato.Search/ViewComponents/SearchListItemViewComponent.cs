@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Shell.Abstractions;
 using Plato.Search.ViewModels;
 
