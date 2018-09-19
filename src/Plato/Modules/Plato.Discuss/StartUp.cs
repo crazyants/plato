@@ -9,14 +9,17 @@ using Plato.Discuss.Assets;
 using Plato.Discuss.Models;
 using Plato.Discuss.Navigation;
 using Plato.Discuss.Services;
+using Plato.Discuss.Subscribers;
 using Plato.Discuss.ViewProviders;
 using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
+using Plato.Entities.Subscribers;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Discuss
 {
@@ -62,6 +65,10 @@ namespace Plato.Discuss
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
             services.AddScoped<IViewProviderManager<Reply>, ViewProviderManager<Reply>>();
             services.AddScoped<IViewProvider<Reply>, ReplyViewProvider>();
+
+            // Register message broker subscribers
+            services.AddScoped<IBrokerSubscriber, ReplySubscriber<Reply>>();
+            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
             
         }
 

@@ -6,7 +6,6 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Entities.Services
 {
@@ -62,12 +61,11 @@ namespace Plato.Entities.Services
             {
                 return result.Failed(new ActivityError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
-
+            
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
             {
                 reply.CreatedUserId = user.Id;
-                reply.ModifiedUserId = user.Id;
             }
      
             // Parse Html and message abstract

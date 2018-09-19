@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -60,8 +61,7 @@ namespace Plato.Discuss.ViewComponents
                 viewOptions,
                 pagerOptions);
         }
-
-
+        
         async Task<IPagedResults<Topic>> GetEntities(
             ViewOptions viewOpts,
             PagerOptions pagerOptions)
@@ -102,7 +102,7 @@ namespace Plato.Discuss.ViewComponents
                     // q.Email.IsIn("email440@address.com,email420@address.com");
                     // q.Id.Between(1, 5);
                 })
-                .OrderBy(viewOpts.Sort, viewOpts.Order)
+                .OrderBy(viewOpts.Sort, viewOpts.Order.ToEnum<OrderBy>(OrderBy.Desc))
                 .ToList();
         }
         

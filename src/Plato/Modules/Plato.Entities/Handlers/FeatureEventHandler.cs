@@ -102,6 +102,11 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "TotalParticipants",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "TotalReactions",
                         DbType = DbType.Int32
                     },
@@ -117,27 +122,27 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "MeanViews",
+                        Name = "DailyViews",
                         DbType = DbType.Double
                     },
                     new SchemaColumn()
                     {
-                        Name = "MeanReplies",
+                        Name = "DailyReplies",
                         DbType = DbType.Double
                     },
                     new SchemaColumn()
                     {
-                        Name = "MeanReactions",
+                        Name = "DailyReactions",
                         DbType = DbType.Double
                     },
                     new SchemaColumn()
                     {
-                        Name = "MeanFollows",
+                        Name = "DailyFollows",
                         DbType = DbType.Double
                     },
                     new SchemaColumn()
                     {
-                        Name = "MeanReports",
+                        Name = "DailyReports",
                         DbType = DbType.Double
                     },
                     new SchemaColumn()
@@ -158,6 +163,21 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "ModifiedDate",
+                        DbType = DbType.DateTimeOffset
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "LastReplyId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "LastReplyUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "LastReplyDate",
                         DbType = DbType.DateTimeOffset
                     }
                 }

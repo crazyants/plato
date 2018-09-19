@@ -15,6 +15,11 @@ namespace Plato.Discuss.ViewModels
         {
             new SortOption()
             {
+                Text = "Last Reply",
+                Value = "lastreply"
+            },
+            new SortOption()
+            {
                 Text = "Replies",
                 Value = "replies"
             },
@@ -40,8 +45,8 @@ namespace Plato.Discuss.ViewModels
             },
             new SortOption()
             {
-                Text = "LastPost",
-                Value = "lastpost"
+                Text = "Modified",
+                Value = "modified"
             }
         };
 
@@ -83,7 +88,7 @@ namespace Plato.Discuss.ViewModels
             this.ViewOpts = viewOptions;
             this.PagerOpts = pagerOptions;
             this.SortColumns = SetSelection(_defaultSortColumns, viewOptions.Sort);
-            this.SortOrder = SetSelection(_defaultSortOrder, viewOptions.Order.ToString());
+            this.SortOrder = SetSelection(_defaultSortOrder, viewOptions.Order);
             this.PagerOpts.SetTotal(results?.Total ?? 0);
         }
 
@@ -110,9 +115,9 @@ namespace Plato.Discuss.ViewModels
 
         public int ChannelId { get; set; }
 
-        public string Sort { get; set; }
+        public string Sort { get; set; } = "lastreply";
 
-        public OrderBy Order { get; set; } 
+        public string Order { get; set; } = "desc";
 
     }
 

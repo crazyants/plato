@@ -102,8 +102,6 @@ namespace Plato.Discuss.Controllers
             //this.RouteData.Values.Add("order", viewOptions.Order);
 
             this.RouteData.Values.Add("viewOptions", viewOptions);
-
-
             
             // Build view
             var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);

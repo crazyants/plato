@@ -57,18 +57,22 @@ namespace Plato.Entities.Repositories
                 entity.IsClosed,
                 entity.TotalViews,
                 entity.TotalReplies,
+                entity.TotalParticipants,
                 entity.TotalReactions,
                 entity.TotalFollows,
                 entity.TotalReports,
-                entity.MeanViews,
-                entity.MeanReplies,
-                entity.MeanReactions,
-                entity.MeanFollows,
-                entity.MeanReports,
+                entity.DailyViews,
+                entity.DailyReplies,
+                entity.DailyReactions,
+                entity.DailyFollows,
+                entity.DailyReports,
                 entity.CreatedUserId,
                 entity.CreatedDate,
                 entity.ModifiedUserId,
                 entity.ModifiedDate,
+                entity.LastReplyId,
+                entity.LastReplyUserId,
+                entity.LastReplyDate,
                 entity.Data);
             if (id > 0)
             {
@@ -205,6 +209,7 @@ namespace Plato.Entities.Repositories
             bool isClosed,
             int totalViews,
             int totalReplies,
+            int totalParticipants,
             int totalReactions,
             int totalFollows,
             int totalReports,
@@ -217,6 +222,9 @@ namespace Plato.Entities.Repositories
             DateTimeOffset? createdDate,
             int modifiedUserId,
             DateTimeOffset? modifiedDate,
+            int lastReplyId,
+            int lastReplyUserId,
+            DateTimeOffset? lastReplyDate,
             IEnumerable<IEntityData> data)
         {
 
@@ -255,6 +263,7 @@ namespace Plato.Entities.Repositories
                     isClosed,
                     totalViews,
                     totalReplies,
+                    totalParticipants,
                     totalReactions,
                     totalFollows,
                     totalReports,
@@ -266,7 +275,10 @@ namespace Plato.Entities.Repositories
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
-                    modifiedDate.ToDateIfNull());
+                    modifiedDate.ToDateIfNull(),
+                    lastReplyId,
+                    lastReplyUserId,
+                    lastReplyDate.ToDateIfNull());
             }
 
             // Add entity data

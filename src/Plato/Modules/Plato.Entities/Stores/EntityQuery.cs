@@ -588,7 +588,7 @@ namespace Plato.Entities.Stores
         private string GetStartIdComparer()
         {
 
-            var output = "Id";
+            var output = "e.Id";
             if (_query.SortColumns.Count > 0)
             {
                 foreach (var sortColumn in _query.SortColumns)
@@ -622,6 +622,20 @@ namespace Plato.Entities.Stores
                     return "e.Title";
                 case "message":
                     return "e.[Message]";
+                case "replies":
+                    return "e.TotalReplies";
+                case "totalreplies":
+                    return "e.TotalReplies";
+                case "participants":
+                    return "e.TotalParticipants";
+                case "totalparticipants":
+                    return "e.TotalParticipants";
+                case "views":
+                    return "e.TotalViews";
+                case "totalviews":
+                    return "e.TotalViews";
+                case "follows":
+                    return "e.TotalFollows";
                 case "created":
                     return "e.CreatedDate";
                 case "createddate":
@@ -630,16 +644,10 @@ namespace Plato.Entities.Stores
                     return "e.ModifiedDate";
                 case "modifieddate":
                     return "e.ModifiedDate";
-                case "replies":
-                    return "e.TotalReplies";
-                case "totalreplies":
-                    return "e.TotalReplies";
-                case "views":
-                    return "e.TotalViews";
-                case "totalviews":
-                    return "e.TotalViews";
-                case "follows":
-                    return "e.TotalFollows";
+                case "lastreply":
+                    return "e.LastReplyDate";
+                case "lastreplydate":
+                    return "e.LastReplyDate";
             }
 
             return string.Empty;

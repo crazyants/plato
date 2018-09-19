@@ -8,10 +8,11 @@ using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
-using Plato.Internal.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
+using Plato.Entities.Subscribers;
+using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Entities
 {
@@ -47,10 +48,8 @@ namespace Plato.Entities
             // Managers
             services.AddScoped<IEntityManager<Entity>, EntityManager<Entity>>();
             services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager<EntityReply>>();
-
-            //services.AddScoped<IEntityDetailsStore<EntityDetails>, EntityDetailsStore>();
-
-
+            
+         
         }
 
         public override void Configure(

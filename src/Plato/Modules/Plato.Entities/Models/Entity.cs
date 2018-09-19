@@ -42,21 +42,23 @@ namespace Plato.Entities.Models
 
         public int TotalReplies { get; set; }
 
+        public int TotalParticipants { get; set; }
+
         public int TotalReactions { get; set; }
 
         public int TotalFollows { get; set; }
 
         public int TotalReports { get; set; }
 
-        public double MeanViews { get; set; }
+        public double DailyViews { get; set; }
 
-        public double MeanReplies { get; set; }
+        public double DailyReplies { get; set; }
 
-        public double MeanReactions { get; set; }
+        public double DailyReactions { get; set; }
 
-        public double MeanFollows { get; set; }
+        public double DailyFollows { get; set; }
 
-        public double MeanReports { get; set; }
+        public double DailyReports { get; set; }
 
         public int CreatedUserId { get; set; }
 
@@ -65,6 +67,12 @@ namespace Plato.Entities.Models
         public int ModifiedUserId { get; set; }
 
         public DateTimeOffset? ModifiedDate { get; set; }
+
+        public int LastReplyId { get; set; }
+
+        public int LastReplyUserId { get; set; }
+
+        public DateTimeOffset? LastReplyDate { get; set; }
 
         public SimpleUser CreatedBy { get; private set; } = new SimpleUser();
 
@@ -206,9 +214,19 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
                 ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
+
+            if (dr.ColumnIsNotNull("LastReplyId"))
+                LastReplyId = Convert.ToInt32(dr["LastReplyId"]);
+
+            if (dr.ColumnIsNotNull("LastReplyUserId"))
+                LastReplyUserId = Convert.ToInt32(dr["LastReplyUserId"]);
             
+            if (dr.ColumnIsNotNull("LastReplyDate"))
+                LastReplyDate = DateTimeOffset.Parse(Convert.ToString((dr["LastReplyDate"])));
+
+
         }
-        
+
     }
     
 

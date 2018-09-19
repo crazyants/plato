@@ -40,21 +40,23 @@ namespace Plato.Entities.Models
 
         int TotalReplies { get; set; }
 
+        int TotalParticipants { get; set; }
+
         int TotalReactions { get; set; }
 
         int TotalFollows { get; set; }
 
         int TotalReports { get; set; }
 
-        double MeanViews { get; set; }
+        double DailyViews { get; set; }
 
-        double MeanReplies { get; set; }
+        double DailyReplies { get; set; }
 
-        double MeanReactions { get; set; }
+        double DailyReactions { get; set; }
 
-        double MeanFollows { get; set; }
+        double DailyFollows { get; set; }
 
-        double MeanReports { get; set; }
+        double DailyReports { get; set; }
 
         int CreatedUserId { get; set; }
 
@@ -64,6 +66,12 @@ namespace Plato.Entities.Models
 
         DateTimeOffset? ModifiedDate { get; set; }
 
+        int LastReplyId { get; set; }
+
+        int LastReplyUserId { get; set; }
+        
+        DateTimeOffset? LastReplyDate { get; set; }
+        
         SimpleUser CreatedBy { get; }
 
         SimpleUser ModifiedBy { get; } 

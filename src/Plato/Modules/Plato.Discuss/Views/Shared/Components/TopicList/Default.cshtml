@@ -26,7 +26,7 @@
                     {
                         var css = option.Selected ? "dropdown-item px-2 active" : "dropdown-item px-2";
                         var iconCss = option.Selected ? "fal fa-fw fa-check" : "fal fa-fw";
-                        <a class="@css" asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" asp-route-viewOptions-Sort="@option.Value">
+                        <a class="@css" asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" asp-route-viewOptions.Sort="@option.Value">
                             <i class="@iconCss"></i>
                             @T[option.Text]
                         </a>
@@ -36,7 +36,7 @@
                     {
                         var css = option.Selected ? "dropdown-item px-2 active" : "dropdown-item px-2";
                         var iconCss = option.Selected ? "fal fa-fw fa-check" : "fal fa-fw";
-                        <a class="@css" asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" asp-route-viewOptions-Order="@option.Value">
+                        <a class="@css" asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" asp-route-viewOptions.Order="@option.Value">
                             <i class="@iconCss"></i>
                             @T[option.Text]
                         </a>

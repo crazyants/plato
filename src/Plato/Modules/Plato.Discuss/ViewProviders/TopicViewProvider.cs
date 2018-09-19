@@ -255,7 +255,7 @@ namespace Plato.Discuss.ViewProviders
         ViewOptions GetViewOptions(IUpdateModel updater)
         {
             var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("viewOptions", out object value);
+            var found = routeData.Values.TryGetValue("viewOptions", out var value);
             if (found && value != null)
             {
                return (ViewOptions)value;
@@ -283,7 +283,7 @@ namespace Plato.Discuss.ViewProviders
         {
             
             topic.TotalViews = topic.TotalViews + 1;
-            topic.MeanViews = topic.TotalViews.ToSafeDevision(DateTimeOffset.Now.DayDifference(topic.CreatedDate));
+            topic.DailyViews = topic.TotalViews.ToSafeDevision(DateTimeOffset.Now.DayDifference(topic.CreatedDate));
 
             await _entityStore.UpdateAsync(topic);
         }
