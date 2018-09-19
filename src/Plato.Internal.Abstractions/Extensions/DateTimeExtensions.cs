@@ -72,5 +72,11 @@ namespace Plato.Internal.Abstractions.Extensions
             return null;
         }
 
+        public static int DayDifference(this DateTime input, DateTime date)
+        {
+            var timeSpan = date.Subtract(input);
+            return timeSpan.Days;
+        }
+
     }
 }

@@ -118,27 +118,27 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "MeanViews",
-                        DbType = DbType.Int32
+                        DbType = DbType.Double
                     },
                     new SchemaColumn()
                     {
                         Name = "MeanReplies",
-                        DbType = DbType.Int32
+                        DbType = DbType.Double
                     },
                     new SchemaColumn()
                     {
                         Name = "MeanReactions",
-                        DbType = DbType.Int32
+                        DbType = DbType.Double
                     },
                     new SchemaColumn()
                     {
                         Name = "MeanFollows",
-                        DbType = DbType.Int32
+                        DbType = DbType.Double
                     },
                     new SchemaColumn()
                     {
                         Name = "MeanReports",
-                        DbType = DbType.Int32
+                        DbType = DbType.Double
                     },
                     new SchemaColumn()
                     {

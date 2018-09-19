@@ -30,14 +30,29 @@ namespace Plato.Search.Handlers
         public override Task InstallingAsync(IFeatureEventContext context)
         {
             return Task.CompletedTask;
-
         }
 
         public override async Task InstalledAsync(IFeatureEventContext context)
         {
+            await InitializeDefaultFeatureSettings(context);
+        }
 
-            // Initialize default feature settings
-            // ----------------------------------
+        public override Task UninstallingAsync(IFeatureEventContext context)
+        {
+            return Task.CompletedTask;
+        }
+
+        public override Task UninstalledAsync(IFeatureEventContext context)
+        {
+            return Task.CompletedTask;
+        }
+
+        #endregion
+
+        #region "Private Methods"
+        
+        async Task InitializeDefaultFeatureSettings(IFeatureEventContext context)
+        {
 
             var features = await _shellFeatureStore.SelectFeatures();
             var feature = features.FirstOrDefault(f => f.ModuleId.Equals(context.Feature.ModuleId, StringComparison.OrdinalIgnoreCase));
@@ -54,22 +69,7 @@ namespace Plato.Search.Handlers
                 await _shellFeatureStore.UpdateAsync(feature);
 
             }
-
         }
-
-        public override Task UninstallingAsync(IFeatureEventContext context)
-        {
-            return Task.CompletedTask;
-        }
-
-        public override Task UninstalledAsync(IFeatureEventContext context)
-        {
-            return Task.CompletedTask;
-        }
-
-        #endregion
-
-        #region "Private Methods"
 
         #endregion
         

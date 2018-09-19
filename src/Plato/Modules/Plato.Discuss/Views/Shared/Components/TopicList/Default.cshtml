@@ -18,14 +18,29 @@
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Sort By
+                    @T["Sort By"]
                 </a>
                 <div class="dropdown-arrow"></div>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
+                    @foreach (var option in Model.SortColumns)
+                    {
+                        var css = option.Selected ? "dropdown-item px-2 active" : "dropdown-item px-2";
+                        var iconCss = option.Selected ? "fal fa-fw fa-check" : "fal fa-fw";
+                        <a class="@css" asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" asp-route-viewOptions-Sort="@option.Value">
+                            <i class="@iconCss"></i>
+                            @T[option.Text]
+                        </a>
+                    }
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    @foreach (var option in Model.SortOrder)
+                    {
+                        var css = option.Selected ? "dropdown-item px-2 active" : "dropdown-item px-2";
+                        var iconCss = option.Selected ? "fal fa-fw fa-check" : "fal fa-fw";
+                        <a class="@css" asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" asp-route-viewOptions-Order="@option.Value">
+                            <i class="@iconCss"></i>
+                            @T[option.Text]
+                        </a>
+                    }
                 </div>
             </li>
         </ul>

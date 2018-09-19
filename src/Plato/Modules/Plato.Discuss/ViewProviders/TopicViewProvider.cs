@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Models;
@@ -10,7 +11,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
-using Plato.Internal.Shell.Abstractions;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Discuss.ViewProviders
 {
@@ -52,10 +53,7 @@ namespace Plato.Discuss.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(Topic topic, IUpdateModel updater)
         {
 
-            var viewOptions = new ViewOptions
-            {
-                Search = GetKeywords(updater)
-            };
+            var viewOptions = GetViewOptions(updater);
 
             var pagerOptions = new PagerOptions
             {
@@ -82,22 +80,29 @@ namespace Plato.Discuss.ViewProviders
            
             var filterOptions = new ViewOptions();
 
-            var pagerOptions = new PagerOptions();
-            pagerOptions.Page = GetPageIndex(updater);
-            
+            var pagerOptions = new PagerOptions
+            {
+                Page = GetPageIndex(updater)
+            };
+
+            // Get entity
             var topic = await _entityStore.GetByIdAsync(viewModel.Id);
             if (topic == null)
             {
                 return await BuildIndexAsync(viewModel, updater);
             }
-            
+
+            // Increment entity view count
+            await IncrementTopicViewCount(topic);
+
+            // Build view model
             var replies = await GetEntityReplies(topic.Id, filterOptions, pagerOptions);
             
             var topivViewModel = new HomeTopicViewModel(replies, pagerOptions)
             {
                 Entity = topic
             };
-
+            
             return Views(
                 View<HomeTopicViewModel>("Home.Topic.Header", model => topivViewModel).Zone("header"),
                 View<HomeTopicViewModel>("Home.Topic.Tools", model => topivViewModel).Zone("tools"),
@@ -246,6 +251,19 @@ namespace Plato.Discuss.ViewProviders
 
         }
 
+
+        ViewOptions GetViewOptions(IUpdateModel updater)
+        {
+            var routeData = updater.RouteData;
+            var found = routeData.Values.TryGetValue("viewOptions", out object value);
+            if (found && value != null)
+            {
+               return (ViewOptions)value;
+            }
+
+            return new ViewOptions();
+        }
+
         string GetKeywords(IUpdateModel updater)
         {
 
@@ -259,6 +277,15 @@ namespace Plato.Discuss.ViewProviders
 
             return keywords;
 
+        }
+
+        async Task IncrementTopicViewCount(Topic topic)
+        {
+            
+            topic.TotalViews = topic.TotalViews + 1;
+            topic.MeanViews = topic.TotalViews.ToSafeDevision(DateTimeOffset.Now.DayDifference(topic.CreatedDate));
+
+            await _entityStore.UpdateAsync(topic);
         }
 
         #endregion

@@ -31,7 +31,11 @@ namespace Plato.Internal.Data.Abstractions
 
         public IQuery<TModel> OrderBy(string columnName, OrderBy sortOrder = Abstractions.OrderBy.Asc)
         {
-            _sortColumns.Add(columnName, sortOrder);
+            // We always need a key
+            if (!String.IsNullOrEmpty(columnName))
+            {
+                _sortColumns.Add(columnName, sortOrder);
+            }
             return this;
         }
 

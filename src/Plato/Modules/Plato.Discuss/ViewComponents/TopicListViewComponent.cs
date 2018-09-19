@@ -7,7 +7,6 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.ViewComponents
 {
@@ -103,7 +102,7 @@ namespace Plato.Discuss.ViewComponents
                     // q.Email.IsIn("email440@address.com,email420@address.com");
                     // q.Id.Between(1, 5);
                 })
-                .OrderBy("ModifiedDate", OrderBy.Desc)
+                .OrderBy(viewOpts.Sort, viewOpts.Order)
                 .ToList();
         }
         

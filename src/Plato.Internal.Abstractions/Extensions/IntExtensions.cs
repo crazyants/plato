@@ -63,7 +63,7 @@ namespace Plato.Internal.Abstractions.Extensions
             
             if (input <= 0)
             {
-                return 0;
+                return default(int);
             }
 
             if (divideBy <= 0)
@@ -74,6 +74,21 @@ namespace Plato.Internal.Abstractions.Extensions
             var size = decimal.Divide(input, divideBy);
             return System.Convert.ToInt32(System.Math.Ceiling(size));
             
+        }
+
+        public static double ToSafeDevision(this int input, int total)
+        {
+
+            if (input == 0) return default(int);
+            if (total == 0) return input;
+            var result = $"{(decimal) input / total:#.##}";
+            if (!string.IsNullOrEmpty(result))
+            {
+                return Convert.ToDouble(result);
+            }
+
+            return default(int);
+
         }
 
 

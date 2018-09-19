@@ -46,15 +46,15 @@ namespace Plato.Entities.Models
 
         int TotalReports { get; set; }
 
-        int MeanViews { get; set; }
+        double MeanViews { get; set; }
 
-        int MeanReplies { get; set; }
+        double MeanReplies { get; set; }
 
-        int MeanReactions { get; set; }
+        double MeanReactions { get; set; }
 
-        int MeanFollows { get; set; }
+        double MeanFollows { get; set; }
 
-        int MeanReports { get; set; }
+        double MeanReports { get; set; }
 
         int CreatedUserId { get; set; }
 

@@ -574,11 +574,14 @@ namespace Plato.Entities.Stores
             foreach (var sortColumn in _query.SortColumns)
             {
                 var columnName = GetSortColumn(sortColumn.Key);
-                if (!String.IsNullOrEmpty(columnName))
+                if (String.IsNullOrEmpty(columnName))
                 {
-                    ourput.Add(columnName, sortColumn.Value);
+                    throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
                 }
+                ourput.Add(columnName, sortColumn.Value);
+
             }
+
             return ourput;
         }
 
@@ -590,7 +593,12 @@ namespace Plato.Entities.Stores
             {
                 foreach (var sortColumn in _query.SortColumns)
                 {
-                    output = GetSortColumn(sortColumn.Key);
+                    var columnName = GetSortColumn(sortColumn.Key);
+                    if (String.IsNullOrEmpty(columnName))
+                    {
+                        throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
+                    }
+                    output = columnName;
                 }
             }
 
@@ -606,7 +614,7 @@ namespace Plato.Entities.Stores
                 return string.Empty;
             }
 
-            switch (columnName.ToLower())
+            switch (columnName.ToLowerInvariant())
             {
                 case "id":
                     return "e.Id";
@@ -614,10 +622,24 @@ namespace Plato.Entities.Stores
                     return "e.Title";
                 case "message":
                     return "e.[Message]";
+                case "created":
+                    return "e.CreatedDate";
                 case "createddate":
                     return "e.CreatedDate";
+                case "modified":
+                    return "e.ModifiedDate";
                 case "modifieddate":
                     return "e.ModifiedDate";
+                case "replies":
+                    return "e.TotalReplies";
+                case "totalreplies":
+                    return "e.TotalReplies";
+                case "views":
+                    return "e.TotalViews";
+                case "totalviews":
+                    return "e.TotalViews";
+                case "follows":
+                    return "e.TotalFollows";
             }
 
             return string.Empty;

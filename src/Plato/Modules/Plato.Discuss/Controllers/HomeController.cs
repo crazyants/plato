@@ -96,9 +96,15 @@ namespace Plato.Discuss.Controllers
 
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
-            this.RouteData.Values.Add("page", pagerOptions.Page);
-            this.RouteData.Values.Add("search", viewOptions.Search);
+            //this.RouteData.Values.Add("page", pagerOptions.Page);
+            //this.RouteData.Values.Add("search", viewOptions.Search);
+            //this.RouteData.Values.Add("sort", viewOptions.Sort);
+            //this.RouteData.Values.Add("order", viewOptions.Order);
 
+            this.RouteData.Values.Add("viewOptions", viewOptions);
+
+
+            
             // Build view
             var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);
 
@@ -130,8 +136,7 @@ namespace Plato.Discuss.Controllers
                     .LocalNav()
                 );
             });
-
-
+            
             var result = await _topicViewProvider.ProvideEditAsync(topic, this);
 
             // Return view
@@ -219,7 +224,13 @@ namespace Plato.Discuss.Controllers
             {
                 viewOptions = new ViewOptions();
             }
-            
+
+            // default pager
+            if (pagerOptions == null)
+            {
+                pagerOptions = new PagerOptions();
+            }
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -234,19 +245,13 @@ namespace Plato.Discuss.Controllers
                 );
             });
 
-            // default pager
-            if (pagerOptions == null)
-            {
-                pagerOptions = new PagerOptions();
-            }
-            
+        
             // Maintain previous route data when generating page links
             var routeData = new RouteData();
-            routeData.Values.Add("Options.Search", viewOptions.Search);
-            routeData.Values.Add("Options.Order", viewOptions.Order);
+            routeData.Values.Add("search", viewOptions.Search);
+            routeData.Values.Add("sort", viewOptions.Sort);
             routeData.Values.Add("page", pagerOptions.Page);
             
-
             // Build view
             var result = await _topicViewProvider.ProvideDisplayAsync(topic, this);
 
@@ -477,8 +482,7 @@ namespace Plato.Discuss.Controllers
 
         #region "Private Methods"
 
-
-        private string GetSampleMarkDown(int number)
+        string GetSampleMarkDown(int number)
         {
             return number.ToString() + @"
 
@@ -520,7 +524,7 @@ message Test message  " + number.ToString();
 
         }
 
-        private async Task CreateSampleData()
+        async Task CreateSampleData()
         { 
 
             var rnd = new Random();

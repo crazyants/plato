@@ -36,6 +36,27 @@ namespace Plato.Internal.Abstractions.Extensions
         {
             return d.DateTime.ToPrettyDate();
         }
+
+        public static int DayDifference(this DateTimeOffset input, DateTime date)
+        {
+            return input.DateTime.DayDifference(date);
+        }
+
+        public static int DayDifference(this DateTimeOffset input, DateTimeOffset date)
+        {
+            return input.DayDifference(date.DateTime);
+        }
+
+        public static int DayDifference(this DateTimeOffset input, DateTimeOffset? date)
+        {
+            if (date == null)
+            {
+                return 0;
+            }
+
+            return input.DayDifference(date.Value.DateTime);
+        }
+
     }
 
 }
