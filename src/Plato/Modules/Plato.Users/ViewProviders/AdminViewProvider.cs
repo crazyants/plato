@@ -14,6 +14,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
+using Plato.Users.Services;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
@@ -21,6 +22,7 @@ namespace Plato.Users.ViewProviders
     public class AdminViewProvider : BaseViewProvider<User>
     {
 
+        private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _hostEnvironment;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
@@ -34,14 +36,17 @@ namespace Plato.Users.ViewProviders
             IHostingEnvironment hostEnvironment,
             IUrlHelperFactory urlHelperFactory,
             IUserPhotoStore<UserPhoto> userPhotoStore,
-            IStringLocalizer<AdminViewProvider> stringLocalizer)
+            IStringLocalizer<AdminViewProvider> stringLocalizer,
+            IPlatoUserManager<User> platoUserManager)
         {
             _userManager = userManager;
             _hostEnvironment = hostEnvironment;
             _userPhotoStore = userPhotoStore;
             _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
+            _platoUserManager = platoUserManager;
 
             T = stringLocalizer;
+            
         }
 
         #region "Implementation"
@@ -182,6 +187,7 @@ namespace Plato.Users.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
+
                 // Update display name. Username and email address are update via UserManager
                 user.DisplayName = model.DisplayName;
 
@@ -197,9 +203,22 @@ namespace Plato.Users.ViewProviders
 
                 // Persist changes
                 var result = await _userManager.UpdateAsync(user);
-                foreach (var error in result.Errors)
+                if (result.Succeeded)
                 {
-                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                    // Mark admin created users as confirmed
+                    var tokenResult = await _platoUserManager.GetEmailConfirmationUserAsync(user.Email);
+                    if (tokenResult.Succeeded)
+                    {
+                        await _platoUserManager.ConfirmEmailAsync(model.Email,
+                            tokenResult.Response.ConfirmationToken);
+                    }
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        updater.ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
 
             }

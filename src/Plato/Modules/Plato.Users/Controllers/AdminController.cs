@@ -176,14 +176,16 @@ namespace Plato.Users.Controllers
 
                     // Get new user
                     var newUser = await _userManager.FindByEmailAsync(model.Email);
+                    if (newUser != null)
+                    {
 
-                    // Mark admin created users as confirmed
-                    newUser.EmailConfirmed = true;
-                    await _userManager.UpdateAsync(newUser);
+                      // Execute view providers ProvideUpdateAsync method
+                        await _viewProvider.ProvideUpdateAsync(newUser, this);
 
-                    // Execute view providers ProvideUpdateAsync method
-                    await _viewProvider.ProvideUpdateAsync(newUser, this);
 
+                    }
+                    
+                  
                     // Everything was OK
                     _alerter.Success(T["User Created Successfully!"]);
 

@@ -85,7 +85,7 @@ namespace Plato.Entities.Subscribers
             var replies = await GetReplies(entity);
             if (replies?.Data != null)
             {
-                entity.TotalReplies = replies.Total + 1;
+                entity.TotalReplies = replies.Total;
                 entity.TotalParticipants = GetTotalUniqueParicipantCount(replies.Data);
             }
 

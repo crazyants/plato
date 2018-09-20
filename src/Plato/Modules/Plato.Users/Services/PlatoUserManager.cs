@@ -428,7 +428,7 @@ namespace Plato.Users.Services
                 return result.Failed(errors.ToArray());
             }
 
-            return result.Success();
+            return result.Success(user);
 
         }
 

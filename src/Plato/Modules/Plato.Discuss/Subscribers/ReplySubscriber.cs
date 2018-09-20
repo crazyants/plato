@@ -60,8 +60,7 @@ namespace Plato.Discuss.Subscribers
             {
                 throw new ArgumentNullException(nameof(reply));
             }
-
-
+            
             if (reply.IsPrivate)
             {
                 return reply;
@@ -82,8 +81,7 @@ namespace Plato.Discuss.Subscribers
             {
                 return reply;
             }
-
-
+            
             // Get entity details to update
             var details = entity.GetOrCreate<PostDetails>();
             
@@ -98,9 +96,9 @@ namespace Plato.Discuss.Subscribers
                 var simpleReplies = new List<SimpleReply>();
                 foreach (var latestReply in replies.Data)
                 {
-                    if (!added.Contains(latestReply.Id))
+                    if (!added.Contains(latestReply.CreatedUserId))
                     {
-                        added.Add(latestReply.Id);
+                        added.Add(latestReply.CreatedUserId);
                         simpleReplies.Add(new SimpleReply()
                         {
                             Id = latestReply.Id,
