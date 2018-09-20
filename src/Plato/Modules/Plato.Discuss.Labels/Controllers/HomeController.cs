@@ -10,6 +10,7 @@ using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
+using Plato.Discuss.ViewModels;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Labels.Controllers
@@ -47,8 +48,8 @@ namespace Plato.Discuss.Labels.Controllers
 
         public async Task<IActionResult> Index(
             int id,
-            ViewOptions viewOptions,
-            PagerOptions pagerOptions)
+            TopicIndexOptions options,
+            PagerOptions pager)
         {
 
             var category = await _channelStore.GetByIdAsync(id);
@@ -59,7 +60,7 @@ namespace Plato.Discuss.Labels.Controllers
             
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
-            this.RouteData.Values.Add("page", pagerOptions.Page);
+            this.RouteData.Values.Add("page", pager.Page);
     
             // Build view
             var result = await _labelViewProvider.ProvideIndexAsync(category, this);

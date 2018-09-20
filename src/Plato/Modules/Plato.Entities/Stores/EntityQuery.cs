@@ -636,6 +636,12 @@ namespace Plato.Entities.Stores
                     return "e.TotalViews";
                 case "follows":
                     return "e.TotalFollows";
+                case "totalfollows":
+                    return "e.TotalFollows";
+                case "reactions":
+                    return "e.TotalReactions";
+                case "totalreactions":
+                    return "e.TotalReactions";
                 case "created":
                     return "e.CreatedDate";
                 case "createddate":

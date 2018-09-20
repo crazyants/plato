@@ -6,8 +6,8 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Labels.Stores;
+using Plato.Discuss.ViewModels;
 
 namespace Plato.Discuss.Labels.ViewProviders
 {
@@ -35,11 +35,11 @@ namespace Plato.Discuss.Labels.ViewProviders
         {
 
             // filter options
-            var filterOptions = new ViewOptions
+            var topicIndexOptions = new TopicIndexOptions()
             {
                 LabelId = label?.Id ?? 0
             };
-
+         
             // paging otptions
             var pagerOptions = new PagerOptions
             {
@@ -48,7 +48,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             var indexViewModel = new LabelIndexViewModel
             {
-                ViewOpts = filterOptions,
+                TopicIndexOpts = topicIndexOptions,
                 PagerOpts = pagerOptions
             };
 
