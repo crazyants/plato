@@ -7,7 +7,7 @@ namespace Plato.Discuss.Channels.ViewModels
     {
         public int SelectedChannelId { get; set; }
 
-        public ViewOptions ViewOpts { get; set; }
+        public ChannelIndexOptions ChannelIndexOpts { get; set; }
 
         public IEnumerable<CategoryBase> Channels { get; set; }
 

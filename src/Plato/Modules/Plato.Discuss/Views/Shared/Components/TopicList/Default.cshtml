@@ -25,7 +25,7 @@
                     @foreach (var option in Model.SortColumns)
                     {
                         var iconCss = option.Selected ? "fal fa-fw fa-check" : "fal fa-fw";
-                        <a class="dropdown-item px-2" asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" asp-route-viewOptions.Sort="@option.Value">
+                        <a class="dropdown-item px-2" asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.sort="@option.Value" asp-route-opts.order="@Model.Options.Order">
                             <i class="@iconCss"></i>
                             @T[option.Text]
                         </a>
@@ -34,7 +34,7 @@
                     @foreach (var option in Model.SortOrder)
                     {
                         var iconCss = option.Selected ? "fal fa-fw fa-check" : "fal fa-fw";
-                        <a class="dropdown-item px-2" asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" asp-route-viewOptions.Order="@option.Value">
+                        <a class="dropdown-item px-2" asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Index" asp-route-opts.sort="@Model.Options.Sort" asp-route-opts.order="@option.Value">
                             <i class="@iconCss"></i>
                             @T[option.Text]
                         </a>
@@ -71,5 +71,5 @@
 </card>
 
 <div class="mt-4 mb-4">
-    <pager model="@Model.PagerOpts"></pager>
+    <pager model="@Model.Pager"></pager>
 </div>

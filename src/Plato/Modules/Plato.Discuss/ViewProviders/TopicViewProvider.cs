@@ -62,8 +62,8 @@ namespace Plato.Discuss.ViewProviders
 
             var viewModel = new TopicIndexViewModel
             {
-                ViewOpts = viewOptions,
-                PagerOpts = pagerOptions
+                Options = viewOptions,
+                Pager = pagerOptions
             };
 
             return Task.FromResult(Views(
@@ -78,7 +78,7 @@ namespace Plato.Discuss.ViewProviders
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
         {
            
-            var filterOptions = new ViewOptions();
+            var filterOptions = new TopicIndexOptions();
 
             var pagerOptions = new PagerOptions
             {
@@ -216,7 +216,7 @@ namespace Plato.Discuss.ViewProviders
         
         async Task<IPagedResults<Reply>> GetEntityReplies(
             int entityId,
-            ViewOptions viewOptions,
+            TopicIndexOptions topicIndexOptions,
             PagerOptions pagerOptions)
         {
             return await _entityReplyStore.QueryAsync()
@@ -224,9 +224,9 @@ namespace Plato.Discuss.ViewProviders
                 .Select<EntityReplyQueryParams>(q =>
                 {
                     q.EntityId.Equals(entityId);
-                    if (!string.IsNullOrEmpty(viewOptions.Search))
+                    if (!string.IsNullOrEmpty(topicIndexOptions.Search))
                     {
-                        q.Keywords.IsIn(viewOptions.Search);
+                        q.Keywords.IsIn(topicIndexOptions.Search);
                     }
                     q.IsSpam.False();
                     q.IsPrivate.False();
@@ -251,16 +251,16 @@ namespace Plato.Discuss.ViewProviders
 
         }
         
-        ViewOptions GetViewOptions(IUpdateModel updater)
+        TopicIndexOptions GetViewOptions(IUpdateModel updater)
         {
             var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("viewOptions", out var value);
+            var found = routeData.Values.TryGetValue("opts", out var value);
             if (found && value != null)
             {
-               return (ViewOptions)value;
+               return (TopicIndexOptions)value;
             }
 
-            return new ViewOptions();
+            return new TopicIndexOptions();
         }
 
         string GetKeywords(IUpdateModel updater)

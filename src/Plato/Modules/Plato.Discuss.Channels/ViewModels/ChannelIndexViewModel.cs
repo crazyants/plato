@@ -11,9 +11,9 @@ namespace Plato.Discuss.Channels.ViewModels
 
         public PagerOptions PagerOpts { get; set; }
 
-        public ViewOptions ChannelViewOpts { get; set; }
+        public ChannelIndexOptions ChannelIndexOpts { get; set; }
 
-        public Discuss.ViewModels.ViewOptions TopicViewOpts { get; set; }
+        public Discuss.ViewModels.TopicIndexOptions TopicIndexOpts { get; set; }
         
         public ChannelIndexViewModel()
         {
@@ -30,7 +30,7 @@ namespace Plato.Discuss.Channels.ViewModels
         
     }
 
-    public class ViewOptions
+    public class ChannelIndexOptions
     {
 
         public int ChannelId { get; set; }

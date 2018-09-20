@@ -59,7 +59,7 @@ namespace Plato.Discuss.Channels.Controllers
 
         public async Task<IActionResult> Index(
             int id,
-            ViewOptions viewOptions,
+            TopicIndexOptions topicIndexOptions,
             PagerOptions pagerOptions)
         {
 

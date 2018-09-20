@@ -20,18 +20,18 @@ namespace Plato.Discuss.Channels.ViewComponents
 
         public Task<IViewComponentResult> InvokeAsync(
             Channel channel,
-            ViewOptions viewOpts)
+            ChannelIndexOptions channelIndexOpts)
         {
 
-            if (viewOpts == null)
+            if (channelIndexOpts == null)
             {
-                viewOpts = new ViewOptions();
+                channelIndexOpts = new ChannelIndexOptions();
             }
 
             var model = new ChannelListItemViewModel()
             {
                 Channel = channel,
-                ViewOpts = viewOpts
+                ChannelIndexOpts = channelIndexOpts
             };
 
             return Task.FromResult((IViewComponentResult)View(model));

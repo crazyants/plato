@@ -5,7 +5,7 @@
     var childForeColor = !String.IsNullOrEmpty(Model.Channel.ForeColor) ? Model.Channel.ForeColor : "#fff";
 }
 
-@if (Model.ViewOpts.EnableEdit)
+@if (Model.ChannelIndexOpts.EnableEdit)
 {
     <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Channel.Id" class="btn btn-secondary float-right">
         <i class="fal fa-pencil"></i>
@@ -49,7 +49,7 @@ else
 <div class="float-left">
   
 
-    @if (Model.ViewOpts.EnableEdit)
+    @if (Model.ChannelIndexOpts.EnableEdit)
     {
         <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
             @Model.Channel.Name
@@ -76,7 +76,7 @@ else
             @foreach (var subchannel in Model.Channel.Children)
             {
                 <li class="float-left mr-2">
-                    @if (Model.ViewOpts.EnableEdit)
+                    @if (Model.ChannelIndexOpts.EnableEdit)
                     {
                         <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
                             @subchannel.Name

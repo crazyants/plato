@@ -65,15 +65,16 @@ namespace Plato.Discuss.Controllers
 
         #region "Actions"
 
+    
         public async Task<IActionResult> Index(
-            ViewOptions viewOptions,
+            TopicIndexOptions opts,
             PagerOptions pagerOptions)
         {
             
             // default options
-            if (viewOptions == null)
+            if (opts == null)
             {
-                viewOptions = new ViewOptions();
+                opts = new TopicIndexOptions();
             }
 
             // default pager
@@ -91,17 +92,19 @@ namespace Plato.Discuss.Controllers
                 ).Add(S["Discuss"]);
               
             });
-            
+
             //await CreateSampleData();
 
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
             //this.RouteData.Values.Add("page", pagerOptions.Page);
-            //this.RouteData.Values.Add("search", viewOptions.Search);
-            //this.RouteData.Values.Add("sort", viewOptions.Sort);
-            //this.RouteData.Values.Add("order", viewOptions.Order);
 
-            this.RouteData.Values.Add("viewOptions", viewOptions);
+            this.RouteData.Values.Add("opts.search", opts.Search);
+            this.RouteData.Values.Add("opts.sort", opts.Sort);
+            this.RouteData.Values.Add("opts.order", opts.Order);
+            this.RouteData.Values.Add("opts.filter", opts.Filter);
+
+            this.RouteData.Values.Add("opts", opts);
             
             // Build view
             var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);
@@ -207,7 +210,7 @@ namespace Plato.Discuss.Controllers
 
         public async Task<IActionResult> Topic(
             int id,
-            ViewOptions viewOptions,
+            TopicIndexOptions topicIndexOptions,
             PagerOptions pagerOptions)
         {
 
@@ -218,9 +221,9 @@ namespace Plato.Discuss.Controllers
             }
             
             // default options
-            if (viewOptions == null)
+            if (topicIndexOptions == null)
             {
-                viewOptions = new ViewOptions();
+                topicIndexOptions = new TopicIndexOptions();
             }
 
             // default pager
@@ -246,8 +249,8 @@ namespace Plato.Discuss.Controllers
         
             // Maintain previous route data when generating page links
             var routeData = new RouteData();
-            routeData.Values.Add("search", viewOptions.Search);
-            routeData.Values.Add("sort", viewOptions.Sort);
+            routeData.Values.Add("search", topicIndexOptions.Search);
+            routeData.Values.Add("sort", topicIndexOptions.Sort);
             routeData.Values.Add("page", pagerOptions.Page);
             
             // Build view

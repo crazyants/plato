@@ -8,8 +8,6 @@ using Plato.Discuss.Channels.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Features;
-using Plato.Internal.Models.Shell;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.ViewComponents
 {
@@ -31,28 +29,28 @@ namespace Plato.Discuss.Channels.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            ViewOptions viewOpts)
+            ChannelIndexOptions options)
         {
 
-            if (viewOpts == null)
+            if (options == null)
             {
-                viewOpts = new ViewOptions();
+                options = new ChannelIndexOptions();
             }
 
-            var model = await GetIndexModel(viewOpts);
-            model.SelectedChannelId = viewOpts.ChannelId;
-            model.ViewOpts = viewOpts;
+            var model = await GetIndexModel(options);
+            model.SelectedChannelId = options.ChannelId;
+            model.ChannelIndexOpts = options;
             return View(model);
 
         }
         
-        async Task<ChannelListViewModel> GetIndexModel(ViewOptions viewOpts)
+        async Task<ChannelListViewModel> GetIndexModel(ChannelIndexOptions channelIndexOpts)
         {
             var feature = await GetcurrentFeature();
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
             return new ChannelListViewModel()
             {
-                Channels = categories?.Where(c => c.ParentId == viewOpts.ChannelId)
+                Channels = categories?.Where(c => c.ParentId == channelIndexOpts.ChannelId)
             };
         }
 

@@ -9,7 +9,7 @@
              <card class="card card-body-flush">
                  <card-title>
 
-                     @if (Model.ViewOpts.EnableEdit)
+                     @if (Model.ChannelIndexOpts.EnableEdit)
                      {
                          <ul class="nav navbar p-0 float-right">
                              <li class="nav-item dropdown">
@@ -60,7 +60,7 @@
                                      @await DisplayAsync(new View("ChannelListItem", new
                                      {
                                          Channel = child,
-                                         ViewOpts = Model.ViewOpts
+                                         ViewOpts = Model.ChannelIndexOpts
                                      }))
                                  </li>
                              }
@@ -112,7 +112,7 @@ else
                              @await DisplayAsync(new View("ChannelListItem", new
                              {
                                  channel = channel,
-                                 viewOpts = Model.ViewOpts
+                                 viewOpts = Model.ChannelIndexOpts
                              }))
                          </li>
                      }
@@ -122,7 +122,7 @@ else
     }
     else
     {
-        if (Model.ViewOpts.EnableEdit)
+        if (Model.ChannelIndexOpts.EnableEdit)
         {
             <card class="card card-body-flush">
                 <card-title>

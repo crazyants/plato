@@ -54,7 +54,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             var viewModel = new ChannelIndexViewModel()
             {
-                ChannelViewOpts = new ViewOptions()
+                ChannelIndexOpts = new ChannelIndexOptions()
                 {
                     ChannelId = category?.Id ?? 0,
                     EnableEdit = true

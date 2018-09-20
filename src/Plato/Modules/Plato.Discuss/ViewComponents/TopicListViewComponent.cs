@@ -29,39 +29,39 @@ namespace Plato.Discuss.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            ViewOptions viewOpts,
-            PagerOptions pagerOpts)
+            TopicIndexOptions options,
+            PagerOptions pager)
         {
 
-            if (viewOpts == null)
+            if (options == null)
             {
-                viewOpts = new ViewOptions();
+                options = new TopicIndexOptions();
             }
 
-            if (pagerOpts == null)
+            if (pager == null)
             {
-                pagerOpts = new PagerOptions();
+                pager = new PagerOptions();
             }
 
 
-            var model = await GetIndexViewModel(viewOpts, pagerOpts);
+            var model = await GetIndexViewModel(options, pager);
 
             return View(model);
         }
         
         async Task<TopicIndexViewModel> GetIndexViewModel(
-            ViewOptions viewOptions,
-            PagerOptions pagerOptions)
+            TopicIndexOptions options,
+            PagerOptions pager)
         {
-            var topics = await GetEntities(viewOptions, pagerOptions);
+            var topics = await GetEntities(options, pager);
             return new TopicIndexViewModel(
                 topics,
-                viewOptions,
-                pagerOptions);
+                options,
+                pager);
         }
         
         async Task<IPagedResults<Topic>> GetEntities(
-            ViewOptions viewOpts,
+            TopicIndexOptions topicIndexOpts,
             PagerOptions pagerOptions)
         {
             
@@ -76,9 +76,9 @@ namespace Plato.Discuss.ViewComponents
                         q.FeatureId.Equals(feature.Id);
                     }
 
-                    if (viewOpts.ChannelId > 0)
+                    if (topicIndexOpts.ChannelId > 0)
                     {
-                        q.CategoryId.Equals(viewOpts.ChannelId);
+                        q.CategoryId.Equals(topicIndexOpts.ChannelId);
                     }
                     
                     q.HideSpam.True();
@@ -97,7 +97,7 @@ namespace Plato.Discuss.ViewComponents
                     // q.Email.IsIn("email440@address.com,email420@address.com");
                     // q.Id.Between(1, 5);
                 })
-                .OrderBy(viewOpts.Sort, viewOpts.Order.ToEnum<OrderBy>(OrderBy.Desc))
+                .OrderBy(topicIndexOpts.Sort.ToString(), topicIndexOpts.Order)
                 .ToList();
         }
         

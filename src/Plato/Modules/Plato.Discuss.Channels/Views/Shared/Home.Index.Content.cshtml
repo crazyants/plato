@@ -2,15 +2,15 @@
 
 @await DisplayAsync(new View("ChannelList", new
 {
-    viewOpts = @Model.ChannelViewOpts
+    options = @Model.ChannelIndexOpts
 }))
 
-@if (Model.ChannelViewOpts.ChannelId != 0)
+@if (Model.ChannelIndexOpts.ChannelId != 0)
 {
     @await DisplayAsync(new View("TopicList", new
     {
-        viewOpts = @Model.TopicViewOpts,
-        pagerOpts = @Model.PagerOpts
+        options = @Model.TopicIndexOpts,
+        pager = @Model.PagerOpts
     }))
 }
 

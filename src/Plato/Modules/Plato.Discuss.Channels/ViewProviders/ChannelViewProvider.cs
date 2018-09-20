@@ -55,13 +55,13 @@ namespace Plato.Discuss.Channels.ViewProviders
             }
 
             // channel filter options
-            var channelViewOpts = new ViewOptions
+            var channelViewOpts = new ChannelIndexOptions
             {
                 ChannelId = categoryBase?.Id ?? 0
             };
 
             // topic filter options
-            var topicViewOpts = new Discuss.ViewModels.ViewOptions
+            var topicViewOpts = new Discuss.ViewModels.TopicIndexOptions
             {
                 ChannelId = categoryBase?.Id ?? 0
             };
@@ -74,8 +74,8 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             var indexViewModel = new ChannelIndexViewModel
             {
-                ChannelViewOpts = channelViewOpts,
-                TopicViewOpts = topicViewOpts,
+                ChannelIndexOpts = channelViewOpts,
+                TopicIndexOpts = topicViewOpts,
                 PagerOpts = pagerOptions
             };
 
