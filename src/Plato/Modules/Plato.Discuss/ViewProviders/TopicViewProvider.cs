@@ -250,8 +250,7 @@ namespace Plato.Discuss.ViewProviders
             return page;
 
         }
-
-
+        
         ViewOptions GetViewOptions(IUpdateModel updater)
         {
             var routeData = updater.RouteData;
@@ -286,6 +285,7 @@ namespace Plato.Discuss.ViewProviders
             topic.DailyViews = topic.TotalViews.ToSafeDevision(DateTimeOffset.Now.DayDifference(topic.CreatedDate));
 
             await _entityStore.UpdateAsync(topic);
+
         }
 
         #endregion

@@ -19,7 +19,6 @@ using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Services;
 

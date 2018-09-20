@@ -92,7 +92,7 @@ namespace Plato.Discuss.Controllers
               
             });
             
-            await CreateSampleData();
+            //await CreateSampleData();
 
             //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
             //this.RouteData.Values.Add("Options.Order", filterOptions.Order);

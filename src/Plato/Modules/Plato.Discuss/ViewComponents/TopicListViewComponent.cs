@@ -48,9 +48,7 @@ namespace Plato.Discuss.ViewComponents
 
             return View(model);
         }
-
-
-
+        
         async Task<TopicIndexViewModel> GetIndexViewModel(
             ViewOptions viewOptions,
             PagerOptions pagerOptions)
@@ -66,11 +64,8 @@ namespace Plato.Discuss.ViewComponents
             ViewOptions viewOpts,
             PagerOptions pagerOptions)
         {
-
-            // Explictly get Plato.Discuss feature, this view component can be 
-            // used in different areas (i.e. Plat.Discuss.Channels) s dn't get by area name
+            
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
-
             return await _entityStore.QueryAsync()
                 .Take(pagerOptions.Page, pagerOptions.PageSize)
                 .Select<EntityQueryParams>(q =>

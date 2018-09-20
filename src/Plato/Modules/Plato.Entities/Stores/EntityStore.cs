@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -45,6 +46,12 @@ namespace Plato.Entities.Stores
 
         public async Task<TModel> CreateAsync(TModel model)
         {
+
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
             // transform meta data
             model.Data = await SerializeMetaDataAsync(model);
 
@@ -57,9 +64,8 @@ namespace Plato.Entities.Stores
                         newEntity.Id);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(typeof(EntityDataStore));
-                newEntity = await GetByIdAsync(newEntity.Id);
+                ClearCache();
+                //newEntity = await GetByIdAsync(newEntity.Id);
             }
 
             return newEntity;
@@ -67,6 +73,12 @@ namespace Plato.Entities.Stores
 
         public async Task<TModel> UpdateAsync(TModel model)
         {
+
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
             // transform meta data
             model.Data = await SerializeMetaDataAsync(model);
 
@@ -79,8 +91,8 @@ namespace Plato.Entities.Stores
                         updatedEntity.Id);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(typeof(EntityDataStore));
+                ClearCache();
+
             }
 
             return updatedEntity;
@@ -89,6 +101,12 @@ namespace Plato.Entities.Stores
 
         public async Task<bool> DeleteAsync(TModel model)
         {
+
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
             var success = await _entityRepository.DeleteAsync(model.Id);
             if (success)
             {
@@ -97,14 +115,22 @@ namespace Plato.Entities.Stores
                     _logger.LogInformation("Deleted entity with id {1}", model.Id);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
+                ClearCache();
+
             }
 
             return success;
+
         }
 
         public async Task<TModel> GetByIdAsync(int id)
         {
+
+            if (id <= 0)
+            {
+                throw new InvalidEnumArgumentException(nameof(id));
+            }
+
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
@@ -150,7 +176,7 @@ namespace Plato.Entities.Stores
 
             // Get all existing entity data
             var data = await _entityDataStore.GetByEntityIdAsync(entity.Id);
-
+            
             // Prepare list to search, use dummy list if needed
             var dataList = data?.ToList() ?? new List<IEntityData>();
 
@@ -163,7 +189,7 @@ namespace Plato.Entities.Stores
                 var entityData = dataList.FirstOrDefault(d => d.Key == key);
                 if (entityData != null)
                 {
-                    entityData.Value = item.Value.Serialize();
+                    entityData.Value = await item.Value.SerializeAsync();
                 }
                 else
                 {
@@ -252,6 +278,27 @@ namespace Plato.Entities.Stores
         async Task<Type> GetModuleTypeCandidateAsync(string typeName)
         {
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
+        }
+
+        void ClearCache()
+        {
+
+            // Clear cache for current type, EntityStore<Entity>,
+            // EntityStore<Topic>, EntityStore<Article> etc
+            _cacheManager.CancelTokens(this.GetType());
+
+            // If we instantiate the EntityStore via a derived type
+            // of IEntity i.e. EntityStore<SomeEntity> ensures we clear
+            // the cache for the base entity store. We don't want our
+            // base entity cache polluting our derived type cache
+            if (this.GetType() != typeof(EntityStore<Entity>))
+            {
+                _cacheManager.CancelTokens(typeof(EntityStore<Entity>));
+            }
+            
+            // Clear entity data
+            _cacheManager.CancelTokens(typeof(EntityDataStore));
+
         }
 
         #endregion

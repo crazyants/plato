@@ -289,6 +289,7 @@ namespace Plato.Entities.Repositories
                     foreach (var item in data)
                     {
                         item.EntityId = entityId;
+                        item.ModifiedDate = DateTimeOffset.UtcNow;
                         await _entityDataRepository.InsertUpdateAsync(item);
                     }
                 }
