@@ -59,9 +59,7 @@ namespace Plato.Categories.Stores
                         newCategory.Id);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ByFeatureId, newCategory.FeatureId);
-                _cacheManager.CancelTokens(typeof(CategoryDataStore));
+                CancelTokens(newCategory);
 
             }
 
@@ -84,10 +82,7 @@ namespace Plato.Categories.Stores
                         updatedCategory.Id);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ById, updatedCategory.Id);
-                _cacheManager.CancelTokens(this.GetType(), ByFeatureId, updatedCategory.FeatureId);
-                _cacheManager.CancelTokens(typeof(CategoryDataStore));
+                CancelTokens(updatedCategory);
 
             }
 
@@ -107,10 +102,8 @@ namespace Plato.Categories.Stores
                         model.Name, model.Id);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
-                _cacheManager.CancelTokens(this.GetType(), ById, model.Id);
-                _cacheManager.CancelTokens(this.GetType(), ByFeatureId, model.FeatureId);
-                _cacheManager.CancelTokens(typeof(CategoryDataStore));
+                CancelTokens(model);
+
             }
 
             return success;
@@ -235,8 +228,7 @@ namespace Plato.Categories.Stores
             return RecurseChildren(categories.ToList(), category.Id);
 
         }
-
-     
+        
         #endregion
 
         #region "Private Methods"
@@ -443,6 +435,30 @@ namespace Plato.Categories.Stores
             }
 
             return output;
+
+        }
+
+        void CancelTokens(TCategory model)
+        {
+
+            // Clear current type
+            _cacheManager.CancelTokens(this.GetType());
+            _cacheManager.CancelTokens(this.GetType(), ById, model.Id);
+            _cacheManager.CancelTokens(this.GetType(), ByFeatureId, model.FeatureId);
+            
+            // If we instantiate the CategoryStore via a derived type
+            // of ICategory i.e. CategoryStore<SomeCategory> ensures we clear
+            // the cache for the base category store. We don't want our
+            // base category cache polluting our derived type cache
+            if (this.GetType() != typeof(CategoryStore<CategoryBase>))
+            {
+                _cacheManager.CancelTokens(typeof(CategoryStore<CategoryBase>));
+                _cacheManager.CancelTokens(typeof(CategoryStore<CategoryBase>), ById, model.Id);
+                _cacheManager.CancelTokens(typeof(CategoryStore<CategoryBase>), ByFeatureId, model.FeatureId);
+            }
+
+            // Clear category data
+            _cacheManager.CancelTokens(typeof(CategoryDataStore));
 
         }
 

@@ -3,10 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Navigation;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.ViewComponents
 {
@@ -21,15 +18,9 @@ namespace Plato.Discuss.ViewComponents
         }
 
         public Task<IViewComponentResult> InvokeAsync(
-            Topic topic,
-            bool enableEditOptions)
+            TopicListItemViewModel model)
         {
-            var model = new TopicListItemViewModel()
-            {
-                Topic = topic,
-                EnableEditOptions = enableEditOptions
-            };
-
+      
             return Task.FromResult((IViewComponentResult)View(model));
         }
      

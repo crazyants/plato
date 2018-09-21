@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Cache;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Modules.Abstractions;
@@ -16,20 +15,20 @@ using Plato.Internal.Modules.Abstractions;
 namespace Plato.Entities.Stores
 {
 
-    public class EntityStore<TModel> : IEntityStore<TModel> where TModel : class, IEntity
+    public class EntityStore<TEntitty> : IEntityStore<TEntitty> where TEntitty : class, IEntity
     {
 
         private readonly ICacheManager _cacheManager;
-        private readonly IEntityRepository<TModel> _entityRepository;
+        private readonly IEntityRepository<TEntitty> _entityRepository;
         private readonly IEntityDataStore<IEntityData> _entityDataStore;
-        private readonly ILogger<EntityStore<TModel>> _logger;
+        private readonly ILogger<EntityStore<TEntitty>> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ITypedModuleProvider _typedModuleProvider;
 
         public EntityStore(
             ITypedModuleProvider typedModuleProvider,
-            IEntityRepository<TModel> entityRepository,
-            ILogger<EntityStore<TModel>> logger,
+            IEntityRepository<TEntitty> entityRepository,
+            ILogger<EntityStore<TEntitty>> logger,
             IDbQueryConfiguration dbQuery,
             ICacheManager cacheManager,
             IEntityDataStore<IEntityData> entityDataStore)
@@ -41,10 +40,10 @@ namespace Plato.Entities.Stores
             _dbQuery = dbQuery;
             _logger = logger;
         }
-        
+
         #region "Implementation"
 
-        public async Task<TModel> CreateAsync(TModel model)
+        public async Task<TEntitty> CreateAsync(TEntitty model)
         {
 
             if (model == null)
@@ -52,7 +51,7 @@ namespace Plato.Entities.Stores
                 throw new ArgumentNullException(nameof(model));
             }
 
-            // transform meta data
+            // Transform meta data
             model.Data = await SerializeMetaDataAsync(model);
 
             var newEntity = await _entityRepository.InsertUpdateAsync(model);
@@ -64,14 +63,13 @@ namespace Plato.Entities.Stores
                         newEntity.Id);
                 }
 
-                ClearCache();
-                //newEntity = await GetByIdAsync(newEntity.Id);
+                CancelTokens(newEntity);
             }
 
             return newEntity;
         }
 
-        public async Task<TModel> UpdateAsync(TModel model)
+        public async Task<TEntitty> UpdateAsync(TEntitty model)
         {
 
             if (model == null)
@@ -79,7 +77,7 @@ namespace Plato.Entities.Stores
                 throw new ArgumentNullException(nameof(model));
             }
 
-            // transform meta data
+            // Transform meta data
             model.Data = await SerializeMetaDataAsync(model);
 
             var updatedEntity = await _entityRepository.InsertUpdateAsync(model);
@@ -91,7 +89,7 @@ namespace Plato.Entities.Stores
                         updatedEntity.Id);
                 }
 
-                ClearCache();
+                CancelTokens(updatedEntity);
 
             }
 
@@ -99,7 +97,7 @@ namespace Plato.Entities.Stores
 
         }
 
-        public async Task<bool> DeleteAsync(TModel model)
+        public async Task<bool> DeleteAsync(TEntitty model)
         {
 
             if (model == null)
@@ -115,7 +113,7 @@ namespace Plato.Entities.Stores
                     _logger.LogInformation("Deleted entity with id {1}", model.Id);
                 }
 
-                ClearCache();
+                CancelTokens(model);
 
             }
 
@@ -123,7 +121,7 @@ namespace Plato.Entities.Stores
 
         }
 
-        public async Task<TModel> GetByIdAsync(int id)
+        public async Task<TEntitty> GetByIdAsync(int id)
         {
 
             if (id <= 0)
@@ -137,15 +135,16 @@ namespace Plato.Entities.Stores
                 var entity = await _entityRepository.SelectByIdAsync(id);
                 return await MergeEntityData(entity);
             });
+
         }
 
-        public IQuery<TModel> QueryAsync()
+        public IQuery<TEntitty> QueryAsync()
         {
-            var query = new EntityQuery<TModel>(this);
-            return _dbQuery.ConfigureQuery<TModel>(query); ;
+            var query = new EntityQuery<TEntitty>(this);
+            return _dbQuery.ConfigureQuery<TEntitty>(query); ;
         }
 
-        public async Task<IPagedResults<TModel>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<TEntitty>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -171,12 +170,12 @@ namespace Plato.Entities.Stores
 
         #region "Private Methods"
 
-        async Task<IEnumerable<IEntityData>> SerializeMetaDataAsync(TModel entity)
+        async Task<IEnumerable<IEntityData>> SerializeMetaDataAsync(TEntitty entity)
         {
 
             // Get all existing entity data
             var data = await _entityDataStore.GetByEntityIdAsync(entity.Id);
-            
+
             // Prepare list to search, use dummy list if needed
             var dataList = data?.ToList() ?? new List<IEntityData>();
 
@@ -207,7 +206,7 @@ namespace Plato.Entities.Stores
 
         }
 
-        async Task<IList<TModel>> MergeEntityData(IList<TModel> entities)
+        async Task<IList<TEntitty>> MergeEntityData(IList<TEntitty> entities)
         {
 
             if (entities == null)
@@ -230,7 +229,7 @@ namespace Plato.Entities.Stores
 
         }
 
-        async Task<IList<TModel>> MergeEntityData(IList<TModel> entities, IList<IEntityData> data)
+        async Task<IList<TEntitty>> MergeEntityData(IList<TEntitty> entities, IList<IEntityData> data)
         {
 
             if (entities == null || data == null)
@@ -248,7 +247,7 @@ namespace Plato.Entities.Stores
 
         }
 
-        async Task<TModel> MergeEntityData(TModel entity)
+        async Task<TEntitty> MergeEntityData(TEntitty entity)
         {
 
             if (entity == null)
@@ -280,7 +279,7 @@ namespace Plato.Entities.Stores
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
 
-        void ClearCache()
+        void CancelTokens(TEntitty model)
         {
 
             // Clear cache for current type, EntityStore<Entity>,
@@ -295,7 +294,7 @@ namespace Plato.Entities.Stores
             {
                 _cacheManager.CancelTokens(typeof(EntityStore<Entity>));
             }
-            
+
             // Clear entity data
             _cacheManager.CancelTokens(typeof(EntityDataStore));
 
@@ -304,5 +303,5 @@ namespace Plato.Entities.Stores
         #endregion
 
     }
-    
+
 }

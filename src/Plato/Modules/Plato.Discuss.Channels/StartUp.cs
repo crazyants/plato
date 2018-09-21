@@ -73,6 +73,7 @@ namespace Plato.Discuss.Channels
        
             // Register view adaptors
             services.AddScoped<IViewAdaptorProvider, ModerationViewAdaptorProvider>();
+            services.AddScoped<IViewAdaptorProvider, TopicListItemViewAdaptor>();
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();

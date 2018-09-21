@@ -9,12 +9,12 @@
         @if (Model.Labels != null)
         {
             <div class="list-group list-group-flush list-group-hover">
-                @foreach (var channel in Model.Labels)
+                @foreach (var label in Model.Labels)
                 {
-                    var css = channel.Id == Model.SelectedLabelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
-                    <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@channel.Id" asp-route-alias="@channel.Alias" title="@channel.Description" class="@css">
-                        <span class="btn btn-sm" style="background-color: @channel.BackColor; color: @channel.ForeColor">
-                            @channel.Name
+                    var css = label.Id == Model.SelectedLabelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
+                    <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@label.Id" asp-route-alias="@label.Alias" title="@label.Description" class="@css">
+                        <span class="btn btn-sm font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                            @label.Name
                         </span>
                     </a>
                 }

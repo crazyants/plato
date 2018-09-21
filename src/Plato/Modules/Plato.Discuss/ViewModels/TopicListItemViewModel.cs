@@ -7,6 +7,8 @@ namespace Plato.Discuss.ViewModels
 
         public Topic Topic { get; set; }
 
+        public string  ChannelName { get; set; }
+
         public bool EnableEditOptions { get; set; }
     }
 }

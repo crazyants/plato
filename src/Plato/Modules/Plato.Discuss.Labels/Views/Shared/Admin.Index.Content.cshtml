@@ -10,7 +10,7 @@
             <ul class="list-group list-group-flush list-group-hover">
                 @foreach (var channel in Model.Labels)
                 {
-                    <li class="list-group-item">
+                    <li class="list-group-item list-group-item-action">
                         
                         <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
                             <i class="fal fa-pencil"></i>
@@ -19,7 +19,7 @@
                         
                         <div class="float-left">
                             <h6 class="d-md-inline align-middle">
-                                <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="p-1 font-weight-bold"  style="background-color: @channel.BackColor; color: @channel.ForeColor">
+                                <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="btn btn-sm font-weight-bold"  style="background-color: @channel.BackColor; color: @channel.ForeColor">
                                     @channel.Name
                                 </a>
                                 @if (!String.IsNullOrEmpty(channel.Description))

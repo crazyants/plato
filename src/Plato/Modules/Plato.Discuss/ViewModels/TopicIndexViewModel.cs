@@ -12,39 +12,39 @@ namespace Plato.Discuss.ViewModels
     public class TopicIndexViewModel
     {
         
-        private readonly IEnumerable<SortOption> _defaultSortColumns = new List<SortOption>()
+        private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
         {
-            new SortOption()
+            new SortColumn()
             {
                 Text = "Last Reply",
                 Value = SortBy.LastReply
             },
-            new SortOption()
+            new SortColumn()
             {
                 Text = "Replies",
                 Value =  SortBy.Replies
             },
-            new SortOption()
+            new SortColumn()
             {
                 Text = "Views",
                 Value = SortBy.Views
             },
-            new SortOption()
+            new SortColumn()
             {
                 Text = "Participants",
                 Value =  SortBy.Participants
             },
-            new SortOption()
+            new SortColumn()
             {
                 Text = "Reactions",
                 Value =  SortBy.Reactions
             },
-            new SortOption()
+            new SortColumn()
             {
                 Text = "Created",
                 Value = SortBy.Created
             },
-            new SortOption()
+            new SortColumn()
             {
                 Text = "Modified",
                 Value = SortBy.Modified
@@ -71,7 +71,7 @@ namespace Plato.Discuss.ViewModels
         
         public TopicIndexOptions Options { get; set; }
         
-        public IEnumerable<SortOption> SortColumns { get; set; }
+        public IEnumerable<SortColumn> SortColumns { get; set; }
 
         public IEnumerable<SortOrder> SortOrder { get; set; }
 
@@ -88,41 +88,10 @@ namespace Plato.Discuss.ViewModels
             this.Results = results;
             this.Options = options;
             this.Pager = pager;
-            this.SortColumns = SetSortSelection(_defaultSortColumns, options.Sort);
-            this.SortOrder = SetOrderSelection(_defaultSortOrder, options.Order);
+            this.SortColumns = _defaultSortColumns;
+            this.SortOrder = _defaultSortOrder;
             this.Pager.SetTotal(results?.Total ?? 0);
         }
-
-        IEnumerable<SortOption> SetSortSelection(IEnumerable<SortOption> options, SortBy value)
-        {
-            var output = new List<SortOption>();
-            foreach (var option in options)
-            {
-                if (option.Value == value)
-                {
-                    option.Selected = true;
-                }
-                output.Add(option);
-            }
-
-            return output;
-        }
-
-        IEnumerable<SortOrder> SetOrderSelection(IEnumerable<SortOrder> options, OrderBy value)
-        {
-            var output = new List<SortOrder>();
-            foreach (var option in options)
-            {
-                if (option.Value == value)
-                {
-                    option.Selected = true;
-                }
-                output.Add(option);
-            }
-
-            return output;
-        }
-
 
     }
 
@@ -137,8 +106,7 @@ namespace Plato.Discuss.ViewModels
         public int ChannelId { get; set; }
 
         public int LabelId { get; set; }
-
-
+        
         [DataMember(Name = "sort")]
         public SortBy Sort { get; set; } = SortBy.LastReply;
 
@@ -150,14 +118,12 @@ namespace Plato.Discuss.ViewModels
 
     }
 
-    public class SortOption
+    public class SortColumn
     {
         public string Text { get; set; }
 
         public SortBy Value { get; set; }
-
-        public bool Selected { get; set; }
-
+        
     }
 
     public class SortOrder
@@ -165,9 +131,7 @@ namespace Plato.Discuss.ViewModels
         public string Text { get; set; }
 
         public OrderBy Value { get; set; }
-
-        public bool Selected { get; set; }
-
+        
     }
 
 
