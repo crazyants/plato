@@ -1,36 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.ViewModels;
+using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Layout.ViewAdaptors;
-using Plato.Moderation.Models;
 
 namespace Plato.Discuss.Channels.ViewAdaptors
 {
-    
+
     public class TopicListItemViewAdaptor : BaseAdaptorProvider
     {
 
         private readonly ICategoryStore<Channel> _channelStore;
-
-        private IHtmlLocalizer T { get; }
+        private readonly IFeatureFacade _featureFacade;
 
         public TopicListItemViewAdaptor(
             ICategoryStore<Channel> channelStore,
-            IHtmlLocalizer htmlLocalizer)
+            IFeatureFacade featureFacade)
         {
             _channelStore = channelStore;
-            T = htmlLocalizer;
+            _featureFacade = featureFacade;
         }
 
         public override Task<IViewAdaptorResult> ConfigureAsync()
         {
 
+            var feature = _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels")
+                .GetAwaiter()
+                .GetResult();
+
+            if (feature == null)
+            {
+                // Return an anonymous type, we are adapting a view component
+                return Task.FromResult(default(IViewAdaptorResult));
+            }
+
+            // Get all categories
+            var channels = _channelStore.GetByFeatureIdAsync(feature.Id)
+                .GetAwaiter()
+                .GetResult();
+            
             // Plato.Discuss does not have a dependency on Plato.Discuss.Channels
             // Instead we update the topic item view here via our view adaptor
             // This way the channel name is only ever populated if the channels feature is enabled
@@ -39,38 +50,44 @@ namespace Plato.Discuss.Channels.ViewAdaptors
                 v.AdaptModel<TopicListItemViewModel>(model =>
                 {
 
-                    IEnumerable<Channel> parents = null;
-                    if (model.Topic.CategoryId > 0)
+                    if (model.Topic == null)
                     {
-                        parents = _channelStore.GetParentsByIdAsync(model.Topic.CategoryId)
-                            .GetAwaiter()
-                            .GetResult();
+                        // Return an anonymous type, we are adapting a view component
+                        return new
+                        {
+                            model = model
+                        };
                     }
 
-                    var sb = new StringBuilder();
-                    if (parents != null)
+                    // Ensure we have a category
+                    if (model.Topic.CategoryId <= 0)
                     {
-                        var i = 0;
-                        var parentList = parents.ToList();
-                        foreach (var parent in parentList)
+                        // Return an anonymous type, we are adapting a view component
+                        return new
                         {
-                            sb.Append(parent.Name);
-                            if (i < parentList.Count - 1)
-                            {
-                                sb.Append(" / ");
-                            }
-                            i += 1;
-                        }
-                        model.ChannelName = sb.ToString();
+                            model = model
+                        };
                     }
-                  
+
+                    Channel channel = null;
+                    if (channels != null)
+                    {
+                        channel = channels.FirstOrDefault(c => c.Id == model.Topic.CategoryId);
+                    }
+
+                    if (channel != null)
+                    {
+                        model.ChannelName = channel.Name;
+                    }
+                    
                     // Return an anonymous type, we are adapting a view component
                     return new
                     {
-                        moderator = model
+                        model = model
                     };
 
                 });
+
             });
 
         }

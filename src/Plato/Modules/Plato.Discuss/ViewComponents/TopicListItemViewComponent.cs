@@ -20,10 +20,8 @@ namespace Plato.Discuss.ViewComponents
         public Task<IViewComponentResult> InvokeAsync(
             TopicListItemViewModel model)
         {
-      
             return Task.FromResult((IViewComponentResult)View(model));
         }
-     
 
     }
 

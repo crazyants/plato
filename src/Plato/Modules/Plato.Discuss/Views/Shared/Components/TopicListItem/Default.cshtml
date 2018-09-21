@@ -31,7 +31,6 @@
             </a>
         </div>
 
-
     }
     
     <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-id="@Model.Topic.Id" asp-route-alias="@Model.Topic.Alias" class="font-weight-bold">
@@ -56,9 +55,15 @@
         @T["By"]
         <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.CreatedUserId" asp-route-alias="@Model.Topic.CreatedBy.Alias">@Model.Topic.CreatedBy.DisplayName</a>,
         <date utc="@Model.Topic.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
-        
 
-        In @Model.ChannelName
+        @if (!String.IsNullOrEmpty(@Model.ChannelName))
+        {
+            <span>-</span>
+            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Topic.CategoryId">
+                @Model.ChannelName
+            </a>
+        }
+        
     </div>
 
 </div>
