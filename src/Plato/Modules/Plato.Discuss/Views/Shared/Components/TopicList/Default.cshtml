@@ -52,7 +52,10 @@
                     <li class="list-group-item  list-group-item-action pt-4">
                         @await DisplayAsync(new View("TopicListItem", new
                         {
-                            Topic = topic
+                            model = new TopicListItemViewModel()
+                            {
+                                Topic = topic
+                            } 
                         }))
                     </li>
 
