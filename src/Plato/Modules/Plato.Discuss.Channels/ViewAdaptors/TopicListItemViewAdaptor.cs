@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.ViewModels;
@@ -24,28 +23,30 @@ namespace Plato.Discuss.Channels.ViewAdaptors
             _featureFacade = featureFacade;
         }
 
-        public override Task<IViewAdaptorResult> ConfigureAsync()
+        public override async Task<IViewAdaptorResult> ConfigureAsync()
         {
 
-            var feature = _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels")
-                .GetAwaiter()
-                .GetResult();
-
+            // Get feature
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
             if (feature == null)
             {
-                // Return an anonymous type, we are adapting a view component
-                return Task.FromResult(default(IViewAdaptorResult));
+                // Feature not found
+                return default(IViewAdaptorResult);
             }
 
-            // Get all categories
-            var channels = _channelStore.GetByFeatureIdAsync(feature.Id)
-                .GetAwaiter()
-                .GetResult();
+            // Get all categories for feature
+            var channels = await _channelStore.GetByFeatureIdAsync(feature.Id);
+            if (channels == null)
+            {
+                // No categories available to adapt the view 
+                return default(IViewAdaptorResult);
+            }
             
             // Plato.Discuss does not have a dependency on Plato.Discuss.Channels
-            // Instead we update the topic item view here via our view adaptor
-            // This way the channel name is only ever populated if the channels feature is enabled
-            return Adapt("TopicListItem", v =>
+            // Instead we update the model for the topic item view component
+            // here via our view adaptor to include the channel information
+            // This way the channel data is only ever populated if the channels feature is enabled
+            return await Adapt("TopicListItem", v =>
             {
                 v.AdaptModel<TopicListItemViewModel>(model =>
                 {
@@ -69,15 +70,11 @@ namespace Plato.Discuss.Channels.ViewAdaptors
                         };
                     }
 
-                    Channel channel = null;
-                    if (channels != null)
-                    {
-                        channel = channels.FirstOrDefault(c => c.Id == model.Topic.CategoryId);
-                    }
-
+                    // Get our channel
+                    var channel = channels.FirstOrDefault(c => c.Id == model.Topic.CategoryId);
                     if (channel != null)
                     {
-                        model.ChannelName = channel.Name;
+                        model.Channel = channel;
                     }
                     
                     // Return an anonymous type, we are adapting a view component
@@ -87,7 +84,6 @@ namespace Plato.Discuss.Channels.ViewAdaptors
                     };
 
                 });
-
             });
 
         }

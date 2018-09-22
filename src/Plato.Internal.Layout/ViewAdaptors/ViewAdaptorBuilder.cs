@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -75,13 +74,14 @@ namespace Plato.Internal.Layout.ViewAdaptors
             {
                 throw new NullReferenceException(nameof(alteration));
             }
-
-        
+            
             // wrapper to convert delegates generic argument type
             // to concrete type (object) for storage within adaptor result
             var typedDelegate = new Func<object, object>((object input) =>
             {
+
                 // use first argument from anonymous type as mdoel
+                // todo: implement support for mulitple arguments within anonymous types
                 if (IsViewModelAnonymousType(input))
                 {
                     var args = new List<object>();
@@ -100,9 +100,7 @@ namespace Plato.Internal.Layout.ViewAdaptors
             _viewAdaptorResult.ModelAlterations.Add(typedDelegate);
             return this;
         }
-
-
-
+        
         bool IsViewModelAnonymousType(object model)
         {
 

@@ -68,7 +68,7 @@ namespace Plato.Discuss.Controllers
     
         public async Task<IActionResult> Index(
             TopicIndexOptions opts,
-            PagerOptions pagerOptions)
+            PagerOptions pager)
         {
             
             // default options
@@ -78,9 +78,9 @@ namespace Plato.Discuss.Controllers
             }
 
             // default pager
-            if (pagerOptions == null)
+            if (pager == null)
             {
-                pagerOptions = new PagerOptions();
+                pager = new PagerOptions();
             }
             
             // Build breadcrumb

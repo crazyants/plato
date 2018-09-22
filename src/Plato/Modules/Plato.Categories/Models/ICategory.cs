@@ -1,31 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Models;
 
 namespace Plato.Categories.Models
 {
-    public interface ICategory
+    public interface ICategory : ILabelBase
     {
-
-        int Id { get; set; }
-
+        
         int ParentId { get; set; }
 
         int FeatureId { get; set; }
-
-        string Name { get; set; }
-
-        string Description { get; set; }
-
-        string Alias { get; set; }
-
-        string IconCss { get; set; }
-
-        string ForeColor { get; set; }
-
-        string BackColor { get; set; }
 
         int SortOrder { get; set; }
         

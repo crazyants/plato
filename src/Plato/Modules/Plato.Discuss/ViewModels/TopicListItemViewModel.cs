@@ -1,4 +1,5 @@
 ﻿using Plato.Discuss.Models;
+using Plato.Internal.Models;
 
 namespace Plato.Discuss.ViewModels
 {
@@ -7,8 +8,9 @@ namespace Plato.Discuss.ViewModels
 
         public Topic Topic { get; set; }
 
-        public string  ChannelName { get; set; }
+        public ILabelBase Channel { get; set; }
 
-        public bool EnableEditOptions { get; set; }
+        public ILabelBase Label { get; set; }
+       
     }
 }

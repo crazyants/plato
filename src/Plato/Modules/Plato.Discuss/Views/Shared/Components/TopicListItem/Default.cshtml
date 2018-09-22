@@ -55,12 +55,11 @@
         @T["By"]
         <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.CreatedUserId" asp-route-alias="@Model.Topic.CreatedBy.Alias">@Model.Topic.CreatedBy.DisplayName</a>,
         <date utc="@Model.Topic.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
-
-        @if (!String.IsNullOrEmpty(@Model.ChannelName))
+        @if (@Model.Channel != null)
         {
-            <span>-</span>
-            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Topic.CategoryId">
-                @Model.ChannelName
+            <span>@T["in"]</span>
+            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias">
+                @Model.Channel.Name
             </a>
         }
         

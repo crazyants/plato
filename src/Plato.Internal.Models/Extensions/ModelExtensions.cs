@@ -10,6 +10,5 @@ namespace Plato.Internal.Models.Extensions
             return JsonConvert.SerializeObject(model);
         }
 
-
     }
 }

@@ -2,31 +2,18 @@
 using System.Collections.Generic;
 using System.Data;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Models;
 
 namespace Plato.Labels.Models
 {
 
-    public interface ILabel
+    public interface ILabel : ILabelBase
     {
-
-        int Id { get; set; }
 
         int ParentId { get; set; }
 
         int FeatureId { get; set; }
-
-        string Name { get; set; }
-
-        string Description { get; set; }
-
-        string Alias { get; set; }
-
-        string IconCss { get; set; }
-
-        string ForeColor { get; set; }
-
-        string BackColor { get; set; }
-
+        
         int SortOrder { get; set; }
 
         int CreatedUserId { get; set; }

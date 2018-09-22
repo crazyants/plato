@@ -279,6 +279,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                         await _entityCategoryStore.DeleteByEntityIdAndCategoryId(topic.Id, channelId);
                     }
                     
+                    // Get current user
                     var user = await _contextFacade.GetAuthenticatedUserAsync();
 
                     // Add new entity category relationship
@@ -293,18 +294,18 @@ namespace Plato.Discuss.Channels.ViewProviders
                         });
                     }
 
-                    //// Update primary category
-                    //foreach (var channelId in channelsToAdd)
-                    //{
-                    //    if (channelId > 0)
-                    //    {
-                    //        topic.CategoryId = channelId;
-                    //        await _topicManager.UpdateAsync(topic);
-                    //        break;
-                    //    }
-                      
-                    //}
-                    
+                    // Update primary category
+                    foreach (var channelId in channelsToAdd)
+                    {
+                        if (channelId > 0)
+                        {
+                            topic.CategoryId = channelId;
+                            await _topicManager.UpdateAsync(topic);
+                            break;
+                        }
+
+                    }
+
                 }
 
             }
