@@ -153,6 +153,7 @@ namespace Plato.Categories.Models
                 return 1;
             return 0;
         }
+
     }
 
 }

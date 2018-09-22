@@ -1,4 +1,5 @@
-﻿using Plato.Discuss.Models;
+﻿using System.Collections.Generic;
+using Plato.Discuss.Models;
 using Plato.Internal.Models;
 
 namespace Plato.Discuss.ViewModels
@@ -10,7 +11,7 @@ namespace Plato.Discuss.ViewModels
 
         public ILabelBase Channel { get; set; }
 
-        public ILabelBase Label { get; set; }
+        public IEnumerable<ILabelBase> Labels { get; set; }
        
     }
 }

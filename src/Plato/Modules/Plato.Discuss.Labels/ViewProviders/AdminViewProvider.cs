@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Plato.Categories.Models;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Internal.Features.Abstractions;
@@ -59,15 +58,11 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override Task<IViewProviderResult> BuildEditAsync(LabelBase label, IUpdateModel updater)
         {
 
-            var defaultIcons = new DefaultIcons();
-
             EditLabelViewModel editLabelViewModel = null;
             if (label.Id == 0)
             {
                 editLabelViewModel = new EditLabelViewModel()
                 {
-                    IconPrefix = defaultIcons.Prefix,
-                    ChannelIcons = defaultIcons,
                     IsNewLabel = true
                 };
             }
@@ -79,10 +74,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                     Name = label.Name,
                     Description = label.Description,
                     ForeColor = label.ForeColor,
-                    BackColor = label.BackColor,
-                    IconCss = label.IconCss,
-                    IconPrefix = defaultIcons.Prefix,
-                    ChannelIcons = defaultIcons
+                    BackColor = label.BackColor
                 };
             }
             
@@ -111,13 +103,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-
-                var iconCss = model.IconCss;
-                if (!string.IsNullOrEmpty(iconCss))
-                {
-                    iconCss = model.IconPrefix + iconCss;
-                }
-
+                
                 var result = await _labelManager.UpdateAsync(new Label()
                 {
                     Id = label.Id,
@@ -125,8 +111,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                     Name = model.Name,
                     Description = model.Description,
                     ForeColor = model.ForeColor,
-                    BackColor = model.BackColor,
-                    IconCss = iconCss
+                    BackColor = model.BackColor
                 });
 
                 foreach (var error in result.Errors)

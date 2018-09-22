@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Plato.Categories.Models;
 
 namespace Plato.Discuss.Labels.ViewModels
 {
@@ -22,16 +21,8 @@ namespace Plato.Discuss.Labels.ViewModels
 
         [StringLength(50)]
         public string BackColor { get; set; }
-        
-        public string IconPrefix { get; set; }
-
-        [StringLength(255)]
-        public string IconCss { get; set; }
-        
-        public DefaultIcons ChannelIcons { get; set; }
-
+  
         public bool IsNewLabel { get; set; }
-
-
+        
     }
 }

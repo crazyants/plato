@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
-using Plato.Categories.Models;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Internal.Features.Abstractions;
@@ -109,21 +108,14 @@ namespace Plato.Discuss.Labels.Controllers
             {
                 return View(viewModel);
             }
-
-            var iconCss = viewModel.IconCss;
-            if (!string.IsNullOrEmpty(iconCss))
-            {
-                iconCss = viewModel.IconPrefix + iconCss;
-            }
-
+            
             var category =  new Label()
             {
                 FeatureId = await GetFeatureIdAsync(),
                 Name = viewModel.Name,
                 Description = viewModel.Description,
                 ForeColor = viewModel.ForeColor,
-                BackColor = viewModel.BackColor,
-                IconCss = iconCss
+                BackColor = viewModel.BackColor
             };
 
             var result = await _labelManager.CreateAsync(category);
