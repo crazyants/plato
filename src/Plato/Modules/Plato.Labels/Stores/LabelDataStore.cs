@@ -14,20 +14,20 @@ namespace Plato.Labels.Stores
     {
 
         private readonly ICacheManager _cacheManager;
-        private readonly ILabelDataRepository<LabelData> _LabelDataRepository;
+        private readonly ILabelDataRepository<LabelData> _labelDataRepository;
         private readonly ILogger<LabelDataStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ITypedModuleProvider _typedModuleProvider;
         
         public LabelDataStore(
             ICacheManager cacheManager,
-            ILabelDataRepository<LabelData> LabelDataRepository, 
+            ILabelDataRepository<LabelData> labelDataRepository, 
             ILogger<LabelDataStore> logger,
             IDbQueryConfiguration dbQuery,
             ITypedModuleProvider typedModuleProvider)
         {
             _cacheManager = cacheManager;
-            _LabelDataRepository = LabelDataRepository;
+            _labelDataRepository = labelDataRepository;
             _logger = logger;
             _dbQuery = dbQuery;
             _typedModuleProvider = typedModuleProvider;
@@ -35,7 +35,7 @@ namespace Plato.Labels.Stores
         
         public async Task<LabelData> CreateAsync(LabelData model)
         {
-            var result =  await _LabelDataRepository.InsertUpdateAsync(model);
+            var result =  await _labelDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -46,7 +46,7 @@ namespace Plato.Labels.Stores
 
         public async Task<LabelData> UpdateAsync(LabelData model)
         {
-            var result = await _LabelDataRepository.InsertUpdateAsync(model);
+            var result = await _labelDataRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -57,7 +57,7 @@ namespace Plato.Labels.Stores
 
         public async Task<bool> DeleteAsync(LabelData model)
         {
-            var success = await _LabelDataRepository.DeleteAsync(model.Id);
+            var success = await _labelDataRepository.DeleteAsync(model.Id);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -75,7 +75,7 @@ namespace Plato.Labels.Stores
         public async Task<LabelData> GetByIdAsync(int id)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _LabelDataRepository.SelectByIdAsync(id));
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _labelDataRepository.SelectByIdAsync(id));
         }
 
         public IQuery<LabelData> QueryAsync()
@@ -87,13 +87,13 @@ namespace Plato.Labels.Stores
         public async Task<IPagedResults<LabelData>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _LabelDataRepository.SelectAsync(args));
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _labelDataRepository.SelectAsync(args));
         }
 
         public async Task<IEnumerable<LabelData>> GetByLabelIdAsync(int entityId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), entityId);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _LabelDataRepository.SelectByLabelIdAsync(entityId));
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _labelDataRepository.SelectByLabelIdAsync(entityId));
         }
 
     }

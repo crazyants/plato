@@ -1,12 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Discuss.Models;
+using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
-using Plato.Entities.Stores;
-using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.ViewComponents
@@ -14,18 +9,13 @@ namespace Plato.Discuss.ViewComponents
     public class TopicListViewComponent : ViewComponent
     {
 
-        private readonly IContextFacade _contextFacade;
-        private readonly IEntityStore<Topic> _entityStore;
-        private readonly IFeatureFacade _featureFacade;
+  
+        private readonly ITopicService _topicService;
 
         public TopicListViewComponent(
-            IContextFacade contextFacade, 
-            IEntityStore<Topic> entityStore, 
-            IFeatureFacade featureFacade)
+            ITopicService topicService)
         {
-            _contextFacade = contextFacade;
-            _entityStore = entityStore;
-            _featureFacade = featureFacade;
+            _topicService = topicService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -53,54 +43,12 @@ namespace Plato.Discuss.ViewComponents
             TopicIndexOptions options,
             PagerOptions pager)
         {
-            var topics = await GetEntities(options, pager);
+            var topics = await _topicService.Get(options, pager);
             return new TopicIndexViewModel(
                 topics,
                 options,
                 pager);
         }
-        
-        async Task<IPagedResults<Topic>> GetEntities(
-            TopicIndexOptions topicIndexOpts,
-            PagerOptions pagerOptions)
-        {
-            
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
-            return await _entityStore.QueryAsync()
-                .Take(pagerOptions.Page, pagerOptions.PageSize)
-                .Select<EntityQueryParams>(q =>
-                {
-                    
-                    if (feature != null)
-                    {
-                        q.FeatureId.Equals(feature.Id);
-                    }
-
-                    if (topicIndexOpts.ChannelId > 0)
-                    {
-                        q.CategoryId.Equals(topicIndexOpts.ChannelId);
-                    }
-                    
-                    q.HideSpam.True();
-                    q.HidePrivate.True();
-                    q.HideDeleted.True();
-
-                    //q.IsPinned.True();
-
-
-                    //if (!string.IsNullOrEmpty(filterOptions.Search))
-                    //{
-                    //    q.UserName.IsIn(filterOptions.Search).Or();
-                    //    q.Email.IsIn(filterOptions.Search);
-                    //}
-                    // q.UserName.IsIn("Admin,Mark").Or();
-                    // q.Email.IsIn("email440@address.com,email420@address.com");
-                    // q.Id.Between(1, 5);
-                })
-                .OrderBy(topicIndexOpts.Sort.ToString(), topicIndexOpts.Order)
-                .ToList();
-        }
-        
 
     }
 

@@ -63,6 +63,16 @@
             </a>
         }
         
-    </div>
+        @if (Model.Labels != null)
+        {
+            foreach (var label in Model.Labels)
+            {
+                <span class="btn btn-sm font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                    @label.Name
+                </span>
+            }
+        }
+
+</div>
 
 </div>

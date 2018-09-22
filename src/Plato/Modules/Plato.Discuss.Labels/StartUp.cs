@@ -13,7 +13,9 @@ using Plato.Labels.Stores;
 using Plato.Discuss.Models;
 using Plato.Discuss.Labels.Navigation;
 using Plato.Discuss.Labels.Models;
+using Plato.Discuss.Labels.ViewAdaptors;
 using Plato.Discuss.Labels.ViewProviders;
+using Plato.Internal.Layout.ViewAdaptors;
 
 namespace Plato.Discuss.Labels
 {
@@ -44,14 +46,14 @@ namespace Plato.Discuss.Labels
             // Admin view providers
             services.AddScoped<IViewProviderManager<LabelBase>, ViewProviderManager<LabelBase>>();
             services.AddScoped<IViewProvider<LabelBase>, AdminViewProvider>();
+       
+            // Register view adaptors
+            services.AddScoped<IViewAdaptorProvider, TopicListItemViewAdaptor>();
 
             // Labels view providers
             services.AddScoped<IViewProviderManager<Label>, ViewProviderManager<Label>>();
             services.AddScoped<IViewProvider<Label>, LabelsViewProvider>();
             
-            //// Register view adaptors
-            //services.AddScoped<IViewAdaptorProvider, DiscussViewAdaptorProvider>();
-
         }
 
         public override void Configure(

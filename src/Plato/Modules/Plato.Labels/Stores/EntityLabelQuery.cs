@@ -61,6 +61,7 @@ namespace Plato.Labels.Stores
 
 
         private WhereInt _id;
+        private WhereInt _entityId;
         private WhereString _keywords;
 
 
@@ -70,13 +71,18 @@ namespace Plato.Labels.Stores
             set => _id = value;
         }
 
+        public WhereInt EntityId
+        {
+            get => _entityId ?? (_entityId = new WhereInt());
+            set => _entityId = value;
+        }
+        
         public WhereString Keywords
         {
             get => _keywords ?? (_keywords = new WhereString());
             set => _keywords = value;
         }
-
-
+        
     }
 
     #endregion

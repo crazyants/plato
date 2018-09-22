@@ -17,8 +17,8 @@ namespace Plato.Labels.Stores
     public class LabelStore<TLabel> : ILabelStore<TLabel> where TLabel : class, ILabel
     {
 
-        private readonly ILabelRepository<TLabel> _LabelRepository;
-        private readonly ILabelDataStore<LabelData> _LabelDataStore;
+        private readonly ILabelRepository<TLabel> _labelRepository;
+        private readonly ILabelDataStore<LabelData> _labelDataStore;
         private readonly ITypedModuleProvider _typedModuleProvider;
         private readonly ILogger<LabelStore<TLabel>> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
@@ -32,11 +32,11 @@ namespace Plato.Labels.Stores
             ILabelDataStore<LabelData> labelDataStore,
             ITypedModuleProvider typedModuleProvider)
         {
-            _LabelRepository = labelRepository;
+            _labelRepository = labelRepository;
             _cacheManager = cacheManager;
             _logger = logger;
             _dbQuery = dbQuery;
-            _LabelDataStore = labelDataStore;
+            _labelDataStore = labelDataStore;
             _typedModuleProvider = typedModuleProvider;
         }
 
@@ -48,7 +48,7 @@ namespace Plato.Labels.Stores
             // transform meta data
             model.Data = await SerializeMetaDataAsync(model);
 
-            var newLabel = await _LabelRepository.InsertUpdateAsync(model);
+            var newLabel = await _labelRepository.InsertUpdateAsync(model);
             if (newLabel != null)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -57,7 +57,7 @@ namespace Plato.Labels.Stores
                         newLabel.Id);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
+                CancelTokens(newLabel);
             }
 
             return newLabel;
@@ -70,7 +70,7 @@ namespace Plato.Labels.Stores
             // transform meta data
             model.Data = await SerializeMetaDataAsync(model);
 
-            var updatedLabel = await _LabelRepository.InsertUpdateAsync(model);
+            var updatedLabel = await _labelRepository.InsertUpdateAsync(model);
             if (updatedLabel != null)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -79,8 +79,7 @@ namespace Plato.Labels.Stores
                         updatedLabel.Id);
                 }
 
-                _cacheManager.CancelTokens(this.GetType());
-
+                CancelTokens(updatedLabel);
             }
 
             return updatedLabel;
@@ -90,7 +89,7 @@ namespace Plato.Labels.Stores
         public async Task<bool> DeleteAsync(TLabel model)
         {
 
-            var success = await _LabelRepository.DeleteAsync(model.Id);
+            var success = await _labelRepository.DeleteAsync(model.Id);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -98,7 +97,9 @@ namespace Plato.Labels.Stores
                     _logger.LogInformation("Deleted Label '{0}' with id {1}",
                         model.Name, model.Id);
                 }
-                _cacheManager.CancelTokens(this.GetType());
+
+                CancelTokens(model);
+
             }
 
             return success;
@@ -110,7 +111,7 @@ namespace Plato.Labels.Stores
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
-                var label = await _LabelRepository.SelectByIdAsync(id);
+                var label = await _labelRepository.SelectByIdAsync(id);
                 return await MergeLabelData(label);
             });
         }
@@ -133,7 +134,7 @@ namespace Plato.Labels.Stores
                         token.ToString(), args.Select(a => a));
                 }
 
-                var results = await _LabelRepository.SelectAsync(args);
+                var results = await _labelRepository.SelectAsync(args);
                 if (results != null)
                 {
                     results.Data = await MergeLabelData(results.Data);
@@ -156,7 +157,7 @@ namespace Plato.Labels.Stores
                         featureId);
                 }
 
-                var results = await _LabelRepository.SelectByFeatureIdAsync(featureId);
+                var results = await _labelRepository.SelectByFeatureIdAsync(featureId);
                 if (results != null)
                 {
                     results = await MergeLabelData(results.ToList());
@@ -174,8 +175,8 @@ namespace Plato.Labels.Stores
         async Task<IEnumerable<LabelData>> SerializeMetaDataAsync(TLabel Label)
         {
 
-            // Get all existing entity data
-            var data = await _LabelDataStore.GetByLabelIdAsync(Label.Id);
+            // Get all existing label data
+            var data = await _labelDataStore.GetByLabelIdAsync(Label.Id);
 
             // Prepare list to search, use dummy list if needed
             var dataList = data?.ToList() ?? new List<LabelData>();
@@ -207,71 +208,71 @@ namespace Plato.Labels.Stores
 
         }
 
-        async Task<IList<TLabel>> MergeLabelData(IList<TLabel> categories)
+        async Task<IList<TLabel>> MergeLabelData(IList<TLabel> labels)
         {
 
-            if (categories == null)
+            if (labels == null)
             {
                 return null;
             }
 
-            // Get all entity data matching supplied entity ids
-            var results = await _LabelDataStore.QueryAsync()
-                .Select<LabelDataQueryParams>(q => { q.LabelId.IsIn(categories.Select(e => e.Id).ToArray()); })
+            // Get all label data matching supplied label ids
+            var results = await _labelDataStore.QueryAsync()
+                .Select<LabelDataQueryParams>(q => { q.LabelId.IsIn(labels.Select(e => e.Id).ToArray()); })
                 .ToList();
 
             if (results == null)
             {
-                return categories;
+                return labels;
             }
 
             // Merge data into entities
-            return await MergeLabelData(categories, results.Data);
+            return await MergeLabelData(labels, results.Data);
 
         }
 
-        async Task<IList<TLabel>> MergeLabelData(IList<TLabel> categories, IList<LabelData> data)
+        async Task<IList<TLabel>> MergeLabelData(IList<TLabel> labels, IList<LabelData> data)
         {
 
-            if (categories == null || data == null)
+            if (labels == null || data == null)
             {
-                return categories;
+                return labels;
             }
 
-            for (var i = 0; i < categories.Count; i++)
+            for (var i = 0; i < labels.Count; i++)
             {
-                categories[i].Data = data.Where(d => d.LabelId == categories[i].Id).ToList();
-                categories[i] = await MergeLabelData(categories[i]);
+                labels[i].Data = data.Where(d => d.LabelId == labels[i].Id).ToList();
+                labels[i] = await MergeLabelData(labels[i]);
             }
 
-            return categories;
+            return labels;
 
         }
 
-        async Task<TLabel> MergeLabelData(TLabel Label)
+        async Task<TLabel> MergeLabelData(TLabel label)
         {
 
-            if (Label == null)
+            if (label == null)
             {
                 return null;
             }
 
-            if (Label.Data == null)
+            if (label.Data == null)
             {
-                return Label;
+                return label;
             }
 
-            foreach (var data in Label.Data)
+            foreach (var data in label.Data)
             {
                 var type = await GetModuleTypeCandidateAsync(data.Key);
                 if (type != null)
                 {
                     var obj = JsonConvert.DeserializeObject(data.Value, type);
-                    Label.AddOrUpdate(type, (ISerializable)obj);
+                    label.AddOrUpdate(type, (ISerializable)obj);
                 }
             }
 
-            return Label;
+            return label;
 
         }
 
@@ -280,276 +281,26 @@ namespace Plato.Labels.Stores
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
 
+        void CancelTokens(TLabel label)
+        {
+
+            // Clear generic type
+            _cacheManager.CancelTokens(this.GetType());
+
+            // Clear base type
+            if (this.GetType() != typeof(LabelStore<LabelBase>))
+            {
+                _cacheManager.CancelTokens(typeof(LabelStore<LabelBase>));
+            }
+
+            // Clear label data
+            _cacheManager.CancelTokens(typeof(LabelDataStore));
+
+
+        }
+
         #endregion
 
     }
-
-    //public class LabelStore : ILabelStore<Label>
-    //{
-
-    //    private readonly ILabelRepository<Label> _LabelRepository;
-    //    private readonly ILabelDataStore<LabelData> _LabelDataStore;
-    //    private readonly ICacheManager _cacheManager;
-    //    private readonly ILogger<LabelStore> _logger;
-    //    private readonly IDbQueryConfiguration _dbQuery;
-    //    private readonly ITypedModuleProvider _typedModuleProvider;
-
-    //    public LabelStore(
-    //        ILabelRepository<Label> LabelRepository,
-    //        ICacheManager cacheManager,
-    //        ILogger<LabelStore> logger,
-    //        IDbQueryConfiguration dbQuery,
-    //        ILabelDataStore<LabelData> LabelDataStore, ITypedModuleProvider typedModuleProvider)
-    //    {
-    //        _LabelRepository = LabelRepository;
-    //        _cacheManager = cacheManager;
-    //        _logger = logger;
-    //        _dbQuery = dbQuery;
-    //        _LabelDataStore = LabelDataStore;
-    //        _typedModuleProvider = typedModuleProvider;
-    //    }
-
-    //    #region "Implementation"
-
-    //    public async Task<Label> CreateAsync(Label model)
-    //    {
-            
-    //        // transform meta data
-    //        model.Data = await SerializeMetaDataAsync(model);
-            
-    //        var newLabel = await _LabelRepository.InsertUpdateAsync(model);
-    //        if (newLabel != null)
-    //        {
-    //            if (_logger.IsEnabled(LogLevel.Information))
-    //            {
-    //                _logger.LogInformation("Added new Label with id {1}",
-    //                    newLabel.Id);
-    //            }
-
-    //            _cacheManager.CancelTokens(this.GetType());
-    //        }
-
-    //        return newLabel;
-
-    //    }
-
-    //    public async Task<Label> UpdateAsync(Label model)
-    //    {
-            
-    //        // transform meta data
-    //        model.Data = await SerializeMetaDataAsync(model);
-            
-    //        var updatedLabel = await _LabelRepository.InsertUpdateAsync(model);
-    //        if (updatedLabel != null)
-    //        {
-    //            if (_logger.IsEnabled(LogLevel.Information))
-    //            {
-    //                _logger.LogInformation("Updated existing entity with id {1}",
-    //                    updatedLabel.Id);
-    //            }
-
-    //            _cacheManager.CancelTokens(this.GetType());
-
-    //        }
-
-    //        return updatedLabel;
-
-    //    }
-
-    //    public async Task<bool> DeleteAsync(Label model)
-    //    {
-
-    //        var success = await _LabelRepository.DeleteAsync(model.Id);
-    //        if (success)
-    //        {
-    //            if (_logger.IsEnabled(LogLevel.Information))
-    //            {
-    //                _logger.LogInformation("Deleted Label '{0}' with id {1}",
-    //                    model.Name, model.Id);
-    //            }
-    //            _cacheManager.CancelTokens(this.GetType());
-    //        }
-
-    //        return success;
-
-    //    }
-
-    //    public async Task<Label> GetByIdAsync(int id)
-    //    {
-    //        var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
-    //        return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-    //        {
-    //            var Label = await _LabelRepository.SelectByIdAsync(id);
-    //            return await MergeLabelData(Label);
-    //        });
-    //    }
-
-    //    public IQuery<Label> QueryAsync()
-    //    {
-    //        var query = new LabelQuery(this);
-    //        return _dbQuery.ConfigureQuery<Label>(query); ;
-    //    }
-
-    //    public async Task<IPagedResults<Label>> SelectAsync(params object[] args)
-    //    {
-    //        var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
-    //        return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-    //        {
-
-    //            if (_logger.IsEnabled(LogLevel.Information))
-    //            {
-    //                _logger.LogInformation("Selecting categories for key '{0}' with the following parameters: {1}",
-    //                    token.ToString(), args.Select(a => a));
-    //            }
-
-    //            var results =  await _LabelRepository.SelectAsync(args);
-    //            if (results != null)
-    //            {
-    //                results.Data = await MergeLabelData(results.Data);
-    //            }
-
-    //            return results;
-
-    //        });
-    //    }
-        
-    //    public async Task<IEnumerable<Label>> GetByFeatureIdAsync(int featureId)
-    //    {
-    //        var token = _cacheManager.GetOrCreateToken(this.GetType(), featureId);
-    //        return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
-    //        {
-
-    //            if (_logger.IsEnabled(LogLevel.Information))
-    //            {
-    //                _logger.LogInformation("Selecting categories for feature with Id '{0}'",
-    //                    featureId);
-    //            }
-
-    //            var results = await _LabelRepository.SelectByFeatureIdAsync(featureId);
-    //            if (results != null)
-    //            {
-    //                results = await MergeLabelData(results.ToList());
-    //            }
-
-    //            return results;
-
-    //        });
-    //    }
-
-    //    #endregion
-
-    //    #region "Private Methods"
-
-    //    async Task<IEnumerable<LabelData>> SerializeMetaDataAsync(Label Label)
-    //    {
-
-    //        // Get all existing entity data
-    //        var data = await _LabelDataStore.GetByLabelIdAsync(Label.Id);
-
-    //        // Prepare list to search, use dummy list if needed
-    //        var dataList = data?.ToList() ?? new List<LabelData>();
-
-    //        // Iterate all meta data on the supplied object,
-    //        // check if a key already exists, if so update existing key 
-    //        var output = new List<LabelData>();
-    //        foreach (var item in Label.MetaData)
-    //        {
-    //            var key = item.Key.FullName;
-    //            var entityData = dataList.FirstOrDefault(d => d.Key == key);
-    //            if (entityData != null)
-    //            {
-    //                entityData.Value = item.Value.Serialize();
-    //            }
-    //            else
-    //            {
-    //                entityData = new LabelData()
-    //                {
-    //                    Key = key,
-    //                    Value = item.Value.Serialize()
-    //                };
-    //            }
-
-    //            output.Add(entityData);
-    //        }
-
-    //        return output;
-
-    //    }
-
-    //    async Task<IList<Label>> MergeLabelData(IList<Label> categories)
-    //    {
-
-    //        if (categories == null)
-    //        {
-    //            return null;
-    //        }
-
-    //        // Get all entity data matching supplied entity ids
-    //        var results = await _LabelDataStore.QueryAsync()
-    //            .Select<LabelDataQueryParams>(q => { q.LabelId.IsIn(categories.Select(e => e.Id).ToArray()); })
-    //            .ToList();
-
-    //        if (results == null)
-    //        {
-    //            return categories;
-    //        }
-
-    //        // Merge data into entities
-    //        return await MergeLabelData(categories, results.Data);
-
-    //    }
-
-    //    async Task<IList<Label>> MergeLabelData(IList<Label> categories, IList<LabelData> data)
-    //    {
-
-    //        if (categories == null || data == null)
-    //        {
-    //            return categories;
-    //        }
-
-    //        for (var i = 0; i < categories.Count; i++)
-    //        {
-    //            categories[i].Data = data.Where(d => d.LabelId == categories[i].Id).ToList();
-    //            categories[i] = await MergeLabelData(categories[i]);
-    //        }
-
-    //        return categories;
-
-    //    }
-
-    //    async Task<Label> MergeLabelData(Label Label)
-    //    {
-
-    //        if (Label == null)
-    //        {
-    //            return null;
-    //        }
-
-    //        if (Label.Data == null)
-    //        {
-    //            return Label;
-    //        }
-
-    //        foreach (var data in Label.Data)
-    //        {
-    //            var type = await GetModuleTypeCandidateAsync(data.Key);
-    //            if (type != null)
-    //            {
-    //                var obj = JsonConvert.DeserializeObject(data.Value, type);
-    //                Label.AddOrUpdate(type, (ISerializable)obj);
-    //            }
-    //        }
-
-    //        return Label;
-
-    //    }
-
-    //    async Task<Type> GetModuleTypeCandidateAsync(string typeName)
-    //    {
-    //        return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
-    //    }
-
-    //    #endregion
-
-    //}
+    
 }

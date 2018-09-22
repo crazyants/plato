@@ -56,6 +56,9 @@ namespace Plato.Discuss
             // Register data access
             services.AddScoped<IPostManager<Topic>, TopicManager>();
             services.AddScoped<IPostManager<Reply>, ReplyManager>();
+
+            // Services
+            services.AddScoped<ITopicService, TopicService>();
             
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();

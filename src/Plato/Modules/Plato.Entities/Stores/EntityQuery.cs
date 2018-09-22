@@ -61,6 +61,7 @@ namespace Plato.Entities.Stores
 
 
         private WhereInt _id;
+        private WhereInt _userId;
         private WhereInt _featureId;
         private WhereInt _categoryId;
         private WhereString _title;
@@ -86,6 +87,12 @@ namespace Plato.Entities.Stores
             set => _id = value;
         }
 
+        public WhereInt UserId
+        {
+            get => _userId ?? (_id = new WhereInt());
+            set => _userId = value;
+        }
+        
         public WhereInt FeatureId
         {
             get => _featureId ?? (_featureId = new WhereInt());
