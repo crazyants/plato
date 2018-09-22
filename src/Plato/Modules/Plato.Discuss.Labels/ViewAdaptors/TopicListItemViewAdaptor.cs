@@ -56,50 +56,14 @@ namespace Plato.Discuss.Labels.ViewAdaptors
             var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
             if (labels == null)
             {
-                // No categories available to adapt the view 
+                // No labels available to adapt the view 
                 return default(IViewAdaptorResult);
             }
 
-            // ---------------------
-
-            // Get acttion parameters for current view
-            var descriptor = _actionContextAccessor.ActionContext.ActionDescriptor;
-            var options = descriptor.GetProperty<TopicIndexOptions>();
-            var pager = descriptor.GetProperty<PagerOptions>();
+            // Build a dictionary we can use below within our AdaptModel
+            // method to add the correct labels for each entitty
+            var topicLabelsDictionary = await BuildLoookUpTable(labels);
             
-            // Get all entities for our current view
-            var entities = await _topicService.Get(options, pager);
-
-            IPagedResults<EntityLabel> entityLabels = null;
-            if (entities?.Data != null)
-            {
-                // Get all entity label relationships for displayed entities
-                entityLabels = await _entityLabelStore.QueryAsync()
-                    .Select<EntityLabelQueryParams>(q => { q.EntityId.IsIn(entities.Data.Select(e => e.Id).ToArray()); })
-                    .ToList();
-            }
-
-            // Build a ditionary of entity and label relationships
-            var lookUpTable = new ConcurrentDictionary<int, IList<Label>>();
-            if (entityLabels?.Data != null)
-            {
-                var labelList = labels.ToList();
-                foreach (var entityLabel in entityLabels.Data)
-                {
-                    var label = labelList.FirstOrDefault(l => l.Id == entityLabel.LabelId);
-                    lookUpTable.AddOrUpdate(entityLabel.Id, new List<Label>()
-                    {
-                        label
-                    }, (k, v) =>
-                    {
-                        v.Add(label);
-                        return v;
-                    });
-                }
-            }
-
-            // ---------------------
-
             // Plato.Discuss does not have a dependency on Plato.Discuss.Labels
             // Instead we update the model for the topic item view component
             // here via our view adaptor to include the label information
@@ -119,8 +83,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
                     }
                     
                     // No need to modify the model if no labels have been found
-                    var topicLabels = lookUpTable[model.Topic.Id];
-                    if (topicLabels == null)
+                    if (!topicLabelsDictionary.ContainsKey(model.Topic.Id))
                     {
                         // Return an anonymous type, we are adapting a view component
                         return new
@@ -128,6 +91,9 @@ namespace Plato.Discuss.Labels.ViewAdaptors
                             model = model
                         };
                     }
+
+                    // Get labels for entity
+                    var topicLabels = topicLabelsDictionary[model.Topic.Id];
 
                     // Add labels to the model from our dictionary
                     var modelLabels = new List<Label>();
@@ -146,6 +112,49 @@ namespace Plato.Discuss.Labels.ViewAdaptors
 
                 });
             });
+
+        }
+        
+        async Task<IDictionary<int, IList<Label>>> BuildLoookUpTable(IEnumerable<Label> labels)
+        {
+
+            // Get action parameters, we need to know which entities to query against
+            var descriptor = _actionContextAccessor.ActionContext.ActionDescriptor;
+         
+            // Get all entities for our current view
+            var entities = await _topicService.Get(
+                descriptor.GetProperty<TopicIndexOptions>(),
+                descriptor.GetProperty<PagerOptions>());
+
+            // Get all entity label relationships for displayed entities
+            IPagedResults<EntityLabel> entityLabels = null;
+            if (entities?.Data != null)
+            {
+                entityLabels = await _entityLabelStore.QueryAsync()
+                    .Select<EntityLabelQueryParams>(q => { q.EntityId.IsIn(entities.Data.Select(e => e.Id).ToArray()); })
+                    .ToList();
+            }
+
+            // Build a ditionary of entity and label relationships
+            var output = new ConcurrentDictionary<int, IList<Label>>();
+            if (entityLabels?.Data != null)
+            {
+                var labelList = labels.ToList();
+                foreach (var entityLabel in entityLabels.Data)
+                {
+                    var label = labelList.FirstOrDefault(l => l.Id == entityLabel.LabelId);
+                    output.AddOrUpdate(entityLabel.EntityId, new List<Label>()
+                    {
+                        label
+                    }, (k, v) =>
+                    {
+                        v.Add(label);
+                        return v;
+                    });
+                }
+            }
+
+            return output;
 
         }
 

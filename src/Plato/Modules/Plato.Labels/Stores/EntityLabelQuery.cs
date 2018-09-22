@@ -43,7 +43,8 @@ namespace Plato.Labels.Stores
                 startSql,
                 populateSql,
                 countSql,
-                Params.Keywords.Value
+                Params.LabelId.Value,
+                Params.EntityId.Value
             );
 
             return data;
@@ -60,27 +61,19 @@ namespace Plato.Labels.Stores
     {
 
 
-        private WhereInt _id;
+        private WhereInt _labelId;
         private WhereInt _entityId;
-        private WhereString _keywords;
-
-
-        public WhereInt Id
+     
+        public WhereInt LabelId
         {
-            get => _id ?? (_id = new WhereInt());
-            set => _id = value;
+            get => _labelId ?? (_labelId = new WhereInt());
+            set => _labelId = value;
         }
 
         public WhereInt EntityId
         {
             get => _entityId ?? (_entityId = new WhereInt());
             set => _entityId = value;
-        }
-        
-        public WhereString Keywords
-        {
-            get => _keywords ?? (_keywords = new WhereString());
-            set => _keywords = value;
         }
         
     }
@@ -93,15 +86,14 @@ namespace Plato.Labels.Stores
     {
         #region "Constructor"
 
-        private readonly string _EntityLabelsTableName;
+        private readonly string _entityLabelsTableName;
 
         private readonly EntityLabelQuery _query;
 
         public EntityLabelQueryBuilder(EntityLabelQuery query)
         {
             _query = query;
-            _EntityLabelsTableName = GetTableNameWithPrefix("Categories");
-
+            _entityLabelsTableName = GetTableNameWithPrefix("EntityLabels");
         }
 
         #endregion
@@ -113,7 +105,7 @@ namespace Plato.Labels.Stores
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = c.Id FROM ")
+            sb.Append("SELECT @start_id_out = el.Id FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -145,7 +137,7 @@ namespace Plato.Labels.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(c.Id) FROM ")
+            sb.Append("SELECT COUNT(el.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -155,7 +147,7 @@ namespace Plato.Labels.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("c.*");
+            sb.Append("el.*");
             return sb.ToString();
 
         }
@@ -165,8 +157,8 @@ namespace Plato.Labels.Stores
 
             var sb = new StringBuilder();
 
-            sb.Append(_EntityLabelsTableName)
-                .Append(" c ");
+            sb.Append(_entityLabelsTableName)
+                .Append(" el ");
 
             return sb.ToString();
 
@@ -188,13 +180,13 @@ namespace Plato.Labels.Stores
             var sb = new StringBuilder();
             // default to ascending
             if (_query.SortColumns.Count == 0)
-                sb.Append("c.Id >= @start_id_in");
+                sb.Append("el.Id >= @start_id_in");
             // set start operator based on first order by
             foreach (var sortColumn in _query.SortColumns)
             {
                 sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "c.Id <= @start_id_in"
-                    : "c.Id >= @start_id_in");
+                    ? "el.Id <= @start_id_in"
+                    : "el.Id >= @start_id_in");
                 break;
             }
 
@@ -210,20 +202,26 @@ namespace Plato.Labels.Stores
         {
             var sb = new StringBuilder();
 
-            // Id
-            if (_query.Params.Id.Value > 0)
+            // LabelId
+            if (_query.Params.LabelId.Value > 0)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("c.Id"));
+                    sb.Append(_query.Params.LabelId.Operator);
+                sb.Append(_query.Params.LabelId.ToSqlString("el.Id"));
             }
 
+            // EntityId
+            if (_query.Params.EntityId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EntityId.Operator);
+                sb.Append(_query.Params.EntityId.ToSqlString("el.EntityId"));
+            }
 
             return sb.ToString();
 
         }
-
-
+        
         string GetQualifiedColumnName(string columnName)
         {
             if (columnName == null)
@@ -233,7 +231,7 @@ namespace Plato.Labels.Stores
 
             return columnName.IndexOf('.') >= 0
                 ? columnName
-                : "c." + columnName;
+                : "el." + columnName;
         }
 
         private string BuildOrderBy()

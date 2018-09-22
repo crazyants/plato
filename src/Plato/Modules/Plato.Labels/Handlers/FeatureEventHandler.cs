@@ -100,7 +100,7 @@ namespace Plato.Labels.Handlers
         };
 
         // Label data table
-        private readonly SchemaTable _LabelData = new SchemaTable()
+        private readonly SchemaTable _labelData = new SchemaTable()
         {
             Name = "LabelData",
             Columns = new List<SchemaColumn>()
@@ -152,7 +152,7 @@ namespace Plato.Labels.Handlers
         };
 
         // Label Roles table
-        private readonly SchemaTable _LabelRoles = new SchemaTable()
+        private readonly SchemaTable _labelRoles = new SchemaTable()
         {
             Name = "LabelRoles",
             Columns = new List<SchemaColumn>()
@@ -323,15 +323,15 @@ namespace Plato.Labels.Handlers
                 
                 // drop Label data
                 builder
-                    .DropTable(_LabelData)
-                    .DropDefaultProcedures(_LabelData)
+                    .DropTable(_labelData)
+                    .DropDefaultProcedures(_labelData)
                     .DropProcedure(new SchemaProcedure("SelectLabelDatumByLabelId"))
                     .DropProcedure(new SchemaProcedure("SelectLabelDatumPaged"));
                 
                 // drop Label roles
                 builder
-                    .DropTable(_LabelRoles)
-                    .DropDefaultProcedures(_LabelRoles)
+                    .DropTable(_labelRoles)
+                    .DropDefaultProcedures(_labelRoles)
                     .DropProcedure(new SchemaProcedure("SelectLabelRolesByLabelId"))
                     .DropProcedure(new SchemaProcedure("SelectLabelRolesPaged"))
                     .DropProcedure(new SchemaProcedure("DeleteLabelRolesByLabelId"))
@@ -426,15 +426,15 @@ namespace Plato.Labels.Handlers
 
             builder
                 // Create tables
-                .CreateTable(_LabelData)
+                .CreateTable(_labelData)
                 // Create basic default CRUD procedures
-                .CreateDefaultProcedures(_LabelData)
+                .CreateDefaultProcedures(_labelData)
                 .CreateProcedure(new SchemaProcedure("SelectLabelDatumByLabelId", StoredProcedureType.SelectByKey)
-                    .ForTable(_LabelData)
+                    .ForTable(_labelData)
                     .WithParameter(new SchemaColumn() { Name = "LabelId", DbType = DbType.Int32 }));
 
             builder.CreateProcedure(new SchemaProcedure("SelectLabelDatumPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_LabelData)
+                .ForTable(_labelData)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -451,8 +451,8 @@ namespace Plato.Labels.Handlers
         {
 
             builder
-                .CreateTable(_LabelRoles)
-                .CreateDefaultProcedures(_LabelRoles);
+                .CreateTable(_labelRoles)
+                .CreateDefaultProcedures(_labelRoles);
             
             builder.CreateProcedure(
                 new SchemaProcedure(
@@ -463,8 +463,8 @@ namespace Plato.Labels.Handlers
                                 WHERE (
                                    cr.Id = @Id
                                 )")
-                    .ForTable(_LabelRoles)
-                    .WithParameter(_LabelRoles.PrimaryKeyColumn));
+                    .ForTable(_labelRoles)
+                    .WithParameter(_labelRoles.PrimaryKeyColumn));
             
             builder.CreateProcedure(
                 new SchemaProcedure(
@@ -475,18 +475,18 @@ namespace Plato.Labels.Handlers
                                 WHERE (
                                    cr.LabelId = @LabelId
                                 )")
-                    .ForTable(_LabelRoles)
+                    .ForTable(_labelRoles)
                     .WithParameter(new SchemaColumn() { Name = "LabelId", DbType = DbType.Int32 }));
             
             builder
                 .CreateProcedure(new SchemaProcedure("DeleteLabelRolesByLabelId", StoredProcedureType.DeleteByKey)
-                    .ForTable(_LabelRoles)
+                    .ForTable(_labelRoles)
                     .WithParameter(new SchemaColumn() { Name = "LabelId", DbType = DbType.Int32 }));
 
             builder
                 .CreateProcedure(new SchemaProcedure("DeleteLabelRolesByRoleIdAndLabelId",
                         StoredProcedureType.DeleteByKey)
-                    .ForTable(_LabelRoles)
+                    .ForTable(_labelRoles)
                     .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn() {Name = "RoleId", DbType = DbType.Int32},
@@ -495,7 +495,7 @@ namespace Plato.Labels.Handlers
                     ));
             
             builder.CreateProcedure(new SchemaProcedure("SelectLabelRolesPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_LabelRoles)
+                .ForTable(_labelRoles)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -524,8 +524,8 @@ namespace Plato.Labels.Handlers
                                 WHERE (
                                    el.Id = @Id
                                 )")
-                    .ForTable(_LabelRoles)
-                    .WithParameter(_LabelRoles.PrimaryKeyColumn));
+                    .ForTable(_labelRoles)
+                    .WithParameter(_labelRoles.PrimaryKeyColumn));
 
             builder.CreateProcedure(
                 new SchemaProcedure(
@@ -561,9 +561,13 @@ namespace Plato.Labels.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "Keywords",
-                        DbType = DbType.String,
-                        Length = "255"
+                        Name = "LabelId",
+                        DbType = DbType.Int32,
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "EntityId",
+                        DbType = DbType.Int32,
                     }
                 }));
             
