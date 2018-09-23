@@ -11,8 +11,8 @@ namespace Plato.Internal.Layout.ViewAdaptors
     public class ViewAdaptorManager : IViewAdaptorManager
     {
 
-        private readonly ConcurrentDictionary<string, IViewAdaptorResult> _viewAdaptorResults
-            = new ConcurrentDictionary<string, IViewAdaptorResult>();
+        private readonly ConcurrentDictionary<string, IList<IViewAdaptorResult>> _viewAdaptorResults
+            = new ConcurrentDictionary<string, IList<IViewAdaptorResult>>();
 
         private readonly IList<IViewAdaptorProvider> _viewAdaptorProviders;
         private readonly ILogger<ViewAdaptorManager> _logger;
@@ -38,7 +38,11 @@ namespace Plato.Internal.Layout.ViewAdaptors
             {
                 if (viewAdaptorResult.Key.Equals(viewName))
                 {
-                    matchingAdapatorResults.Add(viewAdaptorResult.Value);
+                    foreach (var value in viewAdaptorResult.Value)
+                    {
+                        matchingAdapatorResults.Add(value);
+                    }
+                    
                 }
             }
 
@@ -60,7 +64,14 @@ namespace Plato.Internal.Layout.ViewAdaptors
                             var viewAdaptorResult = await provider.ConfigureAsync();
                             if (viewAdaptorResult != null)
                             {
-                                _viewAdaptorResults.TryAdd(viewAdaptorResult.Builder.ViewName, viewAdaptorResult);
+                                _viewAdaptorResults.AddOrUpdate(viewAdaptorResult.Builder.ViewName, new List<IViewAdaptorResult>()
+                                {
+                                    viewAdaptorResult
+                                }, (k, v) =>
+                                {
+                                    v.Add(viewAdaptorResult);
+                                    return v;
+                                } );
                             }
                         }
                         catch (Exception e)
