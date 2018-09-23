@@ -3,15 +3,7 @@ using Microsoft.AspNetCore.Html;
 
 namespace Plato.Internal.Layout.Views
 {
-
-    public interface IViewFactory
-    {
-        Task<ViewDescriptor> CreateAsync(IView view);
-
-        Task<IHtmlContent> InvokeAsync(ViewDisplayContext displayContext);
-
-    }
-
+    
     public class ViewFactory : IViewFactory
     {
 
@@ -45,30 +37,28 @@ namespace Plato.Internal.Layout.Views
 
                     var updatedView = displayContext.ViewDescriptor.View;
 
-                        // Apply view alterations
-
+                    // Apply view alterations
                     var viewAlterations = viewAdaptorResult.ViewAlterations;
-                        if (viewAlterations.Count > 0)
+                    if (viewAlterations.Count > 0)
+                    {
+                        foreach (var alteration in viewAlterations)
                         {
-                            foreach (var alteration in viewAlterations)
-                            {
-                                updatedView.ViewName = alteration;
-                            }
+                            updatedView.ViewName = alteration;
                         }
+                    }
 
-                        // Apply model alterations
-
-                        var modelAlterations = viewAdaptorResult.ModelAlterations;
-                        if (modelAlterations.Count > 0)
+                    // Apply model alterations
+                    var modelAlterations = viewAdaptorResult.ModelAlterations;
+                    if (modelAlterations.Count > 0)
+                    {
+                        foreach (var alteration in modelAlterations)
                         {
-                            foreach (var alteration in modelAlterations)
-                            {
-                                updatedView.Model = alteration(updatedView.Model);
-                            }
+                            updatedView.Model = alteration(updatedView.Model);
                         }
+                    }
 
-                        displayContext.ViewDescriptor.View = updatedView;
-                    
+                    displayContext.ViewDescriptor.View = updatedView;
+
                 }
 
             }
@@ -96,8 +86,7 @@ namespace Plato.Internal.Layout.Views
             return htmlContent;
 
         }
-
-
+        
     }
 
 }

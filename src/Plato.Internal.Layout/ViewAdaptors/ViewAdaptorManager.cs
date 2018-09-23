@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
 
 namespace Plato.Internal.Layout.ViewAdaptors
 {
-
-    public interface IViewAdaptorManager
-    {
-        Task<IEnumerable<IViewAdaptorResult>> GetViewAdaptors(string name);
-    }
-
+    
     public class ViewAdaptorManager : IViewAdaptorManager
     {
 
