@@ -76,34 +76,36 @@ namespace Plato.Users.ViewProviders
             );
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(UserProfile userProfile, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(UserProfile userProfile, IUpdateModel updater)
         {
 
-            var user = await _platoUserStore.GetByIdAsync(userProfile.Id);
-            if (user == null)
-            {
-                return await BuildIndexAsync(userProfile, updater);
-            }
+            return Task.FromResult(default(IViewProviderResult));
 
-            var details = user.GetOrCreate<UserDetail>();
-            
-            var viewModel = new EditUserViewModel()
-            {
-                Id = user.Id,
-                DisplayName = user.DisplayName,
-                UserName = user.UserName,
-                Email = user.Email,
-                Location = details.Profile.Location,
-                Bio = details.Profile.Bio
-            };
+            //var user = await _platoUserStore.GetByIdAsync(userProfile.Id);
+            //if (user == null)
+            //{
+            //    return await BuildIndexAsync(userProfile, updater);
+            //}
 
-            return Views(
-                View<EditUserViewModel>("Home.Edit.Header", model => viewModel).Zone("header"),
-                View<EditUserViewModel>("Home.Edit.Tools", model => viewModel).Zone("tools"),
-                View<EditUserViewModel>("Home.Edit.Content", model => viewModel).Zone("content"),
-                View<EditUserViewModel>("Home.Edit.Footer", model => viewModel).Zone("footer"),
-                View<EditUserViewModel>("Home.Edit.Sidebar", model => viewModel).Zone("sidebar")
-            );
+            //var details = user.GetOrCreate<UserDetail>();
+
+            //var viewModel = new EditUserViewModel()
+            //{
+            //    Id = user.Id,
+            //    DisplayName = user.DisplayName,
+            //    UserName = user.UserName,
+            //    Email = user.Email,
+            //    Location = details.Profile.Location,
+            //    Bio = details.Profile.Bio
+            //};
+
+            //return Views(
+            //    View<EditUserViewModel>("Profile.Edit.Header", model => viewModel).Zone("header"),
+            //    View<EditUserViewModel>("Profile.Edit.Tools", model => viewModel).Zone("tools"),
+            //    View<EditUserViewModel>("Profile.Edit.Content", model => viewModel).Zone("content"),
+            //    View<EditUserViewModel>("Profile.Edit.Footer", model => viewModel).Zone("footer"),
+            //    View<EditUserViewModel>("Profile.Edit.Sidebar", model => viewModel).Zone("sidebar")
+            //);
 
         }
         
@@ -149,13 +151,19 @@ namespace Plato.Users.ViewProviders
                     await UpdateUserPhoto(user, model.AvatarFile);
                 }
 
-                // Update user
+                // Update username and email
 
                 await _userManager.SetUserNameAsync(user, model.UserName);
-
-                // SetEmailAsync sets EmailConfirmed to "false"
-                await _userManager.SetEmailAsync(user, model.Email);
-
+                
+                // Has the email address changed?
+                if (model.Email != null && !model.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Only call SetEmailAsync if the email address changes
+                    // SetEmailAsync internally sets EmailConfirmed to "false"
+                    await _userManager.SetEmailAsync(user, model.Email);
+                }
+                
+                // Update user
                 var result = await _userManager.UpdateAsync(user);
                 foreach (var error in result.Errors)
                 {

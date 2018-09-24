@@ -236,18 +236,41 @@ namespace Plato.Users
             );
 
             routes.MapAreaRoute(
-                name: "ServePhoto",
+                name: "ServeUserPhoto",
                 areaName: "Plato.Users",
                 template: "users/photo/{id}",
                 defaults: new { controller = "Photo", action = "Serve" }
             );
 
             routes.MapAreaRoute(
-                name: "Home-User",
+                name: "DisplayUserProfile",
                 areaName: "Plato.Users",
                 template: "users/{id}/{alias?}",
                 defaults: new { controller = "Home", action = "Display" }
             );
+
+            routes.MapAreaRoute(
+                name: "EditUserProfile",
+                areaName: "Plato.Users",
+                template: "profile/edit",
+                defaults: new { controller = "Home", action = "EditProfile" }
+            );
+            
+            routes.MapAreaRoute(
+                name: "EditUserAccount",
+                areaName: "Plato.Users",
+                template: "account/edit",
+                defaults: new { controller = "Home", action = "EditAccount" }
+            );
+
+            routes.MapAreaRoute(
+                name: "EditUserSettings",
+                areaName: "Plato.Users",
+                template: "settings/edit",
+                defaults: new { controller = "Home", action = "EditSettings" }
+            );
+
+
 
         }
 

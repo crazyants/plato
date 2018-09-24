@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -23,7 +24,8 @@ namespace Plato.Internal.Hosting.Web
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IUrlHelperFactory _urlHelperFactory;
-  
+        private readonly SignInManager<User> _signInManager;
+
         private IUrlHelper _urlHelper;
 
         public ContextFacade(
@@ -31,22 +33,34 @@ namespace Plato.Internal.Hosting.Web
             IPlatoUserStore<User> platoUserStore,
             IActionContextAccessor actionContextAccessor,
             ISiteSettingsStore siteSettingsStore,
-            IUrlHelperFactory urlHelperFactory)
+            IUrlHelperFactory urlHelperFactory, SignInManager<User> signInManager)
         {
             _httpContextAccessor = httpContextAccessor;
             _platoUserStore = platoUserStore;
             _actionContextAccessor = actionContextAccessor;
             _siteSettingsStore = siteSettingsStore;
             _urlHelperFactory = urlHelperFactory;
+            _signInManager = signInManager;
         }
 
         public async Task<User> GetAuthenticatedUserAsync()
         {
-            var user = _httpContextAccessor.HttpContext.User;
-            var identity = user?.Identity;
+        
+            var identity = _httpContextAccessor.HttpContext.User?.Identity;
             if ((identity != null) && (identity.IsAuthenticated))
             {
-                return await _platoUserStore.GetByUserNameAsync(identity.Name);
+
+                var user = await _platoUserStore.GetByUserNameAsync(identity.Name);
+
+                // We are marked as authenticated via a client side cookie
+                // but didn't find the user within the database, log the user out
+                if (user == null)
+                {
+                    await _signInManager.SignOutAsync();
+                    return null;
+                }
+
+                return user;
             }
 
             return null;

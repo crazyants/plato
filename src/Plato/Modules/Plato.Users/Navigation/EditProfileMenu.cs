@@ -23,15 +23,15 @@ namespace Plato.Users.Navigation
 
             builder
                 .Add(T["Profile"], 1, profile => profile
-                    .Action("EditProfile", "Profile", "Plato.Users")
+                    .Action("EditProfile", "Home", "Plato.Users")
                     //.Permission(Permissions.ManageUsers)
                     .LocalNav()
                 ).Add(T["Account"], 2, profile => profile
-                    .Action("EditAccount", "Profile", "Plato.Users")
+                    .Action("EditAccount", "Home", "Plato.Users")
                     //.Permission(Permissions.ManageUsers)
                     .LocalNav()
                 ).Add(T["Settings"], int.MaxValue, profile => profile
-                    .Action("EditSettings", "Profile", "Plato.Users")
+                    .Action("EditSettings", "Home", "Plato.Users")
                     //.Permission(Permissions.ManageUsers)
                     .LocalNav()
                 );

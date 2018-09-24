@@ -51,10 +51,10 @@ namespace Plato.Users.ViewProviders
             }
             
             return Views(
-                View<User>("Profile.Edit.Header", model => user).Zone("header"),
-                View<User>("Profile.Edit.Sidebar", model => user).Zone("sidebar"),
-                View<EditAccountViewModel>("Profile.EditAccount.Content", model => viewModel).Zone("content"),
-                View<User>("Profile.Edit.Footer", model => user).Zone("footer")
+                View<User>("Home.Edit.Header", model => user).Zone("header"),
+                View<User>("Home.Edit.Sidebar", model => user).Zone("sidebar"),
+                View<EditAccountViewModel>("Home.EditAccount.Content", model => viewModel).Zone("content"),
+                View<User>("Home.Edit.Footer", model => user).Zone("footer")
             );
 
         }
@@ -88,8 +88,13 @@ namespace Plato.Users.ViewProviders
 
                 await _userManager.SetUserNameAsync(user, model.UserName);
 
-                // SetEmailAsync sets EmailConfirmed to "false"
-                //await _userManager.SetEmailAsync(user, model.Email);
+                // Has the email address changed?
+                if (model.Email != null && !model.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Only call SetEmailAsync if the email address changes
+                    // SetEmailAsync internally sets EmailConfirmed to "false"
+                    await _userManager.SetEmailAsync(user, model.Email);
+                }
 
                 // Update user
                 var result = await _userManager.UpdateAsync(user);

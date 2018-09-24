@@ -23,13 +23,13 @@
                             <avatar class="avatar" user-id="@user.Id" />
                             @if (Model.ViewOpts.EnableEdit)
                             {
-                                <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" class="font-weight-bold">
+                                <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" asp-route-alias="@user.Alias" class="font-weight-bold">
                                     @user.DisplayName
                                 </a>
                             }
                             else
                             {
-                                <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@user.Id" class="font-weight-bold">
+                                <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@user.Id" asp-route-alias="@user.Alias" class="font-weight-bold">
                                     @user.DisplayName
                                 </a>
                             }
