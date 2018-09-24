@@ -53,17 +53,11 @@ namespace Plato.Discuss.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(Topic topic, IUpdateModel updater)
         {
 
-            var viewOptions = GetViewOptions(updater);
-
-            var pagerOptions = new PagerOptions
-            {
-                Page = GetPageIndex(updater)
-            };
-
+            // Build view model
             var viewModel = new TopicIndexViewModel
             {
-                Options = viewOptions,
-                Pager = pagerOptions
+                Options = GetViewOptions(updater),
+                Pager = GetPagerOptions(updater)
             };
 
             return Task.FromResult(Views(
@@ -77,13 +71,10 @@ namespace Plato.Discuss.ViewProviders
         
         public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
         {
-           
-            var filterOptions = new TopicIndexOptions();
 
-            var pagerOptions = new PagerOptions
-            {
-                Page = GetPageIndex(updater)
-            };
+            // Get view data
+            var viewOptions = GetViewOptions(updater);
+            var pagerOptions = GetPagerOptions(updater);
 
             // Get entity
             var topic = await _entityStore.GetByIdAsync(viewModel.Id);
@@ -96,7 +87,7 @@ namespace Plato.Discuss.ViewProviders
             await IncrementTopicViewCount(topic);
 
             // Build view model
-            var replies = await GetEntityReplies(topic.Id, filterOptions, pagerOptions);
+            var replies = await GetEntityReplies(topic.Id, viewOptions, pagerOptions);
             
             var topivViewModel = new HomeTopicViewModel(replies, pagerOptions)
             {
@@ -236,32 +227,26 @@ namespace Plato.Discuss.ViewProviders
                 .ToList();
         }
         
-        int GetPageIndex(IUpdateModel updater)
-        {
-
-            var page = 1;
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("page", out object value);
-            if (found)
-            {
-                int.TryParse(value.ToString(), out page);
-            }
-
-            return page;
-
-        }
-        
         TopicIndexOptions GetViewOptions(IUpdateModel updater)
         {
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("opts", out var value);
-            if (found && value != null)
+            if (updater.ViewData["opts"] is TopicIndexOptions opts)
             {
-               return (TopicIndexOptions)value;
+                return opts;
             }
-
+          
             return new TopicIndexOptions();
         }
+
+        PagerOptions GetPagerOptions(IUpdateModel updater)
+        {
+            if (updater.ViewData["pager"] is PagerOptions pager)
+            {
+                return pager;
+            }
+
+            return new PagerOptions();
+        }
+
 
         string GetKeywords(IUpdateModel updater)
         {

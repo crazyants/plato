@@ -32,14 +32,12 @@ namespace Plato.Discuss.ViewComponents
             {
                 pager = new PagerOptions();
             }
+       
+            return View(await GetViewModel(options, pager));
 
-
-            var model = await GetIndexViewModel(options, pager);
-
-            return View(model);
         }
         
-        async Task<TopicIndexViewModel> GetIndexViewModel(
+        async Task<TopicIndexViewModel> GetViewModel(
             TopicIndexOptions options,
             PagerOptions pager)
         {

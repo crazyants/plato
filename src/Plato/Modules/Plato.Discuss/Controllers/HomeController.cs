@@ -95,17 +95,22 @@ namespace Plato.Discuss.Controllers
 
             //await CreateSampleData();
 
-            //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
-            //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
-            //this.RouteData.Values.Add("page", pagerOptions.Page);
-
+            // Add route data for pagination purposes
             this.RouteData.Values.Add("opts.search", opts.Search);
             this.RouteData.Values.Add("opts.sort", opts.Sort);
             this.RouteData.Values.Add("opts.order", opts.Order);
             this.RouteData.Values.Add("opts.filter", opts.Filter);
-
-            this.RouteData.Values.Add("opts", opts);
+            this.RouteData.Values.Add("pager.page", pager.Page);
             
+            // Add view opiotsn to view data for use in view provider
+            this.ViewData.Add("opts", opts);
+            this.ViewData.Add("pager", pager);
+
+            this.HttpContext.Items[typeof(TopicIndexOptions)] = opts;
+            this.HttpContext.Items[typeof(PagerOptions)] = pager;
+
+
+
             // Build view
             var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);
 

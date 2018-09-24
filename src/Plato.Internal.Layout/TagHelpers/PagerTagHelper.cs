@@ -41,7 +41,7 @@ namespace Plato.Internal.Layout.TagHelpers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionContextAccesor;
         private readonly IUrlHelper _urlHelper;
-        private string pageKey = "page";
+        private string pageKey = "pager.page";
 
         private RouteValueDictionary _routeData;
 

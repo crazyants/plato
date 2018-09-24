@@ -1,9 +1,14 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
@@ -20,25 +25,26 @@ namespace Plato.Discuss.Labels.ViewAdaptors
     public class TopicListItemViewAdaptor : BaseAdaptorProvider
     {
 
-   
+        //private IDictionary<int, IList<Label>> _lookUpTable;
+
         private readonly ILabelStore<Label> _labelStore;
         private readonly IFeatureFacade _featureFacade;
-        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly ITopicService _topicService;
-
+        
         public TopicListItemViewAdaptor(
             ILabelStore<Label> labelStore,
             IFeatureFacade featureFacade,
-            IActionContextAccessor actionContextAccessor,
             ITopicService topicService, 
-            IEntityLabelStore<EntityLabel> entityLabelStore)
+            IEntityLabelStore<EntityLabel> entityLabelStore,
+            IHttpContextAccessor httpContextAccessor)
         {
             _labelStore = labelStore;
             _featureFacade = featureFacade;
-            _actionContextAccessor = actionContextAccessor;
             _topicService = topicService;
             _entityLabelStore = entityLabelStore;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public override async Task<IViewAdaptorResult> ConfigureAsync()
@@ -62,7 +68,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
 
             // Build a dictionary we can use below within our AdaptModel
             // method to add the correct labels for each entitty
-            var topicLabelsDictionary = await BuildLoookUpTable(labels);
+            var topicLabelsDictionary = await BuildLoookUpTable(labels.ToList());
             
             // Plato.Discuss does not have a dependency on Plato.Discuss.Labels
             // Instead we update the model for the topic item view component
@@ -70,8 +76,15 @@ namespace Plato.Discuss.Labels.ViewAdaptors
             // This way the label data is only ever populated if the labels feature is enabled
             return await Adapt("TopicListItem", v =>
             {
-                v.AdaptModel<TopicListItemViewModel>(model =>
+                v.AdaptModel<TopicListItemViewModel>(model  =>
                 {
+
+                    //if (_lookUpTable == null)
+                    //{
+                    //    _lookUpTable = BuildLoookUpTable(labels)
+                    //        .GetAwaiter()
+                    //        .GetResult();
+                    //}
 
                     if (model.Topic == null)
                     {
@@ -119,12 +132,11 @@ namespace Plato.Discuss.Labels.ViewAdaptors
         {
 
             // Get action parameters, we need to know which entities to query against
-            var descriptor = _actionContextAccessor.ActionContext.ActionDescriptor;
-         
+            var viewOptions = _httpContextAccessor.HttpContext.Items[typeof(TopicIndexOptions)];
+            var pagerOptions = _httpContextAccessor.HttpContext.Items[typeof(PagerOptions)];
+
             // Get all entities for our current view
-            var entities = await _topicService.Get(
-                descriptor.GetProperty<TopicIndexOptions>(),
-                descriptor.GetProperty<PagerOptions>());
+            var entities = await _topicService.Get((TopicIndexOptions) viewOptions, (PagerOptions) pagerOptions);
 
             // Get all entity label relationships for displayed entities
             IPagedResults<EntityLabel> entityLabels = null;
@@ -157,6 +169,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
             return output;
 
         }
+        
 
     }
 

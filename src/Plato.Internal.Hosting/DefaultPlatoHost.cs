@@ -84,8 +84,7 @@ namespace Plato.Internal.Hosting
             _logger.LogDebug("Creating shell context for tenant {0}", settings.Name);
             return _shellContextFactory.CreateShellContext(settings);
         }
-
-
+        
         public void RecycleShellContext(IShellSettings settings)
         {
             if (_logger.IsEnabled(LogLevel.Debug))

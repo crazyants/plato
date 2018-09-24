@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 
 namespace Plato.Internal.Layout.ModelBinding
@@ -16,6 +17,8 @@ namespace Plato.Internal.Layout.ModelBinding
         ModelStateDictionary ModelState { get; }
 
         RouteData RouteData { get; }
+
+        ViewDataDictionary ViewData { get; }
 
     }
 }
