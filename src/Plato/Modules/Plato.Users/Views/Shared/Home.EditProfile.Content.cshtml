@@ -1,53 +1,69 @@
 ﻿@model EditProfileViewModel
 
-<div class="form-group edit-profile-avatar mr-4 float-lg-right float-md-none d-md-block">
-    
-    <div class="profile-avatar">
-        <div data-toggle="tooltip" title="@T["Upload new picture"]" class="avatar-edit">
-            <input type="file" id="imageUpload"
-                   asp-for="AvatarFile"
-                   data-upload="avatar"
-                   data-upload-preview-selector="#avatarPreview"
-                   data-upload-accept=".png, .jpg, .jpeg"/>
-            <label for="imageUpload">
-                <i class="fa fa-upload"></i>
-            </label>
-        </div>
-        <div class="avatar-preview">
-            <avatar id="avatarPreview" class="avatar" user-id="@Model.Id"/>
-        </div>
+<div class="form-group edit-profile-avatar float-lg-right float-md-none">
+    <card>
+        <card-title>
+            <h6 class="card-title">
+                @T["Photo"]
+            </h6>
+        </card-title>
+        <card-body>
+            <div class="profile-avatar">
+                <div data-toggle="tooltip" title="@T["Upload new picture"]" class="avatar-edit">
+                    <input type="file" id="imageUpload"
+                           asp-for="AvatarFile"
+                           data-upload="avatar"
+                           data-upload-preview-selector="#avatarPreview"
+                           data-upload-accept=".png, .jpg, .jpeg"/>
+                    <label for="imageUpload">
+                        <i class="fa fa-upload"></i>
+                    </label>
+                </div>
+                <div class="avatar-preview">
+                    <avatar id="avatarPreview" class="avatar" user-id="@Model.Id"/>
+                </div>
+            </div>
+        </card-body>
+    </card>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <card>
+            <card-title>
+                <h6 class="card-title">
+                    @T["Profile"]
+                </h6>
+            </card-title>
+            <card-body>
+                <fieldset>
+                    <div class="form-group" asp-validation-class-for="DisplayName">
+                        <label asp-for="DisplayName"><strong>@T["Display Name"]</strong></label>
+                        <span asp-validation-for="DisplayName" class="text-danger"></span>
+                        <input asp-for="DisplayName" placeholder="@T["your public display name..."]" class="form-control" autofocus/>
+                    </div>
+                    <hr/>
+                    <div class="form-group" asp-validation-class-for="Location">
+                        <label asp-for="Location"><strong>@T["Location"]</strong></label>
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                        <input asp-for="Location" placeholder="@T["add your location..."]" class="form-control"/>
+                    </div>
+                    <hr/>
+                    <div class="form-group" asp-validation-class-for="Url">
+                        <label asp-for="Location"><strong>@T["Url"]</strong></label>
+                        <span asp-validation-for="Url" class="text-danger"></span>
+                        <input asp-for="Url" placeholder="@T["https://"]" class="form-control"/>
+                    </div>
+                    <hr/>
+                    <div class="form-group" asp-validation-class-for="Bio">
+                        <label asp-for="Bio"><strong>@T["Bio"]</strong></label>
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                        <textarea asp-for="Bio" placeholder="@T["add a short bio..."]" rows="5" class="form-control"></textarea>
+                    </div>
+                </fieldset>
+            </card-body>
+        </card>
     </div>
-    
 </div>
-
-<div class="col-lg-8 col-md-12">
-    <fieldset>
-        <div class="form-group" asp-validation-class-for="DisplayName">
-            <label asp-for="DisplayName"><strong>@T["Display Name"]</strong></label>
-            <span asp-validation-for="DisplayName" class="text-danger"></span>
-            <input asp-for="DisplayName" placeholder="@T["your public display name..."]" class="form-control" autofocus />
-        </div>
-        <hr />
-        <div class="form-group" asp-validation-class-for="Location">
-            <label asp-for="Location"><strong>@T["Location"]</strong></label>
-            <span asp-validation-for="Location" class="text-danger"></span>
-            <input asp-for="Location" placeholder="@T["add your location..."]" class="form-control" />
-        </div>
-        <hr />
-        <div class="form-group" asp-validation-class-for="Url">
-            <label asp-for="Location"><strong>@T["Url"]</strong></label>
-            <span asp-validation-for="Url" class="text-danger"></span>
-            <input asp-for="Url" placeholder="@T["https://"]" class="form-control" />
-        </div>
-        <hr />
-        <div class="form-group" asp-validation-class-for="Bio">
-            <label asp-for="Bio"><strong>@T["Bio"]</strong></label>
-            <span asp-validation-for="Bio" class="text-danger"></span>
-            <textarea asp-for="Bio" placeholder="@T["add a short bio..."]" rows="5" class="form-control"></textarea>
-        </div>
-
-    </fieldset>
-</div>
-
 
 <input type="hidden" asp-for="Id" />
