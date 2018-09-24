@@ -29,8 +29,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         }
         
         #region "Imlementation"
-
-
+        
         public override async Task<IViewProviderResult> BuildIndexAsync(Label label, IUpdateModel updater)
         {
 

@@ -61,14 +61,19 @@ else
         </a>
     }
   
-    SortOrder: @Model.Channel.SortOrder
-
     @if (!String.IsNullOrEmpty(Model.Channel.Description))
     {
         <div class="text-muted">
             @Model.Channel.Description
         </div>
     }
+    else
+    {
+        <div class="text-muted">
+            @T["No description provided"]
+        </div>
+    }
+
     @if (Model.Channel.Children.Any())
     {
         <ul class="list-inline">

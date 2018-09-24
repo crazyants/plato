@@ -113,10 +113,10 @@ namespace Plato.Roles.Controllers
         {
 
             // Ensuer we have permission
-            if (!await _authorizationService.AuthorizeAsync(User, Permissions.AddRoles))
-            {
-                return Unauthorized();
-            }
+            //if (!await _authorizationService.AuthorizeAsync(User, Permissions.AddRoles))
+            //{
+            //    return Unauthorized();
+            //}
             
             _breadCrumbManager.Configure(builder =>
             {

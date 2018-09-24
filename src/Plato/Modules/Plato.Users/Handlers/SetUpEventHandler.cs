@@ -290,13 +290,22 @@ namespace Plato.Users.Handlers
             .CreateProcedure(
                     new SchemaProcedure(
                             $"SelectUserById",
-                            @" SELECT * FROM {prefix}_Users WITH (nolock) 
+                            @"
+                                /* user */
+                                SELECT * FROM {prefix}_Users WITH (nolock) 
                                 WHERE (
                                    Id = @Id
                                 )
+                                /* user data */
                                 SELECT * FROM {prefix}_UserData WITH (nolock) 
                                 WHERE (
                                    UserId = @Id
+                                )
+                                /* roles */
+                                SELECT r.* FROM {prefix}_UserRoles ur WITH (nolock) 
+                                INNER JOIN {prefix}_Roles r ON ur.RoleId = r.Id 
+                                WHERE (
+                                    ur.UserId = @Id
                                 )")
                         .ForTable(users)
                         .WithParameter(users.PrimaryKeyColumn))

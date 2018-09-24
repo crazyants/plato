@@ -85,10 +85,12 @@ namespace Plato.Users.ViewProviders
 
             if (updater.ModelState.IsValid)
             {
-                
+
                 await _userManager.SetUserNameAsync(user, model.UserName);
-                await _userManager.SetEmailAsync(user, model.Email);
-                
+
+                // SetEmailAsync sets EmailConfirmed to "false"
+                //await _userManager.SetEmailAsync(user, model.Email);
+
                 // Update user
                 var result = await _userManager.UpdateAsync(user);
                 foreach (var error in result.Errors)

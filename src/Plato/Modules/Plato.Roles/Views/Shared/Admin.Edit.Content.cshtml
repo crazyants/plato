@@ -18,23 +18,22 @@
         <fieldset>
             @foreach (var category in Model.CategorizedPermissions.Keys)
             {
-                <fieldset class="role-permissions">
+                <fieldset>
               
-                    <table class="table">
+                    <table class="table table-hover">
                         <thead>
-                        <tr>
-                            <th colspan="3" class="col-12 bg-light">
-                                <h6>@category</h6>
-                            </th>
-                        </tr>
+                            <tr>
+                                <th colspan="3" class="col-12 bg-light">
+                                    <h6>@category</h6>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="col-10 font-weight-bold">@T["Permission"]</td>
+                                <td class="col-1 font-weight-bold text-center">@T["Allow"]</td>
+                                <td class="col-1 font-weight-bold text-center">@T["Effective"]</td>
+                            </tr>
                         </thead>
                         <tbody>
-
-                        <tr>
-                            <td class="col-10 font-weight-bold">@T["Permission"]</td>
-                            <td class="col-1 font-weight-bold text-center">@T["Allow"]</td>
-                            <td class="col-1 font-weight-bold text-center">@T["Effective"]</td>
-                        </tr>
 
                         @foreach (var permission in Model.CategorizedPermissions[category])
                         {

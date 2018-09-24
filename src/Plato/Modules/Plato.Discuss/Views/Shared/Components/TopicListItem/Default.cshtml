@@ -38,12 +38,14 @@
     </a>
     @if (Model.Labels != null)
     {
-        foreach (var label in Model.Labels)
-        {
-            <span class="btn btn-sm font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+        <span class="pl-2">
+            @foreach (var label in Model.Labels)
+            {
+            <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@label.Id" asp-route-alias="@label.Alias" title="@label.Description" class="btn btn-sm font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
                 @label.Name
-            </span>
-        }
+            </a>
+            }
+        </span>
     }
  
     <div class="text-muted">

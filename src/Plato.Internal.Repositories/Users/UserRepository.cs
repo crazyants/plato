@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Models.Roles;
 
 namespace Plato.Internal.Repositories.Users
 {
@@ -378,10 +379,24 @@ namespace Plato.Internal.Repositories.Users
                         var data = new List<UserData>();
                         while (await reader.ReadAsync())
                         {
-                            var userData = new UserData(reader);
-                            data.Add(userData);
+                            data.Add(new UserData(reader));
                         }
                         user.Data = data;
+                    }
+                }
+
+                // roles
+
+                if (await reader.NextResultAsync())
+                {
+                    if (reader.HasRows)
+                    {
+                        var data = new List<Role>();
+                        while (await reader.ReadAsync())
+                        {
+                            data.Add(new Role(reader));
+                        }
+                        user.UserRoles = data;
                     }
                 }
 

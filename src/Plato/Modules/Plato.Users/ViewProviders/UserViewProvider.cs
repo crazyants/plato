@@ -152,6 +152,8 @@ namespace Plato.Users.ViewProviders
                 // Update user
 
                 await _userManager.SetUserNameAsync(user, model.UserName);
+
+                // SetEmailAsync sets EmailConfirmed to "false"
                 await _userManager.SetEmailAsync(user, model.Email);
 
                 var result = await _userManager.UpdateAsync(user);

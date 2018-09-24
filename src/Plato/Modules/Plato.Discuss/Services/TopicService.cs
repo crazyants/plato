@@ -1,11 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Models.Roles;
 using Plato.Internal.Navigation;
+using Plato.Internal.Security.Abstractions;
+using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Discuss.Services
 {
@@ -22,20 +27,23 @@ namespace Plato.Discuss.Services
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<Topic> _topicStore;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IPlatoRoleStore _roleStore;
 
         public TopicService(
             IContextFacade contextFacade,
             IEntityStore<Topic> topicStore,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IPlatoRoleStore roleStore)
         {
             _contextFacade = contextFacade;
             _topicStore = topicStore;
             _featureFacade = featureFacade;
+            _roleStore = roleStore;
         }
 
         public async Task<IPagedResults<Topic>> Get(TopicIndexOptions options, PagerOptions pager)
         {
-
+            
             if (options == null)
             {
                 options = new TopicIndexOptions();
@@ -46,11 +54,15 @@ namespace Plato.Discuss.Services
                 pager = new PagerOptions();
             }
 
-            // Get discuss feature
+            // Get discuss features
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+            var channelFeature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Channels");
 
-            // Get authenticated user
+            // Get authenticated user for use within view adaptor below
             var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Get anonymous role for use within view adaptor below
+            var anonymousRole = await _roleStore.GetByNameAsync(DefaultRoles.Anonymous);
 
             // Return tailored results
             return await _topicStore.QueryAsync()
@@ -62,16 +74,33 @@ namespace Plato.Discuss.Services
                     {
                         q.FeatureId.Equals(feature.Id);
                     }
-
-                    //if (user != null)
-                    //{
-                    //    q.UserId.Equals(user.Id);
-                    //}
+                    
+                    // Restrict results via user role if the channels feature is enabled
+                    if (channelFeature != null)
+                    {
+                        if (user != null)
+                        {
+                            q.RoleId.IsIn(user.UserRoles?.Select(r => r.Id).ToArray());
+                        }
+                        else
+                        {
+                            if (anonymousRole != null)
+                            {
+                                q.RoleId.Equals(anonymousRole.Id);
+                            }
+                        }
+                    }
                     
                     if (options.ChannelId > 0)
                     {
                         q.CategoryId.Equals(options.ChannelId);
                     }
+                    
+                    if (options.LabelId > 0)
+                    {
+                        q.LabelId.Equals(options.LabelId);
+                    }
+
 
                     q.HideSpam.True();
                     q.HidePrivate.True();

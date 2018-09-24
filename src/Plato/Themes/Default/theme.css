@@ -33,10 +33,12 @@
 /* ------------------- */
 
 /* Hover state for lists-groups */
+.table-hover tbody tr:hover,
 .list-group-hover .list-group-item-action:not(.active):hover {
     background-color: #007bff;
 }
 
+.table-hover tbody tr:hover,
 .list-group-hover .list-group-item-action:not(.active):hover,
 .list-group-hover .list-group-item-action:not(.active):hover .text-muted,
 .list-group-hover .list-group-item-action:not(.active):hover a:not(.btn),

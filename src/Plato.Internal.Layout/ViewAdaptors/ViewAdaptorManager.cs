@@ -38,11 +38,7 @@ namespace Plato.Internal.Layout.ViewAdaptors
             {
                 if (viewAdaptorResult.Key.Equals(viewName))
                 {
-                    foreach (var value in viewAdaptorResult.Value)
-                    {
-                        matchingAdapatorResults.Add(value);
-                    }
-                    
+                    matchingAdapatorResults.AddRange(viewAdaptorResult.Value);
                 }
             }
 
@@ -64,19 +60,21 @@ namespace Plato.Internal.Layout.ViewAdaptors
                             var viewAdaptorResult = await provider.ConfigureAsync();
                             if (viewAdaptorResult != null)
                             {
-                                _viewAdaptorResults.AddOrUpdate(viewAdaptorResult.Builder.ViewName, new List<IViewAdaptorResult>()
-                                {
-                                    viewAdaptorResult
-                                }, (k, v) =>
-                                {
-                                    v.Add(viewAdaptorResult);
-                                    return v;
-                                } );
+                                _viewAdaptorResults.AddOrUpdate(viewAdaptorResult.Builder.ViewName,
+                                    new List<IViewAdaptorResult>()
+                                    {
+                                        viewAdaptorResult
+                                    }, (k, v) =>
+                                    {
+                                        v.Add(viewAdaptorResult);
+                                        return v;
+                                    });
                             }
                         }
                         catch (Exception e)
                         {
-                            _logger.LogError(e, $"An exception occurred whilst attempting to adapt the view: {provider.ViewName}");
+                            _logger.LogError(e,
+                                $"An exception occurred whilst attempting to adapt the view: {provider.ViewName}");
                         }
                     }
                 }

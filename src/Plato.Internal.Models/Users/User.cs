@@ -57,7 +57,7 @@ namespace Plato.Internal.Models.Users
 
         public IEnumerable<string> RoleNames { get; set; } = new List<string>();
         
-        public IEnumerable<Role> UserRoles { get; } = new List<Role>();
+        public IEnumerable<Role> UserRoles { get; set; } = new List<Role>();
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
 

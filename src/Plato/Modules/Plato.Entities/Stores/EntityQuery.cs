@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
+using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Entities.Stores
 {
@@ -59,11 +60,12 @@ namespace Plato.Entities.Stores
     public class EntityQueryParams
     {
 
-
         private WhereInt _id;
         private WhereInt _userId;
         private WhereInt _featureId;
         private WhereInt _categoryId;
+        private WhereInt _roleId;
+        private WhereInt _labelId;
         private WhereString _title;
         private WhereString _message;
         private WhereString _html;
@@ -105,7 +107,18 @@ namespace Plato.Entities.Stores
             set => _categoryId = value;
         }
 
+        public WhereInt RoleId
+        {
+            get => _roleId ?? (_roleId = new WhereInt());
+            set => _roleId = value;
+        }
 
+        public WhereInt LabelId
+        {
+            get => _labelId ?? (_labelId = new WhereInt());
+            set => _labelId = value;
+        }
+        
         public WhereString Title
         {
             get => _title ?? (_title = new WhereString());
@@ -215,7 +228,11 @@ namespace Plato.Entities.Stores
 
         private readonly string _entitiesTableName;
         private readonly string _usersTableName;
+        private readonly string _userRolesTableName;
+        private readonly string _rolesTableName;
         private readonly string _entityRepliesTableName;
+        private readonly string _entityLabelsTableName;
+        private readonly string _categoryRolesTableName;
 
         private readonly EntityQuery<TModel> _query;
 
@@ -224,7 +241,12 @@ namespace Plato.Entities.Stores
             _query = query;
             _entitiesTableName = GetTableNameWithPrefix("Entities");
             _usersTableName = GetTableNameWithPrefix("Users");
+            _rolesTableName = GetTableNameWithPrefix("Roles");
+            _userRolesTableName = GetTableNameWithPrefix("UserRoles");
             _entityRepliesTableName = GetTableNameWithPrefix("EntityReplies");
+            _entityLabelsTableName = GetTableNameWithPrefix("EntityLabels");
+            _categoryRolesTableName = GetTableNameWithPrefix("CategoryRoles");
+
         }
 
         #endregion
@@ -371,6 +393,19 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.Id.ToSqlString("e.Id"));
             }
 
+            // RoleId
+            if (_query.Params.RoleId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.RoleId.Operator);
+                sb.Append("(e.CategoryId IN (")
+                    .Append("SELECT cr.CategoryId FROM ")
+                    .Append(_categoryRolesTableName)
+                    .Append(" AS cr WITH (nolock) WHERE ")
+                    .Append(_query.Params.RoleId.ToSqlString("RoleId"))
+                    .Append("))");
+            }
+            
             // FeatureId
             if (_query.Params.FeatureId.Value > 0)
             {
@@ -386,7 +421,23 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.CategoryId.Operator);
                 sb.Append(_query.Params.CategoryId.ToSqlString("CategoryId"));
             }
-          
+
+            // LabelId
+            // --> Only available if the Labels feature is enabled
+            if (_query.Params.LabelId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.LabelId.Operator);
+                sb.Append(" e.Id IN (")
+                    .Append("SELECT EntityId FROM ")
+                    .Append(_entityLabelsTableName)
+                    .Append(" WHERE (")
+                    .Append(_query.Params.LabelId.ToSqlString("LabelId"))
+                    .Append("))");
+            }
+
+
+
             // -----------------
             // private 
             // -----------------

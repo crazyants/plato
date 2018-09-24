@@ -94,7 +94,7 @@ namespace Plato.Internal.Stores.Users
                     newUser = await UpdateAsync(newUser);
                 }
 
-                ClearCache(user);
+                CancelTokens(user);
             }
 
             return newUser;
@@ -126,7 +126,10 @@ namespace Plato.Internal.Stores.Users
             var updatedUser = await _userRepository.InsertUpdateAsync(user);
             if (updatedUser != null)
             {
-                ClearCache(user);
+                // Cancel tokens for old user
+                CancelTokens(user);
+                // Cancel tokens for updated user
+                CancelTokens(updatedUser);
             }
 
             return updatedUser;
@@ -138,7 +141,7 @@ namespace Plato.Internal.Stores.Users
             var success = await _userRepository.DeleteAsync(user.Id);
             if (success)
             {
-                ClearCache(user);
+                CancelTokens(user);
             }
 
             return success;
@@ -358,7 +361,7 @@ namespace Plato.Internal.Stores.Users
             return await _typedModuleProvider.GetTypeCandidateAsync(typeName, typeof(ISerializable));
         }
 
-        void ClearCache(User user)
+        void CancelTokens(User user)
         {
 
             // Expire user cache

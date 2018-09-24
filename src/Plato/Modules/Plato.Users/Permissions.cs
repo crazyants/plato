@@ -6,6 +6,9 @@ namespace Plato.Users
     public class Permissions : IPermissionsProvider<Permission>
     {
 
+        public static readonly Permission ViewUsers =
+            new Permission("ViewUsers", "Can view users");
+
         public static readonly Permission ManageUsers =
             new Permission("ManageUsers", "Can manage users");
         
@@ -22,6 +25,7 @@ namespace Plato.Users
         {
             return new[]
             {
+                ViewUsers,
                 ManageUsers,
                 AddUsers,
                 EditUsers,
@@ -38,10 +42,35 @@ namespace Plato.Users
                     RoleName = DefaultRoles.Administrator,
                     Permissions = new[]
                     {
+                        ViewUsers,
                         ManageUsers,
                         AddUsers,
                         EditUsers,
                         DeleteUsers
+                    }
+                },
+                new DefaultPermissions<Permission>
+                {
+                    RoleName = DefaultRoles.Anonymous,
+                    Permissions = new[]
+                    {
+                        ViewUsers
+                    }
+                },
+                new DefaultPermissions<Permission>
+                {
+                    RoleName = DefaultRoles.Member,
+                    Permissions = new[]
+                    {
+                        ViewUsers
+                    }
+                },
+                new DefaultPermissions<Permission>
+                {
+                    RoleName = DefaultRoles.Employee,
+                    Permissions = new[]
+                    {
+                        ViewUsers
                     }
                 }
             };

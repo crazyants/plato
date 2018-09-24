@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,7 @@ namespace Plato.Users.ViewProviders
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _hostEnvironment;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
+        
         private readonly IUrlHelper _urlHelper;
 
         private readonly IStringLocalizer T;
@@ -44,7 +46,7 @@ namespace Plato.Users.ViewProviders
             _userPhotoStore = userPhotoStore;
             _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
             _platoUserManager = platoUserManager;
-
+        
             T = stringLocalizer;
             
         }
@@ -197,9 +199,21 @@ namespace Plato.Users.ViewProviders
                     await UpdateUserPhoto(user, model.AvatarFile);
                 }
 
+                //user.EmailConfirmed = true;
+
                 // Update username and email
                 await _userManager.SetUserNameAsync(user, model.UserName);
-                await _userManager.SetEmailAsync(user, model.Email);
+
+                // Has the email address changed?
+                if (model.Email != null && !model.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Only call SetEmailAsync if the email address changes
+                    // SetEmailAsync internally sets EmailConfirmed to "false"
+                    await _userManager.SetEmailAsync(user, model.Email);
+                }
+                
+                // As we are updating via the Admin CP set back to "true"
+                // await _userEmailStore.SetEmailConfirmedAsync(user, true, CancellationToken.None);
 
                 // Persist changes
                 var result = await _userManager.UpdateAsync(user);
@@ -209,8 +223,22 @@ namespace Plato.Users.ViewProviders
                     var tokenResult = await _platoUserManager.GetEmailConfirmationUserAsync(user.Email);
                     if (tokenResult.Succeeded)
                     {
-                        await _platoUserManager.ConfirmEmailAsync(model.Email,
-                            tokenResult.Response.ConfirmationToken);
+                        //var confirmationResult = await _platoUserManager.ConfirmEmailAsync(model.Email,
+                        //    tokenResult.Response.ConfirmationToken);
+                        //if (!confirmationResult.Succeeded)
+                        //{
+                        //    foreach (var error in confirmationResult.Errors)
+                        //    {
+                        //        updater.ModelState.AddModelError(string.Empty, error.Description);
+                        //    }
+                        //}
+                    }
+                    else
+                    {
+                        foreach (var error in tokenResult.Errors)
+                        {
+                            updater.ModelState.AddModelError(string.Empty, error.Description);
+                        }
                     }
                 }
                 else

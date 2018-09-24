@@ -203,6 +203,12 @@ namespace Plato.Internal.Stores.Abstractions
 
         public WhereInt IsIn(int[] value, char delimiter = ',')
         {
+
+            if (value == null || value.Length == 0)
+            {
+                return this;
+            }
+
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
             Value = value[0];
@@ -210,7 +216,9 @@ namespace Plato.Internal.Stores.Abstractions
                 .Append("{0} IN (")
                 .Append(value.ToDelimitedString(delimiter))
                 .Append(")");
+
             return this;
+
         }
 
         public string ToSqlString(string parameterName)

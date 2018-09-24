@@ -406,7 +406,7 @@ namespace Plato.Users.Services
 
             if (string.IsNullOrWhiteSpace(confirmationToken))
             {
-                return result.Failed(new ActivityError("Token", T["A token is required."]));
+                return result.Failed(new ActivityError("Token", T["A confirmation token is required."]));
             }
 
             var user = await FindByUsernameOrEmailAsync(userIdentifier);
@@ -416,7 +416,6 @@ namespace Plato.Users.Services
             }
 
             var identityResult = await _userManager.ConfirmEmailAsync(user, confirmationToken);
-
             if (!identityResult.Succeeded)
             {
                 var errors = new List<ActivityError>();
@@ -426,10 +425,11 @@ namespace Plato.Users.Services
                 }
 
                 return result.Failed(errors.ToArray());
+
             }
 
             return result.Success(user);
-
+                   
         }
 
         #endregion

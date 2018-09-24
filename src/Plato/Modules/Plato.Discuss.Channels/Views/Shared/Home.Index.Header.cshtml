@@ -12,17 +12,36 @@
          </div>
          <div class="list-body">
              <h4>@Model.Name</h4>
-             <span class="text-muted">
-                 @Model.Description
-             </span>
+             @if (!String.IsNullOrEmpty(Model.Description))
+             {
+                 <span class="text-muted">
+                     @Model.Description
+                 </span>
+             }
+             else
+             {
+                 <div class="text-muted">
+                     @T["No description provided"]
+                 </div>
+             }
          </div>
      }
      else
      {
          <h4>@Model.Name</h4>
-         <span class="text-muted">
-             @Model.Description
-         </span>
+         @if (!String.IsNullOrEmpty(Model.Description))
+          {
+              <span class="text-muted">
+                  @Model.Description
+              </span>
+          }
+          else
+          {
+              <div class="text-muted">
+                  @T["No description provided"]
+              </div>
+          }
+
      }
 }
 else
