@@ -23,6 +23,7 @@ namespace Plato.Discuss.Navigation
 
             builder
                 .Add(T["Discuss"], configuration => configuration
+                    .IconCss("fal fa-comment-alt fa-flip-y")
                     .Add(T["Latest"], "2", installed => installed
                         .Action("Index", "Home", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)

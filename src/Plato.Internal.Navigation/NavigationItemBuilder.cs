@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
@@ -28,6 +29,18 @@ namespace Plato.Internal.Navigation
         public NavigationItemBuilder Position(string position)
         {
             _item.Position = position;
+            return this;
+        }
+
+        public NavigationItemBuilder Attributes(IDictionary<string, object> attributes)
+        {
+            _item.Attributes = attributes;
+            return this;
+        }
+
+        public NavigationItemBuilder IconCss(string css)
+        {
+            _item.IconCss = css;
             return this;
         }
 

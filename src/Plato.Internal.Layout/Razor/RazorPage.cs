@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Plato.Internal.Layout.Views;
@@ -60,20 +62,28 @@ namespace Plato.Internal.Layout.Razor
             return builder;
         }
         
-        public async Task<User> GetAuthenticatedUserAsync()
+        public async Task<User> GetAuthenticatedUserOrSignOutAsync()
         {
             if (User.Identity.IsAuthenticated)
             {
-                var userStore = ViewContext.HttpContext.RequestServices.GetRequiredService<IPlatoUserStore<User>>();
-                return await userStore.GetByUserNameAsync(User.Identity.Name);
+                
+                var store = ViewContext.HttpContext.RequestServices.GetRequiredService<IPlatoUserStore<User>>();
+                var user = await store.GetByUserNameAsync(User.Identity.Name);
+                
+                if (user == null)
+                {
+                    // The user account no longer exists or has changed, sign out and redirect
+                    var signInManager = ViewContext.HttpContext.RequestServices.GetRequiredService<SignInManager<User>>();
+                    await signInManager.SignOutAsync();
+                    ViewContext.HttpContext.Response.Redirect("~/");
+                }
+
+                return user;
             }
 
             return null;
         }
-
-
-
+        
     }
-
-
+    
 }

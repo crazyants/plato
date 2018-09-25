@@ -22,6 +22,7 @@ namespace Plato.Features.Navigation
 
             builder
                 .Add(T["Features"], 9998, features => features
+                    .IconCss("fal fa-cube")
                     .Add(T["Manage Features"], "15", manage => manage
                         .Action("Index", "Admin", "Plato.Features")
                         //.Permission(Permissions.ManageRoles)

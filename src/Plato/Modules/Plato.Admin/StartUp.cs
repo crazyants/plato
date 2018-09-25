@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Hosting;
+using Plato.Admin.Navigation;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 

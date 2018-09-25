@@ -22,6 +22,7 @@ namespace Plato.Search.Navigation
 
             builder
                 .Add(T["Settings"], 9999, configuration => configuration
+                    .IconCss("fal fa-cog")
                     .Add(T["Search Settings"], 4, installed => installed
                         .Action("Index", "Admin", "Plato.Search")
                         //.Permission(Permissions.ManageUsers)

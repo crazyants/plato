@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.Settings
+namespace Plato.Admin.Navigation
 {
     public class AdminMenu : INavigationProvider
     {
@@ -21,12 +21,13 @@ namespace Plato.Settings
             }
 
             builder
-                .Add(T["Settings"], 9999, configuration => configuration
-                    .Add(T["General Settings"], 1, installed => installed
-                        .Action("Index", "Admin", "Plato.Settings")
-                        //.Permission(Permissions.ManageUsers)
-                        .LocalNav()
-                    ));
+                .Add(T["Home"], "0", home => home
+                    .IconCss("fal fa-home")
+                    .Action("Index", "Admin", "Plato.Admin")
+                    //.Permission(Permissions.ManageRoles)
+                    .LocalNav()
+                );
+
 
         }
     }

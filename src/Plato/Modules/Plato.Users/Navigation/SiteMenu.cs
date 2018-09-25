@@ -25,7 +25,13 @@ namespace Plato.Users.Navigation
             builder
                 .Add(T["Users"], "1", installed => installed
                         .Action("Index", "Home", "Plato.Users")
+                        .IconCss("fal fa-users")
                         //.Permission(Permissions.ManageRoles)
+                        .Attributes(new Dictionary<string, object>()
+                        {
+                            {"data-toggle", "tooltip"},
+                            {"title", T["Users"]}
+                        })
                         .LocalNav()
                     , new List<string>() {"users"});
         }

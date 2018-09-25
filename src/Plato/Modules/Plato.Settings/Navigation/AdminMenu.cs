@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.WebApi
+namespace Plato.Settings.Navigation
 {
     public class AdminMenu : INavigationProvider
     {
@@ -22,8 +22,9 @@ namespace Plato.WebApi
 
             builder
                 .Add(T["Settings"], 9999, configuration => configuration
-                    .Add(T["Web Api Settings"], 6, webApiSettings => webApiSettings
-                        .Action("Index", "Admin", "Plato.WebApi")
+                    .IconCss("fal fa-cog")
+                    .Add(T["General Settings"], 1, installed => installed
+                        .Action("Index", "Admin", "Plato.Settings")
                         //.Permission(Permissions.ManageUsers)
                         .LocalNav()
                     ));

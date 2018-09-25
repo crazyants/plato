@@ -12,6 +12,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.WebApi.Configuration;
 using Plato.WebApi.Middleware;
+using Plato.WebApi.Navigation;
 using Plato.WebApi.Services;
 using Plato.WebApi.ViewProviders;
 

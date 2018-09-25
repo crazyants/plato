@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Routing;
+﻿using System.Collections.Concurrent;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
 using System.Text;
@@ -13,6 +14,7 @@ namespace Plato.Internal.Navigation
         {
             //Permissions = new List<Permission>();
             Classes = new List<string>();
+            Attributes = new ConcurrentDictionary<string, object>();
             Items = new List<MenuItem>();
             LinkToFirstChild = true;
         }
@@ -44,6 +46,10 @@ namespace Plato.Internal.Navigation
         public List<Permission> Permissions { get; }
         
         public List<string> Classes { get; }
+
+        public IDictionary<string, object> Attributes { get; set; }
+
+        public string IconCss { get; set; }
 
         public bool Selected { get; set; }
         

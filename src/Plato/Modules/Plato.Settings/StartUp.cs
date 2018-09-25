@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Hosting;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Models.Shell;
-using Plato.Settings.Services;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Settings.Handlers;
+using Plato.Settings.Navigation;
 
 namespace Plato.Settings
 {

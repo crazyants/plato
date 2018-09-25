@@ -183,7 +183,7 @@ namespace Plato.Internal.Layout.TagHelpers
                     targetCss = " data-toggle=\"collapse\"";
                     targetEvent = $" data-target=\"#menu-{_index}\" aria-controls=\"#menu-{_index}\"";
                 }
-                
+
                 sb.Append("<a class=\"")
                     .Append(linkClass)
                     .Append("\" href=\"")
@@ -191,8 +191,41 @@ namespace Plato.Internal.Layout.TagHelpers
                     .Append("\"")
                     .Append(item.Items.Count > 0 ? targetEvent : "")
                     .Append(item.Items.Count > 0 ? targetCss : "")
-                    .Append(" aria-expanded=\"").Append(IsChildSelected(item).ToString().ToLower()).Append("\">")
+                    .Append(" aria-expanded=\"")
+                    .Append(IsChildSelected(item).ToString().ToLower())
+                    .Append("\">")
+                    .Append("<span");
+
+                if (item.Attributes.Count > 0)
+                {
+                    var i = 0;
+                    foreach (var attr in item.Attributes)
+                    {
+                        if (i == 0)
+                        {
+                            sb.Append(" ");
+                        }
+                        sb.Append(attr.Key)
+                            .Append("=\"")
+                            .Append(attr.Value.ToString())
+                            .Append("\"");
+                        if (i < item.Attributes.Count)
+                        {
+                            sb.Append(" ");
+                        }
+                    }
+                }
+
+                sb.Append(">");
+                if (!String.IsNullOrEmpty(item.IconCss))
+                {
+                    sb.Append("<i class=\"")
+                        .Append(item.IconCss)
+                        .Append("\"></i>");
+                }
+                sb.Append("<span class=\"nav-text\">")
                     .Append(item.Text.Value)
+                    .Append("</span></span>")
                     .Append("</a>");
 
                 _index++;

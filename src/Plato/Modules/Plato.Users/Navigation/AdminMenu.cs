@@ -25,6 +25,7 @@ namespace Plato.Users.Navigation
 
             builder
                 .Add(T["Users"], 9996, users => users
+                    .IconCss("fal fa-users")
                     .Add(T["Manage"], 1, manage => manage
                         .Action("Index", "Admin", "Plato.Users")
                         //.Permission(Permissions.ManageRoles)

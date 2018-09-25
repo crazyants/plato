@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.Admin
+namespace Plato.WebApi.Navigation
 {
     public class AdminMenu : INavigationProvider
     {
@@ -21,12 +21,13 @@ namespace Plato.Admin
             }
 
             builder
-                .Add(T["Home"], "0", home => home
-                    .Action("Index", "Admin", "Plato.Admin")
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
-                );
-
+                .Add(T["Settings"], 9999, configuration => configuration
+                    .IconCss("fal fa-cog")
+                    .Add(T["Web Api Settings"], 6, webApiSettings => webApiSettings
+                        .Action("Index", "Admin", "Plato.WebApi")
+                        //.Permission(Permissions.ManageUsers)
+                        .LocalNav()
+                    ));
 
         }
     }
