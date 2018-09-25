@@ -76,20 +76,20 @@ namespace Plato.Discuss.Services
                     }
                     
                     // Restrict results via user role if the channels feature is enabled
-                    if (channelFeature != null)
-                    {
-                        if (user != null)
-                        {
-                            q.RoleId.IsIn(user.UserRoles?.Select(r => r.Id).ToArray());
-                        }
-                        else
-                        {
-                            if (anonymousRole != null)
-                            {
-                                q.RoleId.Equals(anonymousRole.Id);
-                            }
-                        }
-                    }
+                    //if (channelFeature != null)
+                    //{
+                    //    if (user != null)
+                    //    {
+                    //        q.RoleId.IsIn(user.UserRoles?.Select(r => r.Id).ToArray());
+                    //    }
+                    //    else
+                    //    {
+                    //        if (anonymousRole != null)
+                    //        {
+                    //            q.RoleId.Equals(anonymousRole.Id);
+                    //        }
+                    //    }
+                    //}
                     
                     if (options.ChannelId > 0)
                     {

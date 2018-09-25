@@ -56,8 +56,8 @@ namespace Plato.Discuss.ViewProviders
             // Build view model
             var viewModel = new TopicIndexViewModel
             {
-                Options = GetViewOptions(updater),
-                Pager = GetPagerOptions(updater)
+                Options = new TopicIndexOptions(updater.RouteData),
+                Pager = new PagerOptions(updater.RouteData)
             };
 
             return Task.FromResult(Views(
@@ -73,8 +73,8 @@ namespace Plato.Discuss.ViewProviders
         {
 
             // Get view data
-            var viewOptions = GetViewOptions(updater);
-            var pagerOptions = GetPagerOptions(updater);
+            var viewOptions = new TopicIndexOptions(updater.RouteData);
+            var pagerOptions = new PagerOptions(updater.RouteData);
 
             // Get entity
             var topic = await _entityStore.GetByIdAsync(viewModel.Id);
@@ -227,41 +227,41 @@ namespace Plato.Discuss.ViewProviders
                 .ToList();
         }
         
-        TopicIndexOptions GetViewOptions(IUpdateModel updater)
-        {
-            if (updater.ViewData["opts"] is TopicIndexOptions opts)
-            {
-                return opts;
-            }
+        //TopicIndexOptions GetViewOptions(IUpdateModel updater)
+        //{
+        //    if (updater.ViewData["opts"] is TopicIndexOptions opts)
+        //    {
+        //        return opts;
+        //    }
           
-            return new TopicIndexOptions();
-        }
+        //    return new TopicIndexOptions();
+        //}
 
-        PagerOptions GetPagerOptions(IUpdateModel updater)
-        {
-            if (updater.ViewData["pager"] is PagerOptions pager)
-            {
-                return pager;
-            }
+        //PagerOptions GetPagerOptions(IUpdateModel updater)
+        //{
+        //    if (updater.ViewData["pager"] is PagerOptions pager)
+        //    {
+        //        return pager;
+        //    }
 
-            return new PagerOptions();
-        }
+        //    return new PagerOptions();
+        //}
 
 
-        string GetKeywords(IUpdateModel updater)
-        {
+        //string GetKeywords(IUpdateModel updater)
+        //{
 
-            var keywords = string.Empty;
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("search", out object value);
-            if (found && value != null)
-            {
-                keywords = value.ToString();
-            }
+        //    var keywords = string.Empty;
+        //    var routeData = updater.RouteData;
+        //    var found = routeData.Values.TryGetValue("search", out object value);
+        //    if (found && value != null)
+        //    {
+        //        keywords = value.ToString();
+        //    }
 
-            return keywords;
+        //    return keywords;
 
-        }
+        //}
 
         async Task IncrementTopicViewCount(Topic topic)
         {

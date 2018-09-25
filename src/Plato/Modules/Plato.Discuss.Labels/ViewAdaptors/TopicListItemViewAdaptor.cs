@@ -32,19 +32,22 @@ namespace Plato.Discuss.Labels.ViewAdaptors
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly ITopicService _topicService;
-        
+        private readonly IActionContextAccessor _actionContextAccessor;
+
         public TopicListItemViewAdaptor(
             ILabelStore<Label> labelStore,
             IFeatureFacade featureFacade,
             ITopicService topicService, 
             IEntityLabelStore<EntityLabel> entityLabelStore,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IActionContextAccessor actionContextAccessor)
         {
             _labelStore = labelStore;
             _featureFacade = featureFacade;
             _topicService = topicService;
             _entityLabelStore = entityLabelStore;
             _httpContextAccessor = httpContextAccessor;
+            _actionContextAccessor = actionContextAccessor;
         }
 
         public override async Task<IViewAdaptorResult> ConfigureAsync()
@@ -131,12 +134,16 @@ namespace Plato.Discuss.Labels.ViewAdaptors
         async Task<IDictionary<int, IList<Label>>> BuildLoookUpTable(IEnumerable<Label> labels)
         {
 
+            var routeData = _actionContextAccessor.ActionContext.RouteData;
+            var viewOptions = new TopicIndexOptions(routeData);
+            var pagerOptions = new PagerOptions(routeData);
+
             // Get action parameters, we need to know which entities to query against
-            var viewOptions = _httpContextAccessor.HttpContext.Items[typeof(TopicIndexOptions)];
-            var pagerOptions = _httpContextAccessor.HttpContext.Items[typeof(PagerOptions)];
+            //var viewOptions = _httpContextAccessor.HttpContext.Items[typeof(TopicIndexOptions)];
+            //var pagerOptions = _httpContextAccessor.HttpContext.Items[typeof(PagerOptions)];
 
             // Get all entities for our current view
-            var entities = await _topicService.Get((TopicIndexOptions) viewOptions, (PagerOptions) pagerOptions);
+            var entities = await _topicService.Get(viewOptions, pagerOptions);
 
             // Get all entity label relationships for displayed entities
             IPagedResults<EntityLabel> entityLabels = null;

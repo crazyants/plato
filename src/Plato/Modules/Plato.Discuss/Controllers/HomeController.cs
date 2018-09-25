@@ -101,13 +101,14 @@ namespace Plato.Discuss.Controllers
             this.RouteData.Values.Add("opts.order", opts.Order);
             this.RouteData.Values.Add("opts.filter", opts.Filter);
             this.RouteData.Values.Add("pager.page", pager.Page);
-            
-            // Add view opiotsn to view data for use in view provider
-            this.ViewData.Add("opts", opts);
-            this.ViewData.Add("pager", pager);
+            //this.RouteData.Values.Add("pager.size", pager.PageSize);
 
-            this.HttpContext.Items[typeof(TopicIndexOptions)] = opts;
-            this.HttpContext.Items[typeof(PagerOptions)] = pager;
+            //// Add view opiotsn to view data for use in view provider
+            //this.ViewData.Add("opts", opts);
+            //this.ViewData.Add("pager", pager);
+
+            //this.HttpContext.Items[typeof(TopicIndexOptions)] = opts;
+            //this.HttpContext.Items[typeof(PagerOptions)] = pager;
 
 
 

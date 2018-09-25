@@ -88,8 +88,7 @@ namespace Plato.Categories.Stores
             {
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
-
-
+            
             var result = await _entityCategoryRepository.InsertUpdateAsync(model);
             if (result != null)
             {

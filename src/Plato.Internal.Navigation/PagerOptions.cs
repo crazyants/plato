@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Routing;
 
 namespace Plato.Internal.Navigation
 {
@@ -19,5 +20,33 @@ namespace Plato.Internal.Navigation
         {
             _total = total;
         }
+
+        public PagerOptions()
+        {
+        }
+        
+        public PagerOptions(RouteData routeData)
+        {
+            Page = GetRouteValueOrDefault<int>("pager.page", routeData, Page);
+            PageSize = GetRouteValueOrDefault<int>("pager.size", routeData, PageSize);
+        }
+
+        private T GetRouteValueOrDefault<T>(string key, RouteData routeData, T defaultValue)
+        {
+
+            if (routeData == null)
+            {
+                return defaultValue;
+            }
+
+            var found = routeData.Values.TryGetValue(key, out object value);
+            if (found)
+            {
+                return (T)value;
+            }
+            return defaultValue;
+        }
+
+
     }
 }
