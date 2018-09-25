@@ -76,7 +76,7 @@ namespace Plato.Entities.Services
             Creating?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, reply));
 
             // Invoke EntityReplyCreating subscriptions
-            foreach (var handler in await _broker.Pub<TReply>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<TReply>(this, new MessageOptions()
             {
                 Key = "EntityReplyCreating"
             }, reply))
@@ -91,7 +91,7 @@ namespace Plato.Entities.Services
                 Created?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, newReply));
 
                 // Invoke EntityReplyCreated subscriptions
-                foreach (var handler in await _broker.Pub<TReply>(this, new MessageOptions()
+                foreach (var handler in _broker.Pub(this, new MessageOptions()
                 {
                     Key = "EntityReplyCreated"
                 }, newReply))
@@ -144,7 +144,7 @@ namespace Plato.Entities.Services
             Updating?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, reply));
 
             // Invoke EntityReplyUpdating subscriptions
-            foreach (var handler in await _broker.Pub<TReply>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<TReply>(this, new MessageOptions()
             {
                 Key = "EntityReplyUpdating"
             }, reply))
@@ -159,7 +159,7 @@ namespace Plato.Entities.Services
                 Updated?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, updatedReply));
 
                 // Invoke EntityReplyUpdated subscriptions
-                foreach (var handler in await _broker.Pub<TReply>(this, new MessageOptions()
+                foreach (var handler in _broker.Pub<TReply>(this, new MessageOptions()
                 {
                     Key = "EntityReplyUpdated"
                 }, reply))
@@ -189,7 +189,7 @@ namespace Plato.Entities.Services
             Deleting?.Invoke(this, new EntityReplyEventArgs<TReply>(null, reply));
 
             // Invoke EntityReplyDeleting subscriptions
-            foreach (var handler in await _broker.Pub<TReply>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<TReply>(this, new MessageOptions()
             {
                 Key = "EntityReplyDeleting"
             }, reply))
@@ -205,7 +205,7 @@ namespace Plato.Entities.Services
                 Deleted?.Invoke(this, new EntityReplyEventArgs<TReply>(null, reply));
 
                 // Invoke EntityReplyDeleted subscriptions
-                foreach (var handler in await _broker.Pub<TReply>(this, new MessageOptions()
+                foreach (var handler in _broker.Pub<TReply>(this, new MessageOptions()
                 {
                     Key = "EntityReplyDeleted"
                 }, reply))
@@ -226,7 +226,7 @@ namespace Plato.Entities.Services
         {
 
             var output = string.Empty;
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
                 Key = "ParseMarkdown"
             }, message))
@@ -242,7 +242,7 @@ namespace Plato.Entities.Services
         {
 
             var output = message.PlainTextulize().TrimToAround(225);
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
                 Key = "ParseAbstract"
             }, message))

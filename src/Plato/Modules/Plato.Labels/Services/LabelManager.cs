@@ -80,7 +80,7 @@ namespace Plato.Labels.Services
             model.Alias = await ParseAlias(model.Name);
           
             // Publish LabelCreating event
-            await _broker.Pub<TLabel>(this, new MessageOptions()
+             _broker.Pub<TLabel>(this, new MessageOptions()
             {
                 Key = "LabelCreating"
             }, model);
@@ -91,12 +91,14 @@ namespace Plato.Labels.Services
             if (label != null)
             {
                 // Publish LabelCreated event
-                await _broker.Pub<TLabel>(this, new MessageOptions()
+                 _broker.Pub<TLabel>(this, new MessageOptions()
                 {
                     Key = "LabelCreated"
                 }, label);
+
                 // Return success
                 return result.Success(label);
+
             }
 
             return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create the Label"));
@@ -135,7 +137,7 @@ namespace Plato.Labels.Services
             model.Alias = await ParseAlias(model.Name);
             
             // Publish LabelUpdating event
-            await _broker.Pub<TLabel>(this, new MessageOptions()
+            _broker.Pub<TLabel>(this, new MessageOptions()
             {
                 Key = "LabelUpdating"
             }, model);
@@ -146,7 +148,7 @@ namespace Plato.Labels.Services
             if (label != null)
             {
                 // Publish LabelUpdated event
-                await _broker.Pub<TLabel>(this, new MessageOptions()
+                 _broker.Pub<TLabel>(this, new MessageOptions()
                 {
                     Key = "LabelUpdated"
                 }, label);
@@ -168,7 +170,7 @@ namespace Plato.Labels.Services
             }
 
             // Publish LabelDeleting event
-            await _broker.Pub<TLabel>(this, new MessageOptions()
+            _broker.Pub<TLabel>(this, new MessageOptions()
             {
                 Key = "LabelDeleting"
             }, model);
@@ -191,7 +193,7 @@ namespace Plato.Labels.Services
                 }
 
                 // Publish LabelDeleted event
-                await _broker.Pub<TLabel>(this, new MessageOptions()
+                 _broker.Pub<TLabel>(this, new MessageOptions()
                 {
                     Key = "LabelDeleted"
                 }, model);
@@ -353,7 +355,7 @@ namespace Plato.Labels.Services
         private async Task<string> ParseAlias(string input)
         {
 
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
                 Key = "ParseLabelAlias"
             }, input))

@@ -8,9 +8,7 @@ namespace Plato.Internal.Data.Abstractions
     public interface IDataProvider : IDisposable
     {
         IDbConnection Connection { get; }
-
-        //IDataReader ExecuteReader(string sql, params object[] args);
-
+        
         Task<DbDataReader> ExecuteReaderAsync(string sql, params object[] args);
         
         Task<T> ExecuteScalarAsync<T>(string sql, params object[] args);

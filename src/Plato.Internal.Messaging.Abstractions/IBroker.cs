@@ -8,7 +8,7 @@ namespace Plato.Internal.Messaging.Abstractions
     public interface IBroker 
     {
 
-        Task<IEnumerable<Func<Message<T>, Task<T>>>> Pub<T>(object sender, MessageOptions opts, T message) where T : class;
+        IEnumerable<Func<Message<T>, Task<T>>> Pub<T>(object sender, MessageOptions opts, T message) where T : class;
 
         void Sub<T>(MessageOptions opts, Action<Message<T>> subscription) where T : class;
 

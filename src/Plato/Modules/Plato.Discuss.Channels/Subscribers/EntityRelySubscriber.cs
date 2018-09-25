@@ -61,45 +61,45 @@ namespace Plato.Discuss.Channels.Subscribers
 
         #region "Private Methods"
 
-        async Task EntityReplyCreated(TEntityReply reply)
+        async Task<TEntityReply> EntityReplyCreated(TEntityReply reply)
         {
 
             // No need to update cateogry for private entities
             if (reply.IsPrivate)
             {
-                return;
+                return reply;
             }
 
             // No need to update cateogry for soft deleted entities
             if (reply.IsDeleted)
             {
-                return;
+                return reply;
             }
 
             // No need to update cateogry for entities flagged as spam
             if (reply.IsSpam)
             {
-                return;
+                return reply;
             }
 
             // Get the entity we are replying to
             var entity = await _topicStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
-                return;
+                return reply;
             }
             
             // Ensure we have a categoryId for the newly created entity
             if (entity.CategoryId <= 0)
             {
-                return;
+                return reply;
             }
 
             // Ensure we found the category
             var channel = await _channelStore.GetByIdAsync(entity.CategoryId);
             if (channel == null)
             {
-                return;
+                return reply;
             }
 
             //Get current channel and all parent channels
@@ -122,6 +122,8 @@ namespace Plato.Discuss.Channels.Subscribers
                 await _channelManager.UpdateAsync(parent);
 
             }
+
+            return reply;
 
         }
         

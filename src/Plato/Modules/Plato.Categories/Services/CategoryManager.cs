@@ -88,7 +88,7 @@ namespace Plato.Categories.Services
             }
             
             // Publish CategoryCreating event
-            await _broker.Pub<TCategory>(this, new MessageOptions()
+            _broker.Pub<TCategory>(this, new MessageOptions()
             {
                 Key = "CategoryCreating"
             }, model);
@@ -99,7 +99,7 @@ namespace Plato.Categories.Services
             if (category != null)
             {
                 // Publish CategoryCreated event
-                await _broker.Pub<TCategory>(this, new MessageOptions()
+                _broker.Pub<TCategory>(this, new MessageOptions()
                 {
                     Key = "CategoryCreated"
                 }, category);
@@ -143,7 +143,7 @@ namespace Plato.Categories.Services
             model.Alias = await ParseAlias(model.Name);
             
             // Publish CategoryUpdating event
-            await _broker.Pub<TCategory>(this, new MessageOptions()
+            _broker.Pub<TCategory>(this, new MessageOptions()
             {
                 Key = "CategoryUpdating"
             }, model);
@@ -154,7 +154,7 @@ namespace Plato.Categories.Services
             if (category != null)
             {
                 // Publish CategoryUpdated event
-                await _broker.Pub<TCategory>(this, new MessageOptions()
+                _broker.Pub<TCategory>(this, new MessageOptions()
                 {
                     Key = "CategoryUpdated"
                 }, category);
@@ -176,7 +176,7 @@ namespace Plato.Categories.Services
             }
 
             // Publish CategoryDeleting event
-            await _broker.Pub<TCategory>(this, new MessageOptions()
+            _broker.Pub<TCategory>(this, new MessageOptions()
             {
                 Key = "CategoryDeleting"
             }, model);
@@ -199,7 +199,7 @@ namespace Plato.Categories.Services
                 }
 
                 // Publish CategoryDeleted event
-                await _broker.Pub<TCategory>(this, new MessageOptions()
+                _broker.Pub<TCategory>(this, new MessageOptions()
                 {
                     Key = "CategoryDeleted"
                 }, model);
@@ -458,7 +458,7 @@ namespace Plato.Categories.Services
         async Task<string> ParseAlias(string input)
         {
 
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
                 Key = "ParseCategoryAlias"
             }, input))

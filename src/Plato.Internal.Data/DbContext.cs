@@ -148,9 +148,10 @@ namespace Plato.Internal.Data
                 : procedureName;
         }
 
-        public void HandleException(Exception x)
+        public void HandleException(Exception ex)
         {
-            //throw x;
+            _provider?.Dispose();
+            throw ex;
         }
 
         #endregion

@@ -91,7 +91,7 @@ namespace Plato.Entities.Services
             Creating?.Invoke(this, new EntityEventArgs<TEntity>(model));
 
             // Invoke EntityCreating subscriptions
-            foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<TEntity>(this, new MessageOptions()
             {
                 Key = "EntityCreating"
             }, model))
@@ -107,7 +107,7 @@ namespace Plato.Entities.Services
                 Created?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
                 // Invoke EntityCreated subscriptions
-                foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
+                foreach (var handler in _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityCreated"
                 }, entity))
@@ -161,7 +161,7 @@ namespace Plato.Entities.Services
             Updating?.Invoke(this, new EntityEventArgs<TEntity>(model));
 
             // Invoke EntityUpdating subscriptions
-            foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<TEntity>(this, new MessageOptions()
             {
                 Key = "EntityUpdating"
             }, model))
@@ -177,7 +177,7 @@ namespace Plato.Entities.Services
                 Updated?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
                 // Invoke EntityUpdated subscriptions
-                foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
+                foreach (var handler in _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityUpdated"
                 }, entity))
@@ -212,7 +212,7 @@ namespace Plato.Entities.Services
             Deleting?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
             // Invoke EntityDeleting subscriptions
-            foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<TEntity>(this, new MessageOptions()
             {
                 Key = "EntityDeleting"
             }, entity))
@@ -228,7 +228,7 @@ namespace Plato.Entities.Services
                 Deleted?.Invoke(this, new EntityEventArgs<TEntity>(entity, true));
 
                 // Invoke EntityDeleted subscriptions
-                foreach (var handler in await _broker.Pub<TEntity>(this, new MessageOptions()
+                foreach (var handler in _broker.Pub<TEntity>(this, new MessageOptions()
                 {
                     Key = "EntityDeleted"
                 }, entity))
@@ -249,7 +249,7 @@ namespace Plato.Entities.Services
 
         private async Task<string> ParseMarkdown(string message)
         {
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
                 Key = "ParseMarkdown"
             }, message))
@@ -263,7 +263,7 @@ namespace Plato.Entities.Services
 
         private async Task<string> ParseAbstract(string message)
         {
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
                 Key = "ParseAbstract"
             }, message))
@@ -279,7 +279,7 @@ namespace Plato.Entities.Services
         {
 
             var output = _aliasCreator.Create(input);
-            foreach (var handler in await _broker.Pub<string>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
                 Key = "ParseEntityAlias"
             }, input))

@@ -39,8 +39,10 @@ namespace Plato.Entities.Repositories
         {
 
             if (entity == null)
+            {
                 throw new ArgumentNullException(nameof(entity));
-
+            }
+                
             var id = await InsertUpdateInternal(
                 entity.Id,
                 entity.FeatureId,
@@ -104,18 +106,10 @@ namespace Plato.Entities.Repositories
             using (var context = _dbContext)
             {
 
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectEntitiesPaged",
-                    inputParams
-                );
-
+                    inputParams);
                 if ((reader != null) && (reader.HasRows))
                 {
                     output = new PagedResults<TModel>();
@@ -131,7 +125,7 @@ namespace Plato.Entities.Repositories
                         await reader.ReadAsync();
                         output.PopulateTotal(reader);
                     }
-                    
+
                 }
             }
 

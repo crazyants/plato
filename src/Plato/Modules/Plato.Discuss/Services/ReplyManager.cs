@@ -29,7 +29,7 @@ namespace Plato.Discuss.Services
         public async Task<IActivityResult<Reply>> CreateAsync(Reply model)
         {
 
-            _entityReplyManager.Created += async (sender, args) =>
+            _entityReplyManager.Created += (sender, args) =>
             {
             };
             return await _entityReplyManager.CreateAsync(model);

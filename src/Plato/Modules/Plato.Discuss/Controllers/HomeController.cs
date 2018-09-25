@@ -93,7 +93,7 @@ namespace Plato.Discuss.Controllers
               
             });
 
-            //await CreateSampleData();
+            await CreateSampleData();
 
             // Add route data for pagination purposes
             this.RouteData.Values.Add("opts.search", opts.Search);

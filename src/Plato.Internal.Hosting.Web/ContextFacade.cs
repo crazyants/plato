@@ -24,8 +24,7 @@ namespace Plato.Internal.Hosting.Web
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly SignInManager<User> _signInManager;
-
+      
         private IUrlHelper _urlHelper;
 
         public ContextFacade(
@@ -33,14 +32,13 @@ namespace Plato.Internal.Hosting.Web
             IPlatoUserStore<User> platoUserStore,
             IActionContextAccessor actionContextAccessor,
             ISiteSettingsStore siteSettingsStore,
-            IUrlHelperFactory urlHelperFactory, SignInManager<User> signInManager)
+            IUrlHelperFactory urlHelperFactory)
         {
             _httpContextAccessor = httpContextAccessor;
             _platoUserStore = platoUserStore;
             _actionContextAccessor = actionContextAccessor;
             _siteSettingsStore = siteSettingsStore;
             _urlHelperFactory = urlHelperFactory;
-            _signInManager = signInManager;
         }
 
         public async Task<User> GetAuthenticatedUserAsync()
@@ -49,18 +47,7 @@ namespace Plato.Internal.Hosting.Web
             var identity = _httpContextAccessor.HttpContext.User?.Identity;
             if ((identity != null) && (identity.IsAuthenticated))
             {
-
-                var user = await _platoUserStore.GetByUserNameAsync(identity.Name);
-
-                // We are marked as authenticated via a client side cookie
-                // but didn't find the user within the database, log the user out
-                if (user == null)
-                {
-                    await _signInManager.SignOutAsync();
-                    return null;
-                }
-
-                return user;
+                return await _platoUserStore.GetByUserNameAsync(identity.Name);
             }
 
             return null;

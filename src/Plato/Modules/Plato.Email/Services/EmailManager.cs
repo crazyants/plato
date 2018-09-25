@@ -52,7 +52,7 @@ namespace Plato.Email.Services
             }
 
             // Invoke EmailCreating subscriptions
-            foreach (var handler in await _broker.Pub<MailMessage>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<MailMessage>(this, new MessageOptions()
             {
                 Key = "EmailCreating"
             }, message))
@@ -65,7 +65,7 @@ namespace Plato.Email.Services
             if (email != null)
             {
                 // Invoke EmailCreated subscriptions
-                foreach (var handler in await _broker.Pub<MailMessage>(this, new MessageOptions()
+                foreach (var handler in _broker.Pub<MailMessage>(this, new MessageOptions()
                 {
                     Key = "EmailCreated"
                 }, message))
@@ -96,7 +96,7 @@ namespace Plato.Email.Services
             }
 
             // Invoke EmailSending subscriptions
-            foreach (var handler in await _broker.Pub<MailMessage>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<MailMessage>(this, new MessageOptions()
             {
                 Key = "EmailSending"
             }, message))
@@ -109,7 +109,7 @@ namespace Plato.Email.Services
             if (sendResult.Succeeded)
             {
                 // Invoke EmailSent subscriptions
-                foreach (var handler in await _broker.Pub<MailMessage>(this, new MessageOptions()
+                foreach (var handler in _broker.Pub<MailMessage>(this, new MessageOptions()
                 {
                     Key = "EmailSent"
                 }, message))

@@ -75,6 +75,11 @@ namespace Plato.Discuss.Subscribers
             {
                 return reply;
             }
+            
+            if (reply.EntityId <= 0)
+            {
+                return reply;
+            }
 
             var entity = await _entityStore.GetByIdAsync(reply.EntityId);
             if (entity == null)

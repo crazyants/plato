@@ -18,7 +18,7 @@ namespace Plato.Internal.Messaging
             _subscribers = new ConcurrentDictionary<Type, List<DescribedDelegate>>();
         }
 
-        public Task<IEnumerable<Func<Message<T>, Task<T>>>> Pub<T>(object sender, MessageOptions options, T message) where T : class
+        public IEnumerable<Func<Message<T>, Task<T>>> Pub<T>(object sender, MessageOptions options, T message) where T : class
         {
 
             var ourput = new List<Func<Message<T>, Task<T>>>();
@@ -26,20 +26,20 @@ namespace Plato.Internal.Messaging
             // Nothing to process return empty collection
             if (message == null || sender == null)
             {
-                return Task.FromResult((IEnumerable<Func<Message<T>, Task<T>>>)ourput);
+                return ourput;
             }
 
             // No _subscribers for given type return empty collection
             if (!_subscribers.ContainsKey(typeof(T)))
             {
-                return Task.FromResult((IEnumerable<Func<Message<T>, Task<T>>>)ourput);
+                return ourput;
             }
 
             // No delegates within subscriber for given type return empty collection
             var delegates = _subscribers[typeof(T)];
             if (delegates == null || delegates.Count == 0)
             {
-                return Task.FromResult((IEnumerable<Func<Message<T>, Task<T>>>)ourput);
+                return ourput;
             }
 
             // The payload passwed to each subscriber delegate
@@ -55,30 +55,33 @@ namespace Plato.Internal.Messaging
                     // action delegates return void and as such cannot be awaited
                     // wrap action delegates within a dummy func delegate ensuring 
                     // the action can be executed consistently and asynchronously 
-                    ourput.Add(new Func<Message<T>, Task<T>>((Message<T> input) =>
+                    ourput.Add(new Func<Message<T>, Task<T>>(async (Message<T> input) =>
                     {
-                        handler.Invoke(delegatePayload);
-                        return Task.FromResult(delegatePayload.What);
+                        return await Task.Factory.StartNew(() =>
+                        {
+                            handler.Invoke(delegatePayload);
+                            return delegatePayload.What;
+                        });
                     }));
                 }         
               
             }
-
+            
             // Iterate through subscriber func delegates matching our key
-            foreach (var handler in delegates
+            foreach (var func in delegates
                 .Where(d => d.Options.Key == options.Key)
                 .Select(s => s.Subscription as Func<Message<T>, Task<T>>))
             {
-                if (handler != null)
+                if (func != null)
                 {
                     // convert delegates generic argument type
-                    // to concrete type (object) to allow for deferred execurtion
-                    ourput.Add(new Func<Message<T>, Task<T>>((Message<T> input) => handler(delegatePayload)));
+                    // to concrete delegate type to allow for deferred execurtion
+                    ourput.Add((Message<T> input) => func(delegatePayload));
                 }
             }
 
             // Return funcs to invoke
-            return Task.FromResult((IEnumerable<Func<Message<T>, Task<T>>>) ourput);
+            return ourput;
 
         }
 

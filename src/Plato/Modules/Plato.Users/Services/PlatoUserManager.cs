@@ -123,7 +123,7 @@ namespace Plato.Users.Services
             //}
 
             // Invoke UserCreating subscriptions
-            foreach (var handler in await _broker.Pub<TUser>(this, new MessageOptions()
+            foreach (var handler in _broker.Pub<TUser>(this, new MessageOptions()
             {
                 Key = "UserCreating"
             }, user))
@@ -137,7 +137,7 @@ namespace Plato.Users.Services
             {
 
                 // Invoke UserCreated subscriptions
-                foreach (var handler in await _broker.Pub<TUser>(this, new MessageOptions()
+                foreach (var handler in _broker.Pub<TUser>(this, new MessageOptions()
                 {
                     Key = "UserCreated"
                 }, user))

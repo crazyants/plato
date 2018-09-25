@@ -8,7 +8,7 @@ using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Data.Providers
 {
-    public class SqlProvider : IDataProvider, IDisposable
+    public class SqlProvider : IDataProvider
     {
 
         #region "Private Variables"
@@ -33,7 +33,6 @@ namespace Plato.Internal.Data.Providers
 
         #region "Properties"
         
-      
         public int CommandTimeout { get; set; }
 
         public IDbConnection Connection => _dbConnection;
@@ -48,6 +47,7 @@ namespace Plato.Internal.Data.Providers
 
             if (String.IsNullOrEmpty(_connectionString))
             {
+                Close();
                 throw new Exception("The connection string has not been initialized.");
             }
 
@@ -60,7 +60,6 @@ namespace Plato.Internal.Data.Providers
         {
             if (_dbConnection != null)
             {
-                _dbConnection.Close();
                 _dbConnection.Dispose();
                 _dbConnection = null;
             }
@@ -73,7 +72,7 @@ namespace Plato.Internal.Data.Providers
         public async Task<DbDataReader> ExecuteReaderAsync(string sql, params object[] args)
         {
 
-            SqlDataReader reader;
+            SqlDataReader reader = null;
             try
             {
                 await OpenAsync();
@@ -83,12 +82,12 @@ namespace Plato.Internal.Data.Providers
                     OnExecutedCommand(command);
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                HandleException(exception);
-                throw;
+                HandleException(ex);
             }
-           
+          
+
             return reader;
 
         }
@@ -106,18 +105,19 @@ namespace Plato.Internal.Data.Providers
                     OnExecutedCommand(cmd);
                 }
             }
-            catch (Exception x)
+            catch (Exception ex)
             {
-                HandleException(x);
-                throw;
+                HandleException(ex);
             }
-            
+       
             return (T)Convert.ChangeType(output, typeof(T));
             
         }
 
         public async Task<T> ExecuteAsync<T>(string sql, params object[] args)
         {
+
+            var output = default(T);
             try
             {
                 await OpenAsync();
@@ -125,14 +125,16 @@ namespace Plato.Internal.Data.Providers
                 {
                     var retv = await cmd.ExecuteNonQueryAsync();
                     OnExecutedCommand(cmd);
-                    return (T)Convert.ChangeType(retv, typeof(T));
+                    output = (T)Convert.ChangeType(retv, typeof(T));
                 }
             }
-            catch (Exception x)
+            catch (Exception ex)
             {
-                HandleException(x);
-                throw;
+                HandleException(ex);
             }
+        
+
+            return output;
 
         }
         
@@ -238,9 +240,9 @@ namespace Plato.Internal.Data.Providers
                 
         public event DbEventHandlers.DbExceptionEventHandler OnException;  
 
-        public virtual void HandleException(Exception x)
+        public virtual void HandleException(Exception ex)
         {
-            OnException?.Invoke(this, new DbExceptionEventArgs(x));
+            OnException?.Invoke(this, new DbExceptionEventArgs(ex));
         }
      
         #endregion
