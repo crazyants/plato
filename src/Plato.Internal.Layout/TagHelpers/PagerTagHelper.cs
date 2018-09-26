@@ -20,7 +20,7 @@ namespace Plato.Internal.Layout.TagHelpers
     public class PagerTagHelper : TagHelper
     {
 
-        private const int NumberOfPagesToShow = 7;
+        private const int NumberOfPagesToShow = 4;
         private int _totalPageCount;
 
         public PagerOptions Model { get; set; }
@@ -109,7 +109,7 @@ namespace Plato.Internal.Layout.TagHelpers
             _routeData.Remove(pageKey);
             var url = _urlHelper.RouteUrl(new UrlRouteContext { Values = _routeData });
 
-            var text = FirstText ?? T["First"];
+            var text = FirstText ?? T["&laquo;"];
 
             var builder = new HtmlContentBuilder();
             var htmlContentBuilder = builder
@@ -135,7 +135,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 return new HtmlString(string.Empty);
             }
 
-            var text = PreviousText ?? T["&laquo;"];
+            var text = PreviousText ?? T["Prev"];
 
             _routeData[pageKey] = this.Model.Page - 1;
             var url = _urlHelper.RouteUrl(new UrlRouteContext { Values = _routeData });
@@ -159,11 +159,15 @@ namespace Plato.Internal.Layout.TagHelpers
         {
 
             if (Model == null)
+            {
                 throw new ArgumentNullException(nameof(Model));
-            
-            if (Model.PageSize == 0)
-                throw new ArgumentNullException(nameof(Model.PageSize));
+            }
 
+            if (Model.PageSize == 0)
+            {
+                throw new ArgumentNullException(nameof(Model.PageSize));
+            }
+               
             var currentPage = Model.Page;
             if (currentPage < 1)
                 currentPage = 1;
@@ -221,7 +225,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 return new HtmlString(string.Empty);
             }
 
-            var text = NextText ?? T["&raquo;"];
+            var text = NextText ?? T["Next"];
 
             _routeData[pageKey] = this.Model.Page + 1;
             var url = _urlHelper.RouteUrl(new UrlRouteContext { Values = _routeData });
@@ -250,7 +254,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 return new HtmlString(string.Empty);
             }
 
-            var text = LastText ?? T["Last"];
+            var text = LastText ?? T["&raquo;"];
 
             _routeData[pageKey] = _totalPageCount;
             var url = _urlHelper.RouteUrl(new UrlRouteContext { Values = _routeData });

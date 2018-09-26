@@ -68,9 +68,9 @@
                     @if (this.CurrentUser != null)
                     {
                         <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post">
-                            <ul class="nav">
+                            <ul class="nav" id="adminNav">
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tooltip" title="@T["Return Home"]" href="#" data-placement="bottom">
+                                    <a class="nav-link" data-toggle="tooltip" data-container="#adminNav" title="@T["Return Home"]" href="#" data-placement="bottom">
                                         <i class="fal fa-home"></i>
                                     </a>
                                 </li>

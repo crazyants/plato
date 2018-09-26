@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Internal.Features.Abstractions;
@@ -17,15 +18,18 @@ namespace Plato.Discuss.Labels.ViewProviders
         private readonly ILabelStore<Models.Label> _labelStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IActionContextAccessor _actionContextAccessor;
 
         public LabelsViewProvider(
             ILabelStore<Label> labelStore,
             IContextFacade contextFacade,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IActionContextAccessor actionContextAccessor)
         {
             _labelStore = labelStore;
             _contextFacade = contextFacade;
             _featureFacade = featureFacade;
+            _actionContextAccessor = actionContextAccessor;
         }
         
         #region "Imlementation"
@@ -33,22 +37,13 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override async Task<IViewProviderResult> BuildIndexAsync(Label label, IUpdateModel updater)
         {
 
-            // filter options
-            var topicIndexOptions = new TopicIndexOptions()
-            {
-                LabelId = label?.Id ?? 0
-            };
-         
-            // paging otptions
-            var pagerOptions = new PagerOptions
-            {
-                Page = GetPageIndex(updater)
-            };
-
+            // Get topic index view model from context
+            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            
             var indexViewModel = new LabelIndexViewModel
             {
-                TopicIndexOpts = topicIndexOptions,
-                PagerOpts = pagerOptions
+                TopicIndexOpts = viewModel?.Options,
+                PagerOpts = viewModel?.Pager
             };
 
             // Ensure we explictly set the featureId
@@ -87,25 +82,6 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override Task<IViewProviderResult> BuildUpdateAsync(Label model, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));
-        }
-        
-        #endregion
-
-        #region "Private Methods"
-
-        int GetPageIndex(IUpdateModel updater)
-        {
-
-            var page = 1;
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("page", out object value);
-            if (found)
-            {
-                int.TryParse(value.ToString(), out page);
-            }
-
-            return page;
-
         }
         
         #endregion

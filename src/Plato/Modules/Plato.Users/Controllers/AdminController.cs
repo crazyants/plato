@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ViewProviders;
@@ -178,15 +179,19 @@ namespace Plato.Users.Controllers
                     var newUser = await _userManager.FindByEmailAsync(model.Email);
                     if (newUser != null)
                     {
-                      // Execute view providers ProvideUpdateAsync method
+                        // Execute view providers ProvideUpdateAsync method
                         await _viewProvider.ProvideUpdateAsync(newUser, this);
                     }
                     
                     // Everything was OK
                     _alerter.Success(T["User Created Successfully!"]);
 
-                    // Redirect to index
-                    return RedirectToAction(nameof(Index));
+                    // Redirect to edit user
+                    // Redirect back to edit user
+                    return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+                    {
+                        ["id"] = newUser.Id.ToString()
+                    });
 
                 }
                 else
@@ -256,12 +261,17 @@ namespace Plato.Users.Controllers
             }
             
             var result = await _viewProvider.ProvideUpdateAsync((User)currentUser, this);
-
-            // Ensure modelstate is still valid after view providers have executed
             if (ModelState.IsValid)
             {
+
                 _alerter.Success(T["User Updated Successfully!"]);
-                return RedirectToAction(nameof(Index));
+
+                // Redirect back to edit user
+                return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+                {
+                    ["id"] = currentUser.Id.ToString()
+                });
+
             }
 
             // if we reach this point some view model validation
@@ -276,7 +286,38 @@ namespace Plato.Users.Controllers
 
             return await Edit(currentUser.Id.ToString());
 
+        }
 
+        public async Task<IActionResult> ConfirmEmail(string id)
+        {
+            // Get user
+            var currentUser = await _userManager.FindByIdAsync(id);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+
+            currentUser.EmailConfirmed = true;
+
+            // Update user
+            var result = await _userManager.UpdateAsync(currentUser);
+            if (result.Succeeded)
+            {
+                _alerter.Success(T["User activated Successfully!"]);
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    _alerter.Danger(T[error.Description]);
+                }
+            }
+            
+            // Redirect back to edit user
+            return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+            {
+                ["id"] = id
+            });
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Plato.Discuss.Models;
 using Plato.Internal.Data.Abstractions;
@@ -128,6 +129,19 @@ namespace Plato.Discuss.ViewModels
             LabelId = GetRouteValueOrDefault<int>("opts.labelId", routeData, LabelId);
             Sort = GetRouteValueOrDefault<SortBy>("opts.sort", routeData, Sort);
             Order = GetRouteValueOrDefault<OrderBy>("opts.order", routeData, Order);
+        }
+
+        public string BuildSortOrderByHref(RouteData routeData, UrlHelper urlHelper, OrderBy order)
+        {
+            var data = new RouteValueDictionary(routeData.Values);
+            if (order != this.Order)
+            {
+                data.Add("opts.order", order);
+            }
+
+            return urlHelper.RouteUrl(new UrlRouteContext { Values = data });
+
+
         }
 
         private T GetRouteValueOrDefault<T>(string key, RouteData routeData, T defaultValue)

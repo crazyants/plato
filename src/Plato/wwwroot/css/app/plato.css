@@ -12,6 +12,10 @@
 /* ------------------------- */
 
 .site-nav li > a .nav-text { margin-left: 0.50rem; }
+
+.site-nav li.discuss > a .nav-text,
+.site-nav li.roles > a .nav-text { display: none;  }
+
 .site-nav li.search > a .nav-text,
 .site-nav li.users > a .nav-text { display: none;  }
 
@@ -381,7 +385,6 @@
     .nav-asides .main-container {
         overflow: hidden;
         flex: 1;
-        min-height: calc(100vw);
         max-width: calc(100vw - 264px);
     }
     

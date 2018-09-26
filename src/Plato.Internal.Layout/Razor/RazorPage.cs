@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -75,7 +77,12 @@ namespace Plato.Internal.Layout.Razor
 
             return builder;
         }
-        
+
+        public string GetRouteUrl(RouteValueDictionary routeValues)
+        {
+            var facade = Context.RequestServices.GetService<IContextFacade>();
+            return facade.GetRouteUrl(routeValues);
+        }
     }
     
 }

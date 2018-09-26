@@ -94,7 +94,7 @@ namespace Plato.Discuss.Controllers
             });
 
           
-            await CreateSampleData();
+            //await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new TopicIndexOptions();
@@ -113,19 +113,13 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-            
 
-
-            //this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-            //// Add view opiotsn to view data for use in view provider
-            //this.ViewData.Add("opts", opts);
-            //this.ViewData.Add("pager", pager);
-
-            //this.HttpContext.Items[typeof(TopicIndexOptions)] = opts;
-            //this.HttpContext.Items[typeof(PagerOptions)] = pager;
-
-
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
+            {
+                Options = opts,
+                Pager = pager
+            };
 
             // Build view
             var result = await _topicViewProvider.ProvideIndexAsync(new Topic(), this);

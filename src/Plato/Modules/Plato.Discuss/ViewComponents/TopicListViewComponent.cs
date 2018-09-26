@@ -8,8 +8,7 @@ namespace Plato.Discuss.ViewComponents
 {
     public class TopicListViewComponent : ViewComponent
     {
-
-  
+        
         private readonly ITopicService _topicService;
 
         public TopicListViewComponent(
@@ -32,8 +31,10 @@ namespace Plato.Discuss.ViewComponents
             {
                 pager = new PagerOptions();
             }
-       
-            return View(await GetViewModel(options, pager));
+
+            var model = await GetViewModel(options, pager);
+            
+            return View(model);
 
         }
         

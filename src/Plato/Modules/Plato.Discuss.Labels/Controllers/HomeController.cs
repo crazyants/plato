@@ -22,7 +22,7 @@ namespace Plato.Discuss.Labels.Controllers
         
         private readonly IViewProviderManager<Label> _labelViewProvider;
         private readonly ISiteSettingsStore _settingsStore;
-        private readonly ILabelStore<Label> _channelStore;
+        private readonly ILabelStore<Label> _labelStore;
         private readonly IAlerter _alerter;
         
         public IHtmlLocalizer T { get; }
@@ -30,13 +30,13 @@ namespace Plato.Discuss.Labels.Controllers
         public HomeController(
             IViewProviderManager<Label> labelViewProvider,
             IHtmlLocalizer<HomeController> localizer,
-            ILabelStore<Label> channelStore,
+            ILabelStore<Label> labelStore,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
             IAlerter alerter)
         {
             _settingsStore = settingsStore;
-            _channelStore = channelStore;
+            _labelStore = labelStore;
             _labelViewProvider = labelViewProvider;
             _alerter = alerter;
             T = localizer;
@@ -48,22 +48,46 @@ namespace Plato.Discuss.Labels.Controllers
 
         public async Task<IActionResult> Index(
             int id,
-            TopicIndexOptions options,
+            TopicIndexOptions opts,
             PagerOptions pager)
         {
 
-            var category = await _channelStore.GetByIdAsync(id);
-            if (category == null)
+            var label = await _labelStore.GetByIdAsync(id);
+            if (label == null)
             {
                 return NotFound();
             }
+
+            // Get default options
+            var defaultViewOptions = new TopicIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (opts.Filter != defaultViewOptions.Filter)
+                this.RouteData.Values.Add("opts.filter", opts.Filter);
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
             
-            //this.RouteData.Values.Add("Options.Search", filterOptions.Search);
-            //this.RouteData.Values.Add("Options.Order", filterOptions.Order);
-            this.RouteData.Values.Add("page", pager.Page);
-    
+            // We don't need to add to pagination 
+            opts.LabelId = label?.Id ?? 0;
+
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
+            {
+                Options = opts,
+                Pager = pager
+            };
+
             // Build view
-            var result = await _labelViewProvider.ProvideIndexAsync(category, this);
+            var result = await _labelViewProvider.ProvideIndexAsync(label, this);
 
             // Return view
             return View(result);

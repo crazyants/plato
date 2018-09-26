@@ -65,7 +65,7 @@ namespace Plato.Discuss.Labels
             routes.MapAreaRoute(
                 name: "DiscussLabels",
                 areaName: "Plato.Discuss.Labels",
-                template: "discuss/label/{id}/{alias}",
+                template: "discuss/label/{id}/{alias?}",
                 defaults: new { controller = "Home", action = "Index" }
             );
 

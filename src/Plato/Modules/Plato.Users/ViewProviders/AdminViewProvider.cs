@@ -111,7 +111,8 @@ namespace Plato.Users.ViewProviders
                 Bio = details.Profile.Bio,
                 LastLoginDate = user.LastLoginDate,
                 IsNewUser = user.Id == 0,
-                DisplayPasswordFields = user.Id == 0
+                DisplayPasswordFields = user.Id == 0,
+                EmailConfirmed = user.EmailConfirmed
             };
 
             return Task.FromResult(

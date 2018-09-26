@@ -133,17 +133,12 @@ namespace Plato.Discuss.Labels.ViewAdaptors
         
         async Task<IDictionary<int, IList<Label>>> BuildLoookUpTable(IEnumerable<Label> labels)
         {
-
-            var routeData = _actionContextAccessor.ActionContext.RouteData;
-            var viewOptions = new TopicIndexOptions(routeData);
-            var pagerOptions = new PagerOptions(routeData);
-
-            // Get action parameters, we need to know which entities to query against
-            //var viewOptions = _httpContextAccessor.HttpContext.Items[typeof(TopicIndexOptions)];
-            //var pagerOptions = _httpContextAccessor.HttpContext.Items[typeof(PagerOptions)];
-
+            
+            // Get topic index view model from context
+            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+        
             // Get all entities for our current view
-            var entities = await _topicService.Get(viewOptions, pagerOptions);
+            var entities = await _topicService.Get(viewModel?.Options, viewModel?.Pager);
 
             // Get all entity label relationships for displayed entities
             IPagedResults<EntityLabel> entityLabels = null;
