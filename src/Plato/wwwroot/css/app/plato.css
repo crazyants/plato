@@ -11,12 +11,11 @@
 /* Main app navigation */
 /* ------------------------- */
 
-.app-nav li > a span i { margin-right: 0.50rem; }
+.site-nav li > a .nav-text { margin-left: 0.50rem; }
+.site-nav li.search > a .nav-text,
+.site-nav li.users > a .nav-text { display: none;  }
 
-.app-nav li.search > a .nav-text,
-.app-nav li.users > a .nav-text { display: none;  }
-
-.app-nav .avatar { vertical-align: middle; width: 24px; height: 24px; display: inline-block; }
+.nav .avatar { vertical-align: middle; width: 24px; height: 24px; display: inline-block; }
 
 /* ------------------------- */
 /* Search bar */
@@ -206,7 +205,6 @@
 .avatar-group { display: inline-block; margin-left: 9px; }
 .avatar-group .avatar { margin-left: -9px; }
 
-
 .avatar {
     width: 40px;
     height: 40px;
@@ -302,7 +300,7 @@
 /* ------------------------- */
 
 .nav-v .collapse,
-.nav-v .collapsing{ width: 100%; }
+.nav-v .collapsing { width: 100%; }
 
 .nav-link[data-toggle="collapse"]:after {
     width: 0;
@@ -331,41 +329,32 @@
 /* Admin Nav */
 /* ------------------------- */
 
-.main-container > .container:last-child,
 .main-container > .container-fluid:last-child { padding-bottom: 6rem; }
 
 .nav-asides .navbar-nav { margin: 1rem 0; }
 .nav-asides > .navbar .nav-link { padding: 0.5rem 1rem; border-radius: 0.20rem; }
 .nav-asides > .navbar .nav-link i { margin-right: 0.50rem; }
 .nav-asides hr { margin: 0.5rem 0 1rem 0; display: none; }
-
-.nav-asides .navbar-toggler {
-    height: 40px;
-}
+.nav-asides .navbar-toggler { height: 40px; }
 
 @media (min-width: 992px) {
     
     .nav-asides {
         display: flex;
     }
-
-
+    
     .nav-asides .navbar .navbar-nav {
         flex-direction: column;
         width: 100%;
         padding: 0;
         margin: 0;
-       
     }
 
     .navbar-expand-lg .navbar-collapse {
         display: flex !important;
         flex-basis: auto;
     }
-    .navbar-expand-lg .app-nav {
-        display: flex !important;
-        flex-basis: auto;
-    }
+ 
     .nav-asides > .navbar {
         width: 100%;
         flex-direction: column;
@@ -392,14 +381,10 @@
     .nav-asides .main-container {
         overflow: hidden;
         flex: 1;
+        min-height: calc(100vw);
         max-width: calc(100vw - 264px);
     }
-
-    .nav-asides .main-container > .container {
-        padding-left: 3rem;
-        padding-right: 3rem;
-    }
-
+    
     .nav-asides hr { width: 100%; display: block; }
    
 } 
