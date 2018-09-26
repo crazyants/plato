@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inherits Plato.Internal.Layout.Razor.RazorPage<TModel>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -10,83 +11,105 @@
     <scripts section="Header" />
 </head>
 <body>
-    
-<assets section="Body" />
-<scripts section="Body"/>
 
-<div class="nav-v nav-asides">
+    <assets section="Body" />
+    <scripts section="Body" />
 
-    <div class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top">
+    <div class="nav-v nav-asides">
 
-        <a class="navbar-brand" href="#">
-            Plato
-        </a>
-        <hr />
-        <div class="d-flex align-items-center">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="d-block d-lg-none mr-2">
-                
-                <div class="dropdown">
-                    <a href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <avatar class="avatar"></avatar>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a href="nav-side-user.html" class="dropdown-item">Profile</a>
-                        <a href="utility-account-settings.html" class="dropdown-item">Account Settings</a>
-                        <a href="#" class="dropdown-item">Log Out</a>
+        <div class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top">
+
+            <a class="navbar-brand" href="#">
+                Plato
+            </a>
+            <hr />
+            <div class="d-flex align-items-center">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="d-block d-lg-none mr-2">
+
+                    <div class="dropdown">
+                        <a href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <avatar class="avatar"></avatar>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a href="nav-side-user.html" class="dropdown-item">Profile</a>
+                            <a href="utility-account-settings.html" class="dropdown-item">Account Settings</a>
+                            <a href="#" class="dropdown-item">Log Out</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    
-        <div class="collapse navbar-collapse flex-column" id="navbar-collapse" role="navigation">
-            <navigation name="admin"
-                collaspsable="true"
-                class="navbar-nav d-lg-block"
-                child-ul-css-class="nav flex-column"
-                link-css-class="nav-link"/>
+
+            <div class="collapse navbar-collapse flex-column" id="navbar-collapse" role="navigation">
+                <navigation name="admin"
+                            collaspsable="true"
+                            class="navbar-nav d-lg-block"
+                            child-ul-css-class="nav flex-column"
+                            link-css-class="nav-link" />
+            </div>
+
         </div>
 
-    </div>
+        <div class="main-container">
 
-    <div class="main-container">
-        
-        <div class="container-fluid">
-            <div class="row">
-                
-                <div class="navbar nav-tabs col-12" role="navigation">
-                    <a class="navbar-brand text-muted" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">
-                        @T["Plato"]
-                    </a>
-                    <navigation name="site"
-                                class="nav"
-                                child-ul-css-class="dropdown-menu"/>
+            <div class="container-fluid">
+                <div class="row">
+
+                    <div class="navbar nav-tabs col-12" role="navigation">
+                        <a class="navbar-brand text-muted" asp-route-area="Plato.Admin" asp-controller="Admin" asp-action="Index">
+                            @T["Plato"]
+                        </a>
+                        
+                        @if (this.CurrentUser != null)
+                        {
+                            <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="d-inline">
+                                <ul class="nav nav-pills float-right app-nav">
+                                    <li class="nav-item dropdown account">
+                                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                            <avatar class="avatar mr-2" user-id="@this.CurrentUser.Id" /> @this.CurrentUser.DisplayName
+                                        </a>
+                                        <div class="dropdown-arrow"></div>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditProfile">@T["Profile"]</a>
+                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditAccount">@T["Account"]</a>
+                                            <a class="dropdown-item" asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="EditSettings">@T["Settings"]</a>
+                                            <div class="dropdown-divider"></div>
+                                            <button type="submit" class="btn dropdown-item">@T["Log off"]</button>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="@T["Toggle navigation"]"></button>
+                                    </li>
+                                </ul>
+                            </form>
+                        }
+
+                    </div>
                 </div>
-            </div>
-    
-            <nav class="row border-bottom" aria-label="breadcrumb">
-                <breadcrumb class="breadcrumb bg-light mb-0 col-12"/>
-            </nav>
-   
-            <div class="d-block px-1 py-4">
-             
-                @RenderBody()
-                <hr/>
-                <footer>
-                    <p class="text-muted">&copy; @System.DateTime.Now.Year - Plato</p>
-                </footer>
+
+                <nav class="row border-bottom" aria-label="breadcrumb">
+                    <breadcrumb class="breadcrumb bg-light mb-0 col-12" />
+                </nav>
+
+                <div class="d-block px-1 py-4">
+
+                    @RenderBody()
+                    <hr />
+                    <footer>
+                        <p class="text-muted">&copy; @System.DateTime.Now.Year - Plato</p>
+                    </footer>
+
+                </div>
 
             </div>
-            
+
         </div>
-
     </div>
-</div>
-    
-<assets section="Footer" />
-<scripts section="Footer"/>
+
+    <assets section="Footer" />
+    <scripts section="Footer" />
 
 </body>
 </html>

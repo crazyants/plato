@@ -16,8 +16,24 @@ namespace Plato.Internal.Layout.Razor
     public abstract class RazorPage<TModel> :
         Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>
     {
-
         private IViewLocalizer _t;
+        private User _currentUser;
+        private IViewDisplayHelper _viewDisplayHelper;
+
+        public User CurrentUser
+        {
+            get
+            {
+                if (_currentUser == null)
+                {
+                    // Attempt to get user set via our AuthenticatedUserMiddleware
+                    var user = ViewContext.HttpContext.Features[typeof(User)];
+                    _currentUser = (User) user;
+                }
+
+                return _currentUser;
+            }
+        }
 
         public IViewLocalizer T
         {
@@ -31,9 +47,7 @@ namespace Plato.Internal.Layout.Razor
                 return _t;
             }
         }
-
-        private IViewDisplayHelper _viewDisplayHelper;
-
+        
         private void EnsureViewHelper()
         {
             if (_viewDisplayHelper == null)
@@ -60,28 +74,6 @@ namespace Plato.Internal.Layout.Razor
             }
 
             return builder;
-        }
-        
-        public async Task<User> GetAuthenticatedUserOrSignOutAsync()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                
-                var store = ViewContext.HttpContext.RequestServices.GetRequiredService<IPlatoUserStore<User>>();
-                var user = await store.GetByUserNameAsync(User.Identity.Name);
-                
-                if (user == null)
-                {
-                    // The user account no longer exists or has changed, sign out and redirect
-                    var signInManager = ViewContext.HttpContext.RequestServices.GetRequiredService<SignInManager<User>>();
-                    await signInManager.SignOutAsync();
-                    ViewContext.HttpContext.Response.Redirect("~/");
-                }
-
-                return user;
-            }
-
-            return null;
         }
         
     }

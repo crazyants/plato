@@ -1,16 +1,13 @@
 ﻿@model EditTopicViewModel
 
-@{
-    var user = await GetAuthenticatedUserAsync();
-}
 
 <div class="mt-0" id="postReply">
 
     <div class="topic-reply-left">
-        @if (user != null)
+        @if (this.CurrentUser != null)
         {
             <a href="#" class="avatar-link">
-                <avatar data-toggle="tooltip" title="@user.DisplayName" class="avatar" user-id="@user.Id" />
+                <avatar data-toggle="tooltip" title="@this.CurrentUser.DisplayName" class="avatar" user-id="@this.CurrentUser.Id" />
             </a>
         }
 

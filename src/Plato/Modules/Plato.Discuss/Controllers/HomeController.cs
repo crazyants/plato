@@ -94,15 +94,28 @@ namespace Plato.Discuss.Controllers
             });
 
           
-            //await CreateSampleData();
+            await CreateSampleData();
+
+            // Get default options
+            var defaultViewOptions = new TopicIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (opts.Filter != defaultViewOptions.Filter)
+                this.RouteData.Values.Add("opts.filter", opts.Filter);
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
             
 
-            // Add route data for pagination purposes
-            this.RouteData.Values.Add("opts.search", opts.Search);
-            this.RouteData.Values.Add("opts.sort", opts.Sort);
-            this.RouteData.Values.Add("opts.order", opts.Order);
-            this.RouteData.Values.Add("opts.filter", opts.Filter);
-            this.RouteData.Values.Add("pager.page", pager.Page);
+
             //this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             //// Add view opiotsn to view data for use in view provider
@@ -540,7 +553,6 @@ message Test message  " + number.ToString();
             var topic = new Topic()
             {
                 Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
-                CategoryId = rnd.Next(1, 6),
                 Message = GetSampleMarkDown(rnd.Next(0, 100000))
             };
             
