@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Categories.Models;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
+using Plato.Discuss.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
@@ -21,17 +23,20 @@ namespace Plato.Discuss.Channels.ViewProviders
         private readonly ICategoryStore<Channel> _categoryStore;
         private readonly ICategoryManager<Channel> _categoryManager;
         private readonly IFeatureFacade _featureFacade;
+        private readonly IActionContextAccessor _actionContextAccessor;
 
         public ChannelViewProvider(
             IContextFacade contextFacade,
             ICategoryStore<Channel> categoryStore,
             ICategoryManager<Channel> categoryManager,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            IActionContextAccessor actionContextAccessor)
         {
             _contextFacade = contextFacade;
             _categoryStore = categoryStore;
             _categoryManager = categoryManager;
             _featureFacade = featureFacade;
+            _actionContextAccessor = actionContextAccessor;
         }
 
         #region "Implementation"
@@ -59,24 +64,15 @@ namespace Plato.Discuss.Channels.ViewProviders
             {
                 ChannelId = categoryBase?.Id ?? 0
             };
-
-            // topic filter options
-            var topicViewOpts = new Discuss.ViewModels.TopicIndexOptions
-            {
-                ChannelId = categoryBase?.Id ?? 0
-            };
             
-            // paging otptions
-            var pagerOptions = new PagerOptions
-            {
-                Page = GetPageIndex(updater)
-            };
-
+            // Get topic index view model from context
+            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            
             var indexViewModel = new ChannelIndexViewModel
             {
                 ChannelIndexOpts = channelViewOpts,
-                TopicIndexOpts = topicViewOpts,
-                PagerOpts = pagerOptions
+                TopicIndexOpts = viewModel?.Options,
+                PagerOpts = viewModel?.Pager
             };
 
             return Views(
@@ -109,26 +105,6 @@ namespace Plato.Discuss.Channels.ViewProviders
         }
 
         #endregion
-
-        #region "Private Methods"
-
-        int GetPageIndex(IUpdateModel updater)
-        {
-
-            var page = 1;
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("page", out object value);
-            if (found)
-            {
-                int.TryParse(value.ToString(), out page);
-            }
-
-            return page;
-
-        }
-
-
-        #endregion
-
+        
     }
 }

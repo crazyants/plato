@@ -59,8 +59,8 @@ namespace Plato.Discuss.Channels.Controllers
 
         public async Task<IActionResult> Index(
             int id,
-            TopicIndexOptions topicIndexOptions,
-            PagerOptions pagerOptions)
+            TopicIndexOptions opts,
+            PagerOptions pager)
         {
 
             var category = new Channel();
@@ -130,10 +130,35 @@ namespace Plato.Discuss.Channels.Controllers
                 }
                 
             });
-            
-            // Add route data for view provider
-            this.RouteData.Values.Add("page", pagerOptions.Page);
-    
+
+            // Get default options
+            var defaultViewOptions = new TopicIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (opts.Filter != defaultViewOptions.Filter)
+                this.RouteData.Values.Add("opts.filter", opts.Filter);
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+
+            // We don't need to add to pagination 
+            opts.ChannelId = category?.Id ?? 0;
+
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
+            {
+                Options = opts,
+                Pager = pager
+            };
+
             // Build view
             var result = await _channelViewProvider.ProvideIndexAsync(category, this);
 
