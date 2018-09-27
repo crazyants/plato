@@ -39,31 +39,22 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             // Get topic index view model from context
             var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            var pager = viewModel?.Pager;
+        
+            var options = new LabelIndexOptions();
+
+            var labelIndexViewModel = new LabelIndexViewModel()
+            {
+                Options = options,
+                Pager = pager
+            };
             
-            var indexViewModel = new LabelIndexViewModel
-            {
-                TopicIndexOpts = viewModel?.Options,
-                PagerOpts = viewModel?.Pager
-            };
-
-            // Ensure we explictly set the featureId
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
-            if (feature == null)
-            {
-                return default(IViewProviderResult);
-            }
-
-            var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
-
-            var labelsViewModel = new LabelsViewModel()
-            {
-                Labels = labels
-            };
-
+            //var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
+            
             return Views(
                 View<Label>("Home.Index.Header", model => label).Zone("header").Order(1),
                 View<Label>("Home.Index.Tools", model => label).Zone("tools").Order(1),
-                View<LabelsViewModel>("Home.Index.Content", model => labelsViewModel).Zone("content").Order(1)
+                View<LabelIndexViewModel>("Home.Index.Content", model => labelIndexViewModel).Zone("content").Order(1)
             );
 
         }
@@ -74,7 +65,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             // Get topic index view model from context
             var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
 
-            var indexViewModel = new LabelIndexViewModel
+            var indexViewModel = new LabelDisplayViewModel
             {
                 TopicIndexOpts = viewModel?.Options,
                 PagerOpts = viewModel?.Pager
@@ -92,7 +83,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             return Views(
                 View<Label>("Home.Display.Header", model => label).Zone("header").Order(1),
                 View<Label>("Home.Display.Tools", model => label).Zone("tools").Order(1),
-                View<LabelIndexViewModel>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
+                View<LabelDisplayViewModel>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
                 View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
                 {
                     model.SelectedLabelId = label?.Id ?? 0;

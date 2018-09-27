@@ -1,37 +1,50 @@
-﻿using Plato.Discuss.Models;
+﻿using Plato.Discuss.Labels.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
-using Plato.Discuss.ViewModels;
 
 namespace Plato.Discuss.Labels.ViewModels
 {
     public class LabelIndexViewModel
     {
 
-        public IPagedResults<Topic> Results { get; }
+        public IPagedResults<Label> Results { get; }
 
-        public PagerOptions PagerOpts { get; set; }
+        public LabelIndexOptions Options { get; set; }
 
-        public TopicIndexOptions TopicIndexOpts { get; set; }
-
+        public PagerOptions Pager { get; set; }
+        
         public LabelIndexViewModel()
         {
         }
 
         public LabelIndexViewModel(
-            IPagedResults<Topic> results,
-            PagerOptions pagerOptions)
+            IPagedResults<Label> results,
+            LabelIndexOptions options,
+            PagerOptions pager)
         {
             this.Results = results;
-            this.PagerOpts = pagerOptions;
-            this.PagerOpts.SetTotal(results?.Total ?? 0);
+            this.Options = options;
+            this.Pager = pager;
+            this.Pager.SetTotal(results?.Total ?? 0);
         }
-        
+
     }
 
-    public class ViewOptions
+    public class LabelIndexOptions
     {
-        public int LabelId { get; set; }
+        public string Search { get; set; }
+
+        public SortBy Sort { get; set; } = SortBy.Id;
+
+        public OrderBy Order { get; set; } = OrderBy.Desc;
+
     }
 
+    public enum SortBy {
+        Id,
+        SortOrder,
+        TotalEntities,
+        TotalFollows,
+        ModifiedDate
+    }
 }

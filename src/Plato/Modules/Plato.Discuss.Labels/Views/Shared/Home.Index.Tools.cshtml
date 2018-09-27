@@ -1,6 +1,9 @@
 ﻿@model Label
 
-<a asp-controller="Home" asp-area="Plato.Discuss" asp-action="Create" asp-route-channel="@Model.Id" class="btn btn-primary" title="Reply">
-    <i class="fal fa-fw fa-plus"></i>
-    @T["New Topic"]
-</a>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item active"><a class="page-link" href="#">@T["Popular"]</a></li>
+        <li class="page-item"><a class="page-link" href="#">@T["New"]</a></li>
+        <li class="page-item"><a class="page-link" href="#">@T["Follows"]</a></li>
+    </ul>
+</nav>

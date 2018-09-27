@@ -35,9 +35,9 @@ namespace Plato.Discuss.Labels
             services.AddScoped<INavigationProvider, AdminMenu>();
             
             // Data stores
-            services.AddScoped<ILabelRepository<Models.Label>, LabelRepository<Models.Label>>();
-            services.AddScoped<ILabelStore<Models.Label>, LabelStore<Models.Label>>();
-            services.AddScoped<ILabelManager<Models.Label>, LabelManager<Models.Label>>();
+            services.AddScoped<ILabelRepository<Label>, LabelRepository<Label>>();
+            services.AddScoped<ILabelStore<Label>, LabelStore<Label>>();
+            services.AddScoped<ILabelManager<Label>, LabelManager<Label>>();
 
             // Discuss view providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();

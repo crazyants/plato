@@ -8,24 +8,24 @@
         @if (Model.Labels != null)
         {
             <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var channel in Model.Labels)
+                @foreach (var label in Model.Labels)
                 {
                     <li class="list-group-item list-group-item-action">
                         
-                        <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="btn btn-secondary float-right">
+                        <a asp-controller="Admin" asp-action="Edit" asp-route-id="@label.Id" class="btn btn-secondary float-right">
                             <i class="fal fa-pencil"></i>
                             @T["Edit"]
                         </a>
                         
                         <div class="float-left">
                             <h6 class="d-md-inline align-middle">
-                                <a asp-controller="Admin" asp-action="Edit" asp-route-id="@channel.Id" class="btn btn-sm font-weight-bold"  style="background-color: @channel.BackColor; color: @channel.ForeColor">
-                                    @channel.Name
+                                <a asp-controller="Admin" asp-action="Edit" asp-route-id="@label.Id" class="btn btn-sm font-weight-bold"  style="background-color: @label.BackColor; color: @label.ForeColor">
+                                    @label.Name
                                 </a>
-                                @if (!String.IsNullOrEmpty(channel.Description))
+                                @if (!String.IsNullOrEmpty(label.Description))
                                 {
                                     <span class="ml-3 text-muted">
-                                        @channel.Description
+                                        @label.Description
                                     </span>
                                 }
                             </h6>
