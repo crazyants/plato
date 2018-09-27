@@ -46,7 +46,19 @@ namespace Plato.Discuss.Labels.Controllers
 
         #region "Actions"
 
-        public async Task<IActionResult> Index(
+        public async Task<IActionResult> Index()
+        {
+            
+            // Build view
+            var result = await _labelViewProvider.ProvideIndexAsync(new Label(), this);
+
+            // Return view
+            return View(result);
+
+        }
+
+
+        public async Task<IActionResult> Display(
             int id,
             TopicIndexOptions opts,
             PagerOptions pager)
@@ -75,7 +87,7 @@ namespace Plato.Discuss.Labels.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-            
+
             // We don't need to add to pagination 
             opts.LabelId = label?.Id ?? 0;
 
@@ -87,15 +99,16 @@ namespace Plato.Discuss.Labels.Controllers
             };
 
             // Build view
-            var result = await _labelViewProvider.ProvideIndexAsync(label, this);
+            var result = await _labelViewProvider.ProvideDisplayAsync(label, this);
 
             // Return view
             return View(result);
-            
+
         }
-        
+
+
         #endregion
-        
+
     }
-    
+
 }

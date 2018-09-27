@@ -54,11 +54,45 @@ namespace Plato.Discuss.Labels.ViewProviders
             }
 
             var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
-            
+
+            var labelsViewModel = new LabelsViewModel()
+            {
+                Labels = labels
+            };
+
             return Views(
                 View<Label>("Home.Index.Header", model => label).Zone("header").Order(1),
                 View<Label>("Home.Index.Tools", model => label).Zone("tools").Order(1),
-                View<LabelIndexViewModel>("Home.Index.Content", model => indexViewModel).Zone("content").Order(1),
+                View<LabelsViewModel>("Home.Index.Content", model => labelsViewModel).Zone("content").Order(1)
+            );
+
+        }
+
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Label label, IUpdateModel updater)
+        {
+
+            // Get topic index view model from context
+            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+
+            var indexViewModel = new LabelIndexViewModel
+            {
+                TopicIndexOpts = viewModel?.Options,
+                PagerOpts = viewModel?.Pager
+            };
+
+            // Ensure we explictly set the featureId
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
+            if (feature == null)
+            {
+                return default(IViewProviderResult);
+            }
+
+            var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
+
+            return Views(
+                View<Label>("Home.Display.Header", model => label).Zone("header").Order(1),
+                View<Label>("Home.Display.Tools", model => label).Zone("tools").Order(1),
+                View<LabelIndexViewModel>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
                 View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
                 {
                     model.SelectedLabelId = label?.Id ?? 0;
@@ -67,13 +101,9 @@ namespace Plato.Discuss.Labels.ViewProviders
                 }).Zone("sidebar").Order(1)
             );
 
+
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Label model, IUpdateModel updater)
-        {
-            return Task.FromResult(default(IViewProviderResult));
-        }
-        
         public override Task<IViewProviderResult> BuildEditAsync(Label model, IUpdateModel updater)
         {
             return Task.FromResult(default(IViewProviderResult));

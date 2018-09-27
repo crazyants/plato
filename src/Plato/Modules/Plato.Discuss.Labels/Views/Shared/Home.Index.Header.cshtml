@@ -1,24 +1,7 @@
 ﻿@model Label
 
-<div class="list-left">
-    <span class="channel-icon channel-icon-md" style="background-color: @Model.BackColor; color: @Model.ForeColor">
-        <i class="@Model.IconCss"></i>
-    </span>
+<h4>@T["Labels"]</h4>
+<div class="text-muted">
+    @T["Browse conversations by label"]
 </div>
-<div class="list-body">
-    <h4>@Model.Name</h4>
-    @if (!String.IsNullOrEmpty(Model.Description))
-    {
-        <div class="text-muted">
-            @Model.Description
-        </div>
-    }
-    else
-    {
-        <div class="text-muted">
-            @T["No description provided."]
-        </div>
-    }
-
-</div>
-<hr/>
+<hr />

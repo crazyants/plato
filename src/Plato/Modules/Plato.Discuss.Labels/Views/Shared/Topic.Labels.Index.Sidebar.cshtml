@@ -2,6 +2,9 @@
 
 <card class="card card-body-flush">
     <card-title>
+        <a data-toggle="tooltip" title="@T["All Labels"]" asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
+            <i class="fal fa-ellipsis-h fa-2x"></i>
+        </a>
         <h6 class="card-title">@T["Labels"]</h6>
     </card-title>
     <card-body>
@@ -12,7 +15,7 @@
                 @foreach (var label in Model.Labels)
                 {
                     var css = label.Id == Model.SelectedLabelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
-                    <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@label.Id" asp-route-alias="@label.Alias" title="@label.Description" class="@css">
+                    <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@label.Id" asp-route-alias="@label.Alias" title="@label.Description" class="@css">
                         <span class="btn btn-sm font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
                             @label.Name
                         </span>
