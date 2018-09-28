@@ -7,7 +7,7 @@ using Plato.Internal.Layout.ModelBinding;
 namespace Plato.Internal.Layout.ViewProviders
 {
 
-    public interface IViewProviderControllerContext
+    public interface IViewProviderContext : IUpdateModel
     {
 
         RouteData RouteData { get; }
@@ -17,8 +17,8 @@ namespace Plato.Internal.Layout.ViewProviders
         HttpContext HttpContext { get; }
     }
 
-    public class ViewProviderControllerContext :
-        ControllerModelUpdater, IViewProviderControllerContext
+    public class ViewProviderContext :
+        ControllerModelUpdater, IViewProviderContext
     {
         public RouteData RouteData { get; }
 
@@ -26,8 +26,9 @@ namespace Plato.Internal.Layout.ViewProviders
 
         public HttpContext HttpContext { get; }
 
-        public ViewProviderControllerContext(Controller controller) : base(controller)
+        public ViewProviderContext(Controller controller) : base(controller)
         {
+
         }
     }
 }
