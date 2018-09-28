@@ -78,6 +78,32 @@ namespace Plato.Labels.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "TotalEntities",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalFollows",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalViews",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "LastEntityId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "LastEntityDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "CreatedUserId",
                         DbType = DbType.Int32
                     },
@@ -413,7 +439,13 @@ namespace Plato.Labels.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "Keywords",
+                        Name = "[Name]",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Description]",
                         DbType = DbType.String,
                         Length = "255"
                     }

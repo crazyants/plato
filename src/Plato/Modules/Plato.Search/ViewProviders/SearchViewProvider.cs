@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Search.ViewModels;
 using Plato.WebApi.Controllers;
@@ -11,19 +10,10 @@ namespace Plato.Search.ViewProviders
      
         public override Task<IViewProviderResult> BuildIndexAsync(SearchResult searchResult, IViewProviderContext context)
         {
-            var viewModel = new SearchIndexViewModel
-            {
-                ViewOpts =
-                {
-                    Search = GetKeywords(context.Updater)
-                },
-                PagerOpts =
-                {
-                    Page = GetPageIndex(context.Updater)
 
-                }
-            };
 
+            var viewModel = context.Controller.HttpContext.Items[typeof(SearchIndexViewModel)] as SearchIndexViewModel;
+            
             return Task.FromResult(Views(
                 View<SearchIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<SearchIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
@@ -48,38 +38,7 @@ namespace Plato.Search.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
-
-        int GetPageIndex(IUpdateModel updater)
-        {
-
-            var page = 1;
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("page", out object value);
-            if (found)
-            {
-                int.TryParse(value.ToString(), out page);
-            }
-
-            return page;
-
-        }
-
-        string GetKeywords(IUpdateModel updater)
-        {
-
-            var keywords = string.Empty;
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("search", out object value);
-            if (found && value != null)
-            {
-                keywords = value.ToString();
-            }
-
-            return keywords;
-
-        }
-
-
+        
 
     }
 }

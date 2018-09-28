@@ -16,6 +16,16 @@ namespace Plato.Labels.Models
         
         int SortOrder { get; set; }
 
+        int TotalEntities { get; set; }
+
+        int TotalFollows { get; set; }
+
+        int TotalViews { get; set; }
+        
+        int LastEntityId { get; set; }
+
+        DateTimeOffset? LastEntityDate { get; set; }
+        
         int CreatedUserId { get; set; }
 
         DateTimeOffset? CreatedDate { get; set; }

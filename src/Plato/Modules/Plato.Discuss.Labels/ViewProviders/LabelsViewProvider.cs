@@ -49,8 +49,8 @@ namespace Plato.Discuss.Labels.ViewProviders
             //var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
             
             return Task.FromResult(Views(
-                View<Label>("Home.Index.Header", model => label).Zone("header").Order(1),
-                View<Label>("Home.Index.Tools", model => label).Zone("tools").Order(1),
+                View<LabelIndexViewModel>("Home.Index.Header", model => labelIndexViewModel).Zone("header").Order(1),
+                View<LabelIndexViewModel>("Home.Index.Tools", model => labelIndexViewModel).Zone("tools").Order(1),
                 View<LabelIndexViewModel>("Home.Index.Content", model => labelIndexViewModel).Zone("content").Order(1)
             ));
 

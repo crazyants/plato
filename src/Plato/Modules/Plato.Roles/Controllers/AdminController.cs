@@ -63,8 +63,8 @@ namespace Plato.Roles.Controllers
         #region "Actions"
 
         public async Task<IActionResult> Index(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
+            RoleIndexOptions opts,
+            PagerOptions pager)
         {
             
             // Ensuer we have permission
@@ -83,25 +83,26 @@ namespace Plato.Roles.Controllers
 
 
             // default options
-            if (filterOptions == null)
+            if (opts == null)
             {
-                filterOptions = new FilterOptions();
+                opts = new RoleIndexOptions();
             }
 
 
             // default pager
-            if (pagerOptions == null)
+            if (pager == null)
             {
-                pagerOptions = new PagerOptions();
+                pager = new PagerOptions();
             }
 
 
             // Maintain previous route data when generating page links
             var routeData = new RouteData();
-            routeData.Values.Add("Options.RoleName", filterOptions.Search);
-            routeData.Values.Add("Options.Order", filterOptions.Order);
+            routeData.Values.Add("opts.search", opts.Search);
+            routeData.Values.Add("opts.order", opts.Order);
 
            
+
             
             var result = await _roleViewProvider.ProvideIndexAsync(new Role(), this);
 

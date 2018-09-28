@@ -1,9 +1,12 @@
-﻿@model Label
+﻿@model LabelIndexViewModel
 
-<nav aria-label="Page navigation example">
-    <ul class="pagination">
-        <li class="page-item active"><a class="page-link" href="#">@T["Popular"]</a></li>
-        <li class="page-item"><a class="page-link" href="#">@T["New"]</a></li>
-        <li class="page-item"><a class="page-link" href="#">@T["Follows"]</a></li>
-    </ul>
+<nav class="navbar justify-content-between">
+    
+    <form class="form-inline mr-2" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">
+        <input class="form-control mr-sm-2" name="opts.search" value="@Model.Options.Search" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">
+            <i class="fal fa-search"></i>
+        </button>
+    </form>
+
 </nav>

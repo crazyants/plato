@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
@@ -58,16 +57,11 @@ namespace Plato.Roles.ViewProviders
         public override async Task<IViewProviderResult> BuildIndexAsync(Role role, IViewProviderContext context)
         {
 
-            var filterOptions = new FilterOptions();
-
-            var pagerOptions = new PagerOptions
-            {
-                Page = GetPageIndex(context.Updater)
-            };
-
+            var userIndexViewModel = context.Controller.HttpContext.Items[typeof(RolesIndexViewModel)] as RolesIndexViewModel;
+            
             var viewModel = await GetPagedModel(
-                filterOptions,
-                pagerOptions);
+                userIndexViewModel?.Options,
+                userIndexViewModel?.Pager);
 
             return Views(
                 View<RolesIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header"),
@@ -137,31 +131,31 @@ namespace Plato.Roles.ViewProviders
         }
         
         async Task<RolesIndexViewModel> GetPagedModel(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
+            RoleIndexOptions options,
+            PagerOptions pager)
         {
-            var roles = await GetRoles(filterOptions, pagerOptions);
+            var roles = await GetRoles(options, pager);
             return new RolesIndexViewModel(
                 roles,
-                filterOptions,
-                pagerOptions);
+                options,
+                pager);
         }
 
         async Task<IPagedResults<Role>> GetRoles(
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
+            RoleIndexOptions options,
+            PagerOptions pager)
         {
             return await _platoRoleStore.QueryAsync()
-                .Take(pagerOptions.Page, pagerOptions.PageSize)
+                .Take(pager.Page, pager.PageSize)
                 .Select<RoleQueryParams>(q =>
                 {
-                    if (filterOptions.RoleId > 0)
+                    if (options.RoleId > 0)
                     {
-                        q.Id.Equals(filterOptions.RoleId);
+                        q.Id.Equals(options.RoleId);
                     }
-                    if (!string.IsNullOrEmpty(filterOptions.Search))
+                    if (!string.IsNullOrEmpty(options.Search))
                     {
-                        q.RoleName.IsIn(filterOptions.Search);
+                        q.RoleName.IsIn(options.Search);
                     }
                 })
                 .OrderBy("Id", OrderBy.Desc)
@@ -211,22 +205,7 @@ namespace Plato.Roles.ViewProviders
             return result;
 
         }
-
-        int GetPageIndex(IUpdateModel updater)
-        {
-
-            var page = 1;
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("page", out object value);
-            if (found)
-            {
-                int.TryParse(value.ToString(), out page);
-            }
-
-            return page;
-
-        }
-
+        
         #endregion
 
     }

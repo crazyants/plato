@@ -44,7 +44,8 @@ namespace Plato.Labels.Stores
                 startSql,
                 populateSql,
                 countSql,
-                Params.Keywords.Value
+                Params.Name.Value,
+                Params.Description.Value
             );
 
             return data;
@@ -61,20 +62,27 @@ namespace Plato.Labels.Stores
     {
         
         private WhereInt _id;
-        private WhereString _keywords;
-        
+        private WhereString _name;
+        private WhereString _description;
+
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
             set => _id = value;
         }
 
-        public WhereString Keywords
+        public WhereString Name
         {
-            get => _keywords ?? (_keywords = new WhereString());
-            set => _keywords = value;
+            get => _name ?? (_name = new WhereString());
+            set => _name = value;
         }
-        
+
+        public WhereString Description
+        {
+            get => _description ?? (_description = new WhereString());
+            set => _description = value;
+        }
+
     }
 
     #endregion
@@ -209,7 +217,20 @@ namespace Plato.Labels.Stores
                 sb.Append(_query.Params.Id.ToSqlString("c.Id"));
             }
 
+            if (!String.IsNullOrEmpty(_query.Params.Name.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Name.Operator);
+                sb.Append(_query.Params.Name.ToSqlString("Name"));
+            }
 
+            if (!String.IsNullOrEmpty(_query.Params.Description.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Description.Operator);
+                sb.Append(_query.Params.Description.ToSqlString("Description"));
+            }
+            
             return sb.ToString();
 
         }

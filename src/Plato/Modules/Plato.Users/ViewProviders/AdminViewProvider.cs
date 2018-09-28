@@ -56,28 +56,13 @@ namespace Plato.Users.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(User user, IViewProviderContext context)
         {
 
-            var viewOptions = new ViewOptions
-            {
-                Search = GetKeywords(context.Updater),
-                EnableEdit = true
-            };
-
-            var pagerOptions = new PagerOptions
-            {
-                Page = GetPageIndex(context.Updater)
-            };
-
-            var viewModel = new UsersIndexViewModel()
-            {
-                ViewOpts = viewOptions,
-                PagerOpts = pagerOptions
-            };
-
+            var viewModel = context.Controller.HttpContext.Items[typeof(UserIndexViewModel)] as UserIndexViewModel;
+            
             return Task.FromResult(
                 Views(
-                    View<UsersIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header"),
-                    View<UsersIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools"),
-                    View<UsersIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content")
+                    View<UserIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header"),
+                    View<UserIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools"),
+                    View<UserIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content")
                 ));
 
         }
@@ -303,36 +288,7 @@ namespace Plato.Users.ViewProviders
             
         }
 
-        int GetPageIndex(IUpdateModel updater)
-        {
-
-            var page = 1;
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("page", out object value);
-            if (found)
-            {
-                int.TryParse(value.ToString(), out page);
-            }
-
-            return page;
-
-        }
-
-        string GetKeywords(IUpdateModel updater)
-        {
-
-            var keywords = string.Empty;
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("search", out object value);
-            if (found && value != null)
-            {
-                keywords = value.ToString();
-            }
-
-            return keywords;
-
-        }
-
+       
         public async Task<bool> IsNewUser(string userId)
         {
             return await _userManager.FindByIdAsync(userId) == null;

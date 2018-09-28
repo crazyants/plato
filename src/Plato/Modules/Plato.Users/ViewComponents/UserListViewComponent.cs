@@ -26,37 +26,37 @@ namespace Plato.Users.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            ViewOptions viewOpts,
-            PagerOptions pagerOpts)
+            UserIndexOptions options,
+            PagerOptions pager)
         {
 
-            if (viewOpts == null)
+            if (options == null)
             {
-                viewOpts = new ViewOptions();
+                options = new UserIndexOptions();
             }
             
-            if (pagerOpts == null)
+            if (pager == null)
             {
-                pagerOpts = new PagerOptions();
+                pager = new PagerOptions();
             }
 
-            var model = await GetIndexViewModel(viewOpts, pagerOpts);
+            var model = await GetIndexViewModel(options, pager);
             return View(model);
         }
         
-        private async Task<UsersIndexViewModel> GetIndexViewModel(
-            ViewOptions viewOptions,
+        private async Task<UserIndexViewModel> GetIndexViewModel(
+            UserIndexOptions viewOptions,
             PagerOptions pagerOptions)
         {
             var users = await GetUsers(viewOptions, pagerOptions);
-            return new UsersIndexViewModel(
+            return new UserIndexViewModel(
                 users,
                 viewOptions,
                 pagerOptions);
         }
 
         public async Task<IPagedResults<User>> GetUsers(
-            ViewOptions viewOptions,
+            UserIndexOptions viewOptions,
             PagerOptions pagerOptions)
         {
             return await _ploatUserStore.QueryAsync()

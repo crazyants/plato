@@ -66,8 +66,8 @@ namespace Plato.Users.Controllers
         // --------------------------
 
         public async Task<IActionResult> Index(
-            ViewOptions viewOptions,
-            PagerOptions pagerOptions)
+            UserIndexOptions opts,
+            PagerOptions pager)
         {
 
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
@@ -85,18 +85,43 @@ namespace Plato.Users.Controllers
             //});
 
             // default options
-            if (viewOptions == null)
+            if (opts == null)
             {
-                viewOptions = new ViewOptions();
+                opts = new UserIndexOptions();
             }
 
             // default pager
-            if (pagerOptions == null)
+            if (pager == null)
             {
-                pagerOptions = new PagerOptions();
+                pager = new PagerOptions();
             }
 
-            this.RouteData.Values.Add("page", pagerOptions.Page);
+
+            // Get default options
+            var defaultViewOptions = new UserIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+      
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(UserIndexViewModel)] = new UserIndexViewModel()
+            {
+                Options = opts,
+                Pager = pager
+            };
+
+
 
             // Build view
             var result = await _viewProvider.ProvideIndexAsync(new UserProfile(), this);

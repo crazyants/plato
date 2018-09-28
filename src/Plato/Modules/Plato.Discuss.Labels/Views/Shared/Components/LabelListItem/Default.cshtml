@@ -1,21 +1,35 @@
 ﻿@model LabelListItemViewModel
 
-<a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Label.Id" asp-route-alias="@Model.Label.Alias">
-    <span class="btn btn-sm label font-weight-bold" style="background-color: @Model.Label.BackColor; color: @Model.Label.ForeColor">
+<p class="pt-0">
+    <span class="float-right">
+        <span class="badge badge-secondary" data-toggle="tooltip" title="@T["Followers"]">
+            @Model.Label.TotalFollows.ToPrettyInt()
+        </span>
+        <span class="badge badge-secondary" data-toggle="tooltip" title="@T["Topics"]">
+            @Model.Label.TotalEntities.ToPrettyInt()
+        </span>
+    </span>
+    <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Label.Id" asp-route-alias="@Model.Label.Alias" class="btn btn-sm label font-weight-bold" style="background-color: @Model.Label.BackColor; color: @Model.Label.ForeColor">
         @Model.Label.Name
-    </span>
-</a>
+    </a>
+</p>
 
-<br/><br />
-@if (!String.IsNullOrEmpty(@Model.Label.Description))
-{
-    <span class="text-muted">
+<p>
+    @if (!String.IsNullOrEmpty(@Model.Label.Description))
+    {
         @Model.Label.Description
-    </span>
-}
-else
-{
-    <span class="text-muted">
+    }
+    else
+    {
         @T["No description provided."]
-    </span>
-}
+    }
+</p>
+
+<p class="text-muted pb-0">
+    @if (Model.Label.LastEntityDate != null)
+    {
+        @T["Last seen: "]
+        <date utc="@Model.Label.LastEntityDate"/>
+    }
+   
+</p>

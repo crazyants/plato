@@ -15,24 +15,24 @@ namespace Plato.Roles.ViewModels
 
         public RolesIndexViewModel(
             IPagedResults<Role> results,
-            FilterOptions filterOptions,
-            PagerOptions pagerOptions)
+            RoleIndexOptions options,
+            PagerOptions pager)
         {
             this.Results = results;
-            this.FilterOpts = filterOptions;
-            this.PagerOpts = pagerOptions;
-            this.PagerOpts.SetTotal(results?.Total ?? 0);
+            this.Options = options;
+            this.Pager = pager;
+            this.Pager.SetTotal(results?.Total ?? 0);
         }
         
         public IPagedResults<Role> Results { get; set; }
 
-        public PagerOptions PagerOpts { get; set; }
+        public PagerOptions Pager { get; set; }
 
-        public FilterOptions FilterOpts { get; set; }
+        public RoleIndexOptions Options { get; set; }
         
     }
     
-    public class FilterOptions
+    public class RoleIndexOptions
     {
 
         public int RoleId { get; set; }

@@ -1,8 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
 
 namespace Plato.Internal.Layout.ModelBinding
 {
@@ -16,12 +13,6 @@ namespace Plato.Internal.Layout.ModelBinding
         bool TryValidateModel(object model, string prefix);
 
         ModelStateDictionary ModelState { get; }
-
-        RouteData RouteData { get; }
-
-        ViewDataDictionary ViewData { get; }
-
-        HttpContext HttpContext { get; }
 
     }
 }

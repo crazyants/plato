@@ -34,27 +34,13 @@ namespace Plato.Users.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(UserProfile user, IViewProviderContext context)
         {
 
-            var viewOptions = new ViewOptions
-            {
-                Search = GetKeywords(context.Updater)
-            };
-
-            var pagerOptions = new PagerOptions
-            {
-                Page = GetPageIndex(context.Updater)
-            };
-
-            var viewModel = new UsersIndexViewModel()
-            {
-                ViewOpts = viewOptions,
-                PagerOpts = pagerOptions
-            };
-
+            var viewModel = context.Controller.HttpContext.Items[typeof(UserIndexViewModel)] as UserIndexViewModel;
+            
             return Task.FromResult(
                 Views(
-                    View<UsersIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
-                    View<UsersIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
-                    View<UsersIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
+                    View<UserIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
+                    View<UserIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
+                    View<UserIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
                 ));
 
         }
@@ -225,36 +211,6 @@ namespace Plato.Users.ViewProviders
 
         }
         
-        int GetPageIndex(IUpdateModel updater)
-        {
-
-            var page = 1;
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("page", out object value);
-            if (found)
-            {
-                int.TryParse(value.ToString(), out page);
-            }
-
-            return page;
-
-        }
-
-        string GetKeywords(IUpdateModel updater)
-        {
-
-            var keywords = string.Empty;
-            var routeData = updater.RouteData;
-            var found = routeData.Values.TryGetValue("search", out object value);
-            if (found)
-            {
-                keywords = value.ToString();
-            }
-
-            return keywords;
-
-        }
-
         #endregion
 
     }

@@ -29,6 +29,13 @@
 .btn-secondary:hover {  background: #f2f2f2; border-color: #aaa; color: #000;  }
 
 /* ------------------- */
+/* Badges */
+/* ------------------- */
+
+
+.badge-secondary { background: #ddd; color: #888; }
+
+/* ------------------- */
 /* List Groups */
 /* ------------------- */
 

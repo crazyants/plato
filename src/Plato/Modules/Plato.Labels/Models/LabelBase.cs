@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Data;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
@@ -32,6 +32,16 @@ namespace Plato.Labels.Models
         public string BackColor { get; set; }
 
         public int SortOrder { get; set; }
+
+        public int TotalEntities { get; set; }
+
+        public int TotalFollows { get; set; }
+
+        public int TotalViews { get; set; }
+
+        public int LastEntityId { get; set; }
+
+        public DateTimeOffset? LastEntityDate { get; set; }
 
         public int CreatedUserId { get; set; }
 
@@ -117,6 +127,21 @@ namespace Plato.Labels.Models
 
             if (dr.ColumnIsNotNull("SortOrder"))
                 SortOrder = Convert.ToInt32(dr["SortOrder"]);
+
+            if (dr.ColumnIsNotNull("TotalEntities"))
+                TotalEntities = Convert.ToInt32(dr["TotalEntities"]);
+
+            if (dr.ColumnIsNotNull("TotalFollows"))
+                TotalEntities = Convert.ToInt32(dr["TotalFollows"]);
+
+            if (dr.ColumnIsNotNull("TotalViews"))
+                TotalViews = Convert.ToInt32(dr["TotalViews"]);
+
+            if (dr.ColumnIsNotNull("LastEntityId"))
+                LastEntityId = Convert.ToInt32(dr["LastEntityId"]);
+
+            if (dr.ColumnIsNotNull("LastEntityDate"))
+                LastEntityDate = DateTimeOffset.Parse(Convert.ToString((dr["LastEntityDate"])));
 
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);

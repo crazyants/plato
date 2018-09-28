@@ -1,4 +1,4 @@
-﻿@model UsersIndexViewModel
+﻿@model UserIndexViewModel
 
 <card class="card card-body-flush">
     <card-title>
@@ -12,7 +12,7 @@
                 {
                     <li class="list-group-item list-group-item-action">
 
-                        @if (Model.ViewOpts.EnableEdit)
+                        @if (Model.Options.EnableEdit)
                         {
                             <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-secondary float-right">
                                 <i class="fal fa-pencil"></i>
@@ -21,7 +21,7 @@
                         }
                         <h6 class="d-inline-block">
                             <avatar class="avatar" user-id="@user.Id" />
-                            @if (Model.ViewOpts.EnableEdit)
+                            @if (Model.Options.EnableEdit)
                             {
                                 <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" asp-route-alias="@user.Alias" class="font-weight-bold">
                                     @user.DisplayName
@@ -50,6 +50,6 @@
 </card>
 
 <div class="mt-4 mb-4">
-    <pager model="@Model.PagerOpts"></pager>
+    <pager model="@Model.Pager"></pager>
 </div>
 

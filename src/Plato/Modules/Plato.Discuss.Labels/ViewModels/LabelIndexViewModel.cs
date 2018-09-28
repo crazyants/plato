@@ -42,9 +42,13 @@ namespace Plato.Discuss.Labels.ViewModels
 
     public enum SortBy {
         Id,
+        Name,
+        Description,
         SortOrder,
         TotalEntities,
         TotalFollows,
+        TotalViews,
+        LastEntityDate,
         ModifiedDate
     }
 }

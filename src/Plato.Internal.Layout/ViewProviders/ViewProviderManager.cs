@@ -52,8 +52,7 @@ namespace Plato.Internal.Layout.ViewProviders
             {
                 try
                 {
-                    var context = new ViewProviderContext(updater);
-                    results.Add(await provider.BuildIndexAsync(model, context));
+                    results.Add(await provider.BuildIndexAsync(model, new ViewProviderContext(updater)));
                 }
                 catch (Exception e)
                 {
@@ -74,8 +73,7 @@ namespace Plato.Internal.Layout.ViewProviders
             {
                 try
                 {
-                    var context = new ViewProviderContext(updater);
-                    results.Add(await provider.BuildEditAsync(model, context));
+                    results.Add(await provider.BuildEditAsync(model, new ViewProviderContext(updater)));
                 }
                 catch (Exception e)
                 {
@@ -96,8 +94,7 @@ namespace Plato.Internal.Layout.ViewProviders
             {
                 try
                 {
-                    var context = new ViewProviderContext(updater);
-                    results.Add(await provider.BuildUpdateAsync(model, context));
+                    results.Add(await provider.BuildUpdateAsync(model, new ViewProviderContext(updater)));
                 }
                 catch (Exception e)
                 {

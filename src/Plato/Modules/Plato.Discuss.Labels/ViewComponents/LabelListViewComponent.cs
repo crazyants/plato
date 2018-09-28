@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
@@ -49,6 +50,11 @@ namespace Plato.Discuss.Labels.ViewComponents
                 .Take(pager.Page, pager.PageSize)
                 .Select<LabelQueryParams>(q =>
                 {
+                    if (!String.IsNullOrEmpty(options.Search))
+                    {
+                        q.Name.Like(options.Search).Or();
+                        q.Description.Like(options.Search);
+                    }
                 })
                 .OrderBy(options.Sort.ToString(), options.Order)
                 .ToList();
