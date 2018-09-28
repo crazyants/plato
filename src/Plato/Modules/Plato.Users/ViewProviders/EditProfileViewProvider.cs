@@ -31,17 +31,17 @@ namespace Plato.Users.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(EditProfileViewModel viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(EditProfileViewModel viewModel, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(EditProfileViewModel viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(EditProfileViewModel viewModel, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(EditProfileViewModel viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(EditProfileViewModel viewModel, IViewProviderContext updater)
         {
 
             var user = await _platoUserStore.GetByIdAsync(viewModel.Id);
@@ -70,23 +70,23 @@ namespace Plato.Users.ViewProviders
             });
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(EditProfileViewModel userProfile, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(EditProfileViewModel userProfile, IViewProviderContext context)
         {
             var user = await _platoUserStore.GetByIdAsync(userProfile.Id);
             if (user == null)
             {
-                return await BuildIndexAsync(userProfile, updater);
+                return await BuildIndexAsync(userProfile, context);
             }
 
             var model = new EditProfileViewModel();
 
-            if (!await updater.TryUpdateModelAsync(model))
+            if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(userProfile, updater);
+                return await BuildEditAsync(userProfile, context);
             }
 
      
-            if (updater.ModelState.IsValid)
+            if (context.Updater.ModelState.IsValid)
             {
 
                 // Update user data
@@ -110,12 +110,12 @@ namespace Plato.Users.ViewProviders
                 var result = await _userManager.UpdateAsync(user);
                 foreach (var error in result.Errors)
                 {
-                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                 }
 
             }
 
-            return await BuildEditAsync(userProfile, updater);
+            return await BuildEditAsync(userProfile, context);
 
         }
 

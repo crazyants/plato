@@ -12,12 +12,12 @@ namespace Plato.Features.ViewProviders
     public class FeaturesIndexViewProvider : BaseViewProvider<FeaturesViewModel>
     {
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(FeaturesViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(FeaturesViewModel model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(FeaturesViewModel viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(FeaturesViewModel viewModel, IViewProviderContext updater)
         {
 
             return Task.FromResult(Views(
@@ -28,12 +28,12 @@ namespace Plato.Features.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(FeaturesViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(FeaturesViewModel model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(FeaturesViewModel model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(FeaturesViewModel model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

@@ -41,7 +41,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Channel channel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Channel channel, IViewProviderContext updater)
         {
 
             // Ensure we explictly set the featureId
@@ -89,17 +89,17 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Channel indexViewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Channel indexViewModel, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Channel category, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Channel category, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Channel category, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Channel category, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

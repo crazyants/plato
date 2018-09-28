@@ -31,17 +31,17 @@ namespace Plato.Users.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(EditSettingsViewModel viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(EditSettingsViewModel viewModel, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(EditSettingsViewModel viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(EditSettingsViewModel viewModel, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(EditSettingsViewModel viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(EditSettingsViewModel viewModel, IViewProviderContext updater)
         {
 
             var user = await _platoUserStore.GetByIdAsync(viewModel.Id);
@@ -64,22 +64,22 @@ namespace Plato.Users.ViewProviders
             return await updater.TryUpdateModelAsync(viewModel);
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(EditSettingsViewModel viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(EditSettingsViewModel viewModel, IViewProviderContext context)
         {
             var user = await _platoUserStore.GetByIdAsync(viewModel.Id);
             if (user == null)
             {
-                return await BuildIndexAsync(viewModel, updater);
+                return await BuildIndexAsync(viewModel, context);
             }
 
             var model = new EditSettingsViewModel();;
 
-            if (!await updater.TryUpdateModelAsync(model))
+            if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(viewModel, updater);
+                return await BuildEditAsync(viewModel, context);
             }
 
-            if (updater.ModelState.IsValid)
+            if (context.Updater.ModelState.IsValid)
             {
                 user.TimeZone = model.TimeZone;
                 user.ObserveDst = model.ObserveDst;
@@ -89,12 +89,12 @@ namespace Plato.Users.ViewProviders
                 var result = await _userManager.UpdateAsync(user);
                 foreach (var error in result.Errors)
                 {
-                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                 }
 
             }
 
-            return await BuildEditAsync(viewModel, updater);
+            return await BuildEditAsync(viewModel, context);
 
         }
 

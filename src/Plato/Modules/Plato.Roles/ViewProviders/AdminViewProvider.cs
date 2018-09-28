@@ -42,7 +42,7 @@ namespace Plato.Roles.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Role role, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Role role, IViewProviderContext updater)
         {
 
             return Task.FromResult(
@@ -55,14 +55,14 @@ namespace Plato.Roles.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Role role, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Role role, IViewProviderContext context)
         {
 
             var filterOptions = new FilterOptions();
 
             var pagerOptions = new PagerOptions
             {
-                Page = GetPageIndex(updater)
+                Page = GetPageIndex(context.Updater)
             };
 
             var viewModel = await GetPagedModel(
@@ -77,7 +77,7 @@ namespace Plato.Roles.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Role role, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Role role, IViewProviderContext updater)
         {
         
             var editRoleViewModel = new EditRoleViewModel()
@@ -100,17 +100,17 @@ namespace Plato.Roles.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Role role, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Role role, IViewProviderContext context)
         {
 
             var model = new EditRoleViewModel();
 
-            if (!await updater.TryUpdateModelAsync(model))
+            if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(role, updater);
+                return await BuildEditAsync(role, context);
             }
 
-            if (updater.ModelState.IsValid)
+            if (context.Updater.ModelState.IsValid)
             {
 
                 role.Name = model.RoleName?.Trim();
@@ -118,12 +118,12 @@ namespace Plato.Roles.ViewProviders
                 var result = await _roleManager.CreateAsync(role);
                 foreach (var error in result.Errors)
                 {
-                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                 }
 
             }
 
-            return await BuildEditAsync(role, updater);
+            return await BuildEditAsync(role, context);
 
         }
 

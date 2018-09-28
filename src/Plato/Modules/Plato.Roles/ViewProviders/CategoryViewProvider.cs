@@ -41,17 +41,17 @@ namespace Plato.Roles.ViewProviders
         }
 
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(CategoryBase user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(CategoryBase user, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(CategoryBase user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(CategoryBase user, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(CategoryBase categoryBase, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(CategoryBase categoryBase, IViewProviderContext updater)
         {
 
             var selectedRoles = await _categoryManager.GetRolesAsync(categoryBase);
@@ -67,7 +67,7 @@ namespace Plato.Roles.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(CategoryBase categoryBase, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(CategoryBase categoryBase, IViewProviderContext context)
         {
 
             // Get available role names
@@ -97,12 +97,12 @@ namespace Plato.Roles.ViewProviders
             var model = new EditUserRolesViewModel();
             model.SelectedRoles = rolesToAdd;
 
-            if (!await updater.TryUpdateModelAsync(model))
+            if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(categoryBase, updater);
+                return await BuildEditAsync(categoryBase, context);
             }
 
-            if (updater.ModelState.IsValid)
+            if (context.Updater.ModelState.IsValid)
             {
 
                 //var featureId = 0;
@@ -166,7 +166,7 @@ namespace Plato.Roles.ViewProviders
 
             }
 
-            return await BuildEditAsync(categoryBase, updater);
+            return await BuildEditAsync(categoryBase, context);
 
         }
 

@@ -9,17 +9,17 @@ namespace Plato.Search.ViewProviders
     public class SearchViewProvider : BaseViewProvider<SearchResult>
     {
      
-        public override Task<IViewProviderResult> BuildIndexAsync(SearchResult searchResult, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(SearchResult searchResult, IViewProviderContext context)
         {
             var viewModel = new SearchIndexViewModel
             {
                 ViewOpts =
                 {
-                    Search = GetKeywords(updater)
+                    Search = GetKeywords(context.Updater)
                 },
                 PagerOpts =
                 {
-                    Page = GetPageIndex(updater)
+                    Page = GetPageIndex(context.Updater)
 
                 }
             };
@@ -33,18 +33,18 @@ namespace Plato.Search.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(SearchResult model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(SearchResult model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
 
-        public override Task<IViewProviderResult> BuildEditAsync(SearchResult model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(SearchResult model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(SearchResult model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(SearchResult model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

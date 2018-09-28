@@ -8,7 +8,6 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Search.ViewModels;
 using Plato.WebApi.Controllers;
 

@@ -24,17 +24,17 @@ namespace Plato.WebApi.ViewProviders
             _platoUserStore = platoUserStore;
         }
         
-        public override Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(User user, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(User user, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(User user, IViewProviderContext updater)
         {
 
             // Don't adapt the view when creating new users
@@ -53,17 +53,17 @@ namespace Plato.WebApi.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IViewProviderContext context)
         {
 
             var model = new EditUserViewModel();
 
-            if (!await updater.TryUpdateModelAsync(model))
+            if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(user, updater);
+                return await BuildEditAsync(user, context);
             }
             
-            if (updater.ModelState.IsValid)
+            if (context.Updater.ModelState.IsValid)
             {
 
                 user.ApiKey = model.ApiKey;
@@ -72,7 +72,7 @@ namespace Plato.WebApi.ViewProviders
                 
             }
             
-            return await BuildEditAsync(user, updater);
+            return await BuildEditAsync(user, context);
 
         }
         

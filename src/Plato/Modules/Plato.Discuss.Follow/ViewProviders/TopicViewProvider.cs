@@ -34,15 +34,13 @@ namespace Plato.Discuss.Follow.ViewProviders
             _entityStore = entityStore;
             _request = httpContextAccessor.HttpContext.Request;
         }
-
-
-        public override Task<IViewProviderResult> BuildIndexAsync(Topic entity, IUpdateModel updater)
+        
+        public override Task<IViewProviderResult> BuildIndexAsync(Topic entity, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
-
-
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic entity, IUpdateModel updater)
+        
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic entity, IViewProviderContext updater)
         {
 
             if (entity == null)
@@ -73,7 +71,7 @@ namespace Plato.Discuss.Follow.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Topic entity, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Topic entity, IViewProviderContext updater)
         {
             if (entity == null)
             {
@@ -104,7 +102,7 @@ namespace Plato.Discuss.Follow.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext updater)
         {  
             
             // Ensure entity exists before attempting to update

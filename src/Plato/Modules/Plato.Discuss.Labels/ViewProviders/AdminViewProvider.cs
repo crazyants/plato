@@ -37,7 +37,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(LabelBase label, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(LabelBase label, IViewProviderContext updater)
         {
             var indexViewModel = await GetIndexModel();
          
@@ -49,13 +49,13 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(LabelBase label, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(LabelBase label, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(LabelBase label, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(LabelBase label, IViewProviderContext updater)
         {
 
             EditLabelViewModel editLabelViewModel = null;
@@ -86,14 +86,14 @@ namespace Plato.Discuss.Labels.ViewProviders
             ));
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(LabelBase label, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(LabelBase label, IViewProviderContext context)
         {
 
             var model = new EditLabelViewModel();
 
-            if (!await updater.TryUpdateModelAsync(model))
+            if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(label, updater);
+                return await BuildEditAsync(label, context);
             }
 
             model.Name = model.Name?.Trim();
@@ -101,7 +101,7 @@ namespace Plato.Discuss.Labels.ViewProviders
             
             //Category category = null;
 
-            if (updater.ModelState.IsValid)
+            if (context.Updater.ModelState.IsValid)
             {
                 
                 var result = await _labelManager.UpdateAsync(new Label()
@@ -116,12 +116,12 @@ namespace Plato.Discuss.Labels.ViewProviders
 
                 foreach (var error in result.Errors)
                 {
-                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                 }
 
             }
 
-            return await BuildEditAsync(label, updater);
+            return await BuildEditAsync(label, context);
 
 
         }

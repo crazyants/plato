@@ -1,34 +1,30 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Layout.ModelBinding;
 
 namespace Plato.Internal.Layout.ViewProviders
 {
 
-    public interface IViewProviderContext : IUpdateModel
+    public interface IViewProviderContext
     {
 
-        RouteData RouteData { get; }
+        IUpdateModel Updater { get; set; }
 
-        ViewDataDictionary ViewData { get; }
-
-        HttpContext HttpContext { get; }
+        Controller Controller { get; }
+        
     }
 
-    public class ViewProviderContext :
-        ControllerModelUpdater, IViewProviderContext
+    public class ViewProviderContext : IViewProviderContext
     {
-        public RouteData RouteData { get; }
 
-        public ViewDataDictionary ViewData { get; }
+        public IUpdateModel Updater { get; set; }
 
-        public HttpContext HttpContext { get; }
-
-        public ViewProviderContext(Controller controller) : base(controller)
+        public Controller Controller { get; }
+        
+        public ViewProviderContext(IUpdateModel updater)
         {
-
+            Updater = updater ?? throw new ArgumentNullException(nameof(updater));
+            Controller = updater as Controller ?? throw new Exception($"Could not convert type of '{this.GetType()}' to type of 'Controller'.");
         }
     }
 }

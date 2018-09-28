@@ -14,13 +14,13 @@ namespace Plato.Internal.Layout.ViewProviders
 
         #region "Abstract Medthods"
 
-        public abstract Task<IViewProviderResult> BuildDisplayAsync(TModel model, IUpdateModel updater);
+        public abstract Task<IViewProviderResult> BuildDisplayAsync(TModel model, IViewProviderContext context);
 
-        public abstract Task<IViewProviderResult> BuildIndexAsync(TModel model, IUpdateModel updater);
+        public abstract Task<IViewProviderResult> BuildIndexAsync(TModel model, IViewProviderContext context);
 
-        public abstract Task<IViewProviderResult> BuildEditAsync(TModel model, IUpdateModel updater);
+        public abstract Task<IViewProviderResult> BuildEditAsync(TModel model, IViewProviderContext context);
 
-        public abstract Task<IViewProviderResult> BuildUpdateAsync(TModel model, IUpdateModel updater);
+        public abstract Task<IViewProviderResult> BuildUpdateAsync(TModel model, IViewProviderContext context);
         
         public virtual Task<bool> ValidateModelAsync(TModel model, IUpdateModel updater)
         {

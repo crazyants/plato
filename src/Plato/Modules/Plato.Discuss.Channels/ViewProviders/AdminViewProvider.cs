@@ -48,7 +48,7 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(CategoryBase category, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(CategoryBase category, IViewProviderContext updater)
         {
             //var indexViewModel = await GetIndexModel(category?.Id ?? 0);
 
@@ -69,12 +69,12 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(CategoryBase viewModel, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(CategoryBase viewModel, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
         
-        public override async Task<IViewProviderResult> BuildEditAsync(CategoryBase categoryBase, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(CategoryBase categoryBase, IViewProviderContext updater)
         {
 
             var defaultIcons = new DefaultIcons();
@@ -116,20 +116,20 @@ namespace Plato.Discuss.Channels.ViewProviders
             );
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(CategoryBase categoryBase, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(CategoryBase categoryBase, IViewProviderContext context)
         {
 
             var model = new EditChannelViewModel();
 
-            if (!await updater.TryUpdateModelAsync(model))
+            if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(categoryBase, updater);
+                return await BuildEditAsync(categoryBase, context);
             }
 
             model.Name = model.Name?.Trim();
             model.Description = model.Description?.Trim();
   
-            if (updater.ModelState.IsValid)
+            if (context.Updater.ModelState.IsValid)
             {
 
                 var iconCss = model.IconCss;
@@ -153,12 +153,12 @@ namespace Plato.Discuss.Channels.ViewProviders
 
                 foreach (var error in result.Errors)
                 {
-                    updater.ModelState.AddModelError(string.Empty, error.Description);
+                    context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                 }
 
             }
 
-            return await BuildEditAsync(categoryBase, updater);
+            return await BuildEditAsync(categoryBase, context);
             
         }
 

@@ -55,7 +55,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Moderator moderator, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Moderator moderator, IViewProviderContext updater)
         {
 
             var filterOptions = new FilterOptions();
@@ -77,13 +77,13 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Moderator oldModerator, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Moderator oldModerator, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IViewProviderContext updater)
         {
 
             // Serialize tagIt model 
@@ -144,17 +144,17 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator model, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator model, IViewProviderContext context)
         {
             
             var moderator = await _moderatorStore.GetByIdAsync(model.Id);
             if (moderator == null)
             {
-                return await BuildIndexAsync(model, updater);
+                return await BuildIndexAsync(model, context);
             }
           
             // Validate model
-            if (await ValidateModelAsync(model, updater))
+            if (await ValidateModelAsync(model, context.Updater))
             {
 
                 // Build a list of claims to add or update
@@ -176,7 +176,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
             }
 
-            return await BuildEditAsync(moderator, updater);
+            return await BuildEditAsync(moderator, context);
 
 
         }

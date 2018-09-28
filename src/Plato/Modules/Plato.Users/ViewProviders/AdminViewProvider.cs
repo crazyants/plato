@@ -53,18 +53,18 @@ namespace Plato.Users.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(User user, IViewProviderContext context)
         {
 
             var viewOptions = new ViewOptions
             {
-                Search = GetKeywords(updater),
+                Search = GetKeywords(context.Updater),
                 EnableEdit = true
             };
 
             var pagerOptions = new PagerOptions
             {
-                Page = GetPageIndex(updater)
+                Page = GetPageIndex(context.Updater)
             };
 
             var viewModel = new UsersIndexViewModel()
@@ -82,7 +82,7 @@ namespace Plato.Users.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(User user, IViewProviderContext updater)
         {
 
             return Task.FromResult(
@@ -95,7 +95,7 @@ namespace Plato.Users.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(User user, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(User user, IViewProviderContext updater)
         {
 
             var details = user.GetOrCreate<UserDetail>();
@@ -126,8 +126,7 @@ namespace Plato.Users.ViewProviders
                 ));
 
         }
-
-
+        
         public override async Task ComposeTypeAsync(User user, IUpdateModel updater)
         {
 
@@ -172,23 +171,22 @@ namespace Plato.Users.ViewProviders
 
             return valid;
         }
-
-
-        public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IUpdateModel updater)
+        
+        public override async Task<IViewProviderResult> BuildUpdateAsync(User user, IViewProviderContext context)
         {
 
             var model = new EditUserViewModel();
 
-            if (!await updater.TryUpdateModelAsync(model))
+            if (!await context.Updater.TryUpdateModelAsync(model))
             {
-                return await BuildEditAsync(user, updater);
+                return await BuildEditAsync(user, context);
             }
 
             model.UserName = model.UserName?.Trim();
             model.Email = model.Email?.Trim();
             model.DisplayName = model?.DisplayName.Trim();
 
-            if (updater.ModelState.IsValid)
+            if (context.Updater.ModelState.IsValid)
             {
 
                 // Update display name. Username and email address are update via UserManager
@@ -238,7 +236,7 @@ namespace Plato.Users.ViewProviders
                     {
                         foreach (var error in tokenResult.Errors)
                         {
-                            updater.ModelState.AddModelError(string.Empty, error.Description);
+                            context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                         }
                     }
                 }
@@ -246,13 +244,13 @@ namespace Plato.Users.ViewProviders
                 {
                     foreach (var error in result.Errors)
                     {
-                        updater.ModelState.AddModelError(string.Empty, error.Description);
+                        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
 
             }
             
-            return await BuildEditAsync(user, updater);
+            return await BuildEditAsync(user, context);
 
         }
 

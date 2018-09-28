@@ -42,17 +42,17 @@ namespace Plato.Discuss.ViewProviders
 
 
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Reply model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Reply model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Reply model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Reply model, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Reply reply, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Reply reply, IViewProviderContext updater)
         {
 
             // Ensures we persist the message between post backs
@@ -98,17 +98,17 @@ namespace Plato.Discuss.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Reply reply, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Reply reply, IViewProviderContext context)
         {
           
             // Ensure the reply exists
             if (await _replyStore.GetByIdAsync(reply.Id) == null)
             {
-                return await BuildIndexAsync(reply, updater);
+                return await BuildIndexAsync(reply, context);
             }
 
             // Validate model
-            if (await ValidateModelAsync(reply, updater))
+            if (await ValidateModelAsync(reply, context.Updater))
             {
 
                 // Update reply
@@ -119,13 +119,13 @@ namespace Plato.Discuss.ViewProviders
                 {
                     foreach (var error in result.Errors)
                     {
-                        updater.ModelState.AddModelError(string.Empty, error.Description);
+                        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
 
             }
 
-            return await BuildEditAsync(reply, updater);
+            return await BuildEditAsync(reply, context);
 
         }
 

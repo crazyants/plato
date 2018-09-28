@@ -49,7 +49,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IViewProviderContext updater)
         {
 
             // Ensure we explictly set the featureId
@@ -71,7 +71,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IViewProviderContext updater)
         {
 
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
@@ -92,7 +92,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext updater)
         {
             var viewModel = new EditTopicLabelsViewModel()
             {
@@ -121,18 +121,18 @@ namespace Plato.Discuss.Labels.ViewProviders
             //});
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext context)
         {
 
             // Ensure entity exists before attempting to update
             var entity = await _entityStore.GetByIdAsync(topic.Id);
             if (entity == null)
             {
-                return await BuildIndexAsync(topic, updater);
+                return await BuildIndexAsync(topic, context);
             }
 
             // Validate model
-            if (await ValidateModelAsync(topic, updater))
+            if (await ValidateModelAsync(topic, context.Updater))
             {
                
                 // Get selected channels
@@ -174,11 +174,10 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             }
            
-            return await BuildEditAsync(topic, updater);
+            return await BuildEditAsync(topic, context);
 
         }
-
-
+        
         #endregion
 
         #region "Private Methods"

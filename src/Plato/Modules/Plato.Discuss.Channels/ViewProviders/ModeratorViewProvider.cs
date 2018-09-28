@@ -38,18 +38,18 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Moderator moderator, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Moderator moderator, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
 
         }
 
-        public override Task<IViewProviderResult> BuildDisplayAsync(Moderator moderator, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Moderator moderator, IViewProviderContext updater)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Moderator moderator, IViewProviderContext updater)
         {
 
             var viewModel = new EditTopicChannelsViewModel()
@@ -66,8 +66,7 @@ namespace Plato.Discuss.Channels.ViewProviders
             ));
 
         }
-
-
+        
         public override async Task<bool> ValidateModelAsync(Moderator moderator, IUpdateModel updater)
         {
             var valid = await updater.TryUpdateModelAsync(new EditTopicChannelsViewModel()
@@ -95,17 +94,17 @@ namespace Plato.Discuss.Channels.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator model, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Moderator model, IViewProviderContext context)
         {
 
             var moderator = await _moderatorStore.GetByIdAsync(model.Id);
             if (moderator == null)
             {
-                return await BuildIndexAsync(model, updater);
+                return await BuildIndexAsync(model, context);
             }
             
             // Validate model
-            if (await ValidateModelAsync(model, updater))
+            if (await ValidateModelAsync(model, context.Updater))
             {
 
                 // Get all moderators

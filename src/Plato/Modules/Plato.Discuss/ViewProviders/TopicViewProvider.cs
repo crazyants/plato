@@ -50,14 +50,14 @@ namespace Plato.Discuss.ViewProviders
 
         #region "Implementation"
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Topic topic, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Topic topic, IViewProviderContext context)
         {
 
             // Build view model
             var viewModel = new TopicIndexViewModel
             {
-                Options = new TopicIndexOptions(updater.RouteData),
-                Pager = new PagerOptions(updater.RouteData)
+                Options = new TopicIndexOptions(context.Controller.RouteData),
+                Pager = new PagerOptions(context.Controller.RouteData)
             };
 
             return Task.FromResult(Views(
@@ -69,18 +69,18 @@ namespace Plato.Discuss.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IViewProviderContext context)
         {
 
             // Get view data
-            var viewOptions = new TopicIndexOptions(updater.RouteData);
-            var pagerOptions = new PagerOptions(updater.RouteData);
+            var viewOptions = new TopicIndexOptions(context.Controller.RouteData);
+            var pagerOptions = new PagerOptions(context.Controller.RouteData);
 
             // Get entity
             var topic = await _entityStore.GetByIdAsync(viewModel.Id);
             if (topic == null)
             {
-                return await BuildIndexAsync(viewModel, updater);
+                return await BuildIndexAsync(viewModel, context);
             }
 
             // Increment entity view count
@@ -108,7 +108,7 @@ namespace Plato.Discuss.ViewProviders
 
         }
         
-        public override Task<IViewProviderResult> BuildEditAsync(Topic topic, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext updater)
         {
 
             // Ensures we persist the message between post backs
@@ -170,17 +170,17 @@ namespace Plato.Discuss.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext context)
         {
 
             var entity = await _entityStore.GetByIdAsync(topic.Id);
             if (entity == null)
             {
-                return await BuildIndexAsync(topic, updater);
+                return await BuildIndexAsync(topic, context);
             }
             
             // Validate 
-            if (await ValidateModelAsync(topic, updater))
+            if (await ValidateModelAsync(topic, context.Updater))
             {
                 
                 // Update
@@ -191,13 +191,13 @@ namespace Plato.Discuss.ViewProviders
                 {
                     foreach (var error in result.Errors)
                     {
-                        updater.ModelState.AddModelError(string.Empty, error.Description);
+                        context.Updater.ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
 
             }
 
-            return await BuildEditAsync(topic, updater);
+            return await BuildEditAsync(topic, context);
 
         }
 

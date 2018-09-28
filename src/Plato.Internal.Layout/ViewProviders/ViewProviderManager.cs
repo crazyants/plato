@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
@@ -23,7 +24,7 @@ namespace Plato.Internal.Layout.ViewProviders
             _logger = logger;
         }
 
-        public async Task<IViewProviderResult> ProvideDisplayAsync(TModel model, IUpdateModel updater)
+        public async Task<IViewProviderResult> ProvideDisplayAsync(TModel model, IUpdateModel context)
         {
 
             var results = new ConcurrentBag<IViewProviderResult>();
@@ -31,7 +32,7 @@ namespace Plato.Internal.Layout.ViewProviders
             {
                 try
                 {
-                    results.Add(await provider.BuildDisplayAsync(model, updater));
+                    results.Add(await provider.BuildDisplayAsync(model, new ViewProviderContext(context)));
                 }
                 catch (Exception e)
                 {
@@ -51,7 +52,8 @@ namespace Plato.Internal.Layout.ViewProviders
             {
                 try
                 {
-                    results.Add(await provider.BuildIndexAsync(model, updater));
+                    var context = new ViewProviderContext(updater);
+                    results.Add(await provider.BuildIndexAsync(model, context));
                 }
                 catch (Exception e)
                 {
@@ -72,7 +74,8 @@ namespace Plato.Internal.Layout.ViewProviders
             {
                 try
                 {
-                    results.Add(await provider.BuildEditAsync(model, updater));
+                    var context = new ViewProviderContext(updater);
+                    results.Add(await provider.BuildEditAsync(model, context));
                 }
                 catch (Exception e)
                 {
@@ -93,7 +96,8 @@ namespace Plato.Internal.Layout.ViewProviders
             {
                 try
                 {
-                    results.Add(await provider.BuildUpdateAsync(model, updater));
+                    var context = new ViewProviderContext(updater);
+                    results.Add(await provider.BuildUpdateAsync(model, context));
                 }
                 catch (Exception e)
                 {
@@ -129,14 +133,14 @@ namespace Plato.Internal.Layout.ViewProviders
 
         }
 
-        public async Task<TModel> GetComposedType(IUpdateModel updater)
+        public async Task<TModel> GetComposedType(IUpdateModel context)
         {
             var model = ActivateInstanceOf<TModel>.Instance();
             foreach (var provider in _providers)
             {
                 try
                 {
-                    await provider.ComposeTypeAsync(model, updater);
+                    await provider.ComposeTypeAsync(model, context);
 
                 }
                 catch (Exception e)

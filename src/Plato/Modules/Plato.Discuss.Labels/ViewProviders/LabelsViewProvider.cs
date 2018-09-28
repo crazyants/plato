@@ -34,11 +34,11 @@ namespace Plato.Discuss.Labels.ViewProviders
         
         #region "Imlementation"
         
-        public override Task<IViewProviderResult> BuildIndexAsync(Label label, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Label label, IViewProviderContext context)
         {
 
             // Get topic index view model from context
-            var viewModel = updater.HttpContext.Items[typeof(LabelIndexViewModel)] as LabelIndexViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(LabelIndexViewModel)] as LabelIndexViewModel;
             
             var labelIndexViewModel = new LabelIndexViewModel()
             {
@@ -56,7 +56,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Label label, IUpdateModel updater)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Label label, IViewProviderContext context)
         {
 
             // Get topic index view model from context
@@ -92,12 +92,12 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Label model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildEditAsync(Label model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Label model, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Label model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

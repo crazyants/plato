@@ -6,13 +6,13 @@ namespace Plato.Internal.Layout.ViewProviders
     public interface IViewProviderManager<TModel> where TModel : class
     {
 
-        Task<IViewProviderResult> ProvideDisplayAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> ProvideDisplayAsync(TModel model, IUpdateModel context);
 
-        Task<IViewProviderResult> ProvideIndexAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> ProvideIndexAsync(TModel model, IUpdateModel context);
 
-        Task<IViewProviderResult> ProvideEditAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> ProvideEditAsync(TModel model, IUpdateModel context);
 
-        Task<IViewProviderResult> ProvideUpdateAsync(TModel model, IUpdateModel updater);
+        Task<IViewProviderResult> ProvideUpdateAsync(TModel model, IUpdateModel context);
 
         Task<bool> IsModelStateValid(TModel model, IUpdateModel updater);
 
