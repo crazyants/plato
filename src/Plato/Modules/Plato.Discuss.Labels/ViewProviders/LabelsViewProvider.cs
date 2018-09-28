@@ -34,28 +34,25 @@ namespace Plato.Discuss.Labels.ViewProviders
         
         #region "Imlementation"
         
-        public override async Task<IViewProviderResult> BuildIndexAsync(Label label, IUpdateModel updater)
+        public override Task<IViewProviderResult> BuildIndexAsync(Label label, IUpdateModel updater)
         {
 
             // Get topic index view model from context
-            var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
-            var pager = viewModel?.Pager;
-        
-            var options = new LabelIndexOptions();
-
+            var viewModel = updater.HttpContext.Items[typeof(LabelIndexViewModel)] as LabelIndexViewModel;
+            
             var labelIndexViewModel = new LabelIndexViewModel()
             {
-                Options = options,
-                Pager = pager
+                Options = viewModel?.Options,
+                Pager = viewModel?.Pager
             };
             
             //var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
             
-            return Views(
+            return Task.FromResult(Views(
                 View<Label>("Home.Index.Header", model => label).Zone("header").Order(1),
                 View<Label>("Home.Index.Tools", model => label).Zone("tools").Order(1),
                 View<LabelIndexViewModel>("Home.Index.Content", model => labelIndexViewModel).Zone("content").Order(1)
-            );
+            ));
 
         }
 

@@ -964,3 +964,6 @@
 .tree input { display: none; }
 .tree input + label > i.check-icon:after { vertical-align: middle; width: 20px; content: '\f00c'; opacity: 0; }
 .tree input:checked + label > i.check-icon:after { opacity: 1; }
+
+/* default labels */
+.label { background-color: #E4ECF5; color: #007bff; }

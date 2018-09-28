@@ -46,9 +46,44 @@ namespace Plato.Discuss.Labels.Controllers
 
         #region "Actions"
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            LabelIndexOptions opts,
+            PagerOptions pager)
         {
+
+            if (opts == null)
+            {
+                opts = new LabelIndexOptions();
+            }
+
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
             
+            // Get default options
+            var defaultViewOptions = new LabelIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(LabelIndexViewModel)] = new LabelIndexViewModel()
+            {
+                Options = opts,
+                Pager = pager
+            };
+
             // Build view
             var result = await _labelViewProvider.ProvideIndexAsync(new Label(), this);
 

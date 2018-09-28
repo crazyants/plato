@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -16,6 +18,8 @@ namespace Plato.Internal.Layout.ModelBinding
         public RouteData RouteData { get; }
 
         public ViewDataDictionary ViewData { get; }
+
+        public HttpContext HttpContext { get; }
 
         public ControllerModelUpdater(Controller controller)
         {

@@ -113,7 +113,7 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-
+            
             // Add view options to context for use within view adaptors
             this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
             {

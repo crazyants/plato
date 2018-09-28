@@ -7,21 +7,25 @@
     <card-body>
         @if (Model.Results != null)
         {
-            <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var label in Model.Results.Data)
-                {
-                    <li class="list-group-item  list-group-item-action pt-4">
-                        @await DisplayAsync(new View("LabelListItem", new
-                        {
-                            model = new LabelListItemViewModel()
-                            {
-                                Label = label
-                            } 
-                        }))
-                    </li>
+            <div class="list-group list-group-flush list-group-hover">
+                <div class="row">
+                    @foreach (var label in Model.Results.Data)
+                    {
+                        <div class=col-lg-3 col-md-6 col-sm-12">
+                            <div class="list-group-item">
+                                @await DisplayAsync(new View("LabelListItem", new
+                                {
+                                    model = new LabelListItemViewModel()
+                                    {
+                                        Label = label
+                                    }
+                                }))
+                            </div>
+                        </div>
 
-                }
-            </ul>
+                    }
+                </div>
+            </div>
         }
         else
         {

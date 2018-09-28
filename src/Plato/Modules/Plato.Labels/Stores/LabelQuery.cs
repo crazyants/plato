@@ -62,8 +62,7 @@ namespace Plato.Labels.Stores
         
         private WhereInt _id;
         private WhereString _keywords;
-
-
+        
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -86,15 +85,14 @@ namespace Plato.Labels.Stores
     {
         #region "Constructor"
 
-        private readonly string _LabelsTableName;
+        private readonly string _labelsTableName;
 
         private readonly LabelQuery<TModel> _query;
 
         public LabelQueryBuilder(LabelQuery<TModel> query)
         {
             _query = query;
-            _LabelsTableName = GetTableNameWithPrefix("Categories");
-
+            _labelsTableName = GetTableNameWithPrefix("Labels");
         }
 
         #endregion
@@ -158,7 +156,7 @@ namespace Plato.Labels.Stores
 
             var sb = new StringBuilder();
 
-            sb.Append(_LabelsTableName)
+            sb.Append(_labelsTableName)
                 .Append(" c ");
 
             return sb.ToString();
