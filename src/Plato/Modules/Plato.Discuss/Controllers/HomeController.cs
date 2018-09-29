@@ -64,8 +64,7 @@ namespace Plato.Discuss.Controllers
         #endregion
 
         #region "Actions"
-
-    
+        
         public async Task<IActionResult> Index(
             TopicIndexOptions opts,
             PagerOptions pager)

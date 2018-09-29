@@ -88,6 +88,14 @@ namespace Plato.Discuss
                 template: "discuss",
                 defaults: new { controller = "Home", action = "Index" }
             );
+            
+            // discuss popular
+            routes.MapAreaRoute(
+                name: "DiscussPopular",
+                areaName: "Plato.Discuss",
+                template: "discuss/popular",
+                defaults: new { controller = "Home", action = "Index" }
+            );
 
             // discuss topic
             routes.MapAreaRoute(

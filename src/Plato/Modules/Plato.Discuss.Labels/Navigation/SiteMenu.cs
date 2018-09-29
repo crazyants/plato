@@ -3,11 +3,11 @@ using System;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Navigation;
 
-namespace Plato.Discuss.Channels.Navigation
+namespace Plato.Discuss.Labels.Navigation
 {
     public class SiteMenu : INavigationProvider
     {
-        public SiteMenu(IStringLocalizer<AdminMenu> localizer)
+        public SiteMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -23,8 +23,8 @@ namespace Plato.Discuss.Channels.Navigation
 
             builder
                 .Add(T["Discuss"], configuration => configuration
-                    .Add(T["Channels"], 1, installed => installed
-                        .Action("Index", "Home", "Plato.Discuss.Channels", new RouteValueDictionary()
+                    .Add(T["Labels"], 2, installed => installed
+                        .Action("Index", "Home", "Plato.Discuss.Labels", new RouteValueDictionary()
                         {
                             ["id"] = "",
                             ["alias"] = ""

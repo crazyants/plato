@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
 
@@ -24,17 +25,21 @@ namespace Plato.Discuss.Navigation
             builder
                 .Add(T["Discuss"], configuration => configuration
                     .IconCss("fal fa-comment-alt fa-flip-y")
-                    .Add(T["Latest"], "2", installed => installed
+                    .Add(T["Latest"], int.MinValue, installed => installed
                         .Action("Index", "Home", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     )
-                    .Add(T["Trending"], "2", installed => installed
-                        .Action("Trending", "Home", "Plato.Discuss")
+                    .Add(T["Popular"], int.MinValue + 1, installed => installed
+                        .Action("Index", "Home", "Plato.Discuss", new RouteValueDictionary()
+                            {
+                                ["opts.sort"] = "Replies",
+                                ["opts.order"] = "Desc"
+                            })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     )
-                    .Add(T["Following"], "2", installed => installed
+                    .Add(T["Following"], int.MaxValue, installed => installed
                         .Action("Following", "Home", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()

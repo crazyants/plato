@@ -178,8 +178,7 @@ namespace Plato.Discuss.ViewModels
         public OrderBy Value { get; set; }
         
     }
-
-
+    
     public enum SortBy
     {
         LastReply = 0,
@@ -194,7 +193,8 @@ namespace Plato.Discuss.ViewModels
     public enum Filter
     {
         All = 0,
-        Unanswered
+        Unanswered,
+        NoReplies
     }
 
 }
