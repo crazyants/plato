@@ -79,22 +79,29 @@ namespace Plato.Labels.Services
             model.CreatedDate = DateTime.UtcNow;
             model.Alias = await ParseAlias(model.Name);
           
-            // Publish LabelCreating event
-             _broker.Pub<TLabel>(this, new MessageOptions()
+            // Invoke LabelCreating subscriptions
+            foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
             {
                 Key = "LabelCreating"
-            }, model);
+            }, model))
+            {
+                model = await handler.Invoke(new Message<TLabel>(model, this));
+            }
 
             var result = new ActivityResult<TLabel>();
 
             var label = await _labelStore.CreateAsync(model);
             if (label != null)
             {
-                // Publish LabelCreated event
-                 _broker.Pub<TLabel>(this, new MessageOptions()
+           
+                // Invoke LabelCreated subscriptions
+                foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
                 {
                     Key = "LabelCreated"
-                }, label);
+                }, label))
+                {
+                    label = await handler.Invoke(new Message<TLabel>(label, this));
+                }
 
                 // Return success
                 return result.Success(label);
@@ -135,23 +142,31 @@ namespace Plato.Labels.Services
             model.ModifiedUserId = user?.Id ?? 0;
             model.ModifiedDate = DateTime.UtcNow;
             model.Alias = await ParseAlias(model.Name);
-            
-            // Publish LabelUpdating event
-            _broker.Pub<TLabel>(this, new MessageOptions()
+         
+            // Invoke LabelUpdating subscriptions
+            foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
             {
                 Key = "LabelUpdating"
-            }, model);
+            }, model))
+            {
+                model = await handler.Invoke(new Message<TLabel>(model, this));
+            }
 
             var result = new ActivityResult<TLabel>();
 
             var label = await _labelStore.UpdateAsync(model);
             if (label != null)
             {
-                // Publish LabelUpdated event
-                 _broker.Pub<TLabel>(this, new MessageOptions()
+
+                // Invoke LabelUpdated subscriptions
+                foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
                 {
                     Key = "LabelUpdated"
-                }, label);
+                }, label))
+                {
+                    label = await handler.Invoke(new Message<TLabel>(label, this));
+                }
+
                 // Return success
                 return result.Success(label);
             }
@@ -168,13 +183,16 @@ namespace Plato.Labels.Services
             {
                 throw new ArgumentNullException(nameof(model));
             }
-
-            // Publish LabelDeleting event
-            _broker.Pub<TLabel>(this, new MessageOptions()
+            
+            // Invoke LabelDeleting subscriptions
+            foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
             {
                 Key = "LabelDeleting"
-            }, model);
-
+            }, model))
+            {
+                model = await handler.Invoke(new Message<TLabel>(model, this));
+            }
+            
             var result = new ActivityResult<TLabel>();
             if (await _labelStore.DeleteAsync(model))
             {
@@ -189,14 +207,16 @@ namespace Plato.Labels.Services
                     {
                         await _labelDataStore.DeleteAsync(item);
                     }
-                    
                 }
-
-                // Publish LabelDeleted event
-                 _broker.Pub<TLabel>(this, new MessageOptions()
+                
+                // Invoke LabelDeleted subscriptions
+                foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
                 {
                     Key = "LabelDeleted"
-                }, model);
+                }, model))
+                {
+                    model = await handler.Invoke(new Message<TLabel>(model, this));
+                }
 
                 // Return success
                 return result.Success();

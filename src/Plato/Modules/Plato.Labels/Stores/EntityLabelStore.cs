@@ -5,15 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Labels.Models;
 using Plato.Labels.Repositories;
-using Plato.Internal.Cache;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Labels.Stores
 {
-    
+
     public class EntityLabelStore : IEntityLabelStore<EntityLabel>
     {
+
+        private const string ByEntityId = "ByEntityId";
         
         private readonly IEntityLabelRepository<EntityLabel> _entityLabelRepository;
         private readonly ICacheManager _cacheManager;
@@ -36,6 +37,7 @@ namespace Plato.Labels.Stores
 
         public async Task<EntityLabel> CreateAsync(EntityLabel model)
         {
+
             if (model == null)
             {
                 throw new ArgumentNullException(nameof(model));
@@ -46,17 +48,16 @@ namespace Plato.Labels.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
 
-            if (model.LabelId == 0)
+            if (model.LabelId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.LabelId));
             }
             
-            if (model.EntityId == 0)
+            if (model.EntityId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
-
-
+            
             var result = await _entityLabelRepository.InsertUpdateAsync(model);
             if (result != null)
             {
@@ -79,16 +80,15 @@ namespace Plato.Labels.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
 
-            if (model.LabelId == 0)
+            if (model.LabelId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.LabelId));
             }
 
-            if (model.EntityId == 0)
+            if (model.EntityId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
-
 
             var result = await _entityLabelRepository.InsertUpdateAsync(model);
             if (result != null)
@@ -138,7 +138,7 @@ namespace Plato.Labels.Stores
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Selecting entities for key '{0}' with the following parameters: {1}",
+                    _logger.LogInformation("Selecting entity labels for key '{0}' with the following parameters: {1}",
                         token.ToString(), args.Select(a => a));
                 }
 
@@ -149,13 +149,19 @@ namespace Plato.Labels.Stores
 
         public async Task<IEnumerable<EntityLabel>> GetByEntityId(int entityId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), entityId);
+
+            if (entityId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(entityId));
+            }
+
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByEntityId, entityId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Selecting roles for Label Id '{0}'",
+                    _logger.LogInformation("Selecting entity labels for entity Id '{0}'.",
                         entityId);
                 }
 
@@ -166,6 +172,12 @@ namespace Plato.Labels.Stores
 
         public async Task<bool> DeleteByEntityId(int entityId)
         {
+
+            if (entityId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(entityId));
+            }
+
             var success = await _entityLabelRepository.DeleteByEntityId(entityId);
             if (success)
             {
@@ -180,10 +192,10 @@ namespace Plato.Labels.Stores
             return success;
         }
 
-        public async Task<bool> DeleteByEntityIdAndLabelId(int entityId, int LabelId)
+        public async Task<bool> DeleteByEntityIdAndLabelId(int entityId, int labelId)
         {
 
-            var success = await _entityLabelRepository.DeleteByEntityIdAndLabelId(entityId, LabelId);
+            var success = await _entityLabelRepository.DeleteByEntityIdAndLabelId(entityId, labelId);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))

@@ -16,7 +16,7 @@
                 {
                     var css = label.Id == Model.SelectedLabelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
                     <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@label.Id" asp-route-alias="@label.Alias" title="@label.Description" class="@css">
-                        <span class="btn btn-sm font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                        <span class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
                             @label.Name
                         </span>
                     </a>

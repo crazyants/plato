@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Labels.Handlers;
 using Plato.Labels.Models;
 using Plato.Labels.Repositories;
 using Plato.Labels.Services;
 using Plato.Labels.Stores;
+using Plato.Labels.Subscribers;
 
 namespace Plato.Labels
 {
@@ -43,6 +45,9 @@ namespace Plato.Labels
             // Managers
             services.AddScoped<ILabelManager<LabelBase>, LabelManager<LabelBase>>();
             services.AddScoped<IEntityLabelManager<EntityLabel>, EntityLabelManager>();
+
+            // Register message broker subscribers
+            services.AddScoped<IBrokerSubscriber, EntityLabelSubscriber>();
 
         }
 

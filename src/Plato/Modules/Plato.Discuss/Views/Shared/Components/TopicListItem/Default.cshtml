@@ -36,13 +36,12 @@
         <span class="pl-2">
             @foreach (var label in Model.Labels)
             {
-            <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@label.Id" asp-route-alias="@label.Alias" title="@label.Description" class="btn btn-sm font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
-                @label.Name
-            </a>
+                <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@label.Id" asp-route-alias="@label.Alias" title="@label.Description" class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
+                    @label.Name
+                </a>
             }
         </span>
     }
- 
     <div class="text-muted">
         @Model.Topic.Abstract
     </div>
@@ -68,9 +67,6 @@
                 @Model.Channel.Name
             </a>
         }
-        
-        
-
-</div>
+    </div>
 
 </div>
