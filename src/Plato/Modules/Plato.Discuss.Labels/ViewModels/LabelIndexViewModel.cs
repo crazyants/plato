@@ -34,7 +34,7 @@ namespace Plato.Discuss.Labels.ViewModels
     {
         public string Search { get; set; }
 
-        public SortBy Sort { get; set; } = SortBy.Id;
+        public SortBy Sort { get; set; } = SortBy.Entities;
 
         public OrderBy Order { get; set; } = OrderBy.Desc;
 
@@ -45,10 +45,11 @@ namespace Plato.Discuss.Labels.ViewModels
         Name,
         Description,
         SortOrder,
-        TotalEntities,
-        TotalFollows,
-        TotalViews,
-        LastEntityDate,
-        ModifiedDate
+        Entities,
+        Follows,
+        Views,
+        LastEntity,
+        Created,
+        Modified
     }
 }

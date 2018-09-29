@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Labels.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
@@ -109,10 +109,13 @@ namespace Plato.Labels.Stores
 
         public string BuildSqlStartId()
         {
+            var startIdComparer = GetStartIdComparer();
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = c.Id FROM ")
+            sb.Append("SELECT @start_id_out = ")
+                .Append(startIdComparer)
+                .Append(" FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -144,7 +147,7 @@ namespace Plato.Labels.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(c.Id) FROM ")
+            sb.Append("SELECT COUNT(l.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -154,7 +157,7 @@ namespace Plato.Labels.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("c.*");
+            sb.Append("l.*");
             return sb.ToString();
 
         }
@@ -165,7 +168,7 @@ namespace Plato.Labels.Stores
             var sb = new StringBuilder();
 
             sb.Append(_labelsTableName)
-                .Append(" c ");
+                .Append(" l ");
 
             return sb.ToString();
 
@@ -184,16 +187,23 @@ namespace Plato.Labels.Stores
 
         private string BuildWhereClauseForStartId()
         {
+            var startIdComparer = GetStartIdComparer();
             var sb = new StringBuilder();
             // default to ascending
             if (_query.SortColumns.Count == 0)
-                sb.Append("c.Id >= @start_id_in");
+            {
+                sb.Append(startIdComparer)
+                    .Append(" >= @start_id_in");
+            }
+
             // set start operator based on first order by
             foreach (var sortColumn in _query.SortColumns)
             {
-                sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "c.Id <= @start_id_in"
-                    : "c.Id >= @start_id_in");
+                sb
+                    .Append(startIdComparer)
+                    .Append(sortColumn.Value != OrderBy.Asc
+                        ? " <= @start_id_in"
+                        : " >= @start_id_in");
                 break;
             }
 
@@ -214,7 +224,7 @@ namespace Plato.Labels.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("c.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("l.Id"));
             }
 
             if (!String.IsNullOrEmpty(_query.Params.Name.Value))
@@ -245,15 +255,15 @@ namespace Plato.Labels.Stores
 
             return columnName.IndexOf('.') >= 0
                 ? columnName
-                : "c." + columnName;
+                : "l." + columnName;
         }
 
-        private string BuildOrderBy()
+        string BuildOrderBy()
         {
             if (_query.SortColumns.Count == 0) return null;
             var sb = new StringBuilder();
             var i = 0;
-            foreach (var sortColumn in _query.SortColumns)
+            foreach (var sortColumn in GetSafeSortColumns())
             {
                 sb.Append(GetQualifiedColumnName(sortColumn.Key));
                 if (sortColumn.Value != OrderBy.Asc)
@@ -264,6 +274,93 @@ namespace Plato.Labels.Stores
             }
             return sb.ToString();
         }
+
+        IDictionary<string, OrderBy> GetSafeSortColumns()
+        {
+            var ourput = new Dictionary<string, OrderBy>();
+            foreach (var sortColumn in _query.SortColumns)
+            {
+                var columnName = GetSortColumn(sortColumn.Key);
+                if (String.IsNullOrEmpty(columnName))
+                {
+                    throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
+                }
+                ourput.Add(columnName, sortColumn.Value);
+
+            }
+
+            return ourput;
+        }
+
+        private string GetStartIdComparer()
+        {
+
+            var output = "e.Id";
+            if (_query.SortColumns.Count > 0)
+            {
+                foreach (var sortColumn in _query.SortColumns)
+                {
+                    var columnName = GetSortColumn(sortColumn.Key);
+                    if (String.IsNullOrEmpty(columnName))
+                    {
+                        throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
+                    }
+                    output = columnName;
+                }
+            }
+
+            return output;
+
+        }
+
+        string GetSortColumn(string columnName)
+        {
+
+            if (String.IsNullOrEmpty(columnName))
+            {
+                return string.Empty;
+            }
+
+            switch (columnName.ToLowerInvariant())
+            {
+                case "id":
+                    return "l.Id";
+                case "name":
+                    return "l.[Name]";
+                case "description":
+                    return "l.[Description]";
+                case "sortorder":
+                    return "l.SortOrder";
+                case "entities":
+                    return "l.TotalEntities";
+                case "totalentities":
+                    return "l.TotalEntities";
+                case "follows":
+                    return "l.TotalFollows";
+                case "totalfollows":
+                    return "l.TotalFollows";
+                case "views":
+                    return "l.TotalViews";
+                case "totalviews":
+                    return "l.TotalViews";
+                case "created":
+                    return "l.CreatedDate";
+                case "createddate":
+                    return "l.CreatedDate";
+                case "modified":
+                    return "l.ModifiedDate";
+                case "modifieddate":
+                    return "l.ModifiedDate";
+                case "lastentity":
+                    return "l.LastEntityDate";
+                case "lastentitydate":
+                    return "l.LastEntityDate";
+            }
+
+            return string.Empty;
+
+        }
+
 
         #endregion
     }

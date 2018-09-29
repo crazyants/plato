@@ -138,7 +138,7 @@ namespace Plato.Labels.Services
             var result = new ActivityResult<EntityLabel>();
 
             // Persist to database
-            var updatedEntityLabel = await _entityLabelStore.CreateAsync(model);
+            var updatedEntityLabel = await _entityLabelStore.UpdateAsync(model);
             if (updatedEntityLabel != null)
             {
 

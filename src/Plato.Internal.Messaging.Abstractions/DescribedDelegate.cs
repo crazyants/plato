@@ -14,7 +14,7 @@ namespace Plato.Internal.Messaging.Abstractions
         {
             this.Options = options;
             this.Subscription = subscription;
-            this.Id = options.Key + "_" + System.Guid.NewGuid().ToString();
+            this.Id = options.Key + "_" + Guid.NewGuid().ToString();
         }
         
         public bool Equals(DescribedDelegate other)

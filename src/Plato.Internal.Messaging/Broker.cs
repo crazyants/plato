@@ -74,8 +74,8 @@ namespace Plato.Internal.Messaging
             {
                 if (func != null)
                 {
-                    // convert delegates generic argument type
-                    // to concrete delegate type to allow for deferred execurtion
+                    // convert delegates generic delegate type
+                    // to concrete delegate type to allow for deferred invocation
                     ourput.Add((Message<T> input) => func(delegatePayload));
                 }
             }

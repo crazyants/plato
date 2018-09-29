@@ -717,9 +717,9 @@ namespace Plato.Entities.Stores
             return string.Empty;
 
         }
-
-
+        
         #endregion
+
     }
 
     #endregion

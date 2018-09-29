@@ -18,8 +18,8 @@ namespace Plato.Internal.Hosting.Web.Routing
     public class PlatoRouterMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger _logger;
         private readonly Dictionary<string, RequestDelegate> _pipelines = new Dictionary<string, RequestDelegate>();
+        private readonly ILogger _logger;
 
         public PlatoRouterMiddleware(
             RequestDelegate next,
@@ -31,9 +31,12 @@ namespace Plato.Internal.Hosting.Web.Routing
 
         public async Task Invoke(HttpContext httpContext)
         {
-            if (_logger.IsEnabled(LogLevel.Information))
-                _logger.LogInformation("Begin Routing Request");
 
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Begin Routing Request");
+            }
+                
             var shellSettings = (ShellSettings) httpContext.Features[typeof(ShellSettings)];
 
             // Define a PathBase for the current request that is the RequestUrlPrefix.

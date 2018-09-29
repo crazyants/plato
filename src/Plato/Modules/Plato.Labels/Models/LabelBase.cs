@@ -132,7 +132,7 @@ namespace Plato.Labels.Models
                 TotalEntities = Convert.ToInt32(dr["TotalEntities"]);
 
             if (dr.ColumnIsNotNull("TotalFollows"))
-                TotalEntities = Convert.ToInt32(dr["TotalFollows"]);
+                TotalFollows = Convert.ToInt32(dr["TotalFollows"]);
 
             if (dr.ColumnIsNotNull("TotalViews"))
                 TotalViews = Convert.ToInt32(dr["TotalViews"]);
