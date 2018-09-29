@@ -42,7 +42,8 @@ namespace Plato.Labels
 
             // Managers
             services.AddScoped<ILabelManager<LabelBase>, LabelManager<LabelBase>>();
-        
+            services.AddScoped<IEntityLabelManager<EntityLabel>, EntityLabelManager>();
+
         }
 
         public override void Configure(
