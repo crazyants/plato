@@ -33,8 +33,8 @@ namespace Plato.Discuss.Labels.Controllers
         public IStringLocalizer S { get; }
 
         public AdminController(
-            IHtmlLocalizer<AdminController> htmlLocalizer,
-            IStringLocalizer<AdminController> stringLocalizer,
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
             ILabelStore<LabelBase> labelStore,
             IViewProviderManager<LabelBase> viewProvider,
@@ -55,7 +55,9 @@ namespace Plato.Discuss.Labels.Controllers
             S = stringLocalizer;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            LabelIndexOptions opts,
+            PagerOptions pager)
         {
 
             //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
@@ -63,6 +65,17 @@ namespace Plato.Discuss.Labels.Controllers
             //    return Unauthorized();
             //}
             
+            if (opts == null)
+            {
+                opts = new LabelIndexOptions();
+            }
+
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+            
+            // Breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
@@ -71,8 +84,35 @@ namespace Plato.Discuss.Labels.Controllers
                 ).Add(S["Labels"]);
             });
             
+            // Get default options
+            var defaultViewOptions = new LabelIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+            
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+
+            // Indicate administrator view
+            opts.EnableEdit = true;
+
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(LabelIndexViewModel)] = new LabelIndexViewModel()
+            {
+                Options = opts,
+                Pager = pager
+            };
+            
             var model = await _viewProvider.ProvideIndexAsync(new LabelBase(), this);
             return View(model);
+
         }
         
         public async Task<IActionResult> Create()

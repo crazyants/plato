@@ -9,9 +9,20 @@
             @Model.Label.TotalEntities.ToPrettyInt()
         </span>
     </span>
-    <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Label.Id" asp-route-alias="@Model.Label.Alias" class="btn btn-sm label font-weight-bold" style="background-color: @Model.Label.BackColor; color: @Model.Label.ForeColor">
-        @Model.Label.Name
-    </a>
+    
+    @if (Model.EnableEdit)
+    {
+        <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Label.Id" class="btn btn-sm label font-weight-bold" style="background-color: @Model.Label.BackColor; color: @Model.Label.ForeColor">
+            @Model.Label.Name
+        </a>
+    }
+    else
+    {
+        <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Label.Id" asp-route-alias="@Model.Label.Alias" class="btn btn-sm label font-weight-bold" style="background-color: @Model.Label.BackColor; color: @Model.Label.ForeColor">
+            @Model.Label.Name
+        </a>
+    }
+
 </p>
 
 <p>

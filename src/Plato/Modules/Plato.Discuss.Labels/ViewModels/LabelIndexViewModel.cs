@@ -34,6 +34,11 @@ namespace Plato.Discuss.Labels.ViewModels
             {
                 Text = "Last Use",
                 Value = SortBy.LastEntity
+            },
+            new SortColumn()
+            {
+                Text = "Modified",
+                Value = SortBy.Modified
             }
         };
 
@@ -89,6 +94,8 @@ namespace Plato.Discuss.Labels.ViewModels
         public SortBy Sort { get; set; } = SortBy.Entities;
 
         public OrderBy Order { get; set; } = OrderBy.Desc;
+        
+        public bool EnableEdit { get; set; }
 
     }
 
@@ -97,6 +104,7 @@ namespace Plato.Discuss.Labels.ViewModels
         public string Text { get; set; }
 
         public SortBy Value { get; set; }
+
 
     }
     

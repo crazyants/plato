@@ -37,14 +37,18 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         #region "Implementation"
 
-        public override async Task<IViewProviderResult> BuildIndexAsync(LabelBase label, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildIndexAsync(LabelBase label, IViewProviderContext context)
         {
-            var indexViewModel = await GetIndexModel();
-         
+            //var indexViewModel = await GetIndexModel();
+
+            // Get index view model from context
+            var viewModel = context.Controller.HttpContext.Items[typeof(LabelIndexViewModel)] as LabelIndexViewModel;
+
+
             return Views(
-                View<LabelsViewModel>("Admin.Index.Header", model => indexViewModel).Zone("header").Order(1),
-                View<LabelsViewModel>("Admin.Index.Tools", model => indexViewModel).Zone("tools").Order(1),
-                View<LabelsViewModel>("Admin.Index.Content", model => indexViewModel).Zone("content").Order(1)
+                View<LabelIndexViewModel>("Admin.Index.Header", model => viewModel).Zone("header").Order(1),
+                View<LabelIndexViewModel>("Admin.Index.Tools", model => viewModel).Zone("tools").Order(1),
+                View<LabelIndexViewModel>("Admin.Index.Content", model => viewModel).Zone("content").Order(1)
             );
 
         }

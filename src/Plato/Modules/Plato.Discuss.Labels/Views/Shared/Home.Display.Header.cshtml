@@ -1,24 +1,44 @@
 ﻿@model Label
 
-<div class="list-left">
-    <span class="channel-icon channel-icon-md" style="background-color: @Model.BackColor; color: @Model.ForeColor">
-        <i class="@Model.IconCss"></i>
-    </span>
-</div>
-<div class="list-body">
+@if (String.IsNullOrEmpty(Model.BackColor))
+{
     <h4>@Model.Name</h4>
     @if (!String.IsNullOrEmpty(Model.Description))
-    {
-        <div class="text-muted">
-            @Model.Description
-        </div>
-    }
-    else
-    {
-        <div class="text-muted">
-            @T["No description provided."]
-        </div>
-    }
+     {
+         <div class="text-muted">
+             @Model.Description
+         </div>
+     }
+     else
+     {
+         <div class="text-muted">
+             @T["No description provided."]
+         </div>
+     }
+}
+else
+{
+    <div class="list-left">
+        <span class="channel-icon label channel-icon-md" style="background-color: @Model.BackColor; color: @Model.ForeColor">
+            <i class="@Model.IconCss"></i>
+        </span>
+    </div>
+    <div class="list-body">
+        <h4>@Model.Name</h4>
+        @if (!String.IsNullOrEmpty(Model.Description))
+        {
+            <div class="text-muted">
+                @Model.Description
+            </div>
+        }
+        else
+        {
+            <div class="text-muted">
+                @T["No description provided."]
+            </div>
+        }
 
-</div>
+    </div>
+}
+
 <hr/>

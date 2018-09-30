@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
 using Plato.Discuss.Labels.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
@@ -23,23 +24,34 @@ namespace Plato.Discuss.Labels.Controllers
         private readonly IViewProviderManager<Label> _labelViewProvider;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly ILabelStore<Label> _labelStore;
+        private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
-        
+
+
         public IHtmlLocalizer T { get; }
-        
+
+        public IStringLocalizer S { get; }
+
+
         public HomeController(
             IViewProviderManager<Label> labelViewProvider,
-            IHtmlLocalizer<HomeController> localizer,
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             ILabelStore<Label> labelStore,
             ISiteSettingsStore settingsStore,
             IContextFacade contextFacade,
-            IAlerter alerter)
+            IAlerter alerter,
+            IBreadCrumbManager breadCrumbManager)
         {
             _settingsStore = settingsStore;
             _labelStore = labelStore;
             _labelViewProvider = labelViewProvider;
             _alerter = alerter;
-            T = localizer;
+            _breadCrumbManager = breadCrumbManager;
+
+            T = htmlLocalizer;
+            S = stringLocalizer;
+
         }
 
         #endregion
@@ -60,7 +72,20 @@ namespace Plato.Discuss.Labels.Controllers
             {
                 pager = new PagerOptions();
             }
-            
+
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                        .Action("Index", "Home", "Plato.Core")
+                        .LocalNav()
+                    ).Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Home", "Plato.Discuss")
+                        .LocalNav()
+                    ).Add(S["Labels"]);
+            });
+
+
             // Get default options
             var defaultViewOptions = new LabelIndexOptions();
             var defaultPagerOptions = new PagerOptions();
@@ -104,6 +129,21 @@ namespace Plato.Discuss.Labels.Controllers
             {
                 return NotFound();
             }
+
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                        .Action("Index", "Home", "Plato.Core")
+                        .LocalNav()
+                    ).Add(S["Discuss"], discuss => discuss
+                        .Action("Index", "Home", "Plato.Discuss")
+                        .LocalNav()
+                    ).Add(S["Labels"], labels => labels
+                        .Action("Index", "Home", "Plato.Discuss.Labels")
+                        .LocalNav()
+                    ).Add(S[label.Name]);
+            });
 
             // Get default options
             var defaultViewOptions = new TopicIndexOptions();

@@ -6,5 +6,7 @@ namespace Plato.Discuss.Labels.ViewModels
     {
         public Label Label { get; set; }
 
+        public bool EnableEdit { get; set; }
+
     }
 }
