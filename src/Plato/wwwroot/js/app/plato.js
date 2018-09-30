@@ -28,6 +28,7 @@ $(function (win, doc, $) {
         csrfCookieName: "",
         // UI tooltips
         BSToolTipEnabled: true,
+        BSToolTipAlternativeSelector: "[data-provide='tooltip']",
         BSToolTipSelector: "[data-toggle='tooltip']",
         MagnificSelector: "[data-toggle='dialog']",
         AvatarUploadSelector: "[data-upload='avatar']",
@@ -116,10 +117,10 @@ $(function (win, doc, $) {
 
             // Enable bootstratp tooltips
             if (this.context.options().BSToolTipEnabled) {
-                $(this.context.options().BSToolTipSelector).tooltip();
+                $(this.context.options().BSToolTipSelector).tooltip({ trigger: "hover" });
+                $(this.context.options().BSToolTipAlternativeSelector).tooltip({ trigger: "hover" });
                 this.logInfo("Bootstratp tooltipss initialized.");
             }
-
         },
         initDropDowns: function() {
 

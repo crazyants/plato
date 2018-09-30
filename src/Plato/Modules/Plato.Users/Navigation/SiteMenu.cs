@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Plato.Internal.Navigation;
 
 namespace Plato.Users.Navigation
@@ -29,7 +28,7 @@ namespace Plato.Users.Navigation
                         //.Permission(Permissions.ManageRoles)
                         .Attributes(new Dictionary<string, object>()
                         {
-                            {"data-toggle", "tooltip"},
+                            {"data-provide", "tooltip"},
                             {"title", T["Users"]}
                         })
                         .LocalNav()

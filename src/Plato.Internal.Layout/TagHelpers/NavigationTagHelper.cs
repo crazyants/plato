@@ -183,7 +183,7 @@ namespace Plato.Internal.Layout.TagHelpers
                     targetCss = " data-toggle=\"collapse\"";
                     targetEvent = $" data-target=\"#menu-{_index}\" aria-controls=\"#menu-{_index}\"";
                 }
-
+                
                 sb.Append("<a class=\"")
                     .Append(linkClass)
                     .Append("\" href=\"")
@@ -193,9 +193,8 @@ namespace Plato.Internal.Layout.TagHelpers
                     .Append(item.Items.Count > 0 ? targetCss : "")
                     .Append(" aria-expanded=\"")
                     .Append(IsChildSelected(item).ToString().ToLower())
-                    .Append("\">")
-                    .Append("<span");
-
+                    .Append("\"");
+                
                 if (item.Attributes.Count > 0)
                 {
                     var i = 0;
@@ -215,8 +214,8 @@ namespace Plato.Internal.Layout.TagHelpers
                         }
                     }
                 }
-
                 sb.Append(">");
+                
                 if (!String.IsNullOrEmpty(item.IconCss))
                 {
                     sb.Append("<i class=\"")
@@ -225,7 +224,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 }
                 sb.Append("<span class=\"nav-text\">")
                     .Append(item.Text.Value)
-                    .Append("</span></span>")
+                    .Append("</span>")
                     .Append("</a>");
 
                 _index++;
@@ -240,8 +239,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
                 if (this.EnableChildList)
                 {
-                    sb.Append("</li>")
-                        .Append(NewLine);
+                    sb.Append("</li>").Append(NewLine);
                 }
 
                 index += 1;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
@@ -21,8 +20,7 @@ namespace Plato.Search.Navigation
             {
                 return;
             }
-
-
+            
             builder
                 .Add(T["Search"], int.MaxValue, installed => installed
                     .Action("Index", "Home", "Plato.Search")
@@ -30,7 +28,7 @@ namespace Plato.Search.Navigation
                         .IconCss("fal fa-search")
                         .Attributes(new Dictionary<string, object>()
                         {
-                            {"data-toggle", "tooltip"},
+                            {"data-provide", "tooltip"},
                             {"title", T["Search"]}
                         })
                     .LocalNav()
