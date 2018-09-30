@@ -87,11 +87,11 @@ namespace Plato.Discuss.ViewModels
             TopicIndexOptions options,
             PagerOptions pager)
         {
+            this.SortColumns = _defaultSortColumns;
+            this.SortOrder = _defaultSortOrder;
             this.Results = results;
             this.Options = options;
             this.Pager = pager;
-            this.SortColumns = _defaultSortColumns;
-            this.SortOrder = _defaultSortOrder;
             this.Pager.SetTotal(results?.Total ?? 0);
         }
 

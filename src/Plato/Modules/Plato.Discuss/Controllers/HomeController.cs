@@ -9,6 +9,7 @@ using Plato.Discuss.Services;
 using Plato.Internal.Navigation;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
@@ -127,10 +128,33 @@ namespace Plato.Discuss.Controllers
             return View(result);
             
         }
-        
+
+        public Task<IActionResult> Popular(
+            TopicIndexOptions opts,
+            PagerOptions pager)
+        {
+
+            // default options
+            if (opts == null)
+            {
+                opts = new TopicIndexOptions();
+            }
+
+            // default pager
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+
+            opts.Sort = SortBy.Replies;
+            opts.Order = OrderBy.Desc;
+
+            return Index(opts, pager);
+        }
+
         // add new topic
 
-        public async Task<IActionResult> Create(int channel)
+            public async Task<IActionResult> Create(int channel)
         {
             var topic = new Topic();
             if (channel > 0)

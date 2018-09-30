@@ -94,7 +94,7 @@ namespace Plato.Discuss
                 name: "DiscussPopular",
                 areaName: "Plato.Discuss",
                 template: "discuss/popular",
-                defaults: new { controller = "Home", action = "Index" }
+                defaults: new { controller = "Home", action = "Popular" }
             );
 
             // discuss topic

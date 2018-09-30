@@ -31,16 +31,7 @@ namespace Plato.Discuss.Navigation
                         .LocalNav()
                     )
                     .Add(T["Popular"], int.MinValue + 1, installed => installed
-                        .Action("Index", "Home", "Plato.Discuss", new RouteValueDictionary()
-                            {
-                                ["opts.sort"] = "Replies",
-                                ["opts.order"] = "Desc"
-                            })
-                        //.Permission(Permissions.ManageRoles)
-                        .LocalNav()
-                    )
-                    .Add(T["Following"], int.MaxValue, installed => installed
-                        .Action("Following", "Home", "Plato.Discuss")
+                        .Action("Popular", "Home", "Plato.Discuss")
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
                     ), new List<string>() { "discuss" }
