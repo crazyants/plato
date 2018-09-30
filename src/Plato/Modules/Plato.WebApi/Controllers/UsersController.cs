@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 
@@ -39,9 +34,9 @@ namespace Plato.WebApi.Controllers
 
         public int Id { get; set; }
 
-        public string Text { get; set; }
+        public string DisplayName { get; set; }
 
-        public string Value { get; set; }
+        public string UserName { get; set; }
 
         public string Url { get; set; }
 
@@ -105,8 +100,8 @@ namespace Plato.WebApi.Controllers
                     results.Data.Add(new SearchResult()
                     {
                         Id = user.Id,
-                        Text = user.DisplayName,
-                        Value = user.UserName,
+                        DisplayName = user.DisplayName,
+                        UserName = user.UserName,
                         Url = profileUrl,
                         Rank = 0
                     });
