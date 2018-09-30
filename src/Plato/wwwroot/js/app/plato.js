@@ -21,7 +21,7 @@ $(function (win, doc, $) {
 
     /* Default options */
     win.$.Plato.Options = {
-        debug: false,
+        debug: true,
         url: "",
         apiKey: "",
         csrfHeaderName: "X-Csrf-Token",

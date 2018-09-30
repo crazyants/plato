@@ -65,16 +65,16 @@ namespace Plato.WebApi.Controllers
             int page = 1,
             int pageSize = 10,
             string username = "",
-            string sortBy = "Id",
-            OrderBy sortOrder = OrderBy.Desc)
+            string sort = "LastLoginDate",
+            OrderBy order = OrderBy.Desc)
         {
 
             var users = await GetUsers(
                 page,
                 pageSize,
                 username,
-                sortBy,
-                sortOrder);
+                sort,
+                order);
             
             PagedResults<SearchResult> results = null;
             if (users != null)
