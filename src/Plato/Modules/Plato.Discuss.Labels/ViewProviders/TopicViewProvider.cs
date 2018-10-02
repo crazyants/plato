@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
+using Newtonsoft.Json;
 using Plato.Entities.Stores;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -106,9 +108,11 @@ namespace Plato.Discuss.Labels.ViewProviders
                 SelectedLabels = entityabels.Select(l => l.LabelId).ToArray()
             };
 
+            //View<EditTopicLabelsViewModel>("Topic.Labels.Edit.Sidebar", model => viewModel).Zone("sidebar")
+            //    .Order(2),
+
             return Views(
-                View<EditTopicLabelsViewModel>("Topic.Labels.Edit.Sidebar", model => viewModel)
-                    .Zone("sidebar")
+                View<EditTopicLabelsViewModel>("Topic.Labels.Edit.Content", model => viewModel).Zone("content")
                     .Order(2)
             );
 
@@ -142,7 +146,9 @@ namespace Plato.Discuss.Labels.ViewProviders
             {
 
                 // Get selected labels
-                var labelsToAdd = GetLabelsToAdd();
+                //var labelsToAdd = GetLabelsToAdd();
+                var labelsToAdd = await GetLabelsToAddAsync();
+
 
                 // Build labels to remove
                 var labelsToRemove = new List<EntityLabel>();
@@ -200,28 +206,60 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         #region "Private Methods"
         
-        List<int> GetLabelsToAdd()
+        //List<int> GetLabelsToAdd()
+        //{
+        //    // Build selected channels
+        //    var labelsToAdd = new List<int>();
+        //    foreach (var key in _request.Form.Keys)
+        //    {
+        //        if (key.StartsWith(LabelHtmlName))
+        //        {
+        //            var values = _request.Form[key];
+        //            foreach (var value in values)
+        //            {
+        //                int.TryParse(value, out var id);
+        //                if (!labelsToAdd.Contains(id))
+        //                {
+        //                    labelsToAdd.Add(id);
+        //                }
+        //            }
+        //        }
+        //    }
+
+        //    return labelsToAdd;
+        //}
+
+        async Task<List<int>> GetLabelsToAddAsync()
         {
             // Build selected channels
             var labelsToAdd = new List<int>();
             foreach (var key in _request.Form.Keys)
             {
-                if (key.StartsWith(LabelHtmlName))
+                if (key.Equals(LabelHtmlName))
                 {
-                    var values = _request.Form[key];
-                    foreach (var value in values)
+                    var value = _request.Form[key];
+                    if (!String.IsNullOrEmpty(value))
                     {
-                        int.TryParse(value, out var id);
-                        if (!labelsToAdd.Contains(id))
+                        var items = JsonConvert.DeserializeObject<IEnumerable<LabelApiResult>>(value);
+                        foreach (var item in items)
                         {
-                            labelsToAdd.Add(id);
+                            if (item.Id > 0)
+                            {
+                                var label = await _labelStore.GetByIdAsync(item.Id);
+                                if (label != null)
+                                {
+                                    labelsToAdd.Add(label.Id);
+                                }
+                            }
                         }
                     }
+                 
                 }
             }
 
             return labelsToAdd;
         }
+
 
         async Task<IEnumerable<EntityLabel>> GetEntityLabelsByEntityIdAsync(int entityId)
         {

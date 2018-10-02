@@ -481,7 +481,7 @@
 /* Select Dropdown */
 /* ------------------------- */
 
-.select-dropdown { max-height: 300px; overflow: auto; }
+.select-dropdown { max-height: 200px; overflow: auto; }
 .select-dropdown input + label {  cursor: pointer; }
 .select-dropdown-preview i.check-icon { display: none; }
 

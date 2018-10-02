@@ -1,7 +1,19 @@
 ﻿using System.Collections.Generic;
+using Plato.Labels.Models;
 
 namespace Plato.Discuss.Labels.ViewModels
 {
+
+
+    public class SelectLabelsLookUpViewModel
+    {
+
+        public string LabelsJson { get; set; }
+    
+        public string HtmlName { get; set; }
+
+    }
+
     public class SelectLabelsViewModel
     {
         

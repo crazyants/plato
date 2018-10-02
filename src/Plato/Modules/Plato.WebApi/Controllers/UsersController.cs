@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -10,40 +9,11 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
+using Plato.WebApi.Models;
 
 namespace Plato.WebApi.Controllers
 {
-
-    public class Results
-    {
-
-        public int Page { get; set; }
-
-        public int PageSize { get; set; }
-
-        public int Total { get; set; }
-
-        public int TotalPages { get; set; }
-        
-        public IEnumerable<Result> Data { get; set; }
-
-    }
-
-    public class Result
-    {
-
-        public int Id { get; set; }
-
-        public string DisplayName { get; set; }
-
-        public string UserName { get; set; }
-
-        public string Url { get; set; }
-
-        public int Rank { get; set; }
-
-    }
-
+    
     public class UsersController : BaseWebApiController
     {
         
@@ -76,10 +46,10 @@ namespace Plato.WebApi.Controllers
                 sort,
                 order);
             
-            PagedResults<Result> results = null;
+            PagedResults<UserApiResult> results = null;
             if (users != null)
             {
-                results = new PagedResults<Result>
+                results = new PagedResults<UserApiResult>
                 {
                     Total = users.Total
                 };
@@ -97,7 +67,7 @@ namespace Plato.WebApi.Controllers
                         ["Alias"] = user.Alias
                     });
 
-                    results.Data.Add(new Result()
+                    results.Data.Add(new UserApiResult()
                     {
                         Id = user.Id,
                         DisplayName = user.DisplayName,
@@ -108,16 +78,15 @@ namespace Plato.WebApi.Controllers
                 }
             }
 
-            Results output = null;
+            UserApiResults output = null;
             if (results != null)
             {
-                var totalPages = results.Total.ToSafeCeilingDivision(size);
-                output = new Results()
+                output = new UserApiResults()
                 {
                     Page = page,
-                    PageSize = size,
+                    Size = size,
                     Total = results.Total,
-                    TotalPages = totalPages,
+                    TotalPages = results.Total.ToSafeCeilingDivision(size),
                     Data = results.Data
                 };
             }

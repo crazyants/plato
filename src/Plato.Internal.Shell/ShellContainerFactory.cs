@@ -60,7 +60,10 @@ namespace Plato.Internal.Shell
             
             // Add StartUps from modules defined in blueprint descriptor as services
             var moduleServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
-            foreach (var type in blueprint.Dependencies.Where(t => typeof(IStartup).IsAssignableFrom(t.Key)))
+
+            // TODO: Add checks to ensure type is actually enabled as a feature within our shell descriptor
+            foreach (var type in blueprint.Dependencies
+                .Where(t => typeof(IStartup).IsAssignableFrom(t.Key)))
             {
                 moduleServiceCollection.AddSingleton(typeof(IStartup), type.Key);
                 tenantServiceCollection.AddSingleton(typeof(IStartup), type.Key);

@@ -15,6 +15,7 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
+using Plato.WebApi.Models;
 
 namespace Plato.Discuss.Moderation.Controllers
 {
@@ -96,22 +97,20 @@ namespace Plato.Discuss.Moderation.Controllers
 
             // Build users to effect
             var users = new List<User>();
-
             if (!String.IsNullOrEmpty(model.Users))
             {
-                var items = JsonConvert.DeserializeObject<IEnumerable<TagItItem>>(model.Users);
+                var items = JsonConvert.DeserializeObject<IEnumerable<UserApiResult>>(model.Users);
                 foreach (var item in items)
                 {
-                    if (!String.IsNullOrEmpty(item.Value))
+                    if (item.Id > 0)
                     {
-                        var user = await _userStore.GetByUserNameAsync(item.Value);
+                        var user = await _userStore.GetByIdAsync(item.Id);
                         if (user != null)
                         {
                             users.Add(user);
                         }
                     }
                 }
-
             }
 
 

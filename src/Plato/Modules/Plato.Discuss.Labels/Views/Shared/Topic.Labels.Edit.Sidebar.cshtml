@@ -1,33 +1,15 @@
 ﻿@model EditTopicLabelsViewModel
 
-<input type="text" id="labelStore"/>
 
-<div class="dropdown">
-    <ul class="tagit form-control list-inline" data-provide="labelTagIt" data-tagit-store="#labelStore">
-        <li class="tagit-list-item-input">
-            <input type="text"
-                   autocomplete="off"
-                   data-autocomplete-target="#labelsDropDown"
-                   placeholder="@T["Search by username or email..."]">
-        </li>
-    </ul>
-    <div id="labelsDropDown" class="dropdown-menu col-12" role="menu">
-        <p class="text-center">
-            <i class="fal fa-spinner fa-spin"></i>
-        </p>
-    </div>
-</div>
+        @await DisplayAsync(new View("SelectLabelsLookUp", new
+        {
+            selectedLabels = @Model.SelectedLabels,
+            htmlName = @Model.HtmlName
+        }))
 
-
-<card>
-    <card-body>
-        
         @await DisplayAsync(new View("SelectLabels", new
         {
             selectedLabels = @Model.SelectedLabels,
             htmlName = @Model.HtmlName
         }))
         
-    </card-body>
-</card>
-

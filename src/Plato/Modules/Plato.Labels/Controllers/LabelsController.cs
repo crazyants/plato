@@ -14,51 +14,6 @@ using Plato.WebApi.Controllers;
 namespace Plato.Labels.Controllers
 {
 
-    public class Results
-    {
-
-        public int Page { get; set; }
-
-        public int PageSize { get; set; }
-
-        public int Total { get; set; }
-
-        public int TotalPages { get; set; }
-        
-        public IEnumerable<Result> Data { get; set; }
-
-    }
-
-    public class Result
-    {
-
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public string ForeColor { get; set; }
-
-        public string BackColor { get; set; }
-
-        public string Alias { get; set; }
-
-        public FriendlyNumber TotalEntities { get; set; }
-
-        public int Rank { get; set; }
-
-    }
-
-    public class FriendlyNumber
-    {
-
-        public string Text { get; set; }
-
-        public int Value { get; set; }
-
-    }
-
     public class LabelsController : BaseWebApiController
     {
         
@@ -91,10 +46,10 @@ namespace Plato.Labels.Controllers
                 sort,
                 order);
             
-            PagedResults<Result> results = null;
+            PagedResults<LabelApiResult> results = null;
             if (labels != null)
             {
-                results = new PagedResults<Result>
+                results = new PagedResults<LabelApiResult>
                 {
                     Total = labels.Total
                 };
@@ -109,7 +64,7 @@ namespace Plato.Labels.Controllers
                         ["Alias"] = label.Alias
                     });
 
-                    results.Data.Add(new Result()
+                    results.Data.Add(new LabelApiResult()
                     {
                         Id = label.Id,
                         Name = label.Name,
@@ -127,16 +82,15 @@ namespace Plato.Labels.Controllers
                 }
             }
 
-            Results output = null;
+            LabelApiResults output = null;
             if (results != null)
             {
-                var totalPages = results.Total.ToSafeCeilingDivision(size);
-                output = new Results()
+                output = new LabelApiResults()
                 {
                     Page = page,
-                    PageSize = size,
+                    Size = size,
                     Total = results.Total,
-                    TotalPages = totalPages,
+                    TotalPages = results.Total.ToSafeCeilingDivision(size),
                     Data = results.Data
                 };
             }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Claims;
@@ -12,15 +11,13 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Models.Features;
-using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Security.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Moderation.Models;
 using Plato.Moderation.Stores;
+using Plato.WebApi.Models;
 
 namespace Plato.Discuss.Moderation.ViewProviders
 {
@@ -90,12 +87,13 @@ namespace Plato.Discuss.Moderation.ViewProviders
             var users = "";
             if (moderator.UserId > 0)
             {
-                users = new List<TagItItem>()
+                users = new List<UserApiResult>()
                 {
-                    new TagItItem()
+                    new UserApiResult()
                     {
-                        Text = moderator.User.DisplayName,
-                        Value = moderator.User.UserName
+                        Id = moderator.User.Id,
+                        DisplayName = moderator.User.DisplayName,
+                        UserName = moderator.User.UserName,
                     }
                 }.Serialize();
             }
@@ -229,31 +227,20 @@ namespace Plato.Discuss.Moderation.ViewProviders
 
         }
         
-        async Task<IShellFeature> GetcurrentFeature()
-        {
-            var featureId = "Plato.Discuss.Labels";
-            var feature = await _featureFacade.GetFeatureByIdAsync(featureId);
-            if (feature == null)
-            {
-                throw new Exception($"No feature could be found for the module '{featureId}'");
-            }
-            return feature;
-        }
-
         #endregion
 
     }
 
-    [DataContract]
-    public class TagItItem
-    {
+    //[DataContract]
+    //public class TagItItem
+    //{
 
-        [DataMember(Name = "text")]
-        public string Text { get; set; }
+    //    [DataMember(Name = "text")]
+    //    public string Text { get; set; }
 
-        [DataMember(Name = "value")]
-        public string Value { get; set; }
-    }
+    //    [DataMember(Name = "value")]
+    //    public string Value { get; set; }
+    //}
 
 
 }

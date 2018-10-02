@@ -38,10 +38,7 @@ namespace Plato.Internal.Shell
 
             // Get module entires for active modules
             var modules = await _moduleManager.LoadModulesAsync(moduleNames);
-
-            // Get dependencies
-            //var dependencies = await _typedModuleProvider.GetModuleDependenciesAsync(modules);
-
+            
             // TODO: Take advantage of ITypedModuleProvider
             //// Get all dependencies for loaded modules
             var entries = new Dictionary<Type, IModuleEntry>();

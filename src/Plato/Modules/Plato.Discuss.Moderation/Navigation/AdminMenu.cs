@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Localization;
-using System;
+﻿using System;
+using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Moderation.Navigation
 {
     public class AdminMenu : INavigationProvider
     {
-        public AdminMenu(IStringLocalizer<AdminMenu> localizer)
+        public AdminMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }

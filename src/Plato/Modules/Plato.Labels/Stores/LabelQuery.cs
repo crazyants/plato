@@ -62,6 +62,7 @@ namespace Plato.Labels.Stores
     {
         
         private WhereInt _id;
+        private WhereInt _featureId;
         private WhereString _name;
         private WhereString _description;
 
@@ -70,6 +71,13 @@ namespace Plato.Labels.Stores
             get => _id ?? (_id = new WhereInt());
             set => _id = value;
         }
+
+        public WhereInt FeatureId
+        {
+            get => _featureId ?? (_id = new WhereInt());
+            set => _featureId = value;
+        }
+
 
         public WhereString Name
         {

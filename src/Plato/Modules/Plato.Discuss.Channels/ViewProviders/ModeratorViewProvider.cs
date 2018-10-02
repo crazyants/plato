@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.ViewModels;
-using Plato.Discuss.Moderation.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;

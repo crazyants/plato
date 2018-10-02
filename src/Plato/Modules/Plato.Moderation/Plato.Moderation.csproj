@@ -5,10 +5,11 @@
   </PropertyGroup>
   
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\Plato.Internal.Data.Schemas.Abstractions\Plato.Internal.Data.Schemas.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
 		<ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
 		<ProjectReference Include="..\..\..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
-		<ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />    
-		<ProjectReference Include="..\Plato.Discuss\Plato.Discuss.csproj" />
+		<ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
+		<ProjectReference Include="..\Plato.WebApi\Plato.WebApi.csproj" />
 	</ItemGroup>
 </Project>

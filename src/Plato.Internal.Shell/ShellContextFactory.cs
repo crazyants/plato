@@ -42,7 +42,7 @@ namespace Plato.Internal.Shell
             // Build minimal shell descriptor
             var describedContext = CreateDescribedContext(settings, MinimumShellDescriptor());
             
-            // Do we have a descriptor within the database
+            // Do we have a shell descriptor within the database
             IShellDescriptor currentDescriptor = null;
             using (var scope = describedContext.CreateServiceScope())
             {
