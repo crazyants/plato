@@ -3,8 +3,8 @@
 namespace Plato.Search.Models
 {
  
-    public class SearchResultt : Entity
+    public class SearchResult : Entity
     {
-        // A marker class for our view provider
+        // A marker class for our search view provider
     }
 }

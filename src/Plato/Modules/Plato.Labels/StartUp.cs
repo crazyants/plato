@@ -56,6 +56,16 @@ namespace Plato.Labels
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            // Api routes
+            routes.MapAreaRoute(
+                name: "LablesWebApiRoute",
+                areaName: "Plato.Labels",
+                template: "api/{controller}/{action}/{id?}",
+                defaults: new { controller = "Labels", action = "Get" }
+            );
+
+
         }
     }
 }

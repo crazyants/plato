@@ -8,8 +8,8 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Search.Models;
 using Plato.Search.ViewModels;
-using Plato.WebApi.Controllers;
 
 namespace Plato.Search.Controllers
 {

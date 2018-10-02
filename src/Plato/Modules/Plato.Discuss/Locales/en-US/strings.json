@@ -2,7 +2,11 @@
   "Strings": [
     {
       "Key": "Post Topic",
-      "Value": "Post Topic 123"
+      "Value": "Post Topic"
+    },
+    {
+      "Key": "New Post",
+      "Value": "New Post"
     },
     {
       "Key": "Discuss",

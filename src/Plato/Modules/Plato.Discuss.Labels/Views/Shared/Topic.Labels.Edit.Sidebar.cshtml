@@ -1,34 +1,33 @@
 ﻿@model EditTopicLabelsViewModel
 
+<input type="text" id="labelStore"/>
+
+<div class="dropdown">
+    <ul class="tagit form-control list-inline" data-provide="labelTagIt" data-tagit-store="#labelStore">
+        <li class="tagit-list-item-input">
+            <input type="text"
+                   autocomplete="off"
+                   data-autocomplete-target="#labelsDropDown"
+                   placeholder="@T["Search by username or email..."]">
+        </li>
+    </ul>
+    <div id="labelsDropDown" class="dropdown-menu col-12" role="menu">
+        <p class="text-center">
+            <i class="fal fa-spinner fa-spin"></i>
+        </p>
+    </div>
+</div>
+
+
 <card>
     <card-body>
         
-        <div class="dropdown">
-            <ul class="tagit form-control list-inline" data-provide="tagIt" data-tagit-store="#tagItStore">
-                <li class="tagit-list-item-input">
-                    <input type="text"
-                           autocomplete="off"
-                           data-autocomplete-target="#moderators"
-                           data-autocomplete-url="api/users/search?page={page}&pageSize=5&username={username}"
-                           data-autocomplete-value-field="username"
-                           placeholder="@T["Search by username or email..."]">
-                </li>
-            </ul>
-            <div id="moderators" class="dropdown-menu col-12" role="menu">
-                <p class="text-center">
-                    <i class="fal fa-spinner fa-spin"></i>
-                </p>
-            </div>
-        </div>
-        
-
         @await DisplayAsync(new View("SelectLabels", new
         {
             selectedLabels = @Model.SelectedLabels,
             htmlName = @Model.HtmlName
         }))
-
-
+        
     </card-body>
 </card>
 

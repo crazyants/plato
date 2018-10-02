@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Internal.Stores.Users;
+using Plato.Labels.Models;
+using Plato.Labels.Stores;
+using Plato.WebApi.Controllers;
 
-namespace Plato.WebApi.Controllers
+namespace Plato.Labels.Controllers
 {
 
     public class Results
@@ -34,28 +34,43 @@ namespace Plato.WebApi.Controllers
 
         public int Id { get; set; }
 
-        public string DisplayName { get; set; }
+        public string Name { get; set; }
 
-        public string UserName { get; set; }
+        public string Description { get; set; }
 
-        public string Url { get; set; }
+        public string ForeColor { get; set; }
+
+        public string BackColor { get; set; }
+
+        public string Alias { get; set; }
+
+        public FriendlyNumber TotalEntities { get; set; }
 
         public int Rank { get; set; }
 
     }
 
-    public class UsersController : BaseWebApiController
+    public class FriendlyNumber
+    {
+
+        public string Text { get; set; }
+
+        public int Value { get; set; }
+
+    }
+
+    public class LabelsController : BaseWebApiController
     {
         
-        private readonly IPlatoUserStore<User> _ploatUserStore;
+        private readonly ILabelStore<LabelBase> _labelStore;
         private readonly IContextFacade _contextFacade;
    
-        public UsersController(
-            IPlatoUserStore<User> platoUserStore,
+        public LabelsController(
+            ILabelStore<LabelBase> labelStore,
             IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade)
         {
-            _ploatUserStore = platoUserStore;
+            _labelStore = labelStore;
             _contextFacade = contextFacade;
         }
         
@@ -65,11 +80,11 @@ namespace Plato.WebApi.Controllers
             int page = 1,
             int size = 10,
             string keywords = "",
-            string sort = "LastLoginDate",
+            string sort = "TotalEntities",
             OrderBy order = OrderBy.Desc)
         {
 
-            var users = await GetUsers(
+            var labels = await GetData(
                 page,
                 size,
                 keywords,
@@ -77,32 +92,36 @@ namespace Plato.WebApi.Controllers
                 order);
             
             PagedResults<Result> results = null;
-            if (users != null)
+            if (labels != null)
             {
                 results = new PagedResults<Result>
                 {
-                    Total = users.Total
+                    Total = labels.Total
                 };
                 
                 var baseUrl = await _contextFacade.GetBaseUrlAsync();
-                foreach (var user in users.Data)
+                foreach (var label in labels.Data)
                 {
 
-                    var profileUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    var url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Users",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Display",
-                        ["Id"] = user.Id,
-                        ["Alias"] = user.Alias
+                        ["Id"] = label.Id,
+                        ["Alias"] = label.Alias
                     });
 
                     results.Data.Add(new Result()
                     {
-                        Id = user.Id,
-                        DisplayName = user.DisplayName,
-                        UserName = user.UserName,
-                        Url = profileUrl,
+                        Id = label.Id,
+                        Name = label.Name,
+                        Description = label.Description,
+                        ForeColor = label.ForeColor,
+                        BackColor = label.BackColor,
+                        Alias = label.Alias,
+                        TotalEntities = new FriendlyNumber()
+                        {
+                            Text = label.TotalEntities.ToPrettyInt(),
+                            Value = label.TotalEntities
+                        },
                         Rank = 0
                     });
                 }
@@ -128,22 +147,22 @@ namespace Plato.WebApi.Controllers
 
         }
         
-        async Task<IPagedResults<User>> GetUsers(
+        async Task<IPagedResults<LabelBase>> GetData(
             int page,
             int pageSize,
-            string username,
+            string keywords,
             string sortBy,
             OrderBy sortOrder)
         {
 
-            return await _ploatUserStore.QueryAsync()
+            return await _labelStore.QueryAsync()
                 .Take(page, pageSize)
-                .Select<UserQueryParams>(q =>
+                .Select<LabelQueryParams>(q =>
                 {
-                    if (!String.IsNullOrEmpty(username))
+                    if (!String.IsNullOrEmpty(keywords))
                     {
-                        q.UserName.StartsWith(username).Or();
-                        q.Email.StartsWith(username).Or();
+                        q.Name.StartsWith(keywords).Or();
+                        q.Description.StartsWith(keywords).Or();
                     }
                 })
                 .OrderBy(sortBy, sortOrder)

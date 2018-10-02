@@ -1,33 +1,41 @@
 ﻿@model FollowViewModel
 
-<card>
-    <card-body>
-        <span class="text-muted">
-            @T["Subscribe to get notififed via email when replies are psoted."]
-        </span>
-        <br/><br/>
-        @if (!Model.IsFollowing)
-        {
-            <label for="@Model.FollowHtmlName" class="btn btn-block btn-secondary" data-subscribe-text="@T["Subscribe"]" data-unsubscribe-text="@T["Unsubscribe"]" role="button">
-                <input type="checkbox" data-provide="follow-checkbox" class="" name="@Model.FollowHtmlName" id="@Model.FollowHtmlName"/>
-                <i class="fal fa-bell"></i>
-                <span>
-                    @T["Subscribe"]
+<div class="card">
+    <div class="card-body">
+        <card>
+            <card-title>
+                <h6 class="card-title">@T["Follow"]</h6>
+            </card-title>
+            <card-body>
+                <span class="text-muted">
+                    @T["Subscribe to get notififed via email when replies are psoted."]
                 </span>
-            </label>
-        }
-        else
-        {
-            <label for="@Model.FollowHtmlName" class="btn btn-block btn-danger" data-subscribe-text="@T["Subscribe"]" data-unsubscribe-text="@T["Unsubscribe"]" role="button">
-                <input type="checkbox" checked data-provide="follow-checkbox" class="" name="@Model.FollowHtmlName" id="@Model.FollowHtmlName"/>
-                <i class="fal fa-bell-slash"></i>
-                <span>
-                    @T["Unsubscribe"]
-                </span>
-            </label>
-        }
-    </card-body>
-</card>
+                <br/><br/>
+                @if (!Model.IsFollowing)
+                {
+                    <label for="@Model.FollowHtmlName" class="btn btn-block btn-secondary" data-subscribe-text="@T["Subscribe"]" data-unsubscribe-text="@T["Unsubscribe"]" role="button">
+                        <input type="checkbox" data-provide="follow-checkbox" class="" name="@Model.FollowHtmlName" id="@Model.FollowHtmlName"/>
+                        <i class="fal fa-bell"></i>
+                        <span>
+                            @T["Subscribe"]
+                        </span>
+                    </label>
+                }
+                else
+                {
+                    <label for="@Model.FollowHtmlName" class="btn btn-block btn-danger" data-subscribe-text="@T["Subscribe"]" data-unsubscribe-text="@T["Unsubscribe"]" role="button">
+                        <input type="checkbox" checked data-provide="follow-checkbox" class="" name="@Model.FollowHtmlName" id="@Model.FollowHtmlName"/>
+                        <i class="fal fa-bell-slash"></i>
+                        <span>
+                            @T["Unsubscribe"]
+                        </span>
+                    </label>
+                }
+            </card-body>
+        </card>
+    </div>
+</div>
+
 
 
 

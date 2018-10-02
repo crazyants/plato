@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Search.Models;
 using Plato.Search.ViewModels;
-using Plato.WebApi.Controllers;
 
 namespace Plato.Search.ViewProviders
 {
@@ -10,8 +10,7 @@ namespace Plato.Search.ViewProviders
      
         public override Task<IViewProviderResult> BuildIndexAsync(SearchResult searchResult, IViewProviderContext context)
         {
-
-
+            
             var viewModel = context.Controller.HttpContext.Items[typeof(SearchIndexViewModel)] as SearchIndexViewModel;
             
             return Task.FromResult(Views(
