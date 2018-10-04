@@ -1,13 +1,9 @@
 ﻿@model EditTopicChannelsViewModel
 
-<card>
-    <card-body>
 
-        @await DisplayAsync(new View("ChannelsDropDown", new
-        {
-            selectedChannels = @Model.SelectedChannels,
-            htmlName = @Model.HtmlName
-        }))
-    
-    </card-body>
-</card>
+@await DisplayAsync(new View("ChannelsDropDown", new
+{
+    selectedChannels = @Model.SelectedChannels,
+    htmlName = @Model.HtmlName
+}))
+

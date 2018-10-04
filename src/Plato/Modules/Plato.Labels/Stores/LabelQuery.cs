@@ -196,8 +196,9 @@ namespace Plato.Labels.Stores
         private string BuildWhereClauseForStartId()
         {
             var startIdComparer = GetStartIdComparer();
+
             var sb = new StringBuilder();
-            // default to ascending
+            sb.Append("(");
             if (_query.SortColumns.Count == 0)
             {
                 sb.Append(startIdComparer)
@@ -215,9 +216,13 @@ namespace Plato.Labels.Stores
                 break;
             }
 
+            sb.Append(")");
+
             var where = BuildWhereClause();
             if (!string.IsNullOrEmpty(where))
-                sb.Append(" AND ").Append(where);
+                sb.Append(" AND (")
+                    .Append(where)
+                    .Append(")");
 
             return sb.ToString();
 

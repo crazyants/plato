@@ -1,15 +1,14 @@
 ﻿@model EditTopicLabelsViewModel
 
 
-        @await DisplayAsync(new View("SelectLabelsLookUp", new
-        {
-            selectedLabels = @Model.SelectedLabels,
-            htmlName = @Model.HtmlName
-        }))
+@await DisplayAsync(new View("SelectLabels", new
+{
+    selectedLabels = @Model.SelectedLabels,
+    htmlName = @Model.HtmlName
+}))
 
-        @await DisplayAsync(new View("SelectLabels", new
-        {
-            selectedLabels = @Model.SelectedLabels,
-            htmlName = @Model.HtmlName
-        }))
-        
+@await DisplayAsync(new View("SelectLabelsLookUp", new
+    {
+        selectedLabels = @Model.SelectedLabels,
+        htmlName = @Model.HtmlName
+    }))

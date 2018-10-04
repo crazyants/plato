@@ -2,34 +2,24 @@
 
 <input type="hidden" id="@Model.HtmlName" name="@Model.HtmlName" asp-for="LabelsJson" />
 
-<div class="topic-reply-left">
+<div class="dropdown">
+    <ul class="tagit form-control list-inline" data-provide="labelTagIt" data-tagit-store="#@Model.HtmlName">
+        <li class="tagit-list-item-input">
+            <input type="search"
+                   autocomplete="off"
+                   data-autocomplete-target="#labelResults"
+                   data-autocomplete-page-size="5"
+                   placeholder="@T["Search labels or add new labels seperted by a comma..."]">
+        </li>
+    </ul>
+    <div id="labelResults" class="dropdown-menu col-12">
+        <p class="text-center">
+            <i class="fal fa-spinner fa-spin"></i>
+        </p>
+    </div>
 </div>
-<div class="topic-reply-body">
-    <card>
-        <card-title>
-            <h6 class="card-title">@T["Labels"]</h6>
-        </card-title>
-        <card-body>
-            
-            <div class="dropdown">
-                <ul class="tagit form-control list-inline" data-provide="labelTagIt" data-tagit-store="#@Model.HtmlName">
-                    <li class="tagit-list-item-input">
-                        <input type="search"
-                               autocomplete="off"
-                               data-autocomplete-target="#labelResults"
-                               data-autocomplete-page-size="5"
-                               placeholder="@T["Search labels or add new labels seperted by a comma..."]">
-                    </li>
-                </ul>
-                <div id="labelResults" class="dropdown-menu col-12">
-                    <p class="text-center">
-                        <i class="fal fa-spinner fa-spin"></i>
-                    </p>
-                </div>
-            </div>
-        </card-body>
-    </card>
-</div>
+
+
 
 
 
