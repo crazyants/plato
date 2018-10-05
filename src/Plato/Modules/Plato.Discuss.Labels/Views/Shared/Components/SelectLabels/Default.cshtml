@@ -1,7 +1,8 @@
 ﻿@model SelectLabelsViewModel
 
 <div class="card">
-    <div class="dropdown" data-provide="select-dropdown">
+
+    <div class="dropdown" id="labelDropdown">
         <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fal fa-cog float-right"></i>
             @T["Labels"]
@@ -15,25 +16,24 @@
                 @T["Select labels..."]
             </div>
             <div class="my-2 mx-3">
-                
+
                 <input type="search"
                        autocomplete="off"
                        class="form-control"
-                       data-provide="labelAutoComplete"
                        data-autocomplete-target="#labelAutoCompleteResults"
                        data-autocomplete-page-size="5"
                        data-autocomplete-item-css="list-group-item list-group-item-action"
                        placeholder="@T["Search labels or add new labels seperted by a comma..."]">
-                
+
             </div>
-            <div style="max-height: 400px; overflow: auto">
+            <div>
 
                 <div class="list-group list-group-flush list-group-hover hidden" id="labelAutoCompleteResults">
                     <p class="text-center">
                         <i class="fal fa-spinner fa-spin"></i>
                     </p>
                 </div>
-                
+
                 @*@if (Model.SelectedLabels != null)
                 {
                     <div class="list-group list-group-flush tree">
@@ -80,11 +80,11 @@
         <ul data-empty-preview-text="@T["No labels selected."]" class="list-group select-dropdown-preview">
             @foreach (var label in selectedLabels)
             {
-            <li class="list-group-item">
-                <span class="btn btn-sm label font-weight-bold" style="background-color: @label.Value.BackColor; color: @label.Value.ForeColor">
-                    @label.Value.Name
-                </span>
-            </li>
+                <li class="list-group-item">
+                    <span class="btn btn-sm label font-weight-bold" style="background-color: @label.Value.BackColor; color: @label.Value.ForeColor">
+                        @label.Value.Name
+                    </span>
+                </li>
             }
         </ul>
     }
@@ -98,3 +98,23 @@
     }
 </div>
 
+<script section="Footer">
+
+    $(document).ready(function () {
+
+        $('#labelDropdown').selectDropdown({
+            onShow: function($dropdown) {
+                var $input = $dropdown.find('[type="search"]');
+                if ($input.length > 0) {
+                    $input.labelAutoComplete()
+                        .labelAutoComplete("show")
+                        .labelAutoComplete("update");
+                }
+           
+            }
+        });
+
+    });
+  
+
+</script>
