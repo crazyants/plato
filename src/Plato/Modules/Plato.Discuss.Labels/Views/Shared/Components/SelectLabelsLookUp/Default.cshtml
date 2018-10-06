@@ -1,23 +1,62 @@
 ﻿@model SelectLabelsLookUpViewModel
 
-<input type="hidden" id="@Model.HtmlName" name="@Model.HtmlName" asp-for="LabelsJson" />
+<input type="test" id="@Model.HtmlName" name="@Model.HtmlName" asp-for="LabelsJson" />
 
-<div class="dropdown">
-    <ul class="tagit form-control list-inline" data-provide="labelTagIt" data-tagit-store="#@Model.HtmlName">
-        <li class="tagit-list-item-input">
-            <input type="search"
-                   autocomplete="off"
-                   data-autocomplete-target="#labelResults"
-                   data-autocomplete-page-size="5"
-                   placeholder="@T["Search labels or add new labels seperted by a comma..."]">
-        </li>
-    </ul>
-    <div id="labelResults" class="dropdown-menu col-12">
-        <p class="text-center">
-            <i class="fal fa-spinner fa-spin"></i>
-        </p>
+<div class="card" data-provide="label-select-dropdown"
+     data-select-dropdown-store="#@Model.HtmlName">
+
+    <div class="dropdown">
+        <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fal fa-cog float-right"></i>
+            @T["Labels"]
+        </a>
+        <div class="dropdown-arrow dropdown-arrow-right"></div>
+        <div class="dropdown-menu dropdown-menu-right" style="width: 400px;" aria-labelledby="channelDropdown">
+            <div class="dropdown-header">
+                <a href="#" class="text-muted float-right" data-toggle="dropdown">
+                    <i class="fal fa-times"></i>
+                </a>
+                @T["Select labels..."]
+            </div>
+            <div class="my-2 mx-3">
+                <input type="search"
+                       autocomplete="off"
+                       class="form-control"
+                       data-autocomplete-target="#labelAutoCompleteResults"
+                       data-autocomplete-page-size="5"
+                       data-autocomplete-item-css="list-group-item list-group-item-action"
+                       placeholder="@T["Search labels or add new labels seperted by a comma..."]">
+            </div>
+            <div>
+                <div class="list-group list-group-flush tree list-group-hover hidden" id="labelAutoCompleteResults">
+                    <p class="text-center">
+                        <i class="fal fa-spinner fa-spin"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
+    <ul data-empty-preview-text="@T["No labels selected."]" class="list-group select-dropdown-preview">
+        <li class="list-group-item">@T["Loading..."]</li>
+    </ul>
 </div>
+
+    @*<div class="dropdown">
+        <ul class="tagit form-control list-inline" data-provide="labelTagIt" data-tagit-store="#@Model.HtmlName">
+            <li class="tagit-list-item-input">
+                <input type="search"
+                       autocomplete="off"
+                       data-autocomplete-target="#labelResults"
+                       data-autocomplete-page-size="5"
+                       placeholder="@T["Search labels or add new labels seperted by a comma..."]">
+            </li>
+        </ul>
+        <div id="labelResults" class="dropdown-menu col-12">
+            <p class="text-center">
+                <i class="fal fa-spinner fa-spin"></i>
+            </p>
+        </div>
+    </div>*@
 
 
 

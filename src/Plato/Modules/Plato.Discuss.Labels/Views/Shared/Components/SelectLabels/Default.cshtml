@@ -2,7 +2,7 @@
 
 <div class="card">
 
-    <div class="dropdown" id="labelDropdown">
+    <div class="dropdown">
         <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fal fa-cog float-right"></i>
             @T["Labels"]
@@ -28,7 +28,7 @@
             </div>
             <div>
 
-                <div class="list-group list-group-flush list-group-hover hidden" id="labelAutoCompleteResults">
+                <div class="list-group list-group-flush tree list-group-hover hidden" id="labelAutoCompleteResults">
                     <p class="text-center">
                         <i class="fal fa-spinner fa-spin"></i>
                     </p>
@@ -81,9 +81,9 @@
             @foreach (var label in selectedLabels)
             {
                 <li class="list-group-item">
-                    <span class="btn btn-sm label font-weight-bold" style="background-color: @label.Value.BackColor; color: @label.Value.ForeColor">
+                    <label for="label-@label.Value.Id" class="btn btn-sm label font-weight-bold" style="background-color: @label.Value.BackColor; color: @label.Value.ForeColor">
                         @label.Value.Name
-                    </span>
+                    </label>
                 </li>
             }
         </ul>
@@ -98,23 +98,69 @@
     }
 </div>
 
-<script section="Footer">
+@*<script section="Footer">
 
     $(document).ready(function () {
 
-        $('#labelDropdown').selectDropdown({
-            onShow: function($dropdown) {
-                var $input = $dropdown.find('[type="search"]');
-                if ($input.length > 0) {
-                    $input.labelAutoComplete()
-                        .labelAutoComplete("show")
-                        .labelAutoComplete("update");
+
+        var setAutoCompleteSelection = function($preview, $dropdown) {
+            $preview.find('label').each(function () {
+                var checkId = $(this).attr("for"),
+                    $ckb = $dropdown.find("#" + checkId),
+                    $lbl = $dropdown.find('[for="' + checkId + '"]');
+                if ($ckb.length > 0) {
+                    $ckb.prop("checked", "true");
                 }
-           
-            }
+                if ($lbl.length > 0) {
+                    $lbl.addClass("active");
+                }
+            });
+        }
+
+        $('#labelDropdown').selectDropdown({
+            onShow: function ($sender, $dropdown) {
+
+                var $preview = $sender.find(".select-dropdown-preview"),
+                    $input = $dropdown.find('[type="search"]');
+                if ($input.length === 0) { return; }
+
+                $input.labelAutoComplete({
+                        itemTemplate:
+                            '<input type="checkbox" value="{id}" id="label-{id}"/><label for="label-{id}" class="{itemCss}"><i class="fal mr-2 check-icon"></i><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor}">{name}</span><span title="Occurrences" data-toggle="tooltip" class="float-right btn btn-sm btn-secondary">{totalEntities.text}</span></label>',
+                        onLoaded: function($caller, $target) {
+                            setAutoCompleteSelection($preview, $target);
+                        },
+                        onItemClick: function($caller, result, e, $label) {
+
+                            // Prevent defaults
+                            e.preventDefault();
+
+                            // ensure we only add uunque entries
+                            var index = methods.getIndex($caller, result);
+
+                            if (index === -1) {
+                                var selectDropdown = $caller.data("selectDropdown");
+                                selectDropdown.items.push(result);
+                                $caller.tagIt("update");
+                            } else {
+                                //$sender.selectDropdown({
+                                //        highlightIndex: index
+                                //    },
+                                //    "highlight");
+                            }
+
+                         
+
+                        }
+                    })
+                    .labelAutoComplete("show")
+                    .labelAutoComplete("update");
+
+            }           
+
         });
 
     });
   
 
-</script>
+</script>*@
