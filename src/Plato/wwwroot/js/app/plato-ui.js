@@ -1383,12 +1383,8 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            interval: 1000, // interval in milliseconds to wait between typing before fireing onChange event
-            onChange: null, // triggers after interval when no key up on caller
-            onKeyUp: null, // triggers on every key up event within caller
-
-          
-            target: '' // the selector for the list group to filter
+            target: null, // the list group to filter (string selector or object)
+            empty: null // the no filter results element (string selector or object)
         };
 
         var methods = {
@@ -1397,44 +1393,87 @@ $(function (win, doc, $) {
                 this.bind($caller);
             },
             bind: function ($caller) {
-
-                var $list = this.getTarget($caller);
+                $caller.bind('keydown',
+                    function (e) {
+                        e.preventDefault();
+                    });
                 $caller.bind('keyup', function (e) {
-
+                    alert(e.keyCode);
                     if ((e.keyCode && e.keyCode === 13)) {
                         e.preventDefault();
-                        methods.stopTimer();
-                        if ($caller.data(dataKey).onComplete) {
-                            $caller.data(dataKey).onComplete($(this), e);
-                        }
+                        e.stopPropagation();
                     }
-
-                    alert("keyup");
-
+                    methods.filter($(this));
                 });
-
             },
             unbind: function ($caller) {
+                $caller.unbind('keydown');
                 $caller.unbind('keyup');
             },
-            getTarget: function($caller) {
+            filter: function($caller) {
+
+                var $items = this.getListItems($caller),
+                    $empty = this.getEmpty($caller),
+                    word = $caller.val().trim(),
+                    length = $items.length,
+                    hidden = 0;
+
+                if (word.length === 0) {
+                    $items.show();
+                    //$caller.treeView("collapseAll");
+                }
+
+                var i = 0, $label = null;
+
+                // first ensure all matches are visible
+                for (i = 0; i < length; i++) {
+                    $label = $($items[i]);
+                    if ($label.length > 0 && $label.data("filterValue")) {
+                        if ($label.data("filterValue").toLowerCase().startsWith(word)) {
+                            $label.parent(".list-group").show();
+                            $label.show();
+                        }
+                    }
+                }
+
+                // Next hide all others if children are not visible
+                for (i = 0; i < length; i++) {
+                    $label = $($items[i]);
+                    if ($label.length > 0 && $label.data("filterValue")) {
+                        if (!$label.data("filterValue").toLowerCase().startsWith(word)) {
+                            if (!$label.find(".list-group").is(":visible")) {
+                                $label.hide();
+                                hidden++;
+                            }
+                        }
+                    }
+                }
+
+                //If all items are hidden, show the empty element
+                if (hidden === length) {
+                    $empty.show();
+                } else {
+                    $empty.hide();
+                }
+
+            },
+            getList: function ($caller) {
                 var target = $caller.data("filterListTarget") || $caller.data(dataKey).target;
                 if (typeof target == "string") {
                     return $(target);
-                } 
+                }
                 return target;
             },
-            startTimer: function ($caller, e) {
-                this.stopTimer();
-                this.timer = setTimeout(function () {
-                    if ($caller.data(dataKey).onChange) {
-                        $caller.data(dataKey).onChange($caller, e);
-                    }
-                }, $caller.data(dataKey).interval);
+            getListItems: function($caller) {
+                var $list = this.getList($caller);
+                return $list.find(".list-group-item");
             },
-            stopTimer: function () {
-                win.clearTimeout(this.timer);
-                this.timer = null;
+            getEmpty: function ($caller) {
+                var target = $caller.data("filterListEmpty") || $caller.data(dataKey).empty;
+                if (typeof target == "string") {
+                    return $(target);
+                }
+                return target;
             }
         }
 
@@ -1445,19 +1484,21 @@ $(function (win, doc, $) {
                 var methodName = null;
                 for (var i = 0; i < arguments.length; ++i) {
                     var a = arguments[i];
-                    switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
                     }
                 }
 
