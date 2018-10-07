@@ -1375,6 +1375,122 @@ $(function (win, doc, $) {
         };
 
     }();
+
+    /* filterList */
+    var filterList = function () {
+
+        var dataKey = "filterList",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            interval: 1000, // interval in milliseconds to wait between typing before fireing onChange event
+            onChange: null, // triggers after interval when no key up on caller
+            onKeyUp: null, // triggers on every key up event within caller
+
+          
+            target: '' // the selector for the list group to filter
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                var $list = this.getTarget($caller);
+                $caller.bind('keyup', function (e) {
+
+                    if ((e.keyCode && e.keyCode === 13)) {
+                        e.preventDefault();
+                        methods.stopTimer();
+                        if ($caller.data(dataKey).onComplete) {
+                            $caller.data(dataKey).onComplete($(this), e);
+                        }
+                    }
+
+                    alert("keyup");
+
+                });
+
+            },
+            unbind: function ($caller) {
+                $caller.unbind('keyup');
+            },
+            getTarget: function($caller) {
+                var target = $caller.data("filterListTarget") || $caller.data(dataKey).target;
+                if (typeof target == "string") {
+                    return $(target);
+                } 
+                return target;
+            },
+            startTimer: function ($caller, e) {
+                this.stopTimer();
+                this.timer = setTimeout(function () {
+                    if ($caller.data(dataKey).onChange) {
+                        $caller.data(dataKey).onChange($caller, e);
+                    }
+                }, $caller.data(dataKey).interval);
+            },
+            stopTimer: function () {
+                win.clearTimeout(this.timer);
+                this.timer = null;
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).filterList()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().filterList()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
     
     /* tagIt */
     var tagIt = function () {
@@ -2458,42 +2574,44 @@ $(function (win, doc, $) {
 
                             return html;
                         },
-                        onAddItem: function($input, result, e) {
-                            $input.val("");
-                        },
                         onShow: function($sender, $dropdown) {
-
-                            var $preview = $sender.find(".select-dropdown-preview"),
-                                $input = $dropdown.find('[type="search"]');
-                            //if ($input.length === 0) { return; }
-
-                            // Show & update auto complete when dropdown is shown
-                            $input.labelAutoComplete("show")
-                                .labelAutoComplete("update");
-
+                            // Focus search & set-up autoComplete on dropdown show
+                            var $input = $dropdown.find('[type="search"]');
+                            if ($input.length > 0) {
+                                $input.focus()
+                                    .labelAutoComplete("show")
+                                    .labelAutoComplete("update");
+                            }
                         },
-                        onUpdated: function($sender) {
+                    onUpdated: function ($sender) {
 
-                            // Set active items within dropdown
+                            // Set active items within dropdown when preview is updated
                             var $dropdown = $sender.find(".dropdown-menu"),
                                 items = $sender.data("selectDropdown").items;
 
+                            // Clear all selections within dropdown
+                            $dropdown.find("label").each(function() {
+                                var $ckb = $("#" + $(this).attr("for"));
+                                if ($ckb.length > 0) {
+                                    $ckb.prop("checked", false);
+                                    $(this).removeClass("active");
+                                }
+                            });
+
+                            // Set all selections within dropdown based on items within our array
                             if (items && items.length > 0) {
                                 for (var i = 0; i < items.length; i++) {
-
                                     var checkId = "label-" + items[i].id,
                                         $ckb = $dropdown.find("#" + checkId),
                                         $lbl = $dropdown.find('[for="' + checkId + '"]');
-
                                     if ($ckb.length > 0) {
-                                        $ckb.prop("checked", "true");
+                                        $ckb.prop("checked", true);
                                     }
                                     if ($lbl.length > 0) {
                                         $lbl.addClass("active");
                                     }
                                 }
                             }
-
                         }
                     },
                     defaults,
@@ -2511,15 +2629,17 @@ $(function (win, doc, $) {
                             // ensure we only add uunque entries
                             var index = methods.getIndex($caller, result);
                             if (index === -1) {
-                                var selectDropdown = $caller.data("selectDropdown");
-                                selectDropdown.items.push(result);
-                                $caller.selectDropdown("update");
+                                $caller.data("selectDropdown").items.push(result);
+                           
                             } else {
-                                $caller.selectDropdown({
-                                        highlightIndex: index
-                                    },
-                                    "highlight");
+                                $caller.data("selectDropdown").items.splice(index, 1);
+
+                                //$caller.selectDropdown({
+                                //        highlightIndex: index
+                                //    },
+                                //    "highlight");
                             }
+                            $caller.selectDropdown("update");
                         },
                         onLoaded: function($input, $dropdown) {
                             $caller.selectDropdown("update");
@@ -2648,9 +2768,25 @@ $(function (win, doc, $) {
                         onAddItem: function($input, result, e) {
                             $input.val("");
                         },
-                        onShow: function($sender, $dropdown) {
+                    onShow: function ($sender, $dropdown) {
 
-                            $dropdown.find('[data-provide="tree"]').treeView("expandSelected");
+                            // get tree
+                            var $tree = $dropdown.find('[data-provide="tree"]');
+
+                            // Focus & set-up search on dropdown shwn
+                            var $input = $dropdown.find('[type="search"]');
+                            if ($input.length > 0) {
+                                $input.focus()
+                                    .filterList({
+                                        target: $tree
+                                    });
+                            }
+
+                            // Expand tree view selection on dropdown shown
+                         
+                            if ($tree.length > 0) {
+                                $tree.treeView("expandSelected");
+                            }
 
                         },
                         onChange: function($dropdown, $input, e) {
@@ -2782,14 +2918,14 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     /* Register Plugins */
     $.fn.extend({
         scrollTo: scrollTo.init,
         treeView: treeView.init,
         autoComplete: autoComplete.init,
         typeSpy: typeSpy.init,
+        filterList: filterList.init,
         tagIt: tagIt.init,
         userAutoComplete: userAutoComplete.init,
         labelAutoComplete: labelAutoComplete.init,
@@ -2822,6 +2958,9 @@ $(function (win, doc, $) {
         /* treeView */
         this.find('[data-provide="tree"]').treeView();
 
+        /* filterList */
+        this.find('[data-provide="filter-list"]').filterList();
+        
         /* autoComplete */
         this.find('[data-provide="autoComplete"]').autoComplete();
 

@@ -1,6 +1,6 @@
 ﻿@model SelectLabelsLookUpViewModel
 
-<input type="test" id="@Model.HtmlName" name="@Model.HtmlName" asp-for="LabelsJson" />
+<input type="hidden" id="@Model.HtmlName" name="@Model.HtmlName" asp-for="LabelsJson" />
 
 <div class="card" data-provide="label-select-dropdown" data-select-dropdown-store="#@Model.HtmlName">
     <div class="dropdown">
@@ -9,7 +9,7 @@
             @T["Labels"]
         </a>
         <div class="dropdown-arrow dropdown-arrow-right"></div>
-        <div class="dropdown-menu dropdown-menu-right" style="width: 400px;" aria-labelledby="channelDropdown">
+        <div class="dropdown-menu dropdown-menu-right" style="width: 475px;" aria-labelledby="channelDropdown">
             <div class="dropdown-header">
                 <a href="#" class="text-muted float-right" data-toggle="dropdown">
                     <i class="fal fa-times"></i>
@@ -41,7 +41,7 @@
     </ul>
 </div>
 
-<div class="dropdown">
+@*<div class="dropdown">
     <ul class="tagit form-control list-inline" data-provide="labelTagIt" data-tagit-store="#@Model.HtmlName">
         <li class="tagit-list-item-input">
             <input type="search"
@@ -56,7 +56,7 @@
             <i class="fal fa-spinner fa-spin"></i>
         </p>
     </div>
-</div>
+</div>*@
 
 
 
