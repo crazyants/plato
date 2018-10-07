@@ -2159,15 +2159,9 @@ $(function (win, doc, $) {
                 }
                 return html;
             }, // provides a method to parse our itemTemplate with data returned from service url
-            onAddItem: function ($caller, result, e) {
-                var items = $caller.data(dataKey).items;
-                items.push({
-                    text: result.text,
-                    value: result.value
-                });
-            },
-            onShow: function ($caller, $dropdown) { }, // triggers when the dropdown is shown
-            onChange: function($caller, $input, e) { } // triggers when a checkbox or radio button is changed within the dropdown
+            onShow: null, // triggers when the dropdown is shown
+            onChange: null, // triggers when a checkbox or radio button is changed within the dropdown
+            onUpdated: null // triggers whenever our items array is rendered
         };
 
         var methods = {
@@ -2197,17 +2191,14 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
 
-                var $dropdown = this.getDropdownMenu($caller),
-                    $input = this.getDropdownSearchInput($caller);
+                var $dropdown = $caller.find(".dropdown-menu");
 
-                // On dropdown shown focus search
+                // On dropdown shown 
                 $caller.on('shown.bs.dropdown',
                     function () {
-                        $input.focus();
                         if ($caller.data(dataKey).onShow) {
                             $caller.data(dataKey).onShow($caller, $dropdown);
                         }
-                        
                     });
 
                 // On checkbox or radiobutton change within dropdown 
@@ -2221,44 +2212,36 @@ $(function (win, doc, $) {
 
 
             },
+            unbind: function ($caller) {
+                $caller.unbind("shown.bs.dropdown");
+                $caller.find(".dropdown-menu").unbind("change");
+            },
             update: function ($caller) {
 
-                var $preview = this.getDropdownPreview($caller),
-                    $items = this.getDropdownListGroupItems($caller),
-                    $dropdown = this.getDropdownMenu($caller);
+                var $preview = this.getPreview($caller),
+                    items = this.getItems($caller);
 
-               
+                // Clear preview
+                $preview.empty();
 
-                var items = this.getItems($caller);
-            
+                // Populate preview
                 if (items && items.length > 0) {
-                  
-                    $preview.empty();
                     for (var i = 0; i < items.length; i++) {
-
-                        // // Set active items within dropdown
-                        //var checkId = items[i].id || items[i].attr("for"),
-                        //    $ckb = $dropdown.find("#" + checkId),
-                        //    $lbl = $dropdown.find('[for="' + checkId + '"]');
-                      
-                        //if ($ckb.length > 0) {
-                        //    $ckb.prop("checked", "true");
-                        //}
-                        //if ($lbl.length > 0) {
-                        //    $lbl.addClass("active");
-                        //}
-                        
                         // Build preview item and append
                         $preview.append(this.buildItem($caller, items[i], i));
-
                     }
                 } else {
                     $preview
-                        .empty()
                         .append($($caller.data(dataKey).itemTemplateEmpty));
                 }
 
+                // Serialize items to hidden field
                 this.serialize($caller);
+
+                // Raise onUpdated event
+                if ($caller.data(dataKey).onUpdated) {
+                    $caller.data(dataKey).onUpdated($caller);
+                }
 
             },
             buildItem: function ($caller, data, index) {
@@ -2289,8 +2272,9 @@ $(function (win, doc, $) {
                 return $caller.data("selectDropdownItemTemplate") || $caller.data(dataKey).itemTemplate;
             },
             highlight: function ($caller) {
-                var index = $caller.data(dataKey).highlightIndex,
-                    $li = $caller.find("li:eq(" + index + ")");
+                var $preview = this.getPreview($caller),
+                    index = $caller.data(dataKey).highlightIndex,
+                    $li = $preview.find("li:eq(" + index + ")");
                 if ($li.length > 0) {
                     $li.addClass("bg-warning");
                     window.setTimeout(function () {
@@ -2305,10 +2289,9 @@ $(function (win, doc, $) {
                 this.update($caller);
             },
             getItems: function ($caller) {
-                return $caller.data("selectDropDownItems") || $caller.data(dataKey).items;
+                return $caller.data(dataKey).items;
             },
             setItems: function ($caller, value) {
-                $caller.data("tagitItems", value)
                 $caller.data(dataKey).items = value;
             },
             getStore: function ($caller) {
@@ -2342,72 +2325,7 @@ $(function (win, doc, $) {
                     }
                 }
             },
-            filterItems: function ($caller) {
-
-                var $items = this.getDropdownListGroupItems($caller),
-                    $input = this.getDropdownSearchInput($caller),
-                    $noResults = this.getDropdownSearchNoResults($caller),
-                    word = $input.val().trim(),
-                    length = $items.length,
-                    hidden = 0;
-
-                if (word.length === 0) {
-                    $items.show();
-                    $caller.treeView("collapseAll");
-                }
-
-                var i = 0, $label = null;
-
-                // first ensure all matches are visible
-                for (i = 0; i < length; i++) {
-                    $label = $($items[i]);
-                    if ($label.length > 0 && $label.data("filterValue")) {
-                        if ($label.data("filterValue").toLowerCase().startsWith(word)) {
-                            $label.parent(".list-group").show();
-                            $label.show();
-                        }
-                    }
-                }
-
-                // Next hide all others if children are not visible
-                for (i = 0; i < length; i++) {
-                    $label = $($items[i]);
-                    if ($label.length > 0 && $label.data("filterValue")) {
-                        if (!$label.data("filterValue").toLowerCase().startsWith(word)) {
-                            if (!$label.find(".list-group").is(":visible")) {
-                                $label.hide();
-                                hidden++;
-                            }
-                        }
-                    }
-                }
-
-                //If all items are hidden, show the empty view
-                if (hidden === length) {
-                    $noResults.show();
-                } else {
-                    $noResults.hide();
-                }
-
-            },
-            getDropdownButton: function ($caller) {
-                return $caller.find('[data-toggle="dropdown"]');
-            },
-            getDropdownMenu: function ($caller) {
-                return $caller.find(".dropdown-menu");
-            },
-            getDropdownListGroupItems: function ($caller) {
-                var $menu = this.getDropdownMenu($caller);
-                return $menu.find(".list-group-item");
-            },
-            getDropdownSearchInput: function ($caller) {
-                var $menu = this.getDropdownMenu($caller);
-                return $menu.find('[type="search"]');
-            },
-            getDropdownSearchNoResults: function ($caller) {
-                return $caller.find(".empty");
-            },
-            getDropdownPreview: function ($caller) {
+            getPreview: function ($caller) {
 
                 var $preview = $caller.find(".select-dropdown-preview");
                 if ($preview.length === 0) {
@@ -2417,13 +2335,6 @@ $(function (win, doc, $) {
                     }
                 }
                 return $preview;
-            },
-            getDropdownPreviewText: function ($caller) {
-                var $preview = this.getDropdownPreview($caller);
-                if ($preview.length > 0) {
-                    return $preview.attr("data-empty-preview-text");
-                }
-                return "No selection";
             }
         };
 
@@ -2559,6 +2470,29 @@ $(function (win, doc, $) {
                             // Show & update auto complete when dropdown is shown
                             $input.labelAutoComplete("show")
                                 .labelAutoComplete("update");
+
+                        },
+                        onUpdated: function($sender) {
+
+                            // Set active items within dropdown
+                            var $dropdown = $sender.find(".dropdown-menu"),
+                                items = $sender.data("selectDropdown").items;
+
+                            if (items && items.length > 0) {
+                                for (var i = 0; i < items.length; i++) {
+
+                                    var checkId = "label-" + items[i].id,
+                                        $ckb = $dropdown.find("#" + checkId),
+                                        $lbl = $dropdown.find('[for="' + checkId + '"]');
+
+                                    if ($ckb.length > 0) {
+                                        $ckb.prop("checked", "true");
+                                    }
+                                    if ($lbl.length > 0) {
+                                        $lbl.addClass("active");
+                                    }
+                                }
+                            }
 
                         }
                     },
@@ -2756,10 +2690,9 @@ $(function (win, doc, $) {
 
                 // init tree
                 $caller.find('[data-provide="tree"]').treeView($.extend({
-                    onClick: function ($tree, $link, e) {
-
-                  
-                                 // Toggle checkbox when we click a tree node item
+                            onClick: function($tree, $link, e) {
+                                
+                                // Toggle checkbox when we click a tree node item
                                 var $inputs = $link.find("input").first();
                                 $inputs.each(function(i) {
                                     if ($(this).is(":checked")) {
