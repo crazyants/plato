@@ -164,8 +164,10 @@ $(function (win, doc, $) {
             toggleSelector: '[data-toggle="tree"]',
             linkSelector: ".list-group-item",
             enableCheckBoxes: true,
-            onBeforeComplete: function () { },
-            onClick: function ($caller, $link, e) { }
+            onClick: null, // triggers when the linkSelector is clicked
+            onToggle: null, // triggers when the toggleSelector is clicked
+            onExpand: null, // triggers when a node is expanded
+            onCollapse: null // triggers when a node is collapsed
         };
 
         var methods = {
@@ -193,8 +195,13 @@ $(function (win, doc, $) {
                 // Bind toggler events
                 $(toggleSelector).unbind(event).bind(event,
                     function (e) {
-                        e.preventDefault();
-                        methods._toggleNode($caller, $(this).attr("data-node-id"));
+                        var toggle = true;
+                        if ($caller.data(dataKey).onToggle) {
+                            toggle = $caller.data(dataKey).onToggle($caller, $(this), e);
+                        }
+                        if (toggle) {
+                            methods._toggleNode($caller, $(this).attr("data-node-id"), e);
+                        }
                     });
 
                 $caller.on('change',
@@ -233,8 +240,6 @@ $(function (win, doc, $) {
                 // Bind link click events
                 $caller.find(linkSelector).unbind(event).bind(event,
                     function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
                         if ($caller.data(dataKey).onClick) {
                             $caller.data(dataKey).onClick($caller, $(this), e);
                         }
@@ -300,15 +305,15 @@ $(function (win, doc, $) {
                     methods._collapse($caller, $(this).attr("id"));
                 });
             },
-            _toggleNode: function ($caller, nodeId) {
+            _toggleNode: function ($caller, nodeId, e) {
                 var $item = methods.getNodeListItem($caller, nodeId);
                 if ($item.hasClass("show")) {
-                    methods._collapse($caller, nodeId, true);
+                    methods._collapse($caller, nodeId, true, e);
                 } else {
-                    methods._expand($caller, nodeId, true);
+                    methods._expand($caller, nodeId, true, e);
                 }
             },
-            _expand: function ($caller, nodeId, slide) {
+            _expand: function ($caller, nodeId, slide, e) {
                 var $li = methods.getNodeListItem($caller, nodeId),
                     $child = $li.find("ul").first();
                 $li.addClass("show");
@@ -317,6 +322,9 @@ $(function (win, doc, $) {
                 } else {
                     $child.show();
                 }
+                if ($caller.data(dataKey).onExpand) {
+                    $caller.data(dataKey).onExpand($caller, $child, e);
+                }
             },
             _expandParents: function ($caller, nodeId) {
                 var $li = methods.getNodeListItem($caller, nodeId);
@@ -324,7 +332,7 @@ $(function (win, doc, $) {
                     methods._expand($caller, $(this).attr("id"), false);
                 });
             },
-            _collapse: function ($caller, nodeId, slide) {
+            _collapse: function ($caller, nodeId, slide, e) {
                 var $li = methods.getNodeListItem($caller, nodeId),
                     $child = $li.find("ul").first();
                 $li.removeClass("show");
@@ -332,6 +340,9 @@ $(function (win, doc, $) {
                     $child.slideUp("fast");
                 } else {
                     $child.hide();
+                }
+                if ($caller.data(dataKey).onCollapse) {
+                    $caller.data(dataKey).onCollapse($caller, $child, e);
                 }
             },
             getNodeListItem: function ($caller, nodeId) {
@@ -1395,14 +1406,11 @@ $(function (win, doc, $) {
             bind: function ($caller) {
                 $caller.bind('keydown',
                     function (e) {
-                        e.preventDefault();
+                        if ((e.keyCode && e.keyCode === 13)) {
+                            e.preventDefault();
+                        }
                     });
                 $caller.bind('keyup', function (e) {
-                    alert(e.keyCode);
-                    if ((e.keyCode && e.keyCode === 13)) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
                     methods.filter($(this));
                 });
             },
@@ -2836,8 +2844,6 @@ $(function (win, doc, $) {
                             e.stopPropagation();
 
                             // Get all checked labels within the dropdown
-
-                       
                             $dropdown.find('input:checked').each(function() {
 
                                 var checkId = $(this).attr("id");
@@ -2868,7 +2874,10 @@ $(function (win, doc, $) {
                 // init tree
                 $caller.find('[data-provide="tree"]').treeView($.extend({
                             onClick: function($tree, $link, e) {
-                                
+
+                                e.preventDefault();
+                                e.stopPropagation();
+
                                 // Toggle checkbox when we click a tree node item
                                 var $inputs = $link.find("input").first();
                                 $inputs.each(function(i) {
@@ -2879,6 +2888,12 @@ $(function (win, doc, $) {
                                     }
                                     $(this).trigger("change");
                                 });
+                            },
+                            onToggle: function($tree, $toggler, e) {
+                                // Prevent onClick raising when we toggle a node
+                                e.preventDefault();
+                                e.stopPropagation();
+                                return true;
                             }
                         },
                         defaults,
@@ -2889,7 +2904,7 @@ $(function (win, doc, $) {
             },
             getIndex: function ($caller, $label) {
 
-                // Has the label been added to our items array
+                // Has the item been added to our items array
                 var ensureUnique = $caller.data("selectDropdown").ensureUnique,
                     selectDropdown = $caller.data("selectDropdown"),
                     items = selectDropdown.items,

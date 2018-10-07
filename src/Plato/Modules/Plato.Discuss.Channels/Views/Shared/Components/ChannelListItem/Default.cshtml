@@ -5,98 +5,93 @@
     var childForeColor = !String.IsNullOrEmpty(Model.Channel.ForeColor) ? Model.Channel.ForeColor : "#fff";
 }
 
-@if (Model.ChannelIndexOpts.EnableEdit)
-{
-    <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Channel.Id" class="btn btn-secondary float-right">
-        <i class="fal fa-pencil"></i>
-        @T["Edit"]
-    </a>
-}
-else
-{
-    <div class="float-right ml-2">
-        <avatar class="avatar" user-id="@details.LastPost.CreatedUserId" />
-    </div>
-    <div class="float-right text-right">
-        <ol class="list-inline text-muted">
-            <li class="list-inline-item">
-                <span title="@T["Topics"]" data-toggle="tooltip">
-                    @details.TotalTopics.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
-                </span>
-            </li>
-            <li class="list-inline-item">
-                <span title="@T["Replies"]" data-toggle="tooltip">
-                    @details.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt fa-flip-horizontal"></i>
-                </span>
-            </li>
-        </ol>
-
-        <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
-            <date utc="@details.LastPost.CreatedDate"></date>
-        </a>
-    </div>
-}
-
-@if (!String.IsNullOrEmpty(Model.Channel.IconCss))
-{
-    <div class="float-left mr-3">
-        <span class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
-            <i class="@Model.Channel.IconCss"></i>
-        </span>
-    </div>
-}
-
-<div class="float-left">
-  
-    @if (Model.ChannelIndexOpts.EnableEdit)
+<div class="row">
+    
+    @if (!String.IsNullOrEmpty(Model.Channel.IconCss))
     {
-        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
-            @Model.Channel.Name
-        </a>
-    }
-    else
-    {
-        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
-            @Model.Channel.Name
-        </a>
-    }
-  
-    @if (!String.IsNullOrEmpty(Model.Channel.Description))
-    {
-        <div class="text-muted">
-            @Model.Channel.Description
+        <div class="col-1 text-center">
+            <span class="channel-icon channel-icon-md" style="background-color: @childBgColor; color: @childForeColor">
+                <i class="@Model.Channel.IconCss"></i>
+            </span>
         </div>
     }
-    else
-    {
-        <div class="text-muted">
-            @T["No description provided"]
-        </div>
-    }
+    
+    <div class="col-7">
 
-    @if (Model.Channel.Children.Any())
-    {
-        <ul class="list-inline">
-            @foreach (var subchannel in Model.Channel.Children)
-            {
-                <li class="float-left mr-2">
-                    @if (Model.ChannelIndexOpts.EnableEdit)
-                    {
-                        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                            @subchannel.Name
-                        </a>
-                    }
-                    else
-                    {
-                        <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
-                            @subchannel.Name
-                        </a>
-                    }
+        @if (Model.ChannelIndexOpts.EnableEdit)
+        {
+            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
+                @Model.Channel.Name
+            </a>
+        }
+        else
+        {
+            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@Model.Channel.Id" asp-route-alias="@Model.Channel.Alias" class="font-weight-bold">
+                @Model.Channel.Name
+            </a>
+        }
+
+        @if (!String.IsNullOrEmpty(Model.Channel.Description))
+        {
+            <div class="text-muted">
+                @Model.Channel.Description
+            </div>
+        }
+        else
+        {
+            <div class="text-muted">
+                @T["No description provided"]
+            </div>
+        }
+
+        @if (Model.Channel.Children.Any())
+        {
+            <ul class="list-inline">
+                @foreach (var subchannel in Model.Channel.Children)
+                {
+                    <li class="float-left mr-2">
+                        @if (Model.ChannelIndexOpts.EnableEdit)
+                        {
+                            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Admin" asp-route-action="Index" asp-route-id="@subchannel.Id">
+                                @subchannel.Name
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@subchannel.Id">
+                                @subchannel.Name
+                            </a>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+
+    </div>
+    
+    <div class="col-4 text-right">
+        <div class="float-right ml-2">
+            <avatar class="avatar" user-id="@details.LastPost.CreatedUserId"/>
+        </div>
+        <div class="float-right">
+            <ol class="list-inline text-muted">
+                <li class="list-inline-item">
+                    <span title="@T["Topics"]" data-toggle="tooltip">
+                        @details.TotalTopics.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
+                    </span>
                 </li>
-            }
-        </ul>
-    }
+                <li class="list-inline-item">
+                    <span title="@T["Replies"]" data-toggle="tooltip">
+                        @details.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt fa-flip-horizontal"></i>
+                    </span>
+                </li>
+            </ol>
+
+            <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
+                <date utc="@details.LastPost.CreatedDate"></date>
+            </a>
+        </div>
+    </div>
 
 </div>
-
 
