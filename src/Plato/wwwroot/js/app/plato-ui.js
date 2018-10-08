@@ -283,16 +283,9 @@ $(function (win, doc, $) {
                     methods._collapse($caller, nodeId);
                 }
             },
-            toggle: function ($caller) {
-                if ($caller.hasClass("show")) {
-                    methods.collapse($caller);
-                } else {
-                    methods.expand($caller);
-                }
-            },
             expandAll: function ($caller) {
                 $caller.find(".list-group-item").each(function () {
-                    methods._expand($caller, $(this).attr("id"));
+                    methods._expand($caller, $(this).attr("id"), false, win.event);
                 });
             },
             expandSelected: function ($caller) {
@@ -1420,43 +1413,27 @@ $(function (win, doc, $) {
             },
             filter: function($caller) {
 
-                var $items = this.getListItems($caller),
+                var $target = this.getTarget($caller),
+                    $items = this.getListItems($caller),
                     $empty = this.getEmpty($caller),
-                    word = $caller.val().trim(),
+                    word = $caller.val().trim().toLowerCase(),
                     length = $items.length,
                     hidden = 0;
-
-                if (word.length === 0) {
-                    $items.show();
-                    //$caller.treeView("collapseAll");
-                }
-
-                var i = 0, $label = null;
-
-                // first ensure all matches are visible
-                for (i = 0; i < length; i++) {
-                    $label = $($items[i]);
-                    if ($label.length > 0 && $label.data("filterValue")) {
-                        if ($label.data("filterValue").toLowerCase().startsWith(word)) {
-                            $label.parent(".list-group").show();
-                            $label.show();
+                
+                $target.treeView("expandAll");
+                
+                // First hide all items
+                for (var i = 0; i < length; i++) {
+                    var $label = $($items[i]);
+                    if ($label.length > 0) {
+                        $label.removeClass("hidden");
+                        if (!this.find($label, word)) {
+                            $label.addClass("hidden");
+                            hidden++;
                         }
                     }
                 }
-
-                // Next hide all others if children are not visible
-                for (i = 0; i < length; i++) {
-                    $label = $($items[i]);
-                    if ($label.length > 0 && $label.data("filterValue")) {
-                        if (!$label.data("filterValue").toLowerCase().startsWith(word)) {
-                            if (!$label.find(".list-group").is(":visible")) {
-                                $label.hide();
-                                hidden++;
-                            }
-                        }
-                    }
-                }
-
+                
                 //If all items are hidden, show the empty element
                 if (hidden === length) {
                     $empty.show();
@@ -1465,7 +1442,35 @@ $(function (win, doc, $) {
                 }
 
             },
-            getList: function ($caller) {
+            find: function ($root, word) {
+
+                // Search in supplied list item
+                var value = $root.data("filterListValue");
+                if (value) {
+                    if (value.toLowerCase().indexOf(word) >= 0) {
+                        return true;
+                    }
+                }
+
+                // Search in child list items
+                var $labels = $root.find(".list-group-item");
+                for (var i = 0; i < $labels.length; i++) {
+                    var $label = $($labels[i]);
+                    if ($label.length > 0) {
+                        value = $label.data("filterListValue");
+                        if (value.toLowerCase().indexOf(word) >= 0) {
+                            return true;
+                        }
+                        if ($label.find(".list-group-item").length > 0) {
+                            this.find($label, word);
+                        }
+                    }
+                 
+                }
+                return false;
+
+            },
+            getTarget: function ($caller) {
                 var target = $caller.data("filterListTarget") || $caller.data(dataKey).target;
                 if (typeof target == "string") {
                     return $(target);
@@ -1473,7 +1478,7 @@ $(function (win, doc, $) {
                 return target;
             },
             getListItems: function($caller) {
-                var $list = this.getList($caller);
+                var $list = this.getTarget($caller);
                 return $list.find(".list-group-item");
             },
             getEmpty: function ($caller) {
@@ -2817,7 +2822,7 @@ $(function (win, doc, $) {
                         onAddItem: function($input, result, e) {
                             $input.val("");
                         },
-                    onShow: function ($sender, $dropdown) {
+                        onShow: function($sender, $dropdown) {
 
                             // get tree
                             var $tree = $dropdown.find('[data-provide="tree"]');
@@ -2832,14 +2837,14 @@ $(function (win, doc, $) {
                             }
 
                             // Expand tree view selection on dropdown shown
-                         
+
                             if ($tree.length > 0) {
                                 $tree.treeView("expandSelected");
                             }
 
                         },
                         onChange: function($dropdown, $input, e) {
-                            
+
                             e.preventDefault();
                             e.stopPropagation();
 
@@ -2858,12 +2863,11 @@ $(function (win, doc, $) {
                                         $dropdown.selectDropdown({
                                                 highlightIndex: index
                                             },
-                                            "highlight");}
+                                            "highlight");
+                                    }
 
                                 }
                             });
-
-                         
 
 
                         }
