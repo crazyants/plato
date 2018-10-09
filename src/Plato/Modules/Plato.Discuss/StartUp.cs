@@ -20,6 +20,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Discuss
 {
@@ -68,6 +69,15 @@ namespace Plato.Discuss
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
             services.AddScoped<IViewProviderManager<Reply>, ViewProviderManager<Reply>>();
             services.AddScoped<IViewProvider<Reply>, ReplyViewProvider>();
+
+            // Add discussion views to base user pages
+            services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
+            services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
+
+            // Add discussion profile views
+            services.AddScoped<IViewProviderManager<DiscussUser>, ViewProviderManager<DiscussUser>>();
+            services.AddScoped<IViewProvider<DiscussUser>, ProfileViewProvider>();
+
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, ReplySubscriber<Reply>>();

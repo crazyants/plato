@@ -120,9 +120,7 @@ namespace Plato.Users.Controllers
                 Options = opts,
                 Pager = pager
             };
-
-
-
+            
             // Build view
             var result = await _viewProvider.ProvideIndexAsync(new UserProfile(), this);
 

@@ -108,6 +108,8 @@ namespace Plato.Discuss.ViewModels
         public int ChannelId { get; set; }
 
         public int LabelId { get; set; }
+
+        public int CreatedByUserId { get; set; }
         
         [DataMember(Name = "sort")]
         public SortBy Sort { get; set; } = SortBy.LastReply;

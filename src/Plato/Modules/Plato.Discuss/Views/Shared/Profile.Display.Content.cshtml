@@ -1,5 +1,4 @@
-﻿@using Plato.Internal.Abstractions.Extensions
-@model User
+﻿@model TopicIndexViewModel
 
 <card>
     <card-title>
@@ -25,11 +24,17 @@
     </card-title>
     <card-body>
         
-        @T["Joined"] <date utc="@Model.CreatedDate"></date>
+     
+        @await DisplayAsync(new View("TopicList", new
+        {
+            options = @Model.Options,
+            pager = @Model.Pager
+        }))
 
     </card-body>
 </card>
 
+     
 
 
 
