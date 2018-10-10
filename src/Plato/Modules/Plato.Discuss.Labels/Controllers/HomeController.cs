@@ -164,7 +164,7 @@ namespace Plato.Discuss.Labels.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // We don't need to add to pagination 
-            opts.LabelId = label?.Id ?? 0;
+            opts.Params.LabelId = label?.Id ?? 0;
 
             // Add view options to context for use within view adaptors
             this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()

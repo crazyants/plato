@@ -3,7 +3,7 @@
 @using Plato.Internal.Data.Abstractions
 @model TopicIndexViewModel
 
-<card class="card card-body-flush">
+<card enabled="false" class="card card-body-flush">
     <card-title>
         <h6 class="card-title float-left">@T["Topics"]</h6>
         <ul class="nav navbar p-0 float-right">
@@ -71,7 +71,7 @@
                             model = new TopicListItemViewModel()
                             {
                                 Topic = topic
-                            } 
+                            }
                         }))
                     </li>
 
@@ -89,6 +89,10 @@
     </card-body>
 </card>
 
-<div class="mt-4 mb-4">
-    <pager model="@Model.Pager"></pager>
-</div>
+@if (Model.Pager.Enabled)
+{
+    <div class="mt-4 mb-4">
+        <pager model="@Model.Pager"></pager>
+    </div>
+}
+

@@ -37,7 +37,10 @@ namespace Plato.Discuss.ViewProviders
             {
                 Options = new TopicIndexOptions()
                 {
-                    CreatedByUserId = user.Id
+                    Params = new TopicIndexParams()
+                    {
+                        CreatedByUserId = user.Id
+                    }
                 },
                 Pager = new PagerOptions()
                 {
@@ -49,6 +52,7 @@ namespace Plato.Discuss.ViewProviders
             return Views(
                     View<TopicIndexViewModel>("Profile.Display.Content", model => topicIndexViewModel).Zone("content")
                 );
+
         }
 
         public override Task<IViewProviderResult> BuildIndexAsync(UserProfile model, IViewProviderContext context)

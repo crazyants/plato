@@ -97,6 +97,19 @@ namespace Plato.Discuss.ViewModels
 
     }
 
+    public class TopicIndexParams
+    {
+
+        [DataMember(Name = "channel")]
+        public int ChannelId { get; set; }
+        
+        public int CreatedByUserId { get; set; }
+
+        public int LabelId { get; set; }
+
+    }
+
+
     [DataContract]
     public class TopicIndexOptions
     {
@@ -104,13 +117,9 @@ namespace Plato.Discuss.ViewModels
         [DataMember(Name = "search")]
         public string Search { get; set; }
 
-        [DataMember(Name = "channel")]
-        public int ChannelId { get; set; }
+   
+        public TopicIndexParams Params { get; set; } = new TopicIndexParams();
 
-        public int LabelId { get; set; }
-
-        public int CreatedByUserId { get; set; }
-        
         [DataMember(Name = "sort")]
         public SortBy Sort { get; set; } = SortBy.LastReply;
 
@@ -122,13 +131,14 @@ namespace Plato.Discuss.ViewModels
 
         public TopicIndexOptions()
         {
+            Params = new TopicIndexParams();
         }
 
         public TopicIndexOptions(RouteData routeData)
         {
             Search = GetRouteValueOrDefault<string>("opts.earch", routeData, Search);
-            ChannelId = GetRouteValueOrDefault<int>("opts.channelId", routeData, ChannelId);
-            LabelId = GetRouteValueOrDefault<int>("opts.labelId", routeData, LabelId);
+            //ChannelId = GetRouteValueOrDefault<int>("opts.channelId", routeData, ChannelId);
+            //LabelId = GetRouteValueOrDefault<int>("opts.labelId", routeData, LabelId);
             Sort = GetRouteValueOrDefault<SortBy>("opts.sort", routeData, Sort);
             Order = GetRouteValueOrDefault<OrderBy>("opts.order", routeData, Order);
         }

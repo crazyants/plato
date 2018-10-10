@@ -1,20 +1,17 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Threading.Tasks;
 using Plato.Discuss.Models;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Roles;
 using Plato.Internal.Navigation;
 using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 
 namespace Plato.Discuss.Services
 {
-    
+
     public interface ITopicService
     {
         Task<IPagedResults<Topic>> Get(TopicIndexOptions options, PagerOptions pager);
@@ -90,18 +87,22 @@ namespace Plato.Discuss.Services
                     //        }
                     //    }
                     //}
-                    
-                    if (options.ChannelId > 0)
+
+                    if (options.Params != null)
                     {
-                        q.CategoryId.Equals(options.ChannelId);
+
+                        if (options.Params.ChannelId > 0)
+                        {
+                            q.CategoryId.Equals(options.Params.ChannelId);
+                        }
+
+                        if (options.Params.LabelId > 0)
+                        {
+                            q.LabelId.Equals(options.Params.LabelId);
+                        }
+                        
                     }
                     
-                    if (options.LabelId > 0)
-                    {
-                        q.LabelId.Equals(options.LabelId);
-                    }
-
-
                     q.HideSpam.True();
                     q.HidePrivate.True();
                     q.HideDeleted.True();

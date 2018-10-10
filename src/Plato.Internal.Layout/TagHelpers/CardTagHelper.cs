@@ -20,8 +20,12 @@ namespace Plato.Internal.Layout.TagHelpers
     [RestrictChildren("card-title", "card-body", "card-footer")]
     public class CardTagHelper : TagHelper
     {
-        
+
+        [HtmlAttributeName("type")]
         public CardType Type { get; set; }
+
+        [HtmlAttributeName("enabled")]
+        public bool Enabled { get; set; } = true;
 
         [ViewContext] // inform razor to inject
         public ViewContext ViewContext { get; set; }
@@ -32,13 +36,16 @@ namespace Plato.Internal.Layout.TagHelpers
             var cardContext = new CardContext();
             context.Items.Add(typeof(CardContext), cardContext);
 
-            await output.GetChildContentAsync();
-            
-            output.TagName = "div";
-            output.Attributes.Add("class", $"card card-{Type.ToString().ToLower()}");
-            
+            var content = await output.GetChildContentAsync();
+
+            if (this.Enabled)
+            {
+                output.TagName = "div";
+                output.Attributes.Add("class", $"card card-{Type.ToString().ToLower()}");
+            }
+
             // title
-            if (cardContext.Title != null)
+            if (cardContext.Title != null && this.Enabled)
             {
                 var panelTitle = new TagBuilder("div");
                 panelTitle.AddCssClass("card-header");
@@ -48,7 +55,7 @@ namespace Plato.Internal.Layout.TagHelpers
             }
 
             // panel body
-            if (cardContext.Body != null)
+            if (cardContext.Body != null && this.Enabled)
             {
                 var panelBody = new TagBuilder("div");
                 panelBody.AddCssClass("card-body");
@@ -56,9 +63,13 @@ namespace Plato.Internal.Layout.TagHelpers
 
                 output.Content.AppendHtml(panelBody);
             }
+            else
+            {
+                output.Content.SetHtmlContent(cardContext.Body);
+            }
 
             // panel footer
-            if (cardContext.Footer != null)
+            if (cardContext.Footer != null && this.Enabled)
             {
                 var panelFooter = new TagBuilder("div");
                 panelFooter.AddCssClass("card-footer");

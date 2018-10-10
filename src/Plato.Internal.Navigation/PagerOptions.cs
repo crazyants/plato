@@ -16,6 +16,8 @@ namespace Plato.Internal.Navigation
 
         public int Total => _total;
 
+        public bool Enabled { get; set; } = true;
+
         public void SetTotal(int total)
         {
             _total = total;
