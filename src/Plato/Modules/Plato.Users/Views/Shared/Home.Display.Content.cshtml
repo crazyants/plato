@@ -26,16 +26,28 @@
 
     </card-title>
     <card-body>
-        
+
         <div class="row">
             <div class="col-lg-6">
-                @T["Last active:"] <date utc="@Model.LastLoginDate"></date>
+                @T["Reputation:"] @Model.TotalPoints.ToPrettyInt()
             </div>
             <div class="col-lg-6">
-                @T["Joined:"] <date utc="@Model.CreatedDate"></date>
+                @T["Visits:"] @Model.TotalVisits.ToPrettyInt()
             </div>
         </div>
-        
+
+        <hr/>
+
+        <div class="row">
+            <div class="col-lg-6">
+                @T["Last seen:"] <date utc="@Model.LastLoginDate"></date>
+            </div>
+            <div class="col-lg-6">
+                @T["First seen:"] <date utc="@Model.CreatedDate"></date>
+            </div>
+        </div>
+
+
 
     </card-body>
 </card>

@@ -165,7 +165,12 @@ $(function (win, doc, $) {
             linkSelector: ".list-group-item",
             enableCheckBoxes: true,
             onClick: null, // triggers when the linkSelector is clicked
-            onToggle: null, // triggers when the toggleSelector is clicked
+            onToggle: function ($tree, $toggler, e) {
+                // Prevent onClick raising when we toggle a node
+                e.preventDefault();
+                e.stopPropagation();
+                return true;
+            }, // triggers when the toggleSelector is clicked
             onExpand: null, // triggers when a node is expanded
             onCollapse: null // triggers when a node is collapsed
         };

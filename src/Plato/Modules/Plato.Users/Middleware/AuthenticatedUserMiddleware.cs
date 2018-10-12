@@ -127,7 +127,8 @@ namespace Plato.Users.Middleware
                 return;
 
             }
-            
+
+            user.TotalVisits += 1;
             user.LastLoginDate = DateTimeOffset.UtcNow;
 
             var userManager = context.RequestServices.GetRequiredService<IPlatoUserManager<User>>();
@@ -136,8 +137,8 @@ namespace Plato.Users.Middleware
                 return;
             }
             
-            var managerResult = await userManager.UpdateAsync(user);
-            if (managerResult.Succeeded)
+            var result = await userManager.UpdateAsync(user);
+            if (result.Succeeded)
             {
                 // Set cookie to prevent further execution
                 var tennantPath = "/";
