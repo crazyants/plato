@@ -37,10 +37,10 @@ namespace Plato.Internal.Layout.TagHelpers
             context.Items.Add(typeof(CardContext), cardContext);
 
             var content = await output.GetChildContentAsync();
-
+            
+            output.TagName = "div";
             if (this.Enabled)
             {
-                output.TagName = "div";
                 output.Attributes.Add("class", $"card card-{Type.ToString().ToLower()}");
             }
 
@@ -66,6 +66,7 @@ namespace Plato.Internal.Layout.TagHelpers
             else
             {
                 output.Content.SetHtmlContent(cardContext.Body);
+                output.Attributes.Clear();
             }
 
             // panel footer

@@ -270,6 +270,24 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "TotalVisits",
+                        DbType = DbType.Int32,
+                        Length = "50"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TotalPoints",
+                        DbType = DbType.Int32,
+                        Length = "50"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Signature]",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "CreatedDate",
                         DbType = DbType.DateTimeOffset,
                     },

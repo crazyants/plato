@@ -4,8 +4,9 @@
 <card>
     <card-title>
 
-        <div class="nav-v">
-            <div class="navbar p-0 navbar-expand-lg navbar-light">
+        <h6 class="card-title float-left">@T["Overview"]</h6>
+        
+            <div class="nav navbar p-0 navbar-expand-lg float-right navbar-light">
 
                 <div class="d-flex align-items-center">
                     <button class="navbar-toggler my-2" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,12 +21,21 @@
                                 child-ul-css-class="dropdown-menu" />
                 </div>
             </div>
-        </div>
+    
+
 
     </card-title>
     <card-body>
         
-        @T["Joined"] <date utc="@Model.CreatedDate"></date>
+        <div class="row">
+            <div class="col-lg-6">
+                @T["Last active:"] <date utc="@Model.LastLoginDate"></date>
+            </div>
+            <div class="col-lg-6">
+                @T["Joined:"] <date utc="@Model.CreatedDate"></date>
+            </div>
+        </div>
+        
 
     </card-body>
 </card>

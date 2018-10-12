@@ -116,10 +116,7 @@ namespace Plato.Discuss.ViewModels
 
         [DataMember(Name = "search")]
         public string Search { get; set; }
-
-   
-        public TopicIndexParams Params { get; set; } = new TopicIndexParams();
-
+        
         [DataMember(Name = "sort")]
         public SortBy Sort { get; set; } = SortBy.LastReply;
 
@@ -129,6 +126,10 @@ namespace Plato.Discuss.ViewModels
         [DataMember(Name = "filter")]
         public Filter Filter { get; set; }
 
+        public bool EnableCard { get; set; } = true;
+
+        public TopicIndexParams Params { get; set; } = new TopicIndexParams();
+        
         public TopicIndexOptions()
         {
             Params = new TopicIndexParams();

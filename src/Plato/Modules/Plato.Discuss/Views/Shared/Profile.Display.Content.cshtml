@@ -1,25 +1,33 @@
 ﻿@model TopicIndexViewModel
 
-<card  class="card card-body-flush">
+<card class="card card-body-flush">
     <card-title>
 
-        <div class="nav-v">
-            <div class="navbar p-0 navbar-expand-lg navbar-light">
+      
 
-                <div class="d-flex align-items-center">
-                    <button class="navbar-toggler my-2" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
+        <ul class="nav nav-tabs card-header-tabs p-0">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" role="button">
+                    @T["My Topics"]
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" role="button">
+                    @T["Participated Within"]
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" role="button">
+                    @T["Liked"]
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" role="button">
+                    @T["Following"]
+                </a>
+            </li>
+        </ul>
 
-                <div class="collapse navbar-collapse" id="navbar-collapse" role="navigation">
-
-                    <navigation name="profile"
-                                class="nav nav-tabs card-header-tabs"
-                                child-ul-css-class="dropdown-menu" />
-                </div>
-            </div>
-        </div>
 
     </card-title>
     <card-body>

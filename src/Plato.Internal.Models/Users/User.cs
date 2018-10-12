@@ -58,6 +58,12 @@ namespace Plato.Internal.Models.Users
 
         public string IpV6Address { get; set; }
 
+        public int TotalVisits { get; set; }
+
+        public int TotalPoints { get; set; }
+        
+        public string Signature { get; set; }
+
         public DateTimeOffset? CreatedDate { get; set; }
 
         public DateTimeOffset? LastLoginDate { get; set; }
@@ -209,6 +215,15 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("IpV6Address"))
                 IpV6Address = Convert.ToString(dr["IpV6Address"]);
 
+            if (dr.ColumnIsNotNull("TotalVisits"))
+                TotalVisits = Convert.ToInt32(dr["TotalVisits"]);
+
+            if (dr.ColumnIsNotNull("TotalPoints"))
+                TotalPoints = Convert.ToInt32(dr["TotalPoints"]);
+
+            if (dr.ColumnIsNotNull("Signature"))
+                Signature = Convert.ToString(dr["Signature"]);
+            
             if (dr.ColumnIsNotNull("CreatedDate"))
                 CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
 

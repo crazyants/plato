@@ -79,6 +79,9 @@ namespace Plato.Internal.Repositories.Users
                 user.Culture,
                 user.IpV4Address,
                 user.IpV6Address,
+                user.TotalVisits,
+                user.TotalPoints,
+                user.Signature,
                 user.CreatedDate,
                 user.LastLoginDate,
                 user.Data);
@@ -435,6 +438,9 @@ namespace Plato.Internal.Repositories.Users
             string culture,
             string ipv4Address,
             string ipv6Address,
+            int totalVisits,
+            int totalPoints,
+            string signature,
             DateTimeOffset? createdDate,
             DateTimeOffset? lastLoginDate,
             IEnumerable<UserData> data)
@@ -475,6 +481,9 @@ namespace Plato.Internal.Repositories.Users
                     culture.ToEmptyIfNull().TrimToSize(50),
                     ipv4Address.ToEmptyIfNull().TrimToSize(20),
                     ipv6Address.ToEmptyIfNull().TrimToSize(50),
+                    totalVisits,
+                    totalPoints,
+                    signature.ToEmptyIfNull(),
                     createdDate.ToDateIfNull(),
                     lastLoginDate.ToDateIfNull()
                 );

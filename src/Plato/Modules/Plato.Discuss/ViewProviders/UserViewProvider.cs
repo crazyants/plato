@@ -36,7 +36,8 @@ namespace Plato.Discuss.ViewProviders
             var topicIndexViewModel = new TopicIndexViewModel()
             {
                 Options = new TopicIndexOptions()
-                {
+                { 
+                    EnableCard = false,
                     Params = new TopicIndexParams()
                     {
                         CreatedByUserId = user.Id
@@ -45,7 +46,8 @@ namespace Plato.Discuss.ViewProviders
                 Pager = new PagerOptions()
                 {
                     Page = 1,
-                    PageSize = 5
+                    PageSize = 5,
+                    Enabled = false
                 }
             };
 

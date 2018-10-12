@@ -17,6 +17,12 @@ namespace Plato.Internal.Models.Users
 
         string IpV6Address { get; set; }
 
+        int TotalVisits { get; set; }
+
+        int TotalPoints { get; set; }
+
+        string Signature { get; set; }
+
         IEnumerable<string> RoleNames { get; set; }
 
         string ResetToken { get; set; }
