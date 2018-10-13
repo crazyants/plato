@@ -75,7 +75,7 @@ namespace Plato.Labels.Stores
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Updated existing entity with id {1}",
+                    _logger.LogInformation("Updated existing label with id {1}",
                         updatedLabel.Id);
                 }
 
@@ -94,7 +94,7 @@ namespace Plato.Labels.Stores
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Deleted Label '{0}' with id {1}",
+                    _logger.LogInformation("Deleted label '{0}' with id {1}",
                         model.Name, model.Id);
                 }
 

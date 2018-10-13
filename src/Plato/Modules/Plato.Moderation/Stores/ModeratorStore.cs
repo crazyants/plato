@@ -94,7 +94,7 @@ namespace Plato.Moderation.Stores
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Selecting emails for key '{0}' with the following parameters: {1}",
+                    _logger.LogInformation("Selecting moderators for key '{0}' with the following parameters: {1}",
                         token.ToString(), args.Select(a => a));
                 }
 

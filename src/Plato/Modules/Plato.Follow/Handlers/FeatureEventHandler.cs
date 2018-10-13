@@ -70,8 +70,8 @@ namespace Plato.Follow.Handlers
                 // configure
                 Configure(builder);
 
-                // Emails schema
-                Emails(builder);
+                // Entity follows
+                EntityFollows(builder);
                 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -169,7 +169,7 @@ namespace Plato.Follow.Handlers
 
         }
 
-        void Emails(ISchemaBuilder builder)
+        void EntityFollows(ISchemaBuilder builder)
         {
             
             builder
@@ -250,4 +250,5 @@ namespace Plato.Follow.Handlers
         #endregion
         
     }
+
 }

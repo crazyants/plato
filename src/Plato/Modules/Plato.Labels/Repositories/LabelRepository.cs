@@ -38,8 +38,10 @@ namespace Plato.Labels.Repositories
         {
 
             if (model == null)
+            {
                 throw new ArgumentNullException(nameof(model));
-
+            }
+                
             var id = await InsertUpdateInternal(
                 model.Id,
                 model.ParentId,

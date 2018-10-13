@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Badges.Handlers;
 using Plato.Badges.Models;
+using Plato.Badges.Repositories;
 using Plato.Badges.Services;
+using Plato.Badges.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
@@ -22,14 +24,22 @@ namespace Plato.Badges
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-        
+            
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
-            // Badge manager
-            services.AddScoped<IBadgesManager<Badge>, BadgesManager<Badge>>();
+            // Repositories
+            services.AddScoped<IUserBadgeRepository<UserBadge>, UserBadgeRepository>();
 
+            // Stores
+            services.AddScoped<IUserBadgeStore<UserBadge>, UserBadgeStore>();
+            
+            // Services
+            services.AddScoped<IBadgesManager<Badge>, BadgesManager<Badge>>();
+            services.AddScoped<IBadgeAwarderInvoker, BadgeAwarderInvoker>();
+
+            // Badge provider
+            services.AddScoped<IBadgesProvider<Badge>, Badges>();
 
         }
 
@@ -38,6 +48,15 @@ namespace Plato.Badges
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            // Activate all registered badge awarders
+            var awarders = serviceProvider.GetServices<IBadgeAwarderInvoker>();
+            foreach (var awarder in awarders)
+            {
+                awarder?.Invoke();
+            }
+
+
         }
     }
 }

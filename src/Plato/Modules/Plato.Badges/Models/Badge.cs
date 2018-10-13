@@ -1,4 +1,5 @@
 ﻿using System;
+using Plato.Badges.Services;
 
 namespace Plato.Badges.Models
 {
@@ -19,6 +20,8 @@ namespace Plato.Badges.Models
         public bool Enabled { get; set; }
 
         public BadgeLevel Level { get; set; }
+
+        public Action<AwarderContext> Awarder { get; set; }
 
         public Badge(string name)
         {
@@ -55,6 +58,17 @@ namespace Plato.Badges.Models
             int bonusPoints) : this(name, description, level, threshold)
         {
             this.BonusPoints = bonusPoints;
+        }
+
+        public Badge(
+            string name,
+            string description,
+            BadgeLevel level,
+            int threshold,
+            int bonusPoints,
+            Action<AwarderContext> awarder) : this(name, description, level, threshold, bonusPoints)
+        {
+            this.Awarder = awarder;
         }
 
     }

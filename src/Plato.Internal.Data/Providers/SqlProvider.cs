@@ -109,9 +109,14 @@ namespace Plato.Internal.Data.Providers
             {
                 HandleException(ex);
             }
-       
-            return (T)Convert.ChangeType(output, typeof(T));
-            
+
+            if (output != null)
+            {
+                return (T)Convert.ChangeType(output, typeof(T));
+            }
+
+            return default(T);
+
         }
 
         public async Task<T> ExecuteAsync<T>(string sql, params object[] args)
