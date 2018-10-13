@@ -20,6 +20,7 @@ namespace Plato.Badges
             {
 
                  var dbContextOptions = context.ServiceProvider.GetRequiredService<IOptions<DbContextOptions>>();
+                var backgroundTaskManager = context.ServiceProvider.GetRequiredService<IBackgroundTaskManager>();
 
                 // select users who don't have this badge 
                 // but meet the requirements and award the badge
@@ -40,12 +41,9 @@ namespace Plato.Badges
                     OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
                     WHILE @@FETCH_STATUS = 0
                     BEGIN
-
 	                    EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date;
-	                    FETCH NEXT FROM MSGCURSOR INTO @userId;
-	                    
+	                    FETCH NEXT FROM MSGCURSOR INTO @userId;	                    
                     END;
-
                     CLOSE MSGCURSOR;
                     DEALLOCATE MSGCURSOR;";
 
@@ -56,16 +54,13 @@ namespace Plato.Badges
                 //using (var scope = serviceProvider.CreateScope())
                 //{
                 //}
-
-                var backgroundTaskManager = context.ServiceProvider.GetRequiredService<IBackgroundTaskManager>();
-          
+                
                 backgroundTaskManager.Start(async (sender, args) =>
                 {
                     var dbContext = context.ServiceProvider.GetRequiredService<IDbContext>();
                     using (var db = dbContext)
                     {
-                        await db.ExecuteScalarAsync<int>(
-                            CommandType.Text, sql);
+                        await db.ExecuteScalarAsync<int>(CommandType.Text, sql);
                     }
 
                 }, 2000);
@@ -74,13 +69,13 @@ namespace Plato.Badges
         }
         
         public static readonly Badge BronzeVisitor =
-            new Badge("BronzeVisitor", "Visitor I", BadgeLevel.Bronze, 1, 0, VisitsAwarder());
+            new Badge("BronzeVisitor", "Visitor I", BadgeLevel.Bronze, 1, VisitsAwarder());
 
         public static readonly Badge SilverVisitor =
-            new Badge("SilverVisitor", "Visitor II", BadgeLevel.Silver, 10, 10, VisitsAwarder());
+            new Badge("SilverVisitor", "Visitor II", BadgeLevel.Silver, 10, VisitsAwarder());
 
         public static readonly Badge GoldVisitor =
-            new Badge("GoldVisitor", "Visitor III", BadgeLevel.Gold, 20, 20, VisitsAwarder());
+            new Badge("GoldVisitor", "Visitor III", BadgeLevel.Gold, 20, VisitsAwarder());
         
         public IEnumerable<Badge> GetBadges()
         {

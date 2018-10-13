@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Plato.Badges.Services
@@ -10,7 +8,7 @@ namespace Plato.Badges.Services
         IEnumerable<TBadge> GetBadges();
 
         Task<IDictionary<string, IEnumerable<TBadge>>> GetCategorizedBadgesAsync();
-        }
 
+    }
 
 }

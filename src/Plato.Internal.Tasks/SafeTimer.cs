@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Internal.Tasks
 {
     
-  
     public class SafeTimer : SafeTimerBase, ISafeTimer
     {
 
@@ -96,7 +93,7 @@ namespace Plato.Internal.Tasks
             }
             catch
             {
-
+                // ignored
             }
             finally
             {

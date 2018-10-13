@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Badges.Models;
@@ -20,22 +21,17 @@ namespace Plato.Badges.Services
 
         private readonly IServiceProvider _serviceProvider;
         private readonly IBadgesManager<Badge> _badgesManager;
-        private readonly IBackgroundTaskManager _backgroundTaskManager;
-        private readonly IDbContext _dbContext;
         private readonly ILogger<BadgeAwarderInvoker> _logger;
         private readonly IServiceCollection _applicationServices;
 
         public BadgeAwarderInvoker(
-            IBackgroundTaskManager backgroundTaskManager,
             IBadgesManager<Badge> badgesManager, 
             ILogger<BadgeAwarderInvoker> logger,
-            IDbContext dbContext,
             IServiceCollection applicationServices,
             IServiceProvider serviceProvider)
         {
-            _backgroundTaskManager = backgroundTaskManager;
+   
             _badgesManager = badgesManager;
-            _dbContext = dbContext;
             _applicationServices = applicationServices;
             _serviceProvider = serviceProvider;
             _logger = logger;
@@ -52,11 +48,12 @@ namespace Plato.Badges.Services
             {
                 return;
             }
-
+            
+            // Expose all registered services with our badge awarder
             var clonedServices = _serviceProvider.CreateChildContainer(_applicationServices);
             var context = new AwarderContext(clonedServices.BuildServiceProvider());
         
-            // Iterate badges invoking each badge awarder
+            // Iterate badges invoking each badge awarder delegate
             foreach (var badge in badges)
             {
                 context.Badge = badge;

@@ -65,6 +65,16 @@ namespace Plato.Badges.Models
             string description,
             BadgeLevel level,
             int threshold,
+            Action<AwarderContext> awarder) : this(name, description, level, threshold)
+        {
+            this.Awarder = awarder;
+        }
+
+        public Badge(
+            string name,
+            string description,
+            BadgeLevel level,
+            int threshold,
             int bonusPoints,
             Action<AwarderContext> awarder) : this(name, description, level, threshold, bonusPoints)
         {
