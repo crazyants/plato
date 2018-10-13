@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,7 @@ namespace Plato.Badges.Services
     public class BadgesManager<TBadge> : IBadgesManager<TBadge> where TBadge : class, IBadge
     {
 
-        private IEnumerable<TBadge> _permissions;
+        private IEnumerable<TBadge> _badges;
 
         private readonly IAuthorizationService _authorizationService;
         private readonly IEnumerable<IBadgeProvider<TBadge>> _providers;
@@ -32,12 +33,59 @@ namespace Plato.Badges.Services
 
         public IEnumerable<TBadge> GetBadges()
         {
-            throw new NotImplementedException();
+            if (_badges == null)
+            {
+                var badges = new List<TBadge>();
+                foreach (var provider in _providers)
+                {
+                    try
+                    {
+                        badges.AddRange(provider.GetBadges());
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e,
+                            $"An exception occurred within the badge provider '{this.GetType()}'. Please review your badge provider and try again. {e.Message}");
+                        throw;
+                    }
+                }
+
+                _badges = badges;
+            }
+
+            return _badges;
         }
 
-        public Task<IDictionary<string, IEnumerable<TBadge>>> GetCategorizedBadgesAsync()
+        public async Task<IDictionary<string, IEnumerable<TBadge>>> GetCategorizedBadgesAsync()
         {
-            throw new NotImplementedException();
+
+            var output = new Dictionary<string, IEnumerable<TBadge>>();
+            foreach (var provider in _providers)
+            {
+
+                var module = await _typedModuleProvider.GetModuleForDependency(provider.GetType());
+                var name = module.Descriptor.Name;
+                var badges = provider.GetBadges();
+                foreach (var badge in badges)
+                {
+                    var category = badge.ModuleId;
+                    var title = String.IsNullOrWhiteSpace(category) ?
+                        name :
+                        category;
+
+                    if (output.ContainsKey(title))
+                    {
+                        output[title] = output[title].Concat(new[] { badge });
+                    }
+                    else
+                    {
+                        output.Add(title, new[] { badge });
+                    }
+                }
+            }
+
+            return output;
+
         }
     }
 }

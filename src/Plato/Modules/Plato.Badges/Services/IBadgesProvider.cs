@@ -5,7 +5,7 @@ using Plato.Badges.Models;
 
 namespace Plato.Badges.Services
 {
-    public interface IBadgeProvider<TBadge> where TBadge : class, IBadge
+    public interface IBadgesProvider<TBadge> where TBadge : class, IBadge
     {
         IEnumerable<TBadge> GetBadges();
 
