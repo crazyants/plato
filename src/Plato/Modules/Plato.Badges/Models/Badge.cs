@@ -1,11 +1,14 @@
 ﻿using System;
-using Plato.Badges.Services;
 
 namespace Plato.Badges.Models
 {
 
     public class Badge : IBadge
     {
+
+        // Globally multiply the default thredhold and bounus points for all badges
+        private static readonly int ThresholdMultiplier = 1;
+        private static readonly int BonusPointsMultiplier = 1;
 
         public string ModuleId { get; set; }
 
@@ -47,7 +50,7 @@ namespace Plato.Badges.Models
             BadgeLevel level,
             int threshold) : this(name, description, level)
         {
-            this.Threshold = threshold;
+            this.Threshold = threshold * ThresholdMultiplier;
         }
 
         public Badge(
@@ -57,7 +60,16 @@ namespace Plato.Badges.Models
             int threshold,
             int bonusPoints) : this(name, description, level, threshold)
         {
-            this.BonusPoints = bonusPoints;
+            this.BonusPoints = bonusPoints * BonusPointsMultiplier;
+        }
+
+        public Badge(
+            string name,
+            string description,
+            BadgeLevel level,
+            Action<AwarderContext> awarder) : this(name, description, level)
+        {
+            this.Awarder = awarder;
         }
 
         public Badge(

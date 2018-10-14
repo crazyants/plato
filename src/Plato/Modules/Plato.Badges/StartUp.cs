@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Badges.Handlers;
 using Plato.Badges.Models;
+using Plato.Badges.Providers;
 using Plato.Badges.Repositories;
 using Plato.Badges.Services;
 using Plato.Badges.Stores;
@@ -38,8 +39,8 @@ namespace Plato.Badges
             services.AddScoped<IBadgesManager<Badge>, BadgesManager<Badge>>();
             services.AddScoped<IBadgeAwarderInvoker, BadgeAwarderInvoker>();
 
-            // Badge provider
-            services.AddScoped<IBadgesProvider<Badge>, Badges>();
+            // Badge providers
+            services.AddScoped<IBadgesProvider<Badge>, VisitBadges>();
 
         }
 

@@ -8,23 +8,46 @@ using Plato.Badges.Services;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
 
-namespace Plato.Badges
+namespace Plato.Badges.Providers
 {
-    public class Badges : IBadgesProvider<Badge>
+    public class VisitBadges : IBadgesProvider<Badge>
     {
 
+        public static readonly Badge NewMember =
+            new Badge("NewMember", "New Member", BadgeLevel.Bronze, Awarder());
+        
+        public static readonly Badge BronzeVisitor =
+            new Badge("BronzeVisitor", "Visitor I", BadgeLevel.Bronze, 10, 10, Awarder());
 
-        private static Action<AwarderContext> VisitsAwarder()
+        public static readonly Badge SilverVisitor =
+            new Badge("SilverVisitor", "Visitor II", BadgeLevel.Silver, 50, 20, Awarder());
+
+        public static readonly Badge GoldVisitor =
+            new Badge("GoldVisitor", "Visitor III", BadgeLevel.Gold, 100, 30, Awarder());
+        
+        public IEnumerable<Badge> GetBadges()
+        {
+            return new[]
+            {
+                NewMember,
+                BronzeVisitor,
+                SilverVisitor,
+                GoldVisitor
+            };
+
+        }
+
+        private static Action<AwarderContext> Awarder()
         {
             return (context) =>
             {
 
-                 var dbContextOptions = context.ServiceProvider.GetRequiredService<IOptions<DbContextOptions>>();
+                var dbContext = context.ServiceProvider.GetRequiredService<IDbContext>();
+                var dbContextOptions = context.ServiceProvider.GetRequiredService<IOptions<DbContextOptions>>();
                 var backgroundTaskManager = context.ServiceProvider.GetRequiredService<IBackgroundTaskManager>();
 
-                // select users who don't have this badge 
+                // select users who don't have the badge 
                 // but meet the requirements and award the badge
-
                 var sql = @"
                     DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
                     DECLARE @badgeName nvarchar(255) = '{name}';
@@ -50,57 +73,20 @@ namespace Plato.Badges
                 sql = sql.Replace("{name}", context.Badge.Name);
                 sql = sql.Replace("{threshold}", context.Badge.Threshold.ToString());
                 sql = sql.Replace("{prefix}_", dbContextOptions.Value.TablePrefix);
-         
-                //using (var scope = serviceProvider.CreateScope())
-                //{
-                //}
-                
+
+                // Start task to execute awarder SQL every X seconds
                 backgroundTaskManager.Start(async (sender, args) =>
                 {
-                    var dbContext = context.ServiceProvider.GetRequiredService<IDbContext>();
                     using (var db = dbContext)
                     {
                         await db.ExecuteScalarAsync<int>(CommandType.Text, sql);
                     }
+                }, 60 * 1000);
 
-                }, 2000);
-
-            };
-        }
-        
-        public static readonly Badge BronzeVisitor =
-            new Badge("BronzeVisitor", "Visitor I", BadgeLevel.Bronze, 1, VisitsAwarder());
-
-        public static readonly Badge SilverVisitor =
-            new Badge("SilverVisitor", "Visitor II", BadgeLevel.Silver, 10, VisitsAwarder());
-
-        public static readonly Badge GoldVisitor =
-            new Badge("GoldVisitor", "Visitor III", BadgeLevel.Gold, 20, VisitsAwarder());
-        
-        public IEnumerable<Badge> GetBadges()
-        {
-            return new[]
-            {
-                BronzeVisitor,
-                SilverVisitor,
-                GoldVisitor
             };
 
         }
-
-        public IEnumerable<DefaultBadges<Badge>> GetDefaultBadges()
-        {
-            return new[]
-            {
-                new DefaultBadges<Badge>
-                {
-                    Feature = "Plato.Badges",
-                    Badges = GetBadges()
-                }
-            };
-        }
         
-
     }
 
 }

@@ -8,9 +8,7 @@ namespace Plato.Badges.Services
     public interface IBadgesProvider<TBadge> where TBadge : class, IBadge
     {
         IEnumerable<TBadge> GetBadges();
-
-        IEnumerable<DefaultBadges<TBadge>> GetDefaultBadges();
-        
+ 
     }
 
 }

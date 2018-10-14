@@ -53,7 +53,7 @@ namespace Plato.Badges.Services
             var clonedServices = _serviceProvider.CreateChildContainer(_applicationServices);
             var context = new AwarderContext(clonedServices.BuildServiceProvider());
         
-            // Iterate badges invoking each badge awarder delegate
+            // Iterate badges invoking each badge awarder action delegate
             foreach (var badge in badges)
             {
                 context.Badge = badge;
