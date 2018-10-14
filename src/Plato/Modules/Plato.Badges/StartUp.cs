@@ -8,9 +8,12 @@ using Plato.Badges.Providers;
 using Plato.Badges.Repositories;
 using Plato.Badges.Services;
 using Plato.Badges.Stores;
+using Plato.Badges.ViewProviders;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Badges
 {
@@ -41,6 +44,10 @@ namespace Plato.Badges
 
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, VisitBadges>();
+            
+            // Profile view proviers
+            services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
+            services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
 
         }
 

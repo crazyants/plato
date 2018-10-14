@@ -1,4 +1,8 @@
-﻿.transition { transition: all 0.15s ease-out; }
+﻿/* ------------------------- */
+/* Helpers */
+/* ------------------------- */
+
+.transition { transition: all 0.15s ease-out; }
 .transition-2x { transition: all 0.20s ease-out; }
 .transition-3x { transition: all 0.25s ease-out; }
 .transition-4x { transition: all 0.30s ease-out; }
@@ -967,3 +971,47 @@
 
 /* default labels */
 .label { background-color: #E4ECF5; color: #007bff; }
+
+/* ------------------------- */
+/* badges */
+/* ------------------------- */
+
+.badges-list {
+    display: inline-block;
+    min-width: 150px; 
+    text-align: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.badges-list li {
+    width: 33.333333%;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+.badge-header { font-weight: bold; color: white; }
+
+.badge { float: left; overflow: hidden; width: 100%; position: relative; text-align: center; }
+.badge .badge-bg { font-size: 40pt; margin-top: -6px; }
+.badge .badge-icon { font-size: 16pt; z-index: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -75%); }
+
+.badge-header-gold { background: #B5C400; border-bottom: 1px solid #9DAC00; }
+.badge-gold  .badge-bg { color: #E9F000; }
+.badge-gold  .badge-icon {
+    color: rgba(0, 0, 0, 0.3);
+}
+
+.badge-header-silver { background: #7A7976; border-bottom: 1px solid #62615E; }
+.badge-silver .badge-bg { color: #A8A6A3; }
+.badge-silver .badge-icon {
+    color: rgba(0, 0, 0, 0.3);
+}
+
+.badge-header-bronze { background: #9B9000; border-bottom: 1px solid #837800; }
+.badge-bronze .badge-bg {  color: #D0BA00; }
+.badge-bronze .badge-icon {
+    color: rgba(0, 0, 0, 0.3);
+}

@@ -39,6 +39,10 @@ namespace Plato.Badges.Providers
 
         private static Action<AwarderContext> Awarder()
         {
+
+            // select users who don't have the badge but meet
+            // the badge requirements and award the badge
+
             return (context) =>
             {
 
@@ -46,8 +50,6 @@ namespace Plato.Badges.Providers
                 var dbContextOptions = context.ServiceProvider.GetRequiredService<IOptions<DbContextOptions>>();
                 var backgroundTaskManager = context.ServiceProvider.GetRequiredService<IBackgroundTaskManager>();
 
-                // select users who don't have the badge 
-                // but meet the requirements and award the badge
                 var sql = @"
                     DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
                     DECLARE @badgeName nvarchar(255) = '{name}';
@@ -76,12 +78,13 @@ namespace Plato.Badges.Providers
 
                 // Start task to execute awarder SQL every X seconds
                 backgroundTaskManager.Start(async (sender, args) =>
-                {
-                    using (var db = dbContext)
                     {
-                        await db.ExecuteScalarAsync<int>(CommandType.Text, sql);
-                    }
-                }, 60 * 1000);
+                        using (var db = dbContext)
+                        {
+                            // It's safe to use regular SQL here as no user input is supplied
+                            await db.ExecuteScalarAsync<int>(CommandType.Text, sql);
+                        }
+                    }, 60 * 1000);
 
             };
 
