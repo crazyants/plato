@@ -7,8 +7,8 @@ namespace Plato.Badges.Models
     {
 
         // Globally multiply the default thredhold and bounus points for all badges
-        private static readonly int ThresholdMultiplier = 1;
-        private static readonly int BonusPointsMultiplier = 1;
+        private static readonly int ThresholdMultiplier = 0;
+        private static readonly int BonusPointsMultiplier = 0;
 
         public string ModuleId { get; set; }
 

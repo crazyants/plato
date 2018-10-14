@@ -33,10 +33,14 @@ namespace Plato.Users.Badges
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, VisitBadges>();
 
-            // Profile view proviers
+            // User profile view proviers
             services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
             services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
-            
+
+            // Badge view proviers
+            services.AddScoped<IViewProviderManager<UserBadge>, ViewProviderManager<UserBadge>>();
+            services.AddScoped<IViewProvider<UserBadge>, UserBadgeViewProvider>();
+
         }
 
         public override void Configure(

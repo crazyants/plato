@@ -1,4 +1,4 @@
-﻿@model UserBadgesViewModel
+﻿@model UserBadgesIndexViewModel
 
 <div class="text-center">
     
@@ -35,6 +35,10 @@
             </div>
         </li>
     </ul>
+    <br/>
+    <a asp-route-area="Plato.Users.Badges" asp-route-controller="Home" asp-route-action="Index" asp-route-alias="@Model.User.Alias" asp-route-id="@Model.User.Id">
+        @T["All Badges"]
+    </a>
+
 </div>
-  
   
