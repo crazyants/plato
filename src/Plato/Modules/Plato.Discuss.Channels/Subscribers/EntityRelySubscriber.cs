@@ -109,7 +109,7 @@ namespace Plato.Discuss.Channels.Subscribers
             foreach (var parent in parents)
             {
 
-                // Update details with latest entity details
+                // Update channel with latest entity details
                 var details = parent.GetOrCreate<ChannelDetails>();
                 details.TotalReplies = details.TotalReplies + 1;
                 details.LastPost.EntityId = reply.EntityId;

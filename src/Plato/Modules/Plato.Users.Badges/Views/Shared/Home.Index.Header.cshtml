@@ -1,7 +1,14 @@
 ﻿@model UserBadgesIndexViewModel
 
+@{
+    var badgesList = Model.Badges.ToList();
+    var badgesText = badgesList.Count == 1 
+        ? "badge" 
+        : "badges";
+}
+
 <h4>@T["Badges"]</h4>
 <div class="text-muted">
-    @T["XXXXXXXXXXX has earned XXXXX badges!"]
+    @Model.User.DisplayName @T["has earned"] @badgesList.Count @T[badgesText]
 </div>
 <hr />

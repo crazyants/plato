@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Badges.Models;
@@ -63,7 +62,7 @@ namespace Plato.Badges.Stores
 
         private WhereInt _id;
         private WhereString _badgeName;
-
+        private WhereInt _userId;
 
         public WhereInt Id
         {
@@ -77,6 +76,11 @@ namespace Plato.Badges.Stores
             set => _badgeName = value;
         }
 
+        public WhereInt UserId
+        {
+            get => _userId ?? (_userId = new WhereInt());
+            set => _userId = value;
+        }
 
     }
 
@@ -88,16 +92,15 @@ namespace Plato.Badges.Stores
     {
         #region "Constructor"
 
-        private readonly string _UserBadgesTableName;
-        private readonly string _usersTableName;
-
+        private readonly string _userBadgesTableName;
+  
         private readonly UserBadgeQuery _query;
 
         public UserBadgeQueryBuilder(UserBadgeQuery query)
         {
             _query = query;
-            _UserBadgesTableName = GetTableNameWithPrefix("UserBadges");
-            _usersTableName = GetTableNameWithPrefix("Users");
+            _userBadgesTableName = GetTableNameWithPrefix("UserBadges");
+        
 
         }
 
@@ -110,7 +113,7 @@ namespace Plato.Badges.Stores
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = m.Id FROM ")
+            sb.Append("SELECT @start_id_out = ub.Id FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -142,7 +145,7 @@ namespace Plato.Badges.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(m.Id) FROM ")
+            sb.Append("SELECT COUNT(ub.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -152,13 +155,7 @@ namespace Plato.Badges.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("m.*, ")
-                .Append("u.UserName,")
-                .Append("u.DisplayName,")
-                .Append("u.FirstName,")
-                .Append("u.LastName,")
-                .Append("u.Alias");
-
+            sb.Append("ub.*");
             return sb.ToString();
 
         }
@@ -168,14 +165,9 @@ namespace Plato.Badges.Stores
 
             var sb = new StringBuilder();
 
-            sb.Append(_UserBadgesTableName)
-                .Append(" m ");
-
-            // join users to obtain simple UserBadge details
-            sb.Append("LEFT OUTER JOIN ")
-                .Append(_usersTableName)
-                .Append(" u ON m.UserId = u.Id ");
-
+            sb.Append(_userBadgesTableName)
+                .Append(" ub ");
+           
             return sb.ToString();
 
         }
@@ -196,13 +188,13 @@ namespace Plato.Badges.Stores
             var sb = new StringBuilder();
             // default to ascending
             if (_query.SortColumns.Count == 0)
-                sb.Append("m.Id >= @start_id_in");
+                sb.Append("ub.Id >= @start_id_in");
             // set start operator based on first order by
             foreach (var sortColumn in _query.SortColumns)
             {
                 sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "m.Id <= @start_id_in"
-                    : "m.Id >= @start_id_in");
+                    ? "ub.Id <= @start_id_in"
+                    : "ub.Id >= @start_id_in");
                 break;
             }
 
@@ -229,10 +221,25 @@ namespace Plato.Badges.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("m.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("ub.Id"));
+            }
+            
+            // BadgeName
+            if (!String.IsNullOrEmpty(_query.Params.BadgeName.Value) )
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.BadgeName.Operator);
+                sb.Append(_query.Params.Id.ToSqlString("BadgeName"));
             }
 
-
+            // UserId
+            if (_query.Params.UserId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Id.Operator);
+                sb.Append(_query.Params.UserId.ToSqlString("UserId"));
+            }
+            
             return sb.ToString();
 
         }
@@ -247,7 +254,7 @@ namespace Plato.Badges.Stores
 
             return columnName.IndexOf('.') >= 0
                 ? columnName
-                : "m." + columnName;
+                : "ub." + columnName;
         }
 
         private string BuildOrderBy()
