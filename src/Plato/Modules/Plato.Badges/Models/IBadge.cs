@@ -9,6 +9,10 @@
 
         string Description { get; set; }
 
+        string BackgroundIconCss { get; set; }
+
+        string IconCss { get; set; }
+
         int Threshold { get; set; }
 
         int BonusPoints { get; set; }

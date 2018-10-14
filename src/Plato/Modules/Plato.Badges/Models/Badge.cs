@@ -7,8 +7,9 @@ namespace Plato.Badges.Models
     {
 
         // Globally multiply the default thredhold and bounus points for all badges
-        private static readonly int ThresholdMultiplier = 0;
-        private static readonly int BonusPointsMultiplier = 0;
+        // Default value should be set to 1 increase the accomodate requirements
+        private static readonly int ThresholdMultiplier = 1;
+        private static readonly int BonusPointsMultiplier = 1;
 
         public string ModuleId { get; set; }
 
@@ -16,6 +17,10 @@ namespace Plato.Badges.Models
 
         public string Description { get; set; }
 
+        public string BackgroundIconCss { get; set; } = "fas fa-bookmark";
+
+        public string IconCss { get; set; } = "fal fa-star";
+        
         public int Threshold { get; set; }
 
         public int BonusPoints { get; set; }
@@ -36,12 +41,51 @@ namespace Plato.Badges.Models
             this.Description = description;
         }
 
+
+        public Badge(
+            string name,
+            string description,
+            string backgroundIconCss) : this(name, description)
+        {
+            this.BackgroundIconCss = backgroundIconCss;
+        }
+
+        public Badge(
+            string name,
+            string description,
+            string backgroundIconCss,
+            string iconCss) : this(name, description, backgroundIconCss)
+        {
+            this.IconCss = iconCss;
+        }
+
+        public Badge(
+            string name,
+            string description,
+            string backgroundIconCss,
+            string iconCss,
+            BadgeLevel level) : this(name, description, backgroundIconCss, iconCss)
+        {
+            this.Level = level;
+        }
+
         public Badge(
             string name,
             string description,
             BadgeLevel level) : this(name, description)
         {
             this.Level = level;
+        }
+
+        public Badge(
+            string name,
+            string description,
+            string backgroundIconCss,
+            string iconCss,
+            BadgeLevel level,
+            int threshold) : this(name, description, backgroundIconCss, iconCss, level)
+        {
+            this.Threshold = threshold * ThresholdMultiplier;
         }
 
         public Badge(
@@ -56,11 +100,34 @@ namespace Plato.Badges.Models
         public Badge(
             string name,
             string description,
+            string backgroundIconCss,
+            string iconCss,
+            BadgeLevel level,
+            int threshold,
+            int bonusPoints) : this(name, description, backgroundIconCss, iconCss, level, threshold)
+        {
+            this.BonusPoints = bonusPoints * BonusPointsMultiplier;
+        }
+        
+        public Badge(
+            string name,
+            string description,
             BadgeLevel level,
             int threshold,
             int bonusPoints) : this(name, description, level, threshold)
         {
             this.BonusPoints = bonusPoints * BonusPointsMultiplier;
+        }
+
+        public Badge(
+            string name,
+            string description,
+            string backgroundIconCss,
+            string iconCss,
+            BadgeLevel level,
+            Action<AwarderContext> awarder) : this(name, description, backgroundIconCss, iconCss, level)
+        {
+            this.Awarder = awarder;
         }
 
         public Badge(
@@ -75,12 +142,49 @@ namespace Plato.Badges.Models
         public Badge(
             string name,
             string description,
+            string iconCss,
+            BadgeLevel level,
+            Action<AwarderContext> awarder) : this(name, description, "fas fa-bookmark", iconCss, level)
+        {
+            this.Awarder = awarder;
+        }
+
+
+        public Badge(
+            string name,
+            string description,
             BadgeLevel level,
             int threshold,
             Action<AwarderContext> awarder) : this(name, description, level, threshold)
         {
             this.Awarder = awarder;
         }
+
+        public Badge(
+            string name,
+            string description,
+            string backgroundIconCss,
+            string iconCss,
+            BadgeLevel level,
+            int threshold,
+            int bonusPoints,
+            Action<AwarderContext> awarder) : this(name, description, backgroundIconCss, iconCss, level, threshold, bonusPoints)
+        {
+            this.Awarder = awarder;
+        }
+
+        public Badge(
+            string name,
+            string description,
+            string iconCss,
+            BadgeLevel level,
+            int threshold,
+            int bonusPoints,
+            Action<AwarderContext> awarder) : this(name, description, "fas fa-bookmark", iconCss, level, threshold, bonusPoints)
+        {
+            this.Awarder = awarder;
+        }
+
 
         public Badge(
             string name,

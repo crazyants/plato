@@ -1,44 +1,50 @@
-﻿@model UserBadgesIndexViewModel
+﻿@using Plato.Badges.Models
+@model UserBadgesIndexViewModel
+
+@{
+var badgesList = Model.Badges.ToList();
+    var badgesText = badgesList.Count == 1
+        ? "badge"
+        : "badges";
+}
 
 <div class="text-center">
-    
     <div class="form-group">
-        145 reputation, 85 badges
+        145 reputation, @badgesList.Count @T[badgesText]
     </div>
     <ul class="badges-list">
         <li data-toggle="tooltip" title="@T["Gold Badges"]">
 
             <div class="badge-header badge-header-gold">
-                12
+                @Model.Badges.Where(b => b.Level == BadgeLevel.Gold).ToList().Count
             </div>
-            <div class="badge badge-gold">
+            <div class="badge badge-sm badge-gold">
                 <i class="fas fa-bookmark badge-bg"></i>
                 <i class="fal badge-icon"></i>
             </div>
         </li>
         <li data-toggle="tooltip" title="@T["Silver Badges"]">
             <div class="badge-header badge-header-silver">
-                26
+                @Model.Badges.Where(b => b.Level == BadgeLevel.Silver).ToList().Count
             </div>
-            <div class="badge badge-silver">
+            <div class="badge badge-sm badge-silver">
                 <i class="fas fa-bookmark badge-bg"></i>
                 <i class="fal badge-icon"></i>
             </div>
         </li>
         <li data-toggle="tooltip" title="@T["Bronze Badges"]">
             <div class="badge-header badge-header-bronze">
-                48
+                @Model.Badges.Where(b => b.Level == BadgeLevel.Bronze).ToList().Count
             </div>
-            <div class="badge badge-bronze">
+            <div class="badge badge-sm badge-bronze">
                 <i class="fas fa-bookmark badge-bg"></i>
                 <i class="fal badge-icon"></i>
             </div>
         </li>
     </ul>
-    <br/>
+    <br />
     <a asp-route-area="Plato.Users.Badges" asp-route-controller="Home" asp-route-action="Index" asp-route-alias="@Model.User.Alias" asp-route-id="@Model.User.Id">
         @T["All Badges"]
     </a>
-
 </div>
-  
+

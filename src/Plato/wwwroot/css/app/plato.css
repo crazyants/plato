@@ -493,7 +493,7 @@
 /* Plato Layout */
 /* ------------------------- */
 
-.layout { margin-bottom: 2rem; }
+
 .layout-content .card,
 .layout-sidebar .card { margin-bottom: 1.25rem; }
 
@@ -995,8 +995,10 @@
 .badge-header { font-weight: bold; color: white; }
 
 .badge { float: left; overflow: hidden; width: 100%; position: relative; text-align: center; }
-.badge .badge-bg { font-size: 40pt; margin-top: -6px; }
-.badge .badge-icon { font-size: 16pt; z-index: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -75%); }
+.badge .badge-bg { font-size: 50pt; margin-top: -6px; }
+.badge .badge-icon { font-size: 24pt; z-index: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -80%); }
+
+.badge.badge-sm .badge-bg { font-size: 30pt; }
 
 .badge-header-gold { background: #B5C400; border-bottom: 1px solid #9DAC00; }
 .badge-gold  .badge-bg { color: #E9F000; }

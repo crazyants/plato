@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Badges.Models;
 using Plato.Badges.Repositories;
+using Plato.Badges.Services;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 
@@ -16,17 +19,20 @@ namespace Plato.Badges.Stores
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<UserBadgeStore> _logger;
+        private readonly IBadgesManager<Badge> _badgesManager;
 
         public UserBadgeStore(
             IUserBadgeRepository<UserBadge> userBadgeRepository,
             IDbQueryConfiguration dbQuery,
             ICacheManager cacheManager,
-            ILogger<UserBadgeStore> logger)
+            ILogger<UserBadgeStore> logger,
+            IBadgesManager<Badge> badgesManager)
         {
             _userBadgeRepository = userBadgeRepository;
             _dbQuery = dbQuery;
             _cacheManager = cacheManager;
             _logger = logger;
+            _badgesManager = badgesManager;
         }
 
         public async Task<UserBadge> CreateAsync(UserBadge model)
@@ -115,6 +121,45 @@ namespace Plato.Badges.Stores
                 return await _userBadgeRepository.SelectAsync(args);
 
             });
+        }
+
+        public async Task<IEnumerable<Badge>> GetUserBadgesAsync(int userId)
+        {
+            var badges = _badgesManager.GetBadges();
+            if (badges == null)
+            {
+                return null;
+            }
+
+            var badgesList = badges.ToList();
+            if (badgesList.Count == 0)
+            {
+                return null;
+            }
+
+            var userBadges = await QueryAsync()
+                .Select<UserBadgeQueryParams>(q =>
+                {
+                    q.UserId.Equals(userId);
+                })
+                .OrderBy("Id", OrderBy.Asc)
+                .ToList();
+          
+            var output = new List<Badge>();
+            if (userBadges != null)
+            {
+                foreach (var userBadge in userBadges.Data)
+                {
+                    var badge = badgesList.FirstOrDefault(b => b.Name.Equals(userBadge.BadgeName, StringComparison.OrdinalIgnoreCase));
+                    if (badge != null)
+                    {
+                        output.Add(badge);
+                    }
+                }
+            }
+          
+            return output.OrderBy(b => b.Level);
+
         }
 
     }

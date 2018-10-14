@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Badges.Models;
-using Plato.Badges.Services;
 using Plato.Badges.Stores;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -18,25 +13,19 @@ namespace Plato.Users.Badges.ViewProviders
 
         private readonly IUserBadgeStore<UserBadge> _userBadgeStore;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IBadgesManager<Badge> _badgesManager;
-
+   
         public UserBadgeViewProvider(
             IPlatoUserStore<User> platoUserStore, 
-            IUserBadgeStore<UserBadge> userBadgeStore,
-            IBadgesManager<Badge> badgesManager)
+            IUserBadgeStore<UserBadge> userBadgeStore)
         {
             _platoUserStore = platoUserStore;
             _userBadgeStore = userBadgeStore;
-            _badgesManager = badgesManager;
         }
 
         public override Task<IViewProviderResult> BuildDisplayAsync(UserBadge userProfile,
             IViewProviderContext context)
         {
-
             return Task.FromResult(default(IViewProviderResult));
-
-
         }
 
         public override async Task<IViewProviderResult> BuildIndexAsync(UserBadge badge, IViewProviderContext context)
@@ -47,11 +36,12 @@ namespace Plato.Users.Badges.ViewProviders
             {
                 return await BuildIndexAsync(badge, context);
             }
-            
+
+            var badges = await _userBadgeStore.GetUserBadgesAsync(user.Id);
             var viewModel = new UserBadgesIndexViewModel()
             {
                 User = user,
-                Badges = await GetBadgesAsync(user)
+                Badges = badges
             };
             
             return Views(
@@ -71,56 +61,6 @@ namespace Plato.Users.Badges.ViewProviders
         {
             return Task.FromResult(default(IViewProviderResult));
         }
-
-        async Task<IEnumerable<UserBadge>> GetUserBadgesAsync(int userId)
-        {
-            var results = await _userBadgeStore.QueryAsync()
-                .Select<UserBadgeQueryParams>(q =>
-                {
-                    q.UserId.Equals(userId);
-                })
-                .OrderBy("Id", OrderBy.Asc)
-                .ToList();
-            if (results?.Data != null)
-            {
-                return results.Data;
-            }
-            return new List<UserBadge>();
-        }
-
-       async Task<IEnumerable<Badge>> GetBadgesAsync(User user)
-        {
-
-            if (user == null)
-            {
-                return null;
-            }
-
-            var badges = _badgesManager.GetBadges();
-            if (badges == null)
-            {
-                return null;
-            }
-
-            var badgesList = badges.ToList();
-            if (badgesList.Count == 0)
-            {
-                return null;
-            }
-
-            var output = new List<Badge>();
-            foreach (var userBadge in await GetUserBadgesAsync(user.Id))
-            {
-                var badge = badgesList.FirstOrDefault(b => b.Name.Equals(userBadge.BadgeName, StringComparison.OrdinalIgnoreCase));
-                if (badge != null)
-                {
-                    output.Add(badge);
-                }
-            }
-           
-            return output;
-
-        }
-
+        
     }
 }

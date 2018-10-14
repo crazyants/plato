@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Plato.Badges.Models;
+using Plato.Badges.Stores;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -9,12 +11,15 @@ namespace Plato.Users.Badges.ViewProviders
     public class UserViewProvider : BaseViewProvider<UserProfile>
     {
 
+        private readonly IUserBadgeStore<UserBadge> _userBadgeStore;
         private readonly IPlatoUserStore<User> _platoUserStore;
         
         public UserViewProvider(
-            IPlatoUserStore<User> platoUserStore)
+            IPlatoUserStore<User> platoUserStore,
+            IUserBadgeStore<UserBadge> userBadgeStore)
         {
             _platoUserStore = platoUserStore;
+            _userBadgeStore = userBadgeStore;
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(UserProfile userProfile,
@@ -27,9 +32,11 @@ namespace Plato.Users.Badges.ViewProviders
                 return await BuildIndexAsync(userProfile, context);
             }
 
+            var badges = await _userBadgeStore.GetUserBadgesAsync(user.Id);
             var viewModel = new UserBadgesIndexViewModel()
             {
-                User = user
+                User = user,
+                Badges = badges
             };
 
             return Views(

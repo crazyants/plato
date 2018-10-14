@@ -1,2 +1,36 @@
 ﻿@model UserBadgesIndexViewModel
 
+@if (Model.Badges.Any())
+{
+    <div class="row text-center">
+        @foreach (var badge in Model.Badges)
+        {
+            <div class="col-3" data-toggle="tooltip" title="@badge.Name">
+                <div class="d-inline-block form-group">
+                    <div class="badge-header badge-header-@badge.Level.ToString().ToLower()">
+                        @badge.BonusPoints
+                    </div>
+                    <div class="badge badge-@badge.Level.ToString().ToLower()">
+                        <i class="@badge.BackgroundIconCss badge-bg"></i>
+                        <i class="@badge.IconCss badge-icon"></i>
+                    </div>
+                </div>
+                <br/>
+                <div class="d-inline-block">
+                    <h6>@badge.Name</h6>
+                    <span class="text-muted">
+                        @badge.Description
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <span class="text-muted">
+        @T["No badges awarded"]
+    </span>
+}
+
+
