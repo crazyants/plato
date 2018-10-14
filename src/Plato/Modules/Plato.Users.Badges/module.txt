@@ -1,0 +1,14 @@
+Name: Plato User Badges
+Description: Adds functionality to award users badges for contributions and participations.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Core
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Badges",
+		Version: "1.0.0"
+	}
+]

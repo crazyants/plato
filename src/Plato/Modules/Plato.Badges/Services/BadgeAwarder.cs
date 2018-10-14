@@ -1,43 +1,33 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Badges.Models;
-using Plato.Badges.Services;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Shell.Extensions;
-using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Badges.Services
 {
-
-    public interface IBadgeAwarderInvoker
-    {
-        void Invoke();
-    }
-
-    public class BadgeAwarderInvoker : IBadgeAwarderInvoker
+    
+    public class BadgeAwarder : IBadgeAwarder
     {
 
         private readonly IServiceProvider _serviceProvider;
         private readonly IBadgesManager<Badge> _badgesManager;
-        private readonly ILogger<BadgeAwarderInvoker> _logger;
+        private readonly ILogger<BadgeAwarder> _logger;
         private readonly IServiceCollection _applicationServices;
 
-        public BadgeAwarderInvoker(
+        public BadgeAwarder(
             IBadgesManager<Badge> badgesManager, 
-            ILogger<BadgeAwarderInvoker> logger,
+            ILogger<BadgeAwarder> logger,
             IServiceCollection applicationServices,
             IServiceProvider serviceProvider)
         {
-   
             _badgesManager = badgesManager;
             _applicationServices = applicationServices;
             _serviceProvider = serviceProvider;
             _logger = logger;
         }
 
-        public void Invoke()
+        public void StartAwarding()
         {
 
             // Get all registered basges
@@ -49,15 +39,32 @@ namespace Plato.Badges.Services
                 return;
             }
             
-            // Expose all registered services with our badge awarder
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Starting badge awarders.");
+            }
+
+            // Expose all registered services to the AwarderContext
             var clonedServices = _serviceProvider.CreateChildContainer(_applicationServices);
             var context = new AwarderContext(clonedServices.BuildServiceProvider());
         
-            // Iterate badges invoking each badge awarder action delegate
+            // Iterate badges invoking each badge awarder delegate
             foreach (var badge in badges)
             {
                 context.Badge = badge;
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation($"Invoking awarder for badge {badge.Name}.");
+                }
+
                 badge.Awarder?.Invoke(context);
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation($"Awarder for badge {badge.Name} has been registered.");
+                }
+
             }
             
         }

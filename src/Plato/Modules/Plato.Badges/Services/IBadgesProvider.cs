@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Plato.Badges.Models;
 
 namespace Plato.Badges.Services
 {
-    public interface IBadgesProvider<TBadge> where TBadge : class, IBadge
+    public interface IBadgesProvider<out TBadge> where TBadge : class, IBadge
     {
         IEnumerable<TBadge> GetBadges();
  

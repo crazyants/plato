@@ -165,6 +165,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Emails.Abstr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Badges", "src\Plato\Modules\Plato.Badges\Plato.Badges.csproj", "{C37CB751-7A84-4622-873B-62D7610C9F8B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Users.Badges", "src\Plato\Modules\Plato.Users.Badges\Plato.Users.Badges.csproj", "{73F39036-57B9-47FE-9769-DE8DE2CE8C93}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -467,6 +469,10 @@ Global
 		{C37CB751-7A84-4622-873B-62D7610C9F8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C37CB751-7A84-4622-873B-62D7610C9F8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C37CB751-7A84-4622-873B-62D7610C9F8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73F39036-57B9-47FE-9769-DE8DE2CE8C93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73F39036-57B9-47FE-9769-DE8DE2CE8C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73F39036-57B9-47FE-9769-DE8DE2CE8C93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73F39036-57B9-47FE-9769-DE8DE2CE8C93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -548,6 +554,7 @@ Global
 		{C0BF3283-335B-46A8-A7A8-A46BFC7C3141} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{0BB8BFA9-3F72-4B68-B656-C4F681CD9769} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 		{C37CB751-7A84-4622-873B-62D7610C9F8B} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{73F39036-57B9-47FE-9769-DE8DE2CE8C93} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

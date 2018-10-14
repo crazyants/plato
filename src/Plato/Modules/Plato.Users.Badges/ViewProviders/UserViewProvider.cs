@@ -1,12 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plato.Badges.ViewModels;
+﻿using System.Threading.Tasks;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Users.Badges.ViewModels;
 
-namespace Plato.Badges.ViewProviders
+namespace Plato.Users.Badges.ViewProviders
 {
     public class UserViewProvider : BaseViewProvider<UserProfile>
     {
@@ -19,7 +17,8 @@ namespace Plato.Badges.ViewProviders
             _platoUserStore = platoUserStore;
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(UserProfile userProfile, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(UserProfile userProfile,
+            IViewProviderContext context)
         {
 
             var user = await _platoUserStore.GetByIdAsync(userProfile.Id);
@@ -28,15 +27,11 @@ namespace Plato.Badges.ViewProviders
                 return await BuildIndexAsync(userProfile, context);
             }
 
-            //var viewModel = new UserDisplayViewModel()
-            //{
-            //    User = user
-            //};
             var viewModel = new UserBadgesViewModel();
 
             return Views(
-                    View<UserBadgesViewModel>("Profile.Display.Sidebar", model => viewModel).Zone("sidebar").Order(2)
-                );
+                View<UserBadgesViewModel>("Profile.Display.Sidebar", model => viewModel).Zone("sidebar").Order(2)
+            );
 
         }
 
