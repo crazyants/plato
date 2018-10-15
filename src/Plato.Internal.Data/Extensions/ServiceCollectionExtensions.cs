@@ -18,7 +18,8 @@ namespace Plato.Internal.Data.Extensions
             services.AddScoped<IDbContextOptions, DbContextOptions>();
             services.AddSingleton<IConfigureOptions<DbContextOptions>, DbContextOptionsConfigure>();
             services.AddTransient<IDbContext, DbContext>();
-            
+            services.AddTransient<IDbHelper, DbHelper>();
+
             // Add schemas
             services.AddDataSchemas();
 

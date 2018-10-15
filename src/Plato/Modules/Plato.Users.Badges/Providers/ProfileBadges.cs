@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Badges.Models;
 using Plato.Badges.Services;
@@ -10,40 +11,23 @@ using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Users.Badges.Providers
 {
-    public class VisitBadges : IBadgesProvider<Badge>
+    public class ProfileBadges : IBadgesProvider<Badge>
     {
 
-        public static readonly Badge NewMember =
-            new Badge("New Comer", "Hi, I'm new here", "fal fa-drafting-compass", BadgeLevel.Bronze, Awarder());
-        
-        public static readonly Badge BronzeVisitor =
-            new Badge("Getting into this", "I'm starting to like this", "fal fa-heart", BadgeLevel.Bronze, 5, 10, Awarder());
+        public static readonly Badge ConfirmedMember =
+            new Badge("Confirmed", "I'm legit me", "fal fa-email", BadgeLevel.Bronze, ConfirmedAwarder());
 
-        public static readonly Badge SilverVisitor =
-            new Badge("I'm a regular here", "I can't kep away", "fal fa-heart", BadgeLevel.Silver, 10, 20, Awarder());
-
-        public static readonly Badge GoldVisitor =
-            new Badge("I may be obsessed", "I'm here all the time", "fal fa-heart", BadgeLevel.Gold, 20, 30, Awarder());
-        
         public IEnumerable<Badge> GetBadges()
         {
             return new[]
             {
-                NewMember,
-                BronzeVisitor,
-                SilverVisitor,
-                GoldVisitor
+                ConfirmedMember
             };
 
         }
-
-      
-        private static Action<AwarderContext> Awarder()
+        
+        private static Action<AwarderContext> ConfirmedAwarder()
         {
-
-            // select users who don't have the badge but meet
-            // the badge requirements and award the badge
-
             return (context) =>
             {
 
@@ -51,7 +35,7 @@ namespace Plato.Users.Badges.Providers
                 var backgroundTaskManager = context.ServiceProvider.GetRequiredService<IBackgroundTaskManager>();
                 var cacheManager = context.ServiceProvider.GetRequiredService<ICacheManager>();
                 var dbHelper = context.ServiceProvider.GetRequiredService<IDbHelper>();
-
+                
                 const string sql = @"
                     DECLARE @dirty bit = 0;
                     DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
@@ -59,12 +43,12 @@ namespace Plato.Users.Badges.Providers
                     DECLARE @threshold int = {threshold};                  
                     DECLARE @userId int;
                     DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 u.Id FROM {prefix}_Users AS u
-                    WHERE (u.TotalVisits >= @threshold)
+                    WHERE (u.EmailConfirmed = 1)
                     AND NOT EXISTS (
 		                     SELECT Id FROM {prefix}_UserBadges ub 
 		                     WHERE ub.UserId = u.Id AND ub.BadgeName = @badgeName
 	                    )
-                    ORDER BY u.TotalVisits DESC;
+                    ORDER BY u.Id DESC;
                     
                     OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
                     WHILE @@FETCH_STATUS = 0
@@ -76,7 +60,6 @@ namespace Plato.Users.Badges.Providers
                     CLOSE MSGCURSOR;
                     DEALLOCATE MSGCURSOR;
                     SELECT @dirty;";
-
 
                 // Replacements for SQL script
                 var replacements = new Dictionary<string, string>()
@@ -99,7 +82,8 @@ namespace Plato.Users.Badges.Providers
             };
 
         }
-        
+
     }
+
 
 }

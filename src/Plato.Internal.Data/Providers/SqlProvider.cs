@@ -109,6 +109,10 @@ namespace Plato.Internal.Data.Providers
             {
                 HandleException(ex);
             }
+            finally
+            {
+                Close();
+            }
 
             if (output != null)
             {
@@ -137,7 +141,11 @@ namespace Plato.Internal.Data.Providers
             {
                 HandleException(ex);
             }
-        
+            finally
+            {
+                Close();
+            }
+
 
             return output;
 
