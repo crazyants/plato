@@ -30,10 +30,10 @@ namespace Plato.Reputations.Services
         public void Invoke()
         {
 
-            // Get all registered reputations
+            // Get all registered reputation providers
             var reputations = _reputationsManager.GetReputations();
 
-            // We need reputations
+            // We need reputations to continue
             if (reputations == null)
             {
                 return;
@@ -48,7 +48,7 @@ namespace Plato.Reputations.Services
             var clonedServices = _serviceProvider.CreateChildContainer(_applicationServices);
             var context = new ReputationAwarderContext(clonedServices.BuildServiceProvider());
 
-            // Iterate reputations invoking each reputation awarder delegate
+            // Iterate provided reputations invoking each reputation awarder delegate
             foreach (var reputation in reputations)
             {
                 context.Reputation = reputation;

@@ -58,8 +58,7 @@ namespace Plato.Reputations.Stores
 
     public class UserReputationsQueryParams
     {
-
-
+        
         private WhereInt _id;
         private WhereString _reputationName;
         private WhereInt _userId;
@@ -92,16 +91,14 @@ namespace Plato.Reputations.Stores
     {
         #region "Constructor"
 
-        private readonly string _UserReputationssTableName;
+        private readonly string _userReputationssTableName;
 
         private readonly UserReputationQuery _query;
 
         public UserReputationsQueryBuilder(UserReputationQuery query)
         {
             _query = query;
-            _UserReputationssTableName = GetTableNameWithPrefix("UserReputationss");
-
-
+            _userReputationssTableName = GetTableNameWithPrefix("UserReputationss");
         }
 
         #endregion
@@ -113,7 +110,7 @@ namespace Plato.Reputations.Stores
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = ub.Id FROM ")
+            sb.Append("SELECT @start_id_out = ur.Id FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -145,7 +142,7 @@ namespace Plato.Reputations.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(ub.Id) FROM ")
+            sb.Append("SELECT COUNT(ur.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -155,21 +152,16 @@ namespace Plato.Reputations.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("ub.*");
+            sb.Append("ur.*");
             return sb.ToString();
-
         }
 
         string BuildTables()
         {
-
             var sb = new StringBuilder();
-
-            sb.Append(_UserReputationssTableName)
+            sb.Append(_userReputationssTableName)
                 .Append(" ub ");
-
             return sb.ToString();
-
         }
 
         #endregion
@@ -188,13 +180,13 @@ namespace Plato.Reputations.Stores
             var sb = new StringBuilder();
             // default to ascending
             if (_query.SortColumns.Count == 0)
-                sb.Append("ub.Id >= @start_id_in");
+                sb.Append("ur.Id >= @start_id_in");
             // set start operator based on first order by
             foreach (var sortColumn in _query.SortColumns)
             {
                 sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "ub.Id <= @start_id_in"
-                    : "ub.Id >= @start_id_in");
+                    ? "ur.Id <= @start_id_in"
+                    : "ur.Id >= @start_id_in");
                 break;
             }
 
@@ -221,7 +213,7 @@ namespace Plato.Reputations.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("ub.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("ur.Id"));
             }
 
             // ReputationName
@@ -254,7 +246,7 @@ namespace Plato.Reputations.Stores
 
             return columnName.IndexOf('.') >= 0
                 ? columnName
-                : "ub." + columnName;
+                : "ur." + columnName;
         }
 
         private string BuildOrderBy()

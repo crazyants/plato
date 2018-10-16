@@ -14,6 +14,7 @@ using Plato.Reputations.Stores;
 
 namespace Plato.Reputations
 {
+
     public class Startup : StartupBase
     {
         private readonly IShellSettings _shellSettings;
@@ -38,7 +39,8 @@ namespace Plato.Reputations
             // Services
             services.AddScoped<IReputationsManager<Reputation>, ReputationsManager<Reputation>>();
             services.AddScoped<IReputationsAwarder, ReputationsAwarder<Reputation>>();
-
+            services.AddScoped<IUserReputationAggregator, UserReputationAggregator>();
+            
             // Reputation providers
             services.AddScoped<IReputationsProvider<Reputation>, RepProvider>();
 
@@ -50,13 +52,19 @@ namespace Plato.Reputations
             IServiceProvider serviceProvider)
         {
 
-            // Activate all registered reputation awarders
+            // Activate all awarders within registered reputation providers
             var awarders = serviceProvider.GetServices<IReputationsAwarder>();
             foreach (var awarder in awarders)
             {
                 awarder?.Invoke();
             }
 
+            // Activate user total reputation aggregator
+            var aggregator = serviceProvider.GetService<IUserReputationAggregator>();
+            aggregator?.Invoke();
+
         }
+
     }
+
 }
