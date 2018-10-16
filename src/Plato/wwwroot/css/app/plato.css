@@ -992,22 +992,22 @@
     padding: 0;
 }
 
-.badge-header { font-weight: bold; border-radius: 2px; color: white; }
+.badge-header { font-weight: bold; color: white; }
 
 .badge { float: left; overflow: hidden; width: 100%; position: relative; text-align: center; }
-.badge .badge-bg { font-size: 50pt; margin-top: -6px; }
-.badge .badge-icon { font-size: 24pt; z-index: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -80%); }
+.badge .badge-bg { font-size: 50pt;  }
+.badge .badge-icon { font-size: 24pt; z-index: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
 .badge.badge-sm .badge-bg { font-size: 30pt; }
 
-.badge-header-gold { background: #B5C400; border-bottom: 1px solid #9DAC00; }
-.badge-gold  .badge-bg { color: #E9F000; }
-.badge-gold  .badge-icon { color: rgba(0, 0, 0, 0.3); }
+.badge-header-gold { background: #BFCE00; border-bottom: 1px solid #fff; }
+.badge-gold .badge-bg { color: #E9F000; }
+.badge-gold .badge-icon { color: rgba(0, 0, 0, 0.4); }
 
-.badge-header-silver { background: #7A7976; border-bottom: 1px solid #62615E; }
+.badge-header-silver { background: #848380; border-bottom: 1px solid #fff; }
 .badge-silver .badge-bg { color: #A8A6A3; }
-.badge-silver .badge-icon { color: rgba(0, 0, 0, 0.3); }
+.badge-silver .badge-icon { color: white; }
 
-.badge-header-bronze { background: #9B9000; border-bottom: 1px solid #837800; }
+.badge-header-bronze { background: #A59A00; border-bottom: 1px solid #fff; }
 .badge-bronze .badge-bg {  color: #D0BA00; }
-.badge-bronze .badge-icon { color: rgba(0, 0, 0, 0.3); }
+.badge-bronze .badge-icon { color: white; }

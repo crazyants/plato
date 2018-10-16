@@ -15,7 +15,7 @@ namespace Plato.Users.Badges.Providers
     {
 
         public static readonly Badge ConfirmedMember =
-            new Badge("Confirmed", "I'm legit me", "fal fa-email", BadgeLevel.Bronze, ConfirmedAwarder());
+            new Badge("Confirmed", "I'm legit me", "fal fa-check", BadgeLevel.Bronze, ConfirmedAwarder());
 
         public IEnumerable<Badge> GetBadges()
         {

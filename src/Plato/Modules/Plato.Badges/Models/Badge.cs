@@ -17,7 +17,7 @@ namespace Plato.Badges.Models
 
         public string Description { get; set; }
 
-        public string BackgroundIconCss { get; set; } = "fas fa-bookmark";
+        public string BackgroundIconCss { get; set; } = "fas fa-badge";
 
         public string IconCss { get; set; } = "fal fa-star";
         
@@ -144,7 +144,7 @@ namespace Plato.Badges.Models
             string description,
             string iconCss,
             BadgeLevel level,
-            Action<AwarderContext> awarder) : this(name, description, "fas fa-bookmark", iconCss, level)
+            Action<AwarderContext> awarder) : this(name, description, "fas fa-badge", iconCss, level)
         {
             this.Awarder = awarder;
         }
@@ -180,7 +180,7 @@ namespace Plato.Badges.Models
             BadgeLevel level,
             int threshold,
             int bonusPoints,
-            Action<AwarderContext> awarder) : this(name, description, "fas fa-bookmark", iconCss, level, threshold, bonusPoints)
+            Action<AwarderContext> awarder) : this(name, description, "fas fa-badge", iconCss, level, threshold, bonusPoints)
         {
             this.Awarder = awarder;
         }
