@@ -26,7 +26,7 @@ namespace Plato.Users.Badges.Providers
 
         }
         
-        private static Action<AwarderContext> ConfirmedAwarder()
+        private static Action<IBadgeAwarderContext> ConfirmedAwarder()
         {
             return (context) =>
             {

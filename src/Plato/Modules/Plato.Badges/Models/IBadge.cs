@@ -1,4 +1,6 @@
-﻿namespace Plato.Badges.Models
+﻿using System;
+
+namespace Plato.Badges.Models
 {
     public interface IBadge
     {
@@ -20,6 +22,10 @@
         bool Enabled { get; set; }
 
         BadgeLevel Level { get; set; }
+
+        Action<IBadgeAwarderContext> Awarder { get; set; }
+
+        DateTimeOffset? AwardedDate { get; set; }
 
     }
 

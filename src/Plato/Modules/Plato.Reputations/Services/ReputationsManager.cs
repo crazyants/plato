@@ -10,19 +10,19 @@ using Plato.Reputations.Models;
 namespace Plato.Reputations.Services
 {
 
-    public class ReputationManager<TReputation> : IReputationManager<TReputation> where TReputation : class, IReputation
+    public class ReputationsManager<TReputation> : IReputationsManager<TReputation> where TReputation : class, IReputation
     {
 
         private IEnumerable<TReputation> _reputations;
         private readonly IAuthorizationService _authorizationService;
-        private readonly IEnumerable<IReputationProvider<TReputation>> _providers;
-        private readonly ILogger<ReputationManager<TReputation>> _logger;
+        private readonly IEnumerable<IReputationsProvider<TReputation>> _providers;
+        private readonly ILogger<ReputationsManager<TReputation>> _logger;
         private readonly ITypedModuleProvider _typedModuleProvider;
         
-        public ReputationManager(
+        public ReputationsManager(
             IAuthorizationService authorizationService, 
-            IEnumerable<IReputationProvider<TReputation>> providers, 
-            ILogger<ReputationManager<TReputation>> logger,
+            IEnumerable<IReputationsProvider<TReputation>> providers, 
+            ILogger<ReputationsManager<TReputation>> logger,
             ITypedModuleProvider typedModuleProvider)
         {
             _authorizationService = authorizationService;

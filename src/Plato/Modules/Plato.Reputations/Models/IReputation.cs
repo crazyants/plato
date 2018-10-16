@@ -1,4 +1,6 @@
-﻿namespace Plato.Reputations.Models
+﻿using System;
+
+namespace Plato.Reputations.Models
 {
     public interface IReputation
     {
@@ -10,6 +12,8 @@
         int Points { get; set; }
 
         string Category { get; set; }
+
+        Action<IReputationAwarderContext> Awarder { get; set; }
 
     }
 

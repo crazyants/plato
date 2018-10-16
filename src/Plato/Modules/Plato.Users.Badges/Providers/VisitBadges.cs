@@ -38,7 +38,7 @@ namespace Plato.Users.Badges.Providers
         }
 
       
-        private static Action<AwarderContext> Awarder()
+        private static Action<IBadgeAwarderContext> Awarder()
         {
 
             // select users who don't have the badge but meet

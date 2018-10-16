@@ -7,17 +7,17 @@ using Plato.Internal.Shell.Extensions;
 namespace Plato.Badges.Services
 {
     
-    public class BadgeAwarder : IBadgeAwarder
+    public class BadgesAwarder<TBadge> : IBadgesAwarder where TBadge : class, IBadge
     {
 
         private readonly IServiceProvider _serviceProvider;
-        private readonly IBadgesManager<Badge> _badgesManager;
-        private readonly ILogger<BadgeAwarder> _logger;
+        private readonly IBadgesManager<TBadge> _badgesManager;
+        private readonly ILogger<BadgesAwarder<TBadge>> _logger;
         private readonly IServiceCollection _applicationServices;
 
-        public BadgeAwarder(
-            IBadgesManager<Badge> badgesManager, 
-            ILogger<BadgeAwarder> logger,
+        public BadgesAwarder(
+            IBadgesManager<TBadge> badgesManager, 
+            ILogger<BadgesAwarder<TBadge>> logger,
             IServiceCollection applicationServices,
             IServiceProvider serviceProvider)
         {
@@ -27,7 +27,7 @@ namespace Plato.Badges.Services
             _logger = logger;
         }
 
-        public void StartAwarding()
+        public void Invoke()
         {
 
             // Get all registered basges
@@ -44,9 +44,9 @@ namespace Plato.Badges.Services
                 _logger.LogInformation($"Starting badge awarders.");
             }
 
-            // Expose all registered services to the AwarderContext
+            // Expose all registered services to the AwarderContext so the awarder can do some work
             var clonedServices = _serviceProvider.CreateChildContainer(_applicationServices);
-            var context = new AwarderContext(clonedServices.BuildServiceProvider());
+            var context = new BadgeAwarderContext(clonedServices.BuildServiceProvider());
         
             // Iterate badges invoking each badge awarder delegate
             foreach (var badge in badges)

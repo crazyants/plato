@@ -29,7 +29,7 @@ namespace Plato.Badges.Models
 
         public BadgeLevel Level { get; set; }
 
-        public Action<AwarderContext> Awarder { get; set; }
+        public Action<IBadgeAwarderContext> Awarder { get; set; }
         
         public DateTimeOffset? AwardedDate { get; set; }
 
@@ -128,7 +128,7 @@ namespace Plato.Badges.Models
             string backgroundIconCss,
             string iconCss,
             BadgeLevel level,
-            Action<AwarderContext> awarder) : this(name, description, backgroundIconCss, iconCss, level)
+            Action<IBadgeAwarderContext> awarder) : this(name, description, backgroundIconCss, iconCss, level)
         {
             this.Awarder = awarder;
         }
@@ -137,7 +137,7 @@ namespace Plato.Badges.Models
             string name,
             string description,
             BadgeLevel level,
-            Action<AwarderContext> awarder) : this(name, description, level)
+            Action<IBadgeAwarderContext> awarder) : this(name, description, level)
         {
             this.Awarder = awarder;
         }
@@ -147,7 +147,7 @@ namespace Plato.Badges.Models
             string description,
             string iconCss,
             BadgeLevel level,
-            Action<AwarderContext> awarder) : this(name, description, "fas fa-badge", iconCss, level)
+            Action<IBadgeAwarderContext> awarder) : this(name, description, "fas fa-badge", iconCss, level)
         {
             this.Awarder = awarder;
         }
@@ -158,7 +158,7 @@ namespace Plato.Badges.Models
             string description,
             BadgeLevel level,
             int threshold,
-            Action<AwarderContext> awarder) : this(name, description, level, threshold)
+            Action<IBadgeAwarderContext> awarder) : this(name, description, level, threshold)
         {
             this.Awarder = awarder;
         }
@@ -171,7 +171,7 @@ namespace Plato.Badges.Models
             BadgeLevel level,
             int threshold,
             int bonusPoints,
-            Action<AwarderContext> awarder) : this(name, description, backgroundIconCss, iconCss, level, threshold, bonusPoints)
+            Action<IBadgeAwarderContext> awarder) : this(name, description, backgroundIconCss, iconCss, level, threshold, bonusPoints)
         {
             this.Awarder = awarder;
         }
@@ -183,7 +183,7 @@ namespace Plato.Badges.Models
             BadgeLevel level,
             int threshold,
             int bonusPoints,
-            Action<AwarderContext> awarder) : this(name, description, "fas fa-badge", iconCss, level, threshold, bonusPoints)
+            Action<IBadgeAwarderContext> awarder) : this(name, description, "fas fa-badge", iconCss, level, threshold, bonusPoints)
         {
             this.Awarder = awarder;
         }
@@ -195,7 +195,7 @@ namespace Plato.Badges.Models
             BadgeLevel level,
             int threshold,
             int bonusPoints,
-            Action<AwarderContext> awarder) : this(name, description, level, threshold, bonusPoints)
+            Action<IBadgeAwarderContext> awarder) : this(name, description, level, threshold, bonusPoints)
         {
             this.Awarder = awarder;
         }

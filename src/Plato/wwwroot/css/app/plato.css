@@ -994,7 +994,7 @@
 
 .badge-header { font-weight: bold; color: white; }
 
-.badge { float: left; overflow: hidden; width: 100%; position: relative; text-align: center; }
+.badge { position: relative; text-align: center; }
 .badge .badge-bg { font-size: 50pt;  text-shadow: 1px 1px 1px #888; }
 .badge .badge-icon { font-size: 24pt; z-index: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);  text-shadow: 1px 1px 1px #888; }
 

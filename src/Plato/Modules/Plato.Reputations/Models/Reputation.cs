@@ -1,4 +1,6 @@
-﻿namespace Plato.Reputations.Models
+﻿using System;
+
+namespace Plato.Reputations.Models
 {
     public class Reputation : IReputation
     {
@@ -11,6 +13,10 @@
 
         public string Category { get; set; }
 
+        public Action<IReputationAwarderContext> Awarder { get; set; }
+
+        public DateTimeOffset? AwardedDate { get; set; }
+        
         protected Reputation(string name)
         {
             this.Name = name;
@@ -31,8 +37,15 @@
             this.Points = points;
         }
 
-
+        public Reputation(
+            string name,
+            string description,
+            int points,
+            Action<IReputationAwarderContext> awarder) : this(name, description, points)
+        {
+            this.Awarder = awarder;
+        }
 
     }
-    
+
 }

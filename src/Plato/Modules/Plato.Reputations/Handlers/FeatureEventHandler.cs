@@ -12,9 +12,9 @@ namespace Plato.Reputations.Handlers
 
         public string Version { get; } = "1.0.0";
 
-        private readonly SchemaTable _userReputation = new SchemaTable()
+        private readonly SchemaTable _userReputations = new SchemaTable()
         {
-            Name = "UserReputation",
+            Name = "UserReputations",
             Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -113,9 +113,9 @@ namespace Plato.Reputations.Handlers
 
                 // drop user badges
                 builder
-                    .DropTable(_userReputation)
-                    .DropDefaultProcedures(_userReputation)
-                    .DropProcedure(new SchemaProcedure("SelectUserReputationPaged"));
+                    .DropTable(_userReputations)
+                    .DropDefaultProcedures(_userReputations)
+                    .DropProcedure(new SchemaProcedure("SelectUserReputationsPaged"));
 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -170,11 +170,11 @@ namespace Plato.Reputations.Handlers
         {
 
             builder
-                .CreateTable(_userReputation)
-                .CreateDefaultProcedures(_userReputation);
+                .CreateTable(_userReputations)
+                .CreateDefaultProcedures(_userReputations);
 
-            builder.CreateProcedure(new SchemaProcedure("SelectUserReputationPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_userReputation)
+            builder.CreateProcedure(new SchemaProcedure("SelectUserReputationsPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_userReputations)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()
