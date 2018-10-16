@@ -2,7 +2,7 @@
 @model UserBadgesIndexViewModel
 
 @{
-var badgesList = Model.Badges.ToList();
+    var badgesList = Model.Badges.ToList();
     var badgesText = badgesList.Count == 1
         ? "badge"
         : "badges";
@@ -12,39 +12,50 @@ var badgesList = Model.Badges.ToList();
     <div class="form-group">
         145 reputation, @badgesList.Count @T[badgesText]
     </div>
-    <ul class="badges-list">
-        <li data-toggle="tooltip" title="@T["Gold Badges"]">
+    @*<div class="form-group">
+        <ul class="badges-list">
+            <li data-toggle="tooltip" title="@T["Gold Badges"]">
 
-            <div class="badge-header badge-header-gold">
-                @Model.Badges.Where(b => b.Level == BadgeLevel.Gold).ToList().Count
+                <div class="badge-header badge-header-gold">
+                    @Model.Badges.Where(b => b.Level == BadgeLevel.Gold).ToList().Count
+                </div>
+            </li>
+            <li data-toggle="tooltip" title="@T["Silver Badges"]">
+                <div class="badge-header badge-header-silver">
+                    @Model.Badges.Where(b => b.Level == BadgeLevel.Silver).ToList().Count
+                </div>
+            </li>
+            <li data-toggle="tooltip" title="@T["Bronze Badges"]">
+                <div class="badge-header badge-header-bronze">
+                    @Model.Badges.Where(b => b.Level == BadgeLevel.Bronze).ToList().Count
+                </div>
+            </li>
+        </ul>
+    </div>*@
+
+    @if (badgesList.Count > 0)
+    {
+        foreach (var badge in badgesList.OrderByDescending(b => b.AwardedDate).Take(3))
+        {
+            <div class="d-inline-block" data-toggle="tooltip" title="@badge.Name">
+                <div class="badge badge-sm badge-@badge.Level.ToString().ToLower()">
+                    <i class="@badge.BackgroundIconCss badge-bg"></i>
+                    <i class="@badge.IconCss badge-icon"></i>
+                </div>
             </div>
-            <div class="badge badge-sm badge-gold">
-                <i class="fas fa-bookmark badge-bg"></i>
-                <i class="fal badge-icon"></i>
-            </div>
-        </li>
-        <li data-toggle="tooltip" title="@T["Silver Badges"]">
-            <div class="badge-header badge-header-silver">
-                @Model.Badges.Where(b => b.Level == BadgeLevel.Silver).ToList().Count
-            </div>
-            <div class="badge badge-sm badge-silver">
-                <i class="fas fa-bookmark badge-bg"></i>
-                <i class="fal badge-icon"></i>
-            </div>
-        </li>
-        <li data-toggle="tooltip" title="@T["Bronze Badges"]">
-            <div class="badge-header badge-header-bronze">
-                @Model.Badges.Where(b => b.Level == BadgeLevel.Bronze).ToList().Count
-            </div>
-            <div class="badge badge-sm badge-bronze">
-                <i class="fas fa-bookmark badge-bg"></i>
-                <i class="fal badge-icon"></i>
-            </div>
-        </li>
-    </ul>
+        }
+    }
+    else
+    {
+        <span class="text-muted">
+            @T["No badges awarded"]
+        </span>
+    }
+
+
     <br />
     <a asp-route-area="Plato.Users.Badges" asp-route-controller="Home" asp-route-action="Index" asp-route-alias="@Model.User.Alias" asp-route-id="@Model.User.Id">
         @T["All Badges"]
     </a>
-</div>
 
+</div>

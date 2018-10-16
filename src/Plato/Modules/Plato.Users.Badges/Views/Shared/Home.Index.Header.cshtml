@@ -6,8 +6,14 @@
         : "badges";
 }
 
-<h4>@T["Badges"]</h4>
-<div class="text-muted">
-    @Model.User.DisplayName @T["has earned"] @badgesList.Count @T[badgesText]
+<div class="list-left">
+    <avatar class="avatar" user-id="@Model.User.Id"></avatar>
 </div>
+<div class="list-body">
+    <h4>@T["Badges"]</h4>
+    <div class="text-muted">
+        @Model.User.DisplayName @T["has earned"] @badgesList.Count @T[badgesText]
+    </div>
+</div>
+
 <hr />

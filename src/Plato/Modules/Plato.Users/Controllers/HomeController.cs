@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
@@ -25,6 +26,7 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<EditAccountViewModel> _editAccountViewProvider;
         private readonly IViewProviderManager<EditSettingsViewModel> _editSettingsViewProvider;
         private readonly IViewProviderManager<UserProfile> _viewProvider;
+        private readonly IBreadCrumbManager _breadCrumbManager;
 
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly UserManager<User> _userManager;
@@ -44,7 +46,7 @@ namespace Plato.Users.Controllers
             IContextFacade contextFacade, 
             UserManager<User> userManager, 
             IAlerter alerter,
-            ITimeZoneProvider timeZoneProvider, IViewProviderManager<EditProfileViewModel> editProfileViewProvider, IViewProviderManager<EditAccountViewModel> editAccountViewProvider, IViewProviderManager<EditSettingsViewModel> editSettingsViewProvider)
+            ITimeZoneProvider timeZoneProvider, IViewProviderManager<EditProfileViewModel> editProfileViewProvider, IViewProviderManager<EditAccountViewModel> editAccountViewProvider, IViewProviderManager<EditSettingsViewModel> editSettingsViewProvider, IBreadCrumbManager breadCrumbManager)
         {
             _viewProvider = viewProvider;
             _platoUserStore = platoUserStore;
@@ -55,6 +57,7 @@ namespace Plato.Users.Controllers
             _editProfileViewProvider = editProfileViewProvider;
             _editAccountViewProvider = editAccountViewProvider;
             _editSettingsViewProvider = editSettingsViewProvider;
+            _breadCrumbManager = breadCrumbManager;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -96,6 +99,14 @@ namespace Plato.Users.Controllers
                 pager = new PagerOptions();
             }
 
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Users"]);
+            });
 
             // Get default options
             var defaultViewOptions = new UserIndexOptions();
@@ -142,6 +153,18 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
+
+            // Breadcrumb
+            _breadCrumbManager.Configure(builder =>
+            {
+                builder.Add(S["Home"], home => home
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Users"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Users")
+                    .LocalNav()
+                ).Add(S[user.DisplayName]);
+            });
 
             // Build view
             var result = await _viewProvider.ProvideDisplayAsync(new UserProfile()

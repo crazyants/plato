@@ -28,11 +28,66 @@
     <card-body>
 
         <div class="row">
+
             <div class="col-lg-6">
-                @T["Reputation:"] @Model.TotalPoints.ToPrettyInt()
+                
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fal fa-hashtag fa-2x text-muted m-3"></i>
+                    </div>
+                    <div class="col-10">
+                        <h1>1</h1>
+                        <span class="text-muted">
+                            @T["rank"]
+                        </span>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-6">
-                @T["Visits:"] @Model.TotalVisits.ToPrettyInt()
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fal fa-gem fa-2x text-muted m-3"></i>
+                    </div>
+                    <div class="col-10">
+                        <h1>@Model.TotalPoints.ToPrettyInt()</h1>
+                        <span class="text-muted">
+                            @T["reputation"]
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr/>
+
+        <div class="row">
+
+            <div class="col-lg-6">
+                
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fal fa-at fa-2x text-muted m-3"></i>
+                    </div>
+                    <div class="col-10">
+                        <h1>@Model.TotalPoints.ToPrettyInt()</h1>
+                        <span class="text-muted">
+                            @T["mentions"]
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fal fa-heart fa-2x text-muted m-3"></i>
+                    </div>
+                    <div class="col-10">
+                        <h1>@Model.TotalVisits.ToPrettyInt()</h1>
+                        <span class="text-muted">
+                            @T["visits:"]
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
 

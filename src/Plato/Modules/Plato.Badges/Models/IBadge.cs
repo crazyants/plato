@@ -3,7 +3,7 @@
     public interface IBadge
     {
 
-        string ModuleId { get; set; }
+        string Category { get; set; }
 
         string Name { get; set; }
 

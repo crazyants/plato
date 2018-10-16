@@ -68,7 +68,7 @@ namespace Plato.Badges.Services
                 var badges = provider.GetBadges();
                 foreach (var badge in badges)
                 {
-                    var category = badge.ModuleId;
+                    var category = badge.Category;
                     var title = String.IsNullOrWhiteSpace(category) ?
                         name :
                         category;

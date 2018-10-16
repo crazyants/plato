@@ -3,7 +3,7 @@
 @if (Model.Badges.Any())
 {
     <div class="row text-center">
-        @foreach (var badge in Model.Badges)
+        @foreach (var badge in Model.Badges.OrderBy(b => b.Level))
         {
             <div class="col-lg-3 col-md-6 col-sm-12  form-group">
                 <div class="border border-secondary bg-secondary">

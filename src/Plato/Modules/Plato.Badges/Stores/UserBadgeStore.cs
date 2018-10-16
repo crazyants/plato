@@ -153,12 +153,13 @@ namespace Plato.Badges.Stores
                     var badge = badgesList.FirstOrDefault(b => b.Name.Equals(userBadge.BadgeName, StringComparison.OrdinalIgnoreCase));
                     if (badge != null)
                     {
+                        badge.AwardedDate = userBadge.CreatedDate;
                         output.Add(badge);
                     }
                 }
             }
           
-            return output.OrderBy(b => b.Level);
+            return output;
 
         }
 

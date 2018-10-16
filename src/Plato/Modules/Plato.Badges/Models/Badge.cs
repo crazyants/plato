@@ -11,7 +11,7 @@ namespace Plato.Badges.Models
         private static readonly int ThresholdMultiplier = 1;
         private static readonly int BonusPointsMultiplier = 1;
 
-        public string ModuleId { get; set; }
+        public string Category { get; set; }
 
         public string Name { get; set; }
 
@@ -30,6 +30,9 @@ namespace Plato.Badges.Models
         public BadgeLevel Level { get; set; }
 
         public Action<AwarderContext> Awarder { get; set; }
+        
+        public DateTimeOffset? AwardedDate { get; set; }
+
 
         public Badge(string name)
         {

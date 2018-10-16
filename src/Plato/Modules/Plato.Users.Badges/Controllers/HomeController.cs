@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Badges.Models;
 using Plato.Internal.Hosting.Abstractions;
@@ -82,12 +83,19 @@ namespace Plato.Users.Badges.Controllers
             _breadCrumbManager.Configure(builder =>
             {
                 builder.Add(S["Home"], home => home
-                        .Action("Index", "Home", "Plato.Core")
-                        .LocalNav()
-                    ).Add(S["Discuss"], discuss => discuss
-                        .Action("Index", "Home", "Plato.Discuss")
-                        .LocalNav()
-                    ).Add(S["Labels"]);
+                    .Action("Index", "Home", "Plato.Core")
+                    .LocalNav()
+                ).Add(S["Users"], discuss => discuss
+                    .Action("Index", "Home", "Plato.Users")
+                    .LocalNav()
+                ).Add(S[user.DisplayName], discuss => discuss
+                    .Action("Display", "Home", "Plato.Users", new RouteValueDictionary()
+                    {
+                        ["id"] = user.Id,
+                        ["alias"] = user.Alias
+                    })
+                    .LocalNav()
+                ).Add(S["Badges"]);
             });
 
 
