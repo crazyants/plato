@@ -10,7 +10,7 @@
 
 <div class="text-center">
     <div class="form-group">
-        145 reputation, @badgesList.Count @T[badgesText]
+        @Model.User.TotalPoints.ToPrettyInt() reputation, @badgesList.Count @T[badgesText]
     </div>
 
     @if (badgesList.Count > 0)
