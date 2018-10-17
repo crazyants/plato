@@ -9,10 +9,56 @@ using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.ViewModels
 {
-
-
+    
     public class TopicIndexViewModel
     {
+
+        private readonly IEnumerable<Filter> _defaultFilters = new List<Filter>()
+        {
+            new Filter()
+            {
+                Text = "All",
+                Value = FilterBy.All
+            },
+            new Filter()
+            {
+                Text = "-" // represents menu divider
+            },
+            new Filter()
+            {
+                Text = "My Topics",
+                Value = FilterBy.MyTopics
+            },
+            new Filter()
+            {
+                Text = "Participated",
+                Value = FilterBy.Participated
+            },
+            new Filter()
+            {
+                Text = "Following",
+                Value = FilterBy.Following
+            },
+            new Filter()
+            {
+                Text = "Starred",
+                Value = FilterBy.Starred
+            },
+            new Filter()
+            {
+                Text = "-"  // represents menu divider
+            },
+            new Filter()
+            {
+                Text = "Unanswered",
+                Value = FilterBy.Unanswered
+            },
+            new Filter()
+            {
+                Text = "No Replies",
+                Value = FilterBy.NoReplies
+            }
+        };
         
         private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
         {
@@ -77,6 +123,8 @@ namespace Plato.Discuss.ViewModels
 
         public IEnumerable<SortOrder> SortOrder { get; set; }
 
+        public IEnumerable<Filter> Filters { get; set; }
+
         public TopicIndexViewModel()
         {
 
@@ -89,6 +137,7 @@ namespace Plato.Discuss.ViewModels
         {
             this.SortColumns = _defaultSortColumns;
             this.SortOrder = _defaultSortOrder;
+            this.Filters = _defaultFilters;
             this.Results = results;
             this.Options = options;
             this.Pager = pager;
@@ -108,8 +157,7 @@ namespace Plato.Discuss.ViewModels
         public int LabelId { get; set; }
 
     }
-
-
+    
     [DataContract]
     public class TopicIndexOptions
     {
@@ -121,10 +169,10 @@ namespace Plato.Discuss.ViewModels
         public SortBy Sort { get; set; } = SortBy.LastReply;
 
         [DataMember(Name = "order")]
-        public OrderBy Order { get; set; }= OrderBy.Desc;
+        public OrderBy Order { get; set; } = OrderBy.Desc;
 
         [DataMember(Name = "filter")]
-        public Filter Filter { get; set; }
+        public FilterBy Filter { get; set; } = FilterBy.All;
 
         public bool EnableCard { get; set; } = true;
 
@@ -191,7 +239,15 @@ namespace Plato.Discuss.ViewModels
         public OrderBy Value { get; set; }
         
     }
-    
+
+    public class Filter
+    {
+        public string Text { get; set; }
+
+        public FilterBy Value { get; set; }
+
+    }
+
     public enum SortBy
     {
         LastReply = 0,
@@ -203,11 +259,15 @@ namespace Plato.Discuss.ViewModels
         Modified = 6
     }
 
-    public enum Filter
+    public enum FilterBy
     {
         All = 0,
-        Unanswered,
-        NoReplies
+        MyTopics = 1,
+        Participated = 2,
+        Following = 3,
+        Starred = 4,
+        Unanswered = 5,
+        NoReplies = 6
     }
 
 }

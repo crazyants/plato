@@ -8,15 +8,33 @@
         <h6 class="card-title float-left">@T["Topics"]</h6>
         <ul class="nav navbar p-0 float-right">
             <li class="nav-item dropdown">
-                <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link text-muted dropdown-toggle" href="#" id="filterDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @T["Filter"]
                 </a>
                 <div class="dropdown-arrow"></div>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterDropDown">
+                    @foreach (var option in Model.Filters)
+                    {
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["opts.sort"] = Model.Options.Sort,
+                            ["opts.order"] = Model.Options.Order,
+                            ["opts.filter"] = option.Value
+                        };
+                        if (option.Text == "-")
+                        {
+                            <div class="dropdown-divider"></div>
+                        }
+                        else
+                        {
+                            var iconCss = option.Value == Model.Options.Filter ? "fal fa-fw fa-check" : "fal fa-fw";
+                            <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                                <i class="@iconCss"></i>
+                                @T[option.Text]
+                            </a>
+                        }
+                        
+                    }
                 </div>
             </li>
             <li class="nav-item dropdown">

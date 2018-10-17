@@ -436,8 +436,14 @@ namespace Plato.Entities.Stores
                     .Append("))");
             }
 
-
-
+            // CreatedUserId
+            if (_query.Params.CreatedUserId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.CreatedUserId.Operator);
+                sb.Append(_query.Params.CreatedUserId.ToSqlString("CreatedUserId"));
+            }
+            
             // -----------------
             // private 
             // -----------------

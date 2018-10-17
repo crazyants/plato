@@ -5,7 +5,6 @@
 <card class="card card-body-flush">
     <card-title>
         <h6 class="card-title d-inline">@T["Labels"]</h6>
-        
         <ul class="nav navbar p-0 float-right">
             <li class="nav-item dropdown">
                 <a class="nav-link text-muted dropdown-toggle" href="#" id="sortByDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -46,28 +45,22 @@
                 </div>
             </li>
         </ul>
-
     </card-title>
     <card-body>
         @if (Model.Results != null)
         {
             <div class="list-group list-group-flush list-group-hover">
-                <div class="row">
+                <div class="row no-gutters">
                     @foreach (var label in Model.Results.Data)
                     {
-                        <div class="float-left col-lg-4 col-md-6 col-sm-12">
-                            <div class="list-group-item list-group-item-action">
-                                @await DisplayAsync(new View("LabelListItem", new
-                                {
-                                    model = new LabelListItemViewModel()
-                                    {
-                                        Label = label,
-                                        EnableEdit = Model.Options.EnableEdit
-                                    }
-                                }))
-                            </div>
-                        </div>
-
+                        @await DisplayAsync(new View("LabelListItem", new
+                        {
+                            model = new LabelListItemViewModel()
+                            {
+                                Label = label,
+                                EnableEdit = Model.Options.EnableEdit
+                            }
+                        }))
                     }
                 </div>
             </div>

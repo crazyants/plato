@@ -100,7 +100,12 @@ namespace Plato.Discuss.Services
                         {
                             q.LabelId.Equals(options.Params.LabelId);
                         }
-                        
+
+                        if (options.Params.CreatedByUserId > 0)
+                        {
+                            q.CreatedUserId.Equals(options.Params.CreatedByUserId);
+                        }
+
                     }
                     
                     q.HideSpam.True();

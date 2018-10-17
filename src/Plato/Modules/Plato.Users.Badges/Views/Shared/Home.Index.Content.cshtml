@@ -10,66 +10,44 @@
         ? "Badge" 
         : "Badges";
 }
-<card>
+<card class="card card-body-flush">
     <card-title>
-        
-        <h6 class="card-title">
+
+        <h6 class="card-title float-left">
             @badgesList.Count @T[badgesText]
         </h6>
-     
-        @*<ul class="nav nav-tabs card-header-tabs p-0">
-            <li class="nav-item">
-                <a class="nav-link active" href="#" role="button">
-                    @T["All"]
-                    <span class="badge badge-primary ml-1">
-                        @badgesList.Count
-                    </span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" role="button">
-                    @T["Gold"]
-                    <span class="badge badge-primary ml-1">
-                        @goldBadges.ToPrettyInt()
-                    </span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" role="button">
-                    @T["Silver"]
-                    <span class="badge badge-primary ml-1">
-                        @silverBadges.ToPrettyInt()
-                    </span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" role="button">
-                    @T["Bronze"]
-                    <span class="badge badge-primary ml-1">
-                        @bronzeBadges.ToPrettyInt()
-                    </span>
-                </a>
-            </li>
-        </ul>*@
+        <span class="text-muted float-right">
+            @goldBadges
+            @T["Gold"],
+            @silverBadges
+            @T["Silver"],
+            @bronzeBadges
+            @T["Bronze"],
+        </span>
 
     </card-title>
     <card-body>
         
         @if (badgesList.Count > 0)
         {
-            <div class="row text-center">
-                @foreach (var badge in badgesList.OrderBy(b => b.Level))
-                {
-                    <div class="col-lg-3 col-md-6 col-sm-12  form-group">
-                        <div class="border border-secondary bg-secondary">
+            <div class="list-group list-group-flush list-group-hover">
+                <div class="row no-gutters text-center">
+                    @foreach (var badge in badgesList.OrderBy(b => b.Level))
+                    {
+                        <div class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0">
                             <div class="p-3">
+                                <span class="float-right">
+                                    <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Bonus Points"]">
+                                        @badge.BonusPoints.ToPrettyInt()
+                                    </span>
+                                </span>
                                 <div class="d-inline-block">
                                     <div class="badge badge-@badge.Level.ToString().ToLower()">
                                         <i class="@badge.BackgroundIconCss badge-bg"></i>
                                         <i class="@badge.IconCss badge-icon"></i>
                                     </div>
                                 </div>
-                                <br />
+                                <br/>
                                 <div class="d-inline-block">
                                     <h6>@badge.Name</h6>
                                     <span class="text-muted">
@@ -77,9 +55,10 @@
                                     </span>
                                 </div>
                             </div>
+                    
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         }
         else

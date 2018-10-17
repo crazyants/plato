@@ -44,7 +44,7 @@
 /* Hover state for lists-groups */
 .table-hover tbody tr:hover,
 .list-group-hover .list-group-item-action:not(.active):hover {
-    background-color: #007bff;
+    background-color: #007bff !important;
 }
 
 .table-hover tbody tr:hover,

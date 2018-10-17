@@ -20,8 +20,7 @@ namespace Plato.Discuss.ViewProviders
         {
             _platoUserStore = platoUserStore;
         }
-
-
+        
         public override async Task<IViewProviderResult> BuildDisplayAsync(DiscussUser discussUser, IViewProviderContext context)
         {
 
@@ -36,8 +35,7 @@ namespace Plato.Discuss.ViewProviders
                 User = user
             };
 
-            var topicIndexViewModel =
-                context.Controller.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            var topicIndexViewModel = context.Controller.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
 
             return Views(
                 View<UserDisplayViewModel>("Profile.Display.Header", model => viewModel).Zone("header"),

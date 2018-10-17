@@ -53,13 +53,8 @@ namespace Plato.Discuss.ViewProviders
         public override Task<IViewProviderResult> BuildIndexAsync(Topic topic, IViewProviderContext context)
         {
 
-            // Build view model
-            var viewModel = new TopicIndexViewModel
-            {
-                Options = new TopicIndexOptions(context.Controller.RouteData),
-                Pager = new PagerOptions(context.Controller.RouteData)
-            };
-
+            var viewModel = context.Controller.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
+            
             return Task.FromResult(Views(
                 View<TopicIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<TopicIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),

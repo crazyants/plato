@@ -49,6 +49,14 @@ namespace Plato.Users.Badges
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            routes.MapAreaRoute(
+                name: "DisplayUserBadges",
+                areaName: "Plato.Users.Badges",
+                template: "users/{id}/{alias?}/badges",
+                defaults: new { controller = "Home", action = "Index" }
+            );
+
         }
     }
 }
