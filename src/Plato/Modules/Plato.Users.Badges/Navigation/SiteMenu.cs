@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using Plato.Internal.Navigation;
 
-namespace Plato.Users.Navigation
+namespace Plato.Users.Badges.Navigation
 {
     public class SiteMenu : INavigationProvider
     {
-        public SiteMenu(IStringLocalizer<AdminMenu> localizer)
+        public SiteMenu(IStringLocalizer localizer)
         {
             T = localizer;
         }
@@ -22,17 +22,17 @@ namespace Plato.Users.Navigation
             }
 
             builder
-                .Add(T["Users"], "1", installed => installed
-                        .Action("Index", "Home", "Plato.Users")
-                        .IconCss("fal fa-user")
+                .Add(T["Badges"], "1", installed => installed
+                        .Action("Index", "Home", "Plato.User.Badges")
+                        .IconCss("fal fa-badge")
                         //.Permission(Permissions.ManageRoles)
                         .Attributes(new Dictionary<string, object>()
                         {
                             {"data-provide", "tooltip"},
-                            {"title", T["Users"]}
+                            {"title", T["Badges"]}
                         })
                         .LocalNav()
-                    , new List<string>() {"users", "text-hidden"});
+                    , new List<string>() { "badges", "text-hidden" });
         }
     }
 

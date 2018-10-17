@@ -41,6 +41,7 @@ namespace Plato.Users.Badges
             
             // Register navigation provider
             services.AddScoped<INavigationProvider, ProfileMenu>();
+            services.AddScoped<INavigationProvider, SiteMenu>();
 
         }
 

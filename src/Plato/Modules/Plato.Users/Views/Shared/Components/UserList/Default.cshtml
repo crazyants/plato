@@ -19,6 +19,12 @@
                                 @T["Edit"]
                             </a>
                         }
+                        else
+                        {
+                            <span class="text-muted float-right">
+                                @T["Last active "] <date utc="@user.LastLoginDate"></date>
+                            </span>
+                        }
                         <h6 class="d-inline-block">
                             <avatar class="avatar" user-id="@user.Id" />
                             @if (Model.Options.EnableEdit)

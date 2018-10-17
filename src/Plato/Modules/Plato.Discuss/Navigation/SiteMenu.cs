@@ -38,7 +38,7 @@ namespace Plato.Discuss.Navigation
                             .Action("Popular", "Home", "Plato.Discuss")
                             //.Permission(Permissions.ManageRoles)
                             .LocalNav()
-                        ), new List<string>() {"discuss"}
+                        ), new List<string>() {"discuss", "text-hidden"}
                 );
 
         }

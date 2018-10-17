@@ -32,7 +32,7 @@ namespace Plato.Search.Navigation
                             {"title", T["Search"]}
                         })
                     .LocalNav()
-                , new List<string>() { "search"});
+                , new List<string>() { "search", "text-hidden"});
 
         }
     }
