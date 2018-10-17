@@ -8,6 +8,8 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Navigation;
+using Plato.Users.Badges.Navigation;
 using Plato.Users.Badges.Providers;
 using Plato.Users.Badges.ViewProviders;
 
@@ -36,6 +38,9 @@ namespace Plato.Users.Badges
             // Badge view proviers
             services.AddScoped<IViewProviderManager<UserBadge>, ViewProviderManager<UserBadge>>();
             services.AddScoped<IViewProvider<UserBadge>, UserBadgeViewProvider>();
+            
+            // Register navigation provider
+            services.AddScoped<INavigationProvider, ProfileMenu>();
 
         }
 

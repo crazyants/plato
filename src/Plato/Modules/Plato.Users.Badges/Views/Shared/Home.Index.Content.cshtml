@@ -1,37 +1,97 @@
-﻿@model UserBadgesIndexViewModel
+﻿@using Plato.Badges.Models
+@model UserBadgesIndexViewModel
 
-@if (Model.Badges.Any())
-{
-    <div class="row text-center">
-        @foreach (var badge in Model.Badges.OrderBy(b => b.Level))
+@{
+    var badgesList = Model.Badges.ToList();
+    var goldBadges = @badgesList.Where(b => b.Level == BadgeLevel.Gold).ToList().Count;
+    var silverBadges = @badgesList.Where(b => b.Level == BadgeLevel.Silver).ToList().Count;
+    var bronzeBadges = @badgesList.Where(b => b.Level == BadgeLevel.Bronze).ToList().Count;
+    var badgesText = badgesList.Count == 1 
+        ? "Badge" 
+        : "Badges";
+}
+<card>
+    <card-title>
+        
+        <h6 class="card-title">
+            @badgesList.Count @T[badgesText]
+        </h6>
+     
+        @*<ul class="nav nav-tabs card-header-tabs p-0">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" role="button">
+                    @T["All"]
+                    <span class="badge badge-primary ml-1">
+                        @badgesList.Count
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" role="button">
+                    @T["Gold"]
+                    <span class="badge badge-primary ml-1">
+                        @goldBadges.ToPrettyInt()
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" role="button">
+                    @T["Silver"]
+                    <span class="badge badge-primary ml-1">
+                        @silverBadges.ToPrettyInt()
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" role="button">
+                    @T["Bronze"]
+                    <span class="badge badge-primary ml-1">
+                        @bronzeBadges.ToPrettyInt()
+                    </span>
+                </a>
+            </li>
+        </ul>*@
+
+    </card-title>
+    <card-body>
+        
+        @if (badgesList.Count > 0)
         {
-            <div class="col-lg-3 col-md-6 col-sm-12  form-group">
-                <div class="border border-secondary bg-secondary">
-                    <div class="p-3">
-                        <div class="d-inline-block">
-                            <div class="badge badge-@badge.Level.ToString().ToLower()">
-                                <i class="@badge.BackgroundIconCss badge-bg"></i>
-                                <i class="@badge.IconCss badge-icon"></i>
+            <div class="row text-center">
+                @foreach (var badge in badgesList.OrderBy(b => b.Level))
+                {
+                    <div class="col-lg-3 col-md-6 col-sm-12  form-group">
+                        <div class="border border-secondary bg-secondary">
+                            <div class="p-3">
+                                <div class="d-inline-block">
+                                    <div class="badge badge-@badge.Level.ToString().ToLower()">
+                                        <i class="@badge.BackgroundIconCss badge-bg"></i>
+                                        <i class="@badge.IconCss badge-icon"></i>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="d-inline-block">
+                                    <h6>@badge.Name</h6>
+                                    <span class="text-muted">
+                                        @badge.Description
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                        <br />
-                        <div class="d-inline-block">
-                            <h6>@badge.Name</h6>
-                            <span class="text-muted">
-                                @badge.Description
-                            </span>
-                        </div>
                     </div>
-                </div>
+                }
             </div>
         }
-    </div>
-}
-else
-{
-    <span class="text-muted">
-        @T["No badges awarded"]
-    </span>
-}
+        else
+        {
+            <span class="text-muted">
+                @T["No badges awarded"]
+            </span>
+        }
+
+
+
+    </card-body>
+</card>
 
 

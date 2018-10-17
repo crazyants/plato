@@ -42,7 +42,7 @@ namespace Plato.Discuss
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
-            services.AddScoped<INavigationProvider, ProfileMenu>();
+            //services.AddScoped<INavigationProvider, ProfileMenu>();
             services.AddScoped<INavigationProvider, SearchMenu>();
 
             // Stores

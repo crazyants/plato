@@ -1,9 +1,8 @@
-﻿@model UserBadgesIndexViewModel
+﻿@using Plato.Badges.Models
+@model UserBadgesIndexViewModel
 @{
     var badgesList = Model.Badges.ToList();
-    var badgesText = badgesList.Count == 1 
-        ? "badge" 
-        : "badges";
+
 }
 
 <div class="list-left">
@@ -12,7 +11,7 @@
 <div class="list-body">
     <h4>@T["Badges"]</h4>
     <div class="text-muted">
-        @Model.User.DisplayName @T["has earned"] @badgesList.Count @T[badgesText]
+        All badges awarded to @Model.User.DisplayName
     </div>
 </div>
 

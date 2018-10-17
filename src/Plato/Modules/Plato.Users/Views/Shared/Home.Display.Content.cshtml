@@ -3,39 +3,35 @@
 
 <card>
     <card-title>
-
-        <h6 class="card-title float-left">@T["Overview"]</h6>
         
-            <div class="nav navbar p-0 navbar-expand-lg float-right navbar-light">
+        <div class="nav navbar p-0 navbar-expand-lg navbar-light">
 
-                <div class="d-flex align-items-center">
-                    <button class="navbar-toggler my-2" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
-
-                <div class="collapse navbar-collapse" id="navbar-collapse" role="navigation">
-
-                    <navigation name="profile"
-                                class="nav nav-tabs card-header-tabs"
-                                child-ul-css-class="dropdown-menu" />
-                </div>
+            <div class="d-flex align-items-center">
+                <button class="navbar-toggler my-2" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
             </div>
+
+            <div class="collapse navbar-collapse" id="navbar-collapse" role="navigation">
+
+                <navigation name="profile"
+                            class="nav nav-tabs card-header-tabs"
+                            child-ul-css-class="dropdown-menu" />
+            </div>
+        </div>
     
-
-
     </card-title>
     <card-body>
 
         <div class="row">
 
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 
                 <div class="row">
-                    <div class="col-2">
+                    <div class="col-3 text-center">
                         <i class="fal fa-hashtag fa-2x text-muted m-3"></i>
                     </div>
-                    <div class="col-10">
+                    <div class="col-9">
                         <h1>1</h1>
                         <span class="text-muted">
                             @T["rank"]
@@ -43,12 +39,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <div class="row">
-                    <div class="col-2">
+                    <div class="col-3 text-center">
                         <i class="fal fa-gem fa-2x text-muted m-3"></i>
                     </div>
-                    <div class="col-10">
+                    <div class="col-9">
                         <h1>@Model.TotalPoints.ToPrettyInt()</h1>
                         <span class="text-muted">
                             @T["reputation"]
@@ -56,32 +52,12 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <hr/>
-
-        <div class="row">
-
-            <div class="col-lg-6">
-                
+            <div class="col-lg-4">
                 <div class="row">
-                    <div class="col-2">
-                        <i class="fal fa-at fa-2x text-muted m-3"></i>
-                    </div>
-                    <div class="col-10">
-                        <h1>@Model.TotalPoints.ToPrettyInt()</h1>
-                        <span class="text-muted">
-                            @T["mentions"]
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="row">
-                    <div class="col-2">
+                    <div class="col-3 text-center">
                         <i class="fal fa-heart fa-2x text-muted m-3"></i>
                     </div>
-                    <div class="col-10">
+                    <div class="col-9">
                         <h1>@Model.TotalVisits.ToPrettyInt()</h1>
                         <span class="text-muted">
                             @T["visits:"]
@@ -90,20 +66,7 @@
                 </div>
             </div>
         </div>
-
-        <hr/>
-
-        <div class="row">
-            <div class="col-lg-6">
-                @T["Last seen:"] <date utc="@Model.LastLoginDate"></date>
-            </div>
-            <div class="col-lg-6">
-                @T["First seen:"] <date utc="@Model.CreatedDate"></date>
-            </div>
-        </div>
-
-
-
+  
     </card-body>
 </card>
 

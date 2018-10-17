@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Plato.Internal.Navigation;
 
-namespace Plato.Users.Navigation
+namespace Plato.Users.Badges.Navigation
 {
     public class ProfileMenu : INavigationProvider
     {
@@ -16,7 +17,7 @@ namespace Plato.Users.Navigation
         public IStringLocalizer T { get; set; }
         
         public ProfileMenu(
-            IStringLocalizer localizer,
+            IStringLocalizer localizer, 
             IActionContextAccessor actionContextAccessor)
         {
             T = localizer;
@@ -31,20 +32,18 @@ namespace Plato.Users.Navigation
             }
 
             var context = _actionContextAccessor.ActionContext;
-            object id = context.RouteData.Values["id"],
+            object id = context.RouteData.Values["id"], 
                 alias = context.RouteData.Values["alias"];
 
-            builder
-                .Add(T["Overview"], 1, profile => profile
-                    .Action("Display", "Home", "Plato.Users", new RouteValueDictionary()
+            builder.Add(T["Badges"], 1, topics => topics
+                .Action("Index", "Home", "Plato.Users.Badges", new RouteValueDictionary()
                 {
                     ["id"] = id?.ToString(),
                     ["alias"] = alias?.ToString()
                 })
-                    //.Permission(Permissions.ManageUsers)
-                    .LocalNav()
-                );
-
+                //.Permission(Permissions.ManageRoles)
+                .LocalNav()
+            );
         }
     }
 

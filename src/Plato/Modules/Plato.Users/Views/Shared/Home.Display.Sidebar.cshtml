@@ -25,13 +25,16 @@
         }
         @if (!String.IsNullOrWhiteSpace(details.Profile.Url))
         {
-            <li  class="vcard-url">
+            <li class="vcard-url">
                 <i class="fal fa-link"></i>
                 <a href="@details.Profile.Url">
                     @details.Profile.Url
                 </a>
             </li>
         }
+        <li>
+            @T["Last seen:"] <date utc="@Model.LastLoginDate"></date>
+        </li>
     </ul>
 
 </div>
