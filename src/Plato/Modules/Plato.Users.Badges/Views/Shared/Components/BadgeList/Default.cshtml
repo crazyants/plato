@@ -1,6 +1,5 @@
 ﻿@using Plato.Badges.Models
 @model BadgesIndexViewModel
-
 @{
     var badgesList = Model.Badges.ToList();
     var goldBadges = @badgesList.Where(b => b.Level == BadgeLevel.Gold).ToList().Count;
@@ -13,7 +12,6 @@
 
 <card class="card card-body-flush">
     <card-title>
-
         <h6 class="card-title float-left">
             @badgesList.Count @T[badgesText]
         </h6>
@@ -25,10 +23,8 @@
             @bronzeBadges
             @T["Bronze"],
         </span>
-
     </card-title>
     <card-body>
-
         @if (badgesList.Count > 0)
         {
             <div class="list-group list-group-flush list-group-hover">
@@ -49,7 +45,6 @@
                 @T["No badges awarded"]
             </span>
         }
-        
     </card-body>
 </card>
 

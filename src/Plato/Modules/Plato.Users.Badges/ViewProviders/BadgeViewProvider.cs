@@ -17,6 +17,7 @@ namespace Plato.Users.Badges.ViewProviders
         {
             _badgeManager = badgeManager;
         }
+
         public override Task<IViewProviderResult> BuildIndexAsync(Badge badge, IViewProviderContext context)
         {
 

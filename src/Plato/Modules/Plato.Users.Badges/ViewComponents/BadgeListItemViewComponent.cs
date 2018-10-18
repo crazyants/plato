@@ -11,8 +11,7 @@ namespace Plato.Users.Badges.ViewComponents
         {
         }
 
-        public Task<IViewComponentResult> InvokeAsync(
-            Badge badge)
+        public Task<IViewComponentResult> InvokeAsync(Badge badge)
         {
             return Task.FromResult((IViewComponentResult) View(badge));
         }

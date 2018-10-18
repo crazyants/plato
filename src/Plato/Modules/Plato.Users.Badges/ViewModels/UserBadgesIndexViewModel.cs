@@ -14,7 +14,5 @@ namespace Plato.Users.Badges.ViewModels
 
         public IEnumerable<Badge> Badges { get; set; }
         
-        //public BadgesIndexOptions Options { get; set; }
-
     }
 }
