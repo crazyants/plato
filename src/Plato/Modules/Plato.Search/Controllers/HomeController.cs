@@ -49,24 +49,24 @@ namespace Plato.Search.Controllers
 
         [AllowAnonymous]
         public async Task<IActionResult> Index(
-            ViewOptions viewOptions,
-            PagerOptions pagerOptions)
+            SearchIndexOptions opts,
+            PagerOptions pager)
         {
 
             // default options
-            if (viewOptions == null)
+            if (opts == null)
             {
-                viewOptions = new ViewOptions();
+                opts = new SearchIndexOptions();
             }
 
             // default pager
-            if (pagerOptions == null)
+            if (pager == null)
             {
-                pagerOptions = new PagerOptions();
+                pager = new PagerOptions();
             }
 
             // Build breadcrumb
-            if (string.IsNullOrEmpty(viewOptions.Search))
+            if (string.IsNullOrEmpty(opts.Search))
             {
                 _breadCrumbManager.Configure(builder =>
                 {
@@ -91,9 +91,25 @@ namespace Plato.Search.Controllers
             }
 
 
-            this.RouteData.Values.Add("search", viewOptions.Search);
-            this.RouteData.Values.Add("page", pagerOptions.Page);
 
+
+            // Get default options
+            var defaultViewOptions = new SearchIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(SearchIndexViewModel)] = new SearchIndexViewModel(opts, pager);
+            
             // Build view
             var result = await _viewProvider.ProvideIndexAsync(new SearchResult(), this);
 

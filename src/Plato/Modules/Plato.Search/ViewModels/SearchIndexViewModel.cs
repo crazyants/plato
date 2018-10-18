@@ -9,30 +9,37 @@ namespace Plato.Search.ViewModels
 
         public IPagedResults<Entity> Results { get; }
 
-        public PagerOptions PagerOpts { get; set; } = new PagerOptions();
+        public PagerOptions Pager { get; set; } = new PagerOptions();
 
-        public ViewOptions ViewOpts { get; set; } = new ViewOptions();
+        public SearchIndexOptions Options { get; set; } = new SearchIndexOptions();
         
         public SearchIndexViewModel()
         {
 
         }
+        public SearchIndexViewModel(
+            SearchIndexOptions options,
+            PagerOptions pager)
+        {
+            this.Options = options;
+            this.Pager = pager;
+        }
 
         public SearchIndexViewModel(
             IPagedResults<Entity> results,
-            ViewOptions viewOptions,
-            PagerOptions pagerOptions)
+            SearchIndexOptions options,
+            PagerOptions pager)
         {
             this.Results = results;
-            this.ViewOpts = viewOptions;
-            this.PagerOpts = pagerOptions;
-            this.PagerOpts.SetTotal(results?.Total ?? 0);
+            this.Options = options;
+            this.Pager = pager;
+            this.Pager.SetTotal(results?.Total ?? 0);
         }
 
     }
 
 
-    public class ViewOptions
+    public class SearchIndexOptions
     {
         public string Search { get; set; }
 

@@ -1,9 +1,9 @@
 ﻿@model SearchIndexViewModel
 
-@if (!String.IsNullOrEmpty(Model.ViewOpts.Search))
+@if (!String.IsNullOrEmpty(Model.Options.Search))
 {
     <h4>@T["Search Results"]</h4>
-    <span class="text-muted">@T["Results for the search term "] <strong>@Model.ViewOpts.Search</strong></span>
+    <span class="text-muted">@T["Results for the search term "] <strong>@Model.Options.Search</strong></span>
 }
 else
 {

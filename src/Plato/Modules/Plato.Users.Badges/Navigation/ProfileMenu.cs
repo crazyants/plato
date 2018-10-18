@@ -36,7 +36,7 @@ namespace Plato.Users.Badges.Navigation
                 alias = context.RouteData.Values["alias"];
 
             builder.Add(T["Badges"], 1, topics => topics
-                .Action("Index", "Home", "Plato.Users.Badges", new RouteValueDictionary()
+                .Action("Index", "Profile", "Plato.Users.Badges", new RouteValueDictionary()
                 {
                     ["id"] = id?.ToString(),
                     ["alias"] = alias?.ToString()

@@ -29,40 +29,40 @@ namespace Plato.Search.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            ViewOptions viewOpts,
-            PagerOptions pagerOpts)
+            SearchIndexOptions options,
+            PagerOptions pager)
         {
 
-            if (viewOpts == null)
+            if (options == null)
             {
-                viewOpts = new ViewOptions();
+                options = new SearchIndexOptions();
             }
 
-            if (pagerOpts == null)
+            if (pager == null)
             {
-                pagerOpts = new PagerOptions();
+                pager = new PagerOptions();
             }
             
-            var model = await GetIndexViewModel(viewOpts, pagerOpts);
+            var model = await GetIndexViewModel(options, pager);
 
             return View(model);
 
         }
         
         async Task<SearchIndexViewModel> GetIndexViewModel(
-            ViewOptions viewOptions,
+            SearchIndexOptions searchIndexOptions,
             PagerOptions pagerOptions)
         {
-            var results = await GetEntities(viewOptions, pagerOptions);
+            var results = await GetEntities(searchIndexOptions, pagerOptions);
             return new SearchIndexViewModel(
                 results,
-                viewOptions,
+                searchIndexOptions,
                 pagerOptions);
         }
 
 
         async Task<IPagedResults<Entity>> GetEntities(
-            ViewOptions viewOpts,
+            SearchIndexOptions searchIndexOpts,
             PagerOptions pagerOptions)
         {
 
@@ -80,16 +80,16 @@ namespace Plato.Search.ViewComponents
                         q.FeatureId.Equals(feature.Id);
                     }
 
-                    if (viewOpts.ChannelId > 0)
+                    if (searchIndexOpts.ChannelId > 0)
                     {
-                        q.CategoryId.Equals(viewOpts.ChannelId);
+                        q.CategoryId.Equals(searchIndexOpts.ChannelId);
                     }
 
-                    if (!string.IsNullOrEmpty(viewOpts.Search))
+                    if (!string.IsNullOrEmpty(searchIndexOpts.Search))
                     {
-                        q.Title.Like(viewOpts.Search).Or();
-                        q.Message.Like(viewOpts.Search).Or();
-                        q.Html.Like(viewOpts.Search).Or();
+                        q.Title.Like(searchIndexOpts.Search).Or();
+                        q.Message.Like(searchIndexOpts.Search).Or();
+                        q.Html.Like(searchIndexOpts.Search).Or();
                     }
                     
                     q.HideSpam.True();

@@ -7,7 +7,7 @@ namespace Plato.Search.ViewModels
 
         public Entity Entity { get; set; }
 
-        public ViewOptions ViewOptions { get; set; }
+        public SearchIndexOptions SearchIndexOptions { get; set; }
         
     }
 }

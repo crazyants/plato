@@ -34,6 +34,11 @@ namespace Plato.Badges.Models
         public DateTimeOffset? AwardedDate { get; set; }
 
 
+        public Badge()
+        {
+
+        }
+
         public Badge(string name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));

@@ -1,5 +1,5 @@
 ﻿@using Plato.Badges.Models
-@model BadgesIndexViewModel
+@model UserBadgesIndexViewModel
 
 @*@{
     var badgesList = Model.Badges.ToList();
@@ -15,8 +15,9 @@
 
 @await DisplayAsync(new View("BadgeList", new
 {
-    options = @Model.Options,
+    options = @Model.BadgesIndexViewModel.Options,
 }))
+
 
 
 

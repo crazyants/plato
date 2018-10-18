@@ -7,17 +7,17 @@
     <card-body>
         @await DisplayAsync(new View("Search", new
         {
-            viewOpts = @Model.ViewOpts,
+            options = @Model.Options,
         }))
     </card-body>
 </card>
 
-@if (!String.IsNullOrEmpty(Model.ViewOpts.Search))
+@if (!String.IsNullOrEmpty(Model.Options.Search))
 {
     @await DisplayAsync(new View("SearchList", new
     {
-        viewOpts = @Model.ViewOpts,
-        pagerOpts = @Model.PagerOpts
+        options = @Model.Options,
+        pager = @Model.Pager
     }))
 }
 

@@ -36,10 +36,14 @@ namespace Plato.Users.Badges
             services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
 
             // Badge view proviers
+            services.AddScoped<IViewProviderManager<Badge>, ViewProviderManager<Badge>>();
+            services.AddScoped<IViewProvider<Badge>, BadgeViewProvider>();
+
+            // User badges view providers
             services.AddScoped<IViewProviderManager<UserBadge>, ViewProviderManager<UserBadge>>();
             services.AddScoped<IViewProvider<UserBadge>, UserBadgeViewProvider>();
-            
-            // Register navigation provider
+
+            // Register navigation providers
             services.AddScoped<INavigationProvider, ProfileMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
@@ -52,10 +56,17 @@ namespace Plato.Users.Badges
         {
 
             routes.MapAreaRoute(
+                name: "BadgesIndex",
+                areaName: "Plato.Users.Badges",
+                template: "badges",
+                defaults: new { controller = "Home", action = "Index" }
+            );
+
+            routes.MapAreaRoute(
                 name: "DisplayUserBadges",
                 areaName: "Plato.Users.Badges",
                 template: "users/{id}/{alias?}/badges",
-                defaults: new { controller = "Home", action = "Index" }
+                defaults: new { controller = "Profile", action = "Index" }
             );
 
         }

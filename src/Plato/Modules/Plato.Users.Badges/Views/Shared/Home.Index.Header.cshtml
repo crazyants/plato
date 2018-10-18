@@ -1,18 +1,7 @@
-﻿@using Plato.Badges.Models
-@model UserBadgesIndexViewModel
-@{
-    var badgesList = Model.Badges.ToList();
+﻿@model BadgesIndexViewModel
 
-}
-
-<div class="list-left">
-    <avatar class="avatar" user-id="@Model.User.Id"></avatar>
+<h4>@T["All Badges"]</h4>
+<div class="text-muted">
+    Browse all badges.
 </div>
-<div class="list-body">
-    <h4>@T["Badges"]</h4>
-    <div class="text-muted">
-        All badges awarded to @Model.User.DisplayName
-    </div>
-</div>
-
 <hr />

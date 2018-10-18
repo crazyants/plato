@@ -41,13 +41,19 @@ namespace Plato.Users.Badges.ViewProviders
             var viewModel = new UserBadgesIndexViewModel()
             {
                 User = user,
-                Badges = badges
+                BadgesIndexViewModel = new BadgesIndexViewModel()
+                {
+                    Options = new BadgesIndexOptions()
+                    {
+                        UserId = user.Id
+                    }
+                }
             };
             
             return Views(
-                View<UserBadgesIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
-                View<UserBadgesIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
-                View<UserBadgesIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
+                View<UserBadgesIndexViewModel>("Profile.Index.Header", model => viewModel).Zone("header"),
+                View<UserBadgesIndexViewModel>("Profile.Index.Tools", model => viewModel).Zone("tools"),
+                View<UserBadgesIndexViewModel>("Profile.Index.Content", model => viewModel).Zone("content")
             );
 
         }

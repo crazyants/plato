@@ -13,15 +13,15 @@ namespace Plato.Search.ViewComponents
         }
 
         public Task<IViewComponentResult> InvokeAsync(
-            ViewOptions viewOpts)
+            SearchIndexOptions options)
         {
 
-            if (viewOpts == null)
+            if (options == null)
             {
-                viewOpts = new ViewOptions();
+                options = new SearchIndexOptions();
             }
             
-            return Task.FromResult((IViewComponentResult)View(viewOpts));
+            return Task.FromResult((IViewComponentResult)View(options));
         }
 
     }

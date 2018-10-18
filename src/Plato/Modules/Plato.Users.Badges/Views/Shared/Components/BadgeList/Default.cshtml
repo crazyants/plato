@@ -1,0 +1,55 @@
+﻿@using Plato.Badges.Models
+@model BadgesIndexViewModel
+
+@{
+    var badgesList = Model.Badges.ToList();
+    var goldBadges = @badgesList.Where(b => b.Level == BadgeLevel.Gold).ToList().Count;
+    var silverBadges = @badgesList.Where(b => b.Level == BadgeLevel.Silver).ToList().Count;
+    var bronzeBadges = @badgesList.Where(b => b.Level == BadgeLevel.Bronze).ToList().Count;
+    var badgesText = badgesList.Count == 1
+        ? "Badge"
+        : "Badges";
+}
+
+<card class="card card-body-flush">
+    <card-title>
+
+        <h6 class="card-title float-left">
+            @badgesList.Count @T[badgesText]
+        </h6>
+        <span class="text-muted float-right">
+            @goldBadges
+            @T["Gold"],
+            @silverBadges
+            @T["Silver"],
+            @bronzeBadges
+            @T["Bronze"],
+        </span>
+
+    </card-title>
+    <card-body>
+
+        @if (badgesList.Count > 0)
+        {
+            <div class="list-group list-group-flush list-group-hover">
+                <div class="row no-gutters text-center">
+                    @foreach (var badge in badgesList.OrderBy(b => b.Level))
+                    {
+                        @await DisplayAsync(new View("BadgeListItem", new
+                        {
+                            badge = badge
+                        }))
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <span class="text-muted">
+                @T["No badges awarded"]
+            </span>
+        }
+        
+    </card-body>
+</card>
+
