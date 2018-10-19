@@ -2,7 +2,6 @@
 
 @if (Model.EnableEdit)
 {
-    
         <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Label.Id" class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0">
             <div class="p-3">
                 <span class="float-right">
@@ -35,43 +34,41 @@
                 </span>
             </div>
         </a>
-    
 }
 else
 {
-        <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Label.Id" asp-route-alias="@Model.Label.Alias" class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0">
-            <div class="p-3">
-                <span class="float-right">
-                    <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Followers"]">
-                        @Model.Label.TotalFollows.ToPrettyInt()
-                    </span>
-                    <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Topics"]">
-                        @Model.Label.TotalEntities.ToPrettyInt()
-                    </span>
+    <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Label.Id" asp-route-alias="@Model.Label.Alias" class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0">
+        <div class="p-3">
+            <span class="float-right">
+                <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Followers"]">
+                    @Model.Label.TotalFollows.ToPrettyInt()
                 </span>
-                <span class="btn btn-sm label font-weight-bold" style="background-color: @Model.Label.BackColor; color: @Model.Label.ForeColor">
-                    @Model.Label.Name
+                <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Topics"]">
+                    @Model.Label.TotalEntities.ToPrettyInt()
                 </span>
-                <span class="d-block mt-2">
-                    @if (!String.IsNullOrEmpty(@Model.Label.Description))
-                    {
-                        @Model.Label.Description
-                    }
-                    else
-                    {
-                        @T["No description provided."]
-                    }
-                </span>
-                <span class="text-muted d-block mt-2 pb-0">
-                    @if (Model.Label.LastEntityDate != null)
-                    {
-                        @T["Last seen: "]
-                        <date utc="@Model.Label.LastEntityDate"/>
-                    }
-                </span>
-            </div>
-        </a>
- 
+            </span>
+            <span class="btn btn-sm label font-weight-bold" style="background-color: @Model.Label.BackColor; color: @Model.Label.ForeColor">
+                @Model.Label.Name
+            </span>
+            <span class="d-block mt-2">
+                @if (!String.IsNullOrEmpty(@Model.Label.Description))
+                {
+                    @Model.Label.Description
+                }
+                else
+                {
+                    @T["No description provided."]
+                }
+            </span>
+            <span class="text-muted d-block mt-2 pb-0">
+                @if (Model.Label.LastEntityDate != null)
+                {
+                    @T["Last seen: "]
+                    <date utc="@Model.Label.LastEntityDate"/>
+                }
+            </span>
+        </div>
+    </a>
 }
 
         @*<p class="p-3">

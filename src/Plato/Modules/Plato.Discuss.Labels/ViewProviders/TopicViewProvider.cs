@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
+using Plato.Discuss.Labels.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -13,6 +14,7 @@ using Plato.Labels.Models;
 using Plato.Labels.Stores;
 using Plato.Discuss.Labels.ViewModels;
 using Plato.Discuss.Models;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Labels.Services;
 
@@ -23,7 +25,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         private const string LabelHtmlName = "label";
 
-        private readonly ILabelStore<Models.Label> _labelStore;
+        private readonly ILabelStore<Label> _labelStore;
         private readonly IEntityLabelManager<EntityLabel> _entityLabelManager;
         private readonly IEntityLabelStore<EntityLabel> _entityLabelStore;
         private readonly IEntityStore<Topic> _entityStore;
@@ -35,7 +37,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         public TopicViewProvider(
             IContextFacade contextFacade,
-            ILabelStore<Models.Label> labelStore, 
+            ILabelStore<Label> labelStore, 
             IEntityStore<Topic> entityStore,
             IHttpContextAccessor httpContextAccessor,
             IEntityLabelStore<EntityLabel> entityLabelStore,
@@ -65,11 +67,19 @@ namespace Plato.Discuss.Labels.ViewProviders
                 return default(IViewProviderResult);
             }
 
-            var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
-            
+            // Get top 10 labels
+            var labels = await _labelStore.QueryAsync()
+                .Take(1, 10)
+                .Select<LabelQueryParams>(q =>
+                {
+                    q.FeatureId.Equals(feature.Id);
+                })
+                .OrderBy("TotalEntities", OrderBy.Desc)
+                .ToList();
+
             return Views(View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
                 {
-                    model.Labels = labels;
+                    model.Labels = labels?.Data;
                     return model;
                 }).Zone("sidebar").Order(2)
             );
@@ -85,13 +95,21 @@ namespace Plato.Discuss.Labels.ViewProviders
             {
                 return default(IViewProviderResult);
             }
-
-            var categories = await _labelStore.GetByFeatureIdAsync(feature.Id);
+            
+            // Get top 10 labels
+            var labels = await _labelStore.QueryAsync()
+                .Take(1, 10)
+                .Select<LabelQueryParams>(q =>
+                {
+                    q.FeatureId.Equals(feature.Id);
+                })
+                .OrderBy("Entities", OrderBy.Desc)
+                .ToList();
             
             return Views(
                 View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
                 {
-                    model.Labels = categories;
+                    model.Labels = labels?.Data;
                     return model;
                 }).Zone("sidebar").Order(1)
             );
@@ -121,15 +139,8 @@ namespace Plato.Discuss.Labels.ViewProviders
         
         public override Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
-
             // ensure labels are optional
             return Task.FromResult(true);
-
-            // Validate model
-            //return await updater.TryUpdateModelAsync(new EditTopicLabelsViewModel
-            //{
-            //    SelectedLabels = GetLabelsToAdd()
-            //});
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext context)
@@ -149,8 +160,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                 // Get selected labels
                 //var labelsToAdd = GetLabelsToAdd();
                 var labelsToAdd = await GetLabelsToAddAsync();
-
-
+                
                 // Build labels to remove
                 var labelsToRemove = new List<EntityLabel>();
                 foreach (var entityLabel in await GetEntityLabelsByEntityIdAsync(topic.Id))

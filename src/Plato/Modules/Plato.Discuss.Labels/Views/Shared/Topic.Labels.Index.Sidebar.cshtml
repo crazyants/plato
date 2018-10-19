@@ -5,7 +5,7 @@
         <a data-toggle="tooltip" title="@T["All Labels"]" asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
             <i class="fal fa-ellipsis-h fa-2x"></i>
         </a>
-        <h6 class="card-title">@T["Labels"]</h6>
+        <h6 class="card-title">@T["Top Labels"]</h6>
     </card-title>
     <card-body>
 
@@ -18,6 +18,9 @@
                     <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@label.Id" asp-route-alias="@label.Alias" title="@label.Description" class="@css">
                         <span class="btn btn-sm label font-weight-bold" style="background-color: @label.BackColor; color: @label.ForeColor">
                             @label.Name
+                        </span>
+                        <span class="badge badge-primary float-right">
+                            @label.TotalEntities.ToPrettyInt()
                         </span>
                     </a>
                 }

@@ -81,6 +81,7 @@ namespace Plato.Internal.Repositories.Users
                 user.IpV6Address,
                 user.TotalVisits,
                 user.TotalPoints,
+                user.Rank,
                 user.Signature,
                 user.CreatedDate,
                 user.LastLoginDate,
@@ -440,6 +441,7 @@ namespace Plato.Internal.Repositories.Users
             string ipv6Address,
             int totalVisits,
             int totalPoints,
+            int rank,
             string signature,
             DateTimeOffset? createdDate,
             DateTimeOffset? lastLoginDate,
@@ -483,6 +485,7 @@ namespace Plato.Internal.Repositories.Users
                     ipv6Address.ToEmptyIfNull().TrimToSize(50),
                     totalVisits,
                     totalPoints,
+                    rank,
                     signature.ToEmptyIfNull(),
                     createdDate.ToDateIfNull(),
                     lastLoginDate.ToDateIfNull()

@@ -271,20 +271,23 @@ namespace Plato.Users.Handlers
                     new SchemaColumn()
                     {
                         Name = "TotalVisits",
-                        DbType = DbType.Int32,
-                        Length = "50"
+                        DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
                         Name = "TotalPoints",
-                        DbType = DbType.Int32,
-                        Length = "50"
+                        DbType = DbType.Int32
+                    },
+                     new SchemaColumn()
+                    {
+                        Name = "[Rank]",
+                        DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
                         Name = "[Signature]",
-                        Length = "max",
-                        DbType = DbType.String
+                        DbType = DbType.String,
+                        Length = "max"
                     },
                     new SchemaColumn()
                     {

@@ -9,13 +9,14 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
 using Plato.Labels.Stores;
 using Plato.Discuss.ViewModels;
+using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Discuss.Labels.ViewProviders
 {
     public class LabelsViewProvider : BaseViewProvider<Label>
     {
 
-        private readonly ILabelStore<Models.Label> _labelStore;
+        private readonly ILabelStore<Label> _labelStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
         private readonly IActionContextAccessor _actionContextAccessor;
@@ -67,7 +68,16 @@ namespace Plato.Discuss.Labels.ViewProviders
                 return default(IViewProviderResult);
             }
 
-            var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
+            //var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
+
+            var labels = await _labelStore.QueryAsync()
+                .Take(1, 10)
+                .Select<LabelQueryParams>(q =>
+                {
+                    q.FeatureId.Equals(feature.Id);
+                })
+                .OrderBy("Entities", OrderBy.Desc)
+                .ToList();
 
             return Views(
                 View<Label>("Home.Display.Header", model => label).Zone("header").Order(1),
@@ -76,7 +86,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                 View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
                 {
                     model.SelectedLabelId = label?.Id ?? 0;
-                    model.Labels = labels;
+                    model.Labels = labels?.Data;
                     return model;
                 }).Zone("sidebar").Order(1)
             );

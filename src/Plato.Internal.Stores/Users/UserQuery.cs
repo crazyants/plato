@@ -34,14 +34,12 @@ namespace Plato.Internal.Stores.Users
         public override async Task<IPagedResults<User>> ToList()
         {
             var builder = new UserQueryBuilder(this);
-            var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
 
             return await _store.SelectAsync(
                 PageIndex,
                 PageSize,
-                startSql,
                 populateSql,
                 countSql,
                 Params.Id.Value,
@@ -145,26 +143,26 @@ namespace Plato.Internal.Stores.Users
 
         #region "Implementation"
 
-        public string BuildSqlStartId()
-        {
-            var startIdComparer = GetStartIdComparer();
-            var whereClause = BuildWhereClause();
-            var orderBy = BuildOrderBy();
-            var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = ")
-                .Append(startIdComparer)
-                .Append(" FROM ")
-                .Append(_tableName);
-            if (!string.IsNullOrEmpty(whereClause))
-                sb.Append(" WHERE (").Append(whereClause).Append(")");
-            if (!string.IsNullOrEmpty(orderBy))
-                sb.Append(" ORDER BY ").Append(orderBy);
-            return sb.ToString();
-        }
+        //public string BuildSqlStartId()
+        //{
+        //    //var startIdComparer = GetStartIdComparer();
+        //    var whereClause = BuildWhereClause();
+        //    var orderBy = BuildOrderBy();
+        //    var sb = new StringBuilder();
+        //    sb.Append("SELECT @start_id_out = ")
+        //        .Append(startIdComparer)
+        //        .Append(" FROM ")
+        //        .Append(_tableName);
+        //    if (!string.IsNullOrEmpty(whereClause))
+        //        sb.Append(" WHERE (").Append(whereClause).Append(")");
+        //    if (!string.IsNullOrEmpty(orderBy))
+        //        sb.Append(" ORDER BY ").Append(orderBy);
+        //    return sb.ToString();
+        //}
 
         public string BuildSqlPopulate()
         {
-            var whereClause = BuildWhereClauseForStartId();
+            var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
             sb.Append("SELECT * FROM ").Append(_tableName);
@@ -172,6 +170,7 @@ namespace Plato.Internal.Stores.Users
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             if (!string.IsNullOrEmpty(orderBy))
                 sb.Append(" ORDER BY ").Append(orderBy);
+            sb.Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
             return sb.ToString();
         }
 
@@ -189,55 +188,55 @@ namespace Plato.Internal.Stores.Users
 
         #region "Private Methods"
 
-        string BuildWhereClauseForStartId()
-        {
+        //string BuildWhereClauseForStartId()
+        //{
 
-            var startIdComparer = GetStartIdComparer();
-            var sb = new StringBuilder();
-            // default to ascending
-            if (_query.SortColumns.Count == 0)
-            {
-                sb.Append(startIdComparer)
-                    .Append(" >= @start_id_in");
-            }
-            else
-            {
-                // set start operator based on first order by
-                foreach (var sortColumn in _query.SortColumns)
-                {
-                    sb.Append(startIdComparer)
-                        .Append(sortColumn.Value != OrderBy.Asc
-                            ? " <= @start_id_in"
-                            : " >= @start_id_in");
-                    break;
-                }
-            }
+        //    var startIdComparer = GetStartIdComparer();
+        //    var sb = new StringBuilder();
+        //    // default to ascending
+        //    if (_query.SortColumns.Count == 0)
+        //    {
+        //        sb.Append(startIdComparer)
+        //            .Append(" >= @start_id_in");
+        //    }
+        //    else
+        //    {
+        //        // set start operator based on first order by
+        //        foreach (var sortColumn in _query.SortColumns)
+        //        {
+        //            sb.Append(startIdComparer)
+        //                .Append(sortColumn.Value != OrderBy.Asc
+        //                    ? " <= @start_id_in"
+        //                    : " >= @start_id_in");
+        //            break;
+        //        }
+        //    }
      
-            var where = BuildWhereClause();
-            if (!string.IsNullOrEmpty(where))
-            {
-                sb.Append(" AND ").Append(where);
-            }
+        //    var where = BuildWhereClause();
+        //    if (!string.IsNullOrEmpty(where))
+        //    {
+        //        sb.Append(" AND ").Append(where);
+        //    }
             
-            return sb.ToString();
+        //    return sb.ToString();
 
-        }
+        //}
 
-        private string GetStartIdComparer()
-        {
+        //private string GetStartIdComparer()
+        //{
 
-            var output = "Id";
-            if (_query.SortColumns.Count > 0)
-            {
-                foreach (var sortColumn in _query.SortColumns)
-                {
-                    output = GetSortColumn(sortColumn.Key);
-                }
-            }
+        //    var output = "Id";
+        //    if (_query.SortColumns.Count > 0)
+        //    {
+        //        foreach (var sortColumn in _query.SortColumns)
+        //        {
+        //            output = GetSortColumn(sortColumn.Key);
+        //        }
+        //    }
 
-            return output;
+        //    return output;
 
-        }
+        //}
         
         string BuildWhereClause()
         {

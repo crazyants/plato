@@ -120,6 +120,7 @@ namespace Plato.Labels.Controllers
                     }
                 })
                 .OrderBy(sortBy, sortOrder)
+                //.OrderBy("CreatedDate", OrderBy.Desc)
                 .ToList();
 
         }

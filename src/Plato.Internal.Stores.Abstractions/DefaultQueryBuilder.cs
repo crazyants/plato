@@ -9,8 +9,6 @@ namespace Plato.Internal.Stores.Abstractions
 
     public interface IQueryBuilder
     {
-        string BuildSqlStartId();
-
         string BuildSqlPopulate();
 
         string BuildSqlCount();

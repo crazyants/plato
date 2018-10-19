@@ -62,6 +62,8 @@ namespace Plato.Internal.Models.Users
 
         public int TotalPoints { get; set; }
         
+        public int Rank { get; set; }
+        
         public string Signature { get; set; }
 
         public DateTimeOffset? CreatedDate { get; set; }
@@ -220,6 +222,9 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("TotalPoints"))
                 TotalPoints = Convert.ToInt32(dr["TotalPoints"]);
+
+            if (dr.ColumnIsNotNull("Rank"))
+                Rank = Convert.ToInt32(dr["Rank"]);
 
             if (dr.ColumnIsNotNull("Signature"))
                 Signature = Convert.ToString(dr["Signature"]);

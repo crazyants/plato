@@ -21,6 +21,8 @@ namespace Plato.Internal.Models.Users
 
         int TotalPoints { get; set; }
 
+        int Rank { get; set; }
+
         string Signature { get; set; }
 
         IEnumerable<string> RoleNames { get; set; }

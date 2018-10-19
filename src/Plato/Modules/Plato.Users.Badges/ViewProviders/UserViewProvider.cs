@@ -33,14 +33,14 @@ namespace Plato.Users.Badges.ViewProviders
             }
 
             var badges = await _userBadgeStore.GetUserBadgesAsync(user.Id);
-            var viewModel = new UserBadgesIndexViewModel()
+            var viewModel = new ProfileDisplayViewModel()
             {
                 User = user,
                 Badges = badges
             };
 
             return Views(
-                View<UserBadgesIndexViewModel>("Profile.Display.Sidebar", model => viewModel).Zone("sidebar").Order(2)
+                View<ProfileDisplayViewModel>("Profile.Display.Sidebar", model => viewModel).Zone("sidebar").Order(2)
             );
 
         }

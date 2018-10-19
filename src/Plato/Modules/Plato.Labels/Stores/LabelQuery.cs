@@ -34,14 +34,12 @@ namespace Plato.Labels.Stores
         {
 
             var builder = new LabelQueryBuilder<TModel>(this);
-            var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
 
             var data = await _store.SelectAsync(
                 PageIndex,
                 PageSize,
-                startSql,
                 populateSql,
                 countSql,
                 Params.Name.Value,
@@ -74,10 +72,9 @@ namespace Plato.Labels.Stores
 
         public WhereInt FeatureId
         {
-            get => _featureId ?? (_id = new WhereInt());
+            get => _featureId ?? (_featureId = new WhereInt());
             set => _featureId = value;
         }
-
 
         public WhereString Name
         {
@@ -114,28 +111,11 @@ namespace Plato.Labels.Stores
         #endregion
 
         #region "Implementation"
-
-        public string BuildSqlStartId()
-        {
-            var startIdComparer = GetStartIdComparer();
-            var whereClause = BuildWhereClause();
-            var orderBy = BuildOrderBy();
-            var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = ")
-                .Append(startIdComparer)
-                .Append(" FROM ")
-                .Append(BuildTables());
-            if (!string.IsNullOrEmpty(whereClause))
-                sb.Append(" WHERE (").Append(whereClause).Append(")");
-            if (!string.IsNullOrEmpty(orderBy))
-                sb.Append(" ORDER BY ").Append(orderBy);
-            return sb.ToString();
-        }
-
+        
         public string BuildSqlPopulate()
         {
 
-            var whereClause = BuildWhereClauseForStartId();
+            var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
 
             var sb = new StringBuilder();
@@ -148,6 +128,7 @@ namespace Plato.Labels.Stores
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             if (!string.IsNullOrEmpty(orderBy))
                 sb.Append(" ORDER BY ").Append(orderBy);
+            sb.Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
             return sb.ToString();
         }
 
@@ -193,40 +174,40 @@ namespace Plato.Labels.Stores
                 : tableName;
         }
 
-        private string BuildWhereClauseForStartId()
-        {
-            var startIdComparer = GetStartIdComparer();
+        //private string BuildWhereClauseForStartId()
+        //{
+        //    var startIdComparer = GetStartIdComparer();
 
-            var sb = new StringBuilder();
-            sb.Append("(");
-            if (_query.SortColumns.Count == 0)
-            {
-                sb.Append(startIdComparer)
-                    .Append(" >= @start_id_in");
-            }
+        //    var sb = new StringBuilder();
+        //    sb.Append("(");
+        //    if (_query.SortColumns.Count == 0)
+        //    {
+        //        sb.Append(startIdComparer)
+        //            .Append(" >= @start_id_in");
+        //    }
 
-            // set start operator based on first order by
-            foreach (var sortColumn in _query.SortColumns)
-            {
-                sb
-                    .Append(startIdComparer)
-                    .Append(sortColumn.Value != OrderBy.Asc
-                        ? " <= @start_id_in"
-                        : " >= @start_id_in");
-                break;
-            }
+        //    // set start operator based on first order by
+        //    foreach (var sortColumn in _query.SortColumns)
+        //    {
+        //        sb
+        //            .Append(startIdComparer)
+        //            .Append(sortColumn.Value != OrderBy.Asc
+        //                ? " <= @start_id_in"
+        //                : " >= @start_id_in");
+        //        break;
+        //    }
 
-            sb.Append(")");
+        //    sb.Append(")");
 
-            var where = BuildWhereClause();
-            if (!string.IsNullOrEmpty(where))
-                sb.Append(" AND (")
-                    .Append(where)
-                    .Append(")");
+        //    var where = BuildWhereClause();
+        //    if (!string.IsNullOrEmpty(where))
+        //        sb.Append(" AND (")
+        //            .Append(where)
+        //            .Append(")");
 
-            return sb.ToString();
+        //    return sb.ToString();
 
-        }
+        //}
 
         private string BuildWhereClause()
         {
@@ -240,6 +221,13 @@ namespace Plato.Labels.Stores
                 sb.Append(_query.Params.Id.ToSqlString("l.Id"));
             }
 
+            if (_query.Params.FeatureId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.FeatureId.Operator);
+                sb.Append(_query.Params.FeatureId.ToSqlString("l.FeatureId"));
+            }
+            
             if (!String.IsNullOrEmpty(_query.Params.Name.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -305,26 +293,26 @@ namespace Plato.Labels.Stores
             return ourput;
         }
 
-        private string GetStartIdComparer()
-        {
+        //private string GetStartIdComparer()
+        //{
 
-            var output = "e.Id";
-            if (_query.SortColumns.Count > 0)
-            {
-                foreach (var sortColumn in _query.SortColumns)
-                {
-                    var columnName = GetSortColumn(sortColumn.Key);
-                    if (String.IsNullOrEmpty(columnName))
-                    {
-                        throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
-                    }
-                    output = columnName;
-                }
-            }
+        //    var output = "l.Id";
+        //    if (_query.SortColumns.Count > 0)
+        //    {
+        //        foreach (var sortColumn in _query.SortColumns)
+        //        {
+        //            var columnName = GetSortColumn(sortColumn.Key);
+        //            if (String.IsNullOrEmpty(columnName))
+        //            {
+        //                throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
+        //            }
+        //            output = columnName;
+        //        }
+        //    }
 
-            return output;
+        //    return output;
 
-        }
+        //}
 
         string GetSortColumn(string columnName)
         {
