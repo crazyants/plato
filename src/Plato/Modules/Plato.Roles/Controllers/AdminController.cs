@@ -80,8 +80,7 @@ namespace Plato.Roles.Controllers
                     .LocalNav()
                 ).Add(S["Roles"]);
             });
-
-
+            
             // default options
             if (opts == null)
             {
@@ -96,14 +95,34 @@ namespace Plato.Roles.Controllers
             }
 
 
-            // Maintain previous route data when generating page links
-            var routeData = new RouteData();
-            routeData.Values.Add("opts.search", opts.Search);
-            routeData.Values.Add("opts.order", opts.Order);
+            // Get default options
+            var defaultViewOptions = new RoleIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
 
-           
-
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
             
+            //// Maintain previous route data when generating page links
+            //var routeData = new RouteData();
+            //routeData.Values.Add("opts.search", opts.Search);
+            //routeData.Values.Add("opts.order", opts.Order);
+            
+            // Add view model to context for involved view providers
+            this.HttpContext.Items[typeof(RolesIndexViewModel)] = new RolesIndexViewModel()
+            {
+                Options = opts,
+                Pager = pager
+            };
+
             var result = await _roleViewProvider.ProvideIndexAsync(new Role(), this);
 
             return View(result);

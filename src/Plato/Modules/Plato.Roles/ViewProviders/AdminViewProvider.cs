@@ -155,10 +155,10 @@ namespace Plato.Roles.ViewProviders
                     }
                     if (!string.IsNullOrEmpty(options.Search))
                     {
-                        q.RoleName.IsIn(options.Search);
+                        q.RoleName.Like(options.Search);
                     }
                 })
-                .OrderBy("Id", OrderBy.Desc)
+                .OrderBy("ModifiedDate", OrderBy.Desc)
                 .ToList();
         }
 

@@ -98,6 +98,9 @@ namespace Plato.Users.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
+            // Enable edit options for admin view
+            opts.EnableEdit = true;
+
             // Add view options to context for use within view adaptors
             this.HttpContext.Items[typeof(UserIndexViewModel)] = new UserIndexViewModel()
             {

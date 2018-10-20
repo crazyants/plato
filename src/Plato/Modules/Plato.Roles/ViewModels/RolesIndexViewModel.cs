@@ -39,11 +39,14 @@ namespace Plato.Roles.ViewModels
 
         public string Search { get; set; }
 
-        public RolesOrder Order { get; set; }
+        public SortBy Sort { get; set; }
+
+        public OrderBy Order { get; set; }
 
     }
 
-    public enum RolesOrder
+
+    public enum SortBy
     {
         Username,
         Email
