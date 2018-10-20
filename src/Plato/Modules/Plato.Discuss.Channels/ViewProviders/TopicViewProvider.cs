@@ -143,12 +143,13 @@ namespace Plato.Discuss.Channels.ViewProviders
 
             // Get all categories & return views
             var categories = await _channelStore.GetByFeatureIdAsync(feature.Id);
+            
             return Views(
-                View<ChannelListViewModel>("Topic.Channels.Index.Sidebar", model =>
+                View<ChannelListViewModel>("Topic.Channels.Display.Sidebar", model =>
                 {
-                    model.Channels = categories;
+                    model.Channels = categories.Where(c => c.Id == topic.CategoryId);
                     return model;
-                }).Zone("sidebar").Order(1)
+                }).Zone("sidebar").Order(2)
             );
 
         }

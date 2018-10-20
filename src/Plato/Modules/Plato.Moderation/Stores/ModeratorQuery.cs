@@ -34,7 +34,6 @@ namespace Plato.Moderation.Stores
         {
 
             var builder = new ModeratorQueryBuilder(this);
-            var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
             var keywords = Params?.Keywords?.Value ?? string.Empty;
@@ -42,7 +41,6 @@ namespace Plato.Moderation.Stores
             var data = await _store.SelectAsync(
                 PageIndex,
                 PageSize,
-                startSql,
                 populateSql,
                 countSql,
                 keywords
@@ -50,8 +48,7 @@ namespace Plato.Moderation.Stores
 
             return data;
         }
-
-
+        
     }
 
     #endregion
@@ -61,11 +58,9 @@ namespace Plato.Moderation.Stores
     public class ModeratorQueryParams
     {
 
-
         private WhereInt _id;
         private WhereString _keywords;
-
-
+        
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -77,8 +72,7 @@ namespace Plato.Moderation.Stores
             get => _keywords ?? (_keywords = new WhereString());
             set => _keywords = value;
         }
-
-
+        
     }
 
     #endregion
@@ -105,37 +99,23 @@ namespace Plato.Moderation.Stores
         #endregion
 
         #region "Implementation"
-
-        public string BuildSqlStartId()
+        
+        public string BuildSqlPopulate()
         {
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
-            var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = m.Id FROM ")
-                .Append(BuildTables());
-            if (!string.IsNullOrEmpty(whereClause))
-                sb.Append(" WHERE (").Append(whereClause).Append(")");
-            if (!string.IsNullOrEmpty(orderBy))
-                sb.Append(" ORDER BY ").Append(orderBy);
-            return sb.ToString();
-        }
-
-        public string BuildSqlPopulate()
-        {
-
-            var whereClause = BuildWhereClauseForStartId();
-            var orderBy = BuildOrderBy();
-
             var sb = new StringBuilder();
             sb.Append("SELECT ")
                 .Append(BuildPopulateSelect())
                 .Append(" FROM ")
                 .Append(BuildTables());
-
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
-            if (!string.IsNullOrEmpty(orderBy))
-                sb.Append(" ORDER BY ").Append(orderBy);
+            sb.Append(" ORDER BY ")
+                .Append(!string.IsNullOrEmpty(orderBy)
+                    ? orderBy
+                    : "Id ASC");
+            sb.Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
             return sb.ToString();
         }
 
@@ -192,29 +172,6 @@ namespace Plato.Moderation.Stores
                 : tableName;
         }
 
-        private string BuildWhereClauseForStartId()
-        {
-            var sb = new StringBuilder();
-            // default to ascending
-            if (_query.SortColumns.Count == 0)
-                sb.Append("m.Id >= @start_id_in");
-            // set start operator based on first order by
-            foreach (var sortColumn in _query.SortColumns)
-            {
-                sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "m.Id <= @start_id_in"
-                    : "m.Id >= @start_id_in");
-                break;
-            }
-
-            var where = BuildWhereClause();
-            if (!string.IsNullOrEmpty(where))
-                sb.Append(" AND ").Append(where);
-
-            return sb.ToString();
-
-        }
-
         private string BuildWhereClause()
         {
 
@@ -237,8 +194,7 @@ namespace Plato.Moderation.Stores
             return sb.ToString();
 
         }
-
-
+        
         string GetQualifiedColumnName(string columnName)
         {
             if (columnName == null)
@@ -271,6 +227,7 @@ namespace Plato.Moderation.Stores
         }
 
         #endregion
+
     }
 
     #endregion

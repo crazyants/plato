@@ -47,8 +47,7 @@ namespace Plato.Entities.Stores
 
             return data;
         }
-
-
+        
     }
 
     #endregion
@@ -133,8 +132,7 @@ namespace Plato.Entities.Stores
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             return sb.ToString();
         }
-
-
+        
         #endregion
 
         #region "Private Methods"
@@ -191,8 +189,7 @@ namespace Plato.Entities.Stores
             return sb.ToString();
 
         }
-
-
+        
         string GetQualifiedColumnName(string columnName)
         {
             if (columnName == null)
@@ -223,6 +220,7 @@ namespace Plato.Entities.Stores
         }
 
         #endregion
+
     }
 
     #endregion

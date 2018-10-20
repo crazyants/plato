@@ -7,6 +7,7 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Labels.Stores
 {
+
     #region "EntityLabelQuery"
 
     public class EntityLabelQuery : DefaultQuery<EntityLabel>
@@ -211,6 +212,7 @@ namespace Plato.Labels.Stores
         }
 
         #endregion
+
     }
 
     #endregion

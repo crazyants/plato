@@ -34,14 +34,12 @@ namespace Plato.Email.Stores
         {
 
             var builder = new EmailQueryBuilder(this);
-            var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
 
             var data = await _store.SelectAsync(
                 PageIndex,
                 PageSize,
-                startSql,
                 populateSql,
                 countSql,
                 Params.Keywords.Value
@@ -103,36 +101,22 @@ namespace Plato.Email.Stores
 
         #region "Implementation"
 
-        public string BuildSqlStartId()
+        public string BuildSqlPopulate()
         {
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
-            var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = e.Id FROM ")
-                .Append(BuildTables());
-            if (!string.IsNullOrEmpty(whereClause))
-                sb.Append(" WHERE (").Append(whereClause).Append(")");
-            if (!string.IsNullOrEmpty(orderBy))
-                sb.Append(" ORDER BY ").Append(orderBy);
-            return sb.ToString();
-        }
-
-        public string BuildSqlPopulate()
-        {
-
-            var whereClause = BuildWhereClauseForStartId();
-            var orderBy = BuildOrderBy();
-
             var sb = new StringBuilder();
             sb.Append("SELECT ")
                 .Append(BuildPopulateSelect())
                 .Append(" FROM ")
                 .Append(BuildTables());
-
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
-            if (!string.IsNullOrEmpty(orderBy))
-                sb.Append(" ORDER BY ").Append(orderBy);
+            sb.Append(" ORDER BY ")
+                .Append(!string.IsNullOrEmpty(orderBy)
+                    ? orderBy
+                    : "Id ASC");
+            sb.Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
             return sb.ToString();
         }
 
@@ -177,30 +161,7 @@ namespace Plato.Email.Stores
                 ? _query.TablePrefix + tableName
                 : tableName;
         }
-
-        private string BuildWhereClauseForStartId()
-        {
-            var sb = new StringBuilder();
-            // default to ascending
-            if (_query.SortColumns.Count == 0)
-                sb.Append("e.Id >= @start_id_in");
-            // set start operator based on first order by
-            foreach (var sortColumn in _query.SortColumns)
-            {
-                sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "e.Id <= @start_id_in"
-                    : "e.Id >= @start_id_in");
-                break;
-            }
-
-            var where = BuildWhereClause();
-            if (!string.IsNullOrEmpty(where))
-                sb.Append(" AND ").Append(where);
-
-            return sb.ToString();
-
-        }
-
+        
         private string BuildWhereClause()
         {
             var sb = new StringBuilder();
@@ -213,11 +174,9 @@ namespace Plato.Email.Stores
                 sb.Append(_query.Params.Id.ToSqlString("e.Id"));
             }
             
-
             return sb.ToString();
 
         }
-
 
         string GetQualifiedColumnName(string columnName)
         {

@@ -60,6 +60,7 @@ namespace Plato.Labels.Stores
         
         private WhereInt _id;
         private WhereInt _featureId;
+        private WhereInt _entityId;
         private WhereString _name;
         private WhereString _description;
 
@@ -74,6 +75,13 @@ namespace Plato.Labels.Stores
             get => _featureId ?? (_featureId = new WhereInt());
             set => _featureId = value;
         }
+
+        public WhereInt EntityId
+        {
+            get => _entityId ?? (_entityId = new WhereInt());
+            set => _entityId = value;
+        }
+
 
         public WhereString Name
         {
@@ -98,6 +106,7 @@ namespace Plato.Labels.Stores
         #region "Constructor"
 
         private readonly string _labelsTableName;
+        private readonly string _entityLabelsTableName;
 
         private readonly LabelQuery<TModel> _query;
 
@@ -105,6 +114,7 @@ namespace Plato.Labels.Stores
         {
             _query = query;
             _labelsTableName = GetTableNameWithPrefix("Labels");
+            _entityLabelsTableName = GetTableNameWithPrefix("EntityLabels");
         }
 
         #endregion
@@ -193,7 +203,18 @@ namespace Plato.Labels.Stores
                     sb.Append(_query.Params.FeatureId.Operator);
                 sb.Append(_query.Params.FeatureId.ToSqlString("l.FeatureId"));
             }
-            
+
+            if (_query.Params.EntityId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EntityId.Operator);
+                sb.Append(" l.Id IN (SELECT LabelId FROM ")
+                    .Append(_entityLabelsTableName)
+                    .Append(" WHERE EntityId = ")
+                    .Append(_query.Params.EntityId.Value)
+                    .Append(")");
+            }
+
             if (!String.IsNullOrEmpty(_query.Params.Name.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))

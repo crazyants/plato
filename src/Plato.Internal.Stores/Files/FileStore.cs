@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
@@ -83,4 +82,5 @@ namespace Plato.Internal.Stores.Files
         }
 
     }
+
 }

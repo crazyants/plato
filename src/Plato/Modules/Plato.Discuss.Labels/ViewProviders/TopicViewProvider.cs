@@ -96,22 +96,22 @@ namespace Plato.Discuss.Labels.ViewProviders
                 return default(IViewProviderResult);
             }
             
-            // Get top 10 labels
+            // Get entity labels
             var labels = await _labelStore.QueryAsync()
                 .Take(1, 10)
                 .Select<LabelQueryParams>(q =>
                 {
-                    q.FeatureId.Equals(feature.Id);
+                    q.EntityId.Equals(viewModel.Id);
                 })
-                .OrderBy("Entities", OrderBy.Desc)
+                .OrderBy("Name", OrderBy.Desc)
                 .ToList();
             
             return Views(
-                View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
+                View<LabelsViewModel>("Topic.Labels.Display.Sidebar", model =>
                 {
                     model.Labels = labels?.Data;
                     return model;
-                }).Zone("sidebar").Order(1)
+                }).Zone("sidebar").Order(3)
             );
 
         }

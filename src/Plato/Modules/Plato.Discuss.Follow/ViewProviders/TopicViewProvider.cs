@@ -66,7 +66,7 @@ namespace Plato.Discuss.Follow.ViewProviders
                     model.EntityId = entity.Id;
                     model.IsFollowing = isFollowing;
                     return model;
-                }).Zone("sidebar").Order(3)
+                }).Zone("sidebar").Order(4)
             );
 
         }
