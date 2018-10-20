@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Categories.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
@@ -34,14 +33,12 @@ namespace Plato.Categories.Stores
         {
 
             var builder = new CategoryQueryBuilder<TModel>(this);
-            var startSql = builder.BuildSqlStartId();
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
 
             var data = await _store.SelectAsync(
                 PageIndex,
                 PageSize,
-                startSql,
                 populateSql,
                 countSql,
                 Params.Keywords.Value
@@ -49,8 +46,7 @@ namespace Plato.Categories.Stores
 
             return data;
         }
-
-
+        
     }
 
     #endregion
@@ -62,8 +58,7 @@ namespace Plato.Categories.Stores
         
         private WhereInt _id;
         private WhereString _keywords;
-
-
+        
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -101,36 +96,22 @@ namespace Plato.Categories.Stores
 
         #region "Implementation"
 
-        public string BuildSqlStartId()
+        public string BuildSqlPopulate()
         {
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
-            var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = c.Id FROM ")
-                .Append(BuildTables());
-            if (!string.IsNullOrEmpty(whereClause))
-                sb.Append(" WHERE (").Append(whereClause).Append(")");
-            if (!string.IsNullOrEmpty(orderBy))
-                sb.Append(" ORDER BY ").Append(orderBy);
-            return sb.ToString();
-        }
-
-        public string BuildSqlPopulate()
-        {
-
-            var whereClause = BuildWhereClauseForStartId();
-            var orderBy = BuildOrderBy();
-
             var sb = new StringBuilder();
             sb.Append("SELECT ")
                 .Append(BuildPopulateSelect())
                 .Append(" FROM ")
                 .Append(BuildTables());
-
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
-            if (!string.IsNullOrEmpty(orderBy))
-                sb.Append(" ORDER BY ").Append(orderBy);
+            sb.Append(" ORDER BY ")
+                .Append(!string.IsNullOrEmpty(orderBy)
+                    ? orderBy
+                    : "Id ASC");
+            sb.Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
             return sb.ToString();
         }
 
@@ -150,19 +131,14 @@ namespace Plato.Categories.Stores
             var sb = new StringBuilder();
             sb.Append("c.*");
             return sb.ToString();
-
         }
 
         string BuildTables()
         {
-
             var sb = new StringBuilder();
-
             sb.Append(_categorysTableName)
                 .Append(" c ");
-
             return sb.ToString();
-
         }
 
         #endregion
@@ -175,30 +151,7 @@ namespace Plato.Categories.Stores
                 ? _query.TablePrefix + tableName
                 : tableName;
         }
-
-        private string BuildWhereClauseForStartId()
-        {
-            var sb = new StringBuilder();
-            // default to ascending
-            if (_query.SortColumns.Count == 0)
-                sb.Append("c.Id >= @start_id_in");
-            // set start operator based on first order by
-            foreach (var sortColumn in _query.SortColumns)
-            {
-                sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "c.Id <= @start_id_in"
-                    : "c.Id >= @start_id_in");
-                break;
-            }
-
-            var where = BuildWhereClause();
-            if (!string.IsNullOrEmpty(where))
-                sb.Append(" AND ").Append(where);
-
-            return sb.ToString();
-
-        }
-
+        
         private string BuildWhereClause()
         {
             var sb = new StringBuilder();
@@ -215,8 +168,7 @@ namespace Plato.Categories.Stores
             return sb.ToString();
 
         }
-
-
+        
         string GetQualifiedColumnName(string columnName)
         {
             if (columnName == null)
@@ -247,6 +199,7 @@ namespace Plato.Categories.Stores
         }
 
         #endregion
+
     }
 
     #endregion

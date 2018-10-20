@@ -483,7 +483,7 @@ namespace Plato.Internal.Data.Schemas
             ) AS
             SET NOCOUNT ON
 
-            DECLARE @RowIndex int = 1
+            DECLARE @RowIndex int = 0;
             IF(@PageIndex > 1)
             SET @RowIndex = ((@PageIndex * @PageSize) - (@PageSize))
 
@@ -555,7 +555,7 @@ namespace Plato.Internal.Data.Schemas
                 .Append(_newLine)
                 .Append(_newLine);
 
-            sb.Append("DECLARE @RowIndex int = 1;")
+            sb.Append("DECLARE @RowIndex int = 0;")
                 .Append(_newLine)
                 .Append("IF (@PageIndex > 1)")
                 .Append(_newLine)

@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.SetUp;
-using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.SetUp.ViewModels;
 using Plato.SetUp.Services;
 
@@ -44,7 +42,7 @@ namespace Plato.SetUp.Controllers
             var setUpViewModel = new SetUpViewModel()
             {
                 SiteName = "Plato",
-                ConnectionString = "server=localhost;trusted_connection=true;database=PlatoTest10",
+                ConnectionString = "server=localhost;trusted_connection=true;database=PlatoTest11",
                 TablePrefix = "plato",
                 UserName = "admin",
                 Email = "admin@admin.com",
