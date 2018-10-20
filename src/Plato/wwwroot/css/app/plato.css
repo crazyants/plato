@@ -220,6 +220,8 @@
     background-position: top left;
     position: relative;
     border-radius: .15rem;
+    background-color: #B4D0FF;
+    border-radius: 2px;
 }
 
 .avatar > span {
