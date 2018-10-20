@@ -18,9 +18,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
 
     public class TopicListItemViewAdaptor : BaseAdaptorProvider
     {
-
-        //private IDictionary<int, IList<Label>> _lookUpTable;
-
+        
         private readonly ILabelStore<Label> _labelStore;
         private readonly IFeatureFacade _featureFacade;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -46,7 +44,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
 
         public override async Task<IViewAdaptorResult> ConfigureAsync()
         {
-
+            
             // Get feature
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
             if (feature == null)
@@ -64,25 +62,17 @@ namespace Plato.Discuss.Labels.ViewAdaptors
             }
 
             // Build a dictionary we can use below within our AdaptModel
-            // method to add the correct labels for each entitty
+            // method to add the correct labels for each displayed entitty
             var topicLabelsDictionary = await BuildLoookUpTable(labels.ToList());
             
             // Plato.Discuss does not have a dependency on Plato.Discuss.Labels
             // Instead we update the model for the topic item view component
-            // here via our view adaptor to include the label information
+            // here via our view adaptor to include the label data for the entity
             // This way the label data is only ever populated if the labels feature is enabled
             return await Adapt("TopicListItem", v =>
             {
                 v.AdaptModel<TopicListItemViewModel>(model  =>
                 {
-
-                    //if (_lookUpTable == null)
-                    //{
-                    //    _lookUpTable = BuildLoookUpTable(labels)
-                    //        .GetAwaiter()
-                    //        .GetResult();
-                    //}
-
                     if (model.Topic == null)
                     {
                         // Return an anonymous type, we are adapting a view component
@@ -132,7 +122,9 @@ namespace Plato.Discuss.Labels.ViewAdaptors
             var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
         
             // Get all entities for our current view
-            var entities = await _topicService.Get(viewModel?.Options, viewModel?.Pager);
+            var entities = await _topicService.Get(
+                viewModel?.Options, 
+                viewModel?.Pager);
 
             // Get all entity label relationships for displayed entities
             IPagedResults<EntityLabel> entityLabels = null;
@@ -166,8 +158,6 @@ namespace Plato.Discuss.Labels.ViewAdaptors
 
         }
         
-
     }
-
-
+    
 }

@@ -29,7 +29,7 @@ namespace Plato.Internal.Layout.ViewAdaptors
         {
 
             // Populate all providers
-            await EnsureConfiguredAProviders();
+            await EnsureConfiguredProviders();
 
             // Find providers matching our view name
             // Hot code path - avoid linq
@@ -46,7 +46,7 @@ namespace Plato.Internal.Layout.ViewAdaptors
             
         }
         
-        async Task EnsureConfiguredAProviders()
+        async Task EnsureConfiguredProviders()
         {
 
             if (_viewAdaptorResults.Count == 0)
