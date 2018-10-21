@@ -8,12 +8,8 @@ using Plato.Internal.Stores.Abstractions;
 namespace Plato.Entities.Stores
 {
     
-
     public interface IEntityUsersStore : IQueryable<EntityUser>
     {
-
-        //Task<IEnumerable<EntityUser>> GetUniqueUsers(EntityUserQueryParams queryParams);
-
     }
 
     public class EntityUsersStore : IEntityUsersStore
@@ -28,11 +24,6 @@ namespace Plato.Entities.Stores
             _dbQuery = dbQuery;
         }
         
-        //public async Task<IEnumerable<EntityUser>> GetUniqueUsers(EntityUserQueryParams queryParams)
-        //{
-        //    return await _entityUsersRepository.GetUniqueUsers(queryParams);
-        //}
-
         public IQuery<EntityUser> QueryAsync()
         {
             var query = new EntityUserQuery(this);
@@ -41,10 +32,7 @@ namespace Plato.Entities.Stores
 
         public async Task<IPagedResults<EntityUser>> SelectAsync(params object[] args)
         {
-          
-
             return await _entityUsersRepository.SelectAsync(args);
-
         }
     }
 

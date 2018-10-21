@@ -367,11 +367,9 @@ namespace Plato.Entities.Handlers
                     {
                         context.Errors.Add(error.Message, $"InstallingAsync within {this.GetType().FullName}");
                     }
-
                 }
 
             }
-            
 
         }
 
@@ -393,8 +391,10 @@ namespace Plato.Entities.Handlers
                 builder
                     .DropTable(_entities)
                     .DropDefaultProcedures(_entities)
-                    .DropProcedure(new SchemaProcedure("SelectEntitiesPaged", StoredProcedureType.SelectByKey));
-                
+                    .DropProcedure(new SchemaProcedure("SelectEntitiesPaged", StoredProcedureType.SelectByKey))
+                    .DropProcedure(new SchemaProcedure("SelectEntityUsersPaged", StoredProcedureType.SelectByKey));
+
+
                 // drop entity data
                 builder
                     .DropTable(_entityData)
@@ -495,7 +495,9 @@ namespace Plato.Entities.Handlers
                                 )")
                     .ForTable(_entities)
                     .WithParameter(_entities.PrimaryKeyColumn));
+
             
+
             builder.CreateProcedure(new SchemaProcedure("SelectEntitiesPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_entities)
                 .WithParameters(new List<SchemaColumn>()
@@ -517,7 +519,19 @@ namespace Plato.Entities.Handlers
                         Name = "Html",
                         DbType = DbType.String,
                         Length = "255"
-                    },
+                    }
+                }));
+
+            builder.CreateProcedure(new SchemaProcedure("SelectEntityUsersPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_entities)
+                .WithParameters(new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        Name = "Username",
+                        DbType = DbType.String,
+                        Length = "255"
+                    }
                 }));
 
         }

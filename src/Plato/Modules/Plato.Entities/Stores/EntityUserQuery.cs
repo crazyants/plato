@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
@@ -42,7 +41,7 @@ namespace Plato.Entities.Stores
                 PageSize,
                 populateSql,
                 countSql,
-                Params.Keywords.Value
+                Params.Username.Value
             );
 
             return data;
@@ -60,7 +59,7 @@ namespace Plato.Entities.Stores
 
 
         private WhereInt _entityId;
-        private WhereString _keywords;
+        private WhereString _userName;
 
 
         public WhereInt EntityId
@@ -69,10 +68,10 @@ namespace Plato.Entities.Stores
             set => _entityId = value;
         }
 
-        public WhereString Keywords
+        public WhereString Username
         {
-            get => _keywords ?? (_keywords = new WhereString());
-            set => _keywords = value;
+            get => _userName ?? (_userName = new WhereString());
+            set => _userName = value;
         }
 
 
@@ -86,14 +85,16 @@ namespace Plato.Entities.Stores
     {
         #region "Constructor"
 
-        private readonly string _entityUsersTableName;
-
+        private readonly string _usersTableName;
+        private readonly string _repliesTableName;
+        
         private readonly EntityUserQuery _query;
 
         public EntityUserQueryBuilder(EntityUserQuery query)
         {
             _query = query;
-            _entityUsersTableName = GetTableNameWithPrefix("EntityUsers");
+            _usersTableName = GetTableNameWithPrefix("Users");
+            _repliesTableName = GetTableNameWithPrefix("EntityReplies");
 
         }
 
@@ -103,107 +104,117 @@ namespace Plato.Entities.Stores
 
         public string BuildSqlPopulate()
         {
-            
-            var sb = new StringBuilder();
-            sb.Append(BuildTemporaryTable());
-            sb.Append(@"           
-                SELECT TOP @pageSize
-	                u.Id AS UserId,
-	                u.UserName,
-	                u.NormalizedUserName,
-	                u.DisplayName,
-	                u.FirstName,
-	                u.LastName,
-	                u.Alias,
-	                r.Id AS LastReplyId,
-	                r.CreatedDate AS LastReplyDate,
-	                t.TotalReplies
-                FROM @t t 
-                INNER JOIN {prefix}_Users AS u ON u.Id = t.UserID 
-                INNER JOIN {prefix}_EntityReplies AS r ON r.Id = t.LastReplyId              
-            ");
 
             var orderBy = BuildOrderBy();
-            sb.Append(" ORDER BY ")
+            var sb = new StringBuilder();
+
+            sb.Append(BuildTemporaryTable())
+                .Append("SELECT ")
+                .Append("u.Id AS UserId, ")
+                .Append("u.UserName, ")
+                .Append("u.NormalizedUserName, ")
+                .Append("u.DisplayName,")
+                .Append("u.FirstName, ")
+                .Append("u.LastName, ")
+                .Append("u.Alias, ")
+                .Append("r.Id AS LastReplyId, ")
+                .Append("r.CreatedDate AS LastReplyDate, ")
+                .Append("t.TotalReplies ")
+                .Append("FROM @t t ")
+                .Append("INNER JOIN ")
+                .Append(_usersTableName)
+                .Append(" AS u ON u.Id = t.UserID ")
+                .Append("INNER JOIN ")
+                .Append(_repliesTableName)
+                .Append(" AS r ON r.Id = t.LastReplyId")
+                .Append(" ORDER BY ")
                 .Append(!string.IsNullOrEmpty(orderBy)
                     ? orderBy
-                    : "Id ASC");
-            //sb.Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
+                    : "Id ASC")
+                .Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
             return sb.ToString();
         }
 
         public string BuildSqlCount()
         {
-            
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
             sb.Append(BuildTemporaryTable());
-            sb.Append(@"               
-                SELECT COUNT(u.Id) FROM @t t 
-                INNER JOIN {prefix}_Users AS u ON u.Id = t.UserID 
-                INNER JOIN {prefix}_EntityReplies AS r ON r.Id = t.LastReplyId              
-            ");
+            sb.Append("SELECT COUNT(u.Id) FROM @t t ")
+                .Append("INNER JOIN ")
+                .Append(_usersTableName)
+                .Append(" AS u ON u.Id = t.UserID ")
+                .Append(" INNER JOIN ")
+                .Append(_repliesTableName)
+                .Append(" AS r ON r.Id = t.LastReplyId");
             return sb.ToString();
         }
 
-        string BuildTemporaryTable()
-        {
-            
-            var sb = new StringBuilder();
-            sb.Append(@"
-                -- temporary table to hold aggregated data
-                DECLARE @t TABLE
-                (
-	                IndexID int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
-	                UserID int,
-	                LastReplyId int,
-	                TotalReplies int
-                );
-                -- insert aggregated data into temporary table
-                INSERT INTO @t (UserID, LastReplyId, TotalReplies)
-	                SELECT 
-	                u.Id AS UserId, 
-	                MAX(r.Id) AS LastReplyId,
-	                COUNT(r.Id) AS TotalReplies
-	                FROM {prefix}_EntityReplies r 
-	                JOIN {prefix}_Users u ON r.CreatedUserId = u.Id");
-            
-            var whereClause = BuildWhereClause();
-            if (!string.IsNullOrEmpty(whereClause))
-            {
-                
-                 sb.Append(" WHERE (")
-                    .Append(whereClause)
-                    .Append(")");
-            }
-
-            sb.Append(" GROUP BY u.Id");
-        
-            return sb.ToString();
-
-        }
-        
         #endregion
 
         #region "Private Methods"
 
-        private string GetTableNameWithPrefix(string tableName)
+        string BuildTemporaryTable()
+        {
+
+            var whereClause = BuildWhereClause();
+            var sb = new StringBuilder();
+
+            sb.Append("DECLARE @t TABLE")
+                .Append("(")
+                .Append("IndexID int IDENTITY (1, 1) NOT NULL PRIMARY KEY,")
+                .Append("UserID int,")
+                .Append("LastReplyId int,")
+                .Append("TotalReplies int")
+                .Append(");");
+
+            sb.Append("INSERT INTO @t (UserID, LastReplyId, TotalReplies) ")
+                .Append("SELECT ")
+                .Append("u.Id AS UserId, ")
+                .Append("MAX(r.Id) AS LastReplyId, ")
+                .Append("COUNT(r.Id) AS TotalReplies ")
+                .Append("FROM ")
+                .Append(_repliesTableName)
+                .Append(" r JOIN ")
+                .Append(_usersTableName)
+                .Append(" u ON r.CreatedUserId = u.Id");
+            if (!string.IsNullOrEmpty(whereClause))
+            {
+                 sb.Append(" WHERE (")
+                    .Append(whereClause)
+                    .Append(")");
+            }
+            sb.Append(" GROUP BY u.Id;");
+        
+            return sb.ToString();
+
+        }
+        
+        string GetTableNameWithPrefix(string tableName)
         {
             return !string.IsNullOrEmpty(_query.TablePrefix)
                 ? _query.TablePrefix + tableName
                 : tableName;
         }
 
-        private string BuildWhereClause()
+        string BuildWhereClause()
         {
             var sb = new StringBuilder();
 
-            // Id
+            // EntityId
             if (_query.Params.EntityId.Value > 0)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityId.Operator);
-                sb.Append(_query.Params.EntityId.ToSqlString("e.EntityId"));
+                sb.Append(_query.Params.EntityId.ToSqlString("r.EntityId"));
+            }
+
+            // Username
+            if (!string.IsNullOrEmpty(_query.Params.Username.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EntityId.Operator);
+                sb.Append(_query.Params.Username.ToSqlString("Username"));
             }
 
             return sb.ToString();
@@ -222,7 +233,7 @@ namespace Plato.Entities.Stores
                 : "e." + columnName;
         }
 
-        private string BuildOrderBy()
+        string BuildOrderBy()
         {
             if (_query.SortColumns.Count == 0) return null;
             var sb = new StringBuilder();

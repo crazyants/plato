@@ -10,24 +10,7 @@ using Plato.Internal.Data.Abstractions;
 namespace Plato.Entities.Repositories
 {
     
-    //public class EntityUserQueryParams
-    //{
-    //    public enum SortBy
-    //    {
-    //        CreatedDate,
-    //        TotalReplies
-    //    }
-
-    //    public int EntityId { get; set; }
-
-    //    public SortBy Sort { get; set; } = SortBy.TotalReplies;
-
-    //    public OrderBy Order { get; set; } = OrderBy.Desc;
-
-    //    public int PageSize { get; set; } = int.MaxValue;
-
-    //}
-
+    
     public interface IEntityUsersRepository
     {
         Task<IPagedResults<EntityUser>> SelectAsync(params object[] inputParams);
@@ -59,7 +42,7 @@ namespace Plato.Entities.Repositories
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEmailsPaged",
+                    "SelectEntityUsersPaged",
                     inputParams);
                 if ((reader != null) && (reader.HasRows))
                 {
@@ -83,9 +66,6 @@ namespace Plato.Entities.Repositories
             return output;
 
         }
-
-
-
 
         ////public async Task<IEnumerable<EntityUser>> SelectAsync()
         ////{

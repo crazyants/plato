@@ -93,10 +93,19 @@ namespace Plato.Discuss.Subscribers
             
             // Get entity details to update
             var details = entity.GetOrCreate<PostDetails>();
+            
+            // Get last 5 unique users & total unique user count
+            var users = await _entityUsersStore.QueryAsync()
+                .Take(1, 5)
+                .Select<EntityUserQueryParams>(q =>
+                {
+                    q.EntityId.Equals(entity.Id);
+                })
+                .OrderBy("r.CreatedDate", OrderBy.Desc)
+                .ToList();
 
-
-            details.LatestUsers = await GetLastFiveUniqueUsers(entity.Id);
-          
+            details.LatestUsers = users?.Data;
+            entity.TotalParticipants = users?.Total ?? 0;
 
             // -------------
 
@@ -129,9 +138,9 @@ namespace Plato.Discuss.Subscribers
             //    details.LatestReplies = simpleReplies;
             //}
 
-            details.LatestReply.Id = reply.Id;
-            details.LatestReply.CreatedBy = reply.CreatedBy;
-            details.LatestReply.CreatedDate = reply.CreatedDate;
+            //details.LatestReply.Id = reply.Id;
+            //details.LatestReply.CreatedBy = reply.CreatedBy;
+            //details.LatestReply.CreatedDate = reply.CreatedDate;
 
             // Add updated data to entity
             entity.AddOrUpdate<PostDetails>(details);
@@ -147,8 +156,6 @@ namespace Plato.Discuss.Subscribers
 
         async Task<IEnumerable<EntityUser>> GetLastFiveUniqueUsers(int entityId)
         {
-
-
             
             var results = await _entityUsersStore.QueryAsync()
                 .Take(1, 20)

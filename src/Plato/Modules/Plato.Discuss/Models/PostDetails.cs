@@ -10,9 +10,7 @@ namespace Plato.Discuss.Models
     public class PostDetails : Serializable
     {
      
-        public SimpleReply LatestReply { get; set; } = new SimpleReply();
-
-        public IEnumerable<SimpleReply> LatestReplies { get; set; } = new List<SimpleReply>();
+        //public SimpleReply LatestReply { get; set; } = new SimpleReply();
 
         public IEnumerable<EntityUser> LatestUsers { get; set; } = new List<EntityUser>();
 

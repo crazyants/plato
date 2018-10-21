@@ -140,7 +140,7 @@ namespace Plato.Internal.Data
             
             return sb.ToString();
         }
-
+        
         private string GetProcedureName(string procedureName)
         {
             return !string.IsNullOrEmpty(this.Configuration.TablePrefix)
