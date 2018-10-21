@@ -207,6 +207,8 @@
 /* avatar */
 /* ------------------------- */
 
+.avatar-link { display: inline-block; }
+
 .avatar-group { display: inline-block; margin-left: 9px; }
 .avatar-group .avatar { margin-left: -9px; }
 

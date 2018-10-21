@@ -107,41 +107,6 @@ namespace Plato.Discuss.Subscribers
             details.LatestUsers = users?.Data;
             entity.TotalParticipants = users?.Total ?? 0;
 
-            // -------------
-
-            // Get all replies
-            //var replies = await GetReplies(entity);
-            //if (replies?.Data != null)
-            //{
-
-            //    // Store details about the last 5 replys with the entity
-            //    const int max = 5;
-            //    var added = new List<int>();
-            //    var simpleReplies = new List<SimpleReply>();
-            //    foreach (var latestReply in replies.Data)
-            //    {
-            //        if (!added.Contains(latestReply.CreatedUserId))
-            //        {
-            //            added.Add(latestReply.CreatedUserId);
-            //            simpleReplies.Add(new SimpleReply()
-            //            {
-            //                Id = latestReply.Id,
-            //                CreatedBy = latestReply.CreatedBy,
-            //                CreatedDate = latestReply.CreatedDate
-            //            });
-            //        }
-            //        if (added.Count >= max)
-            //        {
-            //            break;
-            //        }
-            //    }
-            //    details.LatestReplies = simpleReplies;
-            //}
-
-            //details.LatestReply.Id = reply.Id;
-            //details.LatestReply.CreatedBy = reply.CreatedBy;
-            //details.LatestReply.CreatedDate = reply.CreatedDate;
-
             // Add updated data to entity
             entity.AddOrUpdate<PostDetails>(details);
 

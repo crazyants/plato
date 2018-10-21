@@ -23,10 +23,10 @@ namespace Plato.Discuss.ViewProviders
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
-
         private readonly IPostManager<Topic> _topicManager;
         private readonly IPostManager<Reply> _replyManager;
         private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IEntityUsersStore _entityUsersStore;
 
         private readonly HttpRequest _request;
         
@@ -37,7 +37,8 @@ namespace Plato.Discuss.ViewProviders
             IActionContextAccessor actionContextAccessor,
             IContextFacade contextFacade,
             IEntityStore<Topic> entityStore,
-            IPostManager<Topic> topicManager)
+            IPostManager<Topic> topicManager,
+            IEntityUsersStore entityUsersStore)
         {
             _replyManager = replyManager;
             _entityReplyStore = entityReplyStore;
@@ -45,6 +46,7 @@ namespace Plato.Discuss.ViewProviders
             _contextFacade = contextFacade;
             _entityStore = entityStore;
             _topicManager = topicManager;
+            _entityUsersStore = entityUsersStore;
             _request = httpContextAccessor.HttpContext.Request;
         }
 
@@ -68,8 +70,8 @@ namespace Plato.Discuss.ViewProviders
         {
 
             // Get view data
-            var viewOptions = new TopicIndexOptions(context.Controller.RouteData);
-            var pagerOptions = new PagerOptions(context.Controller.RouteData);
+            var options = new TopicIndexOptions(context.Controller.RouteData);
+            var pager = new PagerOptions(context.Controller.RouteData);
 
             // Get entity
             var topic = await _entityStore.GetByIdAsync(viewModel.Id);
@@ -80,13 +82,25 @@ namespace Plato.Discuss.ViewProviders
 
             // Increment entity view count
             await IncrementTopicViewCount(topic);
+            
+            // Get replies
+            var replies = await GetEntityReplies(topic.Id, options, pager);
+
+            // Get top 20 participants
+            var users = await _entityUsersStore.QueryAsync()
+                .Take(1, 20)
+                .Select<EntityUserQueryParams>(q =>
+                {
+                    q.EntityId.Equals(topic.Id);
+                })
+                .OrderBy("t.TotalReplies", OrderBy.Desc)
+                .ToList();
 
             // Build view model
-            var replies = await GetEntityReplies(topic.Id, viewOptions, pagerOptions);
-            
-            var topivViewModel = new HomeTopicViewModel(replies, pagerOptions)
+            var topivViewModel = new HomeTopicViewModel(replies, pager)
             {
-                Entity = topic
+                Entity = topic,
+                Users = users
             };
             
             return Views(

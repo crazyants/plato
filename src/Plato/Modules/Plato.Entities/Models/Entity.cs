@@ -154,7 +154,13 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("TotalReplies"))
                 TotalReplies = Convert.ToInt32(dr["TotalReplies"]);
+            
+            if (dr.ColumnIsNotNull("TotalParticipants"))
+                TotalParticipants = Convert.ToInt32(dr["TotalParticipants"]);
 
+            if (dr.ColumnIsNotNull("TotalReactions"))
+                TotalReactions = Convert.ToInt32(dr["TotalReactions"]);
+            
             if (dr.ColumnIsNotNull("TotalFollows"))
                 TotalFollows = Convert.ToInt32(dr["TotalFollows"]);
             

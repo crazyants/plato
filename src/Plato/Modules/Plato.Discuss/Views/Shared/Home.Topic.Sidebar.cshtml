@@ -14,9 +14,8 @@
                 @T["Lstest Reply"]: <date utc="@Model.Entity.LastReplyDate"></date>
             </li>
             <li class="list-group-item">
-                @Model.Entity.TotalParticipants
-                @T[" participants"],
-
+                @Model.Entity.TotalReactions
+                @T[" reactions"],
                 @Model.Entity.TotalFollows
                 @T["follows"]
             </li>
@@ -31,17 +30,38 @@
     </card-body>
 </card>
 
-@*<card>
+<card>
     <card-title>
-        @T["Top Participants"]
+        <h6 class="card-title float-left">
+            @T["Top Posters"]
+        </h6>
+        @if (Model.Users != null)
+        {
+            <span class="text-muted float-right">
+                @Model.Users.Total
+                @T["total"]
+            </span>
+        }
     </card-title>
     <card-body>
 
-
-        <avatar class="avatar" user-id="1" />
-        <avatar class="avatar" user-id="2" />
-        <avatar class="avatar" user-id="3" />
-
+        @if (Model.Users != null)
+        {
+            @foreach (var user in Model.Users.Data)
+             {
+                 var replies = user.TotalReplies == 1
+                     ? "reply"
+                     : "replies";
+                 <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@user.Id" asp-route-alias="@user.Alias" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" data-toggle="tooltip" class="avatar-link">
+                     <avatar class="avatar" user-id="@user.Id"/>
+                 </a>
+             }
+        }
+        else
+        {
+            
+            @T["No replies"]
+        }
 
     </card-body>
-</card>*@
+</card>

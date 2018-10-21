@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Internal.Data.Abstractions;
@@ -7,7 +6,7 @@ using Plato.Internal.Stores.Abstractions;
 
 namespace Plato.Entities.Stores
 {
-    
+
     public interface IEntityUsersStore : IQueryable<EntityUser>
     {
     }
@@ -34,6 +33,7 @@ namespace Plato.Entities.Stores
         {
             return await _entityUsersRepository.SelectAsync(args);
         }
+
     }
 
 }
