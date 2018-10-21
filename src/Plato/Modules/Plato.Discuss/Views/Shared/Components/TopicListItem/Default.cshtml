@@ -51,8 +51,11 @@
             <div class="avatar-group float-right">
                 @foreach (var user in details.LatestUsers)
                 {
+                    var replies = user.TotalReplies == 1
+                        ? "reply"
+                        : "replies";
                     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@user.Id" asp-route-alias="@user.Alias">
-                        <avatar data-toggle="tooltip" title="@user.DisplayName" class="avatar avatar-sm" user-id="@user.Id"/>
+                        <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" user-id="@user.Id"/>
                     </a>
                 }
             </div>

@@ -101,33 +101,33 @@ namespace Plato.Discuss.Subscribers
             // -------------
 
             // Get all replies
-            var replies = await GetReplies(entity);
-            if (replies?.Data != null)
-            {
+            //var replies = await GetReplies(entity);
+            //if (replies?.Data != null)
+            //{
 
-                // Store details about the last 5 replys with the entity
-                const int max = 5;
-                var added = new List<int>();
-                var simpleReplies = new List<SimpleReply>();
-                foreach (var latestReply in replies.Data)
-                {
-                    if (!added.Contains(latestReply.CreatedUserId))
-                    {
-                        added.Add(latestReply.CreatedUserId);
-                        simpleReplies.Add(new SimpleReply()
-                        {
-                            Id = latestReply.Id,
-                            CreatedBy = latestReply.CreatedBy,
-                            CreatedDate = latestReply.CreatedDate
-                        });
-                    }
-                    if (added.Count >= max)
-                    {
-                        break;
-                    }
-                }
-                details.LatestReplies = simpleReplies;
-            }
+            //    // Store details about the last 5 replys with the entity
+            //    const int max = 5;
+            //    var added = new List<int>();
+            //    var simpleReplies = new List<SimpleReply>();
+            //    foreach (var latestReply in replies.Data)
+            //    {
+            //        if (!added.Contains(latestReply.CreatedUserId))
+            //        {
+            //            added.Add(latestReply.CreatedUserId);
+            //            simpleReplies.Add(new SimpleReply()
+            //            {
+            //                Id = latestReply.Id,
+            //                CreatedBy = latestReply.CreatedBy,
+            //                CreatedDate = latestReply.CreatedDate
+            //            });
+            //        }
+            //        if (added.Count >= max)
+            //        {
+            //            break;
+            //        }
+            //    }
+            //    details.LatestReplies = simpleReplies;
+            //}
 
             details.LatestReply.Id = reply.Id;
             details.LatestReply.CreatedBy = reply.CreatedBy;
@@ -147,27 +147,41 @@ namespace Plato.Discuss.Subscribers
 
         async Task<IEnumerable<EntityUser>> GetLastFiveUniqueUsers(int entityId)
         {
-            return await _entityUsersStore.GetUniqueUsers(new EntityUserQueryParams()
-            {
-                EntityId = entityId,
-                PageSize = 5,
-                Sort = EntityUserQueryParams.SortBy.CreatedDate
-            });
-        }
 
-        async Task<IPagedResults<TEntityReply>> GetReplies(Entity entity)
-        {
-            return await _entityReplyStore.QueryAsync()
-                .Select<EntityReplyQueryParams>(q =>
+
+            
+            var results = await _entityUsersStore.QueryAsync()
+                .Take(1, 20)
+                .Select<EntityUserQueryParams>(q =>
                 {
-                    q.EntityId.Equals(entity.Id);
-                    q.IsPrivate.False();
-                    q.IsSpam.False();
-                    q.IsDeleted.False();
+                    q.EntityId.Equals(entityId);
                 })
+                .OrderBy("r.CreatedDate", OrderBy.Desc)
                 .ToList();
 
+            return results.Data;
+
+            //return await _entityUsersStore.GetUniqueUsers(new EntityUserQueryParams()
+            //{
+            //    EntityId = entityId,
+            //    PageSize = 5,
+            //    Sort = EntityUserQueryParams.SortBy.CreatedDate
+            //});
         }
+
+        //async Task<IPagedResults<TEntityReply>> GetReplies(Entity entity)
+        //{
+        //    return await _entityReplyStore.QueryAsync()
+        //        .Select<EntityReplyQueryParams>(q =>
+        //        {
+        //            q.EntityId.Equals(entity.Id);
+        //            q.IsPrivate.False();
+        //            q.IsSpam.False();
+        //            q.IsDeleted.False();
+        //        })
+        //        .ToList();
+
+        //}
 
     }
 

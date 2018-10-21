@@ -4,7 +4,14 @@ using Plato.Internal.Data.Abstractions;
 namespace Plato.Internal.Stores.Abstractions
 {
 
-    public interface IStore<TModel> where TModel : class
+    public interface IQueryable<TModel> where TModel : class
+    {
+        IQuery<TModel> QueryAsync();
+
+        Task<IPagedResults<TModel>> SelectAsync(params object[] args);
+    }
+
+    public interface IStore<TModel> : IQueryable<TModel> where TModel : class
     {
  
         Task<TModel> CreateAsync(TModel model);
@@ -14,10 +21,6 @@ namespace Plato.Internal.Stores.Abstractions
         Task<bool> DeleteAsync(TModel model);
 
         Task<TModel> GetByIdAsync(int id);
-        
-        IQuery<TModel> QueryAsync();
-
-        Task<IPagedResults<TModel>> SelectAsync(params object[] args);
         
     }
 }
