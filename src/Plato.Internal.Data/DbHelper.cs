@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Plato.Internal.Data.Abstractions;
@@ -39,7 +40,17 @@ namespace Plato.Internal.Data
         /// <returns></returns>
         public async Task<T> ExecuteScalarAsync<T>(string sql)
         {
-            return await ExecuteScalarAsync<T>(sql, null);
+            var output = default(T);
+            using (var db = _dbContext)
+            {
+                var value = await db.ExecuteScalarAsync<T>(CommandType.Text, ReplaceTablePrefix(sql));
+                if (value != null)
+                {
+                    output = value;
+                }
+            }
+
+            return output;
         }
         
         /// <summary>
@@ -49,33 +60,58 @@ namespace Plato.Internal.Data
         /// <param name="sql"></param>
         /// <param name="replacements"></param>
         /// <returns></returns>
-        public async Task<T> ExecuteScalarAsync<T>(
-            string sql,
-            IDictionary<string, string> replacements)
+        public async Task<T> ExecuteScalarAsync<T>(string sql, IDictionary<string, string> replacements)
         {
-        
+            return await ExecuteScalarAsync<T>(PerformSqlReplacements(sql, replacements));
+        }
+
+        /// <summary>
+        /// Unsafe SQL execution. Use only if you can guarantee the safely of the supplied TSQL code.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="populate"></param>
+        /// <returns></returns>
+        public async Task<T> ExecuteReaderAsync<T>(string sql, Func<DbDataReader, Task<T>> populate) where T : class
+        {
             var output = default(T);
             using (var db = _dbContext)
             {
-                var value = await db.ExecuteScalarAsync<T>(CommandType.Text, PerformSqlReplacements(sql, replacements));
-                if (value != null)
+                var reader = await db.ExecuteReaderAsync(CommandType.Text, ReplaceTablePrefix(sql));
+                if ((reader != null) && (reader.HasRows))
                 {
-                    output = value;
+                    output = await populate(reader);
                 }
             }
 
             return output;
+
+        }
+
+        /// <summary>
+        /// Unsafe SQL execution. Use only if you can guarantee the safely of the supplied TSQL code.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="sql"></param>
+        /// <param name="replacements"></param>
+        /// <param name="populate"></param>
+        /// <returns></returns>
+        public async Task<T> ExecuteReaderAsync<T>(string sql, IDictionary<string, string> replacements, Func<DbDataReader, Task<T>> populate) where T : class
+        {
+            return await ExecuteReaderAsync(PerformSqlReplacements(sql, replacements), populate);
         }
 
         #endregion
 
         #region "Private Methods"
 
+        string ReplaceTablePrefix(string input)
+        {
+           return input.Replace("{prefix}_", _dbOptions.Value.TablePrefix);
+        }
+        
         string PerformSqlReplacements(string input, IDictionary<string, string> replacements)
         {
-            
-            input = input.Replace("{prefix}_", _dbOptions.Value.TablePrefix);
-
             if (replacements != null)
             {
                 foreach (var replacement in replacements)
@@ -90,4 +126,5 @@ namespace Plato.Internal.Data
         #endregion
 
     }
+
 }

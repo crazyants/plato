@@ -92,8 +92,7 @@ namespace Plato.Discuss.Controllers
                 ).Add(S["Discuss"]);
               
             });
-
-          
+            
             //await CreateSampleData();
 
             // Get default options

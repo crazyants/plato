@@ -70,6 +70,5 @@ namespace Plato.Badges.Services
         }
 
     }
-
-
+    
 }

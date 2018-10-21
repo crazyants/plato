@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Plato.Entities.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Models.Users;
 
@@ -12,7 +13,9 @@ namespace Plato.Discuss.Models
         public SimpleReply LatestReply { get; set; } = new SimpleReply();
 
         public IEnumerable<SimpleReply> LatestReplies { get; set; } = new List<SimpleReply>();
-        
+
+        public IEnumerable<EntityUser> LatestUsers { get; set; } = new List<EntityUser>();
+
     }
 
     public class SimpleReply

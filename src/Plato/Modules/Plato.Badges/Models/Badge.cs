@@ -32,8 +32,7 @@ namespace Plato.Badges.Models
         public Action<IBadgeAwarderContext> Awarder { get; set; }
         
         public DateTimeOffset? AwardedDate { get; set; }
-
-
+        
         public Badge()
         {
 
@@ -156,8 +155,7 @@ namespace Plato.Badges.Models
         {
             this.Awarder = awarder;
         }
-
-
+        
         public Badge(
             string name,
             string description,
@@ -192,8 +190,7 @@ namespace Plato.Badges.Models
         {
             this.Awarder = awarder;
         }
-
-
+        
         public Badge(
             string name,
             string description,

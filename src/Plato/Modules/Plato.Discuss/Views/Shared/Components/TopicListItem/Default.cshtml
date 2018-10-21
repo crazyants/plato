@@ -46,13 +46,13 @@
         @Model.Topic.Abstract
     </div>
     <div>
-        @if (details != null)
+        @if (details?.LatestUsers != null)
         {
             <div class="avatar-group float-right">
-                @foreach (var reply in details.LatestReplies)
+                @foreach (var user in details.LatestUsers)
                 {
-                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@reply.CreatedBy.Id" asp-route-alias="@reply.CreatedBy.Alias">
-                        <avatar data-toggle="tooltip" title="@reply.CreatedBy.DisplayName" class="avatar avatar-sm" user-id="@reply.CreatedBy.Id" />
+                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@user.Id" asp-route-alias="@user.Alias">
+                        <avatar data-toggle="tooltip" title="@user.DisplayName" class="avatar avatar-sm" user-id="@user.Id"/>
                     </a>
                 }
             </div>

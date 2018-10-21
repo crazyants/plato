@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Plato.Discuss.Models;
 using Plato.Entities.Models;
+using Plato.Entities.Repositories;
 using Plato.Entities.Stores;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
@@ -15,15 +16,18 @@ namespace Plato.Discuss.Subscribers
         private readonly IBroker _broker;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<TEntityReply> _entityReplyStore;
+        private readonly IEntityUsersStore _entityUsersStore;
 
         public ReplySubscriber(
             IBroker broker,
             IEntityStore<Topic> entityStore,
-            IEntityReplyStore<TEntityReply> entityReplyStore)
+            IEntityReplyStore<TEntityReply> entityReplyStore,
+            IEntityUsersStore entityUsersStore)
         {
             _broker = broker;
             _entityStore = entityStore;
             _entityReplyStore = entityReplyStore;
+            _entityUsersStore = entityUsersStore;
         }
 
         #region "Implementation"
@@ -89,7 +93,13 @@ namespace Plato.Discuss.Subscribers
             
             // Get entity details to update
             var details = entity.GetOrCreate<PostDetails>();
-            
+
+
+            details.LatestUsers = await GetLastFiveUniqueUsers(entity.Id);
+          
+
+            // -------------
+
             // Get all replies
             var replies = await GetReplies(entity);
             if (replies?.Data != null)
@@ -134,10 +144,19 @@ namespace Plato.Discuss.Subscribers
         }
 
         #endregion
-        
+
+        async Task<IEnumerable<EntityUser>> GetLastFiveUniqueUsers(int entityId)
+        {
+            return await _entityUsersStore.GetUniqueUsers(new EntityUserQueryParams()
+            {
+                EntityId = entityId,
+                PageSize = 5,
+                Sort = EntityUserQueryParams.SortBy.CreatedDate
+            });
+        }
+
         async Task<IPagedResults<TEntityReply>> GetReplies(Entity entity)
         {
-
             return await _entityReplyStore.QueryAsync()
                 .Select<EntityReplyQueryParams>(q =>
                 {

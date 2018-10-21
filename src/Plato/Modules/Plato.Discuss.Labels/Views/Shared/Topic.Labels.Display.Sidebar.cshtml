@@ -29,12 +29,10 @@
         else
         {
 
-            <div class="text-center my-4 text-muted">
-                @T["Labls can be helpful to identify the type of conversation."]
-                <br /><br />
-                <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Admin" asp-route-action="Index">
-                    @T["Manage Labels"]
-                </a>
+            <div class="list-group list-group-flush">
+                <div class="list-group-item">
+                    @T["No labels"]
+                </div>
             </div>
         }
 

@@ -127,7 +127,6 @@ namespace Plato.Discuss.ViewModels
 
         public TopicIndexViewModel()
         {
-
         }
 
         public TopicIndexViewModel(
