@@ -1,39 +1,27 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
-using Plato.Discuss.Services;
-using Plato.Discuss.ViewModels;
-using Plato.Entities.Models;
-using Plato.Internal.Navigation;
+using Plato.Entities.Stores;
 
 namespace Plato.Discuss.ViewComponents
 {
     public class TopicMenuViewComponent : ViewComponent
     {
 
-        private readonly INavigationManager _navigationManager;
+     
+        private readonly IEntityStore<Topic> _entityStore;
 
-        public TopicMenuViewComponent(INavigationManager navigationManager)
+        public TopicMenuViewComponent(IEntityStore<Topic> entityStore)
         {
-            _navigationManager = navigationManager;
+            _entityStore = entityStore;
         }
 
-        public Task<IViewComponentResult> InvokeAsync(Entity entity)
+        public async Task<IViewComponentResult> InvokeAsync(int id)
         {
-
-            var items = _navigationManager.BuildMenu("topic", ViewContext);
-
-            var viewModel = new TopicMenuViewModel()
-            {
-                Entity = entity
-            };
-
-            return Task.FromResult((IViewComponentResult) View(viewModel));
-
+            var model = await _entityStore.GetByIdAsync(id);
+            return View(model);
         }
         
-
-
     }
 
 }

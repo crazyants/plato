@@ -5,25 +5,14 @@
 
         <h6 class="card-title float-left">@T["Topic"]</h6>
         
-        
         <navigation name="topic"
                     class="nav navbar p-0 float-right"
                     child-ul-css-class="dropdown-menu" />
 
 
-        @*@await DisplayAsync(new View("TopicMenu", new
-        {
-            entity = Model.Entity
-        }))*@
-        
-
         @*<ul class="nav navbar p-0 float-right">
             <li class="nav-item dropdown">
-                <a asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Entity.Id" class="nav-link text-muted" role="button">
-                    <span title="@T["Edit"]" data-toggle="tooltip">
-                        <i class="fal fa-pencil"></i>
-                    </span>
-                </a>
+             
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -208,20 +208,19 @@ namespace Plato.Internal.Layout.TagHelpers
 
             if (item.Items.Count > 0)
             {
-
                 if (!this.Collaspsable)
                 {
                     if (!string.IsNullOrEmpty(linkClass))
                         linkClass += " ";
                     linkClass += "dropdown-toggle";
-                }
+            }
+            }
 
-                foreach (var className in item.Classes)
-                {
-                    if (!string.IsNullOrEmpty(linkClass))
-                        linkClass += " ";
-                    linkClass += className;
-                }
+            foreach (var className in item.Classes)
+            {
+                if (!string.IsNullOrEmpty(linkClass))
+                    linkClass += " ";
+                linkClass += className;
             }
 
             if (item.Selected)
