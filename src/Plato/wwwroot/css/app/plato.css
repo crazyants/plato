@@ -12,14 +12,14 @@
 .bg-highlight { background-color: rgba(255, 240, 0, 0.5); font-weight: bold; }
 
 /* ------------------------- */
-/* Main app navigation */
+/* Navigation */
 /* ------------------------- */
 
-.site-nav li > a .nav-text { margin-left: 0.50rem; }
-.site-nav li.text-hidden > a .nav-text { display: none;  }
-.site-nav li .dropdown-menu { right: 0; left: auto; }
-
+.nav li.text-hidden > a .nav-text { display: none;  }
+.nav.float-right li .dropdown-menu { right: 0; left: auto; }
 .nav .avatar { vertical-align: middle; width: 24px; height: 24px; display: inline-block; }
+
+.site-nav li > a .nav-text { margin-left: 0.50rem; }
 
 /* ------------------------- */
 /* Search bar */
@@ -116,7 +116,7 @@
     animation: showDropdown 0.1s ease-out;
 }
 
-.site-nav li .dropdown-menu.show,
+.nav.float-right li .dropdown-menu.show,
 .dropdown-menu-right.show {
     animation: showDropdownRight 0.1s ease-out;
 }

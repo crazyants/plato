@@ -2,11 +2,19 @@
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
-using System.Text;
 using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Internal.Navigation
 {
+
+    public class MenuItemView
+    {
+        public string ViewName { get; set; }
+
+        public object Model { get; set; }
+
+    }
+
     public class MenuItem
     {
 
@@ -42,6 +50,8 @@ namespace Plato.Internal.Navigation
         public List<MenuItem> Items { get; set; }
 
         public RouteValueDictionary RouteValues { get; set; }
+        
+        public MenuItemView View { get; set; }
         
         public List<Permission> Permissions { get; }
         

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 
@@ -105,6 +106,17 @@ namespace Plato.Internal.Navigation
         //    _item.Permissions.Add(permission);
         //    return this;
         //}
+
+        public NavigationItemBuilder View(string viewName, object model = null)
+        {
+            _item.View = new MenuItemView()
+            {
+                ViewName = viewName,
+                Model = model
+            };
+            return this;
+        }
+
 
         public NavigationItemBuilder Resource(object resource)
         {

@@ -312,7 +312,7 @@ namespace Plato.Internal.Navigation
 
             foreach (var item in menuItems)
             {
-                if (!HasHrefOrChildHref(item))
+                if (!HasHrefOrViewOrChildHrefOrView(item))
                 {
                     filtered.Remove(item);
                 }
@@ -342,14 +342,19 @@ namespace Plato.Internal.Navigation
 
         }
 
-        bool HasHrefOrChildHref(MenuItem item)
+        bool HasHrefOrViewOrChildHrefOrView(MenuItem item)
         {
             if (item.Href != "#")
             {
                 return true;
             }
 
-            return item.Items.Any(HasHrefOrChildHref);
+            if (item.View != null)
+            {
+                return true;
+            }
+
+            return item.Items.Any(HasHrefOrViewOrChildHrefOrView);
         }
 
         #endregion
