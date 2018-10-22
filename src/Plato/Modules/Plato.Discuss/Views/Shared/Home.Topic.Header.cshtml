@@ -1,4 +1,9 @@
 ﻿@model HomeTopicViewModel
+@{
+    var replies = @Model.Entity.TotalReplies == 1
+        ? "reply"
+        : "replies";
+}
 
 <div class="list-left">
     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">
@@ -8,9 +13,11 @@
 <div class="list-body">
     <h4>@Model.Entity.Title</h4>
     <span class="text-muted">
-        By <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>, 
-        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
-     
+        @T["Posted"]
+        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
+        @T["by"]
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>
+        - @Model.Entity.TotalReplies.ToPrettyInt() @T[replies]
     </span>
 </div>
 <hr />

@@ -5,7 +5,6 @@
         <h6 class="card-title">@T["Details"]</h6>
     </card-title>
     <card-body>
-        
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 @T["Posted"]: <date utc="@Model.Entity.CreatedDate"></date>
@@ -14,19 +13,12 @@
                 @T["Lstest Reply"]: <date utc="@Model.Entity.LastReplyDate"></date>
             </li>
             <li class="list-group-item">
-                @Model.Entity.TotalReactions
-                @T[" reactions"],
+                @Model.Entity.TotalViews
+                @T[" views"],
                 @Model.Entity.TotalFollows
                 @T["follows"]
             </li>
-            <li class="list-group-item">
-             
-            </li>
         </ul>
-
-        
-            
-        
     </card-body>
 </card>
 

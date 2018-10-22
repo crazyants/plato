@@ -161,8 +161,7 @@ namespace Plato.Internal.Layout.TagHelpers
                         .Append("\">");
                 }
 
-                sb.Append(
-                    item.View != null 
+                sb.Append(item.View != null 
                         ? Buildview(item)
                         : BuildLink(item));
 
@@ -348,24 +347,6 @@ namespace Plato.Internal.Layout.TagHelpers
                     sb.Append(" ");
                 sb.Append("last");
             }
-
-            //if (item.Classes != null)
-            //{
-            //    int count = item.Classes.Count - 1, i = 0;
-            //    foreach (var className in item.Classes)
-            //    {
-            //        if (!string.IsNullOrEmpty(sb.ToString()))
-            //        {
-            //            sb.Append(" ");
-            //        }
-            //        sb.Append(className);
-            //        if (i < count)
-            //        {
-            //            sb.Append(" ");
-            //        }
-            //        i++;
-            //    }
-            //}
 
             return sb.ToString();
 
