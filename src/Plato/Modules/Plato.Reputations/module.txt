@@ -1,5 +1,5 @@
 Name: Plato Reputation
-Description: Adds support to allow modules to award reputation to users. 
+Description: Adds core providers and services for reacting to entities.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core

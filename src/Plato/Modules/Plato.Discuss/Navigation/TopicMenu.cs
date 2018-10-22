@@ -16,8 +16,7 @@ namespace Plato.Discuss.Navigation
     {
 
         private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IEntityStore<Topic> _entityStore;
-
+    
         public IStringLocalizer T { get; set; }
 
         public TopicMenu(
@@ -44,13 +43,13 @@ namespace Plato.Discuss.Navigation
                 return;
             }
 
-            builder
-                .Add(T["Edit By View"], config => config
-                    .View("TopicMenu", new
-                    {
-                        id = entityId
-                    })
-                );
+            //builder
+            //    .Add(T["Edit By View"], config => config
+            //        .View("TopicMenu", new
+            //        {
+            //            id = entityId
+            //        })
+            //    );
 
             builder.Add(T["Edit Topic"], int.MinValue, edit => edit
                     .IconCss("fal fa-pencil")

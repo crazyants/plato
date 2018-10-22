@@ -15,7 +15,7 @@
 /* Navigation */
 /* ------------------------- */
 
-.nav li.text-hidden > a .nav-text { display: none;  }
+.nav li > a.text-hidden .nav-text { display: none;  }
 .nav.float-right li .dropdown-menu { right: 0; left: auto; }
 .nav .avatar { vertical-align: middle; width: 24px; height: 24px; display: inline-block; }
 
