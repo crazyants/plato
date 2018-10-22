@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Plato.Reactions.Models
 {
-    public class DefaultReactions : List<Reaction>
+    public class DefaultReactions : List<EntityReacttion>
     {
 
         public DefaultReactions()
         {
-            Add(new Reaction()
+            Add(new EntityReacttion()
             {
                 Name = "Thumbs Up",
                 Description =  "",
@@ -17,7 +17,7 @@ namespace Plato.Reactions.Models
                 IsPositive = true,
             });
 
-            Add(new Reaction()
+            Add(new EntityReacttion()
             {
                 Name = "Thumbs Down",
                 Description = "",
@@ -25,7 +25,7 @@ namespace Plato.Reactions.Models
                 IsNegative = true,
             });
 
-            Add(new Reaction()
+            Add(new EntityReacttion()
             {
                 Name = "Happy",
                 Description = "",
@@ -33,7 +33,7 @@ namespace Plato.Reactions.Models
                 IsPositive = true,
             });
 
-            Add(new Reaction()
+            Add(new EntityReacttion()
             {
                 Name = "Hooray",
                 Description = "",
@@ -41,7 +41,7 @@ namespace Plato.Reactions.Models
                 IsPositive = true,
             });
 
-            Add(new Reaction()
+            Add(new EntityReacttion()
             {
                 Name = "Confused",
                 Description = "",
@@ -49,7 +49,7 @@ namespace Plato.Reactions.Models
                 IsPositive = true,
             });
 
-            Add(new Reaction()
+            Add(new EntityReacttion()
             {
                 Name = "Heart",
                 Description = "",

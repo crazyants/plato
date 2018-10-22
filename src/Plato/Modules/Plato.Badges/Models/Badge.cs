@@ -8,8 +8,8 @@ namespace Plato.Badges.Models
 
         // Globally multiply the default thredhold and bounus points for all badges
         // Default value should be set to 1 increase the accomodate requirements
-        private static readonly int ThresholdMultiplier = 1;
-        private static readonly int BonusPointsMultiplier = 1;
+        public static readonly int ThresholdMultiplier = 1;
+        public static readonly int PointsMultiplier = 1;
 
         public string Category { get; set; }
 
@@ -113,7 +113,7 @@ namespace Plato.Badges.Models
             int threshold,
             int bonusPoints) : this(name, description, backgroundIconCss, iconCss, level, threshold)
         {
-            this.BonusPoints = bonusPoints * BonusPointsMultiplier;
+            this.BonusPoints = bonusPoints * PointsMultiplier;
         }
         
         public Badge(
@@ -123,7 +123,7 @@ namespace Plato.Badges.Models
             int threshold,
             int bonusPoints) : this(name, description, level, threshold)
         {
-            this.BonusPoints = bonusPoints * BonusPointsMultiplier;
+            this.BonusPoints = bonusPoints * PointsMultiplier;
         }
 
         public Badge(

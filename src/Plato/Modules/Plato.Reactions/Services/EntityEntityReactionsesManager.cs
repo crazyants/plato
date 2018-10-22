@@ -9,21 +9,21 @@ using Plato.Reactions.Stores;
 namespace Plato.Reactions.Services
 {
     
-    public class ReactionManager : IReactionManager
+    public class EntityEntityReactionsesManager : IEntityReactionsManager
     {
 
         private readonly IContextFacade _contextFacade;
-        private readonly IReactionStore<Reaction> _reactionStore;
+        private readonly IReactionStore<EntityReacttion> _reactionStore;
   
-        public ReactionManager(
-            IReactionStore<Reaction> reactionStore,
+        public EntityEntityReactionsesManager(
+            IReactionStore<EntityReacttion> reactionStore,
             IContextFacade contextFacade)
         {
             _reactionStore = reactionStore;
             _contextFacade = contextFacade;
         }
         
-        public async Task<IActivityResult<Reaction>> CreateAsync(Reaction model)
+        public async Task<IActivityResult<EntityReacttion>> CreateAsync(EntityReacttion model)
         {
 
             if (model == null)
@@ -51,7 +51,7 @@ namespace Plato.Reactions.Services
             model.CreatedUserId = user?.Id ?? 0;
         
             // Create result
-            var result = new ActivityResult<Reaction>();
+            var result = new ActivityResult<EntityReacttion>();
 
             // Attempt to persist
             var reaction = await _reactionStore.CreateAsync(model);
@@ -64,7 +64,7 @@ namespace Plato.Reactions.Services
 
         }
 
-        public async Task<IActivityResult<Reaction>> UpdateAsync(Reaction model)
+        public async Task<IActivityResult<EntityReacttion>> UpdateAsync(EntityReacttion model)
         {
 
             // Validate
@@ -94,7 +94,7 @@ namespace Plato.Reactions.Services
             model.ModifiedDate = DateTimeOffset.UtcNow;
 
             // Create result
-            var result = new ActivityResult<Reaction>();
+            var result = new ActivityResult<EntityReacttion>();
 
             // Attempt to persist
             var reaction = await _reactionStore.UpdateAsync(model);

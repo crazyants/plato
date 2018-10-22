@@ -10,19 +10,19 @@ namespace Plato.Reactions.Stores
 
     #region "ReactionQuery"
 
-    public class ReactionQuery : DefaultQuery<Reaction>
+    public class ReactionQuery : DefaultQuery<EntityReacttion>
     {
 
-        private readonly IStore<Reaction> _store;
+        private readonly IStore<EntityReacttion> _store;
 
-        public ReactionQuery(IStore<Reaction> store)
+        public ReactionQuery(IStore<EntityReacttion> store)
         {
             _store = store;
         }
 
         public ReactionQueryParams Params { get; set; }
 
-        public override IQuery<Reaction> Select<T>(Action<T> configure)
+        public override IQuery<EntityReacttion> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
@@ -30,7 +30,7 @@ namespace Plato.Reactions.Stores
             return this;
         }
 
-        public override async Task<IPagedResults<Reaction>> ToList()
+        public override async Task<IPagedResults<EntityReacttion>> ToList()
         {
 
             var builder = new ReactionQueryBuilder(this);

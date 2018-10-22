@@ -13,9 +13,9 @@ namespace Plato.Reactions.Handlers
         public string Version { get; } = "1.0.0";
 
         // Reactions table
-        private readonly SchemaTable _reactions = new SchemaTable()
+        private readonly SchemaTable _entityReactions = new SchemaTable()
         {
-            Name = "Reactions",
+            Name = "EntityReactions",
             Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -26,46 +26,14 @@ namespace Plato.Reactions.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "FeatureId",
+                        Name = "EntityId",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
-                        Name = "[Name]",
+                        Name = "ReactionName",
                         DbType = DbType.String,
                         Length = "255"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Description]",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Emoji",
-                        Length = "20",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsPositive",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsNeutral",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsNegative",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IsDisabled",
-                        DbType = DbType.Boolean
                     },
                     new SchemaColumn()
                     {
@@ -75,16 +43,6 @@ namespace Plato.Reactions.Handlers
                     new SchemaColumn()
                     {
                         Name = "CreatedDate",
-                        DbType = DbType.DateTimeOffset
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedUserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ModifiedDate",
                         DbType = DbType.DateTimeOffset
                     }
                 }
@@ -156,8 +114,8 @@ namespace Plato.Reactions.Handlers
 
                 // drop emails
                 builder
-                    .DropTable(_reactions)
-                    .DropDefaultProcedures(_reactions)
+                    .DropTable(_entityReactions)
+                    .DropDefaultProcedures(_entityReactions)
                     .DropProcedure(new SchemaProcedure("SelectReactionsPaged", StoredProcedureType.SelectByKey));
 
                 // Log statements to execute
@@ -213,11 +171,11 @@ namespace Plato.Reactions.Handlers
         {
 
             builder
-                .CreateTable(_reactions)
-                .CreateDefaultProcedures(_reactions);
+                .CreateTable(_entityReactions)
+                .CreateDefaultProcedures(_entityReactions);
 
             builder.CreateProcedure(new SchemaProcedure("SelectReactionsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_reactions)
+                .ForTable(_entityReactions)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()

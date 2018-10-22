@@ -9,15 +9,15 @@ using Plato.Reactions.Models;
 namespace Plato.Reactions.Repositories
 {
     
-    public class ReactionRepository : IReactionRepository<Reaction>
+    public class EntityEntityReactionRepository : IEntityReactionRepository<EntityReacttion>
     {
 
         private readonly IDbContext _dbContext;
-        private readonly ILogger<ReactionRepository> _logger;
+        private readonly ILogger<EntityEntityReactionRepository> _logger;
 
-        public ReactionRepository(
+        public EntityEntityReactionRepository(
             IDbContext dbContext,
-            ILogger<ReactionRepository> logger)
+            ILogger<EntityEntityReactionRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -25,27 +25,27 @@ namespace Plato.Reactions.Repositories
 
         #region "Implementation"
 
-        public async Task<Reaction> InsertUpdateAsync(Reaction reaction)
+        public async Task<EntityReacttion> InsertUpdateAsync(EntityReacttion entityReacttion)
         {
-            if (reaction == null)
+            if (entityReacttion == null)
             {
-                throw new ArgumentNullException(nameof(reaction));
+                throw new ArgumentNullException(nameof(entityReacttion));
             }
 
             var id = await InsertUpdateInternal(
-                reaction.Id,
-                reaction.FeatureId,
-                reaction.Name,
-                reaction.Description,
-                reaction.Emoji,
-                reaction.IsPositive,
-                reaction.IsNeutral,
-                reaction.IsNegative,
-                reaction.IsDisabled,
-                reaction.CreatedUserId,
-                reaction.CreatedDate,
-                reaction.ModifiedUserId,
-                reaction.ModifiedDate);
+                entityReacttion.Id,
+                entityReacttion.FeatureId,
+                entityReacttion.Name,
+                entityReacttion.Description,
+                entityReacttion.Emoji,
+                entityReacttion.IsPositive,
+                entityReacttion.IsNeutral,
+                entityReacttion.IsNegative,
+                entityReacttion.IsDisabled,
+                entityReacttion.CreatedUserId,
+                entityReacttion.CreatedDate,
+                entityReacttion.ModifiedUserId,
+                entityReacttion.ModifiedDate);
 
             if (id > 0)
             {
@@ -56,9 +56,9 @@ namespace Plato.Reactions.Repositories
             return null;
         }
 
-        public async Task<Reaction> SelectByIdAsync(int id)
+        public async Task<EntityReacttion> SelectByIdAsync(int id)
         {
-            Reaction reaction = null;
+            EntityReacttion entityReacttion = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -67,18 +67,18 @@ namespace Plato.Reactions.Repositories
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
-                    reaction = new Reaction();
-                    reaction.PopulateModel(reader);
+                    entityReacttion = new EntityReacttion();
+                    entityReacttion.PopulateModel(reader);
                 }
 
             }
 
-            return reaction;
+            return entityReacttion;
         }
 
-        public async Task<IPagedResults<Reaction>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EntityReacttion>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<Reaction> output = null;
+            PagedResults<EntityReacttion> output = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -87,10 +87,10 @@ namespace Plato.Reactions.Repositories
                     inputParams);
                 if ((reader != null) && (reader.HasRows))
                 {
-                    output = new PagedResults<Reaction>();
+                    output = new PagedResults<EntityReacttion>();
                     while (await reader.ReadAsync())
                     {
-                        var reaction = new Reaction();
+                        var reaction = new EntityReacttion();
                         reaction.PopulateModel(reader);
                         output.Data.Add(reaction);
                     }

@@ -10,21 +10,21 @@ using Plato.Reactions.Repositories;
 namespace Plato.Reactions.Stores
 {
     
-    public class ReactionStore : IReactionStore<Reaction>
+    public class ReactionStore : IReactionStore<EntityReacttion>
     {
 
-        private readonly IReactionRepository<Reaction> _reactionRepository;
+        private readonly IEntityReactionRepository<EntityReacttion> _entityReactionRepository;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<ReactionStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
 
         public ReactionStore(
-            IReactionRepository<Reaction> reactionRepository,
+            IEntityReactionRepository<EntityReacttion> entityReactionRepository,
             ICacheManager cacheManager,
             ILogger<ReactionStore> logger,
             IDbQueryConfiguration dbQuery)
         {
-            _reactionRepository = reactionRepository;
+            _entityReactionRepository = entityReactionRepository;
             _cacheManager = cacheManager;
             _logger = logger;
             _dbQuery = dbQuery;
@@ -32,9 +32,9 @@ namespace Plato.Reactions.Stores
 
         #region "Implementation"
 
-        public async Task<Reaction> CreateAsync(Reaction model)
+        public async Task<EntityReacttion> CreateAsync(EntityReacttion model)
         {
-            var result = await _reactionRepository.InsertUpdateAsync(model);
+            var result = await _entityReactionRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -43,9 +43,9 @@ namespace Plato.Reactions.Stores
             return result;
         }
 
-        public async Task<Reaction> UpdateAsync(Reaction model)
+        public async Task<EntityReacttion> UpdateAsync(EntityReacttion model)
         {
-            var result = await _reactionRepository.InsertUpdateAsync(model);
+            var result = await _entityReactionRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -54,9 +54,9 @@ namespace Plato.Reactions.Stores
             return result;
         }
 
-        public async Task<bool> DeleteAsync(Reaction model)
+        public async Task<bool> DeleteAsync(EntityReacttion model)
         {
-            var success = await _reactionRepository.DeleteAsync(model.Id);
+            var success = await _entityReactionRepository.DeleteAsync(model.Id);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -70,18 +70,18 @@ namespace Plato.Reactions.Stores
             return success;
         }
 
-        public async Task<Reaction> GetByIdAsync(int id)
+        public async Task<EntityReacttion> GetByIdAsync(int id)
         {
-            return await _reactionRepository.SelectByIdAsync(id);
+            return await _entityReactionRepository.SelectByIdAsync(id);
         }
 
-        public IQuery<Reaction> QueryAsync()
+        public IQuery<EntityReacttion> QueryAsync()
         {
             var query = new ReactionQuery(this);
-            return _dbQuery.ConfigureQuery<Reaction>(query); ;
+            return _dbQuery.ConfigureQuery<EntityReacttion>(query); ;
         }
 
-        public async Task<IPagedResults<Reaction>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<EntityReacttion>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -93,7 +93,7 @@ namespace Plato.Reactions.Stores
                         token.ToString(), args.Select(a => a));
                 }
 
-                return await _reactionRepository.SelectAsync(args);
+                return await _entityReactionRepository.SelectAsync(args);
 
             });
         }

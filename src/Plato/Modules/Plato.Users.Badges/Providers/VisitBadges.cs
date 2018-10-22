@@ -76,8 +76,7 @@ namespace Plato.Users.Badges.Providers
                     CLOSE MSGCURSOR;
                     DEALLOCATE MSGCURSOR;
                     SELECT @dirty;";
-
-
+                
                 // Replacements for SQL script
                 var replacements = new Dictionary<string, string>()
                 {

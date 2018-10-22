@@ -37,9 +37,7 @@ namespace Plato.Badges
             // Services
             services.AddScoped<IBadgesManager<Badge>, BadgesManager<Badge>>();
             services.AddScoped<IBadgesAwarder, BadgesAwarder<Badge>>();
-
-
-
+            
         }
 
         public override void Configure(

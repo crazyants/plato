@@ -30,13 +30,16 @@ namespace Plato.Reactions
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Repositories
-            services.AddScoped<IReactionRepository<Reaction>, ReactionRepository>();
+            services.AddScoped<IEntityReactionRepository<EntityReacttion>, EntityEntityReactionRepository>();
 
             // Stores
-            services.AddScoped<IReactionStore<Reaction>, ReactionStore>();
+            services.AddScoped<IReactionStore<EntityReacttion>, ReactionStore>();
 
-            // Manager
-            services.AddScoped<IReactionManager, ReactionManager>();
+            // Services
+            services.AddScoped<IReactionsManager<Reaction>, ReactionsManager<Reaction>>();
+
+            // Managers
+            services.AddScoped<IEntityReactionsManager, EntityEntityReactionsesManager>();
 
         }
 
