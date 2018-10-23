@@ -5,14 +5,14 @@ using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Reactions.Navigation
 {
-    public class TopicMenu : INavigationProvider
+    public class TopicReplyMenu : INavigationProvider
     {
 
         private readonly IActionContextAccessor _actionContextAccessor;
     
         public IStringLocalizer T { get; set; }
 
-        public TopicMenu(
+        public TopicReplyMenu(
             IStringLocalizer localizer,
             IActionContextAccessor actionContextAccessor)
         {
@@ -23,7 +23,7 @@ namespace Plato.Discuss.Reactions.Navigation
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topic", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topicreply", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }

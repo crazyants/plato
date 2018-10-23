@@ -173,5 +173,17 @@ namespace Plato.Internal.Navigation
                 _item.RouteValues["area"] = areaName;
             return this;
         }
+
+        public T GetModel<T>()
+        {
+            if (_item.Model == null)
+            {
+                return default(T);
+            }
+            return (T)_item.Model;
+        }
+
+
+
     }
 }

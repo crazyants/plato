@@ -27,18 +27,20 @@
             <div class="topic-reply-body">
                 <card>
                     <card-title>
-                        
                         <div class="card-title float-left">
                             <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@reply.CreatedUserId" asp-route-alias="@reply.CreatedBy.Alias" class="avatar-link">
                                 @reply.CreatedBy.DisplayName
                             </a>
                             @T["posted "]
-                            <span data-toggle="tooltip" title=" @reply.CreatedDate">
+                            <span data-toggle="tooltip" title="@reply.CreatedDate">
                                 @reply.CreatedDate.ToPrettyDate()
                             </span>
                         </div>
-
-                        <ul class="nav nav-h navbar p-0 float-right">
+                        <navigation name="topicreply"
+                                    model="reply"
+                                    class="nav navbar p-0 float-right"
+                                    child-ul-css-class="dropdown-menu" />
+                        @*<ul class="nav nav-h navbar p-0 float-right">
                             <li class="nav-item dropdown">
                                 <a class="nav-link text-muted" href="#postReply" data-provide="postQuote" role="button">
                                     <span title="@T["Reply"]" data-toggle="tooltip">
@@ -100,9 +102,7 @@
                                     </div>
                                 </li>
                             </li>
-                        </ul>
-
-
+                        </ul>*@
                     </card-title>
                     <card-body class="card-body">
                         <div class="user-content">

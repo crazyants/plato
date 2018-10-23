@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Navigation;
@@ -31,6 +32,8 @@ namespace Plato.Internal.Layout.TagHelpers
 
         public bool Collaspsable { get; set; }
      
+        public object Model { get; set; }
+
         private readonly INavigationManager _navigationManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IActionContextAccessor _actionContextAccesor;
@@ -74,12 +77,20 @@ namespace Plato.Internal.Layout.TagHelpers
             // Ensure no surrounding element
             output.TagName = "";
             output.TagMode = TagMode.StartTagAndEndTag;
+            
+            // Get action context
+            var acttionContext = _actionContextAccesor.ActionContext;
 
+            // Add navigation model if provided to action context for
+            // optional use within any navigation builders later on
+            if (this.Model != null)
+            {
+                acttionContext.HttpContext.Items[this.Model.GetType()] = this.Model;
+            }
+            
             // Build navigation
             var sb = new StringBuilder();
-            var items = _navigationManager.BuildMenu(
-                this.Name,
-                _actionContextAccesor.ActionContext);
+            var items = _navigationManager.BuildMenu(this.Name, acttionContext);
             if (items != null)
             {
                 BuildNavigationRecursivly(items.ToList(), sb);
@@ -151,7 +162,7 @@ namespace Plato.Internal.Layout.TagHelpers
             var index = 0;
             foreach (var item in items)
             {
-               
+                
                 AddTabs(_level + 1, sb);
 
                 if (this.EnableChildList)
@@ -286,7 +297,7 @@ namespace Plato.Internal.Layout.TagHelpers
         {
 
             EnsureViewHelper();
-
+            
             var view = new View(item.View.ViewName, item.View.Model);
             var viewResult =  _viewDisplayHelper.DisplayAsync(view)
                 .GetAwaiter()

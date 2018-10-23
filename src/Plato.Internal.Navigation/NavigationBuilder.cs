@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 
 namespace Plato.Internal.Navigation
@@ -9,6 +10,8 @@ namespace Plato.Internal.Navigation
     {
         
         List<MenuItem> Contained { get; set; }
+
+        public ActionContext ActionContext { get; set; }
 
         public NavigationBuilder()
         {

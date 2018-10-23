@@ -53,6 +53,7 @@ namespace Plato.Internal.Navigation
         {
 
             var builder = new NavigationBuilder();
+            builder.ActionContext = actionContext;
 
             // Processes all navigation builders to create a flat list of menu items.
             // If a navigation builder fails, it is ignored.

@@ -28,6 +28,7 @@ namespace Plato.Discuss.Reactions
 
             // Register navigation provider
             services.AddScoped<INavigationProvider, TopicMenu>();
+            services.AddScoped<INavigationProvider, TopicReplyMenu>();
 
         }
 

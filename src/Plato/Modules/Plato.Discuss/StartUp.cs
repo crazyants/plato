@@ -45,6 +45,7 @@ namespace Plato.Discuss
             //services.AddScoped<INavigationProvider, ProfileMenu>();
             services.AddScoped<INavigationProvider, SearchMenu>();
             services.AddScoped<INavigationProvider, TopicMenu>();
+            services.AddScoped<INavigationProvider, TopicReplyMenu>();
 
             // Stores
             services.AddScoped<IEntityRepository<Topic>, EntityRepository<Topic>>();
