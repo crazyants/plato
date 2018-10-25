@@ -6,9 +6,9 @@ namespace Plato.Reactions.Services
 {
     public interface IEntityReactionsManager
     {
-        Task<IActivityResult<EntityReacttion>> CreateAsync(EntityReacttion model);
+        Task<IActivityResult<EntityReaction>> CreateAsync(EntityReaction model);
 
-        Task<IActivityResult<EntityReacttion>> UpdateAsync(EntityReacttion model);
+        Task<IActivityResult<EntityReaction>> UpdateAsync(EntityReaction model);
 
     }
 

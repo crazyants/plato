@@ -8,43 +8,41 @@ using Plato.Reactions.Models;
 namespace Plato.Reactions.Stores
 {
 
-    #region "ReactionQuery"
+    #region "EntityReactionQuery"
 
-    public class ReactionQuery : DefaultQuery<EntityReacttion>
+    public class EntityReactionsQuery : DefaultQuery<EntityReaction>
     {
 
-        private readonly IStore<EntityReacttion> _store;
+        private readonly IStore<EntityReaction> _store;
 
-        public ReactionQuery(IStore<EntityReacttion> store)
+        public EntityReactionsQuery(IStore<EntityReaction> store)
         {
             _store = store;
         }
 
-        public ReactionQueryParams Params { get; set; }
+        public EntityReactionsQueryParams Params { get; set; }
 
-        public override IQuery<EntityReacttion> Select<T>(Action<T> configure)
+        public override IQuery<EntityReaction> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
-            Params = (ReactionQueryParams)Convert.ChangeType(defaultParams, typeof(ReactionQueryParams));
+            Params = (EntityReactionsQueryParams)Convert.ChangeType(defaultParams, typeof(EntityReactionsQueryParams));
             return this;
         }
 
-        public override async Task<IPagedResults<EntityReacttion>> ToList()
+        public override async Task<IPagedResults<EntityReaction>> ToList()
         {
 
-            var builder = new ReactionQueryBuilder(this);
-            var startSql = builder.BuildSqlStartId();
+            var builder = new EntityReactionsQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
 
             var data = await _store.SelectAsync(
                 PageIndex,
                 PageSize,
-                startSql,
                 populateSql,
                 countSql,
-                Params.Keywords.Value
+                Params.ReactionName.Value
             );
 
             return data;
@@ -55,14 +53,15 @@ namespace Plato.Reactions.Stores
 
     #endregion
 
-    #region "ReactionQueryParams"
+    #region "EntityReactionsQueryParams"
 
-    public class ReactionQueryParams
+    public class EntityReactionsQueryParams
     {
 
 
         private WhereInt _id;
-        private WhereString _keywords;
+        private WhereInt _entityId;
+        private WhereString _reactionName;
 
 
         public WhereInt Id
@@ -71,10 +70,17 @@ namespace Plato.Reactions.Stores
             set => _id = value;
         }
 
-        public WhereString Keywords
+        public WhereInt EntityId
         {
-            get => _keywords ?? (_keywords = new WhereString());
-            set => _keywords = value;
+            get => _entityId ?? (_entityId = new WhereInt());
+            set => _entityId = value;
+        }
+
+
+        public WhereString ReactionName
+        {
+            get => _reactionName ?? (_reactionName = new WhereString());
+            set => _reactionName = value;
         }
 
 
@@ -82,45 +88,33 @@ namespace Plato.Reactions.Stores
 
     #endregion
 
-    #region "ReactionQueryBuilder"
+    #region "EntityReactionsQueryBuilder"
 
-    public class ReactionQueryBuilder : IQueryBuilder
+    public class EntityReactionsQueryBuilder : IQueryBuilder
     {
         #region "Constructor"
 
-        private readonly string _reactionsTableName;
+        private readonly string _entityReactionsTableName;
+        private readonly string _usersTableName;
 
-        private readonly ReactionQuery _query;
+        private readonly EntityReactionsQuery _query;
 
-        public ReactionQueryBuilder(ReactionQuery query)
+        public EntityReactionsQueryBuilder(EntityReactionsQuery query)
         {
             _query = query;
-            _reactionsTableName = GetTableNameWithPrefix("Reactions");
+            _entityReactionsTableName = GetTableNameWithPrefix("EntityReactions");
+            _usersTableName = GetTableNameWithPrefix("Users");
 
         }
 
         #endregion
 
         #region "Implementation"
-
-        public string BuildSqlStartId()
-        {
-            var whereClause = BuildWhereClause();
-            var orderBy = BuildOrderBy();
-            var sb = new StringBuilder();
-            sb.Append("SELECT @start_id_out = e.Id FROM ")
-                .Append(BuildTables());
-            if (!string.IsNullOrEmpty(whereClause))
-                sb.Append(" WHERE (").Append(whereClause).Append(")");
-            if (!string.IsNullOrEmpty(orderBy))
-                sb.Append(" ORDER BY ").Append(orderBy);
-            return sb.ToString();
-        }
-
+        
         public string BuildSqlPopulate()
         {
 
-            var whereClause = BuildWhereClauseForStartId();
+            var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
 
             var sb = new StringBuilder();
@@ -131,8 +125,11 @@ namespace Plato.Reactions.Stores
 
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
-            if (!string.IsNullOrEmpty(orderBy))
-                sb.Append(" ORDER BY ").Append(orderBy);
+            sb.Append(" ORDER BY ")
+                .Append(!string.IsNullOrEmpty(orderBy)
+                    ? orderBy
+                    : "Id ASC");
+            sb.Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
             return sb.ToString();
         }
 
@@ -140,7 +137,7 @@ namespace Plato.Reactions.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(e.Id) FROM ")
+            sb.Append("SELECT COUNT(er.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -150,19 +147,26 @@ namespace Plato.Reactions.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("e.*");
+            sb.Append("er.*, ")
+                .Append("u.UserName, ")
+                .Append("u.DisplayName,")
+                .Append("u.FirstName,")
+                .Append("u.LastName,")
+                .Append("u.Alias");
             return sb.ToString();
 
         }
 
         string BuildTables()
         {
-
             var sb = new StringBuilder();
+            sb.Append(_entityReactionsTableName)
+                .Append(" er ");
 
-            sb.Append(_reactionsTableName)
-                .Append(" e ");
-
+            // join user
+            sb.Append("LEFT OUTER JOIN ")
+                .Append(_usersTableName)
+                .Append(" u ON er.CreatedUserId = u.Id ");
             return sb.ToString();
 
         }
@@ -177,30 +181,7 @@ namespace Plato.Reactions.Stores
                 ? _query.TablePrefix + tableName
                 : tableName;
         }
-
-        private string BuildWhereClauseForStartId()
-        {
-            var sb = new StringBuilder();
-            // default to ascending
-            if (_query.SortColumns.Count == 0)
-                sb.Append("e.Id >= @start_id_in");
-            // set start operator based on first order by
-            foreach (var sortColumn in _query.SortColumns)
-            {
-                sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "e.Id <= @start_id_in"
-                    : "e.Id >= @start_id_in");
-                break;
-            }
-
-            var where = BuildWhereClause();
-            if (!string.IsNullOrEmpty(where))
-                sb.Append(" AND ").Append(where);
-
-            return sb.ToString();
-
-        }
-
+        
         private string BuildWhereClause()
         {
             var sb = new StringBuilder();
@@ -210,10 +191,25 @@ namespace Plato.Reactions.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("e.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("er.Id"));
             }
 
-
+            // ReactionName
+            if (!String.IsNullOrEmpty(_query.Params.ReactionName.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ReactionName.Operator);
+                sb.Append(_query.Params.ReactionName.ToSqlString("ReactionName"));
+            }
+            
+            // EntityId
+            if (_query.Params.EntityId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EntityId.Operator);
+                sb.Append(_query.Params.EntityId.ToSqlString("er.EntityId"));
+            }
+            
             return sb.ToString();
 
         }
@@ -228,7 +224,7 @@ namespace Plato.Reactions.Stores
 
             return columnName.IndexOf('.') >= 0
                 ? columnName
-                : "e." + columnName;
+                : "er." + columnName;
         }
 
         private string BuildOrderBy()

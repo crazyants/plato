@@ -1,30 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Localization;
-using Plato.Discuss.Models;
 using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Reactions.Navigation
 {
-    public class TopicReplyMenu : INavigationProvider
+    public class TopicFooterMenu : INavigationProvider
     {
 
         private readonly IActionContextAccessor _actionContextAccessor;
-    
+
         public IStringLocalizer T { get; set; }
 
-        public TopicReplyMenu(
+        public TopicFooterMenu(
             IStringLocalizer localizer,
             IActionContextAccessor actionContextAccessor)
         {
             T = localizer;
             _actionContextAccessor = actionContextAccessor;
         }
-        
+
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topicreply", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topic-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -41,16 +42,12 @@ namespace Plato.Discuss.Reactions.Navigation
             {
                 return;
             }
-
-            // Get model from navigation builder
-            var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
             
-            // Add reaction menu view to navigation
             builder
-                .Add(T["React"], react => react
-                    .View("ReactMenu", new
+                .Add(T["Reactions"], react => react
+                    .View("TopicReactions", new
                     {
-                        id = reply?.Id ?? 0
+                        id = entityId
                     })
                 );
 

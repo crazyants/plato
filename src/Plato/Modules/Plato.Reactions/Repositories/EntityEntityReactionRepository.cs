@@ -9,7 +9,7 @@ using Plato.Reactions.Models;
 namespace Plato.Reactions.Repositories
 {
     
-    public class EntityEntityReactionRepository : IEntityReactionRepository<EntityReacttion>
+    public class EntityEntityReactionRepository : IEntityReactionRepository<EntityReaction>
     {
 
         private readonly IDbContext _dbContext;
@@ -25,27 +25,21 @@ namespace Plato.Reactions.Repositories
 
         #region "Implementation"
 
-        public async Task<EntityReacttion> InsertUpdateAsync(EntityReacttion entityReacttion)
+        public async Task<EntityReaction> InsertUpdateAsync(EntityReaction entityReaction)
         {
-            if (entityReacttion == null)
+            if (entityReaction == null)
             {
-                throw new ArgumentNullException(nameof(entityReacttion));
+                throw new ArgumentNullException(nameof(entityReaction));
             }
 
             var id = await InsertUpdateInternal(
-                entityReacttion.Id,
-                entityReacttion.FeatureId,
-                entityReacttion.Name,
-                entityReacttion.Description,
-                entityReacttion.Emoji,
-                entityReacttion.IsPositive,
-                entityReacttion.IsNeutral,
-                entityReacttion.IsNegative,
-                entityReacttion.IsDisabled,
-                entityReacttion.CreatedUserId,
-                entityReacttion.CreatedDate,
-                entityReacttion.ModifiedUserId,
-                entityReacttion.ModifiedDate);
+                entityReaction.Id,
+                entityReaction.ReactionName,
+                entityReaction.Sentiment,
+                entityReaction.Points,
+                entityReaction.EntityId,
+                entityReaction.CreatedUserId,
+                entityReaction.CreatedDate);
 
             if (id > 0)
             {
@@ -56,9 +50,9 @@ namespace Plato.Reactions.Repositories
             return null;
         }
 
-        public async Task<EntityReacttion> SelectByIdAsync(int id)
+        public async Task<EntityReaction> SelectByIdAsync(int id)
         {
-            EntityReacttion entityReacttion = null;
+            EntityReaction entityReaction = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -67,18 +61,18 @@ namespace Plato.Reactions.Repositories
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
-                    entityReacttion = new EntityReacttion();
-                    entityReacttion.PopulateModel(reader);
+                    entityReaction = new EntityReaction();
+                    entityReaction.PopulateModel(reader);
                 }
 
             }
 
-            return entityReacttion;
+            return entityReaction;
         }
 
-        public async Task<IPagedResults<EntityReacttion>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EntityReaction>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EntityReacttion> output = null;
+            PagedResults<EntityReaction> output = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -87,10 +81,10 @@ namespace Plato.Reactions.Repositories
                     inputParams);
                 if ((reader != null) && (reader.HasRows))
                 {
-                    output = new PagedResults<EntityReacttion>();
+                    output = new PagedResults<EntityReaction>();
                     while (await reader.ReadAsync())
                     {
-                        var reaction = new EntityReacttion();
+                        var reaction = new EntityReaction();
                         reaction.PopulateModel(reader);
                         output.Data.Add(reaction);
                     }
@@ -132,18 +126,12 @@ namespace Plato.Reactions.Repositories
 
         async Task<int> InsertUpdateInternal(
             int id,
-            int featureId,
-            string name,
-            string description,
-            string emoji,
-            bool isPositive,
-            bool isNeutral,
-            bool isNegative,
-            bool isDeisabled,
+            string reactionName,
+            Sentiment sentiment,
+            int points,
+            int entityId,
             int createdUserId,
-            DateTimeOffset? createdDate,
-            int modifiedUserId,
-            DateTimeOffset? modifiedDate)
+            DateTimeOffset? createdDate)
         {
 
             var emailId = 0;
@@ -151,20 +139,15 @@ namespace Plato.Reactions.Repositories
             {
                 emailId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "InsertUpdateReaction",
+                    "InsertUpdateEntityReaction",
                     id,
-                    featureId,
-                    name.ToEmptyIfNull().TrimToSize(255),
-                    description.ToEmptyIfNull().TrimToSize(255),
-                    emoji.ToEmptyIfNull().TrimToSize(20),
-                    isPositive,
-                    isNeutral,
-                    isNegative,
-                    isDeisabled,
+                    reactionName.ToEmptyIfNull().TrimToSize(255),
+                    (short)sentiment,
+                    points,
+                    entityId,
                     createdUserId,
-                    createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate.ToDateIfNull());
+                    createdDate.ToDateIfNull()
+                );
             }
 
             return emailId;

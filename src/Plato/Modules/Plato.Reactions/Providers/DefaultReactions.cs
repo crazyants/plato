@@ -8,19 +8,22 @@ namespace Plato.Reactions.Providers
     {
 
         public static readonly Reaction ThumbUp =
-            new Reaction("Thumb Up", "Thumb Up +1", "👍", 1);
+            new Reaction("Thumb Up", "Thumb Up +1", "👍", 1, Sentiment.Positive);
 
         public static readonly Reaction ThumbDown  =
-            new Reaction("Thumb Down", "Thumb Down -1", "👎", -1);
+            new Reaction("Thumb Down", "Thumb Down -1", "👎", -1, Sentiment.Negative);
 
         public static readonly Reaction Smile =
-            new Reaction("Smile", "Smile", "😄", 0);
+            new Reaction("Smile", "Smile", "😄", 0, Sentiment.Positive);
 
         public static readonly Reaction Congratulations =
-            new Reaction("Congrats", "Congratulations", "🎉", 0);
+            new Reaction("Congrats", "Congratulations", "🎉", 0, Sentiment.Positive);
         
         public static readonly Reaction Confused =
-            new Reaction("Confused", "I'm Confused", "😕", 0);
+            new Reaction("Confused", "I'm Confused", "😕", 0, Sentiment.Neutral);
+
+        public static readonly Reaction Angry =
+            new Reaction("Angry", "Angry", "😕", 0, Sentiment.Negative);
 
         public static readonly Reaction Heart =
             new Reaction("Heart", "Heart", "❤️", 0);
@@ -34,6 +37,7 @@ namespace Plato.Reactions.Providers
                 Smile,
                 Congratulations,
                 Confused,
+                Angry,
                 Heart
             };
         }

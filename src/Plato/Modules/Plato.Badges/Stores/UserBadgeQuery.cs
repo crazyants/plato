@@ -183,7 +183,7 @@ namespace Plato.Badges.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.BadgeName.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("BadgeName"));
+                sb.Append(_query.Params.BadgeName.ToSqlString("BadgeName"));
             }
 
             // UserId

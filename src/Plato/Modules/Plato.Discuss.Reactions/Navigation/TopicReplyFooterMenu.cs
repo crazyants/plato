@@ -6,14 +6,14 @@ using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Reactions.Navigation
 {
-    public class TopicReplyMenu : INavigationProvider
+    public class TopicReplyFooterMenu : INavigationProvider
     {
 
         private readonly IActionContextAccessor _actionContextAccessor;
     
         public IStringLocalizer T { get; set; }
 
-        public TopicReplyMenu(
+        public TopicReplyFooterMenu(
             IStringLocalizer localizer,
             IActionContextAccessor actionContextAccessor)
         {
@@ -24,20 +24,7 @@ namespace Plato.Discuss.Reactions.Navigation
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topicreply", StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-
-            // Get action context
-            var context = _actionContextAccessor.ActionContext;
-
-            // Get route values
-            var id = context.RouteData.Values["id"].ToString();
-            var alias = context.RouteData.Values["alias"].ToString();
-
-            // Ensure we have a valid entity Id
-            if (!int.TryParse(id, out var entityId))
+            if (!String.Equals(name, "topicreply-footer", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -48,7 +35,7 @@ namespace Plato.Discuss.Reactions.Navigation
             // Add reaction menu view to navigation
             builder
                 .Add(T["React"], react => react
-                    .View("ReactMenu", new
+                    .View("TopicReactions", new
                     {
                         id = reply?.Id ?? 0
                     })

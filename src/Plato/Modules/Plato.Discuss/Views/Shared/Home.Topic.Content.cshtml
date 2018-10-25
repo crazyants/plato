@@ -12,6 +12,11 @@
             @Html.Raw(@Model.Entity.Html)
         </div>
     </card-body>
+    <card-footer>
+        <navigation name="topic-footer"
+                    class="nav navbar p-0"
+                    child-ul-css-class="dropdown-menu"/>
+    </card-footer>
 </card>
 
 @if (Model.Replies != null)
@@ -40,75 +45,17 @@
                                     model="reply"
                                     class="nav navbar p-0 float-right"
                                     child-ul-css-class="dropdown-menu" />
-                        @*<ul class="nav nav-h navbar p-0 float-right">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link text-muted" href="#postReply" data-provide="postQuote" role="button">
-                                    <span title="@T["Reply"]" data-toggle="tooltip">
-                                        <i class="fal fa-reply"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="EditReply" asp-route-id="@reply.Id" class="nav-link text-muted" role="button">
-                                    <span title="@T["Edit"]" data-toggle="tooltip">
-                                        <i class="fal fa-pencil"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span title="@T["React"]" data-toggle="tooltip">
-                                        <i class="fal fa-smile"></i>
-                                    </span>
-                                </a>
-                                <div class="dropdown-arrow"></div>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-
-                                    <div class="reaction-dropdown-menu mx-1 mb-1">
-
-                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="+1" name="input[content]" aria-label="React with thumbs up emoji" value="THUMBS_UP react">
-                                            <div alias="+1" class="emoji">👍</div>
-                                        </button>
-                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="-1" name="input[content]" aria-label="React with thumbs down emoji" value="THUMBS_DOWN react">
-                                            <div alias="-1" class="emoji">👎</div>
-                                        </button>
-                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Laugh" name="input[content]" aria-label="React with laugh emoji" value="LAUGH react">
-                                            <div alias="smile" class="emoji">😄</div>
-                                        </button>
-                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Hooray" name="input[content]" aria-label="React with hooray emoji" value="HOORAY react">
-                                            <div alias="tada" class="emoji">🎉</div>
-                                        </button>
-                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Confused" name="input[content]" aria-label="React with confused emoji" value="CONFUSED react">
-                                            <div alias="thinking_face" class="emoji">😕</div>
-                                        </button>
-                                        <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Heart" name="input[content]" aria-label="React with heart emoji" value="HEART react">
-                                            <div alias="heart" class="emoji">❤️</div>
-                                        </button>
-                                    </div>
-
-                                </div>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span title="@T["More"]" data-toggle="tooltip">
-                                            <i class="fal fa-ellipsis-h "></i>
-                                        </span>
-                                    </a>
-                                    <div class="dropdown-arrow"></div>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Reply" class="dropdown-item">Edit</a>
-                                        <a class="dropdown-item" href="#">Hide</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Delete</a>
-                                    </div>
-                                </li>
-                            </li>
-                        </ul>*@
                     </card-title>
                     <card-body class="card-body">
                         <div class="user-content">
                             @Html.Raw(reply.Html)
                         </div>
                     </card-body>
+                    <card-footer>
+                        <navigation name="topicreply-footer"
+                                    class="nav navbar p-0"
+                                    child-ul-css-class="dropdown-menu" />
+                    </card-footer>
                 </card>
             </div>
         </div>

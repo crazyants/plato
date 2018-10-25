@@ -13,17 +13,17 @@ namespace Plato.Reactions.Services
     {
 
         private readonly IContextFacade _contextFacade;
-        private readonly IReactionStore<EntityReacttion> _reactionStore;
+        private readonly IEntityReactionsStore<EntityReaction> _entityReactionsStore;
   
         public EntityEntityReactionsesManager(
-            IReactionStore<EntityReacttion> reactionStore,
+            IEntityReactionsStore<EntityReaction> entityReactionsStore,
             IContextFacade contextFacade)
         {
-            _reactionStore = reactionStore;
+            _entityReactionsStore = entityReactionsStore;
             _contextFacade = contextFacade;
         }
         
-        public async Task<IActivityResult<EntityReacttion>> CreateAsync(EntityReacttion model)
+        public async Task<IActivityResult<EntityReaction>> CreateAsync(EntityReaction model)
         {
 
             if (model == null)
@@ -36,14 +36,14 @@ namespace Plato.Reactions.Services
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
 
-            if (model.FeatureId <= 0)
+            if (model.EntityId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.FeatureId));
+                throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
 
-            if (String.IsNullOrEmpty(model.Name))
+            if (String.IsNullOrEmpty(model.ReactionName))
             {
-                throw new ArgumentNullException(nameof(model.Name));
+                throw new ArgumentNullException(nameof(model.ReactionName));
             }
 
             // Update created by
@@ -51,10 +51,10 @@ namespace Plato.Reactions.Services
             model.CreatedUserId = user?.Id ?? 0;
         
             // Create result
-            var result = new ActivityResult<EntityReacttion>();
+            var result = new ActivityResult<EntityReaction>();
 
             // Attempt to persist
-            var reaction = await _reactionStore.CreateAsync(model);
+            var reaction = await _entityReactionsStore.CreateAsync(model);
             if (reaction != null)
             {
                 return result.Success(reaction);
@@ -64,7 +64,7 @@ namespace Plato.Reactions.Services
 
         }
 
-        public async Task<IActivityResult<EntityReacttion>> UpdateAsync(EntityReacttion model)
+        public async Task<IActivityResult<EntityReaction>> UpdateAsync(EntityReaction model)
         {
 
             // Validate
@@ -78,26 +78,24 @@ namespace Plato.Reactions.Services
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
             
-            if (model.FeatureId <= 0)
+            if (model.EntityId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.FeatureId));
+                throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
 
-            if (String.IsNullOrEmpty(model.Name))
+            if (String.IsNullOrEmpty(model.ReactionName))
             {
-                throw new ArgumentNullException(nameof(model.Name));
+                throw new ArgumentNullException(nameof(model.ReactionName));
             }
             
             // Update modified 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-            model.ModifiedUserId = user?.Id ?? 0;
-            model.ModifiedDate = DateTimeOffset.UtcNow;
-
+      
             // Create result
-            var result = new ActivityResult<EntityReacttion>();
+            var result = new ActivityResult<EntityReaction>();
 
             // Attempt to persist
-            var reaction = await _reactionStore.UpdateAsync(model);
+            var reaction = await _entityReactionsStore.UpdateAsync(model);
             if (reaction != null)
             {
                 return result.Success(reaction);

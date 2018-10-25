@@ -30,7 +30,9 @@ namespace Plato.Discuss.Reactions
 
             // Register navigation provider
             services.AddScoped<INavigationProvider, TopicMenu>();
+            services.AddScoped<INavigationProvider, TopicFooterMenu>();
             services.AddScoped<INavigationProvider, TopicReplyMenu>();
+            services.AddScoped<INavigationProvider, TopicReplyFooterMenu>();
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();

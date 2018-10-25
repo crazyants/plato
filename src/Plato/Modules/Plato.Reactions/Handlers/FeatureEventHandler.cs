@@ -26,14 +26,24 @@ namespace Plato.Reactions.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "EntityId",
+                        Name = "ReactionName",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Sentiment",
+                        DbType = DbType.Int16
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Points",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
-                        Name = "ReactionName",
-                        DbType = DbType.String,
-                        Length = "255"
+                        Name = "EntityId",
+                        DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
@@ -116,7 +126,7 @@ namespace Plato.Reactions.Handlers
                 builder
                     .DropTable(_entityReactions)
                     .DropDefaultProcedures(_entityReactions)
-                    .DropProcedure(new SchemaProcedure("SelectReactionsPaged", StoredProcedureType.SelectByKey));
+                    .DropProcedure(new SchemaProcedure("SelectEntityReactionsPaged", StoredProcedureType.SelectByKey));
 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -174,13 +184,34 @@ namespace Plato.Reactions.Handlers
                 .CreateTable(_entityReactions)
                 .CreateDefaultProcedures(_entityReactions);
 
-            builder.CreateProcedure(new SchemaProcedure("SelectReactionsPaged", StoredProcedureType.SelectPaged)
+            // Overwrite our SelectEntityReactionById created via CreateDefaultProcedures
+            // above to also return simple user data with the reaction
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        $"SelectEntityReactionById",
+                        @" SELECT er.*, 
+                                    u.UserName, 
+                                    u.NormalizedUserName,
+                                    u.DisplayName,
+                                    u.FirstName,
+                                    u.LastName,
+                                    u.Alias                                   
+                                FROM {prefix}_EntityReactions er WITH (nolock) 
+                                    LEFT OUTER JOIN {prefix}_Users u ON er.CreatedUserId = u.Id                                    
+                                WHERE (
+                                   er.Id = @Id
+                                )")
+                    .ForTable(_entityReactions)
+                    .WithParameter(_entityReactions.PrimaryKeyColumn));
+            
+
+            builder.CreateProcedure(new SchemaProcedure("SelectEntityReactionsPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_entityReactions)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()
                     {
-                        Name = "Keywords",
+                        Name = "ReactionName",
                         DbType = DbType.String,
                         Length = "255"
                     }
