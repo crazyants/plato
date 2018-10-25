@@ -1,0 +1,17 @@
+﻿
+.react-dropdown-menu {
+    text-align: center;
+}
+
+.react-dropdown-menu .dropdown-item {
+    display: inline-block;
+    width: auto;
+    clear: none;
+    padding: 0.50rem;
+}
+
+.react-dropdown-menu .dropdown-item:hover {
+    animation: pulseOutLrg 0.40s 0s none; 
+}
+
+.react-list-group { width: 200px; white-space: normal; }

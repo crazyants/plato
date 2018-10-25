@@ -8,17 +8,33 @@ namespace Plato.Reactions.Providers
     {
 
         public static readonly Reaction ThumbUp =
-            new Reaction("+1", "Thumb Up", "👍", 5);
+            new Reaction("Thumb Up", "Thumb Up +1", "👍", 1);
 
         public static readonly Reaction ThumbDown  =
-            new Reaction("-1", "Thumb Down", "👎", 5);
+            new Reaction("Thumb Down", "Thumb Down -1", "👎", -1);
+
+        public static readonly Reaction Smile =
+            new Reaction("Smile", "Smile", "😄", 0);
+
+        public static readonly Reaction Congratulations =
+            new Reaction("Congrats", "Congratulations", "🎉", 0);
+        
+        public static readonly Reaction Confused =
+            new Reaction("Confused", "I'm Confused", "😕", 0);
+
+        public static readonly Reaction Heart =
+            new Reaction("Heart", "Heart", "❤️", 0);
 
         public IEnumerable<Reaction> GetReactions()
         {
             return new[]
             {
                 ThumbUp,
-                ThumbDown
+                ThumbDown,
+                Smile,
+                Congratulations,
+                Confused,
+                Heart
             };
         }
     }

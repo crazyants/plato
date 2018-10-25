@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
@@ -64,11 +63,6 @@ namespace Plato.Internal.Navigation
 
         public bool Selected { get; set; }
         
-        public object Model { get; set; }
-
-        public Func<object, object> GetModel { get; set; }
-
-
     }
 
 }

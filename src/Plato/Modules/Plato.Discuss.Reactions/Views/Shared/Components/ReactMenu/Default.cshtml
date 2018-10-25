@@ -1,34 +1,27 @@
-﻿@model Topic
+﻿@model ReactMenuViewModel
 
 <div class="dropdown">
-    <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <a class="nav-link text-muted dropdown-toggle" href="#" id="reactionDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span title="@T["React"]" data-toggle="tooltip">
             <i class="fal fa-smile"></i>
         </span>
     </a>
     <div class="dropdown-arrow"></div>
-    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-
-        <div class="reaction-dropdown-menu mx-1 mb-1">
-            <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="+1" name="input[content]" aria-label="React with thumbs up emoji" value="THUMBS_UP react">
-                <div alias="+1" class="emoji emoji-animate-on-hover">👍</div>
-            </button>
-            <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="-1" name="input[content]" aria-label="React with thumbs down emoji" value="THUMBS_DOWN react">
-                <div alias="-1" class="emoji emoji-animate-on-hover">👎</div>
-            </button>
-            <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="+1" name="input[content]" aria-label="React with thumbs up emoji" value="THUMBS_UP react">
-                <div alias="smile" class="emoji emoji-animate-on-hover">😀</div>
-            </button>
-            <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Hooray" name="input[content]" aria-label="React with hooray emoji" value="HOORAY react">
-                <div alias="ckae" class="emoji emoji-animate-on-hover">🥡</div>
-            </button>
-            <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Confused" name="input[content]" aria-label="React with confused emoji" value="CONFUSED react">
-                <div alias="unhappy" class="emoji emoji-animate-on-hover">😟</div>
-            </button>
-            <button type="submit" class="btn reaction-dropdown-menu-item" data-reaction-label="Heart" name="input[content]" aria-label="React with heart emoji" value="HEART react">
-                <div alias="heart" class="emoji emoji-animate-on-hover">❤️</div>
-            </button>
+    <div class="dropdown-menu dropdown-menu-right react-dropdown-menu" data-provide="react-menu" aria-labelledby="reactionDropdown">
+        <div class="px-2">
+            <div class="d-block">
+                @foreach (var reaction in Model.Reactions)
+                {
+                    <a href="#" class="dropdown-item" data-reaction-label="@reaction.Description">
+                        @reaction.Emoji
+                    </a>
+                }
+            </div>
+            <div class="d-block border-top mt-2">
+                <div class="m-2 text-muted">
+                    @T["React"]
+                </div>
+            </div>
         </div>
-
     </div>
 </div>

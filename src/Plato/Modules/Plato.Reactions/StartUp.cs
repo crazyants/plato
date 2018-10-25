@@ -7,6 +7,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Reactions.Handlers;
 using Plato.Reactions.Models;
+using Plato.Reactions.Providers;
 using Plato.Reactions.Repositories;
 using Plato.Reactions.Services;
 using Plato.Reactions.Stores;
@@ -40,6 +41,9 @@ namespace Plato.Reactions
 
             // Managers
             services.AddScoped<IEntityReactionsManager, EntityEntityReactionsesManager>();
+
+            // Default Reaction Providers
+            services.AddScoped<IReactionsProvider<Reaction>, DefaultReactions>();
 
         }
 

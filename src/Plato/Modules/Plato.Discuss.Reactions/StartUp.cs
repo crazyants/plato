@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Reactions.Handlers;
 using Plato.Discuss.Reactions.Navigation;
+using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Discuss.Reactions.Assets;
 
 namespace Plato.Discuss.Reactions
 {
@@ -29,6 +31,9 @@ namespace Plato.Discuss.Reactions
             // Register navigation provider
             services.AddScoped<INavigationProvider, TopicMenu>();
             services.AddScoped<INavigationProvider, TopicReplyMenu>();
+
+            // Register client resources
+            services.AddScoped<IAssetProvider, AssetProvider>();
 
         }
 
