@@ -1,4 +1,5 @@
 ﻿
+/* reaction dropdown */
 .react-dropdown-menu {
     text-align: center;
 }
@@ -14,4 +15,18 @@
     animation: pulseOutLrg 0.40s 0s none; 
 }
 
-.react-list-group { width: 200px; white-space: normal; }
+/* reaction list (displayed below topics) */
+
+.reaction-list {
+     padding: 0; 
+    margin: 0;
+    list-style: none;
+}
+
+.reaction-list > li {
+    float: left;
+    padding: 0; 
+    margin: 0;
+    background: #ccc;
+    border-right: 1px solid #aaa;
+}

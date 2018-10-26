@@ -4,12 +4,19 @@ namespace Plato.Internal.Layout.TagHelpers
 {
     public class CardContext
     {
-        public IHtmlContent Title { get; set; }
+        public CardSection Title { get; set; }
 
-        public IHtmlContent Body { get; set; }
+        public CardSection Body { get; set; }
 
-        public IHtmlContent Footer { get; set; }
+        public CardSection Footer { get; set; }
 
+    }
+
+    public class CardSection
+    {
+        public string CssClass { get; set; }
+
+        public IHtmlContent Content { get; set; }
     }
 
 }

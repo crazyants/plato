@@ -1,9 +1,17 @@
-﻿@model ReactMenuViewModel
+﻿@model TopicReactionsViewModel
 
+<ul class="reaction-list">
 @foreach (var reaction in Model.Reactions)
 {
-    <span class="text-muted">
-        @reaction.Name - @reaction.Emoji @reaction.CreatedDate
-        <br/>
-    </span>
+    <li>
+        <div class="m-2">
+            <span class="emoji">
+                @reaction.Key
+            </span>
+            <span class="mx-1">
+                @reaction.Value.Count.ToPrettyInt()
+            </span>
+        </div>
+    </li>
 }
+</ul>

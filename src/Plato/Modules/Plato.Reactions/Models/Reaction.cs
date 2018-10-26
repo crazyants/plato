@@ -58,8 +58,7 @@ namespace Plato.Reactions.Models
         {
             this.Points = points * PointsMultiplier; 
         }
-
-
+        
         public Reaction(
             string name,
             string description,
@@ -74,8 +73,8 @@ namespace Plato.Reactions.Models
 
     public enum Sentiment
     {
-        Positive = 1,
         Neutral = 0,
+        Positive = 1,
         Negative = -1
     }
 

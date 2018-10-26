@@ -48,24 +48,23 @@ namespace Plato.Internal.Layout.TagHelpers
             if (cardContext.Title != null && this.Enabled)
             {
                 var panelTitle = new TagBuilder("div");
-                panelTitle.AddCssClass("card-header");
-                panelTitle.InnerHtml.AppendHtml(cardContext.Title);
+                panelTitle.AddCssClass(cardContext.Title.CssClass);
+                panelTitle.InnerHtml.AppendHtml(cardContext.Title.Content);
 
                 output.Content.AppendHtml(panelTitle);
             }
 
             // panel body
-            if (cardContext.Body != null && this.Enabled)
+            if (cardContext.Body.Content != null && this.Enabled)
             {
                 var panelBody = new TagBuilder("div");
-                panelBody.AddCssClass("card-body");
-                panelBody.InnerHtml.AppendHtml(cardContext.Body);
-
+                panelBody.AddCssClass(cardContext.Body.CssClass);
+                panelBody.InnerHtml.AppendHtml(cardContext.Body.Content);
                 output.Content.AppendHtml(panelBody);
             }
             else
             {
-                output.Content.SetHtmlContent(cardContext.Body);
+                output.Content.SetHtmlContent(cardContext.Body.Content);
                 output.Attributes.Clear();
             }
 
@@ -73,8 +72,8 @@ namespace Plato.Internal.Layout.TagHelpers
             if (cardContext.Footer != null && this.Enabled)
             {
                 var panelFooter = new TagBuilder("div");
-                panelFooter.AddCssClass("card-footer");
-                panelFooter.InnerHtml.AppendHtml(cardContext.Footer);
+                panelFooter.AddCssClass(cardContext.Footer.CssClass);
+                panelFooter.InnerHtml.AppendHtml(cardContext.Footer.Content);
 
                 output.Content.AppendHtml(panelFooter);
             }

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
 using Plato.Discuss.Reactions.ViewModels;
@@ -30,13 +32,36 @@ namespace Plato.Discuss.Reactions.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(int id)
         {
 
-            var viewModel = new ReactMenuViewModel()
+            var viewModel = new TopicReactionsViewModel()
             {
-                Topic = await _entityStore.GetByIdAsync(id),
-                Reactions = await _entityReactionsStore.GetEntityReactionsAsync(id)
+                Reactions = await GetReactions(id)
             };
 
             return View(viewModel);
+        }
+
+        private async Task<IDictionary<string, IList<IReaction>>> GetReactions(int id)
+        {
+
+            var output = new ConcurrentDictionary<string, IList<IReaction>>();
+            var reactions = await _entityReactionsStore.GetEntityReactionsAsync(id);
+            if (reactions != null)
+            {
+                foreach (var reaction in reactions)
+                {
+                    output.AddOrUpdate(reaction.Emoji, new List<IReaction>()
+                    {
+                        reaction
+                    }, (k, v) =>
+                    {
+                        v.Add(reaction);
+                        return v;
+                    });
+                }
+             
+            }
+
+            return output;
         }
 
     }

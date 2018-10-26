@@ -8,10 +8,10 @@ namespace Plato.Reactions.Providers
     {
 
         public static readonly Reaction ThumbUp =
-            new Reaction("Thumb Up", "Thumb Up +1", "👍", 1, Sentiment.Positive);
+            new Reaction("Thumb Up", "Thumb Up", "👍", 1, Sentiment.Positive);
 
         public static readonly Reaction ThumbDown  =
-            new Reaction("Thumb Down", "Thumb Down -1", "👎", -1, Sentiment.Negative);
+            new Reaction("Thumb Down", "Thumb Down", "👎", -1, Sentiment.Negative);
 
         public static readonly Reaction Smile =
             new Reaction("Smile", "Smile", "😄", 0, Sentiment.Positive);
@@ -20,14 +20,20 @@ namespace Plato.Reactions.Providers
             new Reaction("Congrats", "Congratulations", "🎉", 0, Sentiment.Positive);
         
         public static readonly Reaction Confused =
-            new Reaction("Confused", "I'm Confused", "😕", 0, Sentiment.Neutral);
+            new Reaction("Confused", "Confused", "😕", 0, Sentiment.Neutral);
 
         public static readonly Reaction Angry =
-            new Reaction("Angry", "Angry", "😕", 0, Sentiment.Negative);
+            new Reaction("Angry", "Angry", "😠", 0, Sentiment.Negative);
+
+        public static readonly Reaction Fearful =
+            new Reaction("Fearful", "Fearful", "😨", 0, Sentiment.Neutral);
+
+        public static readonly Reaction Triumph =
+            new Reaction("Triumph", "Triumph", "😤", 0, Sentiment.Positive);
 
         public static readonly Reaction Heart =
-            new Reaction("Heart", "Heart", "❤️", 0);
-
+            new Reaction("Heart", "Heart", "❤️", 0, Sentiment.Positive);
+        
         public IEnumerable<Reaction> GetReactions()
         {
             return new[]
@@ -38,6 +44,8 @@ namespace Plato.Reactions.Providers
                 Congratulations,
                 Confused,
                 Angry,
+                Fearful,
+                Triumph,
                 Heart
             };
         }

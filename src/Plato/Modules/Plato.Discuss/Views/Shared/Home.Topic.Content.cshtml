@@ -1,6 +1,6 @@
 ﻿@model HomeTopicViewModel
 
-<card type="Danger">
+<card>
     <card-title>
         <h6 class="card-title float-left">@T["Topic"]</h6>
         <navigation name="topic"
@@ -12,7 +12,7 @@
             @Html.Raw(@Model.Entity.Html)
         </div>
     </card-body>
-    <card-footer>
+    <card-footer class="card-footer p-0">
         <navigation name="topic-footer"
                     class="nav navbar p-0"
                     child-ul-css-class="dropdown-menu"/>
