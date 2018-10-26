@@ -9,6 +9,8 @@ namespace Plato.Discuss.Reactions.ViewModels
 
         public IEntity Topic { get; set; }
 
+        public IEntityReply Reply { get; set; }
+
         public IEnumerable<IReaction> Reactions { get; set; }
 
     }

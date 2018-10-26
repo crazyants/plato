@@ -30,6 +30,7 @@ namespace Plato.Discuss.Reactions.Navigation
             }
 
             // Get model from navigation builder
+            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
             
             // Add reaction menu view to navigation
@@ -37,26 +38,13 @@ namespace Plato.Discuss.Reactions.Navigation
                 .Add(T["React"], react => react
                     .View("TopicReactions", new
                     {
-                        id = reply?.Id ?? 0
+                        topic,
+                        reply
                     })
                 );
 
-            //builder.Add(T["React"], int.MinValue, edit => edit
-            //        .IconCss("fal fa-smile")
-            //        .Attributes(new Dictionary<string, object>()
-            //        {
-            //            {"data-provide", "tooltip"},
-            //            {"title", T["React to this topic"]}
-            //        })
-            //        .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
-            //        {
-            //            ["id"] = id
-            //        })
-            //        //.Permission(Permissions.ManageRoles)
-            //        .LocalNav()
-            //    , new List<string>() {"edit", "text-muted", "text-hidden"});
-
-
         }
+
     }
+
 }

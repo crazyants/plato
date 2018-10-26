@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
 using Plato.Discuss.Reactions.ViewModels;
@@ -15,55 +13,42 @@ namespace Plato.Discuss.Reactions.ViewComponents
     public class TopicReactionsViewComponent : ViewComponent
     {
 
-        private readonly IEntityReactionsStore<EntityReaction> _entityReactionsStore;
+        private readonly IReactionsStore<Reaction> _reactionsStore;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IReactionsManager<Reaction> _reactionManager;
 
         public TopicReactionsViewComponent(
             IEntityStore<Topic> entityStore,
             IReactionsManager<Reaction> reactionManager,
-            IEntityReactionsStore<EntityReaction> entityReactionsStore)
+            IReactionsStore<Reaction> reactionsStore)
         {
             _entityStore = entityStore;
             _reactionManager = reactionManager;
-            _entityReactionsStore = entityReactionsStore;
+            _reactionsStore = reactionsStore;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(int id)
+        public async Task<IViewComponentResult> InvokeAsync(
+            Topic topic,
+            Reply reply)
         {
+
+            var reactions = await _reactionsStore.GetEntityReactionsGroupedByEmojiAsync(topic.Id);
+
+            if (reply != null)
+            {
+
+            }
 
             var viewModel = new TopicReactionsViewModel()
             {
-                Topic = await _entityStore.GetByIdAsync(id),
-                Reactions = await GetReactions(id)
+                Topic = topic,
+                Reply = reply,
+                Reactions = reactions
             };
 
             return View(viewModel);
         }
 
-        private async Task<IDictionary<string, IList<IReaction>>> GetReactions(int id)
-        {
-
-            var output = new ConcurrentDictionary<string, IList<IReaction>>();
-            var reactions = await _entityReactionsStore.GetEntityReactionsAsync(id);
-            if (reactions != null)
-            {
-                foreach (var reaction in reactions)
-                {
-                    output.AddOrUpdate(reaction.Emoji, new List<IReaction>()
-                    {
-                        reaction
-                    }, (k, v) =>
-                    {
-                        v.Add(reaction);
-                        return v;
-                    });
-                }
-             
-            }
-
-            return output;
-        }
 
     }
 

@@ -4,6 +4,7 @@
     <card-title>
         <h6 class="card-title float-left">@T["Topic"]</h6>
         <navigation name="topic"
+                    model="@Model.Entity"
                     class="nav navbar p-0 float-right"
                     child-ul-css-class="dropdown-menu" />
     </card-title>
@@ -14,6 +15,7 @@
     </card-body>
     <card-footer class="card-footer p-0">
         <navigation name="topic-footer"
+                    model="@Model.Entity"
                     class="nav navbar p-0"
                     child-ul-css-class="dropdown-menu"/>
     </card-footer>
@@ -53,6 +55,7 @@
                     </card-body>
                     <card-footer class="card-footer p-0">
                         <navigation name="topicreply-footer"
+                                    model="reply"
                                     class="nav navbar p-0"
                                     child-ul-css-class="dropdown-menu" />
                     </card-footer>

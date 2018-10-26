@@ -1,7 +1,7 @@
 ﻿@using System.Text
 @model TopicReactionsViewModel
 
-<ul class="reaction-list" data-entity-id="@Model.Topic?.Id" data-provide="reactions">
+<ul class="reaction-list" data-entity-id="@Model.Topic?.Id" data-entity-reply-id="@Model.Reply?.Id" data-provide="reactions">
 @foreach (var reaction in Model.Reactions)
 {
     int max = 15, i = 0;

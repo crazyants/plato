@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Cache;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Reactions.Models;
@@ -12,7 +11,7 @@ using Plato.Reactions.Services;
 
 namespace Plato.Reactions.Stores
 {
-    
+
     public class EntityReactionsStore : IEntityReactionsStore<EntityReaction>
     {
 
@@ -103,48 +102,7 @@ namespace Plato.Reactions.Stores
 
             });
         }
-
-        public async Task<IEnumerable<IReaction>> GetEntityReactionsAsync(int entityId)
-        {
-            var reactions = _reactionManager.GetReactions();
-            if (reactions == null)
-            {
-                return null;
-            }
-
-            var reactionsList = reactions.ToList();
-            if (reactionsList.Count == 0)
-            {
-                return null;
-            }
-
-            var entityReactions = await QueryAsync()
-                .Select<EntityReactionsQueryParams>(q =>
-                {
-                    q.EntityId.Equals(entityId);
-                })
-                .OrderBy("Id", OrderBy.Asc)
-                .ToList();
-
-            var output = new List<Reaction>();
-            if (entityReactions != null)
-            {
-                foreach (var entityReaction in entityReactions.Data)
-                {
-                    var reaction = reactionsList.FirstOrDefault(b => b.Name.Equals(entityReaction.ReactionName, StringComparison.OrdinalIgnoreCase));
-                    if (reaction != null)
-                    {
-                        reaction.CreatedBy = entityReaction.CreatedBy;
-                        reaction.CreatedDate = entityReaction.CreatedDate;
-                        output.Add(reaction);
-                    }
-                }
-            }
-
-            return output;
-
-        }
-
+        
         public async Task<IEnumerable<EntityReaction>> SelectEntityReacotinsByEntityId(int entityId)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), entityId);
