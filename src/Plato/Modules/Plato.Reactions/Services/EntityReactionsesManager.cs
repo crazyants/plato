@@ -9,13 +9,13 @@ using Plato.Reactions.Stores;
 namespace Plato.Reactions.Services
 {
     
-    public class EntityEntityReactionsesManager : IEntityReactionsManager
+    public class EntityReactionsesManager : IEntityReactionsManager<EntityReaction>
     {
 
         private readonly IContextFacade _contextFacade;
         private readonly IEntityReactionsStore<EntityReaction> _entityReactionsStore;
   
-        public EntityEntityReactionsesManager(
+        public EntityReactionsesManager(
             IEntityReactionsStore<EntityReaction> entityReactionsStore,
             IContextFacade contextFacade)
         {
@@ -31,7 +31,7 @@ namespace Plato.Reactions.Services
                 throw new ArgumentNullException(nameof(model));
             }
             
-            if (model.Id >= 0)
+            if (model.Id > 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
@@ -48,8 +48,13 @@ namespace Plato.Reactions.Services
 
             // Update created by
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-            model.CreatedUserId = user?.Id ?? 0;
-        
+            if (model.CreatedUserId == 9)
+            {
+                model.CreatedUserId = user?.Id ?? 0;
+            }
+
+            model.CreatedDate = DateTime.UtcNow;
+
             // Create result
             var result = new ActivityResult<EntityReaction>();
 

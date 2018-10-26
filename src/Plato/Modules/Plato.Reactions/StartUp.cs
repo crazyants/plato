@@ -31,7 +31,7 @@ namespace Plato.Reactions
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Repositories
-            services.AddScoped<IEntityReactionRepository<EntityReaction>, EntityEntityReactionRepository>();
+            services.AddScoped<IEntityReactionsRepository<EntityReaction>, EntityReactionRepository>();
 
             // Stores
             services.AddScoped<IEntityReactionsStore<EntityReaction>, EntityReactionsStore>();
@@ -40,7 +40,7 @@ namespace Plato.Reactions
             services.AddScoped<IReactionsManager<Reaction>, ReactionsManager<Reaction>>();
 
             // Managers
-            services.AddScoped<IEntityReactionsManager, EntityEntityReactionsesManager>();
+            services.AddScoped<IEntityReactionsManager<EntityReaction>, EntityReactionsesManager>();
 
             // Default Reaction Providers
             services.AddScoped<IReactionsProvider<Reaction>, DefaultReactions>();
@@ -52,6 +52,14 @@ namespace Plato.Reactions
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            routes.MapAreaRoute(
+                name: "EntityReactionsWebApi",
+                areaName: "Plato.Reactions",
+                template: "api/reactions/{controller}/{action}/{id?}",
+                defaults: new { controller = "Entity", action = "Get" }
+            );
+
         }
 
     }

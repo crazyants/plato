@@ -1,17 +1,41 @@
-﻿@model TopicReactionsViewModel
+﻿@using System.Text
+@model TopicReactionsViewModel
 
-<ul class="reaction-list">
+<ul class="reaction-list" data-entity-id="@Model.Topic?.Id" data-provide="reactions">
 @foreach (var reaction in Model.Reactions)
 {
-    <li>
-        <div class="m-2">
-            <span class="emoji">
+    int max = 15, i = 0;
+    var name = "";
+    var sb = new StringBuilder();
+    foreach (var item in reaction.Value)
+    {
+        name = item.Name;
+        sb.Append(item.CreatedBy.DisplayName);
+        if (i < reaction.Value.Count - 1)
+        {
+            sb.Append(", ");
+        }
+        if (i >= max)
+        {
+            break;
+        }
+        i++;
+    }
+    sb.Append(" ")
+        .Append(T["reacted with the"].Value)
+        .Append(" ")
+        .Append(name.ToLower())
+        .Append(" ")
+        .Append(T["emoji"].Value);
+    <li class="bg-light border-right border-secondary" data-toggle="tooltip" title="@sb.ToString()">
+        <a href="#" class="d-inline-block p-2">
+            <span class="mx-1">
                 @reaction.Key
             </span>
             <span class="mx-1">
                 @reaction.Value.Count.ToPrettyInt()
             </span>
-        </div>
+        </a>
     </li>
 }
 </ul>

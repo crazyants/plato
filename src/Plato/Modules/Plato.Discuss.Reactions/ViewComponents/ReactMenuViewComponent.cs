@@ -25,7 +25,7 @@ namespace Plato.Discuss.Reactions.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(int id)
         {
-
+    
             var viewModel = new ReactMenuViewModel()
             {
                 Topic = await _entityStore.GetByIdAsync(id),
@@ -36,6 +36,5 @@ namespace Plato.Discuss.Reactions.ViewComponents
         }
 
     }
-
 
 }

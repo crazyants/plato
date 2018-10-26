@@ -7,7 +7,12 @@ namespace Plato.Reactions.Stores
 {
     public interface IEntityReactionsStore<TModel> : IStore<TModel> where TModel : class
     {
-        Task<IEnumerable<Reaction>> GetEntityReactionsAsync(int entityId);
+        Task<IEnumerable<IReaction>> GetEntityReactionsAsync(int entityId);
+
+        Task<IEnumerable<TModel>> SelectEntityReacotinsByEntityId(int entityId);
+
+        Task<IEnumerable<TModel>> SelectEntityReactionsByUserIdAndEntityId(int userId, int entityId);
+
     }
 
 }

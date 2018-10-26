@@ -7,22 +7,30 @@ if (typeof $.Plato.Context === "undefined") {
     throw new Error("$.Plato.Context Required");
 }
 
-/* follow buttons */
+/* reactions */
 $(function (win, doc, $) {
 
     'use strict';
     
-    var reactionMenu = function () {
+    var reactions = function () {
 
-        var dataKey = "reactionMenu",
+        var dataKey = "reactions",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            toggleToolTipEvent: "mouseenter"
+            tooltipEvent: "mouseenter",
+            event: "click",
+            params: {
+                id: 0,
+                userId: 0,
+                entityId: 0,
+                reactionName: ""
+            }
         };
 
         var methods = {
             init: function ($caller, methodName) {
+
                 if (methodName) {
                     if (this[methodName]) {
                         this[methodName].apply(this, [$caller]);
@@ -37,62 +45,58 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
 
-                // Toggle tooltip on hover state
-                var event = $caller.data(dataKey).toggleToolTipEvent;
-                if (event) {
-                    $caller.find("a").each(function() {
+                $caller.find("a").each(function() {
+                    // Bind tooltip handler
+                    var event = $caller.data(dataKey).tooltipEvent;
+                    if (event) {
                         $(this).unbind(event).bind(event,
-                            function () {
-                                var label = $(this).attr("data-reaction-label");
-                                $caller.find(".text-muted").text(label);
+                            function(e) {
+                                var desc = $(this).attr("data-reaction-description");
+                                $caller.find(".text-muted").text(desc);
                             });
-                    });
-                }
+                    }
+                    // Bind click handler
+                    event = $caller.data(dataKey).event;
+                    if (event) {
+                        $(this).unbind(event).bind(event,
+                            function (e) {
+                                e.preventDefault();
+
+                                $caller.data(dataKey).params.reactionName = $(this).attr("data-reaction-name");
+                                methods.addOrRemove($caller);
+                            });
+                    }
+                });
 
             },
             unbind: function ($caller) {
 
-                // Unbind tooltip on hover state
-                var event = $caller.data(dataKey).toggleToolTipEvent;
-                if (event) {
-                    $caller.find("a").each(function () {
+                // Unbind events
+                $caller.find("a").each(function() {
+                    var event = $caller.data(dataKey).tooltipEvent;
+                    if (event) {
                         $(this).unbind(event);
-                    });
-                }
+                    }
+                    event = $caller.data(dataKey).event;
+                    if (event) {
+                        $(this).unbind(event);
+                    }
+                });
 
             },
-            handleEvent: function ($caller) {
+            addOrRemove: function ($caller) {
 
-                var action = this.getAction($caller);
-                switch (action) {
-                    case "subscribe":
-                        this.subscribe($caller);
-                        break;
-
-                    case "unsubscribe":
-                        this.unsubscribe($caller);
-                        break;
-                }
-
-            },
-            subscribe: function ($caller) {
-
-                var params = {
-                    Id: 0,
-                    UserId: 0,
-                    EntityId: this.getEntityId($caller)
-                };
+                var params = $caller.data(dataKey).params;
+                params.entityId = this.getEntityId($caller);
 
                 win.$.Plato.Http({
-                    url: "api/follows/entity/post",
+                    url: "api/reactions/entity/post",
                     method: "POST",
                     data: JSON.stringify(params)
                 }).done(function (data) {
-
                     if (data.statusCode === 200) {
                         $caller.entityFollowToggler("enable");
                     }
-
                 });
 
             },
@@ -107,11 +111,9 @@ $(function (win, doc, $) {
                     method: "DELETE",
                     data: JSON.stringify(params)
                 }).done(function (data) {
-
                     if (data.statusCode === 200) {
                         $caller.entityFollowToggler("disable");
                     }
-
                 });
 
             },
@@ -128,7 +130,7 @@ $(function (win, doc, $) {
                     entityId = parseInt($caller.attr("data-entity-id"));
                 }
                 if (entityId === 0) {
-                    throw new Error("An entity id is required in order to follow an entity");
+                    throw new Error("An entity id is required in order to react to an entity");
                 }
                 return entityId;
             }
@@ -193,13 +195,13 @@ $(function (win, doc, $) {
 
  
     $.fn.extend({
-        reactionMenu: reactionMenu.init
+        reactions: reactions.init
     });
 
     $(doc).ready(function () {
 
-        $('[data-provide="react-menu"]')
-            .reactionMenu();
+        $('[data-provide="reactions"]')
+            .reactions();
 
     });
 

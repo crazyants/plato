@@ -16,14 +16,14 @@ namespace Plato.Reactions.Stores
     public class EntityReactionsStore : IEntityReactionsStore<EntityReaction>
     {
 
-        private readonly IEntityReactionRepository<EntityReaction> _entityReactionRepository;
+        private readonly IEntityReactionsRepository<EntityReaction> _entityReactionRepository;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<EntityReactionsStore> _logger;
         private readonly IReactionsManager<Reaction> _reactionManager;
         private readonly IDbQueryConfiguration _dbQuery;
 
         public EntityReactionsStore(
-            IEntityReactionRepository<EntityReaction> entityReactionRepository,
+            IEntityReactionsRepository<EntityReaction> entityReactionRepository,
             ICacheManager cacheManager,
             ILogger<EntityReactionsStore> logger,
             IDbQueryConfiguration dbQuery,
@@ -104,7 +104,7 @@ namespace Plato.Reactions.Stores
             });
         }
 
-        public async Task<IEnumerable<Reaction>> GetEntityReactionsAsync(int entityId)
+        public async Task<IEnumerable<IReaction>> GetEntityReactionsAsync(int entityId)
         {
             var reactions = _reactionManager.GetReactions();
             if (reactions == null)
@@ -143,6 +143,40 @@ namespace Plato.Reactions.Stores
 
             return output;
 
+        }
+
+        public async Task<IEnumerable<EntityReaction>> SelectEntityReacotinsByEntityId(int entityId)
+        {
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), entityId);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Adding reactions for entity {0} to cache with key {1}",
+                        entityId, token.ToString());
+                }
+
+                return await _entityReactionRepository.SelectEntityReactionsByEntityId(entityId);
+
+            });
+        }
+
+        public async Task<IEnumerable<EntityReaction>> SelectEntityReactionsByUserIdAndEntityId(int userId, int entityId)
+        {
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), userId, entityId);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Adding reaction for userId {0} and entityId {1} to cache with key {2}",
+                        userId, entityId, token.ToString());
+                }
+
+                return await _entityReactionRepository.SelectEntityReactionsByUserIdAndEntityId(userId, entityId);
+
+            });
         }
 
         #endregion

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -9,15 +10,15 @@ using Plato.Reactions.Models;
 namespace Plato.Reactions.Repositories
 {
     
-    public class EntityEntityReactionRepository : IEntityReactionRepository<EntityReaction>
+    public class EntityReactionRepository : IEntityReactionsRepository<EntityReaction>
     {
 
         private readonly IDbContext _dbContext;
-        private readonly ILogger<EntityEntityReactionRepository> _logger;
+        private readonly ILogger<EntityReactionRepository> _logger;
 
-        public EntityEntityReactionRepository(
+        public EntityReactionRepository(
             IDbContext dbContext,
-            ILogger<EntityEntityReactionRepository> logger)
+            ILogger<EntityReactionRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -57,7 +58,7 @@ namespace Plato.Reactions.Repositories
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectReactionById", id);
+                    "SelectEntityReactionById", id);
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
@@ -77,7 +78,7 @@ namespace Plato.Reactions.Repositories
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectReactionsPaged",
+                    "SelectEntityReactionsPaged",
                     inputParams);
                 if ((reader != null) && (reader.HasRows))
                 {
@@ -114,10 +115,65 @@ namespace Plato.Reactions.Repositories
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteReactionById", id);
+                    "DeleteEntityReactionById", id);
             }
 
             return success > 0 ? true : false;
+        }
+
+
+        public async Task<IEnumerable<EntityReaction>> SelectEntityReactionsByEntityId(int entityId)
+        {
+
+            List<EntityReaction> output = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectEntityReactionsByEntityId",
+                    entityId);
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new List<EntityReaction>();
+                    while (await reader.ReadAsync())
+                    {
+                        var entity = new EntityReaction();
+                        entity.PopulateModel(reader);
+                        output.Add(entity);
+                    }
+                }
+            }
+
+            return output;
+
+        }
+
+        public async Task<IEnumerable<EntityReaction>> SelectEntityReactionsByUserIdAndEntityId(int userId, int entityId)
+        {
+
+            List<EntityReaction> output = null;
+            using (var context = _dbContext)
+            {
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectEntityReactionsByUserIdAndEntityId",
+                    userId,
+                    entityId);
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new List<EntityReaction>();
+                    while (await reader.ReadAsync())
+                    {
+                        var entity = new EntityReaction();
+                        entity.PopulateModel(reader);
+                        output.Add(entity);
+                    }
+                }
+
+            }
+
+            return output;
+
         }
         
         #endregion
@@ -155,6 +211,7 @@ namespace Plato.Reactions.Repositories
         }
 
         #endregion
-        
+
     }
+
 }

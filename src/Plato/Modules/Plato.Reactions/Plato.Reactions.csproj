@@ -10,6 +10,7 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
+    <ProjectReference Include="..\Plato.WebApi\Plato.WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

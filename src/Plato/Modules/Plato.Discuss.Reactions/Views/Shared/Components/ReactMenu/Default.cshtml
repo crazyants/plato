@@ -7,12 +7,12 @@
         </span>
     </a>
     <div class="dropdown-arrow"></div>
-    <div class="dropdown-menu dropdown-menu-right react-dropdown-menu" data-provide="react-menu" aria-labelledby="reactionDropdown">
+    <div class="dropdown-menu dropdown-menu-right react-dropdown-menu" data-entity-id="@Model.Topic?.Id" data-provide="reactions" aria-labelledby="reactionDropdown">
         <div class="px-2">
             <div class="d-block">
                 @foreach (var reaction in Model.Reactions)
                 {
-                    <a href="#" class="dropdown-item" data-reaction-label="@reaction.Description">
+                    <a href="#" class="dropdown-item" data-reaction-name="@reaction.Name" data-reaction-description="@reaction.Description">
                         @reaction.Emoji
                     </a>
                 }

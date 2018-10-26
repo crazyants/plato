@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ViewProviders;
 using Plato.Follow.Assets;
 using Plato.Follow.Handlers;
 using Plato.Follow.Models;
@@ -46,10 +45,10 @@ namespace Plato.Follow
         {
             
             routes.MapAreaRoute(
-                name: "EntitiesFollowWebApi",
+                name: "EntityFollowsWebApi",
                 areaName: "Plato.Follow",
                 template: "api/follows/{controller}/{action}/{id?}",
-                defaults: new { controller = "Follow", action = "Get" }
+                defaults: new { controller = "Entity", action = "Get" }
             );
 
         }

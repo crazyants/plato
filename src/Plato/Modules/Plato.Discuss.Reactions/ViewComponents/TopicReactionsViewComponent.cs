@@ -34,6 +34,7 @@ namespace Plato.Discuss.Reactions.ViewComponents
 
             var viewModel = new TopicReactionsViewModel()
             {
+                Topic = await _entityStore.GetByIdAsync(id),
                 Reactions = await GetReactions(id)
             };
 

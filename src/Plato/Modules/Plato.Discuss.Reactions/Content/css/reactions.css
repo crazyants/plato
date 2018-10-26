@@ -27,6 +27,6 @@
     float: left;
     padding: 0; 
     margin: 0;
-    background: #ccc;
-    border-right: 1px solid #aaa;
 }
+
+.reaction-list a { text-decoration: none; }

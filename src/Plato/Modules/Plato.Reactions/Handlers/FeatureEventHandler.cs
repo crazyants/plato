@@ -126,7 +126,9 @@ namespace Plato.Reactions.Handlers
                 builder
                     .DropTable(_entityReactions)
                     .DropDefaultProcedures(_entityReactions)
-                    .DropProcedure(new SchemaProcedure("SelectEntityReactionsPaged", StoredProcedureType.SelectByKey));
+                    .DropProcedure(new SchemaProcedure("SelectEntityReactionsByEntityId"))
+                    .DropProcedure(new SchemaProcedure("SelectEntityReactionsByUserIdAndEntityId"))
+                    .DropProcedure(new SchemaProcedure("SelectEntityReactionsPaged"));
 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -203,7 +205,62 @@ namespace Plato.Reactions.Handlers
                                 )")
                     .ForTable(_entityReactions)
                     .WithParameter(_entityReactions.PrimaryKeyColumn));
-            
+
+            // Returns all reactions for a specific entity
+            builder
+                .CreateProcedure(
+                    new SchemaProcedure("SelectEntityReactionsByEntityId",
+                            @"SELECT er.*, 
+                                    u.UserName, 
+                                    u.NormalizedUserName,
+                                    u.DisplayName,
+                                    u.FirstName,
+                                    u.LastName,
+                                    u.Alias                                   
+                                FROM {prefix}_EntityReactions er WITH (nolock) 
+                                    LEFT OUTER JOIN {prefix}_Users u ON er.CreatedUserId = u.Id                                    
+                                WHERE (
+                                   er.EntityId = @EntityId
+                                )")
+                        .ForTable(_entityReactions)
+                        .WithParameter(new SchemaColumn()
+                        {
+                            Name = "EntityId",
+                            DbType = DbType.Int32
+                        }));
+
+            // Returns all reactions for the supplied UserId and EntityId
+            builder
+                .CreateProcedure(
+                    new SchemaProcedure("SelectEntityReactionsByUserIdAndEntityId",
+                            @"SELECT er.*, 
+                                    u.UserName, 
+                                    u.NormalizedUserName,
+                                    u.DisplayName,
+                                    u.FirstName,
+                                    u.LastName,
+                                    u.Alias                                   
+                                FROM {prefix}_EntityReactions er WITH (nolock) 
+                                    LEFT OUTER JOIN {prefix}_Users u ON er.CreatedUserId = u.Id                                    
+                                WHERE (
+                                    er.CreatedUserId = @UserId AND
+                                    er.EntityId = @EntityId                                    
+                                )")
+                        .ForTable(_entityReactions)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "UserId",
+                                DbType = DbType.Int32,
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "EntityId",
+                                DbType = DbType.Int32,
+                            }
+                        }));
+
 
             builder.CreateProcedure(new SchemaProcedure("SelectEntityReactionsPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_entityReactions)

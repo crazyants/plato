@@ -181,7 +181,12 @@ namespace Plato.Follow.Handlers
             builder.CreateProcedure(
                 new SchemaProcedure(
                         $"SelectEntityFollowById",
-                        @"SELECT f.*, u.Email, u.UserName, u.DisplayName, u.NormalizedUserName FROM {prefix}_EntityFollows f WITH (nolock) 
+                        @"SELECT f.*, 
+                                u.Email, 
+                                u.UserName, 
+                                u.DisplayName, 
+                                u.NormalizedUserName 
+                                FROM {prefix}_EntityFollows f WITH (nolock) 
                                 LEFT OUTER JOIN {prefix}_Users u ON f.UserId = u.Id 
                                 WHERE (
                                     f.Id = @Id 
@@ -193,7 +198,12 @@ namespace Plato.Follow.Handlers
             builder
                 .CreateProcedure(
                     new SchemaProcedure("SelectEntityFollowsByEntityId",
-                            @"SELECT f.*, u.Email, u.UserName, u.DisplayName, u.NormalizedUserName FROM {prefix}_EntityFollows f WITH (nolock) 
+                            @"SELECT f.*, 
+                                u.Email, 
+                                u.UserName, 
+                                u.DisplayName, 
+                                u.NormalizedUserName 
+                                FROM {prefix}_EntityFollows f WITH (nolock) 
                                 LEFT OUTER JOIN {prefix}_Users u ON f.UserId = u.Id 
                                 WHERE (
                                     f.EntityId = @EntityId AND
@@ -211,7 +221,12 @@ namespace Plato.Follow.Handlers
             builder
                 .CreateProcedure(
                     new SchemaProcedure("SelectEntityFollowsByUserIdAndEntityId",
-                            @" SELECT f.*, u.Email, u.UserName, u.DisplayName, u.NormalizedUserName FROM {prefix}_EntityFollows f WITH (nolock) 
+                            @"SELECT f.*, 
+                                u.Email, 
+                                u.UserName, 
+                                u.DisplayName, 
+                                u.NormalizedUserName 
+                                FROM {prefix}_EntityFollows f WITH (nolock) 
                                 LEFT OUTER JOIN {prefix}_Users u ON f.UserId = u.Id 
                                 WHERE (
                                     f.EntityId = @EntityId AND
@@ -231,7 +246,6 @@ namespace Plato.Follow.Handlers
                                 DbType = DbType.Int32,
                             }
                         }));
-
             
             builder.CreateProcedure(new SchemaProcedure("SelectEntityFollowsPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_entityFollows)
