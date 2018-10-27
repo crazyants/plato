@@ -8,13 +8,13 @@ using Plato.Reactions.Stores;
 
 namespace Plato.Reactions.Services
 {
-    
+
     public class EntityReactionsesManager : IEntityReactionsManager<EntityReaction>
     {
 
         private readonly IContextFacade _contextFacade;
         private readonly IEntityReactionsStore<EntityReaction> _entityReactionsStore;
-  
+
         public EntityReactionsesManager(
             IEntityReactionsStore<EntityReaction> entityReactionsStore,
             IContextFacade contextFacade)
@@ -22,7 +22,7 @@ namespace Plato.Reactions.Services
             _entityReactionsStore = entityReactionsStore;
             _contextFacade = contextFacade;
         }
-        
+
         public async Task<IActivityResult<EntityReaction>> CreateAsync(EntityReaction model)
         {
 
@@ -30,7 +30,7 @@ namespace Plato.Reactions.Services
             {
                 throw new ArgumentNullException(nameof(model));
             }
-            
+
             if (model.Id > 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
@@ -82,7 +82,7 @@ namespace Plato.Reactions.Services
             {
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
-            
+
             if (model.EntityId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
@@ -92,10 +92,10 @@ namespace Plato.Reactions.Services
             {
                 throw new ArgumentNullException(nameof(model.ReactionName));
             }
-            
+
             // Update modified 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-      
+
             // Create result
             var result = new ActivityResult<EntityReaction>();
 
@@ -106,13 +106,29 @@ namespace Plato.Reactions.Services
                 return result.Success(reaction);
             }
 
-            return result.Failed($"An unknown error occurred whilst attempting to create a reaction");
+            return result.Failed($"An unknown error occurred whilst attempting to update a reaction");
 
         }
 
-        public Task<IActivityResult<EntityReaction>> DeleteAsync(EntityReaction model)
+        public async Task<IActivityResult<EntityReaction>> DeleteAsync(EntityReaction model)
         {
-            throw new NotImplementedException();
+
+            // Validate
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var result = new ActivityResult<EntityReaction>();
+
+            var success = await _entityReactionsStore.DeleteAsync(model);
+            if (success)
+            {
+                return result.Success(model);
+            }
+
+            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to delete the reoaction."));
+
         }
     }
 }

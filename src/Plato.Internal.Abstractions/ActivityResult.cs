@@ -7,7 +7,7 @@ namespace Plato.Internal.Abstractions
     
     public class ActivityResult<TResponse> : IActivityResult<TResponse> where TResponse : class
     {
-
+        
         private readonly List<ActivityError> _errors = new List<ActivityError>();
 
         public bool Succeeded { get; protected set; }

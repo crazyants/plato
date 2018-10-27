@@ -1,10 +1,9 @@
-﻿using System.Threading.Tasks;
-using Plato.Internal.Abstractions;
+﻿using Plato.Internal.Abstractions;
 
 namespace Plato.Entities.Services
 {
 
-    public interface IEntityManager<TEntity> where TEntity : class
+    public interface IEntityManager<TEntity> : ICommandManager<TEntity> where TEntity : class
     {
 
         event EntityEvents<TEntity>.Handler Creating;
@@ -13,13 +12,7 @@ namespace Plato.Entities.Services
         event EntityEvents<TEntity>.Handler Updated;
         event EntityEvents<TEntity>.Handler Deleting;
         event EntityEvents<TEntity>.Handler Deleted;
-
-        Task<IActivityResult<TEntity>> CreateAsync(TEntity model);
-
-        Task<IActivityResult<TEntity>> UpdateAsync(TEntity model);
-
-        Task<IActivityResult<TEntity>> DeleteAsync(TEntity model);
-
+        
     }
 
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plato.Internal.Abstractions;
+﻿using Plato.Internal.Abstractions;
 
 namespace Plato.Reactions.Services
 {

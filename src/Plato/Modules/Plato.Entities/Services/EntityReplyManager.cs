@@ -174,17 +174,17 @@ namespace Plato.Entities.Services
 
         }
 
-        public async Task<IActivityResult<TReply>> DeleteAsync(int id)
+        public async Task<IActivityResult<TReply>> DeleteAsync(TReply reply)
         {
 
-            var result = new ActivityResult<TReply>();
-
-            var reply = await _entityReplyStore.GetByIdAsync(id);
+            // Validate
             if (reply == null)
             {
-                return result.Failed(new ActivityError($"An entity reply with the id of '{id}' could not be found"));
+                throw new ArgumentNullException(nameof(reply));
             }
-
+            
+            var result = new ActivityResult<TReply>();
+            
             // Raise Deleting event
             Deleting?.Invoke(this, new EntityReplyEventArgs<TReply>(null, reply));
 

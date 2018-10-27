@@ -51,10 +51,8 @@ namespace Plato.Discuss.Services
 
             _entityReplyManager.Updated += (sender, args) =>
             {
-
             };
-
-            return await _entityReplyManager.DeleteAsync(model.Id);
+            return await _entityReplyManager.DeleteAsync(model);
             
         }
 

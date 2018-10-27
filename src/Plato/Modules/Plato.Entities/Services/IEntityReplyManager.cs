@@ -3,7 +3,7 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Entities.Services
 {
-    public interface IEntityReplyManager<TModel> where TModel : class
+    public interface IEntityReplyManager<TModel> : ICommandManager<TModel> where TModel : class
     {
 
         event EntityReplyEvents<TModel>.Handler Creating;
@@ -13,11 +13,6 @@ namespace Plato.Entities.Services
         event EntityReplyEvents<TModel>.Handler Deleting;
         event EntityReplyEvents<TModel>.Handler Deleted;
 
-        Task<IActivityResult<TModel>> CreateAsync(TModel reply);
-
-        Task<IActivityResult<TModel>> UpdateAsync(TModel reply);
-
-        Task<IActivityResult<TModel>> DeleteAsync(int id);
         
     }
 }
