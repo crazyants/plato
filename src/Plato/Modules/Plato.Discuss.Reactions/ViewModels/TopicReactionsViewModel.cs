@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Plato.Entities.Models;
 using Plato.Reactions.Models;
 
@@ -12,8 +11,7 @@ namespace Plato.Discuss.Reactions.ViewModels
 
         public IEntityReply Reply { get; set; }
 
-        public IDictionary<string, IList<IReaction>> Reactions { get; set; } = 
-            new ConcurrentDictionary<string, IList<IReaction>>();
+        public IEnumerable<GroupedReaction> GroupedReactions { get; set; } 
 
     }
 

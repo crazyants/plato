@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Reactions.Models;
 using Plato.Reactions.Services;
 using Plato.Reactions.Stores;
@@ -37,6 +35,7 @@ namespace Plato.Reactions.Controllers
             return base.NotFound();
         }
         
+
         [HttpPost]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Post([FromBody] EntityReaction model)
@@ -49,27 +48,8 @@ namespace Plato.Reactions.Controllers
                 return base.UnauthorizedException();
             }
 
-            //// Is the user already following the entity?
-            //EntityReaction existingReaction = null;
-            //var existingReactions = await _entityReactionsStore.SelectEntityReactionsByUserIdAndEntityId(user.Id, model.EntityId);
-            //if (existingReactions != null)
-            //{
-            //    foreach (var reaction in existingReactions)
-            //    {
-            //        if (reaction.ReactionName.Equals(model.ReactionName))
-            //        {
-            //            existingReaction = reaction;
-            //        }
-            //    }
-            //}
-            
             // Add and return result
-            var result = await _entityReactionMAnager.CreateAsync(new EntityReaction()
-            {
-                ReactionName = model.ReactionName,
-                EntityId = model.EntityId,
-                CreatedUserId = user.Id
-            });
+            var result = await _entityReactionMAnager.CreateAsync(model);
             if (result.Succeeded)
             {
                 return base.Created(result);
@@ -82,11 +62,26 @@ namespace Plato.Reactions.Controllers
 
         [HttpPut]
         [ResponseCache(NoStore = true)]
-        public Task<IActionResult> Put(EntityReaction model)
+        public async Task<IActionResult> Put(EntityReaction model)
         {
-            throw new NotImplementedException();
+  
+            var user = await base.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return base.UnauthorizedException();
+            }
+
+            var result = await _entityReactionMAnager.UpdateAsync(model);
+            if (result.Succeeded)
+            {
+                return base.Created(result);
+            }
+
+            // We should not reach here
+            return base.InternalServerError();
+
         }
-        
+
         [HttpDelete]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Delete([FromBody] EntityReaction model)

@@ -47,6 +47,11 @@ namespace Plato.Reactions.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "EntityReplyId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "CreatedUserId",
                         DbType = DbType.Int32
                     },

@@ -39,6 +39,7 @@ namespace Plato.Reactions.Repositories
                 entityReaction.Sentiment,
                 entityReaction.Points,
                 entityReaction.EntityId,
+                entityReaction.EntityReplyId,
                 entityReaction.CreatedUserId,
                 entityReaction.CreatedDate);
 
@@ -186,6 +187,7 @@ namespace Plato.Reactions.Repositories
             Sentiment sentiment,
             int points,
             int entityId,
+            int entityReplyId,
             int createdUserId,
             DateTimeOffset? createdDate)
         {
@@ -201,6 +203,7 @@ namespace Plato.Reactions.Repositories
                     (short)sentiment,
                     points,
                     entityId,
+                    entityReplyId,
                     createdUserId,
                     createdDate.ToDateIfNull()
                 );

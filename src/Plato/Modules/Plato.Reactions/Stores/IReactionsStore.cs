@@ -6,10 +6,10 @@ namespace Plato.Reactions.Stores
 {
     public interface IReactionsStore<TReaction> where TReaction : class, IReaction
     {
-        Task<IEnumerable<TReaction>> GetEntityReactionsAsync(int entityId);
+        Task<IEnumerable<TReaction>> GetEntityReactionsAsync(int entityId, int entityReplyId);
         
-        Task<IDictionary<string, IList<IReaction>>> GetEntityReactionsGroupedByEmojiAsync(int entityId);
-
+        Task<IEnumerable<GroupedReaction>> GetEntityReactionsGroupedAsync(int entityId, int entityReplyId);
+        
     }
 
 }

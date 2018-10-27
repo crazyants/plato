@@ -20,6 +20,8 @@ namespace Plato.Reactions.Models
 
         public int EntityId { get; set; }
 
+        public int EntityReplyId { get; set; }
+        
         public int CreatedUserId { get; set; }
         
         public ISimpleUser CreatedBy { get; set; } = new SimpleUser();
@@ -43,7 +45,10 @@ namespace Plato.Reactions.Models
             
             if (dr.ColumnIsNotNull("EntityId"))
                 EntityId = Convert.ToInt32(dr["EntityId"]);
-            
+
+            if (dr.ColumnIsNotNull("EntityReplyId"))
+                EntityReplyId = Convert.ToInt32(dr["EntityReplyId"]);
+
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 

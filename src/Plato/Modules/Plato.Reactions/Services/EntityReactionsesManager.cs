@@ -110,5 +110,9 @@ namespace Plato.Reactions.Services
 
         }
 
+        public Task<IActivityResult<EntityReaction>> DeleteAsync(EntityReaction model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

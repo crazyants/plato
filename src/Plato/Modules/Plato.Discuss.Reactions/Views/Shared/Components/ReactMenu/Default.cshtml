@@ -1,4 +1,11 @@
 ﻿@model ReactMenuViewModel
+@{
+    var id = "reaction-" + Model.Topic?.Id;
+    if (Model.Reply != null)
+    {
+        id += "-" + Model.Reply.Id;
+    }
+}
 
 <div class="dropdown">
     <a class="nav-link text-muted dropdown-toggle" href="#" id="reactionDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -7,7 +14,7 @@
         </span>
     </a>
     <div class="dropdown-arrow"></div>
-    <div class="dropdown-menu dropdown-menu-right react-dropdown-menu" data-entity-id="@Model.Topic?.Id" data-entity-reply-id="@Model.Reply?.Id" data-provide="reactions" aria-labelledby="reactionDropdown">
+    <div class="dropdown-menu dropdown-menu-right react-dropdown-menu" data-entity-id="@Model.Topic?.Id" data-entity-reply-id="@Model.Reply?.Id" data-reactions-target="#@id" data-provide="reactions" aria-labelledby="reactionDropdown">
         <div class="px-2">
             <div class="d-block">
                 @foreach (var reaction in Model.Reactions)

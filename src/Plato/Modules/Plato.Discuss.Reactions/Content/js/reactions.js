@@ -24,6 +24,7 @@ $(function (win, doc, $) {
                 id: 0,
                 userId: 0,
                 entityId: 0,
+                entityReplyId: 0,
                 reactionName: ""
             }
         };
@@ -40,34 +41,54 @@ $(function (win, doc, $) {
                     return;
                 }
 
+                // Set post parameters
+                $caller.data(dataKey).params.entityId = this.getEntityId($caller);
+                $caller.data(dataKey).params.entityReplyId = this.getEntityReplyId($caller);
+
+                // Bind events
                 methods.bind($caller);
 
             },
             bind: function ($caller) {
 
-                $caller.find("a").each(function() {
+                $caller.find("a").each(function () {
+
+                    var event = "";
+
                     // Bind tooltip handler
-                    var event = $caller.data(dataKey).tooltipEvent;
-                    if (event) {
-                        $(this).unbind(event).bind(event,
-                            function(e) {
-                                var desc = $(this).attr("data-reaction-description");
-                                $caller.find(".text-muted").text(desc);
-                            });
+                    if ($(this).attr('data-toggle')) {
+                        // Bind bootstrap tooltips
+                        $(this).tooltip({ trigger: "hover" });
+                    } else {
+                        // Bind custom handler
+                        event = $caller.data(dataKey).tooltipEvent;
+                        if (event) {
+                            $(this).unbind(event).bind(event,
+                                function(e) {
+                                    var desc = $(this).attr("data-reaction-description");
+                                    if (desc) {
+                                        $caller.find(".text-muted").text(desc);
+                                    }
+
+                                });
+                        }
                     }
+
                     // Bind click handler
                     event = $caller.data(dataKey).event;
                     if (event) {
                         $(this).unbind(event).bind(event,
                             function (e) {
                                 e.preventDefault();
-
+                                if ($(this).attr("data-toggle")) {
+                                    $(this).tooltip("hide");
+                                }
                                 $caller.data(dataKey).params.reactionName = $(this).attr("data-reaction-name");
-                                methods.addOrRemove($caller);
+                                methods.update($caller);
                             });
                     }
                 });
-
+                
             },
             unbind: function ($caller) {
 
@@ -84,45 +105,62 @@ $(function (win, doc, $) {
                 });
 
             },
-            addOrRemove: function ($caller) {
+            update: function ($caller) {
 
                 var params = $caller.data(dataKey).params;
                 params.entityId = this.getEntityId($caller);
+                params.entityReplyId = this.getEntityReplyId($caller);
 
                 win.$.Plato.Http({
-                    url: "api/reactions/entity/post",
+                    url: "api/reactions/reaction/post",
                     method: "POST",
                     data: JSON.stringify(params)
                 }).done(function (data) {
-                    if (data.statusCode === 200) {
-                        $caller.entityFollowToggler("enable");
+                    // Created
+                    if (data.statusCode === 201) {
+                        if (data.result) {
+                            methods.build($caller, data.result);
+                        }
                     }
                 });
-
             },
-            unsubscribe: function ($caller) {
+            build: function($caller, results) {
 
-                var params = {
-                    EntityId: this.getEntityId($caller)
-                };
+                var $target = this.getTarget($caller);
+                if ($target) {
+                    $target.empty();
+                    for (var i = 0; i < results.length; i++) {
 
-                win.$.Plato.Http({
-                    url: "api/follows/entity/delete",
-                    method: "DELETE",
-                    data: JSON.stringify(params)
-                }).done(function (data) {
-                    if (data.statusCode === 200) {
-                        $caller.entityFollowToggler("disable");
+                        var result = results[i],
+                            $li = $("<li>",
+                                {
+                                    "class": "bg-light border-right border-secondary"
+                                }),
+                            $a = $("<a>",
+                                {
+                                    "href": "#",
+                                    "class": "d-inline-block py-2 px-3",
+                                    "data-toggle": "tooltip",
+                                    "title": result.toolTip,
+                                    "data-reaction-name": result.name
+                                }),
+                            $emoji = $("<span>",
+                                {
+                                    "class": "d-inline-block mx-1"
+                                }).html(result.emoji),
+                            $total = $("<span>",
+                                {
+                                    "class": "d-inline-block mx-1"
+                                }).html(result.total);
+
+                        $a.append($emoji).append($total);
+                        $li.append($a);
+                        $target.append($li);
                     }
-                });
 
-            },
-            getAction: function ($caller) {
-                var action = "subscribe";
-                if ($caller.attr("data-action")) {
-                    action = $caller.attr("data-action");
+                    methods.bind($target);
                 }
-                return action;
+
             },
             getEntityId: function ($caller) {
                 var entityId = 0;
@@ -133,6 +171,23 @@ $(function (win, doc, $) {
                     throw new Error("An entity id is required in order to react to an entity");
                 }
                 return entityId;
+            },
+            getEntityReplyId: function ($caller) {
+                var replyId = 0;
+                if ($caller.attr("data-entity-reply-id")) {
+                    replyId = parseInt($caller.attr("data-entity-reply-id"));
+                }
+                return replyId;
+            },
+            getTarget: function($caller) {
+                var target = $caller.attr("data-reactions-target");
+                if (target) {
+                    var $target = $(target);
+                    if ($target.length > 0) {
+                        return $target;
+                    }
+                }
+                return null;
             }
 
         }

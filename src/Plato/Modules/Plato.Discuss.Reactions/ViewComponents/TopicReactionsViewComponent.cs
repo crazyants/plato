@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
 using Plato.Discuss.Reactions.ViewModels;
-using Plato.Entities.Stores;
 using Plato.Reactions.Models;
-using Plato.Reactions.Services;
 using Plato.Reactions.Stores;
 
 namespace Plato.Discuss.Reactions.ViewComponents
@@ -14,16 +12,10 @@ namespace Plato.Discuss.Reactions.ViewComponents
     {
 
         private readonly IReactionsStore<Reaction> _reactionsStore;
-        private readonly IEntityStore<Topic> _entityStore;
-        private readonly IReactionsManager<Reaction> _reactionManager;
 
         public TopicReactionsViewComponent(
-            IEntityStore<Topic> entityStore,
-            IReactionsManager<Reaction> reactionManager,
             IReactionsStore<Reaction> reactionsStore)
         {
-            _entityStore = entityStore;
-            _reactionManager = reactionManager;
             _reactionsStore = reactionsStore;
         }
 
@@ -32,23 +24,14 @@ namespace Plato.Discuss.Reactions.ViewComponents
             Reply reply)
         {
 
-            var reactions = await _reactionsStore.GetEntityReactionsGroupedByEmojiAsync(topic.Id);
-
-            if (reply != null)
-            {
-
-            }
-
-            var viewModel = new TopicReactionsViewModel()
+            return View(new TopicReactionsViewModel()
             {
                 Topic = topic,
                 Reply = reply,
-                Reactions = reactions
-            };
+                GroupedReactions = await _reactionsStore.GetEntityReactionsGroupedAsync(topic.Id, reply?.Id ?? 0)
+            });
 
-            return View(viewModel);
         }
-
 
     }
 
