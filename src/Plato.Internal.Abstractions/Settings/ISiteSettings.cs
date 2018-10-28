@@ -13,7 +13,7 @@ namespace Plato.Internal.Abstractions.Settings
 
         string SuperUser { get; set; }
 
-        string Culture { get; set; }
+        string Culture { get; set; } 
 
         string Calendar { get; set; }
 

@@ -12,7 +12,7 @@ namespace Plato.Internal.Abstractions.Settings
 
         public string Calendar { get; set; }
 
-        public string Culture { get; set; }
+        public string Culture { get; set; } = "en-US";
 
         public int MaxPagedCount { get; set; }
 

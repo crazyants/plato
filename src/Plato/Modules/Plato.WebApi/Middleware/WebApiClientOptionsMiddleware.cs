@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -17,7 +16,6 @@ namespace Plato.WebApi.Middleware
 
     public class WebApiClientOptionsMiddleware
     {
-
   
         private readonly RequestDelegate _next;
 
@@ -30,8 +28,12 @@ namespace Plato.WebApi.Middleware
         {
 
             // Register client options for web api with our script manager
-            var scriptManager = context.RequestServices.GetRequiredService<IScriptManager>();
-            scriptManager?.RegisterScriptBlock(BuildScriptBlock(context), ScriptSection.Footer);
+            var scriptBlock = BuildScriptBlock(context);
+            if (scriptBlock != null)
+            {
+                var scriptManager = context.RequestServices.GetRequiredService<IScriptManager>();
+                scriptManager?.RegisterScriptBlock(scriptBlock, ScriptSection.Footer);
+            }
             
             await _next(context);
 
@@ -41,9 +43,14 @@ namespace Plato.WebApi.Middleware
         {
             
             var webApiOptions = context.RequestServices.GetRequiredService<IOptions<WebApiOptions>>();
-      
-            // Register client options for $.Plato.Http
-            var script = "$(function (win) { win.PlatoOptions = { url: '{url}', apiKey: '{apiKey}', csrfCookieName: '{csrfCookieName}' } } (window));";
+            if (webApiOptions == null)
+            {
+                return null;
+            }
+
+            // Register client options for $.Plato.Http by extending $.Plato.Options
+            // i.e. $.extend($.Plato.Options, newOptions);
+            var script = "$(function (win) { $.extend(win.$.Plato.Options, { url: '{url}', apiKey: '{apiKey}', csrfCookieName: '{csrfCookieName}' }); } (window));";
             script = script.Replace("{url}", webApiOptions.Value.Url);
             script = script.Replace("{apiKey}", webApiOptions.Value.ApiKey);
             script = script.Replace("{csrfCookieName}", PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName);

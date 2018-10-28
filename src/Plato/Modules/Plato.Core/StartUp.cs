@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Core.Handlers;
+using Plato.Core.Middleware;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
@@ -39,6 +40,10 @@ namespace Plato.Core
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            // Register client options middleware 
+            app.UseMiddleware<SettingsClientOptionsMiddleware>();
+
         }
     }
 }

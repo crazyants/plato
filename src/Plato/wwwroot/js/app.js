@@ -19281,6 +19281,7 @@ $(function (win, doc, $) {
     win.$.Plato.Options = {
         debug: true,
         url: "",
+        locale: "en-US",
         apiKey: "",
         csrfHeaderName: "X-Csrf-Token",
         csrfCookieName: "",
@@ -19349,7 +19350,53 @@ $(function (win, doc, $) {
 
     /* Client side localization */
     win.$.Plato.Locale = {
-        lang: "en-US"
+        lang: "en-US",
+        init: function() {
+
+            var context = win.$.Plato.Context;
+            if (!context) {
+                throw new Error("Plato.Locale requires a valid Plato.Context object");
+            }
+
+            var opts = context.options();
+            if (!opts) {
+                throw new Error("Plato.Locale requires a valid Plato.Options object");
+            }
+
+            var baseUrl = opts.url,
+                defaultLang = opts.lang;
+
+            this.lang = defaultLang;
+
+            var url = baseUrl + "js/locale/app." + this.lang + ".js";
+            this.load(url);
+
+        },
+        get: function (key) {
+
+            var strings = win.$.Plato.Strings,
+                lang = this.lang;
+            if (typeof strings !== 'undefined' &&
+                typeof strings[lang] !== 'undefined' &&
+                typeof strings[lang][key] !== 'undefined') {
+                return messages[language][key];
+            }
+
+            return key;
+
+        },
+        load: function (url) {
+
+            var head = document.getElementsByTagName('head'),
+                buster = parseInt(Math.random() * 1000) + new Date().getTime();
+
+            var script = document.createElement('script');
+            script.setAttribute('src', url + '?v=' + buster);
+
+            if (head) {
+                head[0].appendChild(script);
+            }
+        }
     };
 
     /* Plato UI */
