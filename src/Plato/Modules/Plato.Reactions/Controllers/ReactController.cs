@@ -12,15 +12,15 @@ namespace Plato.Reactions.Controllers
     {
 
         private readonly IEntityReactionsManager<EntityReaction> _entityReactionMAnager;
-        private readonly IReactionsEntryStore<ReactionEntry> _reactionsEntryStore;
+        private readonly ISimpleReactionsStore<ReactionEntry> _simpleReactionsStore;
         private readonly IEntityReactionsStore<EntityReaction> _entityReactionsStore;
 
         public ReactController(
-            IReactionsEntryStore<ReactionEntry> reactionsEntryStore,
+            ISimpleReactionsStore<ReactionEntry> simpleReactionsStore,
             IEntityReactionsManager<EntityReaction> entityReactionMAnager,
             IEntityReactionsStore<EntityReaction> entityReactionsStore)
         {
-            _reactionsEntryStore = reactionsEntryStore;
+            _simpleReactionsStore = simpleReactionsStore;
             _entityReactionMAnager = entityReactionMAnager;
             _entityReactionsStore = entityReactionsStore;
         }
@@ -56,18 +56,18 @@ namespace Plato.Reactions.Controllers
                 var delete = await _entityReactionMAnager.DeleteAsync(existingReaction);
                 if (delete.Succeeded)
                 {
-                    return base.Created(await _reactionsEntryStore.GetReactionsGroupedAsync(model.EntityId, model.EntityReplyId));
+                    return base.Created(await _simpleReactionsStore.GetSimpleReactionsAsync(model.EntityId, model.EntityReplyId));
                 }
             }
             
             // Set created by 
             model.CreatedUserId = user.Id;
 
-            // Add and return result
+            // Add and return results
             var result = await _entityReactionMAnager.CreateAsync(model);
             if (result.Succeeded)
             {
-                return base.Created(await _reactionsEntryStore.GetReactionsGroupedAsync(model.EntityId, model.EntityReplyId));
+                return base.Created(await _simpleReactionsStore.GetSimpleReactionsAsync(model.EntityId, model.EntityReplyId));
             }
 
             // We should not reach here

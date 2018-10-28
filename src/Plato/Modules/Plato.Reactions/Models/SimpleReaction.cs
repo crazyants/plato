@@ -1,6 +1,6 @@
 ﻿namespace Plato.Reactions.Models
 {
-    public class GroupedReaction
+    public class SimpleReaction
     {
         public string Emoji { get; set; }
 

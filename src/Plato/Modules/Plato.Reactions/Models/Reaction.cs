@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Plato.Internal.Models.Users;
-
-namespace Plato.Reactions.Models
+﻿namespace Plato.Reactions.Models
 {
-
     
     public class Reaction : IReaction
     {

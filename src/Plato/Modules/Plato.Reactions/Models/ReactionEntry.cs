@@ -8,11 +8,11 @@ namespace Plato.Reactions.Models
 
         public ReactionEntry(IReaction reaction)
         {
-            this.Name = reaction.Name;
-            this.Description = reaction.Description;
-            this.Emoji = reaction.Emoji;
-            this.Sentiment = reaction.Sentiment;
-            this.Points = reaction.Points;
+            Name = reaction.Name;
+            Description = reaction.Description;
+            Emoji = reaction.Emoji;
+            Sentiment = reaction.Sentiment;
+            Points = reaction.Points;
         }
 
         public ISimpleUser CreatedBy { get; set; }
@@ -20,4 +20,5 @@ namespace Plato.Reactions.Models
         public DateTimeOffset? CreatedDate { get; set; }
 
     }
+
 }

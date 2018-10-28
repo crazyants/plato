@@ -139,7 +139,7 @@ $(function (win, doc, $) {
                             $a = $("<a>",
                                 {
                                     "href": "#",
-                                    "class": "d-inline-block py-2 px-3",
+                                    "class": "list-group-item list-group-item-action py-2 px-3",
                                     "data-toggle": "tooltip",
                                     "title": result.toolTip,
                                     "data-reaction-name": result.name

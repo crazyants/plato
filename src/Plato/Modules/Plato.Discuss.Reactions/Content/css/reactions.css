@@ -18,9 +18,10 @@
 /* reaction list (displayed below topics) */
 
 .reaction-list {
-     padding: 0; 
+    padding: 0; 
     margin: 0;
     list-style: none;
+    display: block;
 }
 
 .reaction-list > li {

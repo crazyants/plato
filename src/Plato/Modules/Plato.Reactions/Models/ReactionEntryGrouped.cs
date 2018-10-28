@@ -3,18 +3,19 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Reactions.Models
 {
-    public class ReactionEntryGrouped
+
+    public class ReactionEntryGrouped : ReactionEntry
     {
 
-        public ReactionEntryGrouped(IReactionEntry reaction)
+        public ReactionEntryGrouped(IReactionEntry reaction) : base(reaction)
         {
-            Reaction = reaction;
+            CreatedBy = reaction.CreatedBy;
+            CreatedDate = reaction.CreatedDate;
             this.Users.Add(reaction.CreatedBy);
         }
-
-        public IReaction Reaction { get; }
-
+        
         public IList<ISimpleUser> Users { get; } = new List<ISimpleUser>();
 
     }
+
 }

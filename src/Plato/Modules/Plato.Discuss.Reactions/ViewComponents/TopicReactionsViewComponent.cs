@@ -11,12 +11,12 @@ namespace Plato.Discuss.Reactions.ViewComponents
     public class TopicReactionsViewComponent : ViewComponent
     {
 
-        private readonly IReactionsEntryStore<ReactionEntry> _reactionsEntryStore;
+        private readonly ISimpleReactionsStore<ReactionEntry> _simpleReactionsStore;
 
         public TopicReactionsViewComponent(
-            IReactionsEntryStore<ReactionEntry> reactionsEntryStore)
+            ISimpleReactionsStore<ReactionEntry> simpleReactionsStore)
         {
-            _reactionsEntryStore = reactionsEntryStore;
+            _simpleReactionsStore = simpleReactionsStore;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -28,7 +28,7 @@ namespace Plato.Discuss.Reactions.ViewComponents
             {
                 Topic = topic,
                 Reply = reply,
-                GroupedReactions = await _reactionsEntryStore.GetReactionsGroupedAsync(topic.Id, reply?.Id ?? 0)
+                Reactions = await _simpleReactionsStore.GetSimpleReactionsAsync(topic.Id, reply?.Id ?? 0)
             });
 
         }

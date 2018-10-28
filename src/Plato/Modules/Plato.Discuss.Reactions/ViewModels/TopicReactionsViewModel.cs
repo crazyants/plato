@@ -11,7 +11,7 @@ namespace Plato.Discuss.Reactions.ViewModels
 
         public IEntityReply Reply { get; set; }
 
-        public IEnumerable<GroupedReaction> GroupedReactions { get; set; } 
+        public IEnumerable<SimpleReaction> Reactions { get; set; } 
 
     }
 
