@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 
@@ -116,8 +114,7 @@ namespace Plato.Internal.Navigation
             };
             return this;
         }
-
-
+        
         public NavigationItemBuilder Resource(object resource)
         {
             _item.Resource = resource;

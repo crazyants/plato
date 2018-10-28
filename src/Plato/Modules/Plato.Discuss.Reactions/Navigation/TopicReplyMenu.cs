@@ -36,7 +36,7 @@ namespace Plato.Discuss.Reactions.Navigation
             // Add reaction menu view to navigation
             builder
                 .Add(T["React"], react => react
-                    .View("ReactMenu", new
+                    .View("ReactionMenu", new
                     {
                         topic,
                         reply

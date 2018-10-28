@@ -8,12 +8,12 @@ using Plato.Reactions.Stores;
 namespace Plato.Discuss.Reactions.ViewComponents
 {
 
-    public class TopicReactionsViewComponent : ViewComponent
+    public class ReactionListViewComponent : ViewComponent
     {
 
         private readonly ISimpleReactionsStore<ReactionEntry> _simpleReactionsStore;
 
-        public TopicReactionsViewComponent(
+        public ReactionListViewComponent(
             ISimpleReactionsStore<ReactionEntry> simpleReactionsStore)
         {
             _simpleReactionsStore = simpleReactionsStore;
@@ -24,7 +24,7 @@ namespace Plato.Discuss.Reactions.ViewComponents
             Reply reply)
         {
 
-            return View(new TopicReactionsViewModel()
+            return View(new ReactionListViewModel()
             {
                 Topic = topic,
                 Reply = reply,

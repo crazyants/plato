@@ -9,12 +9,12 @@ using Plato.Reactions.Services;
 namespace Plato.Discuss.Reactions.ViewComponents
 {
   
-    public class ReactMenuViewComponent : ViewComponent
+    public class ReactionMenuViewComponent : ViewComponent
     {
   
         private readonly IReactionsManager<Reaction> _reactionManager;
 
-        public ReactMenuViewComponent(
+        public ReactionMenuViewComponent(
             IReactionsManager<Reaction> reactionManager)
         {
       
@@ -26,7 +26,7 @@ namespace Plato.Discuss.Reactions.ViewComponents
             Reply reply)
         {
     
-            var viewModel = new ReactMenuViewModel()
+            var viewModel = new ReactionMenuViewModel()
             {
                 Topic = topic,
                 Reply = reply,

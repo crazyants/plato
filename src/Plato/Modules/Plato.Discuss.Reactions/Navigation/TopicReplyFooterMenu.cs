@@ -33,10 +33,10 @@ namespace Plato.Discuss.Reactions.Navigation
             var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
             
-            // Add reaction menu view to navigation
+            // Add reaction list to topic reply footer navigation
             builder
                 .Add(T["React"], react => react
-                    .View("TopicReactions", new
+                    .View("ReactionList", new
                     {
                         topic,
                         reply

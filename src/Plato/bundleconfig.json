@@ -157,12 +157,12 @@
       "adjustRelativePaths": false
     }
   },
-  /* site js */
+  /* app js */
   {
     "inputFiles": [
       "wwwroot/js/vendors/jquery.js",
       "wwwroot/js/vendors/bootstrap.js",
-      "wwwroot/js/vendors/vue.js",
+      "wwwroot/js/vendors/bootstrap-notify.js",
       "wwwroot/js/app/plato.js"
     ],
     "outputFileName": "wwwroot/js/app.js",
@@ -176,7 +176,7 @@
     "inputFiles": [
       "wwwroot/js/vendors/jquery.js",
       "wwwroot/js/vendors/bootstrap.js",
-      "wwwroot/js/vendors/vue.js",
+      "wwwroot/js/vendors/bootstrap-notify.js",
       "wwwroot/js/app/plato.js"
     ],
     "outputFileName": "wwwroot/js/app.min.js",

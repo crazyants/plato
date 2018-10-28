@@ -224,6 +224,21 @@ $(function (win, doc, $) {
                         context.logger.logInfo("$.Plato.Http - Error: " +
                             JSON.stringify(xhr, null, "     ") +
                             thrownError);
+
+                        $.notify({
+                                // options
+                                message: 'Hello World'
+                            },
+                            {
+                                // settings
+                                position: "fixed",
+                                placement: {
+                                    align: "center"
+                                },
+                                type: 'danger',
+                                allow_dismiss: true
+                            });
+
                     }
                 },
                 onAlways = function(xhr, textStatus) {

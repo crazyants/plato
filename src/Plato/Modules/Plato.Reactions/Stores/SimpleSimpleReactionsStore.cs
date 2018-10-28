@@ -35,16 +35,19 @@ namespace Plato.Reactions.Stores
         
         public async Task<IEnumerable<SimpleReaction>> GetSimpleReactionsAsync(int entityId, int entityReplyId)
         {
-            
+
+            var text1 = _localizer["reacted with the"].Value;
+            var text2 = _localizer["emoji"].Value;
+
             var output = new List<SimpleReaction>();
             foreach (var reaction in await GetReactionsAsync(entityId, entityReplyId))
             {
-                // Build tooltip
+                // Build information tooltip
                 var i = 0;
                 var sb = new StringBuilder();
-                foreach (var item in reaction.Value.Users)
+                foreach (var user in reaction.Value.Users)
                 {
-                    sb.Append(item.DisplayName);
+                    sb.Append(user.DisplayName);
                     if (i < reaction.Value.Users.Count - 1)
                     {
                         sb.Append(", ");
@@ -56,11 +59,11 @@ namespace Plato.Reactions.Stores
                     i++;
                 }
                 sb.Append(" ")
-                    .Append(_localizer["reacted with the"].Value)
+                    .Append(text1)
                     .Append(" ")
                     .Append(reaction.Value.Name.ToLower())
                     .Append(" ")
-                    .Append(_localizer["emoji"].Value);
+                    .Append(text2);
 
                 // Build simple reaction
                 output.Add(new SimpleReaction()

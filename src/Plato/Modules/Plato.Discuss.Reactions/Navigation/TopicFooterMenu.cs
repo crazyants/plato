@@ -35,7 +35,7 @@ namespace Plato.Discuss.Reactions.Navigation
             
             builder
                 .Add(T["Reactions"], react => react
-                    .View("TopicReactions", new
+                    .View("ReactionList", new
                     {
                         topic,
                         reply

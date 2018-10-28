@@ -46,6 +46,7 @@ namespace Plato.Reactions.Controllers
                     if (reaction.ReactionName.Equals(model.ReactionName))
                     {
                         existingReaction = reaction;
+                        break;
                     }
                 }
             }

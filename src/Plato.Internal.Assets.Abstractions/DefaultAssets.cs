@@ -51,7 +51,7 @@ namespace Plato.Internal.Assets.Abstractions
                     },
                     new Asset()
                     {
-                        Url = "/js/vendors/vue.js",
+                        Url = "/js/vendors/bootstrap-notify.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     },

@@ -4,7 +4,7 @@ using Plato.Reactions.Models;
 
 namespace Plato.Discuss.Reactions.ViewModels
 {
-    public class TopicReactionsViewModel
+    public class ReactionListViewModel
     {
 
         public IEntity Topic { get; set; }
