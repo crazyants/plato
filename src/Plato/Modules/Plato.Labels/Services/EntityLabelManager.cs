@@ -26,7 +26,7 @@ namespace Plato.Labels.Services
             _contextFacade = contextFacade;
         }
 
-        public async Task<IActivityResult<EntityLabel>> CreateAsync(EntityLabel model)
+        public async Task<ICommandResult<EntityLabel>> CreateAsync(EntityLabel model)
         {
 
             // Validate
@@ -69,7 +69,7 @@ namespace Plato.Labels.Services
             }
 
             // Create result
-            var result = new ActivityResult<EntityLabel>();
+            var result = new CommandResult<EntityLabel>();
 
             // Persist to database
             var newEntityLabel = await _entityLabelStore.CreateAsync(model);
@@ -90,11 +90,11 @@ namespace Plato.Labels.Services
 
             }
 
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create an entity / label relatinship"));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to create an entity / label relatinship"));
             
         }
 
-        public async Task<IActivityResult<EntityLabel>> UpdateAsync(EntityLabel model)
+        public async Task<ICommandResult<EntityLabel>> UpdateAsync(EntityLabel model)
         {
             
             // Validate
@@ -135,7 +135,7 @@ namespace Plato.Labels.Services
             }
             
             // Create result
-            var result = new ActivityResult<EntityLabel>();
+            var result = new CommandResult<EntityLabel>();
 
             // Persist to database
             var updatedEntityLabel = await _entityLabelStore.UpdateAsync(model);
@@ -156,11 +156,11 @@ namespace Plato.Labels.Services
 
             }
 
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create an entity / label relatinship"));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to create an entity / label relatinship"));
             
         }
 
-        public async Task<IActivityResult<EntityLabel>> DeleteAsync(EntityLabel model)
+        public async Task<ICommandResult<EntityLabel>> DeleteAsync(EntityLabel model)
         {
             
             // Validate
@@ -178,7 +178,7 @@ namespace Plato.Labels.Services
                 model = await handler.Invoke(new Message<EntityLabel>(model, this));
             }
 
-            var result = new ActivityResult<EntityLabel>();
+            var result = new CommandResult<EntityLabel>();
             if (await _entityLabelStore.DeleteAsync(model))
             {
              
@@ -196,7 +196,7 @@ namespace Plato.Labels.Services
 
             }
 
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to delete the entity / label relationship"));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to delete the entity / label relationship"));
 
 
         }

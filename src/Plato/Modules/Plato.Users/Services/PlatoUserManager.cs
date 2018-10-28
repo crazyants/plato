@@ -55,7 +55,7 @@ namespace Plato.Users.Services
 
         #region "Implementation"
 
-        public async Task<IActivityResult<TUser>> CreateAsync(
+        public async Task<ICommandResult<TUser>> CreateAsync(
             string userName,
             string displayName,
             string email,
@@ -63,24 +63,24 @@ namespace Plato.Users.Services
             string[] roleNames = null)
         {
 
-            var result = new ActivityResult<TUser>();
+            var result = new CommandResult<TUser>();
 
             // Validate
             // -------------------------
 
             if (String.IsNullOrEmpty(userName) || String.IsNullOrWhiteSpace(userName))
             {
-                return result.Failed(new ActivityError("UserMame", T["A username is required"]));
+                return result.Failed(new CommandError("UserMame", T["A username is required"]));
             }
 
             if (String.IsNullOrEmpty(email) || String.IsNullOrWhiteSpace(email))
             {
-                return result.Failed(new ActivityError("Email", T["A email is required"]));
+                return result.Failed(new CommandError("Email", T["A email is required"]));
             }
 
             if (string.IsNullOrWhiteSpace(password) || String.IsNullOrWhiteSpace(password))
             {
-                return result.Failed(new ActivityError("Password", T["A password is required"]));
+                return result.Failed(new CommandError("Password", T["A password is required"]));
             }
 
             // Check Uniqueness
@@ -89,13 +89,13 @@ namespace Plato.Users.Services
             // Is this a unique email?
             if (await _userManager.FindByEmailAsync(email) != null)
             {
-                return result.Failed(new ActivityError("Email", T["The email already exists"]));
+                return result.Failed(new CommandError("Email", T["The email already exists"]));
             }
    
             // Is this a unique username?
                 if (await _userManager.FindByNameAsync(userName.Normalize()) != null)
             {
-                return result.Failed(new ActivityError("UserMame", T["The username already exists"]));
+                return result.Failed(new CommandError("UserMame", T["The username already exists"]));
             }
 
             // -------------------------
@@ -151,37 +151,84 @@ namespace Plato.Users.Services
             }
 
             // User could not be created, accumulate errors
-            var errors = new List<ActivityError>();
+            var errors = new List<CommandError>();
             foreach (var error in identityResult.Errors)
             {
-                errors.Add(new ActivityError(error.Code, T[error.Description]));
+                errors.Add(new CommandError(error.Code, T[error.Description]));
             }
 
             return result.Failed(errors.ToArray());
 
         }
 
-        public async Task<IActivityResult<TUser>> UpdateAsync(TUser model)
+
+        public async Task<ICommandResult<TUser>> CreateAsync(TUser user)
         {
 
-            var result = new ActivityResult<TUser>();
+            var result = new CommandResult<TUser>();
+            
+            // Invoke UserCreating subscriptions
+            foreach (var handler in _broker.Pub<TUser>(this, new MessageOptions()
+            {
+                Key = "UserCreating"
+            }, user))
+            {
+                user = await handler.Invoke(new Message<TUser>(user, this));
+            }
+
+            // Persist the user
+            var identityResult = await _userManager.CreateAsync(user);
+            if (identityResult.Succeeded)
+            {
+
+                // Invoke UserCreated subscriptions
+                foreach (var handler in _broker.Pub<TUser>(this, new MessageOptions()
+                {
+                    Key = "UserCreated"
+                }, user))
+                {
+                    user = await handler.Invoke(new Message<TUser>(user, this));
+                }
+
+                // Return success
+                return result.Success(user);
+
+            }
+
+            // User could not be created, accumulate errors
+            var errors = new List<CommandError>();
+            foreach (var error in identityResult.Errors)
+            {
+                errors.Add(new CommandError(error.Code, T[error.Description]));
+            }
+
+            return result.Failed(errors.ToArray());
+
+
+        }
+
+
+        public async Task<ICommandResult<TUser>> UpdateAsync(TUser model)
+        {
+
+            var result = new CommandResult<TUser>();
             
             // Validate
             // -------------------------
             
             if (model.Id <= 0)
             {
-                return result.Failed(new ActivityError("Id", T["You must specify a user id to update"]));
+                return result.Failed(new CommandError("Id", T["You must specify a user id to update"]));
             }
             
             if (String.IsNullOrEmpty(model.UserName) || String.IsNullOrWhiteSpace(model.UserName))
             {
-                return result.Failed(new ActivityError("UserMame", T["A username is required"]));
+                return result.Failed(new CommandError("UserMame", T["A username is required"]));
             }
 
             if (String.IsNullOrEmpty(model.Email) || String.IsNullOrWhiteSpace(model.Email))
             {
-                return result.Failed(new ActivityError("Email", T["A email is required"]));
+                return result.Failed(new CommandError("Email", T["A email is required"]));
             }
 
             // Check Uniqueness
@@ -194,7 +241,7 @@ namespace Plato.Users.Services
                 // found another account with same email
                 if (userByEmail.Id != model.Id)
                 {
-                    return result.Failed(new ActivityError("Email", T["The email already exists"]));
+                    return result.Failed(new CommandError("Email", T["The email already exists"]));
                 }
             }
 
@@ -205,7 +252,7 @@ namespace Plato.Users.Services
                 // found another account with same username
                 if (userByUserName.Id != model.Id)
                 {
-                    return result.Failed(new ActivityError("UserMame", T["The username already exists"]));
+                    return result.Failed(new CommandError("UserMame", T["The username already exists"]));
                 }
             }
 
@@ -222,19 +269,19 @@ namespace Plato.Users.Services
                 return result.Success(user);
             }
 
-            var errors = new List<ActivityError>();
+            var errors = new List<CommandError>();
             foreach (var error in identityResult.Errors)
             {
-                errors.Add(new ActivityError(error.Code, T[error.Description]));
+                errors.Add(new CommandError(error.Code, T[error.Description]));
             }
             return result.Failed(errors.ToArray());
 
         }
 
-        public async Task<IActivityResult<TUser>> DeleteAsync(TUser model)
+        public async Task<ICommandResult<TUser>> DeleteAsync(TUser model)
         {
 
-            var result = new ActivityResult<TUser>();
+            var result = new CommandResult<TUser>();
 
             var identityResult = await _userManager.DeleteAsync(model);
             if (identityResult.Succeeded)
@@ -242,19 +289,19 @@ namespace Plato.Users.Services
                 return result.Success();
             }
             
-            var errors = new List<ActivityError>();
+            var errors = new List<CommandError>();
             foreach (var error in identityResult.Errors)
             {
-                errors.Add(new ActivityError(error.Code, T[error.Description]));
+                errors.Add(new CommandError(error.Code, T[error.Description]));
             }
             return result.Failed(errors.ToArray());
 
         }
 
-        public async Task<IActivityResult<TUser>> ChangePasswordAsync(TUser user, string currentPassword, string newPassword)
+        public async Task<ICommandResult<TUser>> ChangePasswordAsync(TUser user, string currentPassword, string newPassword)
         {
 
-            var result = new ActivityResult<TUser>();
+            var result = new CommandResult<TUser>();
             
             var identityResult = await _userManager.ChangePasswordAsync(
                 user, 
@@ -263,10 +310,10 @@ namespace Plato.Users.Services
 
             if (!identityResult.Succeeded)
             {
-                var errors = new List<ActivityError>();
+                var errors = new List<CommandError>();
                 foreach (var error in identityResult.Errors)
                 {
-                    errors.Add(new ActivityError(error.Code, T[error.Description]));
+                    errors.Add(new CommandError(error.Code, T[error.Description]));
                 }
 
                 return result.Failed(errors.ToArray());
@@ -276,9 +323,9 @@ namespace Plato.Users.Services
 
         }
 
-        public async Task<IActivityResult<TUser>> GetAuthenticatedUserAsync(ClaimsPrincipal principal)
+        public async Task<ICommandResult<TUser>> GetAuthenticatedUserAsync(ClaimsPrincipal principal)
         {
-            var result = new ActivityResult<TUser>();
+            var result = new CommandResult<TUser>();
             var identity = principal?.Identity;
             if ((identity != null) && (identity.IsAuthenticated))
             {
@@ -288,10 +335,10 @@ namespace Plato.Users.Services
             return result.Failed();
         }
 
-        public async Task<IActivityResult<TUser>> GetForgotPasswordUserAsync(string userIdentifier)
+        public async Task<ICommandResult<TUser>> GetForgotPasswordUserAsync(string userIdentifier)
         {
 
-            var result = new ActivityResult<TUser>();
+            var result = new CommandResult<TUser>();
 
             if (string.IsNullOrWhiteSpace(userIdentifier))
             {
@@ -318,9 +365,9 @@ namespace Plato.Users.Services
 
         }
 
-        public async Task<IActivityResult<TUser>> GetEmailConfirmationUserAsync(string userIdentifier)
+        public async Task<ICommandResult<TUser>> GetEmailConfirmationUserAsync(string userIdentifier)
         {
-            var result = new ActivityResult<TUser>();
+            var result = new CommandResult<TUser>();
 
             if (string.IsNullOrWhiteSpace(userIdentifier))
             {
@@ -347,27 +394,27 @@ namespace Plato.Users.Services
 
         }
 
-        public async Task<IActivityResult<TUser>> ResetPasswordAsync(
+        public async Task<ICommandResult<TUser>> ResetPasswordAsync(
             string userIdentifier,
             string resetToken,
             string newPassword)
         {
 
-            var result = new ActivityResult<TUser>();
+            var result = new CommandResult<TUser>();
             
             if (string.IsNullOrWhiteSpace(userIdentifier))
             {
-                return result.Failed(new ActivityError("UserName", T["A user name or email is required"]));
+                return result.Failed(new CommandError("UserName", T["A user name or email is required"]));
             }
 
             if (string.IsNullOrWhiteSpace(newPassword))
             {
-                return result.Failed(new ActivityError("Password", T["A password is required"]));
+                return result.Failed(new CommandError("Password", T["A password is required"]));
             }
 
             if (string.IsNullOrWhiteSpace(resetToken))
             {
-                return result.Failed(new ActivityError("Token", T["A token is required."]));
+                return result.Failed(new CommandError("Token", T["A token is required."]));
             }
             
             var user = await FindByUsernameOrEmailAsync(userIdentifier);
@@ -380,10 +427,10 @@ namespace Plato.Users.Services
 
             if (!identityResult.Succeeded)
             {
-                var errors = new List<ActivityError>();
+                var errors = new List<CommandError>();
                 foreach (var error in identityResult.Errors)
                 {
-                    errors.Add(new ActivityError(error.Code, T[error.Description]));
+                    errors.Add(new CommandError(error.Code, T[error.Description]));
                 }
 
                 return result.Failed(errors.ToArray());
@@ -393,20 +440,20 @@ namespace Plato.Users.Services
 
         }
 
-        public async Task<IActivityResult<TUser>> ConfirmEmailAsync(
+        public async Task<ICommandResult<TUser>> ConfirmEmailAsync(
             string userIdentifier,
             string confirmationToken)
         {
-            var result = new ActivityResult<TUser>();
+            var result = new CommandResult<TUser>();
 
             if (string.IsNullOrWhiteSpace(userIdentifier))
             {
-                return result.Failed(new ActivityError("UserName", T["A user name or email is required"]));
+                return result.Failed(new CommandError("UserName", T["A user name or email is required"]));
             }
 
             if (string.IsNullOrWhiteSpace(confirmationToken))
             {
-                return result.Failed(new ActivityError("Token", T["A confirmation token is required."]));
+                return result.Failed(new CommandError("Token", T["A confirmation token is required."]));
             }
 
             var user = await FindByUsernameOrEmailAsync(userIdentifier);
@@ -418,10 +465,10 @@ namespace Plato.Users.Services
             var identityResult = await _userManager.ConfirmEmailAsync(user, confirmationToken);
             if (!identityResult.Succeeded)
             {
-                var errors = new List<ActivityError>();
+                var errors = new List<CommandError>();
                 foreach (var error in identityResult.Errors)
                 {
-                    errors.Add(new ActivityError(error.Code, T[error.Description]));
+                    errors.Add(new CommandError(error.Code, T[error.Description]));
                 }
 
                 return result.Failed(errors.ToArray());

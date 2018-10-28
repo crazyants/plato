@@ -6,9 +6,9 @@ namespace Plato.Internal.Emails.Abstractions
 { 
     public interface IEmailManager
     {
-        Task<IActivityResult<EmailMessage>> SaveAsync(MailMessage message);
+        Task<ICommandResult<EmailMessage>> SaveAsync(MailMessage message);
 
-        Task<IActivityResult<MailMessage>> SendAsync(MailMessage message);
+        Task<ICommandResult<MailMessage>> SendAsync(MailMessage message);
 
     }
 

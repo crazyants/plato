@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plato.Internal.Abstractions;
+﻿using Plato.Internal.Abstractions;
 
 namespace Plato.Entities.Services
 {
@@ -12,7 +11,6 @@ namespace Plato.Entities.Services
         event EntityReplyEvents<TModel>.Handler Updated;
         event EntityReplyEvents<TModel>.Handler Deleting;
         event EntityReplyEvents<TModel>.Handler Deleted;
-
         
     }
 }

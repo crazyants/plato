@@ -53,8 +53,11 @@ namespace Plato.Reactions.Models
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
             if (CreatedUserId > 0)
-            {
-                CreatedBy.Id = CreatedUserId;
+            { 
+                CreatedBy = new SimpleUser()
+                {
+                    Id = CreatedUserId
+                };
                 if (dr.ColumnIsNotNull("UserName"))
                     CreatedBy.UserName = Convert.ToString(dr["UserName"]);
                 if (dr.ColumnIsNotNull("DisplayName"))

@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using Plato.Reactions.Models;
 using Plato.Reactions.Services;
 using Plato.Reactions.Stores;
@@ -9,35 +8,21 @@ using Plato.WebApi.Controllers;
 namespace Plato.Reactions.Controllers
 {
 
-    public class ReactionController : BaseWebApiController
+    public class ReactController : BaseWebApiController
     {
 
         private readonly IEntityReactionsManager<EntityReaction> _entityReactionMAnager;
-        private readonly IReactionsStore<Reaction> _reactionsStore;
+        private readonly IReactionsEntryStore<ReactionEntry> _reactionsEntryStore;
         private readonly IEntityReactionsStore<EntityReaction> _entityReactionsStore;
 
-        public ReactionController(
-            IReactionsStore<Reaction> reactionsStore,
+        public ReactController(
+            IReactionsEntryStore<ReactionEntry> reactionsEntryStore,
             IEntityReactionsManager<EntityReaction> entityReactionMAnager,
             IEntityReactionsStore<EntityReaction> entityReactionsStore)
         {
-            _reactionsStore = reactionsStore;
+            _reactionsEntryStore = reactionsEntryStore;
             _entityReactionMAnager = entityReactionMAnager;
             _entityReactionsStore = entityReactionsStore;
-        }
-
-        [HttpGet]
-        [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Get(int entityId, int entityReplyId)
-        {
-
-            var data = await _reactionsStore.GetEntityReactionsGroupedAsync(entityId, entityReplyId);
-            if (data != null)
-            {
-                return base.Result(data);
-            }
-
-            return base.NotFound();
         }
 
         [HttpPost]
@@ -71,7 +56,7 @@ namespace Plato.Reactions.Controllers
                 var delete = await _entityReactionMAnager.DeleteAsync(existingReaction);
                 if (delete.Succeeded)
                 {
-                    return base.Created(await _reactionsStore.GetEntityReactionsGroupedAsync(model.EntityId, model.EntityReplyId));
+                    return base.Created(await _reactionsEntryStore.GetReactionsGroupedAsync(model.EntityId, model.EntityReplyId));
                 }
             }
             
@@ -82,18 +67,14 @@ namespace Plato.Reactions.Controllers
             var result = await _entityReactionMAnager.CreateAsync(model);
             if (result.Succeeded)
             {
-                return base.Created(await _reactionsStore.GetEntityReactionsGroupedAsync(model.EntityId, model.EntityReplyId));
+                return base.Created(await _reactionsEntryStore.GetReactionsGroupedAsync(model.EntityId, model.EntityReplyId));
             }
 
             // We should not reach here
             return base.InternalServerError();
 
         }
-
-
-
-
-
+        
     }
 
 }

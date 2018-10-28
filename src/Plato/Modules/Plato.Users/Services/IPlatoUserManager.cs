@@ -1,36 +1,31 @@
-﻿using System;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 
 namespace Plato.Users.Services
 {
 
-    public interface IPlatoUserManager<TUser> where TUser : class
+    public interface IPlatoUserManager<TUser> : ICommandManager<TUser> where TUser : class
     {
 
-        Task<IActivityResult<TUser>> CreateAsync(
+        Task<ICommandResult<TUser>> CreateAsync(
             string userName, 
             string displayName,
             string email,
             string password,
             string[] roleNames = null);
-
-        Task<IActivityResult<TUser>> UpdateAsync(TUser model);
-
-        Task<IActivityResult<TUser>> DeleteAsync(TUser model);
-
-        Task<IActivityResult<TUser>> ChangePasswordAsync(TUser user, string currentPassword, string newPassword);
-
-        Task<IActivityResult<TUser>> GetAuthenticatedUserAsync(ClaimsPrincipal principal);
-
-        Task<IActivityResult<TUser>> GetForgotPasswordUserAsync(string userIdentifier);
-
-        Task<IActivityResult<TUser>> GetEmailConfirmationUserAsync(string userIdentifier);
         
-        Task<IActivityResult<TUser>> ResetPasswordAsync(string userIdentifier, string resetToken, string newPassword);
+        Task<ICommandResult<TUser>> ChangePasswordAsync(TUser user, string currentPassword, string newPassword);
 
-        Task<IActivityResult<TUser>> ConfirmEmailAsync(string userIdentifier, string confirmationToken);
+        Task<ICommandResult<TUser>> GetAuthenticatedUserAsync(ClaimsPrincipal principal);
+
+        Task<ICommandResult<TUser>> GetForgotPasswordUserAsync(string userIdentifier);
+
+        Task<ICommandResult<TUser>> GetEmailConfirmationUserAsync(string userIdentifier);
+        
+        Task<ICommandResult<TUser>> ResetPasswordAsync(string userIdentifier, string resetToken, string newPassword);
+
+        Task<ICommandResult<TUser>> ConfirmEmailAsync(string userIdentifier, string confirmationToken);
         
     }
 

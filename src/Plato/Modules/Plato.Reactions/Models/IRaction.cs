@@ -4,6 +4,14 @@ using Plato.Internal.Models.Users;
 namespace Plato.Reactions.Models
 {
 
+    public interface IReactionEntry : IReaction
+    {
+        ISimpleUser CreatedBy { get; set; }
+        
+        DateTimeOffset? CreatedDate { get; set; }
+
+    }
+
     public interface IReaction
     {
 
@@ -19,9 +27,7 @@ namespace Plato.Reactions.Models
 
         int Points { get; set; }
 
-        ISimpleUser CreatedBy { get; set; }
-
-        DateTimeOffset? CreatedDate { get; set; }
+  
 
     }
 

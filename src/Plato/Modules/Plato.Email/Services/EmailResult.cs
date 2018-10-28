@@ -4,7 +4,7 @@ using Plato.Internal.Abstractions;
 namespace Plato.Email.Services
 {
 
-    public class SmtpResult : ActivityResult<MailMessage>
+    public class SmtpResult : CommandResult<MailMessage>
     {
         
     }

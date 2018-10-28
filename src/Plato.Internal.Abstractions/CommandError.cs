@@ -1,14 +1,14 @@
 ﻿namespace Plato.Internal.Abstractions
 {
 
-    public class ActivityError
+    public class CommandError
     {
 
-        public ActivityError(string description) : this("", description)
+        public CommandError(string description) : this("", description)
         {
         }
 
-        public ActivityError(string code, string description)
+        public CommandError(string code, string description)
         {
             this.Code = code;
             this.Description = description;

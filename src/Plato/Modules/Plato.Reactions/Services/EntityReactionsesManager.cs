@@ -23,7 +23,7 @@ namespace Plato.Reactions.Services
             _contextFacade = contextFacade;
         }
 
-        public async Task<IActivityResult<EntityReaction>> CreateAsync(EntityReaction model)
+        public async Task<ICommandResult<EntityReaction>> CreateAsync(EntityReaction model)
         {
 
             if (model == null)
@@ -56,7 +56,7 @@ namespace Plato.Reactions.Services
             model.CreatedDate = DateTime.UtcNow;
 
             // Create result
-            var result = new ActivityResult<EntityReaction>();
+            var result = new CommandResult<EntityReaction>();
 
             // Attempt to persist
             var reaction = await _entityReactionsStore.CreateAsync(model);
@@ -69,7 +69,7 @@ namespace Plato.Reactions.Services
 
         }
 
-        public async Task<IActivityResult<EntityReaction>> UpdateAsync(EntityReaction model)
+        public async Task<ICommandResult<EntityReaction>> UpdateAsync(EntityReaction model)
         {
 
             // Validate
@@ -97,7 +97,7 @@ namespace Plato.Reactions.Services
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
             // Create result
-            var result = new ActivityResult<EntityReaction>();
+            var result = new CommandResult<EntityReaction>();
 
             // Attempt to persist
             var reaction = await _entityReactionsStore.UpdateAsync(model);
@@ -110,7 +110,7 @@ namespace Plato.Reactions.Services
 
         }
 
-        public async Task<IActivityResult<EntityReaction>> DeleteAsync(EntityReaction model)
+        public async Task<ICommandResult<EntityReaction>> DeleteAsync(EntityReaction model)
         {
 
             // Validate
@@ -119,7 +119,7 @@ namespace Plato.Reactions.Services
                 throw new ArgumentNullException(nameof(model));
             }
 
-            var result = new ActivityResult<EntityReaction>();
+            var result = new CommandResult<EntityReaction>();
 
             var success = await _entityReactionsStore.DeleteAsync(model);
             if (success)
@@ -127,7 +127,7 @@ namespace Plato.Reactions.Services
                 return result.Success(model);
             }
 
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to delete the reoaction."));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to delete the reoaction."));
 
         }
     }

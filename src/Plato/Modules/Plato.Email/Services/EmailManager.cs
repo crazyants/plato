@@ -34,10 +34,10 @@ namespace Plato.Email.Services
             _broker = broker;
         }
         
-        public async Task<IActivityResult<EmailMessage>> SaveAsync(MailMessage message)
+        public async Task<ICommandResult<EmailMessage>> SaveAsync(MailMessage message)
         {
             
-            var result = new ActivityResult<EmailMessage>();
+            var result = new CommandResult<EmailMessage>();
 
             // Ensure we've configured required email settings
             if (_smtpSettings?.DefaultFrom == null)
@@ -79,7 +79,7 @@ namespace Plato.Email.Services
 
         }
 
-        public async Task<IActivityResult<MailMessage>> SendAsync(MailMessage message)
+        public async Task<ICommandResult<MailMessage>> SendAsync(MailMessage message)
         {
             var result = new SmtpResult();
 

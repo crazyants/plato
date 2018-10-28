@@ -26,7 +26,7 @@ namespace Plato.Discuss.Services
             _featureFacade = featureFacade;
         }
 
-        public async Task<IActivityResult<Topic>> CreateAsync(Topic model)
+        public async Task<ICommandResult<Topic>> CreateAsync(Topic model)
         {
             if (model.FeatureId == 0)
             {
@@ -40,7 +40,7 @@ namespace Plato.Discuss.Services
             return await _entityManager.CreateAsync(model);
         }
 
-        public async Task<IActivityResult<Topic>> UpdateAsync(Topic model)
+        public async Task<ICommandResult<Topic>> UpdateAsync(Topic model)
         {
 
             if (model.FeatureId == 0)
@@ -55,7 +55,7 @@ namespace Plato.Discuss.Services
             return await _entityManager.UpdateAsync(model);
         }
 
-        public async Task<IActivityResult<Topic>> DeleteAsync(Topic model)
+        public async Task<ICommandResult<Topic>> DeleteAsync(Topic model)
         {
             return await _entityManager.DeleteAsync(model);
         }

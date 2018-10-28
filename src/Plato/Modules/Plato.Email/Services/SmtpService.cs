@@ -27,7 +27,7 @@ namespace Plato.Email.Services
         
         #region "Implementation"
 
-        public async Task<IActivityResult<MailMessage>> SendAsync(MailMessage message)
+        public async Task<ICommandResult<MailMessage>> SendAsync(MailMessage message)
         {
 
             var result = new SmtpResult();

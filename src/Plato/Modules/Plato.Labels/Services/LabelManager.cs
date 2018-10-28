@@ -44,7 +44,7 @@ namespace Plato.Labels.Services
 
         #region "Implementation"
 
-        public async Task<IActivityResult<TLabel>> CreateAsync(TLabel model)
+        public async Task<ICommandResult<TLabel>> CreateAsync(TLabel model)
         {
 
             // Validate
@@ -88,7 +88,7 @@ namespace Plato.Labels.Services
                 model = await handler.Invoke(new Message<TLabel>(model, this));
             }
 
-            var result = new ActivityResult<TLabel>();
+            var result = new CommandResult<TLabel>();
 
             var label = await _labelStore.CreateAsync(model);
             if (label != null)
@@ -108,11 +108,11 @@ namespace Plato.Labels.Services
 
             }
 
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create the Label"));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to create the Label"));
             
         }
 
-        public async Task<IActivityResult<TLabel>> UpdateAsync(TLabel model)
+        public async Task<ICommandResult<TLabel>> UpdateAsync(TLabel model)
         {
             
             // Validate
@@ -152,7 +152,7 @@ namespace Plato.Labels.Services
                 model = await handler.Invoke(new Message<TLabel>(model, this));
             }
 
-            var result = new ActivityResult<TLabel>();
+            var result = new CommandResult<TLabel>();
 
             var label = await _labelStore.UpdateAsync(model);
             if (label != null)
@@ -171,11 +171,11 @@ namespace Plato.Labels.Services
                 return result.Success(label);
             }
 
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to update the Label"));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to update the Label"));
             
         }
 
-        public async Task<IActivityResult<TLabel>> DeleteAsync(TLabel model)
+        public async Task<ICommandResult<TLabel>> DeleteAsync(TLabel model)
         {
 
             // Validate
@@ -193,7 +193,7 @@ namespace Plato.Labels.Services
                 model = await handler.Invoke(new Message<TLabel>(model, this));
             }
             
-            var result = new ActivityResult<TLabel>();
+            var result = new CommandResult<TLabel>();
             if (await _labelStore.DeleteAsync(model))
             {
                 // Delete Label roles
@@ -223,12 +223,12 @@ namespace Plato.Labels.Services
 
             }
             
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to delete the Label"));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to delete the Label"));
 
 
         }
 
-        public async Task<IActivityResult<TLabel>> AddToRoleAsync(TLabel model, string roleName)
+        public async Task<ICommandResult<TLabel>> AddToRoleAsync(TLabel model, string roleName)
         {
 
             if (model == null)
@@ -241,13 +241,13 @@ namespace Plato.Labels.Services
                 throw new ArgumentNullException(nameof(roleName));
             }
 
-            var result = new ActivityResult<TLabel>();
+            var result = new CommandResult<TLabel>();
 
             // Ensure the role exists
             var existingRole = await _roleStore.GetByNameAsync(roleName);
             if (existingRole == null)
             {
-                return result.Failed(new ActivityError($"A role with the name {roleName} could not be found"));
+                return result.Failed(new CommandError($"A role with the name {roleName} could not be found"));
             }
 
             // Ensure supplied role name is not already associated with the Label
@@ -258,7 +258,7 @@ namespace Plato.Labels.Services
                 {
                     if (role.RoleName.Equals(roleName, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        return result.Failed(new ActivityError($"A role with the name '{roleName}' is already associated with the Label '{model.Name}'"));
+                        return result.Failed(new CommandError($"A role with the name '{roleName}' is already associated with the Label '{model.Name}'"));
                     }
                 }
             }
@@ -278,11 +278,11 @@ namespace Plato.Labels.Services
                 return result.Success();
             }
 
-            return result.Failed(new ActivityError($"An unknown error occurred whilst attempting to add role '{existingRole.Name}' for Label '{model.Name}'"));
+            return result.Failed(new CommandError($"An unknown error occurred whilst attempting to add role '{existingRole.Name}' for Label '{model.Name}'"));
 
         }
 
-        public async Task<IActivityResult<TLabel>> RemoveFromRoleAsync(TLabel model, string roleName)
+        public async Task<ICommandResult<TLabel>> RemoveFromRoleAsync(TLabel model, string roleName)
         {
 
             if (model == null)
@@ -296,13 +296,13 @@ namespace Plato.Labels.Services
             }
             
             // Our result
-            var result = new ActivityResult<TLabel>();
+            var result = new CommandResult<TLabel>();
             
             // Ensure the role exists
             var role = await _roleStore.GetByNameAsync(roleName);
             if (role == null)
             {
-                return result.Failed(new ActivityError($"A role with the name {roleName} could not be found"));
+                return result.Failed(new CommandError($"A role with the name {roleName} could not be found"));
             }
             
             // Attempt to delete the role relationship
@@ -312,7 +312,7 @@ namespace Plato.Labels.Services
                 return result.Success();
             }
             
-            return result.Failed(new ActivityError($"An unknown error occurred whilst attempting to remove role '{role.Name}' for Label '{model.Name}'"));
+            return result.Failed(new CommandError($"An unknown error occurred whilst attempting to remove role '{role.Name}' for Label '{model.Name}'"));
 
         }
 
@@ -329,7 +329,7 @@ namespace Plato.Labels.Services
                 throw new ArgumentNullException(nameof(roleName));
             }
 
-            var result = new ActivityResult<TLabel>();
+            var result = new CommandResult<TLabel>();
 
             var role = await _roleStore.GetByNameAsync(roleName);
             if (role == null)

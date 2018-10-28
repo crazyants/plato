@@ -35,7 +35,7 @@ namespace Plato.Reactions
 
             // Stores
             services.AddScoped<IEntityReactionsStore<EntityReaction>, EntityReactionsStore>();
-            services.AddScoped<IReactionsStore<Reaction>, ReactionsStore<Reaction>>();
+            services.AddScoped<IReactionsEntryStore<ReactionEntry>, ReactionsEntryStore<ReactionEntry>>();
 
             // Services
             services.AddScoped<IReactionsManager<Reaction>, ReactionsManager<Reaction>>();

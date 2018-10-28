@@ -35,31 +35,31 @@ namespace Plato.Entities.Services
             _broker = broker;
         }
 
-        public async Task<IActivityResult<TReply>> CreateAsync(TReply reply)
+        public async Task<ICommandResult<TReply>> CreateAsync(TReply reply)
         {
             
-            var result = new ActivityResult<TReply>();
+            var result = new CommandResult<TReply>();
 
 
             if (reply.Id > 0)
             {
-                return result.Failed(new ActivityError($"{nameof(reply.Id)} cannot be greater than zero when creating a reply"));
+                return result.Failed(new CommandError($"{nameof(reply.Id)} cannot be greater than zero when creating a reply"));
             }
 
             if (reply.EntityId <= 0)
             {
-                return result.Failed(new ActivityError($"{nameof(reply.EntityId)} must must be greater than zero"));
+                return result.Failed(new CommandError($"{nameof(reply.EntityId)} must must be greater than zero"));
             }
         
             if (String.IsNullOrWhiteSpace(reply.Message))
             {
-                return result.Failed(new ActivityError($"{nameof(reply.Message)} is required"));
+                return result.Failed(new CommandError($"{nameof(reply.Message)} is required"));
             }
 
             var entity = await _entityStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
-                return result.Failed(new ActivityError($"An entity with the Id '{reply.EntityId}' could not be found"));
+                return result.Failed(new CommandError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
             
             var user = await _contextFacade.GetAuthenticatedUserAsync();
@@ -102,29 +102,29 @@ namespace Plato.Entities.Services
                 return result.Success(newReply);
             }
 
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create the reply"));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to create the reply"));
 
         }
 
-        public async Task<IActivityResult<TReply>> UpdateAsync(TReply reply)
+        public async Task<ICommandResult<TReply>> UpdateAsync(TReply reply)
         {
 
-            var result = new ActivityResult<TReply>();
+            var result = new CommandResult<TReply>();
 
             if (reply.Id <= 0)
             {
-                return result.Failed(new ActivityError($"{nameof(reply.Id)} must be a valid existing reply id"));
+                return result.Failed(new CommandError($"{nameof(reply.Id)} must be a valid existing reply id"));
             }
             
             if (String.IsNullOrWhiteSpace(reply.Message))
             {
-                return result.Failed(new ActivityError($"{nameof(reply.Message)} is required"));
+                return result.Failed(new CommandError($"{nameof(reply.Message)} is required"));
             }
             
             var entity = await _entityStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
-                return result.Failed(new ActivityError($"An entity with the Id '{reply.EntityId}' could not be found"));
+                return result.Failed(new CommandError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
             
             // Update modified details
@@ -170,11 +170,11 @@ namespace Plato.Entities.Services
                 return result.Success(updatedReply);
             }
 
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to update the reply."));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to update the reply."));
 
         }
 
-        public async Task<IActivityResult<TReply>> DeleteAsync(TReply reply)
+        public async Task<ICommandResult<TReply>> DeleteAsync(TReply reply)
         {
 
             // Validate
@@ -183,7 +183,7 @@ namespace Plato.Entities.Services
                 throw new ArgumentNullException(nameof(reply));
             }
             
-            var result = new ActivityResult<TReply>();
+            var result = new CommandResult<TReply>();
             
             // Raise Deleting event
             Deleting?.Invoke(this, new EntityReplyEventArgs<TReply>(null, reply));
@@ -216,7 +216,7 @@ namespace Plato.Entities.Services
                 return result.Success(reply);
             }
 
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to delete the reply."));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to delete the reply."));
 
         }
         

@@ -6,7 +6,7 @@ namespace Plato.Email.Services
 {
     public interface ISmtpService
     {
-        Task<IActivityResult<MailMessage>> SendAsync(MailMessage message);
+        Task<ICommandResult<MailMessage>> SendAsync(MailMessage message);
 
     }
     

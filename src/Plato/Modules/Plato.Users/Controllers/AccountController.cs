@@ -669,7 +669,7 @@ namespace Plato.Users.Controllers
             }
         }
         
-        async Task<IActivityResult<EmailMessage>> SendPasswordResetTokenAsync(User user)
+        async Task<ICommandResult<EmailMessage>> SendPasswordResetTokenAsync(User user)
         {
             
             // Get reset password email
@@ -704,12 +704,12 @@ namespace Plato.Users.Controllers
                 
             }
 
-            var result = new ActivityResult<EmailMessage>();
+            var result = new CommandResult<EmailMessage>();
             return result.Failed("An error occurred whilst attempting to send the password reset token email.");
 
         }
         
-        async Task<IActivityResult<EmailMessage>> SendEmailConfirmationTokenAsync(User user)
+        async Task<ICommandResult<EmailMessage>> SendEmailConfirmationTokenAsync(User user)
         {
 
             // Get reset password email
@@ -744,7 +744,7 @@ namespace Plato.Users.Controllers
 
             }
 
-            var result = new ActivityResult<EmailMessage>();
+            var result = new CommandResult<EmailMessage>();
             return result.Failed("An error occurred whilst attempting to send the email confirmation email.");
 
         }

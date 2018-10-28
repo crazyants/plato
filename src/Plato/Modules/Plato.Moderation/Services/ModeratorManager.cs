@@ -12,7 +12,7 @@ namespace Plato.Moderation.Services
 
     public interface IModeratorManager
     {
-        Task<IActivityResult<IEnumerable<Moderator>>> CreateAsync(Moderator moderator, IEnumerable<int> categoryIds);
+        Task<ICommandResult<IEnumerable<Moderator>>> CreateAsync(Moderator moderator, IEnumerable<int> categoryIds);
 
 
     }
@@ -27,10 +27,10 @@ namespace Plato.Moderation.Services
             _moderatorStore = moderatorStore;
         }
 
-        public async Task<IActivityResult<IEnumerable<Moderator>>> CreateAsync(Moderator moderator, IEnumerable<int> categoryIds)
+        public async Task<ICommandResult<IEnumerable<Moderator>>> CreateAsync(Moderator moderator, IEnumerable<int> categoryIds)
         {
 
-            var result = new ActivityResult<IEnumerable<Moderator>>();
+            var result = new CommandResult<IEnumerable<Moderator>>();
 
             // Get all moderators
             var moderators = await _moderatorStore

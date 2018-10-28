@@ -7,7 +7,6 @@ using Plato.Categories.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Internal.Text.Abstractions;
 
@@ -16,7 +15,6 @@ namespace Plato.Categories.Services
 
     public class CategoryManager<TCategory> : ICategoryManager<TCategory> where TCategory : class, ICategory
     {
-        
         
         private readonly ICategoryRoleStore<CategoryRole> _categoryRoleStore;
         private readonly ICategoryDataStore<CategoryData> _categoryDataStore;
@@ -46,7 +44,7 @@ namespace Plato.Categories.Services
 
         #region "Implementation"
 
-        public async Task<IActivityResult<TCategory>> CreateAsync(TCategory model)
+        public async Task<ICommandResult<TCategory>> CreateAsync(TCategory model)
         {
 
             // Validate
@@ -93,7 +91,7 @@ namespace Plato.Categories.Services
                 Key = "CategoryCreating"
             }, model);
 
-            var result = new ActivityResult<TCategory>();
+            var result = new CommandResult<TCategory>();
 
             var category = await _categoryStore.CreateAsync(model);
             if (category != null)
@@ -107,11 +105,11 @@ namespace Plato.Categories.Services
                 return result.Success(category);
             }
 
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to create the category"));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to create the category"));
             
         }
 
-        public async Task<IActivityResult<TCategory>> UpdateAsync(TCategory model)
+        public async Task<ICommandResult<TCategory>> UpdateAsync(TCategory model)
         {
             
             // Validate
@@ -148,7 +146,7 @@ namespace Plato.Categories.Services
                 Key = "CategoryUpdating"
             }, model);
 
-            var result = new ActivityResult<TCategory>();
+            var result = new CommandResult<TCategory>();
 
             var category = await _categoryStore.UpdateAsync(model);
             if (category != null)
@@ -166,7 +164,7 @@ namespace Plato.Categories.Services
             
         }
 
-        public async Task<IActivityResult<TCategory>> DeleteAsync(TCategory model)
+        public async Task<ICommandResult<TCategory>> DeleteAsync(TCategory model)
         {
 
             // Validate
@@ -181,7 +179,7 @@ namespace Plato.Categories.Services
                 Key = "CategoryDeleting"
             }, model);
 
-            var result = new ActivityResult<TCategory>();
+            var result = new CommandResult<TCategory>();
             if (await _categoryStore.DeleteAsync(model))
             {
                 // Delete category roles
@@ -209,12 +207,12 @@ namespace Plato.Categories.Services
 
             }
             
-            return result.Failed(new ActivityError("An unknown error occurred whilst attempting to delete the category"));
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to delete the category"));
 
 
         }
 
-        public async Task<IActivityResult<TCategory>> AddToRoleAsync(TCategory model, string roleName)
+        public async Task<ICommandResult<TCategory>> AddToRoleAsync(TCategory model, string roleName)
         {
 
             if (model == null)
@@ -227,13 +225,13 @@ namespace Plato.Categories.Services
                 throw new ArgumentNullException(nameof(roleName));
             }
 
-            var result = new ActivityResult<TCategory>();
+            var result = new CommandResult<TCategory>();
 
             // Ensure the role exists
             var existingRole = await _roleStore.GetByNameAsync(roleName);
             if (existingRole == null)
             {
-                return result.Failed(new ActivityError($"A role with the name {roleName} could not be found"));
+                return result.Failed(new CommandError($"A role with the name {roleName} could not be found"));
             }
 
             // Ensure supplied role name is not already associated with the category
@@ -244,7 +242,7 @@ namespace Plato.Categories.Services
                 {
                     if (role.RoleName.Equals(roleName, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        return result.Failed(new ActivityError($"A role with the name '{roleName}' is already associated with the category '{model.Name}'"));
+                        return result.Failed(new CommandError($"A role with the name '{roleName}' is already associated with the category '{model.Name}'"));
                     }
                 }
             }
@@ -264,11 +262,11 @@ namespace Plato.Categories.Services
                 return result.Success();
             }
 
-            return result.Failed(new ActivityError($"An unknown error occurred whilst attempting to add role '{existingRole.Name}' for category '{model.Name}'"));
+            return result.Failed(new CommandError($"An unknown error occurred whilst attempting to add role '{existingRole.Name}' for category '{model.Name}'"));
 
         }
 
-        public async Task<IActivityResult<TCategory>> RemoveFromRoleAsync(TCategory model, string roleName)
+        public async Task<ICommandResult<TCategory>> RemoveFromRoleAsync(TCategory model, string roleName)
         {
 
             if (model == null)
@@ -282,13 +280,13 @@ namespace Plato.Categories.Services
             }
             
             // Our result
-            var result = new ActivityResult<TCategory>();
+            var result = new CommandResult<TCategory>();
             
             // Ensure the role exists
             var role = await _roleStore.GetByNameAsync(roleName);
             if (role == null)
             {
-                return result.Failed(new ActivityError($"A role with the name {roleName} could not be found"));
+                return result.Failed(new CommandError($"A role with the name {roleName} could not be found"));
             }
             
             // Attempt to delete the role relationship
@@ -298,7 +296,7 @@ namespace Plato.Categories.Services
                 return result.Success();
             }
             
-            return result.Failed(new ActivityError($"An unknown error occurred whilst attempting to remove role '{role.Name}' for category '{model.Name}'"));
+            return result.Failed(new CommandError($"An unknown error occurred whilst attempting to remove role '{role.Name}' for category '{model.Name}'"));
 
         }
 
@@ -315,7 +313,7 @@ namespace Plato.Categories.Services
                 throw new ArgumentNullException(nameof(roleName));
             }
 
-            var result = new ActivityResult<TCategory>();
+            var result = new CommandResult<TCategory>();
 
             var role = await _roleStore.GetByNameAsync(roleName);
             if (role == null)
@@ -354,7 +352,7 @@ namespace Plato.Categories.Services
 
         }
 
-        public async Task<IActivityResult<TCategory>> Move(TCategory model, MoveDirection direction)
+        public async Task<ICommandResult<TCategory>> Move(TCategory model, MoveDirection direction)
         {
 
             if (model == null)
@@ -363,7 +361,7 @@ namespace Plato.Categories.Services
             }
 
             // Our result
-            var result = new ActivityResult<TCategory>();
+            var result = new CommandResult<TCategory>();
             
             // All categories for supplied category feature
             var categories = await _categoryStore.GetByFeatureIdAsync(model.FeatureId);
@@ -449,7 +447,7 @@ namespace Plato.Categories.Services
 
         }
 
-        async Task<IActivityResult<TCategory>> UpdateSortOrder(TCategory model, int sortOrder)
+        async Task<ICommandResult<TCategory>> UpdateSortOrder(TCategory model, int sortOrder)
         {
             model.SortOrder = sortOrder;
             return await UpdateAsync(model);

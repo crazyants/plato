@@ -112,7 +112,7 @@ $(function (win, doc, $) {
                 params.entityReplyId = this.getEntityReplyId($caller);
 
                 win.$.Plato.Http({
-                    url: "api/reactions/reaction/post",
+                    url: "api/reactions/react/post",
                     method: "POST",
                     data: JSON.stringify(params)
                 }).done(function (data) {

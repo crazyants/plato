@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Reactions.Models
@@ -22,10 +23,6 @@ namespace Plato.Reactions.Models
         
         public Sentiment Sentiment { get; set; }
 
-        public ISimpleUser CreatedBy { get; set; } = new SimpleUser();
-
-        public DateTimeOffset? CreatedDate { get; set; }
-        
         public Reaction()
         {
         }

@@ -26,7 +26,7 @@ namespace Plato.Discuss.Services
 
         #region "Implementation"
 
-        public async Task<IActivityResult<Reply>> CreateAsync(Reply model)
+        public async Task<ICommandResult<Reply>> CreateAsync(Reply model)
         {
 
             _entityReplyManager.Created += (sender, args) =>
@@ -36,7 +36,7 @@ namespace Plato.Discuss.Services
         
         }
         
-        public async Task<IActivityResult<Reply>> UpdateAsync(Reply model)
+        public async Task<ICommandResult<Reply>> UpdateAsync(Reply model)
         {
 
             _entityReplyManager.Updated += (sender, args) =>
@@ -46,7 +46,7 @@ namespace Plato.Discuss.Services
          
         }
         
-        public async Task<IActivityResult<Reply>> DeleteAsync(Reply model)
+        public async Task<ICommandResult<Reply>> DeleteAsync(Reply model)
         {
 
             _entityReplyManager.Updated += (sender, args) =>

@@ -5,26 +5,26 @@ using System.Linq;
 namespace Plato.Internal.Abstractions
 {
     
-    public class ActivityResult<TResponse> : IActivityResult<TResponse> where TResponse : class
+    public class CommandResult<TResponse> : ICommandResult<TResponse> where TResponse : class
     {
         
-        private readonly List<ActivityError> _errors = new List<ActivityError>();
+        private readonly List<CommandError> _errors = new List<CommandError>();
 
         public bool Succeeded { get; protected set; }
 
         public TResponse Response { get; protected set; }
 
-        public IEnumerable<ActivityError> Errors => (IEnumerable<ActivityError>)this._errors;
+        public IEnumerable<CommandError> Errors => (IEnumerable<CommandError>)this._errors;
 
-        public ActivityResult<TResponse> Success()
+        public CommandResult<TResponse> Success()
         {
-            return new ActivityResult<TResponse>()
+            return new CommandResult<TResponse>()
             {
                 Succeeded = true
             };
         }
 
-        public ActivityResult<TResponse> Success(object response)
+        public CommandResult<TResponse> Success(object response)
         {
 
             // No response object just return success
@@ -34,33 +34,33 @@ namespace Plato.Internal.Abstractions
             }
 
             // Cast our generic response object to expected type
-            return new ActivityResult<TResponse>()
+            return new CommandResult<TResponse>()
             {
                 Response = (TResponse)Convert.ChangeType(response, typeof(TResponse)),
                 Succeeded = true
             };
         }
 
-        public ActivityResult<TResponse> Failed(string message)
+        public CommandResult<TResponse> Failed(string message)
         {
-            var result = new ActivityResult<TResponse>()
+            var result = new CommandResult<TResponse>()
             {
                 Succeeded = false
             };
 
-            result._errors.Add(new ActivityError(message));
+            result._errors.Add(new CommandError(message));
 
             return result;
         }
         
-        public ActivityResult<TResponse> Failed(params ActivityError[] errors)
+        public CommandResult<TResponse> Failed(params CommandError[] errors)
         {
-            var result = new ActivityResult<TResponse>()
+            var result = new CommandResult<TResponse>()
             {
                 Succeeded = false
             };
             if (errors != null)
-                result._errors.AddRange((IEnumerable<ActivityError>)errors);
+                result._errors.AddRange((IEnumerable<CommandError>)errors);
             return result;
         }
 
@@ -69,7 +69,7 @@ namespace Plato.Internal.Abstractions
             if (!this.Succeeded)
             {
                 return
-                    $"{(object)"Failed"} : {(object)string.Join(",", (IEnumerable<string>)this.Errors.Select<ActivityError, string>((Func<ActivityError, string>)(x => x.Code)).ToList<string>())}";
+                    $"{(object)"Failed"} : {(object)string.Join(",", (IEnumerable<string>)this.Errors.Select<CommandError, string>((Func<CommandError, string>)(x => x.Code)).ToList<string>())}";
             }
 
             return "Succeeded";
