@@ -50,23 +50,26 @@ namespace Plato.Internal.Layout.TagHelpers
                 var panelTitle = new TagBuilder("div");
                 panelTitle.AddCssClass(cardContext.Title.CssClass);
                 panelTitle.InnerHtml.AppendHtml(cardContext.Title.Content);
-
                 output.Content.AppendHtml(panelTitle);
             }
-
-            // panel body
-            if (cardContext.Body.Content != null && this.Enabled)
+            
+            if (cardContext.Body != null)
             {
-                var panelBody = new TagBuilder("div");
-                panelBody.AddCssClass(cardContext.Body.CssClass);
-                panelBody.InnerHtml.AppendHtml(cardContext.Body.Content);
-                output.Content.AppendHtml(panelBody);
+                // panel body
+                if (cardContext.Body.Content != null && this.Enabled)
+                {
+                    var panelBody = new TagBuilder("div");
+                    panelBody.AddCssClass(cardContext.Body.CssClass);
+                    panelBody.InnerHtml.AppendHtml(cardContext.Body.Content);
+                    output.Content.AppendHtml(panelBody);
+                }
+                else
+                {
+                    output.Content.SetHtmlContent(cardContext.Body.Content);
+                    output.Attributes.Clear();
+                }
             }
-            else
-            {
-                output.Content.SetHtmlContent(cardContext.Body.Content);
-                output.Attributes.Clear();
-            }
+           
 
             // panel footer
             if (cardContext.Footer != null && this.Enabled)

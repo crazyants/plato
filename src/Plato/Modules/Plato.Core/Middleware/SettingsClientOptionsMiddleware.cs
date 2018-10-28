@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Scripting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
 
@@ -50,8 +49,7 @@ namespace Plato.Core.Middleware
             {
                 return null;
             }
-
-
+            
             // Register core client options by extending $.Plato.Options
             // i.e. $.extend($.Plato.Options, newOptions);
             var script = "$(function (win) { $.extend(win.$.Plato.Options, { locale: '{locale}' }); } (window));";

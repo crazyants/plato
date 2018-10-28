@@ -19350,7 +19350,6 @@ $(function (win, doc, $) {
 
     /* Client side localization */
     win.$.Plato.Locale = {
-        lang: "en-US",
         init: function() {
 
             var context = win.$.Plato.Context;
@@ -19360,16 +19359,26 @@ $(function (win, doc, $) {
 
             var opts = context.options();
             if (!opts) {
-                throw new Error("Plato.Locale requires a valid Plato.Options object");
+                throw new Error("Plato.Locale requires a valid $.Plato.Options object");
             }
 
-            var baseUrl = opts.url,
-                defaultLang = opts.lang;
+            context.logger.logInfo("Initializing $.Plato.Locale");
 
-            this.lang = defaultLang;
+            // We need a locale
+            if (opts.locale === "") {
+                context.logger.logError("$.Plato.Locale could not be initialized as the $.Plato.Options.locale property is empty!");
+                return;
+            }
 
-            var url = baseUrl + "js/locale/app." + this.lang + ".js";
-            this.load(url);
+            // We need a url
+            if (opts.url === "") {
+                context.logger.logError("$.Plato.Locale could not be initialized as the $.Plato.Options.url property is empty!");
+                return;
+            }
+
+            var url = opts.url + "js/locale/app." + opts.locale + ".js";
+            context.logger.logInfo("Loading locale: " + url);
+            this._load(url);
 
         },
         get: function (key) {
@@ -19385,7 +19394,7 @@ $(function (win, doc, $) {
             return key;
 
         },
-        load: function (url) {
+        _load: function (url) {
 
             var head = document.getElementsByTagName('head'),
                 buster = parseInt(Math.random() * 1000) + new Date().getTime();
@@ -19395,6 +19404,11 @@ $(function (win, doc, $) {
 
             if (head) {
                 head[0].appendChild(script);
+                context.logger.logInfo("Adding locale (" + url + ") to the head element.");
+            }
+
+            script.onLoad = function() {
+                context.logger.logInfo("Added locale (" + url + ") to the head element.");
             }
         }
     };
@@ -19647,7 +19661,8 @@ $(function (win, doc, $) {
         var context = win.$.Plato.Context;
         context.logger.logInfo("$.Plato.Options = " + JSON.stringify(context.options(), null, "     "));
         $.Plato.UI.init();
-        
+        $.Plato.Locale.init();
+
     });
 
 }(window, document, jQuery));
