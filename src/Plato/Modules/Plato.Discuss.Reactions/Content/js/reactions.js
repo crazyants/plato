@@ -69,7 +69,6 @@ $(function (win, doc, $) {
                                     if (desc) {
                                         $caller.find(".text-muted").text(desc);
                                     }
-
                                 });
                         }
                     }
@@ -112,12 +111,12 @@ $(function (win, doc, $) {
                 params.entityReplyId = this.getEntityReplyId($caller);
 
                 win.$.Plato.Http({
-                    url: "api/reactions/react/post123",
+                    url: "api/reactions/react/post",
                     method: "POST",
                     data: JSON.stringify(params)
                 }).done(function (data) {
-                    // Created
-                    if (data.statusCode === 201) {
+                    // Created or deleted
+                    if (data.statusCode === 201 || data.statusCode === 202) {
                         if (data.result) {
                             methods.build($caller, data.result);
                         }

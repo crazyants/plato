@@ -18864,7 +18864,7 @@ return $;
     // Create the defaults once
     var defaults = {
         element: 'body',
-        position: null,
+        position: "fixed",
         type: "info",
         allow_dismiss: true,
         allow_duplicates: true,
@@ -18872,7 +18872,7 @@ return $;
         showProgressbar: false,
         placement: {
             from: "top",
-            align: "right"
+            align: "center"
         },
         offset: 20,
         spacing: 10,
@@ -19489,6 +19489,10 @@ $(function (win, doc, $) {
                 readUrl(this);
             });
 
+        },
+        notify: function(options, settings) {
+            // Bootstrap notify
+            $.notify(options, settings);
         }
     };
 
@@ -19497,12 +19501,17 @@ $(function (win, doc, $) {
 
         var context = win.$.Plato.Context;
         if (!context) {
-            throw new Error("Plato.Http requires a valid Plato.Context object");
+            throw new Error("$.Plato.Http requires a valid Plato.Context object");
+        }
+
+        var ui = win.$.Plato.UI;
+        if (!ui) {
+            throw new Error("$.Plato.Http requires a valid $.Plato.UI object");
         }
 
         var opts = context.options();
         if (!opts) {
-            throw new Error("Plato.Http requires a valid Plato.Options object");
+            throw new Error("$.Plato.Http requires a valid $.Plato.Options object");
         }
         
         var baseUrl = opts.url,
@@ -19550,17 +19559,13 @@ $(function (win, doc, $) {
                 notify = function(message) {
 
                     // Bootstrap notify
-                    $.notify({
+                    ui.notify({
                             // options
                             message: message
                         },
                         {
                             // settings
                             mouse_over: "pause",
-                            position: "fixed",
-                            placement: {
-                                align: "center"
-                            },
                             type: 'danger',
                             allow_dismiss: true
                         });
@@ -19595,12 +19600,6 @@ $(function (win, doc, $) {
                 };
 
             return {
-                onError: function(onError) {
-                    onError = onError;
-                },
-                onAlways: function(onAlways) {
-                    onAlways = onAlways;
-                },
                 promise: function(config) {
                     return $.ajax(config)
                         .fail(function(xhr, ajaxOptions, thrownError) {

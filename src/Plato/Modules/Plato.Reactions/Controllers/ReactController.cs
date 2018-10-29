@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Reactions.Models;
 using Plato.Reactions.Services;
@@ -41,7 +42,7 @@ namespace Plato.Reactions.Controllers
             var existingReactions = await _entityReactionsStore.SelectEntityReactionsByUserIdAndEntityId(user.Id, model.EntityId);
             if (existingReactions != null)
             {
-                foreach (var reaction in existingReactions)
+                foreach (var reaction in existingReactions.Where(r => r.EntityReplyId == model.EntityReplyId))
                 {
                     if (reaction.ReactionName.Equals(model.ReactionName))
                     {
@@ -57,7 +58,8 @@ namespace Plato.Reactions.Controllers
                 var delete = await _entityReactionMAnager.DeleteAsync(existingReaction);
                 if (delete.Succeeded)
                 {
-                    return base.Created(await _simpleReactionsStore.GetSimpleReactionsAsync(model.EntityId, model.EntityReplyId));
+                    // return 202 accepted to confirm delete
+                    return base.Accepted(await _simpleReactionsStore.GetSimpleReactionsAsync(model.EntityId, model.EntityReplyId));
                 }
             }
             
@@ -67,7 +69,8 @@ namespace Plato.Reactions.Controllers
             // Add and return results
             var result = await _entityReactionMAnager.CreateAsync(model);
             if (result.Succeeded)
-            {
+            { 
+                // return 201 created
                 return base.Created(await _simpleReactionsStore.GetSimpleReactionsAsync(model.EntityId, model.EntityReplyId));
             }
 

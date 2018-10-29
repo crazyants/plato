@@ -51,6 +51,15 @@ namespace Plato.WebApi.Controllers
             });
         }
 
+        public ObjectResult Accepted(object result)
+        {
+            return new ObjectResult(new
+            {
+                result,
+                StatusCode = HttpStatusCode.Accepted
+            });
+        }
+
         public ObjectResult Result(object result, string message)
         {
             return new ObjectResult(new
