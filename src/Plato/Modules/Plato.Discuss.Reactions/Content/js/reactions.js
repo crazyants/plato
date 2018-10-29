@@ -26,7 +26,8 @@ $(function (win, doc, $) {
                 entityId: 0,
                 entityReplyId: 0,
                 reactionName: ""
-            }
+            },
+            data: {}
         };
 
         var methods = {
@@ -40,10 +41,6 @@ $(function (win, doc, $) {
                     }
                     return;
                 }
-
-                // Set post parameters
-                $caller.data(dataKey).params.entityId = this.getEntityId($caller);
-                $caller.data(dataKey).params.entityReplyId = this.getEntityReplyId($caller);
 
                 // Bind events
                 methods.bind($caller);
@@ -83,7 +80,7 @@ $(function (win, doc, $) {
                                     $(this).tooltip("hide");
                                 }
                                 $caller.data(dataKey).params.reactionName = $(this).attr("data-reaction-name");
-                                methods.update($caller);
+                                methods.post($caller);
                             });
                     }
                 });
@@ -104,7 +101,7 @@ $(function (win, doc, $) {
                 });
 
             },
-            update: function ($caller) {
+            post: function ($caller) {
 
                 var params = $caller.data(dataKey).params;
                 params.entityId = this.getEntityId($caller);
@@ -115,16 +112,18 @@ $(function (win, doc, $) {
                     method: "POST",
                     data: JSON.stringify(params)
                 }).done(function (data) {
-                    // Created or deleted
+                    // Created or deleted response
                     if (data.statusCode === 201 || data.statusCode === 202) {
                         if (data.result) {
-                            methods.build($caller, data.result);
+                            $caller.data(dataKey).data = data.result;
+                            methods.refresh($caller);
                         }
                     }
                 });
             },
-            build: function($caller, results) {
+            refresh: function($caller) {
 
+                var results = $caller.data(dataKey).data;
                 var $target = this.getTarget($caller);
                 if ($target) {
                     $target.empty();
@@ -188,7 +187,6 @@ $(function (win, doc, $) {
                 }
                 return null;
             }
-
         }
 
         return {
@@ -246,16 +244,14 @@ $(function (win, doc, $) {
         }
 
     }();
-
- 
+    
     $.fn.extend({
         reactions: reactions.init
     });
 
     $(doc).ready(function () {
 
-        $('[data-provide="reactions"]')
-            .reactions();
+        $('[data-provide="reactions"]').reactions();
 
     });
 

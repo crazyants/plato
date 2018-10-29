@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Reactions.Models;
 using Plato.Reactions.Stores;
 
@@ -13,13 +14,16 @@ namespace Plato.Reactions.Services
 
         private readonly IContextFacade _contextFacade;
         private readonly IEntityReactionsStore<EntityReaction> _entityReactionsStore;
+        private readonly IBroker _broker;
 
         public EntityReactionsesManager(
             IEntityReactionsStore<EntityReaction> entityReactionsStore,
-            IContextFacade contextFacade)
+            IContextFacade contextFacade,
+            IBroker broker)
         {
             _entityReactionsStore = entityReactionsStore;
             _contextFacade = contextFacade;
+            _broker = broker;
         }
 
         public async Task<ICommandResult<EntityReaction>> CreateAsync(EntityReaction model)
@@ -54,6 +58,15 @@ namespace Plato.Reactions.Services
 
             model.CreatedDate = DateTime.UtcNow;
 
+            // Invoke EntityReactionCreating subscriptions
+            foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
+            {
+                Key = "EntityReactionCreating"
+            }, model))
+            {
+                model = await handler.Invoke(new Message<EntityReaction>(model, this));
+            }
+
             // Create result
             var result = new CommandResult<EntityReaction>();
 
@@ -61,7 +74,18 @@ namespace Plato.Reactions.Services
             var reaction = await _entityReactionsStore.CreateAsync(model);
             if (reaction != null)
             {
+
+                // Invoke EntityReactionCreated subscriptions
+                foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
+                {
+                    Key = "EntityReactionCreated"
+                }, reaction))
+                {
+                    reaction = await handler.Invoke(new Message<EntityReaction>(reaction, this));
+                }
+
                 return result.Success(reaction);
+
             }
 
             return result.Failed($"An unknown error occurred whilst attempting to create a reaction");
@@ -92,8 +116,14 @@ namespace Plato.Reactions.Services
                 throw new ArgumentNullException(nameof(model.ReactionName));
             }
 
-            // Update modified 
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            // Invoke EntityReactionUpdating subscriptions
+            foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
+            {
+                Key = "EntityReactionUpdating"
+            }, model))
+            {
+                model = await handler.Invoke(new Message<EntityReaction>(model, this));
+            }
 
             // Create result
             var result = new CommandResult<EntityReaction>();
@@ -102,7 +132,18 @@ namespace Plato.Reactions.Services
             var reaction = await _entityReactionsStore.UpdateAsync(model);
             if (reaction != null)
             {
+
+                // Invoke EntityReactionUpdated subscriptions
+                foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
+                {
+                    Key = "EntityReactionUpdated"
+                }, reaction))
+                {
+                    reaction = await handler.Invoke(new Message<EntityReaction>(reaction, this));
+                }
+
                 return result.Success(reaction);
+
             }
 
             return result.Failed($"An unknown error occurred whilst attempting to update a reaction");
@@ -118,16 +159,38 @@ namespace Plato.Reactions.Services
                 throw new ArgumentNullException(nameof(model));
             }
 
+            // Invoke EntityReactionDeleting subscriptions
+            foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
+            {
+                Key = "EntityReactionDeleting"
+            }, model))
+            {
+                model = await handler.Invoke(new Message<EntityReaction>(model, this));
+            }
+
             var result = new CommandResult<EntityReaction>();
 
             var success = await _entityReactionsStore.DeleteAsync(model);
             if (success)
             {
+
+                // Invoke EntityReactionDeleted subscriptions
+                foreach (var handler in _broker.Pub<EntityReaction>(this, new MessageOptions()
+                {
+                    Key = "EntityReactionDeleted"
+                }, model))
+                {
+                    model = await handler.Invoke(new Message<EntityReaction>(model, this));
+                }
+
                 return result.Success(model);
+
             }
 
             return result.Failed(new CommandError("An unknown error occurred whilst attempting to delete the reoaction."));
 
         }
+
     }
+
 }

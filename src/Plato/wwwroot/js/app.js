@@ -19686,8 +19686,8 @@ $(function (win, doc, $) {
 
         var context = win.$.Plato.Context;
         context.logger.logInfo("$.Plato.Options = " + JSON.stringify(context.options(), null, "     "));
-        $.Plato.UI.init();
-        $.Plato.Locale.init();
+        win.$.Plato.UI.init();
+        win.$.Plato.Locale.init();
 
     });
 

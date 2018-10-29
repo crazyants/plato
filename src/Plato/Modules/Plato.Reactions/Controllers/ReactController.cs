@@ -13,11 +13,11 @@ namespace Plato.Reactions.Controllers
     {
 
         private readonly IEntityReactionsManager<EntityReaction> _entityReactionMAnager;
-        private readonly ISimpleReactionsStore<ReactionEntry> _simpleReactionsStore;
+        private readonly ISimpleReactionsStore _simpleReactionsStore;
         private readonly IEntityReactionsStore<EntityReaction> _entityReactionsStore;
 
         public ReactController(
-            ISimpleReactionsStore<ReactionEntry> simpleReactionsStore,
+            ISimpleReactionsStore simpleReactionsStore,
             IEntityReactionsManager<EntityReaction> entityReactionMAnager,
             IEntityReactionsStore<EntityReaction> entityReactionsStore)
         {

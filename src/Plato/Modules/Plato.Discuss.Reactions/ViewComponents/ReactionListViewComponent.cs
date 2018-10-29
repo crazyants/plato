@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
 using Plato.Discuss.Reactions.ViewModels;
-using Plato.Reactions.Models;
 using Plato.Reactions.Stores;
 
 namespace Plato.Discuss.Reactions.ViewComponents
@@ -11,10 +10,10 @@ namespace Plato.Discuss.Reactions.ViewComponents
     public class ReactionListViewComponent : ViewComponent
     {
 
-        private readonly ISimpleReactionsStore<ReactionEntry> _simpleReactionsStore;
+        private readonly ISimpleReactionsStore _simpleReactionsStore;
 
         public ReactionListViewComponent(
-            ISimpleReactionsStore<ReactionEntry> simpleReactionsStore)
+            ISimpleReactionsStore simpleReactionsStore)
         {
             _simpleReactionsStore = simpleReactionsStore;
         }

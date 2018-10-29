@@ -78,8 +78,7 @@ namespace Plato.WebApi.Controllers
                 Message = message
             });
         }
-
-
+        
         public ObjectResult NoResults()
         {
             return new ObjectResult(new
@@ -88,7 +87,6 @@ namespace Plato.WebApi.Controllers
                 Message = "No results found."
             });
         }
-
-
+        
     }
 }

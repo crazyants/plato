@@ -4,7 +4,7 @@ using Plato.Reactions.Models;
 
 namespace Plato.Reactions.Stores
 {
-    public interface ISimpleReactionsStore<TReaction> where TReaction : class, IReactionEntry
+    public interface ISimpleReactionsStore
     {
 
         Task<IEnumerable<SimpleReaction>> GetSimpleReactionsAsync(int entityId, int entityReplyId);

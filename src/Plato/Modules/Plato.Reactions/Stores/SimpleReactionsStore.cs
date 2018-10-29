@@ -13,7 +13,7 @@ using Plato.Reactions.Services;
 namespace Plato.Reactions.Stores
 {
 
-    public class SimpleSimpleReactionsStore<TReaction> : ISimpleReactionsStore<TReaction> where TReaction : class, IReactionEntry
+    public class SimpleReactionsStore : ISimpleReactionsStore
     {
 
         // Maximum number of users to show within the tooltip text
@@ -23,7 +23,7 @@ namespace Plato.Reactions.Stores
         private readonly IReactionsManager<Reaction> _reactionManager;
         private readonly IEntityReactionsStore<EntityReaction> _entityReactionStore;
 
-        public SimpleSimpleReactionsStore(
+        public SimpleReactionsStore(
             IReactionsManager<Reaction> reactionManager,
             IEntityReactionsStore<EntityReaction> entityReactionStore,
             IStringLocalizer localizer)
