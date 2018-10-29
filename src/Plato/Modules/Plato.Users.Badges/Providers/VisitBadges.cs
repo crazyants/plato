@@ -14,16 +14,16 @@ namespace Plato.Users.Badges.Providers
     {
 
         public static readonly Badge NewMember =
-            new Badge("New Comer", "Hi, I'm new here", "fal fa-at", BadgeLevel.Bronze, Awarder());
+            new Badge("New Comer", "I'm new here", "fal fa-at", BadgeLevel.Bronze, Awarder());
         
         public static readonly Badge BronzeVisitor =
-            new Badge("Getting into this", "I'm starting to like this", "fal fa-heart", BadgeLevel.Bronze, 5, 10, Awarder());
+            new Badge("Getting into this", "Starting to like this", "fal fa-heart", BadgeLevel.Bronze, 5, 10, Awarder());
 
         public static readonly Badge SilverVisitor =
-            new Badge("I'm a regular here", "I can't kep away", "fal fa-splotch", BadgeLevel.Silver, 10, 20, Awarder());
+            new Badge("I'm a regular here", "Can't kep away", "fal fa-splotch", BadgeLevel.Silver, 10, 20, Awarder());
 
         public static readonly Badge GoldVisitor =
-            new Badge("I may be obsessed", "I'm here all the time", "fal fa-rocket", BadgeLevel.Gold, 20, 30, Awarder());
+            new Badge("I may be obsessed", "Here all the time", "fal fa-rocket", BadgeLevel.Gold, 20, 30, Awarder());
         
         public IEnumerable<Badge> GetBadges()
         {
@@ -36,8 +36,7 @@ namespace Plato.Users.Badges.Providers
             };
 
         }
-
-      
+        
         private static Action<IBadgeAwarderContext> Awarder()
         {
 

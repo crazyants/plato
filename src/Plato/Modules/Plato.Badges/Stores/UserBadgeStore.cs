@@ -123,7 +123,7 @@ namespace Plato.Badges.Stores
             });
         }
 
-        public async Task<IEnumerable<Badge>> GetUserBadgesAsync(int userId)
+        public async Task<IEnumerable<BadgeEntry>> GetUserBadgesAsync(int userId)
         {
             var badges = _badgesManager.GetBadges();
             if (badges == null)
@@ -145,7 +145,7 @@ namespace Plato.Badges.Stores
                 .OrderBy("Id", OrderBy.Asc)
                 .ToList();
           
-            var output = new List<Badge>();
+            var output = new List<BadgeEntry>();
             if (userBadges != null)
             {
                 foreach (var userBadge in userBadges.Data)
@@ -153,8 +153,10 @@ namespace Plato.Badges.Stores
                     var badge = badgesList.FirstOrDefault(b => b.Name.Equals(userBadge.BadgeName, StringComparison.OrdinalIgnoreCase));
                     if (badge != null)
                     {
-                        badge.AwardedDate = userBadge.CreatedDate;
-                        output.Add(badge);
+                        output.Add(new BadgeEntry(badge)
+                        {
+                            AwardedDate = userBadge.CreatedDate
+                        });
                     }
                 }
             }

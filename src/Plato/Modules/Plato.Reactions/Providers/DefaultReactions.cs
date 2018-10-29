@@ -4,6 +4,7 @@ using Plato.Reactions.Services;
 
 namespace Plato.Reactions.Providers
 {
+
     public class DefaultReactions : IReactionsProvider<Reaction>
     {
 
@@ -36,6 +37,7 @@ namespace Plato.Reactions.Providers
         
         public IEnumerable<Reaction> GetReactions()
         {
+
             return new[]
             {
                 ThumbUp,
@@ -48,6 +50,9 @@ namespace Plato.Reactions.Providers
                 Triumph,
                 Heart
             };
+
         }
+
     }
+
 }

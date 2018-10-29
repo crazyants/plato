@@ -977,7 +977,7 @@
 /* badges */
 /* ------------------------- */
 
-.badges-list {
+.medallion-list {
     display: inline-block;
     min-width: 150px; 
     text-align: center;
@@ -986,26 +986,31 @@
     padding: 0;
 }
 
-.badges-list li {
+.medallion-list li {
     width: 33.333333%;
     float: left;
     margin: 0;
     padding: 0;
 }
 
-.badge { position: relative; text-align: center; }
-.badge .badge-bg { font-size: 50pt;  text-shadow: 1px 1px 1px #888; }
-.badge .badge-icon { font-size: 24pt; z-index: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-shadow: 1px 1px 1px #888; }
+.medallion { position: relative; text-align: center; }
+.medallion .medallion-bg {
+    animation: spinIn 8s linear;
+    transform-origin: center center;
+    animation-iteration-count: infinite;
+    font-size: 55pt; 
+}
+.medallion .medallion-icon { font-size: 28pt; z-index: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-shadow: 1px 1px 1px #888; }
 
-.badge.badge-sm .badge-bg { font-size: 30pt; }
-.badge.badge-sm .badge-icon { font-size: 16pt; }
+.medallion.medallion-sm .medallion-bg { font-size: 30pt; }
+.medallion.medallion-sm .medallion-icon { font-size: 16pt; }
 
-.badge-gold .badge-bg { color: #E9F000; }
-.badge-gold .badge-icon { color: white; }
+.medallion-gold .medallion-bg { color: #E9F000; }
+.medallion-silver .medallion-bg { color: #A8A6A3; }
+.medallion-bronze .medallion-bg {  color: #D0BA00; }
 
-.badge-silver .badge-bg { color: #A8A6A3; }
-.badge-silver .badge-icon { color: white; }
+.medallion-gold .medallion-icon,
+.medallion-silver .medallion-icon,
+.medallion-bronze .medallion-icon { color: white; }
 
-.badge-bronze .badge-bg {  color: #D0BA00; }
-.badge-bronze .badge-icon { color: white; }
-
+.medallion .badge { z-index: 2; position: absolute; right: 0;  }

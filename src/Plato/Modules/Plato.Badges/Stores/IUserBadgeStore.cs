@@ -8,7 +8,7 @@ namespace Plato.Badges.Stores
 {
     public interface IUserBadgeStore<TModel> : IStore<TModel> where TModel : class
     {
-        Task<IEnumerable<Badge>> GetUserBadgesAsync(int userId);
+        Task<IEnumerable<BadgeEntry>> GetUserBadgesAsync(int userId);
 
     }
 

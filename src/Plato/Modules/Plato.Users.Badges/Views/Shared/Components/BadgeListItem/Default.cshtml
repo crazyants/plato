@@ -2,19 +2,21 @@
 
 <div class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0">
     <div class="p-3">
-        <span class="float-right">
-            <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Bonus Points"]">
-                @Model.BonusPoints.ToPrettyInt()
-            </span>
-        </span>
-        <div class="d-inline-block">
-            <div class="badge badge-@Model.Level.ToString().ToLower()">
-                <i class="@Model.BackgroundIconCss badge-bg"></i>
-                <i class="@Model.IconCss badge-icon"></i>
+        <div class="d-block">
+            <div class="d-inline-block">
+                <div class="medallion medallion-@Model.Level.ToString().ToLower()">
+                    @if (Model.BonusPoints > 0)
+                    {
+                        <span class="badge badge-primary" data-toggle="tooltip" title="@T["Bonus Points"]">
+                            @Model.BonusPoints.ToPrettyInt()
+                        </span>
+                    }
+                    <i class="@Model.BackgroundIconCss medallion-bg"></i>
+                    <i class="@Model.IconCss medallion-icon"></i>
+                </div>
             </div>
         </div>
-        <br />
-        <div class="d-inline-block">
+        <div class="d-block my-2">
             <h6>@Model.Name</h6>
             <span class="text-muted">
                 @Model.Description

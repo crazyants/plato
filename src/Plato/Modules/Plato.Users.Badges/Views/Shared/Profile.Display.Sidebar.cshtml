@@ -17,9 +17,9 @@
         foreach (var badge in badgesList.OrderByDescending(b => b.AwardedDate).Take(3))
         {
             <div class="d-inline-block" data-toggle="tooltip" title="@badge.Name">
-                <div class="badge badge-sm badge-@badge.Level.ToString().ToLower()">
-                    <i class="@badge.BackgroundIconCss badge-bg"></i>
-                    <i class="@badge.IconCss badge-icon"></i>
+                <div class="medallion medallion-sm medallion-@badge.Level.ToString().ToLower()">
+                    <i class="@badge.BackgroundIconCss medallion-bg"></i>
+                    <i class="@badge.IconCss medallion-icon"></i>
                 </div>
             </div>
         }
