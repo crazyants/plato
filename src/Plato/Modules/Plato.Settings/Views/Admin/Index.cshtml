@@ -47,6 +47,19 @@
                             asp-for="DateTimeFormat"
                             asp-items="@Model.AvailableDateTimeFormat"></select>
                 </div>
+                
+                <div class="form-group" asp-validation-class-for="TimeZone">
+                    <label asp-for="DateTimeFormat">
+                        <strong>@T["Language"]</strong>
+                        <span asp-validation-for="DateTimeFormat" class="text-danger"></span>
+                        <br />
+                        <span class="text-muted">@T["Customize the default language for Plato."]</span>
+                    </label>
+                    <select class="form-control"
+                            asp-for="Culture"
+                            asp-items="@Model.AvailableCultures"></select>
+                </div>
+
             </fieldset>
             
         </card-body>

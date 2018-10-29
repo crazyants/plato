@@ -26,6 +26,7 @@ namespace Plato.Settings.Controllers
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly ITimeZoneProvider _timeZoneProvider;
+        private readonly ILocaleProvider _localeProvider;
 
         public IHtmlLocalizer T { get; }
 
@@ -39,12 +40,14 @@ namespace Plato.Settings.Controllers
             IAlerter alerter,
             ISiteSettingsStore siteSettingsStore,
             IBreadCrumbManager breadCrumbManager,
-            ITimeZoneProvider timeZoneProvider)
+            ITimeZoneProvider timeZoneProvider,
+            ILocaleProvider localeProvider)
         {
             _alerter = alerter;
             _siteSettingsStore = siteSettingsStore;
             _breadCrumbManager = breadCrumbManager;
             _timeZoneProvider = timeZoneProvider;
+            _localeProvider = localeProvider;
             _authorizationService = authorizationService;
 
             T = htmlLocalizer;
@@ -127,6 +130,7 @@ namespace Plato.Settings.Controllers
                 settings.SiteName = viewModel.SiteName;
                 settings.TimeZone = viewModel.TimeZone;
                 settings.DateTimeFormat = viewModel.DateTimeFormat;
+                settings.Culture = viewModel.Culture;
             }
             else
             {
@@ -135,7 +139,8 @@ namespace Plato.Settings.Controllers
                 {
                     SiteName = viewModel.SiteName,
                     TimeZone = viewModel.TimeZone,
-                    DateTimeFormat = viewModel.DateTimeFormat
+                    DateTimeFormat = viewModel.DateTimeFormat,
+                    Culture = viewModel.Culture
                 };
             }
         
@@ -169,8 +174,10 @@ namespace Plato.Settings.Controllers
                     SiteName = settings.SiteName,
                     TimeZone = settings.TimeZone,
                     DateTimeFormat = settings.DateTimeFormat,
+                    Culture = settings.Culture,
                     AvailableTimeZones = await GetAvailableTimeZonesAsync(),
-                    AvailableDateTimeFormat = GetAvaialbleDateTimeFormats()
+                    AvailableDateTimeFormat = GetAvaialbleDateTimeFormats(),
+                    AvailableCultures = await GetAvailableCulturesAsync()
                 };
             }
             
@@ -232,6 +239,41 @@ namespace Plato.Settings.Controllers
             }
 
             return timeZones;
+        }
+
+        async Task<IEnumerable<SelectListItem>> GetAvailableCulturesAsync()
+        {
+            // Build timezones 
+            var locales = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = S["-"],
+                    Value = ""
+                }
+            };
+
+            // From all locale descriptors get a unique list of supported culture cdes
+            var uniqueLocales = new List<string>();
+            var localeDescriptors = await _localeProvider.GetLocalesAsync();
+            foreach (var localDescriptor in localeDescriptors)
+            {
+                if (!uniqueLocales.Contains(localDescriptor.Descriptor.Name))
+                {
+                    uniqueLocales.Add(localDescriptor.Descriptor.Name);
+                }
+            }
+
+            foreach (var locale in uniqueLocales)
+            {
+                locales.Add(new SelectListItem
+                {
+                    Text = locale,
+                    Value = locale
+                });
+            }
+
+            return locales;
         }
 
         #endregion

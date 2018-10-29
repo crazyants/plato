@@ -19335,22 +19335,10 @@ $(function (win, doc, $) {
             return 0;
         }
     };
-    
-    // access to options & core functionality
-    win.$.Plato.Context = {
-        options: function() {
-            // Extend the options if external options exist
-            if (typeof window.PlatoOptions !== "undefined") {
-                $.extend(true, $.Plato.Options, window.PlatoOptions);
-            }
-            return $.Plato.Options;
-        },
-        logger: $.Plato.Logger
-    };
 
     /* Client side localization */
     win.$.Plato.Locale = {
-        init: function() {
+        init: function () {
 
             var context = win.$.Plato.Context;
             if (!context) {
@@ -19376,27 +19364,30 @@ $(function (win, doc, $) {
                 return;
             }
 
-            var url = opts.url + "js/locale/app." + opts.locale + ".js";
+            var baseUrl = opts.url;
+
+            // append a forward slash
+            if (baseUrl.substring(baseUrl.length - 1, baseUrl.length) !== "/") {
+                baseUrl = baseUrl + "/";
+            }
+
+            var url = baseUrl + "js/app/locale/app." + opts.locale + ".js";
             context.logger.logInfo("Loading locale: " + url);
             this._load(url);
 
         },
         get: function (key) {
-
-            var strings = win.$.Plato.Strings,
-                lang = this.lang;
+            var strings = win.$.Plato.Strings;
             if (typeof strings !== 'undefined' &&
-                typeof strings[lang] !== 'undefined' &&
-                typeof strings[lang][key] !== 'undefined') {
-                return messages[language][key];
+                typeof strings[key] !== 'undefined') {
+                return strings[key];
             }
-
             return key;
-
         },
         _load: function (url) {
 
-            var head = document.getElementsByTagName('head'),
+            var context = win.$.Plato.Context,
+                head = document.getElementsByTagName('head'),
                 buster = parseInt(Math.random() * 1000) + new Date().getTime();
 
             var script = document.createElement('script');
@@ -19407,12 +19398,25 @@ $(function (win, doc, $) {
                 context.logger.logInfo("Adding locale (" + url + ") to the head element.");
             }
 
-            script.onLoad = function() {
+            script.onLoad = function () {
                 context.logger.logInfo("Added locale (" + url + ") to the head element.");
             }
         }
     };
 
+    // access to options & core functionality
+    win.$.Plato.Context = {
+        options: function() {
+            // Extend the options if external options exist
+            if (typeof window.PlatoOptions !== "undefined") {
+                $.extend(true, $.Plato.Options, window.PlatoOptions);
+            }
+            return $.Plato.Options;
+        },
+        logger: $.Plato.Logger,
+        localizer: $.Plato.Locale
+    };
+    
     /* Plato UI */
     win.$.Plato.UI = {
         context: win.$.Plato.Context,
@@ -19501,7 +19505,7 @@ $(function (win, doc, $) {
         if (!opts) {
             throw new Error("Plato.Http requires a valid Plato.Options object");
         }
-
+        
         var baseUrl = opts.url,
             virtualUrl = config.url;
    
@@ -19539,26 +19543,25 @@ $(function (win, doc, $) {
         var http = (function() {
 
             var onError = function(config, xhr, ajaxOptions, thrownError) {
-                    if (context) {
-                        context.logger.logInfo("$.Plato.Http - Error: " +
-                            JSON.stringify(xhr, null, "     ") +
-                            thrownError);
+                    
+                    context.logger.logInfo("$.Plato.Http - Error: " +
+                        JSON.stringify(xhr, null, "     ") +
+                        thrownError);
 
-                        $.notify({
-                                // options
-                                message: 'Hello World'
+                    $.notify({
+                            // options
+                            message: context.localizer.get("Error")
+                        },
+                        {
+                            // settings
+                            position: "fixed",
+                            placement: {
+                                align: "center"
                             },
-                            {
-                                // settings
-                                position: "fixed",
-                                placement: {
-                                    align: "center"
-                                },
-                                type: 'danger',
-                                allow_dismiss: true
-                            });
+                            type: 'danger',
+                            allow_dismiss: true
+                        });
 
-                    }
                 },
                 onAlways = function(xhr, textStatus) {
                     if (context) {
