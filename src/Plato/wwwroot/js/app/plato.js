@@ -89,7 +89,7 @@ $(function (win, doc, $) {
 
             var opts = context.options();
             if (!opts) {
-                throw new Error("Plato.Locale requires a valid $.Plato.Options object");
+                throw new Error("$.Plato.Locale requires a valid $.Plato.Options object");
             }
 
             context.logger.logInfo("Initializing $.Plato.Locale");
@@ -106,11 +106,10 @@ $(function (win, doc, $) {
                 return;
             }
 
+            // append a forward slash if needed
             var baseUrl = opts.url;
-
-            // append a forward slash
             if (baseUrl.substring(baseUrl.length - 1, baseUrl.length) !== "/") {
-                baseUrl = baseUrl + "/";
+                baseUrl += "/";
             }
 
             var url = baseUrl + "js/app/locale/app." + opts.locale + ".js";
@@ -284,18 +283,22 @@ $(function (win, doc, $) {
 
         var http = (function() {
 
-            var onError = function(config, xhr, ajaxOptions, thrownError) {
-                    
-                    context.logger.logInfo("$.Plato.Http - Error: " +
-                        JSON.stringify(xhr, null, "     ") +
-                        thrownError);
+            var getHtmlErrorMessage = function(err) {
+                    var s = '<h6>' + context.localizer.get("An error occurred!") + '</h6>';
+                    s += context.localizer.get("Information is provided below...") + "<br/><br/>";
+                    s += '<textarea style="min-height: 130px;" class="form-control">' + err + '</textarea>';
+                    return s;
+                },
+                notify = function(message) {
 
+                    // Bootstrap notify
                     $.notify({
                             // options
-                            message: context.localizer.get("Error")
+                            message: message
                         },
                         {
                             // settings
+                            mouse_over: "pause",
                             position: "fixed",
                             placement: {
                                 align: "center"
@@ -305,11 +308,32 @@ $(function (win, doc, $) {
                         });
 
                 },
+                onError = function(config, xhr, ajaxOptions, thrownError) {
+
+                    // Error details
+                    var err = "$.Plato.Http - " +
+                        thrownError +
+                        "\n" +
+                        JSON.stringify(xhr, null, "     ");
+
+                    // Log
+                    context.logger.logError(err);
+
+                    // Notify
+                    notify(getHtmlErrorMessage(err));
+
+                },
                 onAlways = function(xhr, textStatus) {
-                    if (context) {
-                        context.logger.logInfo("$.Plato.Http - Completed: " +
-                            JSON.stringify(xhr, null, "     "));
+
+                    // Display a visual indicator if the request fails due to authentication
+                    if (xhr.statusCode === 401) {
+                        notify("<h6>" + context.localizer.get("Could not authenticate your request!") + "</h6>");
                     }
+
+                    // Log
+                    context.logger.logInfo("$.Plato.Http - Completed: " +
+                        JSON.stringify(xhr, null, "     "));
+
                 };
 
             return {
