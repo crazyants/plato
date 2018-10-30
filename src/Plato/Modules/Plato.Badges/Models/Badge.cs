@@ -188,7 +188,19 @@ namespace Plato.Badges.Models
         {
             this.Awarder = awarder;
         }
-        
+
+        public Badge(
+            string name,
+            string description,
+            string iconCss,
+            BadgeLevel level,
+            int threshold,
+            Action<IBadgeAwarderContext> awarder) : this(name, description, "fas fa-badge", iconCss, level, threshold)
+        {
+            this.Awarder = awarder;
+        }
+
+
         public Badge(
             string name,
             string description,

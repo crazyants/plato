@@ -8,7 +8,7 @@ using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
 
-namespace Plato.Users.Badges.Providers
+namespace Plato.Users.Badges
 {
     public class VisitBadges : IBadgesProvider<Badge>
     {

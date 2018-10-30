@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Badges.Models;
+using Plato.Badges.Services;
 using Plato.Discuss.Reactions.Handlers;
 using Plato.Discuss.Reactions.Navigation;
 using Plato.Internal.Assets.Abstractions;
@@ -37,6 +39,9 @@ namespace Plato.Discuss.Reactions
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
 
+            // Badge providers
+            services.AddScoped<IBadgesProvider<Badge>, ReactionBadges>();
+            
         }
 
         public override void Configure(

@@ -10,5 +10,9 @@ Dependencies:
 	{
 		Id: "Plato.Reactions",
 		Version: "1.0.0"
+	},
+	{
+		Id: "Plato.Badges",
+		Version: "1.0.0"
 	}
 ]
