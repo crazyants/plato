@@ -25,21 +25,17 @@ namespace Plato.Internal.Stores.Users
         private readonly IUserDataRepository<UserData> _userDataRepository;
         private readonly ILogger<UserDataStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
-        private readonly ITypedModuleProvider _typedModuleProvider;
-
-
+   
         public UserDataStore(
             ICacheManager cacheManager,
             IUserDataRepository<UserData> userDataRepository,
             ILogger<UserDataStore> logger,
-            IDbQueryConfiguration dbQuery,
-            ITypedModuleProvider typedModuleProvider)
+            IDbQueryConfiguration dbQuery)
         {
             _cacheManager = cacheManager;
             _userDataRepository = userDataRepository;
             _logger = logger;
             _dbQuery = dbQuery;
-            _typedModuleProvider = typedModuleProvider;
         }
         
         public async Task<UserData> CreateAsync(UserData model)

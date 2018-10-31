@@ -10,7 +10,6 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Users.Badges.Navigation;
-using Plato.Users.Badges.Providers;
 using Plato.Users.Badges.ViewProviders;
 
 namespace Plato.Users.Badges

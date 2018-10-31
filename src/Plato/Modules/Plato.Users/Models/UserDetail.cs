@@ -1,9 +1,10 @@
-﻿using Plato.Internal.Abstractions;
+﻿using System.Collections.Generic;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Users.Models
 {
-    
+
     public class UserDetail : Serializable
     {
 
@@ -15,11 +16,16 @@ namespace Plato.Users.Models
 
     public class SettingsData : Serializable
     {
-        //public string TimeZone { get; set; }
+        private IEnumerable<SettingData> Settings { get; set; } = new List<SettingData>();
 
-        //public bool ObserveDst { get; set; }
+    }
 
-        //public string Culture { get; set; }
+    public class SettingData : Serializable
+    {
+
+        public string Key { get; set; }
+
+        public object Value { get; set; }
 
     }
 
@@ -31,7 +37,7 @@ namespace Plato.Users.Models
         public string Bio { get; set; }
 
         public string Url { get; set; }
-        
+
     }
 
 

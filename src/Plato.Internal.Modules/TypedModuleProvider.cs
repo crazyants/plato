@@ -72,20 +72,6 @@ namespace Plato.Internal.Modules
         public async Task<Type> GetTypeCandidateAsync(string typeName, Type baseType)
         {
 
-            //var assemblies = DependencyContext.Default.RuntimeLibraries;
-            //foreach (var candidate in assemblies
-            //    .Where(a => baseType.IsAssignableFrom())
-            //    .Select(t => t.Key.GetTypeInfo()))
-            //{
-            //    if (candidate.GetTypeInfo().FullName == typeName)
-            //    {
-            //        return candidate.AsType();
-            //    }
-            //}
-
-            // If type is not found within DI attempt to 
-            // locate the type within dynamically loaded modules
-
             await BuildTypedProvider();
 
             foreach (var candidate in _modules
