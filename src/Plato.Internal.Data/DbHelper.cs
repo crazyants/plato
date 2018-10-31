@@ -33,7 +33,7 @@ namespace Plato.Internal.Data
         #region "Implementation"
 
         /// <summary>
-        /// Unsafe SQL execution. Use only if you can guarantee the safely of the supplied TSQL code.
+        /// Unsafe SQL execution. Use only if you can guarantee the safety of the supplied TSQL code.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sql"></param>
@@ -52,9 +52,9 @@ namespace Plato.Internal.Data
 
             return output;
         }
-        
+
         /// <summary>
-        /// Unsafe SQL execution. Use only if you can guarantee the safely of the supplied TSQL code.
+        /// Unsafe SQL execution. Use only if you can guarantee the safety of the supplied TSQL code.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sql"></param>
@@ -66,7 +66,7 @@ namespace Plato.Internal.Data
         }
 
         /// <summary>
-        /// Unsafe SQL execution. Use only if you can guarantee the safely of the supplied TSQL code.
+        /// Unsafe SQL execution. Use only if you can guarantee the safety of the supplied TSQL code.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sql"></param>
@@ -89,7 +89,7 @@ namespace Plato.Internal.Data
         }
 
         /// <summary>
-        /// Unsafe SQL execution. Use only if you can guarantee the safely of the supplied TSQL code.
+        /// Unsafe SQL execution. Use only if you can guarantee the safety of the supplied TSQL code.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sql"></param>

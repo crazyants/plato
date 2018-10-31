@@ -104,12 +104,12 @@ namespace Plato.Users.Badges
                     DECLARE @threshold int = {threshold};                  
                     DECLARE @userId int;
                     DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 ud.UserId FROM {prefix}_UserData AS ud
-                    WHERE (ud.Key = '{key}')
+                    WHERE (ud.[Key] = '{key}')
                     AND NOT EXISTS (
 		                     SELECT Id FROM {prefix}_UserBadges ub 
 		                     WHERE ub.UserId = ud.UserId AND ub.BadgeName = @badgeName
 	                    )
-                    ORDER BY ud.Id DESC;
+                    ORDER BY ud.CreatedDate DESC;
                     
                     OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
                     WHILE @@FETCH_STATUS = 0
@@ -139,7 +139,7 @@ namespace Plato.Users.Badges
                         cacheManager.CancelTokens(typeof(UserBadgeStore));
                     }
 
-                }, 240 * 1000);
+                }, 60 * 1000);
 
             };
 
