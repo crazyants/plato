@@ -9,11 +9,11 @@
                     child-ul-css-class="dropdown-menu" />
     </card-title>
     <card-body>
-        <div class="user-content">
+        <div class="markdown-body">
             @Html.Raw(@Model.Entity.Html)
         </div>
     </card-body>
-    <card-footer class="card-footer p-0">
+    <card-footer class="card-footer  p-0">
         <navigation name="topic-footer"
                     model="@Model.Entity"
                     class="nav navbar p-0"
@@ -49,7 +49,7 @@
                                     child-ul-css-class="dropdown-menu" />
                     </card-title>
                     <card-body class="card-body">
-                        <div class="user-content">
+                        <div class="markdown-body">
                             @Html.Raw(reply.Html)
                         </div>
                     </card-body>

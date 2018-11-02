@@ -493,7 +493,7 @@
 
             var previewTabBody = $("<div/>",
                 {
-                    'class': 'tab-pane md-preview user-content',
+                    'class': 'tab-pane md-preview markdown-body',
                     'role': 'tabpanel',
                     'id': 'previewTab' + editorId
                 });
@@ -594,6 +594,7 @@
                 editor.append(tabBody);
 
             } else {
+
                 var rawContent = (typeof toMarkdown == 'function') ? toMarkdown(container.html()) : container.html(),
                     currentContent = $.trim(rawContent);
 

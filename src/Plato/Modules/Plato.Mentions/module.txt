@@ -1,0 +1,14 @@
+Name: Plato Mentions
+Description: Adds core functionality to support user mentions.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Core
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.WebAPI",
+		Version: "1.0.0"
+	}
+]
