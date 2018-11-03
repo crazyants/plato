@@ -16,8 +16,7 @@
 
             <card>
                 <card-body>
-
-
+                    
                     <input type="hidden" asp-for="EntityId"/>
 
                     @await DisplayAsync(new View("Editor", new
@@ -27,9 +26,7 @@
                         htmlName = @Model.EditorHtmlName,
                         autoFocus = false
                     }))
-
-
-
+                    
                 </card-body>
             </card>
 

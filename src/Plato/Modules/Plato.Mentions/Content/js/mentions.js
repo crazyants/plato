@@ -18,7 +18,26 @@ $(function (win, doc, $) {
         var dataKey = "mentions",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {};
+        var defaults = {
+            keys: [
+                {
+                    which: 35, // #
+                    callback: function($input) {
+
+                        //$input.userAutoComplete();
+                        console.log("# was pressed");
+                    }
+                },
+                {
+                    which: 64, // @
+                    callback: function($input) {
+
+                        $input.userAutoComplete();
+                        console.log("@ was pressed");
+                    }
+                }
+            ]
+        };
 
         var methods = {
             init: function ($caller, methodName) {
@@ -36,15 +55,16 @@ $(function (win, doc, $) {
             },
             bind: function($caller) {
 
-                $caller.keypress(function (e) {
+                var key = null,
+                    keys = $caller.data(dataKey).keys;
 
-                    console.log(e.which)
-                    if (e.which === 64) {
-                        console.log($caller.val());
+                $caller.keypress(function(e) {
+                    for (var i = 0; i < keys.length; i++) {
+                        key = keys[i];
+                        if (e.which === key.which) {
+                            key.callback($(this));
+                        }
                     }
-                    
-
-
                 });
 
             }

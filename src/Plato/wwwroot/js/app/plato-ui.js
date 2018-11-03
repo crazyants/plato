@@ -411,54 +411,48 @@ $(function (win, doc, $) {
 
     }();
 
-    /* autoComplete */
-    var autoComplete = function () {
+    /* pagedList */
+    var pagedList = function () {
 
-        var dataKey = "autoComplete",
+        var dataKey = "pagedList",
             dataIdKey = dataKey + "Id";
-
+        
         var defaults = {
             page: 1,
             pageSize: 10,
-            config: { }, // optional configuration options for ajax request
+            config: {}, // optional configuration options for ajax request
             target: null, // optional target selector for auto complete results. if no target a dropdown-menu is used
             enablePaging: true, // indicates if paging should be enabled for results
-            alwaysShow: true, // if true the autocomplete results will be displayed even if no results are returned from the server, if false the dropdown is only shown if results are returned
-            onShow: null, // triggers when the autocomplete target is displayed
-            onHide: null, // triggers when the autocomplete target is hidden
-            onLoad: function ($caller, $target, results) {
-                
+            onLoad: function ($caller, results) {
+
                 if (results) {
 
-                    $target.empty();
-                    
+                    $caller.empty();
+
                     // build results
                     for (var i = 0; i < results.data.length; i++) {
-                        $target.append(this.buildItem($caller, results.data[i]));
+                        $caller.append(this.buildItem($caller, results.data[i]));
                     }
                     // build paging
                     var enablePaging = $caller.data(dataKey).enablePaging;
                     if (enablePaging) {
                         if (results.total > results.size) {
-                            $target.append(this.buildPager($caller, results));
+                            $caller.append(this.buildPager($caller, results));
                         }
                     }
                 } else {
                     // no data
-                    $target.empty().append(this.buildNoResults($caller));
+                    $caller.empty().append(this.buildNoResults($caller));
                 }
-                
+
                 if ($caller.data(dataKey).onLoaded) {
                     $caller.data(dataKey).onLoaded($caller, $target);
                 }
-
-                $target.platoUI();
-
+                
             }, // triggers after autocomplete results have finished loading
             onLoaded: null, // triggers after autocomplete results have been added to the dom
-            onKeyDown: null, // triggers for key down events within the autocomplete input element
             onItemClick: null, // event raised when you click an autocomplete result item
-            buildItem: function($caller, result) {
+            buildItem: function ($caller, result) {
 
                 // apply default css
                 var itemTemplate = $caller.data(dataKey).itemTemplate,
@@ -480,7 +474,7 @@ $(function (win, doc, $) {
                 });
                 return $item;
             },
-            buildPager: function($caller, results) {
+            buildPager: function ($caller, results) {
 
                 var $div = $('<div class="d-block">');
                 if (results.page > 1) {
@@ -509,13 +503,13 @@ $(function (win, doc, $) {
                     .addClass("list-group-item list-group-item-action float-left col-3 text-center")
                     .append(icon);
 
-                a.click(function(e) {
+                a.click(function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     if (page > 1) {
                         $caller.autoComplete({
-                                page: page -= 1
-                            },
+                            page: page -= 1
+                        },
                             "update");
                     }
                 });
@@ -526,25 +520,25 @@ $(function (win, doc, $) {
             buildNext: function ($caller, page) {
 
                 var icon = $("<i>").addClass("fa fa-chevron-right");
-             
+
                 var a = $("<a>")
                     .attr("href", "#")
                     .addClass("list-group-item list-group-item-action float-left col-3 text-center")
                     .append(icon);
 
-                a.click(function(e) {
+                a.click(function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     $caller.autoComplete({
-                            page: page += 1
-                        },
+                        page: page += 1
+                    },
                         "update");
                 });
 
                 return a;
 
             },
-            buildNoResults: function($caller) {
+            buildNoResults: function ($caller) {
 
                 var noResultsText = $caller.data(dataKey).noResultsText;
 
@@ -558,7 +552,7 @@ $(function (win, doc, $) {
                 return li;
 
             },
-            buildInfo: function($caller, results) {
+            buildInfo: function ($caller, results) {
 
                 var pages = "{0} of {1}";
                 pages = pages.replace("{0}", results.page);
@@ -570,7 +564,7 @@ $(function (win, doc, $) {
                 }
                 total = total.replace("{0}", results.total);
 
-                
+
                 var $div = $('<div>').addClass("list-group-item float-left col-6 text-center");
                 $div.text(pages + ", " + total);
                 return $div;
@@ -579,6 +573,340 @@ $(function (win, doc, $) {
             itemCss: "dropdown-item", // the CSS to apply to links within the itemTemplate
             itemTemplate:
                 '<a class="{itemCss}" href="{url}"><span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 85%;">{text}</span> <span style="opacity: .7;">@{value}</span><span class="float-right">{rank}</span></a>',
+            parseRequestValue: null, // optional method which can be used to parse the textbox value before passing to our API endpoint
+            parseItemTemplate: function (html, result) {
+
+                if (result.text) {
+                    html = html.replace(/\{text}/g, result.text);
+                }
+                if (result.value) {
+                    html = html.replace(/\{value}/g, result.value);
+                }
+                if (result.url) {
+                    html = html.replace(/\{url}/g, result.url);
+                }
+                if (result.rank) {
+                    if (result.rank > 0) {
+                        html = html.replace(/\{rank}/g,
+                            '<span class="label label-right label-primary">' + result.rank + '%</span>');
+                    } else {
+                        html = html.replace(/\{rank}/g, "");
+                    }
+                } else {
+                    html = html.replace(/\{rank}/g, "");
+                }
+
+                return html;
+
+            }, // provides a method to parse our itemTemplate with data returned from service url
+            loaderTemplate: '<p class="text-center"><i class="fal fa-spinner fa-spin" ></i></p >', // a handlebars style template for auto complete list items
+            noResultsText: "Sorry no results matched your search!", // the text to display when no results are available
+            valueField: "Keywords" // the name of the parameter passed to the server with the input value
+        };
+
+        var methods = {
+            init: function($caller, methodName) {
+
+                if (methodName) {
+                    if (this[methodName] !== null) {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+                
+                // bind events
+                this.bind($caller);
+
+            },
+            bind: function($caller) {
+
+                var config = this.getConfig($caller);
+                win.$.Plato.Http(config).done(function (response) {
+                    if (response.statusCode !== 200) {
+                        return;
+                    }
+                    if ($caller.data(dataKey).onLoad) {
+                        $caller.data(dataKey).onLoad($caller, response.result);
+                    }
+                });
+
+            },
+            getConfig: function ($caller) {
+                
+                var config = $.extend({}, $caller.data(dataKey).config),
+                    url = $caller.data("pagedListUrl") || config.url,
+                    pageIndex = this.getPageIndex($caller) || 1,
+                    pageSize = this.getPageSize($caller) || 10;
+                
+                // set content type for post data
+                if (config.method) {
+                    if (config.method.toUpperCase() === "POST") {
+                        config.headers = {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        };
+                    }
+                }
+
+                // serialize post data 
+                if (typeof config.data !== "string") {
+                    config.data = JSON.stringify(config.data);
+                }
+                
+                if (url) {
+
+                    if (url.indexOf("{page}") >= 0) {
+                        url = url.replace(/\{page}/g, pageIndex);
+                    }
+                    if (url.indexOf("{pageSize}") >= 0) {
+                        url = url.replace(/\{pageSize}/g, pageSize);
+                    }
+                    
+                    config.url = url;
+                }
+
+                return config;
+
+            },
+            setPageIndex: function ($caller, pageIndex) {
+                $caller.data(dataKey).page = pageIndex;
+            },
+            getPageIndex: function ($caller) {
+                return $caller.data("pagedListPageIndex") || $caller.data(dataKey).page;
+            },
+            setPageSize: function ($caller, pageSize) {
+                $caller.data(dataKey).pageSize = pageSize;
+            },
+            getPageSize: function ($caller) {
+                return $caller.data("pagedListPageSize") || $caller.data(dataKey).pageSize;
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).pagedList()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().pagedList()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+
+    /* autoComplete */
+    var autoComplete = function () {
+
+        var dataKey = "autoComplete",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            page: 1,
+            pageSize: 10,
+            config: { }, // optional configuration options for ajax request
+            target: null, // optional target selector for auto complete results. if no target a dropdown-menu is used
+            enablePaging: true, // indicates if paging should be enabled for results
+            alwaysShow: true, // if true the autocomplete results will be displayed even if no results are returned from the server, if false the dropdown is only shown if results are returned
+            onShow: null, // triggers when the autocomplete target is displayed
+            onHide: null, // triggers when the autocomplete target is hidden
+            //onLoad: function ($caller, $target, results) {
+                
+            //    if (results) {
+
+            //        $target.empty();
+                    
+            //        // build results
+            //        for (var i = 0; i < results.data.length; i++) {
+            //            $target.append(this.buildItem($caller, results.data[i]));
+            //        }
+            //        // build paging
+            //        var enablePaging = $caller.data(dataKey).enablePaging;
+            //        if (enablePaging) {
+            //            if (results.total > results.size) {
+            //                $target.append(this.buildPager($caller, results));
+            //            }
+            //        }
+            //    } else {
+            //        // no data
+            //        $target.empty().append(this.buildNoResults($caller));
+            //    }
+                
+            //    if ($caller.data(dataKey).onLoaded) {
+            //        $caller.data(dataKey).onLoaded($caller, $target);
+            //    }
+
+            //    $target.platoUI();
+
+            //}, // triggers after autocomplete results have finished loading
+            //onLoaded: null, // triggers after autocomplete results have been added to the dom
+            onKeyDown: null, // triggers for key down events within the autocomplete input element
+            //onItemClick: null, // event raised when you click an autocomplete result item
+            //buildItem: function($caller, result) {
+
+            //    // apply default css
+            //    var itemTemplate = $caller.data(dataKey).itemTemplate,
+            //        itemCss = $caller.data("autocompleteItemCss") || $caller.data(dataKey).itemCss;
+            //    itemTemplate = itemTemplate.replace(/\{itemCss}/g, itemCss);
+
+            //    // parse template
+            //    if ($caller.data(dataKey) && $caller.data(dataKey).parseItemTemplate) {
+            //        itemTemplate = $caller.data(dataKey).parseItemTemplate(itemTemplate, result);
+            //    }
+
+            //    // bind onItemClick
+
+            //    var $item = $(itemTemplate);
+            //    $item.click(function (e) {
+            //        if ($caller.data(dataKey).onItemClick) {
+            //            $caller.data(dataKey).onItemClick($caller, result, e, $item);
+            //        }
+            //    });
+            //    return $item;
+            //},
+            //buildPager: function($caller, results) {
+
+            //    var $div = $('<div class="d-block">');
+            //    if (results.page > 1) {
+            //        $div.append(this.buildPrev($caller, results.page));
+            //    } else {
+            //        $div.append($('<div class="float-left col-3">'));
+            //    }
+
+            //    $div.append(this.buildInfo($caller, results));
+
+            //    if (results.page < results.totalPages) {
+            //        $div.append(this.buildNext($caller, results.page));
+            //    } else {
+            //        $div.append($('<div class="float-left col-3">'));
+            //    }
+
+
+            //    return $div;
+
+            //},
+            //buildPrev: function ($caller, page) {
+
+            //    var icon = $("<i>").addClass("fa fa-chevron-left");
+            //    var a = $("<a>")
+            //        .attr("href", "#")
+            //        .addClass("list-group-item list-group-item-action float-left col-3 text-center")
+            //        .append(icon);
+
+            //    a.click(function(e) {
+            //        e.preventDefault();
+            //        e.stopPropagation();
+            //        if (page > 1) {
+            //            $caller.autoComplete({
+            //                    page: page -= 1
+            //                },
+            //                "update");
+            //        }
+            //    });
+
+            //    return a;
+
+            //},
+            //buildNext: function ($caller, page) {
+
+            //    var icon = $("<i>").addClass("fa fa-chevron-right");
+             
+            //    var a = $("<a>")
+            //        .attr("href", "#")
+            //        .addClass("list-group-item list-group-item-action float-left col-3 text-center")
+            //        .append(icon);
+
+            //    a.click(function(e) {
+            //        e.preventDefault();
+            //        e.stopPropagation();
+            //        $caller.autoComplete({
+            //                page: page += 1
+            //            },
+            //            "update");
+            //    });
+
+            //    return a;
+
+            //},
+            //buildNoResults: function($caller) {
+
+            //    var noResultsText = $caller.data(dataKey).noResultsText;
+
+            //    var a = $("<div>")
+            //        .addClass("text-center p-4")
+            //        .append(noResultsText);
+
+            //    var li = $('<li class="no-results">');
+            //    li.append(a);
+
+            //    return li;
+
+            //},
+            //buildInfo: function($caller, results) {
+
+            //    var pages = "{0} of {1}";
+            //    pages = pages.replace("{0}", results.page);
+            //    pages = pages.replace("{1}", results.totalPages);
+
+            //    var total = "{0} results";
+            //    if (results.total === 1) {
+            //        total = "{0} result";
+            //    }
+            //    total = total.replace("{0}", results.total);
+
+                
+            //    var $div = $('<div>').addClass("list-group-item float-left col-6 text-center");
+            //    $div.text(pages + ", " + total);
+            //    return $div;
+
+            //},
+            //itemCss: "dropdown-item", // the CSS to apply to links within the itemTemplate
+            //itemTemplate:
+            //    '<a class="{itemCss}" href="{url}"><span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 85%;">{text}</span> <span style="opacity: .7;">@{value}</span><span class="float-right">{rank}</span></a>',
             parseRequestValue:
                 null, // optional method which can be used to parse the textbox value before passing to our API endpoint
             parseItemTemplate: function (html, result) {
@@ -608,8 +936,8 @@ $(function (win, doc, $) {
             }, // provides a method to parse our itemTemplate with data returned from service url
             loaderTemplate:
                 '<p class="text-center"><i class="fal fa-spinner fa-spin" ></i></p >', // a handlebars style template for auto complete list items
-            noResultsText: "Sorry no results matched your search!", // the text to display when no results are available
-            valueField: "Keywords" // the name of the parameter passed to the server with the input value
+            //noResultsText: "Sorry no results matched your search!", // the text to display when no results are available
+            //valueField: "Keywords" // the name of the parameter passed to the server with the input value
         };
 
         var methods = {
@@ -666,7 +994,7 @@ $(function (win, doc, $) {
                         }
                     },
                     onChange: function ($el, e) {
-                        methods.setPageIndex($caller, 1);
+                        //methods.setPageIndex($caller, 1);
                         // !escape && !tab
                         if (e.keyCode !== 27 && e.keyCode !== 9) {
                             if ($el.val().length === 0) {
@@ -703,12 +1031,10 @@ $(function (win, doc, $) {
             show: function ($caller, onShow) {
                 var $target = this.getTarget($caller);
                 if ($target.length > 0) {
-
                     // Allows for initially hidden state
                     if ($target.hasClass("hidden")) {
                         $target.removeClass("hidden");
                     }
-
                     // Show our target
                     if (!$target.hasClass("show")) {
                         $target.addClass("show");
@@ -745,87 +1071,97 @@ $(function (win, doc, $) {
                 }
 
                 // add loader for updates
-                var loaderTemplate = $caller.data(dataKey).loaderTemplate;
-                $target.empty().append(loaderTemplate);
+                var loaderTemplate = $caller.data(dataKey).loaderTemplate,
+                    config = $caller.data(dataKey).config;
                 
-                var page = $caller.data(dataKey).page;
-                if (page) {
-                    this.setPageIndex($caller, page);
-                }
+                $target
+                    .empty()
+                    .append(loaderTemplate)
+                    .pagedList($.extend(
+                        {
+                            page: 1,
+                            config: $.extend(config, {
+                                url: config.url.replace("{keywords}", encodeURIComponent($caller.val()))
+                            })
+                        }, $caller.data(dataKey)));
+
+                //return;
+
+                //var page = $caller.data(dataKey).page;
+                //if (page) {
+                //    this.setPageIndex($caller, page);
+                //}
                 
-                // ---- configure
+                //// ---- configure
 
-                var config = this.getConfig($caller),
-                    val = this.getParsedValue($caller);
+                //var config = this.getConfig($caller),
+                //    val = this.getParsedValue($caller);
                 
-                // ensure we have a parsed search value
-                //if (val === "") { return; }
-
-                // ------ request
+                //// ------ request
                 
-                // set content type for post data
-                if (config.method) {
-                    if (config.method.toUpperCase() === "POST") {
-                        config.headers = {
-                            'Content-Type': 'application/json; charset=utf-8'
-                        };
-                    }
-                }
+                //// set content type for post data
+                //if (config.method) {
+                //    if (config.method.toUpperCase() === "POST") {
+                //        config.headers = {
+                //            'Content-Type': 'application/json; charset=utf-8'
+                //        };
+                //    }
+                //}
 
-                // serialize post data 
-                if (typeof config.data !== "string") {
-                    config.data = JSON.stringify(config.data);
-                }
+                //// serialize post data 
+                //if (typeof config.data !== "string") {
+                //    config.data = JSON.stringify(config.data);
+                //}
 
-                win.$.Plato.Http(config).done(function(response) {
-                    if (response.statusCode !== 200) {
-                        return;
-                    }
-                    if ($caller.data(dataKey).onLoad) {
-                        $caller.data(dataKey).onLoad($caller, $target, response.result);
-                    }
-                });
+                //win.$.Plato.Http(config).done(function(response) {
+                //    if (response.statusCode !== 200) {
+                //        return;
+                //    }
+                //    if ($caller.data(dataKey).onLoad) {
+                //        $caller.data(dataKey).onLoad($caller, $target, response.result);
+                //    }
+                //});
                 
             },
-            getConfig: function ($caller) {
+            //getConfig: function ($caller) {
 
-                // clone config - we reuse this config upon each request 
-                // so don't want to make changes to the original config
-                var config = $.extend({}, $caller.data(dataKey).config),
-                    url = $caller.data("autocompleteUrl") || config.url,
-                    pageIndex = this.getPageIndex($caller) || 1,
-                    pageSize = this.getPageSize($caller) || 10,
-                    keywords = this.getParsedValue($caller) || "";
+            //    // clone config - we reuse this config upon each request 
+            //    // so don't want to make changes to the original config
+            //    var config = $.extend({}, $caller.data(dataKey).config),
+            //        url = $caller.data("autocompleteUrl") || config.url,
+            //        pageIndex = this.getPageIndex($caller) || 1,
+            //        pageSize = this.getPageSize($caller) || 10,
+            //        keywords = this.getParsedValue($caller) || "";
                 
-                if (url) {
-                    if (url.indexOf("{page}") >= 0) {
-                        url = url.replace(/\{page}/g, pageIndex);
-                    }
-                    if (url.indexOf("{pageSize}") >= 0) {
-                        url = url.replace(/\{pageSize}/g, pageSize);
-                    }
+            //    if (url) {
+            //        if (url.indexOf("{page}") >= 0) {
+            //            url = url.replace(/\{page}/g, pageIndex);
+            //        }
+            //        if (url.indexOf("{pageSize}") >= 0) {
+            //            url = url.replace(/\{pageSize}/g, pageSize);
+            //        }
 
-                    var valueField = this.getValueField($caller);
-                    if (keywords) {
-                        if (valueField) {
-                            if (url.indexOf("{" + valueField + "}") >= 0) {
-                                url = url.replace("{" + valueField + "}", keywords);
-                            }
-                        }
-                        if (typeof config.data === "object" && config.method.toUpperCase() === "POST") {
-                            if (valueField) {
-                                config.data[valueField] = keywords;
-                            }
-                        }
-                    } else {
-                        url = url.replace("{" + valueField + "}", "");
-                    }
-                    config.url = url;
-                }
+            //        var valueField = this.getValueField($caller);
+            //        if (keywords) {
+            //            if (valueField) {
+            //                if (url.indexOf("{" + valueField + "}") >= 0) {
+            //                    url = url.replace("{" + valueField + "}", keywords);
+            //                }
+            //            }
+            //            if (typeof config.data === "object" && config.method.toUpperCase() === "POST") {
+            //                if (valueField) {
+            //                    config.data[valueField] = keywords;
+            //                }
+            //            }
+            //        } else {
+            //            url = url.replace("{" + valueField + "}", "");
+            //        }
+            //        config.url = url;
+            //    }
                 
-                return config;
+            //    return config;
 
-            },
+            //},
             getValueField: function ($caller) {
                 return $caller.data("autocompleteValueField") || $caller.data(dataKey).valueField;
             },
@@ -837,18 +1173,18 @@ $(function (win, doc, $) {
                 }
                 return val;
             },
-            setPageIndex: function ($caller, pageIndex) {
-                $caller.data(dataKey).page = pageIndex;
-            },
-            getPageIndex: function ($caller) {
-                return $caller.data("autocompletePageIndex") || $caller.data(dataKey).page;
-            },
-            setPageSize: function ($caller, pageSize) {
-                $caller.data(dataKey).pageSize = pageSize;
-            },
-            getPageSize: function ($caller) {
-                return $caller.data("autocompletePageSize") || $caller.data(dataKey).pageSize;
-            },
+            //setPageIndex: function ($caller, pageIndex) {
+            //    $caller.data(dataKey).page = pageIndex;
+            //},
+            //getPageIndex: function ($caller) {
+            //    return $caller.data("autocompletePageIndex") || $caller.data(dataKey).page;
+            //},
+            //setPageSize: function ($caller, pageSize) {
+            //    $caller.data(dataKey).pageSize = pageSize;
+            //},
+            //getPageSize: function ($caller) {
+            //    return $caller.data("autocompletePageSize") || $caller.data(dataKey).pageSize;
+            //},
             getTarget: function ($caller) {
 
                 // do we have an explicit target
@@ -1055,7 +1391,8 @@ $(function (win, doc, $) {
                 var methodName = null;
                 for (var i = 0; i < arguments.length; ++i) {
                     var a = arguments[i];
-                    switch (a.constructor) {
+                    if (a) {
+                        switch (a.constructor) {
                         case Object:
                             $.extend(options, a);
                             break;
@@ -1068,6 +1405,7 @@ $(function (win, doc, $) {
                             break;
                         case Function:
                             break;
+                        }
                     }
                 }
 
@@ -2988,6 +3326,7 @@ $(function (win, doc, $) {
     $.fn.extend({
         scrollTo: scrollTo.init,
         treeView: treeView.init,
+        pagedList: pagedList.init,
         autoComplete: autoComplete.init,
         typeSpy: typeSpy.init,
         filterList: filterList.init,
