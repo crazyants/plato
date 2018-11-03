@@ -149,7 +149,7 @@ namespace Plato.Users.Controllers
             //    .Append("-------------------------------------------------")
             //    .Append("<br>");
 
-            
+
             //var currentLocale = await _localeManager.GetResourcesAsync("en-US");
             //foreach (var resource in currentLocale.Resources.Where(r => r.Type == typeof(LocaleEmails)))
             //{
@@ -179,7 +179,7 @@ namespace Plato.Users.Controllers
 
             //    var locales = await _localeManager.GetLocalesAsync();
 
-          
+
             //foreach (var locale in locales)
             //{
 
@@ -189,18 +189,18 @@ namespace Plato.Users.Controllers
             //        .Append("<br>")
             //        .Append("<strong>Path:</strong> ")
             //        .Append(locale.Descriptor.Path);
-              
-                
+
+
             //    foreach (var resource in locale.Resources.Where(r => r.Type == typeof(LocaleEmails)))
             //    {
-                    
+
             //        sb
             //            .Append("<br>")
             //            .Append("<strong>LocaleEmails</strong> ")
             //            .Append("<br>");
 
             //        var emails = (LocaleEmails) resource.Model;
-                  
+
             //        sb.Append("Templates: ").Append(emails.Templates.Count());
             //        sb.Append("<BR>");
 
@@ -211,7 +211,7 @@ namespace Plato.Users.Controllers
             //            sb.Append("Subject: ").Append(email.Subject);
             //            sb.Append("<BR>");
             //        }
-                  
+
             //    }
 
             //    foreach (var resource in locale.Resources.Where(r => r.Type == typeof(LocaleStrings)))
@@ -244,8 +244,8 @@ namespace Plato.Users.Controllers
             //}
 
             //ViewData["Locales"] = sb.ToString();
-            
-            //for (var i = 0; i < 1; i++)
+
+            //for (var i = 0; i < 50; i++)
             //{
 
             //    var displayName = "New User " + i;

@@ -41,7 +41,7 @@ $(function (win, doc, $) {
         var methods = {
             init: function ($caller, methodName) {
                 if (methodName) {
-                    if (this[methodName]) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
@@ -179,7 +179,7 @@ $(function (win, doc, $) {
             init: function ($caller, methodName) {
 
                 if (methodName) {
-                    if (this[methodName]) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
@@ -507,10 +507,9 @@ $(function (win, doc, $) {
                     e.preventDefault();
                     e.stopPropagation();
                     if (page > 1) {
-                        $caller.autoComplete({
+                        $caller.pagedList({
                             page: page -= 1
-                        },
-                            "update");
+                        });
                     }
                 });
 
@@ -529,10 +528,9 @@ $(function (win, doc, $) {
                 a.click(function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    $caller.autoComplete({
+                    $caller.pagedList({
                         page: page += 1
-                    },
-                        "update");
+                    });
                 });
 
                 return a;
@@ -571,9 +569,7 @@ $(function (win, doc, $) {
 
             },
             itemCss: "dropdown-item", // the CSS to apply to links within the itemTemplate
-            itemTemplate:
-                '<a class="{itemCss}" href="{url}"><span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 85%;">{text}</span> <span style="opacity: .7;">@{value}</span><span class="float-right">{rank}</span></a>',
-            parseRequestValue: null, // optional method which can be used to parse the textbox value before passing to our API endpoint
+            itemTemplate: '<a class="{itemCss}" href="{url}"><span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 85%;">{text}</span> <span style="opacity: .7;">@{value}</span><span class="float-right">{rank}</span></a>',
             parseItemTemplate: function (html, result) {
 
                 if (result.text) {
@@ -600,15 +596,14 @@ $(function (win, doc, $) {
 
             }, // provides a method to parse our itemTemplate with data returned from service url
             loaderTemplate: '<p class="text-center"><i class="fal fa-spinner fa-spin" ></i></p >', // a handlebars style template for auto complete list items
-            noResultsText: "Sorry no results matched your search!", // the text to display when no results are available
-            valueField: "Keywords" // the name of the parameter passed to the server with the input value
+            noResultsText: "Sorry no results matched your search!" // the text to display when no results are available
         };
 
         var methods = {
             init: function($caller, methodName) {
 
                 if (methodName) {
-                    if (this[methodName] !== null) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
@@ -622,6 +617,11 @@ $(function (win, doc, $) {
             },
             bind: function($caller) {
 
+                // Add loader
+                var loaderTemplate = $caller.data(dataKey).loaderTemplate;
+                $caller.empty().append(loaderTemplate);
+                
+                // Begin populate
                 var config = this.getConfig($caller);
                 win.$.Plato.Http(config).done(function (response) {
                     if (response.statusCode !== 200) {
@@ -746,205 +746,19 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            page: 1,
-            pageSize: 10,
-            config: { }, // optional configuration options for ajax request
             target: null, // optional target selector for auto complete results. if no target a dropdown-menu is used
             enablePaging: true, // indicates if paging should be enabled for results
-            alwaysShow: true, // if true the autocomplete results will be displayed even if no results are returned from the server, if false the dropdown is only shown if results are returned
             onShow: null, // triggers when the autocomplete target is displayed
             onHide: null, // triggers when the autocomplete target is hidden
-            //onLoad: function ($caller, $target, results) {
-                
-            //    if (results) {
-
-            //        $target.empty();
-                    
-            //        // build results
-            //        for (var i = 0; i < results.data.length; i++) {
-            //            $target.append(this.buildItem($caller, results.data[i]));
-            //        }
-            //        // build paging
-            //        var enablePaging = $caller.data(dataKey).enablePaging;
-            //        if (enablePaging) {
-            //            if (results.total > results.size) {
-            //                $target.append(this.buildPager($caller, results));
-            //            }
-            //        }
-            //    } else {
-            //        // no data
-            //        $target.empty().append(this.buildNoResults($caller));
-            //    }
-                
-            //    if ($caller.data(dataKey).onLoaded) {
-            //        $caller.data(dataKey).onLoaded($caller, $target);
-            //    }
-
-            //    $target.platoUI();
-
-            //}, // triggers after autocomplete results have finished loading
-            //onLoaded: null, // triggers after autocomplete results have been added to the dom
             onKeyDown: null, // triggers for key down events within the autocomplete input element
-            //onItemClick: null, // event raised when you click an autocomplete result item
-            //buildItem: function($caller, result) {
-
-            //    // apply default css
-            //    var itemTemplate = $caller.data(dataKey).itemTemplate,
-            //        itemCss = $caller.data("autocompleteItemCss") || $caller.data(dataKey).itemCss;
-            //    itemTemplate = itemTemplate.replace(/\{itemCss}/g, itemCss);
-
-            //    // parse template
-            //    if ($caller.data(dataKey) && $caller.data(dataKey).parseItemTemplate) {
-            //        itemTemplate = $caller.data(dataKey).parseItemTemplate(itemTemplate, result);
-            //    }
-
-            //    // bind onItemClick
-
-            //    var $item = $(itemTemplate);
-            //    $item.click(function (e) {
-            //        if ($caller.data(dataKey).onItemClick) {
-            //            $caller.data(dataKey).onItemClick($caller, result, e, $item);
-            //        }
-            //    });
-            //    return $item;
-            //},
-            //buildPager: function($caller, results) {
-
-            //    var $div = $('<div class="d-block">');
-            //    if (results.page > 1) {
-            //        $div.append(this.buildPrev($caller, results.page));
-            //    } else {
-            //        $div.append($('<div class="float-left col-3">'));
-            //    }
-
-            //    $div.append(this.buildInfo($caller, results));
-
-            //    if (results.page < results.totalPages) {
-            //        $div.append(this.buildNext($caller, results.page));
-            //    } else {
-            //        $div.append($('<div class="float-left col-3">'));
-            //    }
-
-
-            //    return $div;
-
-            //},
-            //buildPrev: function ($caller, page) {
-
-            //    var icon = $("<i>").addClass("fa fa-chevron-left");
-            //    var a = $("<a>")
-            //        .attr("href", "#")
-            //        .addClass("list-group-item list-group-item-action float-left col-3 text-center")
-            //        .append(icon);
-
-            //    a.click(function(e) {
-            //        e.preventDefault();
-            //        e.stopPropagation();
-            //        if (page > 1) {
-            //            $caller.autoComplete({
-            //                    page: page -= 1
-            //                },
-            //                "update");
-            //        }
-            //    });
-
-            //    return a;
-
-            //},
-            //buildNext: function ($caller, page) {
-
-            //    var icon = $("<i>").addClass("fa fa-chevron-right");
-             
-            //    var a = $("<a>")
-            //        .attr("href", "#")
-            //        .addClass("list-group-item list-group-item-action float-left col-3 text-center")
-            //        .append(icon);
-
-            //    a.click(function(e) {
-            //        e.preventDefault();
-            //        e.stopPropagation();
-            //        $caller.autoComplete({
-            //                page: page += 1
-            //            },
-            //            "update");
-            //    });
-
-            //    return a;
-
-            //},
-            //buildNoResults: function($caller) {
-
-            //    var noResultsText = $caller.data(dataKey).noResultsText;
-
-            //    var a = $("<div>")
-            //        .addClass("text-center p-4")
-            //        .append(noResultsText);
-
-            //    var li = $('<li class="no-results">');
-            //    li.append(a);
-
-            //    return li;
-
-            //},
-            //buildInfo: function($caller, results) {
-
-            //    var pages = "{0} of {1}";
-            //    pages = pages.replace("{0}", results.page);
-            //    pages = pages.replace("{1}", results.totalPages);
-
-            //    var total = "{0} results";
-            //    if (results.total === 1) {
-            //        total = "{0} result";
-            //    }
-            //    total = total.replace("{0}", results.total);
-
-                
-            //    var $div = $('<div>').addClass("list-group-item float-left col-6 text-center");
-            //    $div.text(pages + ", " + total);
-            //    return $div;
-
-            //},
-            //itemCss: "dropdown-item", // the CSS to apply to links within the itemTemplate
-            //itemTemplate:
-            //    '<a class="{itemCss}" href="{url}"><span style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 85%;">{text}</span> <span style="opacity: .7;">@{value}</span><span class="float-right">{rank}</span></a>',
-            parseRequestValue:
-                null, // optional method which can be used to parse the textbox value before passing to our API endpoint
-            parseItemTemplate: function (html, result) {
-                
-                if (result.text) {
-                    html = html.replace(/\{text}/g, result.text);
-                }
-                if (result.value) {
-                    html = html.replace(/\{value}/g, result.value);
-                }
-                if (result.url) {
-                    html = html.replace(/\{url}/g, result.url);
-                }
-                if (result.rank) {
-                    if (result.rank > 0) {
-                        html = html.replace(/\{rank}/g,
-                            '<span class="label label-right label-primary">' + result.rank + '%</span>');
-                    } else {
-                        html = html.replace(/\{rank}/g, "");
-                    }
-                } else {
-                    html = html.replace(/\{rank}/g, "");
-                }
-
-                return html;
-
-            }, // provides a method to parse our itemTemplate with data returned from service url
-            loaderTemplate:
-                '<p class="text-center"><i class="fal fa-spinner fa-spin" ></i></p >', // a handlebars style template for auto complete list items
-            //noResultsText: "Sorry no results matched your search!", // the text to display when no results are available
-            //valueField: "Keywords" // the name of the parameter passed to the server with the input value
+            keywordsFieldName: "keywords"
         };
 
         var methods = {
             init: function ($caller, methodName) {
 
                 if (methodName) {
-                    if (this[methodName] !== null) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
@@ -965,7 +779,6 @@ $(function (win, doc, $) {
             bind: function ($caller) {
 
                 $caller.bind("focus", function () {
-                    methods.resetUI($(this));
                     if ($(this).val().length === 0) {
                         methods.hide($(this));
                     } else {
@@ -987,7 +800,6 @@ $(function (win, doc, $) {
                 // spy on our input
                 $caller.typeSpy({
                     onKeyUp: function ($el, e) {
-                        methods.resetUI($el);
                         if (e.keyCode === 27) {
                             // escape
                             methods.hide($el);
@@ -1069,122 +881,29 @@ $(function (win, doc, $) {
                 if ($target.length === 0) {
                     return;
                 }
-
-                // add loader for updates
-                var loaderTemplate = $caller.data(dataKey).loaderTemplate,
-                    config = $caller.data(dataKey).config;
                 
-                $target
-                    .empty()
-                    .append(loaderTemplate)
-                    .pagedList($.extend(
+                // Clone config & get keywords field name
+                var config = $.extend({}, $caller.data(dataKey).config),
+                    fieldName = $caller.data(dataKey).keywordsFieldName;
+
+                // For get requests replace keywords in URL
+                if (config.method.toUpperCase() === "GET") {
+                    config.url = config.url.replace("{" + fieldName + "}", encodeURIComponent($caller.val()));
+                }
+
+                // For post requests add keyword to data object literal
+                if (config.method.toUpperCase() === "POST") {
+                    config.data[fieldName] = $caller.val();
+                }
+                
+                // Init pagedList
+                $target.pagedList($.extend({}, $caller.data(dataKey),
                         {
                             page: 1,
-                            config: $.extend(config, {
-                                url: config.url.replace("{keywords}", encodeURIComponent($caller.val()))
-                            })
-                        }, $caller.data(dataKey)));
-
-                //return;
-
-                //var page = $caller.data(dataKey).page;
-                //if (page) {
-                //    this.setPageIndex($caller, page);
-                //}
-                
-                //// ---- configure
-
-                //var config = this.getConfig($caller),
-                //    val = this.getParsedValue($caller);
-                
-                //// ------ request
-                
-                //// set content type for post data
-                //if (config.method) {
-                //    if (config.method.toUpperCase() === "POST") {
-                //        config.headers = {
-                //            'Content-Type': 'application/json; charset=utf-8'
-                //        };
-                //    }
-                //}
-
-                //// serialize post data 
-                //if (typeof config.data !== "string") {
-                //    config.data = JSON.stringify(config.data);
-                //}
-
-                //win.$.Plato.Http(config).done(function(response) {
-                //    if (response.statusCode !== 200) {
-                //        return;
-                //    }
-                //    if ($caller.data(dataKey).onLoad) {
-                //        $caller.data(dataKey).onLoad($caller, $target, response.result);
-                //    }
-                //});
+                            config: config
+                        }));
                 
             },
-            //getConfig: function ($caller) {
-
-            //    // clone config - we reuse this config upon each request 
-            //    // so don't want to make changes to the original config
-            //    var config = $.extend({}, $caller.data(dataKey).config),
-            //        url = $caller.data("autocompleteUrl") || config.url,
-            //        pageIndex = this.getPageIndex($caller) || 1,
-            //        pageSize = this.getPageSize($caller) || 10,
-            //        keywords = this.getParsedValue($caller) || "";
-                
-            //    if (url) {
-            //        if (url.indexOf("{page}") >= 0) {
-            //            url = url.replace(/\{page}/g, pageIndex);
-            //        }
-            //        if (url.indexOf("{pageSize}") >= 0) {
-            //            url = url.replace(/\{pageSize}/g, pageSize);
-            //        }
-
-            //        var valueField = this.getValueField($caller);
-            //        if (keywords) {
-            //            if (valueField) {
-            //                if (url.indexOf("{" + valueField + "}") >= 0) {
-            //                    url = url.replace("{" + valueField + "}", keywords);
-            //                }
-            //            }
-            //            if (typeof config.data === "object" && config.method.toUpperCase() === "POST") {
-            //                if (valueField) {
-            //                    config.data[valueField] = keywords;
-            //                }
-            //            }
-            //        } else {
-            //            url = url.replace("{" + valueField + "}", "");
-            //        }
-            //        config.url = url;
-            //    }
-                
-            //    return config;
-
-            //},
-            getValueField: function ($caller) {
-                return $caller.data("autocompleteValueField") || $caller.data(dataKey).valueField;
-            },
-            getParsedValue: function ($caller) {
-                // prepare request value
-                var val = $caller.val();
-                if ($caller.data(dataKey) && $caller.data(dataKey).parseRequestValue) {
-                    val = $caller.data(dataKey).parseRequestValue(val);
-                }
-                return val;
-            },
-            //setPageIndex: function ($caller, pageIndex) {
-            //    $caller.data(dataKey).page = pageIndex;
-            //},
-            //getPageIndex: function ($caller) {
-            //    return $caller.data("autocompletePageIndex") || $caller.data(dataKey).page;
-            //},
-            //setPageSize: function ($caller, pageSize) {
-            //    $caller.data(dataKey).pageSize = pageSize;
-            //},
-            //getPageSize: function ($caller) {
-            //    return $caller.data("autocompletePageSize") || $caller.data(dataKey).pageSize;
-            //},
             getTarget: function ($caller) {
 
                 // do we have an explicit target
@@ -1232,17 +951,6 @@ $(function (win, doc, $) {
 
                 return null;
 
-            },
-            alwaysShow: function ($caller) {
-                return $caller.data("autocompleteAlwaysShow")
-                    ? $caller.data("autocompleteAlwaysShow")
-                    : ($caller.data(dataKey) ? $caller.data(dataKey).alwaysShow : true);
-            },
-            resetUI: function ($caller) {
-                var $target = methods.getTarget($caller);
-                if ($target) {
-                    //$target.find(".tooltip").itooltip("hideAll");
-                }
             }
         }
         
@@ -1370,7 +1078,7 @@ $(function (win, doc, $) {
                     return func(this);
                 }
                 if (methodName) {
-                    if (this[methodName] != null) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
@@ -1927,7 +1635,7 @@ $(function (win, doc, $) {
                     return func(this);
                 }
                 if (methodName) {
-                    if (this[methodName] != null) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
@@ -2326,7 +2034,7 @@ $(function (win, doc, $) {
                     return func(this);
                 }
                 if (methodName) {
-                    if (this[methodName] != null) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
@@ -2487,7 +2195,7 @@ $(function (win, doc, $) {
                     return func(this);
                 }
                 if (methodName) {
-                    if (this[methodName] != null) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
@@ -2681,7 +2389,7 @@ $(function (win, doc, $) {
             init: function ($caller, methodName) {
 
                 if (methodName) {
-                    if (this[methodName]) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
@@ -2922,7 +2630,7 @@ $(function (win, doc, $) {
                     return func(this);
                 }
                 if (methodName) {
-                    if (this[methodName] != null) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
@@ -3136,7 +2844,7 @@ $(function (win, doc, $) {
                     return func(this);
                 }
                 if (methodName) {
-                    if (this[methodName] != null) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
                         this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
