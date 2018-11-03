@@ -446,7 +446,7 @@ $(function (win, doc, $) {
                 }
 
                 if ($caller.data(dataKey).onLoaded) {
-                    $caller.data(dataKey).onLoaded($caller, $target);
+                    $caller.data(dataKey).onLoaded($caller);
                 }
                 
             }, // triggers after autocomplete results have finished loading
@@ -456,7 +456,7 @@ $(function (win, doc, $) {
 
                 // apply default css
                 var itemTemplate = $caller.data(dataKey).itemTemplate,
-                    itemCss = $caller.data("autocompleteItemCss") || $caller.data(dataKey).itemCss;
+                    itemCss = $caller.data("pagedListItemCss") || $caller.data(dataKey).itemCss;
                 itemTemplate = itemTemplate.replace(/\{itemCss}/g, itemCss);
 
                 // parse template
@@ -747,11 +747,10 @@ $(function (win, doc, $) {
 
         var defaults = {
             target: null, // optional target selector for auto complete results. if no target a dropdown-menu is used
-            enablePaging: true, // indicates if paging should be enabled for results
             onShow: null, // triggers when the autocomplete target is displayed
             onHide: null, // triggers when the autocomplete target is hidden
             onKeyDown: null, // triggers for key down events within the autocomplete input element
-            keywordsFieldName: "keywords"
+            valueField: null // the name of the querystring or post parameter representing the keywords for the request
         };
 
         var methods = {
@@ -884,18 +883,22 @@ $(function (win, doc, $) {
                 
                 // Clone config & get keywords field name
                 var config = $.extend({}, $caller.data(dataKey).config),
-                    fieldName = $caller.data(dataKey).keywordsFieldName;
+                    valueField = $caller.data(dataKey).valueField;
 
-                // For get requests replace keywords in URL
-                if (config.method.toUpperCase() === "GET") {
-                    config.url = config.url.replace("{" + fieldName + "}", encodeURIComponent($caller.val()));
-                }
+                if (valueField) {
 
-                // For post requests add keyword to data object literal
-                if (config.method.toUpperCase() === "POST") {
-                    config.data[fieldName] = $caller.val();
+                    // For get requests replace keywords in URL with auto complete value
+                    if (config.method.toUpperCase() === "GET") {
+                        config.url = config.url.replace("{" + valueField + "}", encodeURIComponent($caller.val()));
+                    }
+
+                    // For post requests add keyword to data object literal
+                    if (config.method.toUpperCase() === "POST") {
+                        config.data[valueField] = $caller.val();
+                    }
+
                 }
-                
+             
                 // Init pagedList
                 $target.pagedList($.extend({}, $caller.data(dataKey),
                         {
@@ -1026,9 +1029,7 @@ $(function (win, doc, $) {
                     order: "Desc"
                 }
             },
-
-            itemTemplate:
-                '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
+            itemTemplate: '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
             parseItemTemplate: function (html, result) {
 
                 if (result.id) {
@@ -1165,37 +1166,7 @@ $(function (win, doc, $) {
                 }
             },
             itemCss: "dropdown-item",
-            //buildPager: function ($caller, results) {
-                
-            //    // Not last page
-            //    if (results.page !== results.totalPages) {
-                    
-            //        var icon = $("<i>").addClass("fa fa-chevron-down"),
-            //            itemCss = $caller.data("autocompleteItemCss") || $caller.data(dataKey).itemCss;
-
-            //        var $a = $("<a>")
-            //            .attr("href", "#")
-            //            .addClass(itemCss)
-            //            .addClass("text-center")
-            //            .append(icon);
-
-            //        $a.click(function (e) {
-            //            e.preventDefault();
-            //            $caller.autoComplete({
-            //                    page: results.page += 1
-            //                },
-            //                "update");
-            //        });
-
-            //        return $a;
-
-            //    }
-
-            //    return null;
-
-            //},
-            itemTemplate:
-                '<a class="{itemCss}" href="{url}"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor}">{name}</span><span title="Occurrences" data-toggle="tooltip" class="float-right btn btn-sm btn-secondary">{totalEntities.text}</span></a>',
+            itemTemplate: '<a class="{itemCss}" href="{url}"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor}">{name}</span><span title="Occurrences" data-toggle="tooltip" class="float-right btn btn-sm btn-secondary">{totalEntities.text}</span></a>',
             parseItemTemplate: function (html, result) {
 
                 if (result.id) {
@@ -2647,8 +2618,7 @@ $(function (win, doc, $) {
 
                 // init selectDropdown
                 $caller.selectDropdown($.extend({
-                        itemTemplate:
-                            '<li class="list-group-item select-dropdown-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
+                        itemTemplate: '<li class="list-group-item select-dropdown-item"><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor};">{name}</span><a href="#" class="btn btn-secondary float-right select-dropdown-delete" data-toggle="tooltip" title="Delete"><i class="fal fa-times"></i></a></li>',
                         parseItemTemplate: function(html, result) {
 
                             if (result.id) {
@@ -2724,8 +2694,7 @@ $(function (win, doc, $) {
 
                 // init auto complete
                 methods.getInput($caller).labelAutoComplete($.extend({
-                        itemTemplate:
-                            '<input type="checkbox" value="{id}" id="label-{id}"/><label for="label-{id}" class="{itemCss}"><i class="fal mr-2 check-icon"></i><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor}">{name}</span><span title="Occurrences" data-toggle="tooltip" class="float-right btn btn-sm btn-secondary">{totalEntities.text}</span></label>',
+                        itemTemplate: '<input type="checkbox" value="{id}" id="label-{id}"/><label for="label-{id}" class="{itemCss}"><i class="fal mr-2 check-icon"></i><span class="btn btn-sm label font-weight-bold" style="background-color: {backColor}; color: {foreColor}">{name}</span><span title="Occurrences" data-toggle="tooltip" class="float-right btn btn-sm btn-secondary">{totalEntities.text}</span></label>',
                         onItemClick: function($input, result, e) {
 
                             e.preventDefault();
@@ -2735,18 +2704,12 @@ $(function (win, doc, $) {
                             var index = methods.getIndex($caller, result);
                             if (index === -1) {
                                 $caller.data("selectDropdown").items.push(result);
-                           
                             } else {
                                 $caller.data("selectDropdown").items.splice(index, 1);
-
-                                //$caller.selectDropdown({
-                                //        highlightIndex: index
-                                //    },
-                                //    "highlight");
                             }
                             $caller.selectDropdown("update");
                         },
-                        onLoaded: function($input, $dropdown) {
+                        onLoaded: function($input) {
                             $caller.selectDropdown("update");
                         }
                     },
@@ -2783,19 +2746,21 @@ $(function (win, doc, $) {
                 var methodName = null;
                 for (var i = 0; i < arguments.length; ++i) {
                     var a = arguments[i];
-                    switch (a.constructor) {
-                        case Object:
-                            $.extend(options, a);
-                            break;
-                        case String:
-                            methodName = a;
-                            break;
-                        case Boolean:
-                            break;
-                        case Number:
-                            break;
-                        case Function:
-                            break;
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
                     }
                 }
 

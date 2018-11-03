@@ -21,12 +21,13 @@
                        autocomplete="off"
                        class="form-control"
                        data-autocomplete-target="#labelAutoCompleteResults"
-                       data-autocomplete-page-size="5"
-                       data-autocomplete-item-css="list-group-item list-group-item-action"
                        placeholder="@T["Search labels or add new labels seperted by a comma..."]">
             </div>
             <div style="max-height: 350px; overflow: auto">
-                <div class="list-group list-group-flush tree list-group-hover hidden" id="labelAutoCompleteResults">
+                <div class="list-group list-group-flush tree list-group-hover hidden" 
+                     data-paged-list-page-size="5"
+                     data-paged-list-item-css="list-group-item list-group-item-action"
+                     id="labelAutoCompleteResults">
                     <p class="text-center">
                         <i class="fal fa-spinner fa-spin"></i>
                     </p>
