@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using Plato.Labels.Models;
-
-namespace Plato.Discuss.Labels.ViewModels
+﻿namespace Plato.Discuss.Labels.ViewModels
 {
-
-
-    public class SelectLabelsLookUpViewModel
+    
+    public class SelectLabelsViewModel
     {
 
         public string LabelsJson { get; set; }
@@ -13,24 +9,5 @@ namespace Plato.Discuss.Labels.ViewModels
         public string HtmlName { get; set; }
 
     }
-
-    public class SelectLabelsViewModel
-    {
-        
-        public IList<Selection<Models.Label>> SelectedLabels { get; set; }
-
-        public string HtmlName { get; set; }
-
-    }
-
-    public class Selection<T>
-    {
-
-        public bool IsSelected { get; set; }
-
-        public T Value { get; set; }
-
-    }
-
-
+    
 }

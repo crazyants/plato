@@ -449,9 +449,9 @@ $(function (win, doc, $) {
                     $caller.data(dataKey).onLoaded($caller);
                 }
                 
-            }, // triggers after autocomplete results have finished loading
-            onLoaded: null, // triggers after autocomplete results have been added to the dom
-            onItemClick: null, // event raised when you click an autocomplete result item
+            }, // triggers after paged results have finished loading
+            onLoaded: null, // triggers after paged results have been added to the dom
+            onItemClick: null, // event raised when you click a paged result item
             buildItem: function ($caller, result) {
 
                 // apply default css
@@ -3023,6 +3023,9 @@ $(function (win, doc, $) {
          * <a href="#somelement" data-provide="scroll"> */
         this.find('[data-provide="scroll"]').scrollTo();
 
+        /* pagedList */
+        this.find('[data-provide="paged-list"]').pagedList();
+        
         /* select dropdown */
         this.find('[data-provide="select-dropdown"]').selectDropdown();
 

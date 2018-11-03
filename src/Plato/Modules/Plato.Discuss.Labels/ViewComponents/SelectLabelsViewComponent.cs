@@ -3,9 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Labels.ViewModels;
+using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Shell.Abstractions;
+using Plato.Labels.Models;
 using Plato.Labels.Stores;
 
 namespace Plato.Discuss.Labels.ViewComponents
@@ -13,12 +15,13 @@ namespace Plato.Discuss.Labels.ViewComponents
 
     public class SelectLabelsViewComponent : ViewComponent
     {
+
         private readonly ILabelStore<Models.Label> _labelStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
 
         public SelectLabelsViewComponent(
-            ILabelStore<Models.Label> labelStore, 
+            ILabelStore<Models.Label> labelStore,
             IContextFacade contextFacade,
             IFeatureFacade featureFacade)
         {
@@ -28,42 +31,67 @@ namespace Plato.Discuss.Labels.ViewComponents
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            IEnumerable<int> selectedLabels, 
+            IEnumerable<int> selectedLabels,
             string htmlName)
         {
             if (selectedLabels == null)
             {
                 selectedLabels = new int[0];
             }
-            
+
+            var labels = await BuildSelectionsAsync(selectedLabels);
             return View(new SelectLabelsViewModel
             {
                 HtmlName = htmlName,
-                SelectedLabels = await BuildSelectionsAsync(selectedLabels)
+                LabelsJson = labels.Serialize()
             });
 
         }
 
-        private async Task<IList<Selection<Models.Label>>> BuildSelectionsAsync(
-            IEnumerable<int> selected)
+        private async Task<IEnumerable<LabelApiResult>> BuildSelectionsAsync(IEnumerable<int> selected)
         {
 
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
-            var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
+            if (selected == null)
+            {
+                return new List<LabelApiResult>();
+            }
 
-            var selections = labels?.Select(l => new Selection<Models.Label>
+            if (((int[])selected).Length == 0)
+            {
+                return new List<LabelApiResult>();
+            }
+            
+            // Get all labels for selected ids
+            var labels = await _labelStore.QueryAsync()
+                .Select<LabelQueryParams>(q =>
                 {
-                    IsSelected = selected.Any(v => v == l.Id),
-                    Value = l
+                    q.Id.IsIn(selected.ToArray());
                 })
-                .OrderBy(s => s.Value.Name)
+                .OrderBy("TotalEntities", OrderBy.Desc)
                 .ToList();
 
-            return selections;
+            // Build results 
+            var results = new List<LabelApiResult>();
+            if (labels?.Data != null)
+            {
+                foreach (var label in labels.Data)
+                {
+                    results.Add(new LabelApiResult()
+                    {
+                        Id = label.Id,
+                        Name = label.Name,
+                        Description = label.Description,
+                        ForeColor = label.ForeColor,
+                        BackColor = label.BackColor
+                    });
+
+                }
+            }
+            return results;
+
         }
+
     }
-
-
 
 }
 

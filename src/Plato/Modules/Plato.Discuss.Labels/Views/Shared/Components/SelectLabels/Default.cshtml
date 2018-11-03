@@ -1,14 +1,15 @@
 ﻿@model SelectLabelsViewModel
 
-<div class="card">
+<input type="hidden" id="@Model.HtmlName" name="@Model.HtmlName" asp-for="LabelsJson" />
 
+<div class="card" data-provide="label-select-dropdown" data-select-dropdown-store="#@Model.HtmlName">
     <div class="dropdown">
         <a class="list-group-item list-group-item-action dropdown-toggle dropdown-toggle-no-caret font-weight-bold" href="#" id="channelDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fal fa-cog float-right"></i>
             @T["Labels"]
         </a>
         <div class="dropdown-arrow dropdown-arrow-right"></div>
-        <div class="dropdown-menu dropdown-menu-right" style="width: 400px;" aria-labelledby="channelDropdown">
+        <div class="dropdown-menu dropdown-menu-right" style="width: 450px;" aria-labelledby="channelDropdown">
             <div class="dropdown-header">
                 <a href="#" class="text-muted float-right" data-toggle="dropdown">
                     <i class="fal fa-times"></i>
@@ -16,84 +17,34 @@
                 @T["Select labels..."]
             </div>
             <div class="my-2 mx-3">
-
                 <input type="search"
                        autocomplete="off"
                        class="form-control"
                        data-autocomplete-target="#labelAutoCompleteResults"
-                       data-autocomplete-page-size="5"
-                       data-autocomplete-item-css="list-group-item list-group-item-action"
                        placeholder="@T["Search labels or add new labels seperted by a comma..."]">
-
             </div>
-            <div>
-
-                <div class="list-group list-group-flush tree list-group-hover hidden" id="labelAutoCompleteResults">
+            <div style="max-height: 350px; overflow: auto">
+                <div id="labelAutoCompleteResults"
+                     class="list-group list-group-flush tree list-group-hover hidden" 
+                     data-paged-list-page-size="5"
+                     data-paged-list-item-css="list-group-item list-group-item-action">
                     <p class="text-center">
                         <i class="fal fa-spinner fa-spin"></i>
                     </p>
                 </div>
-
-                @*@if (Model.SelectedLabels != null)
-                {
-                    <div class="list-group list-group-flush tree">
-                        <div class="dropdown-header">
-                            @T["Top Labels"]
-                        </div>
-                        @foreach (var label in Model.SelectedLabels)
-                        {
-                            var check = label.IsSelected ? "checked" : "";
-                            var uniqueId = "label-" + label.Value.Id;
-                            var css = label.IsSelected ? "list-group-item dropdown-item active" : "list-group-item dropdown-item";
-                            <input name="@Model.HtmlName" type="checkbox" value="@label.Value.Id" id="@uniqueId" @check/>
-                            <label data-filter-value="@label.Value.Name" class="@css" for="@uniqueId">
-                                <i class="fal mr-2 check-icon"></i>
-                                <span class="btn btn-sm" style="background-color: @label.Value.BackColor; color: @label.Value.ForeColor">
-                                    @label.Value.Name
-                                </span>
-                                <span class="btn btn-sm btn-secondary float-right">
-                                    @label.Value.TotalEntities.ToPrettyInt()
-                                </span>
-                            </label>
-                        }
-                    </div>
-                }
-                else
-                {
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            @T["No labels available."]
-                        </li>
-                    </ul>
-                }*@
             </div>
-
         </div>
     </div>
-
-    @{
-        // get selected labels for preview
-        var selectedLabels = Model.SelectedLabels?.Where(c => c.IsSelected == true).ToList() ?? new List<Selection<Label>>();
-    }
-    @if (selectedLabels.Count > 0)
-    {
-        <ul data-empty-preview-text="@T["No labels selected."]" class="list-group select-dropdown-preview">
-            @foreach (var label in selectedLabels)
-            {
-                <li class="list-group-item">
-                    <label for="label-@label.Value.Id" class="btn btn-sm label font-weight-bold" style="background-color: @label.Value.BackColor; color: @label.Value.ForeColor">
-                        @label.Value.Name
-                    </label>
-                </li>
-            }
-        </ul>
-    }
-    else
-    {
-        <ul data-empty-preview-text="@T["No labels selected."]" class="list-group select-dropdown-preview">
-            <li class="list-group-item">
-                @T["No labels selected."]
-            </li>
-        </ul>
-    }
+    <ul data-empty-preview-text="@T["No labels selected."]" class="list-group select-dropdown-preview">
+        <li class="list-group-item">
+            @T["Loading..."]
+        </li>
+    </ul>
 </div>
+
+
+
+
+
+
+

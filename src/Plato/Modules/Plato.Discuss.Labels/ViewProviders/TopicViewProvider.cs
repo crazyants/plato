@@ -125,11 +125,7 @@ namespace Plato.Discuss.Labels.ViewProviders
                 HtmlName = LabelHtmlName,
                 SelectedLabels = entityabels.Select(l => l.LabelId).ToArray()
             };
-
-
-            //View<EditTopicLabelsViewModel>("Topic.Labels.Edit.Content", model => viewModel).Zone("content")
-            //    .Order(2)
-
+            
             return Views(
                 View<EditTopicLabelsViewModel>("Topic.Labels.Edit.Sidebar", model => viewModel).Zone("sidebar")
                     .Order(2)
