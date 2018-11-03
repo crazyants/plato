@@ -1256,6 +1256,7 @@
           break;
 
         case 13: // enter
+
           blocked = false;
           var chars = this.getContent().split('');
           var enterIndex = this.getSelection().start;
@@ -1517,11 +1518,6 @@
 
             // Set the cursor
             e.setSelection(cursor, cursor + chunk.length);
-
-            // hide dropdown
-            //if ($target.data("dropdownCaller")) {
-            //    $target.data("dropdownCaller").idropdown("hide");
-            //}
 
         }
 
