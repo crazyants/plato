@@ -157,22 +157,15 @@ $(function (win, doc, $) {
             bind: function ($caller) {
 
                 var start = $caller.data(dataKey).start,
-                    firstHalf = $caller.val().substring(0, start),
-                    lastHalf = $caller.val().substring(start, $caller.val().length - 1);
-                
-                var marker = '<span class="text-field-mirror-marker position-relative">@</span>',
-                    markerHtml = firstHalf + marker + lastHalf,
-                    html = markerHtml.replace(/\n/gi, '<br>');
+                    prefix = $caller.val().substring(0, start),
+                    suffix = $caller.val().substring(start, $caller.val().length - 1),
+                    marker = '<span class="text-field-mirror-marker position-relative">@</span>',
+                    markerHtml = prefix + marker + suffix,
+                    html = markerHtml.replace(/\n/gi, '<br/>');
 
-                var $mirror = $('<div class="form-control text-field-mirror">');
-                $mirror.css({
-                    "position": "absolute",
-                    "backgroundColor": "red",
-                    "height": $caller.height(),
-                    "overflow": "auto"
-                });
+                var $mirror = methods.getOrCreate($caller);
                 $mirror.html(html);
-                $caller.before($mirror);
+                $mirror.show();
                
                 if ($caller.data(dataKey).ready) {
                     $caller.data(dataKey).ready($mirror);
@@ -180,12 +173,24 @@ $(function (win, doc, $) {
                 
             },
             hide: function ($caller) {
-               
+                var $mirror = this.getOrCreate($caller);
+                $mirror.hide();
             },
-            addOrGetMirror: function($caller) {
-                
-            
-
+            getOrCreate: function($caller) {
+                var id = $caller.data(dataIdKey) + "Mirror",
+                    $mirror = $("#" + id);
+                if ($mirror.length === 0) {
+                    $mirror = $('<div>',
+                            {
+                                "id": id,
+                                "class": "form-control text-field-mirror"
+                            })
+                        .css({
+                            "height": $caller.height()
+                        });
+                    $caller.before($mirror);
+                }
+                return $mirror;
             }
         }
 
@@ -304,13 +309,13 @@ $(function (win, doc, $) {
                     ready: function ($mirror) {
 
                         var $marker = $mirror.find(".text-field-mirror-marker"),
-                            offset = $marker.position(),
-                            menuLeft = Math.floor(offset.left),
-                            menuTop = Math.floor(offset.top + 26),
+                            position = $marker.position(),
+                            menuLeft = Math.floor(position.left),
+                            menuTop = Math.floor(position.top + 26),
                             scrollLeft = $mirror.scrollLeft(),
                             scrollTop = $mirror.scrollTop();
 
-                        var $menu = methods.addOrGetMenu($caller);
+                        var $menu = methods.getOrCreate($caller);
                         $menu.css({
                             "left": menuLeft + scrollLeft + "px",
                             "top": menuTop + scrollTop + "px"
@@ -327,15 +332,15 @@ $(function (win, doc, $) {
                 });
                 
             },
-            addOrGetMenu: function ($caller) {
+            getOrCreate: function ($caller) {
 
                 // Get or create menu
-                var $menu = $caller.next(),
-                    menuId = $caller.attr("id") + "MentionsDropDown";
-                if (!$menu.hasClass("dropdown-menu")) {
+                var id = $caller.attr("id") + "MentionsDropDown",
+                    $menu = $("#" + id);
+                if ($menu.length === 0) {
                     $menu = $("<div>",
                         {
-                            "id": menuId,
+                            "id": id,
                             "class": "dropdown-menu col-5",
                             "role": "menu"
                         });
@@ -343,7 +348,6 @@ $(function (win, doc, $) {
                 }
 
                 return $menu;
-
 
             },
             getSelection: function ($caller) {
