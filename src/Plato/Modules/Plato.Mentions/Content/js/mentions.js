@@ -19,19 +19,19 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            event: "keypress",
+            event: "keyup", // use keyup to ensure text to test against expressions has been entered
             keys: [
                 {
-                    which: 35, // #
-                    callback: function($input) {
-                        console.log("# was pressed");
-                    }
+                    match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
+                    search: function ($input) {},
+                    bind: function ($input) {},
+                    unbind: function ($input) {}
                 },
                 {
-                    which: 64, // @
-                    callback: function($input) {
-                        console.log("@ was pressed");
-                    }
+                    match: /(^|\s|\()(#([a-z0-9\-_/]*))$/i,
+                    search: function ($input) { },
+                    bind: function ($input) { },
+                    unbind: function ($input) { }
                 }
             ]
         };
@@ -56,34 +56,24 @@ $(function (win, doc, $) {
                     keys = $caller.data(dataKey).keys,
                     event = $caller.data(dataKey).event;
 
-                $caller.bind(event, function(e) {
-                    for (var i = 0; i < keys.length; i++) {
-                        key = keys[i];
-
-                        // Do we have a specific key?
-                        if (key.which) {
-                            if (e.which === key.which) {
-                                key.callback($(this), "");
-                            }
-                        }
-
-                        // Do we have a regular expression match?
-                        if (key.match) {
-                            var matched = false,
-                                search = key.search !== null
-                                    ? key.search($(this))
+                $caller.bind(event,
+                    function(e) {
+                        for (var i = 0; i < keys.length; i++) {
+                            key = keys[i];
+                            var match = false,
+                                search = key.searcher !== null
+                                    ? key.searcher($(this))
                                     : $(this).val();
                             if (search) {
-                                matched = key.match.test(search);
+                                match = key.match.test(search);
                             }
-                            if (matched) {
-                                alert(search)
-                                key.callback($(this), search);
+                            if (match) {
+                                key.bind($(this));
+                            } else {
+                                key.unbind($(this));
                             }
                         }
-                      
-                    }
-                });
+                    });
 
             },
             unbind: function ($caller) {
@@ -310,13 +300,19 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
                 
-                // Track @ character
+                // Track @mention pattern
                 $caller.keyBinder({
                     keys: [
                         {
-                            which: 64, // @
                             match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
-                            search: function($input) {
+                            searcher: function($input) {
+
+                                // The result of the searcher method is tested
+                                // against the match regular expiression within keyBinder
+                                // If a match is found the bind method is called 
+                                // otherwise unbind method is called
+
+                                $input.focus();
 
                                 var cursor = methods.getSelection($input),
                                     chars = $input.val().split(''),
@@ -324,18 +320,20 @@ $(function (win, doc, $) {
                                     marker = "@",
                                     markerIndex = -1,
                                     i = 0;
-
-                                // Search backwards from cursor for marker & get index
-                                for (i = cursor.start; i >= 0; i--) {
-                                    if (chars[i] === '\n') {
-                                        break;
-                                    }
+                                
+                                // Search backwards from caret for marker, until 
+                                // terminators & attempt to get marker index
+                                for (i = cursor.start - 1; i >= 0; i--) {
                                     if (chars[i] === marker) {
                                         markerIndex = i;
                                         break;
+                                    } else {
+                                        if (chars[i] === '\n' || chars[i] === ' ') {
+                                            break;
+                                        }
                                     }
                                 }
-
+                                
                                 // If we have a marker search forward from marker until terminator
                                 if (markerIndex >= 0) {
                                     for (i = markerIndex; i <= chars.length; i++) {
@@ -349,8 +347,11 @@ $(function (win, doc, $) {
                                 return output;
 
                             },
-                            callback: function ($input, search) {
-                                methods.show($input, search);
+                            bind: function ($input) {
+                                methods.show($input, this.searcher($input));
+                            },
+                            unbind: function ($input) {
+                                methods.hide($input);
                             }
                         }
                     ]
@@ -366,17 +367,23 @@ $(function (win, doc, $) {
             },
             show: function ($caller, search) {
 
-                // ensure we have focus
+                // Remove any @ prefix
+                if (search.substring(0, 1) === "@") {
+                    search = search.substring(1, search.length);
+                }
+
+                // Ensure our input has focus
                 $caller.focus();
 
                 // Get cursor selection
                 var cursor = this.getSelection($caller);
 
-                // Mirror field to position menu
+                // Invoke text field mirror to correctly position menu
                 $caller.textFieldMirror({
                     start: cursor.start,
                     ready: function ($mirror) {
 
+                        // Get position from mirrored marker
                         var $marker = $mirror.find(".text-field-mirror-marker"),
                             position = $marker.position(),
                             menuLeft = Math.floor(position.left),
@@ -392,7 +399,7 @@ $(function (win, doc, $) {
                         // Hide mirror after positioning menu
                         $caller.textFieldMirror("hide");
 
-                        // Invoke paged list of users
+                        // Invoke paged list
                         $menu.pagedList({
                             valueField: "keywords",
                             config: {
@@ -459,6 +466,7 @@ $(function (win, doc, $) {
                         {
                             "id": id,
                             "class": "dropdown-menu col-6",
+                            "data-paged-list-page-size": "5",
                             "role": "menu"
                         });
                     $caller.after($menu);
