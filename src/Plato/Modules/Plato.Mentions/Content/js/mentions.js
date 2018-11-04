@@ -12,7 +12,7 @@ $(function (win, doc, $) {
 
     'use strict';
 
-    // mentions
+    // keyBinder
     var keyBinder = function () {
 
         var dataKey = "keyBinder",
@@ -127,6 +127,125 @@ $(function (win, doc, $) {
 
     }();
 
+    // textFieldMirror
+    var textFieldMirror = function () {
+
+        var dataKey = "textFieldMirror",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            start: 0,
+            ready: function($caller) {
+
+            }
+        };
+
+        var methods = {
+            init: function ($caller, methodName) {
+
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                var start = $caller.data(dataKey).start,
+                    firstHalf = $caller.val().substring(0, start),
+                    lastHalf = $caller.val().substring(start, $caller.val().length - 1);
+                
+                var marker = '<span class="text-field-mirror-marker position-relative">@</span>',
+                    markerHtml = firstHalf + marker + lastHalf,
+                    html = markerHtml.replace(/\n/gi, '<br>');
+
+                var $mirror = $('<div class="form-control text-field-mirror">');
+                $mirror.css({
+                    "position": "absolute",
+                    "backgroundColor": "red",
+                    "height": $caller.height(),
+                    "overflow": "auto"
+                });
+                $mirror.html(html);
+                $caller.before($mirror);
+               
+                if ($caller.data(dataKey).ready) {
+                    $caller.data(dataKey).ready($mirror);
+                }
+                
+            },
+            hide: function ($caller) {
+               
+            },
+            addOrGetMirror: function($caller) {
+                
+            
+
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).textFieldMirror
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().textFieldMirror
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+    }();
+
+
     // mentions
     var mentions = function () {
 
@@ -150,7 +269,7 @@ $(function (win, doc, $) {
                 this.bind($caller);
             },
             bind: function ($caller) {
-
+                
                 // Track @ character
                 $caller.keyBinder({
                     keys: [
@@ -166,7 +285,7 @@ $(function (win, doc, $) {
                 });
 
                 // Wrap a relative wrapper around the input to
-                // correctly position the mention menu
+                // correctly position the absolutely positioned mention menu
                 $caller.wrap($('<div class="position-relative"></div>'));
 
             },
@@ -175,37 +294,41 @@ $(function (win, doc, $) {
             },
             show: function($caller) {
 
-                var cursor = this.getSelection($caller);
-                var firstHalf = $caller.val().substring(0, cursor.start);
-                var lastHalf = $caller.val().substring(cursor.start, $caller.val().length - 1);
-
-                var marker = '<span class="text-field-mirror-marker">@</span>';
-
-                var htmlWithMarker = firstHalf + marker + lastHalf;
-                var html = htmlWithMarker.replace(/\n/gi, '<br>');
-
-                var $mirror = $('<div class="form-control text-field-mirror">');
-                $mirror.css({
-                    "position": "absolute",
-                    "backgroundColor": "red",
-                    "height": $caller.height(),
-                    "overflow": "auto"
-                })
-                $mirror.html(html);
-                $caller.before($mirror);
-
-                var scrollTop = $mirror.scrollTop();
-                var scrollLeft = $mirror.scrollLeft();
-                var $marker = $mirror.find(".text-field-mirror-marker");
-                var markerOffset = $marker.offset();
-                alert(JSON.stringify(markerOffset));
-
                 // ensure we have focus
                 $caller.focus();
+
+                var cursor = this.getSelection($caller);
+
+                $caller.textFieldMirror({
+                    start: cursor.start,
+                    ready: function ($mirror) {
+
+                        var $marker = $mirror.find(".text-field-mirror-marker"),
+                            offset = $marker.position(),
+                            menuLeft = Math.floor(offset.left),
+                            menuTop = Math.floor(offset.top + 26),
+                            scrollLeft = $mirror.scrollLeft(),
+                            scrollTop = $mirror.scrollTop();
+
+                        var $menu = methods.addOrGetMenu($caller);
+                        $menu.css({
+                            "left": menuLeft + scrollLeft + "px",
+                            "top": menuTop + scrollTop + "px"
+                        });
+
+                        $caller.textFieldMirror("hide");
+
+                        $caller.userAutoComplete({
+                            target: "#" + $menu.attr("id")
+                        });
+
+
+                    }
+                });
                 
-                var menuTop = Math.floor(markerOffset.top);
-                var menuLeft = Math.floor(markerOffset.left);
-                
+            },
+            addOrGetMenu: function ($caller) {
+
                 // Get or create menu
                 var $menu = $caller.next(),
                     menuId = $caller.attr("id") + "MentionsDropDown";
@@ -219,14 +342,8 @@ $(function (win, doc, $) {
                     $caller.after($menu);
                 }
 
-                $menu.css({
-                    "left": menuLeft + scrollLeft "px",
-                    "top": menuTop + scrollTop + "px"
-                });
-                
-                $caller.userAutoComplete({
-                    target: "#" + menuId
-                });
+                return $menu;
+
 
             },
             getSelection: function ($caller) {
@@ -333,11 +450,12 @@ $(function (win, doc, $) {
     
     $.fn.extend({
         keyBinder: keyBinder.init,
+        textFieldMirror: textFieldMirror.init,
         mentions: mentions.init
     });
 
     $(doc).ready(function () {
-
+        
         $('[data-provide="mentions"]').mentions();
 
         $('.md-textarea').mentions();
