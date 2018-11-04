@@ -2,5 +2,6 @@
 .text-field-mirror {
     position: absolute;
     overflow: auto;
-    background: red;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.4);
 }

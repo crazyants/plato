@@ -616,7 +616,7 @@ $(function (win, doc, $) {
 
             },
             bind: function($caller) {
-
+                
                 // Add loader
                 var loaderTemplate = $caller.data(dataKey).loaderTemplate;
                 $caller.empty().append(loaderTemplate);
@@ -1090,6 +1090,9 @@ $(function (win, doc, $) {
                 // init autoComplete
                 $caller.autoComplete($caller.data(dataKey), methodName);
 
+            },
+            show: function($caller) {
+                $caller.autoComplete("show");
             }
         }
 

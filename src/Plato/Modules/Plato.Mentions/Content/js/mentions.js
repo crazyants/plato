@@ -59,16 +59,37 @@ $(function (win, doc, $) {
                 $caller.bind(event, function(e) {
                     for (var i = 0; i < keys.length; i++) {
                         key = keys[i];
-                        if (e.which === key.which) {
-                            key.callback($(this));
+
+                        // Do we have a specific key?
+                        if (key.which) {
+                            if (e.which === key.which) {
+                                key.callback($(this), "");
+                            }
                         }
+
+                        // Do we have a regular expression match?
+                        if (key.match) {
+                            var matched = false,
+                                search = key.search !== null
+                                    ? key.search($(this))
+                                    : $(this).val();
+                            if (search) {
+                                matched = key.match.test(search);
+                            }
+                            if (matched) {
+                                alert(search)
+                                key.callback($(this), search);
+                            }
+                        }
+                      
                     }
                 });
 
             },
             unbind: function ($caller) {
                 $caller.unbind($caller.data(dataKey).event);
-            }
+            },
+            
         }
 
         return {
@@ -155,7 +176,7 @@ $(function (win, doc, $) {
                 this.bind($caller);
             },
             bind: function ($caller) {
-
+                
                 var start = $caller.data(dataKey).start,
                     prefix = $caller.val().substring(0, start),
                     suffix = $caller.val().substring(start, $caller.val().length - 1),
@@ -164,17 +185,32 @@ $(function (win, doc, $) {
                     html = markerHtml.replace(/\n/gi, '<br/>');
 
                 var $mirror = methods.getOrCreate($caller);
-                $mirror.html(html);
-                $mirror.show();
-               
-                if ($caller.data(dataKey).ready) {
-                    $caller.data(dataKey).ready($mirror);
+                if ($mirror) {
+
+                    // Populate & show mirror
+                    $mirror.html(html).show();
+
+                    // Ensure mirror is always same height as called
+                    $mirror.css({
+                        "height": $caller.outerHeight()
+                    });
+
+                    // Ensure mirror is always scrolled to same position as calller
+                    $mirror[0].scrollTop = $caller.scrollTop();
+
+                    // Marker added raise ready event
+                    if ($caller.data(dataKey).ready) {
+                        $caller.data(dataKey).ready($mirror);
+                    }
+
                 }
                 
             },
             hide: function ($caller) {
                 var $mirror = this.getOrCreate($caller);
-                $mirror.hide();
+                if ($mirror) {
+                    $mirror.hide();
+                }
             },
             getOrCreate: function($caller) {
                 var id = $caller.data(dataIdKey) + "Mirror",
@@ -186,7 +222,7 @@ $(function (win, doc, $) {
                                 "class": "form-control text-field-mirror"
                             })
                         .css({
-                            "height": $caller.height()
+                            "height": $caller.outerHeight()
                         });
                     $caller.before($mirror);
                 }
@@ -249,8 +285,7 @@ $(function (win, doc, $) {
         }
 
     }();
-
-
+    
     // mentions
     var mentions = function () {
 
@@ -281,9 +316,41 @@ $(function (win, doc, $) {
                         {
                             which: 64, // @
                             match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
+                            search: function($input) {
 
-                            callback: function ($input) {
-                                methods.show($input);
+                                var cursor = methods.getSelection($input),
+                                    chars = $input.val().split(''),
+                                    output = "",
+                                    marker = "@",
+                                    markerIndex = -1,
+                                    i = 0;
+
+                                // Search backwards from cursor for marker & get index
+                                for (i = cursor.start; i >= 0; i--) {
+                                    if (chars[i] === '\n') {
+                                        break;
+                                    }
+                                    if (chars[i] === marker) {
+                                        markerIndex = i;
+                                        break;
+                                    }
+                                }
+
+                                // If we have a marker search forward from marker until terminator
+                                if (markerIndex >= 0) {
+                                    for (i = markerIndex; i <= chars.length; i++) {
+                                        if (chars[i] === '\n' || chars[i] === ' ') {
+                                            break;
+                                        }
+                                        output += chars[i];
+                                    }
+                                }
+                                
+                                return output;
+
+                            },
+                            callback: function ($input, search) {
+                                methods.show($input, search);
                             }
                         }
                     ]
@@ -297,13 +364,15 @@ $(function (win, doc, $) {
             unbind: function($caller) {
                 $caller.keyBinder("unbind");
             },
-            show: function($caller) {
+            show: function ($caller, search) {
 
                 // ensure we have focus
                 $caller.focus();
 
+                // Get cursor selection
                 var cursor = this.getSelection($caller);
 
+                // Mirror field to position menu
                 $caller.textFieldMirror({
                     start: cursor.start,
                     ready: function ($mirror) {
@@ -311,44 +380,90 @@ $(function (win, doc, $) {
                         var $marker = $mirror.find(".text-field-mirror-marker"),
                             position = $marker.position(),
                             menuLeft = Math.floor(position.left),
-                            menuTop = Math.floor(position.top + 26),
-                            scrollLeft = $mirror.scrollLeft(),
-                            scrollTop = $mirror.scrollTop();
+                            menuTop = Math.floor(position.top + 26);
 
-                        var $menu = methods.getOrCreate($caller);
+                        // Build & position menu
+                        var $menu = methods.getOrCreateMenu($caller);
                         $menu.css({
-                            "left": menuLeft + scrollLeft + "px",
-                            "top": menuTop + scrollTop + "px"
-                        });
+                            "left": menuLeft + "px",
+                            "top": menuTop + "px"
+                        }).show();
 
+                        // Hide mirror after positioning menu
                         $caller.textFieldMirror("hide");
 
-                        $caller.userAutoComplete({
-                            target: "#" + $menu.attr("id")
-                        });
+                        // Invoke paged list of users
+                        $menu.pagedList({
+                            valueField: "keywords",
+                            config: {
+                                method: "GET",
+                                url: 'api/users/get?page={page}&size={pageSize}&keywords=' +encodeURIComponent(search),
+                                data: {
+                                    sort: "LastLoginDate",
+                                    order: "Desc"
+                                }
+                            },
+                            itemTemplate: '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
+                            parseItemTemplate: function (html, result) {
 
+                                if (result.id) {
+                                    html = html.replace(/\{id}/g, result.id);
+                                } else {
+                                    html = html.replace(/\{id}/g, "0");
+                                }
+
+                                if (result.displayName) {
+                                    html = html.replace(/\{displayName}/g, result.displayName);
+                                } else {
+                                    html = html.replace(/\{displayName}/g, "(no username)");
+                                }
+                                if (result.userName) {
+                                    html = html.replace(/\{userName}/g, result.userName);
+                                } else {
+                                    html = html.replace(/\{userName}/g, "(no username)");
+                                }
+
+                                if (result.email) {
+                                    html = html.replace(/\{email}/g, result.email);
+                                } else {
+                                    html = html.replace(/\{email}/g, "");
+                                }
+                                if (result.agent_url) {
+                                    html = html.replace(/\{url}/g, result.url);
+                                } else {
+                                    html = html.replace(/\{url}/g, "#");
+                                }
+                                return html;
+
+                            },
+                            onItemClick: function ($caller, result, e) {
+                                e.preventDefault();
+                                alert(JSON.stringify(result));
+                                methods.replaceSelection($caller, result.displayName);
+                            }
+                        });
 
                     }
                 });
                 
             },
-            getOrCreate: function ($caller) {
-
-                // Get or create menu
+            hide: function ($caller) {
+                var $menu = this.getOrCreateMenu($caller);
+                $menu.hide();
+            },
+            getOrCreateMenu: function ($caller) {
                 var id = $caller.attr("id") + "MentionsDropDown",
                     $menu = $("#" + id);
                 if ($menu.length === 0) {
                     $menu = $("<div>",
                         {
                             "id": id,
-                            "class": "dropdown-menu col-5",
+                            "class": "dropdown-menu col-6",
                             "role": "menu"
                         });
                     $caller.after($menu);
                 }
-
                 return $menu;
-
             },
             getSelection: function ($caller) {
 
@@ -393,6 +508,27 @@ $(function (win, doc, $) {
 
                 )();
 
+            },
+            replaceSelection: function ($caller, text) {
+
+                var e = $caller[0];
+
+                return (
+
+                    ('selectionStart' in e && function () {
+                            e.value = e.value.substr(0, e.selectionStart) + text + e.value.substr(e.selectionEnd, e.value.length);
+                            // Set cursor to the last replacement end
+                            e.selectionStart = e.value.length;
+                            return this;
+                        }) ||
+
+                        /* browser not supported */
+                        function () {
+                            e.value += text;
+                            return jQuery(e);
+                        }
+
+                )();
             },
         }
 
