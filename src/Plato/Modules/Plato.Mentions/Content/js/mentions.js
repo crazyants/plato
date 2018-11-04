@@ -61,8 +61,8 @@ $(function (win, doc, $) {
                         for (var i = 0; i < keys.length; i++) {
                             key = keys[i];
                             var match = false,
-                                search = key.searcher !== null
-                                    ? key.searcher($(this))
+                                search = key.search !== null
+                                    ? key.search($(this)).value
                                     : $(this).val();
                             if (search) {
                                 match = key.match.test(search);
@@ -275,7 +275,9 @@ $(function (win, doc, $) {
         }
 
     }();
-    
+
+    // ----------
+
     // mentions
     var mentions = function () {
 
@@ -297,6 +299,7 @@ $(function (win, doc, $) {
                 }
 
                 this.bind($caller);
+
             },
             bind: function ($caller) {
                 
@@ -305,9 +308,9 @@ $(function (win, doc, $) {
                     keys: [
                         {
                             match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
-                            searcher: function($input) {
+                            search: function($input) {
 
-                                // The result of the searcher method is tested
+                                // The result of the search method is tested
                                 // against the match regular expiression within keyBinder
                                 // If a match is found the bind method is called 
                                 // otherwise unbind method is called
@@ -344,11 +347,14 @@ $(function (win, doc, $) {
                                     }
                                 }
                                 
-                                return output;
+                                return {
+                                    markerIndex: markerIndex,
+                                    value: output
+                                };
 
                             },
                             bind: function ($input) {
-                                methods.show($input, this.searcher($input));
+                                methods.show($input, this.search($input));
                             },
                             unbind: function ($input) {
                                 methods.hide($input);
@@ -361,15 +367,26 @@ $(function (win, doc, $) {
                 // correctly position the absolutely positioned mention menu
                 $caller.wrap($('<div class="position-relative"></div>'));
 
+                // Hide menu on click, blur & scroll
+                $caller.bind("click scroll",
+                    function() {
+                        var $menu = methods.getOrCreateMenu($(this));
+                        if ($menu) {
+                            $menu.hide();
+                        }
+                    });
+
             },
             unbind: function($caller) {
                 $caller.keyBinder("unbind");
             },
             show: function ($caller, search) {
 
-                // Remove any @ prefix
-                if (search.substring(0, 1) === "@") {
-                    search = search.substring(1, search.length);
+                var markerIndex = search.markerIndex;
+
+                // Remove any @ prefix from search string
+                if (search.value.substring(0, 1) === "@") {
+                    search = search.value.substring(1, search.value.length);
                 }
 
                 // Ensure our input has focus
@@ -443,10 +460,25 @@ $(function (win, doc, $) {
                                 return html;
 
                             },
-                            onItemClick: function ($caller, result, e) {
+                            onItemClick: function ($self, result, e) {
+
                                 e.preventDefault();
-                                alert(JSON.stringify(result));
-                                methods.replaceSelection($caller, result.displayName);
+                                $menu.hide();
+                                $caller.focus();
+
+                                var sel = methods.getSelection($caller),
+                                    value = result.userName,
+                                    cursor = (markerIndex + 1) + value.length;
+
+                                // Select everything from marker
+                                methods.setSelection($caller, markerIndex + 1, sel.start);
+
+                                // Replace selection with username
+                                methods.replaceSelection($caller, value);
+
+                                // Place cursor at end of new @mention 
+                                methods.setSelection($caller, cursor, cursor);
+
                             }
                         });
 
