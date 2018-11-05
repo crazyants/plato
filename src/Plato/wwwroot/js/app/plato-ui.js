@@ -445,6 +445,8 @@ $(function (win, doc, $) {
                     $caller.empty().append(this.buildNoResults($caller));
                 }
 
+                $caller.pagedList("setItemIndex");
+
                 if ($caller.data(dataKey).onLoaded) {
                     $caller.data(dataKey).onLoaded($caller);
                 }
@@ -596,7 +598,12 @@ $(function (win, doc, $) {
 
             }, // provides a method to parse our itemTemplate with data returned from service url
             loaderTemplate: '<p class="text-center"><i class="fal fa-spinner fa-spin" ></i></p >', // a handlebars style template for auto complete list items
-            noResultsText: "Sorry no results matched your search!" // the text to display when no results are available
+            noResultsText: "Sorry no results matched your search!", // the text to display when no results are available
+            itemSelection: {
+                enable: true,
+                index: 0,
+                css: "active"
+            }
         };
 
         var methods = {
@@ -668,6 +675,29 @@ $(function (win, doc, $) {
 
                 return config;
 
+            },
+            setItemIndex: function($caller) {
+                var selection = $caller.data(dataKey).itemSelection,
+                    itemCss = $caller.data(dataKey).itemCss;
+                console.log(JSON.stringify(selection))
+                if (selection) {
+                    if (selection.enable === false) {
+                        return;
+                    }
+                    var index = selection.index,
+                        selector = "a." + itemCss,
+                        tag = selection.tag,
+                        css = selection.css,
+                        $el = $caller.find(selector + ":eq(" + index + ")");
+                    console.log(selector + " - " + index + " - " + $el.length);
+                    $caller.find(selector).each(function () {
+                        console.log("removeClass");
+                        $(this).removeClass(css);
+                    });
+                    if ($el.length > 0) {
+                        $el.addClass(css);
+                    }
+                }
             },
             setPageIndex: function ($caller, pageIndex) {
                 $caller.data(dataKey).page = pageIndex;

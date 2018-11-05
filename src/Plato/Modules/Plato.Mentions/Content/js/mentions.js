@@ -56,21 +56,31 @@ $(function (win, doc, $) {
                     keys = $caller.data(dataKey).keys,
                     event = $caller.data(dataKey).event;
 
-                $caller.bind(event,
-                    function(e) {
+                $caller.bind(event, function(e) {
                         for (var i = 0; i < keys.length; i++) {
                             key = keys[i];
                             var match = false,
-                                search = key.search !== null
+                                search = key.search 
                                     ? key.search($(this)).value
                                     : $(this).val();
+                          
                             if (search) {
-                                match = key.match.test(search);
+                                if (key.match) {
+                                    match = key.match.test(search);
+                                }
                             }
                             if (match) {
-                                key.bind($(this));
+                                if (key.bind) {
+                                    key.bind($(this), e);
+                                }
                             } else {
-                                key.unbind($(this));
+                                if (key.unbind) {
+                                    key.unbind($(this), e);
+                                }
+                                
+                            }
+                            if (key.always) {
+                                key.always($(this), e);
                             }
                         }
                     });
@@ -276,6 +286,8 @@ $(function (win, doc, $) {
 
     }();
 
+
+  
     // ----------
 
     // mentions
@@ -302,13 +314,15 @@ $(function (win, doc, $) {
 
             },
             bind: function ($caller) {
-                
+               
                 // Track @mention pattern
                 $caller.keyBinder({
+                    event: "keyup",
                     keys: [
                         {
+                            event: "keyup",
                             match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
-                            search: function($input) {
+                            search: function ($input) {
 
                                 // The result of the search method is tested
                                 // against the match regular expiression within keyBinder
@@ -319,11 +333,11 @@ $(function (win, doc, $) {
 
                                 var cursor = methods.getSelection($input),
                                     chars = $input.val().split(''),
-                                    output = "",
+                                    value = "",
                                     marker = "@",
                                     markerIndex = -1,
                                     i = 0;
-                                
+
                                 // Search backwards from caret for marker, until 
                                 // terminators & attempt to get marker index
                                 for (i = cursor.start - 1; i >= 0; i--) {
@@ -336,38 +350,87 @@ $(function (win, doc, $) {
                                         }
                                     }
                                 }
-                                
-                                // If we have a marker search forward from marker until terminator
+
+                                // If we have a marker search forward 
+                                // from marker until terminator
                                 if (markerIndex >= 0) {
                                     for (i = markerIndex; i <= chars.length; i++) {
                                         if (chars[i] === '\n' || chars[i] === ' ') {
                                             break;
                                         }
-                                        output += chars[i];
+                                        value += chars[i];
                                     }
                                 }
-                                
+
                                 return {
                                     markerIndex: markerIndex,
-                                    value: output
+                                    value: value
                                 };
 
                             },
-                            bind: function ($input) {
-                                methods.show($input, this.search($input));
+                            bind: function ($input, e) {
+
+                                switch (e.which) {
+                                    case 38: // up
+                                        return;
+                                    case 40: // down
+                                        return;
+                                    default:
+                                        methods.show($input, this.search($input));
+                                        break;
+                                    }
+
+
                             },
-                            unbind: function ($input) {
+                            unbind: function ($input, e) {
                                 methods.hide($input);
                             }
                         }
                     ]
                 });
 
+                // Handle arrow keys when menu is active
+                $caller.bind("keydown",
+                    function (e) {
+                        var $menu = methods.getOrCreateMenu($(this));
+                        if ($menu) {
+                            if ($menu.is(":visible")) {
+                                var itemSelection = $menu.data("pagedList").itemSelection;
+                                if (itemSelection.enable) {
+                                    switch (e.which) {
+                                    case 38: // up
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        $menu.pagedList({
+                                            itemSelection: $.extend(itemSelection,
+                                                {
+                                                    index: itemSelection.index - 1
+                                                })
+                                        }, "setItemIndex");
+                                        break;
+                                    case 40: // down
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        $menu.pagedList({
+                                            itemSelection: $.extend(itemSelection,
+                                                {
+                                                    index: itemSelection.index + 1
+                                                })
+                                        }, "setItemIndex");
+                                        break;
+                                    }
+                                }
+
+                            
+                            }
+                        }
+                    });
+                
                 // Wrap a relative wrapper around the input to
                 // correctly position the absolutely positioned mention menu
                 $caller.wrap($('<div class="position-relative"></div>'));
 
-                // Hide menu on click, blur & scroll
+                // Hide menu on click & scroll
                 $caller.bind("click scroll",
                     function() {
                         var $menu = methods.getOrCreateMenu($(this));
@@ -382,11 +445,13 @@ $(function (win, doc, $) {
             },
             show: function ($caller, search) {
 
-                var markerIndex = search.markerIndex;
+                // Unbox search results
+                var value = search.value,
+                    markerIndex = search.markerIndex;
 
                 // Remove any @ prefix from search string
-                if (search.value.substring(0, 1) === "@") {
-                    search = search.value.substring(1, search.value.length);
+                if (value.substring(0, 1) === "@") {
+                    value = value.substring(1, value.length);
                 }
 
                 // Ensure our input has focus
@@ -403,14 +468,14 @@ $(function (win, doc, $) {
                         // Get position from mirrored marker
                         var $marker = $mirror.find(".text-field-mirror-marker"),
                             position = $marker.position(),
-                            menuLeft = Math.floor(position.left),
-                            menuTop = Math.floor(position.top + 26);
+                            left = Math.floor(position.left),
+                            top = Math.floor(position.top + 26);
 
                         // Build & position menu
                         var $menu = methods.getOrCreateMenu($caller);
                         $menu.css({
-                            "left": menuLeft + "px",
-                            "top": menuTop + "px"
+                            "left": left + "px",
+                            "top": top + "px"
                         }).show();
 
                         // Hide mirror after positioning menu
@@ -421,12 +486,13 @@ $(function (win, doc, $) {
                             valueField: "keywords",
                             config: {
                                 method: "GET",
-                                url: 'api/users/get?page={page}&size={pageSize}&keywords=' +encodeURIComponent(search),
+                                url: 'api/users/get?page={page}&size={pageSize}&keywords=' + encodeURIComponent(value),
                                 data: {
                                     sort: "LastLoginDate",
                                     order: "Desc"
                                 }
                             },
+                            itemCss: "dropdown-item",
                             itemTemplate: '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
                             parseItemTemplate: function (html, result) {
 
@@ -467,7 +533,7 @@ $(function (win, doc, $) {
                                 $caller.focus();
 
                                 var sel = methods.getSelection($caller),
-                                    value = result.userName,
+                                    value = result.userName + " ",
                                     cursor = (markerIndex + 1) + value.length;
 
                                 // Select everything from marker
