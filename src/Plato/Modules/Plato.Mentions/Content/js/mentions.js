@@ -371,6 +371,8 @@ $(function (win, doc, $) {
                             bind: function ($input, e) {
 
                                 switch (e.which) {
+                                    case 13: // carriage return
+                                        return;
                                     case 38: // up
                                         return;
                                     case 40: // down
@@ -395,30 +397,49 @@ $(function (win, doc, $) {
                         var $menu = methods.getOrCreateMenu($(this));
                         if ($menu) {
                             if ($menu.is(":visible")) {
-                                var itemSelection = $menu.data("pagedList").itemSelection;
+                                var pageSize = $menu.data("pagedList").pageSize,
+                                    itemCss = $menu.data("pagedList").itemCss,
+                                    itemSelection = $menu.data("pagedList").itemSelection,
+                                    newIndex = -1;
+
                                 if (itemSelection.enable) {
                                     switch (e.which) {
-                                    case 38: // up
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        $menu.pagedList({
-                                            itemSelection: $.extend(itemSelection,
-                                                {
-                                                    index: itemSelection.index - 1
-                                                })
-                                        }, "setItemIndex");
-                                        break;
-                                    case 40: // down
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        $menu.pagedList({
-                                            itemSelection: $.extend(itemSelection,
-                                                {
-                                                    index: itemSelection.index + 1
-                                                })
-                                        }, "setItemIndex");
-                                        break;
+                                        case 13: // carriage return
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            // find active and click
+                                            $menu.find("." + itemCss).each(function() {
+                                                if ($(this).hasClass(itemSelection.css)) {
+                                                    $(this).click();
+                                                }
+                                            });
+                                            break;
+                                        case 38: // up
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            newIndex = itemSelection.index - 1;
+                                            if (newIndex < 0) {
+                                                newIndex = 0;
+                                            }
+                                            break;
+                                        case 40: // down
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            newIndex = itemSelection.index + 1;
+                                            if (newIndex > (pageSize - 1)) {
+                                                newIndex = (pageSize - 1);
+                                            }
+                                            break;
                                     }
+                                    if (newIndex >= 0) {
+                                        $menu.pagedList({
+                                            itemSelection: $.extend(itemSelection,
+                                                {
+                                                    index: newIndex
+                                                })
+                                        }, "setItemIndex");
+                                    }
+                                  
                                 }
 
                             
@@ -483,6 +504,7 @@ $(function (win, doc, $) {
 
                         // Invoke paged list
                         $menu.pagedList({
+                            pageSize: 5,
                             valueField: "keywords",
                             config: {
                                 method: "GET",
@@ -564,7 +586,6 @@ $(function (win, doc, $) {
                         {
                             "id": id,
                             "class": "dropdown-menu col-6",
-                            "data-paged-list-page-size": "5",
                             "role": "menu"
                         });
                     $caller.after($menu);

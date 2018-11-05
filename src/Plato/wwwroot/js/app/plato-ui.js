@@ -679,7 +679,7 @@ $(function (win, doc, $) {
             setItemIndex: function($caller) {
                 var selection = $caller.data(dataKey).itemSelection,
                     itemCss = $caller.data(dataKey).itemCss;
-                console.log(JSON.stringify(selection))
+            
                 if (selection) {
                     if (selection.enable === false) {
                         return;
@@ -689,7 +689,11 @@ $(function (win, doc, $) {
                         tag = selection.tag,
                         css = selection.css,
                         $el = $caller.find(selector + ":eq(" + index + ")");
-                    console.log(selector + " - " + index + " - " + $el.length);
+
+                    if (index < 0) {
+                        return;
+                    }
+                    
                     $caller.find(selector).each(function () {
                         console.log("removeClass");
                         $(this).removeClass(css);
