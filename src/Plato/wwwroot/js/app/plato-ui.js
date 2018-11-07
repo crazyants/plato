@@ -690,7 +690,6 @@ $(function (win, doc, $) {
                         css = selection.css,
                         $el = $caller.find(selector + ":eq(" + index + ")");
                     $caller.find(selector).each(function () {
-                        console.log("removeClass");
                         $(this).removeClass(css);
                     });
                     if ($el.length > 0) {
