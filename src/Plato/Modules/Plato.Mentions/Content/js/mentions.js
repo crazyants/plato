@@ -7,7 +7,6 @@ if (typeof $.Plato.Context === "undefined") {
     throw new Error("$.Plato.Context Required");
 }
 
-/* follow buttons */
 $(function (win, doc, $) {
 
     'use strict';
@@ -24,15 +23,13 @@ $(function (win, doc, $) {
                 {
                     match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
                     search: function ($input) {},
-                    bind: function ($input) {},
-                    unbind: function ($input) {}
+                    bind: function ($input) {}
                 },
                 {
                     match: /(^|\s|\()(#([a-z0-9\-_/]*))$/i,
                     search: function ($input) { },
-                    bind: function ($input) { },
-                    unbind: function ($input) { }
-                }
+                    bind: function ($input) { }
+                 }
             ]
         };
 
@@ -60,8 +57,9 @@ $(function (win, doc, $) {
                         for (var i = 0; i < keys.length; i++) {
                             key = keys[i];
                             var match = false,
+                                selection = methods.getSelection($(this)),
                                 search = key.search 
-                                    ? key.search($(this)).value
+                                    ? key.search($(this), selection).value
                                     : $(this).val();
                           
                             if (search) {
@@ -71,16 +69,13 @@ $(function (win, doc, $) {
                             }
                             if (match) {
                                 if (key.bind) {
-                                    key.bind($(this), e);
+                                    key.bind($(this), search, e);
                                 }
                             } else {
                                 if (key.unbind) {
                                     key.unbind($(this), e);
                                 }
                                 
-                            }
-                            if (key.always) {
-                                key.always($(this), e);
                             }
                         }
                     });
@@ -89,7 +84,30 @@ $(function (win, doc, $) {
             unbind: function ($caller) {
                 $caller.unbind($caller.data(dataKey).event);
             },
-            
+            getSelection: function ($caller) {
+
+                var e = $caller[0];
+
+                return (
+
+                    ('selectionStart' in e && function () {
+                            var l = e.selectionEnd - e.selectionStart;
+                            return {
+                                start: e.selectionStart,
+                                end: e.selectionEnd,
+                                length: l,
+                                text: e.value.substr(e.selectionStart, l)
+                            };
+                        }) ||
+
+                        /* browser not supported */
+                        function () {
+                            return null;
+                        }
+
+                )();
+
+            }
         }
 
         return {
@@ -285,15 +303,11 @@ $(function (win, doc, $) {
         }
 
     }();
+    
+    // suggester
+    var suggester = function () {
 
-
-  
-    // ----------
-
-    // mentions
-    var mentions = function () {
-
-        var dataKey = "mentions",
+        var dataKey = "suggester",
             dataIdKey = dataKey + "Id";
 
         var defaults = {};
@@ -316,80 +330,7 @@ $(function (win, doc, $) {
             bind: function ($caller) {
                
                 // Track @mention pattern
-                $caller.keyBinder({
-                    event: "keyup",
-                    keys: [
-                        {
-                            event: "keyup",
-                            match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
-                            search: function ($input) {
-
-                                // The result of the search method is tested
-                                // against the match regular expiression within keyBinder
-                                // If a match is found the bind method is called 
-                                // otherwise unbind method is called
-
-                                $input.focus();
-
-                                var cursor = methods.getSelection($input),
-                                    chars = $input.val().split(''),
-                                    value = "",
-                                    marker = "@",
-                                    markerIndex = -1,
-                                    i = 0;
-
-                                // Search backwards from caret for marker, until 
-                                // terminators & attempt to get marker index
-                                for (i = cursor.start - 1; i >= 0; i--) {
-                                    if (chars[i] === marker) {
-                                        markerIndex = i;
-                                        break;
-                                    } else {
-                                        if (chars[i] === '\n' || chars[i] === ' ') {
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                // If we have a marker search forward 
-                                // from marker until terminator
-                                if (markerIndex >= 0) {
-                                    for (i = markerIndex; i <= chars.length; i++) {
-                                        if (chars[i] === '\n' || chars[i] === ' ') {
-                                            break;
-                                        }
-                                        value += chars[i];
-                                    }
-                                }
-
-                                return {
-                                    markerIndex: markerIndex,
-                                    value: value
-                                };
-
-                            },
-                            bind: function ($input, e) {
-
-                                switch (e.which) {
-                                    case 13: // carriage return
-                                        return;
-                                    case 38: // up
-                                        return;
-                                    case 40: // down
-                                        return;
-                                    default:
-                                        methods.show($input, this.search($input));
-                                        break;
-                                    }
-
-
-                            },
-                            unbind: function ($input, e) {
-                                methods.hide($input);
-                            }
-                        }
-                    ]
-                });
+                $caller.keyBinder($caller.data(dataKey));
 
                 // Handle arrow keys when menu is active
                 $caller.bind("keydown",
@@ -464,17 +405,8 @@ $(function (win, doc, $) {
             unbind: function($caller) {
                 $caller.keyBinder("unbind");
             },
-            show: function ($caller, search) {
-
-                // Unbox search results
-                var value = search.value,
-                    markerIndex = search.markerIndex;
-
-                // Remove any @ prefix from search string
-                if (value.substring(0, 1) === "@") {
-                    value = value.substring(1, value.length);
-                }
-
+            show: function ($caller) {
+                
                 // Ensure our input has focus
                 $caller.focus();
 
@@ -503,72 +435,7 @@ $(function (win, doc, $) {
                         $caller.textFieldMirror("hide");
 
                         // Invoke paged list
-                        $menu.pagedList({
-                            pageSize: 5,
-                            valueField: "keywords",
-                            config: {
-                                method: "GET",
-                                url: 'api/users/get?page={page}&size={pageSize}&keywords=' + encodeURIComponent(value),
-                                data: {
-                                    sort: "LastLoginDate",
-                                    order: "Desc"
-                                }
-                            },
-                            itemCss: "dropdown-item",
-                            itemTemplate: '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
-                            parseItemTemplate: function (html, result) {
-
-                                if (result.id) {
-                                    html = html.replace(/\{id}/g, result.id);
-                                } else {
-                                    html = html.replace(/\{id}/g, "0");
-                                }
-
-                                if (result.displayName) {
-                                    html = html.replace(/\{displayName}/g, result.displayName);
-                                } else {
-                                    html = html.replace(/\{displayName}/g, "(no username)");
-                                }
-                                if (result.userName) {
-                                    html = html.replace(/\{userName}/g, result.userName);
-                                } else {
-                                    html = html.replace(/\{userName}/g, "(no username)");
-                                }
-
-                                if (result.email) {
-                                    html = html.replace(/\{email}/g, result.email);
-                                } else {
-                                    html = html.replace(/\{email}/g, "");
-                                }
-                                if (result.agent_url) {
-                                    html = html.replace(/\{url}/g, result.url);
-                                } else {
-                                    html = html.replace(/\{url}/g, "#");
-                                }
-                                return html;
-
-                            },
-                            onItemClick: function ($self, result, e) {
-
-                                e.preventDefault();
-                                $menu.hide();
-                                $caller.focus();
-
-                                var sel = methods.getSelection($caller),
-                                    value = result.userName + " ",
-                                    cursor = (markerIndex + 1) + value.length;
-
-                                // Select everything from marker
-                                methods.setSelection($caller, markerIndex + 1, sel.start);
-
-                                // Replace selection with username
-                                methods.replaceSelection($caller, value);
-
-                                // Place cursor at end of new @mention 
-                                methods.setSelection($caller, cursor, cursor);
-
-                            }
-                        });
+                        $menu.pagedList($caller.data(dataKey));
 
                     }
                 });
@@ -579,7 +446,7 @@ $(function (win, doc, $) {
                 $menu.hide();
             },
             getOrCreateMenu: function ($caller) {
-                var id = $caller.attr("id") + "MentionsDropDown",
+                var id = $caller.attr("id") + "SuggesterDropDown",
                     $menu = $("#" + id);
                 if ($menu.length === 0) {
                     $menu = $("<div>",
@@ -685,6 +552,244 @@ $(function (win, doc, $) {
                 }
 
                 if (this.length > 0) {
+                    // $(selector).suggester
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().suggester
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+    }();
+
+    // mentions
+    var mentions = function () {
+
+        var dataKey = "mentions",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {};
+
+        var methods = {
+            init: function($caller, methodName) {
+
+                if (methodName) {
+                    if (this[methodName]) {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                this.bind($caller);
+
+            },
+            bind: function($caller) {
+
+                $caller.suggester($.extend($caller.data(dataKey)),
+                    {
+                        // keyBinder options
+                        event: "keyup",
+                        keys: [
+                            {
+                                event: "keyup",
+                                match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
+                                search: function($input, selection) {
+
+                                    // The result of the search method is tested
+                                    // against the match regular expiression within keyBinder
+                                    // If a match is found the bind method is called 
+                                    // otherwise unbind method is called
+                                    // This code executes on everykey press so should be optimized
+
+                                    var chars = $input.val().split(''),
+                                        value = "",
+                                        marker = "@",
+                                        markerIndex = -1,
+                                        i = 0;
+
+                                    // Search backwards from caret for marker, until 
+                                    // terminators & attempt to get marker index
+                                    for (i = selection.start - 1; i >= 0; i--) {
+                                        if (chars[i] === marker) {
+                                            markerIndex = i;
+                                            break;
+                                        } else {
+                                            if (chars[i] === "\n" || chars[i] === " ") {
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    // If we have a marker search forward 
+                                    // from marker until terminator to get value
+                                    if (markerIndex >= 0) {
+                                        for (i = markerIndex; i <= chars.length; i++) {
+                                            if (chars[i] === "\n" || chars[i] === " ") {
+                                                break;
+                                            }
+                                            value += chars[i];
+                                        }
+                                    }
+
+                                    return {
+                                        markerIndex: markerIndex,
+                                        value: value
+                                    };
+
+                                },
+                                bind: function ($input, search, e) {
+                                
+                                    switch (e.which) {
+                                        case 13: // carriage return
+                                            return;
+                                        case 38: // up
+                                            return;
+                                        case 40: // down
+                                            return;
+                                        default:
+
+                                                // Remove any @ prefix from search string
+                                                if (search.substring(0, 1) === "@") {
+                                                    search = search.substring(1, search.length);
+                                                }
+                                                
+                                                $caller.suggester({ // pagedList options
+                                                        pageSize: 5,
+                                                        itemSelection: {
+                                                            enable: true,
+                                                            index: 0,
+                                                            css: "active"
+                                                        },
+                                                        valueField: "keywords",
+                                                        config: {
+                                                            method: "GET",
+                                                            url:
+                                                                'api/users/get?page={page}&size={pageSize}&keywords=' +
+                                                                    encodeURIComponent(search),
+                                                            data: {
+                                                                sort: "LastLoginDate",
+                                                                order: "Desc"
+                                                            }
+                                                        },
+                                                        itemCss: "dropdown-item",
+                                                        itemTemplate:
+                                                            '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
+                                                        parseItemTemplate: function(html, result) {
+
+                                                            if (result.id) {
+                                                                html = html.replace(/\{id}/g, result.id);
+                                                            } else {
+                                                                html = html.replace(/\{id}/g, "0");
+                                                            }
+
+                                                            if (result.displayName) {
+                                                                html = html.replace(/\{displayName}/g, result.displayName);
+                                                            } else {
+                                                                html = html.replace(/\{displayName}/g, "(no username)");
+                                                            }
+                                                            if (result.userName) {
+                                                                html = html.replace(/\{userName}/g, result.userName);
+                                                            } else {
+                                                                html = html.replace(/\{userName}/g, "(no username)");
+                                                            }
+
+                                                            if (result.email) {
+                                                                html = html.replace(/\{email}/g, result.email);
+                                                            } else {
+                                                                html = html.replace(/\{email}/g, "");
+                                                            }
+                                                            if (result.agent_url) {
+                                                                html = html.replace(/\{url}/g, result.url);
+                                                            } else {
+                                                                html = html.replace(/\{url}/g, "#");
+                                                            }
+                                                            return html;
+
+                                                        },
+                                                        onItemClick: function($self, result, e) {
+
+                                                            e.preventDefault();
+                                                            //$menu.hide();
+                                                            $caller.focus();
+
+                                                            var sel = methods.getSelection($caller),
+                                                                value = result.userName + " ",
+                                                                cursor = (markerIndex + 1) + value.length;
+
+                                                            // Select everything from marker
+                                                            methods.setSelection($caller, markerIndex + 1, sel.start);
+
+                                                            // Replace selection with username
+                                                            methods.replaceSelection($caller, value);
+
+                                                            // Place cursor at end of new @mention 
+                                                            methods.setSelection($caller, cursor, cursor);
+
+                                                        }
+                                                    },
+                                                    "show");
+
+                                            break;
+                                        }
+                                    
+                                },
+                                unbind: function ($input, selection, e) {
+                                    $caller.suggester("hide");
+                                }
+                            }
+                        ]
+                    });
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
+                    }
+                }
+
+                if (this.length > 0) {
                     // $(selector).mentions
                     return this.each(function () {
                         if (!$(this).data(dataIdKey)) {
@@ -718,6 +823,7 @@ $(function (win, doc, $) {
     $.fn.extend({
         keyBinder: keyBinder.init,
         textFieldMirror: textFieldMirror.init,
+        suggester: suggester.init,
         mentions: mentions.init
     });
 

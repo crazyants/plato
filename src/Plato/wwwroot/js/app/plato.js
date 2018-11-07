@@ -21,7 +21,7 @@ $(function (win, doc, $) {
 
     /* Default options */
     win.$.Plato.Options = {
-        debug: false,
+        debug: true,
         url: "",
         locale: "en-US",
         apiKey: "",
