@@ -410,7 +410,7 @@
             
             var editorHeaderLeft = $('<div/>',
                 {
-                    'class': 'float-left'
+                    'class': 'd-inline-block'
                 });
 
             var editorHeaderRight = $('<div/>',
@@ -2348,8 +2348,7 @@
     });
   };
     
-  $(document)
-    .on('click.markdown.data-api', '[data-provide="markdown-editable"]', function(e) {
+  $(document).on('click.markdown.data-api', '[data-provide="markdown-editable"]', function(e) {
       initMarkdown($(this));
       e.preventDefault();
     })

@@ -10,8 +10,7 @@
 /* floated row to allow us to float tabs left and buttons right */
 
 .md-header-row {
-    float: left;
-    width: 100%;
+    display: block;
     border-width: 0;
     border-bottom-width: 1px;
     border-style: solid;
