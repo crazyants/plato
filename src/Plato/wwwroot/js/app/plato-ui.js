@@ -1433,6 +1433,110 @@ $(function (win, doc, $) {
 
     }();
 
+    /* blurSpy */
+    var blurSpy = function () {
+
+        var dataKey = "blurSpy",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            interval: 100, // interval in milliseconds to wait between typing before fireing onChange event
+            onBlur: null // triggers after interval if the input does not reeive focus
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                $caller.bind("focus",
+                    function(e) {
+                        methods.stopTimer();
+                    });
+
+                $caller.bind("blur",
+                    function(e) {
+                        methods.startTimer($(this), e);
+                    });
+
+            },
+            unbind: function ($caller) {
+                $caller.unbind('blur');
+                $caller.unbind('focus');
+            },
+            startTimer: function ($caller, e) {
+                this.stopTimer();
+                this.timer = setTimeout(function () {
+                    if ($caller.data(dataKey).onBlur) {
+                        $caller.data(dataKey).onBlur($caller, e);
+                    }
+                }, $caller.data(dataKey).interval);
+            },
+            stopTimer: function () {
+                win.clearTimeout(this.timer);
+                this.timer = null;
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    if (a) {
+                        switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                        }
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).blurSpy()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().blurSpy()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+
+
     /* filterList */
     var filterList = function () {
 
@@ -3033,6 +3137,7 @@ $(function (win, doc, $) {
         pagedList: pagedList.init,
         autoComplete: autoComplete.init,
         typeSpy: typeSpy.init,
+        blurSpy: blurSpy.init,
         filterList: filterList.init,
         tagIt: tagIt.init,
         userAutoComplete: userAutoComplete.init,

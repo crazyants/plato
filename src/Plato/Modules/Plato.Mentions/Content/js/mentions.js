@@ -218,7 +218,7 @@ $(function (win, doc, $) {
                     markerHtml = prefix + marker + suffix,
                     html = markerHtml.replace(/\n/gi, '<br/>');
 
-                var $mirror = methods.getOrCreate($caller);
+                var $mirror = methods.getOrCreateMirror($caller);
                 if ($mirror) {
 
                     // Populate & show mirror
@@ -241,12 +241,12 @@ $(function (win, doc, $) {
                 
             },
             hide: function ($caller) {
-                var $mirror = this.getOrCreate($caller);
+                var $mirror = this.getOrCreateMirror($caller);
                 if ($mirror) {
                     $mirror.hide();
                 }
             },
-            getOrCreate: function($caller) {
+            getOrCreateMirror: function($caller) {
                 var id = $caller.data(dataIdKey) + "Mirror",
                     $mirror = $("#" + id);
                 if ($mirror.length === 0) {
@@ -415,7 +415,6 @@ $(function (win, doc, $) {
                         }
                     });
                 
-                
                 // Hide menu on click & scroll
                 $caller.bind("click scroll",
                     function() {
@@ -424,6 +423,19 @@ $(function (win, doc, $) {
                             $menu.hide();
                         }
                     });
+
+
+                // spy on our input
+                $caller.blurSpy({
+                    onBlur: function ($el, e) {
+                        var $menu = methods.getOrCreateMenu($(this));
+                        if ($menu) {
+                            $menu.hide();
+                        }
+                    }
+                });
+
+
 
             },
             unbind: function($caller) {
@@ -629,6 +641,8 @@ $(function (win, doc, $) {
         }
 
     }();
+
+    // ---------------------
 
     // mentions
     var mentions = function () {
@@ -858,7 +872,8 @@ $(function (win, doc, $) {
         }
 
     }();
-    
+
+
     $.fn.extend({
         keyBinder: keyBinder.init,
         textFieldMirror: textFieldMirror.init,
