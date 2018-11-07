@@ -53,29 +53,45 @@ $(function (win, doc, $) {
                     keys = $caller.data(dataKey).keys,
                     event = $caller.data(dataKey).event;
 
-                $caller.bind(event, function(e) {
+                $caller.bind(event,
+                    function(e) {
                         for (var i = 0; i < keys.length; i++) {
+
                             key = keys[i];
+
+                            $(this).focus();
+                            
                             var match = false,
                                 selection = methods.getSelection($(this)),
-                                search = key.search 
-                                    ? key.search($(this), selection).value
-                                    : $(this).val();
-                          
+                                searchResult = key.search($(this), selection),
+                                search = searchResult.value;
+
                             if (search) {
                                 if (key.match) {
                                     match = key.match.test(search);
                                 }
                             }
+
                             if (match) {
                                 if (key.bind) {
-                                    key.bind($(this), search, e);
+
+                                    switch (e.which) {
+                                    case 13: // carriage return
+                                        return;
+                                    case 38: // up
+                                        return;
+                                    case 40: // down
+                                        return;
+                                    default:
+                                        key.bind($(this), searchResult, e);
+                                        break;
+                                    }
                                 }
                             } else {
                                 if (key.unbind) {
                                     key.unbind($(this), e);
                                 }
-                                
+
                             }
                         }
                     });
@@ -87,7 +103,7 @@ $(function (win, doc, $) {
             getSelection: function ($caller) {
 
                 var e = $caller[0];
-
+              
                 return (
 
                     ('selectionStart' in e && function () {
@@ -310,7 +326,9 @@ $(function (win, doc, $) {
         var dataKey = "suggester",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {};
+        var defaults = {
+            insertData: null // object representing data to insert
+        };
 
         var methods = {
             init: function ($caller, methodName) {
@@ -328,7 +346,10 @@ $(function (win, doc, $) {
 
             },
             bind: function ($caller) {
-               
+
+                // Normalize line breaks within suggester (Required for Edge)
+                $caller.val($caller.val().replace(/(?:\r\n|\r|\n)/g, "\r\n"));
+
                 // Track @mention pattern
                 $caller.keyBinder($caller.data(dataKey));
 
@@ -444,6 +465,30 @@ $(function (win, doc, $) {
             hide: function ($caller) {
                 var $menu = this.getOrCreateMenu($caller);
                 $menu.hide();
+            },
+            insert: function($caller) {
+
+                var data = $caller.data(dataKey).insertData;
+                if (data === null) {
+                    return;
+                }
+
+                var sel = this.getSelection($caller),
+                    index = data.index, // optional index from which everything will be replaced upto selection.start
+                    value = data.value + " ", // add a space after the value we are inserting
+                    cursor = (index + 1) + value.length; // position at end of inserted value
+
+                // Select everything from marker + 1 to cursor
+                if (index > 0) {
+                    methods.setSelection($caller, index + 1, sel.start);
+                }
+                
+                // Replace selection with value
+                methods.replaceSelection($caller, value);
+
+                // Place cursor at end of inserted value
+                methods.setSelection($caller, cursor, cursor);
+
             },
             getOrCreateMenu: function ($caller) {
                 var id = $caller.attr("id") + "SuggesterDropDown",
@@ -606,32 +651,32 @@ $(function (win, doc, $) {
 
             },
             bind: function($caller) {
-
+                
                 $caller.suggester($.extend($caller.data(dataKey)),
                     {
                         // keyBinder options
                         event: "keyup",
                         keys: [
                             {
-                                event: "keyup",
                                 match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
                                 search: function($input, selection) {
-
+                                    
                                     // The result of the search method is tested
                                     // against the match regular expiression within keyBinder
                                     // If a match is found the bind method is called 
                                     // otherwise unbind method is called
                                     // This code executes on everykey press so should be optimized
-
-                                    var chars = $input.val().split(''),
+                                    
+                                    var chars = $input.val().split(""),
                                         value = "",
                                         marker = "@",
                                         markerIndex = -1,
-                                        i = 0;
-
+                                        start = selection.start - 1,
+                                        i;
+                                    
                                     // Search backwards from caret for marker, until 
                                     // terminators & attempt to get marker index
-                                    for (i = selection.start - 1; i >= 0; i--) {
+                                    for (i = start; i >= 0; i--) {
                                         if (chars[i] === marker) {
                                             markerIndex = i;
                                             break;
@@ -641,7 +686,7 @@ $(function (win, doc, $) {
                                             }
                                         }
                                     }
-
+                                    
                                     // If we have a marker search forward 
                                     // from marker until terminator to get value
                                     if (markerIndex >= 0) {
@@ -659,101 +704,92 @@ $(function (win, doc, $) {
                                     };
 
                                 },
-                                bind: function ($input, search, e) {
-                                
-                                    switch (e.which) {
-                                        case 13: // carriage return
-                                            return;
-                                        case 38: // up
-                                            return;
-                                        case 40: // down
-                                            return;
-                                        default:
-
-                                                // Remove any @ prefix from search string
-                                                if (search.substring(0, 1) === "@") {
-                                                    search = search.substring(1, search.length);
-                                                }
-                                                
-                                                $caller.suggester({ // pagedList options
-                                                        pageSize: 5,
-                                                        itemSelection: {
-                                                            enable: true,
-                                                            index: 0,
-                                                            css: "active"
-                                                        },
-                                                        valueField: "keywords",
-                                                        config: {
-                                                            method: "GET",
-                                                            url:
-                                                                'api/users/get?page={page}&size={pageSize}&keywords=' +
-                                                                    encodeURIComponent(search),
-                                                            data: {
-                                                                sort: "LastLoginDate",
-                                                                order: "Desc"
-                                                            }
-                                                        },
-                                                        itemCss: "dropdown-item",
-                                                        itemTemplate:
-                                                            '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
-                                                        parseItemTemplate: function(html, result) {
-
-                                                            if (result.id) {
-                                                                html = html.replace(/\{id}/g, result.id);
-                                                            } else {
-                                                                html = html.replace(/\{id}/g, "0");
-                                                            }
-
-                                                            if (result.displayName) {
-                                                                html = html.replace(/\{displayName}/g, result.displayName);
-                                                            } else {
-                                                                html = html.replace(/\{displayName}/g, "(no username)");
-                                                            }
-                                                            if (result.userName) {
-                                                                html = html.replace(/\{userName}/g, result.userName);
-                                                            } else {
-                                                                html = html.replace(/\{userName}/g, "(no username)");
-                                                            }
-
-                                                            if (result.email) {
-                                                                html = html.replace(/\{email}/g, result.email);
-                                                            } else {
-                                                                html = html.replace(/\{email}/g, "");
-                                                            }
-                                                            if (result.agent_url) {
-                                                                html = html.replace(/\{url}/g, result.url);
-                                                            } else {
-                                                                html = html.replace(/\{url}/g, "#");
-                                                            }
-                                                            return html;
-
-                                                        },
-                                                        onItemClick: function($self, result, e) {
-
-                                                            e.preventDefault();
-                                                            //$menu.hide();
-                                                            $caller.focus();
-
-                                                            var sel = methods.getSelection($caller),
-                                                                value = result.userName + " ",
-                                                                cursor = (markerIndex + 1) + value.length;
-
-                                                            // Select everything from marker
-                                                            methods.setSelection($caller, markerIndex + 1, sel.start);
-
-                                                            // Replace selection with username
-                                                            methods.replaceSelection($caller, value);
-
-                                                            // Place cursor at end of new @mention 
-                                                            methods.setSelection($caller, cursor, cursor);
-
-                                                        }
-                                                    },
-                                                    "show");
-
-                                            break;
-                                        }
+                                bind: function ($input, searchResult, e) {
                                     
+                                    // Remove any @ prefix from search keywords
+                                    var keywords = searchResult.value;
+                                    if (keywords.substring(0, 1) === "@") {
+                                        keywords = keywords.substring(1, keywords.length);
+                                    }
+
+                                    // Invoke suggester
+                                    $caller.suggester({
+                                            // pagedList options
+                                            page: 1,
+                                            pageSize: 5,
+                                            itemSelection: {
+                                                enable: true,
+                                                index: 0,
+                                                css: "active"
+                                            },
+                                            valueField: "keywords",
+                                            config: {
+                                                method: "GET",
+                                                url:
+                                                    'api/users/get?page={page}&size={pageSize}&keywords=' +
+                                                        encodeURIComponent(keywords),
+                                                data: {
+                                                    sort: "LastLoginDate",
+                                                    order: "Desc"
+                                                }
+                                            },
+                                            itemCss: "dropdown-item",
+                                            itemTemplate: '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{displayName}<span class="float-right">@{userName}</span></a>',
+                                            parseItemTemplate: function(html, result) {
+
+                                                if (result.id) {
+                                                    html = html.replace(/\{id}/g, result.id);
+                                                } else {
+                                                    html = html.replace(/\{id}/g, "0");
+                                                }
+
+                                                if (result.displayName) {
+                                                    html = html.replace(/\{displayName}/g, result.displayName);
+                                                } else {
+                                                    html = html.replace(/\{displayName}/g, "(no username)");
+                                                }
+                                                if (result.userName) {
+                                                    html = html.replace(/\{userName}/g, result.userName);
+                                                } else {
+                                                    html = html.replace(/\{userName}/g, "(no username)");
+                                                }
+
+                                                if (result.email) {
+                                                    html = html.replace(/\{email}/g, result.email);
+                                                } else {
+                                                    html = html.replace(/\{email}/g, "");
+                                                }
+                                                if (result.agent_url) {
+                                                    html = html.replace(/\{url}/g, result.url);
+                                                } else {
+                                                    html = html.replace(/\{url}/g, "#");
+                                                }
+                                                return html;
+
+                                            },
+                                            onItemClick: function($self, result, e) {
+
+                                                // Prevent default event
+                                                e.preventDefault();
+
+                                                // Hide suggester menu
+                                                $caller.suggester("hide");
+
+                                                // Ensure input has focus
+                                                $caller.focus();
+
+                                                // Insert data 
+                                                $caller.suggester({
+                                                        insertData: {
+                                                            index: searchResult.markerIndex,
+                                                            value: result.userName
+                                                        }
+                                                    }, "insert");
+
+                                            }
+                                        },
+                                        "show");
+
                                 },
                                 unbind: function ($input, selection, e) {
                                     $caller.suggester("hide");
