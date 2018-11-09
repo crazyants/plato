@@ -798,9 +798,7 @@ $(function (win, doc, $) {
                 if (typeof attr === typeof undefined || attr === false) {
                     $caller.attr("autocomplete", "off");
                 }
-
-                console.log("autoComplete init");
-
+                
                 // bind events
                 methods.bind($caller);
 
@@ -861,7 +859,6 @@ $(function (win, doc, $) {
                                             break;
                                     }
                                     if (newIndex >= 0) {
-                                        console.log("newIndex: " + newIndex);
                                         $target.pagedList({
                                             itemSelection: $.extend(itemSelection,
                                                 {
@@ -875,9 +872,7 @@ $(function (win, doc, $) {
 
                             }
                         }
-                        if ($caller.data(dataKey).onKeyDown) {
-                            $caller.data(dataKey).onKeyDown($(this), e);
-                        }
+                      
                     });
                 
                 // spy on our input
@@ -1380,7 +1375,8 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            interval: 1000, // interval in milliseconds to wait between typing before fireing onChange event
+            event: "keyup", // default event to spy
+            interval: 500, // interval in milliseconds to wait between typing before fireing onChange event
             onChange: null, // triggers after interval when no key up on caller
             onKeyUp: null // triggers on every key up event within caller
         };
@@ -1392,16 +1388,30 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
 
-                $caller.bind('keyup', function (e) {
+                var event = $caller.data(dataKey).event;
+                if (event === null) {
+                    return;
+                }
 
-                    if ((e.keyCode && e.keyCode === 13)) {
-                        e.preventDefault();
-                        methods.stopTimer();
-                        if ($caller.data(dataKey).onComplete) {
-                            $caller.data(dataKey).onComplete($(this), e);
+                $caller.bind(event, function (e) {
+
+                    if (e.which) {
+
+                        switch (e.which) {
+                            case 13: // carriage return
+                                e.preventDefault();
+                                methods.stopTimer();
+                                if ($caller.data(dataKey).onComplete) {
+                                    $caller.data(dataKey).onComplete($(this), e);
+                                }
+                            return;
+                        case 38: // up
+                            return;
+                        case 40: // down
+                            return;
                         }
                     }
-                    
+               
                     if ($(this).val() !== "") {
                         methods.startTimer($(this), e);
                     } else {
@@ -1524,7 +1534,6 @@ $(function (win, doc, $) {
 
                 $caller.on(blurEvent,
                     function (e) {
-                        console.log("blur: " + blurEvent);
                         methods.startTimer($(this), e);
                     });
 

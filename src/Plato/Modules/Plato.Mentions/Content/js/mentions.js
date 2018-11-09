@@ -19,7 +19,7 @@ $(function (win, doc, $) {
 
         var defaults = {
             id: "",
-            event: null, 
+            event: "keyup", 
             keys: [
                 {
                     match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
@@ -265,7 +265,8 @@ $(function (win, doc, $) {
                 }
             },
             getOrCreateMirror: function($caller) {
-                var id = $caller.data(dataIdKey) + "Mirror",
+                var elementid = $caller.attr("id") ? $caller.attr("id") : $caller.attr("name"),
+                    id = elementid + "Mirror",
                     $mirror = $("#" + id);
                 if ($mirror.length === 0) {
                     $mirror = $('<div>',
@@ -370,9 +371,12 @@ $(function (win, doc, $) {
                 var normalizedValue = $caller.val().replace(/(?:\r\n|\r|\n)/g, "\r\n");
                 $caller.val(normalizedValue);
 
-                // Wrap a relative wrapper around the input to
-                // correctly position the absolutely positioned mention menu
-                $caller.wrap($('<div class="position-relative"></div>'));
+                // Wrap a relative wrapper around the input to correctly
+                // position the absolutely positioned suggester menu
+                if (!$caller.parent().hasClass("position-relative")) {
+                    $caller.wrap($('<div class="position-relative"></div>'));
+                }
+                
 
                 // Track @mention pattern
                 $caller.keyBinder($caller.data(dataKey));
@@ -386,10 +390,10 @@ $(function (win, doc, $) {
                 // Ensure our input has focus
                 $caller.focus();
 
-                // Get cursor selection
+                // Get selection
                 var cursor = this.getSelection($caller);
                 
-                // Invoke text field mirror to correctly position menu
+                // Invoke text field mirror to correctly position suggester menu
                 $caller.textFieldMirror({
                     start: cursor.start,
                     ready: function ($mirror) {
@@ -452,8 +456,10 @@ $(function (win, doc, $) {
             },
             getOrCreateMenu: function ($caller) {
                 var elementid = $caller.attr("id") ? $caller.attr("id") : $caller.attr("name"),
-                    id = elementid + "SuggesterMenu",
+                    id = elementid + "Suggester",
                     $menu = $("#" + id);
+
+                // Create menu & bind events the first time the menu is created
                 if ($menu.length === 0) {
                     
                     // Create suggester menu
@@ -525,18 +531,18 @@ $(function (win, doc, $) {
                     // Hide menu on click & scroll
                     $caller.bind("click scroll",
                         function () {
-                            var $menu = methods.getOrCreateMenu($(this));
-                            if ($menu) {
-                                $menu.hide();
+                            var $target = methods.getOrCreateMenu($(this));
+                            if ($target) {
+                                $target.hide();
                             }
                         });
 
                     // spy for blur (allows for a period of time before closing menu)
                     $caller.blurSpy({
                         onBlur: function ($el, e) {
-                            var $menu = methods.getOrCreateMenu($el);
-                            if ($menu) {
-                                $menu.hide();
+                            var $target = methods.getOrCreateMenu($el);
+                            if ($target) {
+                                $target.hide();
                             }
                         }
                     });
@@ -696,7 +702,6 @@ $(function (win, doc, $) {
                 $caller.suggester($.extend($caller.data(dataKey)),
                     {
                         // keyBinder options
-                        event: "keyup",
                         keys: [
                             {
                                 match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
@@ -926,7 +931,6 @@ $(function (win, doc, $) {
                 $caller.suggester($.extend($caller.data(dataKey)),
                     {
                         // keyBinder options
-                        event: "keyup",
                         keys: [
                             {
                                 match: /(^|\s|\()(#([a-z0-9\-_/]*))$/i,
@@ -1140,13 +1144,13 @@ $(function (win, doc, $) {
 
     $(doc).ready(function () {
         
-        $('[data-provide="mentions"]').mentions();
+        //$('[data-provide="mentions"]').mentions();
 
+        // Build suggesters
         $('.md-textarea').mentions();
-
         $('.md-textarea').references();
 
-        // bind suggestions
+        // bind suggesters
         $('.md-textarea').keyBinder("bind");
 
     });
