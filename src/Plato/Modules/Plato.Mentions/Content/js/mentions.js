@@ -18,6 +18,7 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
+            id: "",
             event: null, // use keyup to ensure text to test against expressions has been entered
             keys: [
                 {
@@ -30,7 +31,8 @@ $(function (win, doc, $) {
                     search: function ($input) { },
                     bind: function ($input) { }
                  }
-            ]
+            ],
+            internalKeys: []
         };
 
         var methods = {
@@ -45,24 +47,36 @@ $(function (win, doc, $) {
                     return;
                 }
 
-                this.bind($caller);
+                var keys = $caller.data(dataKey).keys;
+                for (var i = 0; i < keys.length; i++) {
+                    $caller.data(dataKey).internalKeys.push(keys[i]);
+                }
+               
+
+                //this.bind($caller);
             },
             bind: function($caller) {
 
                 var key = null,
-                    keys = $caller.data(dataKey).keys,
+                    id = $caller.data(dataKey).id,
+                    keys = $caller.data(dataKey).internalKeys,
                     event = $caller.data(dataKey).event;
 
+                // namespace event
+                if (event.indexOf(".") === -1) {
+                    event = event + "." + id;
+                }
+
                 $caller.on(event,
-                    function(e) {
+                    function (e) {
+                        var match = false;
                         for (var i = 0; i < keys.length; i++) {
 
                             key = keys[i];
-
+                            
                             $(this).focus();
                             
-                            var match = false,
-                                selection = methods.getSelection($(this)),
+                            var selection = methods.getSelection($(this)),
                                 searchResult = key.search($(this), selection),
                                 search = searchResult.value;
                             
@@ -87,11 +101,11 @@ $(function (win, doc, $) {
                                         break;
                                     }
                                 }
-                            } else {
-                                if (key.unbind) {
-                                    key.unbind($(this), e);
-                                }
-
+                            } 
+                        }
+                        if (!match) {
+                            if (key.unbind) {
+                                key.unbind($(this), key, e);
                             }
                         }
                     });
@@ -189,6 +203,7 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
+            type: "",
             start: 0,
             ready: function($caller) {
 
@@ -211,7 +226,8 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
                 
-                var start = $caller.data(dataKey).start,
+                var id = $caller.data(dataKey).id,
+                    start = $caller.data(dataKey).start,
                     prefix = $caller.val().substring(0, start),
                     suffix = $caller.val().substring(start, $caller.val().length - 1),
                     marker = '<span class="text-field-mirror-marker position-relative">@</span>',
@@ -231,7 +247,7 @@ $(function (win, doc, $) {
 
                     // Ensure mirror is always scrolled to same position as calller
                     $mirror[0].scrollTop = $caller.scrollTop();
-
+                    
                     // Marker added raise ready event
                     if ($caller.data(dataKey).ready) {
                         $caller.data(dataKey).ready($mirror);
@@ -346,7 +362,7 @@ $(function (win, doc, $) {
 
             },
             bind: function ($caller) {
-
+                
                 // Normalize line breaks within suggester element
                 // Required for Edge to correctly determine selectionStart & selectionEnd
                 var normalizedValue = $caller.val().replace(/(?:\r\n|\r|\n)/g, "\r\n");
@@ -358,85 +374,7 @@ $(function (win, doc, $) {
 
                 // Track @mention pattern
                 $caller.keyBinder($caller.data(dataKey));
-
-                // Handle arrow keys when menu is active
-                $caller.bind("keydown",
-                    function (e) {
-                        var $menu = methods.getOrCreateMenu($(this));
-                        if ($menu) {
-                            if ($menu.is(":visible")) {
-
-                                var pageSize = $menu.data("pagedList").pageSize,
-                                    itemCss = $menu.data("pagedList").itemCss,
-                                    itemSelection = $menu.data("pagedList").itemSelection,
-                                    newIndex = -1;
-
-                                if (itemSelection.enable) {
-                                    switch (e.which) {
-                                        case 13: // carriage return
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            // find active and click
-                                            $menu.find("." + itemCss).each(function() {
-                                                if ($(this).hasClass(itemSelection.css)) {
-                                                    $(this).click();
-                                                }
-                                            });
-                                            break;
-                                        case 38: // up
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            newIndex = itemSelection.index - 1;
-                                            if (newIndex < 0) {
-                                                newIndex = 0;
-                                            }
-                                            break;
-                                        case 40: // down
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            newIndex = itemSelection.index + 1;
-                                            if (newIndex > (pageSize - 1)) {
-                                                newIndex = (pageSize - 1);
-                                            }
-                                            break;
-                                    }
-                                    if (newIndex >= 0) {
-                                        $menu.pagedList({
-                                            itemSelection: $.extend(itemSelection,
-                                                {
-                                                    index: newIndex
-                                                })
-                                        }, "setItemIndex");
-                                    }
-                                  
-                                }
-
-                            
-                            }
-                        }
-                    });
                 
-                // Hide menu on click & scroll
-                $caller.bind("click scroll",
-                    function() {
-                        var $menu = methods.getOrCreateMenu($(this));
-                        if ($menu) {
-                            $menu.hide();
-                        }
-                    });
-                
-                // spy for blur 
-                $caller.blurSpy({
-                    onBlur: function ($el, e) {
-                        var $menu = methods.getOrCreateMenu($(this));
-                        if ($menu) {
-                            $menu.hide();
-                        }
-                    }
-                });
-
-
-
             },
             unbind: function($caller) {
                 $caller.keyBinder("unbind");
@@ -448,38 +386,43 @@ $(function (win, doc, $) {
 
                 // Get cursor selection
                 var cursor = this.getSelection($caller);
-
+                
                 // Invoke text field mirror to correctly position menu
                 $caller.textFieldMirror({
                     start: cursor.start,
                     ready: function ($mirror) {
-
+                        
                         // Get position from mirrored marker
                         var $marker = $mirror.find(".text-field-mirror-marker"),
                             position = $marker.position(),
                             left = Math.floor(position.left),
                             top = Math.floor(position.top + 26);
-
+                        
                         // Build & position menu
                         var $menu = methods.getOrCreateMenu($caller);
-                        $menu.css({
-                            "left": left + "px",
-                            "top": top + "px"
-                        }).show();
+                        if ($menu) {
+                            $menu.css({
+                                "left": left + "px",
+                                "top": top + "px"
+                            }).show();
+                            
+                            // Hide mirror after positioning menu
+                            $caller.textFieldMirror("hide");
 
-                        // Hide mirror after positioning menu
-                        $caller.textFieldMirror("hide");
-
-                        // Invoke paged list
-                        $menu.pagedList($caller.data(dataKey));
+                            // Invoke paged list
+                            $menu.pagedList($caller.data(dataKey));
+                        }
+              
 
                     }
                 });
                 
             },
             hide: function ($caller) {
-                var $menu = this.getOrCreateMenu($caller);
-                $menu.hide();
+                var $menu = methods.getOrCreateMenu($caller);
+                if ($menu) {
+                    $menu.hide();
+                }
             },
             insert: function($caller) {
 
@@ -506,16 +449,97 @@ $(function (win, doc, $) {
 
             },
             getOrCreateMenu: function ($caller) {
-                var id = $caller.attr("id") + "SuggesterDropDown",
+                var elementid = $caller.attr("id") ? $caller.attr("id") : $caller.attr("name"),
+                    id = elementid + "SuggesterMenu",
                     $menu = $("#" + id);
                 if ($menu.length === 0) {
+                    console.log("id: " + id);
                     $menu = $("<div>",
                         {
                             "id": id,
-                            "class": "dropdown-menu col-6",
+                            "class": "dropdown-menu suggester-menu col-6",
                             "role": "menu"
                         });
                     $caller.after($menu);
+
+
+                    // Handle arrow keys when menu is active
+                    $caller.bind("keydown.",
+                        function (e) {
+                            var $menu = methods.getOrCreateMenu($(this));
+                            if ($menu) {
+                                if ($menu.is(":visible")) {
+
+                                    var pageSize = $menu.data("pagedList").pageSize,
+                                        itemCss = $menu.data("pagedList").itemCss,
+                                        itemSelection = $menu.data("pagedList").itemSelection,
+                                        newIndex = -1;
+
+                                    if (itemSelection.enable) {
+                                        switch (e.which) {
+                                            case 13: // carriage return
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                // find active and click
+                                                $menu.find("." + itemCss).each(function () {
+                                                    if ($(this).hasClass(itemSelection.css)) {
+                                                        $(this).click();
+                                                    }
+                                                });
+                                                break;
+                                            case 38: // up
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                newIndex = itemSelection.index - 1;
+                                                if (newIndex < 0) {
+                                                    newIndex = 0;
+                                                }
+                                                break;
+                                            case 40: // down
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                newIndex = itemSelection.index + 1;
+                                                if (newIndex > (pageSize - 1)) {
+                                                    newIndex = (pageSize - 1);
+                                                }
+                                                break;
+                                        }
+                                        if (newIndex >= 0) {
+                                            $menu.pagedList({
+                                                itemSelection: $.extend(itemSelection,
+                                                    {
+                                                        index: newIndex
+                                                    })
+                                            }, "setItemIndex");
+                                        }
+
+                                    }
+
+
+                                }
+                            }
+                        });
+
+                    // Hide menu on click & scroll
+                    $caller.bind("click scroll",
+                        function () {
+                            var $menu = methods.getOrCreateMenu($(this));
+                            if ($menu) {
+                                $menu.hide();
+                            }
+                        });
+
+                    // spy for blur 
+                    $caller.blurSpy({
+                        ns: $caller.data(dataKey).id,
+                        onBlur: function ($el, e) {
+                            $(".suggester-menu").hide();
+                        }
+                    });
+
+
+
+
                 }
                 return $menu;
             },
@@ -668,16 +692,17 @@ $(function (win, doc, $) {
 
             },
             bind: function($caller) {
-                
                 $caller.suggester($.extend($caller.data(dataKey)),
                     {
+                        id: "mentions",
                         // keyBinder options
-                        event: "keyup.mentions",
+                        event: "keyup",
                         keys: [
                             {
+                                id: "mentions",
                                 match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
                                 search: function($input, selection) {
-                                    
+
                                     // The result of the search method is tested
                                     // against the match regular expiression within keyBinder
                                     // If a match is found the bind method is called 
@@ -722,15 +747,16 @@ $(function (win, doc, $) {
 
                                 },
                                 bind: function ($input, searchResult, e) {
-                                    
+                       
                                     // Remove any @ prefix from search keywords
                                     var keywords = searchResult.value;
                                     if (keywords.substring(0, 1) === "@") {
                                         keywords = keywords.substring(1, keywords.length);
                                     }
-
+                                   
                                     // Invoke suggester
                                     $caller.suggester({
+                                            id: "mentions",
                                             // pagedList options
                                             page: 1,
                                             pageSize: 5,
@@ -806,12 +832,15 @@ $(function (win, doc, $) {
                                         "show");
 
                                 },
-                                unbind: function ($input, selection, e) {
-                                    $caller.suggester("hide");
+                                unbind: function ($input, key, e) {
+                                    $caller.suggester({
+                                            id: key.id
+                                        },
+                                        "hide");
                                 }
                             }
                         ]
-                    });
+                    }, defaults);
             }
         }
 
@@ -895,13 +924,14 @@ $(function (win, doc, $) {
 
             },
             bind: function ($caller) {
-
                 $caller.suggester($.extend($caller.data(dataKey)),
                     {
+                        id: "references",
                         // keyBinder options
-                        event: "keyup.references",
+                        event: "keyup",
                         keys: [
                             {
+                                id: "references",
                                 match: /(^|\s|\()(#([a-z0-9\-_/]*))$/i,
                                 search: function ($input, selection) {
 
@@ -949,7 +979,7 @@ $(function (win, doc, $) {
 
                                 },
                                 bind: function ($input, searchResult, e) {
-                                    
+                                 
                                     // Remove any @ prefix from search keywords
                                     var keywords = searchResult.value;
                                     if (keywords.substring(0, 1) === "#") {
@@ -958,6 +988,7 @@ $(function (win, doc, $) {
 
                                     // Invoke suggester
                                     $caller.suggester({
+                                        id: "references",
                                         // pagedList options
                                         page: 1,
                                         pageSize: 5,
@@ -1033,12 +1064,15 @@ $(function (win, doc, $) {
                                         "show");
 
                                 },
-                                unbind: function ($input, selection, e) {
-                                    $caller.suggester("hide");
+                                unbind: function ($input, key, e) {
+
+                                    $caller.suggester({
+                                            id: key.id
+                                        }, "hide");
                                 }
                             }
                         ]
-                    });
+                    }, defaults);
             }
         }
 
@@ -1114,6 +1148,9 @@ $(function (win, doc, $) {
         $('.md-textarea').mentions();
 
         $('.md-textarea').references();
+
+        // bind suggestions
+        $('.md-textarea').keyBinder("bind");
 
     });
 

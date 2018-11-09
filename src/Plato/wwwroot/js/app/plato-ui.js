@@ -1440,6 +1440,7 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
+            id: "blurSpy", // uniuqe namespace
             interval: 100, // interval in milliseconds to wait between typing before fireing onChange event
             onBlur: null // triggers after interval if the input does not reeive focus
         };
@@ -1451,13 +1452,23 @@ $(function (win, doc, $) {
             },
             bind: function ($caller) {
 
-                $caller.bind("focus",
+                var id = $caller.data(dataKey).id,
+                    focusEvent = "focus",
+                    blurEvent = "blur";
+
+                if (id !== "") {
+                    focusEvent = focusEvent + "." + id;
+                    blurEvent = blurEvent + "." + id;
+                }
+
+                $caller.on(focusEvent,
                     function(e) {
                         methods.stopTimer();
                     });
 
-                $caller.bind("blur",
-                    function(e) {
+                $caller.on(blurEvent,
+                    function (e) {
+                        console.log("blur: " + blurEvent);
                         methods.startTimer($(this), e);
                     });
 
