@@ -47,16 +47,15 @@ $(function (win, doc, $) {
                     return;
                 }
 
+                // Build an array of all keys
                 var keys = $caller.data(dataKey).keys;
                 for (var i = 0; i < keys.length; i++) {
                     $caller.data(dataKey).internalKeys.push(keys[i]);
                 }
-               
-
-                //this.bind($caller);
             },
             bind: function($caller) {
 
+                // Bind shuuld be called after all internalKeys have been initialized
                 var key = null,
                     id = $caller.data(dataKey).id,
                     keys = $caller.data(dataKey).internalKeys,
@@ -67,8 +66,7 @@ $(function (win, doc, $) {
                     event = event + "." + id;
                 }
 
-                $caller.on(event,
-                    function (e) {
+                $caller.on(event, function (e) {
                         var match = false;
                         for (var i = 0; i < keys.length; i++) {
 
@@ -694,12 +692,10 @@ $(function (win, doc, $) {
             bind: function($caller) {
                 $caller.suggester($.extend($caller.data(dataKey)),
                     {
-                        id: "mentions",
                         // keyBinder options
                         event: "keyup",
                         keys: [
                             {
-                                id: "mentions",
                                 match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
                                 search: function($input, selection) {
 
@@ -926,12 +922,10 @@ $(function (win, doc, $) {
             bind: function ($caller) {
                 $caller.suggester($.extend($caller.data(dataKey)),
                     {
-                        id: "references",
                         // keyBinder options
                         event: "keyup",
                         keys: [
                             {
-                                id: "references",
                                 match: /(^|\s|\()(#([a-z0-9\-_/]*))$/i,
                                 search: function ($input, selection) {
 
