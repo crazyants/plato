@@ -10,7 +10,7 @@ namespace Plato.Labels.Repositories
 
         Task<bool> DeleteByEntityId(int entityId);
 
-        Task<bool> DeleteByEntityIdAndLabelId(int entityId, int LabelId);
+        Task<bool> DeleteByEntityIdAndLabelId(int entityId, int labelId);
 
     }
 

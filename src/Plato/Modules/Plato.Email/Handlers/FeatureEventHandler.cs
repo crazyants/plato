@@ -143,6 +143,7 @@ namespace Plato.Email.Handlers
 
         public override async Task UninstallingAsync(IFeatureEventContext context)
         {
+
             if (context.Logger.IsEnabled(LogLevel.Information))
                 context.Logger.LogInformation($"UninstallingAsync called within {ModuleId}");
 
