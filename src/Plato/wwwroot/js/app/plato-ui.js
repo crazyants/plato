@@ -798,7 +798,9 @@ $(function (win, doc, $) {
                 if (typeof attr === typeof undefined || attr === false) {
                     $caller.attr("autocomplete", "off");
                 }
-                
+
+                console.log("autoComplete init");
+
                 // bind events
                 methods.bind($caller);
 
@@ -817,13 +819,67 @@ $(function (win, doc, $) {
                   
                     }
                 });
+                
+                $caller.bind("keydown.",
+                    function (e) {
+                        var $target = methods.getTarget($(this));
+                        if ($target) {
+                            if ($target.is(":visible")) {
 
-                $caller.bind("keydown", function (e) {
-                    if ($caller.data(dataKey).onKeyDown) {
-                        $caller.data(dataKey).onKeyDown($(this), e);
-                    }
-                });
+                                var itemCss = $target.data("pagedList").itemCss,
+                                    pageSize = $target.find("." + itemCss).length,
+                                    itemSelection = $target.data("pagedList").itemSelection,
+                                    newIndex = -1;
 
+                                if (itemSelection.enable) {
+                                    switch (e.which) {
+                                        case 13: // carriage return
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            // find active and click
+                                            $target.find("." + itemCss).each(function () {
+                                                if ($(this).hasClass(itemSelection.css)) {
+                                                    $(this).click();
+                                                }
+                                            });
+                                            break;
+                                        case 38: // up
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            newIndex = itemSelection.index - 1;
+                                            if (newIndex < 0) {
+                                                newIndex = 0;
+                                            }
+                                            break;
+                                        case 40: // down
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            newIndex = itemSelection.index + 1;
+                                            if (newIndex > (pageSize - 1)) {
+                                                newIndex = (pageSize - 1);
+                                            }
+                                            break;
+                                    }
+                                    if (newIndex >= 0) {
+                                        console.log("newIndex: " + newIndex);
+                                        $target.pagedList({
+                                            itemSelection: $.extend(itemSelection,
+                                                {
+                                                    index: newIndex
+                                                })
+                                        }, "setItemIndex");
+                                    }
+
+                                }
+
+
+                            }
+                        }
+                        if ($caller.data(dataKey).onKeyDown) {
+                            $caller.data(dataKey).onKeyDown($(this), e);
+                        }
+                    });
+                
                 // spy on our input
                 $caller.typeSpy({
                     onKeyUp: function ($el, e) {
@@ -833,7 +889,7 @@ $(function (win, doc, $) {
                         }
                     },
                     onChange: function ($el, e) {
-                        //methods.setPageIndex($caller, 1);
+                      
                         // !escape && !tab
                         if (e.keyCode !== 27 && e.keyCode !== 9) {
                             if ($el.val().length === 0) {
@@ -1345,7 +1401,7 @@ $(function (win, doc, $) {
                             $caller.data(dataKey).onComplete($(this), e);
                         }
                     }
-
+                    
                     if ($(this).val() !== "") {
                         methods.startTimer($(this), e);
                     } else {
@@ -1441,8 +1497,8 @@ $(function (win, doc, $) {
 
         var defaults = {
             id: "blurSpy", // uniuqe namespace
-            interval: 100, // interval in milliseconds to wait between typing before fireing onChange event
-            onBlur: null // triggers after interval if the input does not reeive focus
+            interval: 100, // interval in milliseconds to wait before fireing onBlur event
+            onBlur: null // triggers after interval if element does not reeive focus again
         };
 
         var methods = {
@@ -1785,47 +1841,16 @@ $(function (win, doc, $) {
                         function (e) {
                             $input.focus();
                         });
-                    
-                    var onFocus = function() {
-                        $caller.addClass("form-control-active");
-                        if ($(this).val() !== "") {
-                            $(this).autoComplete("show");
-                        }
-                    };
 
-                    var onBlur = function() {
-                        $caller.removeClass("form-control-active");
-                    };
+                    $input.bind("focus",
+                        function() {
+                            $caller.addClass("form-control-active");
+                        });
 
-                    $input.bind("focus", onFocus);
-                    $input.bind("blur", onBlur);
-                    
-                    // set-up auto complete on tagIt input
-                    $input.autoComplete({
-                        onItemClick: function ($caller, result, e) {
-
-                            // Prevent defaults
-                            e.preventDefault();
-
-                            // Check uniqueness
-                            if (methods.isUnique($caller, result)) {
-
-                                // Raise overrideable event
-                                if ($caller.data(dataKey).onAddItem) {
-                                    $caller.data(dataKey).onAddItem($caller, result, e);
-                                }
-
-                                // Update event may change state
-                                methods.update($caller);
-
-                            }
-
-                            // Focus input after selection
-                            methods.focus($caller);
-                            methods.show($caller);
-
-                        }
-                    });
+                    $input.bind("blur",
+                        function() {
+                            $caller.removeClass("form-control-active");
+                        });
 
                 }
                 
@@ -2158,10 +2183,8 @@ $(function (win, doc, $) {
                     }
                     return null;
                 }
-
+                
                 this.bind($caller);
-
-                return null;
                 
             },
             bind: function($caller) {

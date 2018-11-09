@@ -19,7 +19,7 @@ $(function (win, doc, $) {
 
         var defaults = {
             id: "",
-            event: null, // use keyup to ensure text to test against expressions has been entered
+            event: null, 
             keys: [
                 {
                     match: /(^|\s|\()(@([a-z0-9\-_/]*))$/i,
@@ -60,6 +60,10 @@ $(function (win, doc, $) {
                     id = $caller.data(dataKey).id,
                     keys = $caller.data(dataKey).internalKeys,
                     event = $caller.data(dataKey).event;
+
+                if (event == null) {
+                    return;
+                }
 
                 // namespace event
                 if (event.indexOf(".") === -1) {
@@ -451,7 +455,8 @@ $(function (win, doc, $) {
                     id = elementid + "SuggesterMenu",
                     $menu = $("#" + id);
                 if ($menu.length === 0) {
-                    console.log("id: " + id);
+                    
+                    // Create suggester menu
                     $menu = $("<div>",
                         {
                             "id": id,
@@ -459,18 +464,17 @@ $(function (win, doc, $) {
                             "role": "menu"
                         });
                     $caller.after($menu);
-
-
-                    // Handle arrow keys when menu is active
+                    
+                    // Bind events to caller to hide suggester menu
                     $caller.bind("keydown.",
                         function (e) {
-                            var $menu = methods.getOrCreateMenu($(this));
-                            if ($menu) {
-                                if ($menu.is(":visible")) {
+                            var $target = methods.getOrCreateMenu($(this));
+                            if ($target) {
+                                if ($target.is(":visible")) {
 
-                                    var pageSize = $menu.data("pagedList").pageSize,
-                                        itemCss = $menu.data("pagedList").itemCss,
-                                        itemSelection = $menu.data("pagedList").itemSelection,
+                                    var itemCss = $target.data("pagedList").itemCss,
+                                        pageSize = $target.find("." + itemCss).length,
+                                        itemSelection = $target.data("pagedList").itemSelection,
                                         newIndex = -1;
 
                                     if (itemSelection.enable) {
@@ -479,7 +483,7 @@ $(function (win, doc, $) {
                                                 e.preventDefault();
                                                 e.stopPropagation();
                                                 // find active and click
-                                                $menu.find("." + itemCss).each(function () {
+                                                $target.find("." + itemCss).each(function () {
                                                     if ($(this).hasClass(itemSelection.css)) {
                                                         $(this).click();
                                                     }
@@ -503,7 +507,7 @@ $(function (win, doc, $) {
                                                 break;
                                         }
                                         if (newIndex >= 0) {
-                                            $menu.pagedList({
+                                            $target.pagedList({
                                                 itemSelection: $.extend(itemSelection,
                                                     {
                                                         index: newIndex
@@ -527,17 +531,16 @@ $(function (win, doc, $) {
                             }
                         });
 
-                    // spy for blur 
+                    // spy for blur (allows for a period of time before closing menu)
                     $caller.blurSpy({
-                        ns: $caller.data(dataKey).id,
                         onBlur: function ($el, e) {
-                            $(".suggester-menu").hide();
+                            var $menu = methods.getOrCreateMenu($el);
+                            if ($menu) {
+                                $menu.hide();
+                            }
                         }
                     });
-
-
-
-
+                    
                 }
                 return $menu;
             },
