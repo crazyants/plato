@@ -6,11 +6,14 @@ using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Mentions.Assets;
 using Plato.Mentions.Handlers;
 using Plato.Mentions.Models;
 using Plato.Mentions.Repositories;
+using Plato.Mentions.Services;
 using Plato.Mentions.Stores;
+using Plato.Mentions.Subscribers;
 
 namespace Plato.Mentions
 {
@@ -35,6 +38,11 @@ namespace Plato.Mentions
             // Stores
             services.AddScoped<IEntityMentionsStore<EntityMention>, EntityMentionsStore>();
 
+            // Parsers
+            services.AddScoped<IMentionsParser, MentionsParser>();
+
+            // Register broker subscribers
+            services.AddScoped<IBrokerSubscriber, MentionsSubscriber>();
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();

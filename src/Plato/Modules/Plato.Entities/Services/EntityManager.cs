@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -256,8 +257,8 @@ namespace Plato.Entities.Services
             {
                 message = await handler.Invoke(new Message<string>(message, this));
             }
-
-            return message;
+            
+            return message.HtmlTextulize();
 
         }
 

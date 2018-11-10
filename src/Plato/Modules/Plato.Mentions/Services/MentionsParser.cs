@@ -3,36 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Mentions.Services
 {
-
-   
-    public interface IMentionsParser
-    {
-        Task<string> ParseAsync(string input);
-    }
-
+    
     public class MentionsParser : IMentionsParser
     {
+        
+        private const string SearchPattern = "@([^\\n|^\\s][a-z0-9\\-_\\/]*)";
 
-        // pattern to match
-        private string _pattern = "(?<!.[\\t|\\s{4}|&|;].)#([0-9]+)";
-
+        private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
 
-        public MentionsParser(IPlatoUserStore<User> platoUserStore)
+        public MentionsParser(IPlatoUserStore<User> platoUserStore, IContextFacade contextFacade)
         {
             _platoUserStore = platoUserStore;
+            _contextFacade = contextFacade;
         }
-
-
+        
         #region "Implementation"
 
         public async Task<string> ParseAsync(string input)
         {
+
+            if (input == null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
 
             var usernames = GetUniqueUsernames(input);
             if (usernames?.Length > 0)
@@ -43,7 +43,7 @@ namespace Plato.Mentions.Services
                     var usersList = users.ToList();
                     if (usersList.Count > 0)
                     {
-                        input = ConvertMentionstoUrls(input, usersList);
+                        input = await ConvertMentionsToUrlsAsync(input, usersList);
                     }
                 }
 
@@ -57,9 +57,7 @@ namespace Plato.Mentions.Services
 
         #region "Private Methods"
         
-        private string ConvertMentionstoUrls(
-            string input,
-            IEnumerable<IUser> users)
+        async Task<string> ConvertMentionsToUrlsAsync(string input, IEnumerable<IUser> users)
         {
 
             if (String.IsNullOrEmpty(input))
@@ -71,42 +69,41 @@ namespace Plato.Mentions.Services
             {
                 throw new ArgumentNullException(nameof(users));
             }
-            
-            var userList = users.ToList();
-            var regex = new Regex(_pattern, RegexOptions.IgnoreCase);
+
+            var opts = RegexOptions.Multiline | RegexOptions.IgnoreCase;
+            var regex = new Regex(SearchPattern, opts);
             if (regex.IsMatch(input))
             {
-                var baseUrl = "";
-                var opts = RegexOptions.Multiline | RegexOptions.IgnoreCase;
-
+                var userList = users.ToList();
+                var baseUrl = await _contextFacade.GetBaseUrlAsync();
                 foreach (Match match in regex.Matches(input))
                 {
                     var username = match.Groups[1].Value;
-
-                        var user = userList.FirstOrDefault(u =>u.UserName.Equals(username));
-                        if (user != null)
-                        {
-                            var text = $"<a href=\"{baseUrl + user.Id}/{user.Alias}\">{user.UserName}</a>";
-                            input = Regex.Replace(input, _pattern, text, opts);
-                        }
-                  
+                    var user = userList.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.Ordinal));
+                    if (user != null)
+                    {
+                        input = input.Replace(match.Value,
+                            $"<a href=\"{baseUrl}/users/{user.Id}/{user.Alias}\">@{user.UserName}</a>");
+                    }
                 }
-
             }
 
             return input;
 
         }
         
-        private async Task<IEnumerable<IUser>> GetUsersByUsernamesAsync(string[] usernames)
+        async Task<IEnumerable<IUser>> GetUsersByUsernamesAsync(string[] usernames)
         {
             var users = new List<User>();
             foreach (var username in usernames)
             {
-                var user = await _platoUserStore.GetByUserNameAsync(username);
-                if (user != null)
+                if (!String.IsNullOrEmpty(username))
                 {
-                    users.Add(user);
+                    var user = await _platoUserStore.GetByUserNameAsync(username);
+                    if (user != null)
+                    {
+                        users.Add(user);
+                    }
                 }
             }
 
@@ -118,7 +115,7 @@ namespace Plato.Mentions.Services
         {
 
             List<string> output = null;
-            var regex = new Regex(_pattern, RegexOptions.IgnoreCase);
+            var regex = new Regex(SearchPattern, RegexOptions.IgnoreCase);
             if (regex.IsMatch(input))
             {
                 output = new List<string>();

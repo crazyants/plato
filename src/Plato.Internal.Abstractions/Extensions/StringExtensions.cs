@@ -11,6 +11,7 @@ namespace Plato.Internal.Abstractions.Extensions
 {
     public static class StringExtensions
     {
+        private const string NewLinePattern = "\r\n?|\n";
 
         private static readonly char[] InValidSegmentChars = "/?#[]@\"^{}|`<>\t\r\n\f ".ToCharArray();
 
@@ -169,15 +170,17 @@ namespace Plato.Internal.Abstractions.Extensions
             return input.StripNewLines().StripHtml();
         }
         
+        public static string HtmlTextulize(this string input)
+        {
+            input = Regex.Replace(input, NewLinePattern, "<br/>"); ;
+            input = Regex.Replace(input, System.Environment.NewLine, "<br/>"); ;
+            return input;
+        }
+
         public static string StripNewLines(this string input)
         {
-            if (string.IsNullOrEmpty(input))
-            {
-                return string.Empty;
-            }
-
             input = input.Replace(System.Environment.NewLine, "");
-            input = Regex.Replace(input, @"\r\n?|\n", "");
+            input = Regex.Replace(input, NewLinePattern, "");
             return input;
         }
 
@@ -311,7 +314,7 @@ namespace Plato.Internal.Abstractions.Extensions
 
             return Enum.TryParse<T>(value, true, out var result) ? result : defaultValue;
         }
-
+        
     }
 
 }
