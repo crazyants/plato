@@ -52,15 +52,15 @@ namespace Plato.Internal.Messaging
             {
                 if (handler != null)
                 {
-                    // action delegates return void and as such cannot be awaited
-                    // wrap action delegates within a dummy func delegate ensuring 
+                    // Action delegates return void and as such cannot be awaited
+                    // Wrap action delegates within a dummy func delegate ensuring 
                     // the action can be executed consistently and asynchronously 
                     ourput.Add(new Func<Message<T>, Task<T>>(async (Message<T> input) =>
                     {
                         return await Task.Factory.StartNew(() =>
                         {
-                            handler.Invoke(delegatePayload);
-                            return delegatePayload.What;
+                            handler.Invoke(input);
+                            return input.What;
                         });
                     }));
                 }         
@@ -74,9 +74,14 @@ namespace Plato.Internal.Messaging
             {
                 if (func != null)
                 {
-                    // convert delegates generic delegate type
-                    // to concrete delegate type to allow for deferred invocation
-                    ourput.Add((Message<T> input) => func(delegatePayload));
+                    // Wrap our subscriber delegate within a dummy delegate
+                    // This allows us to invoke the dummy delegate externally
+                    // passing in a custom message for our real subscriber delegate
+                    ourput.Add(new Func<Message<T>, Task<T>>(async (Message<T> input) => await func.Invoke(input)));
+
+                    // convert delegates generic type to
+                    // concrete delegate type to allow for deferred invocation
+                    //ourput.Add((Message<T> input) => func(delegatePayload));
                 }
             }
 

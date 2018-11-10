@@ -250,6 +250,7 @@ namespace Plato.Entities.Services
 
         private async Task<string> ParseMarkdown(string message)
         {
+      
             foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
                 Key = "ParseMarkdown"

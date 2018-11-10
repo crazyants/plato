@@ -31,22 +31,17 @@ namespace Plato.Markdown.Services
 
         public Task<string> ParseAsync(string markdown)
         {
-            if (string.IsNullOrEmpty(markdown))
+            if (String.IsNullOrEmpty(markdown))
+            {
                 return Task.FromResult(string.Empty);
-
+            }
+                
             var htmlWriter = new StringWriter();
             var renderer = CreateRenderer(htmlWriter);
-
             Markdig.Markdown.Convert(markdown, renderer, Pipeline);
 
-            var html = htmlWriter.ToString();
+            return Task.FromResult(htmlWriter.ToString());
 
-            //html = ParseFontAwesomeIcons(html);
-
-            //if (!mmApp.Configuration.MarkdownOptions.AllowRenderScriptTags)
-            //html = ParseScript(html);
-
-            return Task.FromResult(html);
         }
 
         #endregion
