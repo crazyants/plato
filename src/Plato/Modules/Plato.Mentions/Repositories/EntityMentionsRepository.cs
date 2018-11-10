@@ -8,6 +8,7 @@ using Plato.Mentions.Models;
 
 namespace Plato.Mentions.Repositories
 {
+
     public class EntityMentionsRepository : IEntityMentionsRepository<EntityMention>
     {
 
@@ -64,14 +65,58 @@ namespace Plato.Mentions.Repositories
 
         }
 
-        public Task<IPagedResults<EntityMention>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EntityMention>> SelectAsync(params object[] inputParams)
         {
-            throw new NotImplementedException();
+            PagedResults<EntityMention> output = null;
+            using (var context = _dbContext)
+            {
+
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectEntityMentionsPaged",
+                    inputParams
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new PagedResults<EntityMention>();
+                    while (await reader.ReadAsync())
+                    {
+                        var entity = new EntityMention();
+                        entity.PopulateModel(reader);
+                        output.Data.Add(entity);
+                    }
+
+                    if (await reader.NextResultAsync())
+                    {
+                        await reader.ReadAsync();
+                        output.PopulateTotal(reader);
+                    }
+
+                }
+            }
+
+            return output;
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Deleting entity mention with id: {id}");
+            }
+
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteEntityMentionById", id);
+            }
+
+            return success > 0 ? true : false;
+
         }
 
         #endregion

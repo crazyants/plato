@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Markdown.Services;
 
 namespace Plato.Markdown.Subscribers
 {
-    
+
     public class MarkdownSubscriber : IBrokerSubscriber
     {
 

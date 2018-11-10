@@ -67,7 +67,9 @@ $(function (win, doc, $) {
 
                 // namespace event
                 if (event.indexOf(".") === -1) {
-                    event = event + "." + id;
+                    if (id) {
+                        event = event + "." + id;
+                    }
                 }
 
                 $caller.on(event, function (e) {
@@ -760,7 +762,6 @@ $(function (win, doc, $) {
                                    
                                     // Invoke suggester
                                     $caller.suggester({
-                                            id: "mentions",
                                             // pagedList options
                                             page: 1,
                                             pageSize: 5,
@@ -837,10 +838,7 @@ $(function (win, doc, $) {
 
                                 },
                                 unbind: function ($input, key, e) {
-                                    $caller.suggester({
-                                            id: key.id
-                                        },
-                                        "hide");
+                                    $caller.suggester("hide");
                                 }
                             }
                         ]
@@ -989,7 +987,6 @@ $(function (win, doc, $) {
 
                                     // Invoke suggester
                                     $caller.suggester({
-                                        id: "references",
                                         // pagedList options
                                         page: 1,
                                         pageSize: 5,
@@ -1066,10 +1063,7 @@ $(function (win, doc, $) {
 
                                 },
                                 unbind: function ($input, key, e) {
-
-                                    $caller.suggester({
-                                            id: key.id
-                                        }, "hide");
+                                    $caller.suggester("hide");
                                 }
                             }
                         ]

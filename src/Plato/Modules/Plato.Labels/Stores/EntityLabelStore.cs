@@ -18,13 +18,13 @@ namespace Plato.Labels.Stores
         
         private readonly IEntityLabelRepository<EntityLabel> _entityLabelRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly ILogger<LabelRoleStore> _logger;
+        private readonly ILogger<EntityLabelStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
 
         public EntityLabelStore(
             IEntityLabelRepository<EntityLabel> entityLabelRepository,
             ICacheManager cacheManager,
-            ILogger<LabelRoleStore> logger,
+            ILogger<EntityLabelStore> logger,
             IDbQueryConfiguration dbQuery)
         {
             _entityLabelRepository = entityLabelRepository;
@@ -117,11 +117,9 @@ namespace Plato.Labels.Stores
 
         public async Task<EntityLabel> GetByIdAsync(int id)
         {
-
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
             return await _cacheManager.GetOrCreateAsync(token,
                 async (cacheEntry) => await _entityLabelRepository.SelectByIdAsync(id));
-
         }
 
         public IQuery<EntityLabel> QueryAsync()

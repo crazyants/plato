@@ -8,6 +8,9 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Mentions.Assets;
 using Plato.Mentions.Handlers;
+using Plato.Mentions.Models;
+using Plato.Mentions.Repositories;
+using Plato.Mentions.Stores;
 
 namespace Plato.Mentions
 {
@@ -25,7 +28,14 @@ namespace Plato.Mentions
             
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
-            
+
+            // Repositories
+            services.AddScoped<IEntityMentionsRepository<EntityMention>, EntityMentionsRepository>();
+
+            // Stores
+            services.AddScoped<IEntityMentionsStore<EntityMention>, EntityMentionsStore>();
+
+
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
 

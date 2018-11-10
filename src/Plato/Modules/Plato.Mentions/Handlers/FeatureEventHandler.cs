@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -100,9 +99,7 @@ namespace Plato.Mentions.Handlers
 
         public override Task InstalledAsync(IFeatureEventContext context)
         {
-
             return Task.CompletedTask;
-
         }
 
         public override async Task UninstallingAsync(IFeatureEventContext context)
@@ -148,7 +145,6 @@ namespace Plato.Mentions.Handlers
 
         public override Task UninstalledAsync(IFeatureEventContext context)
         {
-
             return Task.CompletedTask;
         }
 
@@ -177,18 +173,9 @@ namespace Plato.Mentions.Handlers
             builder
                 .CreateTable(_entityMentions)
                 .CreateDefaultProcedures(_entityMentions);
-            
+
             builder.CreateProcedure(new SchemaProcedure("SelectEntityMentionsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entityMentions)
-                .WithParameters(new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        Name = "[Keywords]",
-                        DbType = DbType.String,
-                        Length = "255"
-                    }
-                }));
+                .ForTable(_entityMentions));
 
         }
 

@@ -197,7 +197,7 @@ namespace Plato.Labels.Repositories
         async Task<int> InsertUpdateInternal(
             int id,
             int entityId,
-            int LabelId,
+            int labelId,
             int createdUserId,
             DateTime? createdDate,
             int modifiedUserId,
@@ -212,7 +212,7 @@ namespace Plato.Labels.Repositories
                     "InsertUpdateEntityLabel",
                     id,
                     entityId,
-                    LabelId,
+                    labelId,
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
