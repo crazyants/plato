@@ -120,7 +120,9 @@ namespace Plato.Mentions.Handlers
                 builder
                     .DropTable(_entityMentions)
                     .DropDefaultProcedures(_entityMentions)
-                    .DropProcedure(new SchemaProcedure("SelectEntityMentionsPaged", StoredProcedureType.SelectByKey));
+                    .DropProcedure(new SchemaProcedure("SelectEntityMentionsPaged"))
+                    .DropProcedure(new SchemaProcedure("DeleteEntityMentionsByEntityId"))
+                    .DropProcedure(new SchemaProcedure("DeleteEntityMentionsByEntityReplyId"));
 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -190,6 +192,17 @@ namespace Plato.Mentions.Handlers
                         Length = "255"
                     }
                 }));
+
+            builder
+                .CreateProcedure(new SchemaProcedure("DeleteEntityMentionsByEntityId", StoredProcedureType.DeleteByKey)
+                    .ForTable(_entityMentions)
+                    .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
+
+            builder
+                .CreateProcedure(new SchemaProcedure("DeleteEntityMentionsByEntityReplyId", StoredProcedureType.DeleteByKey)
+                    .ForTable(_entityMentions)
+                    .WithParameter(new SchemaColumn() { Name = "EntityReplyId", DbType = DbType.Int32 }));
+
 
         }
 

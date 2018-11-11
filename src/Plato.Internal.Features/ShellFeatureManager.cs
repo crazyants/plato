@@ -135,10 +135,7 @@ namespace Plato.Internal.Features
                             context.Errors.Add(context.Feature.ModuleId, e.Message);
                             contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                             {
-                                //foreach (var error in context.Errors)
-                                //{
-                                    v.Errors.Add(context.Feature.ModuleId, e.Message);
-                                //}
+                                v.Errors.Add(context.Feature.ModuleId, e.Message);
                                 return v;
                             });
                         }
@@ -169,13 +166,10 @@ namespace Plato.Internal.Features
                             }
                             catch (Exception e)
                             {
+                                context.Errors.Add(context.Feature.ModuleId, e.Message);
                                 contexts.AddOrUpdate(context.Feature.ModuleId, context, (k, v) =>
                                 {
-                                    foreach (var error in context.Errors)
-                                    {
-                                        v.Errors.Add(context.Feature.ModuleId, e.Message);
-                                    }
-
+                                    v.Errors.Add(context.Feature.ModuleId, e.Message);
                                     return v;
                                 });
                             }

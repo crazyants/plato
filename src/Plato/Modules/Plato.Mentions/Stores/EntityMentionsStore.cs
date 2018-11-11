@@ -139,6 +139,41 @@ namespace Plato.Mentions.Stores
             });
         }
 
+
+        public async Task<bool> DeleteByEntityIdAsync(int entityId)
+        {
+            var success = await _entityMentionsRepository.DeleteByEntityIdAsync(entityId);
+            if (success)
+            {
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Deleted all mentions for entity Id '{0}'",
+                        entityId);
+                }
+                _cacheManager.CancelTokens(this.GetType());
+            }
+
+            return success;
+
+        }
+
+        public async Task<bool> DeleteByEntityReplyIdAsync(int entityReplyId)
+        {
+            var success = await _entityMentionsRepository.DeleteByEntityReplyIdAsync(entityReplyId);
+            if (success)
+            {
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Deleted all mentions for entity reply with Id '{0}'",
+                        entityReplyId);
+                }
+                _cacheManager.CancelTokens(this.GetType());
+            }
+
+            return success;
+
+        }
+
     }
 
 }

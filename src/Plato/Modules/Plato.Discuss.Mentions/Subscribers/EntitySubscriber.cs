@@ -34,6 +34,14 @@ namespace Plato.Discuss.Mentions.Subscribers
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
+
+            // Updated
+            _broker.Sub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityUpdated"
+            }, async message => await EntityCreated(message.What));
+
+            
         }
 
         public void Unsubscribe()

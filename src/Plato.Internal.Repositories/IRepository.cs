@@ -3,6 +3,7 @@ using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Repositories
 {
+
     public interface IRepository<TModel> where TModel : class
     {
         Task<TModel> InsertUpdateAsync(TModel model);
@@ -12,8 +13,7 @@ namespace Plato.Internal.Repositories
         Task<IPagedResults<TModel>> SelectAsync(params object[] inputParams);
         
         Task<bool> DeleteAsync(int id);
-
-
-
+        
     }
+
 }

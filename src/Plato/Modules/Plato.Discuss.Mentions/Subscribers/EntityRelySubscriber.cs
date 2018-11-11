@@ -32,18 +32,34 @@ namespace Plato.Discuss.Mentions.Subscribers
 
         public void Subscribe()
         {
+            // Created
             _broker.Sub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyCreated"
             }, async message => await EntityReplyCreated(message.What));
+
+            // Updated
+            _broker.Sub<TEntityReply>(new MessageOptions()
+            {
+                Key = "EntityReplyUpdated"
+            }, async message => await EntityReplyCreated(message.What));
+
         }
 
         public void Unsubscribe()
         {
+            // Created
             _broker.Unsub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyCreated"
             }, async message => await EntityReplyCreated(message.What));
+
+            // Updated
+            _broker.Unsub<TEntityReply>(new MessageOptions()
+            {
+                Key = "EntityReplyUpdated"
+            }, async message => await EntityReplyCreated(message.What));
+
         }
         
         public void Dispose()

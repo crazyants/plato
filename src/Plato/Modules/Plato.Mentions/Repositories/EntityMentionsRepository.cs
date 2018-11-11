@@ -120,6 +120,45 @@ namespace Plato.Mentions.Repositories
 
         }
 
+        public async Task<bool> DeleteByEntityIdAsync(int entityId)
+        {
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Deleting all mentions for entity Id {entityId}");
+            }
+
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteEntityMentionsByEntityId", entityId);
+            }
+
+            return success > 0 ? true : false;
+
+        }
+
+        public async Task<bool> DeleteByEntityReplyIdAsync(int entityReplyId)
+        {
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation($"Deleting all mentions for entity reply with Id {entityReplyId}");
+            }
+
+            var success = 0;
+            using (var context = _dbContext)
+            {
+                success = await context.ExecuteScalarAsync<int>(
+                    CommandType.StoredProcedure,
+                    "DeleteEntityMentionsByEntityReplyId", entityReplyId);
+            }
+
+            return success > 0 ? true : false;
+
+        }
+
         #endregion
 
         #region "Private Methods"
