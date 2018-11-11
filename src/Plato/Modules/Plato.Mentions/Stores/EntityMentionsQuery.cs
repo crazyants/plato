@@ -41,7 +41,8 @@ namespace Plato.Mentions.Stores
                 PageIndex,
                 PageSize,
                 populateSql,
-                countSql
+                countSql,
+                Params.Username.Value
             );
 
             return data;
@@ -58,7 +59,7 @@ namespace Plato.Mentions.Stores
 
         private WhereInt _userId;
         private WhereInt _entityId;
-        private WhereString _keywords;
+        private WhereString _username;
 
         public WhereInt UserId
         {
@@ -72,10 +73,10 @@ namespace Plato.Mentions.Stores
             set => _entityId = value;
         }
 
-        public WhereString Keywords
+        public WhereString Username
         {
-            get => _keywords ?? (_keywords = new WhereString());
-            set => _keywords = value;
+            get => _username ?? (_username = new WhereString());
+            set => _username = value;
         }
 
     }
@@ -182,7 +183,13 @@ namespace Plato.Mentions.Stores
                     sb.Append(_query.Params.EntityId.Operator);
                 sb.Append(_query.Params.EntityId.ToSqlString("em.EntityId"));
             }
-
+            
+            if (!string.IsNullOrEmpty(_query.Params.Username.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Username.Operator);
+                sb.Append(_query.Params.Username.ToSqlString("Username"));
+            }
 
             return sb.ToString();
 

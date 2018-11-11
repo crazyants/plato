@@ -60,7 +60,7 @@ namespace Plato.Labels.Stores
 
         private WhereInt _labelId;
         private WhereInt _entityId;
-     
+        
         public WhereInt LabelId
         {
             get => _labelId ?? (_labelId = new WhereInt());

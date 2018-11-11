@@ -180,7 +180,16 @@ namespace Plato.Mentions.Handlers
                 .CreateDefaultProcedures(_entityMentions);
 
             builder.CreateProcedure(new SchemaProcedure("SelectEntityMentionsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entityMentions));
+                .ForTable(_entityMentions)
+                .WithParameters(new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        Name = "[Username]",
+                        DbType = DbType.String,
+                        Length = "255"
+                    }
+                }));
 
         }
 

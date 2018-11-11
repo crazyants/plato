@@ -509,8 +509,10 @@ namespace Plato.Internal.Data.Schemas
             */
 
             if (procedure.Parameters == null)
+            {
                 throw new Exception($"Attempting to create '{GetProcedureName(procedure.Name)}' procedure but no parameters have been defined. Use the WithParameter or WithParameter methods on the SchemaProcedure object.");
-
+            }
+                
             var sb = new StringBuilder();
             sb.Append(alter == false ? "CREATE" : "ALTER")
                 .Append(" PROCEDURE ")
