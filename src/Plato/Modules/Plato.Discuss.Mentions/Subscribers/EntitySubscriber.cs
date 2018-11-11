@@ -156,11 +156,14 @@ namespace Plato.Discuss.Mentions.Subscribers
                 }
             }
 
+            // Build list of mentions to remove
             if (existingMentions != null)
             {
                 foreach (var mention in existingMentions)
                 {
-                    if (!mentionsToAdd.Contains(mention))
+                    // Is user still mentioned within message?
+                    var mentionedUser = mentionedUsers.FirstOrDefault(m => m.Id == mention.UserId);
+                    if (mentionedUser == null)
                     {
                         mentionsToRemove.Add(mention);
                     }
