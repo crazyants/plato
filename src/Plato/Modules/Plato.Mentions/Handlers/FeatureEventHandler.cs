@@ -72,10 +72,10 @@ namespace Plato.Mentions.Handlers
             using (var builder = _schemaBuilder)
             {
                 
-                // configure
+                // Configure
                 Configure(builder);
 
-                // Labels schema
+                // EntityMentions schema
                 EntityMentions(builder);
 
                 // Log statements to execute

@@ -5,7 +5,7 @@ using Plato.Internal.Messaging.Abstractions;
 using Plato.Mentions.Models;
 using Plato.Mentions.Services;
 
-namespace Plato.Mentions.Subscribers
+namespace Plato.Discuss.Mentions.Subscribers
 {
 
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
@@ -16,14 +16,13 @@ namespace Plato.Mentions.Subscribers
         private readonly IMentionsParser _mentionParser;
 
         public EntitySubscriber(
-            IBroker broker,
+            IEntityMentionsManager<EntityMention> entityMentionsManager,
             IMentionsParser mentionParser,
-            IEntityMentionsManager<EntityMention> entityMentionsManager)
+            IBroker broker)
         {
-            _broker = broker;
-        
             _mentionParser = mentionParser;
             _entityMentionsManager = entityMentionsManager;
+            _broker = broker;
         }
 
         #region "Implementation"

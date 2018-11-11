@@ -1,5 +1,5 @@
 Name: Plato Mentions
-Description: Adds core functionality to support user mentions.
+Description: Adds core abstractions to support @mentions.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core

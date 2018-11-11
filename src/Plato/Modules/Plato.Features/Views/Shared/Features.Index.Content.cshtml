@@ -76,14 +76,12 @@
                                 @if (!feature.IsEnabled)
                                 {
                                     <button type="submit" asp-controller="Admin" asp-action="Enable" asp-route-id="@feature.ModuleId" class="btn btn-primary" itemprop="UnsafeUrl">
-                                        <i class="fal fa-check"></i>
                                         @T["Enable"]
                                     </button>
                                 }
                                 else
                                 {
                                     <button type="submit" asp-controller="Admin" asp-action="Disable" asp-route-id="@feature.ModuleId" class="btn btn-secondary" itemprop="UnsafeUrl">
-                                        <i class="fal fa-times"></i>
                                         @T["Disable"]
                                     </button>
                                 }
