@@ -5,13 +5,13 @@ using Plato.Mentions.Services;
 namespace Plato.Mentions.Subscribers
 {
 
-    public class MentionsSubscriber : IBrokerSubscriber
+    public class ParseEntityHtmlSubscriber : IBrokerSubscriber
     {
 
         private readonly IBroker _broker;
         private readonly IMentionsParser _mentionParser;
 
-        public MentionsSubscriber(
+        public ParseEntityHtmlSubscriber(
             IBroker broker,
             IMentionsParser mentionParser)
         {
@@ -24,8 +24,8 @@ namespace Plato.Mentions.Subscribers
             // Add a subscription to convert markdown to html
             _broker.Sub<string>(new MessageOptions()
             {
-                Key = "ParseMarkdown"
-            }, async message => await ParseMarkdownAsync(message.What));
+                Key = "ParseEntityHtml"
+            }, async message => await ParseEntityHtmlAsync(message.What));
             
         }
 
@@ -33,14 +33,14 @@ namespace Plato.Mentions.Subscribers
         {
             _broker.Unsub<string>(new MessageOptions()
             {
-                Key = "ParseMarkdown"
-            }, async message => await ParseMarkdownAsync(message.What));
+                Key = "ParseEntityHtml"
+            }, async message => await ParseEntityHtmlAsync(message.What));
 
         }
 
-        private async Task<string> ParseMarkdownAsync(string markdown)
+        private async Task<string> ParseEntityHtmlAsync(string input)
         {
-            return await _mentionParser.ParseAsync(markdown);
+            return await _mentionParser.ParseAsync(input);
         }
 
     }

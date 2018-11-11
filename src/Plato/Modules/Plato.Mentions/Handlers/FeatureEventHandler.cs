@@ -31,6 +31,11 @@ namespace Plato.Mentions.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "EntityReplyId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "UserId",
                         DbType = DbType.Int32
                     },

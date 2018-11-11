@@ -84,9 +84,9 @@ namespace Plato.Entities.Services
             }
 
             // Parse Html and message abstract
-            model.Html = await ParseMarkdown(model.Message);
-            model.Abstract = await ParseAbstract(model.Message);
-            model.Alias = await ParseAlias(model.Title);
+            model.Html = await ParseEntityHtml(model.Message);
+            model.Abstract = await ParseEntityAbstract(model.Message);
+            model.Alias = await ParseEntityAlias(model.Title);
 
             // Raise creating event
             Creating?.Invoke(this, new EntityEventArgs<TEntity>(model));
@@ -154,9 +154,9 @@ namespace Plato.Entities.Services
             }
 
             // Parse Html and message abstract
-            model.Html = await ParseMarkdown(model.Message);
-            model.Abstract = await ParseAbstract(model.Message);
-            model.Alias = await ParseAlias(model.Title);
+            model.Html = await ParseEntityHtml(model.Message);
+            model.Abstract = await ParseEntityAbstract(model.Message);
+            model.Alias = await ParseEntityAlias(model.Title);
 
             // Raise Updating event
             Updating?.Invoke(this, new EntityEventArgs<TEntity>(model));
@@ -248,12 +248,12 @@ namespace Plato.Entities.Services
 
         #region "Private Methods"
 
-        private async Task<string> ParseMarkdown(string message)
+        private async Task<string> ParseEntityHtml(string message)
         {
       
             foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
-                Key = "ParseMarkdown"
+                Key = "ParseEntityHtml"
             }, message))
             {
                 message = await handler.Invoke(new Message<string>(message, this));
@@ -263,11 +263,11 @@ namespace Plato.Entities.Services
 
         }
 
-        private async Task<string> ParseAbstract(string message)
+        private async Task<string> ParseEntityAbstract(string message)
         {
             foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
-                Key = "ParseAbstract"
+                Key = "ParseEntityAbstract"
             }, message))
             {
                 message = await handler.Invoke(new Message<string>(message, this));
@@ -277,7 +277,7 @@ namespace Plato.Entities.Services
 
         }
 
-        private async Task<string> ParseAlias(string input)
+        private async Task<string> ParseEntityAlias(string input)
         {
 
             var output = _aliasCreator.Create(input);

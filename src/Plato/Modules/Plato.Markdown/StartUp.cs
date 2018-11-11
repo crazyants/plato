@@ -36,7 +36,7 @@ namespace Plato.Markdown
             services.AddScoped<IAssetProvider, AssetProvider>();
 
             // Register message broker subscribers
-            services.AddScoped<IBrokerSubscriber, MarkdownSubscriber>();
+            services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
 
         }
 

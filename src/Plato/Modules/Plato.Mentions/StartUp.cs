@@ -42,7 +42,10 @@ namespace Plato.Mentions
             services.AddScoped<IMentionsParser, MentionsParser>();
 
             // Register broker subscribers
-            services.AddScoped<IBrokerSubscriber, MentionsSubscriber>();
+            services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
+
+            // Managers
+            services.AddScoped<IEntityMentionsManager<EntityMention>, EntityMentionsManager>();
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();

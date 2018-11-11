@@ -13,6 +13,8 @@ namespace Plato.Mentions.Models
 
         public int EntityId { get; set; }
 
+        public int EntityReplyId { get; set; }
+
         public int UserId { get; set; }
 
         public int CreatedUserId { get; set; }

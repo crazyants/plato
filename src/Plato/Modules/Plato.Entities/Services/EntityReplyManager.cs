@@ -68,9 +68,9 @@ namespace Plato.Entities.Services
                 reply.CreatedUserId = user.Id;
             }
      
-            // Parse Html and message abstract
-            reply.Html = await ParseMarkdown(reply.Message);
-            reply.Abstract = await ParseAbstract(reply.Message);
+            // Parse Html and abstract
+            reply.Html = await ParseEntityHtml(reply.Message);
+            reply.Abstract = await ParseEntityAbstract(reply.Message);
             
             // Raise creating event
             Creating?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, reply));
@@ -137,8 +137,8 @@ namespace Plato.Entities.Services
             reply.ModifiedDate = DateTime.UtcNow;
 
             // Parse Html and message abstract
-            reply.Html = await ParseMarkdown(reply.Message);
-            reply.Abstract = await ParseAbstract(reply.Message);
+            reply.Html = await ParseEntityHtml(reply.Message);
+            reply.Abstract = await ParseEntityAbstract(reply.Message);
             
             // Raise updating event
             Updating?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, reply));
@@ -222,35 +222,33 @@ namespace Plato.Entities.Services
         
         #region "Private Methods"
 
-        private async Task<string> ParseMarkdown(string message)
+        private async Task<string> ParseEntityHtml(string message)
         {
-
-            var output = string.Empty;
+         
             foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
-                Key = "ParseMarkdown"
+                Key = "ParseEntityHtml"
             }, message))
             {
-                output = await handler.Invoke(new Message<string>(message, this));
+                message = await handler.Invoke(new Message<string>(message, this));
             }
 
-            return output;
+            return message.HtmlTextulize();
 
         }
 
-        private async Task<string> ParseAbstract(string message)
+        private async Task<string> ParseEntityAbstract(string message)
         {
-
-            var output = message.PlainTextulize().TrimToAround(225);
+            
             foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
             {
-                Key = "ParseAbstract"
+                Key = "ParseEntityAbstract"
             }, message))
             {
-                output = await handler.Invoke(new Message<string>(message, this));
+                message = await handler.Invoke(new Message<string>(message, this));
             }
 
-            return output;
+            return message.PlainTextulize().TrimToAround(225);
 
         }
 

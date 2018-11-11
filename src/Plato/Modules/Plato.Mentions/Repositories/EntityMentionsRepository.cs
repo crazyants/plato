@@ -30,6 +30,7 @@ namespace Plato.Mentions.Repositories
             var id = await InsertUpdateInternal(
                 model.Id,
                 model.EntityId,
+                model.EntityReplyId,
                 model.UserId,
                 model.CreatedUserId,
                 model.CreatedDate);
@@ -126,6 +127,7 @@ namespace Plato.Mentions.Repositories
         async Task<int> InsertUpdateInternal(
             int id,
             int entityId,
+            int entityReplyId,
             int userId,
             int createdUserId,
             DateTimeOffset? createdDate)
@@ -139,6 +141,7 @@ namespace Plato.Mentions.Repositories
                     "InsertUpdateEntityMention",
                     id,
                     entityId,
+                    entityReplyId,
                     userId,
                     createdUserId,
                     createdDate.ToDateIfNull());

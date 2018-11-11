@@ -43,7 +43,7 @@ namespace Plato.Internal.Messaging
             }
 
             // The payload passwed to each subscriber delegate
-            var delegatePayload = new Message<T>(message, sender);
+            //var delegatePayload = new Message<T>(message, sender);
 
             // Iterate through subscriber action delegates matching our key
             foreach (var handler in delegates

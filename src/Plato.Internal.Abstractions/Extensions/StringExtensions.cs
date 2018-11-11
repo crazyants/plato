@@ -12,7 +12,6 @@ namespace Plato.Internal.Abstractions.Extensions
     public static class StringExtensions
     {
      
-
         private static readonly char[] InValidSegmentChars = "/?#[]@\"^{}|`<>\t\r\n\f ".ToCharArray();
 
         public static bool IsValidUrlSegment(this string segment)
@@ -172,14 +171,12 @@ namespace Plato.Internal.Abstractions.Extensions
         
         public static string HtmlTextulize(this string input)
         {
-            input = Regex.Replace(input, System.Environment.NewLine, "<br/>"); ;
-            return input;
+            return Regex.Replace(input, System.Environment.NewLine, "<br/>"); ; ;
         }
-
+        
         public static string StripNewLines(this string input)
         {
-            input = input.Replace(System.Environment.NewLine, "");
-            return input;
+            return input.Replace(System.Environment.NewLine, ""); ;
         }
 
         public static string StripHtml(this string input)

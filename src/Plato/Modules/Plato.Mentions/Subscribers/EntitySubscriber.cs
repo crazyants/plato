@@ -1,58 +1,91 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Mentions.Models;
-using Plato.Mentions.Stores;
+using Plato.Mentions.Services;
 
 namespace Plato.Mentions.Subscribers
 {
 
-    //public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
-    //{
+    public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
+    {
 
-    //    private readonly IBroker _broker;
-    //    private readonly IEntityMentionsStore<EntityMention> _entityMentionsStore;
+        private readonly IBroker _broker;
+        private readonly IEntityMentionsManager<EntityMention> _entityMentionsManager;
+        private readonly IMentionsParser _mentionParser;
+
+        public EntitySubscriber(
+            IBroker broker,
+            IMentionsParser mentionParser,
+            IEntityMentionsManager<EntityMention> entityMentionsManager)
+        {
+            _broker = broker;
         
-    //    public EntitySubscriber(
-    //        IBroker broker,
-    //        IEntityMentionsStore<EntityMention> entityMentionsStore)
-    //    {
-    //        _broker = broker;
-    //        _entityMentionsStore = entityMentionsStore;
-       
-    //    }
-        
-    //    #region "Implementation"
+            _mentionParser = mentionParser;
+            _entityMentionsManager = entityMentionsManager;
+        }
 
-    //    public void Subscribe()
-    //    {
-    //        // Created
-    //        _broker.Sub<TEntity>(new MessageOptions()
-    //        {
-    //            Key = "EntityCreated"
-    //        }, async message => await EntityCreated(message.What));
-    //    }
+        #region "Implementation"
 
-    //    public void Unsubscribe()
-    //    {
-    //        _broker.Unsub<TEntity>(new MessageOptions()
-    //        {
-    //            Key = "EntityCreated"
-    //        }, async message => await EntityCreated(message.What));
-    //    }
+        public void Subscribe()
+        {
+            // Created
+            _broker.Sub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityCreated"
+            }, async message => await EntityCreated(message.What));
+        }
 
-    //    #endregion
+        public void Unsubscribe()
+        {
+            _broker.Unsub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityCreated"
+            }, async message => await EntityCreated(message.What));
+        }
 
-    //    #region "Private Methods"
+        #endregion
 
-    //    async Task<TEntity> EntityCreated(TEntity entity)
-    //    {
-            
-    //        return entity;
+        #region "Private Methods"
 
-    //    }
+        async Task<TEntity> EntityCreated(TEntity entity)
+        {
 
-    //    #endregion
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
 
-    //}
+            // If  we don't have a message we can't parse mentions
+            if (String.IsNullOrEmpty(entity.Message))
+            {
+                return entity;
+            }
+
+            // Get users mentioned within entity message
+            var users = await _mentionParser.GetUsersAsync(entity.Message);
+            if (users == null)
+            {
+                return entity;
+            }
+
+            // Add users mentioned within entity to EntityMentions
+            foreach (var user in users)
+            {
+                var result = await _entityMentionsManager.CreateAsync(new EntityMention()
+                {
+                    EntityId = entity.Id,
+                    UserId = user.Id
+                });
+            }
+
+            return entity;
+
+        }
+
+        #endregion
+
+    }
+
 }

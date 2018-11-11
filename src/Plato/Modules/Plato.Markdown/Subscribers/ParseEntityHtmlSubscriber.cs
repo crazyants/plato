@@ -6,13 +6,13 @@ using Plato.Markdown.Services;
 namespace Plato.Markdown.Subscribers
 {
 
-    public class MarkdownSubscriber : IBrokerSubscriber
+    public class ParseEntityHtmlSubscriber : IBrokerSubscriber
     {
 
         private readonly IBroker _broker;
         private readonly IMarkdownParserFactory _markdownParserFactory;
 
-        public MarkdownSubscriber(
+        public ParseEntityHtmlSubscriber(
             IBroker broker, 
             IMarkdownParserFactory markdownParserFactory)
         {
@@ -25,14 +25,14 @@ namespace Plato.Markdown.Subscribers
             // Add a subscription to convert markdown to html
             _broker.Sub<string>(new MessageOptions()
             {
-                Key = "ParseMarkdown"
-            }, async message => await ParseMarkdownAsync(message.What));
+                Key = "ParseEntityHtml"
+            }, async message => await ParseEntityHtmlAsync(message.What));
             
             // Add a subscription to produce a plaintext abstract from our markdown
             _broker.Sub<string>(new MessageOptions()
             {
-                Key = "ParseAbstract"
-            }, async message => await ParseAbstractAsync(message.What));
+                Key = "ParseEntityAbstract"
+            }, async message => await ParseEntityAbstractAsync(message.What));
             
         }
 
@@ -40,24 +40,24 @@ namespace Plato.Markdown.Subscribers
         {
             _broker.Unsub<string>(new MessageOptions()
             {
-                Key = "ParseMarkdown"
-            }, async message => await ParseMarkdownAsync(message.What));
+                Key = "ParseEntityHtml"
+            }, async message => await ParseEntityHtmlAsync(message.What));
 
             _broker.Unsub<string>(new MessageOptions()
             {
-                Key = "ParseAbstract"
-            }, async message => await ParseAbstractAsync(message.What));
+                Key = "ParseEntityAbstract"
+            }, async message => await ParseEntityAbstractAsync(message.What));
         }
         
-        private async Task<string> ParseMarkdownAsync(string markdown)
+        private async Task<string> ParseEntityHtmlAsync(string markdown)
         {
             var parser = _markdownParserFactory.GetParser();
             return await parser.ParseAsync(markdown);
         }
 
-        private async Task<string> ParseAbstractAsync(string markdown)
+        private async Task<string> ParseEntityAbstractAsync(string markdown)
         {
-            var html = await ParseMarkdownAsync(markdown);
+            var html = await ParseEntityHtmlAsync(markdown);
             return html.PlainTextulize().TrimToAround(225);
         }
         

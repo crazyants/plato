@@ -28,7 +28,18 @@ namespace Plato.Mentions.Services
 
         public async Task<string> ParseAsync(string input)
         {
+            var users = await GetUsersAsync(input);
+            if (users != null)
+            {
+                input = await ConvertToUrlsAsync(input, users);
+            }
 
+            return input;
+
+        }
+
+        public async Task<IEnumerable<IUser>> GetUsersAsync(string input)
+        {
             if (input == null)
             {
                 throw new ArgumentNullException(nameof(input));
@@ -37,19 +48,10 @@ namespace Plato.Mentions.Services
             var usernames = GetUniqueUsernames(input);
             if (usernames?.Length > 0)
             {
-                var users = await GetUsersByUsernamesAsync(usernames.ToArray());
-                if (users != null)
-                {
-                    var usersList = users.ToList();
-                    if (usersList.Count > 0)
-                    {
-                        input = await ConvertMentionsToUrlsAsync(input, usersList);
-                    }
-                }
-
+                return await GetUsersByUsernamesAsync(usernames.ToArray());
             }
 
-            return input;
+            return null;
 
         }
 
@@ -57,7 +59,7 @@ namespace Plato.Mentions.Services
 
         #region "Private Methods"
         
-        async Task<string> ConvertMentionsToUrlsAsync(string input, IEnumerable<IUser> users)
+        async Task<string> ConvertToUrlsAsync(string input, IEnumerable<IUser> users)
         {
 
             if (String.IsNullOrEmpty(input))
@@ -134,4 +136,5 @@ namespace Plato.Mentions.Services
         #endregion
 
     }
+
 }
