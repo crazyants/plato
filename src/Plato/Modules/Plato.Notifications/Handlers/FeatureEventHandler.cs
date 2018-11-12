@@ -49,6 +49,11 @@ namespace Plato.Notifications.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "IsRead",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "CreatedDate",
                         DbType = DbType.DateTimeOffset
                     }

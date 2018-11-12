@@ -20,11 +20,8 @@ namespace Plato.Notifications
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-       
             // Register navigation provider
             services.AddScoped<INavigationProvider, SiteMenu>();
-
         }
 
         public override void Configure(
