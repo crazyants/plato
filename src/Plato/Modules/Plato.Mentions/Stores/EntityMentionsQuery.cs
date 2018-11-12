@@ -59,6 +59,7 @@ namespace Plato.Mentions.Stores
 
         private WhereInt _userId;
         private WhereInt _entityId;
+        private WhereInt _entityReplyId;
         private WhereString _username;
 
         public WhereInt UserId
@@ -71,6 +72,12 @@ namespace Plato.Mentions.Stores
         {
             get => _entityId ?? (_entityId = new WhereInt());
             set => _entityId = value;
+        }
+
+        public WhereInt EntityReplyId
+        {
+            get => _entityReplyId ?? (_entityReplyId = new WhereInt());
+            set => _entityReplyId = value;
         }
 
         public WhereString Username
@@ -182,6 +189,14 @@ namespace Plato.Mentions.Stores
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityId.Operator);
                 sb.Append(_query.Params.EntityId.ToSqlString("em.EntityId"));
+            }
+
+            // EntityReplyId
+            if (_query.Params.EntityReplyId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EntityReplyId.Operator);
+                sb.Append(_query.Params.EntityReplyId.ToSqlString("em.EntityReplyId"));
             }
             
             if (!string.IsNullOrEmpty(_query.Params.Username.Value))

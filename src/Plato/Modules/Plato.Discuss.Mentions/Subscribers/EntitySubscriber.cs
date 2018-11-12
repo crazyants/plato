@@ -60,7 +60,7 @@ namespace Plato.Discuss.Mentions.Subscribers
             }, async message => await EntityCreated(message.What));
 
             // Updated
-            _broker.Sub<TEntity>(new MessageOptions()
+            _broker.Unsub<TEntity>(new MessageOptions()
             {
                 Key = "EntityUpdated"
             }, async message => await EntityUpdated(message.What));
@@ -120,14 +120,14 @@ namespace Plato.Discuss.Mentions.Subscribers
                 return entity;
             }
 
-            // Get users mentioned within entity message
+            // Get users mentioned within message
             var users = await _mentionParser.GetUsersAsync(entity.Message);
             if (users == null)
             {
                 return entity;
             }
 
-            // Get existing mentions
+            // Get all existing mentions
             var mentions = await _entityMentionsStore.QueryAsync()
                 .Select<EntityMentionsQueryParams>(q =>
                 {
@@ -141,7 +141,7 @@ namespace Plato.Discuss.Mentions.Subscribers
             var mentionsToAdd = new List<EntityMention>();
             var mentionsToRemove = new List<EntityMention>();
 
-            // Build a list of new mentions
+            // Build a list of new mentions to add
             foreach (var user in mentionedUsers)
             {
                 // Is there an existing mention for the user?
@@ -185,7 +185,6 @@ namespace Plato.Discuss.Mentions.Subscribers
             return entity;
 
         }
-
 
         #endregion
 

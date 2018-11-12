@@ -47,9 +47,9 @@ namespace Plato.Mentions.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.UserId));
             }
 
-            if (model.EntityId <= 0)
+            if (model.EntityId <= 0 && model.EntityReplyId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.EntityId));
+                throw new ArgumentOutOfRangeException($"{nameof(model.EntityId)} or {nameof(model.EntityReplyId)} must be greater than zero.");
             }
 
             var result = await _entityMentionsRepository.InsertUpdateAsync(model);
@@ -78,9 +78,9 @@ namespace Plato.Mentions.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.UserId));
             }
 
-            if (model.EntityId <= 0)
+            if (model.EntityId <= 0 && model.EntityReplyId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.EntityId));
+                throw new ArgumentOutOfRangeException($"{nameof(model.EntityId)} or {nameof(model.EntityReplyId)} must be greater than zero.");
             }
 
             var result = await _entityMentionsRepository.InsertUpdateAsync(model);

@@ -1,0 +1,14 @@
+Name: Plato Notifications
+Description: Adds notification capabilities to Plato.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Core
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.WebAPI",
+		Version: "1.0.0"
+	}
+]

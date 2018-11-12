@@ -40,9 +40,9 @@ namespace Plato.Mentions.Services
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
 
-            if (model.EntityId <= 0)
+            if (model.EntityId <= 0 && model.EntityReplyId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.EntityId));
+                throw new ArgumentOutOfRangeException($"{nameof(model.EntityId)} or {nameof(model.EntityReplyId)} must be greater than zero.");
             }
 
             if (model.UserId <= 0)
@@ -106,9 +106,9 @@ namespace Plato.Mentions.Services
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
 
-            if (model.EntityId <= 0)
+            if (model.EntityId <= 0 && model.EntityReplyId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.EntityId));
+                throw new ArgumentOutOfRangeException($"{nameof(model.EntityId)} or {nameof(model.EntityReplyId)} must be greater than zero.");
             }
 
             if (model.UserId <= 0)

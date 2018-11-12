@@ -464,7 +464,6 @@
                 });
 
             previewLink.on("click", function (e) {
-                var $ed
                 e.preventDefault();
                 instance.showPreview();
             });
@@ -486,7 +485,7 @@
             
             var writeTabBody = $("<div/>",
                 {
-                    'class': 'tab-pane show active md-write',
+                    'class': 'tab-pane position-relative show active md-write',
                     'role': 'tabpanel',
                     'id': 'writeTab' + editorId
                 });

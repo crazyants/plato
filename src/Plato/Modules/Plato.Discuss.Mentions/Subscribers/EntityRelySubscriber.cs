@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Plato.Discuss.Models;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Mentions.Models;
 using Plato.Mentions.Services;
+using Plato.Mentions.Stores;
 
 namespace Plato.Discuss.Mentions.Subscribers
 {
@@ -14,18 +18,21 @@ namespace Plato.Discuss.Mentions.Subscribers
     public class EntityReplySubscriber<TEntityReply> : IBrokerSubscriber where TEntityReply : class, IEntityReply
     {
 
-        private readonly IBroker _broker;
         private readonly IEntityMentionsManager<EntityMention> _entityMentionsManager;
+        private readonly IEntityMentionsStore<EntityMention> _entityMentionsStore;
         private readonly IMentionsParser _mentionParser;
+        private readonly IBroker _broker;
 
         public EntityReplySubscriber(
             IEntityMentionsManager<EntityMention> entityMentionsManager,
             IMentionsParser mentionParser,
-            IBroker broker)
+            IBroker broker,
+            IEntityMentionsStore<EntityMention> entityMentionsStore)
         {
             _mentionParser = mentionParser;
             _entityMentionsManager = entityMentionsManager;
             _broker = broker;
+            _entityMentionsStore = entityMentionsStore;
         }
         
         #region "Implementation"
@@ -42,7 +49,7 @@ namespace Plato.Discuss.Mentions.Subscribers
             _broker.Sub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyUpdated"
-            }, async message => await EntityReplyCreated(message.What));
+            }, async message => await EntityReplyUpdated(message.What));
 
         }
 
@@ -58,7 +65,7 @@ namespace Plato.Discuss.Mentions.Subscribers
             _broker.Unsub<TEntityReply>(new MessageOptions()
             {
                 Key = "EntityReplyUpdated"
-            }, async message => await EntityReplyCreated(message.What));
+            }, async message => await EntityReplyUpdated(message.What));
 
         }
         
@@ -106,7 +113,87 @@ namespace Plato.Discuss.Mentions.Subscribers
             return reply;
 
         }
-        
+
+        async Task<TEntityReply> EntityReplyUpdated(TEntityReply reply)
+        {
+
+            if (reply == null)
+            {
+                throw new ArgumentNullException(nameof(reply));
+            }
+
+            // If  we don't have a message we can't parse mentions
+            if (String.IsNullOrEmpty(reply.Message))
+            {
+                return reply;
+            }
+
+            // Get users mentioned within message
+            var users = await _mentionParser.GetUsersAsync(reply.Message);
+            if (users == null)
+            {
+                return reply;
+            }
+
+            // Get all existing mentions
+            var mentions = await _entityMentionsStore.QueryAsync()
+                .Select<EntityMentionsQueryParams>(q =>
+                {
+                    q.EntityReplyId.Equals(reply.Id);
+                })
+                .OrderBy("Id", OrderBy.Asc)
+                .ToList();
+
+            var mentionedUsers = users.ToList();
+            var existingMentions = mentions?.Data.ToList();
+            var mentionsToAdd = new List<EntityMention>();
+            var mentionsToRemove = new List<EntityMention>();
+
+            // Build a list of new mentions to add
+            foreach (var user in mentionedUsers)
+            {
+                // Is there an existing mention for the user?
+                var existingMention = existingMentions?.FirstOrDefault(m => m.UserId == user.Id);
+                if (existingMention == null)
+                {
+                    mentionsToAdd.Add(new EntityMention()
+                    {
+                        EntityReplyId = reply.Id,
+                        UserId = user.Id
+                    });
+                }
+            }
+
+            // Build list of mentions to remove
+            if (existingMentions != null)
+            {
+                foreach (var mention in existingMentions)
+                {
+                    // Is user still mentioned within message?
+                    var mentionedUser = mentionedUsers.FirstOrDefault(m => m.Id == mention.UserId);
+                    if (mentionedUser == null)
+                    {
+                        mentionsToRemove.Add(mention);
+                    }
+                }
+            }
+
+            // Delete removed mentions
+            foreach (var mention in mentionsToRemove)
+            {
+                await _entityMentionsManager.DeleteAsync(mention);
+            }
+
+            // Add new users mentioned within entity to EntityMentions
+            foreach (var mention in mentionsToAdd)
+            {
+                await _entityMentionsManager.CreateAsync(mention);
+            }
+
+            return reply;
+
+        }
+
         #endregion
 
     }
