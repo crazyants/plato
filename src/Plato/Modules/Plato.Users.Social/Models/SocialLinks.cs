@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Plato.Internal.Abstractions;
+﻿using Plato.Internal.Abstractions;
 
 namespace Plato.Users.Social.Models
 {

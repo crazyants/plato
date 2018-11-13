@@ -10,6 +10,11 @@
 
         public string Category { get; set; }
 
+
+        public NotificationType()
+        {
+        }
+
         public NotificationType(string name)
         {
             this.Name = name;

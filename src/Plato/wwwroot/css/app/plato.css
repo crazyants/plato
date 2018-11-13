@@ -527,6 +527,9 @@
 .layout-content .card,
 .layout-sidebar .card { margin-bottom: 1.25rem; }
 
+.layout-content .accordion,
+.layout-sidebar .accordion  { margin-bottom: 1.25rem; }
+
 .layout-content .accordion .card,
 .layout-sidebar .accordion .card { margin-bottom: 0; }
 
