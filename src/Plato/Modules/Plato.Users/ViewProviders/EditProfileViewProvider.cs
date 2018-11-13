@@ -41,13 +41,13 @@ namespace Plato.Users.ViewProviders
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override async Task<IViewProviderResult> BuildEditAsync(EditProfileViewModel viewModel, IViewProviderContext updater)
+        public override async Task<IViewProviderResult> BuildEditAsync(EditProfileViewModel viewModel, IViewProviderContext context)
         {
 
             var user = await _platoUserStore.GetByIdAsync(viewModel.Id);
             if (user == null)
             {
-                return await BuildIndexAsync(viewModel, updater);
+                return await BuildIndexAsync(viewModel, context);
             }
             
             return Views(

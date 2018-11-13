@@ -27,7 +27,6 @@ namespace Plato.Users.Controllers
         private readonly IViewProviderManager<EditSettingsViewModel> _editSettingsViewProvider;
         private readonly IViewProviderManager<UserProfile> _viewProvider;
         private readonly IBreadCrumbManager _breadCrumbManager;
-
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly UserManager<User> _userManager;
         private readonly IContextFacade _contextFacade;

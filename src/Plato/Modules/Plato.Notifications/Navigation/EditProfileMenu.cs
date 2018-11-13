@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.Users.Navigation
+namespace Plato.Notifications.Navigation
 {
     public class EditProfileMenu : INavigationProvider
     {
@@ -22,16 +22,8 @@ namespace Plato.Users.Navigation
             }
 
             builder
-                .Add(T["Profile"], 1, profile => profile
-                    .Action("EditProfile", "Home", "Plato.Users")
-                    //.Permission(Permissions.ManageUsers)
-                    .LocalNav()
-                ).Add(T["Account"], 2, profile => profile
-                    .Action("EditAccount", "Home", "Plato.Users")
-                    //.Permission(Permissions.ManageUsers)
-                    .LocalNav()
-                ).Add(T["Settings"], int.MaxValue, profile => profile
-                    .Action("EditSettings", "Home", "Plato.Users")
+                .Add(T["Notifications"], 4, profile => profile
+                    .Action("EditProfile", "Home", "Plato.Notifications")
                     //.Permission(Permissions.ManageUsers)
                     .LocalNav()
                 );

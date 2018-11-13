@@ -7,7 +7,7 @@ namespace Plato.Notifications.Services
 
         IEnumerable<TNotificationType> GetNotificationTypes();
 
-        IDictionary<string, IEnumerable<TNotificationType>> GetCategorizedNotificationTypesAsync();
+        IDictionary<string, IEnumerable<TNotificationType>> GetCategorizedNotificationTypes();
 
     }
     
