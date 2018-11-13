@@ -14,12 +14,29 @@ namespace Plato.Notifications
         public static readonly NotificationType NewTopicsEmail =
             new NotificationType("New Topics", "Send me a notification for each new topic.", "Email");
 
+        public static readonly NotificationType NewTopicsMobile =
+            new NotificationType("New Topics", "Send me a notification for each new topic.", "Mobile");
+
+        public static readonly NotificationType NewRepliesWeb =
+            new NotificationType("New Topics", "Send me a notification for each new topic.", "Web");
+
+        public static readonly NotificationType NewRepliesEmail =
+            new NotificationType("New Topics", "Send me a notification for each new topic.", "Email");
+
+        public static readonly NotificationType NewRepliesMobile =
+            new NotificationType("New Topics", "Send me a notification for each new topic.", "Mobile");
+
+
         public IEnumerable<NotificationType> GetNotificationTypes()
         {
             return new[]
             {
                 NewTopicsWeb,
-                NewTopicsEmail
+                NewTopicsEmail,
+                NewTopicsMobile,
+                NewRepliesWeb,
+                NewRepliesEmail,
+                NewRepliesMobile
             };
 
         }

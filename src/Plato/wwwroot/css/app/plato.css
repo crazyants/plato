@@ -103,7 +103,6 @@
 /* ------------------------- */
 
 .card-title { margin: 0.50rem 0; }
-
 .card-body-flush .card-body { padding: 0; }
 .card-body-sm-gutter .card-body { padding: 0.5rem; }
 
@@ -525,10 +524,22 @@
 /* Plato Layout */
 /* ------------------------- */
 
-
 .layout-content .card,
 .layout-sidebar .card { margin-bottom: 1.25rem; }
 
+.layout-content .accordion .card,
+.layout-sidebar .accordion .card { margin-bottom: 0; }
+
+.accordion .card-header {
+    padding: 0; 
+}
+.accordion .card-header a {
+    display: block;
+    width: 100%;
+    padding: 1.25rem 1.25rem;
+    text-decoration: none;
+}
+.accordion .card-title { margin: 0; }
 
 /* ------------------- */
 /* Tagit */
