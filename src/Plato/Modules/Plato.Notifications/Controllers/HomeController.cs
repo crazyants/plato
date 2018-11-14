@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -53,18 +50,7 @@ namespace Plato.Notifications.Controllers
             {
                 return NotFound();
             }
-
-            //var data = user.GetOrCreate<UserDetail>();
-
-            //var editProfileViewModel = new EditProfileViewModel()
-            //{
-            //    Id = user.Id,
-            //    DisplayName = user.DisplayName,
-            //    Location = data.Profile.Location,
-            //    Bio = data.Profile.Bio,
-            //    Url = data.Profile.Url
-            //};
-
+            
             var editProfileViewModel = new EditNotificationsViewModel()
             {
                 Id = user.Id
@@ -95,7 +81,7 @@ namespace Plato.Notifications.Controllers
             };
 
             // Build view
-            var result = await _editProfileViewProvider.ProvideUpdateAsync(editProfileViewModel, this);
+            await _editProfileViewProvider.ProvideUpdateAsync(editProfileViewModel, this);
             
             // Ensure modelstate is still valid after view providers have executed
             if (ModelState.IsValid)

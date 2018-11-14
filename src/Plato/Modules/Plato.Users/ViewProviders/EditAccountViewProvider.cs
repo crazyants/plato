@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Users.Models;
 using Plato.Users.ViewModels;
 
 namespace Plato.Users.ViewProviders
@@ -110,8 +107,7 @@ namespace Plato.Users.ViewProviders
         }
 
         #endregion
-
-      
+        
     }
 
 }

@@ -11,7 +11,7 @@ namespace Plato.Notifications.ViewModels
 
         public IDictionary<string, IEnumerable<NotificationType>> CategorizedNotificationTypes { get; set; }
 
-        public IEnumerable<INotificationType> EnabledNotificationTypes { get; set; }
+        public IEnumerable<IUserNotificationType> EnabledNotificationTypes { get; set; }
         
     }
 

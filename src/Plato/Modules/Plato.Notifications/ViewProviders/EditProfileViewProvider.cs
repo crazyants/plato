@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Security.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Notifications.Models;
 using Plato.Notifications.Services;
@@ -51,7 +49,7 @@ namespace Plato.Notifications.ViewProviders
                 return await BuildIndexAsync(viewModel, context);
             }
 
-            var userNotificationSettings = user.GetOrCreate<UserNotificationSettings>();
+            var userNotificationSettings = user.GetOrCreate<UserNotificationTyps>();
 
             var editNotificationsViewModel = new EditNotificationsViewModel()
             {
@@ -81,25 +79,24 @@ namespace Plato.Notifications.ViewProviders
 
             // Build list of selected notification types
             var request = _httpContextAccessor.HttpContext.Request;
-            var notificationTypes = new List<NotificationType>();
+            var notificationTypes = new List<UserNotificationType>();
             foreach (string key in request.Form.Keys)
             {
                 
                 if (key.StartsWith("Checkbox.") && request.Form[key] == "true")
                 {
-                    var notificationTypeName = key.Substring("Checkbox.".Length);
-                    notificationTypes.Add(new NotificationType(notificationTypeName));
+                    var notificationTypeId = key.Substring("Checkbox.".Length);
+                    notificationTypes.Add(new UserNotificationType(notificationTypeId));
                 }
             }
-
-         
+            
             if (context.Updater.ModelState.IsValid)
             {
 
                 // Update 
-                var model = user.GetOrCreate<UserNotificationSettings>();
+                var model = user.GetOrCreate<UserNotificationTyps>();
                 model.NotificationTypes = notificationTypes;
-                user.AddOrUpdate<UserNotificationSettings>(model);
+                user.AddOrUpdate<UserNotificationTyps>(model);
 
                 // Persist
                 var result = await _userManager.UpdateAsync(user);

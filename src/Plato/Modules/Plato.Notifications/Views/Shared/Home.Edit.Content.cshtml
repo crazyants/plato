@@ -32,8 +32,7 @@
                             <td class="col-2">
                                 <label>
                                     <span class="switch switch-round">
-                                        @*checked="@(Model.Role?.RoleClaims?.Any(x => x.ClaimValue == permission.Name))"*@
-                                        <input class="form-check-input" type="checkbox" value="true" name="Checkbox.@notificationType.Name" />
+                                        <input class="form-check-input" type="checkbox" value="true" name="Checkbox.@notificationType.Id" checked="@(Model.EnabledNotificationTypes?.Any(x => x.Id == notificationType.Id))" />
                                         <span class="switch-slider"></span>
                                     </span>
                                 </label>
