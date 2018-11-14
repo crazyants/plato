@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Plato.Notifications.Services
+namespace Plato.Internal.Notifications.Abstractions
 {
     public interface INotificationTypeManager<TNotificationType> where TNotificationType : class
     {

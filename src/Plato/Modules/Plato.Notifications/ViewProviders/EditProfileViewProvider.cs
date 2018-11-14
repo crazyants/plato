@@ -4,13 +4,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Notifications.Abstractions.Models;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Notifications.Models;
-using Plato.Notifications.Services;
 using Plato.Notifications.ViewModels;
 
 namespace Plato.Notifications.ViewProviders
 {
+
     public class EditProfileViewProvider : BaseViewProvider<EditNotificationsViewModel>
     {
 
@@ -49,7 +51,7 @@ namespace Plato.Notifications.ViewProviders
                 return await BuildIndexAsync(viewModel, context);
             }
 
-            var userNotificationSettings = user.GetOrCreate<UserNotificationTyps>();
+            var userNotificationSettings = user.GetOrCreate<UserNotificationTypes>();
 
             var editNotificationsViewModel = new EditNotificationsViewModel()
             {
@@ -94,9 +96,9 @@ namespace Plato.Notifications.ViewProviders
             {
 
                 // Update 
-                var model = user.GetOrCreate<UserNotificationTyps>();
+                var model = user.GetOrCreate<UserNotificationTypes>();
                 model.NotificationTypes = notificationTypes;
-                user.AddOrUpdate<UserNotificationTyps>(model);
+                user.AddOrUpdate<UserNotificationTypes>(model);
 
                 // Persist
                 var result = await _userManager.UpdateAsync(user);

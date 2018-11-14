@@ -4,12 +4,33 @@ using System.Data;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Roles;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Models.Users
 {
 
+    public interface IGenericMetaData<TModel> where TModel : class
+    {
+        IDictionary<Type, ISerializable> MetaData { get; }
+
+        IEnumerable<TModel> Data { get; set; }
+
+        void AddOrUpdate<T>(T obj) where T : class;
+
+        void AddOrUpdate(Type type, ISerializable obj);
+        
+        T GetOrCreate<T>() where T : class;
+
+
+    }
+
+    public interface IUserMetaData<TNodel> : IGenericMetaData<TNodel> where TNodel : class
+    {
+
+    }
+    
     public class UserProfile : User
     {
         // UserProfile is simply a marker class so we can use
@@ -17,7 +38,10 @@ namespace Plato.Internal.Models.Users
         // This class should not contain any code
     }
     
-    public class User : IdentityUser<int>, IUser, IModel<User>
+    public class User : IdentityUser<int>,
+        IUser,
+        IUserMetaData<UserData>,
+        IModel<User>
     {
 
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;

@@ -1,6 +1,5 @@
-﻿namespace Plato.Notifications.Models
+﻿namespace Plato.Internal.Notifications.Abstractions.Models
 {
-
 
     public interface INotificationType
     {

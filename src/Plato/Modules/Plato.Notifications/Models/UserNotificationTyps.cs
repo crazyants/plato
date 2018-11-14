@@ -3,10 +3,11 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Notifications.Models
 {
-    public class UserNotificationTyps : Serializable
+    public class UserNotificationTypes : Serializable
     {
 
         public IEnumerable<UserNotificationType> NotificationTypes { get; set; }
 
     }
+
 }

@@ -1,10 +1,6 @@
-﻿using System.Reflection;
-
-namespace Plato.Notifications.Models
+﻿namespace Plato.Internal.Notifications.Abstractions.Models
 {
-
-
-
+    
     public class NotificationType : INotificationType
     {
 
@@ -15,9 +11,8 @@ namespace Plato.Notifications.Models
         public string Description { get; set; }
 
         public string Category { get; set; }
-
-
-        public NotificationType() : base()
+        
+        public NotificationType() 
         {
         }
 
@@ -49,6 +44,5 @@ namespace Plato.Notifications.Models
         }
         
     }
-
-
+    
 }

@@ -10,5 +10,9 @@ Dependencies:
 	{
 		Id: "Plato.WebAPI",
 		Version: "1.0.0"
+	},
+		{
+		Id: "Plato.Notifications",
+		Version: "1.0.0"
 	}
 ]

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Plato.Notifications.Models;
+using Plato.Internal.Notifications.Abstractions.Models;
 
-namespace Plato.Notifications.Services
+namespace Plato.Internal.Notifications.Abstractions
 {
 
     public interface INotificationTypeProvider<out TNotificationType> where TNotificationType : class, INotificationType

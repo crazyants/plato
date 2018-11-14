@@ -15,7 +15,7 @@
             <div class="card-header" role="tab" id="@headerId">
                 <h6 class="card-title">
                     <a data-toggle="collapse" href="#@contentId" aria-expanded="true" aria-controls="collapseOne">
-                        @category
+                        @T[category]
                     </a>
                 </h6>
             </div>
@@ -26,8 +26,8 @@
                     {
                         <tr>
                             <td class="col-10">
-                                <h6>@notificationType.Name</h6>
-                                @notificationType.Description
+                                <h6>@T[notificationType.Name]</h6>
+                                @T[notificationType.Description]
                             </td>
                             <td class="col-2">
                                 <label>
@@ -45,42 +45,3 @@
         </div>
     }
 </div>
-
-@*@foreach (var category in Model.CategorizedNotificationTypes.Keys)
-{
-    <fieldset>
-
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th colspan="3" class="col-12 bg-light">
-                        <h6>@category</h6>
-                    </th>
-                </tr>
-                <tr>
-                    <td class="col-10 font-weight-bold">@T["Notification"]</td>
-                    <td class="col-1 font-weight-bold text-center">@T["Enabled"]</td>
-                </tr>
-            </thead>
-            <tbody>
-
-                @foreach (var notificationType in Model.CategorizedNotificationTypes[category])
-                {
-                    <tr data-text="@notificationType.Description">
-                        <td class="col-10">@notificationType.Description</td>
-                        <td class="col-1 text-center">
-                            <label>
-                                <span class="switch switch-round">
-                                    checked="@(Model.Role?.RoleClaims?.Any(x => x.ClaimValue == permission.Name))"
-                                    <input class="form-check-input" type="checkbox" value="true" name="Checkbox.@notificationType.Name" />
-                                    <span class="switch-slider"></span>
-                                </span>
-                            </label>
-                        </td>
-
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </fieldset>
-}*@

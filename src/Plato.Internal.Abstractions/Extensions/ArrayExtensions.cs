@@ -6,7 +6,8 @@ namespace Plato.Internal.Abstractions.Extensions
     {
 
         public static string ToDelimitedString(
-        this string[] input, char delimiter = ',')
+            this string[] input,
+            char delimiter = ',')
         {
 
             var sb = new StringBuilder();
@@ -18,6 +19,7 @@ namespace Plato.Internal.Abstractions.Extensions
                         .Append(delimiter);
                 }
             }
+
             return sb.ToString().TrimEnd(delimiter);
 
         }

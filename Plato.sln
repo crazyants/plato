@@ -177,6 +177,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Discuss.Mentions", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Notifications", "src\Plato\Modules\Plato.Notifications\Plato.Notifications.csproj", "{69DD285B-0425-4BBA-83EC-1F2D27C89F9A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Notifications", "src\Plato.Internal.Notifications\Plato.Internal.Notifications.csproj", "{9EC00B40-63FA-48CD-9EEB-702BE80E8B34}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Notifications.Abstractions", "src\Plato.Internal.Notifications.Abstractions\Plato.Internal.Notifications.Abstractions.csproj", "{54B560D9-2047-4D86-8425-2017EA5084EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -503,6 +507,14 @@ Global
 		{69DD285B-0425-4BBA-83EC-1F2D27C89F9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69DD285B-0425-4BBA-83EC-1F2D27C89F9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69DD285B-0425-4BBA-83EC-1F2D27C89F9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EC00B40-63FA-48CD-9EEB-702BE80E8B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EC00B40-63FA-48CD-9EEB-702BE80E8B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EC00B40-63FA-48CD-9EEB-702BE80E8B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EC00B40-63FA-48CD-9EEB-702BE80E8B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54B560D9-2047-4D86-8425-2017EA5084EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54B560D9-2047-4D86-8425-2017EA5084EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54B560D9-2047-4D86-8425-2017EA5084EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54B560D9-2047-4D86-8425-2017EA5084EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -590,6 +602,8 @@ Global
 		{C3F62BD9-7177-43ED-95A0-BADB60EF7F94} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{9C2DA563-8473-42BD-B4F6-612E1584BC83} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{69DD285B-0425-4BBA-83EC-1F2D27C89F9A} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
+		{9EC00B40-63FA-48CD-9EEB-702BE80E8B34} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
+		{54B560D9-2047-4D86-8425-2017EA5084EB} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

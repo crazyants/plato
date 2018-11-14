@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plato.Notifications.Models;
-using Plato.Notifications.Services;
+using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Notifications.Abstractions.Models;
 
 namespace Plato.Notifications
 {

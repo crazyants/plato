@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
-using Plato.Notifications.Models;
+using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Notifications.Abstractions.Models;
 
-namespace Plato.Notifications.Services
+namespace Plato.Internal.Notifications
 {
     public class NotificationTypeManager<TNotificationType> : INotificationTypeManager<TNotificationType> where TNotificationType : class, INotificationType
     {
@@ -17,8 +17,7 @@ namespace Plato.Notifications.Services
 
         public NotificationTypeManager(
             IEnumerable<INotificationTypeProvider<TNotificationType>> providers,
-            ILogger<NotificationTypeManager<TNotificationType>> logger,
-            IAuthorizationService authorizationService)
+            ILogger<NotificationTypeManager<TNotificationType>> logger)
         {
             _providers = providers;
             _logger = logger;

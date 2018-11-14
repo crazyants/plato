@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Plato.Internal.Notifications.Abstractions.Models;
 using Plato.Notifications.Models;
 
 namespace Plato.Notifications.ViewModels
