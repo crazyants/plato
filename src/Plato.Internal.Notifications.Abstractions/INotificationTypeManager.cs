@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Plato.Internal.Notifications.Abstractions.Models;
+using Plato.Internal.Models.Notifications;
 
 namespace Plato.Internal.Notifications.Abstractions
 {

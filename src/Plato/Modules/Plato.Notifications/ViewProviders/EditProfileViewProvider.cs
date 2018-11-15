@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Internal.Notifications.Abstractions.Models;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Notifications.Models;
 using Plato.Notifications.ViewModels;

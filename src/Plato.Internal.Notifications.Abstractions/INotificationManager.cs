@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Notifications.Abstractions.Models;
+using Plato.Internal.Models.Notifications;
 
 namespace Plato.Internal.Notifications.Abstractions
 {
@@ -8,7 +8,7 @@ namespace Plato.Internal.Notifications.Abstractions
     public interface INotificationManager
     {
 
-        Task<ICommandResult<INotification>> SendAsync(INotification notification);
+        Task<ICommandResult<INotification>> SendAsync<T>(INotification notification) where T : class;
 
     }
     

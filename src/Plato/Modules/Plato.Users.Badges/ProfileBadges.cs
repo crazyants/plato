@@ -30,7 +30,7 @@ namespace Plato.Users.Badges
 
         }
         
-        private static Action<IBadgeAwarderContext> EmailConfirmedAwarder()
+        static Action<IBadgeAwarderContext> EmailConfirmedAwarder()
         {
             return (context) =>
             {
@@ -87,7 +87,7 @@ namespace Plato.Users.Badges
 
         }
 
-        private static Action<IBadgeAwarderContext> AutobiographerAwarder()
+        static Action<IBadgeAwarderContext> AutobiographerAwarder()
         {
             return (context) =>
             {

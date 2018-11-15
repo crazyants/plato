@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plato.Internal.Notifications.Abstractions.Models
+namespace Plato.Internal.Models.Notifications
 {
 
     public interface INotificationType

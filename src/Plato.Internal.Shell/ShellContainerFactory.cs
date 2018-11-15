@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Shell.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Features;
 using Plato.Internal.Features.Abstractions;

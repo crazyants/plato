@@ -1,13 +1,7 @@
-﻿using System.Collections.Generic;
-using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Features;
-using Plato.Internal.Features.Abstractions;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.FileSystem.AppData;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Shell;
 using Plato.Internal.Shell.Abstractions;
-using Plato.Internal.Stores.Abstractions.Shell;
 
 namespace Plato.Internal.Shell.Extensions
 {

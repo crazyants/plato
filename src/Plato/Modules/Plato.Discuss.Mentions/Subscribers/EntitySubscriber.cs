@@ -6,10 +6,9 @@ using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Internal.Notifications.Abstractions.Models;
-using Plato.Mentions;
 using Plato.Mentions.Models;
 using Plato.Mentions.Notifications;
 using Plato.Mentions.Services;
@@ -213,10 +212,10 @@ namespace Plato.Discuss.Mentions.Subscribers
                 {
 
                     // Build notification
-                    var notification = new Notification(EmailNotifications.NewMention);
+                    var notification = new Notification(user, EmailNotifications.NewMention);
 
                     // Send notification
-                    var result = await _notificationManager.SendAsync(notification);
+                    var result = await _notificationManager.SendAsync<TEntity>(notification);
 
                     // Log any errors
                     if (!result.Succeeded)

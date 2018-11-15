@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Internal.Notifications.Abstractions.Models;
 
 
 namespace Plato.Internal.Notifications.Extensions

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Internal.Notifications.Abstractions.Models;
 
 namespace Plato.Internal.Notifications
 {

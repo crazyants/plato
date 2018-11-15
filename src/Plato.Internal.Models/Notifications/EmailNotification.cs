@@ -1,8 +1,9 @@
 ﻿using System;
 
-namespace Plato.Internal.Notifications.Abstractions.Models
+namespace Plato.Internal.Models.Notifications
 {
-    public class WebNotification : INotificationType
+
+    public class EmailNotification : INotificationType
     {
 
         public string Id { get; set; }
@@ -15,22 +16,22 @@ namespace Plato.Internal.Notifications.Abstractions.Models
 
         public Action<INotificationContext> Sender { get; set; }
 
-        public WebNotification()
+        public EmailNotification()
         {
-            this.Category = "Web";
+            this.Category = "Email";
         }
 
-        public WebNotification(string id) : this()
+        public EmailNotification(string id) : this()
         {
             this.Id = id;
         }
 
-        public WebNotification(string id, string name) : this(id)
+        public EmailNotification(string id, string name) : this(id)
         {
             this.Name = name;
         }
 
-        public WebNotification(
+        public EmailNotification(
             string id,
             string name,
             string description) : this(id, name)
@@ -38,7 +39,7 @@ namespace Plato.Internal.Notifications.Abstractions.Models
             this.Description = description;
         }
 
-        public WebNotification(
+        public EmailNotification(
             string id,
             string name,
             string description,
@@ -48,5 +49,5 @@ namespace Plato.Internal.Notifications.Abstractions.Models
         }
 
     }
-
+    
 }

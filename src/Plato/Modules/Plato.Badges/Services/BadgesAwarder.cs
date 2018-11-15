@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Badges.Models;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Shell.Extensions;
 
 namespace Plato.Badges.Services
