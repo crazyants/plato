@@ -210,12 +210,13 @@ namespace Plato.Discuss.Mentions.Subscribers
             {
                 if (user.NotificationEnabled(EmailNotifications.NewMention))
                 {
-
-                    // Build notification
-                    var notification = new Notification(user, EmailNotifications.NewMention);
-
+                  
                     // Send notification
-                    var result = await _notificationManager.SendAsync<TEntity>(notification);
+                    var result = await _notificationManager.SendAsync<TEntity>(new Notification()
+                    {
+                        To = user,
+                        NotificationType = EmailNotifications.NewMention
+                    });
 
                     // Log any errors
                     if (!result.Succeeded)

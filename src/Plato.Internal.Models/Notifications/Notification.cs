@@ -8,13 +8,8 @@ namespace Plato.Internal.Models.Notifications
 
         public IUser To { get; set; }
 
-        public INotificationType NotificationType { get; }
+        public INotificationType NotificationType { get; set; }
 
-        public Notification(IUser to, INotificationType notificationType)
-        {
-            this.To = to;
-            this.NotificationType = notificationType;
-        }
 
     }
 

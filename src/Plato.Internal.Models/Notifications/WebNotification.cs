@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Models.Notifications
 {
+
     public class WebNotification : INotificationType
     {
 
@@ -13,7 +16,7 @@ namespace Plato.Internal.Models.Notifications
 
         public string Category { get; }
 
-        public Action<INotificationContext> Sender { get; set; }
+        public Func<INotificationContext, Task<ICommandResult<Notification>>> Sender { get; set; }
 
         public WebNotification()
         {
@@ -42,7 +45,7 @@ namespace Plato.Internal.Models.Notifications
             string id,
             string name,
             string description,
-            Action<INotificationContext> sender) : this(id, name, description)
+            Func<INotificationContext, Task<ICommandResult<Notification>>> sender) : this(id, name, description)
         {
             this.Sender = sender;
         }

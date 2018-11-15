@@ -33,7 +33,7 @@ namespace Plato.Internal.Abstractions.Extensions
                     else
                     {
                         // When a service from the main container is resolved, just add its instance to the container.
-                        // It will be shared by all tenant service providers.
+                        // It will be shared by all service providers.
                         clonedCollection.AddSingleton(service.ServiceType, serviceProvider.GetService(service.ServiceType));
                     }
                 }

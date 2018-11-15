@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Shell.Extensions;
 using Plato.Reputations.Models;
 
 namespace Plato.Reputations.Services

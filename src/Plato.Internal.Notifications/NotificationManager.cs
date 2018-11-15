@@ -23,22 +23,13 @@ namespace Plato.Internal.Notifications
             _applicationServices = applicationServices;
         }
 
-        public Task<ICommandResult<INotification>> SendAsync<T>(INotification notification) where T : class
+        public async Task<ICommandResult<INotification>> SendAsync<T>(INotification notification) where T : class
         {
-
-            //var clonedServices = _serviceProvider.CreateChildContainer(_applicationServices);
-            //var context = new NotificationContext(clonedServices.BuildServiceProvider());
-
-            var result = new CommandResult<T>();
-
-            //await notification.NotificationType.Sender(context);
-
-            //return result.Failed($"An unknown error occurred whilst attempting to queue an email message");
-
-            return null;
-
-
+            var clonedServices = _serviceProvider.CreateChildContainer(_applicationServices);
+            var context = new NotificationContext(clonedServices.BuildServiceProvider());
+            return await notification.NotificationType.Sender(context);
         }
 
     }
+
 }
