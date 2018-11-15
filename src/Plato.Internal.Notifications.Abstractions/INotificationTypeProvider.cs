@@ -4,11 +4,11 @@ using Plato.Internal.Notifications.Abstractions.Models;
 namespace Plato.Internal.Notifications.Abstractions
 {
 
-    public interface INotificationTypeProvider<out TNotificationType> where TNotificationType : class, INotificationType
+    public interface INotificationTypeProvider
     {
-        IEnumerable<TNotificationType> GetNotificationTypes();
+        IEnumerable<INotificationType> GetNotificationTypes();
 
-        IEnumerable<TNotificationType> GetDefaultPermissions();
+        IEnumerable<INotificationType> GetDefaultPermissions();
 
     }
 

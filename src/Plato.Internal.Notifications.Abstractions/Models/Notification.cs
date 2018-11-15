@@ -3,9 +3,9 @@
     
     public class Notification : INotification
     {
-        public NotificationType NotificationType { get; }
+        public INotificationType NotificationType { get; }
 
-        public Notification(NotificationType notificationType)
+        public Notification(INotificationType notificationType)
         {
             this.NotificationType = notificationType;
         }

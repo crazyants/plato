@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using Plato.Internal.Notifications.Abstractions.Models;
 
 namespace Plato.Internal.Notifications.Abstractions
 {
-    public interface INotificationTypeManager<TNotificationType> where TNotificationType : class
+    public interface INotificationTypeManager
     {
 
-        IEnumerable<TNotificationType> GetNotificationTypes();
+        IEnumerable<INotificationType> GetNotificationTypes();
 
-        IDictionary<string, IEnumerable<TNotificationType>> GetCategorizedNotificationTypes();
+        IDictionary<string, IEnumerable<INotificationType>> GetCategorizedNotificationTypes();
 
     }
     

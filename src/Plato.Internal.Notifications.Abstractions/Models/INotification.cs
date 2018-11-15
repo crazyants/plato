@@ -3,7 +3,7 @@
 
     public interface INotification
     {
-        NotificationType NotificationType { get; }
+        INotificationType NotificationType { get; }
     }
 
 }

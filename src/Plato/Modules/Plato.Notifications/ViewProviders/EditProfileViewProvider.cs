@@ -18,10 +18,14 @@ namespace Plato.Notifications.ViewProviders
 
         private readonly UserManager<User> _userManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly INotificationTypeManager<NotificationType> _notificationTypeManager;
+        private readonly INotificationTypeManager _notificationTypeManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public EditProfileViewProvider(UserManager<User> userManager, IPlatoUserStore<User> platoUserStore, INotificationTypeManager<NotificationType> notificationTypeManager, IHttpContextAccessor httpContextAccessor)
+        public EditProfileViewProvider(
+            UserManager<User> userManager, 
+            IPlatoUserStore<User> platoUserStore,
+            INotificationTypeManager notificationTypeManager, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _platoUserStore = platoUserStore;

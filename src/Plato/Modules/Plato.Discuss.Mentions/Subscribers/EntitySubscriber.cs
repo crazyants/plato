@@ -11,6 +11,7 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Notifications.Abstractions.Models;
 using Plato.Mentions;
 using Plato.Mentions.Models;
+using Plato.Mentions.Notifications;
 using Plato.Mentions.Services;
 using Plato.Mentions.Stores;
 using Plato.Notifications.Extensions;
@@ -205,14 +206,14 @@ namespace Plato.Discuss.Mentions.Subscribers
         async Task<TEntity> SendNotifications(IEnumerable<User> users, TEntity entity)
         {
 
-            // Send Notifications
+            // Send Ntifications
             foreach (var user in users)
             {
-                if (user.NotificationEnabled(Notitications.NewMentionWeb))
+                if (user.NotificationEnabled(EmailNotifications.NewMention))
                 {
 
                     // Build notification
-                    var notification = new Notification(Notitications.NewMentionWeb);
+                    var notification = new Notification(EmailNotifications.NewMention);
 
                     // Send notification
                     var result = await _notificationManager.SendAsync(notification);

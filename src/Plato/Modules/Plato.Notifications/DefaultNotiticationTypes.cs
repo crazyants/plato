@@ -5,7 +5,7 @@ using Plato.Internal.Notifications.Abstractions.Models;
 
 namespace Plato.Notifications
 {
-    public class DefaultNotiticationTypes : INotificationTypeProvider<NotificationType>
+    public class DefaultNotiticationTypes : INotificationTypeProvider
     {
 
         public static readonly NotificationType NewTopicsWeb = 
@@ -26,7 +26,7 @@ namespace Plato.Notifications
         public static readonly NotificationType NewRepliesMobile =
             new NotificationType("NewRepliesMobile", "New Replies", "Send me a push notification for each new reply.", "Mobile");
         
-        public IEnumerable<NotificationType> GetNotificationTypes()
+        public IEnumerable<INotificationType> GetNotificationTypes()
         {
             return new[]
             {
@@ -40,7 +40,7 @@ namespace Plato.Notifications
 
         }
 
-        public IEnumerable<NotificationType> GetDefaultPermissions()
+        public IEnumerable<INotificationType> GetDefaultPermissions()
         {
             throw new NotImplementedException();
         }

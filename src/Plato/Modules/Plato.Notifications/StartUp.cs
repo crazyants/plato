@@ -35,7 +35,7 @@ namespace Plato.Notifications
             services.AddScoped<IViewProvider<EditNotificationsViewModel>, EditProfileViewProvider>();
 
             // Default Notification Providers
-            services.AddScoped<INotificationTypeProvider<NotificationType>, DefaultNotiticationTypes>();
+            services.AddScoped<INotificationTypeProvider, DefaultNotiticationTypes>();
 
         }
 

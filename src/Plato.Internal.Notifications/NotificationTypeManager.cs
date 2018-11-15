@@ -7,28 +7,28 @@ using Plato.Internal.Notifications.Abstractions.Models;
 
 namespace Plato.Internal.Notifications
 {
-    public class NotificationTypeManager<TNotificationType> : INotificationTypeManager<TNotificationType> where TNotificationType : class, INotificationType
+    public class NotificationTypeManager : INotificationTypeManager
     {
 
-        private IEnumerable<TNotificationType> _notificationTypes;
+        private IEnumerable<INotificationType> _notificationTypes;
 
-        private readonly IEnumerable<INotificationTypeProvider<TNotificationType>> _providers;
-        private readonly ILogger<NotificationTypeManager<TNotificationType>> _logger;
+        private readonly IEnumerable<INotificationTypeProvider> _providers;
+        private readonly ILogger<NotificationTypeManager> _logger;
 
         public NotificationTypeManager(
-            IEnumerable<INotificationTypeProvider<TNotificationType>> providers,
-            ILogger<NotificationTypeManager<TNotificationType>> logger)
+            IEnumerable<INotificationTypeProvider> providers,
+            ILogger<NotificationTypeManager> logger)
         {
             _providers = providers;
             _logger = logger;
         }
 
-        public IEnumerable<TNotificationType> GetNotificationTypes()
+        public IEnumerable<INotificationType> GetNotificationTypes()
         {
 
             if (_notificationTypes == null)
             {
-                var notificationTypes = new List<TNotificationType>();
+                var notificationTypes = new List<INotificationType>();
                 foreach (var provider in _providers)
                 {
                     try
@@ -50,10 +50,10 @@ namespace Plato.Internal.Notifications
 
         }
         
-        public IDictionary<string, IEnumerable<TNotificationType>> GetCategorizedNotificationTypes()
+        public IDictionary<string, IEnumerable<INotificationType>> GetCategorizedNotificationTypes()
         {
 
-            var output = new Dictionary<string, IEnumerable<TNotificationType>>();
+            var output = new Dictionary<string, IEnumerable<INotificationType>>();
 
             foreach (var provider in _providers)
             {

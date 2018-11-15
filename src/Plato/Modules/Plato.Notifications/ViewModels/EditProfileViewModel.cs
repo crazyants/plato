@@ -10,7 +10,7 @@ namespace Plato.Notifications.ViewModels
 
         public int Id { get; set; }
 
-        public IDictionary<string, IEnumerable<NotificationType>> CategorizedNotificationTypes { get; set; }
+        public IDictionary<string, IEnumerable<INotificationType>> CategorizedNotificationTypes { get; set; }
 
         public IEnumerable<IUserNotificationType> EnabledNotificationTypes { get; set; }
         
