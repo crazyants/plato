@@ -9,7 +9,7 @@ namespace Plato.Mentions.Notifications
     {
         
         public static readonly EmailNotification NewMention =
-            new EmailNotification("NewMentionEmail", "New Mentions", "Show me a web notification for each new @mention.", "Web");
+            new EmailNotification("NewMentionEmail", "New Mentions", "Show me a web notification for each new @mention.");
         
         public IEnumerable<INotificationType> GetNotificationTypes()
         {

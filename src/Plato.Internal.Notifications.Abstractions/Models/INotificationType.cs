@@ -1,4 +1,6 @@
-﻿namespace Plato.Internal.Notifications.Abstractions.Models
+﻿using System;
+
+namespace Plato.Internal.Notifications.Abstractions.Models
 {
 
     public interface INotificationType
@@ -9,7 +11,10 @@
 
         string Description { get; set; }
 
-        string Category { get; set; }
+        string Category { get; }
+
+        Action<INotificationContext> Sender { get; set; }
+
 
     }
 

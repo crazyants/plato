@@ -2,20 +2,24 @@
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Notifications.Abstractions.Models;
 
-namespace Plato.Mentions.Notifications
+namespace Plato.Discuss.Notifications
 {
 
     public class WebNotifications : INotificationTypeProvider
     {
 
-        public static readonly WebNotification NewMention =
-            new WebNotification("NewMentionWeb", "New Mentions", "Send me a email notification for each @mention.");
-
+        public static readonly WebNotification NewTopics =
+            new WebNotification("NewTopicWeb", "New Topics", "Show me a web notification for each new topic.");
+        
+        public static readonly WebNotification NewReplies =
+            new WebNotification("NewReplyWeb", "New Replies", "Show me a web notification for each new reply.");
+        
         public IEnumerable<INotificationType> GetNotificationTypes()
         {
             return new[]
             {
-                NewMention
+                NewTopics,
+                NewReplies,
             };
         }
 

@@ -6,8 +6,6 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Notifications.Abstractions;
-using Plato.Internal.Notifications.Abstractions.Models;
 using Plato.Notifications.Navigation;
 using Plato.Notifications.ViewModels;
 using Plato.Notifications.ViewProviders;
@@ -33,10 +31,7 @@ namespace Plato.Notifications
             // Edit profile view provider
             services.AddScoped<IViewProviderManager<EditNotificationsViewModel>, ViewProviderManager<EditNotificationsViewModel>>();
             services.AddScoped<IViewProvider<EditNotificationsViewModel>, EditProfileViewProvider>();
-
-            // Default Notification Providers
-            services.AddScoped<INotificationTypeProvider, DefaultNotiticationTypes>();
-
+            
         }
 
         public override void Configure(

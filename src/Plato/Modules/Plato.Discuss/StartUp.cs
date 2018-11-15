@@ -8,6 +8,7 @@ using Plato.Discuss.Handlers;
 using Plato.Discuss.Assets;
 using Plato.Discuss.Models;
 using Plato.Discuss.Navigation;
+using Plato.Discuss.Notifications;
 using Plato.Discuss.Services;
 using Plato.Discuss.Subscribers;
 using Plato.Discuss.ViewProviders;
@@ -21,6 +22,7 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Notifications.Abstractions;
 
 namespace Plato.Discuss
 {
@@ -62,7 +64,11 @@ namespace Plato.Discuss
 
             // Services
             services.AddScoped<ITopicService, TopicService>();
-            
+
+            // Notification providers
+            services.AddScoped<INotificationTypeProvider, EmailNotifications>();
+            services.AddScoped<INotificationTypeProvider, WebNotifications>();
+
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
             
@@ -75,7 +81,7 @@ namespace Plato.Discuss
             // Add discussion views to base user pages
             services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
             services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();
-
+            
             // Add discussion profile views
             services.AddScoped<IViewProviderManager<DiscussUser>, ViewProviderManager<DiscussUser>>();
             services.AddScoped<IViewProvider<DiscussUser>, ProfileViewProvider>();
