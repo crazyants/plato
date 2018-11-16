@@ -37,6 +37,7 @@ namespace Plato.Discuss.Mentions.Notifications
         public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
         {
 
+            // Ensure correct notification 
             if (context.Notification.Type.Id != EmailNotifications.NewMention.Id)
             {
                 return null;
@@ -52,7 +53,7 @@ namespace Plato.Discuss.Mentions.Notifications
             if (email != null)
             {
 
-                // Parse email template
+                // Build topic url
                 var baseUrl = await _contextFacade.GetBaseUrlAsync();
                 var topicUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
@@ -63,12 +64,14 @@ namespace Plato.Discuss.Mentions.Notifications
                     ["Alias"] = context.Model.Alias
                 });
 
+                // Format message
                 var body = string.Format(
                     email.Message,
                     context.Notification.To.DisplayName,
                     context.Model.Title,
                     topicUrl);
 
+                // Build message
                 var message = new MailMessage()
                 {
                     Subject = email.Subject,
@@ -78,7 +81,7 @@ namespace Plato.Discuss.Mentions.Notifications
 
                 message.To.Add(context.Notification.To.Email);
 
-                // Send email
+                // Send message
                 var emailResult = await _emailManager.SaveAsync(message);
                 if (emailResult.Succeeded)
                 {
@@ -89,7 +92,7 @@ namespace Plato.Discuss.Mentions.Notifications
 
             }
 
-            return result.Failed($"No email template with the Id '{templateid}; exists!");
+            return result.Failed($"No email template with the Id '{templateid}' exists within the 'locales/{culture}/emails.json' file!");
 
         }
 
