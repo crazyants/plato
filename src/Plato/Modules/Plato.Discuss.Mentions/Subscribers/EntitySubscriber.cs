@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Plato.Discuss.Models;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
@@ -25,14 +26,14 @@ namespace Plato.Discuss.Mentions.Subscribers
         private readonly IEntityMentionsManager<EntityMention> _entityMentionsManager;
         private readonly IEntityMentionsStore<EntityMention> _entityMentionsStore;
         private readonly IMentionsParser _mentionParser;
-        private readonly INotificationManager _notificationManager;
+        private readonly INotificationManager<TEntity> _notificationManager;
         private readonly ILogger<EntitySubscriber<TEntity>> _logger;
 
         public EntitySubscriber(
             IEntityMentionsManager<EntityMention> entityMentionsManager,
             IEntityMentionsStore<EntityMention> entityMentionsStore,
             IMentionsParser mentionParser,
-            INotificationManager notificationManager,
+            INotificationManager<TEntity> notificationManager,
             IBroker broker,
             ILogger<EntitySubscriber<TEntity>> logger)
         {
@@ -104,6 +105,7 @@ namespace Plato.Discuss.Mentions.Subscribers
                 return entity;
             }
 
+            // Prevent multiple enumerations
             var userList = users.ToList();
 
             // Add users mentioned within entity to EntityMentions
@@ -116,6 +118,7 @@ namespace Plato.Discuss.Mentions.Subscribers
                 });
             }
 
+            // Send mention notificaitons
             await SendNotifications(userList, entity);
 
             return entity;
@@ -204,31 +207,16 @@ namespace Plato.Discuss.Mentions.Subscribers
 
         async Task<TEntity> SendNotifications(IEnumerable<User> users, TEntity entity)
         {
-
-            // Send Ntifications
+            // Send mention ntifications
             foreach (var user in users)
             {
                 if (user.NotificationEnabled(EmailNotifications.NewMention))
                 {
-
-                    // Send notification
-                    var result = await _notificationManager.SendAsync<TEntity>(new Notification()
+                    await _notificationManager.SendAsync(new Notification(EmailNotifications.NewMention)
                     {
                         To = user,
-                        Type = EmailNotifications.NewMention
-                    });
-
-                    // Log any errors
-                    if (!result.Succeeded)
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            _logger.LogCritical(error.Code, error.Description);
-                        }
-                    }
-
+                    }, entity);
                 }
-
             }
             
             return entity;

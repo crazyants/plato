@@ -4,10 +4,10 @@ using Plato.Internal.Models.Notifications;
 
 namespace Plato.Internal.Notifications.Abstractions
 {
-    public interface INotificationProvider
+    public interface INotificationProvider<TModel> where TModel : class
     {
 
-        Task<ICommandResultBase> SendAsync<T>(INotificationContext<T> context) where T : class;
+        Task<ICommandResult<TModel>> SendAsync(INotificationContext<TModel> context);
 
     }
     

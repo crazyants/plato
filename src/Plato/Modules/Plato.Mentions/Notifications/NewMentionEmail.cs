@@ -15,76 +15,77 @@ using Plato.Mentions.NotificationTypes;
 
 namespace Plato.Mentions.Notifications
 {
-    public class NewMentionEmail : INotificationProvider
-    {
 
-        private readonly IContextFacade _contextFacade;
-        private readonly ILocaleStore _localeStore;
-        private readonly IEmailManager _emailManager;
+    //public class NewMentionEmail : INotificationProvider
+    //{
 
-        public NewMentionEmail(
-            IContextFacade contextFacade,
-            ILocaleStore localeStore,
-            IEmailManager emailManager)
-        {
-            _contextFacade = contextFacade;
-            _localeStore = localeStore;
-            _emailManager = emailManager;
-        }
+    //    private readonly IContextFacade _contextFacade;
+    //    private readonly ILocaleStore _localeStore;
+    //    private readonly IEmailManager _emailManager;
 
-        public async Task<ICommandResultBase> SendAsync<T>(INotificationContext<T> context) where T : class
-        {
+    //    public NewMentionEmail(
+    //        IContextFacade contextFacade,
+    //        ILocaleStore localeStore,
+    //        IEmailManager emailManager)
+    //    {
+    //        _contextFacade = contextFacade;
+    //        _localeStore = localeStore;
+    //        _emailManager = emailManager;
+    //    }
 
-            var result = new CommandResultBase();
+    //    public async Task<ICommandResultBase> SendAsync<T>(INotificationContext<T> context) where T : class
+    //    {
 
-            if (context.Notification.Type.Id !=
-                EmailNotifications.NewMention.Id)
-            {
-                return result.Success();
-            }
+    //        var result = new CommandResultBase();
 
-            // Get email
+    //        if (context.Notification.Type.Id !=
+    //            EmailNotifications.NewMention.Id)
+    //        {
+    //            return result.Success();
+    //        }
 
-            var model = context.Model;
-            var culture = await _contextFacade.GetCurrentCultureAsync();
-            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, "NewMention");
-            if (email != null)
-            {
+    //        // Get email
+    //        var model = context.Model;
+        
+    //        var culture = await _contextFacade.GetCurrentCultureAsync();
+    //        var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, "NewMention");
+    //        if (email != null)
+    //        {
 
-                // Build email confirmation link
-                var baseUrl = await _contextFacade.GetBaseUrlAsync();
-                var callbackUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
-                {
-                    ["Area"] = "Plato.Users",
-                    ["Controller"] = "Account",
-                    ["Action"] = "ActivateAccount",
-                    ["Code"] = context.Notification.To.ConfirmationToken
-                });
+    //            // Build email confirmation link
+    //            var baseUrl = await _contextFacade.GetBaseUrlAsync();
+    //            var callbackUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+    //            {
+    //                ["Area"] = "Plato.Users",
+    //                ["Controller"] = "Account",
+    //                ["Action"] = "ActivateAccount",
+    //                ["Code"] = context.Notification.To.ConfirmationToken
+    //            });
 
-                var body = string.Format(email.Message, context.Notification.To.DisplayName, callbackUrl);
+    //            var body = string.Format(email.Message, context.Notification.To.DisplayName, callbackUrl);
 
-                var message = new MailMessage()
-                {
-                    Subject = email.Subject,
-                    Body = WebUtility.HtmlDecode(body),
-                    IsBodyHtml = true
-                };
+    //            var message = new MailMessage()
+    //            {
+    //                Subject = email.Subject,
+    //                Body = WebUtility.HtmlDecode(body),
+    //                IsBodyHtml = true
+    //            };
 
-                message.To.Add(context.Notification.To.Email);
+    //            message.To.Add(context.Notification.To.Email);
 
-                // send email
-                var emailResult = await _emailManager.SaveAsync(message);
-                return emailResult.Succeeded
-                    ? result.Success()
-                    : result.Failed(emailResult.Errors?.ToArray());
+    //            // send email
+    //            var emailResult = await _emailManager.SaveAsync(message);
+    //            return emailResult.Succeeded
+    //                ? result.Success()
+    //                : result.Failed(emailResult.Errors?.ToArray());
 
-            }
+    //        }
 
-            return result;
+    //        return result;
 
-        }
+    //    }
 
-    }
+    //}
 
 
 }

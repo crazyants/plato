@@ -51,11 +51,7 @@ namespace Plato.Mentions
             // Register notification providers
             services.AddScoped<INotificationTypeProvider, EmailNotifications>();
             services.AddScoped<INotificationTypeProvider, WebNotifications>();
-
-            services.AddScoped<INotificationProvider, NewMentionEmail>();
-
             
-
             // Managers
             services.AddScoped<IEntityMentionsManager<EntityMention>, EntityMentionsManager>();
 

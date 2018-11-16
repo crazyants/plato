@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plato.Internal.Abstractions;
-using Plato.Internal.Models.Users;
+﻿using Plato.Internal.Models.Users;
 
 namespace Plato.Internal.Models.Notifications
 {
@@ -10,8 +7,15 @@ namespace Plato.Internal.Models.Notifications
     {
    
         public IUser To { get; set; }
- 
-        public INotificationType Type { get; set; }
+
+        public IUser From { get; set; }
+
+        public INotificationType Type { get; }
+
+        public Notification(INotificationType type)
+        {
+            this.Type = type;
+        }
 
     }
 
