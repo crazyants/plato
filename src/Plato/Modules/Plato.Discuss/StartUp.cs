@@ -8,7 +8,7 @@ using Plato.Discuss.Handlers;
 using Plato.Discuss.Assets;
 using Plato.Discuss.Models;
 using Plato.Discuss.Navigation;
-using Plato.Discuss.Notifications;
+using Plato.Discuss.NotificationTypes;
 using Plato.Discuss.Services;
 using Plato.Discuss.Subscribers;
 using Plato.Discuss.ViewProviders;
@@ -44,7 +44,6 @@ namespace Plato.Discuss
             // Register navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
-            //services.AddScoped<INavigationProvider, ProfileMenu>();
             services.AddScoped<INavigationProvider, SearchMenu>();
             services.AddScoped<INavigationProvider, TopicMenu>();
             services.AddScoped<INavigationProvider, TopicReplyMenu>();
@@ -66,8 +65,8 @@ namespace Plato.Discuss
             services.AddScoped<ITopicService, TopicService>();
 
             // Notification providers
-            //services.AddScoped<INotificationTypeProvider, EmailNotifications>();
-            //services.AddScoped<INotificationTypeProvider, WebNotifications>();
+            services.AddScoped<INotificationTypeProvider, EmailNotifications>();
+            services.AddScoped<INotificationTypeProvider, WebNotifications>();
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();
@@ -85,7 +84,6 @@ namespace Plato.Discuss
             // Add discussion profile views
             services.AddScoped<IViewProviderManager<DiscussUser>, ViewProviderManager<DiscussUser>>();
             services.AddScoped<IViewProvider<DiscussUser>, ProfileViewProvider>();
-
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, ReplySubscriber<Reply>>();

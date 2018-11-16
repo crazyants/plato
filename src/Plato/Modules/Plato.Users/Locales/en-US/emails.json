@@ -2,21 +2,21 @@
   "Emails": [
     {
       "Id": "ResetPassword",
-      "To": "[RecipientEmail]",
+      "To": "[ToEmail]",
       "Cc": "",
       "Bcc": "",
-      "From": "[AppEmail]",
-      "Subject": "[AppName] - Reset Your Password",
-      "Message": "Hi {0},\n\nPlease use the link below to reset your account password.\n\n{1}\n\n[AppName]\n[AppUrl]"
+      "From": "[SiteEmail]",
+      "Subject": "[SiteName] - Reset Your Password",
+      "Message": "Hi {0},\n\nPlease use the link below to reset your account password.\n\n{1}\n\n[SiteName]\n[SiteUrl]"
     },
     {
       "Id": "ConfirmEmail",
-      "To": "[RecipientEmail]",
+      "To": "[ToEmail]",
       "Cc": "",
       "Bcc": "",
-      "From": "[AppEmail]",
-      "Subject": "[AppName] - Confirm Your Email",
-      "Message": "Hi {0},\n\nPlease use the link below to confirm your email address and activate your account.\n\n{1}\n\n[AppName]\n[AppUrl]"
+      "From": "[SiteEmail]",
+      "Subject": "[SiteName] - Confirm Your Email",
+      "Message": "Hi {0},\n\nPlease use the link below to confirm your email address and activate your account.\n\n{1}\n\n[SiteName]\n[SiteUrl]"
     }
   ]
 }

@@ -15,8 +15,10 @@ using Plato.Email.Navigation;
 using Plato.Email.Repositories;
 using Plato.Email.Services;
 using Plato.Email.Stores;
+using Plato.Email.Subscribers;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Emails.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Email
 {
@@ -51,6 +53,9 @@ namespace Plato.Email
        
             // Services
             services.AddScoped<ISmtpService, SmtpService>();
+
+            // Email subscribers
+            services.AddScoped<IBrokerSubscriber, EmailSubscriber>();
 
             // Email manager
             services.AddSingleton<IEmailManager, EmailManager>();
