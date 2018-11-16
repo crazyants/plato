@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -37,12 +38,32 @@ namespace Plato.Discuss.Mentions.Notifications
         public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
         {
 
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            if (context.Notification == null)
+            {
+                throw new ArgumentNullException(nameof(context.Notification));
+            }
+
+            if (context.Notification.Type == null)
+            {
+                throw new ArgumentNullException(nameof(context.Notification.Type));
+            }
+
+            if (context.Notification.To == null)
+            {
+                throw new ArgumentNullException(nameof(context.Notification.To));
+            }
+            
             // Ensure correct notification 
             if (context.Notification.Type.Id != EmailNotifications.NewMention.Id)
             {
                 return null;
             }
-
+            
             // Create result
             var result = new CommandResult<Topic>();
 
@@ -71,15 +92,11 @@ namespace Plato.Discuss.Mentions.Notifications
                     context.Model.Title,
                     topicUrl);
 
-                // Build message
-                var message = new MailMessage()
-                {
-                    Subject = email.Subject,
-                    Body = WebUtility.HtmlDecode(body),
-                    IsBodyHtml = true
-                };
+                // Build message from template
+                var message = email.BuildMailMessage();
+                message.IsBodyHtml = true;
 
-                message.To.Add(context.Notification.To.Email);
+                message.To.Add(new MailAddress(context.Notification.To.Email));
 
                 // Send message
                 var emailResult = await _emailManager.SaveAsync(message);

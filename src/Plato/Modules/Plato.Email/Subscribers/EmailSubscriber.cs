@@ -62,17 +62,44 @@ namespace Plato.Email.Subscribers
             foreach (var replacement in await GetReplacements())
             {
 
-                // Subject replacements
-                mailMessage.Subject = mailMessage.Subject.Replace(replacement.Key,
-                    !string.IsNullOrEmpty(replacement.Value)
-                        ? replacement.Value
-                        : string.Empty);
+                var value = !string.IsNullOrEmpty(replacement.Value)
+                    ? replacement.Value
+                    : string.Empty;
 
-                // Body replacements
-                mailMessage.Body = mailMessage.Body.Replace(replacement.Key,
-                    !string.IsNullOrEmpty(replacement.Value)
-                        ? replacement.Value
-                        : string.Empty);
+                // To
+                for (var i = 0; i < mailMessage.To.Count; i++)
+                {
+                    mailMessage.To[i] = new MailAddress(
+                        mailMessage.To[i].Address.Replace(replacement.Key, value),
+                        mailMessage.To[i].DisplayName.Replace(replacement.Key, value));
+                }
+
+                // CC
+                for (var i = 0; i < mailMessage.CC.Count; i++)
+                {
+                    mailMessage.CC[i] = new MailAddress(
+                        mailMessage.CC[i].Address.Replace(replacement.Key, value),
+                        mailMessage.CC[i].DisplayName.Replace(replacement.Key, value));
+                }
+
+                // BCC
+                for (var i = 0; i < mailMessage.Bcc.Count; i++)
+                {
+                    mailMessage.Bcc[i] = new MailAddress(
+                        mailMessage.Bcc[i].Address.Replace(replacement.Key, value),
+                        mailMessage.Bcc[i].DisplayName.Replace(replacement.Key, value));
+                }
+                
+                // From
+                mailMessage.From = new MailAddress(
+                    mailMessage.From.Address.Replace(replacement.Key, value),
+                    mailMessage.From.DisplayName.Replace(replacement.Key, value));
+
+                // Subject
+                mailMessage.Subject = mailMessage.Subject.Replace(replacement.Key, value);
+
+                // Body
+                mailMessage.Body = mailMessage.Body.Replace(replacement.Key, value);
 
             }
 
@@ -91,7 +118,6 @@ namespace Plato.Email.Subscribers
                 {"[SiteName]", settings.SiteName},
                 {"[SiteEmail]", _smtpSettings.Value.DefaultFrom},
                 {"[SiteUrl]", baseUrl}
-
             };
 
         }

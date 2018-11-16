@@ -2,12 +2,12 @@
   "Emails": [
     {
       "Id": "NewMention",
-      "To": "[ToEmail]",
+      "To": "",
       "Cc": "",
       "Bcc": "",
       "From": "[SiteEmail]",
       "Subject": "[SiteName] - New Mention",
-      "Message": "Hi {0},\n\nYou've been mentioned within a discussion.\n\nUse the link below to check the discussion.\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
+      "Message": "Hi {0},\n\nYou've been mentioned within a discussion.\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
     }
   ]
 }
