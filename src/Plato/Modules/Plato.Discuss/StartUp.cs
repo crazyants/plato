@@ -66,8 +66,8 @@ namespace Plato.Discuss
             services.AddScoped<ITopicService, TopicService>();
 
             // Notification providers
-            services.AddScoped<INotificationTypeProvider, EmailNotifications>();
-            services.AddScoped<INotificationTypeProvider, WebNotifications>();
+            //services.AddScoped<INotificationTypeProvider, EmailNotifications>();
+            //services.AddScoped<INotificationTypeProvider, WebNotifications>();
 
             // Register client resources
             services.AddScoped<IAssetProvider, AssetProvider>();

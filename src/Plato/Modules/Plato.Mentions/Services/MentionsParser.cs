@@ -38,7 +38,7 @@ namespace Plato.Mentions.Services
 
         }
 
-        public async Task<IEnumerable<IUser>> GetUsersAsync(string input)
+        public async Task<IEnumerable<User>> GetUsersAsync(string input)
         {
             if (input == null)
             {
@@ -94,7 +94,7 @@ namespace Plato.Mentions.Services
 
         }
         
-        async Task<IEnumerable<IUser>> GetUsersByUsernamesAsync(string[] usernames)
+        async Task<IEnumerable<User>> GetUsersByUsernamesAsync(string[] usernames)
         {
             var users = new List<User>();
             foreach (var username in usernames)

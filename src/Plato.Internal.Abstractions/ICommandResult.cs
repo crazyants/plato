@@ -3,14 +3,20 @@
 namespace Plato.Internal.Abstractions
 {
 
-    public interface ICommandResult<out TResponse> where TResponse : class
+    public interface ICommandResultBase
     {
 
         bool Succeeded { get; }
 
-        TResponse Response { get; }
-
         IEnumerable<CommandError> Errors { get; }
+
+    }
+
+    public interface ICommandResult<out TResponse> : ICommandResultBase where TResponse : class
+    {
+        
+        TResponse Response { get; }
+        
 
     }
 

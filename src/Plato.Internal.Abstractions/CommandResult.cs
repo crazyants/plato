@@ -4,7 +4,53 @@ using System.Linq;
 
 namespace Plato.Internal.Abstractions
 {
-    
+
+    public class CommandResultBase : ICommandResultBase
+    {
+
+        private readonly List<CommandError> _errors = new List<CommandError>();
+
+        public bool Succeeded { get; protected set; }
+
+        public IEnumerable<CommandError> Errors => (IEnumerable<CommandError>)this._errors;
+
+
+        public CommandResultBase Success()
+        {
+            return new CommandResultBase()
+            {
+                Succeeded = true
+            };
+        }
+        
+        public CommandResultBase Failed(string message)
+        {
+            var result = new CommandResultBase()
+            {
+                Succeeded = false
+            };
+
+            result._errors.Add(new CommandError(message));
+
+            return result;
+        }
+
+        public CommandResultBase Failed(params CommandError[] errors)
+        {
+            var result = new CommandResultBase()
+            {
+                Succeeded = false
+            };
+            if (errors != null)
+                result._errors.AddRange((IEnumerable<CommandError>)errors);
+            return result;
+        }
+
+
+
+    }
+
+
     public class CommandResult<TResponse> : ICommandResult<TResponse> where TResponse : class
     {
         
@@ -15,6 +61,17 @@ namespace Plato.Internal.Abstractions
         public TResponse Response { get; protected set; }
 
         public IEnumerable<CommandError> Errors => (IEnumerable<CommandError>)this._errors;
+
+        public CommandResult()
+        {
+
+        }
+        
+        public CommandResult(ICommandResultBase result)
+        {
+            this.Succeeded = result.Succeeded;
+            _errors.AddRange(result.Errors);
+        }
 
         public CommandResult<TResponse> Success()
         {

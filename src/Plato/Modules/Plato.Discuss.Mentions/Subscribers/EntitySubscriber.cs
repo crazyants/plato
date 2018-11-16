@@ -10,7 +10,7 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Mentions.Models;
-using Plato.Mentions.Notifications;
+using Plato.Mentions.NotificationTypes;
 using Plato.Mentions.Services;
 using Plato.Mentions.Stores;
 using Plato.Notifications.Extensions;
@@ -116,7 +116,7 @@ namespace Plato.Discuss.Mentions.Subscribers
                 });
             }
 
-            //await SendNotifications(userList, entity);
+            await SendNotifications(userList, entity);
 
             return entity;
 
@@ -210,12 +210,12 @@ namespace Plato.Discuss.Mentions.Subscribers
             {
                 if (user.NotificationEnabled(EmailNotifications.NewMention))
                 {
-                  
+
                     // Send notification
                     var result = await _notificationManager.SendAsync<TEntity>(new Notification()
                     {
                         To = user,
-                        NotificationType = EmailNotifications.NewMention
+                        Type = EmailNotifications.NewMention
                     });
 
                     // Log any errors

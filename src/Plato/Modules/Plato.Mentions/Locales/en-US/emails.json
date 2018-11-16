@@ -1,0 +1,13 @@
+{
+  "Emails": [
+    {
+      "Id": "NewMention",
+      "To": "[RecipientEmail]",
+      "Cc": "",
+      "Bcc": "",
+      "From": "[AppEmail]",
+      "Subject": "[AppName] - New Mention",
+      "Message": "Hi {0},\n\nYou've been mentioned within a discussion. Please use the link below to read the discussion.\n\n{1}\n\n[AppName]\n[AppUrl]"
+    }
+  ]
+}

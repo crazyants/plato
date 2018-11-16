@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plato.Internal.Abstractions;
-
-namespace Plato.Internal.Models.Notifications
+﻿namespace Plato.Internal.Models.Notifications
 {
 
     public class WebNotification : INotificationType
@@ -16,8 +12,8 @@ namespace Plato.Internal.Models.Notifications
 
         public string Category { get; }
 
-        public Func<INotificationContext, Task<ICommandResult<Notification>>> Sender { get; set; }
-
+        //public Func<INotificationContext, Task<ICommandResultBase>> Sender { get; set; }
+ 
         public WebNotification()
         {
             this.Category = "Web";
@@ -41,14 +37,15 @@ namespace Plato.Internal.Models.Notifications
             this.Description = description;
         }
 
-        public WebNotification(
-            string id,
-            string name,
-            string description,
-            Func<INotificationContext, Task<ICommandResult<Notification>>> sender) : this(id, name, description)
-        {
-            this.Sender = sender;
-        }
+        //public WebNotification(
+        //    string id,
+        //    string name,
+        //    string description,
+        //    Func<INotificationContext, Task<ICommandResultBase>> sender) : this(id, name, description)
+        //{
+        //    this.Sender = sender;
+        //}
+        
 
     }
 

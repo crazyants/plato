@@ -9,7 +9,7 @@ namespace Plato.Mentions.Services
     {
         Task<string> ParseAsync(string input);
 
-        Task<IEnumerable<IUser>> GetUsersAsync(string input);
+        Task<IEnumerable<User>> GetUsersAsync(string input);
 
     }
     

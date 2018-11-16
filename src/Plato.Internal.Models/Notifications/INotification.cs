@@ -1,14 +1,19 @@
-﻿using Plato.Internal.Models.Users;
+﻿using System;
+using System.Threading.Tasks;
+using Plato.Internal.Abstractions;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Internal.Models.Notifications
 {
 
+ 
     public interface INotification
     {
+        
         IUser To { get; set; }
 
-        INotificationType NotificationType { get; }
-
+        INotificationType Type { get; }
+        
     }
 
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plato.Internal.Abstractions;
-
-namespace Plato.Internal.Models.Notifications
+﻿namespace Plato.Internal.Models.Notifications
 {
 
     public interface INotificationType
@@ -15,9 +11,7 @@ namespace Plato.Internal.Models.Notifications
 
         string Category { get; }
 
-        Func<INotificationContext, Task<ICommandResult<Notification>>> Sender { get; set; }
-
-        //Task<ICommandResult<Notification>> Send<T>(INotificationContext context) where T : class;
+        //Func<INotificationContext, Task<ICommandResultBase>> Sender { get; set; }
 
     }
 

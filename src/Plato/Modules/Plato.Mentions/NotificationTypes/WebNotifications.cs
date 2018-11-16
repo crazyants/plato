@@ -2,7 +2,7 @@
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Mentions.Notifications
+namespace Plato.Mentions.NotificationTypes
 {
 
     public class WebNotifications : INotificationTypeProvider

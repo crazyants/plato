@@ -4,7 +4,7 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Models.Notifications
 {
-
+    
     public class EmailNotification : INotificationType
     {
 
@@ -16,8 +16,8 @@ namespace Plato.Internal.Models.Notifications
 
         public string Category { get; }
 
-        public Func<INotificationContext, Task<ICommandResult<Notification>>> Sender { get; set; }
-
+        //public Func<INotificationContext, Task<ICommandResultBase>> Sender { get; set; }
+   
         public EmailNotification()
         {
             this.Category = "Email";
@@ -41,15 +41,21 @@ namespace Plato.Internal.Models.Notifications
             this.Description = description;
         }
 
-        public EmailNotification(
-            string id,
-            string name,
-            string description,
-            Func<INotificationContext, Task<ICommandResult<Notification>>> sender) : this(id, name, description)
-        {
-            this.Sender = sender;
-        }
+        //public EmailNotification(
+        //    string id,
+        //    string name,
+        //    string description,
+        //    Func<INotificationContext, Task<ICommandResultBase>> sender) : this(id, name, description)
+        //{
+        //    this.Sender = sender;
+        //}
+
+        //public Task<ICommandResult<T>> SendAsync<T>(INotificationContext context) where T : class
+        //{
+        //    throw new NotImplementedException();
+        //}
+
 
     }
-    
+
 }
