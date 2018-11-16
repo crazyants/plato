@@ -34,9 +34,9 @@ namespace Plato.Discuss.Mentions.Notifications
             _emailManager = emailManager;
         }
 
-        public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context) 
+        public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
         {
-            
+
             if (context.Notification.Type.Id != EmailNotifications.NewMention.Id)
             {
                 return null;
@@ -46,24 +46,28 @@ namespace Plato.Discuss.Mentions.Notifications
             var result = new CommandResult<Topic>();
 
             // Get email template
-            var model = context.Model;
+            var templateid = "NewMention";
             var culture = await _contextFacade.GetCurrentCultureAsync();
-            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, "NewMention");
+            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateid);
             if (email != null)
             {
 
                 // Parse email template
                 var baseUrl = await _contextFacade.GetBaseUrlAsync();
-                var callbackUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                var topicUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",
                     ["Action"] = "Topic",
-                    ["Id"] = model.Id,
-                    ["Alias"] = model.Alias
+                    ["Id"] = context.Model.Id,
+                    ["Alias"] = context.Model.Alias
                 });
 
-                var body = string.Format(email.Message, context.Notification.To.DisplayName, callbackUrl);
+                var body = string.Format(
+                    email.Message,
+                    context.Notification.To.DisplayName,
+                    context.Model.Title,
+                    topicUrl);
 
                 var message = new MailMessage()
                 {
@@ -76,13 +80,16 @@ namespace Plato.Discuss.Mentions.Notifications
 
                 // Send email
                 var emailResult = await _emailManager.SaveAsync(message);
-                return emailResult.Succeeded
-                    ? result.Success()
-                    : result.Failed(emailResult.Errors?.ToArray());
+                if (emailResult.Succeeded)
+                {
+                    return result.Success(context.Model);
+                }
+
+                return result.Failed(emailResult.Errors?.ToArray());
 
             }
 
-            return result;
+            return result.Failed($"No email template with the Id '{templateid}; exists!");
 
         }
 

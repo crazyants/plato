@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Discuss.Models;
 using Plato.Entities.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
@@ -21,21 +20,21 @@ namespace Plato.Discuss.Mentions.Subscribers
 
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
-
-        private readonly IBroker _broker;
+        
         private readonly IEntityMentionsManager<EntityMention> _entityMentionsManager;
         private readonly IEntityMentionsStore<EntityMention> _entityMentionsStore;
-        private readonly IMentionsParser _mentionParser;
         private readonly INotificationManager<TEntity> _notificationManager;
+        private readonly IMentionsParser _mentionParser;
         private readonly ILogger<EntitySubscriber<TEntity>> _logger;
+        private readonly IBroker _broker;
 
         public EntitySubscriber(
             IEntityMentionsManager<EntityMention> entityMentionsManager,
             IEntityMentionsStore<EntityMention> entityMentionsStore,
-            IMentionsParser mentionParser,
             INotificationManager<TEntity> notificationManager,
-            IBroker broker,
-            ILogger<EntitySubscriber<TEntity>> logger)
+            IMentionsParser mentionParser,
+            ILogger<EntitySubscriber<TEntity>> logger,
+            IBroker broker)
         {
        
             _entityMentionsManager = entityMentionsManager;
@@ -105,21 +104,33 @@ namespace Plato.Discuss.Mentions.Subscribers
                 return entity;
             }
 
-            // Prevent multiple enumerations
-            var userList = users.ToList();
-
             // Add users mentioned within entity to EntityMentions
-            foreach (var user in userList)
+            var usersToNotify = new List<User>();
+            foreach (var user in users)
             {
                 var result = await _entityMentionsManager.CreateAsync(new EntityMention()
                 {
                     EntityId = entity.Id,
                     UserId = user.Id
                 });
+                if (result.Succeeded)
+                {
+                    usersToNotify.Add(user);
+                }
+                else
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            _logger.LogCritical(error.Code, error.Description);
+                        }
+                    }
+                }
             }
 
             // Send mention notificaitons
-            await SendNotifications(userList, entity);
+            await SendNotifications(usersToNotify, entity);
 
             return entity;
 
@@ -210,6 +221,8 @@ namespace Plato.Discuss.Mentions.Subscribers
             // Send mention ntifications
             foreach (var user in users)
             {
+
+                // Email notifications
                 if (user.NotificationEnabled(EmailNotifications.NewMention))
                 {
                     await _notificationManager.SendAsync(new Notification(EmailNotifications.NewMention)
@@ -217,6 +230,16 @@ namespace Plato.Discuss.Mentions.Subscribers
                         To = user,
                     }, entity);
                 }
+
+                // Web notifications
+                if (user.NotificationEnabled(WebNotifications.NewMention))
+                {
+                    await _notificationManager.SendAsync(new Notification(WebNotifications.NewMention)
+                    {
+                        To = user,
+                    }, entity);
+                }
+
             }
             
             return entity;
