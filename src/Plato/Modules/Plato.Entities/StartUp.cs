@@ -10,6 +10,8 @@ using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
+using Plato.Entities.Subscribers;
+using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Entities
 {
@@ -44,7 +46,10 @@ namespace Plato.Entities
             // Managers
             services.AddScoped<IEntityManager<Entity>, EntityManager<Entity>>();
             services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager<EntityReply>>();
-            
+
+            // Entity subscribers
+            services.AddScoped<IBrokerSubscriber, ParseEntityUrlsSubscriber>();
+
         }
 
         public override void Configure(

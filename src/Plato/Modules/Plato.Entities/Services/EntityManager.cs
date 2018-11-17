@@ -27,23 +27,17 @@ namespace Plato.Entities.Services
         private readonly IEntityStore<TEntity> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IAliasCreator _aliasCreator;
-        private readonly IImageUriExtractor _imageUriExtractor;
-        private readonly IAnchorUriExtractor _anchorUriExtractor;
-
+     
         public EntityManager(
             IEntityStore<TEntity> entityStore,
             IBroker broker,
             IContextFacade contextFacade,
-            IAliasCreator aliasCreator, 
-            IImageUriExtractor imageUriExtractor,
-            IAnchorUriExtractor anchorUriExtractor)
+            IAliasCreator aliasCreator)
         {
             _entityStore = entityStore;
             _broker = broker;
             _contextFacade = contextFacade;
             _aliasCreator = aliasCreator;
-            _imageUriExtractor = imageUriExtractor;
-            _anchorUriExtractor = anchorUriExtractor;
         }
 
         #endregion
@@ -278,60 +272,15 @@ namespace Plato.Entities.Services
 
         async Task<string> ParseEntityUrls(string html)
         {
-      
-            foreach (var handler in _broker.Pub<string>(this, "ParseEntityImageUrl"))
+
+            var handled = false;
+            foreach (var handler in _broker.Pub<string>(this, "ParseEntityUrls"))
             {
+                handled = true;
                 html = await handler.Invoke(new Message<string>(html, this));
             }
-
-            var entityUris = await GetEntityUrisAsync(html);
-            if (entityUris != null)
-            {
-                return await entityUris.SerializeAsync();
-            }
-            return html;
-
-        }
-
-        async Task<EntityUris> GetEntityUrisAsync(string input)
-        {
-
-            _imageUriExtractor.BaseUrl = await _contextFacade.GetBaseUrlAsync();
-            _anchorUriExtractor.BaseUrl = await _contextFacade.GetBaseUrlAsync();
             
-            var imageUrls = _imageUriExtractor.Extract(input);
-            var anchorUrls = _anchorUriExtractor.Extract(input);
-            
-            EntityUris output = null;
-
-            if (imageUrls != null)
-            {
-                output = new EntityUris();
-                foreach (var imageUrl in imageUrls)
-                {
-                    output.ImageUrls.Add(new EntityUri()
-                    {
-                        Uri = imageUrl.AbsoluteUri
-                    });
-                }
-            }
-
-            if (anchorUrls != null)
-            {
-                if (output == null)
-                {
-                    output = new EntityUris();
-                }
-                foreach (var anchorUrl in anchorUrls)
-                {
-                    output.AnchorUrls.Add(new EntityUri()
-                    {
-                        Uri = anchorUrl.AbsoluteUri
-                    });
-                }
-            }
-
-            return output;
+            return handled ? html : string.Empty;
 
         }
         

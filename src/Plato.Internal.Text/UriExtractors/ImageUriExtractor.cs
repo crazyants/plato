@@ -20,39 +20,44 @@ namespace Plato.Internal.Text.UriExtractors
                 throw new ArgumentNullException($"You must specify a {nameof(BaseUrl)} property before calling the ImageUriExtractor.Extract method.");
             }
             
-            var urls = new List<Uri>();
+            List<Uri> urls = null;
             var pattern = @"<img[^>]*?src\s*=\s*[""']?([^'"" >]+?)[ '""][^>]*?>";
             var matches = Regex.Matches(html, pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
-            foreach (Match m in matches)
+            if (matches.Count > 0)
             {
-
-                var url = m.Groups[1].Value;
-                if (!string.IsNullOrEmpty(url))
+                urls = new List<Uri>();
+                foreach (Match m in matches)
                 {
-                    // Check for absolute uri
-                    var noHttp = url.IndexOf("http://", StringComparison.OrdinalIgnoreCase) == -1;
-                    var noHttps = url.IndexOf("https://", StringComparison.OrdinalIgnoreCase) == -1;
-                    var relativeUrl = noHttp && noHttps;
-                    if (relativeUrl)
+
+                    var url = m.Groups[1].Value;
+                    if (!string.IsNullOrEmpty(url))
                     {
-                        if (!url.StartsWith("/"))
+                        // Check for absolute uri
+                        var noHttp = url.IndexOf("http://", StringComparison.OrdinalIgnoreCase) == -1;
+                        var noHttps = url.IndexOf("https://", StringComparison.OrdinalIgnoreCase) == -1;
+                        var relativeUrl = noHttp && noHttps;
+                        if (relativeUrl)
                         {
-                            url = "/" + url;
+                            if (!url.StartsWith("/"))
+                            {
+                                url = "/" + url;
+                            }
+                            url = this.BaseUrl + url;
                         }
-                        url = this.BaseUrl + url;
                     }
-                }
-                
-                try
-                {
-                    urls.Add(new Uri(url));
-                }
-                catch
-                {
-                    // ignored
-                }
 
+                    try
+                    {
+                        urls.Add(new Uri(url));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+                }
             }
+        
 
             return urls;
 
