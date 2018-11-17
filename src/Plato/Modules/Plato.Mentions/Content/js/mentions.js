@@ -78,20 +78,16 @@ $(function (win, doc, $) {
 
                             key = keys[i];
                             
-                            $(this).focus();
-                            
                             var selection = methods.getSelection($(this)),
                                 searchResult = key.search($(this), selection),
                                 search = searchResult.value;
-                            
-                            if (search) {
-                                if (key.match) {
-                                    match = key.match.test(search);
-                                }
+
+                            if (search && key.match) {
+                                match = key.match.test(search);
                             }
 
                             if (match) {
-                                console.log(key.match + " matched!");
+                        
                                 if (key.bind) {
 
                                     switch (e.which) {
@@ -445,8 +441,6 @@ $(function (win, doc, $) {
                         value = data.value + " ", // add a space after the value we are inserting
                         cursor = (index + 1) + value.length; // position at end of inserted value
 
-                    console.log("index: " + index);
-
                     // Select everything from marker + 1 to cursor
                     if (index >= 0) {
                         methods.setSelection($caller, index + 1, sel.start);
@@ -721,7 +715,7 @@ $(function (win, doc, $) {
                                     // This code executes on every key press so should be optimized
                                     
                                     var chars = $input.val().split(""),
-                                        value = "",
+                                        value = null,
                                         marker = "@",
                                         startIndex = -1,
                                         start = selection.start - 1,
@@ -740,9 +734,11 @@ $(function (win, doc, $) {
                                         }
                                     }
 
+                                    
                                     // If we have a marker search forward from
                                     // marker until terminator to get value
                                     if (startIndex >= 0) {
+                                        value = "";
                                         for (i = startIndex; i <= chars.length - 1; i++) {
                                             if (chars[i] === "\n" || chars[i] === " ") {
                                                 break;
@@ -750,6 +746,9 @@ $(function (win, doc, $) {
                                             value += chars[i];
                                         }
                                     }
+
+                                    console.log("men startIndex: " + startIndex)
+                                    console.log("men value: " + value)
 
                                     return {
                                         startIndex: startIndex,
@@ -759,10 +758,14 @@ $(function (win, doc, $) {
                                 },
                                 bind: function ($input, searchResult, e) {
 
+                                    var keywords = searchResult.value;
+                                    if (keywords == null) {
+                                        return;
+                                    }
+
                                     console.log("bind mentions");
 
-                                    // Remove any @ prefix from search keywords
-                                    var keywords = searchResult.value;
+                                    // Remove any marker from search keywords
                                     if (keywords.substring(0, 1) === "@") {
                                         keywords = keywords.substring(1, keywords.length);
                                     }
@@ -821,9 +824,18 @@ $(function (win, doc, $) {
                                                 }
                                                 return html;
 
+                                        },
+                                            onPagerClick: function ($self, page, e)
+                                            {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                $caller.suggester({
+                                                        page: page
+                                                    },
+                                                    "show");
                                             },
                                             onItemClick: function($self, result, e) {
-                                                alert("mentions click")
+                                              
                                                 // Prevent default event
                                                 e.preventDefault();
                                               
@@ -949,7 +961,7 @@ $(function (win, doc, $) {
                                     // This code executes on everykey press so should be optimized
 
                                     var chars = $input.val().split(""),
-                                        value = "",
+                                        value = null,
                                         marker = "#",
                                         startIndex = -1,
                                         start = selection.start - 1,
@@ -971,6 +983,7 @@ $(function (win, doc, $) {
                                     // If we have a marker search forward from
                                     // marker until terminator to get value
                                     if (startIndex >= 0) {
+                                        value = "";
                                         for (i = startIndex; i <= chars.length - 1; i++) {
                                             if (chars[i] === "\n" || chars[i] === " ") {
                                                 break;
@@ -978,7 +991,10 @@ $(function (win, doc, $) {
                                             value += chars[i];
                                         }
                                     }
-                                    
+
+                                    console.log("ref value: " + value);
+                                    console.log("ref startIndex: " + startIndex);
+
                                     return {
                                         startIndex: startIndex,
                                         value: value
@@ -987,10 +1003,12 @@ $(function (win, doc, $) {
                                 },
                                 bind: function ($input, searchResult, e) {
 
-                                    console.log("bind references");
-
-                                    // Remove any @ prefix from search keywords
                                     var keywords = searchResult.value;
+                                    if (keywords == null) {
+                                        return;
+                                    }
+                             
+                                    // Remove any marker prefix from search keywords
                                     if (keywords.substring(0, 1) === "#") {
                                         keywords = keywords.substring(1, keywords.length);
                                     }
@@ -1050,9 +1068,15 @@ $(function (win, doc, $) {
                                             return html;
 
                                         },
+                                        onPagerClick: function ($self, page, e) {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            $caller.suggester({
+                                                    page: page
+                                                },
+                                                "show");
+                                        },
                                         onItemClick: function ($self, result, e) {
-
-                                            alert("references click");
 
                                             // Prevent default event
                                             e.preventDefault();

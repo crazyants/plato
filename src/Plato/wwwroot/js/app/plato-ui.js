@@ -454,6 +454,13 @@ $(function (win, doc, $) {
             }, // triggers after paged results have finished loading
             onLoaded: null, // triggers after paged results have been added to the dom
             onItemClick: null, // event raised when you click a paged result item
+            onPagerClick: function ($caller, page, e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $caller.pagedList({
+                    page: page
+                });
+            }, // event raised when you click next / previous
             buildItem: function ($caller, result) {
 
                 // apply default css
@@ -500,42 +507,38 @@ $(function (win, doc, $) {
             buildPrev: function ($caller, page) {
 
                 var icon = $("<i>").addClass("fa fa-chevron-left");
-                var a = $("<a>")
+                var $a = $("<a>")
                     .attr("href", "#")
-                    .addClass("list-group-item list-group-item-action float-left col-3 text-center")
+                    .addClass("list-group-item list-group-item-action float-left prev-page col-3 text-center")
                     .append(icon);
 
-                a.click(function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                $a.click(function (e) {
                     if (page > 1) {
-                        $caller.pagedList({
-                            page: page -= 1
-                        });
+                        if ($caller.data(dataKey).onPagerClick) {
+                            $caller.data(dataKey).onPagerClick($caller, page - 1, e);
+                        }
                     }
                 });
 
-                return a;
+                return $a;
 
             },
             buildNext: function ($caller, page) {
 
                 var icon = $("<i>").addClass("fa fa-chevron-right");
 
-                var a = $("<a>")
+                var $a = $("<a>")
                     .attr("href", "#")
-                    .addClass("list-group-item list-group-item-action float-left col-3 text-center")
+                    .addClass("list-group-item list-group-item-action float-left next-page col-3 text-center")
                     .append(icon);
 
-                a.click(function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    $caller.pagedList({
-                        page: page += 1
-                    });
+                $a.click(function (e) {
+                    if ($caller.data(dataKey).onPagerClick) {
+                        $caller.data(dataKey).onPagerClick($caller, page + 1, e);
+                    }
                 });
 
-                return a;
+                return $a;
 
             },
             buildNoResults: function ($caller) {
