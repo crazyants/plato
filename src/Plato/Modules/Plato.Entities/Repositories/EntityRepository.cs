@@ -45,6 +45,7 @@ namespace Plato.Entities.Repositories
                 
             var id = await InsertUpdateInternal(
                 entity.Id,
+                entity.ParentId,
                 entity.FeatureId,
                 entity.CategoryId,
                 entity.Title,
@@ -52,6 +53,7 @@ namespace Plato.Entities.Repositories
                 entity.Message,
                 entity.Html,
                 entity.Abstract,
+                entity.Urls,
                 entity.IsPrivate,
                 entity.IsSpam,
                 entity.IsPinned,
@@ -189,6 +191,7 @@ namespace Plato.Entities.Repositories
 
         async Task<int> InsertUpdateInternal(
             int id,
+            int parentId,
             int featureId,
             int categoryId,
             string title,
@@ -196,6 +199,7 @@ namespace Plato.Entities.Repositories
             string message,
             string html,
             string messageAbstract,
+            string urls,
             bool isPrivate,
             bool isSpam,
             bool isPinned,
@@ -243,6 +247,7 @@ namespace Plato.Entities.Repositories
                     CommandType.StoredProcedure,
                     "InsertUpdateEntity",
                     id,
+                    parentId,
                     featureId,
                     categoryId,
                     title.ToEmptyIfNull().TrimToSize(255),
@@ -250,6 +255,7 @@ namespace Plato.Entities.Repositories
                     message.ToEmptyIfNull(),
                     html.ToEmptyIfNull(),
                     messageAbstract.ToEmptyIfNull().TrimToSize(500),
+                    urls.ToEmptyIfNull(),
                     isPrivate,
                     isSpam,
                     isPinned,

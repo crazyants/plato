@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
+using System.Globalization;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Plato.Internal.Text.Abstractions;
 
@@ -73,7 +73,6 @@ namespace Plato.Internal.Text.Alias
         string ApplyReplacements(string str, IDictionary<string, string> replacements)
         {
             var sb = new StringBuilder(str);
-
             foreach (var replacement in replacements)
             {
                 sb.Replace(replacement.Key, replacement.Value);

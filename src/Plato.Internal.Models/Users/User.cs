@@ -4,29 +4,13 @@ using System.Data;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Roles;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Models.Users
 {
 
-    public interface IGenericMetaData<TModel> where TModel : class
-    {
-        IDictionary<Type, ISerializable> MetaData { get; }
-
-        IEnumerable<TModel> Data { get; set; }
-
-        void AddOrUpdate<T>(T obj) where T : class;
-
-        void AddOrUpdate(Type type, ISerializable obj);
-        
-        T GetOrCreate<T>() where T : class;
-
-
-    }
-
-    public interface IUserMetaData<TNodel> : IGenericMetaData<TNodel> where TNodel : class
+    public interface IUserMetaData<TNodel> : IMetaData<TNodel> where TNodel : class
     {
 
     }

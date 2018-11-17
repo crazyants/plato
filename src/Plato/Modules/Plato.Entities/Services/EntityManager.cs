@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -7,7 +6,6 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Entities.Services
@@ -29,17 +27,23 @@ namespace Plato.Entities.Services
         private readonly IEntityStore<TEntity> _entityStore;
         private readonly IContextFacade _contextFacade;
         private readonly IAliasCreator _aliasCreator;
+        private readonly IImageUriExtractor _imageUriExtractor;
+        private readonly IAnchorUriExtractor _anchorUriExtractor;
 
         public EntityManager(
             IEntityStore<TEntity> entityStore,
             IBroker broker,
             IContextFacade contextFacade,
-            IAliasCreator aliasCreator)
+            IAliasCreator aliasCreator, 
+            IImageUriExtractor imageUriExtractor,
+            IAnchorUriExtractor anchorUriExtractor)
         {
             _entityStore = entityStore;
             _broker = broker;
             _contextFacade = contextFacade;
             _aliasCreator = aliasCreator;
+            _imageUriExtractor = imageUriExtractor;
+            _anchorUriExtractor = anchorUriExtractor;
         }
 
         #endregion
@@ -86,16 +90,14 @@ namespace Plato.Entities.Services
             // Parse Html and message abstract
             model.Html = await ParseEntityHtml(model.Message);
             model.Abstract = await ParseEntityAbstract(model.Message);
+            model.Urls = await ParseEntityUrls(model.Html);
             model.Alias = await ParseEntityAlias(model.Title);
-
+            
             // Raise creating event
             Creating?.Invoke(this, new EntityEventArgs<TEntity>(model));
 
             // Invoke EntityCreating subscriptions
-            foreach (var handler in _broker.Pub<TEntity>(this, new MessageOptions()
-            {
-                Key = "EntityCreating"
-            }, model))
+            foreach (var handler in _broker.Pub<TEntity>(this, "EntityCreating"))
             {
                 model = await handler.Invoke(new Message<TEntity>(model, this));
             }
@@ -108,10 +110,7 @@ namespace Plato.Entities.Services
                 Created?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
                 // Invoke EntityCreated subscriptions
-                foreach (var handler in _broker.Pub<TEntity>(this, new MessageOptions()
-                {
-                    Key = "EntityCreated"
-                }, entity))
+                foreach (var handler in _broker.Pub<TEntity>(this, "EntityCreated"))
                 {
                     entity = await handler.Invoke(new Message<TEntity>(entity, this));
                 }
@@ -156,16 +155,14 @@ namespace Plato.Entities.Services
             // Parse Html and message abstract
             model.Html = await ParseEntityHtml(model.Message);
             model.Abstract = await ParseEntityAbstract(model.Message);
+            model.Urls = await ParseEntityUrls(model.Html);
             model.Alias = await ParseEntityAlias(model.Title);
 
             // Raise Updating event
             Updating?.Invoke(this, new EntityEventArgs<TEntity>(model));
 
             // Invoke EntityUpdating subscriptions
-            foreach (var handler in _broker.Pub<TEntity>(this, new MessageOptions()
-            {
-                Key = "EntityUpdating"
-            }, model))
+            foreach (var handler in _broker.Pub<TEntity>(this, "EntityUpdating"))
             {
                 model = await handler.Invoke(new Message<TEntity>(model, this));
             }
@@ -178,10 +175,7 @@ namespace Plato.Entities.Services
                 Updated?.Invoke(this, new EntityEventArgs<TEntity>(entity));
 
                 // Invoke EntityUpdated subscriptions
-                foreach (var handler in _broker.Pub<TEntity>(this, new MessageOptions()
-                {
-                    Key = "EntityUpdated"
-                }, entity))
+                foreach (var handler in _broker.Pub<TEntity>(this, "EntityUpdated"))
                 {
                     entity = await handler.Invoke(new Message<TEntity>(entity, this));
                 }
@@ -248,13 +242,10 @@ namespace Plato.Entities.Services
 
         #region "Private Methods"
 
-        private async Task<string> ParseEntityHtml(string message)
+        async Task<string> ParseEntityHtml(string message)
         {
       
-            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
-            {
-                Key = "ParseEntityHtml"
-            }, message))
+            foreach (var handler in _broker.Pub<string>(this, "ParseEntityHtml"))
             {
                 message = await handler.Invoke(new Message<string>(message, this));
             }
@@ -263,12 +254,9 @@ namespace Plato.Entities.Services
 
         }
 
-        private async Task<string> ParseEntityAbstract(string message)
+        async Task<string> ParseEntityAbstract(string message)
         {
-            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
-            {
-                Key = "ParseEntityAbstract"
-            }, message))
+            foreach (var handler in _broker.Pub<string>(this, "ParseEntityAbstract"))
             {
                 message = await handler.Invoke(new Message<string>(message, this));
             }
@@ -277,23 +265,76 @@ namespace Plato.Entities.Services
 
         }
 
-        private async Task<string> ParseEntityAlias(string input)
+        async Task<string> ParseEntityAlias(string input)
+        {
+            foreach (var handler in _broker.Pub<string>(this, "ParseEntityAlias"))
+            {
+                input = await handler.Invoke(new Message<string>(input, this));
+            }
+
+            return _aliasCreator.Create(input); ;
+
+        }
+
+        async Task<string> ParseEntityUrls(string html)
+        {
+      
+            foreach (var handler in _broker.Pub<string>(this, "ParseEntityImageUrl"))
+            {
+                html = await handler.Invoke(new Message<string>(html, this));
+            }
+
+            var entityUris = await GetEntityUrisAsync(html);
+            if (entityUris != null)
+            {
+                return await entityUris.SerializeAsync();
+            }
+            return html;
+
+        }
+
+        async Task<EntityUris> GetEntityUrisAsync(string input)
         {
 
-            var output = _aliasCreator.Create(input);
-            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
+            _imageUriExtractor.BaseUrl = await _contextFacade.GetBaseUrlAsync();
+            _anchorUriExtractor.BaseUrl = await _contextFacade.GetBaseUrlAsync();
+            
+            var imageUrls = _imageUriExtractor.Extract(input);
+            var anchorUrls = _anchorUriExtractor.Extract(input);
+            
+            EntityUris output = null;
+
+            if (imageUrls != null)
             {
-                Key = "ParseEntityAlias"
-            }, input))
+                output = new EntityUris();
+                foreach (var imageUrl in imageUrls)
+                {
+                    output.ImageUrls.Add(new EntityUri()
+                    {
+                        Uri = imageUrl.AbsoluteUri
+                    });
+                }
+            }
+
+            if (anchorUrls != null)
             {
-                output = await handler.Invoke(new Message<string>(input, this));
+                if (output == null)
+                {
+                    output = new EntityUris();
+                }
+                foreach (var anchorUrl in anchorUrls)
+                {
+                    output.AnchorUrls.Add(new EntityUri()
+                    {
+                        Uri = anchorUrl.AbsoluteUri
+                    });
+                }
             }
 
             return output;
 
         }
-
-
+        
         #endregion
 
     }

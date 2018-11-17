@@ -18,13 +18,30 @@ namespace Plato.Internal.Messaging
             _subscribers = new ConcurrentDictionary<Type, List<DescribedDelegate>>();
         }
 
+        public IEnumerable<Func<Message<T>, Task<T>>> Pub<T>(object sender, string key, T message)
+            where T : class
+        {
+            return Pub<T>(sender, new MessageOptions()
+            {
+                Key = key
+            }, message);
+        }
+
+        public IEnumerable<Func<Message<T>, Task<T>>> Pub<T>(object sender, string key) where T : class
+        {
+            return Pub<T>(sender, new MessageOptions()
+            {
+                Key = key
+            }, null);
+        }
+
         public IEnumerable<Func<Message<T>, Task<T>>> Pub<T>(object sender, MessageOptions options, T message) where T : class
         {
 
             var ourput = new List<Func<Message<T>, Task<T>>>();
             
             // Nothing to process return empty collection
-            if (message == null || sender == null)
+            if (sender == null)
             {
                 return ourput;
             }
@@ -74,6 +91,10 @@ namespace Plato.Internal.Messaging
             {
                 if (func != null)
                 {
+                    if (message != null)
+                    {
+
+                    }
                     // Wrap our subscriber delegate within a dummy delegate
                     // This allows us to invoke the dummy delegate externally
                     // passing in a custom message for our real subscriber delegate

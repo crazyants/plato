@@ -9,7 +9,6 @@
     {
         var headerId = category + "Header";
         var contentId = category + "Notifications";
-        var css = i == 0 ? "collapse show" : "collapse";
         i++;
         <div class="card">
             <div class="card-header" role="tab" id="@headerId">
@@ -19,7 +18,7 @@
                     </a>
                 </h6>
             </div>
-            <div id="@contentId" class="@css" role="tabpanel" aria-labelledby="@headerId" data-parent="#accordion">
+            <div id="@contentId" class="collapse show" role="tabpanel" aria-labelledby="@headerId" data-parent="#accordion">
                 <table class="table table-hover m-0 p-0">
                     <tbody>
                     @foreach (var notificationType in Model.CategorizedNotificationTypes[category])

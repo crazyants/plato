@@ -93,7 +93,7 @@ namespace Plato.Discuss.Controllers
               
             });
             
-            //await CreateSampleData();
+            await CreateSampleData();
 
             // Get default options
             var defaultViewOptions = new TopicIndexOptions();

@@ -27,6 +27,11 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "ParentId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "FeatureId",
                         DbType = DbType.Int32
                     },
@@ -63,6 +68,12 @@ namespace Plato.Entities.Handlers
                     {
                         Name = "Abstract",
                         Length = "500",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Urls",
+                        Length = "max",
                         DbType = DbType.String
                     },
                     new SchemaColumn()

@@ -46,7 +46,7 @@ namespace Plato.WebApi.Controllers
                 sort,
                 order);
             
-            PagedResults<UserApiResult> results = null;
+            IPagedResults<UserApiResult> results = null;
             if (users != null)
             {
                 results = new PagedResults<UserApiResult>
@@ -78,10 +78,10 @@ namespace Plato.WebApi.Controllers
                 }
             }
 
-            UserApiResults output = null;
+            IPagedApiResults<UserApiResult> output = null;
             if (results != null)
             {
-                output = new UserApiResults()
+                output = new PagedApiResults<UserApiResult>()
                 {
                     Page = page,
                     Size = size,

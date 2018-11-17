@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Plato.Internal.Text.Abstractions;
 using Plato.Internal.Text.Alias;
+using Plato.Internal.Text.UriExtractors;
 
 namespace Plato.Internal.Text.Extensions
 {
@@ -12,8 +13,12 @@ namespace Plato.Internal.Text.Extensions
             this IServiceCollection services)
         {
 
+
             services.TryAddSingleton<IAliasCreator, AliasCreator>();
 
+            services.TryAddSingleton<IImageUriExtractor, ImageUriExtractor>();
+            services.TryAddSingleton<IAnchorUriExtractor, AnchorUriExtractor>();
+            
             return services;
 
         }

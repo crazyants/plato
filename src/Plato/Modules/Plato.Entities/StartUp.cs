@@ -2,15 +2,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Abstractions.SetUp;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Models.Shell;
 using Plato.Entities.Handlers;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
 using Plato.Entities.Services;
 using Plato.Entities.Stores;
-using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Shell;
 
 namespace Plato.Entities
 {
@@ -25,10 +24,7 @@ namespace Plato.Entities
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-            // Set-up event handler
-            services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-
+            
             // Feature event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
@@ -49,7 +45,6 @@ namespace Plato.Entities
             services.AddScoped<IEntityManager<Entity>, EntityManager<Entity>>();
             services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager<EntityReply>>();
             
-         
         }
 
         public override void Configure(

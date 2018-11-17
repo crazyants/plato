@@ -506,17 +506,15 @@ $(function (win, doc, $) {
             },
             buildPrev: function ($caller, page) {
 
-                var icon = $("<i>").addClass("fa fa-chevron-left");
-                var $a = $("<a>")
+                var icon = $("<i>").addClass("fa fa-chevron-left"),
+                    $a = $("<a>")
                     .attr("href", "#")
                     .addClass("list-group-item list-group-item-action float-left prev-page col-3 text-center")
                     .append(icon);
 
                 $a.click(function (e) {
-                    if (page > 1) {
-                        if ($caller.data(dataKey).onPagerClick) {
-                            $caller.data(dataKey).onPagerClick($caller, page - 1, e);
-                        }
+                    if ($caller.data(dataKey).onPagerClick) {
+                        $caller.data(dataKey).onPagerClick($caller, page - 1, e);
                     }
                 });
 
@@ -525,9 +523,8 @@ $(function (win, doc, $) {
             },
             buildNext: function ($caller, page) {
 
-                var icon = $("<i>").addClass("fa fa-chevron-right");
-
-                var $a = $("<a>")
+                var icon = $("<i>").addClass("fa fa-chevron-right"),
+                    $a = $("<a>")
                     .attr("href", "#")
                     .addClass("list-group-item list-group-item-action float-left next-page col-3 text-center")
                     .append(icon);

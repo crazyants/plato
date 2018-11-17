@@ -2,6 +2,7 @@
 using System.Data;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
@@ -13,6 +14,8 @@ namespace Plato.Entities.Models
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
         
         public int Id { get; set; }
+
+        public int ParentId { get; set; }
 
         public int FeatureId { get; set; }
 
@@ -28,6 +31,8 @@ namespace Plato.Entities.Models
 
         public string Abstract { get; set; }
 
+        public string Urls { get; set; }
+        
         public bool IsPrivate { get; set; }
 
         public bool IsSpam { get; set; }
@@ -77,7 +82,7 @@ namespace Plato.Entities.Models
         public SimpleUser CreatedBy { get; private set; } = new SimpleUser();
 
         public SimpleUser ModifiedBy { get; private set; } = new SimpleUser();
-
+   
         public IEnumerable<IEntityData> Data { get; set; } = new List<EntityData>();
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
@@ -121,12 +126,25 @@ namespace Plato.Entities.Models
             return ActivateInstanceOf<T>.Instance(); 
 
         }
-        
+
+        public async Task<EntityUris> GetEntityUrlsAsync()
+        {
+            if (!string.IsNullOrEmpty(Urls))
+            {
+                return await Urls.DeserializeAsync<EntityUris>();
+            }
+
+            return new EntityUris();
+        }
+
         public virtual void PopulateModel(IDataReader dr)
         {
 
             if (dr.ColumnIsNotNull("Id"))
                 Id = Convert.ToInt32(dr["Id"]);
+
+            if (dr.ColumnIsNotNull("ParentId"))
+                ParentId = Convert.ToInt32(dr["ParentId"]);
 
             if (dr.ColumnIsNotNull("FeatureId"))
                 FeatureId = Convert.ToInt32(dr["FeatureId"]);
@@ -148,6 +166,9 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("Abstract"))
                 Abstract = Convert.ToString(dr["Abstract"]);
+
+            if (dr.ColumnIsNotNull("Urls")) 
+                Urls = Convert.ToString(dr["Urls"]);
             
             if (dr.ColumnIsNotNull("TotalViews"))
                 TotalViews = Convert.ToInt32(dr["TotalViews"]);
@@ -229,12 +250,9 @@ namespace Plato.Entities.Models
             
             if (dr.ColumnIsNotNull("LastReplyDate"))
                 LastReplyDate = DateTimeOffset.Parse(Convert.ToString((dr["LastReplyDate"])));
-
-
+            
         }
 
     }
     
-
-
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using Plato.Internal.Models.Annotations;
 using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Models.Users
@@ -33,7 +32,6 @@ namespace Plato.Internal.Models.Users
 
         public UserData()
         {
-
         }
 
         public UserData(IDataReader reader)
@@ -72,11 +70,6 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("ModifiedDate"))
                 this.ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
 
-        }
-
-        public void PopulateModel(Action<UserData> model)
-        {
-            model(this);
         }
 
         #endregion

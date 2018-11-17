@@ -1,16 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using Plato.Internal.Abstractions;
+using System.Threading.Tasks;
+using Plato.Internal.Models;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Models
 {
 
-    public interface IEntity
+    public interface IEntityMetaData<TNodel> : IMetaData<TNodel> where TNodel : class
+    {
+
+    }
+
+    public interface IEntity  : IEntityMetaData<IEntityData>
     {
 
         int Id { get; set; }
+
+        int ParentId { get; set; }
 
         int FeatureId { get; set; }
 
@@ -26,6 +33,8 @@ namespace Plato.Entities.Models
 
         string Abstract { get; set; }
 
+        string Urls { get; set; }
+        
         bool IsPrivate { get; set; }
 
         bool IsSpam { get; set; }
@@ -74,17 +83,9 @@ namespace Plato.Entities.Models
         
         SimpleUser CreatedBy { get; }
 
-        SimpleUser ModifiedBy { get; } 
-        
-        IEnumerable<IEntityData> Data { get; set; }
+        SimpleUser ModifiedBy { get; }
 
-        IDictionary<Type, ISerializable> MetaData { get; }
-
-        void AddOrUpdate<T>(T obj) where T : class;
-
-        void AddOrUpdate(Type type, ISerializable obj);
-
-        T GetOrCreate<T>() where T : class;
+        Task<EntityUris> GetEntityUrlsAsync();
 
         void PopulateModel(IDataReader dr);
 

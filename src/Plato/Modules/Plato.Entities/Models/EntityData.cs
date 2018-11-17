@@ -34,7 +34,6 @@ namespace Plato.Entities.Models
 
         public EntityData()
         {
-
         }
 
         public EntityData(IDataReader reader)
@@ -73,11 +72,6 @@ namespace Plato.Entities.Models
             if (dr.ColumnIsNotNull("ModifiedDate"))
                 ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
 
-        }
-
-        public void PopulateModel(Action<EntityData> model)
-        {
-            model(this);
         }
 
         #endregion

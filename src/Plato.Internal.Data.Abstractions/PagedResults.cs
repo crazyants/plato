@@ -5,6 +5,7 @@ using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Data.Abstractions
 {
+
     public class PagedResults<T> : IPagedResults<T> where T : class
     {
 
@@ -23,5 +24,7 @@ namespace Plato.Internal.Data.Abstractions
             if (reader.ColumnIsNotNull(0))
                 Total = Convert.ToInt32(reader[0]);
         }
+
     }
+
 }
