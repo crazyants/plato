@@ -91,6 +91,7 @@ $(function (win, doc, $) {
                             }
 
                             if (match) {
+                                console.log(key.match + " matched!");
                                 if (key.bind) {
 
                                     switch (e.which) {
@@ -434,6 +435,8 @@ $(function (win, doc, $) {
             },
             insert: function($caller) {
 
+                $caller.focus();
+
                 var data = $caller.data(dataKey).insertData;
                 if (data) {
 
@@ -441,6 +444,8 @@ $(function (win, doc, $) {
                         index = data.index, // index from which everything will be replaced upto selection.start
                         value = data.value + " ", // add a space after the value we are inserting
                         cursor = (index + 1) + value.length; // position at end of inserted value
+
+                    console.log("index: " + index);
 
                     // Select everything from marker + 1 to cursor
                     if (index >= 0) {
@@ -712,8 +717,8 @@ $(function (win, doc, $) {
                                     // The result of the search method is tested
                                     // against the match regular expiression within keyBinder
                                     // If a match is found the bind method is called 
-                                    // otherwise unbind method is called
-                                    // This code executes on everykey press so should be optimized
+                                    // otherwise the unbind method is called
+                                    // This code executes on every key press so should be optimized
                                     
                                     var chars = $input.val().split(""),
                                         value = "",
@@ -734,7 +739,7 @@ $(function (win, doc, $) {
                                             }
                                         }
                                     }
-                                    
+
                                     // If we have a marker search forward from
                                     // marker until terminator to get value
                                     if (startIndex >= 0) {
@@ -753,7 +758,9 @@ $(function (win, doc, $) {
 
                                 },
                                 bind: function ($input, searchResult, e) {
-                       
+
+                                    console.log("bind mentions");
+
                                     // Remove any @ prefix from search keywords
                                     var keywords = searchResult.value;
                                     if (keywords.substring(0, 1) === "@") {
@@ -816,10 +823,10 @@ $(function (win, doc, $) {
 
                                             },
                                             onItemClick: function($self, result, e) {
-
+                                                alert("mentions click")
                                                 // Prevent default event
                                                 e.preventDefault();
-
+                                              
                                                 // Focus input, hide suggest menu & insert result
                                                 $caller
                                                     .focus()
@@ -926,6 +933,7 @@ $(function (win, doc, $) {
 
             },
             bind: function ($caller) {
+            
                 $caller.suggester($.extend($caller.data(dataKey)),
                     {
                         // keyBinder options
@@ -959,7 +967,7 @@ $(function (win, doc, $) {
                                             }
                                         }
                                     }
-
+                                    
                                     // If we have a marker search forward from
                                     // marker until terminator to get value
                                     if (startIndex >= 0) {
@@ -970,7 +978,7 @@ $(function (win, doc, $) {
                                             value += chars[i];
                                         }
                                     }
-
+                                    
                                     return {
                                         startIndex: startIndex,
                                         value: value
@@ -978,7 +986,9 @@ $(function (win, doc, $) {
 
                                 },
                                 bind: function ($input, searchResult, e) {
-                                 
+
+                                    console.log("bind references");
+
                                     // Remove any @ prefix from search keywords
                                     var keywords = searchResult.value;
                                     if (keywords.substring(0, 1) === "#") {
@@ -1041,6 +1051,8 @@ $(function (win, doc, $) {
 
                                         },
                                         onItemClick: function ($self, result, e) {
+
+                                            alert("references click");
 
                                             // Prevent default event
                                             e.preventDefault();

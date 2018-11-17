@@ -3,6 +3,7 @@ using Plato.Internal.Localization.Abstractions.Models;
 
 namespace Plato.Internal.Localization.Extensions
 {
+
     public static class LocaleEmailExtensions
     {
 

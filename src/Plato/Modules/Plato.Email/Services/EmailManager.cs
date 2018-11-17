@@ -120,9 +120,9 @@ namespace Plato.Email.Services
             }
 
             return result.Failed($"An unknown error occurred whilst attempting to send an email message");
-
-
+            
         }
 
     }
+
 }

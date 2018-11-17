@@ -7,6 +7,7 @@ using Plato.Internal.Localization.Abstractions.Models;
 
 namespace Plato.Internal.Localization.Extensions
 {
+
     public static class LocaleStoreExtensions
     {
 
@@ -69,7 +70,7 @@ namespace Plato.Internal.Localization.Extensions
             var localeValues = await localeStore.GetByKeyAsync<TModel>(cultureCode, key);
             return localeValues?.Values.FirstOrDefault();
         }
-
-
+        
     }
+
 }

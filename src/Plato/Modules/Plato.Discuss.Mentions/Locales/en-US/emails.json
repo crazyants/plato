@@ -5,7 +5,7 @@
       "To": "",
       "Cc": "",
       "Bcc": "",
-      "From": "[SiteEmail]",
+      "From": "",
       "Subject": "[SiteName] - New Mention",
       "Message": "Hi {0},\n\nYou've been mentioned within a discussion.\n\n{1}\n{2}\n\n[SiteName]\n[SiteUrl]"
     }
