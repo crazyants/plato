@@ -25,8 +25,7 @@ namespace Plato.Notifications.Models
         public int CreatedUserId { get; set; }
 
         public DateTimeOffset? CreatedDate { get; set; }
-
-
+        
         public void PopulateModel(IDataReader dr)
         {
 

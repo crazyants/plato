@@ -8,6 +8,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Notifications.Handlers;
 using Plato.Notifications.Models;
 using Plato.Notifications.Repositories;
+using Plato.Notifications.Services;
 using Plato.Notifications.Stores;
 
 namespace Plato.Notifications
@@ -34,7 +35,9 @@ namespace Plato.Notifications
             // Stores
             services.AddScoped<IUserNotificationsStore<UserNotification>, UserNotificationsStore>();
             
-          
+            // Managers
+            services.AddScoped<IUserNotificationsManager<UserNotification>, UserNotificationsManager>();
+            
         }
 
         public override void Configure(
