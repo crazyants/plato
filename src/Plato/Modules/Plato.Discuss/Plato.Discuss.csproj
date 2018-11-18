@@ -37,6 +37,7 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Notifications.Abstractions\Plato.Internal.Notifications.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
     <ProjectReference Include="..\Plato.Entities\Plato.Entities.csproj" />
+    <ProjectReference Include="..\Plato.Notifications\Plato.Notifications.csproj" />
   </ItemGroup>
 
   <ItemGroup>

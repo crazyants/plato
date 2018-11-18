@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
 

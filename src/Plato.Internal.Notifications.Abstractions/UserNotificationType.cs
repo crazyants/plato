@@ -1,6 +1,4 @@
-﻿using Plato.Internal.Notifications.Abstractions;
-
-namespace Plato.Notifications.Models
+﻿namespace Plato.Internal.Notifications.Abstractions
 {
     
     public class UserNotificationType : IUserNotificationType

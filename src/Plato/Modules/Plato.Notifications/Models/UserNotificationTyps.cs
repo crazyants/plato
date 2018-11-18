@@ -8,7 +8,7 @@ namespace Plato.Notifications.Models
     public class UserNotificationTypes : Serializable, IUserNotificationTypes
     {
 
-        public IEnumerable<IUserNotificationType> NotificationTypes { get; set; }
+        public IEnumerable<UserNotificationType> NotificationTypes { get; set; }
 
     }
 

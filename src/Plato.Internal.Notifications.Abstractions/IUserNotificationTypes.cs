@@ -10,7 +10,7 @@ namespace Plato.Internal.Notifications.Abstractions
     
     public interface IUserNotificationTypes
     {
-        IEnumerable<IUserNotificationType> NotificationTypes { get; set; }
+        IEnumerable<UserNotificationType> NotificationTypes { get; set; }
     }
 
 
