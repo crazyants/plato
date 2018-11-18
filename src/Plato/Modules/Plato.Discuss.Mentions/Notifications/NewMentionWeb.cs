@@ -17,14 +17,14 @@ using Plato.Discuss.Mentions.NotificationTypes;
 namespace Plato.Discuss.Mentions.Notifications
 {
 
-    public class NewMentionEmail : INotificationProvider<Topic>
+    public class NewMentionWeb : INotificationProvider<Topic>
     {
 
         private readonly IContextFacade _contextFacade;
         private readonly ILocaleStore _localeStore;
         private readonly IEmailManager _emailManager;
 
-        public NewMentionEmail(
+        public NewMentionWeb(
             IContextFacade contextFacade,
             ILocaleStore localeStore,
             IEmailManager emailManager)
@@ -59,7 +59,7 @@ namespace Plato.Discuss.Mentions.Notifications
             }
             
             // Ensure correct notification provider
-            if (context.Notification.Type.Id != EmailNotifications.NewMention.Id)
+            if (context.Notification.Type.Id != WebNotifications.NewMention.Id)
             {
                 return null;
             }

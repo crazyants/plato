@@ -9,11 +9,11 @@ using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Notifications.Abstractions.Extensions;
 using Plato.Mentions.Models;
-using Plato.Mentions.NotificationTypes;
+using Plato.Discuss.Mentions.NotificationTypes;
 using Plato.Mentions.Services;
 using Plato.Mentions.Stores;
-using Plato.Notifications.Extensions;
 
 namespace Plato.Discuss.Mentions.Subscribers
 {
@@ -223,7 +223,7 @@ namespace Plato.Discuss.Mentions.Subscribers
             {
 
                 // Email notifications
-                if (user.NotificationEnabled(EmailNotifications.NewMention))
+                if (user.NotificationEnabled<IUserNotificationTypes>(EmailNotifications.NewMention))
                 {
                     await _notificationManager.SendAsync(new Notification(EmailNotifications.NewMention)
                     {
@@ -232,7 +232,7 @@ namespace Plato.Discuss.Mentions.Subscribers
                 }
 
                 // Web notifications
-                if (user.NotificationEnabled(WebNotifications.NewMention))
+                if (user.NotificationEnabled<IUserNotificationTypes>(WebNotifications.NewMention))
                 {
                     await _notificationManager.SendAsync(new Notification(WebNotifications.NewMention)
                     {

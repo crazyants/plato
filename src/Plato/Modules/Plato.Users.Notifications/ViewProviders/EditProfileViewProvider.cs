@@ -7,9 +7,9 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Notifications.Models;
-using Plato.Notifications.ViewModels;
+using Plato.Users.Notifications.ViewModels;
 
-namespace Plato.Notifications.ViewProviders
+namespace Plato.Users.Notifications.ViewProviders
 {
 
     public class EditProfileViewProvider : BaseViewProvider<EditNotificationsViewModel>

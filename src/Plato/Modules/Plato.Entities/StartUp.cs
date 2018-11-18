@@ -48,6 +48,7 @@ namespace Plato.Entities
             services.AddScoped<IEntityReplyManager<EntityReply>, EntityReplyManager<EntityReply>>();
 
             // Entity subscribers
+            services.AddScoped<IBrokerSubscriber, ParseEntityAliasSubscriber>();
             services.AddScoped<IBrokerSubscriber, ParseEntityUrlsSubscriber>();
 
         }

@@ -7,11 +7,9 @@ using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Notifications.Abstractions;
 using Plato.Mentions.Assets;
 using Plato.Mentions.Handlers;
 using Plato.Mentions.Models;
-using Plato.Mentions.NotificationTypes;
 using Plato.Mentions.Repositories;
 using Plato.Mentions.Services;
 using Plato.Mentions.Stores;
@@ -45,10 +43,6 @@ namespace Plato.Mentions
 
             // Register broker subscribers
             services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
-
-            // Register notification providers
-            services.AddScoped<INotificationTypeProvider, EmailNotifications>();
-            services.AddScoped<INotificationTypeProvider, WebNotifications>();
             
             // Managers
             services.AddScoped<IEntityMentionsManager<EntityMention>, EntityMentionsManager>();

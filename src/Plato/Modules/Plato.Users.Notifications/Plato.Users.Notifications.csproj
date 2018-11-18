@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Plato.Discuss.Mentions</AssemblyName>
-    <PackageId>Plato.Discuss.Mentions</PackageId>
+    <AssemblyName>Plato.Users.Notifications</AssemblyName>
+    <PackageId>Plato.Users.Notifications</PackageId>
     <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -16,8 +16,6 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Hosting\Plato.Internal.Hosting.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Layout\Plato.Internal.Layout.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
-    <ProjectReference Include="..\Plato.Discuss\Plato.Discuss.csproj" />
-    <ProjectReference Include="..\Plato.Mentions\Plato.Mentions.csproj" />
     <ProjectReference Include="..\Plato.Notifications\Plato.Notifications.csproj" />
   </ItemGroup>
 

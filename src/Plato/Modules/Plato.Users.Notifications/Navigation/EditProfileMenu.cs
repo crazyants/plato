@@ -2,7 +2,7 @@
 using System;
 using Plato.Internal.Navigation;
 
-namespace Plato.Notifications.Navigation
+namespace Plato.Users.Notifications.Navigation
 {
     public class EditProfileMenu : INavigationProvider
     {

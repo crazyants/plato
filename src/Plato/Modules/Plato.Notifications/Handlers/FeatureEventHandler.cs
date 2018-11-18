@@ -13,9 +13,9 @@ namespace Plato.Notifications.Handlers
         public string Version { get; } = "1.0.0";
 
         // EntityMentions table
-        private readonly SchemaTable _notifications = new SchemaTable()
+        private readonly SchemaTable _userNotifications = new SchemaTable()
         {
-            Name = "Notifications",
+            Name = "UserNotifications",
             Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -26,31 +26,42 @@ namespace Plato.Notifications.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "[Name]",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
                         Name = "UserId",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
-                        Name = "[Text]",
+                        Name = "NotificationName",
                         Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Title]",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Message]",
+                        Length = "max",
                         DbType = DbType.String
                     },
                     new SchemaColumn()
                     {
                         Name = "[Url]",
-                        Length = "255",
+                        Length = "500",
                         DbType = DbType.String
                     },
                     new SchemaColumn()
                     {
-                        Name = "IsRead",
-                        DbType = DbType.Boolean
+                        Name = "ReadDate",
+                        DbType = DbType.DateTimeOffset
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
@@ -83,8 +94,8 @@ namespace Plato.Notifications.Handlers
                 // Configure
                 Configure(builder);
 
-                // Notifications schema
-                Notifications(builder);
+                // UserNotifications schema
+                UserNotifications(builder);
 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -126,9 +137,9 @@ namespace Plato.Notifications.Handlers
 
                 // drop EntityMentions
                 builder
-                    .DropTable(_notifications)
-                    .DropDefaultProcedures(_notifications)
-                    .DropProcedure(new SchemaProcedure("SelectNotificationsPaged"));
+                    .DropTable(_userNotifications)
+                    .DropDefaultProcedures(_userNotifications)
+                    .DropProcedure(new SchemaProcedure("SelectUserNotificationsPaged"));
                 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -179,20 +190,20 @@ namespace Plato.Notifications.Handlers
 
         }
 
-        void Notifications(ISchemaBuilder builder)
+        void UserNotifications(ISchemaBuilder builder)
         {
 
             builder
-                .CreateTable(_notifications)
-                .CreateDefaultProcedures(_notifications);
+                .CreateTable(_userNotifications)
+                .CreateDefaultProcedures(_userNotifications);
 
-            builder.CreateProcedure(new SchemaProcedure("SelectNotificationsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_notifications)
+            builder.CreateProcedure(new SchemaProcedure("SelectUserNotificationsPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_userNotifications)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()
                     {
-                        Name = "[Name]",
+                        Name = "NotificationName",
                         DbType = DbType.String,
                         Length = "255"
                     }

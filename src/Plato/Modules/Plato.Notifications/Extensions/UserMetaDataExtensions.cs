@@ -6,7 +6,7 @@ using Plato.Notifications.Models;
 namespace Plato.Notifications.Extensions
 {
 
-    public static class UserExtensions
+    public static class UserMetaDataExtensions
     {
 
         public static bool NotificationEnabled(

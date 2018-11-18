@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
 
-namespace Plato.Notifications.Navigation
+namespace Plato.Users.Notifications.Navigation
 {
     public class SiteMenu : INavigationProvider
     {

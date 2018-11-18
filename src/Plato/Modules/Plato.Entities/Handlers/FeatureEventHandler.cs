@@ -283,6 +283,12 @@ namespace Plato.Entities.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "Urls",
+                        Length = "max",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "IsPrivate",
                         DbType = DbType.Boolean
                     },

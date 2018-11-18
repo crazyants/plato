@@ -26,18 +26,15 @@ namespace Plato.Entities.Services
         private readonly IBroker _broker;
         private readonly IEntityStore<TEntity> _entityStore;
         private readonly IContextFacade _contextFacade;
-        private readonly IAliasCreator _aliasCreator;
-     
+  
         public EntityManager(
             IEntityStore<TEntity> entityStore,
-            IBroker broker,
             IContextFacade contextFacade,
-            IAliasCreator aliasCreator)
+            IBroker broker)
         {
             _entityStore = entityStore;
-            _broker = broker;
             _contextFacade = contextFacade;
-            _aliasCreator = aliasCreator;
+            _broker = broker;
         }
 
         #endregion
@@ -261,12 +258,14 @@ namespace Plato.Entities.Services
 
         async Task<string> ParseEntityAlias(string input)
         {
+            var handled = false;
             foreach (var handler in _broker.Pub<string>(this, "ParseEntityAlias"))
             {
+                handled = true;
                 input = await handler.Invoke(new Message<string>(input, this));
             }
 
-            return _aliasCreator.Create(input); ;
+            return handled ? input : string.Empty;
 
         }
 

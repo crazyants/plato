@@ -8,9 +8,9 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
-using Plato.Notifications.ViewModels;
+using Plato.Users.Notifications.ViewModels;
 
-namespace Plato.Notifications.Controllers
+namespace Plato.Users.Notifications.Controllers
 {
     public class HomeController : Controller, IUpdateModel
     {

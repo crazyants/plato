@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Mentions.NotificationTypes
+namespace Plato.Discuss.Mentions.NotificationTypes
 {
     
     public class EmailNotifications : INotificationTypeProvider

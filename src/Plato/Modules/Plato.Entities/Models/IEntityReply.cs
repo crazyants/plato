@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Threading.Tasks;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Entities.Models
@@ -18,6 +19,8 @@ namespace Plato.Entities.Models
         string Html { get; set; }
 
         string Abstract { get; set; }
+
+        string Urls { get; set; }
 
         bool IsPrivate { get; set; }
 
@@ -48,6 +51,8 @@ namespace Plato.Entities.Models
         SimpleUser CreatedBy { get; set; }
 
         SimpleUser ModifiedBy { get; set; }
+
+        Task<EntityUris> GetEntityUrlsAsync();
 
         void PopulateModel(IDataReader dr);
 

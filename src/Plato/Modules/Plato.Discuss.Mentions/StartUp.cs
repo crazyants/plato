@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Mentions.Notifications;
+using Plato.Discuss.Mentions.NotificationTypes;
 using Plato.Discuss.Mentions.Subscribers;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Shell;
@@ -13,6 +14,7 @@ using Plato.Internal.Notifications.Abstractions;
 
 namespace Plato.Discuss.Mentions
 {
+
     public class Startup : StartupBase
     {
         private readonly IShellSettings _shellSettings;
@@ -28,6 +30,10 @@ namespace Plato.Discuss.Mentions
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
+
+            // Register notification providers
+            services.AddScoped<INotificationTypeProvider, EmailNotifications>();
+            services.AddScoped<INotificationTypeProvider, WebNotifications>();
 
             // Notification managers
             services.AddScoped<INotificationManager<Topic>, NotificationManager<Topic>>();

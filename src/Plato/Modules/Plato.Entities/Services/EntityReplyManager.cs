@@ -39,8 +39,7 @@ namespace Plato.Entities.Services
         {
             
             var result = new CommandResult<TReply>();
-
-
+            
             if (reply.Id > 0)
             {
                 return result.Failed(new CommandError($"{nameof(reply.Id)} cannot be greater than zero when creating a reply"));
@@ -71,19 +70,17 @@ namespace Plato.Entities.Services
             // Parse Html and abstract
             reply.Html = await ParseEntityHtml(reply.Message);
             reply.Abstract = await ParseEntityAbstract(reply.Message);
-            
+            reply.Urls = await ParseEntityUrls(reply.Html);
+
             // Raise creating event
             Creating?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, reply));
 
             // Invoke EntityReplyCreating subscriptions
-            foreach (var handler in _broker.Pub<TReply>(this, new MessageOptions()
-            {
-                Key = "EntityReplyCreating"
-            }, reply))
+            foreach (var handler in _broker.Pub<TReply>(this, "EntityReplyCreating"))
             {
                 reply = await handler.Invoke(new Message<TReply>(reply, this));
             }
-            
+
             var newReply = await _entityReplyStore.CreateAsync(reply);
             if (newReply != null)
             {
@@ -91,10 +88,7 @@ namespace Plato.Entities.Services
                 Created?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, newReply));
 
                 // Invoke EntityReplyCreated subscriptions
-                foreach (var handler in _broker.Pub(this, new MessageOptions()
-                {
-                    Key = "EntityReplyCreated"
-                }, newReply))
+                foreach (var handler in _broker.Pub<TReply>(this, "EntityReplyCreated"))
                 {
                     newReply = await handler.Invoke(new Message<TReply>(newReply, this));
                 }
@@ -139,15 +133,13 @@ namespace Plato.Entities.Services
             // Parse Html and message abstract
             reply.Html = await ParseEntityHtml(reply.Message);
             reply.Abstract = await ParseEntityAbstract(reply.Message);
-            
+            reply.Urls = await ParseEntityUrls(reply.Html);
+
             // Raise updating event
             Updating?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, reply));
 
             // Invoke EntityReplyUpdating subscriptions
-            foreach (var handler in _broker.Pub<TReply>(this, new MessageOptions()
-            {
-                Key = "EntityReplyUpdating"
-            }, reply))
+            foreach (var handler in _broker.Pub<TReply>(this, "EntityReplyUpdating"))
             {
                 reply = await handler.Invoke(new Message<TReply>(reply, this));
             }
@@ -159,10 +151,7 @@ namespace Plato.Entities.Services
                 Updated?.Invoke(this, new EntityReplyEventArgs<TReply>(entity, updatedReply));
 
                 // Invoke EntityReplyUpdated subscriptions
-                foreach (var handler in _broker.Pub<TReply>(this, new MessageOptions()
-                {
-                    Key = "EntityReplyUpdated"
-                }, reply))
+                foreach (var handler in _broker.Pub<TReply>(this, "EntityReplyUpdated"))
                 {
                     updatedReply = await handler.Invoke(new Message<TReply>(updatedReply, this));
                 }
@@ -189,10 +178,7 @@ namespace Plato.Entities.Services
             Deleting?.Invoke(this, new EntityReplyEventArgs<TReply>(null, reply));
 
             // Invoke EntityReplyDeleting subscriptions
-            foreach (var handler in _broker.Pub<TReply>(this, new MessageOptions()
-            {
-                Key = "EntityReplyDeleting"
-            }, reply))
+            foreach (var handler in _broker.Pub<TReply>(this, "EntityReplyDeleting"))
             {
                 reply = await handler.Invoke(new Message<TReply>(reply, this));
             }
@@ -205,10 +191,7 @@ namespace Plato.Entities.Services
                 Deleted?.Invoke(this, new EntityReplyEventArgs<TReply>(null, reply));
 
                 // Invoke EntityReplyDeleted subscriptions
-                foreach (var handler in _broker.Pub<TReply>(this, new MessageOptions()
-                {
-                    Key = "EntityReplyDeleted"
-                }, reply))
+                foreach (var handler in _broker.Pub<TReply>(this, "EntityReplyDeleted"))
                 {
                     reply = await handler.Invoke(new Message<TReply>(reply, this));
                 }
@@ -225,10 +208,7 @@ namespace Plato.Entities.Services
         private async Task<string> ParseEntityHtml(string message)
         {
          
-            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
-            {
-                Key = "ParseEntityHtml"
-            }, message))
+            foreach (var handler in _broker.Pub<string>(this, "ParseEntityHtml"))
             {
                 message = await handler.Invoke(new Message<string>(message, this));
             }
@@ -240,15 +220,26 @@ namespace Plato.Entities.Services
         private async Task<string> ParseEntityAbstract(string message)
         {
             
-            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
-            {
-                Key = "ParseEntityAbstract"
-            }, message))
+            foreach (var handler in _broker.Pub<string>(this, "ParseEntityAbstract"))
             {
                 message = await handler.Invoke(new Message<string>(message, this));
             }
 
             return message.PlainTextulize().TrimToAround(225);
+
+        }
+
+        async Task<string> ParseEntityUrls(string html)
+        {
+
+            var handled = false;
+            foreach (var handler in _broker.Pub<string>(this, "ParseEntityUrls"))
+            {
+                handled = true;
+                html = await handler.Invoke(new Message<string>(html, this));
+            }
+
+            return handled ? html : string.Empty;
 
         }
 

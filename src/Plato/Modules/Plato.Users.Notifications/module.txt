@@ -1,5 +1,5 @@
-Name: Plato Notifications
-Description: Adds cire notification services to Plato.
+Name: Plato Users Notification
+Description: Adds the ability for users to see and manage notifications.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Notifications
@@ -8,7 +8,7 @@ Version: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.WebAPI",
+		Id: "Plato.Notifications",
 		Version: "1.0.0"
 	}
 ]

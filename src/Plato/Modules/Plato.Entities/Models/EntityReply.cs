@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Threading.Tasks;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
 
@@ -21,6 +22,8 @@ namespace Plato.Entities.Models
 
         public string Abstract { get; set; }
 
+        public string Urls { get; set; }
+        
         public bool IsPrivate { get; set; }
 
         public bool IsSpam { get; set; }
@@ -50,7 +53,17 @@ namespace Plato.Entities.Models
         public SimpleUser CreatedBy { get; set; } = new SimpleUser();
 
         public SimpleUser ModifiedBy { get; set; } = new SimpleUser();
-        
+
+        public async Task<EntityUris> GetEntityUrlsAsync()
+        {
+            if (!string.IsNullOrEmpty(Urls))
+            {
+                return await Urls.DeserializeAsync<EntityUris>();
+            }
+
+            return new EntityUris();
+        }
+
         public void PopulateModel(IDataReader dr)
         {
 
@@ -68,7 +81,10 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("Abstract"))
                 Abstract = Convert.ToString(dr["Abstract"]);
-       
+
+            if (dr.ColumnIsNotNull("Urls"))
+                Urls = Convert.ToString(dr["Urls"]);
+
             if (dr.ColumnIsNotNull("IsPrivate"))
                 IsPrivate = Convert.ToBoolean(dr["IsPrivate"]);
 
@@ -129,4 +145,5 @@ namespace Plato.Entities.Models
         }
         
     }
+
 }

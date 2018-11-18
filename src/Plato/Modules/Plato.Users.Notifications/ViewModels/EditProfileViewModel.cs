@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using Plato.Internal.Models.Notifications;
+using Plato.Internal.Notifications.Abstractions;
 using Plato.Notifications.Models;
 
-namespace Plato.Notifications.ViewModels
+namespace Plato.Users.Notifications.ViewModels
 {
 
     public class EditNotificationsViewModel
