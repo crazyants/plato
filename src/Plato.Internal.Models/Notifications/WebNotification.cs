@@ -12,8 +12,6 @@
 
         public string Category { get; }
 
-        //public Func<INotificationContext, Task<ICommandResultBase>> Sender { get; set; }
- 
         public WebNotification()
         {
             this.Category = "Web";
@@ -37,15 +35,6 @@
             this.Description = description;
         }
 
-        //public WebNotification(
-        //    string id,
-        //    string name,
-        //    string description,
-        //    Func<INotificationContext, Task<ICommandResultBase>> sender) : this(id, name, description)
-        //{
-        //    this.Sender = sender;
-        //}
-        
 
     }
 

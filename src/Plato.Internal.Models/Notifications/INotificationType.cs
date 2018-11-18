@@ -10,9 +10,7 @@
         string Description { get; set; }
 
         string Category { get; }
-
-        //Func<INotificationContext, Task<ICommandResultBase>> Sender { get; set; }
-
+        
     }
 
 }

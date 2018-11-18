@@ -26,7 +26,7 @@ namespace Plato.Discuss.Mentions
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            
+                                         
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
@@ -40,6 +40,7 @@ namespace Plato.Discuss.Mentions
 
             // Notification Providers
             services.AddScoped<INotificationProvider<Topic>, NewMentionEmail>();
+            services.AddScoped<INotificationProvider<Topic>, NewMentionWeb>();
 
         }
 

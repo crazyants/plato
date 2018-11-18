@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 using Plato.Discuss.Models;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Localization.Abstractions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Discuss.Mentions.NotificationTypes;
@@ -20,19 +18,13 @@ namespace Plato.Discuss.Mentions.Notifications
     {
 
         private readonly IContextFacade _contextFacade;
-        private readonly ILocaleStore _localeStore;
-        private readonly IEmailManager _emailManager;
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
 
         public NewMentionWeb(
             IContextFacade contextFacade,
-            ILocaleStore localeStore,
-            IEmailManager emailManager, 
             IUserNotificationsManager<UserNotification> userNotificationManager)
         {
             _contextFacade = contextFacade;
-            _localeStore = localeStore;
-            _emailManager = emailManager;
             _userNotificationManager = userNotificationManager;
         }
 
