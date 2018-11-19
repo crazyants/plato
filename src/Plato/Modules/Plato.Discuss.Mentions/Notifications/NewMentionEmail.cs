@@ -59,7 +59,7 @@ namespace Plato.Discuss.Mentions.Notifications
             }
             
             // Ensure correct notification provider
-            if (context.Notification.Type.Id != EmailNotifications.NewMention.Id)
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewMention.Name, StringComparison.Ordinal))
             {
                 return null;
             }

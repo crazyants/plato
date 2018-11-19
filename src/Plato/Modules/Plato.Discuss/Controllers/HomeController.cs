@@ -524,13 +524,13 @@ namespace Plato.Discuss.Controllers
         {
             return number.ToString() + @"
 
-Hi There, 
+Hi @admin, 
 
 # header 1
 
 Test message Test message Test message Test :)
 
-## Header 2
+## Header 2 @newuser1
 
 message Test message Test message Test message :(
 

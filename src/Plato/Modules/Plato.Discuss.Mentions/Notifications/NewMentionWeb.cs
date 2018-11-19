@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -20,12 +22,23 @@ namespace Plato.Discuss.Mentions.Notifications
         private readonly IContextFacade _contextFacade;
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
 
+        public IHtmlLocalizer T { get; }
+
+        public IStringLocalizer S { get; }
+
+
         public NewMentionWeb(
+            IHtmlLocalizer htmlLocalizer,
+            IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
             IUserNotificationsManager<UserNotification> userNotificationManager)
         {
             _contextFacade = contextFacade;
             _userNotificationManager = userNotificationManager;
+            
+            T = htmlLocalizer;
+            S = stringLocalizer;
+
         }
 
         public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
@@ -53,7 +66,7 @@ namespace Plato.Discuss.Mentions.Notifications
             }
 
             // Ensure correct notification provider
-            if (context.Notification.Type.Id != WebNotifications.NewMention.Id)
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewMention.Name, StringComparison.Ordinal))
             {
                 return null;
             }
@@ -62,8 +75,8 @@ namespace Plato.Discuss.Mentions.Notifications
             var result = new CommandResult<Topic>();
             
             // Build topic url
-            var baseUrl = await _contextFacade.GetBaseUrlAsync();
-            var topicUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+            //var baseUrl = await _contextFacade.GetBaseUrlAsync();
+            var topicUrl = _contextFacade.GetRouteUrl(new RouteValueDictionary()
             {
                 ["Area"] = "Plato.Discuss",
                 ["Controller"] = "Home",
@@ -75,10 +88,10 @@ namespace Plato.Discuss.Mentions.Notifications
             // Build user notification
             var userNotification = new UserNotification()
             {
-                NotificationName = context.Notification.Type.Id,
+                NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
-                Title = "New Mention",
-                Message = "You've been mentioned by " + context.Model.CreatedBy.DisplayName,
+                Title = S["New Mention"].Value,
+                Message = S["You've been mentioned by "].Value + context.Model.CreatedBy.DisplayName,
                 Url = topicUrl
             };
 

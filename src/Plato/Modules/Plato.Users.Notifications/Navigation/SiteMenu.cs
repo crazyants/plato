@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
 
@@ -7,6 +6,7 @@ namespace Plato.Users.Notifications.Navigation
 {
     public class SiteMenu : INavigationProvider
     {
+   
         public SiteMenu(IStringLocalizer localizer)
         {
             T = localizer;
@@ -20,20 +20,15 @@ namespace Plato.Users.Notifications.Navigation
             {
                 return;
             }
-
+            
+            // We need an empty anonymous type to invoke as as ViewComponent
             builder
-                .Add(T["Notifications"], int.MaxValue, configuration => configuration
-                        .IconCss("fal fa-bell")
-                        .Action("Index", "Home", "Plato.Discuss")
-                        //.Permission(Permissions.ManageRoles)
-                        .Attributes(new Dictionary<string, object>()
-                        {
-                            {"data-provide", "tooltip"},
-                            {"title", T["Notifications"]}
-                        }).LocalNav(), new List<string>() {"notifications", "text-hidden"}
+                .Add(T["React"], react => react
+                    .View("NotificationMenu", new {})
                 );
 
         }
+
     }
 
 }

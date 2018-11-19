@@ -20,9 +20,12 @@ namespace Plato.Notifications.Extensions
             {
                 foreach (var localNotificationType in notificationTypes)
                 {
-                    if (localNotificationType.Id.Equals(notificationType.Id, StringComparison.OrdinalIgnoreCase))
+                    if (!String.IsNullOrEmpty(localNotificationType.Name))
                     {
-                        return true;
+                        if (localNotificationType.Name.Equals(notificationType.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return true;
+                        }
                     }
                 }
             }

@@ -51,7 +51,7 @@ namespace Plato.Internal.Notifications
                 {
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        _logger.LogInformation($"Notification '{notification.Type.Name}' Success!",
+                        _logger.LogInformation($"Notification '{notification.Type.Title}' Success!",
                             $"To: {notification.To.DisplayName}, Message: ");
                     }
                 }
@@ -61,7 +61,7 @@ namespace Plato.Internal.Notifications
                     {
                         if (_logger.IsEnabled(LogLevel.Error))
                         {
-                            _logger.LogCritical($"Notification '{notification.Type.Name}' Failed!",
+                            _logger.LogCritical($"Notification '{notification.Type.Title}' Failed!",
                                 $"To: {notification.To.DisplayName}, Message: {error.Description}");
                         }
                     }

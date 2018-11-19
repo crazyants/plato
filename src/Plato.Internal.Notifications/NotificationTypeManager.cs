@@ -61,7 +61,7 @@ namespace Plato.Internal.Notifications
                 var notificationTypes = provider.GetNotificationTypes();
                 foreach (var notificationType in notificationTypes)
                 {
-                    var name = notificationType.Name;
+                    var name = notificationType.Title;
                     var category = notificationType.Category;
                     var title = String.IsNullOrWhiteSpace(category) ?
                         name :

@@ -56,7 +56,8 @@ namespace Plato.Notifications.Handlers
                     new SchemaColumn()
                     {
                         Name = "ReadDate",
-                        DbType = DbType.DateTimeOffset
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
                     },
                     new SchemaColumn()
                     {

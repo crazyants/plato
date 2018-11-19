@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Plato.Internal.Notifications.Abstractions
+namespace Plato.Internal.Models.Notifications
 {
     
     public interface IUserNotificationTypes
