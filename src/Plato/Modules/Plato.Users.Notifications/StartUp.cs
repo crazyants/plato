@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Users.Notifications.Assets;
 using Plato.Users.Notifications.Navigation;
 using Plato.Users.Notifications.ViewModels;
 using Plato.Users.Notifications.ViewProviders;
@@ -32,6 +34,9 @@ namespace Plato.Users.Notifications
             services.AddScoped<IViewProviderManager<EditNotificationsViewModel>, ViewProviderManager<EditNotificationsViewModel>>();
             services.AddScoped<IViewProvider<EditNotificationsViewModel>, EditProfileViewProvider>();
             
+            // Register assets
+            services.AddScoped<IAssetProvider, AssetProvider>();
+
         }
 
         public override void Configure(

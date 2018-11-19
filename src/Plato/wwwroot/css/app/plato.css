@@ -17,7 +17,7 @@
 
 .nav li > a.text-hidden .nav-text { display: none;  }
 .nav.float-right li .dropdown-menu { right: 0; left: auto; }
-.nav .avatar { vertical-align: middle; width: 24px; height: 24px; display: inline-block; }
+.nav .account .avatar { vertical-align: middle; width: 24px; height: 24px; display: inline-block; }
 
 .site-nav li > a .nav-text { margin-left: 0.50rem; }
 
@@ -508,7 +508,7 @@
 /* ------------------------- */
 
 .list-left { float: left; }
-.list-left + .list-body { margin-left: 56px; }
+.list-left + .list-body { display: block; margin-left: 56px; }
 .list-right { float: left; }
 .list-right + .list-body { margin-right: 56px; }
 

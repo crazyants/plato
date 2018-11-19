@@ -1,16 +1,11 @@
 ﻿
-<div class="dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span title="@T["Notifications"]" data-toggle="tooltip">
-            <i class="fal fa-bell"></i>
-        </span>
+<div class="dropdown notifications-dropdown">
+    <a class="nav-link" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" title="@T["Notifications"]" data-provide="tooltip" aria-haspopup="true" aria-expanded="false">
+        <i class="fal fa-bell"></i>
+        <span class="badge badge-danger">9+</span>
     </a>
     <div class="dropdown-arrow"></div>
-    <div class="dropdown-menu dropdown-menu-right react-dropdown-menu" aria-labelledby="notificationDropdown">
-        <div class="px-2">
-            <div class="d-block">
-              
-            </div>
-        </div>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+        <div data-provide="notifications"></div>
     </div>
 </div>

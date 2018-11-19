@@ -1,0 +1,22 @@
+﻿.notifications-dropdown .dropdown-menu {
+    width: 500px;
+}
+
+.notifications-dropdown .badge {
+    margin-left: -6px;
+    margin-top: -10px;
+}
+
+.notifications-dropdown .dropdown-menu .list-left + .list-body {
+    display: block; 
+    margin-left: 46px;
+}
+
+.notifications-dropdown .dropdown-menu .dropdown-item .dismiss {
+    display: none;
+    padding: 0.50rem 0 0.50rem 0.50rem;
+}
+
+.notifications-dropdown .dropdown-menu .dropdown-item:hover .dismiss {
+    display: inline-block;
+}

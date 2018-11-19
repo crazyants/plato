@@ -198,6 +198,31 @@ namespace Plato.Notifications.Handlers
                 .CreateTable(_userNotifications)
                 .CreateDefaultProcedures(_userNotifications);
 
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        $"SelectUserNotificationById",
+                        @" SELECT un.*, 
+                                    u.UserName, 
+                                    u.NormalizedUserName,
+                                    u.DisplayName,
+                                    u.FirstName,
+                                    u.LastName,
+                                    u.Alias,  
+                                    c.UserName AS CreatedUserName, 
+                                    c.NormalizedUserName AS CreatedNormalizedUserName,
+                                    c.DisplayName AS CreatedDisplayName,
+                                    c.FirstName AS CreatedFirstName,
+                                    c.LastName AS CreatedLastName,
+                                    c.Alias AS CreatedAlias                           
+                                FROM {prefix}_UserNotifications un WITH (nolock) 
+                                    LEFT OUTER JOIN {prefix}_Users u ON un.UserId = u.Id
+                                    LEFT OUTER JOIN {prefix}_Users c ON un.CreatedUserId = c.Id
+                                WHERE (
+                                   un.Id = @Id
+                                )")
+                    .ForTable(_userNotifications)
+                    .WithParameter(_userNotifications.PrimaryKeyColumn));
+
             builder.CreateProcedure(new SchemaProcedure("SelectUserNotificationsPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_userNotifications)
                 .WithParameters(new List<SchemaColumn>()

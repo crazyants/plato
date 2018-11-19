@@ -45,6 +45,14 @@ namespace Plato.Notifications
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            routes.MapAreaRoute(
+                name: "NotificationsWebApi",
+                areaName: "Plato.Notifications",
+                template: "api/notifications/{controller}/{action}/{id?}",
+                defaults: new { controller = "Entity", action = "Get" }
+            );
+
         }
 
     }

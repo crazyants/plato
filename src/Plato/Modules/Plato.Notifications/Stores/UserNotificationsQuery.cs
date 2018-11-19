@@ -83,6 +83,7 @@ namespace Plato.Notifications.Stores
         #region "Constructor"
 
         private readonly string _userNotificationsTableName;
+        private readonly string _usersTableName;
 
         private readonly UserNotificationsQuery _query;
 
@@ -90,6 +91,7 @@ namespace Plato.Notifications.Stores
         {
             _query = query;
             _userNotificationsTableName = GetTableNameWithPrefix("UserNotifications");
+            _usersTableName = GetTableNameWithPrefix("Users");
         }
 
         #endregion
@@ -129,7 +131,19 @@ namespace Plato.Notifications.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("un.*");
+            sb.Append("un.*, ")
+                .Append("u.UserName, ")
+                .Append("u.NormalizedUserName, ")
+                .Append("u.DisplayName, ")
+                .Append("u.FirstName, ")
+                .Append("u.LastName, ")
+                .Append("u.Alias, ")
+                .Append("c.UserName AS CreatedUserName, ")
+                .Append("c.NormalizedUserName AS CreatedNormalizedUserName, ")
+                .Append("c.DisplayName AS CreatedDisplayName, ")
+                .Append("c.FirstName AS CreatedFirstName, ")
+                .Append("c.LastName AS CreatedLastName, ")
+                .Append("c.Alias AS CreatedAlias");
             return sb.ToString();
 
         }
@@ -138,9 +152,12 @@ namespace Plato.Notifications.Stores
         {
 
             var sb = new StringBuilder();
-
             sb.Append(_userNotificationsTableName)
-                .Append(" un ");
+                .Append(" un WITH (nolock) LEFT OUTER JOIN ")
+                .Append(_usersTableName)
+                .Append(" u ON un.UserId = u.Id LEFT OUTER JOIN ")
+                .Append(_usersTableName)
+                .Append(" c ON un.CreatedUserId = c.Id");
 
             return sb.ToString();
 

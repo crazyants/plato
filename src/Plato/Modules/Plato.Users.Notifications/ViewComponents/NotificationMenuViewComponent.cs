@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace Plato.Users.Notifications.ViewComponents
 {
   
@@ -11,8 +10,6 @@ namespace Plato.Users.Notifications.ViewComponents
       
         public NotificationMenuViewComponent()
         {
-      
-          
         }
 
         public Task<IViewComponentResult> InvokeAsync()

@@ -47,7 +47,7 @@ namespace Plato.Mentions
             // Managers
             services.AddScoped<IEntityMentionsManager<EntityMention>, EntityMentionsManager>();
 
-            // Register core client assets
+            // Register assets
             services.AddScoped<IAssetProvider, AssetProvider>();
 
         }

@@ -25,8 +25,7 @@ namespace Plato.Discuss.Mentions.Notifications
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
-
-
+        
         public NewMentionWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
