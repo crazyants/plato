@@ -6,7 +6,10 @@ using Plato.Badges.Services;
 using Plato.Badges.Stores;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models.Notifications;
+using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
+using Plato.Users.Badges.NotificationTypes;
 using Plato.Users.Models;
 
 namespace Plato.Users.Badges
@@ -96,6 +99,7 @@ namespace Plato.Users.Badges
                 var backgroundTaskManager = context.ServiceProvider.GetRequiredService<IBackgroundTaskManager>();
                 var cacheManager = context.ServiceProvider.GetRequiredService<ICacheManager>();
                 var dbHelper = context.ServiceProvider.GetRequiredService<IDbHelper>();
+                var notificationManager = context.ServiceProvider.GetRequiredService<INotificationManager<Badge>>();
 
                 const string sql = @"
                     DECLARE @dirty bit = 0;
@@ -136,6 +140,18 @@ namespace Plato.Users.Badges
                     var dirty = await dbHelper.ExecuteScalarAsync<bool>(sql, replacements);
                     if (dirty)
                     {
+
+                        //// Email notifications
+                        //if (user.NotificationEnabled(EmailNotifications.NewBadge))
+                        //{
+                        //    await notificationManager.SendAsync(new Notification(EmailNotifications.NewBadge)
+                        //    {
+                        //        To = user,
+                        //    }, context.Badge);
+                        //}
+
+
+
                         cacheManager.CancelTokens(typeof(UserBadgeStore));
                     }
 

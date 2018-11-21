@@ -4,11 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Badges.Models;
 using Plato.Badges.Services;
 using Plato.Badges.Stores;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Tasks.Abstractions;
 
-namespace Plato.Discuss.Reactions
+namespace Plato.Discuss.Reactions.Badges
 {
     public class ReactionBadges : IBadgesProvider<Badge>
     {
@@ -58,6 +60,11 @@ namespace Plato.Discuss.Reactions
                     DECLARE @threshold int = {threshold};                  
                     DECLARE @userId int;
                     DECLARE @reactions int;
+                    DECLARE @myTable TABLE
+                    (
+	                    Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
+	                    UserId int NOT NULL
+                    );
                     DECLARE MSGCURSOR CURSOR FOR SELECT er.CreatedUserId, COUNT(er.Id) AS Reactions 
                     FROM {prefix}_EntityReactions er
                     WHERE NOT EXISTS (
@@ -73,13 +80,13 @@ namespace Plato.Discuss.Reactions
                         IF (@reactions >= @threshold)
                         BEGIN
 	                        EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date;
-                            SET @dirty = 1;
+                            INSERT INTO @myTable (UserId) VALUES (@userId);                     
                         END;
 	                    FETCH NEXT FROM MSGCURSOR INTO @userId, @reactions;	                    
                     END;
                     CLOSE MSGCURSOR;
                     DEALLOCATE MSGCURSOR;
-                    SELECT @dirty;";
+                    SELECT UserId FROM @myTable;";
                 
                 // Replacements for SQL script
                 var replacements = new Dictionary<string, string>()
@@ -91,8 +98,26 @@ namespace Plato.Discuss.Reactions
                 // Start task to execute awarder SQL with replacements every X seconds
                 backgroundTaskManager.Start(async (sender, args) =>
                     {
-                        var dirty = await dbHelper.ExecuteScalarAsync<bool>(sql, replacements);
-                        if (dirty)
+
+                        // Execute awarder and retutn all effected UserIds
+                        var results = await dbHelper.ExecuteReaderAsync<IEnumerable<int>>(sql, replacements, async reader =>
+                        {
+                            IList<int> users = null;
+                            if ((reader != null) && (reader.HasRows))
+                            {
+                                users = new List<int>();
+                                while (await reader.ReadAsync())
+                                {
+                                    if (reader.ColumnIsNotNull("Id"))
+                                    {
+                                        users.Add(Convert.ToInt32(reader["UserId"]));
+                                    }
+                                }
+                            }
+                            return users;
+                        });
+
+                        if (results != null)
                         {
                             cacheManager.CancelTokens(typeof(UserBadgeStore));
                         }

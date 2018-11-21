@@ -12,6 +12,7 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Discuss.Reactions.Assets;
+using Plato.Discuss.Reactions.Badges;
 
 namespace Plato.Discuss.Reactions
 {
