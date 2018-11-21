@@ -448,7 +448,7 @@ $(function (win, doc, $) {
                 $caller.pagedList("setItemIndex");
 
                 if ($caller.data(dataKey).onLoaded) {
-                    $caller.data(dataKey).onLoaded($caller);
+                    $caller.data(dataKey).onLoaded($caller, results);
                 }
                 
             }, // triggers after paged results have finished loading
@@ -540,14 +540,22 @@ $(function (win, doc, $) {
             },
             buildNoResults: function ($caller) {
 
-                var noResultsText = $caller.data(dataKey).noResultsText;
+                var noResultsText = $caller.data(dataKey).noResultsText,
+                    noResultsIcon = $caller.data(dataKey).noResultsIcon;
 
-                var a = $("<div>")
-                    .addClass("text-center p-4")
-                    .append(noResultsText);
+                var $div = $("<div>")
+                    .addClass("text-center p-4");
+
+                if (noResultsIcon) {
+                    var $icon = $("<i>");
+                    $icon.addClass(noResultsIcon);
+                    $div.append($icon);
+                }
+
+                $div.append(noResultsText);
 
                 var li = $('<li class="no-results">');
-                li.append(a);
+                li.append($div);
 
                 return li;
 
@@ -599,6 +607,7 @@ $(function (win, doc, $) {
             }, // provides a method to parse our itemTemplate with data returned from service url
             loaderTemplate: '<p class="text-center"><i class="fal fa-spinner fa-spin" ></i></p >', // a handlebars style template for auto complete list items
             noResultsText: "Sorry no results matched your search!", // the text to display when no results are available
+            noResultsIcon: null, // optional icon to display above noResultsText
             itemSelection: {
                 enable: true,
                 index: 0,
@@ -626,7 +635,9 @@ $(function (win, doc, $) {
                 
                 // Add loader
                 var loaderTemplate = $caller.data(dataKey).loaderTemplate;
-                $caller.empty().append(loaderTemplate);
+                if (loaderTemplate) {
+                    $caller.empty().append(loaderTemplate);
+                }
                 
                 // Begin populate
                 var config = this.getConfig($caller);

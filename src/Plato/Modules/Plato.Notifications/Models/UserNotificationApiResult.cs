@@ -11,6 +11,7 @@ namespace Plato.Notifications.Models
     class UserNotificationApiResult
     {
 
+        [DataMember(Name = "id")]
         public int Id { get; set; }
 
         [DataMember(Name = "user")]

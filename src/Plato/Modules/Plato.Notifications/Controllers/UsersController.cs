@@ -15,7 +15,7 @@ using Plato.WebApi.Models;
 
 namespace Plato.Notifications.Controllers
 {
-  
+
 
     public class UsersController : BaseWebApiController
     {
@@ -35,20 +35,27 @@ namespace Plato.Notifications.Controllers
             _userNotificationStore = userNotificationStore;
         }
 
+        #region "Actions"
+
         [HttpGet]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Get(
             int page = 1,
             int size = 10,
-            int userId = 0,
             string sort = "CreatedDate",
             OrderBy order = OrderBy.Desc)
         {
 
+            var user = await base.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return base.UnauthorizedException();
+            }
+
             var userNotifications = await GetUserNotifications(
                 page,
                 size,
-                userId,
+                user.Id,
                 sort,
                 order);
 
@@ -144,6 +151,40 @@ namespace Plato.Notifications.Controllers
 
         }
 
+
+        [HttpDelete]
+        [ResponseCache(NoStore = true)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            // Ensure notificaiton exists
+            var userNotification = await _userNotificationStore.GetByIdAsync(id);
+            if (userNotification == null)
+            {
+                return base.NotFound();
+            }
+
+            // Ensure we are attempting to delete our own notification
+            var user = await base.GetAuthenticatedUserAsync();
+            if (userNotification.UserId != user.Id)
+            {
+                return base.UnauthorizedException();
+            }
+
+            var success = await _userNotificationStore.DeleteAsync(userNotification);
+            if (success)
+            {
+                return base.Result("Notification deleted successfully");
+            }
+
+            return base.InternalServerError();
+
+        }
+
+
+        #endregion
+
+        #region "Private Methods"
+
         async Task<IPagedResults<UserNotification>> GetUserNotifications(
             int page,
             int pageSize,
@@ -154,16 +195,14 @@ namespace Plato.Notifications.Controllers
 
             return await _userNotificationStore.QueryAsync()
                 .Take(page, pageSize)
-                .Select<UserNotificationsQueryParams>(q =>
-                {
-                    q.UserId.Equals(userId);
-                })
+                .Select<UserNotificationsQueryParams>(q => { q.UserId.Equals(userId); })
                 .OrderBy(sortBy, sortOrder)
                 .ToList();
 
         }
 
-    }
+        #endregion
 
+    }
 
 }

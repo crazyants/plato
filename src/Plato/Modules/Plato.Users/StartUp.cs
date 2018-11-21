@@ -228,7 +228,14 @@ namespace Plato.Users
                 name: "Home-Users",
                 areaName: "Plato.Users",
                 template: "users",
-                defaults: new { controller = "Home", action = "Index" }
+                defaults: new { controller = "Home", action = "Index"}
+            );
+
+            routes.MapAreaRoute(
+                name: "ServeUserPhotoFolder",
+                areaName: "Plato.Users",
+                template: "users/photo",
+                defaults: new { controller = "Photo", action = "Serve", id = "0"}
             );
 
             routes.MapAreaRoute(

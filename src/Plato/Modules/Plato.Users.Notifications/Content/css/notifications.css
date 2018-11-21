@@ -1,4 +1,6 @@
-﻿.notifications-dropdown .dropdown-menu {
+﻿/* mptofocatopm dropdown */
+
+.notifications-dropdown .dropdown-menu {
     width: 500px;
 }
 
@@ -12,11 +14,23 @@
     margin-left: 46px;
 }
 
-.notifications-dropdown .dropdown-menu .dropdown-item .dismiss {
-    display: none;
-    padding: 0.50rem 0 0.50rem 0.50rem;
+/* date */
+
+.notifications-dropdown .dropdown-item .notification-date {
+    display: inline;
 }
 
-.notifications-dropdown .dropdown-menu .dropdown-item:hover .dismiss {
+.notifications-dropdown .dropdown-item:hover .notification-date {
+    display: none;
+}
+
+/* dismiss */
+
+.notifications-dropdown .dropdown-item .notification-dismiss {
+    display: none;
+    padding: 0 0 1rem 2rem;
+}
+
+.notifications-dropdown .dropdown-item:hover .notification-dismiss {
     display: inline-block;
 }

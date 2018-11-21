@@ -1,20 +1,23 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Internal.Hosting.Abstractions;
 
 namespace Plato.Users.Notifications.ViewComponents
 {
   
     public class NotificationMenuViewComponent : ViewComponent
     {
-  
+
+        private readonly IContextFacade _contextFacade;
       
-        public NotificationMenuViewComponent()
+        public NotificationMenuViewComponent(IContextFacade contextFacade)
         {
+            _contextFacade = contextFacade;
         }
 
-        public Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            return Task.FromResult((IViewComponentResult) View());
+            return View(await _contextFacade.GetAuthenticatedUserAsync());
         }
 
     }

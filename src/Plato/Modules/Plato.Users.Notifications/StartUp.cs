@@ -44,6 +44,16 @@ namespace Plato.Users.Notifications
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            routes.MapAreaRoute(
+                name: "EditUserNotifications",
+                areaName: "Plato.Users.Notifications",
+                template: "notifications/edit",
+                defaults: new { controller = "Home", action = "EditProfile" }
+            );
+
         }
+
     }
+
 }
