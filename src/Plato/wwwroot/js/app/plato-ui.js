@@ -543,12 +543,17 @@ $(function (win, doc, $) {
                 var noResultsText = $caller.data(dataKey).noResultsText,
                     noResultsIcon = $caller.data(dataKey).noResultsIcon;
 
+                // Apply localizaer
+                if (context.localizer) {
+                    noResultsText = context.localizer.get(noResultsText);
+                }
+                
                 var $div = $("<div>")
                     .addClass("text-center p-4");
 
                 if (noResultsIcon) {
-                    var $icon = $("<i>");
-                    $icon.addClass(noResultsIcon);
+                    var $icon = $("<i>")
+                        .addClass(noResultsIcon);
                     $div.append($icon);
                 }
 

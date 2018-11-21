@@ -46,12 +46,14 @@ namespace Plato.Notifications.Controllers
             OrderBy order = OrderBy.Desc)
         {
 
+            // Ensure we are authenticated
             var user = await base.GetAuthenticatedUserAsync();
             if (user == null)
             {
                 return base.UnauthorizedException();
             }
 
+            // Get notificaitons
             var userNotifications = await GetUserNotifications(
                 page,
                 size,
@@ -162,9 +164,15 @@ namespace Plato.Notifications.Controllers
             {
                 return base.NotFound();
             }
-
-            // Ensure we are attempting to delete our own notification
+            
+            // Ensure we are authenticated
             var user = await base.GetAuthenticatedUserAsync();
+            if (user == null)
+            {
+                return base.UnauthorizedException();
+            }
+
+            // Ensure we are deleting a notification we own
             if (userNotification.UserId != user.Id)
             {
                 return base.UnauthorizedException();
@@ -179,8 +187,7 @@ namespace Plato.Notifications.Controllers
             return base.InternalServerError();
 
         }
-
-
+        
         #endregion
 
         #region "Private Methods"

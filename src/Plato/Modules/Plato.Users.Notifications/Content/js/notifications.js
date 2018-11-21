@@ -1,10 +1,14 @@
 ﻿
 if (typeof jQuery === "undefined") {
-    throw new Error("Plato requires jQuery");
+    throw new Error("Notifications requires jQuery");
 }
 
 if (typeof $.Plato.Context === "undefined") {
-    throw new Error("$.Plato.Context Required");
+    throw new Error("Notifications require $.Plato.Context");
+}
+
+if (typeof $.Plato.Http === "undefined") {
+    throw new Error("Notifications require $.Plato.Http");
 }
 
 $(function (win, doc, $) {
@@ -13,12 +17,7 @@ $(function (win, doc, $) {
     
     // notifications
     var notifications = function () {
-
-        var context = win.$.Plato.Context;
-        if (context === null) {
-            throw new Error("$.Plato.Context Required");
-        }
-
+        
         var dataKey = "notifications",
             dataIdKey = dataKey + "Id";
 
@@ -40,12 +39,7 @@ $(function (win, doc, $) {
 
             },
             bind: function ($caller) {
-
-                var noResultsText = "No notifications at this time";
-                if (context.localizer) {
-                    noResultsText = context.localizer.get(noResultsText);
-                }
-           
+                
                 // Invoke suggester
                 $caller.pagedList({
                     page: 1,
@@ -57,8 +51,8 @@ $(function (win, doc, $) {
                         index: 0,
                         css: "active"
                     },
-                    noResultsIcon: "fal fa-3x fa-bell text-muted d-block mb-2",
-                    noResultsText: noResultsText,
+                    noResultsIcon: null,
+                    noResultsText: "No notifications at this time",
                     config: {
                         method: "GET",
                         url: 'api/notifications/users/get?page={page}&size={pageSize}',
@@ -168,12 +162,16 @@ $(function (win, doc, $) {
                         var $badge = $('[data-provide="notifications-badge"]'),
                             $dismiss = $(".notification-dismiss");
 
-                        // Update badge
+                        // Update notification badge
                         $badge.notificationsBadge({
                             count: results ? results.total : 0
                         });
-                    
-                        // Bind dismiss
+
+                        // Activate tooltips
+                        $caller.find('[data-toggle="tooltip"]')
+                            .tooltip({ trigger: "hover" });
+
+                        // Bind dismiss click event
                         $dismiss.each(function () {
                             $(this).click(function (e) {
 
@@ -185,6 +183,9 @@ $(function (win, doc, $) {
 
                                 $badge.notificationsBadge("pulseIn");
                                 $target.slideUp("fast", function () {
+
+                                    if (id === null) { return; }
+                                    if (id <= 0) { return; }
 
                                     win.$.Plato.Http({
                                         method: "DELETE",
