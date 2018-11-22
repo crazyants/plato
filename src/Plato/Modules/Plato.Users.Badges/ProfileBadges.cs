@@ -4,11 +4,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Badges.Models;
 using Plato.Badges.Services;
 using Plato.Badges.Stores;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Notifications;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Tasks.Abstractions;
+using Plato.Notifications.Extensions;
 using Plato.Users.Badges.NotificationTypes;
 using Plato.Users.Models;
 
@@ -100,6 +104,7 @@ namespace Plato.Users.Badges
                 var cacheManager = context.ServiceProvider.GetRequiredService<ICacheManager>();
                 var dbHelper = context.ServiceProvider.GetRequiredService<IDbHelper>();
                 var notificationManager = context.ServiceProvider.GetRequiredService<INotificationManager<Badge>>();
+                var userStore = context.ServiceProvider.GetRequiredService<IPlatoUserStore<User>>();
 
                 const string sql = @"
                     DECLARE @dirty bit = 0;
@@ -107,6 +112,11 @@ namespace Plato.Users.Badges
                     DECLARE @badgeName nvarchar(255) = '{name}';
                     DECLARE @threshold int = {threshold};                  
                     DECLARE @userId int;
+                    DECLARE @myTable TABLE
+                    (
+	                    Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
+	                    UserId int NOT NULL
+                    );
                     DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 ud.UserId FROM {prefix}_UserData AS ud
                     WHERE (ud.[Key] = '{key}')
                     AND NOT EXISTS (
@@ -119,12 +129,13 @@ namespace Plato.Users.Badges
                     WHILE @@FETCH_STATUS = 0
                     BEGIN
 	                    EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date;
+                        INSERT INTO @myTable (UserId) VALUES (@userId);
                         SET @dirty = 1;
 	                    FETCH NEXT FROM MSGCURSOR INTO @userId;	                    
                     END;
                     CLOSE MSGCURSOR;
                     DEALLOCATE MSGCURSOR;
-                    SELECT @dirty;";
+                    SELECT UserId FROM @myTable;";
 
                 // Replacements for SQL script
                 var replacements = new Dictionary<string, string>()
@@ -137,19 +148,40 @@ namespace Plato.Users.Badges
                 // Start task to execute awarder SQL with replacements every X seconds
                 backgroundTaskManager.Start(async (sender, args) =>
                 {
-                    var dirty = await dbHelper.ExecuteScalarAsync<bool>(sql, replacements);
-                    if (dirty)
+                    var userIds = await dbHelper.ExecuteReaderAsync<IEnumerable<int>>(sql, replacements, async reader =>
+                    {
+                        IList<int> users = null;
+                        if ((reader != null) && (reader.HasRows))
+                        {
+                            users = new List<int>();
+                            while (await reader.ReadAsync())
+                            {
+                                if (reader.ColumnIsNotNull("UserId"))
+                                {
+                                    users.Add(Convert.ToInt32(reader["UserId"]));
+                                }
+                            }
+                        }
+                        return users;
+                    });
+                    
+                    if (userIds != null)
                     {
 
-                        //// Email notifications
-                        //if (user.NotificationEnabled(EmailNotifications.NewBadge))
-                        //{
-                        //    await notificationManager.SendAsync(new Notification(EmailNotifications.NewBadge)
-                        //    {
-                        //        To = user,
-                        //    }, context.Badge);
-                        //}
-
+                        foreach (var userId in userIds)
+                        {
+                            var user = await userStore.GetByIdAsync(userId);
+                            if (user != null)
+                            {
+                                if (user.NotificationEnabled(WebNotifications.NewBadge))
+                                {
+                                    await notificationManager.SendAsync(new Notification(EmailNotifications.NewBadge)
+                                    {
+                                        To = user,
+                                    }, (Badge) context.Badge);
+                                }
+                            }
+                        }
 
 
                         cacheManager.CancelTokens(typeof(UserBadgeStore));

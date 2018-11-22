@@ -9,8 +9,12 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Notifications.Models;
+using Plato.Notifications.Services;
 using Plato.Users.Badges.Navigation;
+using Plato.Users.Badges.Notifications;
 using Plato.Users.Badges.NotificationTypes;
 using Plato.Users.Badges.ViewProviders;
 
@@ -48,9 +52,20 @@ namespace Plato.Users.Badges
             services.AddScoped<INavigationProvider, ProfileMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
-            // Register notification providers
+            // User notifications Manager
+            services.AddScoped<IUserNotificationsManager<UserNotification>, UserNotificationsManager>();
+            
+            // Notification type providers
             services.AddScoped<INotificationTypeProvider, EmailNotifications>();
             services.AddScoped<INotificationTypeProvider, WebNotifications>();
+
+            // Notification manager
+            services.AddScoped<INotificationManager<Badge>, NotificationManager<Badge>>();
+            
+            // Notification Providers
+            //services.AddScoped<INotificationProvider<Badge>, NewMentionEmail>();
+            services.AddScoped<INotificationProvider<Badge>, NewBadgeWeb>();
+
 
         }
 

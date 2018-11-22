@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Notifications.Abstractions;
 using Plato.Notifications.Models;
 using Plato.Notifications.Stores;
 

@@ -7,8 +7,12 @@ using Plato.Badges.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Tasks.Abstractions;
+using Plato.Notifications.Extensions;
 
 namespace Plato.Discuss.Reactions.Badges
 {
@@ -52,6 +56,8 @@ namespace Plato.Discuss.Reactions.Badges
                 var backgroundTaskManager = context.ServiceProvider.GetRequiredService<IBackgroundTaskManager>();
                 var cacheManager = context.ServiceProvider.GetRequiredService<ICacheManager>();
                 var dbHelper = context.ServiceProvider.GetRequiredService<IDbHelper>();
+                var notificationManager = context.ServiceProvider.GetRequiredService<INotificationManager<Badge>>();
+                var userStore = context.ServiceProvider.GetRequiredService<IPlatoUserStore<User>>();
 
                 const string sql = @"
                     DECLARE @dirty bit = 0;
@@ -100,7 +106,7 @@ namespace Plato.Discuss.Reactions.Badges
                     {
 
                         // Execute awarder and retutn all effected UserIds
-                        var results = await dbHelper.ExecuteReaderAsync<IEnumerable<int>>(sql, replacements, async reader =>
+                        var userIds = await dbHelper.ExecuteReaderAsync<IEnumerable<int>>(sql, replacements, async reader =>
                         {
                             IList<int> users = null;
                             if ((reader != null) && (reader.HasRows))
@@ -108,7 +114,7 @@ namespace Plato.Discuss.Reactions.Badges
                                 users = new List<int>();
                                 while (await reader.ReadAsync())
                                 {
-                                    if (reader.ColumnIsNotNull("Id"))
+                                    if (reader.ColumnIsNotNull("UserId"))
                                     {
                                         users.Add(Convert.ToInt32(reader["UserId"]));
                                     }
@@ -117,8 +123,28 @@ namespace Plato.Discuss.Reactions.Badges
                             return users;
                         });
 
-                        if (results != null)
+                        if (userIds != null)
                         {
+                            foreach (var userId in userIds)
+                            {
+                                //var user = await userStore.GetByIdAsync(userId);
+                                //if (user != null)
+                                //{
+                                //    if (user.NotificationEnabled(WebNotifications.NewBadge))
+                                //    {
+                                //        await notificationManager.SendAsync(new Notification(EmailNotifications.NewBadge)
+                                //        {
+                                //            To = user,
+                                //        }, context.Badge);
+                                //    }
+                                //}
+                            }
+                            // Email notifications
+                           
+
+
+
+
                             cacheManager.CancelTokens(typeof(UserBadgeStore));
                         }
 

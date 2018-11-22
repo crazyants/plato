@@ -6,6 +6,8 @@ using Plato.Internal.Models.Users;
 
 namespace Plato.Notifications.Models
 {
+
+
     public class UserNotification : IModel<UserNotification>
     {
 
