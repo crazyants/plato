@@ -9,9 +9,7 @@ namespace Plato.Internal.Models.Notifications
         TModel Model { get; set; }
 
         INotification Notification { get; set; }
-
-        //IServiceProvider ServiceProvider { get; }
-
+        
     }
     
     public class NotificationContext<TModel> : INotificationContext<TModel> where TModel : class

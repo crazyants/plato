@@ -18,8 +18,7 @@ namespace Plato.Badges.Models
                 badge.IconCss,
                 badge.Level,
                 badge.Threshold,
-                badge.BonusPoints,
-                badge.Awarder)
+                badge.BonusPoints)
         {
         }
 

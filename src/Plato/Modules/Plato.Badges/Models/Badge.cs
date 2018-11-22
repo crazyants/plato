@@ -29,7 +29,7 @@ namespace Plato.Badges.Models
 
         public BadgeLevel Level { get; set; }
 
-        public Action<IBadgeAwarderContext> Awarder { get; set; }
+        //public Action<IBadgeAwarderContext> Awarder { get; set; }
  
         public Badge()
         {
@@ -67,6 +67,14 @@ namespace Plato.Badges.Models
         public Badge(
             string name,
             string description,
+            string iconCss,
+            BadgeLevel level) : this(name, description, "fas fa-badge", iconCss)
+        {
+            this.Level = level;
+        }
+        public Badge(
+            string name,
+            string description,
             string backgroundIconCss,
             string iconCss,
             BadgeLevel level) : this(name, description, backgroundIconCss, iconCss)
@@ -91,6 +99,26 @@ namespace Plato.Badges.Models
             int threshold) : this(name, description, backgroundIconCss, iconCss, level)
         {
             this.Threshold = threshold * ThresholdMultiplier;
+        }
+
+        public Badge(
+            string name,
+            string description,
+            string iconCss,
+            BadgeLevel level,
+            int threshold) : this(name, description, "fas fa-badge", iconCss, level)
+        {
+            this.Threshold = threshold * ThresholdMultiplier;
+        }
+        public Badge(
+            string name,
+            string description,
+            string iconCss,
+            BadgeLevel level,
+            int threshold,
+            int bonusPoints) : this(name, description, "fas fa-badge", iconCss, level, threshold)
+        {
+            this.BonusPoints = bonusPoints * PointsMultiplier;
         }
 
         public Badge(
@@ -124,93 +152,6 @@ namespace Plato.Badges.Models
             this.BonusPoints = bonusPoints * PointsMultiplier;
         }
 
-        public Badge(
-            string name,
-            string description,
-            string backgroundIconCss,
-            string iconCss,
-            BadgeLevel level,
-            Action<IBadgeAwarderContext> awarder) : this(name, description, backgroundIconCss, iconCss, level)
-        {
-            this.Awarder = awarder;
-        }
-
-        public Badge(
-            string name,
-            string description,
-            BadgeLevel level,
-            Action<IBadgeAwarderContext> awarder) : this(name, description, level)
-        {
-            this.Awarder = awarder;
-        }
-
-        public Badge(
-            string name,
-            string description,
-            string iconCss,
-            BadgeLevel level,
-            Action<IBadgeAwarderContext> awarder) : this(name, description, "fas fa-badge", iconCss, level)
-        {
-            this.Awarder = awarder;
-        }
-        
-        public Badge(
-            string name,
-            string description,
-            BadgeLevel level,
-            int threshold,
-            Action<IBadgeAwarderContext> awarder) : this(name, description, level, threshold)
-        {
-            this.Awarder = awarder;
-        }
-
-        public Badge(
-            string name,
-            string description,
-            string backgroundIconCss,
-            string iconCss,
-            BadgeLevel level,
-            int threshold,
-            int bonusPoints,
-            Action<IBadgeAwarderContext> awarder) : this(name, description, backgroundIconCss, iconCss, level, threshold, bonusPoints)
-        {
-            this.Awarder = awarder;
-        }
-
-        public Badge(
-            string name,
-            string description,
-            string iconCss,
-            BadgeLevel level,
-            int threshold,
-            int bonusPoints,
-            Action<IBadgeAwarderContext> awarder) : this(name, description, "fas fa-badge", iconCss, level, threshold, bonusPoints)
-        {
-            this.Awarder = awarder;
-        }
-
-        public Badge(
-            string name,
-            string description,
-            string iconCss,
-            BadgeLevel level,
-            int threshold,
-            Action<IBadgeAwarderContext> awarder) : this(name, description, "fas fa-badge", iconCss, level, threshold)
-        {
-            this.Awarder = awarder;
-        }
-
-
-        public Badge(
-            string name,
-            string description,
-            BadgeLevel level,
-            int threshold,
-            int bonusPoints,
-            Action<IBadgeAwarderContext> awarder) : this(name, description, level, threshold, bonusPoints)
-        {
-            this.Awarder = awarder;
-        }
 
     }
 

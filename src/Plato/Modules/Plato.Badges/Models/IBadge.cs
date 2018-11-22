@@ -22,7 +22,7 @@ namespace Plato.Badges.Models
         
         BadgeLevel Level { get; set; }
 
-        Action<IBadgeAwarderContext> Awarder { get; set; }
+        //Action<IBadgeAwarderContext> Awarder { get; set; }
         
     }
 
