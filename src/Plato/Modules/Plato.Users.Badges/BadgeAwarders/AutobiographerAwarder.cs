@@ -103,9 +103,9 @@ namespace Plato.Users.Badges.BadgeAwarders
                     var users = new List<int>();
                     while (await reader.ReadAsync())
                     {
-                        if (reader.ColumnIsNotNull(0))
+                        if (reader.ColumnIsNotNull("UserId"))
                         {
-                            users.Add(Convert.ToInt32(reader[0]));
+                            users.Add(Convert.ToInt32(reader["UserId"]));
                         }
                     }
                     return users;
@@ -130,7 +130,7 @@ namespace Plato.Users.Badges.BadgeAwarders
                     _cacheManager.CancelTokens(typeof(UserBadgeStore));
                 }
 
-            }, 10 * 1000);
+            }, 20 * 1000);
             
             return result.Success(context.Badge);
 

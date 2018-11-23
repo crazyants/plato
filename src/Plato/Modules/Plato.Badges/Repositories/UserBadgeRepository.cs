@@ -145,7 +145,8 @@ namespace Plato.Badges.Repositories
                     id,
                     badgeName.ToEmptyIfNull(),
                     userId,
-                    createdDate.ToDateIfNull());
+                    createdDate.ToDateIfNull(),
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
             return output;
 

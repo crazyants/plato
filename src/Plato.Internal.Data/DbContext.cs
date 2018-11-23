@@ -147,16 +147,16 @@ namespace Plato.Internal.Data
         {
           
             // Build a collection of output params and there index
-            var outputParams = new Dictionary<int, DbCommandParam>(); ;
+            var outputParams = new Dictionary<int, IDbDataParameter>(); ;
             for (var i = 0; i < args.Length; i++)
             {
                 if (args[i] != null)
                 {
-                    if (args[i].GetType() == typeof(DbCommandParam))
+                    if (args[i].GetType() == typeof(DbDataParameter))
                     {
-                        if (((DbCommandParam)args[i]).Direction == ParameterDirection.Output)
+                        if (((DbDataParameter)args[i]).Direction == ParameterDirection.Output)
                         {
-                            outputParams.Add(i, ((DbCommandParam)args[i]));
+                            outputParams.Add(i, ((IDbDataParameter)args[i]));
                         }
                     }
                 }
@@ -167,14 +167,13 @@ namespace Plato.Internal.Data
             {
                 foreach (var outputParam in outputParams)
                 {
-                    var name = !string.IsNullOrEmpty(outputParam.Value.Name)
-                        ? outputParam.Value.Name
+                    var name = !string.IsNullOrEmpty(outputParam.Value.ParameterName)
+                        ? outputParam.Value.ParameterName
                         : outputParam.Key.ToString();
-                    sb.Append($"DECLARE @{name}_out {outputParam.Value.DbTypeNormalized};");
+                    sb.Append($"DECLARE @{name}_out {outputParam.Value.DbTypeNormalized()};");
                 }
             }
             
-            // Execute procedure 
              sb.Append("EXEC ");
             sb.Append(GetProcedureName(procedureName));
             for (var i = 0; i < args.Length; i++)
@@ -182,8 +181,8 @@ namespace Plato.Internal.Data
 
                 if (outputParams.ContainsKey(i))
                 {
-                    var name = !string.IsNullOrEmpty(outputParams[i].Name)
-                        ? outputParams[i].Name
+                    var name = !string.IsNullOrEmpty(outputParams[i].ParameterName)
+                        ? outputParams[i].ParameterName
                         : i.ToString();
                     sb.Append($" @{name}_out output");
                 }
@@ -204,8 +203,8 @@ namespace Plato.Internal.Data
                 var i = 0;
                 foreach (var outputParam in outputParams)
                 {
-                    var name = !string.IsNullOrEmpty(outputParam.Value.Name)
-                        ? outputParam.Value.Name
+                    var name = !string.IsNullOrEmpty(outputParam.Value.ParameterName)
+                        ? outputParam.Value.ParameterName
                         : outputParam.Key.ToString();
                     sb.Append("@")
                         .Append(name)

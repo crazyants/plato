@@ -236,10 +236,10 @@ namespace Plato.Internal.Data.Providers
                 {
                     p.Value = ((DateTime) item);
                 }
-                else if (t == typeof(DbCommandParam))
+                else if (t == typeof(DbDataParameter))
                 {
-                    var dbParam = (DbCommandParam) item;
-                    p.ParameterName = dbParam.Name;
+                    var dbParam = (IDbDataParameter) item;
+                    p.ParameterName = dbParam.ParameterName;
                     p.Value = dbParam.Value ?? DBNull.Value;
                     p.DbType = dbParam.DbType;
                     p.Direction = dbParam.Direction;

@@ -199,7 +199,8 @@ namespace Plato.Entities.Repositories
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
-                    modifiedDate.ToDateIfNull());
+                    modifiedDate.ToDateIfNull(),
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
             
             return entityReplyId;
