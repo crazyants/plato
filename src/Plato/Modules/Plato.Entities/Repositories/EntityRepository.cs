@@ -278,7 +278,8 @@ namespace Plato.Entities.Repositories
                     modifiedDate.ToDateIfNull(),
                     lastReplyId,
                     lastReplyUserId,
-                    lastReplyDate.ToDateIfNull());
+                    lastReplyDate.ToDateIfNull(),
+                    new DbCommandParam(DbType.Int32, ParameterDirection.Output));
             }
 
             // Add entity data

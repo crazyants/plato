@@ -40,7 +40,6 @@ namespace Plato.Users.Badges
 
             // Badge awarder providers
             services.AddScoped<IBadgesAwarderProvider<Badge>, AutobiographerAwarder>();
-
             
             // User profile view proviers
             services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();

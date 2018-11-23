@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq;
 using Plato.Badges.Models;
 using Plato.Badges.Services;
 using Plato.Badges.Stores;
@@ -9,7 +8,9 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
@@ -19,27 +20,30 @@ using Plato.Users.Models;
 
 namespace Plato.Users.Badges.BadgeAwarders
 {
-    public class AutobiographerAwarder : IBadgeAwarderProvider<Badge>
+    public class AutobiographerAwarder : IBadgesAwarderProvider<Badge>
     {
 
         private readonly IBackgroundTaskManager _backgroundTaskManager;
         private readonly ICacheManager _cacheManager;
         private readonly IDbHelper _dbHelper;
         private readonly IPlatoUserStore<User> _userStore;
+        private readonly INotificationManager<Badge> _notificaitonManager;
 
         public AutobiographerAwarder(
             IBackgroundTaskManager backgroundTaskManager, 
             ICacheManager cacheManager,
             IDbHelper dbHelper, 
-            IPlatoUserStore<User> userStore)
+            IPlatoUserStore<User> userStore,
+            INotificationManager<Badge> notificaitonManager)
         {
             _backgroundTaskManager = backgroundTaskManager;
             _cacheManager = cacheManager;
             _dbHelper = dbHelper;
             _userStore = userStore;
+            _notificaitonManager = notificaitonManager;
         }
 
-        public Task<ICommandResult<Badge>> AwardAsync(IBadgeAwarderContext<Badge> context)
+        public ICommandResult<Badge> Award(IBadgeAwarderContext<Badge> context)
         {
             // Create result
             var result = new CommandResult<Badge>();
@@ -47,19 +51,18 @@ namespace Plato.Users.Badges.BadgeAwarders
             // Ensure correct notification provider
             if (!context.Badge.Name.Equals(ProfileBadges.Autobiographer.Name, StringComparison.Ordinal))
             {
-                return Task.FromResult((ICommandResult<Badge>)result.Failed());
+                return result.Failed();
             }
             
-            const string sql = @"
-                    DECLARE @dirty bit = 0;
+            const string sql = @"             
                     DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
                     DECLARE @badgeName nvarchar(255) = '{name}';
                     DECLARE @threshold int = {threshold};                  
                     DECLARE @userId int;
                     DECLARE @myTable TABLE
                     (
-	                    Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
-	                    UserId int NOT NULL
+                        Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
+                        UserId int NOT NULL
                     );
                     DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 ud.UserId FROM {prefix}_UserData AS ud
                     WHERE (ud.[Key] = '{key}')
@@ -72,9 +75,12 @@ namespace Plato.Users.Badges.BadgeAwarders
                     OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
                     WHILE @@FETCH_STATUS = 0
                     BEGIN
-	                    EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date;
-                        INSERT INTO @myTable (UserId) VALUES (@userId);
-                        SET @dirty = 1;
+                        DECLARE @identity int
+	                    EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
+                        IF (@identity > 0)
+                        BEGIN
+                            INSERT INTO @myTable (UserId) VALUES (@userId);                     
+                        END
 	                    FETCH NEXT FROM MSGCURSOR INTO @userId;	                    
                     END;
                     CLOSE MSGCURSOR;
@@ -92,26 +98,21 @@ namespace Plato.Users.Badges.BadgeAwarders
             // Start task to execute awarder SQL with replacements every X seconds
             _backgroundTaskManager.Start(async (sender, args) =>
             {
-                var userIds = await _dbHelper.ExecuteReaderAsync<IEnumerable<int>>(sql, replacements, async reader =>
+                var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(sql, replacements, async reader =>
                 {
-                    IList<int> users = null;
-                    if ((reader != null) && (reader.HasRows))
+                    var users = new List<int>();
+                    while (await reader.ReadAsync())
                     {
-                        users = new List<int>();
-                        while (await reader.ReadAsync())
+                        if (reader.ColumnIsNotNull(0))
                         {
-                            if (reader.ColumnIsNotNull("UserId"))
-                            {
-                                users.Add(Convert.ToInt32(reader["UserId"]));
-                            }
+                            users.Add(Convert.ToInt32(reader[0]));
                         }
                     }
                     return users;
                 });
 
-                if (userIds != null)
+                if (userIds?.Count > 9)
                 {
-
                     foreach (var userId in userIds)
                     {
                         var user = await _userStore.GetByIdAsync(userId);
@@ -119,23 +120,22 @@ namespace Plato.Users.Badges.BadgeAwarders
                         {
                             if (user.NotificationEnabled(WebNotifications.NewBadge))
                             {
-                                //await notificationManager.SendAsync(new Notification(WebNotifications.NewBadge)
-                                //{
-                                //    To = user,
-                                //}, (Badge) context.Badge);
+                                await _notificaitonManager.SendAsync(new Notification(WebNotifications.NewBadge)
+                                {
+                                    To = user,
+                                }, (Badge)context.Badge);
                             }
                         }
                     }
-
-
                     _cacheManager.CancelTokens(typeof(UserBadgeStore));
                 }
 
             }, 10 * 1000);
             
-            return Task.FromResult((ICommandResult<Badge>) result.Success(context.Badge));
+            return result.Success(context.Badge);
 
         }
 
     }
+
 }

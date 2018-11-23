@@ -74,7 +74,7 @@ namespace Plato.Internal.Data
         /// <returns></returns>
         public async Task<T> ExecuteReaderAsync<T>(string sql, Func<DbDataReader, Task<T>> populate) where T : class
         {
-            var output = default(T);
+            T output = null;
             using (var db = _dbContext)
             {
                 var reader = await db.ExecuteReaderAsync(CommandType.Text, ReplaceTablePrefix(sql));

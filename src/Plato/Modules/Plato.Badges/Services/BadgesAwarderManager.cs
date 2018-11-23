@@ -11,7 +11,7 @@ namespace Plato.Badges.Services
     public class BadgesAwarderManager<TBadge> : IBadgesAwarderManager where TBadge : class, IBadge
     {
 
-        private readonly IEnumerable<IBadgeAwarderProvider<TBadge>> _providers;
+        private readonly IEnumerable<IBadgesAwarderProvider<TBadge>> _providers;
         
         private readonly IBadgesManager<TBadge> _badgesManager;
         private readonly ILogger<BadgesAwarderManager<TBadge>> _logger;
@@ -19,7 +19,7 @@ namespace Plato.Badges.Services
         public BadgesAwarderManager(
             IBadgesManager<TBadge> badgesManager, 
             ILogger<BadgesAwarderManager<TBadge>> logger,
-            IEnumerable<IBadgeAwarderProvider<TBadge>> providers)
+            IEnumerable<IBadgesAwarderProvider<TBadge>> providers)
         {
             _badgesManager = badgesManager;
             _providers = providers;
@@ -51,9 +51,7 @@ namespace Plato.Badges.Services
                 foreach (var awarder in _providers)
                 {
 
-                    var result = awarder?.AwardAsync(context)
-                        .GetAwaiter()
-                        .GetResult();
+                    var result = awarder?.Award(context);
                     if (result != null)
                     {
                         if (result.Succeeded)

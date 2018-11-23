@@ -314,7 +314,7 @@ namespace Plato.Internal.Data.Schemas
                 {
                     using (var context = _dbContext)
                     {
-                        await context.ExecuteAsync<int>(CommandType.Text, statement);
+                        await context.ExecuteNonQueryAsync<int>(CommandType.Text, statement);
                     }
                 }
                 catch (Exception ex)
@@ -849,10 +849,9 @@ namespace Plato.Internal.Data.Schemas
                 return string.Empty;
             }
             
-
+            
             var sb = new StringBuilder();
             
-
             sb.Append(alter == false ? "CREATE" : "ALTER")
                 .Append(" PROCEDURE [")
                 .Append(GetProcedureName(procedure.Name))
@@ -872,10 +871,16 @@ namespace Plato.Internal.Data.Schemas
                         .Append(column.NameNormalized)
                         .Append(" ")
                         .Append(column.DbTypeNormalized)
-                        .Append(i < columns.Count - 1 ? "," : "")
+                        .Append(column.Direction == Direction.Out ? " output" : "")
+                        .Append(",")
                         .Append(_newLine);
                     i += 1;
                 }
+
+                sb
+                    .Append("     ")
+                    .Append("@UniqueId int = 0 output")
+                    .Append(_newLine);
 
                 sb.Append(") ");
 
@@ -889,12 +894,6 @@ namespace Plato.Internal.Data.Schemas
                 .Append(_newLine);
 
             sb.Append(GetProcedurePlaceHolderComment())
-                .Append(_newLine)
-                .Append(_newLine);
-
-            sb.Append("DECLARE @unique_id ")
-                .Append(procedure.Table.PrimaryKeyColumn.DbTypeNormalized)
-                .Append(";")
                 .Append(_newLine)
                 .Append(_newLine);
 
@@ -955,7 +954,7 @@ namespace Plato.Internal.Data.Schemas
             sb
                 .Append(_newLine)
                 .Append("     ")
-                .Append("SET @unique_id = @")
+                .Append("SET @UniqueId = @")
                 .Append(procedure.Table.PrimaryKeyColumn.Name)
                 .Append(";")
                 .Append(_newLine)
@@ -1019,16 +1018,13 @@ namespace Plato.Internal.Data.Schemas
                     .Append(_newLine)
                     .Append(_newLine)
                     .Append("     ")
-                    .Append("SET @unique_id = SCOPE_IDENTITY();")
+                    .Append("SET @UniqueId = SCOPE_IDENTITY();")
                     .Append(_newLine)
                     .Append(_newLine);
 
             }
-            
-            sb.Append("END")
-                .Append(_newLine)
-                .Append(_newLine)
-                .Append("SELECT @unique_id;");
+
+            sb.Append("END");
             
             return sb.ToString();
 

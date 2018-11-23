@@ -8,6 +8,8 @@ using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Data.Providers
 {
+
+ 
     public class SqlProvider : IDataProvider
     {
 
@@ -123,7 +125,7 @@ namespace Plato.Internal.Data.Providers
 
         }
 
-        public async Task<T> ExecuteAsync<T>(string sql, params object[] args)
+        public async Task<T> ExecuteNonQueryAsync<T>(string sql, params object[] args)
         {
 
             var output = default(T);
@@ -232,6 +234,14 @@ namespace Plato.Internal.Data.Providers
                 else if (t == typeof(DateTime?))
                 {
                     p.Value = ((DateTime) item);
+                }
+                else if (t == typeof(DbCommandParam))
+                {
+                    var dbParam = (DbCommandParam) item;
+                    p.ParameterName = dbParam.Name;
+                    p.Value = dbParam.Value ?? DBNull.Value;
+                    p.DbType = dbParam.DbType;
+                    p.Direction = dbParam.Direction;
                 }
                 else
                 {

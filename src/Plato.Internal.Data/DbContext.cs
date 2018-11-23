@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Data.Abstractions.Extensions;
 using Plato.Internal.Data.Providers;
 
 namespace Plato.Internal.Data
@@ -109,17 +111,17 @@ namespace Plato.Internal.Data
             if (_provider == null)
                 return default(T);
             if (commandType == CommandType.StoredProcedure)
-                sql = GenerateExecuteStoredProcedureSql(sql, args);
+                sql = GenerateScalarStoredProcedureSql(sql, args);
             return await _provider.ExecuteScalarAsync<T>(sql, args);
         }
 
-        public async Task<T> ExecuteAsync<T>(CommandType commandType, string sql, params object[] args)
+        public async Task<T> ExecuteNonQueryAsync<T>(CommandType commandType, string sql, params object[] args)
         {
             if (_provider == null)
                 return default(T);
             if (commandType == CommandType.StoredProcedure)
                 sql = GenerateExecuteStoredProcedureSql(sql, args);
-            return await _provider.ExecuteAsync<T>(sql, args);
+            return await _provider.ExecuteNonQueryAsync<T>(sql, args);
         }
         
         #endregion
@@ -128,8 +130,8 @@ namespace Plato.Internal.Data
 
         private string GenerateExecuteStoredProcedureSql(string procedureName, params object[] args)
         {
-         
-            var sb = new StringBuilder(";EXEC ");
+            // Execute procedure 
+            var sb = new StringBuilder("EXEC ");
             sb.Append(GetProcedureName(procedureName));
             for (var i = 0; i < args.Length; i++)
             {
@@ -137,10 +139,53 @@ namespace Plato.Internal.Data
                 if (i < args.Length - 1)
                     sb.Append(",");
             }
-            
             return sb.ToString();
         }
-        
+
+        private string GenerateScalarStoredProcedureSql(string procedureName, params object[] args)
+        {
+
+            // Get output parameter index
+            var outputParamIndex = -1;
+            DbType outputParamDbType = DbType.Int32;
+            for (var i = 0; i < args.Length; i++)
+            {
+                if (args[i] != null)
+                {
+                    if (args[i].GetType() == typeof(DbCommandParam))
+                    {
+                        if (((DbCommandParam)args[i]).Direction == ParameterDirection.Output)
+                        {
+                            outputParamIndex = i;
+                            outputParamDbType = ((DbCommandParam) args[i]).DbType;
+                        }
+                    }
+                }
+            }
+
+            // Execute procedure 
+            var sb = new StringBuilder(outputParamIndex >= 0
+                ? $"DECLARE @{outputParamIndex} {outputParamDbType.ToSqlDbTypeNormalized()}; EXEC "
+                : "EXEC ");
+            sb.Append(GetProcedureName(procedureName));
+            for (var i = 0; i < args.Length; i++)
+            {
+                sb.Append(i != outputParamIndex
+                    ? $" @{i}"
+                    : $" @{i} output");
+                if (i < args.Length - 1)
+                    sb.Append(",");
+            }
+
+            if (outputParamIndex >= 0)
+            {
+                sb.Append("; SELECT @").Append(outputParamIndex);
+            }
+
+            return sb.ToString();
+        }
+
+
         private string GetProcedureName(string procedureName)
         {
             return !string.IsNullOrEmpty(this.Configuration.TablePrefix)
@@ -159,4 +204,6 @@ namespace Plato.Internal.Data
 
 
     }
+
+
 }

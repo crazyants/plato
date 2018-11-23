@@ -13,7 +13,7 @@ namespace Plato.Internal.Data.Abstractions
         
         Task<T> ExecuteScalarAsync<T>(string sql, params object[] args);
 
-        Task<T> ExecuteAsync<T>(string sql, params object[] args);
+        Task<T> ExecuteNonQueryAsync<T>(string sql, params object[] args);
 
         void HandleException(Exception x);
 

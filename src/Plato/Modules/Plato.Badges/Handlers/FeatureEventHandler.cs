@@ -40,7 +40,7 @@ namespace Plato.Badges.Handlers
                     {
                         Name = "CreatedDate",
                         DbType = DbType.DateTimeOffset
-                    },
+                    }
                 }
         };
 
