@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
@@ -131,7 +132,7 @@ namespace Plato.Internal.Data
         private string GenerateExecuteStoredProcedureSql(string procedureName, params object[] args)
         {
             // Execute procedure 
-            var sb = new StringBuilder("EXEC ");
+            var sb = new StringBuilder("; EXEC ");
             sb.Append(GetProcedureName(procedureName));
             for (var i = 0; i < args.Length; i++)
             {
@@ -144,10 +145,9 @@ namespace Plato.Internal.Data
 
         private string GenerateScalarStoredProcedureSql(string procedureName, params object[] args)
         {
-
-            // Get output parameter index
-            var outputParamIndex = -1;
-            DbType outputParamDbType = DbType.Int32;
+          
+            // Build a collection of output params and there index
+            var outputParams = new Dictionary<int, DbCommandParam>(); ;
             for (var i = 0; i < args.Length; i++)
             {
                 if (args[i] != null)
@@ -156,36 +156,73 @@ namespace Plato.Internal.Data
                     {
                         if (((DbCommandParam)args[i]).Direction == ParameterDirection.Output)
                         {
-                            outputParamIndex = i;
-                            outputParamDbType = ((DbCommandParam) args[i]).DbType;
+                            outputParams.Add(i, ((DbCommandParam)args[i]));
                         }
                     }
                 }
             }
 
+            var sb = new StringBuilder();
+            if (outputParams.Count > 0)
+            {
+                foreach (var outputParam in outputParams)
+                {
+                    var name = !string.IsNullOrEmpty(outputParam.Value.Name)
+                        ? outputParam.Value.Name
+                        : outputParam.Key.ToString();
+                    sb.Append($"DECLARE @{name}_out {outputParam.Value.DbTypeNormalized};");
+                }
+            }
+            
             // Execute procedure 
-            var sb = new StringBuilder(outputParamIndex >= 0
-                ? $"DECLARE @{outputParamIndex} {outputParamDbType.ToSqlDbTypeNormalized()}; EXEC "
-                : "EXEC ");
+             sb.Append("EXEC ");
             sb.Append(GetProcedureName(procedureName));
             for (var i = 0; i < args.Length; i++)
             {
-                sb.Append(i != outputParamIndex
-                    ? $" @{i}"
-                    : $" @{i} output");
+
+                if (outputParams.ContainsKey(i))
+                {
+                    var name = !string.IsNullOrEmpty(outputParams[i].Name)
+                        ? outputParams[i].Name
+                        : i.ToString();
+                    sb.Append($" @{name}_out output");
+                }
+                else
+                {
+                    sb.Append($" @{i}");
+                }
+
                 if (i < args.Length - 1)
                     sb.Append(",");
             }
 
-            if (outputParamIndex >= 0)
+            sb.Append(";");
+
+            if (outputParams.Count > 0)
             {
-                sb.Append("; SELECT @").Append(outputParamIndex);
+                sb.Append("SELECT ");
+                var i = 0;
+                foreach (var outputParam in outputParams)
+                {
+                    var name = !string.IsNullOrEmpty(outputParam.Value.Name)
+                        ? outputParam.Value.Name
+                        : outputParam.Key.ToString();
+                    sb.Append("@")
+                        .Append(name)
+                        .Append("_out");
+                    if (i < outputParams.Count - 1)
+                    {
+                        sb.Append(",");
+                    }
+                    i++;
+                }
+
+                sb.Append(";");
             }
 
             return sb.ToString();
         }
-
-
+        
         private string GetProcedureName(string procedureName)
         {
             return !string.IsNullOrEmpty(this.Configuration.TablePrefix)

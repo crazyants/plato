@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using Plato.Internal.Data.Abstractions.Extensions;
 
 namespace Plato.Internal.Data.Abstractions
 {
@@ -12,6 +13,21 @@ namespace Plato.Internal.Data.Abstractions
         public string Name { get; }
 
         public DbType DbType { get; }
+
+        public string Length { get; set; } = "255";
+
+        public string DbTypeNormalized
+        {
+            get
+            {
+                var dbTypeNormalized = this.DbType.ToDbTypeNormalized(this.Length);
+                if (String.IsNullOrEmpty(dbTypeNormalized))
+                {
+                    throw new Exception($"Type not returned for column '{this.Name}' whilst building shema");
+                }
+                return dbTypeNormalized;
+            }
+        }
 
         public object Value { get; set; }
 

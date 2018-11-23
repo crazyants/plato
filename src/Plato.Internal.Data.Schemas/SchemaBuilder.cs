@@ -849,7 +849,6 @@ namespace Plato.Internal.Data.Schemas
                 return string.Empty;
             }
             
-            
             var sb = new StringBuilder();
             
             sb.Append(alter == false ? "CREATE" : "ALTER")

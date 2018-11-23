@@ -72,12 +72,12 @@ namespace Plato.Internal.Data.Schemas.Abstractions
         {
             get
             {
-                var sqlDbTypeNormalized = this.DbType.ToSqlDbTypeNormalized(this.Length);
-                if (String.IsNullOrEmpty(sqlDbTypeNormalized))
+                var dbTypeNormalized = this.DbType.ToDbTypeNormalized(this.Length);
+                if (String.IsNullOrEmpty(dbTypeNormalized))
                 {
                     throw new Exception($"Type not returned for column '{this.Name}' whilst building shema");
                 }
-                return sqlDbTypeNormalized;
+                return dbTypeNormalized;
             }
         }
 

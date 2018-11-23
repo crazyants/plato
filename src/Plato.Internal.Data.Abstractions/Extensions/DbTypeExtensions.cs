@@ -5,7 +5,7 @@ namespace Plato.Internal.Data.Abstractions.Extensions
     public static class DbTypeExtensions
     {
 
-        public static string ToSqlDbTypeNormalized(this DbType dbType, string stringLength = "") 
+        public static string ToDbTypeNormalized(this DbType dbType, string stringLength = "") 
         {
             switch (dbType)
             {

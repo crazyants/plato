@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Plato.Internal.Data.Providers
 
         private readonly string _connectionString;
         private SqlConnection _dbConnection;
-    
+   
         #endregion
 
         #region "Constructors"
@@ -250,6 +251,7 @@ namespace Plato.Internal.Data.Providers
             }
 
             cmd.Parameters.Add(p);
+
 
         }
         

@@ -281,7 +281,7 @@ namespace Plato.Entities.Repositories
                     lastReplyDate.ToDateIfNull(),
                     new DbCommandParam(DbType.Int32, ParameterDirection.Output));
             }
-
+            
             // Add entity data
             if (entityId > 0)
             {
@@ -298,6 +298,22 @@ namespace Plato.Entities.Repositories
             }
 
             return entityId;
+
+        }
+
+        public IDbDataParameter RetrieveParameter(
+            IEnumerable<IDbDataParameter> paramCollection,
+            string parameterName)
+        {
+            foreach (var param in paramCollection)
+            {
+                if (param.ParameterName == parameterName)
+                {
+                    return param;
+                }
+            }
+
+            return null;
 
         }
 
