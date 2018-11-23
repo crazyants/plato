@@ -203,7 +203,8 @@ namespace Plato.Follow.Repositories
                     entityId,
                     userId,
                     cancellationGuid.ToEmptyIfNull().TrimToSize(100),
-                    createdDate);
+                    createdDate,
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 
             return output;

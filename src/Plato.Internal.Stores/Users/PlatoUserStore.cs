@@ -239,6 +239,13 @@ namespace Plato.Internal.Stores.Users
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Selecting users for key '{0}' with the following parameters: {1}",
+                        token.ToString(), args.Select(a => a));
+                }
+                
                 var results = await _userRepository.SelectAsync(args);
                 if (results != null)
                 {
@@ -298,7 +305,10 @@ namespace Plato.Internal.Stores.Users
 
             // Get all user data matching supplied user ids
             var results = await _userDataStore.QueryAsync()
-                .Select<UserDataQueryParams>(q => { q.UserId.IsIn(users.Select(u => u.Id).ToArray()); })
+                .Select<UserDataQueryParams>(q =>
+                {
+                    q.UserId.IsIn(users.Select(u => u.Id).ToArray());
+                })
                 .ToList();
 
             if (results == null)
@@ -321,7 +331,7 @@ namespace Plato.Internal.Stores.Users
 
             for (var i = 0; i < users.Count; i++)
             {
-                users[i].Data = data.Where(d => d.Id == users[i].Id).ToList();
+                users[i].Data = data.Where(d => d.UserId == users[i].Id).ToList();
                 users[i] = await MergeUserData(users[i]);
             }
 

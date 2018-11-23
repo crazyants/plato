@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Badges.Models;
 using Plato.Internal.Abstractions;
@@ -65,35 +66,32 @@ namespace Plato.Users.Badges.Notifications
             }
 
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewBadge.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(WebNotifications.NewBadge.Name, StringComparison.Ordinal))
             {
                 return null;
             }
 
             // Create result
             var result = new CommandResult<Badge>();
-
-            // Build topic url
-            //var baseUrl = await _contextFacade.GetBaseUrlAsync();
-            //var topicUrl = _contextFacade.GetRouteUrl(new RouteValueDictionary()
-            //{
-            //    ["Area"] = "Plato.Discuss",
-            //    ["Controller"] = "Home",
-            //    ["Action"] = "Topic",
-            //    ["Id"] = context.Model.Id,
-            //    ["Alias"] = context.Model.Alias
-            //});
-
-            //// Build user notification
+            
+            //// Build notification
             var userNotification = new UserNotification()
             {
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = S["New Badge"].Value,
-                Message = S["You've been awared the "].Value + context.Model.Name + S[" badge"].Value,
-                Url = ""
+                Message = $"{S["You've been awareded the"].Value} '{context.Model.Name}' {S[" badge"].Value}",
+                Url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                {
+                    ["Area"] = "Plato.Users.Badges",
+                    ["Controller"] = "Profile",
+                    ["Action"] = "Index",
+                    ["Id"] = context.Notification.To.Id,
+                    ["Alias"] = context.Notification.To.Alias
+                })
             };
 
+            // Create notification
             var userNotificationResult = await _userNotificationManager.CreateAsync(userNotification);
             if (userNotificationResult.Succeeded)
             {

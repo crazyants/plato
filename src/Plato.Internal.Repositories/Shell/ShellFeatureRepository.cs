@@ -262,7 +262,9 @@ namespace Plato.Internal.Repositories.Shell
                     id,
                     moduleId.ToEmptyIfNull(),
                     version.ToEmptyIfNull(),
-                    settings.ToEmptyIfNull());
+                    settings.ToEmptyIfNull(),
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output)
+                );
 
             }
         }

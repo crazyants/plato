@@ -488,7 +488,8 @@ namespace Plato.Internal.Repositories.Users
                     rank,
                     signature.ToEmptyIfNull(),
                     createdDate.ToDateIfNull(),
-                    lastLoginDate.ToDateIfNull()
+                    lastLoginDate.ToDateIfNull(),
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output)
                 );
             }
 

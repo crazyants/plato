@@ -4,7 +4,7 @@ using Plato.Internal.Data.Abstractions.Extensions;
 
 namespace Plato.Internal.Data.Abstractions
 {
-
+ 
     public class DbDataParameter : IDbDataParameter
     {
    

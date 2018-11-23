@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Plato.Labels.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Repositories;
 
 namespace Plato.Labels.Repositories
 {
@@ -62,7 +61,7 @@ namespace Plato.Labels.Repositories
         public async Task<LabelRole> SelectByIdAsync(int id)
         {
 
-            LabelRole LabelRole = null;
+            LabelRole labelRole = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
@@ -71,13 +70,13 @@ namespace Plato.Labels.Repositories
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
-                    LabelRole = new LabelRole();
-                    LabelRole.PopulateModel(reader);
+                    labelRole = new LabelRole();
+                    labelRole.PopulateModel(reader);
                 }
 
             }
 
-            return LabelRole;
+            return labelRole;
 
         }
 
@@ -224,7 +223,7 @@ namespace Plato.Labels.Repositories
 
         async Task<int> InsertUpdateInternal(
             int id,
-            int LabelId,
+            int labelId,
             int roleId,
             int createdUserId,
             DateTime? createdDate,
@@ -239,12 +238,13 @@ namespace Plato.Labels.Repositories
                     CommandType.StoredProcedure,
                     "InsertUpdateLabelRole",
                     id,
-                    LabelId,
+                    labelId,
                     roleId,
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
-                    modifiedDate.ToDateIfNull());
+                    modifiedDate.ToDateIfNull(),
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 
             return output;

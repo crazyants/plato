@@ -36,9 +36,10 @@ namespace Plato.Internal.Repositories.Users
             DateTime? modifiedDate,
             int modifiedUserId)
         {
+            var bannerId = 0;
             using (var context = _dbContext)
             {
-                return await context.ExecuteScalarAsync<int>(
+                bannerId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "plato_sp_InsertUpdateUserBanner",
                     id,
@@ -50,8 +51,11 @@ namespace Plato.Internal.Repositories.Users
                     createdDate,
                     createdUserId,
                     modifiedDate,
-                    modifiedUserId);
+                    modifiedUserId,
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
+
+            return bannerId;
         }
 
         #endregion

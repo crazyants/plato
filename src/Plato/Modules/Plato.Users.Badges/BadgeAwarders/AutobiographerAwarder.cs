@@ -12,6 +12,7 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
 using Plato.Users.Badges.BadgeProviders;
@@ -98,6 +99,7 @@ namespace Plato.Users.Badges.BadgeAwarders
             // Start task to execute awarder SQL with replacements every X seconds
             _backgroundTaskManager.Start(async (sender, args) =>
             {
+
                 var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(sql, replacements, async reader =>
                 {
                     var users = new List<int>();
@@ -111,12 +113,23 @@ namespace Plato.Users.Badges.BadgeAwarders
                     return users;
                 });
 
-                if (userIds?.Count > 9)
+                if (userIds?.Count > 0)
                 {
-                    foreach (var userId in userIds)
+
+                    // Get all users awarded the badge
+                    var users = await _userStore.QueryAsync()
+                        .Take(1, userIds.Count)
+                        .Select<UserQueryParams>(q =>
+                        {
+                            q.Id.IsIn(userIds.ToArray());
+                        })
+                        .OrderBy("LastLoginDate", OrderBy.Desc)
+                        .ToList();
+
+                    // Send notificaitons
+                    if (users != null)
                     {
-                        var user = await _userStore.GetByIdAsync(userId);
-                        if (user != null)
+                        foreach (var user in users.Data)
                         {
                             if (user.NotificationEnabled(WebNotifications.NewBadge))
                             {
@@ -127,6 +140,9 @@ namespace Plato.Users.Badges.BadgeAwarders
                             }
                         }
                     }
+                 
+
+
                     _cacheManager.CancelTokens(typeof(UserBadgeStore));
                 }
 

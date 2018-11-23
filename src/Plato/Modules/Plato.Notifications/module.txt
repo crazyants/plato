@@ -8,7 +8,7 @@ Version: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.WebAPI",
+		Id: "Plato.WebApi",
 		Version: "1.0.0"
 	}
 ]

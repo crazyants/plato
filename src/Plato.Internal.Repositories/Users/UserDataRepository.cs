@@ -236,7 +236,8 @@ namespace Plato.Internal.Repositories.Users
                     createdDate.ToDateIfNull(),
                     createdUserId,
                     modifiedDate.ToDateIfNull(),
-                    modifiedUserId);
+                    modifiedUserId,
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 
             return output;

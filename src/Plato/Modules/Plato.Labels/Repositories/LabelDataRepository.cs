@@ -203,7 +203,8 @@ namespace Plato.Labels.Repositories
                     createdDate.ToDateIfNull(),
                     createdUserId,
                     modifiedDate.ToDateIfNull(),
-                    modifiedUserId);
+                    modifiedUserId,
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 
         }

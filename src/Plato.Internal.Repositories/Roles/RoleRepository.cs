@@ -291,7 +291,8 @@ namespace Plato.Internal.Repositories.Roles
                     createdUserId,
                     modifiedDate.ToDateIfNull(),
                     modifiedUserId,
-                    concurrencyStamp.ToEmptyIfNull().TrimToSize(255)
+                    concurrencyStamp.ToEmptyIfNull().TrimToSize(255),
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output)
                 );
             }
         }

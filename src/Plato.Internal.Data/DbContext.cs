@@ -145,9 +145,9 @@ namespace Plato.Internal.Data
 
         private string GenerateScalarStoredProcedureSql(string procedureName, params object[] args)
         {
-          
-            // Build a collection of output params and there index
-            var outputParams = new Dictionary<int, IDbDataParameter>(); ;
+
+            // Build a collection of output parameters and there index
+            IDictionary<int, IDbDataParameter> outputParams = null; ;
             for (var i = 0; i < args.Length; i++)
             {
                 if (args[i] != null)
@@ -156,6 +156,10 @@ namespace Plato.Internal.Data
                     {
                         if (((DbDataParameter)args[i]).Direction == ParameterDirection.Output)
                         {
+                            if (outputParams == null)
+                            {
+                                outputParams = new Dictionary<int, IDbDataParameter>(); ;
+                            }
                             outputParams.Add(i, ((IDbDataParameter)args[i]));
                         }
                     }
@@ -163,7 +167,7 @@ namespace Plato.Internal.Data
             }
 
             var sb = new StringBuilder();
-            if (outputParams.Count > 0)
+            if (outputParams != null)
             {
                 foreach (var outputParam in outputParams)
                 {
@@ -174,12 +178,12 @@ namespace Plato.Internal.Data
                 }
             }
             
-             sb.Append("EXEC ");
+            sb.Append("EXEC ");
             sb.Append(GetProcedureName(procedureName));
             for (var i = 0; i < args.Length; i++)
             {
 
-                if (outputParams.ContainsKey(i))
+                if (outputParams?.ContainsKey(i) ?? false)
                 {
                     var name = !string.IsNullOrEmpty(outputParams[i].ParameterName)
                         ? outputParams[i].ParameterName
@@ -197,7 +201,8 @@ namespace Plato.Internal.Data
 
             sb.Append(";");
 
-            if (outputParams.Count > 0)
+            // Return output parameters
+            if (outputParams != null)
             {
                 sb.Append("SELECT ");
                 var i = 0;

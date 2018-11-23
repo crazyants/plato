@@ -145,7 +145,8 @@ namespace Plato.Media.Repositories
                     createdDate.ToDateIfNull(),
                     createdUserId,
                     modifiedDate.ToDateIfNull(),
-                    modifiedUserId);
+                    modifiedUserId,
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 
             return mediaId;

@@ -203,7 +203,8 @@ namespace Plato.Internal.Repositories.Users
                     "InsertUpdateUserRole",
                     id,
                     userId,
-                    roleId);
+                    roleId,
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
         }
 
