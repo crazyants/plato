@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
 
 namespace Plato.Internal.Hosting.Abstractions
@@ -8,14 +7,10 @@ namespace Plato.Internal.Hosting.Abstractions
     public interface ICapturedRouter
     {
 
+        CapturedRouterOptions Options { get; }
+
         ICapturedRouter Configure(Action<CapturedRouterOptions> configure);
-
-        Task<string> GetBaseUrlAsync();
-
-        string GetRouteUrl(string baseUri, RouteValueDictionary routeValues);
-
-        string GetRouteUrl(Uri baseUri, RouteValueDictionary routeValues);
-
+        
     }
     
     public class CapturedRouterOptions

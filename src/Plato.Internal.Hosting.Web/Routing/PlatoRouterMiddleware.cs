@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstractions.Settings;
@@ -145,12 +146,11 @@ namespace Plato.Internal.Hosting.Web.Routing
             appBuilder.UseRouter(router);
 
             // Create a captured router for use outside of application context
-            // For example within background tasks (sending emails etc)
             var capturedRouter = serviceProvider.GetService<ICapturedRouter>();
-            capturedRouter.Configure(opts =>
+            capturedRouter.Configure(o =>
             {
-                opts.Router = router;
-                opts.BaseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{httpContext.Request.PathBase}";
+                o.Router = router;
+                o.BaseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{httpContext.Request.PathBase}";
             });
         
             // Activate all registered message broker subscriptions

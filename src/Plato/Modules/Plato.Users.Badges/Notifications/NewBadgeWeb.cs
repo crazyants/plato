@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Plato.Badges.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Hosting.Web;
-using Plato.Internal.Hosting.Web.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Notifications.Models;
@@ -29,7 +24,7 @@ namespace Plato.Users.Badges.Notifications
         private readonly IContextFacade _contextFacade;
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
   
-        private readonly ICapturedRouter _capturedRouter;
+        private readonly ICapturedRouterUrlHelper _urlHelper;
 
         public IHtmlLocalizer T { get; }
 
@@ -40,11 +35,11 @@ namespace Plato.Users.Badges.Notifications
             IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
             IUserNotificationsManager<UserNotification> userNotificationManager,
-            ICapturedRouter capturedRouter)
+            ICapturedRouterUrlHelper urlHelper)
         {
             _contextFacade = contextFacade;
             _userNotificationManager = userNotificationManager;
-            _capturedRouter = capturedRouter;
+            _urlHelper = urlHelper;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -85,8 +80,8 @@ namespace Plato.Users.Badges.Notifications
             var result = new CommandResult<Badge>();
             
             //var url = _urlHelper.Link()
-            var baseUri = await _capturedRouter.GetBaseUrlAsync();
-            var url = _capturedRouter.GetRouteUrl(baseUri, new RouteValueDictionary()
+            var baseUri = await _urlHelper.GetBaseUrlAsync();
+            var url = _urlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
             {
                 ["Area"] = "Plato.Users.Badges",
                 ["Controller"] = "Profile",
