@@ -6,13 +6,11 @@ namespace Plato.Badges.Models
     public class BadgeAwarderContext<TModel> : IBadgeAwarderContext<TModel> where TModel : class
     {
 
-        public TModel Model { get; set; } 
+        public IServiceProvider ServiceProvider { get; }
 
-        public IBadge Badge { get; set; }
-        
-        public BadgeAwarderContext(IBadge dadge)
+        public BadgeAwarderContext(IServiceProvider serviceProvider)
         {
-            this.Badge = dadge;
+            this.ServiceProvider = serviceProvider;
         }
 
     }

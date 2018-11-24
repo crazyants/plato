@@ -155,7 +155,8 @@ namespace Plato.Moderation.Repositories
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
-                    modifiedDate.ToDateIfNull());
+                    modifiedDate.ToDateIfNull(),
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 
             return emailId;

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Plato.Badges.Models;
 using Plato.Internal.Abstractions;
@@ -35,7 +36,7 @@ namespace Plato.Users.Badges.Notifications
         {
             _contextFacade = contextFacade;
             _userNotificationManager = userNotificationManager;
-            
+
             T = htmlLocalizer;
             S = stringLocalizer;
 
@@ -74,6 +75,19 @@ namespace Plato.Users.Badges.Notifications
             // Create result
             var result = new CommandResult<Badge>();
             
+            // Get services 
+            //var contextFacade = context.ServiceProvider.GetRequiredService<IContextFacade>();
+            //var userNotificationManager = context.ServiceProvider.GetRequiredService<IUserNotificationsManager<UserNotification>>();
+
+            //var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+            //{
+            //    ["Area"] = "Plato.Users.Badges",
+            //    ["Controller"] = "Profile",
+            //    ["Action"] = "Index",
+            //    ["Id"] = context.Notification.To.Id,
+            //    ["Alias"] = context.Notification.To.Alias
+            //});
+
             //// Build notification
             var userNotification = new UserNotification()
             {
@@ -81,14 +95,7 @@ namespace Plato.Users.Badges.Notifications
                 UserId = context.Notification.To.Id,
                 Title = S["New Badge"].Value,
                 Message = $"{S["You've been awareded the"].Value} '{context.Model.Name}' {S[" badge"].Value}",
-                Url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
-                {
-                    ["Area"] = "Plato.Users.Badges",
-                    ["Controller"] = "Profile",
-                    ["Action"] = "Index",
-                    ["Id"] = context.Notification.To.Id,
-                    ["Alias"] = context.Notification.To.Alias
-                })
+                Url = ""
             };
 
             // Create notification

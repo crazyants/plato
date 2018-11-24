@@ -1,11 +1,15 @@
-﻿namespace Plato.Badges.Models
+﻿using System;
+
+namespace Plato.Badges.Models
 {
     public interface IBadgeAwarderContext<TModel> where TModel : class
     {
 
-        TModel Model { get; set; }
+        //TModel Model { get; set; }
 
-        IBadge Badge { get; set; }
+        //IBadge Badge { get; set; }
+
+        IServiceProvider ServiceProvider { get; }
 
     }
 

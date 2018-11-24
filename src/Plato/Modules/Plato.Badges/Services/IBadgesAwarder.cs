@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Plato.Badges.Services
 {
     public interface IBadgesAwarderManager
     {
 
-        void Award();
+        void Award(ref IServiceProvider serviceprovider);
         
     }
 

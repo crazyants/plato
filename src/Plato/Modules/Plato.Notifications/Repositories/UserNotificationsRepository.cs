@@ -153,7 +153,8 @@ namespace Plato.Notifications.Repositories
                     url.ToEmptyIfNull().TrimToSize(500),
                     readDate,
                     createdUserId,
-                    createdDate.ToDateIfNull());
+                    createdDate.ToDateIfNull(),
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 
             return output;

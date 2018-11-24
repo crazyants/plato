@@ -48,7 +48,7 @@ namespace Plato.Badges
 
             // Activate all registered badge awarders
             var awarderManager = serviceProvider.GetService<IBadgesAwarderManager>();
-            awarderManager?.Award();
+            awarderManager?.Award(ref serviceProvider);
             
         }
     }

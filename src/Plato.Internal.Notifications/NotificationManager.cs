@@ -1,7 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
@@ -13,18 +18,28 @@ namespace Plato.Internal.Notifications
         
         private readonly IEnumerable<INotificationProvider<TModel>> _notificationProviders;
         private readonly ILogger<NotificationManager<TModel>> _logger;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceCollection _applicationServices;
 
         public NotificationManager(
             IEnumerable<INotificationProvider<TModel>> notificationProviders, 
-            ILogger<NotificationManager<TModel>> logger)
+            ILogger<NotificationManager<TModel>> logger, 
+            IServiceProvider serviceProvider, 
+            IServiceCollection applicationServices)
         {
             _notificationProviders = notificationProviders;
             _logger = logger;
+            _serviceProvider = serviceProvider;
+            _applicationServices = applicationServices;
         }
         
         public async Task<IEnumerable<ICommandResult<TModel>>> SendAsync(INotification notification, TModel model) 
         {
-            
+
+            // Clone services to expose to notification providers
+            // Some notification may need these services as they run on a background thread
+            //var clonedServices = _serviceProvider.CreateChildContainer(_applicationServices);
+
             // Create context for notification providers
             var context = new NotificationContext<TModel>()
             {
@@ -36,12 +51,22 @@ namespace Plato.Internal.Notifications
             var results = new List<ICommandResult<TModel>>();
             foreach (var notificationProvider in _notificationProviders)
             {
-                var result = await notificationProvider.SendAsync(context);
-                if (result != null)
+                try
                 {
-                    results.Add(result);
+                    var result = await notificationProvider.SendAsync(context);
+                    if (result != null)
+                    {
+                        results.Add(result);
+                    }
                 }
-                
+                catch (Exception e)
+                {
+                    if (_logger.IsEnabled(LogLevel.Critical))
+                    {
+                        _logger.LogError(
+                            $"An error occurred whilst invoking the SendAsync method within a notification provider for notification type '{notification.Type.Name}'. Error Message: {e.Message}");
+                    }
+                }
             }
             
             // Log results

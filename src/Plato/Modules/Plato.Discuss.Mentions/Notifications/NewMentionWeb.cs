@@ -65,7 +65,7 @@ namespace Plato.Discuss.Mentions.Notifications
             }
 
             // Ensure correct notification provider
-            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewMention.Name, StringComparison.Ordinal))
+            if (!context.Notification.Type.Name.Equals(WebNotifications.NewMention.Name, StringComparison.Ordinal))
             {
                 return null;
             }
@@ -73,17 +73,6 @@ namespace Plato.Discuss.Mentions.Notifications
             // Create result
             var result = new CommandResult<Topic>();
             
-            // Build topic url
-            //var baseUrl = await _contextFacade.GetBaseUrlAsync();
-            var topicUrl = _contextFacade.GetRouteUrl(new RouteValueDictionary()
-            {
-                ["Area"] = "Plato.Discuss",
-                ["Controller"] = "Home",
-                ["Action"] = "Topic",
-                ["Id"] = context.Model.Id,
-                ["Alias"] = context.Model.Alias
-            });
-
             // Build user notification
             var userNotification = new UserNotification()
             {
@@ -91,7 +80,14 @@ namespace Plato.Discuss.Mentions.Notifications
                 UserId = context.Notification.To.Id,
                 Title = S["New Mention"].Value,
                 Message = S["You've been mentioned by "].Value + context.Model.CreatedBy.DisplayName,
-                Url = topicUrl
+                Url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                {
+                    ["Area"] = "Plato.Discuss",
+                    ["Controller"] = "Home",
+                    ["Action"] = "Topic",
+                    ["Id"] = context.Model.Id,
+                    ["Alias"] = context.Model.Alias
+                })
             };
 
             var userNotificationResult = await _userNotificationManager.CreateAsync(userNotification);

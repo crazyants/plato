@@ -162,7 +162,8 @@ namespace Plato.Email.Repositories
                     priority,
                     sendAttempts,
                     createdUserId,
-                    createdDate.ToDateIfNull());
+                    createdDate.ToDateIfNull(),
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 
             return emailId;

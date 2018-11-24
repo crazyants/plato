@@ -11,9 +11,10 @@ namespace Plato.Reputations.Services
     {
 
         private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceCollection _applicationServices;
         private readonly IReputationsManager<TReputation> _reputationsManager;
         private readonly ILogger<ReputationsAwarder<TReputation>> _logger;
-        private readonly IServiceCollection _applicationServices;
+ 
 
         public ReputationsAwarder(
             IReputationsManager<TReputation> reputationsManager,
