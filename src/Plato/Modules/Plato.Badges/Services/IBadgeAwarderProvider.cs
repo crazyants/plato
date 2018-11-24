@@ -10,7 +10,9 @@ namespace Plato.Badges.Services
 
         int IntervalInSeconds { get; set; }
 
-        Task<ICommandResult<TModel>> Award(IBadgeAwarderContext<TModel> context);
+        IBadge Badge { get; set; }
+
+        Task<ICommandResult<TModel>> AwardAsync(IBadgeAwarderContext<TModel> context);
 
     }
     

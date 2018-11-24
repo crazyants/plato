@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
@@ -66,7 +67,7 @@ namespace Plato.Internal.Hosting.Web.Routing
             {
                 if (!_pipelines.TryGetValue(shellSettings.Name, out pipeline))
                 {
-                    pipeline = BuildTenantPipeline(shellSettings, httpContext.RequestServices);
+                    pipeline = BuildTenantPipeline(shellSettings, httpContext);
                     if (shellSettings.State == TenantState.Running)
                     {
                         _pipelines.Add(shellSettings.Name, pipeline);
@@ -81,9 +82,10 @@ namespace Plato.Internal.Hosting.Web.Routing
         // Build the middleware pipeline for the current tenant
         public RequestDelegate BuildTenantPipeline(
             ShellSettings shellSettings, 
-            IServiceProvider serviceProvider)
+            HttpContext httpContext)
         {
 
+            var serviceProvider = httpContext.RequestServices;
             var startups = serviceProvider.GetServices<IStartup>();
             var inlineConstraintResolver = serviceProvider.GetService<IInlineConstraintResolver>();
             var appBuilder = new ApplicationBuilder(serviceProvider);
@@ -141,7 +143,16 @@ namespace Plato.Internal.Hosting.Web.Routing
 
             // Use router
             appBuilder.UseRouter(router);
-            
+
+            // Create a captured router for use outside of application context
+            // For example within background tasks (sending emails etc)
+            var capturedRouter = serviceProvider.GetService<ICapturedRouter>();
+            capturedRouter.Configure(opts =>
+            {
+                opts.Router = router;
+                opts.BaseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{httpContext.Request.PathBase}";
+            });
+        
             // Activate all registered message broker subscriptions
             var subscribers = serviceProvider.GetServices<IBrokerSubscriber>();
             foreach (var subscriber in subscribers)
@@ -154,4 +165,6 @@ namespace Plato.Internal.Hosting.Web.Routing
             return pipeline;
         }
     }
+
+
 }

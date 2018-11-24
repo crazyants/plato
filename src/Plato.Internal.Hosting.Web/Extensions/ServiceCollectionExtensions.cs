@@ -81,13 +81,14 @@ namespace Plato.Internal.Hosting.Web.Extensions
         {
             return services.AddHPlatoTennetHost(internalServices =>
             {
-
+           
                 internalServices.AddSingleton<IHostEnvironment, WebHostEnvironment>();
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+                internalServices.AddSingleton<ICapturedRouter, CapturedRouter>();
                 internalServices.AddTransient<IContextFacade, ContextFacade>();
-
+          
                 internalServices.AddLogging();
                 internalServices.AddOptions();
                 internalServices.AddLocalization();
@@ -117,7 +118,8 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
         }
         
-        public static IServiceCollection AddHPlatoTennetHost(this IServiceCollection services,
+        public static IServiceCollection AddHPlatoTennetHost(
+            this IServiceCollection services,
             Action<IServiceCollection> configure)
         {
 
@@ -186,7 +188,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
             // localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-            
+
             // Razor & Views
             var builder = services.AddMvcCore()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)

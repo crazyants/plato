@@ -18,28 +18,18 @@ namespace Plato.Internal.Notifications
         
         private readonly IEnumerable<INotificationProvider<TModel>> _notificationProviders;
         private readonly ILogger<NotificationManager<TModel>> _logger;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IServiceCollection _applicationServices;
-
+ 
         public NotificationManager(
             IEnumerable<INotificationProvider<TModel>> notificationProviders, 
-            ILogger<NotificationManager<TModel>> logger, 
-            IServiceProvider serviceProvider, 
-            IServiceCollection applicationServices)
+            ILogger<NotificationManager<TModel>> logger)
         {
             _notificationProviders = notificationProviders;
             _logger = logger;
-            _serviceProvider = serviceProvider;
-            _applicationServices = applicationServices;
         }
         
         public async Task<IEnumerable<ICommandResult<TModel>>> SendAsync(INotification notification, TModel model) 
         {
-
-            // Clone services to expose to notification providers
-            // Some notification may need these services as they run on a background thread
-            //var clonedServices = _serviceProvider.CreateChildContainer(_applicationServices);
-
+            
             // Create context for notification providers
             var context = new NotificationContext<TModel>()
             {

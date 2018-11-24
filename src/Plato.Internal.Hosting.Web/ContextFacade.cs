@@ -24,7 +24,8 @@ namespace Plato.Internal.Hosting.Web
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IUrlHelperFactory _urlHelperFactory;
-      
+        private readonly ICapturedRouter _capturedRouter;
+
         private IUrlHelper _urlHelper;
 
         public ContextFacade(
@@ -32,13 +33,15 @@ namespace Plato.Internal.Hosting.Web
             IPlatoUserStore<User> platoUserStore,
             IActionContextAccessor actionContextAccessor,
             ISiteSettingsStore siteSettingsStore,
-            IUrlHelperFactory urlHelperFactory)
+            IUrlHelperFactory urlHelperFactory,
+            ICapturedRouter capturedRouter)
         {
             _httpContextAccessor = httpContextAccessor;
             _platoUserStore = platoUserStore;
             _actionContextAccessor = actionContextAccessor;
             _siteSettingsStore = siteSettingsStore;
             _urlHelperFactory = urlHelperFactory;
+            _capturedRouter = capturedRouter;
         }
 
         public async Task<User> GetAuthenticatedUserAsync()
@@ -60,6 +63,12 @@ namespace Plato.Internal.Hosting.Web
 
         public async Task<string> GetBaseUrlAsync()
         {
+            var request = _httpContextAccessor.HttpContext.Request;
+            return await GetBaseUrlAsync(request);
+        }
+
+        public async Task<string> GetBaseUrlAsync(HttpRequest request)
+        {
 
             var settings = await GetSiteSettingsAsync();
             if (!String.IsNullOrWhiteSpace(settings.BaseUrl))
@@ -71,13 +80,12 @@ namespace Plato.Internal.Hosting.Web
                     : settings.BaseUrl;
             }
 
-            var request = _httpContextAccessor.HttpContext.Request;
             return $"{request.Scheme}://{request.Host}{request.PathBase}";
-
         }
 
         public string GetRouteUrl(RouteValueDictionary routeValues)
         {
+
             if (_urlHelper == null)
             {
                 _urlHelper = _urlHelperFactory.GetUrlHelper(_actionContextAccessor.ActionContext);

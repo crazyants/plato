@@ -31,6 +31,8 @@ namespace Plato.Users.Badges.BadgeAwarders
         
         public int IntervalInSeconds { get; set; } = 20;
 
+        public IBadge Badge { get; set; } = ProfileBadges.Autobiographer;
+
         private const string Sql = @"             
                     DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
                     DECLARE @badgeName nvarchar(255) = '{name}';
@@ -65,65 +67,37 @@ namespace Plato.Users.Badges.BadgeAwarders
                     SELECT UserId FROM @myTable;";
 
 
-
-        private readonly IBackgroundTaskManager _backgroundTaskManager;
-
         private readonly ICacheManager _cacheManager;
         private readonly IDbHelper _dbHelper;
         private readonly IPlatoUserStore<User> _userStore;
         private readonly INotificationManager<Badge> _notificationManager;
 
         public AutobiographerAwarder(
-            IBackgroundTaskManager backgroundTaskManager,
             ICacheManager cacheManager,
             IDbHelper dbHelper,
             IPlatoUserStore<User> userStore,
             INotificationManager<Badge> notificaitonManager)
         {
-            _backgroundTaskManager = backgroundTaskManager;
             _cacheManager = cacheManager;
             _dbHelper = dbHelper;
             _userStore = userStore;
             _notificationManager = notificaitonManager;
         }
 
-
-        public async Task<ICommandResult<Badge>> Award(IBadgeAwarderContext<Badge> context)
+        public async Task<ICommandResult<Badge>> AwardAsync(IBadgeAwarderContext<Badge> context)
         {
+            
             // Create result
             var result = new CommandResult<Badge>();
 
-            //// Ensure correct notification provider
-            //if (!context.Badge.Name.Equals(ProfileBadges.Autobiographer.Name, StringComparison.Ordinal))
-            //{
-            //    return result.Failed();
-            //}
-
-            //var contextFacade = context.ServiceProvider.GetRequiredService<IContextFacade>();
-            //var userNotificationManager =
-            //    context.ServiceProvider.GetRequiredService<IUserNotificationsManager<UserNotification>>();
-            //var backgroundTaskManager = context.ServiceProvider.GetRequiredService<IBackgroundTaskManager>();
-            //var dbHelper = context.ServiceProvider.GetRequiredService<IDbHelper>();
-            //var userStore = context.ServiceProvider.GetRequiredService<IPlatoUserStore<User>>();
-            //var notificationManager = context.ServiceProvider.GetRequiredService<INotificationManager<Badge>>();
-            //var cacheManager = context.ServiceProvider.GetRequiredService<ICacheManager>();
-            
             // Replacements for SQL script
             var replacements = new Dictionary<string, string>()
             {
-                ["{name}"] = ProfileBadges.Autobiographer.Name,
-                ["{threshold}"] = ProfileBadges.Autobiographer.Threshold.ToString(),
+                ["{name}"] = Badge.Name,
+                ["{threshold}"] = Badge.Threshold.ToString(),
                 ["{key}"] = typeof(UserDetail).ToString()
             };
-
-            // Start task to execute awarder SQL with replacements every X seconds
-            //_backgroundTaskManager.Start(async (services, args) =>
-            //{
-
-            ////var dbHelper = services.GetRequiredService<IDbHelper>();
-            ////var userStore = services.GetRequiredService<IPlatoUserStore<User>>();
-            ////var notificationManager = services.GetRequiredService<INotificationManager<Badge>>();
-
+            
             var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>
             {
                 var users = new List<int>();
@@ -154,11 +128,10 @@ namespace Plato.Users.Badges.BadgeAwarders
                     {
                         if (user.NotificationEnabled(WebNotifications.NewBadge))
                         {
-                           
                             await _notificationManager.SendAsync(new Notification(WebNotifications.NewBadge)
                             {
                                 To = user,
-                            }, ProfileBadges.Autobiographer);
+                            },  (Badge)Badge);
                         }
                     }
                 }
@@ -166,9 +139,7 @@ namespace Plato.Users.Badges.BadgeAwarders
                 _cacheManager.CancelTokens(typeof(UserBadgeStore));
             }
 
-            //}, 20 * 1000);
-
-            return result.Success(ProfileBadges.Autobiographer);
+            return result.Success(Badge);
 
         }
 

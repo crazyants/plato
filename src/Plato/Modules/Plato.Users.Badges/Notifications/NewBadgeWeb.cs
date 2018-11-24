@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +11,8 @@ using Microsoft.Extensions.Localization;
 using Plato.Badges.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Hosting.Web;
+using Plato.Internal.Hosting.Web.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Notifications.Models;
@@ -23,6 +28,8 @@ namespace Plato.Users.Badges.Notifications
 
         private readonly IContextFacade _contextFacade;
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
+  
+        private readonly ICapturedRouter _capturedRouter;
 
         public IHtmlLocalizer T { get; }
 
@@ -32,10 +39,12 @@ namespace Plato.Users.Badges.Notifications
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IContextFacade contextFacade,
-            IUserNotificationsManager<UserNotification> userNotificationManager)
+            IUserNotificationsManager<UserNotification> userNotificationManager,
+            ICapturedRouter capturedRouter)
         {
             _contextFacade = contextFacade;
             _userNotificationManager = userNotificationManager;
+            _capturedRouter = capturedRouter;
 
             T = htmlLocalizer;
             S = stringLocalizer;
@@ -75,18 +84,16 @@ namespace Plato.Users.Badges.Notifications
             // Create result
             var result = new CommandResult<Badge>();
             
-            // Get services 
-            //var contextFacade = context.ServiceProvider.GetRequiredService<IContextFacade>();
-            //var userNotificationManager = context.ServiceProvider.GetRequiredService<IUserNotificationsManager<UserNotification>>();
-
-            //var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
-            //{
-            //    ["Area"] = "Plato.Users.Badges",
-            //    ["Controller"] = "Profile",
-            //    ["Action"] = "Index",
-            //    ["Id"] = context.Notification.To.Id,
-            //    ["Alias"] = context.Notification.To.Alias
-            //});
+            //var url = _urlHelper.Link()
+            var baseUri = await _capturedRouter.GetBaseUrlAsync();
+            var url = _capturedRouter.GetRouteUrl(baseUri, new RouteValueDictionary()
+            {
+                ["Area"] = "Plato.Users.Badges",
+                ["Controller"] = "Profile",
+                ["Action"] = "Index",
+                ["Id"] = context.Notification.To.Id,
+                ["Alias"] = context.Notification.To.Alias
+            });
 
             //// Build notification
             var userNotification = new UserNotification()
@@ -94,8 +101,8 @@ namespace Plato.Users.Badges.Notifications
                 NotificationName = context.Notification.Type.Name,
                 UserId = context.Notification.To.Id,
                 Title = S["New Badge"].Value,
-                Message = $"{S["You've been awareded the"].Value} '{context.Model.Name}' {S[" badge"].Value}",
-                Url = ""
+                Message = $"{S["You've earned the"].Value} '{context.Model.Name}' {S[" badge"].Value}",
+                Url = url
             };
 
             // Create notification
