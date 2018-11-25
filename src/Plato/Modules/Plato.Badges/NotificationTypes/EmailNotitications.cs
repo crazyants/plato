@@ -1,33 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Discuss.Mentions.NotificationTypes
+namespace Plato.Badges.NotificationTypes
 {
-    
+
     public class EmailNotifications : INotificationTypeProvider
     {
 
-        public static readonly EmailNotification NewMention =
-            new EmailNotification("NewMentionEmail", "New Mentions",
-                "Send me an email notification for each new @mention.");
+        public static readonly EmailNotification NewBadge =
+            new EmailNotification("NewBadgeEmail", "New Badges",
+                "Send me an email notification when I'm awarded a new badge.");
         
         public IEnumerable<INotificationType> GetNotificationTypes()
         {
             return new[]
             {
-                NewMention
+                NewBadge
             };
 
         }
 
         public IEnumerable<INotificationType> GetDefaultNotificationTypes()
         {
-            return new[]
-            {
-                NewMention
-            };
+            return null;
         }
      
     }

@@ -13,6 +13,8 @@ using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Discuss.Reactions.Assets;
 using Plato.Discuss.Reactions.Badges;
+using Plato.Discuss.Reactions.Tasks;
+using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Discuss.Reactions
 {
@@ -30,6 +32,10 @@ namespace Plato.Discuss.Reactions
 
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+
+            // Background tasks
+            services.AddScoped<IBackgroundTaskProvider, ReactionsAwarder>();
+    
 
             // Register navigation provider
             services.AddScoped<INavigationProvider, TopicMenu>();

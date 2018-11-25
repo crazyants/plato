@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
+using Plato.Badges.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -11,105 +12,86 @@ using Plato.Internal.Localization.Abstractions.Models;
 using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Badges.NotificationTypes;
 
-//namespace Plato.Users.Badges.Notifications
-//{
+namespace Plato.Users.Badges.Notifications
+{
 
-//    public class NewMentionEmail : INotificationProvider<Topic>
-//    {
+    public class NewBadgeEmail : INotificationProvider<Badge>
+    {
 
-//        private readonly IContextFacade _contextFacade;
-//        private readonly ILocaleStore _localeStore;
-//        private readonly IEmailManager _emailManager;
+        private readonly IContextFacade _contextFacade;
+        private readonly ILocaleStore _localeStore;
+        private readonly IEmailManager _emailManager;
+        private readonly ICapturedRouterUrlHelper _capturedRouterUrlHelper;
 
-//        public NewMentionEmail(
-//            IContextFacade contextFacade,
-//            ILocaleStore localeStore,
-//            IEmailManager emailManager)
-//        {
-//            _contextFacade = contextFacade;
-//            _localeStore = localeStore;
-//            _emailManager = emailManager;
-//        }
+        public NewBadgeEmail(
+            IContextFacade contextFacade,
+            ILocaleStore localeStore,
+            IEmailManager emailManager,
+            ICapturedRouterUrlHelper capturedRouterUrlHelper)
+        {
+            _contextFacade = contextFacade;
+            _localeStore = localeStore;
+            _emailManager = emailManager;
+            _capturedRouterUrlHelper = capturedRouterUrlHelper;
+        }
 
-//        public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
-//        {
-
-//            // Validate
-//            if (context == null)
-//            {
-//                throw new ArgumentNullException(nameof(context));
-//            }
-
-//            if (context.Notification == null)
-//            {
-//                throw new ArgumentNullException(nameof(context.Notification));
-//            }
-
-//            if (context.Notification.Type == null)
-//            {
-//                throw new ArgumentNullException(nameof(context.Notification.Type));
-//            }
-
-//            if (context.Notification.To == null)
-//            {
-//                throw new ArgumentNullException(nameof(context.Notification.To));
-//            }
+        public async Task<ICommandResult<Badge>> SendAsync(INotificationContext<Badge> context)
+        {
             
-//            // Ensure correct notification provider
-//            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewMention.Name, StringComparison.Ordinal))
-//            {
-//                return null;
-//            }
+            // Ensure correct notification provider
+            if (!context.Notification.Type.Name.Equals(EmailNotifications.NewBadge.Name, StringComparison.Ordinal))
+            {
+                return null;
+            }
+
+            // Create result
+            var result = new CommandResult<Badge>();
             
-//            // Create result
-//            var result = new CommandResult<Topic>();
+            // Get email template
+            var templateid = "NewBadge";
+            var culture = await _contextFacade.GetCurrentCultureAsync();
+            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateid);
+            if (email != null)
+            {
 
-//            // Get email template
-//            var templateid = "NewMention";
-//            var culture = await _contextFacade.GetCurrentCultureAsync();
-//            var email = await _localeStore.GetFirstOrDefaultByKeyAsync<LocaleEmail>(culture, templateid);
-//            if (email != null)
-//            {
+                // Build topic url
+                var baseUri = await _capturedRouterUrlHelper.GetBaseUrlAsync();
+                var url = _capturedRouterUrlHelper.GetRouteUrl(baseUri, new RouteValueDictionary()
+                {
+                    ["Area"] = "Plato.Users.Badges",
+                    ["Controller"] = "Profile",
+                    ["Action"] = "Index",
+                    ["Id"] = context.Notification.To.Id,
+                    ["Alias"] = context.Notification.To.Alias
+                });
 
-//                // Build topic url
-//                var baseUrl = await _contextFacade.GetBaseUrlAsync();
-//                var topicUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
-//                {
-//                    ["Area"] = "Plato.Discuss",
-//                    ["Controller"] = "Home",
-//                    ["Action"] = "Topic",
-//                    ["Id"] = context.Model.Id,
-//                    ["Alias"] = context.Model.Alias
-//                });
+                // Build message from template
+                var message = email.BuildMailMessage();
+                message.Body = string.Format(
+                    email.Message,
+                    context.Notification.To.DisplayName,
+                    context.Model.Name,
+                    baseUri + url); ;
+                message.IsBodyHtml = true;
+                message.To.Add(new MailAddress(context.Notification.To.Email));
 
-//                // Format message
-//                var body = string.Format(
-//                    email.Message,
-//                    context.Notification.To.DisplayName,
-//                    context.Model.Title,
-//                    topicUrl);
+                // Send message
+                var emailResult = await _emailManager.SaveAsync(message);
+                if (emailResult.Succeeded)
+                {
+                    return result.Success(context.Model);
+                }
 
-//                // Build message from template
-//                var message = email.BuildMailMessage();
-//                message.IsBodyHtml = true;
-//                message.To.Add(new MailAddress(context.Notification.To.Email));
+                return result.Failed(emailResult.Errors?.ToArray());
 
-//                // Send message
-//                var emailResult = await _emailManager.SaveAsync(message);
-//                if (emailResult.Succeeded)
-//                {
-//                    return result.Success(context.Model);
-//                }
+            }
 
-//                return result.Failed(emailResult.Errors?.ToArray());
+            return result.Failed($"No email template with the Id '{templateid}' exists within the 'locales/{culture}/emails.json' file!");
 
-//            }
+        }
 
-//            return result.Failed($"No email template with the Id '{templateid}' exists within the 'locales/{culture}/emails.json' file!");
+    }
 
-//        }
-
-//    }
-    
-//}
+}

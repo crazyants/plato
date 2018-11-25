@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Collections.Generic;
 using Plato.Badges.Models;
 using Plato.Badges.Services;
-using Plato.Badges.Stores;
-using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Cache.Abstractions;
-using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Models.Notifications;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Notifications.Abstractions;
-using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Internal.Tasks.Abstractions;
-using Plato.Notifications.Extensions;
 
 namespace Plato.Discuss.Reactions.Badges
 {

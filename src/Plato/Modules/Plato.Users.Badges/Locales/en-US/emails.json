@@ -1,0 +1,13 @@
+{
+  "Emails": [
+    {
+      "Id": "NewBadge",
+      "To": "",
+      "Cc": "",
+      "Bcc": "",
+      "From": "",
+      "Subject": "[SiteName] - New Badge",
+      "Message": "Hi {0},\n\nCongratulations, you've been awarded the '{1}' badge.\n\nSee all your badges @ {2}\n\n[SiteName]\n[SiteUrl]"
+    }
+  ]
+}

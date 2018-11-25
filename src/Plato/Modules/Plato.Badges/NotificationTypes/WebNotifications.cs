@@ -2,24 +2,21 @@
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Discuss.NotificationTypes
+namespace Plato.Badges.NotificationTypes
 {
 
     public class WebNotifications : INotificationTypeProvider
     {
 
-        public static readonly WebNotification NewTopics =
-            new WebNotification("NewTopicWeb", "New Topics", "Show me a web notification for each new topic.");
-
-        public static readonly WebNotification NewReplies =
-            new WebNotification("NewReplyWeb", "New Replies", "Show me a web notification for each new reply.");
+        public static readonly WebNotification NewBadge =
+            new WebNotification("NewBadgeWeb", "New Badges",
+                "Show me a web notification when I'm awarded a new badge.");
 
         public IEnumerable<INotificationType> GetNotificationTypes()
         {
             return new[]
             {
-                NewTopics,
-                NewReplies,
+                NewBadge
             };
         }
 
@@ -27,8 +24,7 @@ namespace Plato.Discuss.NotificationTypes
         {
             return new[]
             {
-                NewTopics,
-                NewReplies,
+                NewBadge
             };
         }
 

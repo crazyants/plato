@@ -15,7 +15,7 @@ using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
 using Plato.Users.Badges.BadgeProviders;
-using Plato.Users.Badges.NotificationTypes;
+using Plato.Badges.NotificationTypes;
 using Plato.Users.Models;
 
 namespace Plato.Users.Badges.Tasks
@@ -117,6 +117,17 @@ namespace Plato.Users.Badges.Tasks
                 {
                     foreach (var user in users.Data)
                     {
+
+                        // Email notification
+                        if (user.NotificationEnabled(EmailNotifications.NewBadge))
+                        {
+                            await _notificationManager.SendAsync(new Notification(EmailNotifications.NewBadge)
+                            {
+                                To = user,
+                            }, (Badge)Badge);
+                        }
+
+                        // Web notification
                         if (user.NotificationEnabled(WebNotifications.NewBadge))
                         {
                             await _notificationManager.SendAsync(new Notification(WebNotifications.NewBadge)
@@ -124,6 +135,7 @@ namespace Plato.Users.Badges.Tasks
                                 To = user,
                             }, (Badge) Badge);
                         }
+
                     }
                 }
 

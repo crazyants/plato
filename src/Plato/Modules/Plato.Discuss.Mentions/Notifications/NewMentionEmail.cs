@@ -36,27 +36,6 @@ namespace Plato.Discuss.Mentions.Notifications
 
         public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
         {
-
-            // Validate
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (context.Notification == null)
-            {
-                throw new ArgumentNullException(nameof(context.Notification));
-            }
-
-            if (context.Notification.Type == null)
-            {
-                throw new ArgumentNullException(nameof(context.Notification.Type));
-            }
-
-            if (context.Notification.To == null)
-            {
-                throw new ArgumentNullException(nameof(context.Notification.To));
-            }
             
             // Ensure correct notification provider
             if (!context.Notification.Type.Name.Equals(EmailNotifications.NewMention.Name, StringComparison.Ordinal))
@@ -75,8 +54,8 @@ namespace Plato.Discuss.Mentions.Notifications
             {
 
                 // Build topic url
-                var baseUrl = await _contextFacade.GetBaseUrlAsync();
-                var topicUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                var baseUri = await _contextFacade.GetBaseUrlAsync();
+                var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
                     ["Area"] = "Plato.Discuss",
                     ["Controller"] = "Home",
@@ -84,16 +63,14 @@ namespace Plato.Discuss.Mentions.Notifications
                     ["Id"] = context.Model.Id,
                     ["Alias"] = context.Model.Alias
                 });
-
-                // Format message
-                var body = string.Format(
+                
+                // Build message from template
+                var message = email.BuildMailMessage();
+                message.Body = string.Format(
                     email.Message,
                     context.Notification.To.DisplayName,
                     context.Model.Title,
-                    topicUrl);
-
-                // Build message from template
-                var message = email.BuildMailMessage();
+                    baseUri + url);
                 message.IsBodyHtml = true;
                 message.To.Add(new MailAddress(context.Notification.To.Email));
 

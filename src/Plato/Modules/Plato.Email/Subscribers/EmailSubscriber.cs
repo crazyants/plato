@@ -15,15 +15,19 @@ namespace Plato.Email.Subscribers
         private readonly IOptions<SmtpSettings> _smtpSettings;
         private readonly IContextFacade _contextFacade;
         private readonly IBroker _broker;
+        private readonly ICapturedRouterUrlHelper _urlHelper;
+
 
         public EmailSubscriber(
             IBroker broker,
             IContextFacade contextFacade,
-            IOptions<SmtpSettings> smtpSettings)
+            IOptions<SmtpSettings> smtpSettings,
+            ICapturedRouterUrlHelper urlHelper)
         {
             _broker = broker;
             _contextFacade = contextFacade;
             _smtpSettings = smtpSettings;
+            _urlHelper = urlHelper;
         }
 
         #region "Implementation"
@@ -75,7 +79,7 @@ namespace Plato.Email.Subscribers
         {
 
             var settings = await _contextFacade.GetSiteSettingsAsync();
-            var baseUrl = await _contextFacade.GetBaseUrlAsync();
+            var baseUrl = await _urlHelper.GetBaseUrlAsync();
 
             return new Dictionary<string, string>
             {

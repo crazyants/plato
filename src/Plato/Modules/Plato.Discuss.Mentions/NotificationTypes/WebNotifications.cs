@@ -20,9 +20,12 @@ namespace Plato.Discuss.Mentions.NotificationTypes
             };
         }
 
-        public IEnumerable<INotificationType> GetDefaultPermissions()
+        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
         {
-            return null;
+            return new[]
+            {
+                NewMention
+            };
         }
 
     }

@@ -23,7 +23,7 @@ namespace Plato.Discuss.NotificationTypes
             };
         }
 
-        public IEnumerable<INotificationType> GetDefaultPermissions()
+        public IEnumerable<INotificationType> GetDefaultNotificationTypes()
         {
             return new[]
             {

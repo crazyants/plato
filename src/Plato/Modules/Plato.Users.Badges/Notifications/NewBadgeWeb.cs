@@ -11,17 +11,15 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Notifications.Models;
 using Plato.Notifications.Services;
-using Plato.Users.Badges.NotificationTypes;
+using Plato.Badges.NotificationTypes;
 
 namespace Plato.Users.Badges.Notifications
 {
 
     public class NewBadgeWeb : INotificationProvider<Badge>
     {
-
-        private readonly IContextFacade _contextFacade;
+        
         private readonly IUserNotificationsManager<UserNotification> _userNotificationManager;
-  
         private readonly ICapturedRouterUrlHelper _urlHelper;
 
         public IHtmlLocalizer T { get; }
@@ -31,17 +29,13 @@ namespace Plato.Users.Badges.Notifications
         public NewBadgeWeb(
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            IContextFacade contextFacade,
             IUserNotificationsManager<UserNotification> userNotificationManager,
             ICapturedRouterUrlHelper urlHelper)
         {
-            _contextFacade = contextFacade;
             _userNotificationManager = userNotificationManager;
             _urlHelper = urlHelper;
-
             T = htmlLocalizer;
             S = stringLocalizer;
-
         }
 
         public async Task<ICommandResult<Badge>> SendAsync(INotificationContext<Badge> context)

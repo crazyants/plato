@@ -15,7 +15,7 @@ namespace Plato.Internal.Hosting.Web
 
     /// <summary>
     /// Allows the use of IUrlHelperFactory outside of the ASP.NET core application context.
-    /// IUrlHelperFactory requires an ActionContext which is not available within background tasks.
+    /// IUrlHelperFactory requires an ActionContext which is not available within IBackgroundTaskProviders
     /// </summary>
     public class CapturedRouterUrlHelper  : ICapturedRouterUrlHelper
     {
@@ -58,7 +58,7 @@ namespace Plato.Internal.Hosting.Web
                 throw new ArgumentNullException(nameof(_capturedRouter));
             }
 
-            // Fallback to baseUri provided within our configure method
+            // Fallback to baseUri within our captured router
             var isNullOrEmpty = String.IsNullOrEmpty(_capturedRouter.Options.BaseUrl);
             var isDefault = _capturedRouter.Options.BaseUrl?.ToLower() == "http://";
             if (isNullOrEmpty | isDefault)

@@ -17,7 +17,7 @@ using Plato.Notifications.Services;
 using Plato.Users.Badges.BadgeProviders;
 using Plato.Users.Badges.Navigation;
 using Plato.Users.Badges.Notifications;
-using Plato.Users.Badges.NotificationTypes;
+using Plato.Badges.NotificationTypes;
 using Plato.Users.Badges.Tasks;
 using Plato.Users.Badges.ViewProviders;
 
@@ -39,7 +39,7 @@ namespace Plato.Users.Badges
             services.AddScoped<IBadgesProvider<Badge>, VisitBadges>();
             services.AddScoped<IBadgesProvider<Badge>, ProfileBadges>();
 
-            // Badge awarder providers
+            // Background tasks
             services.AddScoped<IBackgroundTaskProvider, AutobiographerAwarder>();
             services.AddScoped<IBackgroundTaskProvider, ConfirmedMemberAwarder>();
 
@@ -70,10 +70,9 @@ namespace Plato.Users.Badges
             services.AddScoped<INotificationManager<Badge>, NotificationManager<Badge>>();
             
             // Notification Providers
-            //services.AddScoped<INotificationProvider<Badge>, NewMentionEmail>();
+            services.AddScoped<INotificationProvider<Badge>, NewBadgeEmail>();
             services.AddScoped<INotificationProvider<Badge>, NewBadgeWeb>();
-
-
+            
         }
 
         public override void Configure(

@@ -6,9 +6,6 @@ namespace Plato.Internal.Notifications.Abstractions
 {
     public interface INotificationProvider<TModel> where TModel : class
     {
-
         Task<ICommandResult<TModel>> SendAsync(INotificationContext<TModel> context);
-
     }
-    
 }
