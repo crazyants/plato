@@ -13,7 +13,7 @@ using Plato.Moderation.Stores;
 namespace Plato.Moderation.Services
 {
 
-    public class ModeratorPermissionsHandler : AuthorizationHandler<PermissionRequirement>
+    public class ModeratorPermissionsHandler : AuthorizationHandler<PermissionRequirement<ModeratorPermission>>
     {
 
         private readonly IPlatoUserStore<User> _userStore;
@@ -31,8 +31,9 @@ namespace Plato.Moderation.Services
 
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
-            PermissionRequirement requirement)
+            PermissionRequirement<ModeratorPermission> requirement)
         {
+
             if (context.HasSucceeded)
             {
                 // This handler is not revoking any pre-existing grants.

@@ -245,7 +245,7 @@ namespace Plato.Roles.Controllers
         {
             
             // Ensuer we have permission
-            if (!await _authorizationService.AuthorizeAsync(User, Permissions.DeleteRoles))
+            if (!await _authorizationService.AuthorizeAsync<Permission>(User, Permissions.DeleteRoles))
             {
                 return Unauthorized();
             }

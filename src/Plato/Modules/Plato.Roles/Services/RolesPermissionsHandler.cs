@@ -10,7 +10,7 @@ using Plato.Internal.Security.Abstractions;
 
 namespace Plato.Roles.Services
 {
-    public class RolesPermissionsHandler : AuthorizationHandler<PermissionRequirement>
+    public class RolesPermissionsHandler : AuthorizationHandler<PermissionRequirement<Permission>>
     {
         private readonly RoleManager<Role> _roleManager;
 
@@ -21,7 +21,9 @@ namespace Plato.Roles.Services
 
         #region "Implementation"
 
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
+        protected override async Task HandleRequirementAsync(
+            AuthorizationHandlerContext context, 
+            PermissionRequirement<Permission> requirement)
         {
             if (context.HasSucceeded)
             {
