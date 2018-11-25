@@ -1,20 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Internal.Tasks
 {
-
-    public interface IBackgroundTaskManager
-    {
-        void StartTasks();
-
-        void StopTasks();
-
-    }
-
+    
     public class BackgroundTaskManager : IBackgroundTaskManager
     {
 
@@ -38,10 +29,9 @@ namespace Plato.Internal.Tasks
             {
                 _safeTimerFactory.Start(async (sender, args) =>
                     {
-
                         try
                         {
-                            await provider.ExecuteTaskAsync();
+                            await provider.ExecuteAsync();
                         }
                         catch (Exception e)
                         {
@@ -51,7 +41,6 @@ namespace Plato.Internal.Tasks
                                     $"An error occurred whilst activating background task of type '{provider.GetType()}'. {e.Message}");
                             }
                         }
-
                     }, provider.IntervalInSeconds * 1000);
 
             }

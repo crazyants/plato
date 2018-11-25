@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Badges.Models;
-using Plato.Badges.NotificationTypes;
-using Plato.Badges.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
@@ -16,6 +14,8 @@ using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
 using Plato.Users.Badges.BadgeProviders;
+using Plato.Badges.NotificationTypes;
+using Plato.Badges.Stores;
 
 namespace Plato.Users.Badges.Tasks
 {
@@ -24,7 +24,7 @@ namespace Plato.Users.Badges.Tasks
     {
 
         public int IntervalInSeconds => 120;
-
+        
         public IEnumerable<Badge> Badges => new[]
         {
             VisitBadges.NewMember,
@@ -50,7 +50,7 @@ namespace Plato.Users.Badges.Tasks
             _notificationManager = notificaitonManager;
         }
 
-        public async Task ExecuteTaskAsync()
+        public async Task ExecuteAsync()
         {
 
             const string sql = @"                        
@@ -148,15 +148,13 @@ namespace Plato.Users.Badges.Tasks
                     }
 
                     _cacheManager.CancelTokens(typeof(UserBadgeStore));
+
                 }
 
             }
-
-
-
+            
         }
-
+        
     }
-
-
+    
 }

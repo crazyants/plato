@@ -2,12 +2,14 @@
 
 namespace Plato.Internal.Tasks.Abstractions
 {
+
     public interface IBackgroundTaskProvider
     {
 
         int IntervalInSeconds { get; }
 
-        Task ExecuteTaskAsync();
+        Task ExecuteAsync();
         
     }
+
 }

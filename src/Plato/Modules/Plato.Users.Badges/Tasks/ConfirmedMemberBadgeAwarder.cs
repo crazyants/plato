@@ -44,7 +44,7 @@ namespace Plato.Users.Badges.Tasks
             _notificationManager = notificaitonManager;
         }
 
-        public async Task ExecuteTaskAsync()
+        public async Task ExecuteAsync()
         {
             
             const string sql = @"                   

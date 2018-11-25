@@ -51,7 +51,7 @@ namespace Plato.Discuss.Reactions.Tasks
             _notificationManager = notificaitonManager;
         }
 
-        public async Task ExecuteTaskAsync()
+        public async Task ExecuteAsync()
         {
             
             const string sql = @"                       
@@ -164,6 +164,5 @@ namespace Plato.Discuss.Reactions.Tasks
         }
 
     }
-
-
+    
 }
