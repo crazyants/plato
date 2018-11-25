@@ -55,44 +55,43 @@ namespace Plato.Discuss.Reactions.Tasks
         {
             
             const string sql = @"                       
-                        DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
-                        DECLARE @badgeName nvarchar(255) = '{name}';
-                        DECLARE @threshold int = {threshold};                  
-                        DECLARE @userId int;
-                        DECLARE @reactions int;
-                        DECLARE @myTable TABLE
-                        (
-                            Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
-                            UserId int NOT NULL
-                        );
-                        DECLARE MSGCURSOR CURSOR FOR SELECT er.CreatedUserId, COUNT(er.Id) AS Reactions 
-                        FROM {prefix}_EntityReactions er
-                        WHERE NOT EXISTS (
-                           SELECT Id FROM {prefix}_UserBadges ub 
-                           WHERE ub.UserId = er.CreatedUserId AND ub.BadgeName = @badgeName
-                         )
-                        GROUP BY er.CreatedUserId
-                        ORDER BY Reactions DESC
+                DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
+                DECLARE @badgeName nvarchar(255) = '{name}';
+                DECLARE @threshold int = {threshold};                  
+                DECLARE @userId int;
+                DECLARE @reactions int;
+                DECLARE @myTable TABLE
+                (
+                    Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
+                    UserId int NOT NULL
+                );
+                DECLARE MSGCURSOR CURSOR FOR SELECT er.CreatedUserId, COUNT(er.Id) AS Reactions 
+                FROM {prefix}_EntityReactions er
+                WHERE NOT EXISTS (
+                   SELECT Id FROM {prefix}_UserBadges ub 
+                   WHERE ub.UserId = er.CreatedUserId AND ub.BadgeName = @badgeName
+                 )
+                GROUP BY er.CreatedUserId
+                ORDER BY Reactions DESC
 
-                        OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId, @reactions;                    
-                        WHILE @@FETCH_STATUS = 0
+                OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId, @reactions;                    
+                WHILE @@FETCH_STATUS = 0
+                BEGIN
+                    IF (@reactions >= @threshold)
+                    BEGIN
+                        DECLARE @identity int;
+                        EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
+                        IF (@identity > 0)
                         BEGIN
-                            IF (@reactions >= @threshold)
-                            BEGIN
-                                DECLARE @identity int;
-                                EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
-                                IF (@identity > 0)
-                                BEGIN
-                                    INSERT INTO @myTable (UserId) VALUES (@userId);                     
-                                END
-                            END;
-                            FETCH NEXT FROM MSGCURSOR INTO @userId, @reactions;	                    
-                        END;
-                        CLOSE MSGCURSOR;
-                        DEALLOCATE MSGCURSOR;
-                        SELECT UserId FROM @myTable;";
-
-
+                            INSERT INTO @myTable (UserId) VALUES (@userId);                     
+                        END
+                    END;
+                    FETCH NEXT FROM MSGCURSOR INTO @userId, @reactions;	                    
+                END;
+                CLOSE MSGCURSOR;
+                DEALLOCATE MSGCURSOR;
+                SELECT UserId FROM @myTable;";
+            
             foreach (var badge in this.Badges)
             {
 
@@ -155,12 +154,11 @@ namespace Plato.Discuss.Reactions.Tasks
                     }
 
                     _cacheManager.CancelTokens(typeof(UserBadgeStore));
+
                 }
 
             }
-
-       
-
+            
         }
 
     }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Plato.Email.Configuration;
 using Plato.Internal.Features.Abstractions;
@@ -16,8 +15,10 @@ using Plato.Email.Repositories;
 using Plato.Email.Services;
 using Plato.Email.Stores;
 using Plato.Email.Subscribers;
+using Plato.Email.ViewProviders;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Emails.Abstractions;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Email
@@ -47,7 +48,11 @@ namespace Plato.Email
             // Stores
             services.AddScoped<IEmailSettingsStore<EmailSettings>, EmailSettingsStore>();
             services.AddScoped<IEmailStore<EmailMessage>, EmailStore>();
-            
+
+            // View providers
+            services.AddScoped<IViewProviderManager<EmailSettings>, ViewProviderManager<EmailSettings>>();
+            services.AddScoped<IViewProvider<EmailSettings>, AdminViewProvider>();
+
             // Configuration
             services.AddTransient<IConfigureOptions<SmtpSettings>, SmtpSettingsConfiguration>();
        

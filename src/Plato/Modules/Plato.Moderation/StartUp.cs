@@ -38,8 +38,7 @@ namespace Plato.Moderation
 
             // Stores
             services.AddScoped<IModeratorStore<Moderator>, ModeratorStore>();
-
-
+            
             // Register moderator permissions manager
             services.AddScoped<IPermissionsManager<ModeratorPermission>, PermissionsManager<ModeratorPermission>>();
           

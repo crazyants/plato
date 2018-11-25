@@ -42,28 +42,7 @@ namespace Plato.Discuss.Mentions.Notifications
 
         public async Task<ICommandResult<Topic>> SendAsync(INotificationContext<Topic> context)
         {
-
-            // Validate
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (context.Notification == null)
-            {
-                throw new ArgumentNullException(nameof(context.Notification));
-            }
-
-            if (context.Notification.Type == null)
-            {
-                throw new ArgumentNullException(nameof(context.Notification.Type));
-            }
-
-            if (context.Notification.To == null)
-            {
-                throw new ArgumentNullException(nameof(context.Notification.To));
-            }
-
+            
             // Ensure correct notification provider
             if (!context.Notification.Type.Name.Equals(WebNotifications.NewMention.Name, StringComparison.Ordinal))
             {

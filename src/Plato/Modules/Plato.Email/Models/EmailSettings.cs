@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Plato.Internal.Abstractions;
+﻿using Plato.Internal.Abstractions;
 
 namespace Plato.Email.Models
 {
@@ -13,4 +10,5 @@ namespace Plato.Email.Models
         public SmtpSettings SmtpSettings { get; set; }
 
     }
+
 }

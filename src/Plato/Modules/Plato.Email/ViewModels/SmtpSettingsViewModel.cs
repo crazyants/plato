@@ -1,29 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
-using System.Text;
 
 namespace Plato.Email.ViewModels
 {
-
-    public class EmailSettingsViewModel
-    {
-        public Pop3SettingsViewModel Pop3Settings { get; set; }
-
-        public SmtpSettingsViewModel SmtpSettings { get; set; }
-
-    }
-
-    public class Pop3SettingsViewModel
-    {
-
-        public bool Enabled { get; set; }
-
-        [Required]
-        public string ServerName { get; set; }
-
-    }
 
     public class SmtpSettingsViewModel
     {
