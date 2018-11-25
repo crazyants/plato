@@ -205,7 +205,8 @@ namespace Plato.Reactions.Repositories
                     entityId,
                     entityReplyId,
                     createdUserId,
-                    createdDate.ToDateIfNull()
+                    createdDate.ToDateIfNull(),
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output)
                 );
             }
 

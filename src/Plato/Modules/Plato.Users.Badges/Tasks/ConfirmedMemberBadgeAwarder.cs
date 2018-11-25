@@ -16,23 +16,23 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
 using Plato.Users.Badges.BadgeProviders;
 using Plato.Badges.NotificationTypes;
-using Plato.Users.Models;
 
 namespace Plato.Users.Badges.Tasks
 {
 
-    public class AutobiographerAwarder : IBackgroundTaskProvider
+    public class ConfirmedMemberBadgeAwarder : IBackgroundTaskProvider
     {
-        public int IntervalInSeconds => 120;
 
-        public IBadge Badge => ProfileBadges.Autobiographer;
+        public int IntervalInSeconds => 20;
+
+        public IBadge Badge => ProfileBadges.ConfirmedMember;
 
         private readonly ICacheManager _cacheManager;
         private readonly IDbHelper _dbHelper;
         private readonly IPlatoUserStore<User> _userStore;
         private readonly INotificationManager<Badge> _notificationManager;
 
-        public AutobiographerAwarder(
+        public ConfirmedMemberBadgeAwarder(
             ICacheManager cacheManager,
             IDbHelper dbHelper,
             IPlatoUserStore<User> userStore,
@@ -47,45 +47,44 @@ namespace Plato.Users.Badges.Tasks
         public async Task ExecuteTaskAsync()
         {
             
-            const string sql = @"             
-                    DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
-                    DECLARE @badgeName nvarchar(255) = '{name}';
-                    DECLARE @threshold int = {threshold};                  
-                    DECLARE @userId int;
-                    DECLARE @myTable TABLE
-                    (
-                        Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
-                        UserId int NOT NULL
-                    );
-                    DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 ud.UserId FROM {prefix}_UserData AS ud
-                    WHERE (ud.[Key] = '{key}')
-                    AND NOT EXISTS (
-		                     SELECT Id FROM {prefix}_UserBadges ub 
-		                     WHERE ub.UserId = ud.UserId AND ub.BadgeName = @badgeName
-	                    )
-                    ORDER BY ud.CreatedDate DESC;
-                    
-                    OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
-                    WHILE @@FETCH_STATUS = 0
+            const string sql = @"                   
+                DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
+                DECLARE @badgeName nvarchar(255) = '{name}';
+                DECLARE @threshold int = {threshold};                  
+                DECLARE @userId int;
+                DECLARE @myTable TABLE
+                (
+                    Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
+                    UserId int NOT NULL
+                );
+                DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 u.Id FROM {prefix}_Users AS u
+                WHERE (u.EmailConfirmed = 1)
+                AND NOT EXISTS (
+                   SELECT Id FROM {prefix}_UserBadges ub 
+                   WHERE ub.UserId = u.Id AND ub.BadgeName = @badgeName
+                 )
+                ORDER BY u.Id DESC;
+
+                OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
+                WHILE @@FETCH_STATUS = 0
+                BEGIN
+                    DECLARE @identity int;
+                    EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
+                    IF (@identity > 0)
                     BEGIN
-                        DECLARE @identity int;
-	                    EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
-                        IF (@identity > 0)
-                        BEGIN
-                            INSERT INTO @myTable (UserId) VALUES (@userId);                     
-                        END
-	                    FETCH NEXT FROM MSGCURSOR INTO @userId;	                    
-                    END;
-                    CLOSE MSGCURSOR;
-                    DEALLOCATE MSGCURSOR;
-                    SELECT UserId FROM @myTable;";
+                        INSERT INTO @myTable (UserId) VALUES (@userId);                     
+                    END
+                    FETCH NEXT FROM MSGCURSOR INTO @userId;	                    
+                END;
+                CLOSE MSGCURSOR;
+                DEALLOCATE MSGCURSOR;
+                SELECT UserId FROM @myTable;";
 
             // Replacements for SQL script
             var replacements = new Dictionary<string, string>()
             {
                 ["{name}"] = Badge.Name,
-                ["{threshold}"] = Badge.Threshold.ToString(),
-                ["{key}"] = typeof(UserDetail).ToString()
+                ["{threshold}"] = Badge.Threshold.ToString()
             };
 
             var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(sql, replacements, async reader =>
@@ -145,5 +144,5 @@ namespace Plato.Users.Badges.Tasks
         }
 
     }
-   
+
 }

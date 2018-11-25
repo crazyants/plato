@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Badges.Models;
+using Plato.Badges.NotificationTypes;
 using Plato.Badges.Stores;
-using Plato.Discuss.Reactions.Badges;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
@@ -15,31 +15,30 @@ using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
-using Plato.Badges.NotificationTypes;
+using Plato.Users.Badges.BadgeProviders;
 
-namespace Plato.Discuss.Reactions.Tasks
+namespace Plato.Users.Badges.Tasks
 {
 
-    public class ReactionsAwarder : IBackgroundTaskProvider
+    public class VisitBadgesAwarder : IBackgroundTaskProvider
     {
 
         public int IntervalInSeconds => 120;
 
         public IEnumerable<Badge> Badges => new[]
         {
-            ReactionBadges.FirstReactor,
-            ReactionBadges.BronzeReactor,
-            ReactionBadges.SilverReactor,
-            ReactionBadges.GoldReactor
+            VisitBadges.NewMember,
+            VisitBadges.BronzeVisitor,
+            VisitBadges.SilverVisitor,
+            VisitBadges.GoldVisitor
         };
-
-
+        
         private readonly ICacheManager _cacheManager;
         private readonly IDbHelper _dbHelper;
         private readonly IPlatoUserStore<User> _userStore;
         private readonly INotificationManager<Badge> _notificationManager;
 
-        public ReactionsAwarder(
+        public VisitBadgesAwarder(
             ICacheManager cacheManager,
             IDbHelper dbHelper,
             IPlatoUserStore<User> userStore,
@@ -53,46 +52,40 @@ namespace Plato.Discuss.Reactions.Tasks
 
         public async Task ExecuteTaskAsync()
         {
+
+            const string sql = @"                        
+                DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
+                DECLARE @badgeName nvarchar(255) = '{name}';
+                DECLARE @threshold int = {threshold};                  
+                DECLARE @userId int;
+                DECLARE @myTable TABLE
+                (
+                    Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
+                    UserId int NOT NULL
+                );
+                DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 u.Id FROM {prefix}_Users AS u
+                WHERE (u.TotalVisits >= @threshold)
+                AND NOT EXISTS (
+                   SELECT Id FROM {prefix}_UserBadges ub 
+                   WHERE ub.UserId = u.Id AND ub.BadgeName = @badgeName
+                 )
+                ORDER BY u.TotalVisits DESC;
+
+                OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
+                WHILE @@FETCH_STATUS = 0
+                BEGIN
+                    DECLARE @identity int;
+                    EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
+                    IF (@identity > 0)
+                    BEGIN
+                        INSERT INTO @myTable (UserId) VALUES (@userId);                     
+                    END
+                    FETCH NEXT FROM MSGCURSOR INTO @userId;	                    
+                END;
+                CLOSE MSGCURSOR;
+                DEALLOCATE MSGCURSOR;
+                SELECT UserId FROM @myTable;";
             
-            const string sql = @"                       
-                        DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
-                        DECLARE @badgeName nvarchar(255) = '{name}';
-                        DECLARE @threshold int = {threshold};                  
-                        DECLARE @userId int;
-                        DECLARE @reactions int;
-                        DECLARE @myTable TABLE
-                        (
-                            Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
-                            UserId int NOT NULL
-                        );
-                        DECLARE MSGCURSOR CURSOR FOR SELECT er.CreatedUserId, COUNT(er.Id) AS Reactions 
-                        FROM {prefix}_EntityReactions er
-                        WHERE NOT EXISTS (
-                           SELECT Id FROM {prefix}_UserBadges ub 
-                           WHERE ub.UserId = er.CreatedUserId AND ub.BadgeName = @badgeName
-                         )
-                        GROUP BY er.CreatedUserId
-                        ORDER BY Reactions DESC
-
-                        OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId, @reactions;                    
-                        WHILE @@FETCH_STATUS = 0
-                        BEGIN
-                            IF (@reactions >= @threshold)
-                            BEGIN
-                                DECLARE @identity int;
-                                EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
-                                IF (@identity > 0)
-                                BEGIN
-                                    INSERT INTO @myTable (UserId) VALUES (@userId);                     
-                                END
-                            END;
-                            FETCH NEXT FROM MSGCURSOR INTO @userId, @reactions;	                    
-                        END;
-                        CLOSE MSGCURSOR;
-                        DEALLOCATE MSGCURSOR;
-                        SELECT UserId FROM @myTable;";
-
-
             foreach (var badge in this.Badges)
             {
 
@@ -159,7 +152,7 @@ namespace Plato.Discuss.Reactions.Tasks
 
             }
 
-       
+
 
         }
 

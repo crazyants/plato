@@ -33,10 +33,6 @@ namespace Plato.Discuss.Reactions
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
-            // Background tasks
-            services.AddScoped<IBackgroundTaskProvider, ReactionsAwarder>();
-    
-
             // Register navigation provider
             services.AddScoped<INavigationProvider, TopicMenu>();
             services.AddScoped<INavigationProvider, TopicFooterMenu>();
@@ -48,7 +44,10 @@ namespace Plato.Discuss.Reactions
 
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, ReactionBadges>();
-            
+
+            // Background tasks
+            services.AddScoped<IBackgroundTaskProvider, ReactionBadgesAwarder>();
+
         }
 
         public override void Configure(

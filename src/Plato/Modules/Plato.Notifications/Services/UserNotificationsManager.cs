@@ -45,13 +45,12 @@ namespace Plato.Notifications.Services
             {
                 throw new ArgumentOutOfRangeException(nameof(model.UserId));
             }
-
-            // Get authenticated user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
+            
             // Update
             if (model.CreatedUserId == 0)
-            {
+            {    
+                // Get authenticated user
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
                 model.CreatedUserId = user?.Id ?? 0;
             }
 
@@ -104,10 +103,7 @@ namespace Plato.Notifications.Services
             {
                 throw new ArgumentOutOfRangeException(nameof(model.UserId));
             }
-
-            // Get authenticated user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
+            
             // Invoke UserNotificationUpdating subscriptions
             foreach (var handler in _broker.Pub<UserNotification>(this, "UserNotificationUpdating"))
             {
