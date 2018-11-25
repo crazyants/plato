@@ -1,29 +1,67 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Internal.Tasks
 {
-    
+
+    public interface IBackgroundTaskManager
+    {
+        void StartTasks();
+
+        void StopTasks();
+
+    }
+
     public class BackgroundTaskManager : IBackgroundTaskManager
     {
 
-        private readonly ISafeTimer _safeTimer;
+        private readonly ISafeTimerFactory _safeTimerFactory;
+        private readonly IEnumerable<IBackgroundTaskProvider> _providers;
+        private readonly ILogger<BackgroundTaskManager> _logger;
 
-        public BackgroundTaskManager(ISafeTimer safeTimer)
+        public BackgroundTaskManager(
+            IEnumerable<IBackgroundTaskProvider> providers,
+            ISafeTimerFactory safeTimerFactory,
+            ILogger<BackgroundTaskManager> logger)
         {
-            _safeTimer = safeTimer;
-        }
-        
-        public void Start(Action<object, SafeTimerEventArgs> action, int interval)
-        {
-            _safeTimer.IntervalInSeconds = interval;
-            _safeTimer.Elapsed += (sender, args) => { action(sender, args); };
-            _safeTimer.Start();
+            _providers = providers;
+            _safeTimerFactory = safeTimerFactory;
+            _logger = logger;
         }
 
-        public void Stop()
+        public void StartTasks()
         {
-            _safeTimer.Stop();
+            foreach (var provider in _providers)
+            {
+                _safeTimerFactory.Start(async (sender, args) =>
+                    {
+
+                        try
+                        {
+                            await provider.ExecuteTaskAsync();
+                        }
+                        catch (Exception e)
+                        {
+                            if (_logger.IsEnabled(LogLevel.Critical))
+                            {
+                                _logger.LogError(
+                                    $"An error occurred whilst activating background task of type '{provider.GetType()}'. {e.Message}");
+                            }
+                        }
+
+                    }, provider.IntervalInSeconds * 1000);
+
+            }
         }
+
+        public void StopTasks()
+        {
+            _safeTimerFactory.Stop();
+        }
+
     }
+
 }

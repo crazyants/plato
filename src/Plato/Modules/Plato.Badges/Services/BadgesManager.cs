@@ -45,7 +45,7 @@ namespace Plato.Badges.Services
                     catch (Exception e)
                     {
                         _logger.LogError(e,
-                            $"An exception occurred within the badge provider '{this.GetType()}'. Please review your badge provider and try again. {e.Message}");
+                            $"An exception occurred within the badge provider '{provider.GetType()}'. Please review your badge provider and try again. {e.Message}");
                         throw;
                     }
                 }

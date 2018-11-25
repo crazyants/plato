@@ -12,9 +12,9 @@ namespace Plato.Internal.Tasks.Extensions
         {
 
             services.TryAddScoped<ISafeTimer, SafeTimer>();
-
+            services.TryAddScoped<ISafeTimerFactory, SafeTimerFactory>();
             services.TryAddScoped<IBackgroundTaskManager, BackgroundTaskManager>();
-            
+
             return services;
 
         }

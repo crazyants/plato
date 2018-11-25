@@ -34,7 +34,7 @@ namespace Plato.Reputations.Providers
             {
 
                 // Services we need
-                var backgroundTaskManager = context.ServiceProvider.GetRequiredService<IBackgroundTaskManager>();
+                var backgroundTaskManager = context.ServiceProvider.GetRequiredService<ISafeTimerFactory>();
                 var cacheManager = context.ServiceProvider.GetRequiredService<ICacheManager>();
                 var dbHelper = context.ServiceProvider.GetRequiredService<IDbHelper>();
 

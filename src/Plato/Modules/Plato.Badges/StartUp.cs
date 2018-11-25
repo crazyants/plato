@@ -36,7 +36,7 @@ namespace Plato.Badges
 
             // Services
             services.AddScoped<IBadgesManager<Badge>, BadgesManager<Badge>>();
-            services.AddScoped<IBadgesAwarderManager, BadgesAwarderManager<Badge>>();
+            //services.AddScoped<IBadgesAwarderManager, BadgesAwarderManager<Badge>>();
             
         }
 
@@ -46,11 +46,8 @@ namespace Plato.Badges
             IServiceProvider serviceProvider)
         {
 
-            // Activate all registered badge awarders
-            var awarderManager = serviceProvider.GetService<IBadgesAwarderManager>();
-            awarderManager?.Award(ref serviceProvider);
-            
         }
+
     }
 
 }

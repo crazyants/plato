@@ -14,7 +14,7 @@ namespace Plato.Internal.Hosting.Web
 {
 
     /// <summary>
-    /// Allows the use of IUrlHelperFactory outside of an ASP.NET core application context.
+    /// Allows the use of IUrlHelperFactory outside of the ASP.NET core application context.
     /// IUrlHelperFactory requires an ActionContext which is not available within background tasks.
     /// </summary>
     public class CapturedRouterUrlHelper  : ICapturedRouterUrlHelper
@@ -53,13 +53,18 @@ namespace Plato.Internal.Hosting.Web
                     : settings.BaseUrl;
             }
 
+            if (_capturedRouter == null)
+            {
+                throw new ArgumentNullException(nameof(_capturedRouter));
+            }
+
             // Fallback to baseUri provided within our configure method
             var isNullOrEmpty = String.IsNullOrEmpty(_capturedRouter.Options.BaseUrl);
             var isDefault = _capturedRouter.Options.BaseUrl?.ToLower() == "http://";
             if (isNullOrEmpty | isDefault)
             {
                 throw new Exception(
-                    "No BaseUrl has been captured. You must configure a BaseUrl via the Configure method before calling GetBaseUrlAsync.");
+                    "No BaseUrl has been captured. You must configure a BaseUrl via the ICapturedRouter.Configure method before calling GetBaseUrlAsync.");
             }
 
             return _capturedRouter.Options.BaseUrl;
@@ -74,10 +79,15 @@ namespace Plato.Internal.Hosting.Web
         public string GetRouteUrl(Uri baseUri, RouteValueDictionary routeValues)
         {
 
+            if (_capturedRouter == null)
+            {
+                throw new ArgumentNullException(nameof(_capturedRouter));
+            }
+
             if (_capturedRouter.Options.Router == null)
             {
                 throw new Exception(
-                    "No router has been captured. You must configure a router via the Configure method before calling GetRouteUrl.");
+                    "No router has been captured. You must configure a router via the ICapturedRouter.Configure method before calling GetRouteUrl.");
             }
 
             var httpContext = new DefaultHttpContext()
@@ -107,15 +117,11 @@ namespace Plato.Internal.Hosting.Web
 
         }
 
-        #region "Private Methods"
-
         async Task<ISiteSettings> GetSiteSettingsAsync()
         {
             return await _siteSettingsStore.GetAsync();
         }
-
-        #endregion
-
+        
     }
 
 }

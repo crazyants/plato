@@ -2,7 +2,7 @@
 
 namespace Plato.Internal.Tasks.Abstractions
 {
-    public interface IBackgroundTaskManager
+    public interface ISafeTimerFactory
     {
 
         void Start(Action<object, SafeTimerEventArgs> action, int interval);

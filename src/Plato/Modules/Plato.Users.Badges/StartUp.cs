@@ -11,13 +11,14 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
 using Plato.Internal.Notifications;
 using Plato.Internal.Notifications.Abstractions;
+using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Models;
 using Plato.Notifications.Services;
-using Plato.Users.Badges.BadgeAwarders;
 using Plato.Users.Badges.BadgeProviders;
 using Plato.Users.Badges.Navigation;
 using Plato.Users.Badges.Notifications;
 using Plato.Users.Badges.NotificationTypes;
+using Plato.Users.Badges.Tasks;
 using Plato.Users.Badges.ViewProviders;
 
 namespace Plato.Users.Badges
@@ -39,8 +40,9 @@ namespace Plato.Users.Badges
             services.AddScoped<IBadgesProvider<Badge>, ProfileBadges>();
 
             // Badge awarder providers
-            services.AddScoped<IBadgesAwarderProvider<Badge>, AutobiographerAwarder>();
-            
+            services.AddScoped<IBackgroundTaskProvider, AutobiographerAwarder>();
+            services.AddScoped<IBackgroundTaskProvider, ConfirmedMemberAwarder>();
+
             // User profile view proviers
             services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
             services.AddScoped<IViewProvider<UserProfile>, UserViewProvider>();

@@ -18,18 +18,18 @@ namespace Plato.Reputations.Services
     public class UserReputationAggregator : IUserReputationAggregator
     {
 
-        private readonly IBackgroundTaskManager _backgroundTaskManager;
+        private readonly ISafeTimerFactory _safeTimerFactory;
         private readonly ILogger<UserReputationAggregator> _logger;
         private readonly ICacheManager _cacheManager;
         private readonly IDbHelper _dbHelper;
 
         public UserReputationAggregator(
             IDbHelper dbHelper, 
-            IBackgroundTaskManager backgroundTaskManager,
+            ISafeTimerFactory safeTimerFactory,
             ILogger<UserReputationAggregator> logger, 
             ICacheManager cacheManager)
         {
-            _backgroundTaskManager = backgroundTaskManager;
+            _safeTimerFactory = safeTimerFactory;
             _cacheManager = cacheManager;
             _dbHelper = dbHelper;
             _logger = logger;
@@ -67,7 +67,7 @@ namespace Plato.Reputations.Services
                     SELECT @dirty;";
 
             // Start task to execute SQL every X seconds
-            _backgroundTaskManager.Start(async (sender, args) =>
+            _safeTimerFactory.Start(async (sender, args) =>
                 {
                     var dirty = await _dbHelper.ExecuteScalarAsync<bool>(sql);
                     if (dirty)

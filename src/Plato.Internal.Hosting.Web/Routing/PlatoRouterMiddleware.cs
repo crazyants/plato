@@ -14,6 +14,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Stores.Abstractions.Settings;
+using Plato.Internal.Tasks;
 
 namespace Plato.Internal.Hosting.Web.Routing
 {
@@ -153,6 +154,10 @@ namespace Plato.Internal.Hosting.Web.Routing
                 o.BaseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{httpContext.Request.PathBase}";
             });
         
+            // Activate all background tasks 
+            var backgroundTaskManager = serviceProvider.GetService<IBackgroundTaskManager>();
+            backgroundTaskManager?.StartTasks();
+
             // Activate all registered message broker subscriptions
             var subscribers = serviceProvider.GetServices<IBrokerSubscriber>();
             foreach (var subscriber in subscribers)
