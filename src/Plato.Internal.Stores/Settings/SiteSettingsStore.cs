@@ -7,6 +7,7 @@ using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Stores.Abstract;
 using Plato.Internal.Stores.Abstractions.Settings;
+using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Internal.Stores.Settings
 {
@@ -18,16 +19,19 @@ namespace Plato.Internal.Stores.Settings
         private readonly IDictionaryStore _dictionaryStore;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<SiteSettingsStore> _logger;
+        private readonly IKeyGenerator _keyGenerator;
 
         public SiteSettingsStore(
             IDictionaryStore dictionaryStore,
             IMemoryCache memoryCache,
             ICacheManager cacheManager,
-            ILogger<SiteSettingsStore> logger)
+            ILogger<SiteSettingsStore> logger,
+            IKeyGenerator keyGenerator)
         {
             _dictionaryStore = dictionaryStore;
             _cacheManager = cacheManager;
             _logger = logger;
+            _keyGenerator = keyGenerator;
         }
 
         public async Task<ISiteSettings> GetAsync()
@@ -43,7 +47,7 @@ namespace Plato.Internal.Stores.Settings
             // Automatically generate an API key if one is not supplied
             if (String.IsNullOrWhiteSpace(siteSettings.ApiKey))
             {
-                siteSettings.ApiKey = System.Guid.NewGuid().ToString();
+                siteSettings.ApiKey = _keyGenerator.GenerateKey();
             }
 
             // Use default homepage route if a default route is not explictly specified

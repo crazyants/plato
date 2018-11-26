@@ -1,51 +1,75 @@
-﻿@model EditSettingsViewModel
+﻿@model LayoutViewModel
 @{
     ViewData["Title"] = "Web Api Settings";
 }
 
-<h4>@T["Web Api Settings"]</h4>
-<span class="text-muted">@T["Manage API settings for remote requests into Plato services."]</span>
-<hr/>
+<div class="layout">
 
-<form asp-action="Index" method="post" enctype="multipart/form-data">
-    
-    <card>
-        <card-title>
-            <h6 class="card-title">@T["General"]</h6>
-        </card-title>
-        <card-body>
-
-            <div class="row">
-                <div class="col">
-                    
-                    <fieldset>
-                        <div class="form-group" asp-validation-class-for="ApiKey">
-                            <label asp-for="@Model.ApiKey">
-                                <strong>@T["API Key"]</strong>
-                                <span asp-validation-for="@Model.ApiKey" class="text-danger"></span>
-                                <br/>
-                                <span class="text-muted">@T["An API Key is required to help secure remote API requests."]</span>
-                            </label>
-                            <input asp-for="@Model.ApiKey" class="form-control"/>
-                            <br/>
-                            <a asp-action="CreateApiKey">
-                                <i class="fal fa-key"></i>
-                                @T["Generate a new API Key"]
-                            </a>
-                        </div>
-                    </fieldset>
-
-
-                </div>
+    <div class="layout-header">
+        @if (Model.Alerts != null)
+        {
+            <div class="layout-alerts">
+                <view model="@Model.Alerts"></view>
             </div>
-            
-        </card-body>
-    </card>
+        }
+        @if (Model.Tools != null)
+        {
+            <div class="float-right layout-tools">
+                <view model="@Model.Tools" />
+            </div>
+        }
+        @if (Model.Header != null)
+        {
+            <div class="layout-header-item">
+                <view model="@Model.Header" />
+            </div>
+        }
+        @if (Model.Meta != null)
+        {
+            <div class="layout-meta">
+                <view model="@Model.Meta"></view>
+            </div>
+        }
+    </div>
 
-    <card class="card mt-4">
-        <card-footer>
-            <button class="btn btn-primary" type="submit">@T["Save"]</button>
-        </card-footer>
-    </card>
+    @if (Model.SideBar != null)
+    {
+        <div class="row layout-content">
+            <div class="col-md-9">
+                @if (Model.Content != null)
+                {
+                    <view model="@Model.Content"></view>
+                }
+            </div>
+            <div class="col-md-3">
+                @if (Model.SideBar != null)
+                {
+                    <view model="@Model.SideBar"></view>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (Model.Content != null)
+         {
+             <view model="@Model.Content"></view>
+         }
+    }
 
-</form>
+    <div class="layout-footer">
+        @if (Model.Actions != null)
+        {
+            <div class="float-right layout-actions">
+                <view model="@Model.Actions" />
+            </div>
+        }
+        @if (Model.Footer != null)
+        {
+            <div class="layout-footer-item">
+                <view model="@Model.Footer"></view>
+            </div>
+        }
+    </div>
+
+</div>

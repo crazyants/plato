@@ -12,6 +12,7 @@ using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Repositories.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Text.Abstractions;
+using Remotion.Linq;
 
 namespace Plato.Internal.Stores.Users
 {
@@ -36,6 +37,7 @@ namespace Plato.Internal.Stores.Users
         private readonly ILogger<PlatoUserStore> _logger;
         private readonly ITypedModuleProvider _typedModuleProvider;
         private readonly IAliasCreator _aliasCreator;
+        private readonly IKeyGenerator _keyGenerator;
 
         #endregion
 
@@ -49,7 +51,8 @@ namespace Plato.Internal.Stores.Users
             ITypedModuleProvider typedModuleProvider,
             IUserDataItemStore<UserData> userDataItemStore, 
             IUserDataStore<UserData> userDataStore,
-            IAliasCreator aliasCreator)
+            IAliasCreator aliasCreator,
+            IKeyGenerator keyGenerator)
         {
             _typedModuleProvider = typedModuleProvider;
             _userDataItemStore = userDataItemStore;
@@ -57,6 +60,7 @@ namespace Plato.Internal.Stores.Users
             _cacheManager = cacheManager;
             _userDataStore = userDataStore;
             _aliasCreator = aliasCreator;
+            _keyGenerator = keyGenerator;
             _dbQuery = dbQuery;
             _logger = logger;
         }
@@ -112,9 +116,13 @@ namespace Plato.Internal.Stores.Users
                 throw new ArgumentOutOfRangeException(nameof(user.Id));
             }
 
+            // Generate a default api key
             if (String.IsNullOrEmpty(user.ApiKey))
             {
-                user.ApiKey = System.Guid.NewGuid().ToString() + user.Id.ToString();
+                user.ApiKey = _keyGenerator.GenerateKey(o =>
+                {
+                    o.UniqueIdentifier = user.Id.ToString();
+                });
             }
 
             // Update alias

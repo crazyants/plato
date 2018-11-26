@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
-using Plato.Internal.Stores.Users;
 
 using Plato.WebApi.ViewModels;
 
@@ -65,11 +63,8 @@ namespace Plato.WebApi.ViewProviders
             
             if (context.Updater.ModelState.IsValid)
             {
-
                 user.ApiKey = model.ApiKey;
-
                 await _platoUserStore.UpdateAsync(user);
-                
             }
             
             return await BuildEditAsync(user, context);

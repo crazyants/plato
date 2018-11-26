@@ -5,6 +5,7 @@ using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Stores.Abstractions.Settings;
+using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Settings.Handlers
 {
@@ -13,13 +14,16 @@ namespace Plato.Settings.Handlers
 
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly ISiteSettingsStore _siteSettingsStore;
-    
+        private readonly IKeyGenerator _keyGenerator;
+
         public SetUpEventHandler(
             ISchemaBuilder schemaBuilder,
-            ISiteSettingsStore siteSettingsService)
+            ISiteSettingsStore siteSettingsService, 
+            IKeyGenerator keyGenerator)
         {
             _schemaBuilder = schemaBuilder;
             _siteSettingsStore = siteSettingsService;
+            _keyGenerator = keyGenerator;
         }
 
         public override async Task SetUp(
@@ -37,7 +41,7 @@ namespace Plato.Settings.Handlers
                 var siteSettings = await _siteSettingsStore.GetAsync() ?? new SiteSettings();
                 siteSettings.SiteName = context.SiteName;
                 siteSettings.SuperUser = context.AdminUsername;
-                siteSettings.ApiKey = System.Guid.NewGuid().ToString();
+                siteSettings.ApiKey = _keyGenerator.GenerateKey();
                 siteSettings.HomeRoute = new DefaultHomePageRoute();
 
                 await _siteSettingsStore.SaveAsync(siteSettings);

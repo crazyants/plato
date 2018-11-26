@@ -50,7 +50,7 @@
 .table-hover tbody tr:hover,
 .list-group-hover .list-group-item-action:not(.active):hover,
 .list-group-hover .list-group-item-action:not(.active):hover .text-muted,
-.list-group-hover .list-group-item-action:not(.active):hover a:not(.btn),
+.list-group-hover .list-group-item-action:not(.active):hover a:not(.btn):not(.dropdown-item),
 .list-group-hover .list-group-item-action:not(.active):hover a.btn-expand {
     color: #fff !important;
 }
@@ -73,6 +73,9 @@
     color: #fff;
     background-color: #007bff;
 }
+
+.dropdown-item-danger:hover,
+.dropdown-item-danger:focus { background: #dc3545; }
 
 /* ------------------- */
 /* Switches */

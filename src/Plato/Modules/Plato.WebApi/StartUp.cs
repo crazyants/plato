@@ -10,8 +10,10 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Text.Abstractions;
 using Plato.WebApi.Configuration;
 using Plato.WebApi.Middleware;
+using Plato.WebApi.Models;
 using Plato.WebApi.Navigation;
 using Plato.WebApi.Services;
 using Plato.WebApi.ViewProviders;
@@ -38,9 +40,13 @@ namespace Plato.WebApi
             // Navigation provider
             services.AddScoped<INavigationProvider, AdminMenu>();
 
-            // View providers
+            // View providers (adds API key to admin / edit user)
             services.AddScoped<IViewProviderManager<User>, ViewProviderManager<User>>();
             services.AddScoped<IViewProvider<User>, UserViewProvider>();
+
+            // Admin view providers
+            services.AddScoped<IViewProviderManager<WebApiSettings>, ViewProviderManager<WebApiSettings>>();
+            services.AddScoped<IViewProvider<WebApiSettings>, AdminViewProvider>();
 
             // Services
             services.AddScoped<IWebApiAuthenticator, WebApiAuthenticator>();
@@ -55,7 +61,11 @@ namespace Plato.WebApi
             
             // Register client options middleware 
             app.UseMiddleware<WebApiClientOptionsMiddleware>();
-            
+
+
+            var keyGenerator = app.ApplicationServices.GetService<IKeyGenerator>();
+            var csrfToken = keyGenerator.GenerateKey(o => { o.MaxLength = 75; });
+
             // Add client accessible CSRF toekn for web api requests
             app.Use(next => ctx =>
             {
@@ -63,16 +73,16 @@ namespace Plato.WebApi
                 var cookie = ctx.Request.Cookies[PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName];
                 if (cookie == null)
                 {
-                    ctx.Response.Cookies.Append(PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName, System.Guid.NewGuid().ToString(),
-                        new CookieOptions() { HttpOnly = false });
+                    ctx.Response.Cookies.Append(PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName, csrfToken,
+                        new CookieOptions() {HttpOnly = false});
                 }
                 else
                 {
                     // Delete any existing cookie
                     ctx.Response.Cookies.Delete(cookie);
                     // Create new cookie
-                    ctx.Response.Cookies.Append(PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName, System.Guid.NewGuid().ToString(),
-                        new CookieOptions() { HttpOnly = false });
+                    ctx.Response.Cookies.Append(PlatoAntiForgeryOptions.AjaxCsrfTokenCookieName, csrfToken,
+                        new CookieOptions() {HttpOnly = false});
                 }
                 return next(ctx);
             });

@@ -6,4 +6,5 @@
         public string ApiKey { get; set; }
 
     }
+
 }

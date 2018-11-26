@@ -1,6 +1,6 @@
 ﻿namespace Plato.WebApi.ViewModels
 {
-    public class EditSettingsViewModel
+    public class WebApiSettingsViewModel
     {
 
         public string ApiKey { get; set; }

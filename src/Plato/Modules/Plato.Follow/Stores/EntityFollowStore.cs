@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using Plato.Follow.Models;
 using Plato.Follow.Repositories;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Follow.Stores
 {
@@ -19,17 +21,20 @@ namespace Plato.Follow.Stores
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<EmailStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
+        private readonly IKeyGenerator _keyGenerator;
 
         public EntityFollowStore(
             IEntityFollowRepository<EntityFollow> entityFollowRepository,
             ICacheManager cacheManager,
             ILogger<EmailStore> logger,
-            IDbQueryConfiguration dbQuery)
+            IDbQueryConfiguration dbQuery,
+            IKeyGenerator keyGenerator)
         {
             _entityFollowRepository = entityFollowRepository;
             _cacheManager = cacheManager;
             _logger = logger;
             _dbQuery = dbQuery;
+            _keyGenerator = keyGenerator;
         }
 
         #region "Implementation"
@@ -54,7 +59,10 @@ namespace Plato.Follow.Stores
 
             if (String.IsNullOrEmpty(model.CancellationGuid))
             {
-                model.CancellationGuid = System.Guid.NewGuid().ToString();
+                model.CancellationGuid = _keyGenerator.GenerateKey(o =>
+                {
+                    o.MaxLength = 100;
+                });
             }
 
             var follow = await _entityFollowRepository.InsertUpdateAsync(model);
@@ -86,10 +94,12 @@ namespace Plato.Follow.Stores
 
             if (String.IsNullOrEmpty(model.CancellationGuid))
             {
-                model.CancellationGuid = System.Guid.NewGuid().ToString();
+                model.CancellationGuid = _keyGenerator.GenerateKey(o =>
+                {
+                    o.MaxLength = 100;
+                });
             }
-
-
+            
             var follow = await _entityFollowRepository.InsertUpdateAsync(model);
             if (follow != null)
             {

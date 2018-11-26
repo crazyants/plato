@@ -6,8 +6,11 @@ using Microsoft.Extensions.Localization;
 using Plato.Internal.Abstractions.Settings;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
 using Plato.Internal.Stores.Abstractions.Settings;
+using Plato.Internal.Text.Abstractions;
+using Plato.WebApi.Models;
 using Plato.WebApi.ViewModels;
 
 namespace Plato.WebApi.Controllers
@@ -17,11 +20,13 @@ namespace Plato.WebApi.Controllers
     {
 
         #region "Constructor"
-
+        
         private readonly IAuthorizationService _authorizationService;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IViewProviderManager<WebApiSettings> _viewProvider;
+        private readonly IKeyGenerator _keyGenerator;
 
         public IHtmlLocalizer T { get; }
 
@@ -32,11 +37,15 @@ namespace Plato.WebApi.Controllers
             IStringLocalizer<AdminController> stringLocalizer,
             IAuthorizationService authorizationService,
             IAlerter alerter, ISiteSettingsStore siteSettingsStore,
-            IBreadCrumbManager breadCrumbManager)
+            IBreadCrumbManager breadCrumbManager,
+            IViewProviderManager<WebApiSettings> viewProvider, 
+            IKeyGenerator keyGenerator)
         {
             _alerter = alerter;
             _siteSettingsStore = siteSettingsStore;
             _breadCrumbManager = breadCrumbManager;
+            _viewProvider = viewProvider;
+            _keyGenerator = keyGenerator;
             _authorizationService = authorizationService;
 
             T = htmlLocalizer;
@@ -67,8 +76,26 @@ namespace Plato.WebApi.Controllers
                 ).Add(S["Web Api Settings"]);
             });
 
+            // Build view
+            var result = await _viewProvider.ProvideEditAsync(new WebApiSettings(), this);
 
-            return View(await GetModel());
+            // Return view
+            return View(result);
+            
+        }
+ 
+        [HttpPost]
+        [ActionName(nameof(Index))]
+        public async Task<IActionResult> IndexPost(WebApiSettingsViewModel viewModel)
+        {
+
+            // Execute view providers ProvideUpdateAsync method
+            await _viewProvider.ProvideUpdateAsync(new WebApiSettings(), this);
+
+            // Add alert
+            _alerter.Success(T["Settings Updated Successfully!"]);
+
+            return RedirectToAction(nameof(Index));
 
         }
 
@@ -80,9 +107,9 @@ namespace Plato.WebApi.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            
-            settings.ApiKey = System.Guid.NewGuid().ToString();
-         
+
+            settings.ApiKey = _keyGenerator.GenerateKey();
+
             var result = await _siteSettingsStore.SaveAsync(settings);
             if (result != null)
             {
@@ -92,70 +119,23 @@ namespace Plato.WebApi.Controllers
             {
                 _alerter.Danger(T["A problem occurred updating the settings. Please try again!"]);
             }
-            
+
             return RedirectToAction(nameof(Index));
         }
-        
-        [HttpPost]
-        [ActionName(nameof(Index))]
-        public async Task<IActionResult> IndexPost(EditSettingsViewModel viewModel)
-        {
 
 
-            // TODO: Impelement security
-            //if (!await _authorizationService.AuthorizeAsync(User, PermissionsProvider.ManageRoles))
-            //{
-            //    return Unauthorized();
-            //}
-
-
-            if (!ModelState.IsValid)
-            {
-                return View(await GetModel());
-            }
-
-            // Update existing settings
-            var settings = await _siteSettingsStore.GetAsync();
-            if (settings != null)
-            {
-                settings.ApiKey = viewModel.ApiKey;
-            }
-            else
-            {
-                // Create new settings
-                settings = new SiteSettings()
-                {
-                    ApiKey = viewModel.ApiKey
-                };
-            }
-            
-            // Update settings
-            var result = await _siteSettingsStore.SaveAsync(settings);
-            if (result != null)
-            {
-                _alerter.Success(T["Settings Updated Successfully!"]);
-            }
-            else
-            {
-                _alerter.Danger(T["A problem occurred updating the settings. Please try again!"]);
-            }
-            
-            return RedirectToAction(nameof(Index));
-            
-        }
-        
         #endregion
 
         #region "Private Methods"
 
-        private async Task<EditSettingsViewModel> GetModel()
+        private async Task<WebApiSettingsViewModel> GetModel()
         {
 
             var settings = await _siteSettingsStore.GetAsync();
 
             if (settings != null)
             {
-                return new EditSettingsViewModel()
+                return new WebApiSettingsViewModel()
                 {
                     ApiKey = settings.ApiKey
 
@@ -163,9 +143,9 @@ namespace Plato.WebApi.Controllers
             }
             
             // return default settings
-            return new EditSettingsViewModel()
+            return new WebApiSettingsViewModel()
             {
-                ApiKey = System.Guid.NewGuid().ToString()
+                ApiKey = _keyGenerator.GenerateKey()
             };
 
         }

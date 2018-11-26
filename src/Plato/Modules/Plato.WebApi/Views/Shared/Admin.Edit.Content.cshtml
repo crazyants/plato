@@ -1,0 +1,44 @@
+﻿@model WebApiSettingsViewModel
+
+<form asp-route-action="Index" method="post" enctype="multipart/form-data">
+
+    <card>
+        <card-title>
+            <h6 class="card-title">@T["General"]</h6>
+        </card-title>
+        <card-body>
+
+            <div class="row">
+                <div class="col">
+
+                    <fieldset>
+                        <div class="form-group" asp-validation-class-for="ApiKey">
+                            <label asp-for="@Model.ApiKey">
+                                <strong>@T["API Key"]</strong>
+                                <span asp-validation-for="@Model.ApiKey" class="text-danger"></span>
+                                <br />
+                                <span class="text-muted">@T["An API Key is required to help secure remote API requests."]</span>
+                            </label>
+                            <input asp-for="@Model.ApiKey" class="form-control" />
+                            <br />
+                            <a asp-action="CreateApiKey">
+                                <i class="fal fa-key"></i>
+                                @T["Generate a new API Key"]
+                            </a>
+                        </div>
+                    </fieldset>
+
+
+                </div>
+            </div>
+
+        </card-body>
+    </card>
+
+    <card class="card mt-4">
+        <card-footer>
+            <button class="btn btn-primary" type="submit">@T["Save"]</button>
+        </card-footer>
+    </card>
+
+</form>
