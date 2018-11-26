@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Plato.Discuss.Moderation.ViewModels;
@@ -111,17 +110,14 @@ namespace Plato.Discuss.Moderation.Controllers
                     }
                 }
             }
-
-
-            // Ensure we have users
+            
             if (users.Count > 0)
             {
-
-                var isValid = false;
-
+                
                 // Compose moderator from all involved view providers
                 // This ensures the claims are always populated
                 var composedModerator = await _viewProvider.GetComposedType(this);
+                var isValid = false;
 
                 // Update each user
                 foreach (var user in users)
@@ -165,8 +161,7 @@ namespace Plato.Discuss.Moderation.Controllers
                 }
 
                 return await Create();
-
-
+                
             }
             else
             {
@@ -215,15 +210,8 @@ namespace Plato.Discuss.Moderation.Controllers
             var result = await _viewProvider.ProvideUpdateAsync(moderator, this);
             if (ModelState.IsValid)
             {
-
                 _alerter.Success(T["Moderator Updated Successfully!"]);
-
-                // Redirect back to edit user
-                return RedirectToAction(nameof(Edit), new RouteValueDictionary()
-                {
-                    ["id"] = moderator.Id.ToString()
-                });
-
+                return RedirectToAction(nameof(Index));
             }
 
             // if we reach this point some view model validation

@@ -241,17 +241,6 @@ namespace Plato.Discuss.Moderation.ViewProviders
         #endregion
 
     }
-
-    //[DataContract]
-    //public class TagItItem
-    //{
-
-    //    [DataMember(Name = "text")]
-    //    public string Text { get; set; }
-
-    //    [DataMember(Name = "value")]
-    //    public string Value { get; set; }
-    //}
-
+    
 
 }

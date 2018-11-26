@@ -3188,10 +3188,10 @@ $(function (win, doc, $) {
 
     }();
 
-    /* confirmer */
-    var confirmer = function () {
+    /* confirm */
+    var confirm = function () {
 
-        var dataKey = "confirmer",
+        var dataKey = "confirm",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
@@ -3207,7 +3207,7 @@ $(function (win, doc, $) {
             bind: function ($caller) {
 
                 var event = $caller.data(dataKey).event,
-                    message = $caller.data("confirmerMessage") || $caller.data(dataKey).message;;
+                    message = $caller.data("confirmMessage") || $caller.data(dataKey).message;;
                 $caller.on(event, function (e) {
                     return confirm(message);
                     });
@@ -3245,7 +3245,7 @@ $(function (win, doc, $) {
                 }
 
                 if (this.length > 0) {
-                    // $(selector).confirmer()
+                    // $(selector).confirm()
                     return this.each(function () {
                         if (!$(this).data(dataIdKey)) {
                             var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
@@ -3257,7 +3257,7 @@ $(function (win, doc, $) {
                         methods.init($(this), methodName);
                     });
                 } else {
-                    // $().confirmer()
+                    // $().confirm()
                     if (methodName) {
                         if (methods[methodName]) {
                             var $caller = $("body");
@@ -3293,7 +3293,7 @@ $(function (win, doc, $) {
         selectDropdown: selectDropdown.init,
         labelSelectDropdown: labelSelectDropdown.init,
         categorySelectDropdown: categorySelectDropdown.init,
-        confirmer: confirmer.init
+        confirm: confirm.init
     });
 
     // ---------------------------
@@ -3342,8 +3342,8 @@ $(function (win, doc, $) {
         /* labelTagIt */
         this.find('[data-provide="labelTagIt"]').labelTagIt();
 
-        /* confirmer */
-        this.find('[data-provide="confirmer"]').confirmer();
+        /* confirm */
+        this.find('[data-provide="confirm"]').confirm();
 
     }
 

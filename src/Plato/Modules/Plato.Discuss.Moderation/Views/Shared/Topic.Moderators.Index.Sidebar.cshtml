@@ -1,0 +1,26 @@
+﻿@model ModeratorsViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title">@T["Community Team"]</h6>
+    </card-title>
+    <card-body>
+        @if (Model.Moderators != null) {
+            foreach (var moderator in Model.Moderators)
+            {
+                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@moderator.Id" asp-route-alias="@moderator.Alias">
+                    <avatar data-provide="tooltip" title="@moderator.DisplayName" class="avatar" user-id="@moderator.Id"></avatar>
+                </a>
+            }
+        }
+        else
+        {
+            <span class="text-muted">
+                @T["No moderators have been added"]
+            </span>
+         
+        }
+    </card-body>
+</card>
+
+

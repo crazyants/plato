@@ -2,7 +2,7 @@
 
 @if (!Model.IsNewModerator)
 {
-    <button type="submit" asp-controller="Admin" asp-route-action="Delete" asp-route-id="@Model.Moderator?.Id.ToString()" class="btn btn-danger btn-sm">
+    <button type="submit" asp-controller="Admin" asp-route-action="Delete" asp-route-id="@Model.Moderator?.Id.ToString()" data-provide="confirm" class="btn btn-danger btn-sm">
         <i class="fal fa-trash"></i>
         @T["Delete"]
     </button>

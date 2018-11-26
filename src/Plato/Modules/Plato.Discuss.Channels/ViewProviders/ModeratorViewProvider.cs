@@ -144,7 +144,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                     
                 }
 
-                // If we have specific channels, lets delete the "All Channels" entry
+                // If we have channels, lets delete the "All Channels" entry
                 if (output.Count > 0)
                 {
                     var allChannels = moderators?.Data.FirstOrDefault(m =>
@@ -154,13 +154,12 @@ namespace Plato.Discuss.Channels.ViewProviders
                         await _moderatorStore.DeleteAsync(allChannels);
                     }
                 }
-
-                // Persist moderator
-                //await _moderatorStore.UpdateAsync(moderator);
+                
 
             }
 
-            return default(IViewProviderResult);
+            return await BuildEditAsync(moderator, context);
+
         }
 
         #endregion
