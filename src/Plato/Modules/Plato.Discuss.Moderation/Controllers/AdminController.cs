@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Plato.Discuss.Moderation.ViewModels;
@@ -118,17 +119,14 @@ namespace Plato.Discuss.Moderation.Controllers
 
                 var isValid = false;
 
+                // Compose moderator from all involved view providers
+                // This ensures the claims are always populated
+                var composedModerator = await _viewProvider.GetComposedType(this);
+
                 // Update each user
                 foreach (var user in users)
                 {
-
-                    //var newModerator = new Moderator()
-                    //{
-                    //    UserId = user.Id
-                    //};
-
-                    // Compose moderator from all involved view providers
-                    var composedModerator = await _viewProvider.GetComposedType(this);
+                    
                     composedModerator.UserId = user.Id;
 
                     // Validate model state within all view providers
@@ -213,17 +211,32 @@ namespace Plato.Discuss.Moderation.Controllers
             {
                 return NotFound();
             }
-
+            
             var result = await _viewProvider.ProvideUpdateAsync(moderator, this);
-
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(result);
+
+                _alerter.Success(T["Moderator Updated Successfully!"]);
+
+                // Redirect back to edit user
+                return RedirectToAction(nameof(Edit), new RouteValueDictionary()
+                {
+                    ["id"] = moderator.Id.ToString()
+                });
+
             }
 
-            _alerter.Success(T["Moderator Updated Successfully!"]);
+            // if we reach this point some view model validation
+            // failed within a view provider, display model state errors
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    _alerter.Danger(T[error.ErrorMessage]);
+                }
+            }
 
-            return RedirectToAction(nameof(Index));
+            return await Edit(moderator.Id);
 
 
         }

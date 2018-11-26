@@ -4,6 +4,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Plato.Discuss.Moderation.ViewModels;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Features.Abstractions;
@@ -31,13 +33,17 @@ namespace Plato.Discuss.Moderation.ViewProviders
         private readonly HttpRequest _request;
         private readonly IFeatureFacade _featureFacade;
 
+
+        private readonly IStringLocalizer T;
+
         public AdminViewProvider(
             IContextFacade contextFacade,
             IPermissionsManager<ModeratorPermission> permissionsManager,
             IAuthorizationService authorizationService,
             IHttpContextAccessor httpContextAccessor,
             IModeratorStore<Moderator> moderatorStore, 
-            IPlatoUserStore<User> userStore, 
+            IPlatoUserStore<User> userStore,
+            IStringLocalizer<AdminViewProvider> stringLocalizer,
             IFeatureFacade featureFacade)
         {
             _contextFacade = contextFacade;
@@ -47,6 +53,8 @@ namespace Plato.Discuss.Moderation.ViewProviders
             _userStore = userStore;
             _featureFacade = featureFacade;
             _request = httpContextAccessor.HttpContext.Request;
+
+            T = stringLocalizer;
         }
 
         #region "Implementation"
@@ -137,21 +145,7 @@ namespace Plato.Discuss.Moderation.ViewProviders
             if (updater.ModelState.IsValid)
             {
                 moderator.UserId = model.UserId;
-
-                // Build a list of claims to add or update
-                var moderatorClaims = new List<ModeratorClaim>();
-                foreach (var key in _request.Form.Keys)
-                {
-                    if (key.StartsWith("Checkbox.") && _request.Form[key] == "true")
-                    {
-                        var permissionName = key.Substring("Checkbox.".Length);
-                        moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimType, ClaimValue = permissionName });
-                    }
-                }
-
-                // Update claims
-                moderator.Claims = moderatorClaims;
-
+                moderator.Claims = GetPostedClaims();
             }
 
         }
@@ -168,26 +162,12 @@ namespace Plato.Discuss.Moderation.ViewProviders
             // Validate model
             if (await ValidateModelAsync(model, context.Updater))
             {
-
-                //// Build a list of claims to add or update
-                //var moderatorClaims = new List<ModeratorClaim>();
-                //foreach (var key in _request.Form.Keys)
-                //{
-                //    if (key.StartsWith("Checkbox.") && _request.Form[key] == "true")
-                //    {
-                //        var permissionName = key.Substring("Checkbox.".Length);
-                //        moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimType, ClaimValue = permissionName });
-                //    }
-                //}
+                // Update claims
+                moderator.Claims = GetPostedClaims();
+                await _moderatorStore.UpdateAsync(moderator);
                 
-                //// Update claims
-                //moderator.Claims = moderatorClaims;
-                
-                //// Persist moderator
-                //await _moderatorStore.UpdateAsync(moderator);
-
             }
-
+      
             return await BuildEditAsync(moderator, context);
 
 
@@ -196,7 +176,24 @@ namespace Plato.Discuss.Moderation.ViewProviders
         #endregion
 
         #region "Private Methods"
-        
+
+        IList<ModeratorClaim> GetPostedClaims()
+        {
+            // Build a list of claims to add or update
+            var moderatorClaims = new List<ModeratorClaim>();
+            foreach (var key in _request.Form.Keys)
+            {
+                if (key.StartsWith("Checkbox.") && _request.Form[key] == "true")
+                {
+                    var permissionName = key.Substring("Checkbox.".Length);
+                    moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimType, ClaimValue = permissionName });
+                }
+            }
+
+            return moderatorClaims;
+
+        }
+
         async Task<IEnumerable<string>> GetEnabledModeratorPermissionsAsync(Moderator moderator)
         {
 

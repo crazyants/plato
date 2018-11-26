@@ -20,7 +20,7 @@ namespace Plato.Moderation.Models
 
         public string CategoryName { get; set; }
 
-        public List<ModeratorClaim> Claims { get; set;  } = new List<ModeratorClaim>();
+        public IList<ModeratorClaim> Claims { get; set;  } = new List<ModeratorClaim>();
 
         public int CreatedUserId { get; set; }
 

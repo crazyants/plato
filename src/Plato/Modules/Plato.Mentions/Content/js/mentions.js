@@ -72,12 +72,13 @@ $(function (win, doc, $) {
                     }
                 }
 
-                $caller.on(event, function (e) {
+                $caller.on(event,
+                    function(e) {
                         var match = false;
                         for (var i = 0; i < keys.length; i++) {
 
                             key = keys[i];
-                            
+
                             var selection = methods.getSelection($(this)),
                                 searchResult = key.search($(this), selection),
                                 search = searchResult.value;
@@ -87,7 +88,7 @@ $(function (win, doc, $) {
                             }
 
                             if (match) {
-                        
+
                                 if (key.bind) {
 
                                     switch (e.which) {
@@ -102,9 +103,9 @@ $(function (win, doc, $) {
                                         break;
                                     }
                                 }
-                            } 
+                            }
                         }
-                        if (!match) {
+                        if (!match && key) {
                             if (key.unbind) {
                                 key.unbind($(this), key, e);
                             }
@@ -366,7 +367,7 @@ $(function (win, doc, $) {
             bind: function ($caller) {
                 
                 // Normalize line breaks within suggester element
-                // Required for Edge to correctly determine selectionStart & selectionEnd
+                // Required for Edge to correctly determine selectionStart & selectionEnd indexes
                 var normalizedValue = $caller.val().replace(/(?:\r\n|\r|\n)/g, "\r\n");
                 $caller.val(normalizedValue);
 
@@ -376,8 +377,7 @@ $(function (win, doc, $) {
                     $caller.wrap($('<div class="position-relative"></div>'));
                 }
                 
-
-                // Track @mention pattern
+                // Track key patterns
                 $caller.keyBinder($caller.data(dataKey));
                 
             },

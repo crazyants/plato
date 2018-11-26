@@ -1627,8 +1627,7 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     /* filterList */
     var filterList = function () {
 
@@ -3188,7 +3187,95 @@ $(function (win, doc, $) {
         };
 
     }();
-    
+
+    /* confirmer */
+    var confirmer = function () {
+
+        var dataKey = "confirmer",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            event: "click", // uniuqe namespace
+            message: "Are you sure you wish to delete this item?\n\nClick OK to confirm..."
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                var event = $caller.data(dataKey).event,
+                    message = $caller.data("confirmerMessage") || $caller.data(dataKey).message;;
+                $caller.on(event, function (e) {
+                    return confirm(message);
+                    });
+
+            },
+            unbind: function ($caller) {
+                var event = $caller.data(dataKey).event;
+                $caller.unbind(event);
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    if (a) {
+                        switch (a.constructor) {
+                            case Object:
+                                $.extend(options, a);
+                                break;
+                            case String:
+                                methodName = a;
+                                break;
+                            case Boolean:
+                                break;
+                            case Number:
+                                break;
+                            case Function:
+                                break;
+                        }
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).confirmer()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().confirmer()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+
+
     /* Register Plugins */
     $.fn.extend({
         scrollTo: scrollTo.init,
@@ -3205,7 +3292,8 @@ $(function (win, doc, $) {
         labelTagIt: labelTagIt.init,
         selectDropdown: selectDropdown.init,
         labelSelectDropdown: labelSelectDropdown.init,
-        categorySelectDropdown: categorySelectDropdown.init
+        categorySelectDropdown: categorySelectDropdown.init,
+        confirmer: confirmer.init
     });
 
     // ---------------------------
@@ -3253,6 +3341,9 @@ $(function (win, doc, $) {
 
         /* labelTagIt */
         this.find('[data-provide="labelTagIt"]').labelTagIt();
+
+        /* confirmer */
+        this.find('[data-provide="confirmer"]').confirmer();
 
     }
 

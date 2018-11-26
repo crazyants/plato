@@ -9,7 +9,7 @@
             @T["Edit Moderator"]
         </a>
         <div class="dropdown-divider"></div>
-        <button type="submit" asp-controller="Admin" asp-route-action="Delete" asp-route-id="@Model.Id.ToString()" class="dropdown-item dropdown-item-danger">
+        <button type="submit" asp-controller="Admin" asp-route-action="Delete" asp-route-id="@Model.Id.ToString()" data-provide="confirmer" class="dropdown-item dropdown-item-danger">
             @T["Delete Channel"]
         </button>
     </div>

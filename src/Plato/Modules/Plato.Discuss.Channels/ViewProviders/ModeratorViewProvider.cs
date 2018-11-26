@@ -75,22 +75,20 @@ namespace Plato.Discuss.Channels.ViewProviders
             return valid;
         }
 
-        public override Task ComposeTypeAsync(Moderator moderator, IUpdateModel updater)
+        public override async Task ComposeTypeAsync(Moderator moderator, IUpdateModel updater)
         {
+            
+            var model = new EditTopicChannelsViewModel
+            {
+                SelectedChannels = GetChannelsToAdd()
+            };
 
-            return Task.CompletedTask;
+            await updater.TryUpdateModelAsync(model);
 
-            //var model = new EditTopicChannelsViewModel
-            //{
-            //    SelectedChannels = GetChannelsToAdd()
-            //};
-
-            //await updater.TryUpdateModelAsync(model);
-
-            //if (updater.ModelState.IsValid)
-            //{
-            //    moderator.CategoryId = model.SelectedChannels.FirstOrDefault();
-            //}
+            if (updater.ModelState.IsValid)
+            {
+                moderator.CategoryId = model.SelectedChannels.FirstOrDefault();
+            }
 
         }
 
@@ -177,18 +175,22 @@ namespace Plato.Discuss.Channels.ViewProviders
             {
                 if (key.StartsWith(ChannelHtmlName))
                 {
-                    if (channelsToAdd == null)
-                    {
-                        channelsToAdd = new List<int>();
-                    }
                     var values = _request.Form[key];
                     foreach (var value in values)
                     {
                         int.TryParse(value, out var id);
-                        if (!channelsToAdd.Contains(id))
+                        if (id > 0)
                         {
-                            channelsToAdd.Add(id);
+                            if (channelsToAdd == null)
+                            {
+                                channelsToAdd = new List<int>();
+                            }
+                            if (!channelsToAdd.Contains(id))
+                            {
+                                channelsToAdd.Add(id);
+                            }
                         }
+                       
                     }
                 }
             }
