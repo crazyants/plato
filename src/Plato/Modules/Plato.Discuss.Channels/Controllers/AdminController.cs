@@ -271,8 +271,7 @@ namespace Plato.Discuss.Channels.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-
+        
         public async Task<IActionResult> MoveUp(int id)
         {
 

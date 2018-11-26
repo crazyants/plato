@@ -137,6 +137,21 @@ namespace Plato.Discuss.Moderation.ViewProviders
             if (updater.ModelState.IsValid)
             {
                 moderator.UserId = model.UserId;
+
+                // Build a list of claims to add or update
+                var moderatorClaims = new List<ModeratorClaim>();
+                foreach (var key in _request.Form.Keys)
+                {
+                    if (key.StartsWith("Checkbox.") && _request.Form[key] == "true")
+                    {
+                        var permissionName = key.Substring("Checkbox.".Length);
+                        moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimType, ClaimValue = permissionName });
+                    }
+                }
+
+                // Update claims
+                moderator.Claims = moderatorClaims;
+
             }
 
         }
@@ -154,22 +169,22 @@ namespace Plato.Discuss.Moderation.ViewProviders
             if (await ValidateModelAsync(model, context.Updater))
             {
 
-                // Build a list of claims to add or update
-                var moderatorClaims = new List<ModeratorClaim>();
-                foreach (var key in _request.Form.Keys)
-                {
-                    if (key.StartsWith("Checkbox.") && _request.Form[key] == "true")
-                    {
-                        var permissionName = key.Substring("Checkbox.".Length);
-                        moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimType, ClaimValue = permissionName });
-                    }
-                }
+                //// Build a list of claims to add or update
+                //var moderatorClaims = new List<ModeratorClaim>();
+                //foreach (var key in _request.Form.Keys)
+                //{
+                //    if (key.StartsWith("Checkbox.") && _request.Form[key] == "true")
+                //    {
+                //        var permissionName = key.Substring("Checkbox.".Length);
+                //        moderatorClaims.Add(new ModeratorClaim { ClaimType = ModeratorPermission.ClaimType, ClaimValue = permissionName });
+                //    }
+                //}
                 
-                // Update claims
-                moderator.Claims = moderatorClaims;
+                //// Update claims
+                //moderator.Claims = moderatorClaims;
                 
-                // Persist moderator
-                await _moderatorStore.UpdateAsync(moderator);
+                //// Persist moderator
+                //await _moderatorStore.UpdateAsync(moderator);
 
             }
 

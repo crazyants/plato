@@ -151,7 +151,7 @@
     animation: showDropdownRight 0.1s ease-out;
 }
 
-.btn-group.show > .dropdown-arrow, 
+.btn-group.show>.dropdown-arrow, 
 .dropdown.show > .dropdown-arrow {
     display: block;
     -webkit-transform-origin: bottom;
@@ -159,7 +159,7 @@
     animation: showDropdown 0.1s ease-out;
 }
 
-.btn-group.show> .dropdown-arrow.dropdown-arrow-right, 
+.btn-group.show > .dropdown-arrow.dropdown-arrow-right, 
 .dropdown.show > .dropdown-arrow.dropdown-arrow-right {
     animation: showDropdownRight 0.1s ease-out;
 }
@@ -178,7 +178,6 @@
     pointer-events: none;
     z-index: 1001;
 }
-
 
 .btn-group .dropdown-arrow:before,
 .dropdown .dropdown-arrow:before {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,20 +75,22 @@ namespace Plato.Discuss.Channels.ViewProviders
             return valid;
         }
 
-        public override async Task ComposeTypeAsync(Moderator moderator, IUpdateModel updater)
+        public override Task ComposeTypeAsync(Moderator moderator, IUpdateModel updater)
         {
 
-            var model = new EditTopicChannelsViewModel
-            {
-                SelectedChannels = GetChannelsToAdd()
-            };
+            return Task.CompletedTask;
 
-            await updater.TryUpdateModelAsync(model);
+            //var model = new EditTopicChannelsViewModel
+            //{
+            //    SelectedChannels = GetChannelsToAdd()
+            //};
 
-            if (updater.ModelState.IsValid)
-            {
-                moderator.CategoryId = model.SelectedChannels.FirstOrDefault();
-            }
+            //await updater.TryUpdateModelAsync(model);
+
+            //if (updater.ModelState.IsValid)
+            //{
+            //    moderator.CategoryId = model.SelectedChannels.FirstOrDefault();
+            //}
 
         }
 
@@ -126,7 +127,7 @@ namespace Plato.Discuss.Channels.ViewProviders
                     Moderator newOrUpdatedModerator = null;
                     moderator.CategoryId = categoryId;
 
-                    // IF so update existing moderator
+                    // If so update existing moderator
                     if (existingModerator != null)
                     {
                         moderator.Id = existingModerator.Id;
@@ -142,11 +143,22 @@ namespace Plato.Discuss.Channels.ViewProviders
                     {
                         output.Add(newOrUpdatedModerator);
                     }
-
+                    
                 }
-                
+
+                // If we have specific channels, lets delete the "All Channels" entry
+                if (output.Count > 0)
+                {
+                    var allChannels = moderators?.Data.FirstOrDefault(m =>
+                        m.UserId == moderator.UserId && m.CategoryId == 0);
+                    if (allChannels != null)
+                    {
+                        await _moderatorStore.DeleteAsync(allChannels);
+                    }
+                }
+
                 // Persist moderator
-                await _moderatorStore.UpdateAsync(moderator);
+                //await _moderatorStore.UpdateAsync(moderator);
 
             }
 

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Plato.Discuss.Moderation.ViewModels;
-using Plato.Discuss.Moderation.ViewProviders;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
@@ -31,7 +30,6 @@ namespace Plato.Discuss.Moderation.Controllers
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
-
 
         public AdminController(
             IHtmlLocalizer<AdminController> htmlLocalizer,
@@ -124,16 +122,20 @@ namespace Plato.Discuss.Moderation.Controllers
                 foreach (var user in users)
                 {
 
-                    var newModerator = new Moderator()
-                    {
-                        UserId = user.Id
-                    };
+                    //var newModerator = new Moderator()
+                    //{
+                    //    UserId = user.Id
+                    //};
+
+                    // Compose moderator from all involved view providers
+                    var composedModerator = await _viewProvider.GetComposedType(this);
+                    composedModerator.UserId = user.Id;
 
                     // Validate model state within all view providers
-                    if (await _viewProvider.IsModelStateValid(newModerator, this))
+                    if (await _viewProvider.IsModelStateValid(composedModerator, this))
                     {
                         // Create moderator
-                        var moderator = await _moderatorStore.CreateAsync(newModerator);
+                        var moderator = await _moderatorStore.CreateAsync(composedModerator);
                         if (moderator != null)
                         {
                             // Update moderator within various view providers
@@ -225,6 +227,36 @@ namespace Plato.Discuss.Moderation.Controllers
 
 
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+
+            var ok = int.TryParse(id, out int moderatorId);
+            if (!ok)
+            {
+                return NotFound();
+            }
+
+            var moderator = await _moderatorStore.GetByIdAsync(moderatorId);
+            if (moderator == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _moderatorStore.DeleteAsync(moderator);
+            if (result)
+            {
+                _alerter.Success(T["Moderator Deleted Successfully"]);
+            }
+            else
+            {
+                _alerter.Danger(T["Could not delete the moderator"]);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
 
     }
 

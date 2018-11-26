@@ -4,15 +4,14 @@
     <a class="btn btn-secondary dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         @T["Edit"]
     </a>
-    <div class="dropdown-arrow dropdown-arrow-right"></div>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
         <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" class="dropdown-item">
             @T["Edit Moderator"]
         </a>
         <div class="dropdown-divider"></div>
-        <a asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Id" class="dropdown-item dropdown-item-danger">
+        <button type="submit" asp-controller="Admin" asp-route-action="Delete" asp-route-id="@Model.Id.ToString()" class="dropdown-item dropdown-item-danger">
             @T["Delete Channel"]
-        </a>
+        </button>
     </div>
 </div>
 
