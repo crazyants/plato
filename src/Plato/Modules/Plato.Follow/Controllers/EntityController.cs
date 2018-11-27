@@ -12,19 +12,19 @@ namespace Plato.Follow.Controllers
     public class EntityController : BaseWebApiController
     {
 
-        private readonly IEntityFollowStore<EntityFollow> _entityFollowStore;
+        private readonly IFollowStore<Models.Follow> _followStore;
 
         public EntityController(
-            IEntityFollowStore<EntityFollow> entityFollowStore)
+            IFollowStore<Models.Follow> followStore)
         {
-            _entityFollowStore = entityFollowStore;
+            _followStore = followStore;
         }
 
         [HttpGet]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Get(int id)
         {
-            var follow = await _entityFollowStore.GetByIdAsync(id);
+            var follow = await _followStore.GetByIdAsync(id);
             if (follow != null)
             {
                 return base.Result(follow);
@@ -34,7 +34,7 @@ namespace Plato.Follow.Controllers
         
         [HttpPost]
         [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Post([FromBody] EntityFollow follow)
+        public async Task<IActionResult> Post([FromBody] Models.Follow follow)
         {
      
             // We need a user to subscribe to the entity
@@ -45,23 +45,23 @@ namespace Plato.Follow.Controllers
             }
 
             // Is the user already following the entity?
-            var existingFollow = await _entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, follow.EntityId);
+            var existingFollow = await _followStore.SelectFollowsByCreatedUserIdAndThingId(user.Id, follow.ThingId);
             if (existingFollow != null)
             {
                 return base.Result(HttpStatusCode.OK,
-                    $"Authenticated user already following entity with id '{follow.EntityId}'");
+                    $"Authenticated user already following entity with id '{follow.ThingId}'");
             }
 
             // Build a new subscription
-            var followToAdd = new EntityFollow()
+            var followToAdd = new Models.Follow()
             {
-                EntityId = follow.EntityId,
-                UserId = user.Id,
+                ThingId = follow.ThingId,
+                CreatedUserId = user.Id,
                 CreatedDate = DateTime.UtcNow
             };
 
             // Add and return result
-            var result = await _entityFollowStore.CreateAsync(followToAdd);
+            var result = await _followStore.CreateAsync(followToAdd);
             if (result != null)
             {
                 return base.Result(result);
@@ -74,14 +74,14 @@ namespace Plato.Follow.Controllers
 
         [HttpPut]
         [ResponseCache(NoStore = true)]
-        public Task<IActionResult> Put(EntityFollow follow)
+        public Task<IActionResult> Put(Models.Follow follow)
         {
             throw new NotImplementedException();
         }
         
         [HttpDelete]
         [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Delete([FromBody] EntityFollow follow)
+        public async Task<IActionResult> Delete([FromBody] Models.Follow follow)
         {
 
             var user = await base.GetAuthenticatedUserAsync();
@@ -90,10 +90,10 @@ namespace Plato.Follow.Controllers
                 return base.UnauthorizedException();
             }
             
-            var existingFollow = await _entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, follow.EntityId);
+            var existingFollow = await _followStore.SelectFollowsByCreatedUserIdAndThingId(user.Id, follow.ThingId);
             if (existingFollow != null)
             {
-                var success = await _entityFollowStore.DeleteAsync(existingFollow);
+                var success = await _followStore.DeleteAsync(existingFollow);
                 if (success)
                 {
                     return base.Result(existingFollow);

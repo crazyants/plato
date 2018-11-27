@@ -19,18 +19,18 @@ namespace Plato.Discuss.Follow.ViewProviders
         private const string FollowHtmlName = "follow";
         
         private readonly IContextFacade _contextFacade;
-        private readonly IEntityFollowStore<EntityFollow> _entityFollowStore;
+        private readonly IFollowStore<Plato.Follow.Models.Follow> _followStore;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly HttpRequest _request;
  
         public TopicViewProvider(
             IContextFacade contextFacade,
             IHttpContextAccessor httpContextAccessor,
-            IEntityFollowStore<EntityFollow> entityFollowStore,
+            IFollowStore<Plato.Follow.Models.Follow> followStore,
             IEntityStore<Topic> entityStore)
         {
             _contextFacade = contextFacade;
-            _entityFollowStore = entityFollowStore;
+            _followStore = followStore;
             _entityStore = entityStore;
             _request = httpContextAccessor.HttpContext.Request;
         }
@@ -53,7 +53,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
             {
-                var entityFollow = await _entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, entity.Id);
+                var entityFollow = await _followStore.SelectFollowsByCreatedUserIdAndThingId(user.Id, entity.Id);
                 if (entityFollow != null)
                 {
                     isFollowing = true;
@@ -83,7 +83,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
             {
-                var entityFollow = await _entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, entity.Id);
+                var entityFollow = await _followStore.SelectFollowsByCreatedUserIdAndThingId(user.Id, entity.Id);
                 if (entityFollow != null)
                 {
                     isFollowing = true;
@@ -137,10 +137,10 @@ namespace Plato.Discuss.Follow.ViewProviders
             if (follow)
             {
                 // Add and return result
-                await _entityFollowStore.CreateAsync(new EntityFollow()
+                await _followStore.CreateAsync(new Plato.Follow.Models.Follow()
                 {
-                    EntityId = entity.Id,
-                    UserId = user.Id,
+                    ThingId = entity.Id,
+                    CreatedUserId = user.Id,
                     CreatedDate = DateTime.UtcNow
                 });
             }
@@ -148,10 +148,10 @@ namespace Plato.Discuss.Follow.ViewProviders
             {
                 // Delete the follow
                 var existingFollow =
-                    await _entityFollowStore.SelectEntityFollowByUserIdAndEntityId(user.Id, entity.Id);
+                    await _followStore.SelectFollowsByCreatedUserIdAndThingId(user.Id, entity.Id);
                 if (existingFollow != null)
                 {
-                    await _entityFollowStore.DeleteAsync(existingFollow);
+                    await _followStore.DeleteAsync(existingFollow);
                 }
             }
 

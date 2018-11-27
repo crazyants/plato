@@ -9,6 +9,7 @@ using Plato.Follow.Assets;
 using Plato.Follow.Handlers;
 using Plato.Follow.Models;
 using Plato.Follow.Repositories;
+using Plato.Follow.Services;
 using Plato.Follow.Stores;
 using Plato.Internal.Assets.Abstractions;
 
@@ -26,6 +27,9 @@ namespace Plato.Follow
         public override void ConfigureServices(IServiceCollection services)
         {
 
+            // Follow Types
+            services.AddScoped<IFollowTypesManager, FollowTypesManager>();
+            
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
        
@@ -33,8 +37,8 @@ namespace Plato.Follow
             services.AddScoped<IAssetProvider, AssetProvider>();
 
             // Data access
-            services.AddScoped<IEntityFollowRepository<EntityFollow>, EntityFollowRepository>();
-            services.AddScoped<IEntityFollowStore<EntityFollow>, EntityFollowStore>();
+            services.AddScoped<IFollowRepository<Models.Follow>, FollowRepository>();
+            services.AddScoped<IFollowStore<Models.Follow>, FollowStore>();
 
         }
 

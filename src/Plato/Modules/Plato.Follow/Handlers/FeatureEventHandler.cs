@@ -12,10 +12,10 @@ namespace Plato.Follow.Handlers
 
         public string Version { get; } = "1.0.0";
 
-        // EntityFollows table
-        private readonly SchemaTable _entityFollows = new SchemaTable()
+        // Follows table
+        private readonly SchemaTable _follows = new SchemaTable()
         {
-            Name = "EntityFollows",
+            Name = "Follows",
             Columns = new List<SchemaColumn>()
                 {
                     new SchemaColumn()
@@ -26,19 +26,25 @@ namespace Plato.Follow.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "EntityId",
+                        Name = "[Name]",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ThingId",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
-                        Name = "UserId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CancellationGuid",
+                        Name = "CancellationToken",
                         DbType = DbType.String,
                         Length = "100"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
@@ -71,7 +77,7 @@ namespace Plato.Follow.Handlers
                 Configure(builder);
 
                 // Entity follows
-                EntityFollows(builder);
+                Follows(builder);
                 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -114,11 +120,11 @@ namespace Plato.Follow.Handlers
 
                 // drop entity follows
                 builder
-                    .DropTable(_entityFollows)
-                    .DropDefaultProcedures(_entityFollows)
+                    .DropTable(_follows)
+                    .DropDefaultProcedures(_follows)
                     .DropProcedure(new SchemaProcedure("SelectEntityFollowsPaged"))
-                    .DropProcedure(new SchemaProcedure("SelectEntityFollowsByEntityId"))
-                    .DropProcedure(new SchemaProcedure("SelectEntityFollowsByUserIdAndEntityId"));
+                    .DropProcedure(new SchemaProcedure("SelectFollowsByNameAndThingId"))
+                    .DropProcedure(new SchemaProcedure("SelectFollowsByCreatedUserIdAndThingId"));
                 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -169,86 +175,91 @@ namespace Plato.Follow.Handlers
 
         }
 
-        void EntityFollows(ISchemaBuilder builder)
+        void Follows(ISchemaBuilder builder)
         {
             
             builder
-                .CreateTable(_entityFollows)
-                .CreateDefaultProcedures(_entityFollows);
+                .CreateTable(_follows)
+                .CreateDefaultProcedures(_follows);
             
-            // Overwrite our SelectEntityFollowById created via CreateDefaultProcedures
+            // Overwrite our SelectFollowById created via CreateDefaultProcedures
             // above to also return basic user data with follow
             builder.CreateProcedure(
                 new SchemaProcedure(
-                        $"SelectEntityFollowById",
+                        $"SelectFollowById",
                         @"SELECT f.*, 
                                 u.Email, 
                                 u.UserName, 
                                 u.DisplayName, 
                                 u.NormalizedUserName 
-                                FROM {prefix}_EntityFollows f WITH (nolock) 
-                                LEFT OUTER JOIN {prefix}_Users u ON f.UserId = u.Id 
+                                FROM {prefix}_Follows f WITH (nolock) 
+                                LEFT OUTER JOIN {prefix}_Users u ON f.CreatedUserId = u.Id 
                                 WHERE (
                                     f.Id = @Id 
                                 )")
-                    .ForTable(_entityFollows)
-                    .WithParameter(_entityFollows.PrimaryKeyColumn));
+                    .ForTable(_follows)
+                    .WithParameter(_follows.PrimaryKeyColumn));
                     
-            // Returns all followers for a specific entity
             builder
                 .CreateProcedure(
-                    new SchemaProcedure("SelectEntityFollowsByEntityId",
+                    new SchemaProcedure("SelectFollowsByNameAndThingId",
                             @"SELECT f.*, 
                                 u.Email, 
                                 u.UserName, 
                                 u.DisplayName, 
                                 u.NormalizedUserName 
-                                FROM {prefix}_EntityFollows f WITH (nolock) 
-                                LEFT OUTER JOIN {prefix}_Users u ON f.UserId = u.Id 
+                                FROM {prefix}_Follows f WITH (nolock) 
+                                LEFT OUTER JOIN {prefix}_Users u ON f.CreatedUserId = u.Id 
                                 WHERE (
-                                    f.EntityId = @EntityId AND
-                                    u.EmailConfirmed = 1 AND 
-                                    u.LockoutEnabled = 0
+                                    (f.[Name] = @Name AND f.ThingId = @ThingId) AND
+                                    (u.EmailConfirmed = 1 AND u.LockoutEnabled = 0)
                                 )")
-                        .ForTable(_entityFollows)
-                        .WithParameter(new SchemaColumn()
-                        {
-                            Name = "EntityId",
-                            DbType = DbType.Int32
-                        }));
-
-            // Returns a follow based on the supplied UserId and EntityId
-            builder
-                .CreateProcedure(
-                    new SchemaProcedure("SelectEntityFollowsByUserIdAndEntityId",
-                            @"SELECT f.*, 
-                                u.Email, 
-                                u.UserName, 
-                                u.DisplayName, 
-                                u.NormalizedUserName 
-                                FROM {prefix}_EntityFollows f WITH (nolock) 
-                                LEFT OUTER JOIN {prefix}_Users u ON f.UserId = u.Id 
-                                WHERE (
-                                    f.EntityId = @EntityId AND
-                                    u.Id = @UserId
-                                )")
-                        .ForTable(_entityFollows)
+                        .ForTable(_follows)
                         .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn()
                             {
-                                Name = "UserId",
-                                DbType = DbType.Int32,
+                                Name = "[Name]",
+                                DbType = DbType.String,
+                                Length = "255"
                             },
                             new SchemaColumn()
                             {
-                                Name = "EntityId",
+                                Name = "ThingId",
                                 DbType = DbType.Int32,
                             }
                         }));
             
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityFollowsPaged", StoredProcedureType.SelectPaged)
-                .ForTable(_entityFollows)
+            builder
+                .CreateProcedure(
+                    new SchemaProcedure("SelectFollowsByCreatedUserIdAndThingId",
+                            @"SELECT f.*, 
+                                u.Email, 
+                                u.UserName, 
+                                u.DisplayName, 
+                                u.NormalizedUserName 
+                                FROM {prefix}_Follows f WITH (nolock) 
+                                LEFT OUTER JOIN {prefix}_Users u ON f.CreatedUserId = u.Id 
+                                WHERE (
+                                    f.ThingId = @ThingId AND u.Id = @CreatedUserId
+                                )")
+                        .ForTable(_follows)
+                        .WithParameters(new List<SchemaColumn>()
+                        {
+                            new SchemaColumn()
+                            {
+                                Name = "CreatedUserId",
+                                DbType = DbType.Int32,
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "ThingId",
+                                DbType = DbType.Int32,
+                            }
+                        }));
+            
+            builder.CreateProcedure(new SchemaProcedure("SelectFollowsPaged", StoredProcedureType.SelectPaged)
+                .ForTable(_follows)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()

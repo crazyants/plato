@@ -5,20 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Follow.Models;
 
 namespace Plato.Follow.Repositories
 {
-    
-    class EntityFollowRepository : IEntityFollowRepository<EntityFollow>
+
+    class FollowRepository : IFollowRepository<Models.Follow>
     {
 
         private readonly IDbContext _dbContext;
-        private readonly ILogger<EntityFollowRepository> _logger;
+        private readonly ILogger<FollowRepository> _logger;
 
-        public EntityFollowRepository(
+        public FollowRepository(
             IDbContext dbContext,
-            ILogger<EntityFollowRepository> logger)
+            ILogger<FollowRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -26,7 +25,7 @@ namespace Plato.Follow.Repositories
         
         #region "Implementation"
 
-        public async Task<EntityFollow> InsertUpdateAsync(EntityFollow follow)
+        public async Task<Models.Follow> InsertUpdateAsync(Models.Follow follow)
         {
             if (follow == null)
             {
@@ -35,9 +34,10 @@ namespace Plato.Follow.Repositories
                 
             var id = await InsertUpdateInternal(
                 follow.Id,
-                follow.EntityId,
-                follow.UserId,
-                follow.CancellationGuid,
+                follow.Name,
+                follow.ThingId,
+                follow.CancellationToken,
+                follow.CreatedUserId,
                 follow.CreatedDate);
 
             if (id > 0)
@@ -49,18 +49,18 @@ namespace Plato.Follow.Repositories
             return null;
         }
 
-        public async Task<EntityFollow> SelectByIdAsync(int id)
+        public async Task<Models.Follow> SelectByIdAsync(int id)
         {
-            EntityFollow follow = null;
+            Models.Follow follow = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityFollowById", id);
+                    "SelectFollowById", id);
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
-                    follow = new EntityFollow();
+                    follow = new Models.Follow();
                     follow.PopulateModel(reader);
                 }
 
@@ -69,9 +69,9 @@ namespace Plato.Follow.Repositories
             return follow;
         }
 
-        public async Task<IPagedResults<EntityFollow>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<Models.Follow>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EntityFollow> output = null;
+            PagedResults<Models.Follow> output = null;
             using (var context = _dbContext)
             {
 
@@ -83,16 +83,16 @@ namespace Plato.Follow.Repositories
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityFollowsPaged",
+                    "SelectFollowsPaged",
                     inputParams
                 );
 
                 if ((reader != null) && (reader.HasRows))
                 {
-                    output = new PagedResults<EntityFollow>();
+                    output = new PagedResults<Models.Follow>();
                     while (await reader.ReadAsync())
                     {
-                        var entity = new EntityFollow();
+                        var entity = new Models.Follow();
                         entity.PopulateModel(reader);
                         output.Data.Add(entity);
                     }
@@ -121,34 +121,28 @@ namespace Plato.Follow.Repositories
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityFollowById", id);
+                    "DeleteFollowById", id);
             }
 
             return success > 0 ? true : false;
         }
 
-        public async Task<IEnumerable<EntityFollow>> SelectEntityFollowsByEntityId(int entityId)
+        public async Task<IEnumerable<Models.Follow>> SelectFollowsByNameAndThingId(string name, int thingId)
         {
-            List<EntityFollow> output = null;
+            List<Models.Follow> output = null;
             using (var context = _dbContext)
             {
-
-                _dbContext.OnException += (sender, args) =>
-                {
-                    if (_logger.IsEnabled(LogLevel.Error))
-                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
-                };
-
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityFollowsByEntityId",
-                    entityId);
+                    "SelectFollowsByNameAndThingId",
+                    name,
+                    thingId);
                 if ((reader != null) && (reader.HasRows))
                 {
-                    output = new List<EntityFollow>();
+                    output = new List<Models.Follow>();
                     while (await reader.ReadAsync())
                     {
-                        var entity = new EntityFollow();
+                        var entity = new Models.Follow();
                         entity.PopulateModel(reader);
                         output.Add(entity);
                     }
@@ -159,20 +153,20 @@ namespace Plato.Follow.Repositories
             return output;
         }
 
-        public async Task<EntityFollow> SelectEntityFollowByUserIdAndEntityId(int userId, int entityId)
+        public async Task<Models.Follow> SelectFollowsByCreatedUserIdAndThingId(int userId, int entityId)
         {
-            EntityFollow follow = null;
+            Models.Follow follow = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityFollowsByUserIdAndEntityId", 
+                    "SelectFollowsByCreatedUserIdAndThingId", 
                     userId,
                     entityId);
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
-                    follow = new EntityFollow();
+                    follow = new Models.Follow();
                     follow.PopulateModel(reader);
                 }
 
@@ -187,9 +181,10 @@ namespace Plato.Follow.Repositories
 
         async Task<int> InsertUpdateInternal(
             int id,
-            int entityId,
-            int userId,
-            string cancellationGuid,
+            string name,
+            int thingId,
+            string cancellationToken,
+            int createdUserId,
             DateTimeOffset createdDate)
         {
 
@@ -198,11 +193,12 @@ namespace Plato.Follow.Repositories
             {
                 output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "InsertUpdateEntityFollow",
+                    "InsertUpdateFollow",
                     id,
-                    entityId,
-                    userId,
-                    cancellationGuid.ToEmptyIfNull().TrimToSize(100),
+                    name.ToEmptyIfNull().TrimToSize(255),
+                    thingId,
+                    cancellationToken.ToEmptyIfNull().TrimToSize(100),
+                    createdUserId,
                     createdDate,
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }

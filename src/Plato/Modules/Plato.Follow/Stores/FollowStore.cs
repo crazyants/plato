@@ -14,23 +14,23 @@ using Plato.Internal.Text.Abstractions;
 namespace Plato.Follow.Stores
 {
 
-    public class EntityFollowStore : IEntityFollowStore<EntityFollow>
+    public class FollowStore : IFollowStore<Models.Follow>
     {
         
-        private readonly IEntityFollowRepository<EntityFollow> _entityFollowRepository;
+        private readonly IFollowRepository<Models.Follow> _followRepository;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<EmailStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly IKeyGenerator _keyGenerator;
 
-        public EntityFollowStore(
-            IEntityFollowRepository<EntityFollow> entityFollowRepository,
+        public FollowStore(
+            IFollowRepository<Models.Follow> followRepository,
             ICacheManager cacheManager,
             ILogger<EmailStore> logger,
             IDbQueryConfiguration dbQuery,
             IKeyGenerator keyGenerator)
         {
-            _entityFollowRepository = entityFollowRepository;
+            _followRepository = followRepository;
             _cacheManager = cacheManager;
             _logger = logger;
             _dbQuery = dbQuery;
@@ -39,7 +39,7 @@ namespace Plato.Follow.Stores
 
         #region "Implementation"
 
-        public async Task<EntityFollow> CreateAsync(EntityFollow model)
+        public async Task<Models.Follow> CreateAsync(Models.Follow model)
         {
 
             if (model == null)
@@ -47,25 +47,25 @@ namespace Plato.Follow.Stores
                 throw new ArgumentNullException(nameof(model));
             }
 
-            if (model.EntityId <= 0)
+            if (model.ThingId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.EntityId));
+                throw new ArgumentOutOfRangeException(nameof(model.ThingId));
             }
             
-            if (model.UserId <= 0)
+            if (model.CreatedUserId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.UserId));
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
             }
 
-            if (String.IsNullOrEmpty(model.CancellationGuid))
+            if (String.IsNullOrEmpty(model.CancellationToken))
             {
-                model.CancellationGuid = _keyGenerator.GenerateKey(o =>
+                model.CancellationToken = _keyGenerator.GenerateKey(o =>
                 {
                     o.MaxLength = 100;
                 });
             }
 
-            var follow = await _entityFollowRepository.InsertUpdateAsync(model);
+            var follow = await _followRepository.InsertUpdateAsync(model);
             if (follow != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -74,7 +74,7 @@ namespace Plato.Follow.Stores
             return follow;
         }
 
-        public async Task<EntityFollow> UpdateAsync(EntityFollow model)
+        public async Task<Models.Follow> UpdateAsync(Models.Follow model)
         {
 
             if (model == null)
@@ -82,25 +82,25 @@ namespace Plato.Follow.Stores
                 throw new ArgumentNullException(nameof(model));
             }
 
-            if (model.EntityId <= 0)
+            if (model.ThingId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.EntityId));
+                throw new ArgumentOutOfRangeException(nameof(model.ThingId));
             }
 
-            if (model.UserId <= 0)
+            if (model.CreatedUserId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.UserId));
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
             }
 
-            if (String.IsNullOrEmpty(model.CancellationGuid))
+            if (String.IsNullOrEmpty(model.CancellationToken))
             {
-                model.CancellationGuid = _keyGenerator.GenerateKey(o =>
+                model.CancellationToken = _keyGenerator.GenerateKey(o =>
                 {
                     o.MaxLength = 100;
                 });
             }
             
-            var follow = await _entityFollowRepository.InsertUpdateAsync(model);
+            var follow = await _followRepository.InsertUpdateAsync(model);
             if (follow != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -109,7 +109,7 @@ namespace Plato.Follow.Stores
             return follow;
         }
 
-        public async Task<bool> DeleteAsync(EntityFollow model)
+        public async Task<bool> DeleteAsync(Models.Follow model)
         {
             
             if (model == null)
@@ -122,13 +122,13 @@ namespace Plato.Follow.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
             
-            var success = await _entityFollowRepository.DeleteAsync(model.Id);
+            var success = await _followRepository.DeleteAsync(model.Id);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Deleted follow with EntityId {0} UserId {1}",
-                        model.EntityId, model.UserId);
+                        model.ThingId, model.CreatedUserId);
                 }
                 _cacheManager.CancelTokens(this.GetType());
             }
@@ -136,18 +136,18 @@ namespace Plato.Follow.Stores
             return success;
         }
 
-        public async Task<EntityFollow> GetByIdAsync(int id)
+        public async Task<Models.Follow> GetByIdAsync(int id)
         {
-            return await _entityFollowRepository.SelectByIdAsync(id);
+            return await _followRepository.SelectByIdAsync(id);
         }
 
-        public IQuery<EntityFollow> QueryAsync()
+        public IQuery<Models.Follow> QueryAsync()
         {
             var query = new EntityFollowQuery(this);
-            return _dbQuery.ConfigureQuery<EntityFollow>(query); ;
+            return _dbQuery.ConfigureQuery<Models.Follow>(query); ;
         }
 
-        public async Task<IPagedResults<EntityFollow>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<Models.Follow>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -159,41 +159,41 @@ namespace Plato.Follow.Stores
                         token.ToString(), args.Select(a => a));
                 }
 
-                return await _entityFollowRepository.SelectAsync(args);
+                return await _followRepository.SelectAsync(args);
 
             });
         }
 
-        public async Task<IEnumerable<EntityFollow>> SelectEntityFollowsByEntityId(int entityId)
+        public async Task<IEnumerable<Models.Follow>> SelectFollowsByNameAndThingId(string name, int thingId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), entityId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), name, thingId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Adding followers for entity {0} to cache with key {1}",
-                        entityId, token.ToString());
+                        thingId, token.ToString());
                 }
 
-                return await _entityFollowRepository.SelectEntityFollowsByEntityId(entityId);
+                return await _followRepository.SelectFollowsByNameAndThingId(name, thingId);
 
             });
         }
 
-        public async Task<EntityFollow> SelectEntityFollowByUserIdAndEntityId(int userId, int entityId)
+        public async Task<Models.Follow> SelectFollowsByCreatedUserIdAndThingId(int userId, int thingId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), userId, entityId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), userId, thingId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Adding follow details for userId {0} and entityId {1} to cache with key {2}",
-                       userId, entityId, token.ToString());
+                       userId, thingId, token.ToString());
                 }
 
-                return await _entityFollowRepository.SelectEntityFollowByUserIdAndEntityId(userId, entityId);
+                return await _followRepository.SelectFollowsByCreatedUserIdAndThingId(userId, thingId);
 
             });
         }

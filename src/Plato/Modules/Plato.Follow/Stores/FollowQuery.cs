@@ -13,19 +13,19 @@ namespace Plato.Follow.Stores
 {
     #region "EmailQuery"
 
-    public class EntityFollowQuery : DefaultQuery<EntityFollow>
+    public class EntityFollowQuery : DefaultQuery<Models.Follow>
     {
 
-        private readonly IStore<EntityFollow> _store;
+        private readonly IStore<Models.Follow> _store;
 
-        public EntityFollowQuery(IStore<EntityFollow> store)
+        public EntityFollowQuery(IStore<Models.Follow> store)
         {
             _store = store;
         }
 
         public EntityQueryParams Params { get; set; }
 
-        public override IQuery<EntityFollow> Select<T>(Action<T> configure)
+        public override IQuery<Models.Follow> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
@@ -33,7 +33,7 @@ namespace Plato.Follow.Stores
             return this;
         }
 
-        public override async Task<IPagedResults<EntityFollow>> ToList()
+        public override async Task<IPagedResults<Models.Follow>> ToList()
         {
 
             var builder = new EntityQueryBuilder(this);
@@ -171,7 +171,7 @@ namespace Plato.Follow.Stores
             sb.Append(_entityFollowsTableName)
                 .Append(" f WITH (nolock) LEFT OUTER JOIN ")
                 .Append(_usersTableName)
-                .Append(" u ON f.UserId = u.Id");
+                .Append(" u ON f.CreatedUserId = u.Id");
             return sb.ToString();
 
         }

@@ -70,9 +70,6 @@ namespace Plato.Users.ViewComponents
                         q.FirstName.Like(viewOptions.Search).Or();
                         q.LastName.Like(viewOptions.Search).Or();
                     }
-                    // q.UserName.IsIn("Admin,Mark").Or();
-                    // q.Email.IsIn("email440@address.com,email420@address.com");
-                    // q.Id.Between(1, 5);
                 })
                 .OrderBy("LastLoginDate", OrderBy.Desc)
                 .ToList();
