@@ -85,12 +85,12 @@ namespace Plato.Discuss.Follow.ViewProviders
             }
 
             var isFollowing = false;
-
+            var followType = DefaultFollowTypes.Topic;
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
             {
                 var entityFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
-                    DefaultFollowTypes.Topic.Name,
+                    followType.Name,
                     entity.Id,
                     user.Id);
                 if (entityFollow != null)
@@ -102,6 +102,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             return Views(
                 View<FollowViewModel>("Follow.Edit.Sidebar", model =>
                 {
+                    model.FollowType = followType;
                     model.FollowHtmlName = FollowHtmlName;
                     model.EntityId = entity.Id;
                     model.IsFollowing = isFollowing;

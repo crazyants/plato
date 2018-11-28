@@ -13,9 +13,9 @@ $(function (win, doc, $) {
     'use strict';
 
     // Provides state changes functionality for the follow button
-    var entityFollowToggler = function () {
+    var followToggler = function () {
 
-        var dataKey = "entityFollowToggler",
+        var dataKey = "followToggler",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
@@ -126,9 +126,9 @@ $(function (win, doc, $) {
     }();
 
     // Provides the ability to follow an entity
-    var entityFollowButton = function () {
+    var followButton = function () {
 
-        var dataKey = "entityFollowButton",
+        var dataKey = "followButton",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
@@ -198,7 +198,7 @@ $(function (win, doc, $) {
                 }).done(function(data) {
                     
                     if (data.statusCode === 200) {
-                        $caller.entityFollowToggler("enable");
+                        $caller.followToggler("enable");
                     }
                  
                 });
@@ -217,7 +217,7 @@ $(function (win, doc, $) {
                     data: JSON.stringify(params)
                 }).done(function (data) {
                     if (data.statusCode === 200) {
-                        $caller.entityFollowToggler("disable");
+                        $caller.followToggler("disable");
                     }
                 });
 
@@ -307,9 +307,9 @@ $(function (win, doc, $) {
     }();
 
     // Mimics the follow button but uses a hidden checkbox to persist state
-    var entityFollowCheckbox = function () {
+    var followCheckbox = function () {
 
-        var dataKey = "entityFollowCheckable",
+        var dataKey = "followCheckable",
             dataIdKey = dataKey + "Id";
 
         var defaults = {
@@ -338,9 +338,9 @@ $(function (win, doc, $) {
                         function (e) {
                             e.preventDefault();
                             if ($(this).is(":checked")) {
-                                $caller.parent().entityFollowToggler("enable");
+                                $caller.parent().followToggler("enable");
                             } else {
-                                $caller.parent().entityFollowToggler("disable");
+                                $caller.parent().followToggler("disable");
                             }
                             
                         });
@@ -382,7 +382,7 @@ $(function (win, doc, $) {
                 }).done(function (data) {
 
                     if (data.statusCode === 200) {
-                        $caller.entityFollowToggle("enable");
+                        $caller.followToggle("enable");
                     }
 
                 });
@@ -401,7 +401,7 @@ $(function (win, doc, $) {
                 }).done(function (data) {
 
                     if (data.statusCode === 200) {
-                        $caller.entityFollowToggle("disable");
+                        $caller.followToggle("disable");
                     }
 
                 });
@@ -482,18 +482,18 @@ $(function (win, doc, $) {
     }();
     
     $.fn.extend({
-        entityFollowButton: entityFollowButton.init,
-        entityFollowToggler: entityFollowToggler.init,
-        entityFollowCheckbox: entityFollowCheckbox.init
+        followButton: followButton.init,
+        followToggler: followToggler.init,
+        followCheckbox: followCheckbox.init
     });
     
     $(doc).ready(function () {
 
         $('[data-provide="follow-button"]')
-            .entityFollowButton();
+            .followButton();
 
         $('[data-provide="follow-checkbox"]')
-            .entityFollowCheckbox();
+            .followCheckbox();
      
     });
 

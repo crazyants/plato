@@ -40,25 +40,22 @@ namespace Plato.Discuss.Follow.ViewProviders
                 return await BuildIndexAsync(discussUser, context);
             }
 
-            var viewModel = new UserDisplayViewModel()
-            {
-                User = user
-            };
-
+            var followType = DefaultFollowTypes.User;
             var isFollowing = false;
 
             var currentUser = await _contextFacade.GetAuthenticatedUserAsync();
-            var followType = DefaultFollowTypes.User;
-
-            var entityFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
-                followType.Name,
-                currentUser.Id,
-                user.Id);
-            if (entityFollow != null)
+            if (currentUser != null)
             {
-                isFollowing = true;
+                var entityFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+                    followType.Name,
+                    user.Id,
+                    currentUser.Id);
+                if (entityFollow != null)
+                {
+                    isFollowing = true;
+                }
             }
-   
+            
             return Views(
                 View<FollowViewModel>("Follow.Display.Tools", model =>
                 {
