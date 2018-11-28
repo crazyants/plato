@@ -18,7 +18,10 @@ $(function (win, doc, $) {
         var dataKey = "entityFollowToggler",
             dataIdKey = dataKey + "Id";
 
-        var defaults = {};
+        var defaults = {
+            onCss: null,
+            offCss: null
+        };
 
         var methods = {
             init: function ($caller, methodName) {
@@ -33,10 +36,15 @@ $(function (win, doc, $) {
 
             },
             enable: function ($caller) {
+           
+                var onCss = $caller.data("onCss") || $caller.data(dataKey).onCss,
+                    offCss = $caller.data("offCss") || $caller.data(dataKey).offCss;
 
+                alert(offCss)
+                alert(onCss)
                 $caller
-                    .removeClass("btn-secondary")
-                    .addClass("btn-danger")
+                    .removeClass(offCss)
+                    .addClass(onCss)
                     .attr("data-action", "unsubscribe");
 
                 $caller.find("i")
@@ -48,9 +56,12 @@ $(function (win, doc, $) {
             },
             disable: function ($caller) {
 
+                var onCss = $caller.data("onCss") || $caller.data(dataKey).onCss,
+                    offCss = $caller.data("offCss") || $caller.data(dataKey).offCss;
+
                 $caller
-                    .addClass("btn-secondary")
-                    .removeClass("btn-danger")
+                    .removeClass(onCss)
+                    .addClass(offCss)
                     .attr("data-action", "subscribe");
 
                 $caller.find("i")
@@ -127,6 +138,7 @@ $(function (win, doc, $) {
         };
 
         var methods = {
+
             init: function ($caller, methodName) {
                 if (methodName) {
                     if (this[methodName]) {

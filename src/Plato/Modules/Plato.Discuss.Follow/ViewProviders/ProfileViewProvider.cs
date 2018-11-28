@@ -60,13 +60,13 @@ namespace Plato.Discuss.Follow.ViewProviders
             }
    
             return Views(
-                View<FollowViewModel>("Follow.Display.Sidebar", model =>
+                View<FollowViewModel>("Follow.Display.Tools", model =>
                 {
                     model.FollowType = followType;
                     model.EntityId = user.Id;
                     model.IsFollowing = isFollowing;
                     return model;
-                }).Zone("sidebar").Order(4)
+                }).Zone("tools").Order(1)
             );
 
 

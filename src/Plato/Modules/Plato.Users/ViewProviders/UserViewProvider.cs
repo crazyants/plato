@@ -56,7 +56,7 @@ namespace Plato.Users.ViewProviders
 
             return Views(
                 View<User>("Home.Display.Header", model => user).Zone("header"),
-                View<User>("Home.Display.Tools", model => user).Zone("tools"),
+                //View<User>("Home.Display.Tools", model => user).Zone("tools"),
                 View<User>("Home.Display.Content", model => user).Zone("content"),
                 View<User>("Home.Display.Sidebar", model => user).Zone("sidebar")
             );
