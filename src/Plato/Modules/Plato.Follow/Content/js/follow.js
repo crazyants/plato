@@ -40,8 +40,6 @@ $(function (win, doc, $) {
                 var onCss = $caller.data("onCss") || $caller.data(dataKey).onCss,
                     offCss = $caller.data("offCss") || $caller.data(dataKey).offCss;
 
-                alert(offCss)
-                alert(onCss)
                 $caller
                     .removeClass(offCss)
                     .addClass(onCss)
