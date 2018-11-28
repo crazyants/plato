@@ -5,12 +5,18 @@ using System.Threading.Tasks;
 namespace Plato.Internal.Data.Abstractions
 {
 
+ 
+
     public interface IQuery<TModel> where TModel : class
     {
+        
+        QueryOptions Options { get; }
 
         string TablePrefix { get; set; }
 
         IQuery<TModel> Take(int pageIndex, int pageSize);
+
+        IQuery<TModel> Configure(Action<QueryOptions> configure);
 
         IQuery<TModel> Select<TParams>(Action<TParams> configure) where TParams : new();
 

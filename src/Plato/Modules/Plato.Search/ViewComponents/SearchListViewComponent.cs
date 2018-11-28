@@ -6,7 +6,8 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
-using Plato.Internal.Shell.Abstractions;
+using Plato.Search.Models;
+using Plato.Search.Stores;
 using Plato.Search.ViewModels;
 
 namespace Plato.Search.ViewComponents
@@ -17,15 +18,18 @@ namespace Plato.Search.ViewComponents
         private readonly IContextFacade _contextFacade;
         private readonly IEntityStore<Entity> _entityStore;
         private readonly IFeatureFacade _featureFacade;
-        
+        private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
+
         public SearchListViewComponent(
             IContextFacade contextFacade,
             IEntityStore<Entity> entityStore,
-            IFeatureFacade featureFacade)
+            IFeatureFacade featureFacade,
+            ISearchSettingsStore<SearchSettings> searchSettingsStore)
         {
             _contextFacade = contextFacade;
             _entityStore = entityStore;
             _featureFacade = featureFacade;
+            _searchSettingsStore = searchSettingsStore;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -67,11 +71,17 @@ namespace Plato.Search.ViewComponents
         {
 
             // Explictly get Plato.Discuss feature, this view component can be 
-            // used in different areas (i.e. Plat.Discuss.Channels) s dn't get by area name
+            // used in different areas (i.e. Plat.Discuss.Channels) so use explict area name
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
 
+            var searchSettings =  await _searchSettingsStore.GetAsync();
+            
             return await _entityStore.QueryAsync()
                 .Take(pagerOptions.Page, pagerOptions.PageSize)
+                .Configure(options =>
+                {
+                    options.SearchType = searchSettings.SearchType;
+                })
                 .Select<EntityQueryParams>(q =>
                 {
                     
@@ -85,13 +95,45 @@ namespace Plato.Search.ViewComponents
                         q.CategoryId.Equals(searchIndexOpts.ChannelId);
                     }
 
-                    if (!string.IsNullOrEmpty(searchIndexOpts.Search))
+                    switch (searchSettings.SearchType)
                     {
-                        q.Title.Like(searchIndexOpts.Search).Or();
-                        q.Message.Like(searchIndexOpts.Search).Or();
-                        q.Html.Like(searchIndexOpts.Search).Or();
+
+                        case SearchTypes.ContainsTable:
+
+                            if (!string.IsNullOrEmpty(searchIndexOpts.Search))
+                            {
+                                q.Title.ContainsTable(searchIndexOpts.Search).Or();
+                                q.Message.ContainsTable(searchIndexOpts.Search).Or();
+                                q.Html.ContainsTable(searchIndexOpts.Search).Or();
+                            }
+
+                            break;
+
+                        case SearchTypes.FreeTextTable:
+
+                            if (!string.IsNullOrEmpty(searchIndexOpts.Search))
+                            {
+                                q.Title.FreeTextTable(searchIndexOpts.Search).Or();
+                                q.Message.FreeTextTable(searchIndexOpts.Search).Or();
+                                q.Html.FreeTextTable(searchIndexOpts.Search).Or();
+                            }
+
+                            break;
+
+                        default:
+
+                            if (!string.IsNullOrEmpty(searchIndexOpts.Search))
+                            {
+                                q.Title.Like(searchIndexOpts.Search).Or();
+                                q.Message.Like(searchIndexOpts.Search).Or();
+                                q.Html.Like(searchIndexOpts.Search).Or();
+                            }
+
+                            break;
                     }
-                    
+
+
+
                     q.HideSpam.True();
                     q.HidePrivate.True();
                     q.HideDeleted.True();

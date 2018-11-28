@@ -89,10 +89,7 @@ namespace Plato.Search.Controllers
                         .Add(S["Results"]);
                 });
             }
-
-
-
-
+            
             // Get default options
             var defaultViewOptions = new SearchIndexOptions();
             var defaultPagerOptions = new PagerOptions();

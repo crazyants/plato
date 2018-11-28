@@ -101,7 +101,19 @@ namespace Plato.Internal.Stores.Abstractions
             _builder.Append("{0} LIKE '%' + @{0} + '%'");
             return this;
         }
-        
+
+        public WhereString ContainsTable(string value)
+        {
+            Value = value;
+            return this;
+        }
+
+        public WhereString FreeTextTable(string value)
+        {
+            Value = value;
+            return this;
+        }
+
         public string ToSqlString(string parameterName)
         {
             return _builder.ToString().Replace("{0}", parameterName);

@@ -8,8 +8,13 @@ namespace Plato.Internal.Data.Abstractions
     public abstract class DefaultQuery<TModel> : IQuery<TModel> where TModel : class
     {
 
-        private readonly Dictionary<string, OrderBy> _sortColumns;
+        
+        private readonly QueryOptions _options;
 
+        private readonly Dictionary<string, OrderBy> _sortColumns;
+        
+        public QueryOptions Options => _options;
+   
         public IDictionary<string, OrderBy> SortColumns => _sortColumns;
 
         public int PageIndex { get; private set; } = 1;
@@ -22,6 +27,12 @@ namespace Plato.Internal.Data.Abstractions
         {
             this.PageIndex = pageIndex;
             this.PageSize = pageSize;
+            return this;
+        }
+        
+        public IQuery<TModel> Configure(Action<QueryOptions> configure)
+        {
+            configure(_options);
             return this;
         }
 
@@ -42,6 +53,7 @@ namespace Plato.Internal.Data.Abstractions
         protected DefaultQuery()
         {
             _sortColumns = new Dictionary<string, OrderBy>();
+            _options = new QueryOptions();
         }
 
     }

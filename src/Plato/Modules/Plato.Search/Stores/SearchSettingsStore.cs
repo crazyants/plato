@@ -40,7 +40,7 @@ namespace Plato.Search.Stores
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation("Email settings updating");
+                _logger.LogInformation("Search settings updating");
             }
 
             var settings = await _dictionaryStore.UpdateAsync<SearchSettings>(SettingsKey, model);

@@ -1,10 +1,11 @@
 ﻿using Plato.Internal.Abstractions;
+using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Search.Models
 {
     public class SearchSettings : Serializable
     {
-        public string SearchMethod { get; set; }
+        public SearchTypes SearchType { get; set; }
 
     }
  

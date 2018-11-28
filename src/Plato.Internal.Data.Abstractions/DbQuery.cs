@@ -5,6 +5,8 @@ namespace Plato.Internal.Data.Abstractions
     
     public class DbQueryConfiguration : IDbQueryConfiguration
     {
+
+        
         private readonly DbContextOptions _dbContextOptionss;
 
         public DbQueryConfiguration(IOptions<DbContextOptions> dbContextOptions)

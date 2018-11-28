@@ -251,9 +251,11 @@ namespace Plato.Entities.Stores
         
         public string BuildSqlPopulate()
         {
+            
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
+            sb.Append(BuildFullTextQuery());
             sb.Append("SELECT ")
                 .Append(BuildPopulateSelect())
                 .Append(" FROM ")
@@ -272,6 +274,7 @@ namespace Plato.Entities.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
+            sb.Append(BuildFullTextQuery());
             sb.Append("SELECT COUNT(e.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
@@ -297,6 +300,16 @@ namespace Plato.Entities.Stores
 
         }
 
+        string BuildFullTextQuery()
+        {
+            var sb = new StringBuilder();
+            sb.Append("DECLARE @FullTextQuery nvarchar(255);");
+            sb.Append("SET @FullTextQuery = 'FORMSOF(INFLECTIONAL, ' + @Title + ')';");
+            sb.Append(Environment.NewLine);
+            return sb.ToString();
+
+        }
+
         string BuildTables()
         {
 
@@ -310,10 +323,27 @@ namespace Plato.Entities.Stores
                 .Append(_usersTableName)
                 .Append(" c ON e.CreatedUserId = c.Id ");
             
+            // join last modified user
             sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
                 .Append(" m ON e.ModifiedUserId = m.Id");
+
+            if (_query.Options.SearchType != SearchTypes.Tsql)
+            {
+                sb.Append(" INNER JOIN ")
+                    .Append(_query.Options.SearchType.ToString().ToUpper())
+                    .Append("(")
+                    .Append(_entitiesTableName)
+                    .Append(", *, @FullTextQuery");
+                if (_query.Options.MaxResults > 0)
+                {
+                    sb.Append(", ")
+                        .Append(_query.Options.MaxResults.ToString());
+                }
+                sb.Append(") AS ftEntities ON ftEntities.[Key] = e.Id ");
+            }
             
+
             return sb.ToString();
 
         }
@@ -451,38 +481,41 @@ namespace Plato.Entities.Stores
                     sb.Append(_query.Params.IsPinned.Operator);
                 sb.Append("IsPinned = 1");
             }
-            
+
             // -----------------
-            // Keywords 
+            // Keywords  - Only if TSQL is enabled
             // -----------------
-            
-            var keywordWhereClause = BuildEntityKeywordWhereClause();
-            if (!string.IsNullOrEmpty(keywordWhereClause))
+
+            if (_query.Options.SearchType == SearchTypes.Tsql)
             {
+                var keywordWhereClause = BuildEntityKeywordWhereClause();
+                if (!string.IsNullOrEmpty(keywordWhereClause))
+                {
 
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(" AND ");
-                sb.Append("(");
+                    if (!string.IsNullOrEmpty(sb.ToString()))
+                        sb.Append(" AND ");
+                    sb.Append("(");
 
-                // Entities
+                    // Entities
 
-                sb.Append("(")
-                    .Append(keywordWhereClause)
-                    .Append(")");
+                    sb.Append("(")
+                        .Append(keywordWhereClause)
+                        .Append(")");
 
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(" OR ");
+                    if (!string.IsNullOrEmpty(sb.ToString()))
+                        sb.Append(" OR ");
 
-                // Entity Replies
-                
-                sb.Append("(e.Id IN (SELECT EntityId FROM ")
-                    .Append(_entityRepliesTableName)
-                    .Append(" WHERE (")
-                    .Append(BuildEntityRepliesKeywordWhereClause())
-                    .Append(")))");
+                    // Entity Replies
 
-                sb.Append(")");
+                    sb.Append("(e.Id IN (SELECT EntityId FROM ")
+                        .Append(_entityRepliesTableName)
+                        .Append(" WHERE (")
+                        .Append(BuildEntityRepliesKeywordWhereClause())
+                        .Append(")))");
 
+                    sb.Append(")");
+
+                }
             }
 
             return sb.ToString();
@@ -491,6 +524,7 @@ namespace Plato.Entities.Stores
 
         string BuildEntityKeywordWhereClause()
         {
+            
 
             var sb = new StringBuilder();
 

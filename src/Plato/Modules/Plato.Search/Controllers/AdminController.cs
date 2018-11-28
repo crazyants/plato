@@ -99,7 +99,7 @@ namespace Plato.Search.Controllers
 
             var settings = new SearchSettings()
             {
-                SearchMethod = viewModel.SearchMethod
+                SearchType = viewModel.SearchType
             };
             
             var result = await _searchSettingsStore.SaveAsync(settings);
@@ -130,29 +130,29 @@ namespace Plato.Search.Controllers
             {
                 return new SearchSettingsViewModel()
                 {
-                    SearchMethod = settings.SearchMethod,
-                    AvailableSearchMethods = GetAvailableSearchMMethods()
+                    SearchType = settings.SearchType,
+                    AvailableSearchTypes = GetAvailableSearchTypes()
                 };
             }
 
             // return default settings
             return new SearchSettingsViewModel()
             {
-                AvailableSearchMethods = GetAvailableSearchMMethods()
+                AvailableSearchTypes = GetAvailableSearchTypes()
             };
 
         }
 
-        IEnumerable<SelectListItem> GetAvailableSearchMMethods()
+        IEnumerable<SelectListItem> GetAvailableSearchTypes()
         {
 
             var output = new List<SelectListItem>();
-            foreach (var searchMethod in SearchDefaults.AvailableSearchMethods)
+            foreach (var searchType in SearchDefaults.AvailableSearchTypes)
             {
                 output.Add(new SelectListItem
                 {
-                    Text = searchMethod.Name,
-                    Value = searchMethod.Id
+                    Text = searchType.Name,
+                    Value = System.Convert.ToString((int)searchType.Type)
                 });
             }
 

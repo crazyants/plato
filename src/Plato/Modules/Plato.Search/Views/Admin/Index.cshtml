@@ -15,11 +15,11 @@
         </card-title>
         <card-body>
 
-            <label asp-for="SearchMethod" class="col-form-label font-weight-bold">@T["Search Method"]</label>
-            <span asp-validation-for="SearchMethod" class="text-danger"></span>
+            <label asp-for="SearchType" class="col-form-label font-weight-bold">@T["Search Type"]</label>
+            <span asp-validation-for="SearchType" class="text-danger"></span>
             <select class="form-control"
-                    asp-for="SearchMethod"
-                    asp-items="@Model.AvailableSearchMethods"></select>
+                    asp-for="SearchType"
+                    asp-items="@Model.AvailableSearchTypes"></select>
 
         </card-body>
     </card>
