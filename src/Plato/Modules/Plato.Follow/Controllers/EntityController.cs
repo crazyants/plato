@@ -45,16 +45,20 @@ namespace Plato.Follow.Controllers
             }
 
             // Is the user already following the entity?
-            var existingFollow = await _followStore.SelectFollowsByCreatedUserIdAndThingId(user.Id, follow.ThingId);
+            var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+                follow.Name,
+                follow.ThingId,
+                user.Id);
             if (existingFollow != null)
             {
                 return base.Result(HttpStatusCode.OK,
-                    $"Authenticated user already following entity with id '{follow.ThingId}'");
+                    $"Authenticated user already following object with id '{follow.ThingId}'");
             }
 
             // Build a new subscription
             var followToAdd = new Models.Follow()
             {
+                Name = follow.Name,
                 ThingId = follow.ThingId,
                 CreatedUserId = user.Id,
                 CreatedDate = DateTime.UtcNow
@@ -90,7 +94,10 @@ namespace Plato.Follow.Controllers
                 return base.UnauthorizedException();
             }
             
-            var existingFollow = await _followStore.SelectFollowsByCreatedUserIdAndThingId(user.Id, follow.ThingId);
+            var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+                follow.Name,
+                follow.ThingId,
+                user.Id);
             if (existingFollow != null)
             {
                 var success = await _followStore.DeleteAsync(existingFollow);

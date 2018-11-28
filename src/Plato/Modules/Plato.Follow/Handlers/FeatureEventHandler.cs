@@ -122,9 +122,9 @@ namespace Plato.Follow.Handlers
                 builder
                     .DropTable(_follows)
                     .DropDefaultProcedures(_follows)
-                    .DropProcedure(new SchemaProcedure("SelectEntityFollowsPaged"))
+                    .DropProcedure(new SchemaProcedure("SelectFollowsPaged"))
                     .DropProcedure(new SchemaProcedure("SelectFollowsByNameAndThingId"))
-                    .DropProcedure(new SchemaProcedure("SelectFollowsByCreatedUserIdAndThingId"));
+                    .DropProcedure(new SchemaProcedure("SelectFollowByNameThingIdAndCreatedUserId"));
                 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -232,7 +232,7 @@ namespace Plato.Follow.Handlers
             
             builder
                 .CreateProcedure(
-                    new SchemaProcedure("SelectFollowsByCreatedUserIdAndThingId",
+                    new SchemaProcedure("SelectFollowByNameThingIdAndCreatedUserId",
                             @"SELECT f.*, 
                                 u.Email, 
                                 u.UserName, 
@@ -241,19 +241,25 @@ namespace Plato.Follow.Handlers
                                 FROM {prefix}_Follows f WITH (nolock) 
                                 LEFT OUTER JOIN {prefix}_Users u ON f.CreatedUserId = u.Id 
                                 WHERE (
-                                    f.ThingId = @ThingId AND u.Id = @CreatedUserId
+                                    f.[Name] = @Name AND f.ThingId = @ThingId AND u.Id = @CreatedUserId
                                 )")
                         .ForTable(_follows)
                         .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn()
                             {
-                                Name = "CreatedUserId",
-                                DbType = DbType.Int32,
+                                Name = "[Name]",
+                                DbType = DbType.String,
+                                Length = "255"
                             },
                             new SchemaColumn()
                             {
                                 Name = "ThingId",
+                                DbType = DbType.Int32,
+                            },
+                            new SchemaColumn()
+                            {
+                                Name = "CreatedUserId",
                                 DbType = DbType.Int32,
                             }
                         }));

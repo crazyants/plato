@@ -176,8 +176,9 @@ $(function (win, doc, $) {
 
                 var params = {
                     Id: 0,
-                    UserId: 0,
-                    EntityId: this.getEntityId($caller)
+                    Name: this.getFollowType($caller),
+                    CreatedUserId: 0,
+                    ThingId: this.getThingId($caller)
                 };
 
                 win.$.Plato.Http({
@@ -196,7 +197,8 @@ $(function (win, doc, $) {
             unsubscribe: function($caller) {
                 
                 var params = {
-                    EntityId: this.getEntityId($caller)
+                    Name: this.getFollowType($caller),
+                    ThingId: this.getThingId($caller)
                 };
 
                 win.$.Plato.Http({
@@ -204,11 +206,9 @@ $(function (win, doc, $) {
                     method: "DELETE",
                     data: JSON.stringify(params)
                 }).done(function (data) {
-
                     if (data.statusCode === 200) {
                         $caller.entityFollowToggler("disable");
                     }
-
                 });
 
             },
@@ -219,10 +219,20 @@ $(function (win, doc, $) {
                 }
                 return action;
             },
-            getEntityId: function ($caller) {
+            getFollowType: function ($caller) {
+                var followType = "";
+                if ($caller.attr("data-follow-type")) {
+                    followType = $caller.attr("data-follow-type");
+                }
+                if (followType === "") {
+                    throw new Error("A follow type  is required in order to follow an item.");
+                }
+                return followType;
+            },
+            getThingId: function ($caller) {
                 var entityId = 0;
-                if ($caller.attr("data-entity-id")) {
-                    entityId = parseInt($caller.attr("data-entity-id"));
+                if ($caller.attr("data-thing-id")) {
+                    entityId = parseInt($caller.attr("data-thing-id"));
                 }
                 if (entityId === 0) {
                     throw new Error("An entity id is required in order to follow an entity");

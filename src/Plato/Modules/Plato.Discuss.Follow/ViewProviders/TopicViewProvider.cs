@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Models;
 using Plato.Entities.Stores;
+using Plato.Follow;
 using Plato.Follow.Models;
 using Plato.Follow.Stores;
 using Plato.Follow.ViewModels;
@@ -49,11 +50,15 @@ namespace Plato.Discuss.Follow.ViewProviders
             }
 
             var isFollowing = false;
+            var followType = DefaultFollowTypes.Topic;
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
             {
-                var entityFollow = await _followStore.SelectFollowsByCreatedUserIdAndThingId(user.Id, entity.Id);
+                var entityFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+                    followType.Name,
+                    entity.Id,
+                    user.Id);
                 if (entityFollow != null)
                 {
                     isFollowing = true;
@@ -63,6 +68,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             return Views(
                 View<FollowViewModel>("Follow.Display.Sidebar", model =>
                 {
+                    model.FollowType = followType;
                     model.EntityId = entity.Id;
                     model.IsFollowing = isFollowing;
                     return model;
@@ -83,7 +89,10 @@ namespace Plato.Discuss.Follow.ViewProviders
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
             {
-                var entityFollow = await _followStore.SelectFollowsByCreatedUserIdAndThingId(user.Id, entity.Id);
+                var entityFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+                    DefaultFollowTypes.Topic.Name,
+                    entity.Id,
+                    user.Id);
                 if (entityFollow != null)
                 {
                     isFollowing = true;
@@ -147,8 +156,10 @@ namespace Plato.Discuss.Follow.ViewProviders
             else
             {
                 // Delete the follow
-                var existingFollow =
-                    await _followStore.SelectFollowsByCreatedUserIdAndThingId(user.Id, entity.Id);
+                var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
+                        DefaultFollowTypes.Topic.Name,
+                        entity.Id,
+                        user.Id);
                 if (existingFollow != null)
                 {
                     await _followStore.DeleteAsync(existingFollow);

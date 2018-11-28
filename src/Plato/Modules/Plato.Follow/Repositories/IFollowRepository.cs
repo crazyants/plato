@@ -9,7 +9,7 @@ namespace Plato.Follow.Repositories
 
         Task<IEnumerable<TModel>> SelectFollowsByNameAndThingId(string name, int thingId);
 
-        Task<TModel> SelectFollowsByCreatedUserIdAndThingId(int userId, int thingId);
+        Task<TModel> SelectFollowByNameThingIdAndCreatedUserId(string name,  int thingId, int userId);
 
     }
 

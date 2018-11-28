@@ -153,16 +153,17 @@ namespace Plato.Follow.Repositories
             return output;
         }
 
-        public async Task<Models.Follow> SelectFollowsByCreatedUserIdAndThingId(int userId, int entityId)
+        public async Task<Models.Follow> SelectFollowByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
         {
             Models.Follow follow = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectFollowsByCreatedUserIdAndThingId", 
-                    userId,
-                    entityId);
+                    "SelectFollowByNameThingIdAndCreatedUserId", 
+                    name,
+                    thingId,
+                    createdUserId);
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();

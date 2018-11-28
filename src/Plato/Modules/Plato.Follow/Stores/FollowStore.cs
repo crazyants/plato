@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Email.Stores;
-using Plato.Follow.Models;
 using Plato.Follow.Repositories;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
@@ -155,7 +153,7 @@ namespace Plato.Follow.Stores
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Selecting entities for key '{0}' with the following parameters: {1}",
+                    _logger.LogInformation("Selecting follows for key '{0}' with parameters: {1}",
                         token.ToString(), args.Select(a => a));
                 }
 
@@ -172,8 +170,8 @@ namespace Plato.Follow.Stores
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Adding followers for entity {0} to cache with key {1}",
-                        thingId, token.ToString());
+                    _logger.LogInformation("Adding followers for name {0} with thingId of {1} to cache with key {2}",
+                        name, thingId, token.ToString());
                 }
 
                 return await _followRepository.SelectFollowsByNameAndThingId(name, thingId);
@@ -181,19 +179,19 @@ namespace Plato.Follow.Stores
             });
         }
 
-        public async Task<Models.Follow> SelectFollowsByCreatedUserIdAndThingId(int userId, int thingId)
+        public async Task<Models.Follow> SelectFollowByNameThingIdAndCreatedUserId(string name, int thingId, int createdUserId)
         {
-            var token = _cacheManager.GetOrCreateToken(this.GetType(), userId, thingId);
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), name, thingId, createdUserId);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
             {
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Adding follow details for userId {0} and entityId {1} to cache with key {2}",
-                       userId, thingId, token.ToString());
+                    _logger.LogInformation("Adding follow details for name {0} with createdUserId of {1} and thingId of {2} to cache with key {3}",
+                      name,  createdUserId, thingId, token.ToString());
                 }
 
-                return await _followRepository.SelectFollowsByCreatedUserIdAndThingId(userId, thingId);
+                return await _followRepository.SelectFollowByNameThingIdAndCreatedUserId(name, thingId, createdUserId);
 
             });
         }
@@ -201,4 +199,5 @@ namespace Plato.Follow.Stores
         #endregion
 
     }
+
 }

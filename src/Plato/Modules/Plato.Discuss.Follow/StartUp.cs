@@ -7,6 +7,7 @@ using Plato.Discuss.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Discuss.Follow
 {
@@ -25,7 +26,12 @@ namespace Plato.Discuss.Follow
             // View providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
-         
+
+            // View providers
+            services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
+            services.AddScoped<IViewProvider<UserProfile>, ProfileViewProvider>();
+
+            
         }
 
         public override void Configure(
