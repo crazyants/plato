@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Navigation;
 
@@ -22,9 +23,11 @@ namespace Plato.Search.Navigation
             }
 
             builder
-                .Add(T["All"], int.MinValue, favourites => favourites
-                    .Action("Index", "Home", "Plato.Search")
-                    //.Permission(Permissions.ManageRoles)
+                .Add(T["Everything"], int.MinValue, favourites => favourites
+                    .Attributes(new Dictionary<string, object>()
+                    {
+                        { "data-feature-id", 0 }
+                    })
                     .LocalNav()
                 );
         }

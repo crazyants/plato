@@ -42,7 +42,7 @@ namespace Plato.Mentions.Stores
                 PageSize,
                 populateSql,
                 countSql,
-                Params.Username.Value
+                Params.Keywords.Value
             );
 
             return data;
@@ -80,7 +80,7 @@ namespace Plato.Mentions.Stores
             set => _entityReplyId = value;
         }
 
-        public WhereString Username
+        public WhereString Keywords
         {
             get => _username ?? (_username = new WhereString());
             set => _username = value;
@@ -199,11 +199,11 @@ namespace Plato.Mentions.Stores
                 sb.Append(_query.Params.EntityReplyId.ToSqlString("em.EntityReplyId"));
             }
             
-            if (!string.IsNullOrEmpty(_query.Params.Username.Value))
+            if (!string.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Username.Operator);
-                sb.Append(_query.Params.Username.ToSqlString("Username"));
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("Username", "Keywords"));
             }
 
             return sb.ToString();

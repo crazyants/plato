@@ -20,7 +20,7 @@ namespace Plato.Discuss.ViewProviders
 
         private const string EditorHtmlName = "message";
 
-        private readonly IContextFacade _contextFacade;
+ 
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
         private readonly IPostManager<Topic> _topicManager;
@@ -35,7 +35,6 @@ namespace Plato.Discuss.ViewProviders
             IPostManager<Reply> replyManager,
             IEntityReplyStore<Reply> entityReplyStore,
             IActionContextAccessor actionContextAccessor,
-            IContextFacade contextFacade,
             IEntityStore<Topic> entityStore,
             IPostManager<Topic> topicManager,
             IEntityUsersStore entityUsersStore)
@@ -43,7 +42,6 @@ namespace Plato.Discuss.ViewProviders
             _replyManager = replyManager;
             _entityReplyStore = entityReplyStore;
             _actionContextAccessor = actionContextAccessor;
-            _contextFacade = contextFacade;
             _entityStore = entityStore;
             _topicManager = topicManager;
             _entityUsersStore = entityUsersStore;

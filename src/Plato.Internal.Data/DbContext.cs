@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Data.Abstractions.Extensions;
 using Plato.Internal.Data.Providers;
@@ -241,10 +240,7 @@ namespace Plato.Internal.Data
         }
 
         #endregion
-
-
-
+        
     }
-
 
 }

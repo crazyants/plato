@@ -63,8 +63,7 @@ namespace Plato.Discuss.Labels.ViewComponents
 
                     if (!String.IsNullOrEmpty(options.Search))
                     {
-                        q.Name.Like(options.Search).Or();
-                        q.Description.Like(options.Search);
+                        q.Keywords.Like(options.Search);
                     }
                 })
                 .OrderBy(options.Sort.ToString(), options.Order)

@@ -59,7 +59,7 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(this.Operator);
             Value = value;
-            _builder.Append("{0} = @{0}");
+            _builder.Append("{columnName} = @{paramName}");
             return this;
         }
 
@@ -68,7 +68,7 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(this.Operator);
             Value = value;
-            _builder.Append("{0} LIKE @{0} + '%'");
+            _builder.Append("{columnName} LIKE @{paramName} + '%'");
             return this;
         }
 
@@ -77,7 +77,7 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(this.Operator);
             Value = value;
-            _builder.Append("{0} LIKE '%' + @{0}");
+            _builder.Append("{columnName} LIKE '%' + @{paramName}");
             return this;
         }
 
@@ -98,25 +98,16 @@ namespace Plato.Internal.Stores.Abstractions
             if (!string.IsNullOrEmpty(_builder.ToString()))
                 _builder.Append(" OR ");
             Value = value;
-            _builder.Append("{0} LIKE '%' + @{0} + '%'");
+            _builder.Append("{columnName} LIKE '%' + @{paramName} + '%'");
             return this;
         }
-
-        public WhereString ContainsTable(string value)
+        
+        public string ToSqlString(string columnName, string paramName)
         {
-            Value = value;
-            return this;
-        }
-
-        public WhereString FreeTextTable(string value)
-        {
-            Value = value;
-            return this;
-        }
-
-        public string ToSqlString(string parameterName)
-        {
-            return _builder.ToString().Replace("{0}", parameterName);
+            return _builder
+                .ToString()
+                .Replace("{columnName}", columnName)
+                .Replace("{paramName}", paramName);
         }
 
 

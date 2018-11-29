@@ -7,10 +7,6 @@ PlatoVersion: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.Entities",
-		Version: "1.0.0"
-	},
-	{
 		Id: "Plato.Email",
 		Version: "1.0.0"
 	},

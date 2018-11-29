@@ -207,7 +207,7 @@ namespace Plato.Roles.Handlers
                         },
                         new SchemaColumn()
                         {
-                            Name = "[Name]",
+                            Name = "Keywords",
                             DbType = DbType.String,
                             Length = "255"
                         }

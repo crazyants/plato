@@ -42,9 +42,7 @@ namespace Plato.Labels.Stores
                 PageSize,
                 populateSql,
                 countSql,
-                Params.Name.Value,
-                Params.Description.Value
-            );
+                Params.Keywords.Value);
 
             return data;
         }
@@ -61,8 +59,7 @@ namespace Plato.Labels.Stores
         private WhereInt _id;
         private WhereInt _featureId;
         private WhereInt _entityId;
-        private WhereString _name;
-        private WhereString _description;
+        private WhereString _keywords;
 
         public WhereInt Id
         {
@@ -83,17 +80,12 @@ namespace Plato.Labels.Stores
         }
 
 
-        public WhereString Name
+        public WhereString Keywords
         {
-            get => _name ?? (_name = new WhereString());
-            set => _name = value;
+            get => _keywords ?? (_keywords = new WhereString());
+            set => _keywords = value;
         }
 
-        public WhereString Description
-        {
-            get => _description ?? (_description = new WhereString());
-            set => _description = value;
-        }
 
     }
 
@@ -215,18 +207,17 @@ namespace Plato.Labels.Stores
                     .Append(")");
             }
 
-            if (!String.IsNullOrEmpty(_query.Params.Name.Value))
+            if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Name.Operator);
-                sb.Append(_query.Params.Name.ToSqlString("Name"));
-            }
 
-            if (!String.IsNullOrEmpty(_query.Params.Description.Value))
-            {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Description.Operator);
-                sb.Append(_query.Params.Description.ToSqlString("Description"));
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("Name", "Keywords"));
+          
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("Description", "Keywords"));
+
             }
             
             return sb.ToString();

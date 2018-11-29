@@ -111,8 +111,7 @@ namespace Plato.WebApi.Controllers
                 {
                     if (!String.IsNullOrEmpty(username))
                     {
-                        q.UserName.StartsWith(username).Or();
-                        q.Email.StartsWith(username).Or();
+                        q.Keywords.StartsWith(username);
                     }
                 })
                 .OrderBy(sortBy, sortOrder)

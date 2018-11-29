@@ -176,7 +176,7 @@ namespace Plato.Badges.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "BadgeName",
+                        Name = "Keywords",
                         DbType = DbType.String,
                         Length = "255"
                     }

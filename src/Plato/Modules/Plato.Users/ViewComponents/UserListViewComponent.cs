@@ -65,10 +65,7 @@ namespace Plato.Users.ViewComponents
                 {
                     if (!string.IsNullOrEmpty(viewOptions.Search))
                     {
-                        q.UserName.Like(viewOptions.Search).Or();
-                        q.Email.Like(viewOptions.Search).Or();
-                        q.FirstName.Like(viewOptions.Search).Or();
-                        q.LastName.Like(viewOptions.Search).Or();
+                        q.Keywords.Like(viewOptions.Search);
                     }
                 })
                 .OrderBy("LastLoginDate", OrderBy.Desc)

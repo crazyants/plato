@@ -439,13 +439,7 @@ namespace Plato.Labels.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "[Name]",
-                        DbType = DbType.String,
-                        Length = "255"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Description]",
+                        Name = "Keywords",
                         DbType = DbType.String,
                         Length = "255"
                     }

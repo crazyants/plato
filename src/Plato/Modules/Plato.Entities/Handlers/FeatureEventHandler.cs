@@ -512,7 +512,6 @@ namespace Plato.Entities.Handlers
                                 )")
                     .ForTable(_entities)
                     .WithParameter(_entities.PrimaryKeyColumn));
-
             
 
             builder.CreateProcedure(new SchemaProcedure("SelectEntitiesPaged", StoredProcedureType.SelectPaged)
@@ -521,19 +520,7 @@ namespace Plato.Entities.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "Title",
-                        DbType = DbType.String,
-                        Length = "255"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Message",
-                        DbType = DbType.String,
-                        Length = "255"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Html",
+                        Name = "Keywords",
                         DbType = DbType.String,
                         Length = "255"
                     }
@@ -545,7 +532,7 @@ namespace Plato.Entities.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "Username",
+                        Name = "Keywords",
                         DbType = DbType.String,
                         Length = "255"
                     }

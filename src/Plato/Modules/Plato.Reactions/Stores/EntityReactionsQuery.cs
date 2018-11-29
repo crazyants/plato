@@ -199,7 +199,7 @@ namespace Plato.Reactions.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.ReactionName.Operator);
-                sb.Append(_query.Params.ReactionName.ToSqlString("ReactionName"));
+                sb.Append(_query.Params.ReactionName.ToSqlString("ReactionName", "Keywords"));
             }
             
             // EntityId

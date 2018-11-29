@@ -190,7 +190,7 @@ namespace Plato.Notifications.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.NotificationName.Operator);
-                sb.Append(_query.Params.NotificationName.ToSqlString("un.NotificationName"));
+                sb.Append(_query.Params.NotificationName.ToSqlString("un.NotificationName", "Keywords"));
             }
 
             return sb.ToString();

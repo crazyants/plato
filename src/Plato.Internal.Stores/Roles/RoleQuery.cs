@@ -43,7 +43,7 @@ namespace Plato.Internal.Stores.Roles
                 populateSql,
                 countSql,
                 Params.Id.Value,
-                Params.RoleName.Value
+                Params.Keywords.Value
             );
 
             return data;
@@ -60,7 +60,7 @@ namespace Plato.Internal.Stores.Roles
     {
         
         private WhereInt _id;
-         private WhereString _roleName;
+         private WhereString _keywords;
 
         public WhereInt Id
         {
@@ -68,10 +68,10 @@ namespace Plato.Internal.Stores.Roles
             set => _id = value;
         }
 
-        public WhereString RoleName
+        public WhereString Keywords
         {
-            get => _roleName ?? (_roleName = new WhereString());
-            set => _roleName = value;
+            get => _keywords ?? (_keywords = new WhereString());
+            set => _keywords = value;
         }
 
     }
@@ -144,11 +144,11 @@ namespace Plato.Internal.Stores.Roles
                 sb.Append(_query.Params.Id.ToSqlString("Id"));
             }
 
-            if (!string.IsNullOrEmpty(_query.Params.RoleName.Value))
+            if (!string.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.RoleName.Operator);
-                sb.Append(_query.Params.RoleName.ToSqlString("RoleName"));
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("RoleName", "Keywords"));
             }
             
             return sb.ToString();

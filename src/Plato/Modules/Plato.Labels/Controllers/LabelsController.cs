@@ -115,8 +115,7 @@ namespace Plato.Labels.Controllers
                 {
                     if (!String.IsNullOrEmpty(keywords))
                     {
-                        q.Name.StartsWith(keywords).Or();
-                        q.Description.StartsWith(keywords).Or();
+                        q.Keywords.StartsWith(keywords);
                     }
                 })
                 .OrderBy(sortBy, sortOrder)

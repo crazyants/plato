@@ -155,7 +155,7 @@ namespace Plato.Roles.ViewProviders
                     }
                     if (!string.IsNullOrEmpty(options.Search))
                     {
-                        q.RoleName.Like(options.Search);
+                        q.Keywords.Like(options.Search);
                     }
                 })
                 .OrderBy("ModifiedDate", OrderBy.Desc)

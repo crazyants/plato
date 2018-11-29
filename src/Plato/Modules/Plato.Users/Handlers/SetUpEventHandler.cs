@@ -464,32 +464,7 @@ namespace Plato.Users.Handlers
                         },
                         new SchemaColumn()
                         {
-                            Name = "UserName",
-                            DbType = DbType.String,
-                            Length = "255"
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "Email",
-                            DbType = DbType.String,
-                            Length = "255"
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "DisplayName",
-                            DbType = DbType.String,
-                            Length = "255"
-                        },
-                        new SchemaColumn()
-                        {
-                            Name = "FirstName",
-                            DbType = DbType.String,
-                            Length = "255"
-                        }
-                        ,
-                        new SchemaColumn()
-                        {
-                            Name = "LastName",
+                            Name = "Keywords",
                             DbType = DbType.String,
                             Length = "255"
                         }

@@ -77,8 +77,10 @@ namespace Plato.Internal.Data
                     while (!_parser.EndOfText &&
                            !Punctuation.Contains(_parser.Peek().ToString()) &&
                            !Char.IsWhiteSpace(_parser.Peek()))
+                    {
                         _parser.MoveAhead();
-
+                    }
+                        
                     // Allow trailing wildcard
                     if (_parser.Peek() == '*')
                     {

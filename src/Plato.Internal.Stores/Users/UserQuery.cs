@@ -43,11 +43,7 @@ namespace Plato.Internal.Stores.Users
                 populateSql,
                 countSql,
                 Params.Id.Value,
-                Params.UserName.Value,
-                Params.Email.Value,
-                Params.DisplayName.Value,
-                Params.FirstName.Value,
-                Params.LastName.Value);
+                Params.Keywords.Value);
         }
 
     }
@@ -60,11 +56,7 @@ namespace Plato.Internal.Stores.Users
     {
 
         private WhereInt _id;
-        private WhereString _email;
-        private WhereString _userName;
-        private WhereString _firstName;
-        private WhereString _lastName;
-        private WhereString _displayName;
+        private WhereString _keywords;
         private WhereInt _roleId;
         private WhereString _roleName;
 
@@ -74,36 +66,12 @@ namespace Plato.Internal.Stores.Users
             set => _id = value;
         }
 
-        public WhereString UserName
+        public WhereString Keywords
         {
-            get => _userName ?? (_userName = new WhereString());
-            set => _userName = value;
+            get => _keywords ?? (_keywords = new WhereString());
+            set => _keywords = value;
         }
 
-        public WhereString FirstName
-        {
-            get => _firstName ?? (_firstName = new WhereString());
-            set => _firstName = value;
-        }
-
-        public WhereString LastName
-        {
-            get => _lastName ?? (_lastName = new WhereString());
-            set => _lastName = value;
-        }
-
-        public WhereString DisplayName
-        {
-            get => _displayName ?? (_displayName = new WhereString());
-            set => _displayName = value;
-        }
-
-        public WhereString Email
-        {
-            get => _email ?? (_email = new WhereString());
-            set => _email = value;
-        }
-        
         public WhereInt RoleId
         {
             get => _roleId ?? (_roleId = new WhereInt());
@@ -185,33 +153,34 @@ namespace Plato.Internal.Stores.Users
                 sb.Append(_query.Params.Id.ToSqlString("Id"));
             }
 
-            if (!String.IsNullOrEmpty(_query.Params.UserName.Value))
+            if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.UserName.Operator);
-                sb.Append(_query.Params.UserName.ToSqlString("UserName"));
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("UserName", "Keywords"));
+        
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("Email", "Keywords"));
+          
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("FirstName", "Keywords"));
+         
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("LastName", "Keywords"));
             }
             
-            if (!String.IsNullOrEmpty(_query.Params.Email.Value))
+
+            if (!String.IsNullOrEmpty(_query.Params.RoleName.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Email.Operator);
-                sb.Append(_query.Params.Email.ToSqlString("Email"));
+                    sb.Append(_query.Params.RoleName.Operator);
+                sb.Append(_query.Params.RoleName.ToSqlString("RoleName", "Keywords"));
+                
             }
 
-            if (!String.IsNullOrEmpty(_query.Params.FirstName.Value))
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.FirstName.Operator);
-                sb.Append(_query.Params.FirstName.ToSqlString("FirstName"));
-            }
-
-            if (!String.IsNullOrEmpty(_query.Params.LastName.Value))
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.LastName.Operator);
-                sb.Append(_query.Params.LastName.ToSqlString("LastName"));
-            }
 
             return sb.ToString();
         }

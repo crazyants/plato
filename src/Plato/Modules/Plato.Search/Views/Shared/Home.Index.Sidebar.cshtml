@@ -1,7 +1,5 @@
 ﻿@model SearchIndexViewModel
 
-
-
 <card class="card card-body-flush">
     <card-title>
         <h6 class="card-title">
@@ -23,6 +21,7 @@
 
                     <navigation name="search"
                                 collaspsable="true"
+                                collapse-css="collapse show"
                                 enable-child-list="false"
                                 class="navbar-nav d-lg-block"
                                 child-ul-css-class="nav"
@@ -35,24 +34,5 @@
     </card-body>
 </card>
 
-
-
-<card>
-    <card-title>
-        <h6 class="card-title">@T["Search"]</h6>
-    </card-title>
-    <card-body>
-        <fieldset>
-            <div class="input-group">
-                <input class="form-control py-2 border-right-0 border" type="search" value="search" id="example-search-input">
-                <div class="input-group-append">
-                    <div class="input-group-text bg-transparent">
-                        <i class="fal fa-search"></i>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-    </card-body>
-</card>
 
 

@@ -12,9 +12,5 @@ Dependencies:
 	{
 		Id: "Plato.Entities",
 		Version: "1.0.0"
-	},
-	{
-		Id: "Plato.Categories",
-		Version: "1.0.0"
 	}
 ]

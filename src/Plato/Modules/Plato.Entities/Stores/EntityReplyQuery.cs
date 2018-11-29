@@ -269,7 +269,7 @@ namespace Plato.Entities.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Keywords"));
+                sb.Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"));
             }
             
          

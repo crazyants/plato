@@ -74,13 +74,17 @@ namespace Plato.Search.ViewComponents
             // used in different areas (i.e. Plat.Discuss.Channels) so use explict area name
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
 
+            // Get search settings
             var searchSettings =  await _searchSettingsStore.GetAsync();
             
             return await _entityStore.QueryAsync()
                 .Take(pagerOptions.Page, pagerOptions.PageSize)
                 .Configure(options =>
                 {
-                    options.SearchType = searchSettings.SearchType;
+                    if (searchSettings != null)
+                    {
+                        options.SearchType = searchSettings.SearchType;
+                    }
                 })
                 .Select<EntityQueryParams>(q =>
                 {
@@ -95,45 +99,11 @@ namespace Plato.Search.ViewComponents
                         q.CategoryId.Equals(searchIndexOpts.ChannelId);
                     }
 
-                    switch (searchSettings.SearchType)
+                    if (!string.IsNullOrEmpty(searchIndexOpts.Search))
                     {
-
-                        case SearchTypes.ContainsTable:
-
-                            if (!string.IsNullOrEmpty(searchIndexOpts.Search))
-                            {
-                                q.Title.ContainsTable(searchIndexOpts.Search).Or();
-                                q.Message.ContainsTable(searchIndexOpts.Search).Or();
-                                q.Html.ContainsTable(searchIndexOpts.Search).Or();
-                            }
-
-                            break;
-
-                        case SearchTypes.FreeTextTable:
-
-                            if (!string.IsNullOrEmpty(searchIndexOpts.Search))
-                            {
-                                q.Title.FreeTextTable(searchIndexOpts.Search).Or();
-                                q.Message.FreeTextTable(searchIndexOpts.Search).Or();
-                                q.Html.FreeTextTable(searchIndexOpts.Search).Or();
-                            }
-
-                            break;
-
-                        default:
-
-                            if (!string.IsNullOrEmpty(searchIndexOpts.Search))
-                            {
-                                q.Title.Like(searchIndexOpts.Search).Or();
-                                q.Message.Like(searchIndexOpts.Search).Or();
-                                q.Html.Like(searchIndexOpts.Search).Or();
-                            }
-
-                            break;
+                        q.Keywords.Like(searchIndexOpts.Search);
                     }
-
-
-
+                    
                     q.HideSpam.True();
                     q.HidePrivate.True();
                     q.HideDeleted.True();

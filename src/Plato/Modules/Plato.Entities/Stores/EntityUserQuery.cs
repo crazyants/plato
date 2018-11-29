@@ -214,7 +214,7 @@ namespace Plato.Entities.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityId.Operator);
-                sb.Append(_query.Params.Username.ToSqlString("Username"));
+                sb.Append(_query.Params.Username.ToSqlString("Username", "Keywords"));
             }
 
             return sb.ToString();

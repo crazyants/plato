@@ -186,7 +186,7 @@ namespace Plato.Categories.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Key.Operator);
-                sb.Append(_query.Params.Key.ToSqlString("Key"));
+                sb.Append(_query.Params.Key.ToSqlString("Key", "Keywords"));
             }
 
 

@@ -345,7 +345,7 @@ namespace Plato.Internal.Navigation
 
         bool HasHrefOrViewOrChildHrefOrView(MenuItem item)
         {
-            if (item.Href != "#")
+            if (item.Href != "")
             {
                 return true;
             }

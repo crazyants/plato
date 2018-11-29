@@ -4,9 +4,7 @@ using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
-using Plato.Entities.Services;
 using Plato.Entities.Stores;
-using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 
@@ -17,8 +15,7 @@ namespace Plato.Discuss.ViewProviders
     {
 
         private const string EditorHtmlName = "message";
-
-
+        
         private readonly IEntityReplyStore<Reply> _replyStore;
         private readonly IPostManager<Reply> _replyManager;
  

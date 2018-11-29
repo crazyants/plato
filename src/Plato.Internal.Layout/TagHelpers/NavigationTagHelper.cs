@@ -31,7 +31,9 @@ namespace Plato.Internal.Layout.TagHelpers
         public string Name { get; set; } = "Site";
 
         public bool Collaspsable { get; set; }
-     
+
+        public string CollapseCss { get; set; } = "collapse";
+
         public object Model { get; set; }
 
         private readonly INavigationManager _navigationManager;
@@ -101,7 +103,24 @@ namespace Plato.Internal.Layout.TagHelpers
             return Task.CompletedTask;
 
         }
-        
+
+        bool IsLinkExpandedOrChildSelected(MenuItem menuItem)
+        {
+            var output = IsChildSelected(menuItem);
+            if (output)
+            {
+                return true;
+            }
+
+            output = IsCollapseCssVisible();
+            if (output)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         bool IsChildSelected(List<MenuItem> items)
         {
             foreach (var item in items)
@@ -122,6 +141,15 @@ namespace Plato.Internal.Layout.TagHelpers
             return false;
         }
 
+        bool IsCollapseCssVisible()
+        {
+            if (CollapseCss.IndexOf("show", StringComparison.Ordinal) >= 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
         string BuildNavigationRecursivly(
             List<MenuItem> items, 
             StringBuilder sb)
@@ -130,19 +158,13 @@ namespace Plato.Internal.Layout.TagHelpers
             // reset index
             if (_level == 0)
                 _index = 0;
-
-            var ulClass = _cssClasses;
-            if (_level > 0)
-            {
-                ulClass = this.ChildUlCssClass;
-            }
-               
+            
             sb.Append(NewLine);
             AddTabs(_level, sb);
             
             if (_level > 0 && this.Collaspsable)
             {
-                var collapseCss = IsChildSelected(items) ? "collapse show" : "collapse";
+                var collapseCss = IsChildSelected(items) ? this.CollapseCss + " show" : this.CollapseCss;
                 sb.Append("<div class=\"")
                     .Append(collapseCss)
                     .Append("\" id=\"")
@@ -153,6 +175,11 @@ namespace Plato.Internal.Layout.TagHelpers
 
             if (this.EnableChildList)
             {
+                var ulClass = _cssClasses;
+                if (_level > 0)
+                {
+                    ulClass = this.ChildUlCssClass;
+                }
                 sb.Append("<ul class=\"")
                     .Append(ulClass)
                     .Append("\">")
@@ -223,7 +250,7 @@ namespace Plato.Internal.Layout.TagHelpers
                     if (!string.IsNullOrEmpty(linkClass))
                         linkClass += " ";
                     linkClass += "dropdown-toggle";
-            }
+                }
             }
 
             foreach (var className in item.Classes)
@@ -255,7 +282,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 .Append(item.Items.Count > 0 ? targetEvent : "")
                 .Append(item.Items.Count > 0 ? targetCss : "")
                 .Append(" aria-expanded=\"")
-                .Append(IsChildSelected(item).ToString().ToLower())
+                .Append(IsLinkExpandedOrChildSelected(item).ToString().ToLower())
                 .Append("\"");
 
             if (item.Attributes.Count > 0)

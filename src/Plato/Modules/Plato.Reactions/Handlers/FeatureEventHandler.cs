@@ -273,7 +273,7 @@ namespace Plato.Reactions.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "ReactionName",
+                        Name = "Keywords",
                         DbType = DbType.String,
                         Length = "255"
                     }

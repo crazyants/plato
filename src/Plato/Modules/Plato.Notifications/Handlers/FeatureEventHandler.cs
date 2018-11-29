@@ -229,7 +229,7 @@ namespace Plato.Notifications.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "NotificationName",
+                        Name = "Keywords",
                         DbType = DbType.String,
                         Length = "255"
                     }

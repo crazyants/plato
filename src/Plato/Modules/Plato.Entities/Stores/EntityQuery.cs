@@ -42,10 +42,7 @@ namespace Plato.Entities.Stores
                 PageSize,
                 populateSql,
                 countSql,
-                Params.Title.Value,
-                Params.Message.Value,
-                Params.Html.Value
-            );
+                Params.Keywords.Value);
         }
         
     }
@@ -63,9 +60,8 @@ namespace Plato.Entities.Stores
         private WhereInt _categoryId;
         private WhereInt _roleId;
         private WhereInt _labelId;
-        private WhereString _title;
-        private WhereString _message;
-        private WhereString _html;
+        private WhereString _keywords;
+   
         private WhereBool _showPrivate;
         private WhereBool _hidePrivate;
         private WhereBool _showSpam;
@@ -116,22 +112,10 @@ namespace Plato.Entities.Stores
             set => _labelId = value;
         }
         
-        public WhereString Title
+        public WhereString Keywords
         {
-            get => _title ?? (_title = new WhereString());
-            set => _title = value;
-        }
-
-        public WhereString Message
-        {
-            get => _message ?? (_message = new WhereString());
-            set => _message = value;
-        }
-
-        public WhereString Html
-        {
-            get => _html ?? (_html = new WhereString());
-            set => _html = value;
+            get => _keywords ?? (_keywords = new WhereString());
+            set => _keywords = value;
         }
         
         public WhereBool ShowPrivate
@@ -337,7 +321,7 @@ namespace Plato.Entities.Stores
             // Get full text query
             var fullTextSearchQuery =
                 _query.Options.FullTextQueryParser.ToFullTextSearchQuery(
-                    _query.Params.Title.Value);
+                    _query.Params.Keywords.Value);
 
             if (String.IsNullOrEmpty(fullTextSearchQuery))
             {
@@ -345,7 +329,7 @@ namespace Plato.Entities.Stores
             }
 
             var sb = new StringBuilder();
-            sb.Append("DECLARE @FullTextQuery nvarchar(255);")
+            sb.Append("DECLARE @FullTextQuery nvarchar(4000);")
                 .Append("SET @FullTextQuery = '")
                 .Append(fullTextSearchQuery.Replace("'", "''"))
                 .Append("';")
@@ -386,7 +370,7 @@ namespace Plato.Entities.Stores
         {
 
             // No keywords
-            if (String.IsNullOrEmpty(_query.Params.Title.Value))
+            if (String.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
                 return false;
             }
@@ -583,27 +567,21 @@ namespace Plato.Entities.Stores
 
             var sb = new StringBuilder();
 
-            if (!string.IsNullOrEmpty(_query.Params.Title.Value))
+            if (!string.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Title.Operator);
-                sb.Append(_query.Params.Title.ToSqlString("Title"));
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("Title", "Keywords"));
+         
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"));
+         
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("Html", "Keywords"));
             }
 
-            if (!string.IsNullOrEmpty(_query.Params.Message.Value))
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Message.Operator);
-                sb.Append(_query.Params.Message.ToSqlString("Message"));
-            }
-
-            if (!string.IsNullOrEmpty(_query.Params.Html.Value))
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Html.Operator);
-                sb.Append(_query.Params.Html.ToSqlString("Html"));
-            }
-            
             return sb.ToString();
 
         }
@@ -613,18 +591,17 @@ namespace Plato.Entities.Stores
 
             var sb = new StringBuilder();
             
-            if (!string.IsNullOrEmpty(_query.Params.Message.Value))
+            if (!string.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Message.Operator);
-                sb.Append(_query.Params.Message.ToSqlString("Message"));
-            }
 
-            if (!string.IsNullOrEmpty(_query.Params.Html.Value))
-            {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Html.Operator);
-                sb.Append(_query.Params.Html.ToSqlString("Html"));
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"));
+
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("Html", "Keywords"));
+
             }
 
             // Include entity replies

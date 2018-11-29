@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Features.Abstractions;
+using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Navigation
@@ -9,16 +12,29 @@ namespace Plato.Discuss.Navigation
     public class SearchMenu : INavigationProvider
     {
 
-        public IStringLocalizer T { get; set; }
+        private IStringLocalizer T { get; set; }
 
-        public SearchMenu(IStringLocalizer<AdminMenu> localizer)
+        private readonly IFeatureFacade _featureFacade;
+   
+        public SearchMenu(IStringLocalizer<AdminMenu> localizer, IContextFacade contextFacade, IFeatureFacade featureFacade)
         {
             T = localizer;
+            _featureFacade = featureFacade;
         }
 
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
+
             if (!String.Equals(name, "search", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var feature = _featureFacade.GetFeatureByIdAsync("Plato.Discuss")
+                .GetAwaiter()
+                .GetResult();
+
+            if (feature == null)
             {
                 return;
             }
@@ -26,14 +42,20 @@ namespace Plato.Discuss.Navigation
             builder
                 .Add(T["Discuss"], 2, discuss => discuss
                     .Add(T["Topics"], 1, topics => topics
-                        .Action("Index", "Admin", "Plato.Discuss")
+                        .Attributes(new Dictionary<string, object>()
+                        {
+                            { "data-feature-id", feature.Id }
+                        })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ).Add(T["Favourites"], 999, favourites => favourites
-                        .Action("Channels", "Admin", "Plato.Discuss")
+                    ).Add(T["Replies"], 2, favourites => favourites
+                        .Attributes(new Dictionary<string, object>()
+                        {
+                            { "data-feature-id", feature.Id }
+                        })
                         //.Permission(Permissions.ManageRoles)
                         .LocalNav()
-                    ));
+                    ), new List<string>() { "discuss", "text-hidden" });
         }
     }
 

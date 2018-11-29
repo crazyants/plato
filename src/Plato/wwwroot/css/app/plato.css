@@ -34,6 +34,9 @@
 /* ------------------------- */
 
 .markdown-body img { max-width: 100%; } 
+
+/* quotes */
+
 .markdown-body blockquote p { padding: 0.75rem; }
 .markdown-body blockquote p,
 .markdown-body blockquote p.primary{ border: 1px solid #D9DDE7; border-left: 4px solid #007bff; background: #F3F7FF; }
@@ -43,6 +46,8 @@
 .markdown-body blockquote p.warning { border: 1px solid #E6DFD8; border-left: 4px solid #F6A800; background: #FFF8F1; }
 .markdown-body blockquote p.danger { border: 1px solid #E8D8D8; border-left: 4px solid red; background: #FFF0F0; }
 
+/* lists */
+
 .markdown-body ol,
 .markdown-body ul,
 .markdown-body dl
@@ -50,6 +55,8 @@
     margin-top: 1em;
     margin-bottom: 1em;
 }
+
+/* table */
 
 .markdown-body table {
     display: block;
@@ -73,6 +80,34 @@
     border-color: rgba(0, 0, 0, 0.1);
 }
 
+/* headings */
+
+.markdown-body h1 { font-size: 2em; }
+.markdown-body h2 { font-size: 1.5em; }
+.markdown-body h3 { font-size: 1.25em; }
+.markdown-body h4 { font-size: 1em; }
+.markdown-body h5 { font-size: .875em; }
+.markdown-body h6 { font-size: .85em; }
+
+.markdown-body h1,
+.markdown-body h2 {
+    border-bottom: 1px solid #eaecef;
+    padding-bottom: .3em;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    margin-top: 24px;
+}
+
+.markdown-body>:first-child { margin-top: 0!important; }
 
 /* ------------------------- */
 /* Grid system */
