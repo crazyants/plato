@@ -21,8 +21,7 @@ namespace Plato.Internal.Text.Extensions
             services.TryAddSingleton<IKeyGenerator, KeyGenerator>();
 
             services.TryAddSingleton<ITextParser, TextParser>();
-            services.TryAddSingleton<IFullTextQueryParser, FullTextQueryParser>();
-
+        
             return services;
 
         }

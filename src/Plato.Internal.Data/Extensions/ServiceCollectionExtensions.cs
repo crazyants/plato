@@ -20,6 +20,9 @@ namespace Plato.Internal.Data.Extensions
             services.AddTransient<IDbContext, DbContext>();
             services.AddTransient<IDbHelper, DbHelper>();
 
+            // Parsers
+            services.AddSingleton<IFullTextQueryParser, FullTextQueryParser>();
+
             // Add schemas
             services.AddDataSchemas();
 

@@ -135,8 +135,8 @@ namespace Plato.Internal.Stores.Users
         public UserQueryBuilder(UserQuery query)
         {
             _query = query;
-            _tableName = !string.IsNullOrEmpty(_query.TablePrefix)
-                ? _query.TablePrefix + TableName
+            _tableName = !string.IsNullOrEmpty(_query.Options.TablePrefix)
+                ? _query.Options.TablePrefix + TableName
                 : TableName;
         }
 

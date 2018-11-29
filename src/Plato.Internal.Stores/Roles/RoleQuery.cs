@@ -93,8 +93,8 @@ namespace Plato.Internal.Stores.Roles
         public RoleQueryBuilder(RoleQuery query)
         {
             _query = query;
-            _tableName = !string.IsNullOrEmpty(_query.TablePrefix)
-                ? _query.TablePrefix + TableName
+            _tableName = !string.IsNullOrEmpty(_query.Options.TablePrefix)
+                ? _query.Options.TablePrefix + TableName
                 : TableName;
         }
 
@@ -104,7 +104,7 @@ namespace Plato.Internal.Stores.Roles
 
         public string BuildSqlPopulate()
         {
-            var tablePrefix = _query.TablePrefix;
+            var tablePrefix = _query.Options.TablePrefix;
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();

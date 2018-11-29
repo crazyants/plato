@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 
-namespace Plato.Internal.Text.Abstractions
-{
+//namespace Plato.Internal.Text.Abstractions
+//{
 
-    public interface IFullTextQueryParser
-    {
+//    public interface IFullTextQueryParser
+//    {
 
-        HashSet<string> StopWords { get; set; }
+//        HashSet<string> StopWords { get; set; }
 
-        string ToFullTextSearchQuery(string query);
+//        string ToFullTextSearchQuery(string query);
 
-    }
+//    }
 
 
-}
+//}

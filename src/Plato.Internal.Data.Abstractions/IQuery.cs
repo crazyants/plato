@@ -4,16 +4,12 @@ using System.Threading.Tasks;
 
 namespace Plato.Internal.Data.Abstractions
 {
-
- 
-
+    
     public interface IQuery<TModel> where TModel : class
     {
+
+        IQueryOptions Options { get; }
         
-        QueryOptions Options { get; }
-
-        string TablePrefix { get; set; }
-
         IQuery<TModel> Take(int pageIndex, int pageSize);
 
         IQuery<TModel> Configure(Action<QueryOptions> configure);

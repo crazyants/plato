@@ -147,8 +147,8 @@ namespace Plato.Categories.Stores
 
         private string GetTableNameWithPrefix(string tableName)
         {
-            return !string.IsNullOrEmpty(_query.TablePrefix)
-                ? _query.TablePrefix + tableName
+            return !string.IsNullOrEmpty(_query.Options.TablePrefix)
+                ? _query.Options.TablePrefix + tableName
                 : tableName;
         }
         

@@ -13,15 +13,13 @@ namespace Plato.Internal.Data.Abstractions
 
         private readonly Dictionary<string, OrderBy> _sortColumns;
         
-        public QueryOptions Options => _options;
+        public IQueryOptions Options => _options;
    
         public IDictionary<string, OrderBy> SortColumns => _sortColumns;
 
         public int PageIndex { get; private set; } = 1;
 
         public int PageSize { get; private set; } = int.MaxValue;
-
-        public string TablePrefix { get; set; }
 
         public IQuery<TModel> Take(int pageIndex, int pageSize)
         {
