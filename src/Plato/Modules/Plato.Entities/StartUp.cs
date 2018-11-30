@@ -58,6 +58,14 @@ namespace Plato.Entities
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            routes.MapAreaRoute(
+                name: "EntitiesWebApi",
+                areaName: "Plato.Entities",
+                template: "api/entities/{controller}/{action}/{id?}",
+                defaults: new { controller = "Entity", action = "Get" }
+            );
+
         }
     }
 }

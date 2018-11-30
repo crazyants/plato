@@ -1,11 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Text;
 using Plato.WebApi.Models;
 
-namespace Plato.Notifications.Models
+namespace Plato.Entities.Models
 {
 
     [DataContract]
-    class UserNotificationApiResult
+    class EntityApiResult
     {
 
         [DataMember(Name = "id")]
@@ -30,6 +33,4 @@ namespace Plato.Notifications.Models
         public IFriendlyDate Date { get; set; }
 
     }
-
-
 }

@@ -9,12 +9,12 @@ using Plato.WebApi.Controllers;
 namespace Plato.Follow.Controllers
 {
 
-    public class EntityController : BaseWebApiController
+    public class FollowController : BaseWebApiController
     {
 
         private readonly IFollowStore<Models.Follow> _followStore;
 
-        public EntityController(
+        public FollowController(
             IFollowStore<Models.Follow> followStore)
         {
             _followStore = followStore;

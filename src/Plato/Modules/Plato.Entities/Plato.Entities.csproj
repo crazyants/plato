@@ -13,6 +13,7 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Repositories\Plato.Internal.Repositories.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Security.Abstractions\Plato.Internal.Security.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Plato.Internal.Text.Abstractions\Plato.Internal.Text.Abstractions.csproj" />
+    <ProjectReference Include="..\Plato.WebApi\Plato.WebApi.csproj" />
   </ItemGroup>
 
     <ItemGroup>

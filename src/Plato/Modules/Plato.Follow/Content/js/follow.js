@@ -192,7 +192,7 @@ $(function (win, doc, $) {
                 };
 
                 win.$.Plato.Http({
-                    url: "api/follows/entity/post",
+                    url: "api/follows/follow/post",
                     method: "POST",
                     data: JSON.stringify(params)
                 }).done(function(data) {
@@ -212,7 +212,7 @@ $(function (win, doc, $) {
                 };
 
                 win.$.Plato.Http({
-                    url: "api/follows/entity/delete",
+                    url: "api/follows/follow/delete",
                     method: "DELETE",
                     data: JSON.stringify(params)
                 }).done(function (data) {
@@ -240,14 +240,14 @@ $(function (win, doc, $) {
                 return followType;
             },
             getThingId: function ($caller) {
-                var entityId = 0;
+                var thingId = 0;
                 if ($caller.attr("data-thing-id")) {
-                    entityId = parseInt($caller.attr("data-thing-id"));
+                    thingId = parseInt($caller.attr("data-thing-id"));
                 }
-                if (entityId === 0) {
-                    throw new Error("An entity id is required in order to follow an entity");
+                if (thingId === 0) {
+                    throw new Error("A thing id is required in order to follow an item.");
                 }
-                return entityId;
+                return thingId;
             }
         
         }
@@ -352,79 +352,7 @@ $(function (win, doc, $) {
                 if (event) {
                     $caller.unbind(event);
                 }
-            },
-            handleEvent: function ($caller) {
-
-                var action = this.getAction($caller);
-                switch (action) {
-                    case "subscribe":
-                        this.subscribe($caller);
-                        break;
-
-                    case "unsubscribe":
-                        this.unsubscribe($caller);
-                        break;
-                }
-
-            },
-            subscribe: function ($caller) {
-
-                var params = {
-                    Id: 0,
-                    UserId: 0,
-                    EntityId: this.getEntityId($caller)
-                };
-
-                win.$.Plato.Http({
-                    url: "api/follows/entity/post",
-                    method: "POST",
-                    data: JSON.stringify(params)
-                }).done(function (data) {
-
-                    if (data.statusCode === 200) {
-                        $caller.followToggle("enable");
-                    }
-
-                });
-
-            },
-            unsubscribe: function ($caller) {
-
-                var params = {
-                    EntityId: this.getEntityId($caller)
-                };
-
-                win.$.Plato.Http({
-                    url: "api/follows/entity/delete",
-                    method: "DELETE",
-                    data: JSON.stringify(params)
-                }).done(function (data) {
-
-                    if (data.statusCode === 200) {
-                        $caller.followToggle("disable");
-                    }
-
-                });
-
-            },
-            getAction: function ($caller) {
-                var action = "subscribe";
-                if ($caller.attr("data-action")) {
-                    action = $caller.attr("data-action");
-                }
-                return action;
-            },
-            getEntityId: function ($caller) {
-                var entityId = 0;
-                if ($caller.attr("data-entity-id")) {
-                    entityId = parseInt($caller.attr("data-entity-id"));
-                }
-                if (entityId === 0) {
-                    throw new Error("An entity id is required in order to follow an entity");
-                }
-                return entityId;
             }
-
         }
 
         return {

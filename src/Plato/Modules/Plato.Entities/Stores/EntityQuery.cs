@@ -206,13 +206,11 @@ namespace Plato.Entities.Stores
 
         /*
 
-            Example of produced full text query...
-
             DECLARE @RowIndex int = 0;
             DECLARE @PageSize int = 40;
 
             DECLARE @FullTextSearchQuery nvarchar(4000);
-            SET @FullTextSearchQuery = 'FORMSOF(INFLECTIONAL, test)';
+            SET @FullTextSearchQuery = 'FORMSOF(INFLECTIONAL, installation)';
 
             DECLARE @FullTextMaxRank int;
             SET @FullTextMaxRank = (
@@ -227,36 +225,48 @@ namespace Plato.Entities.Stores
             );
 
             SELECT e.*, 
-                c.UserName AS CreatedUserName, 
-                c.DisplayName AS CreatedDisplayName,
-                c.FirstName AS CreatedFirstName,
-                c.LastName AS CreatedLastName,
-                c.Alias AS CreatedAlias,
-                m.UserName AS ModifiedUserName, 
-                m.DisplayName AS ModifiedDisplayName,
-                m.FirstName AS ModifiedFirstName,
-                m.LastName AS ModifiedLastName,
-                m.Alias AS ModifiedAlias,
-                IsNull(ftEntities.RANK,0) AS [Rank],
-                @FullTextMaxRank AS MaxRank 
+            c.UserName AS CreatedUserName, 
+            c.DisplayName AS CreatedDisplayName,
+            c.FirstName AS CreatedFirstName,
+            c.LastName AS CreatedLastName,
+            c.Alias AS CreatedAlias,
+            m.UserName AS ModifiedUserName, 
+            m.DisplayName AS ModifiedDisplayName,
+            m.FirstName AS ModifiedFirstName,
+            m.LastName AS ModifiedLastName,
+            m.Alias AS ModifiedAlias,
+            IsNull(ftEntities.RANK,0) AS [Rank],
+            @FullTextMaxRank AS MaxRank 
 
             FROM 
 
-            -- join replies based on full text results
-            CONTAINSTABLE(plato4_EntityReplies, *, @FullTextSearchQuery) AS ftEntityReplies 
-            INNER JOIN plato4_EntityReplies AS er ON ftEntityReplies.[Key] = er.Id 
-
-            RIGHT OUTER JOIN
-
-            plato4_Entities e 
+            plato4_Entities e
             LEFT OUTER JOIN plato4_Users c ON e.CreatedUserId = c.Id 
             LEFT OUTER JOIN plato4_Users m ON e.ModifiedUserId = m.Id 
-            ON er.EntityId = e.Id
 
-            INNER JOIN CONTAINSTABLE(plato4_Entities, *, @FullTextSearchQuery) AS ftEntities 
-            ON ftEntities.[Key] = e.Id  
+            LEFT OUTER JOIN
 
-            WHERE (e.FeatureId = 41 AND e.IsPrivate = 0 AND e.IsSpam = 0) ORDER BY e.Id DESC OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;
+            CONTAINSTABLE(plato4_Entities, *, @FullTextSearchQuery) AS ftEntities  ON ftEntities.[Key] = e.Id 
+
+            LEFT OUTER JOIN
+
+            CONTAINSTABLE(plato4_EntityReplies, *, @FullTextSearchQuery) AS ftEntityReplies 
+            INNER JOIN plato4_EntityReplies er ON ftEntityReplies.[Key] = er.Id 
+
+            ON e.Id = er.EntityId 
+
+            WHERE (
+
+	            (
+		            e.FeatureId = 41 AND e.IsPrivate = 0 AND e.IsSpam = 0
+	            )
+	            AND
+	            (
+		            e.Id IN (IsNull(ftEntities.[Key],0)) OR 
+		            er.Id IN (IsNull(ftEntityReplies.[Key],0))
+	            )
+
+            ) ORDER BY e.Id DESC OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;
             
         */
 
@@ -354,26 +364,7 @@ namespace Plato.Entities.Stores
         {
 
             var sb = new StringBuilder();
-
-            if (EnableFullText())
-            {
-                // join entity replies matching full text query
-                sb
-                    .Append(_query.Options.SearchType.ToString().ToUpper())
-                    .Append("(")
-                    .Append(_entityRepliesTableName)
-                    .Append(", *, @FullTextSearchQuery) AS ftEntityReplies ")
-                    .Append("INNER JOIN ")
-                    .Append(_entityRepliesTableName)
-                    .Append(" AS er ON ftEntityReplies.[Key] = er.Id");
-            }
-
-
-            if (!string.IsNullOrEmpty(sb.ToString()))
-            {
-                sb.Append(" RIGHT OUTER JOIN ");
-            }
-          
+            
             sb.Append(_entitiesTableName)
                 .Append(" e ");
 
@@ -386,9 +377,14 @@ namespace Plato.Entities.Stores
             sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
                 .Append(" m ON e.ModifiedUserId = m.Id");
-            
+
             if (EnableFullText())
             {
+
+     
+                // join ftEntities
+                // ---------------------------
+
                 sb
                     .Append(" LEFT OUTER JOIN ") // join entities
                     .Append(_query.Options.SearchType.ToString().ToUpper())
@@ -400,11 +396,34 @@ namespace Plato.Entities.Stores
                     sb.Append(", ").Append(_query.Options.MaxResults.ToString());
                 }
 
-                sb.Append(") AS ftEntities ON ftEntities.[Key] = e.Id ")
-                    .Append("ON er.EntityId = e.Id"); // join entity replies
+                sb.Append(") AS ftEntities ON ftEntities.[Key] = e.Id");
+                
+                // join ftEntityReplies
+                // ---------------------------
+
+                sb
+                    .Append(" LEFT OUTER JOIN ") // join entities
+                    .Append(_query.Options.SearchType.ToString().ToUpper())
+                    .Append("(")
+                    .Append(_entityRepliesTableName)
+                    .Append(", *, @FullTextSearchQuery");
+                if (_query.Options.MaxResults > 0)
+                {
+                    sb.Append(", ").Append(_query.Options.MaxResults.ToString());
+                }
+
+                sb.Append(") AS ftEntityReplies ")
+                    .Append("INNER JOIN ")
+                    .Append(_entityRepliesTableName)
+                    .Append(" AS er ON ftEntityReplies.[Key] = er.Id ");
+
+                // join EntityReplies
+                // ---------------------------
+
+                sb.Append("ON er.EntityId = e.Id");
 
             }
-            
+
             return sb.ToString();
 
         }
@@ -649,6 +668,7 @@ namespace Plato.Entities.Stores
             // -----------------
             // Keywords 
             // -----------------
+
             if (!string.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
@@ -658,40 +678,30 @@ namespace Plato.Entities.Stores
 
                 if (_query.Options.SearchType == SearchTypes.Tsql)
                 {
-                 
-                    var tsqlWhereClause = BuildEntityKeywordTsqlWhereClause();
-                    if (!string.IsNullOrEmpty(tsqlWhereClause))
-                    {
 
-                        if (!string.IsNullOrEmpty(sb.ToString()))
-                            sb.Append(" AND ");
-                        sb.Append("(");
+                    // Entities
 
-                        // Entities
+                    sb.Append("(")
+                        .Append(_query.Params.Keywords.ToSqlString("Title", "Keywords"))
+                        .Append(" OR ")
+                        .Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"))
+                        .Append(")");
+                    
+                    sb.Append(" OR ");
 
-                        sb.Append("(")
-                            .Append(tsqlWhereClause)
-                            .Append(")");
+                    // Entity Replies
 
-                        if (!string.IsNullOrEmpty(sb.ToString()))
-                            sb.Append(" OR ");
-
-                        // Entity Replies
-
-                        sb.Append("(e.Id IN (SELECT EntityId FROM ")
-                            .Append(_entityRepliesTableName)
-                            .Append(" WHERE (")
-                            .Append(BuildEntityRepliesKeywordTsqlWhereClause())
-                            .Append(")))");
-
-                        sb.Append(")");
-
-                    }
+                    sb.Append("(e.Id IN (SELECT EntityId FROM ")
+                        .Append(_entityRepliesTableName)
+                        .Append(" WHERE (")
+                        .Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"))
+                        .Append(")))");
 
                 }
                 else
                 {
-                    sb.Append("e.Id IN (IsNull(ftEntities.[Key],0)) OR ")
+                    sb.Append("e.Id IN (IsNull(ftEntities.[Key],0))")
+                        .Append(" OR ")
                         .Append("er.Id IN(IsNull(ftEntityReplies.[Key], 0))");
 
                 }
@@ -700,45 +710,6 @@ namespace Plato.Entities.Stores
 
             }
 
-            return sb.ToString();
-
-        }
-
-        string BuildEntityKeywordTsqlWhereClause()
-        {
-           
-            var sb = new StringBuilder();
-
-          
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-
-                // Search title OR message
-                sb.Append("(")
-                    .Append(_query.Params.Keywords.ToSqlString("Title", "Keywords"))
-                    .Append(" OR ")
-                    .Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"))
-                    .Append(")");
-         
-
-            return sb.ToString();
-
-        }
-
-        string BuildEntityRepliesKeywordTsqlWhereClause()
-        {
-
-            var sb = new StringBuilder();
-            
-            if (!string.IsNullOrEmpty(_query.Params.Keywords.Value))
-            {
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-                sb.Append("(")
-                    .Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"))
-                    .Append(")");
-            }
-            
             return sb.ToString();
 
         }
