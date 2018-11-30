@@ -8,108 +8,8 @@ namespace Plato.Search.ViewModels
 {
     public class SearchIndexViewModel
     {
-
-        private readonly IEnumerable<Filter> _defaultFilters = new List<Filter>()
-        {
-            new Filter()
-            {
-                Text = "All",
-                Value = FilterBy.All
-            },
-            new Filter()
-            {
-                Text = "-" // represents menu divider
-            },
-            new Filter()
-            {
-                Text = "My Topics",
-                Value = FilterBy.MyTopics
-            },
-            new Filter()
-            {
-                Text = "Participated",
-                Value = FilterBy.Participated
-            },
-            new Filter()
-            {
-                Text = "Following",
-                Value = FilterBy.Following
-            },
-            new Filter()
-            {
-                Text = "Starred",
-                Value = FilterBy.Starred
-            },
-            new Filter()
-            {
-                Text = "-"  // represents menu divider
-            },
-            new Filter()
-            {
-                Text = "Unanswered",
-                Value = FilterBy.Unanswered
-            },
-            new Filter()
-            {
-                Text = "No Replies",
-                Value = FilterBy.NoReplies
-            }
-        };
-
-        private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
-        {
-            new SortColumn()
-            {
-                Text = "Last Reply",
-                Value = SortBy.LastReply
-            },
-            new SortColumn()
-            {
-                Text = "Replies",
-                Value =  SortBy.Replies
-            },
-            new SortColumn()
-            {
-                Text = "Views",
-                Value = SortBy.Views
-            },
-            new SortColumn()
-            {
-                Text = "Participants",
-                Value =  SortBy.Participants
-            },
-            new SortColumn()
-            {
-                Text = "Reactions",
-                Value =  SortBy.Reactions
-            },
-            new SortColumn()
-            {
-                Text = "Created",
-                Value = SortBy.Created
-            },
-            new SortColumn()
-            {
-                Text = "Modified",
-                Value = SortBy.Modified
-            }
-        };
-
-        private readonly IEnumerable<SortOrder> _defaultSortOrder = new List<SortOrder>()
-        {
-            new SortOrder()
-            {
-                Text = "Descending",
-                Value = OrderBy.Desc
-            },
-            new SortOrder()
-            {
-                Text = "Ascending",
-                Value = OrderBy.Asc
-            },
-        };
-
-        public IPagedResults<Entity> Results { get; }
+        
+        public IPagedResults<Entity> Results { get; set; }
 
         public PagerOptions Pager { get; set; } = new PagerOptions();
 
@@ -127,27 +27,15 @@ namespace Plato.Search.ViewModels
 
         }
         
-        public SearchIndexViewModel(
-            IPagedResults<Entity> results,
-            SearchIndexOptions options,
-            PagerOptions pager)
-        {
-            this.SortColumns = _defaultSortColumns;
-            this.SortOrder = _defaultSortOrder;
-            this.Filters = _defaultFilters;
-            this.Results = results;
-            this.Options = options;
-            this.Pager = pager;
-            this.Pager.SetTotal(results?.Total ?? 0);
-        }
 
     }
-
-
+    
     public class SearchIndexOptions
     {
+        [DataMember(Name = "search")]
         public string Search { get; set; }
 
+        [DataMember(Name = "channel")]
         public int ChannelId { get; set; }
         
         [DataMember(Name = "filter")]
@@ -160,14 +48,8 @@ namespace Plato.Search.ViewModels
         public OrderBy Order { get; set; } = OrderBy.Desc;
         
     }
-
-
-    public enum EntityOrder
-    {
-        Username,
-        Email
-    }
-
+    
+ 
     public enum SortBy
     {
         LastReply = 0,
