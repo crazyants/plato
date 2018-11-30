@@ -70,9 +70,8 @@ namespace Plato.Internal.Abstractions.Extensions
             {
                 return input;
             }
-
-            var size = decimal.Divide(input, divideBy);
-            return System.Convert.ToInt32(System.Math.Ceiling(size));
+            
+            return (int)System.Math.Ceiling(decimal.Divide(input, divideBy));
             
         }
 
@@ -99,7 +98,7 @@ namespace Plato.Internal.Abstractions.Extensions
             if (total == 0)
                 return 0;
 
-            return (int)System.Math.Ceiling(Decimal.Divide(input, total) * devision);
+            return (int)System.Math.Ceiling(decimal.Divide(input, total) * devision);
 
         }
 
