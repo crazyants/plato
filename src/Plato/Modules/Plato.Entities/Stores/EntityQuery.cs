@@ -497,25 +497,9 @@ namespace Plato.Entities.Stores
             }
 
             return "(IsNull(ftEntities.RANK,0) + IsNull(ftEntityReplies.RANK,0))";
-
-            //switch (_args.SearchWithin)
-            //    {
-            //        case Enumerations.EnumSearchWithin.EntirePost:
-            //            return "((IsNull(ftTopic.RANK,0) * 2) + IsNull(ftMessage.RANK,0))";
-            //        case Enumerations.EnumSearchWithin.TitlesOnly:
-            //            return "IsNull(ftTopic.RANK,0)";
-            //        case Enumerations.EnumSearchWithin.MessageOnly:
-            //            return "IsNull(ftMessage.RANK,0)";
-            //        case Enumerations.EnumSearchWithin.Tags:
-            //            return "IsNull(ftTags.RANK,0)";
-            //    }
-
-
-            //return "0";
-
+            
         }
-
-
+        
         bool EnableFullText()
         {
 
@@ -544,6 +528,7 @@ namespace Plato.Entities.Stores
 
         string BuildWhereClause()
         {
+
             var sb = new StringBuilder();
 
             // Id
@@ -808,6 +793,8 @@ namespace Plato.Entities.Stores
                     return "e.LastReplyDate";
                 case "lastreplydate":
                     return "e.LastReplyDate";
+                case "rank":
+                    return "[Rank]";
             }
 
             return string.Empty;

@@ -72,7 +72,7 @@ namespace Plato.Search.ViewComponents
 
             // Explictly get Plato.Discuss feature, this view component can be 
             // used in different areas (i.e. Plat.Discuss.Channels) so use explict area name
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+            //var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
 
             // Get search settings
             var searchSettings =  await _searchSettingsStore.GetAsync();
@@ -89,10 +89,10 @@ namespace Plato.Search.ViewComponents
                 .Select<EntityQueryParams>(q =>
                 {
                     
-                    if (feature != null)
-                    {
-                        q.FeatureId.Equals(feature.Id);
-                    }
+                    //if (feature != null)
+                    //{
+                    //    q.FeatureId.Equals(feature.Id);
+                    //}
 
                     if (searchIndexOpts.ChannelId > 0)
                     {
@@ -108,9 +108,6 @@ namespace Plato.Search.ViewComponents
                     q.HidePrivate.True();
                     q.HideDeleted.True();
                
-                    // q.UserName.IsIn("Admin,Mark").Or();
-                    // q.Email.IsIn("email440@address.com,email420@address.com");
-                    // q.Id.Between(1, 5);
                 })
                 .OrderBy("Id", OrderBy.Desc)
                 .ToList();

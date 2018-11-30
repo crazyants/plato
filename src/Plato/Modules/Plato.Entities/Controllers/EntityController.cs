@@ -8,8 +8,6 @@ using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Models.Users;
-using Plato.Internal.Stores.Abstractions.Users;
 using Plato.WebApi.Controllers;
 using Plato.WebApi.Models;
 
@@ -21,16 +19,13 @@ namespace Plato.Entities.Controllers
     {
 
         private readonly IEntityStore<Entity> _entityStore;
-        private readonly IPlatoUserStore<User> _ploatUserStore;
         private readonly IContextFacade _contextFacade;
 
         public EntityController(
-            IPlatoUserStore<User> platoUserStore,
             IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade,
             IEntityStore<Entity> entityStore)
         {
-            _ploatUserStore = platoUserStore;
             _contextFacade = contextFacade;
             _entityStore = entityStore;
         }
@@ -42,22 +37,16 @@ namespace Plato.Entities.Controllers
         public async Task<IActionResult> Get(
             int page = 1,
             int size = 10,
-            string sort = "CreatedDate",
+            string keywords = "",
+            string sort = "LastReplyDate",
             OrderBy order = OrderBy.Desc)
         {
-
-            // Ensure we are authenticated
-            var user = await base.GetAuthenticatedUserAsync();
-            if (user == null)
-            {
-                return base.UnauthorizedException();
-            }
 
             // Get notificaitons
             var userNotifications = await GetEntities(
                 page,
                 size,
-                user.Id,
+                keywords,
                 sort,
                 order);
 
@@ -158,7 +147,7 @@ namespace Plato.Entities.Controllers
         async Task<IPagedResults<Entity>> GetEntities(
             int page,
             int pageSize,
-            int userId,
+            string keywords,
             string sortBy,
             OrderBy sortOrder)
         {
@@ -167,7 +156,12 @@ namespace Plato.Entities.Controllers
                 .Take(page, pageSize)
                 .Select<EntityQueryParams>(q =>
                 {
-                    q.UserId.Equals(userId);
+
+                    if (!String.IsNullOrEmpty(keywords))
+                    {
+                        q.Keywords.Like(keywords);
+                    }
+
                 })
                 .OrderBy(sortBy, sortOrder)
                 .ToList();

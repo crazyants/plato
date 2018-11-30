@@ -28,7 +28,9 @@ namespace Plato.WebApi.Controllers
             _ploatUserStore = platoUserStore;
             _contextFacade = contextFacade;
         }
-        
+
+        #region "Actions"
+
         [HttpGet]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Get(
@@ -96,7 +98,11 @@ namespace Plato.WebApi.Controllers
                 : base.NoResults();
 
         }
-        
+
+        #endregion
+
+        #region "Private Methods"
+
         async Task<IPagedResults<User>> GetUsers(
             int page,
             int pageSize,
@@ -118,6 +124,8 @@ namespace Plato.WebApi.Controllers
                 .ToList();
 
         }
+
+        #endregion
 
     }
 

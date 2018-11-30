@@ -2,7 +2,6 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Follow.Models;
 using Plato.Follow.Stores;
 using Plato.WebApi.Controllers;
 

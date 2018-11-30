@@ -97,15 +97,23 @@ namespace Plato.Search.Controllers
             // Add non default route data for pagination purposes
             if (opts.Search != defaultViewOptions.Search)
                 this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
             if (opts.Order != defaultViewOptions.Order)
                 this.RouteData.Values.Add("opts.order", opts.Order);
+            if (opts.Filter != defaultViewOptions.Filter)
+                this.RouteData.Values.Add("opts.filter", opts.Filter);
             if (pager.Page != defaultPagerOptions.Page)
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // Add view options to context for use within view adaptors
-            this.HttpContext.Items[typeof(SearchIndexViewModel)] = new SearchIndexViewModel(opts, pager);
+            this.HttpContext.Items[typeof(SearchIndexViewModel)] = new SearchIndexViewModel()
+            {
+                Options = opts,
+                Pager = pager
+            }; 
             
             // Build view
             var result = await _viewProvider.ProvideIndexAsync(new SearchResult(), this);
