@@ -487,7 +487,7 @@ namespace Plato.Entities.Handlers
             builder.CreateProcedure(
                 new SchemaProcedure(
                         $"SelectEntityById",
-                        @" SELECT e.*, 
+                        @" SELECT e.*, 0 AS Rank, 0 AS MaxRank,
                                     c.UserName AS CreatedUserName, 
                                     c.NormalizedUserName AS CreatedNormalizedUserName,
                                     c.DisplayName AS CreatedDisplayName,

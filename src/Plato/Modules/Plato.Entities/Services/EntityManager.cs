@@ -46,14 +46,12 @@ namespace Plato.Entities.Services
             var result = new CommandResult<TEntity>();
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-       
-
-            if (user != null)
+            if (model.CreatedUserId == 0)
             {
-                model.CreatedUserId = user.Id;
-                model.ModifiedUserId = user.Id;
+                model.CreatedUserId = user?.Id ?? 0;
+                model.ModifiedUserId = user?.Id ?? 0;
             }
-
+         
             model.CreatedDate = DateTime.UtcNow;
             model.ModifiedDate = DateTime.UtcNow;
 

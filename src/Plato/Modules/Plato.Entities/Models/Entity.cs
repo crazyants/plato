@@ -87,6 +87,12 @@ namespace Plato.Entities.Models
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
 
+        public int Rank { get; set; }
+
+        public int MaxRank { get; set; }
+
+        public int Relevance { get; set; }
+
         public Entity()
         {
             _metaData = new ConcurrentDictionary<Type, ISerializable>();
@@ -250,8 +256,16 @@ namespace Plato.Entities.Models
             
             if (dr.ColumnIsNotNull("LastReplyDate"))
                 LastReplyDate = DateTimeOffset.Parse(Convert.ToString((dr["LastReplyDate"])));
-            
+
+            if (dr.ColumnIsNotNull("Rank"))
+                Rank = Convert.ToInt32(dr["Rank"]);
+
+            if (dr.ColumnIsNotNull("MaxRank"))
+                MaxRank = Convert.ToInt32(dr["MaxRank"]);
+
+            Relevance = Rank.ToPercentageOf(MaxRank);
         }
+
 
     }
     

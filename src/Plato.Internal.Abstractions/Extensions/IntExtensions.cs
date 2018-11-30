@@ -91,6 +91,17 @@ namespace Plato.Internal.Abstractions.Extensions
 
         }
 
+        public static int ToPercentageOf(this int input, int total, int devision = 100)
+        {
+            if (input > total)
+                return 100;
+
+            if (total == 0)
+                return 0;
+
+            return (int)System.Math.Ceiling(Decimal.Divide(input, total) * devision);
+
+        }
 
     }
 }

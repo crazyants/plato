@@ -14,7 +14,10 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Users;
 using Plato.Internal.Shell.Abstractions;
+using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Internal.Stores.Users;
 
 namespace Plato.Discuss.Controllers
 {
@@ -32,6 +35,8 @@ namespace Plato.Discuss.Controllers
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
 
+        private readonly IPlatoUserStore<User> _ploatUserStore;
+
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
@@ -46,7 +51,8 @@ namespace Plato.Discuss.Controllers
             IViewProviderManager<Reply> replyViewProvider,
             IPostManager<Topic> topicManager,
             IPostManager<Reply> replyManager,
-            IAlerter alerter, IBreadCrumbManager breadCrumbManager)
+            IAlerter alerter, IBreadCrumbManager breadCrumbManager,
+            IPlatoUserStore<User> ploatUserStore)
         {
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
@@ -56,6 +62,7 @@ namespace Plato.Discuss.Controllers
             _replyManager = replyManager;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
+            _ploatUserStore = ploatUserStore;
 
             T = localizer;
             S = stringLocalizer;
@@ -565,24 +572,42 @@ message Test message  " + number.ToString();
         async Task CreateSampleData()
         { 
 
+            var users =   await _ploatUserStore.QueryAsync()
+                .Take(1, 1000)
+                .Select<UserQueryParams>(q =>
+                {
+              
+                })
+                .OrderBy("LastLoginDate", OrderBy.Desc)
+                .ToList();
+
             var rnd = new Random();
             var topic = new Topic()
             {
-                Title = "Test Topic " + rnd.Next(0, 100000).ToString(),
-                Message = GetSampleMarkDown(rnd.Next(0, 100000))
+                Title = "Test Topic " + rnd.Next(0, users.Total).ToString(),
+                Message = GetSampleMarkDown(rnd.Next(0, users.Total)),
+                CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id
+                
             };
             
             // create topic
             var data = await _topicManager.CreateAsync(topic);
             if (data.Succeeded)
             {
-
-                var reply = new Reply()
+                
+                for (var i = 0; i < 10; i++)
                 {
-                    EntityId = data.Response.Id,
-                    Message = GetSampleMarkDown(rnd.Next(1, 6))
-                };
-                var newReply = await _replyManager.CreateAsync(reply);
+                    rnd = new Random();
+                    var reply = new Reply()
+                    {
+                        EntityId = data.Response.Id,
+                        Message = GetSampleMarkDown(rnd.Next(1, 6)),
+                        CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id
+                    };
+                    var newReply = await _replyManager.CreateAsync(reply);
+                }
+               
+            
                 
             }
 

@@ -61,7 +61,6 @@ namespace Plato.Entities.Stores
         private WhereInt _roleId;
         private WhereInt _labelId;
         private WhereString _keywords;
-   
         private WhereBool _showPrivate;
         private WhereBool _hidePrivate;
         private WhereBool _showSpam;
@@ -241,6 +240,7 @@ namespace Plato.Entities.Stores
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
             sb.Append(BuildFullTextQuery());
+            sb.Append(BuildFullTextMaxRank());
             sb.Append("SELECT ")
                 .Append(BuildPopulateSelect())
                 .Append(" FROM ")
@@ -260,17 +260,23 @@ namespace Plato.Entities.Stores
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
             sb.Append(BuildFullTextQuery());
+            sb.Append(BuildFullTextMaxRank());
             sb.Append("SELECT COUNT(e.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             return sb.ToString();
         }
+
+        #endregion
+
+        #region "Private Methods"
         
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("e.*, ")
+            sb
+                .Append("e.*, ")
                 .Append("c.UserName AS CreatedUserName, ")
                 .Append("c.DisplayName AS CreatedDisplayName,")
                 .Append("c.FirstName AS CreatedFirstName,")
@@ -280,11 +286,14 @@ namespace Plato.Entities.Stores
                 .Append("m.DisplayName AS ModifiedDisplayName,")
                 .Append("m.FirstName AS ModifiedFirstName,")
                 .Append("m.LastName AS ModifiedLastName,")
-                .Append("m.Alias AS ModifiedAlias");
+                .Append("m.Alias AS ModifiedAlias, ")
+                .Append(BuildFullTextRankSelect()).Append(" AS [Rank], ")
+                .Append("@FullTextMaxRank AS MaxRank");
+            
             return sb.ToString();
 
         }
-        
+
         string BuildTables()
         {
 
@@ -297,12 +306,12 @@ namespace Plato.Entities.Stores
             sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
                 .Append(" c ON e.CreatedUserId = c.Id ");
-            
+
             // join last modified user
             sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
                 .Append(" m ON e.ModifiedUserId = m.Id");
-            
+
             // Join full text table
             sb.Append(BuildFullTextTables());
 
@@ -310,10 +319,42 @@ namespace Plato.Entities.Stores
 
         }
 
+        string BuildFullTextMaxRank()
+        {
+
+            var sb = new StringBuilder();
+            sb.Append("DECLARE @FullTextMaxRank int;");
+            sb.Append("SET @FullTextMaxRank = ");
+
+            if (EnableFullText())
+            {
+                var whereClause = BuildWhereClause();
+                sb
+                    .Append("(")
+                    .Append("SELECT TOP 1 ")
+                    .Append(BuildFullTextRankSelect())
+                    .Append(" AS MaxRank FROM ")
+                    .Append(BuildTables());
+                if (!string.IsNullOrEmpty(whereClause))
+                    sb.Append(" WHERE (").Append(whereClause).Append(")");
+                sb.Append(" ORDER BY MaxRank DESC")
+                    .Append(")");
+            }
+            else
+            {
+                sb.Append("0");
+            }
+
+            sb.Append(";");
+
+            return sb.ToString();
+        }
+
         string BuildFullTextQuery()
         {
 
-            if (!EnableFullTextQueries())
+            // Not used if full text search is not active
+            if (!EnableFullText())
             {
                 return string.Empty;
             }
@@ -329,8 +370,8 @@ namespace Plato.Entities.Stores
             }
 
             var sb = new StringBuilder();
-            sb.Append("DECLARE @FullTextQuery nvarchar(4000);")
-                .Append("SET @FullTextQuery = '")
+            sb.Append("DECLARE @FullTextSearchQuery nvarchar(4000);")
+                .Append("SET @FullTextSearchQuery = '")
                 .Append(fullTextSearchQuery.Replace("'", "''"))
                 .Append("';")
                 .Append(Environment.NewLine);
@@ -338,22 +379,49 @@ namespace Plato.Entities.Stores
 
         }
 
+        string BuildFullTextRankSelect()
+        {
+
+            if (!EnableFullText())
+            {
+                return "0";
+            }
+
+            return "IsNull(ftEntities.RANK,0)";
+
+            //switch (_args.SearchWithin)
+            //    {
+            //        case Enumerations.EnumSearchWithin.EntirePost:
+            //            return "((IsNull(ftTopic.RANK,0) * 2) + IsNull(ftMessage.RANK,0))";
+            //        case Enumerations.EnumSearchWithin.TitlesOnly:
+            //            return "IsNull(ftTopic.RANK,0)";
+            //        case Enumerations.EnumSearchWithin.MessageOnly:
+            //            return "IsNull(ftMessage.RANK,0)";
+            //        case Enumerations.EnumSearchWithin.Tags:
+            //            return "IsNull(ftTags.RANK,0)";
+            //    }
+
+
+            //return "0";
+
+        }
 
         string BuildFullTextTables()
         {
-            
-            if (!EnableFullTextQueries())
+
+            if (!EnableFullText())
             {
                 return string.Empty;
             }
-            
+
             var sb = new StringBuilder();
 
+            // Join entities on full text results table
             sb.Append(" INNER JOIN ")
                 .Append(_query.Options.SearchType.ToString().ToUpper())
                 .Append("(")
                 .Append(_entitiesTableName)
-                .Append(", *, @FullTextQuery");
+                .Append(", *, @FullTextSearchQuery");
             if (_query.Options.MaxResults > 0)
             {
                 sb.Append(", ")
@@ -362,11 +430,14 @@ namespace Plato.Entities.Stores
 
             sb.Append(") AS ftEntities ON ftEntities.[Key] = e.Id ");
 
+
+
+
             return sb.ToString();
 
         }
-        
-        bool EnableFullTextQueries()
+
+        bool EnableFullText()
         {
 
             // No keywords
@@ -385,9 +456,6 @@ namespace Plato.Entities.Stores
 
         }
 
-        #endregion
-
-        #region "Private Methods"
 
         string GetTableNameWithPrefix(string tableName)
         {
@@ -571,15 +639,13 @@ namespace Plato.Entities.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Title", "Keywords"));
-         
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"));
-         
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Html", "Keywords"));
+
+                // Search title OR message
+                sb.Append("(")
+                    .Append(_query.Params.Keywords.ToSqlString("Title", "Keywords"))
+                    .Append(" OR ")
+                    .Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"))
+                    .Append(")");
             }
 
             return sb.ToString();
@@ -593,21 +659,13 @@ namespace Plato.Entities.Stores
             
             if (!string.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
-
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"));
-
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Html", "Keywords"));
-
+                sb.Append("(")
+                    .Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"))
+                    .Append(")");
             }
-
-            // Include entity replies
-
-
-
+            
             return sb.ToString();
 
         }

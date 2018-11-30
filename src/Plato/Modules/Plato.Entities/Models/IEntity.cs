@@ -88,6 +88,12 @@ namespace Plato.Entities.Models
         Task<EntityUris> GetEntityUrlsAsync();
 
         void PopulateModel(IDataReader dr);
+        
+        int Rank { get; set; }
+
+        int MaxRank { get; set; }
+
+        int Relevance { get; set; }
 
     }
     

@@ -62,9 +62,9 @@ namespace Plato.Entities.Services
             }
             
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user != null)
+            if (reply.CreatedUserId == 0)
             {
-                reply.CreatedUserId = user.Id;
+                reply.CreatedUserId = user?.Id ?? 0;
             }
      
             // Parse Html and abstract

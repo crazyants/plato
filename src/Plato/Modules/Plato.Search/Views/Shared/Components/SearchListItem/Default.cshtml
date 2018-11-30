@@ -7,8 +7,16 @@
     @Html.Raw(Model.Entity.Abstract.HighlightTerms(Model.SearchIndexOptions.Search))
 </div>
 <div>
+    <span class="text-muted float-right" data-toggle="tooltip" title="@T["Relevance"]">
+        @Model.Entity.Relevance%
+    </span>
     @T["By"] <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>,
-    <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
+    <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip"/>
 </div>
 
+
+
+@Model.Entity.Rank
+
+@Model.Entity.MaxRank
 
