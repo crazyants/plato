@@ -157,19 +157,16 @@ namespace Plato.Internal.Stores.Users
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("UserName", "Keywords"));
-        
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("Email", "Keywords"));
-          
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("FirstName", "Keywords"));
-         
-                if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("LastName", "Keywords"));
+                sb
+                    .Append(_query.Params.Keywords.ToSqlString("UserName", "Keywords"))
+                    .Append(" OR ")
+                    .Append(_query.Params.Keywords.ToSqlString("DisplayName", "Keywords"))
+                    .Append(" OR ")
+                    .Append(_query.Params.Keywords.ToSqlString("Email", "Keywords"))
+                    .Append(" OR ")
+                    .Append(_query.Params.Keywords.ToSqlString("FirstName", "Keywords"))
+                    .Append(" OR ")
+                    .Append(_query.Params.Keywords.ToSqlString("LastName", "Keywords"));
             }
             
 

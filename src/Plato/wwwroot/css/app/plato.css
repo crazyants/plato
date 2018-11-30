@@ -107,6 +107,21 @@
     margin-top: 24px;
 }
 
+/* code blocks */
+
+.markdown-body pre {
+    background-color: #f6f8fa;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    font-size: 85%;
+    line-height: 1.45;
+    overflow: auto;
+    padding: 16px;
+    word-wrap: normal;
+    margin-bottom: 16px;
+    margin-top: 0;
+}
+
 .markdown-body>:first-child { margin-top: 0!important; }
 
 /* ------------------------- */
