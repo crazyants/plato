@@ -42,32 +42,6 @@ namespace Plato.Search.ViewModels
         public OrderBy Order { get; set; } = OrderBy.Desc;
         
     }
-    
- 
-    public enum SortBy
-    {
-        Auto = 0,
-        Rank = 1,
-        LastReply = 2,
-        Replies = 3,
-        Views = 4,
-        Participants = 5,
-        Reactions = 6,
-        Created = 7,
-        Modified = 8,
-       
-    }
-
-    public enum FilterBy
-    {
-        All = 0,
-        MyTopics = 1,
-        Participated = 2,
-        Following = 3,
-        Starred = 4,
-        Unanswered = 5,
-        NoReplies = 6
-    }
 
     public class SortColumn
     {
@@ -93,5 +67,28 @@ namespace Plato.Search.ViewModels
 
     }
 
+    public enum SortBy
+    {
+        Auto = 0,
+        Rank = 1,
+        LastReply = 2,
+        Replies = 3,
+        Views = 4,
+        Participants = 5,
+        Reactions = 6,
+        Created = 7,
+        Modified = 8
+    }
+
+    public enum FilterBy
+    {
+        All = 0,
+        MyTopics = 1,
+        Participated = 2,
+        Following = 3,
+        Starred = 4,
+        Unanswered = 5,
+        NoReplies = 6
+    }
 
 }

@@ -1,8 +1,22 @@
 ﻿@model SearchIndexOptions 
 
-<div class="input-group">
-    <input asp-for="Search" type="search" class="form-control" placeholder="@T["Search..."]" autofocus />
-    <button type="submit" class="btn btn-primary" role="button">
-        @T["Search"]
-    </button>
+<div class="dropdown">
+    <div class="input-group">
+        <input data-provide="searchAutoComplete" 
+               asp-for="Search" 
+               type="search" 
+               class="form-control" 
+               autocomplete="off"
+               data-autocomplete-target="#searchResults"
+               placeholder="@T["Search for keywords..."]"
+               autofocus />
+        <button type="submit" class="btn btn-primary" role="button">
+            @T["Search"]
+        </button>
+    </div>
+    <div id="searchResults" class="dropdown-menu col-12" role="menu">
+        <p class="text-center">
+            <i class="fal fa-spinner fa-spin"></i>
+        </p>
+    </div>
 </div>

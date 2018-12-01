@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
+using Plato.Search.Assets;
 using Plato.Search.Models;
 using Plato.Search.Navigation;
 using Plato.Search.Stores;
@@ -44,7 +46,10 @@ namespace Plato.Search
             services.AddScoped<IViewProviderManager<SearchResult>, ViewProviderManager<SearchResult>>();
             services.AddScoped<IViewProvider<SearchResult>, SearchViewProvider>();
             services.AddScoped<INavigationProvider, AdminMenu>();
-            
+
+            // Register assets
+            services.AddScoped<IAssetProvider, AssetProvider>();
+
         }
 
         public override void Configure(
@@ -61,9 +66,9 @@ namespace Plato.Search
             );
 
             routes.MapAreaRoute(
-                name: "PlatoSearchApi",
+                name: "PlatoSearchWebApi",
                 areaName: "Plato.Search",
-                template: "api/search/{controller}/{action}/{id?}",
+                template: "api/{controller}/{action}/{id?}",
                 defaults: new { controller = "Users", action = "Get" }
             );
 

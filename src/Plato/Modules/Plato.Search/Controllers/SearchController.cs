@@ -8,20 +8,21 @@ using Plato.Entities.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Search.Models;
 using Plato.WebApi.Controllers;
 using Plato.WebApi.Models;
 
-namespace Plato.Entities.Controllers
+namespace Plato.Search.Controllers
 {
 
 
-    public class EntityController : BaseWebApiController
+    public class SearchController : BaseWebApiController
     {
 
         private readonly IEntityStore<Entity> _entityStore;
         private readonly IContextFacade _contextFacade;
 
-        public EntityController(
+        public SearchController(
             IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade,
             IEntityStore<Entity> entityStore)
@@ -50,10 +51,10 @@ namespace Plato.Entities.Controllers
                 sort,
                 order);
 
-            IPagedResults<EntityApiResult> results = null;
+            IPagedResults<SearchApiResult> results = null;
             if (userNotifications != null)
             {
-                results = new PagedResults<EntityApiResult>
+                results = new PagedResults<SearchApiResult>
                 {
                     Total = userNotifications.Total
                 };
@@ -82,7 +83,7 @@ namespace Plato.Entities.Controllers
 
                     var url = "";
 
-                    results.Data.Add(new EntityApiResult()
+                    results.Data.Add(new SearchApiResult()
                     {
                         Id = userNotification.Id,
                         User = new UserApiResult()
@@ -113,10 +114,10 @@ namespace Plato.Entities.Controllers
 
             }
 
-            IPagedApiResults<EntityApiResult> output = null;
+            IPagedApiResults<SearchApiResult> output = null;
             if (results != null)
             {
-                output = new PagedApiResults<EntityApiResult>()
+                output = new PagedApiResults<SearchApiResult>()
                 {
                     Page = page,
                     Size = size,

@@ -59,6 +59,7 @@ namespace Plato.Discuss.Mentions.Notifications
                 UserId = context.Notification.To.Id,
                 Title = S["New Mention"].Value,
                 Message = S["You've been mentioned by "].Value + context.Model.CreatedBy.DisplayName,
+                CreatedUserId = context.Model.CreatedUserId,
                 Url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
                 {
                     ["Area"] = "Plato.Discuss",
