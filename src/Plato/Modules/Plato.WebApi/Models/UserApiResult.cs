@@ -19,8 +19,6 @@ namespace Plato.WebApi.Models
         [DataMember(Name = "url")]
         public string Url { get; set; }
 
-        [DataMember(Name = "rank")]
-        public int Rank { get; set; }
 
     }
     

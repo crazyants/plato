@@ -82,7 +82,9 @@ namespace Plato.Entities.Models
         public SimpleUser CreatedBy { get; private set; } = new SimpleUser();
 
         public SimpleUser ModifiedBy { get; private set; } = new SimpleUser();
-   
+
+        public SimpleUser LastReplyBy { get; private set; } = new SimpleUser();
+
         public IEnumerable<IEntityData> Data { get; set; } = new List<EntityData>();
 
         public IDictionary<Type, ISerializable> MetaData => _metaData;
@@ -253,6 +255,21 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("LastReplyUserId"))
                 LastReplyUserId = Convert.ToInt32(dr["LastReplyUserId"]);
+
+            if (LastReplyUserId > 0)
+            {
+                LastReplyBy.Id = LastReplyUserId;
+                if (dr.ColumnIsNotNull("LastReplyUserName"))
+                    LastReplyBy.UserName = Convert.ToString(dr["LastReplyUserName"]);
+                if (dr.ColumnIsNotNull("LastReplyDisplayName"))
+                    LastReplyBy.DisplayName = Convert.ToString(dr["LastReplyDisplayName"]);
+                if (dr.ColumnIsNotNull("LastReplyFirstName"))
+                    LastReplyBy.FirstName = Convert.ToString(dr["LastReplyFirstName"]);
+                if (dr.ColumnIsNotNull("LastReplyLastName"))
+                    LastReplyBy.LastName = Convert.ToString(dr["LastReplyLastName"]);
+                if (dr.ColumnIsNotNull("LastReplyAlias"))
+                    LastReplyBy.Alias = Convert.ToString(dr["LastReplyAlias"]);
+            }
             
             if (dr.ColumnIsNotNull("LastReplyDate"))
                 LastReplyDate = DateTimeOffset.Parse(Convert.ToString((dr["LastReplyDate"])));

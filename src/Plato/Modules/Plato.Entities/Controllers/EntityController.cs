@@ -13,15 +13,14 @@ using Plato.WebApi.Models;
 
 namespace Plato.Entities.Controllers
 {
-
-
-    public class SearchController : BaseWebApiController
+    
+    public class EntityController : BaseWebApiController
     {
 
         private readonly IEntityStore<Entity> _entityStore;
         private readonly IContextFacade _contextFacade;
 
-        public SearchController(
+        public EntityController(
             IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade,
             IEntityStore<Entity> entityStore)
@@ -43,7 +42,7 @@ namespace Plato.Entities.Controllers
         {
 
             // Get notificaitons
-            var userNotifications = await GetEntities(
+            var entities = await GetEntities(
                 page,
                 size,
                 keywords,
@@ -51,61 +50,75 @@ namespace Plato.Entities.Controllers
                 order);
 
             IPagedResults<EntityApiResult> results = null;
-            if (userNotifications != null)
+            if (entities != null)
             {
                 results = new PagedResults<EntityApiResult>
                 {
-                    Total = userNotifications.Total
+                    Total = entities.Total
                 };
 
                 var baseUrl = await _contextFacade.GetBaseUrlAsync();
-                foreach (var userNotification in userNotifications.Data)
+                foreach (var entity in entities.Data)
                 {
 
-                    var userUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    var createdByUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
                         ["Area"] = "Plato.Users",
                         ["Controller"] = "Home",
                         ["Action"] = "Display",
-                        ["Id"] = userNotification.CreatedBy.Id,
-                        ["Alias"] = userNotification.CreatedBy.Alias
+                        ["Id"] = entity.CreatedBy.Id,
+                        ["Alias"] = entity.CreatedBy.Alias
                     });
 
-                    var fromUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    var modifiedByUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
                         ["Area"] = "Plato.Users",
                         ["Controller"] = "Home",
                         ["Action"] = "Display",
-                        ["Id"] = userNotification.CreatedBy.Id,
-                        ["Alias"] = userNotification.CreatedBy.Alias
+                        ["Id"] = entity.ModifiedBy.Id,
+                        ["Alias"] = entity.ModifiedBy.Alias
                     });
 
-                    var url = "";
+                    var url = _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    {
+                        ["Area"] = "Plato.Discuss",
+                        ["Controller"] = "Home",
+                        ["Action"] = "Topic",
+                        ["Id"] = entity.Id,
+                        ["Alias"] = entity.Alias
+                    });
 
                     results.Data.Add(new EntityApiResult()
                     {
-                        Id = userNotification.Id,
-                        User = new UserApiResult()
+                        Id = entity.Id,
+                        CreatedBy = new UserApiResult()
                         {
-                            Id = userNotification.CreatedBy.Id,
-                            DisplayName = userNotification.CreatedBy.DisplayName,
-                            UserName = userNotification.CreatedBy.UserName,
-                            Url = userUrl
+                            Id = entity.CreatedBy.Id,
+                            DisplayName = entity.CreatedBy.DisplayName,
+                            UserName = entity.CreatedBy.UserName,
+                            Url = createdByUrl
                         },
-                        From = new UserApiResult()
+                        ModifiedBy = new UserApiResult()
                         {
-                            Id = userNotification.CreatedBy.Id,
-                            DisplayName = userNotification.CreatedBy.DisplayName,
-                            UserName = userNotification.CreatedBy.UserName,
-                            Url = fromUrl
+                            Id = entity.ModifiedBy.Id,
+                            DisplayName = entity.ModifiedBy.DisplayName,
+                            UserName = entity.ModifiedBy.UserName,
+                            Url = modifiedByUrl
                         },
-                        Title = userNotification.Title,
-                        Message = userNotification.Message,
+                        LastReplyBy = new UserApiResult()
+                        {
+                            Id = entity.ModifiedBy.Id,
+                            DisplayName = entity.ModifiedBy.DisplayName,
+                            UserName = entity.ModifiedBy.UserName,
+                            Url = modifiedByUrl
+                        },
+                        Title = entity.Title,
+                        Message = entity.Message,
                         Url = url,
-                        Date = new FriendlyDate()
+                        CreatedDate = new FriendlyDate()
                         {
-                            Text = userNotification.CreatedDate.ToPrettyDate(),
-                            Value = userNotification.CreatedDate
+                            Text = entity.CreatedDate.ToPrettyDate(),
+                            Value = entity.CreatedDate
                         }
                     });
 

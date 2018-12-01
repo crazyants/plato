@@ -74,8 +74,7 @@ namespace Plato.WebApi.Controllers
                         Id = user.Id,
                         DisplayName = user.DisplayName,
                         UserName = user.UserName,
-                        Url = profileUrl,
-                        Rank = 0
+                        Url = profileUrl
                     });
                 }
             }

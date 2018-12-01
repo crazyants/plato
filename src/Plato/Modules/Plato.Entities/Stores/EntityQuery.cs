@@ -353,6 +353,11 @@ namespace Plato.Entities.Stores
                 .Append("m.FirstName AS ModifiedFirstName,")
                 .Append("m.LastName AS ModifiedLastName,")
                 .Append("m.Alias AS ModifiedAlias, ")
+                .Append("l.UserName AS LastReplyUserName, ")
+                .Append("l.DisplayName AS LastReplyDisplayName,")
+                .Append("l.FirstName AS LastReplyFirstName,")
+                .Append("l.LastName AS LastReplyLastName,")
+                .Append("l.Alias AS LastReplyAlias, ")
                 .Append(BuildFullTextRankSelect()).Append(" AS [Rank], ")
                 .Append("@FullTextMaxRank AS MaxRank");
             
@@ -376,12 +381,17 @@ namespace Plato.Entities.Stores
             // join last modified user
             sb.Append("LEFT OUTER JOIN ")
                 .Append(_usersTableName)
-                .Append(" m ON e.ModifiedUserId = m.Id");
+                .Append(" m ON e.ModifiedUserId = m.Id ");
 
+            // join last reply user
+            sb.Append("LEFT OUTER JOIN ")
+                .Append(_usersTableName)
+                .Append(" l ON e.LastReplyUserId = l.Id");
+
+            // join full text tables
             if (EnableFullText())
             {
-
-     
+                
                 // join ftEntities
                 // ---------------------------
 
@@ -417,7 +427,7 @@ namespace Plato.Entities.Stores
                     .Append(_entityRepliesTableName)
                     .Append(" AS er ON ftEntityReplies.[Key] = er.Id ");
 
-                // join EntityReplies
+                // join EntityReplies on Entities
                 // ---------------------------
 
                 sb.Append("ON er.EntityId = e.Id");

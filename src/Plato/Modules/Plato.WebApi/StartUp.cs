@@ -61,8 +61,8 @@ namespace Plato.WebApi
             
             // Register client options middleware 
             app.UseMiddleware<WebApiClientOptionsMiddleware>();
-
-
+            
+            // Generate csrf token for client api requests
             var keyGenerator = app.ApplicationServices.GetService<IKeyGenerator>();
             var csrfToken = keyGenerator.GenerateKey(o => { o.MaxLength = 75; });
 
@@ -96,8 +96,7 @@ namespace Plato.WebApi
             );
 
         }
-
-
-
+        
     }
+
 }

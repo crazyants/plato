@@ -205,7 +205,7 @@ namespace Plato.Search.ViewComponents
             PagerOptions pagerOptions)
         {
 
-        
+   
             return await _entityStore.QueryAsync()
                 .Take(pagerOptions.Page, pagerOptions.PageSize)
                 .Configure(opts =>

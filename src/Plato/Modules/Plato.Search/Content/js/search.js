@@ -31,7 +31,7 @@ $(function (win, doc, $) {
                     order: "Desc"
                 }
             },
-            itemTemplate: '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{title}<span class="float-right badge badge-primary">{rank}</span></a>',
+            itemTemplate: '<a class="{itemCss}" href="{url}"><span class="avatar avatar-sm mr-2"><span style="background-image: url(/users/photo/{id});"></span></span>{title}{relevance}</a>',
             parseItemTemplate: function (html, result) {
 
                 if (result.id) {
@@ -40,27 +40,36 @@ $(function (win, doc, $) {
                     html = html.replace(/\{id}/g, "0");
                 }
 
+                
                 if (result.title) {
                     html = html.replace(/\{title}/g, result.title);
                 } else {
                     html = html.replace(/\{title}/g, "(no title)");
                 }
-                if (result.userName) {
-                    html = html.replace(/\{userName}/g, result.userName);
+                if (result.excerpt) {
+                    html = html.replace(/\{excerpt}/g, result.userName);
                 } else {
-                    html = html.replace(/\{userName}/g, "(no username)");
+                    html = html.replace(/\{excerpt}/g, "(no excerpt)");
                 }
 
-                if (result.email) {
-                    html = html.replace(/\{email}/g, result.email);
-                } else {
-                    html = html.replace(/\{email}/g, "");
-                }
-                if (result.agent_url) {
+                if (result.url) {
                     html = html.replace(/\{url}/g, result.url);
                 } else {
                     html = html.replace(/\{url}/g, "#");
                 }
+
+                if (result.relevance) {
+                    if (result.relevance > 0) {
+                        html = html.replace(/\{relevance}/g,
+                            '<span class="float-right badge badge-primary">' + result.relevance + '</span>');
+                    } else {
+                        html = html.replace(/\{relevance}/g, "");
+                    }
+                    
+                } else {
+                    html = html.replace(/\{relevance}/g, "");
+                }
+
                 return html;
 
             },

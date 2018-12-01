@@ -499,10 +499,17 @@ namespace Plato.Entities.Handlers
                                     m.DisplayName AS ModifiedDisplayName,
                                     m.FirstName AS ModifiedFirstName,
                                     m.LastName AS ModifiedLastName,
-                                    m.Alias AS ModifiedAlias
+                                    m.Alias AS ModifiedAlias,
+                                    l.UserName AS LastReplyUserName, 
+                                    l.NormalizedUserName AS LastReplyNormalizedUserName,
+                                    l.DisplayName AS LastReplyDisplayName,
+                                    l.FirstName AS LastReplyFirstName,
+                                    l.LastName AS LastReplyLastName,
+                                    l.Alias AS LastReplyAlias
                                 FROM {prefix}_Entities e WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users c ON e.CreatedUserId = c.Id
                                     LEFT OUTER JOIN {prefix}_Users m ON e.ModifiedUserId = m.Id
+                                    LEFT OUTER JOIN {prefix}_Users l ON e.LastReplyUserId = l.Id
                                 WHERE (
                                    e.Id = @Id
                                 )

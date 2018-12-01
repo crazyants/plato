@@ -9,6 +9,7 @@ using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Search.Models;
+using Plato.Search.Stores;
 using Plato.WebApi.Controllers;
 using Plato.WebApi.Models;
 
@@ -21,14 +22,17 @@ namespace Plato.Search.Controllers
 
         private readonly IEntityStore<Entity> _entityStore;
         private readonly IContextFacade _contextFacade;
+        private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
 
         public SearchController(
             IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade,
-            IEntityStore<Entity> entityStore)
+            IEntityStore<Entity> entityStore,
+            ISearchSettingsStore<SearchSettings> searchSettingsStore)
         {
             _contextFacade = contextFacade;
             _entityStore = entityStore;
+            _searchSettingsStore = searchSettingsStore;
         }
 
         #region "Actions"
@@ -44,7 +48,7 @@ namespace Plato.Search.Controllers
         {
 
             // Get notificaitons
-            var userNotifications = await GetEntities(
+            var entities = await GetEntities(
                 page,
                 size,
                 keywords,
@@ -52,62 +56,90 @@ namespace Plato.Search.Controllers
                 order);
 
             IPagedResults<SearchApiResult> results = null;
-            if (userNotifications != null)
+            if (entities != null)
             {
                 results = new PagedResults<SearchApiResult>
                 {
-                    Total = userNotifications.Total
+                    Total = entities.Total
                 };
 
                 var baseUrl = await _contextFacade.GetBaseUrlAsync();
-                foreach (var userNotification in userNotifications.Data)
+                foreach (var entity in entities.Data)
                 {
 
-                    var userUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    var url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
-                        ["Area"] = "Plato.Users",
+                        ["Area"] = "Plato.Discuss",
                         ["Controller"] = "Home",
-                        ["Action"] = "Display",
-                        ["Id"] = userNotification.CreatedBy.Id,
-                        ["Alias"] = userNotification.CreatedBy.Alias
+                        ["Action"] = "Topic",
+                        ["Id"] = entity.Id,
+                        ["Alias"] = entity.Alias
                     });
-
-                    var fromUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
-                    {
-                        ["Area"] = "Plato.Users",
-                        ["Controller"] = "Home",
-                        ["Action"] = "Display",
-                        ["Id"] = userNotification.CreatedBy.Id,
-                        ["Alias"] = userNotification.CreatedBy.Alias
-                    });
-
-                    var url = "";
 
                     results.Data.Add(new SearchApiResult()
                     {
-                        Id = userNotification.Id,
-                        User = new UserApiResult()
+                        Id = entity.Id,
+                        CreatedBy = new UserApiResult()
                         {
-                            Id = userNotification.CreatedBy.Id,
-                            DisplayName = userNotification.CreatedBy.DisplayName,
-                            UserName = userNotification.CreatedBy.UserName,
-                            Url = userUrl
+                            Id = entity.CreatedBy.Id,
+                            DisplayName = entity.CreatedBy.DisplayName,
+                            UserName = entity.CreatedBy.UserName,
+                            Url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                            {
+                                ["Area"] = "Plato.Users",
+                                ["Controller"] = "Home",
+                                ["Action"] = "Display",
+                                ["Id"] = entity.CreatedBy.Id,
+                                ["Alias"] = entity.CreatedBy.Alias
+                            })
                         },
-                        From = new UserApiResult()
+                        ModifiedBy = new UserApiResult()
                         {
-                            Id = userNotification.CreatedBy.Id,
-                            DisplayName = userNotification.CreatedBy.DisplayName,
-                            UserName = userNotification.CreatedBy.UserName,
-                            Url = fromUrl
+                            Id = entity.ModifiedBy.Id,
+                            DisplayName = entity.ModifiedBy.DisplayName,
+                            UserName = entity.ModifiedBy.UserName,
+                            Url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                            {
+                                ["Area"] = "Plato.Users",
+                                ["Controller"] = "Home",
+                                ["Action"] = "Display",
+                                ["Id"] = entity.ModifiedBy.Id,
+                                ["Alias"] = entity.ModifiedBy.Alias
+                            })
                         },
-                        Title = userNotification.Title,
-                        Message = userNotification.Message,
+                        LastReplyBy = new UserApiResult()
+                        {
+                            Id = entity.LastReplyBy.Id,
+                            DisplayName = entity.LastReplyBy.DisplayName,
+                            UserName = entity.LastReplyBy.UserName,
+                            Url = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                            {
+                                ["Area"] = "Plato.Users",
+                                ["Controller"] = "Home",
+                                ["Action"] = "Display",
+                                ["Id"] = entity.LastReplyBy.Id,
+                                ["Alias"] = entity.LastReplyBy.Alias
+                            })
+                        },
+                        Title = entity.Title,
+                        Excerpt = entity.Abstract,
                         Url = url,
-                        Date = new FriendlyDate()
+                        CreatedDate = new FriendlyDate()
                         {
-                            Text = userNotification.CreatedDate.ToPrettyDate(),
-                            Value = userNotification.CreatedDate
-                        }
+                            Text = entity.CreatedDate.ToPrettyDate(),
+                            Value = entity.CreatedDate
+                        },
+                        ModifiedDate = new FriendlyDate()
+                        {
+                            Text = entity.ModifiedDate.ToPrettyDate(),
+                            Value = entity.ModifiedDate
+                        },
+                        LastReplyDate = new FriendlyDate()
+                        {
+                            Text = entity.LastReplyDate.ToPrettyDate(),
+                            Value = entity.LastReplyDate
+                        },
+                        Relevance = entity.Relevance
                     });
 
                 }
@@ -152,9 +184,17 @@ namespace Plato.Search.Controllers
             string sortBy,
             OrderBy sortOrder)
         {
+            var searchSettings = await _searchSettingsStore.GetAsync();
 
             return await _entityStore.QueryAsync()
                 .Take(page, pageSize)
+                .Configure(opts =>
+                {
+                    if (searchSettings != null)
+                    {
+                        opts.SearchType = searchSettings.SearchType;
+                    }
+                })
                 .Select<EntityQueryParams>(q =>
                 {
 

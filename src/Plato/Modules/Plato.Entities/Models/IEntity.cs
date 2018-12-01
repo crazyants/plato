@@ -85,6 +85,8 @@ namespace Plato.Entities.Models
 
         SimpleUser ModifiedBy { get; }
 
+        SimpleUser LastReplyBy { get; }
+        
         Task<EntityUris> GetEntityUrlsAsync();
 
         void PopulateModel(IDataReader dr);
