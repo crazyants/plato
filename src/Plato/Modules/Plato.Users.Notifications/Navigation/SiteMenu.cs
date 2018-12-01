@@ -24,7 +24,7 @@ namespace Plato.Users.Notifications.Navigation
             
             // We need an empty anonymous type to invoke as as ViewComponent
             builder
-                .Add(T["Notifications"], notifications => notifications
+                .Add(T["Notifications"], int.MaxValue, notifications => notifications
                     .View("NotificationMenu", new {})
                 );
 

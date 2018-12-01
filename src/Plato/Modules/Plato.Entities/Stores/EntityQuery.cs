@@ -698,19 +698,7 @@ namespace Plato.Entities.Stores
             return sb.ToString();
 
         }
-        
-        string GetQualifiedColumnName(string columnName)
-        {
-            if (columnName == null)
-            {
-                throw new ArgumentNullException(nameof(columnName));
-            }
-
-            return columnName.IndexOf('.') >= 0
-                ? columnName
-                : "e." + columnName;
-        }
-
+              
         private string BuildOrderBy()
         {
             if (_query.SortColumns.Count == 0) return null;
@@ -718,7 +706,7 @@ namespace Plato.Entities.Stores
             var i = 0;
             foreach (var sortColumn in GetSafeSortColumns())
             {
-                sb.Append(GetQualifiedColumnName(sortColumn.Key));
+                sb.Append(sortColumn.Key);
                 if (sortColumn.Value != OrderBy.Asc)
                     sb.Append(" DESC");
                 if (i < _query.SortColumns.Count - 1)

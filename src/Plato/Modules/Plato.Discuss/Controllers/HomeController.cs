@@ -160,14 +160,14 @@ namespace Plato.Discuss.Controllers
 
         // add new topic
 
-            public async Task<IActionResult> Create(int channel)
+        public async Task<IActionResult> Create(int channel)
         {
             var topic = new Topic();
             if (channel > 0)
             {
                 topic.CategoryId = channel;
             }
-            
+
             // Build breadcrumb
             _breadCrumbManager.Configure(builder =>
             {
@@ -181,14 +181,14 @@ namespace Plato.Discuss.Controllers
                     .LocalNav()
                 );
             });
-            
+
             var result = await _topicViewProvider.ProvideEditAsync(topic, this);
 
             // Return view
             return View(result);
 
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName(nameof(Create))]

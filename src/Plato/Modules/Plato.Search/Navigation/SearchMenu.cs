@@ -29,7 +29,7 @@ namespace Plato.Search.Navigation
                         { "data-feature-id", 0 }
                     })
                     .LocalNav()
-                );
+                    , new List<string>() { "active" });
         }
     }
 

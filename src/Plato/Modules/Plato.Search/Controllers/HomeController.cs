@@ -1,14 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.Extensions.Localization;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Search.Models;
+using Plato.Search.Stores;
 using Plato.Search.ViewModels;
 
 namespace Plato.Search.Controllers
@@ -21,6 +24,7 @@ namespace Plato.Search.Controllers
         private readonly IViewProviderManager<SearchResult> _viewProvider;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
 
         public IHtmlLocalizer T { get; }
 
@@ -31,12 +35,14 @@ namespace Plato.Search.Controllers
             IHtmlLocalizer<HomeController> localizer,
             IContextFacade contextFacade,
             IAlerter alerter, IBreadCrumbManager breadCrumbManager,
-            IViewProviderManager<SearchResult> viewProvider)
+            IViewProviderManager<SearchResult> viewProvider,
+            ISearchSettingsStore<SearchSettings> searchSettingsStore)
         {
 
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
             _viewProvider = viewProvider;
+            _searchSettingsStore = searchSettingsStore;
 
             T = localizer;
             S = stringLocalizer;
@@ -53,18 +59,36 @@ namespace Plato.Search.Controllers
             PagerOptions pager)
         {
 
+            // Get search settings
+            var searchSettings = await _searchSettingsStore.GetAsync();
+
             // default options
             if (opts == null)
             {
                 opts = new SearchIndexOptions();
             }
 
+            // Set default sort column if auto is specified
+            if (opts.Sort == SortBy.Auto)
+            {
+                if (searchSettings != null)
+                {
+                    opts.Sort = searchSettings.SearchType == SearchTypes.Tsql
+                        ? SortBy.LastReply
+                        : SortBy.Rank;
+                }
+                else
+                {
+                    opts.Sort = SortBy.LastReply;
+                }
+            }
+            
             // default pager
             if (pager == null)
             {
                 pager = new PagerOptions();
             }
-
+            
             // Build breadcrumb
             if (string.IsNullOrEmpty(opts.Search))
             {
@@ -93,7 +117,7 @@ namespace Plato.Search.Controllers
             // Get default options
             var defaultViewOptions = new SearchIndexOptions();
             var defaultPagerOptions = new PagerOptions();
-
+            
             // Add non default route data for pagination purposes
             if (opts.Search != defaultViewOptions.Search)
                 this.RouteData.Values.Add("opts.search", opts.Search);

@@ -50,7 +50,10 @@
                         };
                         if (Model.Options.Order != OrderBy.Desc)
                         {
-                            routeValues.Add("opts.order", Model.Options.Order);
+                            if (!routeValues.ContainsKey("opts.order"))
+                            {
+                                routeValues.Add("opts.order", Model.Options.Order);
+                            }
                         }
                         var iconCss = option.Value == Model.Options.Sort ? "fal fa-fw fa-check" : "fal fa-fw";
                         <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">

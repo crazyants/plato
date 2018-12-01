@@ -21,14 +21,14 @@ namespace Plato.Roles.Navigation
                 return;
             }
 
-            builder
-                .Add(T["Articles"], configuration => configuration
-                    .Add(T["Roles 2"], "5", security => security
-                        .Add(T["Roles 3"], "10", installed => installed
-                            .Action("Index", "Admin", "Plato.Roles")
-                            //.Permission(Permissions.ManageRoles)
-                            .LocalNav()
-                        )), new List<string>() { "roles" });
+            //builder
+            //    .Add(T["Articles"], configuration => configuration
+            //        .Add(T["Roles 2"], "5", security => security
+            //            .Add(T["Roles 3"], "10", installed => installed
+            //                .Action("Index", "Admin", "Plato.Roles")
+            //                //.Permission(Permissions.ManageRoles)
+            //                .LocalNav()
+            //            )), new List<string>() { "roles" });
 
         }
     }

@@ -22,7 +22,7 @@ namespace Plato.Search.Navigation
             }
             
             builder
-                .Add(T["Search"], int.MaxValue, installed => installed
+                .Add(T["Search"], 3, search => search
                     .Action("Index", "Home", "Plato.Search")
                     //.Permission(Permissions.ManageRoles)
                         .IconCss("fal fa-search")

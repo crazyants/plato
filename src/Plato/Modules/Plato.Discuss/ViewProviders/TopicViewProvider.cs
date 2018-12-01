@@ -68,8 +68,8 @@ namespace Plato.Discuss.ViewProviders
         {
 
             // Get view data
-            var options = new TopicIndexOptions(context.Controller.RouteData);
-            var pager = new PagerOptions(context.Controller.RouteData);
+            var options = new TopicIndexOptions();
+            var pager = new PagerOptions();
 
             // Get entity
             var topic = await _entityStore.GetByIdAsync(viewModel.Id);

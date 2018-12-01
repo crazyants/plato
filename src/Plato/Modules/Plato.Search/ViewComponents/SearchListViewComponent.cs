@@ -17,7 +17,7 @@ namespace Plato.Search.ViewComponents
     {
 
 
-        private readonly IEnumerable<Filter> _defaultFilters = new List<Filter>()
+        private readonly IList<Filter> _defaultFilters = new List<Filter>()
         {
             new Filter()
             {
@@ -64,7 +64,7 @@ namespace Plato.Search.ViewComponents
             }
         };
 
-        private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
+        private readonly IList<SortColumn> _defaultSortColumns = new List<SortColumn>()
         {
             new SortColumn()
             {
@@ -103,7 +103,7 @@ namespace Plato.Search.ViewComponents
             }
         };
 
-        private readonly IEnumerable<SortOrder> _defaultSortOrder = new List<SortOrder>()
+        private readonly IList<SortOrder> _defaultSortOrder = new List<SortOrder>()
         {
             new SortOrder()
             {
@@ -121,6 +121,8 @@ namespace Plato.Search.ViewComponents
         private readonly IEntityStore<Entity> _entityStore;
         private readonly IFeatureFacade _featureFacade;
         private readonly ISearchSettingsStore<SearchSettings> _searchSettingsStore;
+
+        private SearchSettings _searchSettings;
 
         public SearchListViewComponent(
             IContextFacade contextFacade,
@@ -148,9 +150,28 @@ namespace Plato.Search.ViewComponents
             {
                 pager = new PagerOptions();
             }
+
+            // Get search settings
+            _searchSettings = await _searchSettingsStore.GetAsync();
             
+            // Get view model
             var model = await GetIndexViewModel(options, pager);
 
+            // If full text is enabled add rank to sort options
+            if (_searchSettings != null)
+            {
+                if (_searchSettings.SearchType != SearchTypes.Tsql)
+                {
+                    model.SortColumns.Insert(0, new SortColumn()
+                    {
+                        Text = "Relevency",
+                        Value = SortBy.Rank
+                    });
+                }
+
+            }
+
+            // Return view model
             return View(model);
 
         }
@@ -180,42 +201,31 @@ namespace Plato.Search.ViewComponents
 
 
         async Task<IPagedResults<Entity>> GetEntities(
-            SearchIndexOptions searchIndexOpts,
+            SearchIndexOptions options,
             PagerOptions pagerOptions)
         {
 
-            // Explictly get Plato.Discuss feature, this view component can be 
-            // used in different areas (i.e. Plat.Discuss.Channels) so use explict area name
-            //var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
-
-            // Get search settings
-            var searchSettings =  await _searchSettingsStore.GetAsync();
-            
+        
             return await _entityStore.QueryAsync()
                 .Take(pagerOptions.Page, pagerOptions.PageSize)
-                .Configure(options =>
+                .Configure(opts =>
                 {
-                    if (searchSettings != null)
+                    if (_searchSettings != null)
                     {
-                        options.SearchType = searchSettings.SearchType;
+                        opts.SearchType = _searchSettings.SearchType;
                     }
                 })
                 .Select<EntityQueryParams>(q =>
                 {
-                    
-                    //if (feature != null)
-                    //{
-                    //    q.FeatureId.Equals(feature.Id);
-                    //}
-
-                    if (searchIndexOpts.ChannelId > 0)
+               
+                    if (options.ChannelId > 0)
                     {
-                        q.CategoryId.Equals(searchIndexOpts.ChannelId);
+                        q.CategoryId.Equals(options.ChannelId);
                     }
 
-                    if (!string.IsNullOrEmpty(searchIndexOpts.Search))
+                    if (!string.IsNullOrEmpty(options.Search))
                     {
-                        q.Keywords.Like(searchIndexOpts.Search);
+                        q.Keywords.Like(options.Search);
                     }
                     
                     q.HideSpam.True();
@@ -223,13 +233,11 @@ namespace Plato.Search.ViewComponents
                     q.HideDeleted.True();
                
                 })
-                .OrderBy("Id", OrderBy.Desc)
+                .OrderBy(options.Sort.ToString(), options.Order)
                 .ToList();
         }
         
-
     }
-
-
+    
 }
 

@@ -15,23 +15,17 @@ namespace Plato.Search.ViewModels
 
         public SearchIndexOptions Options { get; set; } = new SearchIndexOptions();
 
-        public IEnumerable<SortColumn> SortColumns { get; set; }
+        public IList<SortColumn> SortColumns { get; set; }
 
-        public IEnumerable<SortOrder> SortOrder { get; set; }
+        public IList<SortOrder> SortOrder { get; set; }
 
-        public IEnumerable<Filter> Filters { get; set; }
-
-
-        public SearchIndexViewModel()
-        {
-
-        }
+        public IList<Filter> Filters { get; set; }
         
-
     }
     
     public class SearchIndexOptions
     {
+
         [DataMember(Name = "search")]
         public string Search { get; set; }
 
@@ -42,7 +36,7 @@ namespace Plato.Search.ViewModels
         public FilterBy Filter { get; set; } = FilterBy.All;
         
         [DataMember(Name = "sort")]
-        public SortBy Sort { get; set; } = SortBy.LastReply;
+        public SortBy Sort { get; set; } = SortBy.Auto;
 
         [DataMember(Name = "order")]
         public OrderBy Order { get; set; } = OrderBy.Desc;
@@ -52,13 +46,16 @@ namespace Plato.Search.ViewModels
  
     public enum SortBy
     {
-        LastReply = 0,
-        Replies = 1,
-        Views = 2,
-        Participants = 3,
-        Reactions = 4,
-        Created = 5,
-        Modified = 6
+        Auto = 0,
+        Rank = 1,
+        LastReply = 2,
+        Replies = 3,
+        Views = 4,
+        Participants = 5,
+        Reactions = 6,
+        Created = 7,
+        Modified = 8,
+       
     }
 
     public enum FilterBy

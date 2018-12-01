@@ -13,7 +13,6 @@ namespace Plato.Discuss.ViewModels
     public class TopicIndexViewModel
     {
 
-
         public IPagedResults<Topic> Results { get; set; }
 
         public PagerOptions Pager { get; set; }
@@ -69,44 +68,32 @@ namespace Plato.Discuss.ViewModels
             Params = new TopicIndexParams();
         }
 
-        public TopicIndexOptions(RouteData routeData)
-        {
-            Search = GetRouteValueOrDefault<string>("opts.earch", routeData, Search);
-            //ChannelId = GetRouteValueOrDefault<int>("opts.channelId", routeData, ChannelId);
-            //LabelId = GetRouteValueOrDefault<int>("opts.labelId", routeData, LabelId);
-            Sort = GetRouteValueOrDefault<SortBy>("opts.sort", routeData, Sort);
-            Order = GetRouteValueOrDefault<OrderBy>("opts.order", routeData, Order);
-        }
+        //public TopicIndexOptions(RouteData routeData)
+        //{
+        //    Search = GetRouteValueOrDefault<string>("opts.earch", routeData, Search);
+        //    //ChannelId = GetRouteValueOrDefault<int>("opts.channelId", routeData, ChannelId);
+        //    //LabelId = GetRouteValueOrDefault<int>("opts.labelId", routeData, LabelId);
+        //    Sort = GetRouteValueOrDefault<SortBy>("opts.sort", routeData, Sort);
+        //    Order = GetRouteValueOrDefault<OrderBy>("opts.order", routeData, Order);
+        //}
+        
 
-        public string BuildSortOrderByHref(RouteData routeData, UrlHelper urlHelper, OrderBy order)
-        {
-            var data = new RouteValueDictionary(routeData.Values);
-            if (order != this.Order)
-            {
-                data.Add("opts.order", order);
-            }
+        //private T GetRouteValueOrDefault<T>(string key, RouteData routeData, T defaultValue)
+        //{
 
-            return urlHelper.RouteUrl(new UrlRouteContext { Values = data });
+        //    if (routeData == null)
+        //    {
+        //        return defaultValue;
+        //    }
 
+        //    var found = routeData.Values.TryGetValue(key, out object value);
+        //    if (found)
+        //    {
+        //        return (T) value;
+        //    }
 
-        }
-
-        private T GetRouteValueOrDefault<T>(string key, RouteData routeData, T defaultValue)
-        {
-
-            if (routeData == null)
-            {
-                return defaultValue;
-            }
-
-            var found = routeData.Values.TryGetValue(key, out object value);
-            if (found)
-            {
-                return (T) value;
-            }
-
-            return defaultValue;
-        }
+        //    return defaultValue;
+        //}
 
     }
 

@@ -22,7 +22,7 @@ namespace Plato.Users.Badges.Navigation
             }
 
             builder
-                .Add(T["Badges"], "1", installed => installed
+                .Add(T["Badges"], 3, badges => badges
                         .Action("Index", "Home", "Plato.Users.Badges")
                         .IconCss("fal fa-trophy")
                         //.Permission(Permissions.ManageRoles)

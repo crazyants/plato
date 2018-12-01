@@ -22,7 +22,7 @@ namespace Plato.Users.Navigation
             }
 
             builder
-                .Add(T["Users"], "1", installed => installed
+                .Add(T["Users"], 4, installed => installed
                         .Action("Index", "Home", "Plato.Users")
                         .IconCss("fal fa-user")
                         //.Permission(Permissions.ManageRoles)
