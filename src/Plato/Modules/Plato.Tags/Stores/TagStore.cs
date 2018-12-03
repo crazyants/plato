@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -102,6 +103,23 @@ namespace Plato.Tags.Stores
 
                 return await _tagsRepository.SelectAsync(args);
 
+            });
+        }
+
+        public async Task<IEnumerable<Tag>> GetByFeatureIdAsync(int featureId)
+        {
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), featureId);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Selecting tags for feature with Id '{0}'",
+                        featureId);
+                }
+
+                return await _tagsRepository.SelectByFeatureIdAsync(featureId);
+                
             });
         }
         

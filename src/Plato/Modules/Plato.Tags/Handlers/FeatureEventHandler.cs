@@ -109,8 +109,7 @@ namespace Plato.Tags.Handlers
                 }
             }
         };
-
-
+        
         private readonly ISchemaBuilder _schemaBuilder;
 
         public FeatureEventHandler(ISchemaBuilder schemaBuilder)

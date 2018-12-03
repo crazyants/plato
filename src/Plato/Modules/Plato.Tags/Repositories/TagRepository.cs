@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -120,6 +121,42 @@ namespace Plato.Tags.Repositories
 
             return success > 0 ? true : false;
         }
+
+        public async Task<IEnumerable<Tag>> SelectByFeatureIdAsync(int featureId)
+        {
+
+            List<Tag> output = null;
+            using (var context = _dbContext)
+            {
+
+                _dbContext.OnException += (sender, args) =>
+                {
+                    if (_logger.IsEnabled(LogLevel.Error))
+                        _logger.LogInformation($"SelectEntitiesPaged failed with the following error {args.Exception.Message}");
+                };
+
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectTagsByFeatureId",
+                    featureId
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new List<Tag>();
+                    while (await reader.ReadAsync())
+                    {
+                        var label = new Tag();
+                        label.PopulateModel(reader);
+                        output.Add(label);
+                    }
+
+                }
+            }
+
+            return output;
+        }
+
 
         #endregion
 
