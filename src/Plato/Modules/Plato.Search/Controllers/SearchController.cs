@@ -184,8 +184,8 @@ namespace Plato.Search.Controllers
             string sortBy,
             OrderBy sortOrder)
         {
-            var searchSettings = await _searchSettingsStore.GetAsync();
 
+            var searchSettings = await _searchSettingsStore.GetAsync();
             return await _entityStore.QueryAsync()
                 .Take(page, pageSize)
                 .Configure(opts =>

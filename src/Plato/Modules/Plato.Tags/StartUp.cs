@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Abstractions.SetUp;
-using Plato.Demo.Handlers;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Tags.Handlers;
+using Plato.Tags.Models;
+using Plato.Tags.Repositories;
 
-namespace Plato.Demo
+namespace Plato.Tags
 {
     public class Startup : StartupBase
     {
@@ -23,11 +25,12 @@ namespace Plato.Demo
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            // Set-up event handler
-            services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-
-            // Feature installation event handler
+            // Feature event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
+            
+            // Repositories
+            services.AddScoped<ITagsRepository<Tag>, TagsRepository>();
+
 
 
         }

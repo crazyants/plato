@@ -27,7 +27,7 @@ namespace Plato.Labels
         public override void ConfigureServices(IServiceCollection services)
         {
             
-            //// Feature event handler
+            // Feature event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Repositories
