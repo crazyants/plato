@@ -2,14 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
-using Plato.Internal.Navigation;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Tags.Handlers;
 using Plato.Tags.Models;
 using Plato.Tags.Repositories;
+using Plato.Tags.Stores;
 
 namespace Plato.Tags
 {
@@ -29,7 +28,12 @@ namespace Plato.Tags
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
             
             // Repositories
-            services.AddScoped<ITagsRepository<Tag>, TagsRepository>();
+            services.AddScoped<ITagRepository<Tag>, TagRepository>();
+            services.AddScoped<IEntityTagsRepository<EntityTag>, EntityTagsRepository>();
+
+            // Stores
+            services.AddScoped<ITagStore<Tag>, TagStore>();
+            services.AddScoped<IEntityTagStore<EntityTag>, EntityTagStore>();
 
 
 

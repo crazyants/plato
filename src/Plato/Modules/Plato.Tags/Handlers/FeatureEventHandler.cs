@@ -96,6 +96,16 @@ namespace Plato.Tags.Handlers
                 {
                     Name = "CreatedDate",
                     DbType = DbType.DateTime
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedUserId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
+                    Name = "ModifiedDate",
+                    DbType = DbType.DateTime
                 }
             }
         };

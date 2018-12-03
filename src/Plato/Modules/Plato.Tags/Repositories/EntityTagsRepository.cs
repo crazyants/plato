@@ -3,40 +3,41 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Labels.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Tags.Models;
 
-namespace Plato.Labels.Repositories
+namespace Plato.Tags.Repositories
 {
 
-    public class EntityLabelRepository : IEntityLabelRepository<EntityLabel>
+    public class EntityTagsRepository : IEntityTagsRepository<EntityTag>
     {
         
         private readonly IDbContext _dbContext;
-        private readonly ILogger<EntityLabelRepository> _logger;
+        private readonly ILogger<EntityTagsRepository> _logger;
 
-        public EntityLabelRepository(
+        public EntityTagsRepository(
             IDbContext dbContext,
-            ILogger<EntityLabelRepository> logger)
+            ILogger<EntityTagsRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
         }
 
+
         #region "Implementation"
 
-        public async Task<EntityLabel> InsertUpdateAsync(EntityLabel model)
+        public async Task<EntityTag> InsertUpdateAsync(EntityTag model)
         {
             if (model == null)
             {
                 throw new ArgumentNullException(nameof(model));
             }
-            
+
             var id = await InsertUpdateInternal(
                 model.Id,
                 model.EntityId,
-                model.LabelId,
+                model.TagId,
                 model.CreatedUserId,
                 model.CreatedDate,
                 model.ModifiedUserId,
@@ -48,48 +49,46 @@ namespace Plato.Labels.Repositories
             }
 
             return null;
-
         }
 
-        public async Task<EntityLabel> SelectByIdAsync(int id)
+        public async Task<EntityTag> SelectByIdAsync(int id)
         {
-            EntityLabel output = null;
+            EntityTag output = null;
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityLabelById", id);
+                    "SelectEntityTagById", id);
                 if ((reader != null) && (reader.HasRows))
                 {
                     await reader.ReadAsync();
-                    output = new EntityLabel();
+                    output = new EntityTag();
                     output.PopulateModel(reader);
                 }
 
             }
 
             return output;
-
         }
 
-        public async Task<IPagedResults<EntityLabel>> SelectAsync(params object[] inputParams)
+        public async Task<IPagedResults<EntityTag>> SelectAsync(params object[] inputParams)
         {
-            PagedResults<EntityLabel> output = null;
+            PagedResults<EntityTag> output = null;
             using (var context = _dbContext)
             {
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityLabelsPaged",
+                    "SelectEntityTagsPaged",
                     inputParams
                 );
 
                 if ((reader != null) && (reader.HasRows))
                 {
-                    output = new PagedResults<EntityLabel>();
+                    output = new PagedResults<EntityTag>();
                     while (await reader.ReadAsync())
                     {
-                        var entity = new EntityLabel();
+                        var entity = new EntityTag();
                         entity.PopulateModel(reader);
                         output.Data.Add(entity);
                     }
@@ -110,7 +109,7 @@ namespace Plato.Labels.Repositories
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Deleting entity Label relationship with id: {id}");
+                _logger.LogInformation($"Deleting entity tag relationship with id: {id}");
             }
 
             var success = 0;
@@ -118,34 +117,33 @@ namespace Plato.Labels.Repositories
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityLabelById", id);
+                    "DeleteEntityTagById", id);
             }
 
             return success > 0 ? true : false;
-
         }
 
-        public async Task<IEnumerable<EntityLabel>> SelectByEntityId(int entityId)
+        public async Task<IEnumerable<EntityTag>> SelectByEntityId(int entityId)
         {
-            List<EntityLabel> output = null;
+            List<EntityTag> output = null;
             using (var context = _dbContext)
             {
 
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
-                    "SelectEntityLabelsByEntityId",
+                    "SelectEntityTagsByEntityId",
                     entityId);
 
                 if ((reader != null) && (reader.HasRows))
                 {
-                    output = new List<EntityLabel>();
+                    output = new List<EntityTag>();
                     while (await reader.ReadAsync())
                     {
-                        var entity = new EntityLabel();
+                        var entity = new EntityTag();
                         entity.PopulateModel(reader);
                         output.Add(entity);
                     }
-                    
+
                 }
             }
 
@@ -156,7 +154,7 @@ namespace Plato.Labels.Repositories
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Deleting all entity label relationships for entity id: {entityId}");
+                _logger.LogInformation($"Deleting all entity tag relationships for entity id: {entityId}");
             }
 
             var success = 0;
@@ -164,17 +162,17 @@ namespace Plato.Labels.Repositories
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityLabelsByEntityId", entityId);
+                    "DeleteEntityTagsByEntityId", entityId);
             }
 
             return success > 0 ? true : false;
         }
 
-        public async Task<bool> DeleteByEntityIdAndLabelId(int entityId, int LabelId)
+        public async Task<bool> DeleteByEntityIdAndTagId(int entityId, int tagId)
         {
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogInformation($"Deleting entity Label relationship with entityId '{entityId}' and labelId '{LabelId}'");
+                _logger.LogInformation($"Deleting entity tag relationship with entityId '{entityId}' and tagId '{tagId}'");
             }
 
             var success = 0;
@@ -182,22 +180,22 @@ namespace Plato.Labels.Repositories
             {
                 success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "DeleteEntityLabelByEntityIdAndLabelId",
+                    "DeleteEntityTagByEntityIdAndTagId",
                     entityId,
-                    LabelId);
+                    tagId);
             }
 
             return success > 0 ? true : false;
         }
-
+        
         #endregion
 
         #region "Private Methods"
-        
+
         async Task<int> InsertUpdateInternal(
             int id,
             int entityId,
-            int labelId,
+            int tagId,
             int createdUserId,
             DateTime? createdDate,
             int modifiedUserId,
@@ -209,10 +207,10 @@ namespace Plato.Labels.Repositories
             {
                 output = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "InsertUpdateEntityLabel",
+                    "InsertUpdateEntityTag",
                     id,
                     entityId,
-                    labelId,
+                    tagId,
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
@@ -223,8 +221,8 @@ namespace Plato.Labels.Repositories
             return output;
 
         }
-        
-        #endregion
 
+        #endregion
     }
+
 }

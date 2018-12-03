@@ -1,32 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Repositories;
 using Plato.Tags.Models;
 
 namespace Plato.Tags.Repositories
 {
-
-    public interface ITagsRepository<T> : IRepository<T> where T : class
+    public class TagRepository : ITagRepository<Tag>
     {
-
-    }
-    
-    public class TagsRepository : ITagsRepository<Tag>
-    {
-
-
+        
         private readonly IDbContext _dbContext;
-        private readonly ILogger<TagsRepository> _logger;
+        private readonly ILogger<TagRepository> _logger;
 
-        public TagsRepository(
+        public TagRepository(
             IDbContext dbContext,
-            ILogger<TagsRepository> logger)
+            ILogger<TagRepository> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -146,10 +136,10 @@ namespace Plato.Tags.Repositories
             DateTimeOffset? createdDate)
         {
 
-            var emailId = 0;
+            var tagId = 0;
             using (var context = _dbContext)
             {
-                emailId = await context.ExecuteScalarAsync<int>(
+                tagId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "InsertUpdateTag",
                     id,
@@ -159,11 +149,11 @@ namespace Plato.Tags.Repositories
                     totalEntities,
                     totalFollows,
                     createdUserId,
-                    createdDate,
+                    createdDate.ToDateIfNull(),
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 
-            return emailId;
+            return tagId;
 
         }
 

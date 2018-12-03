@@ -2,7 +2,7 @@
 
 namespace Plato.Tags.Stores
 {
-    public interface ITagsStore<TModel> : IStore<TModel> where TModel : class
+    public interface ITagStore<TModel> : IStore<TModel> where TModel : class
     {
 
     }

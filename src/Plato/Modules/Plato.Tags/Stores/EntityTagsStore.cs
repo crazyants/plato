@@ -3,28 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Labels.Models;
-using Plato.Labels.Repositories;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Tags.Models;
+using Plato.Tags.Repositories;
 
-namespace Plato.Labels.Stores
+namespace Plato.Tags.Stores
 {
 
-    public class EntityLabelStore : IEntityLabelStore<EntityLabel>
+    public class EntityTagStore : IEntityTagStore<EntityTag>
     {
 
         private const string ByEntityId = "ByEntityId";
-        
-        private readonly IEntityLabelRepository<EntityLabel> _entityLabelRepository;
+
+        private readonly IEntityTagsRepository<EntityTag> _entityLabelRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly ILogger<EntityLabelStore> _logger;
+        private readonly ILogger<EntityTagStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
 
-        public EntityLabelStore(
-            IEntityLabelRepository<EntityLabel> entityLabelRepository,
+        public EntityTagStore(
+            IEntityTagsRepository<EntityTag> entityLabelRepository,
             ICacheManager cacheManager,
-            ILogger<EntityLabelStore> logger,
+            ILogger<EntityTagStore> logger,
             IDbQueryConfiguration dbQuery)
         {
             _entityLabelRepository = entityLabelRepository;
@@ -32,10 +32,10 @@ namespace Plato.Labels.Stores
             _logger = logger;
             _dbQuery = dbQuery;
         }
-        
+
         #region "Implementation"
 
-        public async Task<EntityLabel> CreateAsync(EntityLabel model)
+        public async Task<EntityTag> CreateAsync(EntityTag model)
         {
 
             if (model == null)
@@ -48,16 +48,16 @@ namespace Plato.Labels.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
 
-            if (model.LabelId <= 0)
+            if (model.TagId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.LabelId));
+                throw new ArgumentOutOfRangeException(nameof(model.TagId));
             }
-            
+
             if (model.EntityId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
-            
+
             var result = await _entityLabelRepository.InsertUpdateAsync(model);
             if (result != null)
             {
@@ -67,7 +67,7 @@ namespace Plato.Labels.Stores
             return result;
         }
 
-        public async Task<EntityLabel> UpdateAsync(EntityLabel model)
+        public async Task<EntityTag> UpdateAsync(EntityTag model)
         {
 
             if (model == null)
@@ -80,9 +80,9 @@ namespace Plato.Labels.Stores
                 throw new ArgumentOutOfRangeException(nameof(model.Id));
             }
 
-            if (model.LabelId <= 0)
+            if (model.TagId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(model.LabelId));
+                throw new ArgumentOutOfRangeException(nameof(model.TagId));
             }
 
             if (model.EntityId <= 0)
@@ -99,15 +99,15 @@ namespace Plato.Labels.Stores
             return result;
         }
 
-        public async Task<bool> DeleteAsync(EntityLabel model)
+        public async Task<bool> DeleteAsync(EntityTag model)
         {
             var success = await _entityLabelRepository.DeleteAsync(model.Id);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Deleted Label role for Label '{0}' with id {1}",
-                        model.LabelId, model.Id);
+                    _logger.LogInformation("Deleted entity tag for entityId '{0}' and tagId {1}",
+                        model.EntityId, model.TagId);
                 }
                 _cacheManager.CancelTokens(this.GetType());
             }
@@ -115,20 +115,20 @@ namespace Plato.Labels.Stores
             return success;
         }
 
-        public async Task<EntityLabel> GetByIdAsync(int id)
+        public async Task<EntityTag> GetByIdAsync(int id)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
             return await _cacheManager.GetOrCreateAsync(token,
                 async (cacheEntry) => await _entityLabelRepository.SelectByIdAsync(id));
         }
 
-        public IQuery<EntityLabel> QueryAsync()
+        public IQuery<EntityTag> QueryAsync()
         {
-            var query = new EntityLabelQuery(this);
-            return _dbQuery.ConfigureQuery<EntityLabel>(query); ;
+            var query = new EntityTagQuery(this);
+            return _dbQuery.ConfigureQuery<EntityTag>(query); ;
         }
 
-        public async Task<IPagedResults<EntityLabel>> SelectAsync(params object[] args)
+        public async Task<IPagedResults<EntityTag>> SelectAsync(params object[] args)
         {
             var token = _cacheManager.GetOrCreateToken(this.GetType(), args);
             return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
@@ -145,7 +145,7 @@ namespace Plato.Labels.Stores
             });
         }
 
-        public async Task<IEnumerable<EntityLabel>> GetByEntityId(int entityId)
+        public async Task<IEnumerable<EntityTag>> GetByEntityId(int entityId)
         {
 
             if (entityId <= 0)
@@ -159,7 +159,7 @@ namespace Plato.Labels.Stores
 
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Selecting entity labels for entityId '{0}'.",
+                    _logger.LogInformation("Selecting entity tags for entity Id '{0}'.",
                         entityId);
                 }
 
@@ -181,7 +181,7 @@ namespace Plato.Labels.Stores
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Deleted all labels for entityId '{0}'",
+                    _logger.LogInformation("Deleted all tags for entityId '{0}'",
                         entityId);
                 }
                 _cacheManager.CancelTokens(this.GetType());
@@ -190,16 +190,16 @@ namespace Plato.Labels.Stores
             return success;
         }
 
-        public async Task<bool> DeleteByEntityIdAndLabelId(int entityId, int labelId)
+        public async Task<bool> DeleteByEntityIdAndTagIdId(int entityId, int tagId)
         {
 
-            var success = await _entityLabelRepository.DeleteByEntityIdAndLabelId(entityId, labelId);
+            var success = await _entityLabelRepository.DeleteByEntityIdAndTagId(entityId, tagId);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Deleted entity label for entityId '{0}' and labelId {1}",
-                        entityId, labelId);
+                    _logger.LogInformation("Deleted entity Label for entityId '{0}' and tagId {1}",
+                        entityId, tagId);
                 }
                 _cacheManager.CancelTokens(this.GetType());
             }
@@ -210,4 +210,5 @@ namespace Plato.Labels.Stores
         #endregion
 
     }
+
 }
