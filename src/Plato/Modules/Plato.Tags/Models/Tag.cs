@@ -33,10 +33,7 @@ namespace Plato.Tags.Models
 
             if (dr.ColumnIsNotNull("FeatureId"))
                 FeatureId = Convert.ToInt32(dr["FeatureId"]);
-
-            if (dr.ColumnIsNotNull("EntityId"))
-                FeatureId = Convert.ToInt32(dr["EntityId"]);
-
+            
             if (dr.ColumnIsNotNull("Name"))
                 Name = Convert.ToString(dr["Name"]);
 
@@ -51,8 +48,7 @@ namespace Plato.Tags.Models
 
             if (dr.ColumnIsNotNull("TotalFollows"))
                 TotalFollows = Convert.ToInt32(dr["TotalFollows"]);
-
-
+            
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
@@ -60,6 +56,7 @@ namespace Plato.Tags.Models
                 CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
 
         }
+
     }
 
 }

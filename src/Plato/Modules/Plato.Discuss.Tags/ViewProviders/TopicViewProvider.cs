@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+using System.Collections.Generic;
+using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Layout.ViewProviders;
 using Plato.Discuss.Models;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Entities.Stores;
-using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Features.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
@@ -23,21 +24,26 @@ namespace Plato.Discuss.Tags.ViewProviders
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityTagManager<EntityTag> _entityTagManager;
+        private readonly ITagManager<Tag> _tagManager;
+        private readonly IFeatureFacade _featureFacade;
 
         private readonly HttpRequest _request;
-
-
+        
         public TopicViewProvider(
             ITagStore<Tag> tagStore,
             IEntityStore<Topic> entityStore,
             IEntityTagStore<EntityTag> entityTagStore,
             IHttpContextAccessor httpContextAccessor, 
-            IEntityTagManager<EntityTag> entityTagManager)
+            IEntityTagManager<EntityTag> entityTagManager,
+            ITagManager<Tag> tagManager, 
+            IFeatureFacade featureFacade)
         {
             _tagStore = tagStore;
             _entityStore = entityStore;
             _entityTagStore = entityTagStore;
             _entityTagManager = entityTagManager;
+            _tagManager = tagManager;
+            _featureFacade = featureFacade;
             _request = httpContextAccessor.HttpContext.Request;
         }
 
@@ -151,7 +157,10 @@ namespace Plato.Discuss.Tags.ViewProviders
 
         async Task<List<Tag>> GetTagsToAddAsync()
         {
-     
+            
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+            var featureId = feature?.Id ?? 0;
+
             var tagsToAdd = new List<Tag>();
             foreach (var key in _request.Form.Keys)
             {
@@ -164,8 +173,10 @@ namespace Plato.Discuss.Tags.ViewProviders
                         var items = JsonConvert.DeserializeObject<IEnumerable<TagApiResult>>(value);
                         foreach (var item in items)
                         {
+
                             if (item.Id > 0)
                             {
+                                // We've added a tag that already exists
                                 var tag = await _tagStore.GetByIdAsync(item.Id);
                                 if (tag != null)
                                 {
@@ -174,15 +185,24 @@ namespace Plato.Discuss.Tags.ViewProviders
                             }
                             else
                             {
-                                tagsToAdd.Add(new Tag()
+                                // We've added a new tag
+                                var tagManager = await _tagManager.CreateAsync(new Tag()
                                 {
+                                    FeatureId = featureId,
                                     Name = item.Name
                                 });
+                                if (tagManager.Succeeded)
+                                {
+                                    tagsToAdd.Add(tagManager.Response);
+                                }
                             }
+
                         }
+
                     }
 
                 }
+
             }
 
             return tagsToAdd;

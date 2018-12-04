@@ -10,10 +10,10 @@
 
                 <fieldset>
 
-                    <input asp-for="Tags" type="text" id="tagsTagItStore"/>
+                    <input asp-for="Tags" type="text" name="@Model.HtmlName" id="@Model.HtmlName"/>
                     
                     <div class="dropdown">
-                        <ul class="tagit form-control list-inline" data-provide="tagTagIt" data-tagit-store="#tagsTagItStore">
+                        <ul class="tagit form-control list-inline" data-provide="tagTagIt" data-tagit-store="#@Model.HtmlName">
                             <li class="tagit-list-item-input">
                                 <input type="text"
                                        autocomplete="off"

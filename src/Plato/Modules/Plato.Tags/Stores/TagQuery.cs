@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -172,6 +173,13 @@ namespace Plato.Tags.Stores
                 sb.Append(_query.Params.Id.ToSqlString("t.Id"));
             }
 
+            if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("[Name]", "Keywords"));
+            }
+            
             return sb.ToString();
 
         }
@@ -181,7 +189,7 @@ namespace Plato.Tags.Stores
             if (_query.SortColumns.Count == 0) return null;
             var sb = new StringBuilder();
             var i = 0;
-            foreach (var sortColumn in _query.SortColumns)
+            foreach (var sortColumn in GetSafeSortColumns())
             {
                 sb.Append(sortColumn.Key);
                 if (sortColumn.Value != OrderBy.Asc)
@@ -192,6 +200,51 @@ namespace Plato.Tags.Stores
             }
             return sb.ToString();
         }
+
+        IDictionary<string, OrderBy> GetSafeSortColumns()
+        {
+            var ourput = new Dictionary<string, OrderBy>();
+            foreach (var sortColumn in _query.SortColumns)
+            {
+                var columnName = GetSortColumn(sortColumn.Key);
+                if (!String.IsNullOrEmpty(columnName))
+                {
+                    ourput.Add(columnName, sortColumn.Value);
+                }
+            }
+            return ourput;
+        }
+
+        string GetSortColumn(string columnName)
+        {
+
+            if (String.IsNullOrEmpty(columnName))
+            {
+                return string.Empty;
+            }
+
+            switch (columnName.ToLower())
+            {
+                case "id":
+                    return "Id";
+                case "name":
+                    return "[Name]";
+                case "entities":
+                    return "TotalEntities";
+                case "totalentities":
+                    return "TotalEntities";
+                case "follows":
+                    return "TotalFollows";
+                case "totalfollows":
+                    return "TotalFollows";
+                case "createddate":
+                    return "CreatedDate";
+            }
+
+            return string.Empty;
+
+        }
+
 
         #endregion
     }

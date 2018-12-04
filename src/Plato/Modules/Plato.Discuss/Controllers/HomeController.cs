@@ -158,7 +158,9 @@ namespace Plato.Discuss.Controllers
             return Index(opts, pager);
         }
 
+        // -----------------
         // add new topic
+        // -----------------
 
         public async Task<IActionResult> Create(int channel)
         {

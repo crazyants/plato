@@ -39,7 +39,7 @@ namespace Plato.Tags
             services.AddScoped<IEntityTagStore<EntityTag>, EntityTagStore>();
 
             // Managers
-            //services.AddScoped<ILabelManager<LabelBase>, LabelManager<LabelBase>>();
+            services.AddScoped<ITagManager<Tag>, TagManager>();
             services.AddScoped<IEntityTagManager<EntityTag>, EntityTagManager>();
 
             // Register client assets
