@@ -119,11 +119,11 @@ namespace Plato.Discuss.Labels.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext updater)
         {
 
-            var entityabels = await GetEntityLabelsByEntityIdAsync(topic.Id);
+            var entityLabels = await GetEntityLabelsByEntityIdAsync(topic.Id);
             var viewModel = new EditTopicLabelsViewModel()
             {
                 HtmlName = LabelHtmlName,
-                SelectedLabels = entityabels.Select(l => l.LabelId).ToArray()
+                SelectedLabels = entityLabels.Select(l => l.LabelId).ToArray()
             };
             
             return Views(

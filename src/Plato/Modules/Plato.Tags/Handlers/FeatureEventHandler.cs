@@ -189,7 +189,7 @@ namespace Plato.Tags.Handlers
                     .DropDefaultProcedures(_entityTags)
                     .DropProcedure(new SchemaProcedure("SelectEntityTagsByEntityId"))
                     .DropProcedure(new SchemaProcedure("DeleteEntityTagsByEntityId"))
-                    .DropProcedure(new SchemaProcedure("DeleteEntityTaglByEntityIdAndTagId"))
+                    .DropProcedure(new SchemaProcedure("DeleteEntityTagByEntityIdAndTagId"))
                     .DropProcedure(new SchemaProcedure("SelectEntityTagsPaged"));
                 
                 // Log statements to execute
@@ -274,14 +274,15 @@ namespace Plato.Tags.Handlers
                 .CreateTable(_entityTags)
                 .CreateDefaultProcedures(_entityTags);
 
+            // Overwrite default SelectEntityTagById
             builder.CreateProcedure(
                 new SchemaProcedure(
                         $"SelectEntityTagById",
-                        @" SELECT el.*, l.[Name] AS LabelName
-                                FROM {prefix}_Labels l WITH (nolock) 
-                                    INNER JOIN {prefix}_EntityLabels el ON el.LabelId = l.Id                                    
+                        @" SELECT et.*, t.[Name] AS Tag
+                                FROM {prefix}_Tags t WITH (nolock) 
+                                    INNER JOIN {prefix}_EntityTags et ON et.TagId = t.Id                                    
                                 WHERE (
-                                   el.Id = @Id
+                                   et.Id = @Id
                                 )")
                     .ForTable(_entityTags)
                     .WithParameter(_entityTags.PrimaryKeyColumn));
@@ -289,17 +290,17 @@ namespace Plato.Tags.Handlers
             builder.CreateProcedure(
                 new SchemaProcedure(
                         $"SelectEntityTagsByEntityId",
-                        @" SELECT el.*, l.[Name] AS LabelName
-                                FROM {prefix}_Labels l WITH (nolock) 
-                                    INNER JOIN {prefix}_EntityLabels el ON el.LabelId = l.Id                                    
+                        @" SELECT et.*, t.[Name] AS Tag
+                                FROM {prefix}_Tags t WITH (nolock) 
+                                    INNER JOIN {prefix}_EntityTags et ON et.TagId = t.Id                                    
                                 WHERE (
-                                   el.EntityId = @EntityId
+                                   et.EntityId = @EntityId
                                 )")
                     .ForTable(_entityTags)
                     .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
 
             builder
-                .CreateProcedure(new SchemaProcedure("DeleteEntityLabelsByEntityId", StoredProcedureType.DeleteByKey)
+                .CreateProcedure(new SchemaProcedure("DeleteEntityTagsByEntityId", StoredProcedureType.DeleteByKey)
                     .ForTable(_entityTags)
                     .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
 
@@ -314,13 +315,13 @@ namespace Plato.Tags.Handlers
                         }
                     ));
 
-            builder.CreateProcedure(new SchemaProcedure("SelectEntityLabelsPaged", StoredProcedureType.SelectPaged)
+            builder.CreateProcedure(new SchemaProcedure("SelectEntityTagsPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_entityTags)
                 .WithParameters(new List<SchemaColumn>()
                 {
                     new SchemaColumn()
                     {
-                        Name = "LabelId",
+                        Name = "TagId",
                         DbType = DbType.Int32,
                     },
                     new SchemaColumn()

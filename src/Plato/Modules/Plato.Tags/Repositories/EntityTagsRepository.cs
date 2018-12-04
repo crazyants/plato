@@ -178,7 +178,8 @@ namespace Plato.Tags.Repositories
             var success = 0;
             using (var context = _dbContext)
             {
-                success = await context.ExecuteScalarAsync<int>(
+              
+                   success = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
                     "DeleteEntityTagByEntityIdAndTagId",
                     entityId,

@@ -1,0 +1,38 @@
+﻿@model EditTopicTagsViewModel
+
+<div class="mt-0" id="postReply">
+    <div class="topic-reply-left">
+    </div>
+    <div class="topic-reply-body">
+        
+        <card>
+            <card-body>
+
+                <fieldset>
+
+                    <input asp-for="Tags" type="text" id="tagsTagItStore"/>
+                    
+                    <div class="dropdown">
+                        <ul class="tagit form-control list-inline" data-provide="tagTagIt" data-tagit-store="#tagsTagItStore">
+                            <li class="tagit-list-item-input">
+                                <input type="text"
+                                       autocomplete="off"
+                                       data-autocomplete-target="#tagsDropDown"
+                                       placeholder="@T["Optionally add upto 5 tags..."]">
+                            </li>
+                        </ul>
+                        <div id="tagsDropDown" class="dropdown-menu col-12" role="menu">
+                            <p class="text-center">
+                                <i class="fal fa-spinner fa-spin"></i>
+                            </p>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </card-body>
+        </card>
+
+    </div>
+</div>
+
+

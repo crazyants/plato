@@ -74,8 +74,7 @@ namespace Plato.Tags.Stores
             get => _keywords ?? (_keywords = new WhereString());
             set => _keywords = value;
         }
-
-
+        
     }
 
     #endregion
@@ -94,7 +93,6 @@ namespace Plato.Tags.Stores
         {
             _query = query;
             _tagsTableName = GetTableNameWithPrefix("Tags");
-
         }
 
         #endregion
@@ -124,7 +122,7 @@ namespace Plato.Tags.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(e.Id) FROM ")
+            sb.Append("SELECT COUNT(t.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -134,7 +132,7 @@ namespace Plato.Tags.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("e.*");
+            sb.Append("t.*");
             return sb.ToString();
 
         }
@@ -145,7 +143,7 @@ namespace Plato.Tags.Stores
             var sb = new StringBuilder();
 
             sb.Append(_tagsTableName)
-                .Append(" e ");
+                .Append(" t ");
 
             return sb.ToString();
 
@@ -171,25 +169,13 @@ namespace Plato.Tags.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("e.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("t.Id"));
             }
 
             return sb.ToString();
 
         }
-
-        string GetQualifiedColumnName(string columnName)
-        {
-            if (columnName == null)
-            {
-                throw new ArgumentNullException(nameof(columnName));
-            }
-
-            return columnName.IndexOf('.') >= 0
-                ? columnName
-                : "e." + columnName;
-        }
-
+        
         private string BuildOrderBy()
         {
             if (_query.SortColumns.Count == 0) return null;
@@ -197,7 +183,7 @@ namespace Plato.Tags.Stores
             var i = 0;
             foreach (var sortColumn in _query.SortColumns)
             {
-                sb.Append(GetQualifiedColumnName(sortColumn.Key));
+                sb.Append(sortColumn.Key);
                 if (sortColumn.Value != OrderBy.Asc)
                     sb.Append(" DESC");
                 if (i < _query.SortColumns.Count - 1)

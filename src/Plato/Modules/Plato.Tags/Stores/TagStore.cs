@@ -14,18 +14,18 @@ namespace Plato.Tags.Stores
     public class TagStore : ITagStore<Tag>
     {
 
-        private readonly ITagRepository<Tag> _tagsRepository;
+        private readonly ITagRepository<Tag> _tagRepository;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<TagStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
 
         public TagStore(
-            ITagRepository<Tag> tagsRepository,
+            ITagRepository<Tag> tagRepository,
             ICacheManager cacheManager,
             ILogger<TagStore> logger,
             IDbQueryConfiguration dbQuery)
         {
-            _tagsRepository = tagsRepository;
+            _tagRepository = tagRepository;
             _cacheManager = cacheManager;
             _logger = logger;
             _dbQuery = dbQuery;
@@ -35,7 +35,7 @@ namespace Plato.Tags.Stores
         
         public async Task<Tag> CreateAsync(Tag model)
         {
-            var result = await _tagsRepository.InsertUpdateAsync(model);
+            var result = await _tagRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -47,7 +47,7 @@ namespace Plato.Tags.Stores
         public async Task<Tag> UpdateAsync(Tag model)
         {
 
-            var result = await _tagsRepository.InsertUpdateAsync(model);
+            var result = await _tagRepository.InsertUpdateAsync(model);
             if (result != null)
             {
                 _cacheManager.CancelTokens(this.GetType());
@@ -58,7 +58,7 @@ namespace Plato.Tags.Stores
 
         public async Task<bool> DeleteAsync(Tag model)
         {
-            var success = await _tagsRepository.DeleteAsync(model.Id);
+            var success = await _tagRepository.DeleteAsync(model.Id);
             if (success)
             {
                 if (_logger.IsEnabled(LogLevel.Information))
@@ -80,7 +80,7 @@ namespace Plato.Tags.Stores
             }
 
             var token = _cacheManager.GetOrCreateToken(this.GetType(), id);
-            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _tagsRepository.SelectByIdAsync(id));
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _tagRepository.SelectByIdAsync(id));
         }
         
         public IQuery<Tag> QueryAsync()
@@ -101,7 +101,7 @@ namespace Plato.Tags.Stores
                         token.ToString(), args.Select(a => a));
                 }
 
-                return await _tagsRepository.SelectAsync(args);
+                return await _tagRepository.SelectAsync(args);
 
             });
         }
@@ -118,7 +118,7 @@ namespace Plato.Tags.Stores
                         featureId);
                 }
 
-                return await _tagsRepository.SelectByFeatureIdAsync(featureId);
+                return await _tagRepository.SelectByFeatureIdAsync(featureId);
                 
             });
         }

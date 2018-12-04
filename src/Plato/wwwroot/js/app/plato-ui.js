@@ -884,9 +884,12 @@ $(function (win, doc, $) {
                                     }
 
                                 }
-
-
+                                
                             }
+                        }
+                        
+                        if ($caller.data(dataKey).onKeyDown) {
+                            $caller.data(dataKey).onKeyDown($caller, e);
                         }
                       
                     });
