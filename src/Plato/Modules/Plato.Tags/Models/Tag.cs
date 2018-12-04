@@ -40,9 +40,6 @@ namespace Plato.Tags.Models
             if (dr.ColumnIsNotNull("Alias"))
                 Alias = Convert.ToString(dr["Alias"]);
 
-            if (dr.ColumnIsNotNull("Alias"))
-                Alias = Convert.ToString(dr["Alias"]);
-
             if (dr.ColumnIsNotNull("TotalEntities"))
                 TotalEntities = Convert.ToInt32(dr["TotalEntities"]);
 

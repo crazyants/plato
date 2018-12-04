@@ -22,6 +22,5 @@ namespace Plato.Tags.Models
         DateTimeOffset? CreatedDate { get; set; }
 
     }
-
-
+    
 }
