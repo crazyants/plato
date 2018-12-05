@@ -171,7 +171,7 @@ $(function (win, doc, $) {
                 // init tagIt
                 $caller.tagIt($.extend({
                     itemTemplate:
-                        '<li class="tagit-list-item"><i class="fal text-muted fa-tag"></i> {name} <a href="#" class="tagit-list-item-delete"><i class="fal fa-times"></i></a></li>',
+                        '<li class="tagit-list-item"><div class="btn-group"><div class="btn btn-sm btn-primary"><i class="fal fa-tag"></i> {name}</div><div class="btn btn-sm btn-primary dropdown-toggle-split tagit-list-item-delete"><i class="fal fa-times"></i></div></div></li>',
                     parseItemTemplate: function (html, result) {
 
                         if (result.id) {
@@ -224,9 +224,14 @@ $(function (win, doc, $) {
 
                                 e.preventDefault();
 
+                                var value = $input.val();
+                                if (value === "") {
+                                    return;
+                                }
+
                                 var result = {
                                     id: 0,
-                                    name: $input.val()
+                                    name: value
                                 }
 
                                 // ensure we only add uunque entries

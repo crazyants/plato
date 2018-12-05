@@ -10,8 +10,13 @@
 
                 <fieldset>
 
-                    <input asp-for="Tags" type="text" name="@Model.HtmlName" id="@Model.HtmlName"/>
+                    <input asp-for="Tags" type="hidden" name="@Model.HtmlName" id="@Model.HtmlName"/>
                     
+                    <label asp-for="Tags">
+                        <strong>@T["Tags"]</strong>
+                        <span asp-validation-for="Tags" class="text-danger"></span><br/>
+                        <span class="text-muted">@T["Enter upto 5 tags seperated by commas below..."]</span>
+                    </label>
                     <div class="dropdown">
                         <ul class="tagit form-control list-inline" data-provide="tagTagIt" data-tagit-store="#@Model.HtmlName">
                             <li class="tagit-list-item-input">

@@ -18,6 +18,12 @@ namespace Plato.Tags.Assets
                 {
                     new Asset()
                     {
+                        Url = "/plato.tags/content/css/tags.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+                    new Asset()
+                    {
                         Url = "/plato.tags/content/js/tags.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
@@ -29,7 +35,13 @@ namespace Plato.Tags.Assets
                 {
                     new Asset()
                     {
-                        Url = "/plato.tags/content/js/tags.min.js",
+                        Url = "/plato.tags/content/css/tags.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+                    new Asset()
+                    {
+                        Url = "/plato.tags/content/js/tags.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }
@@ -40,7 +52,13 @@ namespace Plato.Tags.Assets
                 {
                     new Asset()
                     {
-                        Url = "/plato.tags/content/js/tags.min.js",
+                        Url = "/plato.tags/content/css/tags.css",
+                        Type = AssetType.IncludeCss,
+                        Section = AssetSection.Header
+                    },
+                    new Asset()
+                    {
+                        Url = "/plato.tags/content/js/tags.js",
                         Type = AssetType.IncludeJavaScript,
                         Section = AssetSection.Footer
                     }

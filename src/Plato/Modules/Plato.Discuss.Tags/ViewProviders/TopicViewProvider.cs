@@ -66,46 +66,51 @@ namespace Plato.Discuss.Tags.ViewProviders
 
             //var entityTags = await GetEntityTagsByEntityIdAsync(topic.Id);
 
-            var existingTags = new List<Tag>();
+
             // Get all entity tags
-            var entityTags = await _entityTagStore.GetByEntityId(topic.Id);
+
+            var tags = "";
+      
+            var entityTags = await GetEntityTagsByEntityIdAsync(topic.Id);
             if (entityTags != null)
             {
-                var tags = await _tagStore.QueryAsync()
-                
-                    .Select<TagQueryParams>(q => { q.Id.IsIn(entityTags.Select(e => e.TagId).ToArray()); })
+
+                var existingTags = await _tagStore.QueryAsync()
+                    .Select<TagQueryParams>(q =>
+                    {
+                        q.Id.IsIn(entityTags.Select(e => e.TagId).ToArray());
+                    })
                     .OrderBy("Name")
                     .ToList();
 
-            }
-
-
-            var entityTagsList = entityTags.ToList();
-
-       
-            // Serialize tagIt model 
-            var tags = "";
-            
-            var tagsToSerialize = new List<TagApiResult>();
-            foreach (var tag in entityTagsList)
-            {
-                tagsToSerialize.Add(new TagApiResult()
+                List<TagApiResult> tagsToSerialize = null;
+                if (existingTags != null)
                 {
-                    Id = tag.
-                });
+                    tagsToSerialize = new List<TagApiResult>();
+                    foreach (var tag in existingTags.Data)
+                    {
+                        tagsToSerialize.Add(new TagApiResult()
+                        {
+                            Id = tag.Id,
+                            Name = tag.Name
+                        });
+                    }
+                }
+
+                if (tagsToSerialize != null)
+                {
+                    tags = tagsToSerialize.Serialize();
+                }
+            
             }
-
-            tags = tagsToSerialize.Serialize();
-
-
-
-
-
+            
+            //var entityTagsList = entityTags.ToList();
+            
+            
             var viewModel = new EditTopicTagsViewModel()
             {
                 Tags = tags,
-                HtmlName = TagsHtmlName,
-                SelectedTags = entityTagsList.Select(t => t.TagId).ToArray()
+                HtmlName = TagsHtmlName
             };
 
             return Views(
@@ -265,10 +270,10 @@ namespace Plato.Discuss.Tags.ViewProviders
             if (entityId == 0)
             {
                 // return empty collection for new topics
-                return new List<EntityTag>();
+                return null;
             }
             
-            return await _entityTagStore.GetByEntityId(entityId) ?? new List<EntityTag>();
+            return await _entityTagStore.GetByEntityId(entityId);
 
         }
 
