@@ -1,0 +1,29 @@
+﻿@model TagsViewModel
+
+<card>
+    <card-title>
+        <a data-toggle="tooltip" title="@T["All Tags"]" asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
+            <i class="fal fa-ellipsis-h fa-2x"></i>
+        </a>
+        <h6 class="card-title">@T["Tags"]</h6>
+    </card-title>
+    <card-body>
+        
+        @if (Model.Tags != null)
+        {
+            foreach (var tag in Model.Tags)
+            {
+                <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.Id" asp-route-alias="@tag.Alias" class="btn btn-primary my-1">
+                    @tag.Name
+                </a>
+            }
+        }
+        else
+        {
+            @T["No tags"]
+        }
+
+    </card-body>
+</card>
+
+

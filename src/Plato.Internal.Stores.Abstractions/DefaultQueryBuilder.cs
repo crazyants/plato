@@ -81,18 +81,6 @@ namespace Plato.Internal.Stores.Abstractions
             return this;
         }
 
-        public WhereString IsIn(string value, char delimiter = ',')
-        {
-            if (!string.IsNullOrEmpty(_builder.ToString()))
-                _builder.Append(" OR ");
-            Value = value;
-            _builder
-                .Append("{0} IN ( SELECT * FROM plato_fn_ListToTable('")
-                .Append(delimiter)
-                .Append("', @{0})  )");
-            return this;
-        }
-
         public WhereString Like(string value)
         {
             if (!string.IsNullOrEmpty(_builder.ToString()))

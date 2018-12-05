@@ -62,7 +62,8 @@ namespace Plato.Tags.Stores
 
         private WhereInt _id;
         private WhereString _keywords;
-
+        private WhereInt _featureId;
+        private WhereInt _entityId;
 
         public WhereInt Id
         {
@@ -74,6 +75,18 @@ namespace Plato.Tags.Stores
         {
             get => _keywords ?? (_keywords = new WhereString());
             set => _keywords = value;
+        }
+
+        public WhereInt FeatureId
+        {
+            get => _featureId ?? (_featureId = new WhereInt());
+            set => _featureId = value;
+        }
+
+        public WhereInt EntityId
+        {
+            get => _entityId ?? (_entityId = new WhereInt());
+            set => _entityId = value;
         }
         
     }
@@ -87,6 +100,7 @@ namespace Plato.Tags.Stores
         #region "Constructor"
 
         private readonly string _tagsTableName;
+        private readonly string _entityTagsTableName;
 
         private readonly TagQuery _query;
 
@@ -94,6 +108,8 @@ namespace Plato.Tags.Stores
         {
             _query = query;
             _tagsTableName = GetTableNameWithPrefix("Tags");
+            _entityTagsTableName = GetTableNameWithPrefix("EntityTags");
+            ;
         }
 
         #endregion
@@ -173,11 +189,34 @@ namespace Plato.Tags.Stores
                 sb.Append(_query.Params.Id.ToSqlString("t.Id"));
             }
 
+            // FeatureId
+            if (_query.Params.FeatureId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.FeatureId.Operator);
+                sb.Append(_query.Params.FeatureId.ToSqlString("t.FeatureId"));
+            }
+
+            // EntityId
+            if (_query.Params.EntityId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EntityId.Operator);
+                sb.Append(" t.Id IN (SELECT TagId FROM ")
+                    .Append(_entityTagsTableName)
+                    .Append(" WHERE EntityId = ")
+                    .Append(_query.Params.EntityId.Value)
+                    .Append(")");
+            }
+
+            // Keywords
             if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("[Name]", "Keywords"));
+                sb.Append(_query.Params.Keywords.ToSqlString("[Name]", "Keywords"))
+                    .Append(" OR ")
+                    .Append(_query.Params.Keywords.ToSqlString("NameNormalized", "Keywords"));
             }
             
             return sb.ToString();

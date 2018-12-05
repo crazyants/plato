@@ -222,10 +222,7 @@ namespace Plato.Discuss.ViewProviders
                 .Select<EntityReplyQueryParams>(q =>
                 {
                     q.EntityId.Equals(entityId);
-                    if (!string.IsNullOrEmpty(topicIndexOptions.Search))
-                    {
-                        q.Keywords.IsIn(topicIndexOptions.Search);
-                    }
+               
                     q.IsSpam.False();
                     q.IsPrivate.False();
                     q.IsDeleted.False();

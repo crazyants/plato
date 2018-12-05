@@ -12,7 +12,7 @@ namespace Plato.Tags.Stores
 
         Task<TModel> GetByNameAsync(string name);
         
-        Task<TModel> GetByNameNormalizedAsync(string name);
+        Task<TModel> GetByNameNormalizedAsync(string nameNormalized);
 
     }
     

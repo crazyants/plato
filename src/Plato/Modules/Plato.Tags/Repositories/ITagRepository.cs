@@ -12,6 +12,7 @@ namespace Plato.Tags.Repositories
         Task<T> SelectByNameAsync(string name);
 
         Task<T> SelectByNameNormalizedAsync(string nameNormalized);
+
     }
 
 }

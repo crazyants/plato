@@ -50,27 +50,69 @@ namespace Plato.Discuss.Tags.ViewProviders
         }
 
         #region "Implementation"
-
-        public override Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IViewProviderContext context)
+        
+        public override async Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IViewProviderContext context)
         {
-            return Task.FromResult(default(IViewProviderResult));
+
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+            if (feature == null)
+            {
+                return default(IViewProviderResult);
+            }
+
+            // Get tags
+            var labels = await _tagStore.QueryAsync()
+                .Take(1, 10)
+                .Select<TagQueryParams>(q =>
+                {
+                    q.FeatureId.Equals(feature.Id);
+                })
+                .OrderBy("Name", OrderBy.Desc)
+                .ToList();
+
+            return Views(
+                View<TagsViewModel>("Topic.Tags.Display.Sidebar", model =>
+                {
+                    model.Tags = labels?.Data;
+                    return model;
+                }).Zone("sidebar").Order(4)
+            );
+
         }
 
-        public override Task<IViewProviderResult> BuildIndexAsync(Topic viewModel, IViewProviderContext context)
+
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IViewProviderContext context)
         {
-            return Task.FromResult(default(IViewProviderResult));
+            
+            // Get entity tags
+            var labels = await _tagStore.QueryAsync()
+                .Take(1, 10)
+                .Select<TagQueryParams>(q =>
+                {
+                    q.EntityId.Equals(viewModel.Id);
+                })
+                .OrderBy("Name", OrderBy.Desc)
+                .ToList();
+
+            return Views(
+                View<TagsViewModel>("Topic.Tags.Display.Sidebar", model =>
+                {
+                    model.Tags = labels?.Data;
+                    return model;
+                }).Zone("sidebar").Order(4)
+            );
+
         }
 
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext context)
         {
-
-         
-            var tags = "";
+            
+            var tagsJson = "";
             var entityTags = await GetEntityTagsByEntityIdAsync(topic.Id);
             if (entityTags != null)
             {
 
-                var existingTags = await _tagStore.QueryAsync()
+                var tags = await _tagStore.QueryAsync()
                     .Select<TagQueryParams>(q =>
                     {
                         q.Id.IsIn(entityTags.Select(e => e.TagId).ToArray());
@@ -79,10 +121,10 @@ namespace Plato.Discuss.Tags.ViewProviders
                     .ToList();
 
                 List<TagApiResult> tagsToSerialize = null;
-                if (existingTags != null)
+                if (tags != null)
                 {
                     tagsToSerialize = new List<TagApiResult>();
-                    foreach (var tag in existingTags.Data)
+                    foreach (var tag in tags.Data)
                     {
                         tagsToSerialize.Add(new TagApiResult()
                         {
@@ -94,17 +136,14 @@ namespace Plato.Discuss.Tags.ViewProviders
 
                 if (tagsToSerialize != null)
                 {
-                    tags = tagsToSerialize.Serialize();
+                    tagsJson = tagsToSerialize.Serialize();
                 }
             
             }
             
-            //var entityTagsList = entityTags.ToList();
-            
-            
             var viewModel = new EditTopicTagsViewModel()
             {
-                Tags = tags,
+                Tags = tagsJson,
                 HtmlName = TagsHtmlName
             };
 
