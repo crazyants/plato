@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,10 @@ namespace Plato.Tags.Stores
 
     public class TagStore : ITagStore<Tag>
     {
+
+
+        public const string ByName = "ByName";
+        public const string ByNameNormalized = "ByNameNormalized";
 
         private readonly ITagRepository<Tag> _tagRepository;
         private readonly ICacheManager _cacheManager;
@@ -122,7 +127,31 @@ namespace Plato.Tags.Stores
                 
             });
         }
-        
+
+        public async Task<Tag> GetByNameAsync(string name)
+        {
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new InvalidEnumArgumentException(nameof(name));
+            }
+
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByName, name);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _tagRepository.SelectByNameAsync(name));
+
+        }
+
+        public async Task<Tag> GetByNameNormalizedAsync(string nameNormalized)
+        {
+            if (String.IsNullOrEmpty(nameNormalized))
+            {
+                throw new InvalidEnumArgumentException(nameof(nameNormalized));
+            }
+
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByNameNormalized, nameNormalized);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) => await _tagRepository.SelectByNameNormalizedAsync(nameNormalized));
+
+        }
+
         #endregion
 
     }

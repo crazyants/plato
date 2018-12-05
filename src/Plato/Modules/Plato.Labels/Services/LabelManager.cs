@@ -80,10 +80,7 @@ namespace Plato.Labels.Services
             model.Alias = await ParseAlias(model.Name);
           
             // Invoke LabelCreating subscriptions
-            foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
-            {
-                Key = "LabelCreating"
-            }, model))
+            foreach (var handler in _broker.Pub<TLabel>(this,"LabelCreating"))
             {
                 model = await handler.Invoke(new Message<TLabel>(model, this));
             }
@@ -95,10 +92,7 @@ namespace Plato.Labels.Services
             {
            
                 // Invoke LabelCreated subscriptions
-                foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
-                {
-                    Key = "LabelCreated"
-                }, label))
+                foreach (var handler in _broker.Pub<TLabel>(this, "LabelCreated"))
                 {
                     label = await handler.Invoke(new Message<TLabel>(label, this));
                 }
@@ -144,10 +138,7 @@ namespace Plato.Labels.Services
             model.Alias = await ParseAlias(model.Name);
          
             // Invoke LabelUpdating subscriptions
-            foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
-            {
-                Key = "LabelUpdating"
-            }, model))
+            foreach (var handler in _broker.Pub<TLabel>(this, "LabelUpdating"))
             {
                 model = await handler.Invoke(new Message<TLabel>(model, this));
             }
@@ -159,10 +150,7 @@ namespace Plato.Labels.Services
             {
 
                 // Invoke LabelUpdated subscriptions
-                foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
-                {
-                    Key = "LabelUpdated"
-                }, label))
+                foreach (var handler in _broker.Pub<TLabel>(this, "LabelUpdated"))
                 {
                     label = await handler.Invoke(new Message<TLabel>(label, this));
                 }
@@ -185,10 +173,7 @@ namespace Plato.Labels.Services
             }
             
             // Invoke LabelDeleting subscriptions
-            foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
-            {
-                Key = "LabelDeleting"
-            }, model))
+            foreach (var handler in _broker.Pub<TLabel>(this, "LabelDeleting"))
             {
                 model = await handler.Invoke(new Message<TLabel>(model, this));
             }
@@ -210,10 +195,7 @@ namespace Plato.Labels.Services
                 }
                 
                 // Invoke LabelDeleted subscriptions
-                foreach (var handler in _broker.Pub<TLabel>(this, new MessageOptions()
-                {
-                    Key = "LabelDeleted"
-                }, model))
+                foreach (var handler in _broker.Pub<TLabel>(this, "LabelDeleted"))
                 {
                     model = await handler.Invoke(new Message<TLabel>(model, this));
                 }
@@ -375,16 +357,15 @@ namespace Plato.Labels.Services
         private async Task<string> ParseAlias(string input)
         {
 
-            foreach (var handler in _broker.Pub<string>(this, new MessageOptions()
+            var handled = false;
+            foreach (var handler in _broker.Pub<string>(this, "ParseLabelAlias"))
             {
-                Key = "ParseLabelAlias"
-            }, input))
-            {
-                return await handler.Invoke(new Message<string>(input, this));
+                handled = true;
+                input =  await handler.Invoke(new Message<string>(input, this));
             }
 
             // No subscription found, use default alias creator
-            return _aliasCreator.Create(input);
+            return handled ? input :  _aliasCreator.Create(input);
 
         }
 

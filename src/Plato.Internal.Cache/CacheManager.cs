@@ -41,6 +41,7 @@ namespace Plato.Internal.Cache
                 // Create ICacheEntry
                 var entry = _memoryCache.CreateEntry(key);
              
+                // Invoke our func delegate
                 obj = (object) await factory(entry);
 
                 // Set expiration tokens

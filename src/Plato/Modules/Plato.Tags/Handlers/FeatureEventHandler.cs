@@ -38,6 +38,12 @@ namespace Plato.Tags.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "NameNormalized",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "Alias",
                         Length = "255",
                         DbType = DbType.String
@@ -181,7 +187,9 @@ namespace Plato.Tags.Handlers
                     .DropTable(_tags)
                     .DropDefaultProcedures(_tags)
                     .DropProcedure(new SchemaProcedure("SelectTagsPaged", StoredProcedureType.SelectByKey))
-                    .DropProcedure(new SchemaProcedure("SelectTagsByFeatureId", StoredProcedureType.SelectByKey));
+                    .DropProcedure(new SchemaProcedure("SelectTagsByFeatureId", StoredProcedureType.SelectByKey))
+                    .DropProcedure(new SchemaProcedure("SelectTagByName", StoredProcedureType.SelectByKey))
+                    .DropProcedure(new SchemaProcedure("SelectTagByNameNormalized", StoredProcedureType.SelectByKey));
                 
                 // drop entity tags
                 builder
@@ -252,7 +260,18 @@ namespace Plato.Tags.Handlers
                 .CreateProcedure(new SchemaProcedure("SelectTagsByFeatureId", StoredProcedureType.SelectByKey)
                     .ForTable(_tags)
                     .WithParameter(new SchemaColumn() {Name = "FeatureId", DbType = DbType.Int32}));
-            
+
+            builder
+                .CreateProcedure(new SchemaProcedure("SelectTagByName", StoredProcedureType.SelectByKey)
+                    .ForTable(_tags)
+                    .WithParameter(new SchemaColumn() { Name = "[Name]", DbType = DbType.String, Length = "255" }));
+
+            builder
+                .CreateProcedure(new SchemaProcedure("SelectTagByNameNormalized", StoredProcedureType.SelectByKey)
+                    .ForTable(_tags)
+                    .WithParameter(new SchemaColumn() { Name = "NameNormalized", DbType = DbType.String, Length = "255" }));
+
+
             builder.CreateProcedure(new SchemaProcedure("SelectTagsPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_tags)
                 .WithParameters(new List<SchemaColumn>()

@@ -36,6 +36,7 @@ namespace Plato.Tags.Repositories
                 tag.Id,
                 tag.FeatureId,
                 tag.Name,
+                tag.NameNormalized,
                 tag.Alias,
                 tag.TotalEntities,
                 tag.TotalFollows,
@@ -157,6 +158,51 @@ namespace Plato.Tags.Repositories
             return output;
         }
 
+        public async Task<Tag> SelectByNameAsync(string name)
+        {
+            Tag tag = null;
+            using (var context = _dbContext)
+            {
+
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectTagByName",
+                    name
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    await reader.ReadAsync();
+                    tag = new Tag();
+                    tag.PopulateModel(reader);
+                }
+            }
+
+            return tag;
+        }
+
+        public async Task<Tag> SelectByNameNormalizedAsync(string nameNormalized)
+        {
+            Tag tag = null;
+            using (var context = _dbContext)
+            {
+
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectTagByNameNormalized",
+                    nameNormalized
+                );
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    await reader.ReadAsync();
+                    tag = new Tag();
+                    tag.PopulateModel(reader);
+                }
+            }
+
+            return tag;
+        }
 
         #endregion
 
@@ -166,6 +212,7 @@ namespace Plato.Tags.Repositories
             int id,
             int featureId,
             string name,
+            string nameNormalized,
             string alias,
             int totalEntities,
             int totalFollows,
@@ -182,6 +229,7 @@ namespace Plato.Tags.Repositories
                     id,
                     featureId,
                     name.ToEmptyIfNull().TrimToSize(255),
+                    nameNormalized.ToEmptyIfNull().TrimToSize(255),
                     alias.ToEmptyIfNull().TrimToSize(255),
                     totalEntities,
                     totalFollows,

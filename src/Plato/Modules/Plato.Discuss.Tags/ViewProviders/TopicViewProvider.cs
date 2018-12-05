@@ -64,13 +64,8 @@ namespace Plato.Discuss.Tags.ViewProviders
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext context)
         {
 
-            //var entityTags = await GetEntityTagsByEntityIdAsync(topic.Id);
-
-
-            // Get all entity tags
-
+         
             var tags = "";
-      
             var entityTags = await GetEntityTagsByEntityIdAsync(topic.Id);
             if (entityTags != null)
             {
@@ -146,21 +141,25 @@ namespace Plato.Discuss.Tags.ViewProviders
                 var tagsToRemove = new List<EntityTag>();
 
                 // Iterate over existing tags
-                foreach (var entityTag in await GetEntityTagsByEntityIdAsync(topic.Id))
+                var existingTags = await GetEntityTagsByEntityIdAsync(topic.Id);
+                if (existingTags != null)
                 {
-                    // Is our existing tag in our list of new tags to add
-                    var existingTag = tagsToAdd.FirstOrDefault(t => t.Id == entityTag.TagId);
-                    if (existingTag != null)
+                    foreach (var entityTag in existingTags)
                     {
-                        tagsToAdd.Remove(existingTag);
-                    }
-                    else
-                    {
-                        // Entry does NOT exist in tags so add ensure it's removed
-                        tagsToRemove.Add(entityTag);
+                        // Is our existing tag in our list of tags to add
+                        var existingTag = tagsToAdd.FirstOrDefault(t => t.Id == entityTag.TagId);
+                        if (existingTag != null)
+                        {
+                            tagsToAdd.Remove(existingTag);
+                        }
+                        else
+                        {
+                            // Entry no longer exist in tags so ensure it's removed
+                            tagsToRemove.Add(entityTag);
+                        }
                     }
                 }
-
+            
                 // Remove entity tags
                 foreach (var entityTag in tagsToRemove)
                 {
@@ -203,10 +202,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
         async Task<List<Tag>> GetTagsToAddAsync(Topic topic)
         {
-            
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
-            var featureId = feature?.Id ?? 0;
-
+         
             var tagsToAdd = new List<Tag>();
             foreach (var key in _request.Form.Keys)
             {
@@ -220,9 +216,9 @@ namespace Plato.Discuss.Tags.ViewProviders
                         foreach (var item in items)
                         {
 
+                            // Get existing tag if we have an identity
                             if (item.Id > 0)
                             {
-                                // We've added a tag that already exists
                                 var tag = await _tagStore.GetByIdAsync(item.Id);
                                 if (tag != null)
                                 {
@@ -231,23 +227,20 @@ namespace Plato.Discuss.Tags.ViewProviders
                             }
                             else
                             {
-                                // We've added a new tag
-                                var tagManagerResult = await _tagManager.CreateAsync(new Tag()
+
+                                // Does the tag already exist by name?
+                                var existingTag = await _tagStore.GetByNameNormalizedAsync(item.Name.Normalize());
+                                if (existingTag != null)
                                 {
-                                    FeatureId = featureId,
-                                    Name = item.Name
-                                });
-                                if (tagManagerResult.Succeeded)
+                                    tagsToAdd.Add(existingTag);
+                                }
+                                else
                                 {
-                                    // Add entity tag relationship
-                                    var entityTagManagerResult = await _entityTagManager.CreateAsync(new EntityTag()
+                                    // Create tag
+                                    var newTag = await CreateTag(item.Name, topic.Id);
+                                    if (newTag != null)
                                     {
-                                        EntityId = topic.Id,
-                                        TagId = tagManagerResult.Response.Id
-                                    });
-                                    if (entityTagManagerResult.Succeeded)
-                                    {
-                                        tagsToAdd.Add(tagManagerResult.Response);
+                                        tagsToAdd.Add(newTag);
                                     }
                                 }
                             }
@@ -261,8 +254,41 @@ namespace Plato.Discuss.Tags.ViewProviders
             }
 
             return tagsToAdd;
+
         }
 
+        async Task<Tag> CreateTag(string name, int entityId)
+        {
+
+            // Get feature for tag
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
+      
+            // Create tag
+            var tagManagerResult = await _tagManager.CreateAsync(new Tag()
+            {
+                FeatureId = feature?.Id ?? 0,
+                Name = name
+            });
+            
+            if (tagManagerResult.Succeeded)
+            {
+                // Add entity tag relationship
+                var entityTagManagerResult = await _entityTagManager.CreateAsync(new EntityTag()
+                {
+                    EntityId = entityId,
+                    TagId = tagManagerResult.Response.Id
+                });
+
+                // Relationship added successfully return new tag
+                if (entityTagManagerResult.Succeeded)
+                {
+                    return tagManagerResult.Response;
+                }
+            }
+
+            return null;
+
+        }
 
         async Task<IEnumerable<EntityTag>> GetEntityTagsByEntityIdAsync(int entityId)
         {

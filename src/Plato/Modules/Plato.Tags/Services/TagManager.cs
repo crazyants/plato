@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Text.Abstractions;
 using Plato.Tags.Models;
 using Plato.Tags.Stores;
 
@@ -15,16 +16,21 @@ namespace Plato.Tags.Services
         private readonly ITagStore<Tag> _tagStore;
         private readonly IContextFacade _contextFacade;
         private readonly IBroker _broker;
+        private readonly IAliasCreator _aliasCreator;
 
         public TagManager(
             ITagStore<Tag> tagStore,
             IContextFacade contextFacade,
-            IBroker broker)
+            IBroker broker,
+            IAliasCreator aliasCreator)
         {
             _tagStore = tagStore;
             _broker = broker;
+            _aliasCreator = aliasCreator;
             _contextFacade = contextFacade;
         }
+
+        #region "Implementation"
 
         public async Task<ICommandResult<Tag>> CreateAsync(Tag model)
         {
@@ -52,11 +58,13 @@ namespace Plato.Tags.Services
         
             // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            // Update
+            
+            model.NameNormalized = model.Name.Normalize();
+            model.Alias = await ParseAlias(model.Name);
             model.CreatedUserId = user?.Id ?? 0;
             model.CreatedDate = DateTime.UtcNow;
-          
+            
+
             // Invoke TagCreating subscriptions
             foreach (var handler in _broker.Pub<Tag>(this, "TagCreating"))
             {
@@ -113,6 +121,8 @@ namespace Plato.Tags.Services
             // Get authenticated user
             var user = await _contextFacade.GetAuthenticatedUserAsync();
 
+            model.NameNormalized = model.Name.Normalize();
+            model.Alias = await ParseAlias(model.Name);
 
             // Invoke TagUpdating subscriptions
             foreach (var handler in _broker.Pub<Tag>(this, "TagUpdating"))
@@ -176,6 +186,27 @@ namespace Plato.Tags.Services
             return result.Failed(new CommandError("An unknown error occurred whilst attempting to delete the entity / tag relationship"));
             
         }
+
+        #endregion
+
+        #region "Private Methods"
+
+        private async Task<string> ParseAlias(string input)
+        {
+
+            var handled = false;
+            foreach (var handler in _broker.Pub<string>(this, "ParseTagAlias"))
+            {
+                handled = true;
+                input = await handler.Invoke(new Message<string>(input, this));
+            }
+
+            // No subscription found, use default alias creator
+            return handled ? input : _aliasCreator.Create(input);
+
+        }
+
+        #endregion
 
     }
 

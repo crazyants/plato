@@ -10,6 +10,10 @@ namespace Plato.Tags.Stores
 
         Task<IEnumerable<TModel>> GetByFeatureIdAsync(int featureId);
 
+        Task<TModel> GetByNameAsync(string name);
+        
+        Task<TModel> GetByNameNormalizedAsync(string name);
+
     }
     
 }
