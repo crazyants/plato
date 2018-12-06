@@ -60,6 +60,11 @@ namespace Plato.Tags.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "LastSeenDate",
+                        DbType = DbType.DateTimeOffset
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "CreatedUserId",
                         DbType = DbType.Int32
                     },
@@ -68,6 +73,7 @@ namespace Plato.Tags.Handlers
                         Name = "CreatedDate",
                         DbType = DbType.DateTimeOffset
                     }
+                    
                 }
         };
         

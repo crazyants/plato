@@ -23,10 +23,12 @@ namespace Plato.Tags.Models
 
         public int TotalFollows { get; set; }
 
+        public DateTimeOffset? LastSeenDate { get; set; }
+        
         public int CreatedUserId { get; set; }
 
         public DateTimeOffset? CreatedDate { get; set; }
-
+        
         public void PopulateModel(IDataReader dr)
         {
 
@@ -50,13 +52,17 @@ namespace Plato.Tags.Models
 
             if (dr.ColumnIsNotNull("TotalFollows"))
                 TotalFollows = Convert.ToInt32(dr["TotalFollows"]);
-            
+
+            if (dr.ColumnIsNotNull("LastSeenDate"))
+                LastSeenDate = DateTimeOffset.Parse(Convert.ToString((dr["LastSeenDate"])));
+
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
                 CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
-
+            
+            
         }
 
     }

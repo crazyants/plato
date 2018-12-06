@@ -6,12 +6,14 @@ using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Messaging.Abstractions;
 using Plato.Tags.Assets;
 using Plato.Tags.Handlers;
 using Plato.Tags.Models;
 using Plato.Tags.Repositories;
 using Plato.Tags.Services;
 using Plato.Tags.Stores;
+using Plato.Tags.Subscribers;
 
 namespace Plato.Tags
 {
@@ -44,6 +46,9 @@ namespace Plato.Tags
 
             // Register client assets
             services.AddScoped<IAssetProvider, AssetProvider>();
+
+            // Register broker subscribers
+            services.AddScoped<IBrokerSubscriber, EntityTagSubscriber>();
 
 
         }

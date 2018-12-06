@@ -19,9 +19,12 @@ namespace Plato.Tags.Models
 
         int TotalFollows { get; set; }
 
+        DateTimeOffset? LastSeenDate { get; set; }
+
         int CreatedUserId { get; set; }
 
         DateTimeOffset? CreatedDate { get; set; }
+
 
     }
     

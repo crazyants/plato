@@ -61,19 +61,19 @@ namespace Plato.Discuss.Tags.ViewProviders
             }
 
             // Get tags
-            var labels = await _tagStore.QueryAsync()
+            var tags = await _tagStore.QueryAsync()
                 .Take(1, 10)
                 .Select<TagQueryParams>(q =>
                 {
                     q.FeatureId.Equals(feature.Id);
                 })
-                .OrderBy("Name", OrderBy.Desc)
+                .OrderBy("TotalEntities", OrderBy.Desc)
                 .ToList();
 
             return Views(
                 View<TagsViewModel>("Topic.Tags.Display.Sidebar", model =>
                 {
-                    model.Tags = labels?.Data;
+                    model.Tags = tags?.Data;
                     return model;
                 }).Zone("sidebar").Order(4)
             );
@@ -85,19 +85,19 @@ namespace Plato.Discuss.Tags.ViewProviders
         {
             
             // Get entity tags
-            var labels = await _tagStore.QueryAsync()
+            var tags = await _tagStore.QueryAsync()
                 .Take(1, 10)
                 .Select<TagQueryParams>(q =>
                 {
                     q.EntityId.Equals(viewModel.Id);
                 })
-                .OrderBy("Name", OrderBy.Desc)
+                .OrderBy("TotalEntities", OrderBy.Desc)
                 .ToList();
 
             return Views(
                 View<TagsViewModel>("Topic.Tags.Display.Sidebar", model =>
                 {
-                    model.Tags = labels?.Data;
+                    model.Tags = tags?.Data;
                     return model;
                 }).Zone("sidebar").Order(4)
             );

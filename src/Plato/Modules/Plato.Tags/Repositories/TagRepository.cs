@@ -40,6 +40,7 @@ namespace Plato.Tags.Repositories
                 tag.Alias,
                 tag.TotalEntities,
                 tag.TotalFollows,
+                tag.LastSeenDate,
                 tag.CreatedUserId,
                 tag.CreatedDate);
 
@@ -216,6 +217,7 @@ namespace Plato.Tags.Repositories
             string alias,
             int totalEntities,
             int totalFollows,
+            DateTimeOffset? lastSeenDate,
             int createdUserId,
             DateTimeOffset? createdDate)
         {
@@ -233,6 +235,7 @@ namespace Plato.Tags.Repositories
                     alias.ToEmptyIfNull().TrimToSize(255),
                     totalEntities,
                     totalFollows,
+                    lastSeenDate.ToDateIfNull(),
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
@@ -241,8 +244,7 @@ namespace Plato.Tags.Repositories
             return tagId;
 
         }
-
-
+        
         #endregion
 
     }

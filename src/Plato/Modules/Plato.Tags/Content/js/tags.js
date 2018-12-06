@@ -198,7 +198,7 @@ $(function (win, doc, $) {
                         onItemClick: function($input, result, e) {
 
                             e.preventDefault();
-
+                            
                             // ensure we only add uunque entries
                             var index = methods.getIndex($caller, result);
 
@@ -207,7 +207,7 @@ $(function (win, doc, $) {
                                 tagit.items.push(result);
                                 $caller.tagIt("update")
                                     .tagIt("focus")
-                                    .tagIt("select")
+                                    .tagIt("reset")
                                     .tagIt("show");
                             } else {
                                 $caller.tagIt({
@@ -224,11 +224,29 @@ $(function (win, doc, $) {
 
                                 e.preventDefault();
 
+                                // Add dropdown selection if available
+                                var target = $input.data("autocompleteTarget") ||
+                                    $caller.data("autoComplete").target;
+                                if (target !== null) {
+                                    var $target = $(target);
+                                    if ($target) {
+                                        var itemCss = $target.data("pagedList").itemCss;
+                                        // Do we have a selection within our dropdown
+                                        $target.find("a." + itemCss).each(function () {
+                                            if ($(this).hasClass("active")) {
+                                                return;
+                                            }
+                                        });
+                                    }
+                                }
+
+                                // Ensure we have a value to add
                                 var value = $input.val();
                                 if (value === "") {
                                     return;
                                 }
 
+                                // Json to represent value
                                 var result = {
                                     id: 0,
                                     name: value

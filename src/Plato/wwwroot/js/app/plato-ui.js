@@ -615,7 +615,7 @@ $(function (win, doc, $) {
             noResultsIcon: null, // optional icon to display above noResultsText
             itemSelection: {
                 enable: true,
-                index: 0,
+                index: -1,
                 css: "active"
             }
         };
@@ -692,6 +692,25 @@ $(function (win, doc, $) {
                 return config;
 
             },
+            getItemIndex: function ($caller) {
+                var index = -1,
+                    selector = null,
+                    selection = $caller.data(dataKey).itemSelection,
+                    itemCss = $caller.data(dataKey).itemCss;
+                if (selection) {
+                    selector = "a." + itemCss;
+                    if (selection.enable === false) {
+                        return index;
+                    }
+                    $caller.find(selector).each(function() {
+                        if ($(this).hasClass(selection.css)) {
+                            return index;
+                        }
+                        index++;
+                    });
+                }
+                return index;
+            },
             setItemIndex: function($caller) {
                 var selection = $caller.data(dataKey).itemSelection,
                     itemCss = $caller.data(dataKey).itemCss;
@@ -700,17 +719,25 @@ $(function (win, doc, $) {
                     if (selection.enable === false) {
                         return;
                     }
-                    var index = selection.index,
-                        selector = "a." + itemCss,
+                    var index = selection.index;
+                    var selector = "a." + itemCss,
                         tag = selection.tag,
                         css = selection.css,
                         $el = $caller.find(selector + ":eq(" + index + ")");
-                    $caller.find(selector).each(function () {
-                        $(this).removeClass(css);
-                    });
-                    if ($el.length > 0) {
-                        $el.addClass(css);
+
+                    if (index < 0) {
+                        $caller.find(selector).each(function () {
+                            $(this).removeClass(css);
+                        });
+                    } else {
+                        $caller.find(selector).each(function () {
+                            $(this).removeClass(css);
+                        });
+                        if ($el.length > 0) {
+                            $el.addClass(css);
+                        }
                     }
+                  
                 }
             },
             setPageIndex: function ($caller, pageIndex) {
@@ -802,7 +829,7 @@ $(function (win, doc, $) {
 
                 if (methodName) {
                     if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
-                        this[methodName].apply(this, [$caller]);
+                        return this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
                     }
@@ -874,14 +901,15 @@ $(function (win, doc, $) {
                                             }
                                             break;
                                     }
-                                    if (newIndex >= 0) {
-                                        $target.pagedList({
+                                   
+                                    $target.pagedList({
                                             itemSelection: $.extend(itemSelection,
                                                 {
                                                     index: newIndex
                                                 })
-                                        }, "setItemIndex");
-                                    }
+                                        },
+                                        "setItemIndex");
+                                  
 
                                 }
                                 
@@ -1090,7 +1118,7 @@ $(function (win, doc, $) {
                         } else {
                             $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
                         }
-                        methods.init($(this), methodName);
+                        return methods.init($(this), methodName);
                     });
                 } else {
                     // $().autoComplete()
