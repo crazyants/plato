@@ -14,11 +14,16 @@
             foreach (var tag in Model.Tags)
             {
                 var css = Model.SelectedTagId == tag.Id
-                    ? "btn btn-sm btn-primary my-1"
-                    : "btn btn-sm btn-secondary my-1";
-                <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.Id" asp-route-alias="@tag.Alias" class="@css">
-                    @tag.Name
-                </a>
+                    ? "btn btn-sm label font-weight-bold active"
+                    : "btn btn-sm label font-weight-bold";
+        <div class="btn-group my-1">
+            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.Id" asp-route-alias="@tag.Alias" class="@css">
+                @tag.Name
+            </a>
+            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.Id" asp-route-alias="@tag.Alias" class="@css">
+                <span>x</span>@tag.TotalEntities.ToPrettyInt()
+            </a>
+        </div>
             }
         }
         else

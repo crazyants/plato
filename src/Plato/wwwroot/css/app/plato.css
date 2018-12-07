@@ -1065,6 +1065,7 @@
 
 /* default labels */
 .label { background-color: #E4ECF5; color: #007bff; }
+.label.active { background: #007bff; color: #fff; }
 
 /* ------------------------- */
 /* badges */
