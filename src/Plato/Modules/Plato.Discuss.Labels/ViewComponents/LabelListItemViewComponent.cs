@@ -14,12 +14,9 @@ namespace Plato.Discuss.Labels.ViewComponents
  
     public class LabelListItemViewComponent : ViewComponent
     {
-
-        private readonly IContextFacade _contextFacade;
-
-        public LabelListItemViewComponent(IContextFacade contextFacade, IEntityStore<Topic> entityStore)
+        
+        public LabelListItemViewComponent()
         {
-            _contextFacade = contextFacade;
         }
 
         public Task<IViewComponentResult> InvokeAsync(

@@ -26,10 +26,9 @@ namespace Plato.Discuss.Tags.ViewProviders
 
 
         private readonly IEntityReplyStore<Reply> _replyStore;
-        private readonly IPostManager<Reply> _replyManager;
         private readonly IEntityTagStore<EntityTag> _entityTagStore;
-        private readonly ITagStore<Tag> _tagStore;
         private readonly IEntityTagManager<EntityTag> _entityTagManager;
+        private readonly ITagStore<Tag> _tagStore;
         private readonly ITagManager<Tag> _tagManager;
         private readonly IFeatureFacade _featureFacade;
 
@@ -40,7 +39,7 @@ namespace Plato.Discuss.Tags.ViewProviders
         public ReplyViewProvider(
             IHttpContextAccessor httpContextAccessor,
             IStringLocalizer<Discuss.ViewProviders.TopicViewProvider> stringLocalize,
-            IPostManager<Reply> replyManager,
+            
             IEntityReplyStore<Reply> replyStore,
             IEntityTagStore<EntityTag> entityTagStore, 
             ITagStore<Tag> tagStore, 
@@ -48,8 +47,6 @@ namespace Plato.Discuss.Tags.ViewProviders
             ITagManager<Tag> tagManager,
             IFeatureFacade featureFacade)
         {
-
-            _replyManager = replyManager;
             _replyStore = replyStore;
             _entityTagStore = entityTagStore;
             _tagStore = tagStore;
@@ -238,7 +235,6 @@ namespace Plato.Discuss.Tags.ViewProviders
                             }
                             else
                             {
-
                                 // Does the tag already exist by name?
                                 var existingTag = await _tagStore.GetByNameNormalizedAsync(item.Name.Normalize());
                                 if (existingTag != null)
@@ -248,7 +244,7 @@ namespace Plato.Discuss.Tags.ViewProviders
                                 else
                                 {
                                     // Create tag
-                                    var newTag = await CreateTag(item.Name, reply.Id);
+                                    var newTag = await CreateTag(item.Name, reply.EntityId, reply.Id);
                                     if (newTag != null)
                                     {
                                         tagsToAdd.Add(newTag);
@@ -268,7 +264,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
         }
 
-        async Task<Tag> CreateTag(string name, int entityId)
+        async Task<Tag> CreateTag(string name, int entityId, int replyId)
         {
 
             // Get feature for tag
@@ -283,18 +279,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
             if (tagManagerResult.Succeeded)
             {
-                // Add entity tag relationship
-                var entityTagManagerResult = await _entityTagManager.CreateAsync(new EntityTag()
-                {
-                    EntityId = entityId,
-                    TagId = tagManagerResult.Response.Id
-                });
-
-                // Relationship added successfully return new tag
-                if (entityTagManagerResult.Succeeded)
-                {
-                    return tagManagerResult.Response;
-                }
+                return tagManagerResult.Response;
             }
 
             return null;

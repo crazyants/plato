@@ -47,7 +47,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Tag label, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Tag tag, IViewProviderContext context)
         {
 
             // Get topic index view model from context
@@ -76,12 +76,12 @@ namespace Plato.Discuss.Tags.ViewProviders
                 .ToList();
 
             return Views(
-                View<Tag>("Home.Display.Header", model => label).Zone("header").Order(1),
-                View<Tag>("Home.Display.Tools", model => label).Zone("tools").Order(1),
+                View<Tag>("Home.Display.Header", model => tag).Zone("header").Order(1),
+                View<Tag>("Home.Display.Tools", model => tag).Zone("tools").Order(1),
                 View<TagDisplayViewModel>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
                 View<TagsViewModel>("Topic.Tags.Index.Sidebar", model =>
                 {
-                    model.SelectedTagId = label?.Id ?? 0;
+                    model.SelectedTagId = tag?.Id ?? 0;
                     model.Tags = tags?.Data;
                     return model;
                 }).Zone("sidebar").Order(1)

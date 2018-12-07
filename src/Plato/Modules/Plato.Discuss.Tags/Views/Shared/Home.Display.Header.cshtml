@@ -7,6 +7,11 @@
 
 <h4>@Model.Name</h4>
 <div class="text-muted">
-    @T["Tag appears "] @Model.TotalEntities @T[text], @T["Last seen "] @Model.LastSeenDate.ToPrettyDate().
+    @T["Tag appears "] @Model.TotalEntities @T[text]
+    @if (Model.LastSeenDate != null)
+    {
+        @T["Last seen: "]
+        <date utc="@Model.LastSeenDate"/>
+    }
 </div>
 <hr />

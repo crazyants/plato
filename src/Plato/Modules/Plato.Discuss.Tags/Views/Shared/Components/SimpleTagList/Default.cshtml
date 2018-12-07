@@ -5,12 +5,9 @@
     foreach (var tag in Model.Tags)
     {
         <div class="btn-group my-1">
-            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.TagId" asp-route-alias="@tag.Alias" class="btn btn-sm btn-primary">
-                 @tag.Name
+            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.TagId" asp-route-alias="@tag.Alias" class="btn btn-sm btn-secondary">
+                @tag.Name <span>x</span>@tag.TotalEntities.ToPrettyInt()
             </a>
-            <div class="btn btn-sm btn-outline-primary">
-                @tag.TotalEntities.ToPrettyInt()
-            </div>
         </div>
     }
 }

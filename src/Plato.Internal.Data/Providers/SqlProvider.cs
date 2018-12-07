@@ -54,9 +54,12 @@ namespace Plato.Internal.Data.Providers
                 throw new Exception("The connection string has not been initialized.");
             }
 
-            _dbConnection = new SqlConnection {ConnectionString = _connectionString};
+            _dbConnection = new SqlConnection
+            {
+                ConnectionString = _connectionString
+            };
             await _dbConnection.OpenAsync();
-
+            
         }
 
         public void Close()

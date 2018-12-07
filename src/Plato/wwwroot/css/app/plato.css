@@ -292,7 +292,7 @@
 .avatar-link { display: inline-block; }
 
 .avatar-group { display: inline-block; margin-left: 9px; }
-.avatar-group .avatar { margin-left: -9px; }
+.avatar-group .avatar { width: 24px; height: 24px; display: inline-block;}
 
 .avatar {
     width: 40px;
@@ -309,6 +309,7 @@
 }
 
 .avatar > span {
+    border-radius: 2px;
     width: 100%;
     height: 100%;
     display: block;
@@ -317,15 +318,8 @@
     background-position: center;
 }
 
-.avatar-sm {
-    width: 28px;
-    height: 28px;
-}
-
-.avatar-lg {
-    width: 110px;
-    height: 110px;
-}
+.avatar-sm { width: 28px; height: 28px; }
+.avatar-lg { width: 110px; height: 110px; }
 
 .avatar-round { border-radius: 50%; }
 

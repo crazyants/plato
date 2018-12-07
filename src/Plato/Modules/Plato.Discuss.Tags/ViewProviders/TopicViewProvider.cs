@@ -62,7 +62,7 @@ namespace Plato.Discuss.Tags.ViewProviders
 
             // Get tags
             var tags = await _tagStore.QueryAsync()
-                .Take(1, 10)
+                .Take(1, 20)
                 .Select<TagQueryParams>(q =>
                 {
                     q.FeatureId.Equals(feature.Id);
@@ -91,17 +91,18 @@ namespace Plato.Discuss.Tags.ViewProviders
             
             var tagsJson = "";
             var entityTags = await GetEntityTagsByEntityIdAsync(topic.Id);
-            if (entityTags != null)
+
+            // Exclude replies
+            var entityTagList = entityTags?.Where(t => t.EntityReplyId == 0).ToList();
+            
+            if (entityTagList?.Count > 0)
             {
-
-                // Exclude replies
-                entityTags = entityTags.Where(t => t.EntityReplyId == 0);
-
+              
                 // Get entity tags
                 var tags = await _tagStore.QueryAsync()
                     .Select<TagQueryParams>(q =>
                     {
-                        q.Id.IsIn(entityTags.Select(e => e.TagId).ToArray());
+                        q.Id.IsIn(entityTagList.Select(e => e.TagId).ToArray());
                     })
                     .OrderBy("Name")
                     .ToList();
@@ -297,18 +298,7 @@ namespace Plato.Discuss.Tags.ViewProviders
             
             if (tagManagerResult.Succeeded)
             {
-                // Add entity tag relationship
-                var entityTagManagerResult = await _entityTagManager.CreateAsync(new EntityTag()
-                {
-                    EntityId = entityId,
-                    TagId = tagManagerResult.Response.Id
-                });
-
-                // Relationship added successfully return new tag
-                if (entityTagManagerResult.Succeeded)
-                {
-                    return tagManagerResult.Response;
-                }
+                return tagManagerResult.Response;
             }
 
             return null;

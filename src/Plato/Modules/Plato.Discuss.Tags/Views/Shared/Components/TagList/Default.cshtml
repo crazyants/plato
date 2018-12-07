@@ -2,7 +2,7 @@
 @using Plato.Internal.Data.Abstractions
 @model TagIndexViewModel
 
-<card>
+<card class="card card-body-flush">
     <card-title>
         <h6 class="card-title d-inline">@T["Tags"]</h6>
         <ul class="nav navbar p-0 float-right">
@@ -53,17 +53,23 @@
     <card-body>
         @if (Model.Results != null)
         {
-            foreach (var tag in Model.Results.Data)
-            {
-                <div class="btn-group my-1">
-                    <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.Id" asp-route-alias="@tag.Alias" class="btn btn-sm btn-primary">
-                        @tag.Name
-                    </a>
-                    <div class="btn btn-sm btn-outline-primary bg-white">
-                        <span>x</span>@tag.TotalEntities.ToPrettyInt()
-                    </div>
+            <div class="list-group list-group-flush list-group-hover">
+                <div class="row no-gutters">
+                    @foreach (var tag in Model.Results.Data)
+                    {
+                       
+                        @await DisplayAsync(new View("TagListItem", new
+                        {
+                            model = new TagListItemViewModel()
+                            {
+                                Tag = tag,
+                                EnableEdit = Model.Options.EnableEdit
+                            }
+                        }))
+
+                    }
                 </div>
-            }
+            </div>
         }
         else
         {
