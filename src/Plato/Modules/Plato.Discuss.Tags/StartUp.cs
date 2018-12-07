@@ -36,7 +36,9 @@ namespace Plato.Discuss.Tags
             // Discuss view providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
-          
+            services.AddScoped<IViewProviderManager<Reply>, ViewProviderManager<Reply>>();
+            services.AddScoped<IViewProvider<Reply>, ReplyViewProvider>();
+
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, TagBadges>();
 
