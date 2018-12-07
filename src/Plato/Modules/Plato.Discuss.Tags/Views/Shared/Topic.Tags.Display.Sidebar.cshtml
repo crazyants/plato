@@ -2,7 +2,7 @@
 
 <card>
     <card-title>
-        <a data-toggle="tooltip" title="@T["All Tags"]" asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
+        <a data-toggle="tooltip" title="@T["All Tags"]" asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Index" class="float-right text-muted">
             <i class="fal fa-ellipsis-h fa-2x"></i>
         </a>
         <h6 class="card-title">@T["Top Tags"]</h6>
@@ -13,9 +13,14 @@
         {
             foreach (var tag in Model.Tags)
             {
-                <a data-toggle="tooltip" title="@T["Last used"] @tag.LastSeenDate.ToPrettyDate() " asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.Id" asp-route-alias="@tag.Alias" class="btn btn-outline-primary my-1">
-                    @tag.Name
-                </a>
+                <div class="btn-group my-1">
+                    <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.Id" asp-route-alias="@tag.Alias" class="btn btn-sm btn-primary">
+                        @tag.Name
+                    </a>
+                    <div class="btn btn-sm btn-outline-primary bg-white">
+                        <span>x</span>@tag.TotalEntities.ToPrettyInt()
+                    </div>
+                </div>
             }
         }
         else

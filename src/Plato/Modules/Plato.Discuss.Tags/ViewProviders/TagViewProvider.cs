@@ -1,28 +1,28 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Plato.Discuss.Labels.Models;
-using Plato.Discuss.Labels.ViewModels;
+using Plato.Discuss.Tags.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
-using Plato.Labels.Stores;
 using Plato.Discuss.ViewModels;
 using Plato.Internal.Data.Abstractions;
+using Plato.Tags.Models;
+using Plato.Tags.Stores;
 
-namespace Plato.Discuss.Labels.ViewProviders
+namespace Plato.Discuss.Tags.ViewProviders
 {
-    public class LabelViewProvider : BaseViewProvider<Label>
+    public class TagViewProvider : BaseViewProvider<Tag>
     {
 
-        private readonly ILabelStore<Label> _labelStore;
+        private readonly ITagStore<Tag> _labelStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
         private readonly IActionContextAccessor _actionContextAccessor;
 
-        public LabelViewProvider(
-            ILabelStore<Label> labelStore,
+        public TagViewProvider(
+            ITagStore<Tag> labelStore,
             IContextFacade contextFacade,
             IFeatureFacade featureFacade,
             IActionContextAccessor actionContextAccessor)
@@ -35,27 +35,27 @@ namespace Plato.Discuss.Labels.ViewProviders
         
         #region "Imlementation"
         
-        public override Task<IViewProviderResult> BuildIndexAsync(Label label, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildIndexAsync(Tag label, IViewProviderContext context)
         {
 
             // Get index view model from context
-            var viewModel = context.Controller.HttpContext.Items[typeof(LabelIndexViewModel)] as LabelIndexViewModel;
+            var viewModel = context.Controller.HttpContext.Items[typeof(TagIndexViewModel)] as TagIndexViewModel;
          
             return Task.FromResult(Views(
-                View<LabelIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header").Order(1),
-                View<LabelIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools").Order(1),
-                View<LabelIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content").Order(1)
+                View<TagIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header").Order(1),
+                View<TagIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools").Order(1),
+                View<TagIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content").Order(1)
             ));
 
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Label label, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Tag label, IViewProviderContext context)
         {
 
             // Get topic index view model from context
             var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
 
-            var indexViewModel = new LabelDisplayViewModel
+            var indexViewModel = new TagDisplayViewModel
             {
                 TopicIndexOpts = viewModel?.Options,
                 PagerOpts = viewModel?.Pager
@@ -72,7 +72,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             var labels = await _labelStore.QueryAsync()
                 .Take(1, 10)
-                .Select<LabelQueryParams>(q =>
+                .Select<TagQueryParams>(q =>
                 {
                     q.FeatureId.Equals(feature.Id);
                 })
@@ -80,13 +80,13 @@ namespace Plato.Discuss.Labels.ViewProviders
                 .ToList();
 
             return Views(
-                View<Label>("Home.Display.Header", model => label).Zone("header").Order(1),
-                View<Label>("Home.Display.Tools", model => label).Zone("tools").Order(1),
-                View<LabelDisplayViewModel>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
-                View<LabelsViewModel>("Topic.Labels.Index.Sidebar", model =>
+                View<Tag>("Home.Display.Header", model => label).Zone("header").Order(1),
+                View<Tag>("Home.Display.Tools", model => label).Zone("tools").Order(1),
+                View<TagDisplayViewModel>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
+                View<TagsViewModel>("Topic.Labels.Index.Sidebar", model =>
                 {
                     model.SelectedLabelId = label?.Id ?? 0;
-                    model.Labels = labels?.Data;
+                    model.Tags = labels?.Data;
                     return model;
                 }).Zone("sidebar").Order(1)
             );
@@ -94,12 +94,12 @@ namespace Plato.Discuss.Labels.ViewProviders
 
         }
 
-        public override Task<IViewProviderResult> BuildEditAsync(Label model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildEditAsync(Tag model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }
 
-        public override Task<IViewProviderResult> BuildUpdateAsync(Label model, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildUpdateAsync(Tag model, IViewProviderContext context)
         {
             return Task.FromResult(default(IViewProviderResult));
         }

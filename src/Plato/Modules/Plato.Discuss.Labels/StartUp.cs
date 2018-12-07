@@ -53,7 +53,7 @@ namespace Plato.Discuss.Labels
 
             // Labels view providers
             services.AddScoped<IViewProviderManager<Label>, ViewProviderManager<Label>>();
-            services.AddScoped<IViewProvider<Label>, LabelsViewProvider>();
+            services.AddScoped<IViewProvider<Label>, LabelViewProvider>();
             
         }
 

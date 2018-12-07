@@ -81,27 +81,9 @@ namespace Plato.Discuss.Tags.ViewProviders
         }
 
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IViewProviderContext context)
+        public override Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IViewProviderContext context)
         {
-            
-            // Get entity tags
-            var tags = await _tagStore.QueryAsync()
-                .Take(1, 10)
-                .Select<TagQueryParams>(q =>
-                {
-                    q.EntityId.Equals(viewModel.Id);
-                })
-                .OrderBy("TotalEntities", OrderBy.Desc)
-                .ToList();
-
-            return Views(
-                View<TagsViewModel>("Topic.Tags.Display.Sidebar", model =>
-                {
-                    model.Tags = tags?.Data;
-                    return model;
-                }).Zone("sidebar").Order(4)
-            );
-
+            return Task.FromResult(default(IViewProviderResult));
         }
 
         public override async Task<IViewProviderResult> BuildEditAsync(Topic topic, IViewProviderContext context)
@@ -112,6 +94,10 @@ namespace Plato.Discuss.Tags.ViewProviders
             if (entityTags != null)
             {
 
+                // Exclude replies
+                entityTags = entityTags.Where(t => t.EntityReplyId == 0);
+
+                // Get entity tags
                 var tags = await _tagStore.QueryAsync()
                     .Select<TagQueryParams>(q =>
                     {

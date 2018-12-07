@@ -1,17 +1,81 @@
-﻿@model TagListViewModel
+﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Internal.Data.Abstractions
+@model TagIndexViewModel
 
-<h6>@T["Tags"]</h6>
+<card>
+    <card-title>
+        <h6 class="card-title d-inline">@T["Tags"]</h6>
+        <ul class="nav navbar p-0 float-right">
+            <li class="nav-item dropdown">
+                <a class="nav-link text-muted dropdown-toggle" href="#" id="sortByDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @T["Sort By"]
+                </a>
+                <div class="dropdown-arrow"></div>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sortByDropdown">
+                    @foreach (var option in Model.SortColumns)
+                    {
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["opts.sort"] = option.Value
+                        };
+                        if (Model.Options.Order != OrderBy.Desc)
+                        {
+                            if (!routeValues.ContainsKey("opts.order"))
+                            {
+                                routeValues.Add("opts.order", Model.Options.Order);
+                            }
 
-@if (Model.Tags != null)
-{
-    foreach (var tag in Model.Tags)
-    {
-        <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.Id" asp-route-alias="@tag.Alias" class="btn btn-primary my-1">
-            @tag.Name
-        </a>
-    }
-}
-else
-{
-    @T["No tags"]
-}
+                        }
+                        var iconCss = option.Value == Model.Options.Sort ? "fal fa-fw fa-check" : "fal fa-fw";
+                        <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                            <i class="@iconCss"></i>
+                            @T[option.Text]
+                        </a>
+                    }
+                    <div class="dropdown-divider"></div>
+                    @foreach (var option in Model.SortOrder)
+                    {
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["opts.sort"] = Model.Options.Sort,
+                            ["opts.order"] = option.Value
+                        };
+                        var iconCss = option.Value == Model.Options.Order ? "fal fa-fw fa-check" : "fal fa-fw";
+                        <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                            <i class="@iconCss"></i>
+                            @T[option.Text]
+                        </a>
+                    }
+                </div>
+            </li>
+        </ul>
+    </card-title>
+    <card-body>
+        @if (Model.Results != null)
+        {
+            foreach (var tag in Model.Results.Data)
+            {
+                <div class="btn-group my-1">
+                    <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.Id" asp-route-alias="@tag.Alias" class="btn btn-sm btn-primary">
+                        @tag.Name
+                    </a>
+                    <div class="btn btn-sm btn-outline-primary bg-white">
+                        <span>x</span>@tag.TotalEntities.ToPrettyInt()
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    @T["No tags found"]
+                </li>
+            </ul>
+        }
+    </card-body>
+</card>
+
+<div class="mt-4 mb-4">
+    <pager model="@Model.Pager"></pager>
+</div>

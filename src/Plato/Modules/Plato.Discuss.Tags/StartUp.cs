@@ -14,6 +14,7 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Navigation;
 using Plato.Internal.Tasks.Abstractions;
+using Plato.Tags.Models;
 
 namespace Plato.Discuss.Tags
 {
@@ -32,12 +33,19 @@ namespace Plato.Discuss.Tags
 
             // Register navigation provider
             services.AddScoped<INavigationProvider, TopicExtraMenu>();
+            services.AddScoped<INavigationProvider, TopicReplyExtraMenu>();
+            services.AddScoped<INavigationProvider, SiteMenu>();
 
             // Discuss view providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
             services.AddScoped<IViewProviderManager<Reply>, ViewProviderManager<Reply>>();
             services.AddScoped<IViewProvider<Reply>, ReplyViewProvider>();
+
+            // Tag view providers
+            services.AddScoped<IViewProviderManager<Tag>, ViewProviderManager<Tag>>();
+            services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
+            
 
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, TagBadges>();

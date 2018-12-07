@@ -24,7 +24,7 @@ namespace Plato.Discuss.Tags.Navigation
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
-            if (!String.Equals(name, "topicreply-footer", StringComparison.OrdinalIgnoreCase))
+            if (!String.Equals(name, "topicreply-extra", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -36,7 +36,7 @@ namespace Plato.Discuss.Tags.Navigation
             // Add reaction list to topic reply footer navigation
             builder
                 .Add(T["Tags"], react => react
-                    .View("TagList", new
+                    .View("SimpleTagList", new
                     {
                         topic,
                         reply

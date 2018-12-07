@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
-using Plato.Discuss.Labels.Models;
+using Plato.Tags.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
 
-namespace Plato.Discuss.Labels.ViewModels
+namespace Plato.Discuss.Tags.ViewModels
 {
-    public class LabelIndexViewModel
+    public class TagIndexViewModel
     {
-        
-        public IPagedResults<Label> Results { get; set; }
 
-        public LabelIndexOptions Options { get; set; }
+  
+        public IPagedResults<Tag> Results { get; set; }
+
+        public TagIndexOptions Options { get; set; }
 
         public PagerOptions Pager { get; set; }
 
@@ -20,7 +21,7 @@ namespace Plato.Discuss.Labels.ViewModels
         
     }
 
-    public class LabelIndexOptions
+    public class TagIndexOptions
     {
         public string Search { get; set; }
 

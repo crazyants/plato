@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Labels.Models;
 using Plato.Discuss.Labels.ViewModels;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Navigation;
 using Plato.Labels.Stores;
@@ -13,6 +15,54 @@ namespace Plato.Discuss.Labels.ViewComponents
     public class LabelListViewComponent : ViewComponent
     {
 
+        private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
+        {
+            new SortColumn()
+            {
+                Text = "Popular",
+                Value = SortBy.Entities
+            },
+            new SortColumn()
+            {
+                Text = "Follows",
+                Value =  SortBy.Follows
+            },
+            new SortColumn()
+            {
+                Text = "Views",
+                Value = SortBy.Views
+            },
+            new SortColumn()
+            {
+                Text = "First Use",
+                Value =  SortBy.Created
+            },
+            new SortColumn()
+            {
+                Text = "Last Use",
+                Value = SortBy.LastEntity
+            },
+            new SortColumn()
+            {
+                Text = "Modified",
+                Value = SortBy.Modified
+            }
+        };
+
+        private readonly IEnumerable<SortOrder> _defaultSortOrder = new List<SortOrder>()
+        {
+            new SortOrder()
+            {
+                Text = "Descending",
+                Value = OrderBy.Desc
+            },
+            new SortOrder()
+            {
+                Text = "Ascending",
+                Value = OrderBy.Asc
+            },
+        };
+        
         private readonly ILabelStore<Label> _labelStore;
         private readonly IFeatureFacade _featureFacade;
 
@@ -52,7 +102,7 @@ namespace Plato.Discuss.Labels.ViewComponents
 
             var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
 
-            var labels = await _labelStore.QueryAsync()
+            var results = await _labelStore.QueryAsync()
                 .Take(pager.Page, pager.PageSize)
                 .Select<LabelQueryParams>(q =>
                 {
@@ -69,10 +119,19 @@ namespace Plato.Discuss.Labels.ViewComponents
                 .OrderBy(options.Sort.ToString(), options.Order)
                 .ToList();
             
-            return new LabelIndexViewModel(
-                labels,
-                options,
-                pager);
+            // Set total on pager
+            pager.SetTotal(results?.Total ?? 0);
+
+            // Return view model
+            return new LabelIndexViewModel
+            {
+                SortColumns = _defaultSortColumns,
+                SortOrder = _defaultSortOrder,
+                Results = results,
+                Options = options,
+                Pager = pager
+            };
+
         }
 
     }
