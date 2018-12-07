@@ -6,16 +6,28 @@ namespace Plato.Badges.Models
     public class Badge : IBadge
     {
 
+        private string _name;
+
+        private string _description;
+
         // Globally multiply the default thredhold and bounus points for all badges
         // Default value should be set to 1 increase the accomodate requirements
-        public static readonly int ThresholdMultiplier = 1;
-        public static readonly int PointsMultiplier = 1;
+        public static readonly int ThresholdMultiplier = 0;
+        public static readonly int PointsMultiplier = 0;
 
         public string Category { get; set; }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name.Replace("{threshold}", this.Threshold.ToString());
+            set => _name = value;
+        }
 
-        public string Description { get; set; }
+        public string Description
+        {
+            get => _description.Replace("{threshold}", this.Threshold.ToString());
+            set => _description = value;
+        }
 
         public string BackgroundIconCss { get; set; } = "fas fa-badge";
 
@@ -38,12 +50,12 @@ namespace Plato.Badges.Models
 
         public Badge(string name)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name ?? throw new ArgumentNullException(nameof(name)); ;
         }
 
         public Badge(string name,string description) : this(name)
         {
-            this.Description = description;
+            this.Description = description ?? throw new ArgumentNullException(nameof(description)); ;
         }
 
 
@@ -98,7 +110,9 @@ namespace Plato.Badges.Models
             BadgeLevel level,
             int threshold) : this(name, description, backgroundIconCss, iconCss, level)
         {
-            this.Threshold = threshold * ThresholdMultiplier;
+            this.Threshold = ThresholdMultiplier > 0
+                ? threshold * ThresholdMultiplier
+                : threshold;
         }
 
         public Badge(
@@ -108,8 +122,11 @@ namespace Plato.Badges.Models
             BadgeLevel level,
             int threshold) : this(name, description, "fas fa-badge", iconCss, level)
         {
-            this.Threshold = threshold * ThresholdMultiplier;
+            this.Threshold = Badge.ThresholdMultiplier > 0
+                ? threshold * ThresholdMultiplier
+                : threshold;
         }
+
         public Badge(
             string name,
             string description,
@@ -118,7 +135,9 @@ namespace Plato.Badges.Models
             int threshold,
             int bonusPoints) : this(name, description, "fas fa-badge", iconCss, level, threshold)
         {
-            this.BonusPoints = bonusPoints * PointsMultiplier;
+            this.BonusPoints = PointsMultiplier > 0 
+                ? bonusPoints * PointsMultiplier
+                : bonusPoints;
         }
 
         public Badge(
@@ -127,7 +146,9 @@ namespace Plato.Badges.Models
             BadgeLevel level,
             int threshold) : this(name, description, level)
         {
-            this.Threshold = threshold * ThresholdMultiplier;
+            this.Threshold = ThresholdMultiplier > 0 
+                ? threshold * ThresholdMultiplier
+                : threshold;
         }
 
         public Badge(
@@ -139,7 +160,9 @@ namespace Plato.Badges.Models
             int threshold,
             int bonusPoints) : this(name, description, backgroundIconCss, iconCss, level, threshold)
         {
-            this.BonusPoints = bonusPoints * PointsMultiplier;
+            this.BonusPoints = Badge.PointsMultiplier > 0
+                ? bonusPoints * PointsMultiplier
+                : bonusPoints;
         }
         
         public Badge(
@@ -149,10 +172,11 @@ namespace Plato.Badges.Models
             int threshold,
             int bonusPoints) : this(name, description, level, threshold)
         {
-            this.BonusPoints = bonusPoints * PointsMultiplier;
+            this.BonusPoints = PointsMultiplier > 0
+                ? bonusPoints * PointsMultiplier
+                : bonusPoints;
         }
-
-
+        
     }
 
 }

@@ -829,7 +829,7 @@ $(function (win, doc, $) {
 
                 if (methodName) {
                     if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
-                        return this[methodName].apply(this, [$caller]);
+                        this[methodName].apply(this, [$caller]);
                     } else {
                         alert(methodName + " is not a valid method!");
                     }
@@ -901,7 +901,7 @@ $(function (win, doc, $) {
                                             }
                                             break;
                                     }
-                                   
+
                                     $target.pagedList({
                                             itemSelection: $.extend(itemSelection,
                                                 {
@@ -909,7 +909,7 @@ $(function (win, doc, $) {
                                                 })
                                         },
                                         "setItemIndex");
-                                  
+
 
                                 }
                                 
@@ -1118,7 +1118,7 @@ $(function (win, doc, $) {
                         } else {
                             $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
                         }
-                        return methods.init($(this), methodName);
+                        methods.init($(this), methodName);
                     });
                 } else {
                     // $().autoComplete()

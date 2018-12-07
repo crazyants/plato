@@ -37,11 +37,10 @@ namespace Plato.Tags.Repositories
             var id = await InsertUpdateInternal(
                 model.Id,
                 model.EntityId,
+                model.EntityReplyId,
                 model.TagId,
                 model.CreatedUserId,
-                model.CreatedDate,
-                model.ModifiedUserId,
-                model.ModifiedDate);
+                model.CreatedDate);
 
             if (id > 0)
             {
@@ -150,6 +149,34 @@ namespace Plato.Tags.Repositories
             return output;
         }
 
+        public async Task<IEnumerable<EntityTag>> SelectByEntityReplyId(int entityReplyId)
+        {
+            List<EntityTag> output = null;
+            using (var context = _dbContext)
+            {
+
+                var reader = await context.ExecuteReaderAsync(
+                    CommandType.StoredProcedure,
+                    "SelectEntityTagsByEntityReplyId",
+                    entityReplyId);
+
+                if ((reader != null) && (reader.HasRows))
+                {
+                    output = new List<EntityTag>();
+                    while (await reader.ReadAsync())
+                    {
+                        var entity = new EntityTag();
+                        entity.PopulateModel(reader);
+                        output.Add(entity);
+                    }
+
+                }
+            }
+
+            return output;
+        }
+
+
         public async Task<bool> DeleteByEntityId(int entityId)
         {
             if (_logger.IsEnabled(LogLevel.Information))
@@ -196,11 +223,10 @@ namespace Plato.Tags.Repositories
         async Task<int> InsertUpdateInternal(
             int id,
             int entityId,
+            int entityReplyId,
             int tagId,
             int createdUserId,
-            DateTime? createdDate,
-            int modifiedUserId,
-            DateTime? modifiedDate)
+            DateTimeOffset? createdDate)
         {
 
             var output = 0;
@@ -211,11 +237,10 @@ namespace Plato.Tags.Repositories
                     "InsertUpdateEntityTag",
                     id,
                     entityId,
+                    entityReplyId,
                     tagId,
                     createdUserId,
                     createdDate.ToDateIfNull(),
-                    modifiedUserId,
-                    modifiedDate.ToDateIfNull(),
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 

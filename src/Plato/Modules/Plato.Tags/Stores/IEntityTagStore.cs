@@ -9,6 +9,8 @@ namespace Plato.Tags.Stores
 
         Task<IEnumerable<TModel>> GetByEntityId(int entityId);
 
+        Task<IEnumerable<TModel>> GetByEntityReplyId(int entityReplyId);
+
         Task<bool> DeleteByEntityId(int entityId);
 
         Task<bool> DeleteByEntityIdAndTagIdId(int entityId, int tagId);

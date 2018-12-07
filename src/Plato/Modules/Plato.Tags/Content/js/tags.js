@@ -229,7 +229,7 @@ $(function (win, doc, $) {
                                     $caller.data("autoComplete").target;
                                 if (target !== null) {
                                     var $target = $(target);
-                                    if ($target) {
+                                    if ($target) {  
                                         var itemCss = $target.data("pagedList").itemCss;
                                         // Do we have a selection within our dropdown
                                         $target.find("a." + itemCss).each(function () {

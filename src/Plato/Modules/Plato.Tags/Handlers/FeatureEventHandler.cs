@@ -96,6 +96,11 @@ namespace Plato.Tags.Handlers
                 },
                 new SchemaColumn()
                 {
+                    Name = "EntityReplyId",
+                    DbType = DbType.Int32
+                },
+                new SchemaColumn()
+                {
                     Name = "TagId",
                     DbType = DbType.Int32
                 },
@@ -107,16 +112,6 @@ namespace Plato.Tags.Handlers
                 new SchemaColumn()
                 {
                     Name = "CreatedDate",
-                    DbType = DbType.DateTime
-                },
-                new SchemaColumn()
-                {
-                    Name = "ModifiedUserId",
-                    DbType = DbType.Int32
-                },
-                new SchemaColumn()
-                {
-                    Name = "ModifiedDate",
                     DbType = DbType.DateTime
                 }
             }
@@ -202,6 +197,7 @@ namespace Plato.Tags.Handlers
                     .DropTable(_entityTags)
                     .DropDefaultProcedures(_entityTags)
                     .DropProcedure(new SchemaProcedure("SelectEntityTagsByEntityId"))
+                    .DropProcedure(new SchemaProcedure("SelectEntityTagsByEntityReplyId"))
                     .DropProcedure(new SchemaProcedure("DeleteEntityTagsByEntityId"))
                     .DropProcedure(new SchemaProcedure("DeleteEntityTagByEntityIdAndTagId"))
                     .DropProcedure(new SchemaProcedure("SelectEntityTagsPaged"));
@@ -303,7 +299,14 @@ namespace Plato.Tags.Handlers
             builder.CreateProcedure(
                 new SchemaProcedure(
                         $"SelectEntityTagById",
-                        @" SELECT et.*, t.[Name] AS Tag
+                        @"SELECT et.*, 
+                                t.FeatureId,
+                                t.[Name],
+                                t.NameNormalized,                               
+                                t.Alias,
+                                t.TotalEntities,
+                                t.TotalFollows,
+                                t.LastSeenDate
                                 FROM {prefix}_Tags t WITH (nolock) 
                                     INNER JOIN {prefix}_EntityTags et ON et.TagId = t.Id                                    
                                 WHERE (
@@ -315,7 +318,14 @@ namespace Plato.Tags.Handlers
             builder.CreateProcedure(
                 new SchemaProcedure(
                         $"SelectEntityTagsByEntityId",
-                        @" SELECT et.*, t.[Name] AS Tag
+                        @"SELECT et.*, 
+                                t.FeatureId,
+                                t.[Name],
+                                t.NameNormalized,                               
+                                t.Alias,
+                                t.TotalEntities,
+                                t.TotalFollows,
+                                t.LastSeenDate
                                 FROM {prefix}_Tags t WITH (nolock) 
                                     INNER JOIN {prefix}_EntityTags et ON et.TagId = t.Id                                    
                                 WHERE (
@@ -324,6 +334,25 @@ namespace Plato.Tags.Handlers
                     .ForTable(_entityTags)
                     .WithParameter(new SchemaColumn() { Name = "EntityId", DbType = DbType.Int32 }));
 
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        $"SelectEntityTagsByEntityReplyId",
+                        @"SELECT et.*, 
+                                t.FeatureId,
+                                t.[Name],
+                                t.NameNormalized,                               
+                                t.Alias,
+                                t.TotalEntities,
+                                t.TotalFollows,
+                                t.LastSeenDate
+                                FROM {prefix}_Tags t WITH (nolock) 
+                                    INNER JOIN {prefix}_EntityTags et ON et.TagId = t.Id                                    
+                                WHERE (
+                                   et.EntityReplyId = @EntityReplyId
+                                )")
+                    .ForTable(_entityTags)
+                    .WithParameter(new SchemaColumn() { Name = "EntityReplyId", DbType = DbType.Int32 }));
+            
             builder
                 .CreateProcedure(new SchemaProcedure("DeleteEntityTagsByEntityId", StoredProcedureType.DeleteByKey)
                     .ForTable(_entityTags)

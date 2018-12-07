@@ -60,6 +60,7 @@ namespace Plato.Tags.Stores
 
         private WhereInt _labelId;
         private WhereInt _entityId;
+        private WhereInt _entityReplyId;
 
         public WhereInt LabelId
         {
@@ -73,6 +74,13 @@ namespace Plato.Tags.Stores
             set => _entityId = value;
         }
 
+        public WhereInt EntityReplyId
+        {
+            get => _entityReplyId ?? (_entityReplyId = new WhereInt());
+            set => _entityReplyId = value;
+        }
+        
+
     }
 
     #endregion
@@ -83,6 +91,7 @@ namespace Plato.Tags.Stores
     {
         #region "Constructor"
 
+        private readonly string _tagsTableName;
         private readonly string _entityTagsTableName;
 
         private readonly EntityTagQuery _query;
@@ -90,6 +99,7 @@ namespace Plato.Tags.Stores
         public EntityTagQueryBuilder(EntityTagQuery query)
         {
             _query = query;
+            _tagsTableName = GetTableNameWithPrefix("Tags");
             _entityTagsTableName = GetTableNameWithPrefix("EntityTags");
         }
 
@@ -120,7 +130,7 @@ namespace Plato.Tags.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(el.Id) FROM ")
+            sb.Append("SELECT COUNT(et.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -130,21 +140,26 @@ namespace Plato.Tags.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("el.*");
+            sb.Append("et.*, ")
+                .Append("t.FeatureId,")
+                .Append("t.[Name],")
+                .Append("t.NameNormalized,")
+                .Append("t.Alias,")
+                .Append("t.TotalEntities,")
+                .Append("t.TotalFollows,")
+                .Append("t.LastSeenDate");
             return sb.ToString();
-
         }
 
         string BuildTables()
         {
-
             var sb = new StringBuilder();
-
             sb.Append(_entityTagsTableName)
-                .Append(" el ");
-
+                .Append(" et WITH (nolock) ")
+                .Append("INNER JOIN ")
+                .Append(_tagsTableName)
+                .Append(" t ON t.Id = et.TagId");
             return sb.ToString();
-
         }
 
         #endregion
@@ -167,7 +182,7 @@ namespace Plato.Tags.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.LabelId.Operator);
-                sb.Append(_query.Params.LabelId.ToSqlString("el.Id"));
+                sb.Append(_query.Params.LabelId.ToSqlString("et.Id"));
             }
 
             // EntityId
@@ -175,23 +190,20 @@ namespace Plato.Tags.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityId.Operator);
-                sb.Append(_query.Params.EntityId.ToSqlString("el.EntityId"));
+                sb.Append(_query.Params.EntityId.ToSqlString("et.EntityId"));
             }
+
+            // EntityReplyId
+            if (_query.Params.EntityReplyId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EntityReplyId.Operator);
+                sb.Append(_query.Params.EntityReplyId.ToSqlString("et.EntityReplyId"));
+            }
+
 
             return sb.ToString();
 
-        }
-
-        string GetQualifiedColumnName(string columnName)
-        {
-            if (columnName == null)
-            {
-                throw new ArgumentNullException(nameof(columnName));
-            }
-
-            return columnName.IndexOf('.') >= 0
-                ? columnName
-                : "el." + columnName;
         }
 
         private string BuildOrderBy()
@@ -201,7 +213,7 @@ namespace Plato.Tags.Stores
             var i = 0;
             foreach (var sortColumn in _query.SortColumns)
             {
-                sb.Append(GetQualifiedColumnName(sortColumn.Key));
+                sb.Append(sortColumn.Key);
                 if (sortColumn.Value != OrderBy.Asc)
                     sb.Append(" DESC");
                 if (i < _query.SortColumns.Count - 1)

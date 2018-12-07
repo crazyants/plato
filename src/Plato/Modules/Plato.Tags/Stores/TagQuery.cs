@@ -64,6 +64,7 @@ namespace Plato.Tags.Stores
         private WhereString _keywords;
         private WhereInt _featureId;
         private WhereInt _entityId;
+        private WhereInt _entityReplyId;
 
         public WhereInt Id
         {
@@ -88,7 +89,13 @@ namespace Plato.Tags.Stores
             get => _entityId ?? (_entityId = new WhereInt());
             set => _entityId = value;
         }
-        
+
+        public WhereInt EntityReplyId
+        {
+            get => _entityReplyId ?? (_entityReplyId = new WhereInt());
+            set => _entityReplyId = value;
+        }
+
     }
 
     #endregion
@@ -209,6 +216,18 @@ namespace Plato.Tags.Stores
                     .Append(")");
             }
 
+            // EntityReplyId
+            if (_query.Params.EntityReplyId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EntityReplyId.Operator);
+                sb.Append(" t.Id IN (SELECT TagId FROM ")
+                    .Append(_entityTagsTableName)
+                    .Append(" WHERE EntityReplyId = ")
+                    .Append(_query.Params.EntityReplyId.Value)
+                    .Append(")");
+            }
+            
             // Keywords
             if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
             {

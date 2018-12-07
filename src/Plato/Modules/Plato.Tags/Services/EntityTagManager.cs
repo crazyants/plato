@@ -56,9 +56,7 @@ namespace Plato.Tags.Services
             // Update
             model.CreatedUserId = user?.Id ?? 0;
             model.CreatedDate = DateTime.UtcNow;
-            model.ModifiedUserId = user?.Id ?? 0;
-            model.ModifiedDate = DateTime.UtcNow;
-
+        
             // Invoke EntityTagCreating subscriptions
             foreach (var handler in _broker.Pub<EntityTag>(this, "EntityTagCreating"))
             {
@@ -113,12 +111,8 @@ namespace Plato.Tags.Services
             }
             
             // Get authenticated user
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
+            //var user = await _contextFacade.GetAuthenticatedUserAsync();
          
-            // Update
-            model.ModifiedUserId = user?.Id ?? 0;
-            model.ModifiedDate = DateTime.UtcNow;
-
             // Invoke EntityTagUpdating subscriptions
             foreach (var handler in _broker.Pub<EntityTag>(this, "EntityTagUpdating"))
             {

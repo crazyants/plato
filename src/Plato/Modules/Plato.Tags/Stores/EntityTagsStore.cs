@@ -15,6 +15,7 @@ namespace Plato.Tags.Stores
     {
 
         private const string ByEntityId = "ByEntityId";
+        private const string ByEntityReplyId = "ByEntityReplyId";
 
         private readonly IEntityTagsRepository<EntityTag> _entityLabelRepository;
         private readonly ICacheManager _cacheManager;
@@ -167,6 +168,30 @@ namespace Plato.Tags.Stores
 
             });
         }
+
+        public async Task<IEnumerable<EntityTag>> GetByEntityReplyId(int entityReplyId)
+        {
+
+            if (entityReplyId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(entityReplyId));
+            }
+
+            var token = _cacheManager.GetOrCreateToken(this.GetType(), ByEntityReplyId, entityReplyId);
+            return await _cacheManager.GetOrCreateAsync(token, async (cacheEntry) =>
+            {
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation("Selecting entity tags for entity reply Id '{0}'.",
+                        entityReplyId);
+                }
+
+                return await _entityLabelRepository.SelectByEntityReplyId(entityReplyId);
+
+            });
+        }
+
 
         public async Task<bool> DeleteByEntityId(int entityId)
         {

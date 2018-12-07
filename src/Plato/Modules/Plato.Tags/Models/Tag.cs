@@ -29,7 +29,7 @@ namespace Plato.Tags.Models
 
         public DateTimeOffset? CreatedDate { get; set; }
         
-        public void PopulateModel(IDataReader dr)
+        public virtual void PopulateModel(IDataReader dr)
         {
 
             if (dr.ColumnIsNotNull("Id"))
