@@ -60,6 +60,7 @@ namespace Plato.Entities.Stores
         private WhereInt _categoryId;
         private WhereInt _roleId;
         private WhereInt _labelId;
+        private WhereInt _tagId;
         private WhereString _keywords;
         private WhereBool _showPrivate;
         private WhereBool _hidePrivate;
@@ -110,7 +111,13 @@ namespace Plato.Entities.Stores
             get => _labelId ?? (_labelId = new WhereInt());
             set => _labelId = value;
         }
-        
+
+        public WhereInt TagId
+        {
+            get => _tagId ?? (_tagId = new WhereInt());
+            set => _tagId = value;
+        }
+
         public WhereString Keywords
         {
             get => _keywords ?? (_keywords = new WhereString());
@@ -278,6 +285,7 @@ namespace Plato.Entities.Stores
         private readonly string _rolesTableName;
         private readonly string _entityRepliesTableName;
         private readonly string _entityLabelsTableName;
+        private readonly string _entityTagsTableName;
         private readonly string _categoryRolesTableName;
 
         private readonly EntityQuery<TModel> _query;
@@ -291,6 +299,7 @@ namespace Plato.Entities.Stores
             _userRolesTableName = GetTableNameWithPrefix("UserRoles");
             _entityRepliesTableName = GetTableNameWithPrefix("EntityReplies");
             _entityLabelsTableName = GetTableNameWithPrefix("EntityLabels");
+            _entityTagsTableName = GetTableNameWithPrefix("EntityTags");
             _categoryRolesTableName = GetTableNameWithPrefix("CategoryRoles");
 
         }
@@ -591,6 +600,21 @@ namespace Plato.Entities.Stores
                     .Append(_query.Params.LabelId.ToSqlString("e.LabelId"))
                     .Append("))");
             }
+
+            // TagId
+            // --> Only available if the Tags feature is enabled
+            if (_query.Params.TagId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.TagId.Operator);
+                sb.Append(" e.Id IN (")
+                    .Append("SELECT EntityId FROM ")
+                    .Append(_entityTagsTableName)
+                    .Append(" et WHERE (")
+                    .Append(_query.Params.TagId.ToSqlString("et.TagId"))
+                    .Append("))");
+            }
+
 
             // CreatedUserId
             if (_query.Params.CreatedUserId.Value > 0)

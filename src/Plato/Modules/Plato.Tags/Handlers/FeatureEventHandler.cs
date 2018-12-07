@@ -44,6 +44,12 @@ namespace Plato.Tags.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "Description",
+                        Length = "500",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "Alias",
                         Length = "255",
                         DbType = DbType.String
@@ -302,7 +308,8 @@ namespace Plato.Tags.Handlers
                         @"SELECT et.*, 
                                 t.FeatureId,
                                 t.[Name],
-                                t.NameNormalized,                               
+                                t.NameNormalized,    
+                                t.Description,
                                 t.Alias,
                                 t.TotalEntities,
                                 t.TotalFollows,
@@ -321,7 +328,8 @@ namespace Plato.Tags.Handlers
                         @"SELECT et.*, 
                                 t.FeatureId,
                                 t.[Name],
-                                t.NameNormalized,                               
+                                t.NameNormalized,
+                                t.Description,
                                 t.Alias,
                                 t.TotalEntities,
                                 t.TotalFollows,
@@ -340,7 +348,8 @@ namespace Plato.Tags.Handlers
                         @"SELECT et.*, 
                                 t.FeatureId,
                                 t.[Name],
-                                t.NameNormalized,                               
+                                t.NameNormalized,
+                                t.Description,
                                 t.Alias,
                                 t.TotalEntities,
                                 t.TotalFollows,
@@ -375,16 +384,12 @@ namespace Plato.Tags.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "TagId",
-                        DbType = DbType.Int32,
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "EntityId",
-                        DbType = DbType.Int32,
+                        Name = "Keywords",
+                        DbType = DbType.String,
+                        Length = "255"
                     }
                 }));
-            
+
         }
         
         #endregion

@@ -21,9 +21,8 @@ namespace Plato.Discuss.Tags.Controllers
 
         #region "Constructor"
         
-        private readonly IViewProviderManager<Tag> _labelViewProvider;
-        private readonly ISiteSettingsStore _settingsStore;
-        private readonly ITagStore<Tag> _labelStore;
+        private readonly IViewProviderManager<Tag> _tagViewProvider;
+        private readonly ITagStore<Tag> _tagStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
 
@@ -34,18 +33,16 @@ namespace Plato.Discuss.Tags.Controllers
 
 
         public HomeController(
-            IViewProviderManager<Tag> labelViewProvider,
+            IViewProviderManager<Tag> tagViewProvider,
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
-            ITagStore<Tag> labelStore,
-            ISiteSettingsStore settingsStore,
+            ITagStore<Tag> tagStore,
             IContextFacade contextFacade,
             IAlerter alerter,
             IBreadCrumbManager breadCrumbManager)
         {
-            _settingsStore = settingsStore;
-            _labelStore = labelStore;
-            _labelViewProvider = labelViewProvider;
+            _tagStore = tagStore;
+            _tagViewProvider = tagViewProvider;
             _alerter = alerter;
             _breadCrumbManager = breadCrumbManager;
 
@@ -110,7 +107,7 @@ namespace Plato.Discuss.Tags.Controllers
             };
 
             // Build view
-            var result = await _labelViewProvider.ProvideIndexAsync(new Tag(), this);
+            var result = await _tagViewProvider.ProvideIndexAsync(new Tag(), this);
 
             // Return view
             return View(result);
@@ -124,8 +121,8 @@ namespace Plato.Discuss.Tags.Controllers
             PagerOptions pager)
         {
 
-            var label = await _labelStore.GetByIdAsync(id);
-            if (label == null)
+            var tag = await _tagStore.GetByIdAsync(id);
+            if (tag == null)
             {
                 return NotFound();
             }
@@ -142,7 +139,7 @@ namespace Plato.Discuss.Tags.Controllers
                     ).Add(S["Tags"], labels => labels
                         .Action("Index", "Home", "Plato.Discuss.Tags")
                         .LocalNav()
-                    ).Add(S[label.Name]);
+                    ).Add(S[tag.Name]);
             });
 
             // Get default options
@@ -164,7 +161,7 @@ namespace Plato.Discuss.Tags.Controllers
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
 
             // We don't need to add to pagination 
-            opts.Params.LabelId = label?.Id ?? 0;
+            opts.Params.TagId = tag?.Id ?? 0;
 
             // Add view options to context for use within view adaptors
             this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
@@ -174,7 +171,7 @@ namespace Plato.Discuss.Tags.Controllers
             };
 
             // Build view
-            var result = await _labelViewProvider.ProvideDisplayAsync(label, this);
+            var result = await _tagViewProvider.ProvideDisplayAsync(tag, this);
 
             // Return view
             return View(result);

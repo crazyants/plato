@@ -71,7 +71,7 @@ namespace Plato.Discuss.Tags.ViewProviders
                 .ToList();
 
             return Views(
-                View<TagsViewModel>("Topic.Tags.Display.Sidebar", model =>
+                View<TagsViewModel>("Topic.Tags.Index.Sidebar", model =>
                 {
                     model.Tags = tags?.Data;
                     return model;

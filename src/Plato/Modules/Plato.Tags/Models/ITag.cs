@@ -13,6 +13,8 @@ namespace Plato.Tags.Models
 
         string NameNormalized { get; set; }
 
+        string Description { get; set; }
+
         string Alias { get; set; }
 
         int TotalEntities { get; set; }

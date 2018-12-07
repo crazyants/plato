@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
 using Plato.Discuss.ViewModels;
 using Plato.Internal.Data.Abstractions;
 using Plato.Tags.Models;
@@ -16,18 +14,18 @@ namespace Plato.Discuss.Tags.ViewProviders
     public class TagViewProvider : BaseViewProvider<Tag>
     {
 
-        private readonly ITagStore<Tag> _labelStore;
+        private readonly ITagStore<Tag> _tagStore;
         private readonly IContextFacade _contextFacade;
         private readonly IFeatureFacade _featureFacade;
         private readonly IActionContextAccessor _actionContextAccessor;
 
         public TagViewProvider(
-            ITagStore<Tag> labelStore,
+            ITagStore<Tag> tagStore,
             IContextFacade contextFacade,
             IFeatureFacade featureFacade,
             IActionContextAccessor actionContextAccessor)
         {
-            _labelStore = labelStore;
+            _tagStore = tagStore;
             _contextFacade = contextFacade;
             _featureFacade = featureFacade;
             _actionContextAccessor = actionContextAccessor;
@@ -62,36 +60,33 @@ namespace Plato.Discuss.Tags.ViewProviders
             };
 
             // Ensure we explictly set the featureId
-            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss.Labels");
+            var feature = await _featureFacade.GetFeatureByIdAsync("Plato.Discuss");
             if (feature == null)
             {
                 return default(IViewProviderResult);
             }
-
-            //var labels = await _labelStore.GetByFeatureIdAsync(feature.Id);
-
-            var labels = await _labelStore.QueryAsync()
-                .Take(1, 10)
+            
+            var tags = await _tagStore.QueryAsync()
+                .Take(1, 20)
                 .Select<TagQueryParams>(q =>
                 {
                     q.FeatureId.Equals(feature.Id);
                 })
-                .OrderBy("Entities", OrderBy.Desc)
+                .OrderBy("TotalEntities", OrderBy.Desc)
                 .ToList();
 
             return Views(
                 View<Tag>("Home.Display.Header", model => label).Zone("header").Order(1),
                 View<Tag>("Home.Display.Tools", model => label).Zone("tools").Order(1),
                 View<TagDisplayViewModel>("Home.Display.Content", model => indexViewModel).Zone("content").Order(1),
-                View<TagsViewModel>("Topic.Labels.Index.Sidebar", model =>
+                View<TagsViewModel>("Topic.Tags.Index.Sidebar", model =>
                 {
-                    model.SelectedLabelId = label?.Id ?? 0;
-                    model.Tags = labels?.Data;
+                    model.SelectedTagId = label?.Id ?? 0;
+                    model.Tags = tags?.Data;
                     return model;
                 }).Zone("sidebar").Order(1)
             );
-
-
+            
         }
 
         public override Task<IViewProviderResult> BuildEditAsync(Tag model, IViewProviderContext context)
@@ -107,4 +102,5 @@ namespace Plato.Discuss.Tags.ViewProviders
         #endregion
 
     }
+
 }

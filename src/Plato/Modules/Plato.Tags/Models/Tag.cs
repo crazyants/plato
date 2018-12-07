@@ -17,6 +17,8 @@ namespace Plato.Tags.Models
 
         public string NameNormalized { get; set; }
 
+        public string Description { get; set; }
+
         public string Alias { get; set; }
 
         public int TotalEntities { get; set; }
@@ -43,6 +45,9 @@ namespace Plato.Tags.Models
 
             if (dr.ColumnIsNotNull("NameNormalized"))
                 NameNormalized = Convert.ToString(dr["NameNormalized"]);
+
+            if (dr.ColumnIsNotNull("Description"))
+                Description = Convert.ToString(dr["Description"]);
             
             if (dr.ColumnIsNotNull("Alias"))
                 Alias = Convert.ToString(dr["Alias"]);

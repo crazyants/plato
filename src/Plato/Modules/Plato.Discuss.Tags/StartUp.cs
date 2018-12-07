@@ -46,7 +46,6 @@ namespace Plato.Discuss.Tags
             services.AddScoped<IViewProviderManager<Tag>, ViewProviderManager<Tag>>();
             services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
             
-
             // Badge providers
             services.AddScoped<IBadgesProvider<Badge>, TagBadges>();
 
@@ -60,6 +59,22 @@ namespace Plato.Discuss.Tags
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            routes.MapAreaRoute(
+                name: "DiscussTagIndex",
+                areaName: "Plato.Discuss.Tags",
+                template: "discuss/tags",
+                defaults: new { controller = "Home", action = "Index" }
+            );
+
+            routes.MapAreaRoute(
+                name: "DiscussTagDisplay",
+                areaName: "Plato.Discuss.Tags",
+                template: "discuss/tag/{id}/{alias?}",
+                defaults: new { controller = "Home", action = "Display" }
+            );
+
+
         }
     }
 }

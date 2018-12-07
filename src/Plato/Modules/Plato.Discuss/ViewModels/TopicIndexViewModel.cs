@@ -41,6 +41,8 @@ namespace Plato.Discuss.ViewModels
 
         public int LabelId { get; set; }
 
+        public int TagId { get; set; }
+
     }
     
     [DataContract]

@@ -101,6 +101,11 @@ namespace Plato.Discuss.Services
                             q.LabelId.Equals(options.Params.LabelId);
                         }
 
+                        if (options.Params.TagId > 0)
+                        {
+                            q.TagId.Equals(options.Params.TagId);
+                        }
+
                         if (options.Params.CreatedByUserId > 0)
                         {
                             q.CreatedUserId.Equals(options.Params.CreatedByUserId);
