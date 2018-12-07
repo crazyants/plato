@@ -3236,13 +3236,11 @@ $(function (win, doc, $) {
                 this.bind($caller);
             },
             bind: function ($caller) {
-
                 var event = $caller.data(dataKey).event,
                     message = $caller.data("confirmMessage") || $caller.data(dataKey).message;;
                 $caller.on(event, function (e) {
-                    return confirm(message);
+                    return win.confirm(message);
                     });
-
             },
             unbind: function ($caller) {
                 var event = $caller.data(dataKey).event;
@@ -3305,8 +3303,7 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     /* Register Plugins */
     $.fn.extend({
         scrollTo: scrollTo.init,

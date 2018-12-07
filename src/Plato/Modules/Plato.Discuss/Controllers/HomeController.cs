@@ -157,6 +157,57 @@ namespace Plato.Discuss.Controllers
             return Index(opts, pager);
         }
 
+
+        public async Task<IActionResult> Get(
+          TopicIndexOptions opts,
+          PagerOptions pager)
+        {
+
+            // default options
+            if (opts == null)
+            {
+                opts = new TopicIndexOptions();
+            }
+
+            // default pager
+            if (pager == null)
+            {
+                pager = new PagerOptions();
+            }
+
+            // Get default options
+            var defaultViewOptions = new TopicIndexOptions();
+            var defaultPagerOptions = new PagerOptions();
+
+            // Add non default route data for pagination purposes
+            if (opts.Search != defaultViewOptions.Search)
+                this.RouteData.Values.Add("opts.search", opts.Search);
+            if (opts.Sort != defaultViewOptions.Sort)
+                this.RouteData.Values.Add("opts.sort", opts.Sort);
+            if (opts.Order != defaultViewOptions.Order)
+                this.RouteData.Values.Add("opts.order", opts.Order);
+            if (opts.Filter != defaultViewOptions.Filter)
+                this.RouteData.Values.Add("opts.filter", opts.Filter);
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+
+            opts.EnableCard = false;
+
+            // Add view options to context for use within view adaptors
+            var viewModel = new TopicIndexViewModel()
+            {
+                Options = opts,
+                Pager = pager
+            };
+
+            // Return view
+            return View(viewModel);
+
+        }
+
+
         // -----------------
         // add new topic
         // -----------------

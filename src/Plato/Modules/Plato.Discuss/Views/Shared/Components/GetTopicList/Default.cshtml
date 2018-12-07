@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Mvc.Routing
+@using Microsoft.AspNetCore.Routing
+@using Plato.Internal.Data.Abstractions
+@model TopicIndexViewModel
+
+@if (Model.Results != null)
+{
+    @foreach (var topic in Model.Results.Data)
+     {
+         <li class="list-group-item  list-group-item-action pt-4">
+             @await DisplayAsync(new View("TopicListItem", new
+             {
+                 model = new TopicListItemViewModel()
+                 {
+                     Topic = topic
+                 }
+             }))
+         </li>
+     }
+}
+
+

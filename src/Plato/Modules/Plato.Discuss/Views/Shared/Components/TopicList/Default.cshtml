@@ -3,7 +3,6 @@
 @using Plato.Internal.Data.Abstractions
 @model TopicIndexViewModel
 
-
 <card enabled="@Model.Options.EnableCard" class="card card-body-flush">
     <card-title>
         <h6 class="card-title float-left">@T["Topics"]</h6>
@@ -82,12 +81,13 @@
         </ul>
     </card-title>
     <card-body>
+        
         @if (Model.Results != null)
         {
-            <ul class="list-group list-group-flush list-group-hover">
+            <ul id="topicList" class="list-group list-group-flush list-group-hover">
                 @foreach (var topic in Model.Results.Data)
                 {
-                    <li class="list-group-item  list-group-item-action pt-4">
+                    <li class="list-group-item list-group-item-action pt-4">
                         @await DisplayAsync(new View("TopicListItem", new
                         {
                             model = new TopicListItemViewModel()
@@ -96,9 +96,14 @@
                             }
                         }))
                     </li>
-
                 }
+                <li id="topicListLoader" class="list-group-item" style="display: none;">
+                    <p class="text-center">
+                        <i class="fal fa-2x fa-spinner fa-spin py-4"></i>
+                    </p>
+                </li>
             </ul>
+           
         }
         else
         {

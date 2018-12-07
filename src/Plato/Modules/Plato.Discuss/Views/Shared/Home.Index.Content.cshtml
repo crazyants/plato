@@ -6,3 +6,57 @@
     pager = @Model.Pager
 }))
 
+
+<script section="Footer">
+
+    $(function(win, doc, $) {
+
+        var loadingNewPage = false;
+
+        var page = @Model.Pager.Page,
+            pageSize = @Model.Pager.PageSize,
+            sort = '@Model.Options.Sort',
+            order = '@Model.Options.Order.ToString().ToLower()';
+
+        var $loader = $("#topicListLoader");
+
+        function loadPage() {
+
+            $loader.show();
+            loadingNewPage = true;
+            page++;
+
+            var pagerUrl = "?pager.page=" + page +
+                "&pager.size=" + pageSize +
+                "&opts.sort=" + sort + 
+                "opts.order=" + order;
+            
+            win.$.Plato.Http({
+                url: "discuss/get" + pagerUrl,
+                method: "GET"
+            }).done(function (data) {
+                if (data !== "") {
+                    $loader.hide();
+                    $("#topicList").append(data);
+                }
+                loadingNewPage = false;
+            });
+            
+        };
+
+
+        $(win).scroll(function () {
+
+            var wintop = $(win).scrollTop(),
+                docheight = $(doc).height(),
+                winheight = $(win).height(),
+                delta = 0.95;
+
+            if (!loadingNewPage && (wintop / (docheight - winheight)) > delta) {
+                loadPage();
+            }
+        });
+
+    }(window, document, jQuery));
+
+</script>

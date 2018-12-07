@@ -57,7 +57,6 @@ namespace Plato.Discuss.ViewProviders
             return Task.FromResult(Views(
                 View<TopicIndexViewModel>("Home.Index.Header", model => viewModel).Zone("header"),
                 View<TopicIndexViewModel>("Home.Index.Tools", model => viewModel).Zone("tools"),
-                //View<TopicIndexViewModel>("Home.Index.Sidebar", model => viewModel).Zone("sidebar").Order(3),
                 View<TopicIndexViewModel>("Home.Index.Content", model => viewModel).Zone("content")
             ));
 
