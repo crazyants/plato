@@ -1,25 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
-
-  
-    public class MarkdownTagHelper : TagHelper
+    
+    [HtmlTargetElement("markdown-body")]
+    public class MarkdownBodyTagHelper : TagHelper
     {
 
         [HtmlAttributeName("markdown")]
         public string Markdown { get; set; }
 
+        [ViewContext] // inform razor to inject
+        public ViewContext ViewContext { get; set; }
+
 
         private readonly IBroker _broker;
 
-        public MarkdownTagHelper(
+        public MarkdownBodyTagHelper(
             IBroker broker)
         {
             _broker = broker;
@@ -29,9 +32,12 @@ namespace Plato.Internal.Layout.TagHelpers
             TagHelperContext context,
             TagHelperOutput output)
         {
+         
+            //this.Markdown = HtmlEncoder.Default.Encode(this.Markdown);
 
-            output.TagName = "span";
+            output.TagName = "div";
             output.TagMode = TagMode.StartTagAndEndTag;
+            output.Attributes.Add("class", "markdown-body");
 
             output.Content.SetHtmlContent(await ParseEntityHtml(this.Markdown));
             
