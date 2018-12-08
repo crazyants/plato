@@ -10,7 +10,11 @@
     </card-title>
     <card-body>
         <div class="markdown-body">
-            @Html.Raw(@Model.Entity.Html)
+            
+            
+            <markdown markdown="@Model.Entity.Message"/>
+            
+
         </div>
         <div>
             <navigation name="topic-extra"
@@ -56,7 +60,9 @@
                     </card-title>
                     <card-body class="card-body">
                         <div class="markdown-body">
-                            @Html.Raw(reply.Html)
+
+                            <markdown markdown="@reply.Message"/>
+
                         </div>
                         <div>
                             <navigation name="topicreply-extra"

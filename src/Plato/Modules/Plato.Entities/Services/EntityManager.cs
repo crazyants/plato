@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -6,7 +7,6 @@ using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Entities.Services
 {
@@ -233,7 +233,7 @@ namespace Plato.Entities.Services
 
         async Task<string> ParseEntityHtml(string message)
         {
-      
+            
             foreach (var handler in _broker.Pub<string>(this, "ParseEntityHtml"))
             {
                 message = await handler.Invoke(new Message<string>(message, this));

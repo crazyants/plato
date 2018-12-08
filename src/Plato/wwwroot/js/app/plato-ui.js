@@ -1853,7 +1853,7 @@ $(function (win, doc, $) {
                     text: result.text,
                     value: result.value
                 });
-            }
+            } 
         };
 
         var methods = {
@@ -1924,14 +1924,12 @@ $(function (win, doc, $) {
                 if ($input) {
                     $input.autoComplete("show");
                 }
-
             },
             hide: function ($caller) {
                 var $input = this.getInput($caller);
                 if ($input) {
                     $input.autoComplete("hide");
                 }
-
             },
             update: function ($caller) {
 
@@ -1983,7 +1981,10 @@ $(function (win, doc, $) {
                         }
                     }
                     if ($inputLi) {
-                        $inputLi.css({ "min-width": "initial", "width": "100%" });
+                        $inputLi.css({
+                            "min-width": "initial",
+                            "width": "100%"
+                        });
                     }
                 }
             },
@@ -2022,6 +2023,7 @@ $(function (win, doc, $) {
                     itemTemplate = $caller.data(dataKey).parseItemTemplate(itemTemplate, data);
                 }
 
+                console.log(itemTemplate)
                 var $item = $(itemTemplate);
                 $item.data("tagitItem", data);
 

@@ -420,6 +420,15 @@ $(function (win, doc, $) {
             return this;
         }
     };
+
+    /* Plato Text */
+    win.$.Plato.Text = {
+        htmlEncode: function(input) {
+            var ele = document.createElement('span');
+            ele.textContent = input;
+            return ele.innerHTML;
+        }
+    };
     
     /* Initialize */
     /* ---------------------------------------------*/

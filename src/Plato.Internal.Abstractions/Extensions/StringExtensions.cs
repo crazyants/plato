@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -194,7 +195,7 @@ namespace Plato.Internal.Abstractions.Extensions
 
             if (input.IndexOf('&') >= 0)
             {
-                input = Regex.Replace(input, "&nbsp;", "", RegexOptions.IgnoreCase);
+                input = Regex.Replace(input, "&nbsp;", " ", RegexOptions.IgnoreCase);
                 input = Regex.Replace(input, "&amp;", "&", RegexOptions.IgnoreCase);
             }
 

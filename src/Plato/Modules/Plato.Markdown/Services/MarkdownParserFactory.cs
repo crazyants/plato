@@ -8,15 +8,12 @@
         
         public IMarkdownParser GetParser()
         {
-
-            var usePragmaLines = false;
-         
             if (_currentParser != null)
                 return _currentParser;
-
-            _currentParser = new MarkdownParserMarkdig(usePragmaLines, null);
+            _currentParser = new MarkdownParserMarkdig(false, null);
             return _currentParser;
         }
 
     }
+
 }

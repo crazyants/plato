@@ -7,6 +7,10 @@ if (typeof $.Plato.Context === "undefined") {
     throw new Error("$.Plato.Context Required");
 }
 
+if (typeof $.Plato.Text === "undefined") {
+    throw new Error("Plato Tags requires $.Plato.Text");
+}
+
 $(function (win, doc, $) {
 
     'use strict';
@@ -37,7 +41,7 @@ $(function (win, doc, $) {
                 }
 
                 if (result.name) {
-                    html = html.replace(/\{name}/g, result.name);
+                    html = html.replace(/\{name}/g, win.$.Plato.Text.htmlEncode(result.name));
                 } else {
                     html = html.replace(/\{name}/g, "(no name)");
                 }
@@ -180,7 +184,7 @@ $(function (win, doc, $) {
                             html = html.replace(/\{id}/g, "0");
                         }
                         if (result.name) {
-                            html = html.replace(/\{name}/g, result.name);
+                            html = html.replace(/\{name}/g, win.$.Plato.Text.htmlEncode(result.name));
                         } else {
                             html = html.replace(/\{name}/g, "");
                         }

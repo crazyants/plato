@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -13,6 +14,7 @@ namespace Plato.Internal.Layout.TagHelpers
     public class BreadCrumbTagHelper : TagHelper
     {
 
+        private readonly HtmlEncoder _htmlEncoder;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IActionContextAccessor _actionContextAccesor;
 
@@ -22,11 +24,12 @@ namespace Plato.Internal.Layout.TagHelpers
         {
             _actionContextAccesor = actionContextAccesor;
             _breadCrumbManager = breadCrumbManager;
+            _htmlEncoder = HtmlEncoder.Default;
         }
 
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            
+
             output.TagName = "ol";
             output.TagMode = TagMode.StartTagAndEndTag;
             
@@ -57,7 +60,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
         void BuildBreadCrumbItem(MenuItem item, StringBuilder sb)
         {
-
+         
             var hasUrl = !String.IsNullOrEmpty(item.Href);
 
             sb.Append("<li  class=\"breadcrumb-item\">");
@@ -66,8 +69,10 @@ namespace Plato.Internal.Layout.TagHelpers
             {
                 sb.Append("<a href=\"").Append(item.Href).Append("\">");
             }
-
-            sb.Append(item.Text);
+            
+            // Ensure item.Text is always encoded
+            // This can contain user supplied input
+            sb.Append(_htmlEncoder.Encode(item.Text));
 
             if (hasUrl)
             {
