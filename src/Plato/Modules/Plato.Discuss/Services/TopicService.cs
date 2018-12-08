@@ -71,7 +71,23 @@ namespace Plato.Discuss.Services
                     {
                         q.FeatureId.Equals(feature.Id);
                     }
-                    
+
+                    switch (options.Filter)
+                    {
+                        case FilterBy.MyTopics:
+                            if (user != null)
+                            {
+                                q.CreatedUserId.Equals(user.Id);
+                            }
+                            break;
+                        case FilterBy.Participated:
+                            if (user != null)
+                            {
+                                q.CreatedUserId.Equals(user.Id);
+                            }
+                            break;
+                    }
+
                     // Restrict results via user role if the channels feature is enabled
                     //if (channelFeature != null)
                     //{

@@ -2,14 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Discuss.Follow.ViewProviders;
-using Plato.Discuss.Models;
+using Plato.Follow.Users.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 
-namespace Plato.Discuss.Follow
+namespace Plato.Follow.Users
 {
     public class Startup : StartupBase
     {
@@ -22,10 +21,10 @@ namespace Plato.Discuss.Follow
 
         public override void ConfigureServices(IServiceCollection services)
         {
-                   
-            // View providers
-            services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
-            services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
+
+            // User Profile View providers
+            services.AddScoped<IViewProviderManager<UserProfile>, ViewProviderManager<UserProfile>>();
+            services.AddScoped<IViewProvider<UserProfile>, ProfileViewProvider>();
             
         }
 
@@ -34,8 +33,6 @@ namespace Plato.Discuss.Follow
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-      
-
         }
     }
 }

@@ -6,7 +6,6 @@
     pager = @Model.Pager
 }))
 
-
 <script section="Footer">
 
     $(function(win, doc, $) {
@@ -15,6 +14,7 @@
 
         var page = @Model.Pager.Page,
             pageSize = @Model.Pager.PageSize,
+            filter = '@Model.Options.Filter',
             sort = '@Model.Options.Sort',
             order = '@Model.Options.Order.ToString().ToLower()';
 
@@ -28,6 +28,7 @@
 
             var pagerUrl = "?pager.page=" + page +
                 "&pager.size=" + pageSize +
+                "&opts.filter=" + filter +
                 "&opts.sort=" + sort + 
                 "opts.order=" + order;
             
@@ -43,8 +44,7 @@
             });
             
         };
-
-
+        
         $(win).scroll(function () {
 
             var wintop = $(win).scrollTop(),

@@ -9,17 +9,25 @@ namespace Plato.Follow
 
         public static readonly FollowType Topic = 
             new FollowType("Topic",
-                "Follow", 
+                "Follow Topic", 
                 "Folow this topic to get notified when replies are posted...",
                 "Unsubscribe",
                 "You are already following this topic. Unsubscribe below...");
 
         public static readonly FollowType User = 
             new FollowType("User",
-                "Follow",
+                "Follow User",
                 "Folow this user to get notified when they post new content.",
                 "Unsubscribe",
                 "You are already following this user. Unsubscribe below...");
+
+        public static readonly FollowType Tag =
+            new FollowType("Tag",
+                "Follow Tag",
+                "Folow this tag to get notified when new content is posted with this tag.",
+                "Unsubscribe",
+                "You are already following this tag. Unsubscribe below...");
+
 
         public static readonly FollowType Album = 
             new FollowType("Album");

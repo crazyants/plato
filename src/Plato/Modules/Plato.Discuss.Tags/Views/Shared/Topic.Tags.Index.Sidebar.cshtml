@@ -20,9 +20,6 @@
             <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.Id" asp-route-alias="@tag.Alias" class="@css">
                 @tag.Name
             </a>
-            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.Id" asp-route-alias="@tag.Alias" class="@css">
-                <span>x</span>@tag.TotalEntities.ToPrettyInt()
-            </a>
         </div>
             }
         }

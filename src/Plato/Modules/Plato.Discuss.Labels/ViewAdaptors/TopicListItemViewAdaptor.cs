@@ -75,7 +75,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
                 {
                     if (model.Topic == null)
                     {
-                        // Return an anonymous type, we are adapting a view component
+                        // Return an anonymous type as we are adapting a view component
                         return new
                         {
                             model = model
@@ -85,7 +85,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
                     // No need to modify the model if no labels have been found
                     if (!topicLabelsDictionary.ContainsKey(model.Topic.Id))
                     {
-                        // Return an anonymous type, we are adapting a view component
+                        // Return an anonymous type as we are adapting a view component
                         return new
                         {
                             model = model
@@ -104,7 +104,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
 
                     model.Labels = modelLabels;
 
-                    // Return an anonymous type, we are adapting a view component
+                    // Return an anonymous type as we are adapting a view component
                     return new
                     {
                         model = model
@@ -131,7 +131,10 @@ namespace Plato.Discuss.Labels.ViewAdaptors
             if (entities?.Data != null)
             {
                 entityLabels = await _entityLabelStore.QueryAsync()
-                    .Select<EntityLabelQueryParams>(q => { q.EntityId.IsIn(entities.Data.Select(e => e.Id).ToArray()); })
+                    .Select<EntityLabelQueryParams>(q =>
+                    {
+                        q.EntityId.IsIn(entities.Data.Select(e => e.Id).ToArray());
+                    })
                     .ToList();
             }
 
@@ -143,14 +146,17 @@ namespace Plato.Discuss.Labels.ViewAdaptors
                 foreach (var entityLabel in entityLabels.Data)
                 {
                     var label = labelList.FirstOrDefault(l => l.Id == entityLabel.LabelId);
-                    output.AddOrUpdate(entityLabel.EntityId, new List<Label>()
+                    if (label != null)
                     {
-                        label
-                    }, (k, v) =>
-                    {
-                        v.Add(label);
-                        return v;
-                    });
+                        output.AddOrUpdate(entityLabel.EntityId, new List<Label>()
+                        {
+                            label
+                        }, (k, v) =>
+                        {
+                            v.Add(label);
+                            return v;
+                        });
+                    }
                 }
             }
 

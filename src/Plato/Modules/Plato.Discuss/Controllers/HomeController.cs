@@ -158,7 +158,7 @@ namespace Plato.Discuss.Controllers
         }
 
 
-        public async Task<IActionResult> Get(
+        public Task<IActionResult> Get(
           TopicIndexOptions opts,
           PagerOptions pager)
         {
@@ -192,18 +192,19 @@ namespace Plato.Discuss.Controllers
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
-
-            opts.EnableCard = false;
-
-            // Add view options to context for use within view adaptors
+            
+            // Build view model
             var viewModel = new TopicIndexViewModel()
             {
                 Options = opts,
                 Pager = pager
             };
-
+            
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(TopicIndexViewModel)] = viewModel;
+            
             // Return view
-            return View(viewModel);
+            return Task.FromResult((IActionResult) View(viewModel));
 
         }
 
