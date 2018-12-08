@@ -69,7 +69,7 @@ namespace Plato.Discuss.Follow.ViewProviders
                 View<FollowViewModel>("Follow.Display.Sidebar", model =>
                 {
                     model.FollowType = followType;
-                    model.EntityId = entity.Id;
+                    model.ThingId = entity.Id;
                     model.IsFollowing = isFollowing;
                     return model;
                 }).Zone("sidebar").Order(4)
@@ -104,7 +104,7 @@ namespace Plato.Discuss.Follow.ViewProviders
                 {
                     model.FollowType = followType;
                     model.FollowHtmlName = FollowHtmlName;
-                    model.EntityId = entity.Id;
+                    model.ThingId = entity.Id;
                     model.IsFollowing = isFollowing;
                     return model;
                 }).Zone("sidebar").Order(2)

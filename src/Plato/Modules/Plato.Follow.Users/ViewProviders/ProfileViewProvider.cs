@@ -55,7 +55,7 @@ namespace Plato.Follow.Users.ViewProviders
                 View<FollowViewModel>("Follow.Display.Tools", model =>
                 {
                     model.FollowType = followType;
-                    model.EntityId = user.Id;
+                    model.ThingId = user.Id;
                     model.IsFollowing = isFollowing;
                     return model;
                 }).Zone("tools").Order(1)

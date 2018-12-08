@@ -6,33 +6,34 @@ using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Tags.Models;
+using Plato.Tags.Stores;
 
 namespace Plato.Follow.Tags.ViewProviders
 {
     public class TagViewProvider : BaseViewProvider<Tag>
     {
 
-        private readonly IPlatoUserStore<User> _platoUserStore;
+        private readonly ITagStore<Tag> _tagStore;
         private readonly IContextFacade _contextFacade;
-        private readonly IFollowStore<Plato.Follow.Models.Follow> _followStore;
+        private readonly IFollowStore<Models.Follow> _followStore;
 
         public TagViewProvider(
-            IPlatoUserStore<User> platoUserStore, 
+            ITagStore<Tag> tagStore, 
             IContextFacade contextFacade,
-            IFollowStore<Plato.Follow.Models.Follow> followStore)
+            IFollowStore<Models.Follow> followStore)
         {
-            _platoUserStore = platoUserStore;
+            _tagStore = tagStore;
             _contextFacade = contextFacade;
             _followStore = followStore;
         }
 
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Tag discussUser, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Tag tag, IViewProviderContext context)
         {
 
-            var user = await _platoUserStore.GetByIdAsync(discussUser.Id);
-            if (user == null)
+            var existingTag = await _tagStore.GetByIdAsync(tag.Id);
+            if (existingTag == null)
             {
-                return await BuildIndexAsync(discussUser, context);
+                return await BuildIndexAsync(tag, context);
             }
 
             var followType = DefaultFollowTypes.Tag;
@@ -43,7 +44,7 @@ namespace Plato.Follow.Tags.ViewProviders
             {
                 var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
                     followType.Name,
-                    user.Id,
+                    existingTag.Id,
                     currentUser.Id);
                 if (existingFollow != null)
                 {
@@ -55,12 +56,11 @@ namespace Plato.Follow.Tags.ViewProviders
                 View<FollowViewModel>("Follow.Display.Tools", model =>
                 {
                     model.FollowType = followType;
-                    model.EntityId = user.Id;
+                    model.ThingId = existingTag.Id;
                     model.IsFollowing = isFollowing;
                     return model;
                 }).Zone("tools").Order(1)
             );
-
 
         }
 

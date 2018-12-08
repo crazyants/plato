@@ -5,13 +5,21 @@
         : "times";
 }
 
-<h4>@Model.Name</h4>
+<h4>@T["Results for tag"] "@Model.Name"</h4>
 <div class="text-muted">
-    @T["Tag appears "] @Model.TotalEntities @T[text]
-    @if (Model.LastSeenDate != null)
+    @if (!String.IsNullOrEmpty(Model.Description))
     {
-        @T["Last seen: "]
-        <date utc="@Model.LastSeenDate"/>
+        @Model.Description
     }
+    else
+    {
+        @T["Tag appears "] <span>@Model.TotalEntities.ToPrettyInt()</span> @T[text]
+        @if (Model.LastSeenDate != null)
+         {
+             @T[", Last seen: "] <span><date utc="@Model.LastSeenDate"/></span>
+         }
+    }
+
+ 
 </div>
 <hr />
