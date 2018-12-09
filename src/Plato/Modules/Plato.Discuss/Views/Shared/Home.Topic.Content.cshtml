@@ -9,12 +9,14 @@
                     child-ul-css-class="dropdown-menu" />
     </card-title>
     <card-body>
-        <markdown-body markdown="@Model.Entity.Message"/>
+        <div class="markdown-body">
+              @Html.Raw(@Model.Entity.Html)
+        </div>
         <div>
             <navigation name="topic-extra"
-                model="@Model.Entity"
-                class="nav navbar p-0"
-                child-ul-css-class="dropdown-menu"/>
+                        model="@Model.Entity"
+                        class="nav navbar p-0"
+                        child-ul-css-class="dropdown-menu"/>
         </div>
     </card-body>
     <card-footer class="card-footer p-0">
@@ -53,9 +55,9 @@
                                     child-ul-css-class="dropdown-menu" />
                     </card-title>
                     <card-body class="card-body">
-               
-                        <markdown-body markdown="@reply.Message" />
-                    
+                        <div class="markdown-body">
+                            @Html.Raw(@reply.Html)
+                        </div>
                         <div>
                             <navigation name="topicreply-extra"
                                 model="reply"
