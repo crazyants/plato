@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Assets.Abstractions;
 using Plato.Internal.Features.Abstractions;
@@ -57,6 +59,17 @@ namespace Plato.Mentions
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            // If the markdown feature is enabled, ensure the
+            // mention parser uses the markdown linking syntax
+            var shellDescriptor = serviceProvider.GetService<IShellDescriptor>();
+            var markdownFeature = shellDescriptor.Modules.FirstOrDefault(m => m.ModuleId == "Plato.Markdown");
+            if (markdownFeature != null)
+            {
+                var parser = serviceProvider.GetService<IMentionsParser>();
+                parser.ReplacePattern = "[@{userName}]({url})";
+            }
+
         }
 
     }

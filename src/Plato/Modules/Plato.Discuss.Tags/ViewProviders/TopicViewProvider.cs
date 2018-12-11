@@ -90,42 +90,60 @@ namespace Plato.Discuss.Tags.ViewProviders
         {
             
             var tagsJson = "";
-            var entityTags = await GetEntityTagsByEntityIdAsync(topic.Id);
-
-            // Exclude replies
-            var entityTagList = entityTags?.Where(t => t.EntityReplyId == 0).ToList();
             
-            if (entityTagList?.Count > 0)
+            // Ensures we persist the tag json between post backs
+            var message = topic.Message;
+            if (_request.Method == "POST")
             {
-              
-                // Get entity tags
-                var tags = await _tagStore.QueryAsync()
-                    .Select<TagQueryParams>(q =>
-                    {
-                        q.Id.IsIn(entityTagList.Select(e => e.TagId).ToArray());
-                    })
-                    .OrderBy("Name")
-                    .ToList();
-
-                List<TagApiResult> tagsToSerialize = null;
-                if (tags != null)
+                foreach (string key in _request.Form.Keys)
                 {
-                    tagsToSerialize = new List<TagApiResult>();
-                    foreach (var tag in tags.Data)
+                    if (key == TagsHtmlName)
                     {
-                        tagsToSerialize.Add(new TagApiResult()
-                        {
-                            Id = tag.Id,
-                            Name = tag.Name
-                        });
+                        tagsJson = _request.Form[key];
                     }
                 }
+            }
+            else
+            {
 
-                if (tagsToSerialize != null)
+                var entityTags = await GetEntityTagsByEntityIdAsync(topic.Id);
+
+                // Exclude replies
+                var entityTagList = entityTags?.Where(t => t.EntityReplyId == 0).ToList();
+
+                if (entityTagList?.Count > 0)
                 {
-                    tagsJson = tagsToSerialize.Serialize();
+
+                    // Get entity tags
+                    var tags = await _tagStore.QueryAsync()
+                        .Select<TagQueryParams>(q =>
+                        {
+                            q.Id.IsIn(entityTagList.Select(e => e.TagId).ToArray());
+                        })
+                        .OrderBy("Name")
+                        .ToList();
+
+                    List<TagApiResult> tagsToSerialize = null;
+                    if (tags != null)
+                    {
+                        tagsToSerialize = new List<TagApiResult>();
+                        foreach (var tag in tags.Data)
+                        {
+                            tagsToSerialize.Add(new TagApiResult()
+                            {
+                                Id = tag.Id,
+                                Name = tag.Name
+                            });
+                        }
+                    }
+
+                    if (tagsToSerialize != null)
+                    {
+                        tagsJson = tagsToSerialize.Serialize();
+                    }
+
                 }
-            
+
             }
             
             var viewModel = new EditTopicTagsViewModel()

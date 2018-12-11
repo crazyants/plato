@@ -72,7 +72,8 @@ namespace Plato.Markdown.Services
                     .UseFigures()
                     .UseTaskLists()
                     .UseCustomContainers()
-                    .UseGenericAttributes();
+                    .UseGenericAttributes()
+                    .DisableHtml();
 
                 //builder = builder.UseSmartyPants();            
 

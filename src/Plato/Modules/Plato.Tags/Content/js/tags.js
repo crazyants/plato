@@ -223,9 +223,12 @@ $(function (win, doc, $) {
                         },
                         onKeyDown: function($input, e) {
 
-                            // handle enter or comma
-                            if (e.keyCode === 13 || e.keyCode === 188) {
-
+                            // handle carriage returns & comma (without modifier)
+                            var noMod = (!e.shiftKey && !e.ctrlKey),
+                                isComma = (noMod && e.keyCode === 188),
+                                isCarriageReturn = (noMod && e.keyCode === 13);
+                            if (isCarriageReturn | isComma) {
+                                
                                 e.preventDefault();
 
                                 // Add dropdown selection if available

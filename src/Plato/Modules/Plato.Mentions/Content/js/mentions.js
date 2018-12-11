@@ -746,10 +746,7 @@ $(function (win, doc, $) {
                                             value += chars[i];
                                         }
                                     }
-
-                                    console.log("men startIndex: " + startIndex)
-                                    console.log("men value: " + value)
-
+                                    
                                     return {
                                         startIndex: startIndex,
                                         value: value

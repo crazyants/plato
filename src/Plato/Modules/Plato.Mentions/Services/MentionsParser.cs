@@ -1,24 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstractions.Users;
 
 namespace Plato.Mentions.Services
 {
-    
+
     public class MentionsParser : IMentionsParser
     {
         
         private const string SearchPattern = "@([^\\n|^\\s][a-z0-9\\-_\\/]*)";
 
+        public string ReplacePattern { get; set; }
+            = "<a href=\"{url}\">@{userName}</a>";
+
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
-
-        public MentionsParser(IPlatoUserStore<User> platoUserStore, IContextFacade contextFacade)
+    
+        public MentionsParser(
+            IPlatoUserStore<User> platoUserStore, 
+            IContextFacade contextFacade)
         {
             _platoUserStore = platoUserStore;
             _contextFacade = contextFacade;
@@ -84,8 +91,13 @@ namespace Plato.Mentions.Services
                     var user = userList.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.Ordinal));
                     if (user != null)
                     {
-                        input = input.Replace(match.Value,
-                            $"<a href=\"{baseUrl}/users/{user.Id}/{user.Alias}\">@{user.UserName}</a>");
+                        // parse template
+                        var sb = new StringBuilder(ReplacePattern);
+                        sb.Replace("{url}", $"{baseUrl}/users/{user.Id}/{user.Alias}");
+                        sb.Replace("{userName}", user.UserName);
+
+                        // Replace match with template
+                        input = input.Replace(match.Value, sb.ToString());
                     }
                 }
             }

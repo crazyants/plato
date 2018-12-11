@@ -238,7 +238,7 @@ namespace Plato.Entities.Services
         {
 
             // Ensure HTML is sanitized before any parsing takes place
-            message = _htmlSanitizer.SanitizeHtml(message);
+            message = _htmlSanitizer.Sanitize(message);
 
             foreach (var handler in _broker.Pub<string>(this, "ParseEntityHtml"))
             {

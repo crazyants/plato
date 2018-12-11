@@ -15,6 +15,7 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Scripting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 
@@ -586,7 +587,32 @@ namespace Plato.Discuss.Controllers
 
 Hi @admin, 
 
+<script>alert('test')</script>
+
 # header 1
+
+```
+<script>alert(""test"")</script>
+```
+
+![Video1](https://www.youtube.com/watch?v=7lhlKF6MECs)
+
+test
+
+```
+<script>alert(""test"")</script>
+```
+
+![image.png](/media/2)
+
+- This is a test `< script > alert(""test"") </ script >`
+- This is a test `<script> alert(""test"") </script>`
+
+### Check List 
+
+- [x] check list 1 
+- [x] check list 2
+- [ ] check list 3
 
 Test message Test message Test message Test :)
 
@@ -606,9 +632,73 @@ Test message Test message Test message Test
 
 ### Header 3
 
+＜script
+＞alert('XSS')＜/
+script＞
+
+'＜script lang＞alert('XSS')＜/ script＞'
+
+<code test=""23"">qweqweqweqweqweqwewqeqwe</code>
+
+test
+```<&#115;cript>alert(""test"")</script>```
+
+```
+<script>alert(""test"")</script>
+```
+
+-This is a test `< &#115;cript > alert(""test"") </ script >`
+-This is a test `<script> alert(""test"") </script>`
+
+```
+
+<script>alert(""test"")</script>
+
+```
+
+``
+
+<script>alert(""test"")</script>
+
+<code>123</code>
+
+<code> <&#115;&#99;&#114;&#105;&#112;&#116;>alert(""test"")<&#115;&#99;&#114;&#105;&#112;&#116;>
+</code>
+
+&#115;
+
+<code> <&#115;&#99;&#114;&#105;&#112;&#116;>alert(""test"")<&#115;&#99;&#114;&#105;&#112;&#116;></code>
+
+<code> &#115;&#99;&#114;&#105;&#112;&#116;>alert(""test"")<&#115;&#99;&#114;&#105;&#112;&#116;</code>
+
+<&#115;&#99;&#114;&#105;&#112;&#116;>alert(""test"")<&#115;&#99;&#114;&#105;&#112;&#116;>
+
+'''
+＜script lang＞alert('XSS')＜/ script＞
+'''
+
+＜script lang＞alert('XSS')＜/ script＞
+
+＜script＞alert('XSS')＜/script＞
+
+<div onmouseover=alert('test') onmouseenter=alert""('test')"">
+This is a div
+</div>
+
+<iframe src=""https://www.instantasp.co.uk/></iframe>
+< iframe src=""https://www.instantasp.co.uk/""></iframe>
+
+<section onload=""alert('test')"" onmouseenter=alert""('test')"">
+This is a section
+</section>
+
+
 message Test message Test message Test message 
 
 Test message Test message Test message Test message 
+
+<script>alert('test')</script>
+<script>alert('test')</script>
 
 #### Header 4
 
