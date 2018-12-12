@@ -1,5 +1,5 @@
-Name: Plato Demo
-Description: A demo module for testing purposes.
+Name: Plato Media Lightbox
+Description: Provides lightbox funcitonlity for embedded images.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core

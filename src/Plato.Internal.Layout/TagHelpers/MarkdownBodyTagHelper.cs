@@ -16,7 +16,7 @@ namespace Plato.Internal.Layout.TagHelpers
     {
 
         [HtmlAttributeName("allow-razor-expressions")]
-        public bool AllowRazorExpressions { get; set; } = true;
+        public bool AllowRazorExpressions { get; set; } = false;
 
         [HtmlAttributeName("normalize-whitespace")]
         public bool NormalizeWhitespace { get; set; } = true;
@@ -70,6 +70,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
             output.TagName = "div";
             output.Attributes.Add("class", "markdown-body");
+            output.Attributes.Add("data-provide", "markdownBody");
 
             output.Content.SetHtmlContent(await ParseEntityHtml(markdown));
             

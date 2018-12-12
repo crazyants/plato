@@ -583,9 +583,9 @@ namespace Plato.Discuss.Controllers
 
         string GetSampleMarkDown(int number)
         {
-            return number.ToString() + @"
+            return @"Hi @admin, 
 
-Hi @admin, 
+Yay ♥♥♥ Yay
 
 <script>alert('test')</script>
 
@@ -731,7 +731,7 @@ message Test message  " + number.ToString();
             var rnd = new Random();
             var topic = new Topic()
             {
-                Title = "Test Topic " + rnd.Next(0, users.Total).ToString(),
+                Title = "Test Topic ♥ " + rnd.Next(0, users.Total).ToString(),
                 Message = GetSampleMarkDown(rnd.Next(0, users.Total)),
                 CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id
                 

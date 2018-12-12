@@ -19,7 +19,8 @@ namespace Plato.Internal.Text.Extensions
             services.TryAddSingleton<IImageUriExtractor, ImageUriExtractor>();
             services.TryAddSingleton<IAnchorUriExtractor, AnchorUriExtractor>();
             services.TryAddSingleton<IKeyGenerator, KeyGenerator>();
-     
+            services.TryAddSingleton<IDefaultHtmlEncoder, DefaultHtmlEncoder>();
+
             services.TryAddSingleton<ITextParser, TextParser>();
         
             return services;

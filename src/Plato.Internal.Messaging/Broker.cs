@@ -65,7 +65,9 @@ namespace Plato.Internal.Messaging
             // Iterate through subscriber action delegates matching our key
             foreach (var handler in delegates
                 .Where(d => d.Options.Key == options.Key)
-                .Select(s => s.Subscription as Action<Message<T>>))
+                .OrderBy(d => d.Options.Order)
+                .Select(s => s.Subscription as Action<Message<T>>)
+                )
             {
                 if (handler != null)
                 {
@@ -87,6 +89,7 @@ namespace Plato.Internal.Messaging
             // Iterate through subscriber func delegates matching our key
             foreach (var func in delegates
                 .Where(d => d.Options.Key == options.Key)
+                .OrderBy(d => d.Options.Order)
                 .Select(s => s.Subscription as Func<Message<T>, Task<T>>))
             {
                 if (func != null)

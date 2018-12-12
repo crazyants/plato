@@ -11,6 +11,8 @@ using Plato.Markdown.Assets;
 using Plato.Markdown.Services;
 using Plato.Markdown.Subscribers;
 using Plato.Markdown.ViewAdaptors;
+using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Markdown
 {
@@ -38,6 +40,11 @@ namespace Plato.Markdown
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
 
+            // Replace the IDefaultHtmlEncoder implementation used by default 
+            // This ensures HTML is not HtmlEncoded before it's passed to the markdown parser
+            // The markdown parser should safely encode the final html produced from the markdown
+            services.Replace<IDefaultHtmlEncoder, MarkdownHtmlEncoder>(ServiceLifetime.Singleton);
+            
         }
 
         public override void Configure(

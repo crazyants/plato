@@ -50,6 +50,7 @@ namespace Plato.Entities
             // Entity subscribers
             services.AddScoped<IBrokerSubscriber, ParseEntityAliasSubscriber>();
             services.AddScoped<IBrokerSubscriber, ParseEntityUrlsSubscriber>();
+            services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
 
         }
 

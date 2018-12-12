@@ -25,13 +25,15 @@ namespace Plato.Markdown.Subscribers
             // Add a subscription to convert markdown to html
             _broker.Sub<string>(new MessageOptions()
             {
-                Key = "ParseEntityHtml"
+                Key = "ParseEntityHtml",
+                Order = short.MinValue // ensure message is always converted to markdown first
             }, async message => await ParseEntityHtmlAsync(message.What));
             
             // Add a subscription to produce a plaintext abstract from our markdown
             _broker.Sub<string>(new MessageOptions()
             {
-                Key = "ParseEntityAbstract"
+                Key = "ParseEntityAbstract",
+                Order = short.MinValue // ensure message is always converted to markdown first
             }, async message => await ParseEntityAbstractAsync(message.What));
             
         }

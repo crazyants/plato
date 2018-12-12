@@ -3221,6 +3221,258 @@ $(function (win, doc, $) {
 
     }();
 
+    /* autoTargetBlank */
+    var autoTargetBlank = function () {
+
+        var dataKey = "autoTargetBlank",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            selector: "a"
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+                var selector = $caller.data(dataKey).selector;
+                $caller.find(selector).each(function () {
+                    if ($(this).attr("href")) {
+                        $(this).attr("target", "_blank");
+                    }
+                });
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).autoTargetBlank()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().autoTargetBlank()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+
+    /* autoLinkImages */
+    var autoLinkImages = function () {
+
+        var dataKey = "autoLinkImages",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            selector: "img"
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                // Iterate images to auto link
+                var selector = $caller.data(dataKey).selector;
+                $caller.find(selector).each(function(i) {
+
+                    // Ensure we have a src attribute to link to
+                    if ($(this).attr("src")) {
+
+                        // Is the parent tag already a link?
+                        var parentTag = $(this).parent().prop("tagName");
+                        if (parentTag && parentTag !== "A") {
+                            // Wrap link around image
+                            $(this).wrap($("<a/>",
+                                {
+                                    "href": $(this).attr("src"),
+                                    "title": $(this).attr("alt") || "",
+                                    "target": "_blank"
+                                }));
+                        }
+
+                    }
+
+                });
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).autoLinkImages()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().autoLinkImages()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+    
+    /* markdownBody */
+    var markdownBody = function () {
+
+        var dataKey = "markdownBody",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            selector: "a"
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller) {
+                this.bind($caller);
+            },
+            bind: function ($caller) {
+
+                $caller
+                    .autoTargetBlank()
+                    .autoLinkImages();
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).targetBlank()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().targetBlank()
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            var $caller = $("body");
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+    
     /* confirm */
     var confirm = function () {
 
@@ -3323,7 +3575,10 @@ $(function (win, doc, $) {
         selectDropdown: selectDropdown.init,
         labelSelectDropdown: labelSelectDropdown.init,
         categorySelectDropdown: categorySelectDropdown.init,
-        confirm: confirm.init
+        confirm: confirm.init,
+        autoTargetBlank: autoTargetBlank.init,
+        autoLinkImages: autoLinkImages.init,
+        markdownBody: markdownBody.init
     });
 
     // ---------------------------
@@ -3375,6 +3630,15 @@ $(function (win, doc, $) {
         /* confirm */
         this.find('[data-provide="confirm"]').confirm();
 
+        /* autoTargetBlank */
+        this.find('[data-provide="autoTargetBlank"]').autoTargetBlank();
+
+        /* autoLinkImages */
+        this.find('[data-provide="autoLinkImages"]').autoLinkImages();
+        
+        /* markdownBody */
+        this.find('[data-provide="markdownBody"]').markdownBody();
+        
     }
 
     $(doc).ready(function() {
