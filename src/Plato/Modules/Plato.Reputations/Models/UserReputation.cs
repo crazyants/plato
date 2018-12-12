@@ -10,12 +10,13 @@ namespace Plato.Reputations.Models
 
         public int Id { get; set; }
 
-        public string ReputationName { get; set; }
-
-        public int UserId { get; set; }
+        public string Name { get; set; }
+        
 
         public int Points { get; set; }
-        
+
+        public int CreatedUserId { get; set; }
+
         public DateTimeOffset? CreatedDate { get; set; }
 
         public void PopulateModel(IDataReader dr)
@@ -24,15 +25,15 @@ namespace Plato.Reputations.Models
             if (dr.ColumnIsNotNull("Id"))
                 Id = Convert.ToInt32(dr["Id"]);
 
-            if (dr.ColumnIsNotNull("ReputationName"))
-                ReputationName = Convert.ToString(dr["ReputationName"]);
-
-            if (dr.ColumnIsNotNull("UserId"))
-                UserId = Convert.ToInt32(dr["UserId"]);
+            if (dr.ColumnIsNotNull("Name"))
+                Name = Convert.ToString(dr["Name"]);
 
             if (dr.ColumnIsNotNull("Points"))
                 Points = Convert.ToInt32(dr["Points"]);
-
+            
+            if (dr.ColumnIsNotNull("CreatedUserId"))
+                CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
+            
             if (dr.ColumnIsNotNull("CreatedDate"))
                 CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
 

@@ -13,8 +13,6 @@ namespace Plato.Reputations.Models
 
         public string Category { get; set; }
 
-        public Action<IReputationAwarderContext> Awarder { get; set; }
-
         public DateTimeOffset? AwardedDate { get; set; }
         
         protected Reputation(string name)
@@ -37,14 +35,6 @@ namespace Plato.Reputations.Models
             this.Points = points;
         }
 
-        public Reputation(
-            string name,
-            string description,
-            int points,
-            Action<IReputationAwarderContext> awarder) : this(name, description, points)
-        {
-            this.Awarder = awarder;
-        }
 
     }
 

@@ -33,9 +33,9 @@ namespace Plato.Reputations.Repositories
 
             var id = await InsertUpdateInternal(
                 model.Id,
-                model.ReputationName,
-                model.UserId,
+                model.Name,
                 model.Points,
+                model.CreatedUserId,
                 model.CreatedDate
              );
 
@@ -132,9 +132,9 @@ namespace Plato.Reputations.Repositories
 
         async Task<int> InsertUpdateInternal(
             int id,
-            string reputationName,
-            int userId,
+            string name,
             int points,
+            int createdUserId,
             DateTimeOffset? createdDate)
         {
 
@@ -145,9 +145,9 @@ namespace Plato.Reputations.Repositories
                     CommandType.StoredProcedure,
                     "InsertUpdateUserReputation",
                     id,
-                    reputationName.ToEmptyIfNull(),
-                    userId,
+                    name.ToEmptyIfNull(),
                     points,
+                    createdUserId,
                     createdDate.ToDateIfNull());
             }
             return output;

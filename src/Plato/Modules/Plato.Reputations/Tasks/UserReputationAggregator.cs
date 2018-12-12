@@ -1,21 +1,17 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 
-namespace Plato.Reputations.Services
+namespace Plato.Reputations.Tasks
 {
-
-    public interface IUserReputationAggregator
-    {
-        void Invoke();
-    }
-
+    
     /// <summary>
     /// Polls the UserReputation tables and agregates total reputation points into Users.TotalPoints
     /// </summary>
-    public class UserReputationAggregator : IUserReputationAggregator
+    public class UserReputationAggregator : IBackgroundTaskProvider
     {
 
         private readonly ISafeTimerFactory _safeTimerFactory;
@@ -35,7 +31,10 @@ namespace Plato.Reputations.Services
             _logger = logger;
         }
 
-        public void Invoke()
+
+        public int IntervalInSeconds => 90;
+
+        public async Task ExecuteAsync()
         {
 
             // Selects all users who have been awarded reputation within the last 24 hours
@@ -65,20 +64,15 @@ namespace Plato.Reputations.Services
                     CLOSE MSGCURSOR;
                     DEALLOCATE MSGCURSOR;
                     SELECT @dirty;";
-
-            // Start task to execute SQL every X seconds
-            _safeTimerFactory.Start(async (sender, args) =>
-                {
-                    var dirty = await _dbHelper.ExecuteScalarAsync<bool>(sql);
-                    if (dirty)
-                    {
-                        _cacheManager.CancelTokens(typeof(PlatoUserStore));
-                    }
-
-                }, 90 * 1000);
-
+            
+            var dirty = await _dbHelper.ExecuteScalarAsync<bool>(sql);
+            if (dirty)
+            {
+                _cacheManager.CancelTokens(typeof(PlatoUserStore));
+            }
         }
 
     }
+
 
 }

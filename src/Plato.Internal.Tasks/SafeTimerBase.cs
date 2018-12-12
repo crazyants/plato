@@ -1,16 +1,16 @@
-﻿namespace Plato.Internal.Tasks
+﻿using System.Threading;
+
+namespace Plato.Internal.Tasks
 {
 
     public abstract class SafeTimerBase 
     {
-
+   
         private volatile bool _isRunning;
         
         public bool IsRunning => _isRunning;
 
         public bool PerformingTasks { get; set; }
-
-        public int IntervalInSeconds { get; set; }
         
         public virtual void Start()
         {

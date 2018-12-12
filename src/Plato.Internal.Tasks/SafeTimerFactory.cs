@@ -14,9 +14,15 @@ namespace Plato.Internal.Tasks
             _safeTimer = safeTimer;
         }
         
-        public void Start(Action<object, SafeTimerEventArgs> action, int interval)
+        public void Start(Action<object, SafeTimerEventArgs> action, SafeTimerOptions options)
         {
-            _safeTimer.IntervalInSeconds = interval;
+
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            _safeTimer.Options = options;
             _safeTimer.Elapsed += (sender, args) => { action(sender, args); };
             _safeTimer.Start();
         }

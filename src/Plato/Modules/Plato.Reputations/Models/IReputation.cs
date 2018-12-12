@@ -13,8 +13,6 @@ namespace Plato.Reputations.Models
 
         string Category { get; set; }
 
-        Action<IReputationAwarderContext> Awarder { get; set; }
-
     }
 
 }

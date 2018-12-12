@@ -36,14 +36,13 @@ namespace Plato.Reputations.Stores
             var builder = new UserReputationsQueryBuilder(this);
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
-            var reputationName = Params?.ReputationName?.Value ?? string.Empty;
-
+       
             var data = await _store.SelectAsync(
                 PageIndex,
                 PageSize,
                 populateSql,
                 countSql,
-                reputationName
+                Params?.Keywords?.Value ?? string.Empty
             );
 
             return data;
@@ -59,7 +58,7 @@ namespace Plato.Reputations.Stores
     {
         
         private WhereInt _id;
-        private WhereString _reputationName;
+        private WhereString _keywords;
         private WhereInt _userId;
 
         public WhereInt Id
@@ -68,10 +67,10 @@ namespace Plato.Reputations.Stores
             set => _id = value;
         }
 
-        public WhereString ReputationName
+        public WhereString Keywords
         {
-            get => _reputationName ?? (_reputationName = new WhereString());
-            set => _reputationName = value;
+            get => _keywords ?? (_keywords = new WhereString());
+            set => _keywords = value;
         }
 
         public WhereInt UserId
@@ -178,12 +177,12 @@ namespace Plato.Reputations.Stores
                 sb.Append(_query.Params.Id.ToSqlString("ur.Id"));
             }
 
-            // ReputationName
-            if (!String.IsNullOrEmpty(_query.Params.ReputationName.Value))
+            // Name
+            if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
-                    sb.Append(_query.Params.ReputationName.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("ReputationName"));
+                    sb.Append(_query.Params.Keywords.Operator);
+                sb.Append(_query.Params.Keywords.ToSqlString("[Name]", "Keywords"));
             }
 
             // UserId

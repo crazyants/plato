@@ -25,18 +25,18 @@ namespace Plato.Reputations.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "ReputationName",
+                        Name = "[Name]",
                         DbType = DbType.String,
                         Length = "255"
                     },
                     new SchemaColumn()
                     {
-                        Name = "UserId",
+                        Name = "Points",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
-                        Name = "Points",
+                        Name = "CreatedUserId",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()
@@ -69,8 +69,8 @@ namespace Plato.Reputations.Handlers
                 // configure
                 Configure(builder);
 
-                // User badges
-                UserBadges(builder);
+                // User reputations
+                UserReputations(builder);
 
                 // Log statements to execute
                 if (context.Logger.IsEnabled(LogLevel.Information))
@@ -166,7 +166,7 @@ namespace Plato.Reputations.Handlers
 
         }
 
-        void UserBadges(ISchemaBuilder builder)
+        void UserReputations(ISchemaBuilder builder)
         {
 
             builder
@@ -179,7 +179,7 @@ namespace Plato.Reputations.Handlers
                 {
                     new SchemaColumn()
                     {
-                        Name = "ReputationName",
+                        Name = "Keywords",
                         DbType = DbType.String,
                         Length = "255"
                     }

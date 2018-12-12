@@ -5,12 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Tasks.Abstractions;
 using Plato.Reputations.Handlers;
 using Plato.Reputations.Models;
 using Plato.Reputations.Providers;
 using Plato.Reputations.Repositories;
 using Plato.Reputations.Services;
 using Plato.Reputations.Stores;
+using Plato.Reputations.Tasks;
 
 namespace Plato.Reputations
 {
@@ -38,8 +40,10 @@ namespace Plato.Reputations
             
             // Services
             services.AddScoped<IReputationsManager<Reputation>, ReputationsManager<Reputation>>();
-            services.AddScoped<IReputationsAwarder, ReputationsAwarder<Reputation>>();
-            services.AddScoped<IUserReputationAggregator, UserReputationAggregator>();
+            //services.AddScoped<IReputationsAwarder, ReputationsAwarder<Reputation>>();
+
+            // Background tasks
+            services.AddScoped<IBackgroundTaskProvider, UserReputationAggregator>();
             
             // Reputation providers
             services.AddScoped<IReputationsProvider<Reputation>, RepProvider>();
@@ -52,16 +56,16 @@ namespace Plato.Reputations
             IServiceProvider serviceProvider)
         {
 
-            // Activate all awarders within registered reputation providers
-            var awarders = serviceProvider.GetServices<IReputationsAwarder>();
-            foreach (var awarder in awarders)
-            {
-                awarder?.Invoke();
-            }
+            //// Activate all awarders within registered reputation providers
+            //var awarders = serviceProvider.GetServices<IReputationsAwarder>();
+            //foreach (var awarder in awarders)
+            //{
+            //    awarder?.Invoke();
+            //}
 
-            // Activate user total reputation aggregator
-            var aggregator = serviceProvider.GetService<IUserReputationAggregator>();
-            aggregator?.Invoke();
+            //// Activate user total reputation aggregator
+            //var aggregator = serviceProvider.GetService<IUserReputationAggregator>();
+            //aggregator?.Invoke();
 
         }
 

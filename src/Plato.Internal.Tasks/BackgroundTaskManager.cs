@@ -28,22 +28,26 @@ namespace Plato.Internal.Tasks
             foreach (var provider in _providers)
             {
                 _safeTimerFactory.Start(async (sender, args) =>
+                {
+                    try
                     {
-                        try
+                        await provider.ExecuteAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        if (_logger.IsEnabled(LogLevel.Critical))
                         {
-                            await provider.ExecuteAsync();
+                            _logger.LogError(
+                                $"An error occurred whilst activating background task of type '{provider.GetType()}'. {e.Message}");
                         }
-                        catch (Exception e)
-                        {
-                            if (_logger.IsEnabled(LogLevel.Critical))
-                            {
-                                _logger.LogError(
-                                    $"An error occurred whilst activating background task of type '{provider.GetType()}'. {e.Message}");
-                            }
-                        }
-                    }, provider.IntervalInSeconds * 1000);
+                    }
+                }, new SafeTimerOptions()
+                {
+                    IntervalInSeconds = provider.IntervalInSeconds * 1000
+                });
 
             }
+
         }
 
         public void StopTasks()

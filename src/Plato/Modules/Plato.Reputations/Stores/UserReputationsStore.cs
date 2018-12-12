@@ -83,7 +83,7 @@ namespace Plato.Reputations.Stores
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
                     _logger.LogInformation("Deleted user reputation '{0}' with id {1}",
-                        model.ReputationName, model.Id);
+                        model.Name, model.Id);
                 }
 
                 _cacheManager.CancelTokens(this.GetType());
@@ -150,7 +150,7 @@ namespace Plato.Reputations.Stores
             {
                 foreach (var userReputation in userReputations.Data)
                 {
-                    var reputation = reputationList.FirstOrDefault(b => b.Name.Equals(userReputation.ReputationName, StringComparison.OrdinalIgnoreCase));
+                    var reputation = reputationList.FirstOrDefault(b => b.Name.Equals(userReputation.Name, StringComparison.OrdinalIgnoreCase));
                     if (reputation != null)
                     {
                         reputation.AwardedDate = userReputation.CreatedDate;

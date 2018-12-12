@@ -7,10 +7,10 @@ namespace Plato.Internal.Tasks
     
     public class SafeTimer : SafeTimerBase, ISafeTimer
     {
+       
+        public SafeTimerOptions Options { get; set; } = new SafeTimerOptions();
 
         public event TimerEventHandler Elapsed;
-
-        public bool RunOnStart { get; set; }
         
         private Timer _timer;
         private int _inTimerCallback = 0;
@@ -25,12 +25,12 @@ namespace Plato.Internal.Tasks
 
             _timer = new Timer(TimerCallBack, null, Timeout.Infinite, Timeout.Infinite);
 
-            if (IntervalInSeconds <= 0)
+            if (Options.IntervalInSeconds <= 0)
                 throw new Exception("IntervalInSeconds should be set before starting the timer!");
 
             base.Start();
             
-            _timer.Change(RunOnStart ? 0 : IntervalInSeconds, Timeout.Infinite);
+            _timer.Change(Options.RunOnStart ? 0 : Options.IntervalInSeconds, Timeout.Infinite);
         }
 
         public override void Stop()
@@ -102,10 +102,19 @@ namespace Plato.Internal.Tasks
                     base.PerformingTasks = false;
                     if (base.IsRunning)
                     {
-                        _timer.Change(IntervalInSeconds, Timeout.Infinite);
+                        if (!Options.RunOnce)
+                        {
+                            _timer.Change(Options.IntervalInSeconds, Timeout.Infinite);
+                            Monitor.Pulse(_timer);
+                            Interlocked.Exchange(ref _inTimerCallback, 0);
+                        }
+                        else
+                        {
+                            Stop();
+                        }
+                        
                     }
-                    Monitor.Pulse(_timer);
-                    Interlocked.Exchange(ref _inTimerCallback, 0);
+             
                 }
 
             }
