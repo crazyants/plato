@@ -169,10 +169,16 @@ namespace Plato.Internal.Abstractions.Extensions
         {
             return input.StripNewLines().StripHtml();
         }
-        
+
+        public static string NormalizeNewLines(this string input)
+        {
+            // Normalize non-unix "\r\n" to standardized "\n"
+            return Regex.Replace(input, "\r\n", "\n");
+        }
+
         public static string HtmlTextulize(this string input)
         {
-            return Regex.Replace(input, System.Environment.NewLine, "<br/>"); ; ;
+            return Regex.Replace(input.NormalizeNewLines(), "\n", "<br/>");
         }
         
         public static string StripNewLines(this string input)

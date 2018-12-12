@@ -18,7 +18,6 @@ namespace Plato.Entities.Subscribers
             IShellDescriptor shellDescriptor, 
             IDefaultHtmlEncoder defaultHtmlEncoder)
         {
-
             _broker = broker;
             _shellDescriptor = shellDescriptor;
             _defaultHtmlEncoder = defaultHtmlEncoder;
@@ -47,12 +46,18 @@ namespace Plato.Entities.Subscribers
         private Task<string> ParseEntityHtmlAsync(string message)
         {
 
-            // If needed modules can override the IDefaultHtmlEncoder implementation
-            // to handle other scenarios such as parsing markdown or HTML.
-            // If a module overrides the IDefaultHtmlEncoder implementation it's
-            // the responsibility of the overriding module to safely encode the HTML
+            // IDefaultHtmlEncoder ensures user supplied content is correctly HTML encoded
+            // before being stored to the database for later display, For performance reasons
+            // we saves the HTML to display within the database as opposed to parsing the
+            // message everytime it's displayed. For this reason we must ensure the saved HTML
+            // is correctly HTML encoded as this may be dislpayed via the Html.Raw HtmlHelper
 
+            // If needed modules can override the IDefaultHtmlEncoder implementation
+            // to handle additional scenarios such as parsing markdown or HTML.
+            // If a module overrides the IDefaultHtmlEncoder implementation it's
+            // the responsibility of the overriding module to safely encode the HTML for display
             return Task.FromResult(_defaultHtmlEncoder.Encode(message));
+
         }
 
     }

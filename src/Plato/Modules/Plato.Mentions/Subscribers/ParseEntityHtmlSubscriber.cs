@@ -22,10 +22,11 @@ namespace Plato.Mentions.Subscribers
 
         public void Subscribe()
         {
-            // Add a subscription to convert markdown to html
+            // Add a subscription to convert @mentions to hyperlinks to user profiles
             _broker.Sub<string>(new MessageOptions()
             {
-                Key = "ParseEntityHtml"
+                Key = "ParseEntityHtml",
+                Order = short.MaxValue // @mentions should be parsed towards the very end
             }, async message => await ParseEntityHtmlAsync(message.What));
             
         }

@@ -6,8 +6,8 @@ namespace Plato.Markdown.Services
     {
         public string Encode(string html)
         {
-            // No need to HtmlEncode our HTML if the markdown feature is enabled
-            // It's the markdown parsers responsibility to safely parse and encode the HTML
+            // Defer the responsibility to the markdown parser
+            // to safely encode the supplied HTML
             return html;
         }
     }

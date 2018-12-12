@@ -40,9 +40,9 @@ namespace Plato.Markdown
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, ParseEntityHtmlSubscriber>();
 
-            // Replace the IDefaultHtmlEncoder implementation used by default 
+            // Replace the IDefaultHtmlEncoder implementation 
             // This ensures HTML is not HtmlEncoded before it's passed to the markdown parser
-            // The markdown parser should safely encode the final html produced from the markdown
+            // The markdown parser will safely encode the html produced from the supplied markdown
             services.Replace<IDefaultHtmlEncoder, MarkdownHtmlEncoder>(ServiceLifetime.Singleton);
             
         }
