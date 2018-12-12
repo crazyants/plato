@@ -56,7 +56,7 @@ namespace Plato.Reputations.Tasks
                     WHILE @@FETCH_STATUS = 0
                     BEGIN	                   
                         UPDATE {prefix}_Users SET TotalPoints = (
-                            SELECT SUM(Points) FROM {prefix}_UserReputations WHERE UserId = @userId
+                            SELECT SUM(Points) FROM {prefix}_UserReputations WHERE CreatedUserId = @userId
                         ) WHERE Id = @userId;
                         SET @dirty = 1;
 	                    FETCH NEXT FROM MSGCURSOR INTO @userId;	                    

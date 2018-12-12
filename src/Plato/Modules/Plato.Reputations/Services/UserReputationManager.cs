@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Reputations.Models;
@@ -9,12 +8,7 @@ using Plato.Reputations.Stores;
 
 namespace Plato.Reputations.Services
 {
-
-    public interface IUserReputationManager<TUserReputation> : ICommandManager<TUserReputation> where TUserReputation : class
-    {
-
-    }
-
+    
     public class UserReputationManager : IUserReputationManager<UserReputation>
     {
 
@@ -135,9 +129,41 @@ namespace Plato.Reputations.Services
 
         }
 
-        public Task<ICommandResult<UserReputation>> UpdateAsync(UserReputation model)
+        public async Task<ICommandResult<UserReputation>> UpdateAsync(UserReputation model)
         {
-            throw new NotImplementedException();
+
+            // Validate
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            // Invoke UserReputationDeleting subscriptions
+            foreach (var handler in _broker.Pub<UserReputation>(this, "UserReputationDeleting"))
+            {
+                model = await handler.Invoke(new Message<UserReputation>(model, this));
+            }
+
+            var result = new CommandResult<UserReputation>();
+            var success = await _userReputationStore.DeleteAsync(model);
+            if (success)
+            {
+
+                // Invoke UserReputationDeleted subscriptions
+                foreach (var handler in _broker.Pub<UserReputation>(this, "UserReputationDeleted"))
+                {
+                    model = await handler.Invoke(new Message<UserReputation>(model, this));
+                }
+
+                // Return success
+                return result.Success();
+
+            }
+
+            return result.Failed(new CommandError("An unknown error occurred whilst attempting to delete the user reputation entry"));
+            
         }
+
     }
+
 }
