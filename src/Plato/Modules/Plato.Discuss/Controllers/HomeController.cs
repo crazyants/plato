@@ -589,6 +589,10 @@ Hi @admin,
 
 <script>alert('test')</script>
 
+![Example Image](https://www.catster.com/wp-content/uploads/2017/08/A-fluffy-cat-looking-funny-surprised-or-concerned.jpg ""Image Title Here"")
+
+This is a sample paragraph. This is a sample paragraph. This is a sample paragraph. This is a sample paragraph. This is a sample paragraph. This is a sample paragraph. This is a sample paragraph. This is a sample paragraph. 
+
 # header 1
 
 ```

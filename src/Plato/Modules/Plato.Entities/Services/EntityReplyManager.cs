@@ -24,18 +24,15 @@ namespace Plato.Entities.Services
         private readonly IEntityStore<Entity> _entityStore;
         private readonly IEntityReplyStore<TReply> _entityReplyStore;
         private readonly IContextFacade _contextFacade;
-        private readonly IHtmlSanitizer _htmlSanitizer;
-
+ 
         public EntityReplyManager(
             IEntityReplyStore<TReply> entityReplyStore, 
             IBroker broker, IContextFacade contextFacade,
-            IEntityStore<Entity> entityStore,
-            IHtmlSanitizer htmlSanitizer)
+            IEntityStore<Entity> entityStore)
         {
             _entityReplyStore = entityReplyStore;
             _contextFacade = contextFacade;
             _entityStore = entityStore;
-            _htmlSanitizer = htmlSanitizer;
             _broker = broker;
         }
 
@@ -211,10 +208,7 @@ namespace Plato.Entities.Services
 
         private async Task<string> ParseEntityHtml(string message)
         {
-
-            // Ensure HTML is sanitized before any parsing takes place
-            message = _htmlSanitizer.Sanitize(message);
-
+            
             foreach (var handler in _broker.Pub<string>(this, "ParseEntityHtml"))
             {
                 message = await handler.Invoke(new Message<string>(message, this));
