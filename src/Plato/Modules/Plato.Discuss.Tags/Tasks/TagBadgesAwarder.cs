@@ -16,6 +16,7 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
 using Plato.Badges.NotificationTypes;
 using Plato.Discuss.Tags.Badges;
+using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Discuss.Tags.Tasks
 {
@@ -38,17 +39,20 @@ namespace Plato.Discuss.Tags.Tasks
         private readonly IDbHelper _dbHelper;
         private readonly IPlatoUserStore<User> _userStore;
         private readonly INotificationManager<Badge> _notificationManager;
+        private readonly IUserReputationAwarder _userReputationAwarder;
 
         public TagBadgesAwarder(
             ICacheManager cacheManager,
             IDbHelper dbHelper,
             IPlatoUserStore<User> userStore,
-            INotificationManager<Badge> notificaitonManager)
+            INotificationManager<Badge> notificaitonManager,
+            IUserReputationAwarder userReputationAwarder)
         {
             _cacheManager = cacheManager;
             _dbHelper = dbHelper;
             _userStore = userStore;
             _notificationManager = notificaitonManager;
+            _userReputationAwarder = userReputationAwarder;
         }
 
         public async Task ExecuteAsync()
@@ -131,6 +135,20 @@ namespace Plato.Discuss.Tags.Tasks
                     {
                         foreach (var user in users.Data)
                         {
+
+                            // ---------------
+                            // Award badge reputation 
+                            // ---------------
+
+                            var badgeReputation = badge.GetReputation();
+                            if (badgeReputation.Points != 0)
+                            {
+                                await _userReputationAwarder.AwardAsync(badgeReputation, user.Id);
+                            }
+
+                            // ---------------
+                            // Trigger notifications
+                            // ---------------
 
                             // Email notification
                             if (user.NotificationEnabled(EmailNotifications.NewBadge))

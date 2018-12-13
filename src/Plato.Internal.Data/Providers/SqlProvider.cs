@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
 
 namespace Plato.Internal.Data.Providers
 {
-
- 
+    
     public class SqlProvider : IDataProvider
     {
 

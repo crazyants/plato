@@ -1,4 +1,5 @@
 ﻿using System;
+using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Badges.Models
 {
@@ -41,11 +42,13 @@ namespace Plato.Badges.Models
 
         public BadgeLevel Level { get; set; }
 
-        //public Action<IBadgeAwarderContext> Awarder { get; set; }
- 
+        public IReputation GetReputation()
+        {
+            return new Reputation(this.Name, string.Empty, this.BonusPoints);
+        }
+        
         public Badge()
         {
-
         }
 
         public Badge(string name)
@@ -57,8 +60,7 @@ namespace Plato.Badges.Models
         {
             this.Description = description ?? throw new ArgumentNullException(nameof(description)); ;
         }
-
-
+        
         public Badge(
             string name,
             string description,

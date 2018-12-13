@@ -22,7 +22,7 @@ namespace Plato.Reputations.Services
             {
                 throw new ArgumentNullException(nameof(reputation));
             }
-
+            
             if (userId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(userId));

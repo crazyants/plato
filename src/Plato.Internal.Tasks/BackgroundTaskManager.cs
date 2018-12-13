@@ -27,8 +27,20 @@ namespace Plato.Internal.Tasks
         {
             foreach (var provider in _providers)
             {
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogInformation($"Found background task provider of type '{provider.GetType()}'.");
+                }
+                
                 _safeTimerFactory.Start(async (sender, args) =>
                 {
+
+                    if (_logger.IsEnabled(LogLevel.Information))
+                    {
+                        _logger.LogInformation($"Executing timer callback for background task provider of type '{provider.GetType()}'.");
+                    }
+
                     try
                     {
                         await provider.ExecuteAsync();
@@ -37,8 +49,8 @@ namespace Plato.Internal.Tasks
                     {
                         if (_logger.IsEnabled(LogLevel.Critical))
                         {
-                            _logger.LogError(
-                                $"An error occurred whilst activating background task of type '{provider.GetType()}'. {e.Message}");
+                            _logger.LogCritical(
+                                $"An error occurred whilst executing the timer callback for background task provider of type '{provider.GetType()}'. {e.Message}");
                         }
                     }
                 }, new SafeTimerOptions()

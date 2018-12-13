@@ -21,21 +21,38 @@ namespace Plato.Internal.Tasks
         public SafeTimer(ILogger<SafeTimer> logger)
         {
             _logger = logger;
+            _timer = new Timer(TimerCallBack, null, Timeout.Infinite, Timeout.Infinite);
         }
 
         public override void Start()
         {
-
-            _timer = new Timer(TimerCallBack, null, Timeout.Infinite, Timeout.Infinite);
-
+            
             if (Options.IntervalInSeconds <= 0 && !Options.RunOnce)
             {
                 throw new Exception("IntervalInSeconds should be set before starting the timer!");
             }
                 
             base.Start();
+
+            // dueTime
+            // The amount of time to delay before invoking
+            // the callback method specified when the Timer was
+            // constructed, in milliseconds. Specify Infinite to
+            // prevent the timer from restarting. Specify zero (0)
+            // to restart the timer immediately.
+            var dueTime = Options.RunOnStart ? 0 : Options.IntervalInSeconds * 1000;
+            dueTime = Options.RunOnce ? Timeout.Infinite : dueTime;
+
+            lock (_timer)
+            {
+                _timer.Change(dueTime, Timeout.Infinite);
+            }
+
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogCritical($"Started safe timer with dueTime of '{dueTime}'.");
+            }
             
-            _timer.Change(Options.RunOnStart ? 0 : Options.IntervalInSeconds * 1000, Timeout.Infinite);
         }
 
         public override void Stop()
@@ -73,13 +90,17 @@ namespace Plato.Internal.Tasks
         {
 
             if (Interlocked.Exchange(ref _inTimerCallback, 1) != 0)
+            {
                 return;
-
+            }
+                
             lock (_timer)
             {
                 if (!base.IsRunning || base.PerformingTasks)
+                {
                     return;
-
+                }
+                    
                 _timer.Change(Timeout.Infinite, Timeout.Infinite);
                 base.PerformingTasks = true;
             }
@@ -92,18 +113,16 @@ namespace Plato.Internal.Tasks
 
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        _logger.LogCritical($"Executing timer callback of type '{Elapsed.GetType()}'.");
+                        _logger.LogCritical($"Executing Elapsed delegate within timer callback on thread: {Thread.CurrentThread.ManagedThreadId}");
                     }
                     
-                    SafeTimerEventArgs e = null;
-                    e = state != null ?
+                    Elapsed(this, state != null ?
                         new SafeTimerEventArgs(state) :
-                        new SafeTimerEventArgs();
-                    Elapsed(this, e);
+                        new SafeTimerEventArgs());
 
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
-                        _logger.LogCritical($"Completed executing timer callback of type '{Elapsed.GetType()}' with no errors.");
+                        _logger.LogCritical($"Completed executing Elapsed delegate within timer callback on thread: {Thread.CurrentThread.ManagedThreadId}.");
                     }
 
                 }
@@ -123,17 +142,9 @@ namespace Plato.Internal.Tasks
                     base.PerformingTasks = false;
                     if (base.IsRunning)
                     {
-                        if (!Options.RunOnce)
-                        {
-                            _timer.Change(Options.IntervalInSeconds * 1000, Timeout.Infinite);
-                            Monitor.Pulse(_timer);
-                            Interlocked.Exchange(ref _inTimerCallback, 0);
-                        }
-                        else
-                        {
-                            Stop();
-                        }
-                        
+                        _timer.Change(Options.IntervalInSeconds * 1000, Timeout.Infinite);
+                        Monitor.Pulse(_timer);
+                        Interlocked.Exchange(ref _inTimerCallback, 0);
                     }
              
                 }

@@ -29,8 +29,10 @@ namespace Plato.Internal.Stores.Files
         {
 
             if (string.IsNullOrEmpty(path))
+            {
                 throw new ArgumentNullException(nameof(path));
-
+            }
+                
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .AddExpirationToken(_fileSystem.Watch(path));
 

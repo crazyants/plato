@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
@@ -74,10 +70,9 @@ namespace Plato.Internal.Notifications
                 {
                     foreach (var error in result.Errors)
                     {
-                        if (_logger.IsEnabled(LogLevel.Error))
+                        if (_logger.IsEnabled(LogLevel.Critical))
                         {
-                            _logger.LogCritical($"Notification '{notification.Type.Title}' Failed!",
-                                $"To: {notification.To.DisplayName}, Message: {error.Description}");
+                            _logger.LogCritical($"Notification to ' {notification.To.DisplayName}' of type '{notification.Type.Title}' failed with the following error: {error.Description}");
                         }
                     }
                 }

@@ -41,12 +41,13 @@ namespace Plato.Reputations
             services.AddScoped<IReputationsManager<Reputation>, ReputationsManager<Reputation>>();
             services.AddScoped<IUserReputationManager<UserReputation>, UserReputationManager>();
 
-
+            // Awards user reputation
             services.AddScoped<IUserReputationAwarder, UserReputationAwarder>();
 
             // Background tasks
+            services.AddScoped<IBackgroundTaskProvider, UserRankAggregator>();
             services.AddScoped<IBackgroundTaskProvider, UserReputationAggregator>();
-            
+
         }
 
         public override void Configure(

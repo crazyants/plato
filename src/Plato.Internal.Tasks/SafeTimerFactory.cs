@@ -29,7 +29,7 @@ namespace Plato.Internal.Tasks
 
             if (_logger.IsEnabled(LogLevel.Information))
             {
-                _logger.LogCritical($"Starting timer for action '{action.GetType()}'. Interval: {options.IntervalInSeconds}, RunOnce: {options.RunOnce}, RunOnStart: {options.RunOnStart}");
+                _logger.LogCritical($"Starting new timer. Interval: {options.IntervalInSeconds}, RunOnce: {options.RunOnce}, RunOnStart: {options.RunOnStart}");
             }
 
             _safeTimer.Options = options;
