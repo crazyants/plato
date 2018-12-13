@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plato.Reputations.Models
+namespace Plato.Internal.Reputations.Abstractions
 {
     public class Reputation : IReputation
     {
@@ -34,8 +34,7 @@ namespace Plato.Reputations.Models
         {
             this.Points = points;
         }
-
-
+        
     }
 
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Modules.Abstractions;
-using Plato.Reputations.Models;
+using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Reputations.Services
 {

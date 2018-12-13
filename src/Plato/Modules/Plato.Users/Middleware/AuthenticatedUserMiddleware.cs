@@ -140,6 +140,7 @@ namespace Plato.Users.Middleware
             var result = await userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
+
                 // Set cookie to prevent further execution
                 var tennantPath = "/";
                 var shellSettings = context.RequestServices.GetRequiredService<IShellSettings>();

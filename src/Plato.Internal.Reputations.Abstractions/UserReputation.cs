@@ -3,8 +3,9 @@ using System.Data;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models;
 
-namespace Plato.Reputations.Models
+namespace Plato.Internal.Reputations.Abstractions
 {
+
     public class UserReputation : IModel<UserReputation>
     {
 
@@ -12,7 +13,6 @@ namespace Plato.Reputations.Models
 
         public string Name { get; set; }
         
-
         public int Points { get; set; }
 
         public int CreatedUserId { get; set; }

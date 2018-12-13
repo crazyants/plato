@@ -2,9 +2,9 @@
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Plato.Reputations.Models;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Reputations.Repositories
 {

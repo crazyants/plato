@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Reputations.Handlers;
-using Plato.Reputations.Models;
 using Plato.Reputations.Providers;
 using Plato.Reputations.Repositories;
 using Plato.Reputations.Services;
@@ -40,7 +40,10 @@ namespace Plato.Reputations
             
             // Services
             services.AddScoped<IReputationsManager<Reputation>, ReputationsManager<Reputation>>();
-            //services.AddScoped<IReputationsAwarder, ReputationsAwarder<Reputation>>();
+            services.AddScoped<IUserReputationManager<UserReputation>, UserReputationManager>();
+
+
+            services.AddScoped<IUserReputationAwarder, UserReputationAwarder>();
 
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, UserReputationAggregator>();

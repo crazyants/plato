@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Reputations.Services;
-using Plato.Reputations.Models;
 
 namespace Plato.Reputations.Providers
 {

@@ -2,8 +2,8 @@
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Abstractions;
-using Plato.Reputations.Models;
 
 namespace Plato.Reputations.Stores
 {

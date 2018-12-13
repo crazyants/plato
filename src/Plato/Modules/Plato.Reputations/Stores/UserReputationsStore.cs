@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Reputations.Models;
+using Plato.Internal.Reputations.Abstractions;
 using Plato.Reputations.Repositories;
 using Plato.Reputations.Services;
 

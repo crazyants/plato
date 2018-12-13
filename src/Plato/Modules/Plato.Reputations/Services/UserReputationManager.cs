@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Reputations.Models;
+using Plato.Internal.Reputations.Abstractions;
 using Plato.Reputations.Stores;
 
 namespace Plato.Reputations.Services

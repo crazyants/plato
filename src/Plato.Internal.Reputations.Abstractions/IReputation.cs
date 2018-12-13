@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plato.Reputations.Models
+namespace Plato.Internal.Reputations.Abstractions
 {
     public interface IReputation
     {
