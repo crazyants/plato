@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
-using Plato.Internal.Models.Annotations;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Models.Roles
 {
-    
+
     public class Role : IdentityRole<int>, IModel<Role>
     {
 

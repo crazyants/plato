@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Net.Mail;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Models;
 
 namespace Plato.Internal.Emails.Abstractions
 {

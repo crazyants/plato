@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Data;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Models.Annotations;
 
 namespace Plato.Internal.Models.Users
 {
-    
+
     public class UserImage : IModel<UserImage>
     {
 

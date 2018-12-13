@@ -5,6 +5,9 @@ namespace Plato.Internal.Reputations.Abstractions
     public class Reputation : IReputation
     {
 
+        // Globally multiply the points for all reputations
+        public static readonly int PointsMultiplier = 0;
+
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -32,7 +35,9 @@ namespace Plato.Internal.Reputations.Abstractions
             string description,
             int points) : this(name, description)
         {
-            this.Points = points;
+            this.Points = PointsMultiplier > 0
+                ? points * PointsMultiplier
+                : points;
         }
         
     }

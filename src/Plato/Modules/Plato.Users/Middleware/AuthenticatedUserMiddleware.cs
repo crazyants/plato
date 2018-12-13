@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Reputations.Abstractions;
 using Plato.Users.Services;
 
 namespace Plato.Users.Middleware
@@ -141,6 +142,15 @@ namespace Plato.Users.Middleware
             if (result.Succeeded)
             {
 
+                // Award visit reputation
+                var userReputationAwarder = context.RequestServices.GetRequiredService<IUserReputationAwarder>();
+                if (userReputationAwarder != null)
+                {
+                    await userReputationAwarder.AwardAsync(
+                        Reputations.UniqueVisit,
+                        result.Response.Id);
+                }
+                
                 // Set cookie to prevent further execution
                 var tennantPath = "/";
                 var shellSettings = context.RequestServices.GetRequiredService<IShellSettings>();

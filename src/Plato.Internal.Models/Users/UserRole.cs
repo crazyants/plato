@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Internal.Models.Users

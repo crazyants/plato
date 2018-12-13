@@ -14,6 +14,7 @@ using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
+using Plato.Internal.Reputations.Abstractions;
 using Plato.Users.ViewAdaptors;
 using Plato.Users.Handlers;
 using Plato.Users.ViewModels;
@@ -125,8 +126,11 @@ namespace Plato.Users
             // Register permissions provider
             services.AddScoped<IPermissionsProvider<Permission>, Permissions>();
 
-            // register view drivers
+            // register view adaptors
             services.AddScoped<IViewAdaptorProvider, UserListAdaptor>();
+            
+            // Register reputation providers
+            services.AddScoped<IReputationsProvider<Reputation>, Reputations>();
 
         }
 

@@ -8,7 +8,6 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Reputations.Handlers;
-using Plato.Reputations.Providers;
 using Plato.Reputations.Repositories;
 using Plato.Reputations.Services;
 using Plato.Reputations.Stores;
@@ -48,9 +47,6 @@ namespace Plato.Reputations
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, UserReputationAggregator>();
             
-            // Reputation providers
-            services.AddScoped<IReputationsProvider<Reputation>, RepProvider>();
-
         }
 
         public override void Configure(

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Plato.Internal.Models.Users;
 using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Reputations.Services
@@ -16,7 +15,7 @@ namespace Plato.Reputations.Services
             _userReputationManager = userReputationManager;
         }
 
-        public async Task<UserReputation> AwardAsync(IReputation reputation, IUser user)
+        public async Task<UserReputation> AwardAsync(IReputation reputation, int userId)
         {
 
             if (reputation == null)
@@ -24,21 +23,16 @@ namespace Plato.Reputations.Services
                 throw new ArgumentNullException(nameof(reputation));
             }
 
-            if (user == null)
+            if (userId <= 0)
             {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            if (user.Id <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(user.Id));
+                throw new ArgumentOutOfRangeException(nameof(userId));
             }
 
             var userReputation = new UserReputation()
             {
                 Name = reputation.Name,
                 Points = reputation.Points,
-                CreatedUserId = user.Id
+                CreatedUserId = userId
             };
 
             var result = await _userReputationManager.CreateAsync(userReputation);

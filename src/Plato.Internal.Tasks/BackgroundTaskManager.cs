@@ -43,7 +43,7 @@ namespace Plato.Internal.Tasks
                     }
                 }, new SafeTimerOptions()
                 {
-                    IntervalInSeconds = provider.IntervalInSeconds * 1000
+                    IntervalInSeconds = provider.IntervalInSeconds
                 });
 
             }

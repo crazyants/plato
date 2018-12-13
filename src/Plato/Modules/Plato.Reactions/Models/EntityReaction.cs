@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
+using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
-using Plato.Internal.Models;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Reactions.Models

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Internal.Tasks
@@ -14,10 +15,12 @@ namespace Plato.Internal.Tasks
         
         private Timer _timer;
         private int _inTimerCallback = 0;
-        
-        public SafeTimer()
+
+        private readonly ILogger<SafeTimer> _logger;
+
+        public SafeTimer(ILogger<SafeTimer> logger)
         {
-            
+            _logger = logger;
         }
 
         public override void Start()
@@ -25,12 +28,14 @@ namespace Plato.Internal.Tasks
 
             _timer = new Timer(TimerCallBack, null, Timeout.Infinite, Timeout.Infinite);
 
-            if (Options.IntervalInSeconds <= 0)
+            if (Options.IntervalInSeconds <= 0 && !Options.RunOnce)
+            {
                 throw new Exception("IntervalInSeconds should be set before starting the timer!");
-
+            }
+                
             base.Start();
             
-            _timer.Change(Options.RunOnStart ? 0 : Options.IntervalInSeconds, Timeout.Infinite);
+            _timer.Change(Options.RunOnStart ? 0 : Options.IntervalInSeconds * 1000, Timeout.Infinite);
         }
 
         public override void Stop()
@@ -81,19 +86,35 @@ namespace Plato.Internal.Tasks
 
             try
             {
+
                 if (Elapsed != null)
                 {
+
+                    if (_logger.IsEnabled(LogLevel.Information))
+                    {
+                        _logger.LogCritical($"Executing timer callback of type '{Elapsed.GetType()}'.");
+                    }
+                    
                     SafeTimerEventArgs e = null;
                     e = state != null ?
                         new SafeTimerEventArgs(state) :
                         new SafeTimerEventArgs();
                     Elapsed(this, e);
+
+                    if (_logger.IsEnabled(LogLevel.Information))
+                    {
+                        _logger.LogCritical($"Completed executing timer callback of type '{Elapsed.GetType()}' with no errors.");
+                    }
+
                 }
 
             }
-            catch
+            catch (Exception e)
             {
-                // ignored
+                if (_logger.IsEnabled(LogLevel.Critical))
+                {
+                    _logger.LogCritical($"An error corrected within a timer callback. Error message: {e.Message}");
+                }
             }
             finally
             {
@@ -104,7 +125,7 @@ namespace Plato.Internal.Tasks
                     {
                         if (!Options.RunOnce)
                         {
-                            _timer.Change(Options.IntervalInSeconds, Timeout.Infinite);
+                            _timer.Change(Options.IntervalInSeconds * 1000, Timeout.Infinite);
                             Monitor.Pulse(_timer);
                             Interlocked.Exchange(ref _inTimerCallback, 0);
                         }
