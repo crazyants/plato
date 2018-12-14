@@ -101,10 +101,9 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddPlatoCaching();
                 internalServices.AddPlatoText();
                 internalServices.AddPlatoNotifications();
-                internalServices.AddPlatoReputations();
+        
                 internalServices.AddPlatoModules();
                 internalServices.AddPlatoTheming();
-            
                 internalServices.AddPlatoViewFeature();
                 internalServices.AddPlatoTagHelpers();
                 internalServices.AddPlatoAssets();
@@ -112,13 +111,12 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddPlatoShellFeatures();
                 internalServices.AddPlatoMessaging();
                 internalServices.AddPlatoTasks();
-
                 internalServices.AddPlatoLogging();
-
                 internalServices.AddPlatoDbContext();
-                internalServices.AddRepositories();
-                internalServices.AddStores();
-                
+                internalServices.AddPlatoRepositories();
+                internalServices.AddPlatoStores();
+                internalServices.AddPlatoReputations();
+
             });
 
         }

@@ -6,6 +6,8 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Abstract;
 using Plato.Internal.Models.Features;
+using Plato.Internal.Models.Reputations;
+using Plato.Internal.Repositories.Reputations;
 using Plato.Internal.Repositories.Roles;
 using Plato.Internal.Repositories.Shell;
 
@@ -14,20 +16,21 @@ namespace Plato.Internal.Repositories.Extensions
     public static class ServiceCollectionExtensions
     {
 
-        public static IServiceCollection AddRepositories(
+        public static IServiceCollection AddPlatoRepositories(
             this IServiceCollection services)
         {
 
+            // Shell features
             services.AddScoped<IShellFeatureRepository<ShellFeature>, ShellFeatureRepository>();
             
-            // abstract storage (used for unique key value paris - i.e. global settings
+            // Abstract storage (used for unique key value paris - i.e. global settings
             services.AddScoped<IDictionaryRepository<DictionaryEntry>, DictionaryRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
 
-            // roles
+            // Roles
             services.AddScoped<IRoleRepository<Role>, RoleRepository>();
 
-            // users
+            // Users
             services.AddScoped<IUserRepository<User>, UserRepository>();
             services.AddScoped<IUserSecretRepository<UserSecret>, UserSecretRepository>();
             services.AddScoped<IUserDataRepository<UserData>, UserDataRepository>();
@@ -36,6 +39,9 @@ namespace Plato.Internal.Repositories.Extensions
             services.AddScoped<IUserRolesRepository<UserRole>, UserRolesRepository>();
             services.AddScoped<IRoleRepository<Role>, RoleRepository>();
 
+            // User reputations
+            services.AddScoped<IUserReputationsRepository<UserReputation>, UserReputationsRepository>();
+            
             return services;
 
         }

@@ -1,17 +1,20 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Features;
+using Plato.Internal.Models.Reputations;
 using Plato.Internal.Stores.Settings;
 using Plato.Internal.Stores.Roles;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Abstract;
 using Plato.Internal.Stores.Abstractions.Files;
+using Plato.Internal.Stores.Abstractions.Reputations;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Stores.Abstractions.Shell;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Files;
+using Plato.Internal.Stores.Reputations;
 using Plato.Internal.Stores.Shell;
 
 namespace Plato.Internal.Stores.Extensions
@@ -19,7 +22,7 @@ namespace Plato.Internal.Stores.Extensions
     public static class ServiceCollectionExtensions
     {
 
-        public static IServiceCollection AddStores(
+        public static IServiceCollection AddPlatoStores(
          this IServiceCollection services)
         {
 
@@ -47,16 +50,16 @@ namespace Plato.Internal.Stores.Extensions
             // Users
             services.AddScoped<IPlatoUserStore<User>, PlatoUserStore>();
             services.AddScoped<IUserPhotoStore<UserPhoto>, UserPhotoStore>();
-
-            //services.AddScoped<IUserBannerStore<UserBanner>, UserBannerStore>();
-
             services.AddScoped<IUserDataItemStore<UserData>, UserDataItemStore>();
             services.AddScoped<IUserDataStore<UserData>, UserDataStore>();
 
+            // User Reputation
+            services.AddScoped<IUserReputationsStore<UserReputation>, UserReputationsStore>();
+
             return services;
-
-
+            
         }
 
     }
+
 }

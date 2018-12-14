@@ -2,10 +2,10 @@
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Reputations.Abstractions;
+using Plato.Internal.Models.Reputations;
 using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Reputations.Stores
+namespace Plato.Internal.Stores.Reputations
 {
 
     #region "UserReputationsQuery"

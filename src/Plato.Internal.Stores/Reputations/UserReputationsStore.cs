@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Reputations.Abstractions;
-using Plato.Reputations.Repositories;
+using Plato.Internal.Models.Reputations;
+using Plato.Internal.Repositories.Reputations;
+using Plato.Internal.Stores.Abstractions.Reputations;
 
-namespace Plato.Reputations.Stores
+namespace Plato.Internal.Stores.Reputations
 {
 
     public class UserReputationsStore : IUserReputationsStore<UserReputation>
@@ -18,20 +19,17 @@ namespace Plato.Reputations.Stores
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly ICacheManager _cacheManager;
         private readonly ILogger<UserReputationsStore> _logger;
-        private readonly IReputationsManager<Reputation> _badgesManager;
-
+   
         public UserReputationsStore(
             IUserReputationsRepository<UserReputation> userReputationsRepository,
             IDbQueryConfiguration dbQuery,
             ICacheManager cacheManager,
-            ILogger<UserReputationsStore> logger,
-            IReputationsManager<Reputation> badgesManager)
+            ILogger<UserReputationsStore> logger)
         {
             _userReputationsRepository = userReputationsRepository;
             _dbQuery = dbQuery;
             _cacheManager = cacheManager;
             _logger = logger;
-            _badgesManager = badgesManager;
         }
 
         public async Task<UserReputation> CreateAsync(UserReputation model)
@@ -122,14 +120,9 @@ namespace Plato.Reputations.Stores
             });
         }
 
-        public async Task<IEnumerable<IReputation>> GetUserReputationsAsync(int userId)
+        public async Task<IEnumerable<IReputation>> GetUserReputationsAsync(int userId, IEnumerable<IReputation> reputations)
         {
-            var reputations = _badgesManager.GetReputations();
-            if (reputations == null)
-            {
-                return null;
-            }
-
+            
             var reputationList = reputations.ToList();
             if (reputationList.Count == 0)
             {
@@ -144,7 +137,7 @@ namespace Plato.Reputations.Stores
                 .OrderBy("Id", OrderBy.Asc)
                 .ToList();
 
-            var output = new List<Reputation>();
+            var output = new List<IReputation>();
             if (userReputations != null)
             {
                 foreach (var userReputation in userReputations.Data)
@@ -152,7 +145,7 @@ namespace Plato.Reputations.Stores
                     var reputation = reputationList.FirstOrDefault(b => b.Name.Equals(userReputation.Name, StringComparison.OrdinalIgnoreCase));
                     if (reputation != null)
                     {
-                        reputation.AwardedDate = userReputation.CreatedDate;
+                        //reputation.AwardedDate = userReputation.CreatedDate;
                         output.Add(reputation);
                     }
                 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Plato.Internal.Models.Reputations;
 using Plato.Internal.Reputations.Abstractions;
 
 namespace Plato.Users

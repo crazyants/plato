@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Reputations.Abstractions;
+using Plato.Internal.Models.Reputations;
 
-namespace Plato.Reputations.Repositories
+namespace Plato.Internal.Repositories.Reputations
 {
     public class UserReputationsRepository : IUserReputationsRepository<UserReputation>
     {

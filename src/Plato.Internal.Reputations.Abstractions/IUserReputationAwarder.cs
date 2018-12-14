@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Plato.Internal.Models.Reputations;
 
 namespace Plato.Internal.Reputations.Abstractions
 {

@@ -12,6 +12,7 @@ using Plato.Internal.Models.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Internal.Layout.ViewAdaptors;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Reputations;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Navigation;
 using Plato.Internal.Reputations.Abstractions;

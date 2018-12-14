@@ -1,5 +1,5 @@
 ﻿using System;
-using Plato.Internal.Reputations.Abstractions;
+using Plato.Internal.Models.Reputations;
 
 namespace Plato.Badges.Models
 {

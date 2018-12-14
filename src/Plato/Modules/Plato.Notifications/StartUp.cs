@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Notifications.Abstractions;
 using Plato.Notifications.Handlers;
 using Plato.Notifications.Models;
 using Plato.Notifications.Repositories;

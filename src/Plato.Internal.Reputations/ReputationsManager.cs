@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using Plato.Internal.Models.Reputations;
 using Plato.Internal.Modules.Abstractions;
 using Plato.Internal.Reputations.Abstractions;
 
-namespace Plato.Reputations.Services
+namespace Plato.Internal.Reputations
 {
 
     public class ReputationsManager<TReputation> : IReputationsManager<TReputation> where TReputation : class, IReputation

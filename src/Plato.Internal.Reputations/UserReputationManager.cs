@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Internal.Models.Reputations;
 using Plato.Internal.Reputations.Abstractions;
-using Plato.Reputations.Stores;
+using Plato.Internal.Stores.Abstractions.Reputations;
 
-namespace Plato.Reputations.Services
+namespace Plato.Internal.Reputations
 {
     
     public class UserReputationManager : IUserReputationManager<UserReputation>

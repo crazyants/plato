@@ -1,18 +1,18 @@
 ﻿using System;
 
-namespace Plato.Internal.Reputations.Abstractions
-{
-    public interface IReputation
-    {
+//namespace Plato.Internal.Reputations.Abstractions
+//{
+//    public interface IReputation
+//    {
 
-        string Name { get; set; }
+//        string Name { get; set; }
 
-        string Description { get; set; }
+//        string Description { get; set; }
 
-        int Points { get; set; }
+//        int Points { get; set; }
 
-        string Category { get; set; }
+//        string Category { get; set; }
 
-    }
+//    }
 
-}
+//}
