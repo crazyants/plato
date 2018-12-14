@@ -10,24 +10,13 @@ using Plato.Internal.Models.Features;
 
 namespace Plato.Internal.Repositories.Shell
 {
-    public interface IShellFeatureRepository<T> : IRepository<T> where T : class
-    {
-
-        Task<IEnumerable<T>> SelectFeatures();
-    }
-
+ 
     public class ShellFeatureRepository : IShellFeatureRepository<ShellFeature>
     {
-
-        #region "Private Variables"
-
+        
         private readonly IDbContext _dbContext;
         private readonly ILogger<ShellFeatureRepository> _logger;
-
-        #endregion
-
-        #region "Constructor"
-
+        
         public ShellFeatureRepository(
             IDbContext dbContext,
             ILogger<ShellFeatureRepository> logger)
@@ -35,12 +24,9 @@ namespace Plato.Internal.Repositories.Shell
             _dbContext = dbContext;
             _logger = logger;
         }
-
-        #endregion
-
+        
         #region "Implementation"
-
-
+        
         public async Task<bool> DeleteAsync(int id)
         {
 
@@ -210,7 +196,7 @@ namespace Plato.Internal.Repositories.Shell
 
         #region "Private Methods"
 
-        private async Task<ShellFeature> BuildObjectFromResultSets(DbDataReader reader)
+        async Task<ShellFeature> BuildObjectFromResultSets(DbDataReader reader)
         {
             ShellFeature feature = null;
             if ((reader != null) && (reader.HasRows))
@@ -225,7 +211,7 @@ namespace Plato.Internal.Repositories.Shell
             return feature;
         }
 
-        private async Task<int> InsertUpdateInternal(
+        async Task<int> InsertUpdateInternal(
             int id,
             string moduleId,
             string version,

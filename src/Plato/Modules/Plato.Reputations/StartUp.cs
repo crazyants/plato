@@ -2,11 +2,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Reputations.Handlers;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Abstractions.SetUp;
 
 namespace Plato.Reputations
