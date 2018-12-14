@@ -66,12 +66,22 @@ namespace Plato.Internal.Models.Users
 
         public string IpV6Address { get; set; }
 
-        public int TotalVisits { get; set; }
+        public int Visits { get; set; }
 
-        public int TotalPoints { get; set; }
+        public DateTimeOffset? VisitsUpdatedDate { get; set; }
+
+        public int MinutesActive { get; set; }
+
+        public DateTimeOffset? MinutesActiveUpdatedDate { get; set; }
+
+        public int Points { get; set; }
+
+        public DateTimeOffset? PointsUpdatedDate { get; set; }
         
         public int Rank { get; set; }
-        
+
+        public DateTimeOffset? RankUpdatedDate { get; set; }
+
         public string Signature { get; set; }
 
         public DateTimeOffset? CreatedDate { get; set; }
@@ -225,14 +235,29 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("IpV6Address"))
                 IpV6Address = Convert.ToString(dr["IpV6Address"]);
 
-            if (dr.ColumnIsNotNull("TotalVisits"))
-                TotalVisits = Convert.ToInt32(dr["TotalVisits"]);
+            if (dr.ColumnIsNotNull("Visits"))
+                Visits = Convert.ToInt32(dr["Visits"]);
 
-            if (dr.ColumnIsNotNull("TotalPoints"))
-                TotalPoints = Convert.ToInt32(dr["TotalPoints"]);
+            if (dr.ColumnIsNotNull("VisitsUpdatedDate"))
+                VisitsUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["VisitsUpdatedDate"])));
 
+            if (dr.ColumnIsNotNull("MinutesActive"))
+                MinutesActive = Convert.ToInt32(dr["MinutesActive"]);
+
+            if (dr.ColumnIsNotNull("MinutesActiveUpdatedDate"))
+                MinutesActiveUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["VisitsUpdatedDate"])));
+            
+            if (dr.ColumnIsNotNull("Points"))
+                Points = Convert.ToInt32(dr["Points"]);
+            
+            if (dr.ColumnIsNotNull("PointsUpdatedDate"))
+                PointsUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["PointsUpdatedDate"])));
+            
             if (dr.ColumnIsNotNull("Rank"))
                 Rank = Convert.ToInt32(dr["Rank"]);
+
+            if (dr.ColumnIsNotNull("RankUpdatedDate"))
+                RankUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["RankUpdatedDate"])));
 
             if (dr.ColumnIsNotNull("Signature"))
                 Signature = Convert.ToString(dr["Signature"]);

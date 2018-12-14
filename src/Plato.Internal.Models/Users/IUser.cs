@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Plato.Internal.Models.Users
 {
@@ -17,11 +18,21 @@ namespace Plato.Internal.Models.Users
 
         string IpV6Address { get; set; }
 
-        int TotalVisits { get; set; }
+        int Visits { get; set; }
 
-        int TotalPoints { get; set; }
+        DateTimeOffset? VisitsUpdatedDate { get; set; }
 
+        int MinutesActive { get; set; }
+
+        DateTimeOffset? MinutesActiveUpdatedDate { get; set; }
+        
+        int Points { get; set; }
+
+        DateTimeOffset? PointsUpdatedDate { get; set; }
+        
         int Rank { get; set; }
+
+        DateTimeOffset? RankUpdatedDate { get; set; }
 
         string Signature { get; set; }
 

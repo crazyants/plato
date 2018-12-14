@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 
-
 namespace Plato.Internal.Reputations.Abstractions
 {
     public interface IUserReputationAwarder

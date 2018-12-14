@@ -129,7 +129,8 @@ namespace Plato.Users.Middleware
 
             }
 
-            user.TotalVisits += 1;
+            user.Visits += 1;
+            user.VisitsUpdatedDate = DateTimeOffset.UtcNow;
             user.LastLoginDate = DateTimeOffset.UtcNow;
 
             var userManager = context.RequestServices.GetRequiredService<IPlatoUserManager<User>>();

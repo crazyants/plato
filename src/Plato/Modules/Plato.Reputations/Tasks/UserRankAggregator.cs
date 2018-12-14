@@ -27,10 +27,17 @@ namespace Plato.Reputations.Tasks
 	                    Total int	                
                     );
 
-                    INSERT INTO @temp (UserID, Total, DateStamp) 
-	                    SELECT Id, TotalPoints		                 
+                    -- Order last 200 users awarded reputation by totalpoints
+                    -- Insert these users into our temporary rank table
+                    INSERT INTO @temp (UserID, Total) 
+	                    SELECT TOP 200 Id, TotalPoints FROM	{prefix}_Users AS u
+                        WHERE EXISTS (
+		                     SELECT ur.Id FROM {prefix}_UserReputations ur 
+		                     WHERE ur.CreatedUserId = u.Id AND ur.CreatedDate > @yesterday 
+	                    )	                 
 	                    ORDER BY TotalPoints DESC;
 
+                    -- Now we have a rank update rank for last 200 users awarded reputation since yesterday
                     DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 u.Id FROM {prefix}_Users AS u
                     WHERE EXISTS (
 		                     SELECT ur.Id FROM {prefix}_UserReputations ur 
@@ -52,22 +59,16 @@ namespace Plato.Reputations.Tasks
                     SELECT @dirty;";
 
         public int IntervalInSeconds => 30;
-
-        private readonly ISafeTimerFactory _safeTimerFactory;
-        private readonly ILogger<UserReputationAggregator> _logger;
+        
         private readonly ICacheManager _cacheManager;
         private readonly IDbHelper _dbHelper;
 
         public UserRankAggregator(
             IDbHelper dbHelper, 
-            ISafeTimerFactory safeTimerFactory,
-            ILogger<UserReputationAggregator> logger, 
             ICacheManager cacheManager)
         {
-            _safeTimerFactory = safeTimerFactory;
             _cacheManager = cacheManager;
             _dbHelper = dbHelper;
-            _logger = logger;
         }
 
         public async Task ExecuteAsync()

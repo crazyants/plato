@@ -197,6 +197,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Media.Lightbox", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Reputations.Abstractions", "src\Plato.Internal.Reputations.Abstractions\Plato.Internal.Reputations.Abstractions.csproj", "{7AE619BF-5C9C-4EF1-9217-2A31B2ABE0B2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plato.Internal.Reputations", "src\Plato.Internal.Reputations\Plato.Internal.Reputations.csproj", "{64676CD2-42BF-4364-844B-D07393DA5B2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -563,6 +565,10 @@ Global
 		{7AE619BF-5C9C-4EF1-9217-2A31B2ABE0B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AE619BF-5C9C-4EF1-9217-2A31B2ABE0B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AE619BF-5C9C-4EF1-9217-2A31B2ABE0B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64676CD2-42BF-4364-844B-D07393DA5B2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64676CD2-42BF-4364-844B-D07393DA5B2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64676CD2-42BF-4364-844B-D07393DA5B2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64676CD2-42BF-4364-844B-D07393DA5B2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -660,6 +666,7 @@ Global
 		{FF534F8B-D84C-4D48-A91F-7F55029386D0} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{92035387-3164-4819-B25E-8460FD695B9D} = {D358F128-F8E0-4008-8615-85F0F7021F8F}
 		{7AE619BF-5C9C-4EF1-9217-2A31B2ABE0B2} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
+		{64676CD2-42BF-4364-844B-D07393DA5B2E} = {BA04FA36-9601-4A2B-9678-B22C17D513FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C0D07DC-FF4F-4F46-9D46-263DE79274E9}

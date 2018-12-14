@@ -42,22 +42,16 @@ namespace Plato.Reputations.Tasks
                     SELECT @dirty;";
 
         public int IntervalInSeconds => 30;
-
-        private readonly ISafeTimerFactory _safeTimerFactory;
-        private readonly ILogger<UserReputationAggregator> _logger;
+        
         private readonly ICacheManager _cacheManager;
         private readonly IDbHelper _dbHelper;
 
         public UserReputationAggregator(
             IDbHelper dbHelper, 
-            ISafeTimerFactory safeTimerFactory,
-            ILogger<UserReputationAggregator> logger, 
             ICacheManager cacheManager)
         {
-            _safeTimerFactory = safeTimerFactory;
             _cacheManager = cacheManager;
             _dbHelper = dbHelper;
-            _logger = logger;
         }
 
         public async Task ExecuteAsync()

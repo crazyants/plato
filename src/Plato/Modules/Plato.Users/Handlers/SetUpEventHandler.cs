@@ -270,18 +270,43 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "TotalVisits",
+                        Name = "Visits",
                         DbType = DbType.Int32
                     },
                     new SchemaColumn()
                     {
-                        Name = "TotalPoints",
+                        Name = "VisitsUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MinutesActive",
                         DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MinutesActiveUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Points",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "PointsUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
                     },
                      new SchemaColumn()
                     {
                         Name = "[Rank]",
                         DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "RankUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
                     },
                     new SchemaColumn()
                     {

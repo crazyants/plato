@@ -12,6 +12,7 @@ using Plato.Reputations.Repositories;
 using Plato.Reputations.Services;
 using Plato.Reputations.Stores;
 using Plato.Reputations.Tasks;
+using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Reputations
 {
@@ -41,8 +42,8 @@ namespace Plato.Reputations
             services.AddScoped<IReputationsManager<Reputation>, ReputationsManager<Reputation>>();
             services.AddScoped<IUserReputationManager<UserReputation>, UserReputationManager>();
 
-            // Awards user reputation
-            services.AddScoped<IUserReputationAwarder, UserReputationAwarder>();
+            // Replace reputation awarder with real implementation
+            services.Replace<IUserReputationAwarder, UserReputationAwarder>(ServiceLifetime.Scoped);
 
             // Background tasks
             services.AddScoped<IBackgroundTaskProvider, UserRankAggregator>();
@@ -55,18 +56,6 @@ namespace Plato.Reputations
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
-
-            //// Activate all awarders within registered reputation providers
-            //var awarders = serviceProvider.GetServices<IReputationsAwarder>();
-            //foreach (var awarder in awarders)
-            //{
-            //    awarder?.Invoke();
-            //}
-
-            //// Activate user total reputation aggregator
-            //var aggregator = serviceProvider.GetService<IUserReputationAggregator>();
-            //aggregator?.Invoke();
-
         }
 
     }

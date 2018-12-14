@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Plato.Internal.Reputations</RootNamespace>
+    <AssemblyName>Plato.Internal.Reputations</AssemblyName>
+  </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Plato.Internal.Abstractions\Plato.Internal.Abstractions.csproj" />
+      <ProjectReference Include="..\Plato.Internal.Reputations.Abstractions\Plato.Internal.Reputations.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

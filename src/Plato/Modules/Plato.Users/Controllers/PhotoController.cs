@@ -111,9 +111,8 @@ namespace Plato.Users.Controllers
 
             return View();
         }
-        
-        [HttpGet]
-        [AllowAnonymous]
+
+        [HttpGet, AllowAnonymous, ResponseCache(Duration = 60)]
         public async Task Serve(int id)
         {
             
