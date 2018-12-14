@@ -1,7 +1,7 @@
-Name: Plato Reputation
-Description: Adds core providers and services to enable user reputation.
+Name: Plato Reputations
+Description: Adds core services to enable user reputation.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
-Category: Core
+Category: Users
 PlatoVersion: 1.0.0
 Version: 1.0.0

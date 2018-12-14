@@ -6,6 +6,8 @@ using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Reputations.Handlers;
 using Plato.Internal.Abstractions.SetUp;
+using Plato.Internal.Tasks.Abstractions;
+using Plato.Reputations.Tasks;
 
 namespace Plato.Reputations
 {
@@ -24,6 +26,10 @@ namespace Plato.Reputations
 
             // Feature installation event handler
             services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
+
+            // Points & Rank Aggregator background tasks
+            services.AddScoped<IBackgroundTaskProvider, UserRankAggregator>();
+            services.AddScoped<IBackgroundTaskProvider, UserReputationAggregator>();
 
         }
 

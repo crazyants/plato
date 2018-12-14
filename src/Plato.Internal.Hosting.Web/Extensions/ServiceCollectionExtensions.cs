@@ -87,10 +87,8 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
                 internalServices.AddSingleton<ICapturedRouter, CapturedRouter>();
                 internalServices.AddSingleton<ICapturedRouterUrlHelper, CapturedRouterUrlHelper>();
-
                 internalServices.AddTransient<IContextFacade, ContextFacade>();
           
                 internalServices.AddLogging();
@@ -110,13 +108,12 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddPlatoScripting();
                 internalServices.AddPlatoShellFeatures();
                 internalServices.AddPlatoMessaging();
-                internalServices.AddPlatoTasks();
                 internalServices.AddPlatoLogging();
                 internalServices.AddPlatoDbContext();
                 internalServices.AddPlatoRepositories();
                 internalServices.AddPlatoStores();
                 internalServices.AddPlatoReputations();
-
+                internalServices.AddPlatoTasks();
             });
 
         }
@@ -134,7 +131,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
 
             // Let the app change the default tenant behavior and set of features
             configure?.Invoke(services);
-
+             
             // Register the list of services to be resolved later on
             services.AddSingleton(_ => services);
 

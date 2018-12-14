@@ -245,21 +245,21 @@ namespace Plato.Users.Controllers
 
             //ViewData["Locales"] = sb.ToString();
 
-            //for (var i = 0; i < 15; i++)
-            //{
+            for (var i = 0; i < 15; i++)
+            {
 
-            //    var displayName = "New User " + i;
-            //    var userNAme = "newuser" + i;
-            //    var email = "email@address" + i + ".com";
-            //    var password = "34Fdckf#343";
+                var displayName = "New User " + i;
+                var userNAme = "newuser" + i;
+                var email = "email@address" + i + ".com";
+                var password = "34Fdckf#343";
 
-            //    var result = await _platoUserManager.CreateAsync(
-            //        userNAme,
-            //        displayName,
-            //        email,
-            //        password);
+                var result = await _platoUserManager.CreateAsync(
+                    userNAme,
+                    displayName,
+                    email,
+                    password);
 
-            //}
+            }
 
             //var user = _httpContextAccessor.HttpContext.User;
             //var claims = user.Claims;

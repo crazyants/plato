@@ -153,17 +153,17 @@ namespace Plato.Internal.Hosting.Web.Routing
                 o.BaseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{httpContext.Request.PathBase}";
             });
         
-            // Activate all background tasks 
-            var backgroundTaskManager = serviceProvider.GetService<IBackgroundTaskManager>();
-            backgroundTaskManager?.StartTasks();
-
             // Activate all registered message broker subscriptions
             var subscribers = serviceProvider.GetServices<IBrokerSubscriber>();
             foreach (var subscriber in subscribers)
             {
                 subscriber?.Subscribe();
             }
-            
+
+            // Activate all background tasks 
+            var backgroundTaskManager = serviceProvider.GetService<IBackgroundTaskManager>();
+            backgroundTaskManager?.StartTasks();
+
             // Return new pipline
             var pipeline = appBuilder.Build();
             return pipeline;
