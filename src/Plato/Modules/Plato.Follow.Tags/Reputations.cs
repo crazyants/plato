@@ -1,0 +1,23 @@
+﻿using System.Collections.Generic;
+using Plato.Internal.Models.Reputations;
+using Plato.Internal.Reputations.Abstractions;
+
+namespace Plato.Follow.Tags
+{
+
+    public class Reputations : IReputationsProvider<Reputation>
+    {
+
+        public static readonly Reputation NewFollow =
+            new Reputation("New Follow", "Reputation awarded for following a tag.", 1);
+        
+        public IEnumerable<Reputation> GetReputations()
+        {
+            return new[]
+            {
+                NewFollow
+            };
+        }
+
+    }
+}

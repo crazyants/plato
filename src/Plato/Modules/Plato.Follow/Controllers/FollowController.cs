@@ -2,7 +2,9 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Plato.Follow.Services;
 using Plato.Follow.Stores;
+using Plato.WebApi.Attributes;
 using Plato.WebApi.Controllers;
 
 namespace Plato.Follow.Controllers
@@ -12,11 +14,14 @@ namespace Plato.Follow.Controllers
     {
 
         private readonly IFollowStore<Models.Follow> _followStore;
+        private readonly IFollowManager<Models.Follow> _followManager;
 
         public FollowController(
-            IFollowStore<Models.Follow> followStore)
+            IFollowStore<Models.Follow> followStore,
+            IFollowManager<Models.Follow> followManager)
         {
             _followStore = followStore;
+            _followManager = followManager;
         }
 
         [HttpGet]
@@ -31,19 +36,19 @@ namespace Plato.Follow.Controllers
             return base.NotFound();
         }
         
-        [HttpPost]
+        [HttpPost, ValidateClientAntiForgeryToken]
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Post([FromBody] Models.Follow follow)
         {
      
-            // We need a user to subscribe to the entity
+            // We need a user to subscribe to the thing
             var user = await base.GetAuthenticatedUserAsync();
             if (user == null)
             {
                 return base.UnauthorizedException();
             }
 
-            // Is the user already following the entity?
+            // Is the user already following the thing?
             var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
                 follow.Name,
                 follow.ThingId,
@@ -64,9 +69,14 @@ namespace Plato.Follow.Controllers
             };
 
             // Add and return result
-            var result = await _followStore.CreateAsync(followToAdd);
+            var result = await _followManager.CreateAsync(followToAdd);
             if (result != null)
             {
+
+                // Award reputation
+                
+                // Send notifications
+                
                 return base.Result(result);
             }
 
@@ -99,8 +109,8 @@ namespace Plato.Follow.Controllers
                 user.Id);
             if (existingFollow != null)
             {
-                var success = await _followStore.DeleteAsync(existingFollow);
-                if (success)
+                var result = await _followManager.DeleteAsync(existingFollow);
+                if (result.Succeeded)
                 {
                     return base.Result(existingFollow);
                 }
@@ -111,8 +121,7 @@ namespace Plato.Follow.Controllers
             return base.InternalServerError();
 
         }
-
-
-
+        
     }
+
 }

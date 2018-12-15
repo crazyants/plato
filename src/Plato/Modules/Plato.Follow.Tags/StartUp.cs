@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Follow.Services;
 using Plato.Follow.Tags.ViewProviders;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
@@ -26,6 +27,9 @@ namespace Plato.Follow.Tags
             services.AddScoped<IViewProviderManager<Tag>, ViewProviderManager<Tag>>();
             services.AddScoped<IViewProvider<Tag>, TagViewProvider>();
             
+            // Follow types
+            services.AddScoped<IFollowTypeProvider, FollowTypes>();
+
         }
 
         public override void Configure(

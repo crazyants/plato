@@ -1,5 +1,4 @@
-﻿using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Mentions.Services;
 

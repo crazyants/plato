@@ -36,7 +36,7 @@ namespace Plato.Follow.Tags.ViewProviders
                 return await BuildIndexAsync(tag, context);
             }
 
-            var followType = DefaultFollowTypes.Tag;
+            var followType = FollowTypes.Tag;
             var isFollowing = false;
 
             var currentUser = await _contextFacade.GetAuthenticatedUserAsync();

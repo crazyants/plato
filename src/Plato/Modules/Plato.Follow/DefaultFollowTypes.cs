@@ -20,23 +20,7 @@ namespace Plato.Follow
                 "Folow this channel to get notified when new topics are posted to this channel...",
                 "Unsubscribe",
                 "You are already following this channel. Unsubscribe below...");
-
-
-        public static readonly FollowType User = 
-            new FollowType("User",
-                "Follow User",
-                "Folow this user to get notified when they post new content.",
-                "Unsubscribe",
-                "You are already following this user. Unsubscribe below...");
-
-        public static readonly FollowType Tag =
-            new FollowType("Tag",
-                "Follow Tag",
-                "Folow this tag to get notified when new content is posted with this tag.",
-                "Unsubscribe",
-                "You are already following this tag. Unsubscribe below...");
-
-
+   
         public static readonly FollowType Album = 
             new FollowType("Album");
 
@@ -48,7 +32,6 @@ namespace Plato.Follow
             return new[]
             {
                 Topic,
-                User,
                 Album,
                 Article
             };

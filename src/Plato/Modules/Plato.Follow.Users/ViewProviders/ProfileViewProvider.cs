@@ -35,7 +35,7 @@ namespace Plato.Follow.Users.ViewProviders
                 return await BuildIndexAsync(discussUser, context);
             }
 
-            var followType = DefaultFollowTypes.User;
+            var followType = FollowTypes.User;
             var isFollowing = false;
 
             var currentUser = await _contextFacade.GetAuthenticatedUserAsync();

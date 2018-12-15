@@ -1,0 +1,18 @@
+﻿@model RegisterViewModel
+@{
+    ViewData["Title"] = T["Registration Successful"];
+}
+
+<h2>@T["Check Your Email"]</h2>
+<div class="row">
+    <div class="col-md-6">
+        <p>
+            @T["We've sent you an email with a unique account activation link. You'll need to click this link before you can login."]
+            @T["If you don't receive the email you can "] <a asp-route-controller="Account" asp-route-action="ConfirmEmail">@T["send this again"]</a>.
+            <br/><br />
+            <a asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="Login" class="btn btn-primary">
+                @T["Login"]
+            </a>
+        </p> 
+    </div>
+</div>

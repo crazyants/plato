@@ -286,8 +286,8 @@ namespace Plato.Users.Controllers
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(
-                    model.UserName, 
-                    model.Password, 
+                    model.UserName,
+                    model.Password,
                     model.RememberMe,
                     lockoutOnFailure: false);
 
@@ -303,37 +303,34 @@ namespace Plato.Users.Controllers
                     ModelState.AddModelError(string.Empty, "Account Required Two Factor Authentication.");
                     return View(model);
                 }
-                
+
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning(2, "User account locked out.");
                     ModelState.AddModelError(string.Empty, "Account Locked out.");
                     return View(model);
                 }
-                else
+                
+                // Inform the user the account requires confirmation
+                if (_identityOptions.Value.SignIn.RequireConfirmedEmail)
                 {
-                    
-                    // Inform the user the account requires confirmation
-                    if (_identityOptions.Value.SignIn.RequireConfirmedEmail)
+                    var user = await _userManager.FindByNameAsync(model.UserName);
+                    if (user != null)
                     {
-                        var user = await _userManager.FindByNameAsync(model.UserName);
-                        if (user != null)
+                        var validPassword = await _userManager.CheckPasswordAsync(user, model.Password);
+                        if (validPassword)
                         {
-                            var validPassword = await _userManager.CheckPasswordAsync(user, model.Password);
-                            if (validPassword)
-                            {
-                                // Valid credentials entered
-                                ModelState.AddModelError(string.Empty, "Before you can login you must first confirm your email address. Use the link below to confirm your email address.");
-                                return View(model);
-                            }
+                            // Valid credentials entered
+                            ModelState.AddModelError(string.Empty, T["Before you can login you must first confirm your email address. Use the link below to confirm your email address."].Value);
+                            return View(model);
                         }
                     }
-                   
-                    // Username & password not found
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
                 }
 
+                // Username & password not found
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return View(model);
+                
             }
 
             // If we got this far, something failed, redisplay form
@@ -366,15 +363,30 @@ namespace Plato.Users.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
-                    // Send an email with this link
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
-                    //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    //_logger.LogInformation(3, "User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    
+                    // Send account activation email
+                    var emailConfirmationResult = await _platoUserManager.GetEmailConfirmationUserAsync(model.UserName);
+                    if (emailConfirmationResult.Succeeded)
+                    {
+                        var updatedUser = emailConfirmationResult.Response;
+                        if (updatedUser != null)
+                        {
+                            updatedUser.ConfirmationToken = Convert.ToBase64String(Encoding.UTF8.GetBytes(updatedUser.ConfirmationToken));
+                            var emailResult = await SendEmailConfirmationTokenAsync(updatedUser);
+                            if (!emailResult.Succeeded)
+                            {
+                                foreach (var error in emailResult.Errors)
+                                {
+                                    ViewData.ModelState.AddModelError(string.Empty, error.Description);
+                                }
+                                return View(model);
+                            }
+                        }
+                    }
+
+                    // Redirect to confirmation page
+                    return RedirectToAction(nameof(RegisterConfirmation));
+
                 }
 
                 foreach (var error in result.Errors)
@@ -387,8 +399,14 @@ namespace Plato.Users.Controllers
             return View(model);
         }
 
-        //
-        // POST: /Account/LogOff
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult RegisterConfirmation()
+        {
+            return View();
+        }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
@@ -432,8 +450,8 @@ namespace Plato.Users.Controllers
                     }
                 }
             }
-            
-            return RedirectToLocal(Url.Action("ConfirmEmailConfirmation"));
+
+            return RedirectToAction(nameof(ConfirmEmailConfirmation));
         }
         
         [HttpGet]
@@ -552,8 +570,9 @@ namespace Plato.Users.Controllers
                     }
                 }
             }
+
+            return RedirectToAction(nameof(ForgotPasswordConfirmation));
             
-            return RedirectToLocal(Url.Action("ForgotPasswordConfirmation"));
         }
 
         [HttpGet]

@@ -1,24 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Plato.Follow.Models
+﻿namespace Plato.Follow.Models
 {
-
-    public interface IFollowType
-    {
-        string Name { get; }
-
-        string SubscribeText { get; }
-
-        string SubscribeDescription { get; }
-        
-        string UnsubscribeText { get; }
-
-        string UnsubscribeDescription { get; }
-
-    }
-
+    
     public class FollowType : IFollowType
     {
 
