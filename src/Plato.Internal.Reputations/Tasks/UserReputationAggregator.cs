@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Plato.Internal.Cache.Abstractions;
+
 using Plato.Internal.Data.Abstractions;
-using Plato.Internal.Stores.Users;
+
 using Plato.Internal.Tasks.Abstractions;
 
 //namespace Plato.Internal.Reputations.Tasks
