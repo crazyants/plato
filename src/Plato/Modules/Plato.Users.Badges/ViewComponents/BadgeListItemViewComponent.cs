@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Badges.Models;
+using Plato.Internal.Models.Badges;
 
 namespace Plato.Users.Badges.ViewComponents
 {

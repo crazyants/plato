@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
-using Plato.Badges.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Notifications;
@@ -12,6 +11,7 @@ using Plato.Internal.Notifications.Abstractions;
 using Plato.Notifications.Models;
 using Plato.Notifications.Services;
 using Plato.Badges.NotificationTypes;
+using Plato.Internal.Models.Badges;
 
 namespace Plato.Users.Badges.Notifications
 {

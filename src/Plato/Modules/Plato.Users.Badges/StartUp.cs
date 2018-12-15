@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Badges.Models;
-using Plato.Badges.Services;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
@@ -18,6 +16,8 @@ using Plato.Users.Badges.BadgeProviders;
 using Plato.Users.Badges.Navigation;
 using Plato.Users.Badges.Notifications;
 using Plato.Badges.NotificationTypes;
+using Plato.Internal.Badges.Abstractions;
+using Plato.Internal.Models.Badges;
 using Plato.Users.Badges.Tasks;
 using Plato.Users.Badges.ViewProviders;
 

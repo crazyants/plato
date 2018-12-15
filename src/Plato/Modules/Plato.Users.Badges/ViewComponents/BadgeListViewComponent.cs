@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Plato.Badges.Models;
-using Plato.Badges.Services;
-using Plato.Badges.Stores;
+using Plato.Internal.Badges.Abstractions;
+using Plato.Internal.Models.Badges;
+using Plato.Internal.Stores.Abstractions.Badges;
 using Plato.Users.Badges.ViewModels;
 
 namespace Plato.Users.Badges.ViewComponents
@@ -11,13 +11,14 @@ namespace Plato.Users.Badges.ViewComponents
     {
 
         private readonly IUserBadgeStore<UserBadge> _userBadgeStore;
-        private readonly IBadgesManager<Badge> _badgeManager;
+        private readonly IBadgesManager<Badge> _badgesManager;
+   
 
         public BadgeListViewComponent(
-            IBadgesManager<Badge> badgeManager,
+            IBadgesManager<Badge> badgesManager,
             IUserBadgeStore<UserBadge> userBadgeStore)
         {
-            _badgeManager = badgeManager;
+            _badgesManager = badgesManager;
             _userBadgeStore = userBadgeStore;
         }
 
@@ -39,10 +40,10 @@ namespace Plato.Users.Badges.ViewComponents
         async Task<BadgesIndexViewModel> GetViewModel(
             BadgesIndexOptions options)
         {
-
+            var availableBadges = _badgesManager.GetBadges();
             var badges = options.UserId > 0
-                ? await _userBadgeStore.GetUserBadgesAsync(options.UserId)
-                : _badgeManager.GetBadges();
+                ? await _userBadgeStore.GetUserBadgesAsync(options.UserId, availableBadges)
+                : _badgesManager.GetBadges();
 
             return new BadgesIndexViewModel()
             {

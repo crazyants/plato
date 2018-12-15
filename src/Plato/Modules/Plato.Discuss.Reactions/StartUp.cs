@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Badges.Models;
-using Plato.Badges.Services;
 using Plato.Discuss.Reactions.Handlers;
 using Plato.Discuss.Reactions.Navigation;
 using Plato.Internal.Assets.Abstractions;
@@ -14,6 +12,8 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Discuss.Reactions.Assets;
 using Plato.Discuss.Reactions.Badges;
 using Plato.Discuss.Reactions.Tasks;
+using Plato.Internal.Badges.Abstractions;
+using Plato.Internal.Models.Badges;
 using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Discuss.Reactions

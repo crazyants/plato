@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Plato.Badges.Models;
-using Plato.Badges.Stores;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
@@ -16,7 +14,9 @@ using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
 using Plato.Users.Badges.BadgeProviders;
 using Plato.Badges.NotificationTypes;
+using Plato.Internal.Models.Badges;
 using Plato.Internal.Reputations.Abstractions;
+using Plato.Internal.Stores.Badges;
 using Plato.Users.Models;
 
 namespace Plato.Users.Badges.Tasks

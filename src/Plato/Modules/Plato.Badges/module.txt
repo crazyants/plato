@@ -1,5 +1,5 @@
 Name: Plato Badges
-Description: Adds functionality allowing modules to award basges to users.
+Description: Adds core functionality allowing modules to award basges to users.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core

@@ -1,4 +1,4 @@
-﻿@using Plato.Badges.Models
+﻿@using Plato.Internal.Models.Badges
 @model BadgesIndexViewModel
 @{
     var badgesList = Model.Badges.ToList();
@@ -41,9 +41,11 @@
         }
         else
         {
-            <span class="text-muted">
-                @T["No badges awarded"]
-            </span>
+            <ul class="list-group list-group-flush list-group-hover">
+                <li class="list-group-item">
+                    @T["No badges awarded"]
+                </li>
+            </ul>
         }
     </card-body>
 </card>

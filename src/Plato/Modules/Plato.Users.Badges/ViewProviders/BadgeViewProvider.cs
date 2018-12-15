@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Plato.Badges.Models;
-using Plato.Badges.Services;
+using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Badges;
 using Plato.Users.Badges.ViewModels;
 
 namespace Plato.Users.Badges.ViewProviders

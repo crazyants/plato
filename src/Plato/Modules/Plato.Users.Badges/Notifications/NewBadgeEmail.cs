@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Routing;
-using Plato.Badges.Models;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Emails.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -13,6 +12,7 @@ using Plato.Internal.Localization.Extensions;
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Badges.NotificationTypes;
+using Plato.Internal.Models.Badges;
 
 namespace Plato.Users.Badges.Notifications
 {

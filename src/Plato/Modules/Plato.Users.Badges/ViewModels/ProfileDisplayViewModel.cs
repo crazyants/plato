@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Plato.Badges.Models;
+using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Users;
 
 namespace Plato.Users.Badges.ViewModels

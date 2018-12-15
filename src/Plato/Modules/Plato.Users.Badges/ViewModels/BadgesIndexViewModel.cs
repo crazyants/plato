@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Plato.Badges.Models;
+using Plato.Internal.Models.Badges;
 
 namespace Plato.Users.Badges.ViewModels
 {
     public class BadgesIndexViewModel
     {
-
-
+        
         public IEnumerable<Badge> Badges { get; set; }
 
         public BadgesIndexOptions Options { get; set; }

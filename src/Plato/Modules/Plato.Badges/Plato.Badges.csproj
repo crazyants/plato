@@ -21,8 +21,4 @@
     <ProjectReference Include="..\..\..\Plato.Internal.Tasks.Abstractions\Plato.Internal.Tasks.Abstractions.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Content\" />
-  </ItemGroup>
-
 </Project>

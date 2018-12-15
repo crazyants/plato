@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Plato.Internal.Badges.Abstractions</RootNamespace>
+    <AssemblyName>Plato.Internal.Badges.Abstractions</AssemblyName>
+  </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Plato.Internal.Abstractions\Plato.Internal.Abstractions.csproj" />
+      <ProjectReference Include="..\Plato.Internal.Cache.Abstractions\Plato.Internal.Cache.Abstractions.csproj" />
+      <ProjectReference Include="..\Plato.Internal.Data.Abstractions\Plato.Internal.Data.Abstractions.csproj" />
+      <ProjectReference Include="..\Plato.Internal.Hosting.Abstractions\Plato.Internal.Hosting.Abstractions.csproj" />
+      <ProjectReference Include="..\Plato.Internal.Messaging.Abstractions\Plato.Internal.Messaging.Abstractions.csproj" />
+      <ProjectReference Include="..\Plato.Internal.Reputations.Abstractions\Plato.Internal.Reputations.Abstractions.csproj" />
+      <ProjectReference Include="..\Plato.Internal.Stores\Plato.Internal.Stores.csproj" />
+      <ProjectReference Include="..\Plato.Internal.Tasks.Abstractions\Plato.Internal.Tasks.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

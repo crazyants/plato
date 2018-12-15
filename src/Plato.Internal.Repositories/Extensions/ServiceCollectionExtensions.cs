@@ -5,8 +5,10 @@ using Plato.Internal.Repositories.Abstract;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Models.Roles;
 using Plato.Internal.Models.Abstract;
+using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Features;
 using Plato.Internal.Models.Reputations;
+using Plato.Internal.Repositories.Badges;
 using Plato.Internal.Repositories.Reputations;
 using Plato.Internal.Repositories.Roles;
 using Plato.Internal.Repositories.Shell;
@@ -41,11 +43,14 @@ namespace Plato.Internal.Repositories.Extensions
 
             // User reputations
             services.AddScoped<IUserReputationsRepository<UserReputation>, UserReputationsRepository>();
-            
+           
+            // User badges
+            services.AddScoped<IUserBadgeRepository<UserBadge>, UserBadgeRepository>();
+
             return services;
 
         }
      
-
     }
+
 }

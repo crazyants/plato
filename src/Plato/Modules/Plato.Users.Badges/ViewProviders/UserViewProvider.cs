@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
-using Plato.Badges.Models;
-using Plato.Badges.Stores;
+using Plato.Internal.Badges.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Badges;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Stores.Abstractions.Badges;
 using Plato.Internal.Stores.Abstractions.Users;
+using Plato.Internal.Stores.Badges;
 using Plato.Users.Badges.ViewModels;
 
 namespace Plato.Users.Badges.ViewProviders
@@ -13,13 +15,16 @@ namespace Plato.Users.Badges.ViewProviders
 
         private readonly IUserBadgeStore<UserBadge> _userBadgeStore;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        
+        private readonly IBadgesManager<Badge> _badgesManager;
+
         public UserViewProvider(
             IPlatoUserStore<User> platoUserStore,
-            IUserBadgeStore<UserBadge> userBadgeStore)
+            IUserBadgeStore<UserBadge> userBadgeStore,
+            IBadgesManager<Badge> badgesManager)
         {
             _platoUserStore = platoUserStore;
             _userBadgeStore = userBadgeStore;
+            _badgesManager = badgesManager;
         }
 
         public override async Task<IViewProviderResult> BuildDisplayAsync(UserProfile userProfile,
@@ -32,7 +37,8 @@ namespace Plato.Users.Badges.ViewProviders
                 return await BuildIndexAsync(userProfile, context);
             }
 
-            var badges = await _userBadgeStore.GetUserBadgesAsync(user.Id);
+            var availableBadges = _badgesManager.GetBadges();
+            var badges = await _userBadgeStore.GetUserBadgesAsync(user.Id, availableBadges);
             var viewModel = new ProfileDisplayViewModel()
             {
                 User = user,

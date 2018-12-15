@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Plato.Badges.Models;
-using Plato.Badges.Services;
+using Plato.Internal.Badges.Abstractions;
+using Plato.Internal.Models.Badges;
 
 namespace Plato.Discuss.Tags.Badges
 {

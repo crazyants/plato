@@ -3,10 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Plato.Badges.Handlers;
-using Plato.Badges.Models;
-using Plato.Badges.Repositories;
-using Plato.Badges.Services;
-using Plato.Badges.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
@@ -29,13 +25,13 @@ namespace Plato.Badges
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Repositories
-            services.AddScoped<IUserBadgeRepository<UserBadge>, UserBadgeRepository>();
+            //services.AddScoped<IUserBadgeRepository<UserBadge>, UserBadgeRepository>();
 
             // Stores
-            services.AddScoped<IUserBadgeStore<UserBadge>, UserBadgeStore>();
+            //services.AddScoped<IUserBadgeStore<UserBadge>, UserBadgeStore>();
 
             // Services
-            services.AddScoped<IBadgesManager<Badge>, BadgesManager<Badge>>();
+//            services.AddScoped<IBadgesManager<Badge>, BadgesManager<Badge>>();
             //services.AddScoped<IBadgesAwarderManager, BadgesAwarderManager<Badge>>();
             
         }
