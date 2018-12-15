@@ -2,30 +2,32 @@
 using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 
-namespace Plato.Badges.NotificationTypes
+namespace Plato.Internal.Badges.NotificationTypes
 {
 
-    public class EmailNotifications : INotificationTypeProvider
+    public class WebNotifications : INotificationTypeProvider
     {
 
-        public static readonly EmailNotification NewBadge =
-            new EmailNotification("NewBadgeEmail", "New Badges",
-                "Send me an email notification when I'm awarded a new badge.");
-        
+        public static readonly WebNotification NewBadge =
+            new WebNotification("NewBadgeWeb", "New Badges",
+                "Show me a web notification when I'm awarded a new badge.");
+
         public IEnumerable<INotificationType> GetNotificationTypes()
         {
             return new[]
             {
                 NewBadge
             };
-
         }
 
         public IEnumerable<INotificationType> GetDefaultNotificationTypes()
         {
-            return null;
+            return new[]
+            {
+                NewBadge
+            };
         }
-     
+
     }
 
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.Badges.NotificationTypes;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Models.Notifications;
@@ -13,7 +14,6 @@ using Plato.Internal.Stores.Users;
 using Plato.Internal.Tasks.Abstractions;
 using Plato.Notifications.Extensions;
 using Plato.Users.Badges.BadgeProviders;
-using Plato.Badges.NotificationTypes;
 using Plato.Internal.Models.Badges;
 using Plato.Internal.Reputations.Abstractions;
 using Plato.Internal.Stores.Badges;
@@ -122,7 +122,7 @@ namespace Plato.Users.Badges.Tasks
                     {
 
                         // ---------------
-                        // Award badge reputation 
+                        // Award badge points 
                         // ---------------
 
                         var badgeReputation = Badge.GetReputation();

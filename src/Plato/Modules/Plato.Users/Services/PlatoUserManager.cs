@@ -123,10 +123,7 @@ namespace Plato.Users.Services
             //}
 
             // Invoke UserCreating subscriptions
-            foreach (var handler in _broker.Pub<TUser>(this, new MessageOptions()
-            {
-                Key = "UserCreating"
-            }, user))
+            foreach (var handler in _broker.Pub<TUser>(this, "UserCreating"))
             {
                 user = await handler.Invoke(new Message<TUser>(user, this));
             }
@@ -137,10 +134,7 @@ namespace Plato.Users.Services
             {
 
                 // Invoke UserCreated subscriptions
-                foreach (var handler in _broker.Pub<TUser>(this, new MessageOptions()
-                {
-                    Key = "UserCreated"
-                }, user))
+                foreach (var handler in _broker.Pub<TUser>(this, "UserCreated"))
                 {
                     user = await handler.Invoke(new Message<TUser>(user, this));
                 }
@@ -166,12 +160,12 @@ namespace Plato.Users.Services
         {
 
             var result = new CommandResult<TUser>();
-            
+
+            user.IpV4Address = GetIpV4Address();
+            user.IpV6Address = GetIpV6Address();
+
             // Invoke UserCreating subscriptions
-            foreach (var handler in _broker.Pub<TUser>(this, new MessageOptions()
-            {
-                Key = "UserCreating"
-            }, user))
+            foreach (var handler in _broker.Pub<TUser>(this,"UserCreating"))
             {
                 user = await handler.Invoke(new Message<TUser>(user, this));
             }
@@ -182,10 +176,7 @@ namespace Plato.Users.Services
             {
 
                 // Invoke UserCreated subscriptions
-                foreach (var handler in _broker.Pub<TUser>(this, new MessageOptions()
-                {
-                    Key = "UserCreated"
-                }, user))
+                foreach (var handler in _broker.Pub<TUser>(this, "UserCreated"))
                 {
                     user = await handler.Invoke(new Message<TUser>(user, this));
                 }
@@ -203,11 +194,9 @@ namespace Plato.Users.Services
             }
 
             return result.Failed(errors.ToArray());
-
-
+            
         }
-
-
+        
         public async Task<ICommandResult<TUser>> UpdateAsync(TUser model)
         {
 
@@ -260,13 +249,28 @@ namespace Plato.Users.Services
             model.IpV4Address = GetIpV4Address();
             model.IpV6Address = GetIpV6Address();
 
+            // Invoke UserUpdating subscriptions
+            foreach (var handler in _broker.Pub<TUser>(this, "UserUpdating"))
+            {
+                model = await handler.Invoke(new Message<TUser>(model, this));
+            }
+
             // -------------------------
 
             var identityResult = await _userManager.UpdateAsync(model);
             if (identityResult.Succeeded)
             {
+
                 var user = await _userManager.FindByEmailAsync(model.Email);
+
+                // Invoke UserUpdatied subscriptions
+                foreach (var handler in _broker.Pub<TUser>(this, "UserUpdatied"))
+                {
+                    model = await handler.Invoke(new Message<TUser>(model, this));
+                }
+                
                 return result.Success(user);
+
             }
 
             var errors = new List<CommandError>();
@@ -283,10 +287,24 @@ namespace Plato.Users.Services
 
             var result = new CommandResult<TUser>();
 
+            // Invoke UserDeleting subscriptions
+            foreach (var handler in _broker.Pub<TUser>(this, "UserDeleting"))
+            {
+                model = await handler.Invoke(new Message<TUser>(model, this));
+            }
+            
             var identityResult = await _userManager.DeleteAsync(model);
             if (identityResult.Succeeded)
             {
+
+                // Invoke UserDeleted subscriptions
+                foreach (var handler in _broker.Pub<TUser>(this, "UserDeleted"))
+                {
+                    model = await handler.Invoke(new Message<TUser>(model, this));
+                }
+
                 return result.Success();
+
             }
             
             var errors = new List<CommandError>();
@@ -489,7 +507,7 @@ namespace Plato.Users.Services
             var value = string.Empty;
 
             // Check X-Forwarded-For
-            // Is the request forwarded via a proxy server?
+            // Is the request forwarded via a proxy?
             if (tryUseXForwardHeader)
             {
                 value = _httpContextAccessor.GetRequestHeaderValueAs<string>(ForwardForHeader)?.Split(',').FirstOrDefault();

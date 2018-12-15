@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Emails.Abstractions;
@@ -36,6 +37,7 @@ namespace Plato.Users.Controllers
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IContextFacade _contextFacade;
         private readonly IEmailManager _emailManager;
+        private readonly IOptions<IdentityOptions> _identityOptions;
 
         public IHtmlLocalizer T { get; }
 
@@ -51,7 +53,8 @@ namespace Plato.Users.Controllers
             ILocaleStore localeStore,
             IContextFacade contextFacade,
             IEmailManager emailManager,
-            IPlatoUserStore<User> platoUserStore)
+            IPlatoUserStore<User> platoUserStore,
+            IOptions<IdentityOptions> identityOptions)
         {
             _userManager = userManager;
             _signInManager = signInManage;
@@ -61,7 +64,8 @@ namespace Plato.Users.Controllers
             _contextFacade = contextFacade;
             _emailManager = emailManager;
             _platoUserStore = platoUserStore;
-            
+            _identityOptions = identityOptions;
+
             T = htmlLocalizer;
             S = stringLocalizer;
 
@@ -286,21 +290,20 @@ namespace Plato.Users.Controllers
                     model.Password, 
                     model.RememberMe,
                     lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
+
                 if (result.RequiresTwoFactor)
                 {
                     //return RedirectToAction(nameof(LoginWith2fa), new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                    
                     ModelState.AddModelError(string.Empty, "Account Required Two Factor Authentication.");
                     return View(model);
-
                 }
-
-            
+                
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning(2, "User account locked out.");
@@ -309,9 +312,28 @@ namespace Plato.Users.Controllers
                 }
                 else
                 {
+                    
+                    // Inform the user the account requires confirmation
+                    if (_identityOptions.Value.SignIn.RequireConfirmedEmail)
+                    {
+                        var user = await _userManager.FindByNameAsync(model.UserName);
+                        if (user != null)
+                        {
+                            var validPassword = await _userManager.CheckPasswordAsync(user, model.Password);
+                            if (validPassword)
+                            {
+                                // Valid credentials entered
+                                ModelState.AddModelError(string.Empty, "Before you can login you must first confirm your email address. Use the link below to confirm your email address.");
+                                return View(model);
+                            }
+                        }
+                    }
+                   
+                    // Username & password not found
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return View(model);
                 }
+
             }
 
             // If we got this far, something failed, redisplay form

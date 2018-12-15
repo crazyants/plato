@@ -7,19 +7,18 @@ namespace Plato.Internal.Hosting.Web
     public class CapturedRouter : ICapturedRouter
     {
         
-        private CapturedRouterOptions _options;
+        private readonly CapturedRouterOptions _options;
 
         public CapturedRouterOptions Options => _options;
         
         public CapturedRouter()
         {
+            _options = new CapturedRouterOptions();
         }
         
         public ICapturedRouter Configure(Action<CapturedRouterOptions> configure)
         {
-            var options = new CapturedRouterOptions();
-            configure(options);
-            _options = options;
+            configure(_options);
             return this;
         }
     

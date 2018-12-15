@@ -10,8 +10,8 @@ using Plato.Internal.Models.Notifications;
 using Plato.Internal.Notifications.Abstractions;
 using Plato.Notifications.Models;
 using Plato.Notifications.Services;
-using Plato.Badges.NotificationTypes;
 using Plato.Internal.Models.Badges;
+using Plato.Internal.Badges.NotificationTypes;
 
 namespace Plato.Users.Badges.Notifications
 {
