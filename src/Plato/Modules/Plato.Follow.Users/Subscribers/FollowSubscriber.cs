@@ -27,15 +27,25 @@ namespace Plato.Follow.Users.Subscribers
                 Key = "FollowCreated"
             }, async message => await FollowCreated(message.What));
 
+            _broker.Sub<Models.Follow>(new MessageOptions()
+            {
+                Key = "FollowDeleted"
+            }, async message => await FollowDeleted(message.What));
+
         }
 
         public void Unsubscribe()
         {
-            // Add a reputation for new follows
+      
             _broker.Unsub<Models.Follow>(new MessageOptions()
             {
                 Key = "FollowCreated"
             }, async message => await FollowCreated(message.What));
+
+            _broker.Unsub<Models.Follow>(new MessageOptions()
+            {
+                Key = "FollowDeleted"
+            }, async message => await FollowDeleted(message.What));
 
         }
 
@@ -59,6 +69,30 @@ namespace Plato.Follow.Users.Subscribers
             // Award new follower reputation to the user the current user is following
             await _reputationAwarder.AwardAsync(Reputations.NewFollower, follow.ThingId);
             
+            return follow;
+
+        }
+
+        private async Task<Models.Follow> FollowDeleted(Models.Follow follow)
+        {
+
+            if (follow == null)
+            {
+                return null;
+            }
+
+            // Is this a user follow?
+            if (!follow.Name.Equals(FollowTypes.User.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                return follow;
+            }
+
+            // Award new follow reputation to the user following another user
+            await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId);
+
+            // Award new follower reputation to the user the current user is following
+            await _reputationAwarder.RevokeAsync(Reputations.NewFollower, follow.ThingId);
+
             return follow;
 
         }

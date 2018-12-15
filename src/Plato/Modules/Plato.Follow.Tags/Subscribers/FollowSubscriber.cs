@@ -21,11 +21,16 @@ namespace Plato.Follow.Tags.Subscribers
 
         public void Subscribe()
         {
-            // Add a reputation for new follows
+ 
             _broker.Sub<Models.Follow>(new MessageOptions()
             {
                 Key = "FollowCreated"
             }, async message => await FollowCreated(message.What));
+            
+            _broker.Sub<Models.Follow>(new MessageOptions()
+            {
+                Key = "FollowDeleted"
+            }, async message => await FollowDeleted(message.What));
 
         }
 
@@ -37,6 +42,11 @@ namespace Plato.Follow.Tags.Subscribers
                 Key = "FollowCreated"
             }, async message => await FollowCreated(message.What));
 
+            _broker.Unsub<Models.Follow>(new MessageOptions()
+            {
+                Key = "FollowDeleted"
+            }, async message => await FollowDeleted(message.What));
+
         }
 
         private async Task<Models.Follow> FollowCreated(Models.Follow follow)
@@ -47,7 +57,7 @@ namespace Plato.Follow.Tags.Subscribers
                 return null;
             }
 
-            // Is this a user follow?
+            // Is this a tag follow?
             if (!follow.Name.Equals(FollowTypes.Tag.Name, StringComparison.OrdinalIgnoreCase))
             {
                 return follow;
@@ -56,6 +66,27 @@ namespace Plato.Follow.Tags.Subscribers
             // Award reputation for following tag
             await _reputationAwarder.AwardAsync(Reputations.NewFollow, follow.CreatedUserId);
             
+            return follow;
+
+        }
+
+        private async Task<Models.Follow> FollowDeleted(Models.Follow follow)
+        {
+
+            if (follow == null)
+            {
+                return null;
+            }
+
+            // Is this a tag follow?
+            if (!follow.Name.Equals(FollowTypes.Tag.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                return follow;
+            }
+
+            // Revoke reputation for following tag
+            await _reputationAwarder.RevokeAsync(Reputations.NewFollow, follow.CreatedUserId);
+
             return follow;
 
         }

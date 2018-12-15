@@ -46,6 +46,36 @@ namespace Plato.Internal.Reputations
 
         }
 
+        public async Task<UserReputation> RevokeAsync(IReputation reputation, int userId)
+        {
+
+            if (reputation == null)
+            {
+                throw new ArgumentNullException(nameof(reputation));
+            }
+
+            if (userId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(userId));
+            }
+
+            var userReputation = new UserReputation()
+            {
+                Name = reputation.Name,
+                Points = -reputation.Points,
+                CreatedUserId = userId
+            };
+
+            var result = await _userReputationManager.CreateAsync(userReputation);
+            if (result.Succeeded)
+            {
+                return result.Response;
+            }
+
+            return null;
+
+
+        }
     }
 
 }
