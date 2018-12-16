@@ -597,7 +597,7 @@ namespace Plato.Entities.Stores
                     .Append("SELECT EntityId FROM ")
                     .Append(_entityLabelsTableName)
                     .Append(" WHERE (")
-                    .Append(_query.Params.LabelId.ToSqlString("e.LabelId"))
+                    .Append(_query.Params.LabelId.ToSqlString("LabelId"))
                     .Append("))");
             }
 

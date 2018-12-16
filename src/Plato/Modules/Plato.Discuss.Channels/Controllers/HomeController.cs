@@ -13,15 +13,12 @@ using Plato.Discuss.ViewModels;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Channels.Controllers
 {
     public class HomeController : Controller, IUpdateModel
     {
-
-        #region "Constructor"
-        
+     
         private readonly IViewProviderManager<Channel> _channelViewProvider;
         private readonly ISiteSettingsStore _settingsStore;
         private readonly ICategoryStore<Channel> _channelStore;
@@ -52,11 +49,8 @@ namespace Plato.Discuss.Channels.Controllers
             S = stringLocalizer;
         }
 
-        #endregion
-
         #region "Actions"
-
-
+        
         public async Task<IActionResult> Index(
             int id,
             TopicIndexOptions opts,

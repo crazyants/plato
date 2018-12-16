@@ -20,7 +20,7 @@
                             @label.Name
                         </span>
                         <span class="badge badge-info float-right">
-                            <span>x</span>@label.TotalEntities.ToPrettyInt()
+                            @label.TotalEntities.ToPrettyInt()
                         </span>
                     </a>
                 }
@@ -28,7 +28,6 @@
         }
         else
         {
-
             <div class="text-center my-4 text-muted">
                 @T["Labls can be helpful to identify the type of conversation."]
                 <br /><br />
@@ -36,7 +35,6 @@
                     @T["Manage Labels"]
                 </a>
             </div>
-
         }
 
     </card-body>

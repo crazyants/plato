@@ -5,12 +5,18 @@
         <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Admin" asp-route-action="Edit" asp-route-id="@Model.Label.Id" class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0">
             <div class="p-3">
                 <span class="float-right">
+                @if (Model.Label.TotalFollows > 0)
+                {
                     <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Followers"]">
                         @Model.Label.TotalFollows.ToPrettyInt()
                     </span>
+                }
+                @if (Model.Label.TotalEntities > 0)
+                {
                     <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Topics"]">
                         @Model.Label.TotalEntities.ToPrettyInt()
                     </span>
+                }
                 </span>
                 <span class="btn btn-sm label font-weight-bold" style="background-color: @Model.Label.BackColor; color: @Model.Label.ForeColor">
                     @Model.Label.Name
@@ -40,12 +46,18 @@ else
     <a asp-route-area="Plato.Discuss.Labels" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Label.Id" asp-route-alias="@Model.Label.Alias" class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0">
         <div class="p-3">
             <span class="float-right">
-                <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Followers"]">
-                    @Model.Label.TotalFollows.ToPrettyInt()
-                </span>
-                <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Topics"]">
-                    @Model.Label.TotalEntities.ToPrettyInt()
-                </span>
+                @if (Model.Label.TotalFollows > 0)
+                {
+                    <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Followers"]">
+                        @Model.Label.TotalFollows.ToPrettyInt()
+                    </span>
+                }
+                @if (Model.Label.TotalEntities > 0)
+                {
+                    <span class="btn btn-sm btn-secondary" data-toggle="tooltip" title="@T["Topics"]">
+                        @Model.Label.TotalEntities.ToPrettyInt()
+                    </span>
+                }
             </span>
             <span class="btn btn-sm label font-weight-bold" style="background-color: @Model.Label.BackColor; color: @Model.Label.ForeColor">
                 @Model.Label.Name
