@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
-using Plato.Follow.Stores;
-using Plato.Follow.ViewModels;
+using Plato.Follows.Models;
+using Plato.Follows.Stores;
+using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 
@@ -14,11 +15,11 @@ namespace Plato.Discuss.Channels.Follow.ViewProviders
 
         private readonly ICategoryStore<Channel> _channelStore;
         private readonly IContextFacade _contextFacade;
-        private readonly IFollowStore<Plato.Follow.Models.Follow> _followStore;
+        private readonly IFollowStore<Plato.Follows.Models.Follow> _followStore;
 
         public ChannelViewProvider(
             IContextFacade contextFacade,
-            IFollowStore<Plato.Follow.Models.Follow> followStore,
+            IFollowStore<Plato.Follows.Models.Follow> followStore,
             ICategoryStore<Channel> channelStore)
         {
             _contextFacade = contextFacade;
@@ -38,27 +39,32 @@ namespace Plato.Discuss.Channels.Follow.ViewProviders
             {
                 return default(IViewProviderResult);
             }
-
-            if (channel.Id == 0)
+            
+            // Get follow type
+            FollowType followType = null;
+            followType = channel.Id == 0
+                ? FollowTypes.AllChannels
+                : FollowTypes.Channel;
+            
+            // Get thingId if available
+            var thingId = 0;
+            if (channel.Id > 0)
             {
-                return default(IViewProviderResult);
+                var existingChannel = await _channelStore.GetByIdAsync(channel.Id);
+                if (existingChannel != null)
+                {
+                    thingId = existingChannel.Id;
+                }
             }
 
-            var existingChannel = await _channelStore.GetByIdAsync(channel.Id);
-            if (existingChannel == null)
-            {
-                return default(IViewProviderResult);
-            }
-
-            var followType = FollowTypes.Channel;
+            // Are we already following?
             var isFollowing = false;
-
             var currentUser = await _contextFacade.GetAuthenticatedUserAsync();
             if (currentUser != null)
             {
                 var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
                     followType.Name,
-                    existingChannel.Id,
+                    thingId,
                     currentUser.Id);
                 if (existingFollow != null)
                 {
@@ -70,7 +76,7 @@ namespace Plato.Discuss.Channels.Follow.ViewProviders
                 View<FollowViewModel>("Follow.Display.Sidebar", model =>
                 {
                     model.FollowType = followType;
-                    model.ThingId = existingChannel.Id;
+                    model.ThingId = thingId;
                     model.IsFollowing = isFollowing;
                     return model;
                 }).Zone("sidebar").Order(2)

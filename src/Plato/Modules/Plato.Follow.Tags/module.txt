@@ -8,7 +8,7 @@ Version: 1.0.0
 Dependencies: 
 [
 	{
-		Id: "Plato.Follow",
+		Id: "Plato.Follows",
 		Version: "1.0.0"
 	},
 	{

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Follow.Services;
+using Plato.Follows.Services;
 using Plato.Follow.Users.Subscribers;
 using Plato.Follow.Users.ViewProviders;
 using Plato.Internal.Models.Shell;

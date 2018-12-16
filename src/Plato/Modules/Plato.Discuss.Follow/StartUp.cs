@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Discuss.Follow.Subscribers;
 using Plato.Discuss.Follow.ViewProviders;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Models.Users;
+using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Discuss.Follow
 {
@@ -26,7 +27,10 @@ namespace Plato.Discuss.Follow
             // View providers
             services.AddScoped<IViewProviderManager<Topic>, ViewProviderManager<Topic>>();
             services.AddScoped<IViewProvider<Topic>, TopicViewProvider>();
-            
+
+            // Follow subscribers
+            services.AddScoped<IBrokerSubscriber, FollowSubscriber>();
+
         }
 
         public override void Configure(

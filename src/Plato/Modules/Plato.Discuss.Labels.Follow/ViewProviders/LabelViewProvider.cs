@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Plato.Discuss.Labels.Models;
-using Plato.Follow.Stores;
-using Plato.Follow.ViewModels;
+using Plato.Follows.Stores;
+using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Labels.Stores;
@@ -14,12 +14,12 @@ namespace Plato.Discuss.Labels.Follow.ViewProviders
 
         private readonly ILabelStore<Label> _tagStore;
         private readonly IContextFacade _contextFacade;
-        private readonly IFollowStore<Plato.Follow.Models.Follow> _followStore;
+        private readonly IFollowStore<Follows.Models.Follow> _followStore;
 
         public LabelViewProvider(
             ILabelStore<Label> tagStore, 
             IContextFacade contextFacade,
-            IFollowStore<Plato.Follow.Models.Follow> followStore)
+            IFollowStore<Follows.Models.Follow> followStore)
         {
             _tagStore = tagStore;
             _contextFacade = contextFacade;

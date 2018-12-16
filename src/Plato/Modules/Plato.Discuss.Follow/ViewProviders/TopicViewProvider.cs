@@ -3,14 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Plato.Discuss.Models;
 using Plato.Entities.Stores;
-using Plato.Follow;
-using Plato.Follow.Models;
-using Plato.Follow.Stores;
-using Plato.Follow.ViewModels;
+using Plato.Follows.Services;
+using Plato.Follows.Stores;
+using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Layout.ModelBinding;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Follow.ViewProviders
 {
@@ -20,19 +17,22 @@ namespace Plato.Discuss.Follow.ViewProviders
         private const string FollowHtmlName = "follow";
         
         private readonly IContextFacade _contextFacade;
-        private readonly IFollowStore<Plato.Follow.Models.Follow> _followStore;
+        private readonly IFollowStore<Plato.Follows.Models.Follow> _followStore;
+        private readonly IFollowManager<Plato.Follows.Models.Follow> _followManager;
         private readonly IEntityStore<Topic> _entityStore;
         private readonly HttpRequest _request;
  
         public TopicViewProvider(
             IContextFacade contextFacade,
             IHttpContextAccessor httpContextAccessor,
-            IFollowStore<Plato.Follow.Models.Follow> followStore,
-            IEntityStore<Topic> entityStore)
+            IFollowStore<Plato.Follows.Models.Follow> followStore,
+            IEntityStore<Topic> entityStore,
+            IFollowManager<Plato.Follows.Models.Follow> followManager)
         {
             _contextFacade = contextFacade;
             _followStore = followStore;
             _entityStore = entityStore;
+            _followManager = followManager;
             _request = httpContextAccessor.HttpContext.Request;
         }
         
@@ -50,7 +50,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             }
 
             var isFollowing = false;
-            var followType = DefaultFollowTypes.Topic;
+            var followType = FollowTypes.Topic;
 
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
@@ -85,7 +85,7 @@ namespace Plato.Discuss.Follow.ViewProviders
             }
 
             var isFollowing = false;
-            var followType = DefaultFollowTypes.Topic;
+            var followType = FollowTypes.Topic;
             var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (user != null)
             {
@@ -146,8 +146,8 @@ namespace Plato.Discuss.Follow.ViewProviders
             // Add the follow
             if (follow)
             {
-                // Add and return result
-                await _followStore.CreateAsync(new Plato.Follow.Models.Follow()
+                // Add follow
+                await _followManager.CreateAsync(new Plato.Follows.Models.Follow()
                 {
                     ThingId = entity.Id,
                     CreatedUserId = user.Id,
@@ -158,12 +158,12 @@ namespace Plato.Discuss.Follow.ViewProviders
             {
                 // Delete the follow
                 var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
-                        DefaultFollowTypes.Topic.Name,
+                        FollowTypes.Topic.Name,
                         entity.Id,
                         user.Id);
                 if (existingFollow != null)
                 {
-                    await _followStore.DeleteAsync(existingFollow);
+                    await _followManager.DeleteAsync(existingFollow);
                 }
             }
 

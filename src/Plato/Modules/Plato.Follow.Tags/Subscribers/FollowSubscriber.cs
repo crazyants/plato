@@ -27,12 +27,12 @@ namespace Plato.Follow.Tags.Subscribers
         public void Subscribe()
         {
  
-            _broker.Sub<Models.Follow>(new MessageOptions()
+            _broker.Sub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowCreated"
             }, async message => await FollowCreated(message.What));
             
-            _broker.Sub<Models.Follow>(new MessageOptions()
+            _broker.Sub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowDeleted"
             }, async message => await FollowDeleted(message.What));
@@ -42,19 +42,19 @@ namespace Plato.Follow.Tags.Subscribers
         public void Unsubscribe()
         {
             // Add a reputation for new follows
-            _broker.Unsub<Models.Follow>(new MessageOptions()
+            _broker.Unsub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowCreated"
             }, async message => await FollowCreated(message.What));
 
-            _broker.Unsub<Models.Follow>(new MessageOptions()
+            _broker.Unsub<Follows.Models.Follow>(new MessageOptions()
             {
                 Key = "FollowDeleted"
             }, async message => await FollowDeleted(message.What));
 
         }
 
-        private async Task<Models.Follow> FollowCreated(Models.Follow follow)
+        private async Task<Follows.Models.Follow> FollowCreated(Follows.Models.Follow follow)
         {
 
             if (follow == null)
@@ -92,7 +92,7 @@ namespace Plato.Follow.Tags.Subscribers
 
         }
 
-        private async Task<Models.Follow> FollowDeleted(Models.Follow follow)
+        private async Task<Follows.Models.Follow> FollowDeleted(Follows.Models.Follow follow)
         {
 
             if (follow == null)

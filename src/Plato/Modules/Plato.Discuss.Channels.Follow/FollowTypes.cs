@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Plato.Follow.Models;
-using Plato.Follow.Services;
+using Plato.Follows.Models;
+using Plato.Follows.Services;
 
 namespace Plato.Discuss.Channels.Follow
 {
@@ -9,17 +9,27 @@ namespace Plato.Discuss.Channels.Follow
     {
         
         public static readonly FollowType Channel =
-            new FollowType("Channel",
+            new FollowType(
+                "Channel",
                 "Follow Channel",
                 "Folow this channel to get notified when new content is posted.",
                 "Unsubscribe",
-                "You are already following this channel.");
-
+                "You are already following this channel. Unsubscribe below...");
+        
+        public static readonly FollowType AllChannels =
+            new FollowType(
+                "AllChannels",
+                "Follow All Channels",
+                "Folow all channels to get notified when new posts are added to any channel..",
+                "Unsubscribe",
+                "You are already following all channels. Unsubscribe below...");
+        
         public IEnumerable<IFollowType> GetFollowTypes()
         {
             return new[]
             {
-                Channel
+                Channel,
+                AllChannels
             };
         }
 

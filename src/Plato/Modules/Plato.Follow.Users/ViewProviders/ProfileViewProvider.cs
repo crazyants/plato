@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Plato.Follow;
-using Plato.Follow.Stores;
-using Plato.Follow.ViewModels;
+using Plato.Follows.Stores;
+using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -14,12 +13,12 @@ namespace Plato.Follow.Users.ViewProviders
 
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IContextFacade _contextFacade;
-        private readonly IFollowStore<Plato.Follow.Models.Follow> _followStore;
+        private readonly IFollowStore<Follows.Models.Follow> _followStore;
 
         public ProfileViewProvider(
             IPlatoUserStore<User> platoUserStore, 
             IContextFacade contextFacade,
-            IFollowStore<Plato.Follow.Models.Follow> followStore)
+            IFollowStore<Follows.Models.Follow> followStore)
         {
             _platoUserStore = platoUserStore;
             _contextFacade = contextFacade;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Plato.Follow.Models;
-using Plato.Follow.Services;
+using Plato.Follows.Models;
+using Plato.Follows.Services;
 
 namespace Plato.Discuss.Labels.Follow
 {

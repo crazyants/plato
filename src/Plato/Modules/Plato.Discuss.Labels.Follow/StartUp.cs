@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Plato.Discuss.Labels.Follow.Subscribers;
 using Plato.Discuss.Labels.Follow.ViewProviders;
 using Plato.Discuss.Labels.Models;
-using Plato.Follow.Services;
+using Plato.Follows.Services;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;

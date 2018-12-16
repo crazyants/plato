@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Plato.Follow.Stores;
-using Plato.Follow.ViewModels;
+using Plato.Follows.Stores;
+using Plato.Follows.ViewModels;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
@@ -15,12 +15,12 @@ namespace Plato.Follow.Tags.ViewProviders
 
         private readonly ITagStore<Tag> _tagStore;
         private readonly IContextFacade _contextFacade;
-        private readonly IFollowStore<Models.Follow> _followStore;
+        private readonly IFollowStore<Follows.Models.Follow> _followStore;
 
         public TagViewProvider(
             ITagStore<Tag> tagStore, 
             IContextFacade contextFacade,
-            IFollowStore<Models.Follow> followStore)
+            IFollowStore<Follows.Models.Follow> followStore)
         {
             _tagStore = tagStore;
             _contextFacade = contextFacade;

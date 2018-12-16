@@ -1,5 +1,5 @@
 Name: Plato Discuss Follow
-Description: Adds the ability to follow topics & channels via email.
+Description: Adds the ability for users to follow topics.
 Category: Discussions
 Author: InstantASP
 Version: 1.0.0
@@ -11,7 +11,7 @@ Dependencies:
 		Version: "1.0.0"
 	},
 	{
-		Id: "Plato.Follow",
+		Id: "Plato.Follows",
 		Version: "1.0.0"
 	}
 ]
