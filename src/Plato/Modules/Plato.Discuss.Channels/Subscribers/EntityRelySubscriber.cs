@@ -114,7 +114,7 @@ namespace Plato.Discuss.Channels.Subscribers
                 details.TotalReplies = details.TotalReplies + 1;
                 details.LastPost.EntityId = reply.EntityId;
                 details.LastPost.EntityReplyId = reply.Id;
-                details.LastPost.CreatedUserId = reply.CreatedUserId;
+                details.LastPost.CreatedBy = reply.CreatedBy;
                 details.LastPost.CreatedDate = reply.CreatedDate;
                 parent.AddOrUpdate<ChannelDetails>(details);
 

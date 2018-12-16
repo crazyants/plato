@@ -1,5 +1,6 @@
 ﻿using System;
 using Plato.Internal.Abstractions;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Discuss.Channels.Models
 {
@@ -22,7 +23,7 @@ namespace Plato.Discuss.Channels.Models
 
         public DateTimeOffset? CreatedDate { get; set; }
 
-        public int CreatedUserId { get; set; }
+        public ISimpleUser CreatedBy { get; set; } = new SimpleUser();
 
     }
 

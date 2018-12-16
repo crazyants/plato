@@ -6,7 +6,7 @@
 }
 
 <div class="row">
-    
+
     @if (!String.IsNullOrEmpty(Model.Channel.IconCss))
     {
         <div class="col-1 text-center">
@@ -15,7 +15,15 @@
             </span>
         </div>
     }
-    
+    else
+    {
+        <div class="col-1 text-center">
+            <span class="channel-icon channel-icon-md bg-info text-light">
+                <i class="fal fa-folder"></i>
+            </span>
+        </div>
+    }
+
     <div class="col-7">
 
         @if (Model.ChannelIndexOpts.EnableEdit)
@@ -68,29 +76,35 @@
         }
 
     </div>
-    
-    <div class="col-4 text-right">
-        <div class="float-right ml-2">
-            <avatar class="avatar" user-id="@details.LastPost.CreatedUserId"/>
-        </div>
-        <div class="float-right">
-            <ol class="list-inline text-muted">
-                <li class="list-inline-item">
-                    <span title="@T["Topics"]" data-toggle="tooltip">
-                        @details.TotalTopics.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
-                    </span>
-                </li>
-                <li class="list-inline-item">
-                    <span title="@T["Replies"]" data-toggle="tooltip">
-                        @details.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt fa-flip-horizontal"></i>
-                    </span>
-                </li>
-            </ol>
 
-            <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
-                <date utc="@details.LastPost.CreatedDate"></date>
-            </a>
-        </div>
+    <div class="col-4 text-right">
+
+        @if (details.TotalTopics > 0)
+        {
+            <div class="float-right ml-2">
+                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-alias="@details.LastPost.CreatedBy.Alias" asp-route-id="@details.LastPost.CreatedBy.Id">
+                    <avatar data-toggle="tooltip" title="@details.LastPost.CreatedBy.DisplayName" class="avatar" user-id="@details.LastPost.CreatedBy.Id" />
+                </a>
+            </div>
+            <div class="float-right">
+                <ol class="list-inline text-muted">
+                    <li class="list-inline-item">
+                        <span title="@T["Topics"]" data-toggle="tooltip">
+                            @details.TotalTopics.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
+                        </span>
+                    </li>
+                    <li class="list-inline-item">
+                        <span title="@T["Replies"]" data-toggle="tooltip">
+                            @details.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt fa-flip-horizontal"></i>
+                        </span>
+                    </li>
+                </ol>
+
+                <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
+                    <date utc="@details.LastPost.CreatedDate"></date>
+                </a>
+            </div>
+        }
     </div>
 
 </div>
