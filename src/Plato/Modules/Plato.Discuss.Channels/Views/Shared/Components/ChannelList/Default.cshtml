@@ -39,7 +39,24 @@
                          </ul>
 
                      }
-                   
+                     else
+                     {
+                         var details = channel.GetOrCreate<ChannelDetails>();
+                       
+                         <ol class="list-inline text-muted float-right">
+                             <li class="list-inline-item">
+                                 <span title="@T["Topics"]" data-toggle="tooltip">
+                                     @details.TotalTopics.ToPrettyInt() <i class="fal fa-comment-alt-lines"></i>
+                                 </span>
+                             </li>
+                             <li class="list-inline-item">
+                                 <span title="@T["Replies"]" data-toggle="tooltip">
+                                     @details.TotalReplies.ToPrettyInt() <i class="fal fa-comment-alt fa-flip-horizontal"></i>
+                                 </span>
+                             </li>
+                         </ol>
+                     }
+
                      <h6 class="card-title">@channel.Name</h6>
                      @if (!String.IsNullOrEmpty(@channel.Description))
                      {

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
@@ -29,8 +30,7 @@ namespace Plato.Discuss.Channels.Services
             _topicStore = topicStore;
             _replyStore = replyStore;
         }
-
-
+        
         public async Task UpdateAsync(int channelId)
         {
             
@@ -41,16 +41,19 @@ namespace Plato.Discuss.Channels.Services
             foreach (var parent in parents)
             {
 
-                // Get latest topic & total count for current channel
+                // Get latest topic & total topic count for current channel
                 var topics = await _topicStore.QueryAsync()
                     .Take(1, 1) // we only need the latest topic
                     .Select<EntityQueryParams>(q =>
                     {
-
-                        // If the channel has children include all child topics
+                        
+                        // If the channel has children also include all child topics
                         if (parent.Children.Any())
                         {
-                            q.CategoryId.IsIn(parent.Children.Select(c => c.Id).ToArray());
+                            q.CategoryId.IsIn(parent.Children
+                                .Select(c => c.Id)
+                                .Append(parent.Id)
+                                .ToArray());
                         }
                         else
                         {
@@ -65,16 +68,19 @@ namespace Plato.Discuss.Channels.Services
                     .OrderBy("LastReplyDate", OrderBy.Desc)
                     .ToList();
 
-                // Get reply details for current channel
+                // Get latest reply & total reply count for current channel
                 var replies = await _replyStore.QueryAsync()
-                    .Take(1, 1) // we only need the latest topic
+                    .Take(1, 1) // we only need the latest reply
                     .Select<EntityReplyQueryParams>(q =>
                     {
 
-                        // If the channel has children include all child topics
+                        // If the channel has children also include all child replies
                         if (parent.Children.Any())
                         {
-                            q.CategoryId.IsIn(parent.Children.Select(c => c.Id).ToArray());
+                            q.CategoryId.IsIn(parent.Children
+                                .Select(c => c.Id)
+                                .Append(parent.Id)
+                                .ToArray());
                         }
                         else
                         {
