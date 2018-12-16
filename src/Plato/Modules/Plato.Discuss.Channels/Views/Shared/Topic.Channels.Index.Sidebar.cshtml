@@ -13,9 +13,12 @@
             <div class="list-group list-group-flush list-group-hover">
                 @foreach (var channel in Model.Channels.Where(c => c.ParentId == 0))
                 {
+                    var channelDetails = channel.GetOrCreate<ChannelDetails>();
                     var css = channel.Id == Model.SelectedChannelId ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action";
                     <a asp-route-area="Plato.Discuss.Channels" asp-route-controller="Home" asp-route-action="Index" asp-route-id="@channel.Id" asp-route-alias="@channel.Alias" title="@channel.Description" class="@css">
-
+                        <span class="badge badge-info float-right">
+                            @channelDetails.TotalTopics.ToPrettyInt()
+                        </span>
                         @if (!String.IsNullOrWhiteSpace(channel.IconCss))
                         {
                             <div class="float-left mr-3">

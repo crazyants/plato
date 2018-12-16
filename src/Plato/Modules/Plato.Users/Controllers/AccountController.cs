@@ -249,7 +249,7 @@ namespace Plato.Users.Controllers
 
             //ViewData["Locales"] = sb.ToString();
 
-            for (var i = 0; i < 15; i++)
+            for (var i = 0; i < 500; i++)
             {
 
                 var displayName = "New User " + i;

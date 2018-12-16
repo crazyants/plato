@@ -1,4 +1,4 @@
-Name: Plato Follow
+Name: Plato Follows
 Description: Adds the ability to follow entities, categories & users via email within Plato.
 Category: Discussions
 Author: InstantASP
