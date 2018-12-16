@@ -82,8 +82,8 @@
         @if (details.TotalTopics > 0)
         {
             <div class="float-right ml-2">
-                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-alias="@details.LastPost.CreatedBy.Alias" asp-route-id="@details.LastPost.CreatedBy.Id">
-                    <avatar data-toggle="tooltip" title="@details.LastPost.CreatedBy.DisplayName" class="avatar" user-id="@details.LastPost.CreatedBy.Id" />
+                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-alias="@details.LastTopic.CreatedBy.Alias" asp-route-id="@details.LastTopic.CreatedBy.Id">
+                    <avatar data-toggle="tooltip" title="@details.LastTopic.CreatedBy.DisplayName" class="avatar" user-id="@details.LastTopic.CreatedBy.Id" />
                 </a>
             </div>
             <div class="float-right">
@@ -100,8 +100,8 @@
                     </li>
                 </ol>
 
-                <a href="#" title="@T["Jump to last post"]" data-toggle="tooltip">
-                    <date utc="@details.LastPost.CreatedDate"></date>
+                <a asp-route-area="Plato.Discuss" asp-route-controller="Home" asp-route-action="Topic" asp-route-alias="@details.LastTopic.Alias" asp-route-id="@details.LastTopic.Id" title="@T["Jump to latest topic"]" data-toggle="tooltip">
+                    <date utc="@details.LastTopic.CreatedDate"></date>
                 </a>
             </div>
         }

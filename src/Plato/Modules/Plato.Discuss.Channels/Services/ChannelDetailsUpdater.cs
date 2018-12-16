@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
@@ -40,20 +39,24 @@ namespace Plato.Discuss.Channels.Services
             // Update details within current and all parents
             foreach (var parent in parents)
             {
+                
+                // Get all children for current channel
+                var children = await _channelStore.GetChildrenByIdAsync(parent.Id);
 
                 // Get latest topic & total topic count for current channel
                 var topics = await _topicStore.QueryAsync()
                     .Take(1, 1) // we only need the latest topic
                     .Select<EntityQueryParams>(q =>
                     {
-                        
+
                         // If the channel has children also include all child topics
-                        if (parent.Children.Any())
+                        if (children != null)
                         {
-                            q.CategoryId.IsIn(parent.Children
+                            var channelIds = children
                                 .Select(c => c.Id)
                                 .Append(parent.Id)
-                                .ToArray());
+                                .ToArray();
+                            q.CategoryId.IsIn(channelIds);
                         }
                         else
                         {
@@ -118,14 +121,17 @@ namespace Plato.Discuss.Channels.Services
 
                 if (latestTopic != null)
                 {
-                    details.LastPost.EntityId = latestTopic.Id;
-                    details.LastPost.CreatedBy = latestTopic.CreatedBy;
-                    details.LastPost.CreatedDate = latestTopic.CreatedDate;
+                    details.LastTopic.Id = latestTopic.Id;
+                    details.LastTopic.Alias = latestTopic.Alias;
+                    details.LastTopic.CreatedBy = latestTopic.CreatedBy;
+                    details.LastTopic.CreatedDate = latestTopic.CreatedDate;
                 }
 
                 if (latestReply != null)
                 {
-                    details.LastPost.EntityReplyId = latestReply.Id;
+                    details.LastReply.Id = latestReply.Id;
+                    details.LastReply.CreatedBy = latestReply.CreatedBy;
+                    details.LastReply.CreatedDate = latestReply.CreatedDate;
                 }
 
                 parent.AddOrUpdate<ChannelDetails>(details);
