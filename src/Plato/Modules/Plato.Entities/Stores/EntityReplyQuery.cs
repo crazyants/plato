@@ -57,11 +57,14 @@ namespace Plato.Entities.Stores
 
         private WhereInt _id;
         private WhereInt _entityId;
+        private WhereInt _categoryId;
         private WhereString _keywords;
-        private WhereBool _isPrivate;
-        private WhereBool _isSpam;
-        private WhereBool _isPinned;
-        private WhereBool _isDeleted;
+        private WhereBool _hidePrivate;
+        private WhereBool _showPrivate;
+        private WhereBool _hideSpam;
+        private WhereBool _showSpam;
+        private WhereBool _hideDeleted;
+        private WhereBool _showDeleted;
         private WhereBool _isClosed;
         private WhereInt _createdUserId;
         private WhereDate _createdDate;
@@ -79,36 +82,57 @@ namespace Plato.Entities.Stores
             get => _entityId ?? (_entityId = new WhereInt());
             set => _entityId = value;
         }
-        
+
+        public WhereInt CategoryId
+        {
+            get => _categoryId ?? (_categoryId = new WhereInt());
+            set => _categoryId = value;
+        }
+
+
         public WhereString Keywords
         {
             get => _keywords ?? (_keywords = new WhereString());
             set => _keywords = value;
         }
 
-        public WhereBool IsPrivate
+        public WhereBool HidePrivate
         {
-            get => _isPrivate ?? (_isPrivate = new WhereBool());
-            set => _isPrivate = value;
+            get => _hidePrivate ?? (_hidePrivate = new WhereBool());
+            set => _hidePrivate = value;
         }
 
-        public WhereBool IsSpam
+        public WhereBool ShowPrivate
         {
-            get => _isSpam ?? (_isSpam = new WhereBool());
-            set => _isSpam = value;
+            get => _showPrivate ?? (_showPrivate = new WhereBool());
+            set => _showPrivate = value;
         }
 
-        public WhereBool IsPinned
+
+        public WhereBool HideSpam
         {
-            get => _isPinned ?? (_isPinned = new WhereBool());
-            set => _isPinned = value;
+            get => _hideSpam ?? (_hideSpam = new WhereBool());
+            set => _hideSpam = value;
         }
 
-        public WhereBool IsDeleted
+        public WhereBool ShowSpam
         {
-            get => _isDeleted ?? (_isDeleted = new WhereBool());
-            set => _isDeleted = value;
+            get => _showSpam ?? (_showSpam = new WhereBool());
+            set => _showSpam = value;
         }
+        
+        public WhereBool HideDeleted
+        {
+            get => _hideDeleted ?? (_hideDeleted = new WhereBool());
+            set => _hideDeleted = value;
+        }
+
+        public WhereBool ShowDeleted
+        {
+            get => _showDeleted ?? (_showDeleted = new WhereBool());
+            set => _showDeleted = value;
+        }
+
 
         public WhereBool IsClosed
         {
@@ -150,6 +174,7 @@ namespace Plato.Entities.Stores
     {
         #region "Constructor"
 
+        private readonly string _entitiesTableName;
         private readonly string _entityRepliesTableName;
         private readonly string _usersTableName;
 
@@ -158,6 +183,7 @@ namespace Plato.Entities.Stores
         public EntityReplyQueryBuilder(EntityReplyQuery<TModel> query)
         {
             _query = query;
+            _entitiesTableName = GetTableNameWithPrefix("Entities");
             _entityRepliesTableName = GetTableNameWithPrefix("EntityReplies");
             _usersTableName = GetTableNameWithPrefix("Users");
         }
@@ -272,7 +298,82 @@ namespace Plato.Entities.Stores
                 sb.Append(_query.Params.Keywords.ToSqlString("Message", "Keywords"));
             }
             
-         
+            // -----------------
+            // CategoryId 
+            // -----------------
+
+            if (_query.Params.CategoryId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.CategoryId.Operator);
+                sb.Append(" r.EntityId IN (")
+                    .Append("SELECT Id FROM ")
+                    .Append(_entitiesTableName)
+                    .Append(" WHERE (")
+                    .Append(_query.Params.CategoryId.ToSqlString("CategoryId"))
+                    .Append("))");
+            }
+            
+            // -----------------
+            // private 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HidePrivate.Value && !_query.Params.ShowPrivate.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HidePrivate.Operator);
+                sb.Append("r.IsPrivate = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowPrivate.Value && !_query.Params.HidePrivate.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowPrivate.Operator);
+                sb.Append("r.IsPrivate = 1");
+            }
+
+            // -----------------
+            // spam 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideSpam.Value && !_query.Params.ShowSpam.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideSpam.Operator);
+                sb.Append("r.IsSpam = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowSpam.Value && !_query.Params.HideSpam.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowSpam.Operator);
+                sb.Append("r.IsSpam = 1");
+            }
+
+            // -----------------
+            // deleted 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideDeleted.Value && !_query.Params.ShowDeleted.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideDeleted.Operator);
+                sb.Append("r.IsDeleted = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowDeleted.Value && !_query.Params.HideDeleted.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowDeleted.Operator);
+                sb.Append("r.IsDeleted = 1");
+            }
+            
             return sb.ToString();
 
         }

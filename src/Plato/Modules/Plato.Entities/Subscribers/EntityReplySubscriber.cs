@@ -129,9 +129,9 @@ namespace Plato.Entities.Subscribers
                 .Select<EntityReplyQueryParams>(q =>
                 {
                     q.EntityId.Equals(entity.Id);
-                    q.IsPrivate.False();
-                    q.IsSpam.False();
-                    q.IsDeleted.False();
+                    q.HidePrivate.True();
+                    q.HideSpam.True();
+                    q.HideDeleted.True();
                 })
                 .ToList();
 

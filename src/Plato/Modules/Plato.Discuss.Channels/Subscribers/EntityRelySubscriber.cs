@@ -2,6 +2,7 @@
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
+using Plato.Discuss.Channels.Services;
 using Plato.Discuss.Models;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -21,17 +22,20 @@ namespace Plato.Discuss.Channels.Subscribers
         private readonly ICategoryStore<Channel> _channelStore;
         private readonly ICategoryManager<Channel> _channelManager;
         private readonly IEntityStore<Topic> _topicStore;
+        private readonly IChannelDetailsUpdater _channelDetailsUpdater;
 
         public EntityReplySubscriber(
             IBroker broker,
             ICategoryStore<Channel> channelStore,
             ICategoryManager<Channel> channelManager,
-            IEntityStore<Topic> topicStore)
+            IEntityStore<Topic> topicStore,
+            IChannelDetailsUpdater channelDetailsUpdater)
         {
             _broker = broker;
             _channelStore = channelStore;
             _channelManager = channelManager;
             _topicStore = topicStore;
+            _channelDetailsUpdater = channelDetailsUpdater;
         }
 
         #region "Implementation"
@@ -70,13 +74,13 @@ namespace Plato.Discuss.Channels.Subscribers
                 return reply;
             }
 
-            // No need to update cateogry for soft deleted entities
+            // No need to update cateogry for soft deleted replies
             if (reply.IsDeleted)
             {
                 return reply;
             }
 
-            // No need to update cateogry for entities flagged as spam
+            // No need to update cateogry for replies flagged as spam
             if (reply.IsSpam)
             {
                 return reply;
@@ -89,7 +93,7 @@ namespace Plato.Discuss.Channels.Subscribers
                 return reply;
             }
             
-            // Ensure we have a categoryId for the newly created entity
+            // Ensure we have a categoryId for the entity
             if (entity.CategoryId <= 0)
             {
                 return reply;
@@ -102,27 +106,10 @@ namespace Plato.Discuss.Channels.Subscribers
                 return reply;
             }
 
-            //Get current channel and all parent channels
-            var parents = await _channelStore.GetParentsByIdAsync(channel.Id);
-
-            // Update details within current and all parents
-            foreach (var parent in parents)
-            {
-
-                // Update channel with latest entity details
-                var details = parent.GetOrCreate<ChannelDetails>();
-                details.TotalReplies = details.TotalReplies + 1;
-                details.LastPost.EntityId = reply.EntityId;
-                details.LastPost.EntityReplyId = reply.Id;
-                details.LastPost.CreatedBy = reply.CreatedBy;
-                details.LastPost.CreatedDate = reply.CreatedDate;
-                parent.AddOrUpdate<ChannelDetails>(details);
-
-                // Save the updated details 
-                await _channelManager.UpdateAsync(parent);
-
-            }
-
+            // Update channel details
+            await _channelDetailsUpdater.UpdateAsync(channel.Id);
+            
+            // return 
             return reply;
 
         }

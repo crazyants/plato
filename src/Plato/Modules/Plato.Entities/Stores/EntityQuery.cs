@@ -66,6 +66,10 @@ namespace Plato.Entities.Stores
         private WhereBool _hidePrivate;
         private WhereBool _showSpam;
         private WhereBool _hideSpam;
+
+        private WhereBool _showClosed;
+        private WhereBool _hideClosed;
+
         private WhereBool _isPinned;
         private WhereBool _isNotPinned;
         private WhereBool _hideDeleted;
@@ -135,6 +139,12 @@ namespace Plato.Entities.Stores
             get => _hidePrivate ?? (_hidePrivate = new WhereBool());
             set => _hidePrivate = value;
         }
+        
+        public WhereBool HideSpam
+        {
+            get => _hideSpam ?? (_hideSpam = new WhereBool());
+            set => _hideSpam = value;
+        }
 
         public WhereBool ShowSpam
         {
@@ -142,11 +152,19 @@ namespace Plato.Entities.Stores
             set => _showSpam = value;
         }
 
-        public WhereBool HideSpam
+
+        public WhereBool HideClosed
         {
-            get => _hideSpam ?? (_hideSpam = new WhereBool());
-            set => _hideSpam = value;
+            get => _hideClosed ?? (_hideClosed = new WhereBool());
+            set => _hideClosed = value;
         }
+
+        public WhereBool ShowClosed
+        {
+            get => _showClosed ?? (_showClosed = new WhereBool());
+            set => _showClosed = value;
+        }
+
 
         public WhereBool IsPinned
         {
@@ -645,7 +663,7 @@ namespace Plato.Entities.Stores
             }
 
             // -----------------
-            // toggle spam 
+            // spam 
             // -----------------
 
             // hide = true, show = false
@@ -664,6 +682,46 @@ namespace Plato.Entities.Stores
                 sb.Append("e.IsSpam = 1");
             }
 
+            // -----------------
+            // deleted 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideDeleted.Value && !_query.Params.ShowDeleted.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideDeleted.Operator);
+                sb.Append("e.IsDeleted = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowDeleted.Value && !_query.Params.HideDeleted.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowDeleted.Operator);
+                sb.Append("e.IsDeleted = 1");
+            }
+
+            // -----------------
+            // closed 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideClosed.Value && !_query.Params.ShowClosed.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideClosed.Operator);
+                sb.Append("e.IsClosed = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowClosed.Value && !_query.Params.HideClosed.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowClosed.Operator);
+                sb.Append("e.IsClosed = 1");
+            }
+            
             // -----------------
             // pinned 
             // -----------------

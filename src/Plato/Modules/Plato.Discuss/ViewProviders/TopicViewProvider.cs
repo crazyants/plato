@@ -220,10 +220,9 @@ namespace Plato.Discuss.ViewProviders
                 .Select<EntityReplyQueryParams>(q =>
                 {
                     q.EntityId.Equals(entityId);
-               
-                    q.IsSpam.False();
-                    q.IsPrivate.False();
-                    q.IsDeleted.False();
+                    q.HideSpam.True();
+                    q.HidePrivate.True();
+                    q.HideDeleted.True();
                 })
                 .OrderBy("CreatedDate", OrderBy.Asc)
                 .ToList();

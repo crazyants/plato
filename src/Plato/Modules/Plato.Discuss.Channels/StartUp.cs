@@ -21,6 +21,7 @@ using Plato.Discuss.Channels.ViewAdaptors;
 using Plato.Discuss.Channels.ViewProviders;
 using Plato.Discuss.Models;
 using Plato.Discuss.Channels.Handlers;
+using Plato.Discuss.Channels.Services;
 
 namespace Plato.Discuss.Channels
 {
@@ -78,6 +79,9 @@ namespace Plato.Discuss.Channels
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
+
+            // Channel details updated
+            services.AddScoped<IChannelDetailsUpdater, ChannelDetailsUpdater>();
 
         }
 

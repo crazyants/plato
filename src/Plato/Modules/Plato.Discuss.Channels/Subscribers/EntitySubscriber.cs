@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Plato.Categories.Services;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
+using Plato.Discuss.Channels.Services;
 using Plato.Discuss.Models;
 using Plato.Entities.Models;
 using Plato.Entities.Stores;
@@ -21,19 +22,16 @@ namespace Plato.Discuss.Channels.Subscribers
 
         private readonly IBroker _broker;
         private readonly ICategoryStore<Channel> _channelStore;
-        private readonly ICategoryManager<Channel> _channelManager;
-        private readonly IEntityStore<Topic> _topicStore;
+        private readonly IChannelDetailsUpdater _channelDetailsUpdater;
 
         public EntitySubscriber(
             IBroker broker,
             ICategoryStore<Channel> channelStore,
-            ICategoryManager<Channel> channelManager,
-            IEntityStore<Topic> topicStore)
+            IChannelDetailsUpdater channelDetailsUpdater)
         {
             _broker = broker;
             _channelStore = channelStore;
-            _channelManager = channelManager;
-            _topicStore = topicStore;
+            _channelDetailsUpdater = channelDetailsUpdater;
         }
 
         #region "Implementation"
@@ -99,61 +97,8 @@ namespace Plato.Discuss.Channels.Subscribers
                 return entity;
             }
 
-            // Get current channel and all parent channels
-            var parents = await _channelStore.GetParentsByIdAsync(channel.Id);
-
-            // Update details within current and all parents
-            foreach (var parent in parents)
-            {
-                
-                // Get topic details for current channel
-                var topics = await _topicStore.QueryAsync()
-                    .Take(1, 1) // we only need the latest topic
-                    .Select<EntityQueryParams>(q =>
-                    {
-
-                        // If the channel has children include all child topics
-                        if (parent.Children.Any())
-                        {
-                            q.CategoryId.IsIn(parent.Children.Select(c => c.Id).ToArray());
-                        }
-                        else
-                        {
-                            // Get topics for current channel
-                            q.CategoryId.Equals(parent.Id);
-                        }
-                        
-                        q.HideSpam.True();
-                        q.HidePrivate.True();
-                        q.HideDeleted.True();
-                    })
-                    .OrderBy("LastReplyDate", OrderBy.Desc)
-                    .ToList();
-
-                // Details we'll store within the channel details
-                var totalTopics = 0;
-                Topic latestTopic = null;
-                if (topics?.Data != null)
-                {
-                    totalTopics = topics.Total;
-                    latestTopic = topics.Data[0];
-                }
-
-                // Update channel details with latest entity details
-                var details = parent.GetOrCreate<ChannelDetails>();
-                details.TotalTopics = totalTopics;
-                if (latestTopic != null)
-                {
-                    details.LastPost.EntityId = latestTopic.Id;
-                    details.LastPost.CreatedBy = latestTopic.CreatedBy;
-                    details.LastPost.CreatedDate = latestTopic.CreatedDate;
-                }
-                parent.AddOrUpdate<ChannelDetails>(details);
-
-                // Save the updated details 
-                await _channelManager.UpdateAsync(parent);
-
-            }
+            // Update channel details
+            await _channelDetailsUpdater.UpdateAsync(channel.Id);
 
             return entity;
 
