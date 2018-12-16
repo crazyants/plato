@@ -1,20 +1,15 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Plato.Categories.Services;
+﻿using System.Threading.Tasks;
 using Plato.Categories.Stores;
 using Plato.Discuss.Channels.Models;
 using Plato.Discuss.Channels.Services;
-using Plato.Discuss.Models;
 using Plato.Entities.Models;
-using Plato.Entities.Stores;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 
 namespace Plato.Discuss.Channels.Subscribers
 {
 
     /// <summary>
-    /// Updates category meta data whenever an entity is created.
+    /// Updates category meta data whenever an entity is created or updated.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
@@ -48,15 +43,22 @@ namespace Plato.Discuss.Channels.Subscribers
             _broker.Sub<TEntity>(new MessageOptions()
             {
                 Key = "EntityUpdated"
-            }, async message => await EntityCreated(message.What));
+            }, async message => await EntityUpdated(message.What));
         }
 
         public void Unsubscribe()
         {
+
             _broker.Unsub<TEntity>(new MessageOptions()
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
+
+            _broker.Unsub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityUpdated"
+            }, async message => await EntityUpdated(message.What));
+
         }
         
         #endregion
@@ -84,7 +86,7 @@ namespace Plato.Discuss.Channels.Subscribers
                 return entity;
             }
 
-            // Ensure we have a categoryId for the newly created entity
+            // Ensure we have a categoryId for the entity
             if (entity.CategoryId <= 0)
             {
                 return entity;
@@ -100,10 +102,53 @@ namespace Plato.Discuss.Channels.Subscribers
             // Update channel details
             await _channelDetailsUpdater.UpdateAsync(channel.Id);
 
+            // Return
             return entity;
 
         }
-  
+
+        async Task<TEntity> EntityUpdated(TEntity entity)
+        {
+
+            // No need to update cateogry for private entities
+            if (entity.IsPrivate)
+            {
+                return entity;
+            }
+
+            // No need to update cateogry for soft deleted entities
+            if (entity.IsDeleted)
+            {
+                return entity;
+            }
+
+            // No need to update cateogry for entities flagged as spam
+            if (entity.IsSpam)
+            {
+                return entity;
+            }
+
+            // Ensure we have a categoryId for the entity
+            if (entity.CategoryId <= 0)
+            {
+                return entity;
+            }
+
+            // Ensure we found the category
+            var channel = await _channelStore.GetByIdAsync(entity.CategoryId);
+            if (channel == null)
+            {
+                return entity;
+            }
+
+            // Update channel details
+            await _channelDetailsUpdater.UpdateAsync(channel.Id);
+
+            // Return
+            return entity;
+
+        }
+        
         #endregion
 
     }
