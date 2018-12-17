@@ -3,9 +3,9 @@
 namespace Plato.Notifications.Services
 {
 
-    public interface IUserNotificationsManager<TNoficiation> : ICommandManager<TNoficiation> where TNoficiation : class
-    {
+    //public interface IUserNotificationsManager<TNoficiation> : ICommandManager<TNoficiation> where TNoficiation : class
+    //{
 
-    }
+    //}
     
 }

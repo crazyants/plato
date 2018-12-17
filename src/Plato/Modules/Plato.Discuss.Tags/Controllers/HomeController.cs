@@ -5,14 +5,12 @@ using Microsoft.Extensions.Localization;
 using Plato.Tags.Models;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Navigation;
-using Plato.Internal.Stores.Abstractions.Settings;
 using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Tags.Stores;
 using Plato.Discuss.Tags.ViewModels;
 using Plato.Discuss.ViewModels;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Discuss.Tags.Controllers
 {
@@ -25,13 +23,11 @@ namespace Plato.Discuss.Tags.Controllers
         private readonly ITagStore<Tag> _tagStore;
         private readonly IBreadCrumbManager _breadCrumbManager;
         private readonly IAlerter _alerter;
-
-
+        
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
-
-
+        
         public HomeController(
             IViewProviderManager<Tag> tagViewProvider,
             IHtmlLocalizer htmlLocalizer,
@@ -81,8 +77,7 @@ namespace Plato.Discuss.Tags.Controllers
                         .LocalNav()
                     ).Add(S["Tags"]);
             });
-
-
+            
             // Get default options
             var defaultViewOptions = new TagIndexOptions();
             var defaultPagerOptions = new PagerOptions();
@@ -113,8 +108,7 @@ namespace Plato.Discuss.Tags.Controllers
             return View(result);
 
         }
-
-
+        
         public async Task<IActionResult> Display(
             int id,
             TopicIndexOptions opts,

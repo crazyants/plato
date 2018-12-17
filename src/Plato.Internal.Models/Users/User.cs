@@ -9,18 +9,6 @@ using Plato.Internal.Abstractions;
 
 namespace Plato.Internal.Models.Users
 {
-
-    public interface IUserMetaData<TNodel> : IMetaData<TNodel> where TNodel : class
-    {
-
-    }
-    
-    public class UserProfile : User
-    {
-        // UserProfile is simply a marker class so we can use
-        // a separate view provider for the front-end profile pages
-        // This class should not contain any code
-    }
     
     public class User : IdentityUser<int>,
         IUser,
@@ -56,11 +44,17 @@ namespace Plato.Internal.Models.Users
 
         public string ApiKey { get; set; }
 
+        public DateTimeOffset? PasswordExpiryDate { get; set; }
+
+        public DateTimeOffset? PasswordUpdatedDate { get; set; }
+
         public string TimeZone { get; set; }
 
         public bool ObserveDst { get; set; }
 
         public string Culture { get; set; }
+
+        public string Theme { get; set; }
 
         public string IpV4Address { get; set; }
 
@@ -74,9 +68,9 @@ namespace Plato.Internal.Models.Users
 
         public DateTimeOffset? MinutesActiveUpdatedDate { get; set; }
 
-        public int Points { get; set; }
+        public int Reputation { get; set; }
 
-        public DateTimeOffset? PointsUpdatedDate { get; set; }
+        public DateTimeOffset? ReputationUpdatedDate { get; set; }
         
         public int Rank { get; set; }
 
@@ -84,8 +78,20 @@ namespace Plato.Internal.Models.Users
 
         public string Signature { get; set; }
 
+        public bool IsSpam { get; set; }
+
+        public bool IsBanned { get; set; }
+
+        public DateTimeOffset? BanExpiryDate { get; set; }
+        
+        public int CreatedUserId { get; set; }
+
         public DateTimeOffset? CreatedDate { get; set; }
 
+        public int ModifiedUserId { get; set; }
+
+        public DateTimeOffset? ModifiedDate { get; set; }
+        
         public DateTimeOffset? LastLoginDate { get; set; }
 
         public IEnumerable<string> RoleNames { get; set; } = new List<string>();
@@ -190,6 +196,12 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("PasswordHash"))
                 PasswordHash = Convert.ToString(dr["PasswordHash"]);
 
+            if (dr.ColumnIsNotNull("PasswordExpiryDate"))
+                PasswordExpiryDate = DateTimeOffset.Parse(Convert.ToString((dr["PasswordExpiryDate"])));
+
+            if (dr.ColumnIsNotNull("PasswordUpdatedDate"))
+                PasswordUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["PasswordUpdatedDate"])));
+
             if (dr.ColumnIsNotNull("SecurityStamp"))
                 SecurityStamp = Convert.ToString(dr["SecurityStamp"]);
             
@@ -229,6 +241,9 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("Culture"))
                 Culture = Convert.ToString(dr["Culture"]);
 
+            if (dr.ColumnIsNotNull("Theme"))
+                Theme = Convert.ToString(dr["Theme"]);
+
             if (dr.ColumnIsNotNull("IpV4Address"))
                 IpV4Address = Convert.ToString(dr["IpV4Address"]);
 
@@ -247,11 +262,11 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("MinutesActiveUpdatedDate"))
                 MinutesActiveUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["VisitsUpdatedDate"])));
             
-            if (dr.ColumnIsNotNull("Points"))
-                Points = Convert.ToInt32(dr["Points"]);
+            if (dr.ColumnIsNotNull("Reputation"))
+                Reputation = Convert.ToInt32(dr["Reputation"]);
             
-            if (dr.ColumnIsNotNull("PointsUpdatedDate"))
-                PointsUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["PointsUpdatedDate"])));
+            if (dr.ColumnIsNotNull("ReputationUpdatedDate"))
+                ReputationUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["ReputationUpdatedDate"])));
             
             if (dr.ColumnIsNotNull("Rank"))
                 Rank = Convert.ToInt32(dr["Rank"]);
@@ -261,10 +276,28 @@ namespace Plato.Internal.Models.Users
 
             if (dr.ColumnIsNotNull("Signature"))
                 Signature = Convert.ToString(dr["Signature"]);
-            
+
+            if (dr.ColumnIsNotNull("IsSpam"))
+                IsSpam = Convert.ToBoolean(dr["IsSpam"]);
+
+            if (dr.ColumnIsNotNull("IsBanned"))
+                IsBanned = Convert.ToBoolean(dr["IsBanned"]);
+
+            if (dr.ColumnIsNotNull("BanExpiryDate"))
+                BanExpiryDate = DateTimeOffset.Parse(Convert.ToString((dr["BanExpiryDate"])));
+
+            if (dr.ColumnIsNotNull("CreatedUserId"))
+                CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
+
             if (dr.ColumnIsNotNull("CreatedDate"))
                 CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
 
+            if (dr.ColumnIsNotNull("ModifiedUserId"))
+                ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
+
+            if (dr.ColumnIsNotNull("ModifiedDate"))
+                ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
+            
             if (dr.ColumnIsNotNull("LastLoginDate"))
                 LastLoginDate = DateTimeOffset.Parse(Convert.ToString((dr["LastLoginDate"])));
 

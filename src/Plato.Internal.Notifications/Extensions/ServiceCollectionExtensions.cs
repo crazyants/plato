@@ -15,6 +15,9 @@ namespace Plato.Internal.Notifications.Extensions
             // Type Manager
             services.TryAddScoped<INotificationTypeManager, NotificationTypeManager>();
 
+            // Dummy user notification implementation
+            services.TryAddScoped<IUserNotificationsManager<UserNotification>, DummyUserNotificationsManager>();
+
             // Notification Manager
             //services.TryAddScoped<INotificationManager, NotificationManager>();
 

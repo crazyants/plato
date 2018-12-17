@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
+using Plato.Internal.Notifications.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 using Plato.Notifications.Models;
 

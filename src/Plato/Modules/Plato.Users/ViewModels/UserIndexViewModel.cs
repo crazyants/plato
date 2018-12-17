@@ -64,8 +64,10 @@ namespace Plato.Users.ViewModels
         TotalPoints,
         Follows,
         TotalFollows,
+        TotalFollowers,
         Rank,
         CreatedDate,
         LastLoginDate
     }
+
 }

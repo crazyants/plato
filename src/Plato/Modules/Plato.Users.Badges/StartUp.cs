@@ -65,7 +65,7 @@ namespace Plato.Users.Badges
             services.AddScoped<INavigationProvider, SiteMenu>();
 
             // User notifications Manager
-            services.AddScoped<IUserNotificationsManager<UserNotification>, UserNotificationsManager>();
+            //services.AddScoped<IUserNotificationsManager<UserNotification>, UserNotificationsManager>();
             
             // Notification type providers
             services.AddScoped<INotificationTypeProvider, EmailNotifications>();

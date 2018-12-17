@@ -117,7 +117,6 @@ namespace Plato.Users.Controllers
                 this.RouteData.Values.Add("opts.sort", opts.Sort);
             if (opts.Order != defaultViewOptions.Order)
                 this.RouteData.Values.Add("opts.order", opts.Order);
-      
             if (pager.Page != defaultPagerOptions.Page)
                 this.RouteData.Values.Add("pager.page", pager.Page);
             if (pager.PageSize != defaultPagerOptions.PageSize)

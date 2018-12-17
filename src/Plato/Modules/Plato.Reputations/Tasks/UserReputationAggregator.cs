@@ -8,7 +8,7 @@ namespace Plato.Reputations.Tasks
 {
 
     /// <summary>
-    /// Polls the UserReputations tables and aggregates total reputation points into the Users.Points column..
+    /// Polls the UserReputations tables and aggregates total reputation points into the Users.Reputation column..
     /// </summary>
     public class UserReputationAggregator : IBackgroundTaskProvider
     {
@@ -21,13 +21,13 @@ namespace Plato.Reputations.Tasks
                     DECLARE @yesterday DATETIME = DATEADD(day, -1, @date);                           
                     DECLARE @userId int;
 
-                    DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 Id FROM {prefix}_Users ORDER BY PointsUpdatedDate;                    
+                    DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 Id FROM {prefix}_Users ORDER BY ReputationUpdatedDate;                    
                     OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
                     WHILE @@FETCH_STATUS = 0
                     BEGIN	                   
                         UPDATE {prefix}_Users SET 
-                            Points = (SELECT SUM(Points) FROM {prefix}_UserReputations WHERE CreatedUserId = @userId),
-                            PointsUpdatedDate = @date
+                            Reputation = (SELECT SUM(Points) FROM {prefix}_UserReputations WHERE CreatedUserId = @userId),
+                            ReputationUpdatedDate = @date
                         WHERE Id = @userId;
                         SET @dirty = 1;
 	                    FETCH NEXT FROM MSGCURSOR INTO @userId;	                    

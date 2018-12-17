@@ -20,13 +20,12 @@ namespace Plato.Reputations.Tasks
                     DECLARE @temp TABLE
                     (
 	                    [Rank] int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
-	                    UserID int, 
-	                    Total int	                
+	                    UserID int	                               
                     );
 
                     -- Order users by points adding to temp table                    
-                    INSERT INTO @temp (UserID, Total) 
-	                    SELECT Id, Points FROM {prefix}_Users ORDER BY Points DESC;
+                    INSERT INTO @temp (UserID) 
+	                    SELECT Id FROM {prefix}_Users ORDER BY Reputation DESC;
 
                     -- Now we have a ranked list update rank for last 200 users
                     DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 Id FROM {prefix}_Users ORDER BY RankUpdatedDate;

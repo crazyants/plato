@@ -8,11 +8,17 @@ namespace Plato.Internal.Models.Users
 
         string Email { get; set; }
 
+        DateTimeOffset? PasswordExpiryDate { get; set; }
+
+        DateTimeOffset? PasswordUpdatedDate { get; set; }
+        
         string TimeZone { get; set; }
 
         bool ObserveDst { get; set; }
 
         string Culture { get; set; }
+
+        string Theme { get; set; }
 
         string IpV4Address { get; set; }
 
@@ -26,9 +32,9 @@ namespace Plato.Internal.Models.Users
 
         DateTimeOffset? MinutesActiveUpdatedDate { get; set; }
         
-        int Points { get; set; }
+        int Reputation { get; set; }
 
-        DateTimeOffset? PointsUpdatedDate { get; set; }
+        DateTimeOffset? ReputationUpdatedDate { get; set; }
         
         int Rank { get; set; }
 
@@ -36,6 +42,20 @@ namespace Plato.Internal.Models.Users
 
         string Signature { get; set; }
 
+        bool IsSpam { get; set; }
+
+        bool IsBanned { get; set; }
+
+        DateTimeOffset? BanExpiryDate { get; set; }
+
+        int CreatedUserId { get; set; }
+
+        DateTimeOffset? CreatedDate { get; set; }
+        
+        int ModifiedUserId { get; set; }
+
+        DateTimeOffset? ModifiedDate { get; set; }
+        
         IEnumerable<string> RoleNames { get; set; }
 
         string ResetToken { get; set; }

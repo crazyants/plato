@@ -14,6 +14,280 @@ namespace Plato.Users.Handlers
         private readonly ISchemaBuilder _schemaBuilder;
         private readonly UserManager<User> _userManager;
 
+        private readonly SchemaTable _users = new SchemaTable()
+        {
+            Name = "Users",
+            Columns = new List<SchemaColumn>()
+                {
+                    new SchemaColumn()
+                    {
+                        PrimaryKey = true,
+                        Name = "Id",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "PrimaryRoleId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "UserName",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "NormalizedUserName",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Email",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "NormalizedEmail",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "EmailConfirmed",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "DisplayName",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "FirstName",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "LastName",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Alias",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "SamAccountName",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "PasswordHash",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "PasswordExpiryDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "PasswordUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "SecurityStamp",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "PhoneNumber",
+                        Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "PhoneNumberConfirmed",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TwoFactorEnabled",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "LockoutEnd",
+                        Nullable = true,
+                        DbType = DbType.DateTime2
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "LockoutEnabled",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "AccessFailedCount",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ResetToken",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ConfirmationToken",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ApiKey",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "TimeZone",
+                        DbType = DbType.String,
+                        Length = "255"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ObserveDst",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Culture",
+                        DbType = DbType.String,
+                        Length = "50"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Theme",
+                        DbType = DbType.String,
+                        Length = "50"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV4Address",
+                        DbType = DbType.String,
+                        Length = "20"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IpV6Address",
+                        DbType = DbType.String,
+                        Length = "50"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Visits",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "VisitsUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MinutesActive",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "MinutesActiveUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "Reputation",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ReputationUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
+                    },
+                     new SchemaColumn()
+                    {
+                        Name = "[Rank]",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "RankUpdatedDate",
+                        DbType = DbType.DateTimeOffset,
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "[Signature]",
+                        DbType = DbType.String,
+                        Length = "max"
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsSpam",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "IsBanned",
+                        DbType = DbType.Boolean
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "BanExpiryDate",
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "CreatedDate",
+                        DbType = DbType.DateTimeOffset,
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedUserId",
+                        DbType = DbType.Int32
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ModifiedDate",
+                        DbType = DbType.DateTimeOffset,
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "LastLoginDate",
+                        DbType = DbType.DateTimeOffset,
+                    }
+                }
+        };
+
         public SetUpEventHandler(
             ISchemaBuilder schemaBuilder,
             UserManager<User> userManager)
@@ -101,235 +375,10 @@ namespace Plato.Users.Handlers
 
         void Users(ISchemaBuilder builder)
         {
-
-            var users = new SchemaTable()
-            {
-                Name = "Users",
-                Columns = new List<SchemaColumn>()
-                {
-                    new SchemaColumn()
-                    {
-                        PrimaryKey = true,
-                        Name = "Id",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "PrimaryRoleId",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "UserName",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "NormalizedUserName",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Email",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "NormalizedEmail",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "EmailConfirmed",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "DisplayName",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "FirstName",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "LastName",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Alias",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "SamAccountName",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "PasswordHash",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "SecurityStamp",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "PhoneNumber",
-                        Length = "255",
-                        DbType = DbType.String
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "PhoneNumberConfirmed",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "TwoFactorEnabled",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "LockoutEnd",
-                        Nullable = true,
-                        DbType = DbType.DateTime2
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "LockoutEnabled",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "AccessFailedCount",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ResetToken",
-                        DbType = DbType.String,
-                        Length = "255"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ConfirmationToken",
-                        DbType = DbType.String,
-                        Length = "255"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ApiKey",
-                        DbType = DbType.String,
-                        Length = "255"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "TimeZone",
-                        DbType = DbType.String,
-                        Length = "255"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "ObserveDst",
-                        DbType = DbType.Boolean
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Culture",
-                        DbType = DbType.String,
-                        Length = "50"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IpV4Address",
-                        DbType = DbType.String,
-                        Length = "20"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "IpV6Address",
-                        DbType = DbType.String,
-                        Length = "50"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Visits",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "VisitsUpdatedDate",
-                        DbType = DbType.DateTimeOffset,
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "MinutesActive",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "MinutesActiveUpdatedDate",
-                        DbType = DbType.DateTimeOffset,
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "Points",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "PointsUpdatedDate",
-                        DbType = DbType.DateTimeOffset,
-                    },
-                     new SchemaColumn()
-                    {
-                        Name = "[Rank]",
-                        DbType = DbType.Int32
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "RankUpdatedDate",
-                        DbType = DbType.DateTimeOffset,
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "[Signature]",
-                        DbType = DbType.String,
-                        Length = "max"
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "CreatedDate",
-                        DbType = DbType.DateTimeOffset,
-                    },
-                    new SchemaColumn()
-                    {
-                        Name = "LastLoginDate",
-                        DbType = DbType.DateTimeOffset,
-                    }
-                }
-            };
-
+            
             builder
-                .CreateTable(users)
-                .CreateDefaultProcedures(users)
+                .CreateTable(_users)
+                .CreateDefaultProcedures(_users)
 
             // Overwrite our SelectEntityById created via CreateDefaultProcedures
             // above to also return all EntityData within a second result set
@@ -353,8 +402,8 @@ namespace Plato.Users.Handlers
                                 WHERE (
                                     ur.UserId = @Id
                                 )")
-                        .ForTable(users)
-                        .WithParameter(users.PrimaryKeyColumn))
+                        .ForTable(_users)
+                        .WithParameter(_users.PrimaryKeyColumn))
 
                 .CreateProcedure(new SchemaProcedure("SelectUserByEmail", @"
                             DECLARE @Id int;
@@ -363,7 +412,7 @@ namespace Plato.Users.Handlers
                                    Email = @Email
                             ))
                             EXEC {prefix}_SelectUserById @id;")
-                    .ForTable(users)
+                    .ForTable(_users)
                     .WithParameter(new SchemaColumn() {Name = "Email", DbType = DbType.String, Length = "255"}))
 
 
@@ -374,7 +423,7 @@ namespace Plato.Users.Handlers
                                    NormalizedEmail = @NormalizedEmail
                             ))
                             EXEC {prefix}_SelectUserById @id;")
-                    .ForTable(users)
+                    .ForTable(_users)
                     .WithParameter(new SchemaColumn() { Name = "NormalizedEmail", DbType = DbType.String, Length = "255" }))
 
 
@@ -385,7 +434,7 @@ namespace Plato.Users.Handlers
                                    UserName = @UserName
                             ))
                             EXEC {prefix}_SelectUserById @id;")
-                    .ForTable(users)
+                    .ForTable(_users)
                     .WithParameter(new SchemaColumn() {Name = "UserName", DbType = DbType.String, Length = "255"}))
               
                 .CreateProcedure(
@@ -396,7 +445,7 @@ namespace Plato.Users.Handlers
                                    NormalizedUserName = @NormalizedUserName
                             ))
                             EXEC {prefix}_SelectUserById @id;")
-                        .ForTable(users)
+                        .ForTable(_users)
                         .WithParameter(new SchemaColumn()
                         {
                             Name = "NormalizedUserName",
@@ -412,7 +461,7 @@ namespace Plato.Users.Handlers
                                    ApiKey = @ApiKey
                             ))
                             EXEC {prefix}_SelectUserById @id;")
-                    .ForTable(users)
+                    .ForTable(_users)
                     .WithParameter(new SchemaColumn() { Name = "ApiKey", DbType = DbType.String, Length = "255" }))
 
                 .CreateProcedure(
@@ -423,7 +472,7 @@ namespace Plato.Users.Handlers
                                    Email = @Email AND PasswordHash = @PasswordHash
                             ))
                             EXEC {prefix}_SelectUserById @id;")
-                        .ForTable(users)
+                        .ForTable(_users)
                         .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn()
@@ -448,7 +497,7 @@ namespace Plato.Users.Handlers
                                    ResetToken = @ResetToken
                             ))
                             EXEC {prefix}_SelectUserById @id;")
-                        .ForTable(users)
+                        .ForTable(_users)
                         .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn()
@@ -467,7 +516,7 @@ namespace Plato.Users.Handlers
                                    ConfirmationToken = @ConfirmationToken
                             ))
                             EXEC {prefix}_SelectUserById @id;")
-                        .ForTable(users)
+                        .ForTable(_users)
                         .WithParameters(new List<SchemaColumn>()
                         {
                             new SchemaColumn()
@@ -479,7 +528,7 @@ namespace Plato.Users.Handlers
                         }))
                         
                 .CreateProcedure(new SchemaProcedure("SelectUsersPaged", StoredProcedureType.SelectPaged)
-                    .ForTable(users)
+                    .ForTable(_users)
                     .WithParameters(new List<SchemaColumn>()
                     {
                         new SchemaColumn()

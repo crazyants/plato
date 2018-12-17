@@ -45,6 +45,11 @@ namespace Plato.Users.ViewComponents
             },
             new SortColumn()
             {
+                Text = "Followers",
+                Value = SortBy.Follows
+            },
+            new SortColumn()
+            {
                 Text = "Created",
                 Value = SortBy.CreatedDate
             }

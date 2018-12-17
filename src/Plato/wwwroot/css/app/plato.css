@@ -1069,7 +1069,7 @@
 .label.active { background: #007bff; color: #fff; }
 
 /* ------------------------- */
-/* badges */
+/* badges / medallions */
 /* ------------------------- */
 
 .medallion-list {
@@ -1090,9 +1090,7 @@
 
 .medallion { position: relative; text-align: center; }
 .medallion .medallion-bg {
-    animation: spinIn 8s linear;
-    transform-origin: center center;
-    animation-iteration-count: infinite;
+
     font-size: 55pt; 
 }
 .medallion .medallion-icon { font-size: 28pt; z-index: 1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-shadow: 1px 1px 1px #888; }
