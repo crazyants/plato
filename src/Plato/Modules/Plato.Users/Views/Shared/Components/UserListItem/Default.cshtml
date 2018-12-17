@@ -1,32 +1,39 @@
-﻿@using Plato.Internal.Data.Abstractions
+﻿@using Plato.Internal.Abstractions.Extensions
+@using Plato.Internal.Data.Abstractions
 @model UserListItemViewModel
 
 @if (Model.EnableEdit)
 {
-    <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.User.Id" class="btn btn-secondary float-right">
-        <i class="fal fa-pencil"></i>
-        @T["Edit"]
+    <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0 text-center">
+        @Model.User.DisplayName
     </a>
 }
 else
 {
-    <span class="text-muted float-right">
-        @T["Last active "] <date utc="@Model.User.LastLoginDate"></date>
-    </span>
+    <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="list-group-item list-group-item-action border-0 col-lg-4 col-md-6 col-sm-12 p-0 text-center">
+        <div class="p-3">
+            <avatar class="avatar avatar-md" user-id="@Model.User.Id" />
+            <h6 class="mt-2">@Model.User.DisplayName</h6>
+            <span class="d-inline-block text-muted">
+                <span class="mx-1" title="@T["Rank"]" data-toggle="tooltip">
+                    <i class="fal fa-hashtag"></i>
+                    @Model.User.Rank
+                </span>
+                <span class="mx-1" title="@T["Reputation"]" data-toggle="tooltip">
+                    <i class="fal fa-gem"></i>
+                    @Model.User.Points.ToPrettyInt()
+                </span>
+                <span class="mx-1" title="@T["visits"]" data-toggle="tooltip">
+                    <i class="fal fa-heart"></i>
+                    @Model.User.Visits.ToPrettyInt()
+                </span>
+                <br />
+                @T["Last active "] <date utc="@Model.User.LastLoginDate"></date>
+              
+            </span>
+       
+        </div>
+    </a>
 }
-<h6 class="d-inline-block">
-    <avatar class="avatar" user-id="@Model.User.Id" />
-    @if (Model.EnableEdit)
-    {
-        <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="font-weight-bold">
-            @Model.User.DisplayName
-        </a>
-    }
-    else
-    {
-        <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="font-weight-bold">
-            @Model.User.DisplayName
-        </a>
-    }
-</h6>
+
 

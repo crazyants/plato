@@ -95,17 +95,13 @@ namespace Plato.Internal.Stores.Users
 
         #region "Constructor"
 
-        private readonly string _tableName;
-        private const string TableName = "Users";
-
+        private readonly string _usersTableName;
         private readonly UserQuery _query;
 
         public UserQueryBuilder(UserQuery query)
         {
             _query = query;
-            _tableName = !string.IsNullOrEmpty(_query.Options.TablePrefix)
-                ? _query.Options.TablePrefix + TableName
-                : TableName;
+            _usersTableName = GetTableNameWithPrefix("Users");
         }
 
         #endregion
@@ -117,13 +113,13 @@ namespace Plato.Internal.Stores.Users
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
             var sb = new StringBuilder();
-            sb.Append("SELECT * FROM ").Append(_tableName);
+            sb.Append("SELECT * FROM ").Append(_usersTableName);
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             sb.Append(" ORDER BY ")
                 .Append(!string.IsNullOrEmpty(orderBy)
                     ? orderBy
-                    : "Id ASC");
+                    : "LastLoginDate DESC");
             sb.Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
             return sb.ToString();
         }
@@ -132,7 +128,7 @@ namespace Plato.Internal.Stores.Users
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(Id) FROM ").Append(_tableName);
+            sb.Append("SELECT COUNT(Id) FROM ").Append(_usersTableName);
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             return sb.ToString();
@@ -141,6 +137,13 @@ namespace Plato.Internal.Stores.Users
         #endregion
 
         #region "Private Methods"
+
+        string GetTableNameWithPrefix(string tableName)
+        {
+            return !string.IsNullOrEmpty(_query.Options.TablePrefix)
+                ? _query.Options.TablePrefix + tableName
+                : tableName;
+        }
 
         string BuildWhereClause()
         {

@@ -57,7 +57,6 @@
                 <div class="row no-gutters">
                     @foreach (var tag in Model.Results.Data)
                     {
-                       
                         @await DisplayAsync(new View("TagListItem", new
                         {
                             model = new TagListItemViewModel()
@@ -66,7 +65,6 @@
                                 EnableEdit = Model.Options.EnableEdit
                             }
                         }))
-
                     }
                 </div>
             </div>

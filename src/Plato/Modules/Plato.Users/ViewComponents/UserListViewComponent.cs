@@ -109,7 +109,7 @@ namespace Plato.Users.ViewComponents
                         q.Keywords.Like(options.Search);
                     }
                 })
-                .OrderBy("LastLoginDate", OrderBy.Desc)
+                .OrderBy(options.Sort.ToString(), options.Order)
                 .ToList();
             
             // Set total on pager

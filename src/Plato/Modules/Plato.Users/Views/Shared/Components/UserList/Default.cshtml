@@ -53,10 +53,11 @@
     <card-body>
         @if (Model.Results?.Data != null)
         {
-            <ul class="list-group list-group-flush list-group-hover">
-                @foreach (var user in Model.Results.Data)
-                {
-                    <li class="list-group-item list-group-item-action">
+            <div class="list-group list-group-flush list-group-hover">
+                <div class="row no-gutters">
+                    @foreach (var user in Model.Results.Data)
+                    {
+                 
                         @await DisplayAsync(new View("UserListItem", new
                         {
                             model = new UserListItemViewModel()
@@ -65,9 +66,10 @@
                                 EnableEdit = Model.Options.EnableEdit
                             }
                         }))
-                    </li>
-                }
-            </ul>
+                  
+                    }
+                </div>
+            </div>
         }
         else
         {

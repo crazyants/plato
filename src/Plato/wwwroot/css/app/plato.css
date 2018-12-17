@@ -319,6 +319,7 @@
 }
 
 .avatar-sm { width: 28px; height: 28px; }
+.avatar-md { width: 62px; height: 62px; }
 .avatar-lg { width: 110px; height: 110px; }
 
 .avatar-round { border-radius: 50%; }
