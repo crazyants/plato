@@ -24,7 +24,41 @@ namespace Plato.Users.Badges.Tasks
 
     public class AutobiographerBadgeAwarder : IBackgroundTaskProvider
     {
-        public int IntervalInSeconds => 120;
+
+        private const string Sql = @"             
+            DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
+            DECLARE @badgeName nvarchar(255) = '{name}';
+            DECLARE @threshold int = {threshold};                  
+            DECLARE @userId int;
+            DECLARE @myTable TABLE
+            (
+                Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
+                UserId int NOT NULL
+            );
+            DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 ud.UserId FROM {prefix}_UserData AS ud
+            WHERE (ud.[Key] = '{key}')
+            AND NOT EXISTS (
+		             SELECT Id FROM {prefix}_UserBadges ub 
+		             WHERE ub.UserId = ud.UserId AND ub.BadgeName = @badgeName
+	            )
+            ORDER BY ud.CreatedDate DESC;
+            
+            OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
+            WHILE @@FETCH_STATUS = 0
+            BEGIN
+                DECLARE @identity int;
+	            EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
+                IF (@identity > 0)
+                BEGIN
+                    INSERT INTO @myTable (UserId) VALUES (@userId);                     
+                END
+	            FETCH NEXT FROM MSGCURSOR INTO @userId;	                    
+            END;
+            CLOSE MSGCURSOR;
+            DEALLOCATE MSGCURSOR;
+            SELECT UserId FROM @myTable;";
+        
+        public int IntervalInSeconds => 30;
 
         public IBadge Badge => ProfileBadges.Autobiographer;
 
@@ -51,39 +85,6 @@ namespace Plato.Users.Badges.Tasks
         public async Task ExecuteAsync()
         {
             
-            const string sql = @"             
-                    DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
-                    DECLARE @badgeName nvarchar(255) = '{name}';
-                    DECLARE @threshold int = {threshold};                  
-                    DECLARE @userId int;
-                    DECLARE @myTable TABLE
-                    (
-                        Id int IDENTITY (1, 1) NOT NULL PRIMARY KEY,
-                        UserId int NOT NULL
-                    );
-                    DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 ud.UserId FROM {prefix}_UserData AS ud
-                    WHERE (ud.[Key] = '{key}')
-                    AND NOT EXISTS (
-		                     SELECT Id FROM {prefix}_UserBadges ub 
-		                     WHERE ub.UserId = ud.UserId AND ub.BadgeName = @badgeName
-	                    )
-                    ORDER BY ud.CreatedDate DESC;
-                    
-                    OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
-                    WHILE @@FETCH_STATUS = 0
-                    BEGIN
-                        DECLARE @identity int;
-	                    EXEC {prefix}_InsertUpdateUserBadge 0, @badgeName, @userId, @date, @identity OUTPUT;
-                        IF (@identity > 0)
-                        BEGIN
-                            INSERT INTO @myTable (UserId) VALUES (@userId);                     
-                        END
-	                    FETCH NEXT FROM MSGCURSOR INTO @userId;	                    
-                    END;
-                    CLOSE MSGCURSOR;
-                    DEALLOCATE MSGCURSOR;
-                    SELECT UserId FROM @myTable;";
-
             // Replacements for SQL script
             var replacements = new Dictionary<string, string>()
             {
@@ -92,7 +93,7 @@ namespace Plato.Users.Badges.Tasks
                 ["{key}"] = typeof(UserDetail).ToString()
             };
 
-            var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(sql, replacements, async reader =>
+            var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>
             {
                 var users = new List<int>();
                 while (await reader.ReadAsync())

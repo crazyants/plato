@@ -68,12 +68,12 @@ namespace Plato.Users.Badges.Tasks
                     UserId int NOT NULL
                 );
                 DECLARE MSGCURSOR CURSOR FOR SELECT TOP 200 u.Id FROM {prefix}_Users AS u
-                WHERE (u.TotalVisits >= @threshold)
+                WHERE (u.Visits >= @threshold)
                 AND NOT EXISTS (
                    SELECT Id FROM {prefix}_UserBadges ub 
                    WHERE ub.UserId = u.Id AND ub.BadgeName = @badgeName
                  )
-                ORDER BY u.TotalVisits DESC;
+                ORDER BY u.Visits DESC;
 
                 OPEN MSGCURSOR FETCH NEXT FROM MSGCURSOR INTO @userId;                    
                 WHILE @@FETCH_STATUS = 0

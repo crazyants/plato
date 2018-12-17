@@ -24,7 +24,7 @@ namespace Plato.Users.Badges.Tasks
     public class ConfirmedMemberBadgeAwarder : IBackgroundTaskProvider
     {
 
-        public int IntervalInSeconds => 20;
+        public int IntervalInSeconds => 120;
 
         public IBadge Badge => ProfileBadges.ConfirmedMember;
 

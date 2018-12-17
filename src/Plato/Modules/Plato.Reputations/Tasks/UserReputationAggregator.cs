@@ -26,7 +26,7 @@ namespace Plato.Reputations.Tasks
                     WHILE @@FETCH_STATUS = 0
                     BEGIN	                   
                         UPDATE {prefix}_Users SET 
-                            Reputation = (SELECT SUM(Points) FROM {prefix}_UserReputations WHERE CreatedUserId = @userId),
+                            Reputation = IsNull((SELECT SUM(Points) FROM {prefix}_UserReputations WHERE CreatedUserId = @userId), 0),
                             ReputationUpdatedDate = @date
                         WHERE Id = @userId;
                         SET @dirty = 1;

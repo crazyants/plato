@@ -15,10 +15,9 @@ namespace Plato.Notifications.Extensions
         {
 
             var settings = user.GetOrCreate<UserNotificationTypes>();
-            var notificationTypes = settings?.NotificationTypes;
-            if (notificationTypes != null)
+            if (settings?.NotificationTypes != null)
             {
-                foreach (var localNotificationType in notificationTypes)
+                foreach (var localNotificationType in settings?.NotificationTypes)
                 {
                     if (!String.IsNullOrEmpty(localNotificationType.Name))
                     {
