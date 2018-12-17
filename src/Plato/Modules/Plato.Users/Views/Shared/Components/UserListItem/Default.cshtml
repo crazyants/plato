@@ -1,0 +1,32 @@
+﻿@using Plato.Internal.Data.Abstractions
+@model UserListItemViewModel
+
+@if (Model.EnableEdit)
+{
+    <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.User.Id" class="btn btn-secondary float-right">
+        <i class="fal fa-pencil"></i>
+        @T["Edit"]
+    </a>
+}
+else
+{
+    <span class="text-muted float-right">
+        @T["Last active "] <date utc="@Model.User.LastLoginDate"></date>
+    </span>
+}
+<h6 class="d-inline-block">
+    <avatar class="avatar" user-id="@Model.User.Id" />
+    @if (Model.EnableEdit)
+    {
+        <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="font-weight-bold">
+            @Model.User.DisplayName
+        </a>
+    }
+    else
+    {
+        <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@Model.User.Id" asp-route-alias="@Model.User.Alias" class="font-weight-bold">
+            @Model.User.DisplayName
+        </a>
+    }
+</h6>
+

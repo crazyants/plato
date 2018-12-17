@@ -1,8 +1,54 @@
-﻿@model UserIndexViewModel
+﻿@using Microsoft.AspNetCore.Routing
+@using Plato.Internal.Data.Abstractions
+@model UserIndexViewModel
 
 <card class="card card-body-flush">
     <card-title>
-        <h6 class="card-title">@T["Users"]</h6>
+        <h6 class="card-title d-inline-block">@T["Users"]</h6>
+        <ul class="nav navbar p-0 float-right">
+            <li class="nav-item dropdown">
+                <a class="nav-link text-muted dropdown-toggle" href="#" id="sortByDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @T["Sort By"]
+                </a>
+                <div class="dropdown-arrow"></div>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="sortByDropdown">
+                    @foreach (var option in Model.SortColumns)
+                    {
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["opts.sort"] = option.Value
+                        };
+                        if (Model.Options.Order != OrderBy.Desc)
+                        {
+                            if (!routeValues.ContainsKey("opts.order"))
+                            {
+                                routeValues.Add("opts.order", Model.Options.Order);
+                            }
+
+                        }
+                        var iconCss = option.Value == Model.Options.Sort ? "fal fa-fw fa-check" : "fal fa-fw";
+                        <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                            <i class="@iconCss"></i>
+                            @T[option.Text]
+                        </a>
+                    }
+                    <div class="dropdown-divider"></div>
+                    @foreach (var option in Model.SortOrder)
+                    {
+                        var routeValues = new RouteValueDictionary(ViewContext.RouteData.Values)
+                        {
+                            ["opts.sort"] = Model.Options.Sort,
+                            ["opts.order"] = option.Value
+                        };
+                        var iconCss = option.Value == Model.Options.Order ? "fal fa-fw fa-check" : "fal fa-fw";
+                        <a class="dropdown-item px-2" href="@GetRouteUrl(routeValues)">
+                            <i class="@iconCss"></i>
+                            @T[option.Text]
+                        </a>
+                    }
+                </div>
+            </li>
+        </ul>
     </card-title>
     <card-body>
         @if (Model.Results?.Data != null)
@@ -11,35 +57,14 @@
                 @foreach (var user in Model.Results.Data)
                 {
                     <li class="list-group-item list-group-item-action">
-
-                        @if (Model.Options.EnableEdit)
+                        @await DisplayAsync(new View("UserListItem", new
                         {
-                            <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-secondary float-right">
-                                <i class="fal fa-pencil"></i>
-                                @T["Edit"]
-                            </a>
-                        }
-                        else
-                        {
-                            <span class="text-muted float-right">
-                                @T["Last active "] <date utc="@user.LastLoginDate"></date>
-                            </span>
-                        }
-                        <h6 class="d-inline-block">
-                            <avatar class="avatar" user-id="@user.Id" />
-                            @if (Model.Options.EnableEdit)
+                            model = new UserListItemViewModel()
                             {
-                                <a asp-route-area="Plato.Users" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.Id" asp-route-alias="@user.Alias" class="font-weight-bold">
-                                    @user.DisplayName
-                                </a>
+                                User = user,
+                                EnableEdit = Model.Options.EnableEdit
                             }
-                            else
-                            {
-                                <a asp-route-area="Plato.Users" asp-controller="Home" asp-action="Display" asp-route-id="@user.Id" asp-route-alias="@user.Alias" class="font-weight-bold">
-                                    @user.DisplayName
-                                </a>
-                            }
-                        </h6>
+                        }))
                     </li>
                 }
             </ul>

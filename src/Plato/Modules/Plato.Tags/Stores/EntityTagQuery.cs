@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Internal.Data.Abstractions;
@@ -212,7 +213,7 @@ namespace Plato.Tags.Stores
             if (_query.SortColumns.Count == 0) return null;
             var sb = new StringBuilder();
             var i = 0;
-            foreach (var sortColumn in _query.SortColumns)
+            foreach (var sortColumn in GetSafeSortColumns())
             {
                 sb.Append(sortColumn.Key);
                 if (sortColumn.Value != OrderBy.Asc)
@@ -223,6 +224,57 @@ namespace Plato.Tags.Stores
             }
             return sb.ToString();
         }
+
+        IDictionary<string, OrderBy> GetSafeSortColumns()
+        {
+            var ourput = new Dictionary<string, OrderBy>();
+            foreach (var sortColumn in _query.SortColumns)
+            {
+                var columnName = GetSortColumn(sortColumn.Key);
+                if (String.IsNullOrEmpty(columnName))
+                {
+                    throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
+                }
+                ourput.Add(columnName, sortColumn.Value);
+
+            }
+
+            return ourput;
+        }
+
+
+        string GetSortColumn(string columnName)
+        {
+
+            if (String.IsNullOrEmpty(columnName))
+            {
+                return string.Empty;
+            }
+
+            switch (columnName.ToLower())
+            {
+                case "id":
+                    return "Id";
+                case "name":
+                    return "[Name]";
+                case "description":
+                    return "Description";
+                case "follows":
+                    return "TotalFollows";
+                case "totalfollows":
+                    return "TotalFollows";
+                case "entities":
+                    return "TotalEntities";
+                case "createddate":
+                    return "CreatedDate";
+                case "lastlogindate":
+                    return "LastLoginDate";
+            }
+
+            return string.Empty;
+
+        }
+
 
         #endregion
 

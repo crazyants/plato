@@ -7,8 +7,7 @@ namespace Plato.Discuss.Tags.ViewModels
 {
     public class TagIndexViewModel
     {
-
-  
+        
         public IPagedResults<Tag> Results { get; set; }
 
         public TagIndexOptions Options { get; set; }
@@ -38,8 +37,7 @@ namespace Plato.Discuss.Tags.ViewModels
         public string Text { get; set; }
 
         public SortBy Value { get; set; }
-
-
+        
     }
     
     public class SortOrder

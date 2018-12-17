@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
@@ -13,6 +14,56 @@ namespace Plato.Users.ViewComponents
 {
     public class UserListViewComponent : ViewComponent
     {
+
+
+        private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
+        {
+            new SortColumn()
+            {
+                Text = "Last Active",
+                Value = SortBy.LastLoginDate
+            },
+            new SortColumn()
+            {
+                Text = "Reputation",
+                Value =  SortBy.Points
+            },
+            new SortColumn()
+            {
+                Text = "Rank",
+                Value = SortBy.Rank
+            },
+            new SortColumn()
+            {
+                Text = "Time Spent",
+                Value =  SortBy.Minutes
+            },
+            new SortColumn()
+            {
+                Text = "Visits",
+                Value = SortBy.Visits
+            },
+            new SortColumn()
+            {
+                Text = "Created",
+                Value = SortBy.CreatedDate
+            }
+        };
+
+        private readonly IEnumerable<SortOrder> _defaultSortOrder = new List<SortOrder>()
+        {
+            new SortOrder()
+            {
+                Text = "Descending",
+                Value = OrderBy.Desc
+            },
+            new SortOrder()
+            {
+                Text = "Ascending",
+                Value = OrderBy.Asc
+            },
+        };
+
 
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _ploatUserStore;
@@ -45,36 +96,38 @@ namespace Plato.Users.ViewComponents
         }
         
         private async Task<UserIndexViewModel> GetIndexViewModel(
-            UserIndexOptions viewOptions,
-            PagerOptions pagerOptions)
+            UserIndexOptions options,
+            PagerOptions pager)
         {
-            var users = await GetUsers(viewOptions, pagerOptions);
-            return new UserIndexViewModel(
-                users,
-                viewOptions,
-                pagerOptions);
-        }
 
-        public async Task<IPagedResults<User>> GetUsers(
-            UserIndexOptions viewOptions,
-            PagerOptions pagerOptions)
-        {
-            return await _ploatUserStore.QueryAsync()
-                .Take(pagerOptions.Page, pagerOptions.PageSize)
+            var results = await _ploatUserStore.QueryAsync()
+                .Take(pager.Page, pager.PageSize)
                 .Select<UserQueryParams>(q =>
                 {
-                    if (!string.IsNullOrEmpty(viewOptions.Search))
+                    if (!string.IsNullOrEmpty(options.Search))
                     {
-                        q.Keywords.Like(viewOptions.Search);
+                        q.Keywords.Like(options.Search);
                     }
                 })
                 .OrderBy("LastLoginDate", OrderBy.Desc)
                 .ToList();
+            
+            // Set total on pager
+            pager.SetTotal(results?.Total ?? 0);
+            
+            // Return view model
+            return new UserIndexViewModel
+            {
+                SortColumns = _defaultSortColumns,
+                SortOrder = _defaultSortOrder,
+                Results = results,
+                Options = options,
+                Pager = pager
+            };
+
         }
 
-
     }
-
 
 }
 

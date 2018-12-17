@@ -234,6 +234,24 @@ namespace Plato.Internal.Stores.Users
                     return "FirstName";
                 case "lastname":
                     return "LastName";
+                case "visits":
+                    return "Visits";
+                case "totalvisits":
+                    return "Visits";
+                case "minutes":
+                    return "MinutesActive";
+                case "minutesactive":
+                    return "MinutesActive";
+                case "points":
+                    return "Points";
+                case "totalpoints":
+                    return "Points";
+                case "follows":
+                    return "Follows";
+                case "totalfollows":
+                    return "Follows";
+                case "rank":
+                    return "[Rank]";
                 case "createddate":
                     return "CreatedDate";
                 case "lastlogindate":

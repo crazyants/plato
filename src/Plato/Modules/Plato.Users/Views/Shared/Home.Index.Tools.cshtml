@@ -1,10 +1,14 @@
 ﻿@model UserIndexViewModel
 
-<nav class="navbar navbar-light bg-light justify-content-between">
 
-    <form class="form-inline" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">
-        <input class="form-control mr-sm-2" name="opts.search" value="@Model.Options.Search" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
-    </form>
-    
-</nav>
+<form class="form-inline" asp-route-controller="Home" asp-route-action="Index" method="get" enctype="multipart/form-data">
+    <div class="input-group">
+        <input class="form-control" name="opts.search" value="@Model.Options.Search" type="search" placeholder="@T["Search tags..."]" aria-label="Search">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">
+                <i class="fal fa-search"></i>
+            </button>
+        </div>
+    </div>
+</form>
+

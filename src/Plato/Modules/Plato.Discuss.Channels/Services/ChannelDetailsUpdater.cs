@@ -78,12 +78,13 @@ namespace Plato.Discuss.Channels.Services
                     {
 
                         // If the channel has children also include all child replies
-                        if (parent.Children.Any())
+                        if (children != null)
                         {
-                            q.CategoryId.IsIn(parent.Children
+                            var channelIds = children
                                 .Select(c => c.Id)
                                 .Append(parent.Id)
-                                .ToArray());
+                                .ToArray();
+                            q.CategoryId.IsIn(channelIds);
                         }
                         else
                         {
