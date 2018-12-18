@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
@@ -13,10 +14,15 @@ namespace Plato.Internal.Tasks
     {
         
         private readonly ILogger<SafeTimerFactory> _logger;
+  
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public SafeTimerFactory(ILogger<SafeTimerFactory> logger)
+        public SafeTimerFactory(
+            ILogger<SafeTimerFactory> logger,
+            IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public void Start(Action<object, SafeTimerEventArgs> action, SafeTimerOptions options)
@@ -27,13 +33,16 @@ namespace Plato.Internal.Tasks
                 throw new ArgumentNullException(nameof(options));
             }
 
+            //var tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
+            //var serviceProvider = tenantServiceCollection.BuildServiceProvider();
+            
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogCritical($"Starting new timer. Interval: {options.IntervalInSeconds}, RunOnce: {options.RunOnce}, RunOnStart: {options.RunOnStart}");
             }
 
-            var safeTimer = new SafeTimer(_logger);
-            safeTimer.Elapsed += (sender, args) => action(this, new SafeTimerEventArgs());
+            var safeTimer = new SafeTimer(_httpContextAccessor.HttpContext);
+            safeTimer.Elapsed += (sender, args) => action(sender, args);
             safeTimer.Options = options;
             safeTimer.Start();
 

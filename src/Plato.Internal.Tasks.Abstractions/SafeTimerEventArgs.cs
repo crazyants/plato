@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Plato.Internal.Tasks.Abstractions
@@ -7,15 +8,15 @@ namespace Plato.Internal.Tasks.Abstractions
     public class SafeTimerEventArgs : EventArgs
     {
 
-        public IServiceProvider ServiceProvider;
+        public HttpContext HttpContext;
 
         public SafeTimerEventArgs()
         {
         }
 
-        public SafeTimerEventArgs(IServiceProvider serviceProvider)
+        public SafeTimerEventArgs(HttpContext context)
         {
-            ServiceProvider = serviceProvider;
+            HttpContext = context;
         }
 
     }

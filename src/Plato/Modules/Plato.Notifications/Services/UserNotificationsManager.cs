@@ -14,16 +14,13 @@ namespace Plato.Notifications.Services
     {
 
         private readonly IUserNotificationsStore<UserNotification> _userNotificationsStore;
-        private readonly IContextFacade _contextFacade;
         private readonly IBroker _broker;
 
         public UserNotificationsManager(
             IUserNotificationsStore<UserNotification> userNotificationsStore,
-            IContextFacade contextFacade,
             IBroker broker)
         {
             _userNotificationsStore = userNotificationsStore;
-            _contextFacade = contextFacade;
             _broker = broker;
         }
 
@@ -46,12 +43,9 @@ namespace Plato.Notifications.Services
                 throw new ArgumentOutOfRangeException(nameof(model.UserId));
             }
             
-            // Update
-            if (model.CreatedUserId == 0)
-            {    
-                // Get authenticated user
-                var user = await _contextFacade.GetAuthenticatedUserAsync();
-                model.CreatedUserId = user?.Id ?? 0;
+            if (model.CreatedUserId < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
             }
 
             model.CreatedDate = DateTime.UtcNow;
@@ -103,7 +97,13 @@ namespace Plato.Notifications.Services
             {
                 throw new ArgumentOutOfRangeException(nameof(model.UserId));
             }
-            
+
+            if (model.CreatedUserId < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+            }
+
+
             // Invoke UserNotificationUpdating subscriptions
             foreach (var handler in _broker.Pub<UserNotification>(this, "UserNotificationUpdating"))
             {

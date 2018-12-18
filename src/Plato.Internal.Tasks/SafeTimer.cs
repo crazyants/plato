@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Tasks.Abstractions;
 
 namespace Plato.Internal.Tasks
@@ -22,10 +21,10 @@ namespace Plato.Internal.Tasks
         
         private readonly ILogger _logger;
         
-        public SafeTimer(ILogger logger)
+        public SafeTimer(HttpContext context)
         {
-            _logger = logger;
-            _timer = new Timer(TimerCallBack, null, Timeout.Infinite, Timeout.Infinite);
+            _logger = context.RequestServices.GetRequiredService<ILogger<SafeTimerFactory>>();
+            _timer = new Timer(TimerCallBack, context, Timeout.Infinite, Timeout.Infinite);
         }
 
         public override void Start()
@@ -130,7 +129,7 @@ namespace Plato.Internal.Tasks
                     Task.Factory.StartNew(() =>
                     {
                         Elapsed(this, state != null
-                            ? new SafeTimerEventArgs(state as IServiceProvider)
+                            ? new SafeTimerEventArgs(state as HttpContext)
                             : new SafeTimerEventArgs());
                     }).Wait();
 

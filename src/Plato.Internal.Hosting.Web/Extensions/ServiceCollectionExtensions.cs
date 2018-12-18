@@ -88,6 +88,7 @@ namespace Plato.Internal.Hosting.Web.Extensions
                 internalServices.AddSingleton<IPlatoFileSystem, HostedFileSystem>();
                 internalServices.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 internalServices.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+                internalServices.AddSingleton<ICapturedHttpContext, CapturedHttpContext>();
                 internalServices.AddSingleton<ICapturedRouter, CapturedRouter>();
                 internalServices.AddSingleton<ICapturedRouterUrlHelper, CapturedRouterUrlHelper>();
                 internalServices.AddTransient<IContextFacade, ContextFacade>();
