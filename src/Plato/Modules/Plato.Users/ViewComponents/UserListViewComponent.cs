@@ -5,7 +5,6 @@ using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
-using Plato.Internal.Shell.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 using Plato.Users.ViewModels;
@@ -14,6 +13,44 @@ namespace Plato.Users.ViewComponents
 {
     public class UserListViewComponent : ViewComponent
     {
+
+        private readonly IEnumerable<Filter> _defaultFilters = new List<Filter>()
+        {
+            new Filter()
+            {
+                Text = "All",
+                Value = FilterBy.All
+            },
+            new Filter()
+            {
+                Text = "-" // represents menu divider
+            },
+            new Filter()
+            {
+                Text = "Confirmed",
+                Value = FilterBy.Confirmed
+            },
+            new Filter()
+            {
+                Text = "Banned",
+                Value = FilterBy.Banned
+            },
+            new Filter()
+            {
+                Text = "Locked",
+                Value = FilterBy.Locked
+            },
+            new Filter()
+            {
+                Text = "Spam",
+                Value = FilterBy.Spam
+            },
+            new Filter()
+            {
+                Text = "Possible Spam",
+                Value = FilterBy.PossibleSpam
+            }
+        };
 
 
         private readonly IEnumerable<SortColumn> _defaultSortColumns = new List<SortColumn>()
@@ -26,7 +63,7 @@ namespace Plato.Users.ViewComponents
             new SortColumn()
             {
                 Text = "Reputation",
-                Value =  SortBy.Points
+                Value =  SortBy.Reputation
             },
             new SortColumn()
             {
@@ -45,13 +82,13 @@ namespace Plato.Users.ViewComponents
             },
             new SortColumn()
             {
-                Text = "Followers",
-                Value = SortBy.Follows
+                Text = "Created",
+                Value = SortBy.CreatedDate
             },
             new SortColumn()
             {
-                Text = "Created",
-                Value = SortBy.CreatedDate
+                Text = "Modified",
+                Value = SortBy.ModifiedDate
             }
         };
 
@@ -109,6 +146,28 @@ namespace Plato.Users.ViewComponents
                 .Take(pager.Page, pager.PageSize)
                 .Select<UserQueryParams>(q =>
                 {
+
+                    switch (options.Filter)
+                    {
+                        case FilterBy.Confirmed:
+                            q.ShowConfirmed.True();
+                            break;
+                        case FilterBy.Banned:
+                            q.ShowBanned.True();
+                            break;
+                        case FilterBy.Locked:
+                            q.ShowLocked.True();
+                            break;
+                        case FilterBy.Spam:
+                            q.ShowSpam.True();
+                            break;
+                        case FilterBy.PossibleSpam:
+                            q.HideConfirmed.True();
+                            break;
+                        default:
+                            break;
+                    }
+
                     if (!string.IsNullOrEmpty(options.Search))
                     {
                         q.Keywords.Like(options.Search);
@@ -125,6 +184,7 @@ namespace Plato.Users.ViewComponents
             {
                 SortColumns = _defaultSortColumns,
                 SortOrder = _defaultSortOrder,
+                Filters = _defaultFilters,
                 Results = results,
                 Options = options,
                 Pager = pager

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -12,9 +13,10 @@ namespace Plato.Internal.Tasks
 
     public class SafeTimerFactory : ISafeTimerFactory
     {
-        
+
+        private IList<ISafeTimer> _timers = null;
+
         private readonly ILogger<SafeTimerFactory> _logger;
-  
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public SafeTimerFactory(
@@ -33,9 +35,14 @@ namespace Plato.Internal.Tasks
                 throw new ArgumentNullException(nameof(options));
             }
 
+            if (_timers == null)
+            {
+                _timers = new List<ISafeTimer>();
+            }
+            
             //var tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
             //var serviceProvider = tenantServiceCollection.BuildServiceProvider();
-            
+
             if (_logger.IsEnabled(LogLevel.Information))
             {
                 _logger.LogCritical($"Starting new timer. Interval: {options.IntervalInSeconds}, RunOnce: {options.RunOnce}, RunOnStart: {options.RunOnStart}");
@@ -46,11 +53,23 @@ namespace Plato.Internal.Tasks
             safeTimer.Options = options;
             safeTimer.Start();
 
+            _timers.Add(safeTimer);
+
         }
 
         public void Stop()
         {
-            //safeTimer.Stop();
+
+            if (_timers == null)
+            {
+                return;
+            }
+
+            foreach (var timer in _timers)
+            {
+                timer.WaitToStop();
+            }
+       
         }
     }
 }

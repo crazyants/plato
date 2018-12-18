@@ -151,8 +151,7 @@ namespace Plato.Entities.Stores
             get => _showSpam ?? (_showSpam = new WhereBool());
             set => _showSpam = value;
         }
-
-
+        
         public WhereBool HideClosed
         {
             get => _hideClosed ?? (_hideClosed = new WhereBool());

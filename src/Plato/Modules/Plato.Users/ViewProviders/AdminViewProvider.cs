@@ -200,7 +200,7 @@ namespace Plato.Users.ViewProviders
                 // await _userEmailStore.SetEmailConfirmedAsync(user, true, CancellationToken.None);
 
                 // Persist changes
-                var result = await _userManager.UpdateAsync(user);
+                var result = await _platoUserManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
                     // Mark admin created users as confirmed

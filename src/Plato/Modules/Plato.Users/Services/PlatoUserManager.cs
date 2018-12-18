@@ -110,9 +110,17 @@ namespace Plato.Users.Services
             user.Email = email;
             user.RoleNames = new List<string>(roleNames ?? new string[] { DefaultRoles.Member });
             user.TimeZone = settings?.TimeZone ?? string.Empty;
-            user.IpV4Address = GetIpV4Address();
-            user.IpV6Address = GetIpV6Address();
-          
+       
+            if (String.IsNullOrEmpty(user.IpV4Address))
+            {
+                user.IpV4Address = GetIpV4Address();
+            }
+
+            if (String.IsNullOrEmpty(user.IpV6Address))
+            {
+                user.IpV6Address = GetIpV6Address();
+            }
+            
             // Add new roles
             //foreach (var role in roles)
             //{
@@ -156,33 +164,30 @@ namespace Plato.Users.Services
         }
 
 
-        public async Task<ICommandResult<TUser>> CreateAsync(TUser user)
+        public async Task<ICommandResult<TUser>> CreateAsync(TUser model)
         {
 
             var result = new CommandResult<TUser>();
-
-            user.IpV4Address = GetIpV4Address();
-            user.IpV6Address = GetIpV6Address();
-
+            
             // Invoke UserCreating subscriptions
             foreach (var handler in _broker.Pub<TUser>(this,"UserCreating"))
             {
-                user = await handler.Invoke(new Message<TUser>(user, this));
+                model = await handler.Invoke(new Message<TUser>(model, this));
             }
 
             // Persist the user
-            var identityResult = await _userManager.CreateAsync(user);
+            var identityResult = await _userManager.CreateAsync(model);
             if (identityResult.Succeeded)
             {
 
                 // Invoke UserCreated subscriptions
                 foreach (var handler in _broker.Pub<TUser>(this, "UserCreated"))
                 {
-                    user = await handler.Invoke(new Message<TUser>(user, this));
+                    model = await handler.Invoke(new Message<TUser>(model, this));
                 }
 
                 // Return success
-                return result.Success(user);
+                return result.Success(model);
 
             }
 
@@ -244,10 +249,8 @@ namespace Plato.Users.Services
                     return result.Failed(new CommandError("UserMame", T["The username already exists"]));
                 }
             }
-
-            // Update IP addresses
-            model.IpV4Address = GetIpV4Address();
-            model.IpV6Address = GetIpV6Address();
+            
+            model.ModifiedDate = DateTimeOffset.Now;
 
             // Invoke UserUpdating subscriptions
             foreach (var handler in _broker.Pub<TUser>(this, "UserUpdating"))

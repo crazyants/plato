@@ -30,7 +30,7 @@
                         <i class="fal fa-hashtag fa-2x text-muted m-3"></i>
                     </div>
                     <div class="col-9">
-                        <h1>@Model.Rank</h1>
+                        <h1 class="d-inline-block" data-toggle="tooltip" title=" @T["rannk"] #@Model.Rank.ToPrettyInt(true)">@Model.Rank.ToPrettyInt(true)</h1><br/>
                         <span class="text-muted">
                             @T["rank"]
                         </span>
@@ -43,7 +43,7 @@
                         <i class="fal fa-gem fa-2x text-muted m-3"></i>
                     </div>
                     <div class="col-9">
-                        <h1>@Model.Reputation.ToPrettyInt()</h1>
+                        <h1 class="d-inline-block" data-toggle="tooltip" title="@Model.Reputation.ToPrettyInt(true) @T["reputation"]">@Model.Reputation.ToPrettyInt()</h1><br />
                         <span class="text-muted">
                             @T["reputation"]
                         </span>
@@ -56,7 +56,7 @@
                         <i class="fal fa-heart fa-2x text-muted m-3"></i>
                     </div>
                     <div class="col-9">
-                        <h1>@Model.Visits.ToPrettyInt()</h1>
+                        <h1 class="d-inline-block" data-toggle="tooltip" title="@Model.Visits.ToPrettyInt(true) @T["visits"]">@Model.Visits.ToPrettyInt()</h1><br />
                         <span class="text-muted">
                             @T["visits:"]
                         </span>

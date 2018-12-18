@@ -59,7 +59,15 @@ namespace Plato.Internal.Stores.Users
         private WhereString _keywords;
         private WhereInt _roleId;
         private WhereString _roleName;
-
+        private WhereBool _showSpam;
+        private WhereBool _hideSpam;
+        private WhereBool _showBanned;
+        private WhereBool _hideBanned;
+        private WhereBool _showConfirmed;
+        private WhereBool _hideConfirmed;
+        private WhereBool _showLocked;
+        private WhereBool _hideLocked;
+        
         public WhereInt Id
         {
             get => _id ?? (_id = new WhereInt());
@@ -84,6 +92,54 @@ namespace Plato.Internal.Stores.Users
             set => _roleName = value;
         }
 
+        public WhereBool HideSpam
+        {
+            get => _hideSpam ?? (_hideSpam = new WhereBool());
+            set => _hideSpam = value;
+        }
+
+        public WhereBool ShowSpam
+        {
+            get => _showSpam ?? (_showSpam = new WhereBool());
+            set => _showSpam = value;
+        }
+
+        public WhereBool HideBanned
+        {
+            get => _hideBanned ?? (_hideBanned = new WhereBool());
+            set => _hideBanned = value;
+        }
+
+        public WhereBool ShowBanned
+        {
+            get => _showBanned ?? (_showBanned = new WhereBool());
+            set => _showBanned = value;
+        }
+
+        public WhereBool HideConfirmed
+        {
+            get => _hideConfirmed ?? (_hideConfirmed = new WhereBool());
+            set => _hideConfirmed = value;
+        }
+
+        public WhereBool ShowConfirmed
+        {
+            get => _showConfirmed ?? (_showConfirmed = new WhereBool());
+            set => _showConfirmed = value;
+        }
+
+
+        public WhereBool HideLocked
+        {
+            get => _hideLocked ?? (_hideLocked = new WhereBool());
+            set => _hideLocked = value;
+        }
+
+        public WhereBool ShowLocked
+        {
+            get => _showLocked ?? (_showLocked = new WhereBool());
+            set => _showLocked = value;
+        }
     }
 
     #endregion
@@ -171,7 +227,11 @@ namespace Plato.Internal.Stores.Users
                     .Append(" OR ")
                     .Append(_query.Params.Keywords.ToSqlString("LastName", "Keywords"));
             }
-            
+
+
+            // -----------------
+            // RoleName 
+            // -----------------
 
             if (!String.IsNullOrEmpty(_query.Params.RoleName.Value))
             {
@@ -180,6 +240,88 @@ namespace Plato.Internal.Stores.Users
                 sb.Append(_query.Params.RoleName.ToSqlString("RoleName", "Keywords"));
                 
             }
+
+            // -----------------
+            // IsSpam 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideSpam.Value && !_query.Params.ShowSpam.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideSpam.Operator);
+                sb.Append("IsSpam = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowSpam.Value && !_query.Params.HideSpam.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowSpam.Operator);
+                sb.Append("IsSpam = 1");
+            }
+
+
+            // -----------------
+            // IsBanned 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideBanned.Value && !_query.Params.ShowBanned.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideBanned.Operator);
+                sb.Append("IsBanned = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowBanned.Value && !_query.Params.HideBanned.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowBanned.Operator);
+                sb.Append("IsBanned = 1");
+            }
+
+            // -----------------
+            // EmailConfirmed 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideConfirmed.Value && !_query.Params.ShowConfirmed.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideConfirmed.Operator);
+                sb.Append("EmailConfirmed = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowConfirmed.Value && !_query.Params.HideConfirmed.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowConfirmed.Operator);
+                sb.Append("EmailConfirmed = 1");
+            }
+
+            // -----------------
+            // LockoutEnabled 
+            // -----------------
+
+            // hide = true, show = false
+            if (_query.Params.HideLocked.Value && !_query.Params.ShowLocked.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.HideLocked.Operator);
+                sb.Append("LockoutEnabled = 0");
+            }
+
+            // show = true, hide = false
+            if (_query.Params.ShowLocked.Value && !_query.Params.HideLocked.Value)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.ShowLocked.Operator);
+                sb.Append("LockoutEnabled = 1");
+            }
+
 
 
             return sb.ToString();
@@ -245,18 +387,18 @@ namespace Plato.Internal.Stores.Users
                     return "MinutesActive";
                 case "minutesactive":
                     return "MinutesActive";
-                case "points":
-                    return "Points";
-                case "totalpoints":
-                    return "Points";
-                case "follows":
-                    return "Follows";
-                case "totalfollows":
-                    return "Follows";
+                case "reputation":
+                    return "Reputation";
+                case "totalreputation":
+                    return "Reputation";
                 case "rank":
                     return "[Rank]";
                 case "createddate":
                     return "CreatedDate";
+                case "modified":
+                    return "ModifiedDate";
+                case "modifieddate":
+                    return "ModifiedDate";
                 case "lastlogindate":
                     return "LastLoginDate";
             }
