@@ -9,9 +9,9 @@ namespace Plato.Internal.Text
     public class KeyGenerator : IKeyGenerator
     {
 
-        private static readonly object SyncLock = new object();
-        private readonly Random _rnd;
-        private readonly KeyGeneratorOptions _options;
+        static readonly object SyncLock = new object();
+        readonly Random _rnd;
+        readonly KeyGeneratorOptions _options;
 
         public KeyGenerator()
         {

@@ -13,68 +13,57 @@ namespace Plato.Internal.Tasks
     public class SafeTimer : SafeTimerBase, ISafeTimer
     {
        
+        Timer _timer;
+        int _inTimerCallback = 0;
+
         public SafeTimerOptions Options { get; set; } = new SafeTimerOptions();
 
         public event TimerEventHandler Elapsed;
-
-        //public Func<object, SafeTimerEventArgs, Task> Elapsed { get; set; }
-
-        private Timer _timer;
-        private int _inTimerCallback = 0;
-
-     
-        private readonly ILogger<SafeTimer> _logger;
-
-        //private readonly IServiceProvider _serviceProvider;
-        //private readonly IServiceCollection _applicationServices;
-       
-
-        public SafeTimer(ILogger<SafeTimer> logger,
-            IServiceProvider serviceProvider,
-            IServiceCollection applicationServices)
+        
+        private readonly ILogger _logger;
+        
+        public SafeTimer(ILogger logger)
         {
             _logger = logger;
-            //_serviceProvider = serviceProvider;
-            //_applicationServices = applicationServices;
-          
-        }
-
-        public override void Start()
-        {
-            
-            if (Options.IntervalInSeconds <= 0 && !Options.RunOnce)
-            {
-                throw new Exception("IntervalInSeconds should be set before starting the timer!");
-            }
-            
-            // Clone services
-            //var tenantServiceCollection = _serviceProvider.CreateChildContainer(_applicationServices);
-            //var serviceProvider = tenantServiceCollection.BuildServiceProvider();
-            
             _timer = new Timer(
                 TimerCallBack,
                 null,
                 Timeout.Infinite,
                 Timeout.Infinite);
+        }
 
-            base.Start();
+        public override void Start()
+        {
 
-            // dueTime
-            // The amount of time to delay before invoking
-            // the callback method specified when the Timer was
-            // constructed, in milliseconds. Specify Infinite to
-            // prevent the timer from restarting. Specify zero (0)
-            // to restart the timer immediately.
-            var dueTime = Options.RunOnStart ? 0 : Options.IntervalInSeconds * 1000;
-            dueTime = Options.RunOnce ? Timeout.Infinite : dueTime;
-            
-            _timer.Change(dueTime, Timeout.Infinite);
-      
-            if (_logger.IsEnabled(LogLevel.Information))
+            if (Options.IntervalInSeconds <= 0 && !Options.RunOnce)
             {
-                _logger.LogCritical($"Started safe timer with dueTime of '{dueTime}' for type {Options.Owner?.ToString() ?? "Unknown"}.");
+                throw new Exception("IntervalInSeconds should be set before starting the timer!");
             }
             
+            lock (_timer)
+            {
+           
+                base.Start();
+
+                // dueTime
+                // The amount of time to delay before invoking
+                // the callback method specified when the Timer was
+                // constructed, in milliseconds. Specify Infinite to
+                // prevent the timer from restarting. Specify zero (0)
+                // to restart the timer immediately.
+                var dueTime = Options.RunOnStart ? 0 : Options.IntervalInSeconds * 1000;
+                dueTime = Options.RunOnce ? Timeout.Infinite : dueTime;
+
+                _timer.Change(dueTime, Timeout.Infinite);
+
+                if (_logger.IsEnabled(LogLevel.Information))
+                {
+                    _logger.LogCritical(
+                        $"Started safe timer with dueTime of '{dueTime}' for type {Options.Owner?.ToString() ?? "Unknown"}.");
+                }
+
+            }
+
         }
 
         public override void Stop()
@@ -92,6 +81,8 @@ namespace Plato.Internal.Tasks
             }
 
             base.Stop();
+            _timer = null;
+            _inTimerCallback = 0;
 
         }
 
@@ -106,11 +97,14 @@ namespace Plato.Internal.Tasks
             }
 
             base.WaitToStop();
+            _timer = null;
+            _inTimerCallback = 0;
         }
 
         void TimerCallBack(object state)
         {
 
+            
             if (Interlocked.Exchange(ref _inTimerCallback, 1) != 0)
             {
                 return;
@@ -132,7 +126,7 @@ namespace Plato.Internal.Tasks
 
                 if (Elapsed != null)
                 {
-                    
+
                     if (_logger.IsEnabled(LogLevel.Information))
                     {
                         _logger.LogCritical(
@@ -141,11 +135,9 @@ namespace Plato.Internal.Tasks
 
                     Task.Factory.StartNew(() =>
                     {
-
                         Elapsed(this, state != null
                             ? new SafeTimerEventArgs(state as IServiceProvider)
                             : new SafeTimerEventArgs());
-
                     }).Wait();
 
                     if (_logger.IsEnabled(LogLevel.Information))
@@ -153,29 +145,8 @@ namespace Plato.Internal.Tasks
                         _logger.LogCritical(
                             $"Completed executing elapsed func delegate within timer callback for type '{Options.Owner?.ToString() ?? "Unknown"}' on thread: {Thread.CurrentThread.ManagedThreadId}.");
                     }
-                    
+
                 }
-
-
-
-                //if (Elapsed != null)
-                //{
-
-                //    if (_logger.IsEnabled(LogLevel.Information))
-                //    {
-                //        _logger.LogCritical($"Executing Elapsed delegate within timer callback on thread: {Thread.CurrentThread.ManagedThreadId}");
-                //    }
-                    
-                //    Elapsed(this, state != null ?
-                //        new SafeTimerEventArgs(state) :
-                //        new SafeTimerEventArgs());
-            
-                //    if (_logger.IsEnabled(LogLevel.Information))
-                //    {
-                //        _logger.LogCritical($"Completed executing Elapsed delegate within timer callback on thread: {Thread.CurrentThread.ManagedThreadId}.");
-                //    }
-
-                //}
 
             }
             catch (Exception e)
@@ -187,6 +158,7 @@ namespace Plato.Internal.Tasks
             }
             finally
             {
+
                 lock (_timer)
                 {
                     base.PerformingTasks = false;
@@ -196,11 +168,13 @@ namespace Plato.Internal.Tasks
                         Monitor.Pulse(_timer);
                         Interlocked.Exchange(ref _inTimerCallback, 0);
                     }
-             
+
                 }
 
             }
+
         }
 
     }
+
 }

@@ -14,6 +14,7 @@ namespace Plato.Internal.Tasks
         private readonly IEnumerable<IBackgroundTaskProvider> _providers;
         private readonly ILogger<BackgroundTaskManager> _logger;
 
+
         public BackgroundTaskManager(
             IEnumerable<IBackgroundTaskProvider> providers,
             ISafeTimerFactory safeTimerFactory,
@@ -33,6 +34,7 @@ namespace Plato.Internal.Tasks
                 {
                     _logger.LogInformation($"Found background task provider of type '{provider.GetType()}'.");
                 }
+                
 
                 _safeTimerFactory.Start(async (sender, args) =>
                 {
