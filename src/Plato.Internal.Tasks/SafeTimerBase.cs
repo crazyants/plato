@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace Plato.Internal.Tasks
+﻿namespace Plato.Internal.Tasks
 {
 
     public abstract class SafeTimerBase 
@@ -22,10 +20,6 @@ namespace Plato.Internal.Tasks
             _isRunning = false;
         }
 
-        public virtual void WaitToStop()
-        {
-            _isRunning = false;
-        }
 
     }
 

@@ -14,7 +14,7 @@ namespace Plato.Internal.Tasks
     {
        
         Timer _timer;
-        int _inTimerCallback = 0;
+        int _inTimerCallback;
 
         public SafeTimerOptions Options { get; set; } = new SafeTimerOptions();
 
@@ -25,11 +25,7 @@ namespace Plato.Internal.Tasks
         public SafeTimer(ILogger logger)
         {
             _logger = logger;
-            _timer = new Timer(
-                TimerCallBack,
-                null,
-                Timeout.Infinite,
-                Timeout.Infinite);
+            _timer = new Timer(TimerCallBack, null, Timeout.Infinite, Timeout.Infinite);
         }
 
         public override void Start()
@@ -81,12 +77,10 @@ namespace Plato.Internal.Tasks
             }
 
             base.Stop();
-            _timer = null;
-            _inTimerCallback = 0;
-
+    
         }
 
-        public override void WaitToStop()
+        public void WaitToStop()
         {
             lock (_timer)
             {
@@ -96,9 +90,8 @@ namespace Plato.Internal.Tasks
                 }
             }
 
-            base.WaitToStop();
-            _timer = null;
-            _inTimerCallback = 0;
+            base.Stop();
+        
         }
 
         void TimerCallBack(object state)
@@ -133,6 +126,7 @@ namespace Plato.Internal.Tasks
                             $"Executing elapsed func delegate within timer callback for type '{Options.Owner?.ToString() ?? "Unknown"}' on thread: {Thread.CurrentThread.ManagedThreadId}");
                     }
 
+                    // Ensure we await for the task to complete
                     Task.Factory.StartNew(() =>
                     {
                         Elapsed(this, state != null
