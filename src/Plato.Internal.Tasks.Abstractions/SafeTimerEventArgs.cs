@@ -1,19 +1,21 @@
 ﻿using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Plato.Internal.Tasks.Abstractions
 {
     public class SafeTimerEventArgs : EventArgs
     {
 
-        public object State;
+        public IServiceProvider ServiceProvider;
 
         public SafeTimerEventArgs()
         {
         }
 
-        public SafeTimerEventArgs(object state)
+        public SafeTimerEventArgs(IServiceProvider serviceProvider)
         {
-            State = state;
+            ServiceProvider = serviceProvider;
         }
 
     }

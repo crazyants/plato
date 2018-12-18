@@ -36,7 +36,7 @@ namespace Plato.Reputations.Tasks
                     DEALLOCATE MSGCURSOR;
                     SELECT @dirty;";
 
-        public int IntervalInSeconds => 30;
+        public int IntervalInSeconds => 240;
         
         private readonly ICacheManager _cacheManager;
         private readonly IDbHelper _dbHelper;
@@ -49,7 +49,7 @@ namespace Plato.Reputations.Tasks
             _dbHelper = dbHelper;
         }
 
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
 
             var dirty = await _dbHelper.ExecuteScalarAsync<bool>(Sql);

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Notifications.Abstractions;
-using Plato.Notifications.Models;
 
 namespace Plato.Notifications.Repositories
 {
@@ -79,9 +78,7 @@ namespace Plato.Notifications.Repositories
                 var reader = await context.ExecuteReaderAsync(
                     CommandType.StoredProcedure,
                     "SelectUserNotificationsPaged",
-                    inputParams
-                );
-
+                    inputParams);
                 if ((reader != null) && (reader.HasRows))
                 {
                     output = new PagedResults<UserNotification>();

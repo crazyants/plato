@@ -8,7 +8,7 @@ namespace Plato.Internal.Tasks.Abstractions
 
         int IntervalInSeconds { get; }
 
-        Task ExecuteAsync();
+        Task ExecuteAsync(object sender, SafeTimerEventArgs args);
         
     }
 

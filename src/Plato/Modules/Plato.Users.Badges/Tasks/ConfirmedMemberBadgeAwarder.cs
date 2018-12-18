@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Badges.NotificationTypes;
 using Plato.Internal.Cache.Abstractions;
@@ -24,34 +25,7 @@ namespace Plato.Users.Badges.Tasks
     public class ConfirmedMemberBadgeAwarder : IBackgroundTaskProvider
     {
 
-        public int IntervalInSeconds => 120;
-
-        public IBadge Badge => ProfileBadges.ConfirmedMember;
-
-        private readonly ICacheManager _cacheManager;
-        private readonly IDbHelper _dbHelper;
-        private readonly IPlatoUserStore<User> _userStore;
-        private readonly INotificationManager<Badge> _notificationManager;
-        private readonly IUserReputationAwarder _userReputationAwarder;
-
-        public ConfirmedMemberBadgeAwarder(
-            ICacheManager cacheManager,
-            IDbHelper dbHelper,
-            IPlatoUserStore<User> userStore,
-            INotificationManager<Badge> notificaitonManager,
-            IUserReputationAwarder userReputationAwarder)
-        {
-            _cacheManager = cacheManager;
-            _dbHelper = dbHelper;
-            _userStore = userStore;
-            _notificationManager = notificaitonManager;
-            _userReputationAwarder = userReputationAwarder;
-        }
-
-        public async Task ExecuteAsync()
-        {
-            
-            const string sql = @"                   
+        private const string Sql = @"                   
                 DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
                 DECLARE @badgeName nvarchar(255) = '{name}';
                 DECLARE @threshold int = {threshold};                  
@@ -84,6 +58,40 @@ namespace Plato.Users.Badges.Tasks
                 DEALLOCATE MSGCURSOR;
                 SELECT UserId FROM @myTable;";
 
+        public int IntervalInSeconds => 30;
+
+        public IBadge Badge => ProfileBadges.ConfirmedMember;
+
+        private readonly ICacheManager _cacheManager;
+        private readonly IDbHelper _dbHelper;
+        private readonly IPlatoUserStore<User> _userStore;
+        private readonly INotificationManager<Badge> _notificationManager;
+        private readonly IUserReputationAwarder _userReputationAwarder;
+
+        public ConfirmedMemberBadgeAwarder(
+            ICacheManager cacheManager,
+            IDbHelper dbHelper,
+            IPlatoUserStore<User> userStore,
+            INotificationManager<Badge> notificaitonManager,
+            IUserReputationAwarder userReputationAwarder)
+        {
+            _cacheManager = cacheManager;
+            _dbHelper = dbHelper;
+            _userStore = userStore;
+            _notificationManager = notificaitonManager;
+            _userReputationAwarder = userReputationAwarder;
+        }
+
+        public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
+        {
+            
+            //var cacheManager = args.ServiceProvider.GetRequiredService<ICacheManager>();
+            //var dbHelper = args.ServiceProvider.GetRequiredService<IDbHelper>();
+            //var userStore = args.ServiceProvider.GetRequiredService<IPlatoUserStore<User>>();
+            //var notificationManager = args.ServiceProvider.GetRequiredService<INotificationManager<Badge>>();
+            //var userReputationAwarder = args.ServiceProvider.GetRequiredService<IUserReputationAwarder>();
+
+
             // Replacements for SQL script
             var replacements = new Dictionary<string, string>()
             {
@@ -91,7 +99,7 @@ namespace Plato.Users.Badges.Tasks
                 ["{threshold}"] = Badge.Threshold.ToString()
             };
 
-            var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(sql, replacements, async reader =>
+            var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>
             {
                 var users = new List<int>();
                 while (await reader.ReadAsync())

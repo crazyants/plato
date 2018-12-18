@@ -41,7 +41,6 @@ namespace Plato.Internal.Repositories.Reputations
 
             if (id > 0)
             {
-                // return
                 return await SelectByIdAsync(id);
             }
 
@@ -145,10 +144,11 @@ namespace Plato.Internal.Repositories.Reputations
                     CommandType.StoredProcedure,
                     "InsertUpdateUserReputation",
                     id,
-                    name.ToEmptyIfNull(),
+                    name.ToEmptyIfNull().TrimToSize(255),
                     points,
                     createdUserId,
-                    createdDate.ToDateIfNull());
+                    createdDate.ToDateIfNull(),
+                    new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
             return output;
 

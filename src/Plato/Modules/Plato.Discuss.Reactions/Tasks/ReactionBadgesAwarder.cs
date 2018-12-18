@@ -24,41 +24,7 @@ namespace Plato.Discuss.Reactions.Tasks
     public class ReactionBadgesAwarder : IBackgroundTaskProvider
     {
 
-        public int IntervalInSeconds => 120;
-
-        public IEnumerable<Badge> Badges => new[]
-        {
-            ReactionBadges.FirstReactor,
-            ReactionBadges.BronzeReactor,
-            ReactionBadges.SilverReactor,
-            ReactionBadges.GoldReactor
-        };
-
-
-        private readonly ICacheManager _cacheManager;
-        private readonly IDbHelper _dbHelper;
-        private readonly IPlatoUserStore<User> _userStore;
-        private readonly INotificationManager<Badge> _notificationManager;
-        private readonly IUserReputationAwarder _userReputationAwarder;
-
-        public ReactionBadgesAwarder(
-            ICacheManager cacheManager,
-            IDbHelper dbHelper,
-            IPlatoUserStore<User> userStore,
-            INotificationManager<Badge> notificaitonManager,
-            IUserReputationAwarder userReputationAwarder)
-        {
-            _cacheManager = cacheManager;
-            _dbHelper = dbHelper;
-            _userStore = userStore;
-            _notificationManager = notificaitonManager;
-            _userReputationAwarder = userReputationAwarder;
-        }
-
-        public async Task ExecuteAsync()
-        {
-            
-            const string sql = @"                       
+        private const string Sql = @"                       
                 DECLARE @date datetimeoffset = SYSDATETIMEOFFSET(); 
                 DECLARE @badgeName nvarchar(255) = '{name}';
                 DECLARE @threshold int = {threshold};                  
@@ -95,7 +61,43 @@ namespace Plato.Discuss.Reactions.Tasks
                 CLOSE MSGCURSOR;
                 DEALLOCATE MSGCURSOR;
                 SELECT UserId FROM @myTable;";
+
+
+        public int IntervalInSeconds => 120;
+
+        public IEnumerable<Badge> Badges => new[]
+        {
+            ReactionBadges.FirstReactor,
+            ReactionBadges.BronzeReactor,
+            ReactionBadges.SilverReactor,
+            ReactionBadges.GoldReactor
+        };
+
+
+        private readonly ICacheManager _cacheManager;
+        private readonly IDbHelper _dbHelper;
+        private readonly IPlatoUserStore<User> _userStore;
+        private readonly INotificationManager<Badge> _notificationManager;
+        private readonly IUserReputationAwarder _userReputationAwarder;
+
+        public ReactionBadgesAwarder(
+            ICacheManager cacheManager,
+            IDbHelper dbHelper,
+            IPlatoUserStore<User> userStore,
+            INotificationManager<Badge> notificaitonManager,
+            IUserReputationAwarder userReputationAwarder)
+        {
+            _cacheManager = cacheManager;
+            _dbHelper = dbHelper;
+            _userStore = userStore;
+            _notificationManager = notificaitonManager;
+            _userReputationAwarder = userReputationAwarder;
+        }
+
+        public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
+        {
             
+         
             foreach (var badge in this.Badges)
             {
 
@@ -106,7 +108,7 @@ namespace Plato.Discuss.Reactions.Tasks
                     ["{threshold}"] = badge.Threshold.ToString()
                 };
 
-                var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(sql, replacements, async reader =>
+                var userIds = await _dbHelper.ExecuteReaderAsync<IList<int>>(Sql, replacements, async reader =>
                 {
                     var users = new List<int>();
                     while (await reader.ReadAsync())

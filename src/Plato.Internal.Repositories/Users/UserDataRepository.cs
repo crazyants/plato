@@ -44,16 +44,13 @@ namespace Plato.Internal.Repositories.Users
             using (var context = _dbContext)
             {
                 var reader = await context.ExecuteReaderAsync(
-                  CommandType.StoredProcedure,
+                    CommandType.StoredProcedure,
                     "SelectUserDatumById", id);
-                if (reader != null)
+                if (reader != null && reader.HasRows)
                 {
-                    if (reader.HasRows)
-                    {
-                        userData = new UserData();
-                        await reader.ReadAsync();
-                        userData.PopulateModel(reader);
-                    }
+                    userData = new UserData();
+                    await reader.ReadAsync();
+                    userData.PopulateModel(reader);
                 }
 
             }
@@ -78,14 +75,11 @@ namespace Plato.Internal.Repositories.Users
                     "SelectUserDatumByKeyAndUserId",
                     key.ToEmptyIfNull(),
                     userId);
-                if (reader != null)
+                if (reader != null && reader.HasRows)
                 {
-                    if (reader.HasRows)
-                    {
-                        await reader.ReadAsync();
-                        data = new UserData();
-                        data.PopulateModel(reader);
-                    }
+                    await reader.ReadAsync();
+                    data = new UserData();
+                    data.PopulateModel(reader);
                 }
             }
 
@@ -109,17 +103,14 @@ namespace Plato.Internal.Repositories.Users
                     CommandType.StoredProcedure,
                     "SelectUserDatumByUserId",
                     userId);
-                if (reader != null)
+                if (reader != null && reader.HasRows)
                 {
-                    if (reader.HasRows)
+                    data = new List<UserData>();
+                    while (await reader.ReadAsync())
                     {
-                        data = new List<UserData>();
-                        while (await reader.ReadAsync())
-                        {
-                            var userData = new UserData();
-                            userData.PopulateModel(reader);
-                            data.Add(userData);
-                        }
+                        var userData = new UserData();
+                        userData.PopulateModel(reader);
+                        data.Add(userData);
                     }
                 }
             }
@@ -188,8 +179,11 @@ namespace Plato.Internal.Repositories.Users
 
                     if (await reader.NextResultAsync())
                     {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
+                        if (reader.HasRows)
+                        {
+                            await reader.ReadAsync();
+                            output.PopulateTotal(reader);
+                        }
                     }
 
                 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.Tasks.Abstractions;
 
@@ -32,18 +33,12 @@ namespace Plato.Internal.Tasks
                 {
                     _logger.LogInformation($"Found background task provider of type '{provider.GetType()}'.");
                 }
-                
+
                 _safeTimerFactory.Start(async (sender, args) =>
                 {
-
-                    if (_logger.IsEnabled(LogLevel.Information))
-                    {
-                        _logger.LogInformation($"Executing timer callback for background task provider of type '{provider.GetType()}'.");
-                    }
-
                     try
                     {
-                        await provider.ExecuteAsync();
+                        await provider.ExecuteAsync(sender, args);
                     }
                     catch (Exception e)
                     {
@@ -55,8 +50,10 @@ namespace Plato.Internal.Tasks
                     }
                 }, new SafeTimerOptions()
                 {
+                    Owner = provider.GetType(),
                     IntervalInSeconds = provider.IntervalInSeconds
                 });
+
 
             }
 

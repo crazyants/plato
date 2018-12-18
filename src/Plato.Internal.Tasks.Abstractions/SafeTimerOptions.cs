@@ -1,7 +1,11 @@
-﻿namespace Plato.Internal.Tasks.Abstractions
+﻿using System;
+
+namespace Plato.Internal.Tasks.Abstractions
 {
     public class SafeTimerOptions
     {
+
+        public Type Owner { get; set; }
 
         /// <summary>
         /// Gets or sets a boolean to indicate if the timer callback should run immediately. 

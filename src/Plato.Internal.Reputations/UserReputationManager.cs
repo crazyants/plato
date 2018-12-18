@@ -46,10 +46,9 @@ namespace Plato.Internal.Reputations
             }
 
             // Configure model
-
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
             if (model.CreatedUserId == 0)
             {
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
                 model.CreatedUserId = user?.Id ?? 0;
             }
             
@@ -79,8 +78,8 @@ namespace Plato.Internal.Reputations
             return result.Failed(new CommandError("An unknown error occurred whilst attempting to create the user reputation entry."));
 
         }
-
-        public async Task<ICommandResult<UserReputation>> DeleteAsync(UserReputation model)
+        
+        public async Task<ICommandResult<UserReputation>> UpdateAsync(UserReputation model)
         {
             // Validate
             if (model == null)
@@ -130,7 +129,8 @@ namespace Plato.Internal.Reputations
 
         }
 
-        public async Task<ICommandResult<UserReputation>> UpdateAsync(UserReputation model)
+
+        public async Task<ICommandResult<UserReputation>> DeleteAsync(UserReputation model)
         {
 
             // Validate

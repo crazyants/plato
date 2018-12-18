@@ -1,4 +1,7 @@
-﻿namespace Plato.Internal.Tasks.Abstractions
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Plato.Internal.Tasks.Abstractions
 {
 
 
@@ -9,7 +12,9 @@
         SafeTimerOptions Options { get; set; }
         
         event TimerEventHandler Elapsed;
-        
+
+        //Func<object, SafeTimerEventArgs, Task> Elapsed { get; set; }
+
         void Start();
 
         void Stop();

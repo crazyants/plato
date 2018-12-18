@@ -55,7 +55,7 @@ namespace Plato.Discuss.Tags.Tasks
             _userReputationAwarder = userReputationAwarder;
         }
 
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
             
             const string sql = @"                       

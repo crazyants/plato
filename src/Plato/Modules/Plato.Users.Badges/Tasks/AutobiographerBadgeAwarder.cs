@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
@@ -58,7 +59,7 @@ namespace Plato.Users.Badges.Tasks
             DEALLOCATE MSGCURSOR;
             SELECT UserId FROM @myTable;";
         
-        public int IntervalInSeconds => 30;
+        public int IntervalInSeconds => 10;
 
         public IBadge Badge => ProfileBadges.Autobiographer;
 
@@ -82,9 +83,15 @@ namespace Plato.Users.Badges.Tasks
             _userReputationAwarder = userReputationAwarder;
         }
 
-        public async Task ExecuteAsync()
+        public async Task ExecuteAsync(object sender, SafeTimerEventArgs args)
         {
-            
+
+            //var cacheManager = args.ServiceProvider.GetRequiredService<ICacheManager>();
+            //var dbHelper = args.ServiceProvider.GetRequiredService<IDbHelper>();
+            //var userStore = args.ServiceProvider.GetRequiredService<IPlatoUserStore<User>>();
+            //var notificationManager = args.ServiceProvider.GetRequiredService<INotificationManager<Badge>>();
+            //var userReputationAwarder = args.ServiceProvider.GetRequiredService<IUserReputationAwarder>();
+
             // Replacements for SQL script
             var replacements = new Dictionary<string, string>()
             {
