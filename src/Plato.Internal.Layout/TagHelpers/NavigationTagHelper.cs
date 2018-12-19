@@ -2,24 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Layout.Views;
 using Plato.Internal.Navigation;
 
 namespace Plato.Internal.Layout.TagHelpers
 {
-    
+
     [HtmlTargetElement("navigation")]
     public class NavigationTagHelper : TagHelper
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
+using Plato.Discuss.Models;
 using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.Navigation
@@ -29,15 +30,22 @@ namespace Plato.Discuss.Navigation
             {
                 return;
             }
-
-            // Get route values
-            var context = _actionContextAccessor.ActionContext;
-            var id = context.RouteData.Values["id"].ToString();
-            var alias = context.RouteData.Values["alias"].ToString();
-            if (!int.TryParse(id, out var entityId))
+            
+            // Get model from navigation builder
+            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
+            if (topic == null)
             {
                 return;
             }
+            
+            //// Get route values
+            //var context = _actionContextAccessor.ActionContext;
+            //var id = context.RouteData.Values["id"].ToString();
+            //var alias = context.RouteData.Values["alias"].ToString();
+            //if (!int.TryParse(id, out var entityId))
+            //{
+            //    return;
+            //}
 
             // Edit topic
             builder.Add(T["Edit"], int.MinValue, edit => edit
@@ -49,11 +57,12 @@ namespace Plato.Discuss.Navigation
                     })
                     .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                     {
-                        ["id"] = id
+                        ["id"] = topic.Id
                     })
                     //.Permission(Permissions.ManageRoles)
                     .LocalNav()
-                , new string[] {"edit", "text-muted", "text-hidden"});
+                , new string[] {"edit", "text-muted", "text-hidden" });
+
         }
 
     }

@@ -34,7 +34,11 @@ namespace Plato.Discuss.Reactions.Navigation
 
             // Get model from navigation builder
             var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
-            
+            if (topic == null)
+            {
+                return;
+            }
+
             // Add reaction menu view to navigation
             builder
                 .Add(T["React"], react => react
