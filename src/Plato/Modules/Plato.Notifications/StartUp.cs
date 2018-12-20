@@ -51,7 +51,7 @@ namespace Plato.Notifications
                 name: "NotificationsWebApi",
                 areaName: "Plato.Notifications",
                 template: "api/notifications/{controller}/{action}/{id?}",
-                defaults: new { controller = "Entity", action = "Get" }
+                defaults: new { controller = "User", action = "Get" }
             );
 
         }

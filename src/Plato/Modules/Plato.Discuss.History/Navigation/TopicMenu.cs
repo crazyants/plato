@@ -1,28 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
+using Plato.Entities.Stores;
 using Plato.Internal.Navigation;
 
-namespace Plato.Discuss.Navigation
+namespace Plato.Discuss.History.Navigation
 {
     public class TopicMenu : INavigationProvider
     {
 
+        private readonly IEntityStore<Topic> _entityStore;
         private readonly IActionContextAccessor _actionContextAccessor;
     
         public IStringLocalizer T { get; set; }
 
         public TopicMenu(
             IStringLocalizer localizer,
-            IActionContextAccessor actionContextAccessor)
+            IActionContextAccessor actionContextAccessor, IEntityStore<Topic> entityStore)
         {
             T = localizer;
             _actionContextAccessor = actionContextAccessor;
+            _entityStore = entityStore;
         }
-
+        
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
@@ -30,7 +31,7 @@ namespace Plato.Discuss.Navigation
             {
                 return;
             }
-            
+
             // Get model from navigation builder
             var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
             if (topic == null)
@@ -38,21 +39,13 @@ namespace Plato.Discuss.Navigation
                 return;
             }
             
-            // Edit topic
-            builder.Add(T["Edit"], int.MinValue + 1, edit => edit
-                    .IconCss("fal fa-pencil")
-                    .Attributes(new Dictionary<string, object>()
+            builder
+                .Add(T["Edit History"], int.MinValue, history => history
+                    .View("HistoryMenu", new
                     {
-                        {"data-provide", "tooltip"},
-                        {"title", T["Edit"]}
+                        topic = topic
                     })
-                    .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
-                    {
-                        ["id"] = topic.Id
-                    })
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
-                , new string[] {"edit", "text-muted", "text-hidden" });
+                );
 
         }
 

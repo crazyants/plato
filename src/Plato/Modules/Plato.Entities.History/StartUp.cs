@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Entities.History.Assets;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
@@ -13,6 +14,7 @@ using Plato.Entities.History.Repositories;
 using Plato.Entities.History.Services;
 using Plato.Entities.History.Stores;
 using Plato.Entities.History.Subscribers;
+using Plato.Internal.Assets.Abstractions;
 
 namespace Plato.Entities.History
 {
@@ -41,7 +43,10 @@ namespace Plato.Entities.History
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Entity>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<EntityReply>>();
-            
+
+            // Register assets
+            services.AddScoped<IAssetProvider, AssetProvider>();
+
         }
 
         public override void Configure(
@@ -49,6 +54,14 @@ namespace Plato.Entities.History
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+
+            routes.MapAreaRoute(
+                name: "EntitiesHistoryWebApi",
+                areaName: "Plato.Entities.History",
+                template: "api/history/{controller}/{action}/{id?}",
+                defaults: new { controller = "Entity", action = "Get" }
+            );
+
         }
     }
 }

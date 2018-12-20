@@ -16,16 +16,15 @@ using Plato.WebApi.Models;
 
 namespace Plato.Notifications.Controllers
 {
-
-
-    public class UsersController : BaseWebApiController
+    
+    public class UserController : BaseWebApiController
     {
 
         private readonly IUserNotificationsStore<UserNotification> _userNotificationStore;
         private readonly IPlatoUserStore<User> _ploatUserStore;
         private readonly IContextFacade _contextFacade;
 
-        public UsersController(
+        public UserController(
             IPlatoUserStore<User> platoUserStore,
             IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade,
@@ -200,13 +199,11 @@ namespace Plato.Notifications.Controllers
             string sortBy,
             OrderBy sortOrder)
         {
-
             return await _userNotificationStore.QueryAsync()
                 .Take(page, pageSize)
                 .Select<UserNotificationsQueryParams>(q => { q.UserId.Equals(userId); })
                 .OrderBy(sortBy, sortOrder)
                 .ToList();
-
         }
 
         #endregion

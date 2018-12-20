@@ -55,7 +55,7 @@ $(function (win, doc, $) {
                     noResultsText: "No notifications at this time",
                     config: {
                         method: "GET",
-                        url: 'api/notifications/users/get?page={page}&size={pageSize}',
+                        url: 'api/notifications/user/get?page={page}&size={pageSize}',
                         data: {
                             sort: "CreatedDate",
                             order: "Desc"

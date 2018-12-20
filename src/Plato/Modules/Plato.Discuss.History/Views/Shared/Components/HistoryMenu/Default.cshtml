@@ -1,0 +1,22 @@
+﻿@model HistoryMenuViewModel
+@{
+    var id = "reaction-" + Model.Topic?.Id;
+    if (Model.Reply != null)
+    {
+        id += "-" + Model.Reply.Id;
+    }
+}
+
+<div class="dropdown">
+    <a class="nav-link text-muted dropdown-toggle" href="#" id="historyDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        @T["edited"] @Model.Topic?.ModifiedDate.ToPrettyDate()
+    </a>
+    <div class="dropdown-arrow"></div>
+    <div class="dropdown-menu dropdown-menu-right react-dropdown-menu" aria-labelledby="historyDropdown">
+
+        <div data-entity-id="@Model.Topic?.Id" data-entity-reply-id="@Model.Reply?.Id" data-provide="history">
+            Loading
+        </div>
+
+    </div>
+</div>

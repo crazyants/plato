@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Plato.Discuss.History.Navigation;
 using Plato.Discuss.Models;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Discuss.History.Subscribers;
+using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.History
 {
@@ -22,6 +24,8 @@ namespace Plato.Discuss.History
         public override void ConfigureServices(IServiceCollection services)
         {
 
+            // Register navigation provider
+            services.AddScoped<INavigationProvider, TopicMenu>();
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.History.Models;
@@ -61,6 +62,8 @@ namespace Plato.Entities.History.Stores
 
 
         private WhereInt _id;
+        private WhereInt _entityId;
+        private WhereInt _entityReplyId;
         private WhereString _keywords;
 
 
@@ -70,6 +73,18 @@ namespace Plato.Entities.History.Stores
             set => _id = value;
         }
 
+        public WhereInt EntityId
+        {
+            get => _entityId ?? (_entityId = new WhereInt());
+            set => _entityId = value;
+        }
+
+        public WhereInt EntityReplyId
+        {
+            get => _entityReplyId ?? (_entityReplyId = new WhereInt());
+            set => _entityReplyId = value;
+        }
+        
         public WhereString Keywords
         {
             get => _keywords ?? (_keywords = new WhereString());
@@ -109,13 +124,11 @@ namespace Plato.Entities.History.Stores
 
             var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
-
             var sb = new StringBuilder();
             sb.Append("SELECT ")
                 .Append(BuildPopulateSelect())
                 .Append(" FROM ")
                 .Append(BuildTables());
-
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             sb.Append(" ORDER BY ")
@@ -186,7 +199,7 @@ namespace Plato.Entities.History.Stores
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
-                sb.Append(_query.Params.Id.ToSqlString("f.Id"));
+                sb.Append(_query.Params.Id.ToSqlString("h.Id"));
             }
             
             if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
@@ -199,28 +212,15 @@ namespace Plato.Entities.History.Stores
             return sb.ToString();
 
         }
-
-
-        string GetQualifiedColumnName(string columnName)
-        {
-            if (columnName == null)
-            {
-                throw new ArgumentNullException(nameof(columnName));
-            }
-
-            return columnName.IndexOf('.') >= 0
-                ? columnName
-                : "f." + columnName;
-        }
-
+        
         private string BuildOrderBy()
         {
             if (_query.SortColumns.Count == 0) return null;
             var sb = new StringBuilder();
             var i = 0;
-            foreach (var sortColumn in _query.SortColumns)
+            foreach (var sortColumn in GetSafeSortColumns())
             {
-                sb.Append(GetQualifiedColumnName(sortColumn.Key));
+                sb.Append(sortColumn.Key);
                 if (sortColumn.Value != OrderBy.Asc)
                     sb.Append(" DESC");
                 if (i < _query.SortColumns.Count - 1)
@@ -229,6 +229,56 @@ namespace Plato.Entities.History.Stores
             }
             return sb.ToString();
         }
+
+        IDictionary<string, OrderBy> GetSafeSortColumns()
+        {
+            var ourput = new Dictionary<string, OrderBy>();
+            foreach (var sortColumn in _query.SortColumns)
+            {
+                var columnName = GetSortColumn(sortColumn.Key);
+                if (String.IsNullOrEmpty(columnName))
+                {
+                    throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
+                }
+                ourput.Add(columnName, sortColumn.Value);
+
+            }
+
+            return ourput;
+        }
+
+
+        string GetSortColumn(string columnName)
+        {
+
+            if (String.IsNullOrEmpty(columnName))
+            {
+                return string.Empty;
+            }
+
+            switch (columnName.ToLower())
+            {
+                case "id":
+                    return "h.Id";
+                case "message":
+                    return "[Message]";
+                case "EntityId":
+                    return "h.EntityId";
+                case "EntityReplyId":
+                    return "h.EntityReplyId";
+                case "majorversion":
+                    return "h.MajorVersion";
+                case "minorversion":
+                    return "h.MinorVersion";
+                case "createddate":
+                    return "h.CreatedDate";
+            
+            }
+
+            return string.Empty;
+
+        }
+
 
         #endregion
     }

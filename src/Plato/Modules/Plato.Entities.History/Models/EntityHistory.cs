@@ -25,7 +25,7 @@ namespace Plato.Entities.History.Models
 
         public DateTimeOffset? CreatedDate { get; set; }
 
-        public SimpleUser User { get; set; } = new SimpleUser();
+        public SimpleUser CreatedBy { get; set; } = new SimpleUser();
         
         public void PopulateModel(IDataReader dr)
         {
@@ -53,17 +53,17 @@ namespace Plato.Entities.History.Models
 
             if (CreatedUserId > 0)
             {
-                User.Id = CreatedUserId;
+                CreatedBy.Id = CreatedUserId;
                 if (dr.ColumnIsNotNull("UserName"))
-                    User.UserName = Convert.ToString(dr["UserName"]);
+                    CreatedBy.UserName = Convert.ToString(dr["UserName"]);
                 if (dr.ColumnIsNotNull("DisplayName"))
-                    User.DisplayName = Convert.ToString(dr["DisplayName"]);
+                    CreatedBy.DisplayName = Convert.ToString(dr["DisplayName"]);
                 if (dr.ColumnIsNotNull("FirstName"))
-                    User.FirstName = Convert.ToString(dr["FirstName"]);
+                    CreatedBy.FirstName = Convert.ToString(dr["FirstName"]);
                 if (dr.ColumnIsNotNull("LastName"))
-                    User.LastName = Convert.ToString(dr["LastName"]);
+                    CreatedBy.LastName = Convert.ToString(dr["LastName"]);
                 if (dr.ColumnIsNotNull("Alias"))
-                    User.Alias = Convert.ToString(dr["Alias"]);
+                    CreatedBy.Alias = Convert.ToString(dr["Alias"]);
             }
 
             if (dr.ColumnIsNotNull("CreatedDate"))
