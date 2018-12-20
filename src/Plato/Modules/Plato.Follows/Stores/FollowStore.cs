@@ -18,14 +18,14 @@ namespace Plato.Follows.Stores
         
         private readonly IFollowRepository<Follow> _followRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly ILogger<EmailStore> _logger;
+        private readonly ILogger<FollowStore> _logger;
         private readonly IDbQueryConfiguration _dbQuery;
         private readonly IKeyGenerator _keyGenerator;
 
         public FollowStore(
             IFollowRepository<Follow> followRepository,
             ICacheManager cacheManager,
-            ILogger<EmailStore> logger,
+            ILogger<FollowStore> logger,
             IDbQueryConfiguration dbQuery,
             IKeyGenerator keyGenerator)
         {

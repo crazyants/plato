@@ -1,39 +1,40 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using Plato.Follows.Models;
+using Plato.Entities.History.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Stores.Abstractions;
 
-namespace Plato.Follows.Stores
+namespace Plato.Entities.History.Stores
 {
 
-    #region "FollowQuery"
+    #region "EntityHistoryQuery"
 
-    public class FollowQuery : DefaultQuery<Follow>
+    public class EntityHistoryQuery : DefaultQuery<EntityHistory>
     {
 
-        private readonly IStore<Follow> _store;
+        private readonly IStore<EntityHistory> _store;
 
-        public FollowQuery(IStore<Follow> store)
+        public EntityHistoryQuery(IStore<EntityHistory> store)
         {
             _store = store;
         }
 
-        public FollowQueryParams Params { get; set; }
+        public EntityHistoryQueryParams Params { get; set; }
 
-        public override IQuery<Follow> Select<T>(Action<T> configure)
+        public override IQuery<EntityHistory> Select<T>(Action<T> configure)
         {
             var defaultParams = new T();
             configure(defaultParams);
-            Params = (FollowQueryParams)Convert.ChangeType(defaultParams, typeof(FollowQueryParams));
+            Params = (EntityHistoryQueryParams)Convert.ChangeType(defaultParams, typeof(EntityHistoryQueryParams));
             return this;
         }
 
-        public override async Task<IPagedResults<Follow>> ToList()
+        public override async Task<IPagedResults<EntityHistory>> ToList()
         {
 
-            var builder = new FollowQueryBuilder(this);
+            var builder = new EntityHistoryQueryBuilder(this);
+          
             var populateSql = builder.BuildSqlPopulate();
             var countSql = builder.BuildSqlCount();
 
@@ -53,9 +54,9 @@ namespace Plato.Follows.Stores
 
     #endregion
 
-    #region "FollowQueryParams"
+    #region "EntityHistoryQueryParams"
 
-    public class FollowQueryParams
+    public class EntityHistoryQueryParams
     {
 
 
@@ -80,21 +81,21 @@ namespace Plato.Follows.Stores
 
     #endregion
 
-    #region "FollowQueryBuilder"
+    #region "EntityHistoryQueryBuilder"
 
-    public class FollowQueryBuilder : IQueryBuilder
+    public class EntityHistoryQueryBuilder : IQueryBuilder
     {
         #region "Constructor"
 
-        private readonly string _entityFollowsTableName;
+        private readonly string _entityHistoryTableName;
         private readonly string _usersTableName;
 
-        private readonly FollowQuery _query;
+        private readonly EntityHistoryQuery _query;
 
-        public FollowQueryBuilder(FollowQuery query)
+        public EntityHistoryQueryBuilder(EntityHistoryQuery query)
         {
             _query = query;
-            _entityFollowsTableName = GetTableNameWithPrefix("EntityFollows");
+            _entityHistoryTableName = GetTableNameWithPrefix("EntityHistory");
             _usersTableName = GetTableNameWithPrefix("Users");
 
         }
@@ -106,7 +107,7 @@ namespace Plato.Follows.Stores
         public string BuildSqlPopulate()
         {
 
-            var whereClause = BuildWhereClauseForStartId();
+            var whereClause = BuildWhereClause();
             var orderBy = BuildOrderBy();
 
             var sb = new StringBuilder();
@@ -114,12 +115,13 @@ namespace Plato.Follows.Stores
                 .Append(BuildPopulateSelect())
                 .Append(" FROM ")
                 .Append(BuildTables());
+
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
             sb.Append(" ORDER BY ")
                 .Append(!string.IsNullOrEmpty(orderBy)
                     ? orderBy
-                    : "f.Id ASC");
+                    : "h.Id ASC");
             sb.Append(" OFFSET @RowIndex ROWS FETCH NEXT @PageSize ROWS ONLY;");
             return sb.ToString();
         }
@@ -128,7 +130,7 @@ namespace Plato.Follows.Stores
         {
             var whereClause = BuildWhereClause();
             var sb = new StringBuilder();
-            sb.Append("SELECT COUNT(f.Id) FROM ")
+            sb.Append("SELECT COUNT(h.Id) FROM ")
                 .Append(BuildTables());
             if (!string.IsNullOrEmpty(whereClause))
                 sb.Append(" WHERE (").Append(whereClause).Append(")");
@@ -138,11 +140,15 @@ namespace Plato.Follows.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("f.*, ")
+            sb.Append("h.*, ")
                 .Append("u.Email, ")
                 .Append("u.UserName, ")
                 .Append("u.DisplayName, ")
-                .Append("u.NormalizedUserName");
+                .Append("u.NormalizedUserName, ")
+                .Append("u.FirstName, ")
+                .Append("u.LastName, ")
+                .Append("u.Alias");
+
             return sb.ToString();
 
         }
@@ -151,10 +157,10 @@ namespace Plato.Follows.Stores
         {
 
             var sb = new StringBuilder();
-            sb.Append(_entityFollowsTableName)
-                .Append(" f WITH (nolock) LEFT OUTER JOIN ")
+            sb.Append(_entityHistoryTableName)
+                .Append(" h WITH (nolock) LEFT OUTER JOIN ")
                 .Append(_usersTableName)
-                .Append(" u ON f.CreatedUserId = u.Id");
+                .Append(" u ON h.CreatedUserId = u.Id");
             return sb.ToString();
 
         }
@@ -170,29 +176,7 @@ namespace Plato.Follows.Stores
                 : tableName;
         }
 
-        private string BuildWhereClauseForStartId()
-        {
-            var sb = new StringBuilder();
-            // default to ascending
-            if (_query.SortColumns.Count == 0)
-                sb.Append("f.Id >= @start_id_in");
-            // set start operator based on first order by
-            foreach (var sortColumn in _query.SortColumns)
-            {
-                sb.Append(sortColumn.Value != OrderBy.Asc
-                    ? "f.Id <= @start_id_in"
-                    : "f.Id >= @start_id_in");
-                break;
-            }
-
-            var where = BuildWhereClause();
-            if (!string.IsNullOrEmpty(where))
-                sb.Append(" AND ").Append(where);
-
-            return sb.ToString();
-
-        }
-
+      
         private string BuildWhereClause()
         {
             var sb = new StringBuilder();
@@ -204,17 +188,19 @@ namespace Plato.Follows.Stores
                     sb.Append(_query.Params.Id.Operator);
                 sb.Append(_query.Params.Id.ToSqlString("f.Id"));
             }
-
+            
             if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Keywords.Operator);
-                sb.Append(_query.Params.Keywords.ToSqlString("[Name]", "Keywords"));
+                sb.Append(_query.Params.Keywords.ToSqlString("[Message]", "Keywords"));
             }
+
             return sb.ToString();
 
         }
-        
+
+
         string GetQualifiedColumnName(string columnName)
         {
             if (columnName == null)
@@ -245,7 +231,6 @@ namespace Plato.Follows.Stores
         }
 
         #endregion
-
     }
 
     #endregion

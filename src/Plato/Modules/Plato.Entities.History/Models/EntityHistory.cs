@@ -23,7 +23,7 @@ namespace Plato.Entities.History.Models
         
         public int CreatedUserId { get; set; }
 
-        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
         public SimpleUser User { get; set; } = new SimpleUser();
         
