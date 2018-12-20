@@ -10,7 +10,7 @@ using Plato.Internal.Data.Abstractions;
 namespace Plato.Entities.History.Stores
 {
 
-    public class EntityHistoryStore : IFollowStore<EntityHistory>
+    public class EntityHistoryStore : IEntityHistoryStore<EntityHistory>
     {
         
         private readonly IEntityHistoryRepository<EntityHistory> _entityHistoryRepository;

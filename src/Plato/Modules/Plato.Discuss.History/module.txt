@@ -1,5 +1,5 @@
-Name: Plato Discuss Follow
-Description: Adds the ability for users to follow topics.
+Name: Plato Discuss History
+Description: Adds the ability to track & review edits to topics & replies.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Discuss
@@ -12,7 +12,7 @@ Dependencies:
 		Version: "1.0.0"
 	},
 	{
-		Id: "Plato.Follows",
+		Id: "Plato.Entities.History",
 		Version: "1.0.0"
 	}
 ]

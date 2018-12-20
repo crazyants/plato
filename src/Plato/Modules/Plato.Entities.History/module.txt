@@ -1,5 +1,5 @@
 Name: Plato Entities History
-Description: Adds the ability to keep a history of all edits to any entity.
+Description: Adds services to track changes to entities.
 Author: InstantASP
 WebSite: https://www.instantasp.co.uk/
 Category: Core
