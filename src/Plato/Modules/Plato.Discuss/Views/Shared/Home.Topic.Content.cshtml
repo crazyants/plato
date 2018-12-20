@@ -32,23 +32,20 @@
                     class="nav navbar p-0 float-right"
                     child-ul-css-class="dropdown-menu" />
     </card-title>
-    <card-body>
-        <div class="markdown-body" data-provide="markdownBody">
-              @Html.Raw(@Model.Entity.Html)
-        </div>
-        <div>
+    <card-body class="card-body-flush">
+        <div class="m-3">
+            <div class="markdown-body" data-provide="markdownBody">
+                @Html.Raw(@Model.Entity.Html)
+            </div>
             <navigation name="topic-extra"
                         model="@Model.Entity"
-                        class="nav navbar p-0"
-                        child-ul-css-class="dropdown-menu"/>
+                        enable-list="false" />
         </div>
-    </card-body>
-    <card-footer class="card-footer p-0">
         <navigation name="topic-footer"
                     model="@Model.Entity"
-                    class="nav navbar p-0"
-                    child-ul-css-class="dropdown-menu"/>
-    </card-footer>
+                    enable-list="false" />
+    </card-body>
+
 </card>
 
 @if (Model.Replies != null)

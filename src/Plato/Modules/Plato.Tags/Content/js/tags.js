@@ -175,7 +175,7 @@ $(function (win, doc, $) {
                 // init tagIt
                 $caller.tagIt($.extend({
                     itemTemplate:
-                        '<li class="tagit-list-item"><div class="btn-group"><div class="btn btn-sm btn-primary"><i class="fal fa-tag"></i> {name}</div><div class="btn btn-sm btn-outline-primary dropdown-toggle-split tagit-list-item-delete"><i class="fal fa-times"></i></div></div></li>',
+                        '<li class="tagit-list-item"><div class="btn-group"><div class="btn btn-sm label label-outline font-weight-bold">{name}</div><div class="btn btn-sm label label-outline dropdown-toggle-split tagit-list-item-delete"><i class="fal fa-times"></i></div></div></li>',
                     parseItemTemplate: function (html, result) {
 
                         if (result.id) {

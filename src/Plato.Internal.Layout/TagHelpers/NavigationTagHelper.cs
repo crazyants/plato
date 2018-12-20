@@ -21,17 +21,38 @@ namespace Plato.Internal.Layout.TagHelpers
     public class NavigationTagHelper : TagHelper
     {
 
-
         [ViewContext] // inform razor to inject
         public ViewContext ViewContext { get; set; }
 
+        [HtmlAttributeName("name")]
         public string Name { get; set; } = "Site";
 
+        [HtmlAttributeName("collaspsable")]
         public bool Collaspsable { get; set; }
 
+        [HtmlAttributeName("collapse-css")]
         public string CollapseCss { get; set; } = "collapse";
 
+        [HtmlAttributeName("model")]
         public object Model { get; set; }
+        
+        [HtmlAttributeName("link-css-class")]
+        public string LinkCssClass { get; set; } = "nav-link";
+
+        [HtmlAttributeName("li-css-class")]
+        public string LiCssClass { get; set; } = "nav-item";
+
+        [HtmlAttributeName("enable-list")]
+        public bool EnableList { get; set; } = true;
+
+        [HtmlAttributeName("child-ul-css-class")]
+        public string ChildUlCssClass { get; set; } = "nav flex-column";
+        
+        private static readonly string NewLine = Environment.NewLine;
+        private int _level;
+        private int _index;
+        private object _cssClasses;
+
 
         private readonly INavigationManager _navigationManager;
         private readonly IUrlHelperFactory _urlHelperFactory;
@@ -40,19 +61,6 @@ namespace Plato.Internal.Layout.TagHelpers
         private readonly IViewHelperFactory _viewHelperFactory;
 
         private IViewDisplayHelper _viewDisplayHelper;
-
-        public string LinkCssClass { get; set; } = "nav-link";
-
-        public string LiCssClass { get; set; } = "nav-item";
-
-        public bool EnableChildList { get; set; } = true;
-
-        public string ChildUlCssClass { get; set; } = "nav flex-column";
-        
-        private static readonly string NewLine = Environment.NewLine;
-        private int _level;
-        private int _index;
-        private object _cssClasses;
 
         public NavigationTagHelper(
             INavigationManager navigationManager,
@@ -170,7 +178,7 @@ namespace Plato.Internal.Layout.TagHelpers
                     .Append("\">");
             }
 
-            if (this.EnableChildList)
+            if (this.EnableList)
             {
                 var ulClass = _cssClasses;
                 if (_level > 0)
@@ -189,7 +197,7 @@ namespace Plato.Internal.Layout.TagHelpers
                 
                 AddTabs(_level + 1, sb);
 
-                if (this.EnableChildList)
+                if (this.EnableList)
                 {
                     sb.Append("<li class=\"")
                         .Append(GetListItemClass(items, item, index))
@@ -210,7 +218,7 @@ namespace Plato.Internal.Layout.TagHelpers
                     _level--;
                 }
 
-                if (this.EnableChildList)
+                if (this.EnableList)
                 {
                     sb.Append("</li>").Append(NewLine);
                 }
@@ -219,7 +227,7 @@ namespace Plato.Internal.Layout.TagHelpers
             }
 
             AddTabs(_level, sb);
-            if (this.EnableChildList)
+            if (this.EnableList)
             {
                 sb.Append("</ul>")
                     .Append(NewLine);

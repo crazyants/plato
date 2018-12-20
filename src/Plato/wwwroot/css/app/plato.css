@@ -7,7 +7,7 @@
 .transition-3x { transition: all 0.25s ease-out; }
 .transition-4x { transition: all 0.30s ease-out; }
 
-.hidden { display: none; }
+.hidden { display: none !important; }
 
 .bg-highlight { background-color: rgba(255, 240, 0, 0.5); font-weight: bold; }
 
@@ -1067,6 +1067,8 @@
 /* default labels */
 .label { background-color: #E4ECF5; color: #007bff; }
 .label.active { background: #007bff; color: #fff; }
+
+.label-outline { border: 1px solid #CBDCFF; }
 
 /* ------------------------- */
 /* badges / medallions */

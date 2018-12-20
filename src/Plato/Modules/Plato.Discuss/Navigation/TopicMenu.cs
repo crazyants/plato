@@ -38,15 +38,6 @@ namespace Plato.Discuss.Navigation
                 return;
             }
             
-            //// Get route values
-            //var context = _actionContextAccessor.ActionContext;
-            //var id = context.RouteData.Values["id"].ToString();
-            //var alias = context.RouteData.Values["alias"].ToString();
-            //if (!int.TryParse(id, out var entityId))
-            //{
-            //    return;
-            //}
-
             // Edit topic
             builder.Add(T["Edit"], int.MinValue, edit => edit
                     .IconCss("fal fa-pencil")

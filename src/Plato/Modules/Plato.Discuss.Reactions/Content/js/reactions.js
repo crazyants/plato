@@ -122,38 +122,58 @@ $(function (win, doc, $) {
                 });
             },
             refresh: function($caller) {
-
+                
                 var results = $caller.data(dataKey).data;
                 var $target = this.getTarget($caller);
                 if ($target) {
+
+                    // empty target
                     $target.empty();
-                    for (var i = 0; i < results.length; i++) {
+                    
+                    if (results.length > 0) {
 
-                        var result = results[i],
-                            $li = $("<li>",
-                                {
-                                    "class": "bg-light border-right border-secondary"
-                                }),
-                            $a = $("<a>",
-                                {
-                                    "href": "#",
-                                    "class": "list-group-item list-group-item-action py-2 px-3",
-                                    "data-toggle": "tooltip",
-                                    "title": result.toolTip,
-                                    "data-reaction-name": result.name
-                                }),
-                            $emoji = $("<span>",
-                                {
-                                    "class": "d-inline-block mx-1"
-                                }).html(result.emoji),
-                            $total = $("<span>",
-                                {
-                                    "class": "d-inline-block mx-1"
-                                }).html(result.total);
+                        for (var i = 0; i < results.length; i++) {
 
-                        $a.append($emoji).append($total);
-                        $li.append($a);
-                        $target.append($li);
+                            var result = results[i],
+                                $li = $("<li>",
+                                    {
+                                        "class": "bg-light border-right border-secondary"
+                                    }),
+                                $a = $("<a>",
+                                    {
+                                        "href": "#",
+                                        "class": "list-group-item list-group-item-action py-2 px-3 border-0",
+                                        "data-toggle": "tooltip",
+                                        "title": result.toolTip,
+                                        "data-reaction-name": result.name
+                                    }),
+                                $emoji = $("<span>",
+                                    {
+                                        "class": "d-inline-block mx-1"
+                                    }).html(result.emoji),
+                                $total = $("<span>",
+                                    {
+                                        "class": "d-inline-block mx-1"
+                                    }).html(result.total);
+
+                            $a.append($emoji).append($total);
+                            $li.append($a);
+                            $target.append($li);
+                        }
+
+                        // ensure target is visible
+                        if ($target.hasClass("hidden")) {
+                            $target.removeClass("hidden");
+                        }
+
+
+                    } else {
+
+                        // ensure target is visible
+                        if (!$target.hasClass("hidden")) {
+                            $target.addClass("hidden");
+                        }
+
                     }
 
                     methods.bind($target);
