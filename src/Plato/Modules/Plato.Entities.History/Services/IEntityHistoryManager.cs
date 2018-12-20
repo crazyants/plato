@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Plato.Internal.Abstractions;
 
-namespace Plato.Labels.Services
+namespace Plato.Entities.History.Services
 {
 
-    public interface IEntityHistoryManager<TLabel> : ICommandManager<TLabel> where TLabel : class
+    public interface IEntityHistoryManager<TModel> : ICommandManager<TModel> where TModel : class
     {
    
    

@@ -10,11 +10,9 @@ namespace Plato.Entities.History.Subscribers
 
         private readonly IBroker _broker;
       
-        public EntitySubscriber(
-            IBroker broker)
+        public EntitySubscriber(IBroker broker)
         {
             _broker = broker;
-  
         }
 
         #region "Implementation"
@@ -36,7 +34,6 @@ namespace Plato.Entities.History.Subscribers
 
         public void Unsubscribe()
         {
-
             _broker.Unsub<TEntity>(new MessageOptions()
             {
                 Key = "EntityCreated"
@@ -46,7 +43,6 @@ namespace Plato.Entities.History.Subscribers
             {
                 Key = "EntityUpdated"
             }, async message => await EntityUpdated(message.What));
-
         }
 
         #endregion
@@ -55,88 +51,12 @@ namespace Plato.Entities.History.Subscribers
 
         Task<TEntity> EntityCreated(TEntity entity)
         {
-
             return Task.FromResult(entity);
-            //// No need to update cateogry for private entities
-            //if (entity.IsPrivate)
-            //{
-            //    return entity;
-            //}
-
-            //// No need to update cateogry for soft deleted entities
-            //if (entity.IsDeleted)
-            //{
-            //    return entity;
-            //}
-
-            //// No need to update cateogry for entities flagged as spam
-            //if (entity.IsSpam)
-            //{
-            //    return entity;
-            //}
-
-            //// Ensure we have a categoryId for the entity
-            //if (entity.CategoryId <= 0)
-            //{
-            //    return entity;
-            //}
-
-            //// Ensure we found the category
-            //var channel = await _channelStore.GetByIdAsync(entity.CategoryId);
-            //if (channel == null)
-            //{
-            //    return entity;
-            //}
-
-            //// Update channel details
-            //await _channelDetailsUpdater.UpdateAsync(channel.Id);
-
-            //// Return
-            //return entity;
-
         }
 
         Task<TEntity> EntityUpdated(TEntity entity)
         {
-
             return Task.FromResult(entity);
-            //// No need to update cateogry for private entities
-            //if (entity.IsPrivate)
-            //{
-            //    return entity;
-            //}
-
-            //// No need to update cateogry for soft deleted entities
-            //if (entity.IsDeleted)
-            //{
-            //    return entity;
-            //}
-
-            //// No need to update cateogry for entities flagged as spam
-            //if (entity.IsSpam)
-            //{
-            //    return entity;
-            //}
-
-            //// Ensure we have a categoryId for the entity
-            //if (entity.CategoryId <= 0)
-            //{
-            //    return entity;
-            //}
-
-            //// Ensure we found the category
-            //var channel = await _channelStore.GetByIdAsync(entity.CategoryId);
-            //if (channel == null)
-            //{
-            //    return entity;
-            //}
-
-            //// Update channel details
-            //await _channelDetailsUpdater.UpdateAsync(channel.Id);
-
-            //// Return
-            //return entity;
-
         }
 
         #endregion

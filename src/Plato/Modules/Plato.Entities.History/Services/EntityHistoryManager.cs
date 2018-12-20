@@ -7,7 +7,6 @@ using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
 using Plato.Internal.Stores.Abstractions.Roles;
 using Plato.Internal.Text.Abstractions;
-using Plato.Labels.Services;
 
 namespace Plato.Entities.History.Services
 {
@@ -15,24 +14,18 @@ namespace Plato.Entities.History.Services
     public class EntityHistoryManager : IEntityHistoryManager<EntityHistory> 
     {
         
-        private readonly IEntityHistoryStore<EntityHistory> _labelStore;
+        private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
         private readonly IContextFacade _contextFacade;
-        private readonly IAliasCreator _aliasCreator;
-        private readonly IPlatoRoleStore _roleStore;
         private readonly IBroker _broker;
 
         public EntityHistoryManager(
-            IEntityHistoryStore<EntityHistory> labelStore,
+            IEntityHistoryStore<EntityHistory> entityHistoryStore,
             IContextFacade contextFacade,
-            IAliasCreator aliasCreator,
-            IPlatoRoleStore roleStore,
             IBroker broker)
         {
-            _labelStore = labelStore;
-            _roleStore = roleStore;
+            _entityHistoryStore = entityHistoryStore;
             _contextFacade = contextFacade;
             _broker = broker;
-            _aliasCreator = aliasCreator;
         }
 
         #region "Implementation"
@@ -75,7 +68,7 @@ namespace Plato.Entities.History.Services
 
             var result = new CommandResult<EntityHistory>();
 
-            var newEntityHistory = await _labelStore.CreateAsync(model);
+            var newEntityHistory = await _entityHistoryStore.CreateAsync(model);
             if (newEntityHistory != null)
             {
 
@@ -123,7 +116,7 @@ namespace Plato.Entities.History.Services
 
             var result = new CommandResult<EntityHistory>();
 
-            var label = await _labelStore.UpdateAsync(model);
+            var label = await _entityHistoryStore.UpdateAsync(model);
             if (label != null)
             {
 
@@ -157,7 +150,7 @@ namespace Plato.Entities.History.Services
             }
             
             var result = new CommandResult<EntityHistory>();
-            if (await _labelStore.DeleteAsync(model))
+            if (await _entityHistoryStore.DeleteAsync(model))
             {
 
                 // Invoke EntityHistoryDeleted subscriptions

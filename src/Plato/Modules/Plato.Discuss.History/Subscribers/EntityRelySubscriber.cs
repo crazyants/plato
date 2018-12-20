@@ -3,7 +3,7 @@ using Plato.Entities.Models;
 using Plato.Entities.Stores;
 using Plato.Internal.Messaging.Abstractions;
 
-namespace Plato.Entities.History.Subscribers
+namespace Plato.Discuss.History.Subscribers
 {
 
     /// <summary>

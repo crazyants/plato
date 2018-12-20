@@ -2,16 +2,17 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Plato.Entities.History.Handlers;
-using Plato.Entities.History.Models;
-using Plato.Entities.History.Repositories;
-using Plato.Entities.History.Stores;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Entities.History.Subscribers;
-using Plato.Entities.Models;
 using Plato.Internal.Messaging.Abstractions;
+using Plato.Entities.Models;
+using Plato.Entities.History.Handlers;
+using Plato.Entities.History.Models;
+using Plato.Entities.History.Repositories;
+using Plato.Entities.History.Services;
+using Plato.Entities.History.Stores;
+using Plato.Entities.History.Subscribers;
 
 namespace Plato.Entities.History
 {
@@ -26,14 +27,16 @@ namespace Plato.Entities.History
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-    
+            
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 
             // Data access
             services.AddScoped<IEntityHistoryRepository<EntityHistory>, EntityHistoryRepository>();
             services.AddScoped<IEntityHistoryStore<EntityHistory>, EntityHistoryStore>();
+
+            // Managers
+            services.AddScoped<IEntityHistoryManager<EntityHistory>, EntityHistoryManager>();
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Entity>>();
