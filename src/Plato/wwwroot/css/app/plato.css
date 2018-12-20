@@ -33,6 +33,7 @@
 /* User generated content */
 /* ------------------------- */
 
+.markdown-body>:first-child { margin-top: 0!important; }
 .markdown-body img { max-width: 100%; } 
 
 /* quotes */
@@ -122,7 +123,6 @@
     margin-top: 0;
 }
 
-.markdown-body>:first-child { margin-top: 0!important; }
 
 /* ------------------------- */
 /* Grid system */

@@ -50,7 +50,7 @@ namespace Plato.Follows.Handlers
                     {
                         Name = "CreatedDate",
                         DbType = DbType.DateTimeOffset
-                    },
+                    }
                 }
         };
         

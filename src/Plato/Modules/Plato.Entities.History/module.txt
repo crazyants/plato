@@ -1,0 +1,14 @@
+Name: Plato Entities History
+Description: Adds the ability to keep a history of all edits to any entity.
+Author: InstantASP
+WebSite: https://www.instantasp.co.uk/
+Category: Core
+PlatoVersion: 1.0.0
+Version: 1.0.0
+Dependencies: 
+[
+	{
+		Id: "Plato.Entities",
+		Version: "1.0.0"
+	}
+]

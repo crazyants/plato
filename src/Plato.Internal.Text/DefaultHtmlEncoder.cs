@@ -21,9 +21,11 @@ namespace Plato.Internal.Text
         {
             // Encode the supplied html but ensure
             // we convert encoded new lines back into \n
+            // then convert all \n to <br/>
             return HtmlEncoder.Default
                 .Encode(html.NormalizeNewLines())
-                .Replace("&#xA;", "\n");
+                .Replace("&#xA;", "\n")
+                .HtmlTextulize();
         }
     }
 }

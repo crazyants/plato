@@ -33,13 +33,8 @@
                     child-ul-css-class="dropdown-menu" />
     </card-title>
     <card-body class="card-body-flush">
-        <div class="m-3">
-            <div class="markdown-body" data-provide="markdownBody">
-                @Html.Raw(@Model.Entity.Html)
-            </div>
-            <navigation name="topic-extra"
-                        model="@Model.Entity"
-                        enable-list="false" />
+        <div class="markdown-body m-3" data-provide="markdownBody">
+            @Html.Raw(@Model.Entity.Html)
         </div>
         <navigation name="topic-footer"
                     model="@Model.Entity"
@@ -93,23 +88,14 @@
                                     class="nav navbar p-0 float-right"
                                     child-ul-css-class="dropdown-menu" />
                     </card-title>
-                    <card-body class="card-body">
-                        <div class="markdown-body" data-provide="markdownBody">
+                    <card-body class="card-body-flush">
+                        <div class="markdown-body m-3" data-provide="markdownBody">
                             @Html.Raw(@reply.Html)
                         </div>
-                        <div>
-                            <navigation name="topicreply-extra"
-                                model="reply"
-                                class="nav navbar p-0"
-                                child-ul-css-class="dropdown-menu"/>
-                        </div>
-                    </card-body>
-                    <card-footer class="card-footer p-0">
                         <navigation name="topicreply-footer"
                                     model="reply"
-                                    class="nav navbar p-0"
-                                    child-ul-css-class="dropdown-menu" />
-                    </card-footer>
+                                    enable-list="false" />
+                    </card-body>
                 </card>
             </div>
         </div>

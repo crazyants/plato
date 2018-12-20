@@ -34,8 +34,8 @@ namespace Plato.Discuss.Tags
         {
 
             // Register navigation provider
-            services.AddScoped<INavigationProvider, TopicExtraMenu>();
-            services.AddScoped<INavigationProvider, TopicReplyExtraMenu>();
+            services.AddScoped<INavigationProvider, TopicFooterMenu>();
+            services.AddScoped<INavigationProvider, TopicReplyFooterMenu>();
             services.AddScoped<INavigationProvider, SiteMenu>();
 
             // Discuss view providers

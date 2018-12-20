@@ -165,11 +165,10 @@ $(function (win, doc, $) {
                         if ($target.hasClass("hidden")) {
                             $target.removeClass("hidden");
                         }
-
-
+                        
                     } else {
 
-                        // ensure target is visible
+                        // ensure target is hidden
                         if (!$target.hasClass("hidden")) {
                             $target.addClass("hidden");
                         }

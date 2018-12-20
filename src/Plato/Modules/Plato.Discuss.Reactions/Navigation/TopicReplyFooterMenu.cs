@@ -35,7 +35,7 @@ namespace Plato.Discuss.Reactions.Navigation
             
             // Add reaction list to topic reply footer navigation
             builder
-                .Add(T["React"], react => react
+                .Add(T["React"], int.MaxValue, react => react
                     .View("ReactionList", new
                     {
                         topic,

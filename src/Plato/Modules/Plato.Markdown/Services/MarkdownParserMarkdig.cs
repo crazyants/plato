@@ -39,7 +39,6 @@ namespace Plato.Markdown.Services
             var htmlWriter = new StringWriter();
             var renderer = CreateRenderer(htmlWriter);
             Markdig.Markdown.Convert(markdown, renderer, Pipeline);
-
             return Task.FromResult(htmlWriter.ToString());
 
         }

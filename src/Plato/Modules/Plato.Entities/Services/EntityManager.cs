@@ -240,7 +240,7 @@ namespace Plato.Entities.Services
                 message = await handler.Invoke(new Message<string>(message, this));
             }
             
-            return message.HtmlTextulize();
+            return message;
 
         }
 

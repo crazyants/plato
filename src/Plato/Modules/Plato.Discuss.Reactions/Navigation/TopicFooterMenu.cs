@@ -34,7 +34,7 @@ namespace Plato.Discuss.Reactions.Navigation
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
             
             builder
-                .Add(T["Reactions"], react => react
+                .Add(T["Reactions"], int.MaxValue, react => react
                     .View("ReactionList", new
                     {
                         topic,

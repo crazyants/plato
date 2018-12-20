@@ -1,18 +1,19 @@
 ﻿@model TagListViewModel
 
-@if (Model.Tags != null)
+@if (Model.Tags != null && Model.Tags.Any())
 {
-    <h6><i class="fal fa-tag"></i> @T["Tags"]</h6>
-    foreach (var tag in Model.Tags)
-    {
-        var tooltip = $"{T["Show all topics tagged"].Value} '{tag.Name}'";
-        <div title="@tooltip" data-toggle="tooltip" class="btn-group mt-2">
-            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.TagId" asp-route-alias="@tag.Alias" class="btn btn-sm label label-outline font-weight-bold">
+    <div class="m-3">
+        @foreach (var tag in Model.Tags)
+        {
+        var tooltip = $"{T["Show all topics tagged"].Value} '{tag.Name}...'";
+        <div title="@tooltip" class="btn-group my-2">
+            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.TagId" asp-route-alias="@tag.Alias" class="btn btn-sm label font-weight-bold">
                 @tag.Name
             </a>
-            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.TagId" asp-route-alias="@tag.Alias" class="btn btn-sm label label-outline dropdown-toggle-split">
+            <a asp-route-area="Plato.Discuss.Tags" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@tag.TagId" asp-route-alias="@tag.Alias" class="btn btn-sm label dropdown-toggle-split">
                 <span>x</span>@tag.TotalEntities.ToPrettyInt()
             </a>
         </div>
-    }
+        }
+    </div>
 }
