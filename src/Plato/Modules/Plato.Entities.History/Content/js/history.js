@@ -42,12 +42,19 @@ $(function (win, doc, $) {
 
             },
             bind: function ($caller) {
-                
+
+                var entityId = this.getEntityId($caller),
+                    entityReplyId = this.getEntityReplyId($caller),
+                    params = '?page={page}&size={pageSize}&entityId={entityId}&entityReplyId={entityReplyId}';
+
+                params = params.replace(/\{entityId}/g, entityId);
+                params = params.replace(/\{entityReplyId}/g, entityReplyId);
+
                 // Invoke suggester
                 $caller.pagedList({
                     page: 1,
-                    pageSize: 5,
-                    enablePaging: false,
+                    pageSize: 50,
+                    enablePaging: true,
                     loaderTemplate: null,
                     itemSelection: {
                         enable: false,
@@ -58,15 +65,16 @@ $(function (win, doc, $) {
                     noResultsText: "No history at this time",
                     config: {
                         method: "GET",
-                        url: 'api/history/entity/get?page={page}&size={pageSize}',
+                        url: 'api/history/entity/get' + params,
                         data: {
                             sort: "CreatedDate",
-                            order: "Desc"
+                            order: 1
                         }
                     },
-                    itemTemplate: '<a id="historyid}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url(/users/photo/{from.id});"></span></span></span><span class="list-body">{text}</span></a>',
+                    itemCss: "dropdown-item p-2",
+                    itemTemplate: '<a id="historyid}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url(/users/photo/{createdBy.id}"></span></span></span><span class="list-body">{text}</span></a>',
                     parseItemTemplate: function (html, result) {
-
+                        
                         if (result.id) {
                             html = html.replace(/\{id}/g, result.id);
                         } else {
@@ -79,56 +87,24 @@ $(function (win, doc, $) {
                             html = html.replace(/\{text}/g, "");
                         }
 
-                        // user
+                        // createdBy
 
-                        if (result.user.id) {
-                            html = html.replace(/\{user.Id}/g, result.user.id);
+                        if (result.createdBy.id) {
+                            html = html.replace(/\{createdBy.id}/g, result.createdBy.id);
                         } else {
-                            html = html.replace(/\{user.Id}/g, "");
+                            html = html.replace(/\{createdBy.id}/g, "");
                         }
 
-                        if (result.user.displayName) {
-                            html = html.replace(/\{user.displayName}/g, result.user.displayName);
+                        if (result.createdBy.displayName) {
+                            html = html.replace(/\{createdBy.displayName}/g, result.createdBy.displayName);
                         } else {
-                            html = html.replace(/\{user.displayName}/g, "");
+                            html = html.replace(/\{createdBy.displayName}/g, "");
                         }
-
-                        if (result.user.userName) {
-                            html = html.replace(/\{user.userName}/g, result.user.userName);
+                        
+                        if (result.createdBy.url) {
+                            html = html.replace(/\{createdBy.url}/g, result.createdBy.url);
                         } else {
-                            html = html.replace(/\{user.userName}/g, "");
-                        }
-
-                        if (result.user.url) {
-                            html = html.replace(/\{user.url}/g, result.user.url);
-                        } else {
-                            html = html.replace(/\{user.url}/g, "");
-                        }
-
-                        // from
-
-                        if (result.from.id) {
-                            html = html.replace(/\{from.id}/g, result.from.id);
-                        } else {
-                            html = html.replace(/\{from.id}/g, "");
-                        }
-
-                        if (result.from.displayName) {
-                            html = html.replace(/\{from.displayName}/g, result.from.displayName);
-                        } else {
-                            html = html.replace(/\{from.displayName}/g, "");
-                        }
-
-                        if (result.from.userName) {
-                            html = html.replace(/\{from.userName}/g, result.from.userName);
-                        } else {
-                            html = html.replace(/\{from.userName}/g, "");
-                        }
-
-                        if (result.from.url) {
-                            html = html.replace(/\{from.url}/g, result.from.url);
-                        } else {
-                            html = html.replace(/\{from.url}/g, "");
+                            html = html.replace(/\{createdBy.url}/g, "");
                         }
                         
                         if (result.date.text) {
@@ -136,6 +112,8 @@ $(function (win, doc, $) {
                         } else {
                             html = html.replace(/\{date.text}/g, "");
                         }
+
+                        // date
 
                         if (result.date.value) {
                             html = html.replace(/\{date.value}/g, result.date.value);
@@ -163,6 +141,16 @@ $(function (win, doc, $) {
             },
             update: function($caller) {
                 $caller.pagedList("bind");
+            },
+            getEntityId: function($caller) {
+                return typeof $caller.data("entityId") !== "undefined"
+                    ? $caller.data("entityId")
+                    : $caller.data(dataKey).entityId;
+            },
+            getEntityReplyId: function ($caller) {
+                return typeof $caller.data("entityReplyId") !== "undefined"
+                    ? $caller.data("entityReplyId")
+                    : $caller.data(dataKey).entityReplyId;
             }
 
         }
@@ -223,6 +211,7 @@ $(function (win, doc, $) {
 
     }();
 
+    
     $.fn.extend({
         history: history.init
     });

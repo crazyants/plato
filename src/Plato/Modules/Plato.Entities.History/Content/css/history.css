@@ -1,36 +1,5 @@
-﻿/* mptofocatopm dropdown */
+﻿/* history dropdown */
 
-.notifications-dropdown .dropdown-menu {
-    width: 500px;
-}
-
-.notifications-dropdown .badge {
-    margin-left: -6px;
-    margin-top: -10px;
-}
-
-.notifications-dropdown .dropdown-menu .list-left + .list-body {
-    display: block; 
-    margin-left: 46px;
-}
-
-/* date */
-
-.notifications-dropdown .dropdown-item .notification-date {
-    display: inline;
-}
-
-.notifications-dropdown .dropdown-item:hover .notification-date {
-    display: none;
-}
-
-/* dismiss */
-
-.notifications-dropdown .dropdown-item .notification-dismiss {
-    display: none;
-    padding: 0 0 1rem 2rem;
-}
-
-.notifications-dropdown .dropdown-item:hover .notification-dismiss {
-    display: inline-block;
+.history-dropdown .dropdown-menu {
+    width: 375px;
 }

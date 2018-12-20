@@ -202,6 +202,24 @@ namespace Plato.Entities.History.Stores
                 sb.Append(_query.Params.Id.ToSqlString("h.Id"));
             }
             
+            // EntityId
+            if (_query.Params.EntityId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EntityId.Operator);
+                sb.Append(_query.Params.EntityId.ToSqlString("h.EntityId"));
+            }
+
+
+            // EntityReplyId
+            if (_query.Params.EntityReplyId.Value > 0)
+            {
+                if (!string.IsNullOrEmpty(sb.ToString()))
+                    sb.Append(_query.Params.EntityReplyId.Operator);
+                sb.Append(_query.Params.EntityReplyId.ToSqlString("h.EntityReplyId"));
+            }
+
+            // Keywords
             if (!String.IsNullOrEmpty(_query.Params.Keywords.Value))
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))

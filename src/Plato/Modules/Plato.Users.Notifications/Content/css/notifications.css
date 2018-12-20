@@ -9,9 +9,9 @@
     margin-top: -10px;
 }
 
-.notifications-dropdown .dropdown-menu .list-left + .list-body {
+.dropdown-menu .list-left + .list-body {
     display: block; 
-    margin-left: 46px;
+    margin-left: 36px;
 }
 
 /* date */

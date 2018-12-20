@@ -610,7 +610,7 @@ $(function (win, doc, $) {
                 return html;
 
             }, // provides a method to parse our itemTemplate with data returned from service url
-            loaderTemplate: '<p class="text-center"><i class="fal fa-spinner fa-spin" ></i></p >', // a handlebars style template for auto complete list items
+            loaderTemplate: '<p class="text-center"><i class="fal fa-spinner fa-spin"></i></p>', // a handlebars style template for auto complete list items
             noResultsText: "Sorry no results matched your search!", // the text to display when no results are available
             noResultsIcon: null, // optional icon to display above noResultsText
             itemSelection: {

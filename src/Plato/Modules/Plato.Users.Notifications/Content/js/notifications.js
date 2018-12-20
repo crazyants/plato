@@ -61,6 +61,7 @@ $(function (win, doc, $) {
                             order: "Desc"
                         }
                     },
+                    itemCss: "dropdown-item p-2",
                     itemTemplate: '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url(/users/photo/{from.id});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right notification-dismiss" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6>{title}</h6>{message}</span></a>',
                     parseItemTemplate: function (html, result) {
 

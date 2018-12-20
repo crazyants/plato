@@ -54,28 +54,30 @@ namespace Plato.Entities.History.Controllers
             int page = 1,
             int size = 10,
             int entityId = 0,
+            int entityReplyId = 0,
             string sort = "CreatedDate",
             OrderBy order = OrderBy.Desc)
         {
 
-         // Get entity history
-            var userNotifications = await GetEntityHistory(
+            // Get histories
+            var histories = await GetEntityHistory(
                 page,
                 size,
                 entityId,
+                entityReplyId,
                 sort,
                 order);
 
             IPagedResults<EntityHistoryApiResult> results = null;
-            if (userNotifications != null)
+            if (histories != null)
             {
                 results = new PagedResults<EntityHistoryApiResult>
                 {
-                    Total = userNotifications.Total
+                    Total = histories.Total
                 };
 
                 var baseUrl = await _contextFacade.GetBaseUrlAsync();
-                foreach (var userNotification in userNotifications.Data)
+                foreach (var history in histories.Data)
                 {
                     
                     var createdByUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -83,33 +85,32 @@ namespace Plato.Entities.History.Controllers
                         ["Area"] = "Plato.Users",
                         ["Controller"] = "Home",
                         ["Action"] = "Display",
-                        ["Id"] = userNotification.CreatedBy.Id,
-                        ["Alias"] = userNotification.CreatedBy.Alias
+                        ["Id"] = history.CreatedBy.Id,
+                        ["Alias"] = history.CreatedBy.Alias
                     });
 
                     var sb = new StringBuilder();
-                    sb.Append(userNotification.CreatedBy.DisplayName)
+                    sb.Append(history.CreatedBy.DisplayName)
                         .Append(" ")
                         .Append(T["edited"].Value)
                         .Append(" ")
-                        .Append(userNotification.CreatedDate.ToPrettyDate());
+                        .Append(history.CreatedDate.ToPrettyDate());
                         
                     results.Data.Add(new EntityHistoryApiResult()
                     {
-                        Id = userNotification.Id,
+                        Id = history.Id,
                         Text = sb.ToString(),
                         CreatedBy = new UserApiResult()
                         {
-                            Id = userNotification.CreatedBy.Id,
-                            DisplayName = userNotification.CreatedBy.DisplayName,
-                            UserName = userNotification.CreatedBy.UserName,
+                            Id = history.CreatedBy.Id,
+                            DisplayName = history.CreatedBy.DisplayName,
+                            UserName = history.CreatedBy.UserName,
                             Url = createdByUrl
                         },
-                   
                         Date = new FriendlyDate()
                         {
-                            Text = userNotification.CreatedDate.ToPrettyDate(),
-                            Value = userNotification.CreatedDate
+                            Text = history.CreatedDate.ToPrettyDate(),
+                            Value = history.CreatedDate
                         }
                     });
 
@@ -137,15 +138,6 @@ namespace Plato.Entities.History.Controllers
         }
 
 
-        [HttpDelete]
-        [ResponseCache(NoStore = true)]
-        public async Task<IActionResult> Delete(int id)
-        {
-        
-            return base.InternalServerError();
-
-        }
-        
         #endregion
 
         #region "Private Methods"
@@ -154,6 +146,7 @@ namespace Plato.Entities.History.Controllers
             int page,
             int pageSize,
             int entityId,
+            int entityReplyId,
             string sortBy,
             OrderBy sortOrder)
         {
@@ -164,6 +157,11 @@ namespace Plato.Entities.History.Controllers
                     if (entityId > 0)
                     {
                         q.EntityId.Equals(entityId);
+                    }
+
+                    if (entityReplyId > 0)
+                    {
+                        q.EntityReplyId.Equals(entityId);
                     }
                     
                 })
