@@ -49,7 +49,8 @@ $(function (win, doc, $) {
                 }
             ],
             css: {
-                modal: "modal fade"
+                modal: "modal fade",
+                dialog: "modal-dialog modal-lg"
             },
             onLoad: function ($caller) {}, // triggers when body.url is loaded
             onShow: function ($caller) {}, // triggers when the dialog is shown
@@ -148,7 +149,7 @@ $(function (win, doc, $) {
 
                     var $model = $("<div>",
                             {
-                                "class": "modal-dialog"
+                                "class": $caller.data(dataKey).css.dialog
                             }),
                         $content = $("<div>",
                             {

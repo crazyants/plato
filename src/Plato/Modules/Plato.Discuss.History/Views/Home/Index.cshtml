@@ -5,9 +5,16 @@
 }
 
 <div class="modal-header">
-    <h6>Edit History</h6>
+    <h6 class="modal-title">
+        @T["Edit History"]
+    </h6>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">
+            <i class="fal fa-times"></i>
+        </span>
+    </button>
 </div>
-<div class="modal-body">
+<div class="modal-body" style="max-height: 550px; overflow: auto;">
     <div class="markdown-body">
         @Html.Raw(Model.Html)
     </div>

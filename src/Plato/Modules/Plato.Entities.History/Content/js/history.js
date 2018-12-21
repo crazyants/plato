@@ -77,7 +77,7 @@ $(function (win, doc, $) {
                     },
                     itemCss: "dropdown-item p-2",
                     itemTemplate:
-                        '<a id="historyid}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url(/users/photo/{createdBy.id}"></span></span></span><span class="list-body">{text}</span></a>',
+                        '<a data-history-id="{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url(/users/photo/{createdBy.id}"></span></span></span><span class="list-body">{text}</span></a>',
                     parseItemTemplate: function(html, result) {
 
                         if (result.id) {
@@ -141,15 +141,22 @@ $(function (win, doc, $) {
                             e.preventDefault();
                             e.stopPropagation();
 
+                            // Ensure we have a historyId
+                            var historyId = parseInt($(this).data("historyId"));
+                            if (historyId === 0 || isNaN(historyId)) {
+                                throw new Error("A history id is required!");
+                            }
+
+                            // Load the diff
                             $().dialog({
                                 id: "historyDialog",
                                 body: {
-                                    url: "/discuss/history/home/5"
+                                    url: "/discuss/history/home/" + historyId
                                 },
                                 css: {
-                                    modal: "modal fade modal-lg"
-                                },
-                                title: "Test Title"
+                                    modal: "modal fade",
+                                    dialog: "modal-dialog modal-lg"
+                                }
                             }, "show");
                             
                         });

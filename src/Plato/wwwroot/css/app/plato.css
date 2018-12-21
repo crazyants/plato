@@ -508,13 +508,11 @@
 
 
 /* ------------------------- */
-/* Model sizes */
+/* Modal sizes */
 /* ------------------------- */
 
-.modal-lg .modal-dialog { max-width: 900px; margin: auto; }
-
 /* ------------------------- */
-/* Asides style model */
+/* Asides style modal */
 /* ------------------------- */
 
 .modal>.modal-right {
