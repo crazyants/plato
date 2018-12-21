@@ -96,11 +96,6 @@ namespace Plato.Discuss.History.Controllers
                         sb.Append(line.Text);
                         sb.Append("</div>");
                         break;
-                    case ChangeType.Unchanged:
-                        sb.Append("<div class=\"unchanged-line\">");
-                        sb.Append(line.Text);
-                        sb.Append("</div>");
-                        break;
                     case ChangeType.Modified:
                         foreach (var character in line.SubPieces)
                         {

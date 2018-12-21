@@ -11,6 +11,10 @@ if (typeof $.Plato.Http === "undefined") {
     throw new Error("History require $.Plato.Http");
 }
 
+if (typeof $.Plato.Http === "undefined") {
+    throw new Error("History require $.Plato.Ui");
+}
+
 $(function (win, doc, $) {
 
     'use strict';
@@ -72,9 +76,10 @@ $(function (win, doc, $) {
                         }
                     },
                     itemCss: "dropdown-item p-2",
-                    itemTemplate: '<a id="historyid}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url(/users/photo/{createdBy.id}"></span></span></span><span class="list-body">{text}</span></a>',
-                    parseItemTemplate: function (html, result) {
-                        
+                    itemTemplate:
+                        '<a id="historyid}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url(/users/photo/{createdBy.id}"></span></span></span><span class="list-body">{text}</span></a>',
+                    parseItemTemplate: function(html, result) {
+
                         if (result.id) {
                             html = html.replace(/\{id}/g, result.id);
                         } else {
@@ -100,13 +105,13 @@ $(function (win, doc, $) {
                         } else {
                             html = html.replace(/\{createdBy.displayName}/g, "");
                         }
-                        
+
                         if (result.createdBy.url) {
                             html = html.replace(/\{createdBy.url}/g, result.createdBy.url);
                         } else {
                             html = html.replace(/\{createdBy.url}/g, "");
                         }
-                        
+
                         if (result.date.text) {
                             html = html.replace(/\{date.text}/g, result.date.text);
                         } else {
@@ -120,7 +125,7 @@ $(function (win, doc, $) {
                         } else {
                             html = html.replace(/\{date.value}/g, "");
                         }
-                        
+
                         if (result.url) {
                             html = html.replace(/\{url}/g, result.url);
                         } else {
@@ -129,8 +134,26 @@ $(function (win, doc, $) {
                         return html;
 
                     },
-                    onLoaded: function ($caller, results) {
+                    onLoaded: function($pagedList, results) {
                         
+                        $pagedList.find(".dropdown-item").click(function (e) {
+
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            $().dialog({
+                                id: "historyDialog",
+                                body: {
+                                    url: "/discuss/history/home/5"
+                                },
+                                css: {
+                                    modal: "modal fade modal-lg"
+                                },
+                                title: "Test Title"
+                            }, "show");
+                            
+                        });
+
                         // Activate tooltips
                         $caller.find('[data-toggle="tooltip"]')
                             .tooltip({ trigger: "hover" });
@@ -152,7 +175,6 @@ $(function (win, doc, $) {
                     ? $caller.data("entityReplyId")
                     : $caller.data(dataKey).entityReplyId;
             }
-
         }
 
         return {

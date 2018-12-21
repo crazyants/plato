@@ -26,6 +26,202 @@ $(function (win, doc, $) {
 
     var context = $.Plato.Context;
 
+    /* dialog */
+    var dialog = function () {
+
+        var dataKey = "dialog",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            id: "dialog",
+            title: "Dialog Title",
+            body: {
+                html: null,
+                url: null
+            },
+            buttons: [
+                {
+                    text: "Close",
+                    id: this.id,
+                    click: function($modal) {
+                        $modal.dismiss();
+                    }
+                }
+            ],
+            css: {
+                modal: "modal fade"
+            },
+            onLoad: function ($caller) {}, // triggers when body.url is loaded
+            onShow: function ($caller) {}, // triggers when the dialog is shown
+            onHide: function ($caller) {} // triggers when the dialog is hidden
+        };
+
+        var methods = {
+            init: function ($caller, methodName) {
+
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+                
+                methods.bind($caller);
+
+            },
+            bind: function ($caller) {
+
+                var $dialog = methods.getOrCreate($caller);
+                $dialog.modal();
+
+            },
+            show: function($caller) {
+
+                var $dialog = methods.getOrCreate($caller);
+                $dialog.modal("show");
+                
+                methods.load($caller);
+
+                // onShow event
+                if ($caller.data(dataKey).onShow) {
+                    $caller.data(dataKey).onShow($caller);
+                }
+
+
+            },
+            hide: function ($caller) {
+
+                var $dialog = methods.getOrCreate($caller);
+                $dialog.modal("hide");
+
+
+                // onHide event
+                if ($caller.data(dataKey).onShow) {
+                    $caller.data(dataKey).onShow($caller);
+                }
+
+            },
+            load: function($caller) {
+
+                if ($caller.data(dataKey).body.url == null) {
+                    return;
+                }
+
+                if ($caller.data(dataKey).body.url === "") {
+                    return;
+                }
+                
+                win.$.Plato.Http({
+                    method: "GET",
+                    url: $caller.data(dataKey).body.url
+                }).done(function(response) {
+                    var $body = $caller.find(".modal-content");
+                    if ($body.length > 0) {
+                        $body.empty();
+                        if (response !== "") {
+                            $body.html(response);
+                        }
+                    }
+                    // onLoad event
+                    if ($caller.data(dataKey).onLoad) {
+                        $caller.data(dataKey).onLoad($caller, response.result);
+                    }
+                });
+
+            },
+            getOrCreate: function($caller) {
+
+                var id = $caller.data(dataKey).id,
+                    $dialog = $("#" + id);
+
+                if ($dialog.length === 0) {
+
+                    $dialog = $("<div>",
+                        {
+                            "id": id,
+                            "role": "dialog",
+                            "class": $caller.data(dataKey).css.modal,
+                            "tabIndex": "1"
+                        });
+
+                    var $model = $("<div>",
+                            {
+                                "class": "modal-dialog"
+                            }),
+                        $content = $("<div>",
+                            {
+                                "class": "modal-content"
+                            }).append($('<p class="my-4 text-center"><i class="fal my-4 fa-spinner fa-spin"></i></p>'));
+                    
+                    $model.append($content);
+                    $dialog.append($model);
+                    $("body").append($dialog);
+
+                    return $($dialog);
+                }
+
+                return $dialog;
+
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).dialog()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().dialog()
+                    var $caller = $("body");
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                    methods.init($caller);
+                }
+
+            }
+
+        };
+
+    }();
+    
     /* scrollTo */
     var scrollTo = function () {
 
@@ -3560,6 +3756,7 @@ $(function (win, doc, $) {
     
     /* Register Plugins */
     $.fn.extend({
+        dialog: dialog.init,
         scrollTo: scrollTo.init,
         treeView: treeView.init,
         pagedList: pagedList.init,
