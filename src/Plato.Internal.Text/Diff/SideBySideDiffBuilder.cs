@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plato.Internal.Text.Diff.DiffBuilder.Model;
-using Plato.Internal.Text.Diff.Model;
+using Plato.Internal.Text.Abstractions.Diff;
+using Plato.Internal.Text.Abstractions.Diff.Models;
 
-
-namespace Plato.Internal.Text.Diff.DiffBuilder
+namespace Plato.Internal.Text.Diff
 {
     public class SideBySideDiffBuilder : ISideBySideDiffBuilder
     {
-        private readonly IDiffer differ;
+        private readonly IDiffer _differ;
 
         private delegate void PieceBuilder(string oldText, string newText, List<DiffPiece> oldPieces, List<DiffPiece> newPieces);
 
@@ -16,7 +15,7 @@ namespace Plato.Internal.Text.Diff.DiffBuilder
 
         public SideBySideDiffBuilder(IDiffer differ)
         {
-            this.differ = differ ?? throw new ArgumentNullException(nameof(differ));
+            this._differ = differ ?? throw new ArgumentNullException(nameof(differ));
         }
 
         public SideBySideDiffBuilder(IDiffer differ, char[] wordSeparators) : this(differ)
@@ -38,14 +37,14 @@ namespace Plato.Internal.Text.Diff.DiffBuilder
         private SideBySideDiffModel BuildLineDiff(string oldText, string newText)
         {
             var model = new SideBySideDiffModel();
-            var diffResult = differ.CreateLineDiffs(oldText, newText, ignoreWhitespace: true);
+            var diffResult = _differ.CreateLineDiffs(oldText, newText, ignoreWhitespace: true);
             BuildDiffPieces(diffResult, model.OldText.Lines, model.NewText.Lines, BuildWordDiffPieces);
             return model;
         }
 
         private void BuildWordDiffPieces(string oldText, string newText, List<DiffPiece> oldPieces, List<DiffPiece> newPieces)
         {
-            var diffResult = differ.CreateWordDiffs(oldText, newText, false, WordSeparaters);
+            var diffResult = _differ.CreateWordDiffs(oldText, newText, false, WordSeparaters);
             BuildDiffPieces(diffResult, oldPieces, newPieces, null);
         }
 

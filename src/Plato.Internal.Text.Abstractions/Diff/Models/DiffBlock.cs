@@ -1,4 +1,4 @@
-﻿namespace Plato.Internal.Text.Diff.Model
+﻿namespace Plato.Internal.Text.Abstractions.Diff.Models
 {
 
     public class DiffBlock

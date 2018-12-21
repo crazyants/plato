@@ -1,6 +1,6 @@
-﻿using Plato.Internal.Text.Diff.DiffBuilder.Model;
+﻿using Plato.Internal.Text.Abstractions.Diff.Models;
 
-namespace Plato.Internal.Text.Diff.DiffBuilder
+namespace Plato.Internal.Text.Abstractions.Diff
 {
     public interface IInlineDiffBuilder
     {

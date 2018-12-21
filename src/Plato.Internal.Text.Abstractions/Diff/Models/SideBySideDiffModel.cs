@@ -1,4 +1,4 @@
-﻿namespace Plato.Internal.Text.Diff.DiffBuilder.Model
+﻿namespace Plato.Internal.Text.Abstractions.Diff.Models
 {
     /// <summary>
     /// A model which represents differences between two texts to be shown side by side

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Plato.Internal.Text.Diff.DiffBuilder.Model
+namespace Plato.Internal.Text.Abstractions.Diff.Models
 {
     public class DiffPaneModel
     {

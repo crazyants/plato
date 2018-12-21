@@ -30,8 +30,7 @@ namespace Plato.Discuss.History
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();
             services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<Reply>>();
-
-
+            
 
         }
 
@@ -40,6 +39,16 @@ namespace Plato.Discuss.History
             IRouteBuilder routes,
             IServiceProvider serviceProvider)
         {
+            
+            routes.MapAreaRoute(
+                name: "DiscussHistory",
+                areaName: "Plato.Discuss.History",
+                template: "discuss/history/{controller}/{id?}",
+                defaults: new { controller = "Home", action = "Index" }
+            );
+            
         }
+
     }
+
 }

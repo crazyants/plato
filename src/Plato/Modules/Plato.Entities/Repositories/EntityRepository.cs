@@ -275,7 +275,7 @@ namespace Plato.Entities.Repositories
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
-                    modifiedDate.ToDateIfNull(),
+                    modifiedDate,
                     lastReplyId,
                     lastReplyUserId,
                     lastReplyDate.ToDateIfNull(),

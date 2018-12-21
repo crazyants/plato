@@ -3,3 +3,9 @@
 .history-dropdown .dropdown-menu {
     width: 375px;
 }
+
+
+.history-dropdown .dropdown-body {
+    max-height: 300px;
+    overflow: auto;
+}

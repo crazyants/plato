@@ -54,8 +54,7 @@ namespace Plato.Entities.Services
             }
          
             model.CreatedDate = DateTime.UtcNow;
-            model.ModifiedDate = DateTime.UtcNow;
-
+        
             // Validate
             if (model.Id > 0)
             {

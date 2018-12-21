@@ -1,21 +1,24 @@
 ﻿@model HistoryMenuViewModel
 
-<div class="dropdown history-dropdown">
-    <a class="nav-link text-muted dropdown-toggle" href="#" id="historyDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        @T["edited"] @Model.Topic?.ModifiedDate.ToPrettyDate()
-    </a>
-    <div class="dropdown-arrow"></div>
-    <div class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="historyDropdown">
-        <div class="dropdown-header px-3 py-2 border-bottom">
-            <a href="#" class="text-muted float-right" data-toggle="dropdown">
-                <i class="fal fa-times"></i>
-            </a>
-            <span class="d-inline-block text-muted">@T["Edited"] </span>
-        </div>
-        <div class="dropdown-body" data-entity-id="@Model.Topic?.Id" data-entity-reply-id="@Model.Reply?.Id" data-provide="history">
-            <p class="my-4 text-center">
-                <i class="fal fa-spinner fa-spin"></i>
-            </p>
+@if (Model.Topic?.ModifiedDate != null)
+{
+    <div class="dropdown history-dropdown">
+        <a class="nav-link text-muted dropdown-toggle" href="#" id="historyDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @T["edited"] @Model.Topic?.ModifiedDate.ToPrettyDate()
+        </a>
+        <div class="dropdown-arrow"></div>
+        <div class="dropdown-menu dropdown-menu-right p-0" aria-labelledby="historyDropdown">
+            <div class="dropdown-header px-3 py-2 border-bottom">
+                <a href="#" class="text-muted float-right" data-toggle="dropdown">
+                    <i class="fal fa-times"></i>
+                </a>
+                <span class="d-inline-block text-muted">@T["Edited"] </span>
+            </div>
+            <div class="dropdown-body" data-entity-id="@Model.Topic?.Id" data-entity-reply-id="@Model.Reply?.Id" data-provide="history">
+                <p class="my-4 text-center">
+                    <i class="fal fa-spinner fa-spin"></i>
+                </p>
+            </div>
         </div>
     </div>
-</div>
+}

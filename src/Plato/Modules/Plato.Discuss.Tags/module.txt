@@ -8,6 +8,10 @@ Version: 1.0.0
 Dependencies: 
 [
 	{
+		Id: "Plato.Discuss",
+		Version: "1.0.0"
+	},
+	{
 		Id: "Plato.Tags",
 		Version: "1.0.0"
 	}

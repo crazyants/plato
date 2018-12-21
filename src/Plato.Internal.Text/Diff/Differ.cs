@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plato.Internal.Text.Diff.Model;
+using Plato.Internal.Text.Abstractions.Diff;
+using Plato.Internal.Text.Abstractions.Diff.Models;
 
 namespace Plato.Internal.Text.Diff
 {

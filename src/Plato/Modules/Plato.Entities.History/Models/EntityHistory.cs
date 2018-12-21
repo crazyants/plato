@@ -17,6 +17,8 @@ namespace Plato.Entities.History.Models
         
         public string Message { get; set; }
 
+        public string Html { get; set; }
+        
         public short MajorVersion { get; set; }
 
         public short MinorVersion { get; set; }
@@ -41,6 +43,9 @@ namespace Plato.Entities.History.Models
 
             if (dr.ColumnIsNotNull("Message"))
                 Message = Convert.ToString(dr["Message"]);
+
+            if (dr.ColumnIsNotNull("Html"))
+                Html = Convert.ToString(dr["Html"]);
 
             if (dr.ColumnIsNotNull("MajorVersion"))
                 MajorVersion = Convert.ToInt16(dr["MajorVersion"]);

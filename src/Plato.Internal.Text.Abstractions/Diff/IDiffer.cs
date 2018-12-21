@@ -1,7 +1,7 @@
 ﻿using System;
-using Plato.Internal.Text.Diff.Model;
+using Plato.Internal.Text.Abstractions.Diff.Models;
 
-namespace Plato.Internal.Text.Diff
+namespace Plato.Internal.Text.Abstractions.Diff
 {
 
     public interface IDiffer

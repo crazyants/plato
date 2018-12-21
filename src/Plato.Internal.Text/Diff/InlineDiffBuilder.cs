@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plato.Internal.Text.Diff.DiffBuilder.Model;
-using Plato.Internal.Text.Diff.Model;
+using Plato.Internal.Text.Abstractions.Diff;
+using Plato.Internal.Text.Abstractions.Diff.Models;
 
-namespace Plato.Internal.Text.Diff.DiffBuilder
+
+namespace Plato.Internal.Text.Diff
 {
     public class InlineDiffBuilder : IInlineDiffBuilder
     {
@@ -12,7 +13,7 @@ namespace Plato.Internal.Text.Diff.DiffBuilder
 
         public InlineDiffBuilder(IDiffer differ)
         {
-            this._differ = differ ?? throw new ArgumentNullException(nameof(differ));
+            _differ = differ ?? throw new ArgumentNullException(nameof(differ));
         }
 
         public DiffPaneModel BuildDiffModel(string oldText, string newText)

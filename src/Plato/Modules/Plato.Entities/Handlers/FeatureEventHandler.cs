@@ -174,7 +174,8 @@ namespace Plato.Entities.Handlers
                     new SchemaColumn()
                     {
                         Name = "ModifiedDate",
-                        DbType = DbType.DateTimeOffset
+                        DbType = DbType.DateTimeOffset,
+                        Nullable = true
                     },
                     new SchemaColumn()
                     {

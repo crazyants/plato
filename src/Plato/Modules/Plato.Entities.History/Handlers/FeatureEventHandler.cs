@@ -44,6 +44,12 @@ namespace Plato.Entities.History.Handlers
                 },
                 new SchemaColumn()
                 {
+                    Name = "Html",
+                    DbType = DbType.String,
+                    Length = "max"
+                },
+                new SchemaColumn()
+                {
                     Name = "MajorVersion",
                     DbType = DbType.Int16
                 },
