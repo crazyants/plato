@@ -44,12 +44,26 @@ namespace Plato.Discuss.History.Controllers
             {
                 return NotFound();
             }
+            
+            // Get previous history 
+            var previousHistory = await _entityHistoryStore.QueryAsync()
+                .Take(1)
+                .Select<EntityHistoryQueryParams>(q =>
+                {
+                    q.Id.LessThan(history.Id);
+                    q.EntityId.Equals(entity.Id);
+                }).ToList();
 
-            var html = PrepareDifAsync(entity.Html, history.Html);
+
+            var before = entity.Html;
+            if (previousHistory?.Data != null)
+            {
+                before = previousHistory?.Data[0].Html;
+            }
 
             var viewModel = new HistoryIndexViewModel()
             {
-                Html = history.Html
+                Html = PrepareDifAsync(before, history.Html)
             };
 
             return View(viewModel);
@@ -60,29 +74,49 @@ namespace Plato.Discuss.History.Controllers
         {
 
             var sb = new StringBuilder();
-
             var diff = _inlineDiffBuilder.BuildDiffModel(before, after);
+
             foreach (var line in diff.Lines)
             {
                 
                 switch (line.Type)
                 {
                     case ChangeType.Inserted:
-                        sb.Append("<span class=\"inserted\">");
+                        sb.Append("<div class=\"inserted-line\">");
                         sb.Append(line.Text);
-                        sb.Append("</span>");
+                        sb.Append("</div>");
                         break;
                     case ChangeType.Deleted:
-                        sb.Append("<span class=\"deleted\">");
+                        sb.Append("<div class=\"deleted-line\">");
                         sb.Append(line.Text);
-                        sb.Append("</span>");
+                        sb.Append("</div>");
+                        break;
+                    case ChangeType.Imaginary:
+                        sb.Append("<div class=\"imaginary-line\">");
+                        sb.Append(line.Text);
+                        sb.Append("</div>");
+                        break;
+                    case ChangeType.Unchanged:
+                        sb.Append("<div class=\"unchanged-line\">");
+                        sb.Append(line.Text);
+                        sb.Append("</div>");
+                        break;
+                    case ChangeType.Modified:
+                        foreach (var character in line.SubPieces)
+                        {
+                            if (character.Type == ChangeType.Imaginary) continue;
+                            sb.Append("<span class=\"")
+                                .Append(character.Type.ToString().ToLower())
+                                .Append("-character\">")
+                                .Append(character.Text)
+                                .Append("</span>");
+                        }
                         break;
                     default:
                         sb.Append(line.Text);
                         break;
                 }
-
-                Console.WriteLine(line.Text);
+                
             }
 
             return sb.ToString();

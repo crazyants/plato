@@ -4,8 +4,17 @@
     width: 375px;
 }
 
-
 .history-dropdown .dropdown-body {
     max-height: 300px;
     overflow: auto;
 }
+
+/* diff css */
+
+.inserted-line { color: #000; background-color:rgba(93,255,125,.4); }
+.modified-line { color: #000; background-color:rgba(110,167,255,.3);}
+.deleted-line { color: #000; background-color: rgba(255,150,150,.4); }
+.unchanged-line { }
+.imaginary-line {color: #000; background-color: rgba(160,160,160,.3); }
+.inserted-character { color: #000; background-color:rgba(0,255,0,.8); }
+.deleted-character { color: #000;  background-color:rgba(255,0,0,.8); }

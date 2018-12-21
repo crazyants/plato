@@ -7,3 +7,16 @@
 <div class="markdown-body">
     @Html.Raw(Model.Html)
 </div>
+
+
+<style>
+    /* diff css */
+
+    .inserted-line { background-color:rgba(156,204,79,.5); }
+    .modified-line { background-color:rgba(110,167,255,.3);}
+    .deleted-line { background-color: rgba(255,150,150,.5); }
+    .unchanged-line {  }
+    .imaginary-line { background-color: rgba(160,160,160,.3); }
+    .inserted-character { display: inline-block; background-color:rgba(0,255,0,.8); }
+    .deleted-character { display: inline-block; background-color:rgba(255,0,0,.8); }
+</style>

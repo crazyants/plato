@@ -27,7 +27,14 @@ namespace Plato.Internal.Data.Abstractions
             this.PageSize = pageSize;
             return this;
         }
-        
+
+        public IQuery<TModel> Take(int pageSize)
+        {
+            this.PageIndex = 1;
+            this.PageSize = pageSize;
+            return this;
+        }
+
         public IQuery<TModel> Configure(Action<QueryOptions> configure)
         {
             configure(_options);

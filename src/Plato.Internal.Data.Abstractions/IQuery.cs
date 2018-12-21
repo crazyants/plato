@@ -12,6 +12,8 @@ namespace Plato.Internal.Data.Abstractions
         
         IQuery<TModel> Take(int pageIndex, int pageSize);
 
+        IQuery<TModel> Take(int pageSize);
+
         IQuery<TModel> Configure(Action<QueryOptions> configure);
 
         IQuery<TModel> Select<TParams>(Action<TParams> configure) where TParams : new();
