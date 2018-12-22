@@ -90,8 +90,11 @@ namespace Plato.Mentions.Repositories
 
                     if (await reader.NextResultAsync())
                     {
-                        await reader.ReadAsync();
-                        output.PopulateTotal(reader);
+                        if (reader.HasRows)
+                        {
+                            await reader.ReadAsync();
+                            output.PopulateTotal(reader);
+                        }
                     }
 
                 }

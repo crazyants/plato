@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions.SetUp;
 using Plato.Internal.Data.Schemas.Abstractions;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Text.Abstractions;
+using Plato.Users.Services;
 
 namespace Plato.Users.Handlers
 {
     public class SetUpEventHandler : BaseSetUpEventHandler
     {
         private readonly ISchemaBuilder _schemaBuilder;
+        private readonly IUserColorProvider _userColorProvider;
         private readonly UserManager<User> _userManager;
 
         private readonly SchemaTable _users = new SchemaTable()
@@ -81,6 +84,18 @@ namespace Plato.Users.Handlers
                     {
                         Name = "Alias",
                         Length = "255",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "ForeColor",
+                        Length = "6",
+                        DbType = DbType.String
+                    },
+                    new SchemaColumn()
+                    {
+                        Name = "BackColor",
+                        Length = "6",
                         DbType = DbType.String
                     },
                     new SchemaColumn()
@@ -262,6 +277,11 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
+                        Name = "UserType",
+                        DbType = DbType.Int16
+                    },
+                    new SchemaColumn()
+                    {
                         Name = "CreatedUserId",
                         DbType = DbType.Int32
                     },
@@ -290,10 +310,12 @@ namespace Plato.Users.Handlers
 
         public SetUpEventHandler(
             ISchemaBuilder schemaBuilder,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            IUserColorProvider userColorProvider)
         {
             _schemaBuilder = schemaBuilder;
             _userManager = userManager;
+            _userColorProvider = userColorProvider;
         }
 
         #region "Implementation"
@@ -329,24 +351,50 @@ namespace Plato.Users.Handlers
                 }
 
             }
-
-            // create super user
-
+            
             try
             {
-                var result =  await _userManager.CreateAsync(new User()
+
+                // create super user
+                var color = _userColorProvider.GetColor();
+                var result1 =  await _userManager.CreateAsync(new User()
                 {
                     Email = context.AdminEmail,
                     UserName = context.AdminUsername,
+                    ForeColor = color?.ForeColor ?? string.Empty,
+                    BackColor = color?.BackColor ?? string.Empty,
                     EmailConfirmed = true
                 }, context.AdminPassword);
-                if (!result.Succeeded)
+                if (!result1.Succeeded)
                 {
-                    foreach (var error in result.Errors)
+                    foreach (var error in result1.Errors)
                     {
                         reportError(error.Code, error.Description);
                     }
                 }
+                
+                // create default plato bot
+                color = _userColorProvider.GetColor();
+                var result2 = await _userManager.CreateAsync(new User()
+                {
+                    Email = "bot@plato.com",
+                    UserName = "PlatoBot",
+                    DisplayName = "Plato Bot",
+                    EmailConfirmed = true,
+                    LockoutEnabled = true,
+                    ForeColor = color?.ForeColor ?? string.Empty,
+                    BackColor = color?.BackColor ?? string.Empty,
+                    UserType = UserType.Bot
+                }, context.AdminPassword);
+                if (!result2.Succeeded)
+                {
+                    foreach (var error in result2.Errors)
+                    {
+                        reportError(error.Code, error.Description);
+                    }
+                }
+                
+
             }
             catch (Exception ex)
             {

@@ -32,6 +32,7 @@ namespace Plato.Users.Services
         private readonly IBroker _broker;
         private readonly ISiteSettingsStore _siteSettingsStore;
         private readonly IPlatoUserStore<TUser> _platoUserStore;
+        private readonly IUserColorProvider _userColorProvider;
 
         public PlatoUserManager(
             IOptions<IdentityOptions> identityOptions,
@@ -40,7 +41,8 @@ namespace Plato.Users.Services
             IHttpContextAccessor httpContextAccessor,
             ISiteSettingsStore siteSettingsStore,
             IPlatoUserStore<TUser> platoUserStore,
-            IBroker broker)
+            IBroker broker,
+            IUserColorProvider userColorProvider)
         {
             _httpContextAccessor = httpContextAccessor;
             _identityOptions = identityOptions;
@@ -48,6 +50,7 @@ namespace Plato.Users.Services
             _platoUserStore = platoUserStore;
             _userManager = userManager;
             _broker = broker;
+            _userColorProvider = userColorProvider;
 
             T = stringLocalizer;
 
@@ -63,17 +66,42 @@ namespace Plato.Users.Services
             string[] roleNames = null)
         {
 
+            // Build user
+            var user = ActivateInstanceOf<TUser>.Instance();
+            user.UserName = userName;
+            user.DisplayName = displayName;
+            user.Email = email;
+            user.RoleNames = new List<string>(roleNames ?? new string[] { DefaultRoles.Member });
+    
+            return await CreateAsync(user, password);
+
+        }
+
+
+        public async Task<ICommandResult<TUser>> CreateAsync(TUser user)
+        {
+            return await CreateAsync(user, user.Password);
+        }
+
+        public async Task<ICommandResult<TUser>> CreateAsync(TUser user, string password)
+        {
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             var result = new CommandResult<TUser>();
 
             // Validate
             // -------------------------
 
-            if (String.IsNullOrEmpty(userName) || String.IsNullOrWhiteSpace(userName))
+            if (String.IsNullOrEmpty(user.UserName) || String.IsNullOrWhiteSpace(user.UserName))
             {
                 return result.Failed(new CommandError("UserMame", T["A username is required"]));
             }
 
-            if (String.IsNullOrEmpty(email) || String.IsNullOrWhiteSpace(email))
+            if (String.IsNullOrEmpty(user.Email) || String.IsNullOrWhiteSpace(user.Email))
             {
                 return result.Failed(new CommandError("Email", T["A email is required"]));
             }
@@ -85,15 +113,15 @@ namespace Plato.Users.Services
 
             // Check Uniqueness
             // -------------------------
-            
+
             // Is this a unique email?
-            if (await _userManager.FindByEmailAsync(email) != null)
+            if (await _userManager.FindByEmailAsync(user.Email) != null)
             {
                 return result.Failed(new CommandError("Email", T["The email already exists"]));
             }
-   
+
             // Is this a unique username?
-                if (await _userManager.FindByNameAsync(userName.Normalize()) != null)
+            if (await _userManager.FindByNameAsync(user.UserName.Normalize()) != null)
             {
                 return result.Failed(new CommandError("UserMame", T["The username already exists"]));
             }
@@ -102,15 +130,19 @@ namespace Plato.Users.Services
 
             // Get site settings to populate some user defaults
             var settings = await _siteSettingsStore.GetAsync();
-            
-            // Build user
-            var user = ActivateInstanceOf<TUser>.Instance();
-            user.UserName = userName;
-            user.DisplayName = displayName;
-            user.Email = email;
-            user.RoleNames = new List<string>(roleNames ?? new string[] { DefaultRoles.Member });
-            user.TimeZone = settings?.TimeZone ?? string.Empty;
-       
+            if (settings != null)
+            {
+                user.TimeZone = settings.TimeZone;
+            }
+    
+            var color = _userColorProvider.GetColor();
+
+            if (color != null)
+            {
+                user.ForeColor = color.ForeColor;
+                user.BackColor = color.BackColor;
+            }
+
             if (String.IsNullOrEmpty(user.IpV4Address))
             {
                 user.IpV4Address = GetIpV4Address();
@@ -120,15 +152,15 @@ namespace Plato.Users.Services
             {
                 user.IpV6Address = GetIpV6Address();
             }
-            
+
             // Add new roles
-            //foreach (var role in roles)
-            //{
-            //    if (!await _userManager.IsInRoleAsync(user, role))
-            //    {
-            //        await _userManager.AddToRoleAsync(user, role);
-            //    }
-            //}
+            foreach (var role in user.RoleNames)
+            {
+                if (!await _userManager.IsInRoleAsync(user, role))
+                {
+                    await _userManager.AddToRoleAsync(user, role);
+                }
+            }
 
             // Invoke UserCreating subscriptions
             foreach (var handler in _broker.Pub<TUser>(this, "UserCreating"))
@@ -164,44 +196,6 @@ namespace Plato.Users.Services
         }
 
 
-        public async Task<ICommandResult<TUser>> CreateAsync(TUser model)
-        {
-
-            var result = new CommandResult<TUser>();
-            
-            // Invoke UserCreating subscriptions
-            foreach (var handler in _broker.Pub<TUser>(this,"UserCreating"))
-            {
-                model = await handler.Invoke(new Message<TUser>(model, this));
-            }
-
-            // Persist the user
-            var identityResult = await _userManager.CreateAsync(model);
-            if (identityResult.Succeeded)
-            {
-
-                // Invoke UserCreated subscriptions
-                foreach (var handler in _broker.Pub<TUser>(this, "UserCreated"))
-                {
-                    model = await handler.Invoke(new Message<TUser>(model, this));
-                }
-
-                // Return success
-                return result.Success(model);
-
-            }
-
-            // User could not be created, accumulate errors
-            var errors = new List<CommandError>();
-            foreach (var error in identityResult.Errors)
-            {
-                errors.Add(new CommandError(error.Code, T[error.Description]));
-            }
-
-            return result.Failed(errors.ToArray());
-            
-        }
-        
         public async Task<ICommandResult<TUser>> UpdateAsync(TUser model)
         {
 

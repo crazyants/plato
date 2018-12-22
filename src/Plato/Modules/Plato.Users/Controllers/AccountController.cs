@@ -249,19 +249,47 @@ namespace Plato.Users.Controllers
 
             //ViewData["Locales"] = sb.ToString();
 
+
+            var rnd = new Random();
+            
+            var usernames = new string[]
+                {
+                    "John D",
+                    "Mark Dogs",
+                    "Reverbe ",
+                    "Johan",
+                    "jcarreira ",
+                    "tokyo2002 ",
+                    "ebevernage",
+                    "pwelter34",
+                    "frankmonroe",
+                    "tabs",
+                    "johangw",
+                    "raymak23",
+                    "beats",
+                    "Fred",
+                    "shan",
+                    "scottrudy",
+                    "thechop",
+                };
+
+        
             for (var i = 0; i < 25; i++)
             {
 
-                var displayName = "New User " + i;
-                var userNAme = "newuser" + i;
+                var usernameIndex = rnd.Next(0, usernames.Length - 1);
+                var displayName = usernames[usernameIndex];
+                var userNAme = usernames[usernameIndex];
                 var email = "email@address" + i + ".com";
                 var password = "34Fdckf#343";
 
-                var result = await _platoUserManager.CreateAsync(
-                    userNAme,
-                    displayName,
-                    email,
-                    password);
+                var result = await _platoUserManager.CreateAsync(new User()
+                {
+                    UserName = userNAme,
+                    Email = email,
+                    DisplayName = displayName
+                }, password);
+
 
             }
 
@@ -272,6 +300,9 @@ namespace Plato.Users.Controllers
             return View(new LoginViewModel());
 
         }
+
+
+
 
         [HttpPost]
         [AllowAnonymous]

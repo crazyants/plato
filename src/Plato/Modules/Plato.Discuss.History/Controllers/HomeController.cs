@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.History.ViewModels;
@@ -7,6 +6,7 @@ using Plato.Discuss.Models;
 using Plato.Entities.History.Models;
 using Plato.Entities.History.Stores;
 using Plato.Entities.Stores;
+using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Text.Abstractions.Diff;
 using Plato.Internal.Text.Abstractions.Diff.Models;
 
@@ -52,9 +52,10 @@ namespace Plato.Discuss.History.Controllers
                 {
                     q.Id.LessThan(history.Id);
                     q.EntityId.Equals(entity.Id);
-                }).ToList();
-
-
+                })
+                .OrderBy("Id", OrderBy.Desc)
+                .ToList();
+            
             var before = entity.Html;
             if (previousHistory?.Data != null)
             {
@@ -63,6 +64,7 @@ namespace Plato.Discuss.History.Controllers
 
             var viewModel = new HistoryIndexViewModel()
             {
+                History = history,
                 Html = PrepareDifAsync(before, history.Html)
             };
 

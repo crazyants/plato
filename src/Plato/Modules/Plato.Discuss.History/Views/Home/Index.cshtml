@@ -4,18 +4,32 @@
     ViewData["Title"] = "History";
 }
 
-<div class="modal-header">
-    <h6 class="modal-title">
-        @T["Edit History"]
-    </h6>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">
-            <i class="fal fa-times"></i>
-        </span>
-    </button>
-</div>
-<div class="modal-body" style="max-height: 550px; overflow: auto;">
-    <div class="markdown-body">
-        @Html.Raw(Model.Html)
+@if (!String.IsNullOrEmpty(Model.Html))
+{
+    <div class="modal-header">
+        <h6 class="modal-title">
+        
+            @if (Model.History.CreatedBy != null)
+            {
+                <avatar title="@Model.History.CreatedBy.DisplayName" class="avatar avatar-sm" user-id="@Model.History.CreatedBy.Id"></avatar>
+                @Model.History.CreatedBy.DisplayName
+            }
+            @T["edited"]
+            <span data-toggle="tooltip" title="@Model.History.CreatedDate">
+                @Model.History.CreatedDate.ToPrettyDate()
+            </span>
+
+        </h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">
+                <i class="fal fa-times"></i>
+            </span>
+        </button>
     </div>
-</div>
+    <div class="modal-body" style="max-height: 550px; overflow: auto;">
+        <div class="markdown-body">
+            @Html.Raw(Model.Html)
+        </div>
+    </div>
+
+}

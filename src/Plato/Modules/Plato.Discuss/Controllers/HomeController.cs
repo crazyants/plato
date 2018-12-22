@@ -36,7 +36,7 @@ namespace Plato.Discuss.Controllers
         private readonly IBreadCrumbManager _breadCrumbManager;
 
         private readonly IPlatoUserStore<User> _ploatUserStore;
-
+   
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }

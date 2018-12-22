@@ -3,8 +3,11 @@ using System.Collections.Generic;
 
 namespace Plato.Internal.Models.Users
 {
+
     public interface IUser : ISimpleUser
     {
+        
+        string Password { get; set; }
 
         string Email { get; set; }
 
@@ -48,6 +51,8 @@ namespace Plato.Internal.Models.Users
 
         DateTimeOffset? BanExpiryDate { get; set; }
 
+        UserType UserType { get; set; }
+
         int CreatedUserId { get; set; }
 
         DateTimeOffset? CreatedDate { get; set; }
@@ -61,6 +66,12 @@ namespace Plato.Internal.Models.Users
         string ResetToken { get; set; }
 
         string ConfirmationToken { get; set; }
+    }
+
+    public enum UserType
+    {
+        None = 0,
+        Bot = 1
     }
 
 }

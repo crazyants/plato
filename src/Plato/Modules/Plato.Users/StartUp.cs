@@ -73,6 +73,9 @@ namespace Plato.Users
             services.TryAddScoped<UserManager<User>>();
             services.TryAddScoped<SignInManager<User>>();
 
+            // User color provider 
+            services.AddSingleton<IUserColorProvider, UserColorProvider>();
+
             // Custom User Manager
             services.AddScoped<IPlatoUserManager<User>, PlatoUserManager<User>>();
 

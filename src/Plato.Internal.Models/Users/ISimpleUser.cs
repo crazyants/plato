@@ -15,6 +15,10 @@
 
         string Alias { get; set; }
 
+        string ForeColor { get; set; }
+
+        string BackColor { get; set; }
+
     }
 
 

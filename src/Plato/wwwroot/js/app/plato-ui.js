@@ -50,7 +50,7 @@ $(function (win, doc, $) {
             ],
             css: {
                 modal: "modal fade",
-                dialog: "modal-dialog modal-lg"
+                dialog: "modal-dialog" // add modal-lg,  modal-sm for sizing
             },
             onLoad: function ($caller) {}, // triggers when body.url is loaded
             onShow: function ($caller) {}, // triggers when the dialog is shown
@@ -89,8 +89,7 @@ $(function (win, doc, $) {
                 if ($caller.data(dataKey).onShow) {
                     $caller.data(dataKey).onShow($caller);
                 }
-
-
+                
             },
             hide: function ($caller) {
 
@@ -106,17 +105,13 @@ $(function (win, doc, $) {
             },
             load: function($caller) {
 
-                if ($caller.data(dataKey).body.url == null) {
-                    return;
-                }
-
-                if ($caller.data(dataKey).body.url === "") {
-                    return;
-                }
+                var url = $caller.data(dataKey).body.url;
+                if (url == null) { return; }
+                if (url === "") { return; }
                 
                 win.$.Plato.Http({
                     method: "GET",
-                    url: $caller.data(dataKey).body.url
+                    url: url
                 }).done(function(response) {
                     var $body = $caller.find(".modal-content");
                     if ($body.length > 0) {

@@ -6,14 +6,11 @@ using Plato.Entities.History.Assets;
 using Plato.Internal.Features.Abstractions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Messaging.Abstractions;
-using Plato.Entities.Models;
 using Plato.Entities.History.Handlers;
 using Plato.Entities.History.Models;
 using Plato.Entities.History.Repositories;
 using Plato.Entities.History.Services;
 using Plato.Entities.History.Stores;
-using Plato.Entities.History.Subscribers;
 using Plato.Internal.Assets.Abstractions;
 
 namespace Plato.Entities.History
@@ -41,8 +38,8 @@ namespace Plato.Entities.History
             services.AddScoped<IEntityHistoryManager<EntityHistory>, EntityHistoryManager>();
 
             // Register message broker subscribers
-            services.AddScoped<IBrokerSubscriber, EntitySubscriber<Entity>>();
-            services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<EntityReply>>();
+            //services.AddScoped<IBrokerSubscriber, EntitySubscriber<Entity>>();
+            //services.AddScoped<IBrokerSubscriber, EntityReplySubscriber<EntityReply>>();
 
             // Register assets
             services.AddScoped<IAssetProvider, AssetProvider>();

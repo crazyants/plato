@@ -16,6 +16,7 @@ namespace Plato.Internal.Models.Users
         IModel<User>
     {
 
+
         private readonly ConcurrentDictionary<Type, ISerializable> _metaData;
 
         private string _displayName;
@@ -36,6 +37,10 @@ namespace Plato.Internal.Models.Users
 
         public string Alias { get; set; }
 
+        public string ForeColor { get; set; }
+
+        public string BackColor { get; set; }
+
         public string SamAccountName { get; set; }
 
         public string ResetToken { get; set; }
@@ -44,6 +49,8 @@ namespace Plato.Internal.Models.Users
 
         public string ApiKey { get; set; }
 
+        public string Password { get; set; }
+        
         public DateTimeOffset? PasswordExpiryDate { get; set; }
 
         public DateTimeOffset? PasswordUpdatedDate { get; set; }
@@ -83,7 +90,9 @@ namespace Plato.Internal.Models.Users
         public bool IsBanned { get; set; }
 
         public DateTimeOffset? BanExpiryDate { get; set; }
-        
+
+        public UserType UserType { get; set; } = UserType.None;
+
         public int CreatedUserId { get; set; }
 
         public DateTimeOffset? CreatedDate { get; set; }
@@ -190,6 +199,12 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("Alias"))
                 Alias = Convert.ToString(dr["Alias"]);
 
+            if (dr.ColumnIsNotNull("ForeColor"))
+                ForeColor = Convert.ToString(dr["ForeColor"]);
+            
+            if (dr.ColumnIsNotNull("BackColor"))
+                BackColor = Convert.ToString(dr["BackColor"]);
+
             if (dr.ColumnIsNotNull("SamAccountName"))
                 SamAccountName = Convert.ToString(dr["SamAccountName"]);
 
@@ -286,6 +301,9 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("BanExpiryDate"))
                 BanExpiryDate = DateTimeOffset.Parse(Convert.ToString((dr["BanExpiryDate"])));
 
+            if (dr.ColumnIsNotNull("UserType"))
+                UserType = (UserType)Convert.ToInt16(dr["UserType"]);
+            
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
