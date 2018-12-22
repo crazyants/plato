@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
 using Microsoft.AspNetCore.Hosting;
+using Plato.Internal.Drawing.Letters;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -22,19 +23,22 @@ namespace Plato.Users.Controllers
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
         private readonly IHostingEnvironment _hostEnvironment;
         private readonly IFileStore _fileStore;
-    
+        private readonly IInMemoryLetterRenderer _letterRenderer;
+
         public PhotoController(
             IContextFacade contextFacade,
             IPlatoUserStore<User> platoUserStore,
             IUserPhotoStore<UserPhoto> userPhotoStore,
             IHostingEnvironment hostEnvironment,
-            IFileStore fileStore)
+            IFileStore fileStore,
+            IInMemoryLetterRenderer letterRenderer)
         {
             _contextFacade = contextFacade;
             _platoUserStore = platoUserStore;
             _userPhotoStore = userPhotoStore;
             _hostEnvironment = hostEnvironment;
             _fileStore = fileStore;
+            _letterRenderer = letterRenderer;
 
             if (_pathToEmptyImage == null)
             {
@@ -128,14 +132,33 @@ namespace Plato.Users.Controllers
             }
             else
             {
-                var fileBytes = await _fileStore.GetFileBytesAsync(_pathToEmptyImage);
-                if (fileBytes != null)
+
+                
+                using (var renderer = _letterRenderer)
                 {
+                    var fileBytes = renderer.GetLetter(new LetterOptions()
+                    {
+                        Letter = "A",
+                        BackColor = "ff0000",
+                        ForeColor = "0000ff"
+                    }).StreamToByteArray();
+                    
                     r.ContentType = "image/png";
                     r.Headers.Add("content-disposition", "filename=\"empty.png\"");
                     r.Headers.Add("content-length", Convert.ToString((int)fileBytes.Length));
                     r.Body.Write(fileBytes, 0, fileBytes.Length);
+
                 }
+
+
+                //var fileBytes = await _fileStore.GetFileBytesAsync(_pathToEmptyImage);
+                //if (fileBytes != null)
+                //{
+                //    r.ContentType = "image/png";
+                //    r.Headers.Add("content-disposition", "filename=\"empty.png\"");
+                //    r.Headers.Add("content-length", Convert.ToString((int)fileBytes.Length));
+                //    r.Body.Write(fileBytes, 0, fileBytes.Length);
+                //}
             }
             
         }

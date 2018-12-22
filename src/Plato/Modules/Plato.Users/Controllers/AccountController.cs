@@ -271,16 +271,30 @@ namespace Plato.Users.Controllers
                     "shan",
                     "scottrudy",
                     "thechop",
+                    "lyrog",
+                    "daniel.gehr",
+                    "Cedrik",
+                    "nathanchase",
+                    "MattPress",
+                    "gert.oelof",
+                    "abiniyam",
+                    "austinh ",
+                    "wasimf",
+                    "project.ufa",
+                    "einaradolfsen",
+                    "bstj",
+                    "samos",
+                    "jintoppy",
+                    "mhelin",
+                    "eric-914",
                 };
 
         
-            for (var i = 0; i < 25; i++)
+            foreach (var username in usernames)
             {
-
-                var usernameIndex = rnd.Next(0, usernames.Length - 1);
-                var displayName = usernames[usernameIndex];
-                var userNAme = usernames[usernameIndex];
-                var email = "email@address" + i + ".com";
+                var displayName = username;
+                var userNAme = username;
+                var email = username + "@example.com";
                 var password = "34Fdckf#343";
 
                 var result = await _platoUserManager.CreateAsync(new User()
@@ -289,8 +303,6 @@ namespace Plato.Users.Controllers
                     Email = email,
                     DisplayName = displayName
                 }, password);
-
-
             }
 
             //var user = _httpContextAccessor.HttpContext.User;
