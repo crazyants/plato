@@ -218,12 +218,12 @@ namespace Plato.Entities.Models
                     CreatedBy.UserName = Convert.ToString(dr["CreatedUserName"]);
                 if (dr.ColumnIsNotNull("CreatedDisplayName"))
                     CreatedBy.DisplayName = Convert.ToString(dr["CreatedDisplayName"]);
-                if (dr.ColumnIsNotNull("CreatedFirstName"))
-                    CreatedBy.FirstName = Convert.ToString(dr["CreatedFirstName"]);
-                if (dr.ColumnIsNotNull("CreatedLastName"))
-                    CreatedBy.LastName = Convert.ToString(dr["CreatedLastName"]);
                 if (dr.ColumnIsNotNull("CreatedAlias"))
                     CreatedBy.Alias = Convert.ToString(dr["CreatedAlias"]);
+                if (dr.ColumnIsNotNull("CreatedPhotoUrl"))
+                    CreatedBy.PhotoUrl = Convert.ToString(dr["CreatedPhotoUrl"]);
+                if (dr.ColumnIsNotNull("CreatedPhotoColor"))
+                    CreatedBy.PhotoColor = Convert.ToString(dr["CreatedPhotoColor"]);
             }
 
             if (dr.ColumnIsNotNull("CreatedDate"))
@@ -239,12 +239,12 @@ namespace Plato.Entities.Models
                     ModifiedBy.UserName = Convert.ToString(dr["ModifiedUserName"]);
                 if (dr.ColumnIsNotNull("ModifiedDisplayName"))
                     ModifiedBy.DisplayName = Convert.ToString(dr["ModifiedDisplayName"]);
-                if (dr.ColumnIsNotNull("ModifiedFirstName"))
-                    ModifiedBy.FirstName = Convert.ToString(dr["ModifiedFirstName"]);
-                if (dr.ColumnIsNotNull("ModifiedLastName"))
-                    ModifiedBy.LastName = Convert.ToString(dr["ModifiedLastName"]);
                 if (dr.ColumnIsNotNull("ModifiedAlias"))
                     ModifiedBy.Alias = Convert.ToString(dr["ModifiedAlias"]);
+                if (dr.ColumnIsNotNull("ModifiedPhotoUrl"))
+                    ModifiedBy.PhotoUrl = Convert.ToString(dr["ModifiedPhotoUrl"]);
+                if (dr.ColumnIsNotNull("ModifiedPhotoColor"))
+                    ModifiedBy.PhotoColor = Convert.ToString(dr["ModifiedPhotoColor"]);
             }
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
@@ -263,12 +263,10 @@ namespace Plato.Entities.Models
                     LastReplyBy.UserName = Convert.ToString(dr["LastReplyUserName"]);
                 if (dr.ColumnIsNotNull("LastReplyDisplayName"))
                     LastReplyBy.DisplayName = Convert.ToString(dr["LastReplyDisplayName"]);
-                if (dr.ColumnIsNotNull("LastReplyFirstName"))
-                    LastReplyBy.FirstName = Convert.ToString(dr["LastReplyFirstName"]);
-                if (dr.ColumnIsNotNull("LastReplyLastName"))
-                    LastReplyBy.LastName = Convert.ToString(dr["LastReplyLastName"]);
-                if (dr.ColumnIsNotNull("LastReplyAlias"))
-                    LastReplyBy.Alias = Convert.ToString(dr["LastReplyAlias"]);
+                if (dr.ColumnIsNotNull("LastReplyPhotoUrl"))
+                    LastReplyBy.PhotoUrl = Convert.ToString(dr["LastReplyPhotoUrl"]);
+                if (dr.ColumnIsNotNull("LastReplyPhotoColor"))
+                    LastReplyBy.PhotoColor = Convert.ToString(dr["LastReplyPhotoColor"]);
             }
             
             if (dr.ColumnIsNotNull("LastReplyDate"))

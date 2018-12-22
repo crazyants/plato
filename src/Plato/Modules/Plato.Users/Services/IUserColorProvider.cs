@@ -3,7 +3,7 @@
     public interface IUserColorProvider
     {
 
-        UserColor GetColor();
+        string GetColor();
 
     }
 

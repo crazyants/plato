@@ -45,12 +45,12 @@ namespace Plato.Moderation.Models
                     User.UserName = Convert.ToString(dr["UserName"]);
                 if (dr.ColumnIsNotNull("DisplayName"))
                     User.DisplayName = Convert.ToString(dr["DisplayName"]);
-                if (dr.ColumnIsNotNull("FirstName"))
-                    User.FirstName = Convert.ToString(dr["FirstName"]);
-                if (dr.ColumnIsNotNull("LastName"))
-                    User.LastName = Convert.ToString(dr["LastName"]);
                 if (dr.ColumnIsNotNull("Alias"))
                     User.Alias = Convert.ToString(dr["Alias"]);
+                if (dr.ColumnIsNotNull("PhotoUrl"))
+                    User.PhotoUrl = Convert.ToString(dr["PhotoUrl"]);
+                if (dr.ColumnIsNotNull("PhotoColor"))
+                    User.PhotoColor = Convert.ToString(dr["PhotoColor"]);
             }
 
             if (dr.ColumnIsNotNull("CategoryId"))

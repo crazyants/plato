@@ -134,15 +134,9 @@ namespace Plato.Users.Services
             {
                 user.TimeZone = settings.TimeZone;
             }
-    
-            var color = _userColorProvider.GetColor();
 
-            if (color != null)
-            {
-                user.ForeColor = color.ForeColor;
-                user.BackColor = color.BackColor;
-            }
-
+            user.PhotoColor = _userColorProvider.GetColor();
+            
             if (String.IsNullOrEmpty(user.IpV4Address))
             {
                 user.IpV4Address = GetIpV4Address();

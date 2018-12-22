@@ -88,13 +88,13 @@ namespace Plato.Users.Handlers
                     },
                     new SchemaColumn()
                     {
-                        Name = "ForeColor",
-                        Length = "6",
+                        Name = "PhotoUrl",
+                        Length = "255",
                         DbType = DbType.String
                     },
                     new SchemaColumn()
                     {
-                        Name = "BackColor",
+                        Name = "PhotoColor",
                         Length = "6",
                         DbType = DbType.String
                     },
@@ -356,13 +356,11 @@ namespace Plato.Users.Handlers
             {
 
                 // create super user
-                var color = _userColorProvider.GetColor();
                 var result1 =  await _userManager.CreateAsync(new User()
                 {
                     Email = context.AdminEmail,
                     UserName = context.AdminUsername,
-                    ForeColor = color?.ForeColor ?? string.Empty,
-                    BackColor = color?.BackColor ?? string.Empty,
+                    PhotoColor = _userColorProvider.GetColor(),
                     EmailConfirmed = true
                 }, context.AdminPassword);
                 if (!result1.Succeeded)
@@ -374,7 +372,7 @@ namespace Plato.Users.Handlers
                 }
                 
                 // create default plato bot
-                color = _userColorProvider.GetColor();
+            
                 var result2 = await _userManager.CreateAsync(new User()
                 {
                     Email = "bot@plato.com",
@@ -382,8 +380,8 @@ namespace Plato.Users.Handlers
                     DisplayName = "Plato Bot",
                     EmailConfirmed = true,
                     LockoutEnabled = true,
-                    ForeColor = color?.ForeColor ?? string.Empty,
-                    BackColor = color?.BackColor ?? string.Empty,
+                    PhotoUrl = "images/bit.png",
+                    PhotoColor = _userColorProvider.GetColor(),
                     UserType = UserType.Bot
                 }, context.AdminPassword);
                 if (!result2.Succeeded)

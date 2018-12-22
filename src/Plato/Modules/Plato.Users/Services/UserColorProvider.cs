@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Plato.Users.Services
 {
@@ -7,33 +6,33 @@ namespace Plato.Users.Services
     public class UserColorProvider : IUserColorProvider
     {
 
-        private static readonly IList<UserColor> Colors = new List<UserColor>()
+        public static string[] Colors = new string[]
         {
-            new UserColor("6AC494"),
-            new UserColor("75ADA8"),
-            new UserColor("E34B49"),
-            new UserColor("6AA7A1"),
-            new UserColor("AFC800"),
-            new UserColor("8A8FA4"),
-            new UserColor("D5E09E"),
-            new UserColor("25A681"),
-            new UserColor("7DABB0"),
-            new UserColor("71A4BC"),
-            new UserColor("00F19A"),
-            new UserColor("5BBC36"),
-            new UserColor("ED3857"),
-            new UserColor("FF817F"),
-            new UserColor("FEDC7F"),
-            new UserColor("BC8971"),
-            new UserColor("71BC99"),
-            new UserColor("D1AC5B"),
-            new UserColor("7397BE"),
-            new UserColor("A18AA4")
+            "6AC494",
+            "75ADA8",
+            "E34B49",
+            "6AA7A1",
+            "AFC800",
+            "8A8FA4",
+            "D5E09E",
+            "25A681",
+            "7DABB0",
+            "71A4BC",
+            "00F19A",
+            "5BBC36",
+            "ED3857",
+            "FF817F",
+            "FEDC7F",
+            "BC8971",
+            "71BC99",
+            "D1AC5B",
+            "7397BE",
+            "A18AA4"
         };
-
-        public UserColor GetColor()
+   
+        public string GetColor()
         {
-            return Colors[new Random().Next(0, Colors.Count - 1)];
+            return Colors[new Random().Next(0, Colors.Length - 1)];
         }
 
     }

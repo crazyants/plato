@@ -246,6 +246,15 @@ namespace Plato.Users
                 defaults: new { controller = "Photo", action = "Serve", id = "0"}
             );
 
+
+            routes.MapAreaRoute(
+                name: "ServeUserLetterFolder",
+                areaName: "Plato.Users",
+                template: "users/letter/{letter}/{color}",
+                defaults: new { controller = "Letter", action = "Get" }
+            );
+
+
             routes.MapAreaRoute(
                 name: "ServeUserPhoto",
                 areaName: "Plato.Users",

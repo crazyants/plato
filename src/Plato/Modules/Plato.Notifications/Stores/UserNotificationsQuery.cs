@@ -136,15 +136,16 @@ namespace Plato.Notifications.Stores
                 .Append("u.UserName, ")
                 .Append("u.NormalizedUserName, ")
                 .Append("u.DisplayName, ")
-                .Append("u.FirstName, ")
-                .Append("u.LastName, ")
                 .Append("u.Alias, ")
+                .Append("u.PhotoUrl, ")
+                .Append("u.PhotoColor, ")
                 .Append("c.UserName AS CreatedUserName, ")
                 .Append("c.NormalizedUserName AS CreatedNormalizedUserName, ")
                 .Append("c.DisplayName AS CreatedDisplayName, ")
-                .Append("c.FirstName AS CreatedFirstName, ")
-                .Append("c.LastName AS CreatedLastName, ")
-                .Append("c.Alias AS CreatedAlias");
+                .Append("c.Alias AS CreatedAlias")
+                .Append("c.PhotoUrl AS CreatedPhotoUrl, ")
+                .Append("c.PhotoColor AS CreatedPhotoColor");
+               ;
             return sb.ToString();
 
         }

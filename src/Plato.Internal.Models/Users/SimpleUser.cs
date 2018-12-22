@@ -9,31 +9,31 @@
         public string UserName { get; set; }
         
         public string DisplayName { get; set; }
-
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
+        
         public string Alias { get; set; }
 
-        public string ForeColor { get; set; }
+        public string PhotoUrl { get; set; }
 
-        public string BackColor { get; set; }
+        public string PhotoColor { get; set; }
+
+        public UserAvatar Avatar => new UserAvatar(this);
 
         public SimpleUser()
         {
-
+        
         }
 
-        public SimpleUser(IUser user)
+        public SimpleUser(IUser user) : this()
         {
             Id = user.Id;
             UserName = user.UserName;
             DisplayName = user.DisplayName;
-            FirstName = user.FirstName;
-            LastName = user.LastName;
             Alias = user.Alias;
+            PhotoUrl = user.PhotoUrl;
+            PhotoColor = user.PhotoColor;
         }
 
     }
+
+
 }

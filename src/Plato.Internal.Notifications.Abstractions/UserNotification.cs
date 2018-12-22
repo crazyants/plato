@@ -49,12 +49,12 @@ namespace Plato.Internal.Notifications.Abstractions
                         User.UserName = Convert.ToString(dr["UserName"]);
                     if (dr.ColumnIsNotNull("DisplayName"))
                         User.DisplayName = Convert.ToString(dr["DisplayName"]);
-                    if (dr.ColumnIsNotNull("FirstName"))
-                        User.FirstName = Convert.ToString(dr["FirstName"]);
-                    if (dr.ColumnIsNotNull("LastName"))
-                        User.LastName = Convert.ToString(dr["LastName"]);
                     if (dr.ColumnIsNotNull("Alias"))
                         User.Alias = Convert.ToString(dr["Alias"]);
+                    if (dr.ColumnIsNotNull("PhotoUrl"))
+                        User.PhotoUrl = Convert.ToString(dr["PhotoUrl"]);
+                    if (dr.ColumnIsNotNull("PhotoColor"))
+                        User.PhotoColor = Convert.ToString(dr["PhotoColor"]);
                 }
             }
             
@@ -86,12 +86,12 @@ namespace Plato.Internal.Notifications.Abstractions
                         CreatedBy.UserName = Convert.ToString(dr["CreatedUserName"]);
                     if (dr.ColumnIsNotNull("CreatedDisplayName"))
                         CreatedBy.DisplayName = Convert.ToString(dr["CreatedDisplayName"]);
-                    if (dr.ColumnIsNotNull("CreatedFirstName"))
-                        CreatedBy.FirstName = Convert.ToString(dr["CreatedFirstName"]);
-                    if (dr.ColumnIsNotNull("CreatedLastName"))
-                        CreatedBy.LastName = Convert.ToString(dr["CreatedLastName"]);
                     if (dr.ColumnIsNotNull("CreatedAlias"))
                         CreatedBy.Alias = Convert.ToString(dr["CreatedAlias"]);
+                    if (dr.ColumnIsNotNull("CreatedPhotoUrl"))
+                        CreatedBy.PhotoUrl = Convert.ToString(dr["CreatedPhotoUrl"]);
+                    if (dr.ColumnIsNotNull("CreatedPhotoColor"))
+                        CreatedBy.PhotoColor = Convert.ToString(dr["CreatedPhotoColor"]);
                 }
             }
                 

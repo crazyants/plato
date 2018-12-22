@@ -495,18 +495,24 @@ namespace Plato.Entities.Handlers
                                     c.FirstName AS CreatedFirstName,
                                     c.LastName AS CreatedLastName,
                                     c.Alias AS CreatedAlias,
+                                    c.PhotoUrl AS CreatedPhotoUrl,
+                                    c.PhotoColor AS CreatedPhotoColor,
                                     m.UserName AS ModifiedUserName, 
                                     m.NormalizedUserName AS ModifiedNormalizedUserName,
                                     m.DisplayName AS ModifiedDisplayName,
                                     m.FirstName AS ModifiedFirstName,
                                     m.LastName AS ModifiedLastName,
                                     m.Alias AS ModifiedAlias,
+                                    m.PhotoUrl AS ModifiedPhotoUrl,
+                                    m.PhotoColor AS ModifiedPhotoColor,
                                     l.UserName AS LastReplyUserName, 
                                     l.NormalizedUserName AS LastReplyNormalizedUserName,
                                     l.DisplayName AS LastReplyDisplayName,
                                     l.FirstName AS LastReplyFirstName,
                                     l.LastName AS LastReplyLastName,
-                                    l.Alias AS LastReplyAlias
+                                    l.Alias AS LastReplyAlias,
+                                    l.PhotoUrl AS LastReplyPhotoUrl,
+                                    l.PhotoColor AS LastReplyPhotoColor
                                 FROM {prefix}_Entities e WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users c ON e.CreatedUserId = c.Id
                                     LEFT OUTER JOIN {prefix}_Users m ON e.ModifiedUserId = m.Id
@@ -593,12 +599,16 @@ namespace Plato.Entities.Handlers
                                     c.FirstName AS CreatedFirstName,
                                     c.LastName AS CreatedLastName,
                                     c.Alias AS CreatedAlias,
+                                    c.PhotoUrl AS CreatedPhotoUrl,
+                                    c.PhotoColor AS CreatedPhotoColor,
                                     m.UserName AS ModifiedUserName, 
                                     m.NormalizedUserName AS ModifiedNormalizedUserName,
                                     m.DisplayName AS ModifiedDisplayName,
                                     m.FirstName AS ModifiedFirstName,
                                     m.LastName AS ModifiedLastName,
-                                    m.Alias AS ModifiedAlias
+                                    m.Alias AS ModifiedAlias,
+                                    m.PhotoUrl AS ModifiedPhotoUrl,
+                                    m.PhotoColor AS ModifiedPhotoColor,
                                 FROM {prefix}_EntityReplies r WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users c ON r.CreatedUserId = c.Id
                                     LEFT OUTER JOIN {prefix}_Users m ON r.ModifiedUserId = m.Id

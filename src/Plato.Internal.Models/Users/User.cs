@@ -37,9 +37,11 @@ namespace Plato.Internal.Models.Users
 
         public string Alias { get; set; }
 
-        public string ForeColor { get; set; }
+        public string PhotoUrl { get; set; }
 
-        public string BackColor { get; set; }
+        public string PhotoColor { get; set; }
+
+        public UserAvatar Avatar => new UserAvatar(this);
 
         public string SamAccountName { get; set; }
 
@@ -199,11 +201,11 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("Alias"))
                 Alias = Convert.ToString(dr["Alias"]);
 
-            if (dr.ColumnIsNotNull("ForeColor"))
-                ForeColor = Convert.ToString(dr["ForeColor"]);
+            if (dr.ColumnIsNotNull("PhotoUrl"))
+                PhotoUrl = Convert.ToString(dr["PhotoUrl"]);
             
-            if (dr.ColumnIsNotNull("BackColor"))
-                BackColor = Convert.ToString(dr["BackColor"]);
+            if (dr.ColumnIsNotNull("PhotoColor"))
+                PhotoColor = Convert.ToString(dr["PhotoColor"]);
 
             if (dr.ColumnIsNotNull("SamAccountName"))
                 SamAccountName = Convert.ToString(dr["SamAccountName"]);

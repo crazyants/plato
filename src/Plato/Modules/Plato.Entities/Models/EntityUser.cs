@@ -26,16 +26,16 @@ namespace Plato.Entities.Models
 
             if (dr.ColumnIsNotNull("DisplayName"))
                 DisplayName = Convert.ToString(dr["DisplayName"]);
-
-            if (dr.ColumnIsNotNull("FirstName"))
-                FirstName = Convert.ToString(dr["FirstName"]);
-
-            if (dr.ColumnIsNotNull("LastName"))
-                LastName = Convert.ToString(dr["LastName"]);
-
+            
             if (dr.ColumnIsNotNull("Alias"))
                 Alias = Convert.ToString(dr["Alias"]);
-
+            
+            if (dr.ColumnIsNotNull("PhotoUrl"))
+                PhotoUrl = Convert.ToString(dr["PhotoUrl"]);
+            
+            if (dr.ColumnIsNotNull("PhotoColor"))
+                PhotoColor = Convert.ToString(dr["PhotoColor"]);
+            
             if (dr.ColumnIsNotNull("LastReplyId"))
                 LastReplyId = Convert.ToInt32(dr["LastReplyId"]);
 

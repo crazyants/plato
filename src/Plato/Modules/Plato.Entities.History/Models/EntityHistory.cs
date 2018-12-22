@@ -63,12 +63,12 @@ namespace Plato.Entities.History.Models
                     CreatedBy.UserName = Convert.ToString(dr["UserName"]);
                 if (dr.ColumnIsNotNull("DisplayName"))
                     CreatedBy.DisplayName = Convert.ToString(dr["DisplayName"]);
-                if (dr.ColumnIsNotNull("FirstName"))
-                    CreatedBy.FirstName = Convert.ToString(dr["FirstName"]);
-                if (dr.ColumnIsNotNull("LastName"))
-                    CreatedBy.LastName = Convert.ToString(dr["LastName"]);
                 if (dr.ColumnIsNotNull("Alias"))
                     CreatedBy.Alias = Convert.ToString(dr["Alias"]);
+                if (dr.ColumnIsNotNull("PhotoUrl"))
+                    CreatedBy.PhotoUrl = Convert.ToString(dr["PhotoUrl"]);
+                if (dr.ColumnIsNotNull("PhotoColor"))
+                    CreatedBy.PhotoColor = Convert.ToString(dr["PhotoColor"]);
             }
 
             if (dr.ColumnIsNotNull("CreatedDate"))
