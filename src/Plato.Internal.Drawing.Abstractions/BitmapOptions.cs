@@ -1,4 +1,4 @@
-﻿namespace Plato.Internal.Drawing
+﻿namespace Plato.Internal.Drawing.Abstractions
 {
 
     public class BitmapOptions

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Plato.Internal.Drawing
+namespace Plato.Internal.Drawing.Abstractions
 {
     public interface IDisposableBitmap : IDisposable
     {

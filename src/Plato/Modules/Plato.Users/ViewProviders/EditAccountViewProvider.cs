@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
+using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.ViewModels;
 
@@ -12,18 +15,17 @@ namespace Plato.Users.ViewProviders
 
     public class EditAccountViewProvider : BaseViewProvider<EditAccountViewModel>
     {
-
+        
         private readonly UserManager<User> _userManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
-        private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-
+  
         public EditAccountViewProvider(
             IPlatoUserStore<User> platoUserStore,
-            UserManager<User> userManager, IUserPhotoStore<UserPhoto> userPhotoStore)
+            UserManager<User> userManager)
         {
             _platoUserStore = platoUserStore;
             _userManager = userManager;
-            _userPhotoStore = userPhotoStore;
+
         }
 
         #region "Implementation"

@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Plato.Internal.Drawing.Abstractions;
+using Plato.Internal.Drawing.Abstractions.Letters;
 using Plato.Internal.Drawing.Letters;
 
 namespace Plato.Internal.Drawing.Extensions

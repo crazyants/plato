@@ -105,6 +105,23 @@ namespace Plato.Internal.FileSystem
             }
         }
 
+        public async Task CreateFileAsync(string path, Stream stream)
+        {
+            using (var file = CreateFile(path))
+            {
+
+                var fileLength = (int)stream.Length;
+                var fileContents = new byte[fileLength + 1];
+
+                // Ensure position is reset before reading
+                stream.Seek(0, SeekOrigin.Begin);
+                stream.Read(fileContents, 0, fileLength);
+
+                await file.WriteAsync(fileContents, 0, fileLength);
+                
+            }
+        }
+
         public Stream CreateFile(string path)
         {
             var fileInfo = _fileProvider.GetFileInfo(path);

@@ -2,11 +2,13 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using Plato.Internal.Drawing.Extensions;
+using Plato.Internal.Drawing.Abstractions;
+using Plato.Internal.Drawing.Abstractions.Letters;
 
 namespace Plato.Internal.Drawing.Letters
 {
     
-
     public class InMemoryLetterRenderer : IInMemoryLetterRenderer
     {
 
@@ -44,8 +46,8 @@ namespace Plato.Internal.Drawing.Letters
 
                         var backBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
                             rect,
-                            ConvertHexToColor(options.BackColor, Color.CornflowerBlue),
-                            ConvertHexToColor(options.BackColor, Color.CornflowerBlue),
+                            options.BackColor.ToColor(Color.CornflowerBlue),
+                            options.BackColor.ToColor(Color.CornflowerBlue),
                             System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
                         g.FillRectangle(backBrush, rect);
                  
@@ -53,8 +55,7 @@ namespace Plato.Internal.Drawing.Letters
                         var gradBrushDark = new System.Drawing.Drawing2D.LinearGradientBrush(rect, Color.Black,
                             Color.Gray,
                             System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
-
-
+                        
                         // Set up the text font.
                         SizeF size;
                         float fontSize = 200;
@@ -95,8 +96,8 @@ namespace Plato.Internal.Drawing.Letters
                         // Draw the letter
                         var foreBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
                             rect,
-                            ConvertHexToColor(options.ForeColor, Color.White),
-                            ConvertHexToColor(options.ForeColor, Color.White),
+                            options.ForeColor.ToColor(Color.White),
+                            options.ForeColor.ToColor(Color.White),
                             System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
                         g.FillPath(foreBrush, path);
 
@@ -114,26 +115,7 @@ namespace Plato.Internal.Drawing.Letters
         {
             _stream?.Dispose();
         }
-
-
-        Color ConvertHexToColor(string hex, Color fallback)
-        {
-
-            if (string.IsNullOrEmpty(hex))
-            {
-                return fallback;
-            }
-
-            var converter = System.ComponentModel.TypeDescriptor.GetConverter(typeof(Color));
-            var color = converter.ConvertFromString(hex.StartsWith("#") ? hex : '#' + hex);
-            Color backColor = fallback;
-            if (color is Color)
-            {
-                backColor = (Color)color;
-            }
-
-            return backColor;
-        }
+        
     }
 
 }

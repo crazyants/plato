@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Users;
 using Microsoft.AspNetCore.Hosting;
-using Plato.Internal.Drawing.Letters;
+using Plato.Internal.Drawing.Abstractions.Letters;
+using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
@@ -16,14 +17,15 @@ namespace Plato.Users.Controllers
     public class PhotoController : Controller
     {
 
+        private static string _pathToUploadFolder;
         private static string _pathToEmptyImage;
 
         private readonly IContextFacade _contextFacade;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-        private readonly IHostingEnvironment _hostEnvironment;
-        private readonly IFileStore _fileStore;
+      
         private readonly IInMemoryLetterRenderer _letterRenderer;
+        private readonly IUploadFolder _uploadFolder;
 
         public PhotoController(
             IContextFacade contextFacade,
@@ -31,23 +33,30 @@ namespace Plato.Users.Controllers
             IUserPhotoStore<UserPhoto> userPhotoStore,
             IHostingEnvironment hostEnvironment,
             IFileStore fileStore,
-            IInMemoryLetterRenderer letterRenderer)
+            IInMemoryLetterRenderer letterRenderer,
+            IUploadFolder uploadFolder)
         {
             _contextFacade = contextFacade;
             _platoUserStore = platoUserStore;
             _userPhotoStore = userPhotoStore;
-            _hostEnvironment = hostEnvironment;
-            _fileStore = fileStore;
             _letterRenderer = letterRenderer;
+            _uploadFolder = uploadFolder;
 
             if (_pathToEmptyImage == null)
             {
-                _pathToEmptyImage = _fileStore.Combine(hostEnvironment.ContentRootPath,
+                _pathToEmptyImage = fileStore.Combine(hostEnvironment.ContentRootPath,
                     "wwwroot",
                     "images",
                     "photo.png");
             }
-   
+
+            if (_pathToUploadFolder == null)
+            {
+                _pathToUploadFolder = fileStore.Combine(hostEnvironment.ContentRootPath,
+                    "wwwroot",
+                    "uploads");
+            }
+
         }
 
         [HttpGet]
@@ -88,7 +97,10 @@ namespace Plato.Users.Controllers
             {
                 return NotFound();
             }
-                
+
+
+            var avatarFileName = await _uploadFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToUploadFolder);
+
             var id = 0;
             var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
             if (existingPhoto != null)
@@ -139,7 +151,7 @@ namespace Plato.Users.Controllers
                     var fileBytes = renderer.GetLetter(new LetterOptions()
                     {
                         Letter = "A",
-                        BackColor = "ff0000",
+                        BackColor = "#ff0000",
                         ForeColor = "0000ff"
                     }).StreamToByteArray();
                     
@@ -149,8 +161,7 @@ namespace Plato.Users.Controllers
                     r.Body.Write(fileBytes, 0, fileBytes.Length);
 
                 }
-
-
+                
                 //var fileBytes = await _fileStore.GetFileBytesAsync(_pathToEmptyImage);
                 //if (fileBytes != null)
                 //{

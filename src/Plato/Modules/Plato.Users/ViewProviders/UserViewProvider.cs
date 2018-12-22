@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
 using Plato.Users.ViewModels;
@@ -15,18 +19,36 @@ namespace Plato.Users.ViewProviders
 {
     public class UserViewProvider : BaseViewProvider<UserProfile>
     {
+        private static string _pathToUploadFolder;
 
         private readonly UserManager<User> _userManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
+        private readonly IUploadFolder _uploadFolder;
 
         public UserViewProvider(
+            IShellSettings shellSettings,
             IPlatoUserStore<User> platoUserStore,
-            UserManager<User> userManager, IUserPhotoStore<UserPhoto> userPhotoStore)
+            UserManager<User> userManager,
+            IUserPhotoStore<UserPhoto> userPhotoStore,
+            IUploadFolder uploadFolder,
+            IHostingEnvironment hostEnvironment,
+            IFileStore fileStore)
         {
             _platoUserStore = platoUserStore;
             _userManager = userManager;
             _userPhotoStore = userPhotoStore;
+            _uploadFolder = uploadFolder;
+            
+            if (_pathToUploadFolder == null)
+            {
+                _pathToUploadFolder = fileStore.Combine(hostEnvironment.ContentRootPath,
+                    "wwwroot",
+                    "uploads",
+                    shellSettings.Name);
+            }
+
+
         }
 
         #region "Implementation"
@@ -174,8 +196,13 @@ namespace Plato.Users.ViewProviders
                 throw new ArgumentNullException(nameof(file));
             }
 
-            byte[] bytes = null;
             var stream = file.OpenReadStream();
+
+            var avatarFileName = await _uploadFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToUploadFolder);
+            
+
+            byte[] bytes = null;
+       
             if (stream != null)
             {
                 bytes = stream.StreamToByteArray();

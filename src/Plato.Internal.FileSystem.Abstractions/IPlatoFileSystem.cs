@@ -26,6 +26,8 @@ namespace Plato.Internal.FileSystem.Abstractions
 
         Task CreateFileAsync(string path, string content);
 
+        Task CreateFileAsync(string path, Stream stream);
+
         Stream CreateFile(string path);
 
         Task<string> ReadFileAsync(string path);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.FileSystem.AppData;
+using Plato.Internal.FileSystem.Uploads;
 using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Shell.Extensions
@@ -26,7 +27,8 @@ namespace Plato.Internal.Shell.Extensions
             // ----------------
 
             services.AddSingleton<IAppDataFolder, PhysicalAppDataFolder>();
-            
+            services.AddSingleton<IUploadFolder, PhysicalUploadFolder>();
+
             // shell / tenant context
 
             services.AddSingleton<IShellSettingsManager, ShellSettingsManager>();

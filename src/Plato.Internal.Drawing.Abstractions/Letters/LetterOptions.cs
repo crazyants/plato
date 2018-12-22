@@ -1,4 +1,4 @@
-﻿namespace Plato.Internal.Drawing.Letters
+﻿namespace Plato.Internal.Drawing.Abstractions.Letters
 {
     public class LetterOptions : BitmapOptions
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Plato.Internal.Drawing.Abstractions;
 
 namespace Plato.Internal.Drawing
 {

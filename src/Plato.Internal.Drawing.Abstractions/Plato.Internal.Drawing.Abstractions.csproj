@@ -6,8 +6,12 @@
     <AssemblyName>Plato.Internal.Drawing.Abstractions</AssemblyName>
   </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Plato.Internal.Reputations.Abstractions\Plato.Internal.Reputations.Abstractions.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CoreCompat.System.Drawing.v2" Version="5.2.0-preview1-r131" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Captcha\" />
+  </ItemGroup>
 
 </Project>
