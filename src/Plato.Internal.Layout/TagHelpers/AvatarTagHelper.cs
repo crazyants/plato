@@ -26,7 +26,10 @@ namespace Plato.Internal.Layout.TagHelpers
         public const string Action = "Serve";
         
         public int UserId { get; set; }
-        
+
+        [HtmlAttributeName("url")]
+        public string Url { get; set; }
+
         public ISimpleUser User { get; set; } 
 
         private readonly IUrlHelper _urlHelper;
@@ -43,23 +46,34 @@ namespace Plato.Internal.Layout.TagHelpers
         
         public override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-
-            var url = _urlHelper.RouteUrl(new UrlRouteContext
-            {
-                Values = new RouteValueDictionary()
-                {
-                    {AreaAttributeName, Area},
-                    {ControllerAttributeName, Controller},
-                    {ActionAttributeName, Action},
-                    {IdAttributeName, this.UserId}
-                }
-            });
             
             output.TagName = "span";
             output.TagMode = TagMode.StartTagAndEndTag;
-  
+            output.Attributes.Add("role", "avatar");
+
             var img = new TagBuilder("span");
-            img.Attributes.Add("style", $"background-image: url('{url}');");
+            if (!string.IsNullOrEmpty(Url))
+            {
+                img.Attributes.Add("style", $"background-image: url('{Url}');");
+            }
+            else
+            {
+
+                var url = _urlHelper.RouteUrl(new UrlRouteContext
+                {
+                    Values = new RouteValueDictionary()
+                    {
+                        {AreaAttributeName, Area},
+                        {ControllerAttributeName, Controller},
+                        {ActionAttributeName, Action},
+                        {IdAttributeName, this.UserId}
+                    }
+                });
+                
+                img.Attributes.Add("style", $"background-image: url('{url}');");
+
+            }
+      
             output.Content.SetHtmlContent(img.ToHtmlString());
 
             return Task.CompletedTask;

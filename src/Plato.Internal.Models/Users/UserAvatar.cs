@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Plato.Internal.Models.Users
+﻿namespace Plato.Internal.Models.Users
 {
     public class UserAvatar
     {
 
-        public string Url { get; set; }
+        public string Url { get; }
 
         public UserAvatar(ISimpleUser user)
         {

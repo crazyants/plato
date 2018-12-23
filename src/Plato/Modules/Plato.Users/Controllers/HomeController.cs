@@ -194,7 +194,8 @@ namespace Plato.Users.Controllers
                 DisplayName = user.DisplayName,
                 Location = data.Profile.Location,
                 Bio = data.Profile.Bio,
-                Url = data.Profile.Url
+                Url = data.Profile.Url,
+                Avatar = user.Avatar
             };
 
             // Build view

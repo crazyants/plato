@@ -4,9 +4,7 @@
     {
 
         public string Letter { get; set; }
-
-        public string ForeColor { get; set; }
-
+        
         public string BackColor { get; set; }
 
         public LetterOptions()

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,8 +27,7 @@ namespace Plato.Users.Controllers
                 var fileBytes = renderer.GetLetter(new LetterOptions()
                 {
                     Letter = letter.ToString(),
-                    BackColor = color,
-                    ForeColor = "0000ff"
+                    BackColor = color
                 }).StreamToByteArray();
 
                 r.ContentType = "image/png";

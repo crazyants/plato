@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Text;
 using Plato.Internal.Drawing.Extensions;
 using Plato.Internal.Drawing.Abstractions;
 using Plato.Internal.Drawing.Abstractions.Letters;
@@ -72,7 +74,7 @@ namespace Plato.Internal.Drawing.Letters
                         var format = new StringFormat();
                         format.Alignment = StringAlignment.Center;
                         format.LineAlignment = StringAlignment.Center;
-
+                        
                         // Create a path using the text and warp it randomly - nice :)
                         var path = new System.Drawing.Drawing2D.GraphicsPath();
                         path.AddString(options.Letter.ToString(),
@@ -94,10 +96,11 @@ namespace Plato.Internal.Drawing.Letters
                         path.Warp(points, rect, matrix, System.Drawing.Drawing2D.WarpMode.Perspective, 0f);
 
                         // Draw the letter
+                        var foreColor = GetIdealTextColor(options.BackColor).ToColor(Color.White);
                         var foreBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
                             rect,
-                            options.ForeColor.ToColor(Color.White),
-                            options.ForeColor.ToColor(Color.White),
+                            foreColor,
+                            foreColor,
                             System.Drawing.Drawing2D.LinearGradientMode.Horizontal);
                         g.FillPath(foreBrush, path);
 
@@ -115,7 +118,58 @@ namespace Plato.Internal.Drawing.Letters
         {
             _stream?.Dispose();
         }
-        
+
+
+        string GetIdealTextColor(string hex)
+        {
+
+            var fallback = "ffffff";
+
+            if (string.IsNullOrEmpty(hex))
+            {
+                return fallback;
+            }
+
+            // Remove # suffix
+            if (hex.StartsWith("#"))
+            {
+                hex = hex.Substring(1, hex.Length - 1);
+            }
+
+            // Break apart
+            var r = hex.Substring(0, 2);
+            var g = hex.Substring(2, 2);
+            var b = hex.Substring(4, 2);
+
+            // Reassemble 
+            var sb = new StringBuilder();
+            sb
+                .Append(r)
+                .Append(b)
+                .Append(b);
+
+            // Validate
+            if (!sb.ToString().IsHex())
+            {
+                return fallback;
+            }
+            
+            var threshold = 127;
+            var components = new Dictionary<string, int>()
+            {
+                ["r"] = Convert.ToInt32(r, 16),
+                ["g"] = Convert.ToInt32(r, 16),
+                ["b"] = Convert.ToInt32(r, 16)
+            };
+
+            var delta = (components["r"] * 0.299) +
+                        (components["g"] * 0.587) +
+                        (components["b"] * 0.114);
+
+            return ((255 - Math.Floor(delta)) < threshold) ? "000000" : "ffffff";
+
+        }
+
     }
 
 }

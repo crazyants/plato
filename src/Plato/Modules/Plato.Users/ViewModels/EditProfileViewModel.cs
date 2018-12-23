@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Users.ViewModels
 {
@@ -19,6 +20,8 @@ namespace Plato.Users.ViewModels
 
         [DataType(DataType.Url)]
         public string Url { get; set; }
+
+        public UserAvatar Avatar { get; set; }
 
         [DataType(DataType.MultilineText)]
         public string Bio { get; set; }
