@@ -62,11 +62,11 @@ namespace Plato.Entities.Services
                 return result.Failed(new CommandError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
             
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (reply.CreatedUserId == 0)
-            {
-                reply.CreatedUserId = user?.Id ?? 0;
-            }
+            //var user = await _contextFacade.GetAuthenticatedUserAsync();
+            //if (reply.CreatedUserId == 0)
+            //{
+            //    reply.CreatedUserId = user?.Id ?? 0;
+            //}
      
             // Parse Html and abstract
             reply.Html = await ParseEntityHtml(reply.Message);
@@ -122,14 +122,14 @@ namespace Plato.Entities.Services
                 return result.Failed(new CommandError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
             
-            // Update modified details
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (user != null)
-            {
-                reply.ModifiedUserId = user.Id;
-            }
+            //// Update modified details
+            //var user = await _contextFacade.GetAuthenticatedUserAsync();
+            //if (user != null)
+            //{
+            //    reply.ModifiedUserId = user.Id;
+            //}
             
-            reply.ModifiedDate = DateTime.UtcNow;
+            //reply.ModifiedDate = DateTime.UtcNow;
 
             // Parse Html and message abstract
             reply.Html = await ParseEntityHtml(reply.Message);

@@ -132,7 +132,12 @@ namespace Plato.Discuss.Labels.ViewProviders
             );
 
         }
-        
+
+        //public override Task ComposeTypeAsync(Topic model, IUpdateModel updater)
+        //{
+        //    return base.ComposeTypeAsync(model, updater);
+        //}
+
         public override Task<bool> ValidateModelAsync(Topic topic, IUpdateModel updater)
         {
             // ensure labels are optional
@@ -212,30 +217,7 @@ namespace Plato.Discuss.Labels.ViewProviders
         #endregion
 
         #region "Private Methods"
-        
-        //List<int> GetLabelsToAdd()
-        //{
-        //    // Build selected channels
-        //    var labelsToAdd = new List<int>();
-        //    foreach (var key in _request.Form.Keys)
-        //    {
-        //        if (key.StartsWith(LabelHtmlName))
-        //        {
-        //            var values = _request.Form[key];
-        //            foreach (var value in values)
-        //            {
-        //                int.TryParse(value, out var id);
-        //                if (!labelsToAdd.Contains(id))
-        //                {
-        //                    labelsToAdd.Add(id);
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    return labelsToAdd;
-        //}
-
+         
         async Task<List<int>> GetLabelsToAddAsync()
         {
             // Build selected channels
@@ -266,8 +248,7 @@ namespace Plato.Discuss.Labels.ViewProviders
 
             return labelsToAdd;
         }
-
-
+        
         async Task<IEnumerable<EntityLabel>> GetEntityLabelsByEntityIdAsync(int entityId)
         {
 

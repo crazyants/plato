@@ -50,7 +50,6 @@ namespace Plato.Entities.Services
             if (model.CreatedUserId == 0)
             {
                 model.CreatedUserId = user?.Id ?? 0;
-                model.ModifiedUserId = user?.Id ?? 0;
             }
          
             model.CreatedDate = DateTime.UtcNow;
@@ -115,15 +114,6 @@ namespace Plato.Entities.Services
         public async Task<ICommandResult<TEntity>> UpdateAsync(TEntity model)
         {
             var result = new CommandResult<TEntity>();
-
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-
-            if (user != null)
-            {
-                model.ModifiedUserId = user.Id;
-            }
-
-            model.ModifiedDate = DateTime.UtcNow;
 
             // Validate
             if (model.Id <= 0)

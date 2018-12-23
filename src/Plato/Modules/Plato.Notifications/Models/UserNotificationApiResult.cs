@@ -5,7 +5,7 @@ namespace Plato.Notifications.Models
 {
 
     [DataContract]
-    class UserNotificationApiResult
+    public class UserNotificationApiResult
     {
 
         [DataMember(Name = "id")]

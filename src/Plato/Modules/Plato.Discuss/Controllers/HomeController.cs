@@ -15,7 +15,6 @@ using Plato.Internal.Layout.Alerts;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Models.Users;
-using Plato.Internal.Scripting.Abstractions;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Internal.Stores.Users;
 
@@ -34,6 +33,7 @@ namespace Plato.Discuss.Controllers
         private readonly IPostManager<Reply> _replyManager;
         private readonly IAlerter _alerter;
         private readonly IBreadCrumbManager _breadCrumbManager;
+        private readonly IContextFacade _contextFacade;
 
         private readonly IPlatoUserStore<User> _ploatUserStore;
    
@@ -57,6 +57,7 @@ namespace Plato.Discuss.Controllers
             _topicViewProvider = topicViewProvider;
             _replyViewProvider = replyViewProvider;
             _entityStore = entityStore;
+            _contextFacade = contextFacade;
             _entityReplyStore = entityReplyStore;
             _topicManager = topicManager;
             _replyManager = replyManager;
@@ -259,6 +260,11 @@ namespace Plato.Discuss.Controllers
 
                 // Get fully composed type from all involved view providers
                 var topic = await _topicViewProvider.GetComposedType(this);
+
+                // Populated created by
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+                topic.CreatedUserId = user?.Id ?? 0;
+                topic.CreatedDate = DateTimeOffset.UtcNow;
 
                 // We need to first add the fully composed type
                 // so we have a nuique entity Id for all ProvideUpdateAsync
@@ -473,6 +479,11 @@ namespace Plato.Discuss.Controllers
                 // Update title & message
                 topic.Title = model.Title;
                 topic.Message = model.Message;
+
+                // Populated created by
+                var user = await _contextFacade.GetAuthenticatedUserAsync();
+                topic.ModifiedUserId = user?.Id ?? 0;
+                topic.ModifiedDate = DateTimeOffset.UtcNow;
 
                 // Execute view providers ProvideUpdateAsync method
                 await _topicViewProvider.ProvideUpdateAsync(topic, this);

@@ -202,18 +202,16 @@ namespace Plato.Notifications.Handlers
                 new SchemaProcedure(
                         $"SelectUserNotificationById",
                         @" SELECT un.*, 
-                                    u.UserName, 
-                                    u.NormalizedUserName,
-                                    u.DisplayName,                                  
-                                    u.Alias,  
+                                    u.UserName,
+                                    u.DisplayName,
+                                    u.Alias,
                                     u.PhotoUrl,
                                     u.PhotoColor,
-                                    c.UserName AS CreatedUserName, 
-                                    c.NormalizedUserName AS CreatedNormalizedUserName,
-                                    c.DisplayName AS CreatedDisplayName,                                    
+                                    c.UserName AS CreatedUserName,                                    
+                                    c.DisplayName AS CreatedDisplayName,
                                     c.Alias AS CreatedAlias,
                                     c.PhotoUrl AS CreatedPhotoUrl,
-                                    c.PhotoColor AS CreatedPhotoColor,
+                                    c.PhotoColor AS CreatedPhotoColor
                                 FROM {prefix}_UserNotifications un WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users u ON un.UserId = u.Id
                                     LEFT OUTER JOIN {prefix}_Users c ON un.CreatedUserId = c.Id

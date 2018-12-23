@@ -9,7 +9,7 @@
         @if (base.CurrentUser != null)
         {
             <a href="#" class="avatar-link">
-                <avatar data-toggle="tooltip" title="@base.CurrentUser.DisplayName" class="avatar" user-id="@base.CurrentUser.Id" />
+                <avatar data-toggle="tooltip" title="@base.CurrentUser.DisplayName" class="avatar" url="@base.CurrentUser.Avatar.Url" />
             </a>
         }
 

@@ -132,20 +132,17 @@ namespace Plato.Notifications.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("un.*, ")
-                .Append("u.UserName, ")
-                .Append("u.NormalizedUserName, ")
-                .Append("u.DisplayName, ")
-                .Append("u.Alias, ")
-                .Append("u.PhotoUrl, ")
-                .Append("u.PhotoColor, ")
-                .Append("c.UserName AS CreatedUserName, ")
-                .Append("c.NormalizedUserName AS CreatedNormalizedUserName, ")
-                .Append("c.DisplayName AS CreatedDisplayName, ")
-                .Append("c.Alias AS CreatedAlias")
-                .Append("c.PhotoUrl AS CreatedPhotoUrl, ")
+            sb.Append("un.*,")
+                .Append("u.UserName,")
+                .Append("u.DisplayName,")
+                .Append("u.Alias,")
+                .Append("u.PhotoUrl,")
+                .Append("u.PhotoColor,")
+                .Append("c.UserName AS CreatedUserName,")
+                .Append("c.DisplayName AS CreatedDisplayName,")
+                .Append("c.Alias AS CreatedAlias,")
+                .Append("c.PhotoUrl AS CreatedPhotoUrl,")
                 .Append("c.PhotoColor AS CreatedPhotoColor");
-               ;
             return sb.ToString();
 
         }
