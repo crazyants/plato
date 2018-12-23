@@ -62,7 +62,7 @@ $(function (win, doc, $) {
                         }
                     },
                     itemCss: "dropdown-item p-2",
-                    itemTemplate: '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url(/users/photo/{from.id});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right notification-dismiss" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6>{title}</h6>{message}</span></a>',
+                    itemTemplate: '<a id="notification{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{from.displayName}"><span style="background-image: url({from.avatar.url});"></span></span></span><span class="list-body"><span class="float-right text-muted notification-date">{date.text}</span><span class="float-right notification-dismiss" data-notification-id="{id}"><i class="fal fa-times"></i></span><h6>{title}</h6>{message}</span></a>',
                     parseItemTemplate: function (html, result) {
 
                         if (result.id) {
@@ -71,32 +71,38 @@ $(function (win, doc, $) {
                             html = html.replace(/\{id}/g, "0");
                         }
 
-                        // user
+                        // to
 
-                        if (result.user.id) {
-                            html = html.replace(/\{user.Id}/g, result.user.id);
+                        if (result.to.id) {
+                            html = html.replace(/\{to.Id}/g, result.to.id);
                         } else {
-                            html = html.replace(/\{user.Id}/g, "");
+                            html = html.replace(/\{to.Id}/g, "");
                         }
 
-                        if (result.user.displayName) {
-                            html = html.replace(/\{user.displayName}/g, result.user.displayName);
+                        if (result.to.displayName) {
+                            html = html.replace(/\{to.displayName}/g, result.to.displayName);
                         } else {
-                            html = html.replace(/\{user.displayName}/g, "");
+                            html = html.replace(/\{to.displayName}/g, "");
                         }
 
-                        if (result.user.userName) {
-                            html = html.replace(/\{user.userName}/g, result.user.userName);
+                        if (result.to.userName) {
+                            html = html.replace(/\{to.userName}/g, result.to.userName);
                         } else {
-                            html = html.replace(/\{user.userName}/g, "");
+                            html = html.replace(/\{to.userName}/g, "");
                         }
 
-                        if (result.user.url) {
-                            html = html.replace(/\{user.url}/g, result.user.url);
+                        if (result.to.url) {
+                            html = html.replace(/\{to.url}/g, result.to.url);
                         } else {
-                            html = html.replace(/\{user.url}/g, "");
+                            html = html.replace(/\{to.url}/g, "");
                         }
 
+                        if (result.to.avatar.url) {
+                            html = html.replace(/\{to.avatar.url}/g, result.to.avatar.url);
+                        } else {
+                            html = html.replace(/\{to.avatar.url}/g, "");
+                        }
+                        
                         // from
 
                         if (result.from.id) {
@@ -121,6 +127,12 @@ $(function (win, doc, $) {
                             html = html.replace(/\{from.url}/g, result.from.url);
                         } else {
                             html = html.replace(/\{from.url}/g, "");
+                        }
+
+                        if (result.from.avatar.url) {
+                            html = html.replace(/\{from.avatar.url}/g, result.from.avatar.url);
+                        } else {
+                            html = html.replace(/\{from.avatar.url}/g, "");
                         }
 
                         // notification

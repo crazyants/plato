@@ -105,6 +105,7 @@ namespace Plato.Entities.History.Controllers
                             Id = history.CreatedBy.Id,
                             DisplayName = history.CreatedBy.DisplayName,
                             UserName = history.CreatedBy.UserName,
+                            Avatar = history.CreatedBy.Avatar,
                             Url = createdByUrl
                         },
                         Date = new FriendlyDate()

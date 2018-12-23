@@ -1,10 +1,11 @@
 ﻿using System.Runtime.Serialization;
+using Plato.Internal.Models.Users;
 
 namespace Plato.WebApi.Models
 {
     
     [DataContract]
-    public class UserApiResult
+    public class UserApiResult 
     {
 
         [DataMember(Name = "id")]
@@ -19,6 +20,8 @@ namespace Plato.WebApi.Models
         [DataMember(Name = "url")]
         public string Url { get; set; }
 
+        [DataMember(Name = "avatar")]
+        public UserAvatar Avatar { get; set; }
 
     }
     

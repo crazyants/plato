@@ -23,11 +23,11 @@ namespace Plato.Internal.Models.Users
 
         public long ContentLength { get; set; }
 
-        public DateTime? CreatedDate { get; set; }
+        public DateTimeOffset? CreatedDate { get; set; }
 
         public int CreatedUserId { get; set; }
 
-        public DateTime? ModifiedDate { get; set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
 
         public int ModifiedUserId { get; set; }
 
@@ -69,17 +69,17 @@ namespace Plato.Internal.Models.Users
             if (dr.ColumnIsNotNull("ContentLength"))
                 this.ContentLength = Convert.ToInt64(dr["ContentLength"]);
 
-            if (dr.ColumnIsNotNull("CreatedDate"))
-                this.CreatedDate = Convert.ToDateTime(dr["CreatedDate"]);
-
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 this.CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
-            if (dr.ColumnIsNotNull("ModifiedDate"))
-                this.ModifiedDate = Convert.ToDateTime(dr["ModifiedDate"]);
-
+            if (dr.ColumnIsNotNull("CreatedDate"))
+                this.CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
+            
             if (dr.ColumnIsNotNull("ModifiedUserId"))
                 this.ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
+
+            if (dr.ColumnIsNotNull("ModifiedDate"))
+                this.ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
 
         }
 

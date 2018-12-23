@@ -85,10 +85,10 @@ namespace Plato.Media.Repositories
                 media.ContentBlob,
                 media.ContentType,
                 media.ContentLength,
-                media.CreatedDate,
                 media.CreatedUserId,
-                media.ModifiedDate,
-                media.ModifiedUserId);
+                media.CreatedDate,
+                media.ModifiedUserId,
+                media.ModifiedDate);
 
             if (id > 0)
                 return await SelectByIdAsync(id);
@@ -125,10 +125,10 @@ namespace Plato.Media.Repositories
             byte[] contentBlob,
             string contentType,
             long contentLength,
-            DateTimeOffset? createdDate,
             int createdUserId,
-            DateTimeOffset? modifiedDate,
-            int modifiedUserId)
+            DateTimeOffset? createdDate,
+            int modifiedUserId,
+            DateTimeOffset? modifiedDate)
         {
 
             var mediaId = 0;
@@ -142,10 +142,10 @@ namespace Plato.Media.Repositories
                     contentBlob ?? new byte[0], // don't allow nulls so we can determine parameter type
                     contentType.ToEmptyIfNull().TrimToSize(75),
                     contentLength,
+                    createdUserId, 
                     createdDate.ToDateIfNull(),
-                    createdUserId,
-                    modifiedDate.ToDateIfNull(),
                     modifiedUserId,
+                    modifiedDate,
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 

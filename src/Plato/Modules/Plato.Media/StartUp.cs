@@ -25,10 +25,7 @@ namespace Plato.Media
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
-            // Set-up event handler
-            services.AddScoped<ISetUpEventHandler, SetUpEventHandler>();
-
+            
             // Feature installation event handler
             services.AddScoped<IFeatureEventHandler, FeatureEventHandler>();
 

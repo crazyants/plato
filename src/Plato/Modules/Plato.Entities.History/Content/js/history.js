@@ -77,7 +77,7 @@ $(function (win, doc, $) {
                     },
                     itemCss: "dropdown-item p-2",
                     itemTemplate:
-                        '<a data-history-id="{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm mr-2" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url(/users/photo/{createdBy.id}"></span></span></span><span class="list-body">{text}</span></a>',
+                        '<a data-history-id="{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url({createdBy.avatar.url}"></span></span></span><span class="list-body">{text}</span></a>',
                     parseItemTemplate: function(html, result) {
 
                         if (result.id) {
@@ -112,12 +112,12 @@ $(function (win, doc, $) {
                             html = html.replace(/\{createdBy.url}/g, "");
                         }
 
-                        if (result.date.text) {
-                            html = html.replace(/\{date.text}/g, result.date.text);
+                        if (result.createdBy.avatar.url) {
+                            html = html.replace(/\{createdBy.avatar.url}/g, result.createdBy.avatar.url);
                         } else {
-                            html = html.replace(/\{date.text}/g, "");
+                            html = html.replace(/\{createdBy.avatar.url}/g, "");
                         }
-
+                        
                         // date
 
                         if (result.date.value) {

@@ -742,10 +742,10 @@ message Test message  " + number.ToString();
             var rnd = new Random();
             var topic = new Topic()
             {
-                Title = "Test Topic ♥ " + rnd.Next(0, users.Total).ToString(),
+                Title = "Test Topic ♥♥♥ " + rnd.Next(0, users.Total).ToString(),
                 Message = GetSampleMarkDown(rnd.Next(0, users.Total)),
-                CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id
-                
+                CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id,
+                CreatedDate = DateTimeOffset.UtcNow
             };
             
             // create topic
@@ -760,7 +760,8 @@ message Test message  " + number.ToString();
                     {
                         EntityId = data.Response.Id,
                         Message = GetSampleMarkDown(rnd.Next(1, 6)),
-                        CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id
+                        CreatedUserId = users.Data[rnd.Next(0, users.Total)].Id,
+                        CreatedDate = DateTimeOffset.UtcNow
                     };
                     var newReply = await _replyManager.CreateAsync(reply);
                 }

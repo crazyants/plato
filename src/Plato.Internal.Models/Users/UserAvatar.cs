@@ -1,8 +1,12 @@
-﻿namespace Plato.Internal.Models.Users
+﻿using System.Runtime.Serialization;
+
+namespace Plato.Internal.Models.Users
 {
+    [DataContract]
     public class UserAvatar
     {
 
+        [DataMember(Name = "url")]
         public string Url { get; }
 
         public UserAvatar(ISimpleUser user)

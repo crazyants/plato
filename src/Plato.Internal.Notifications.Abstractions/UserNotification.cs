@@ -14,7 +14,9 @@ namespace Plato.Internal.Notifications.Abstractions
         public int Id { get; set; }
 
         public int UserId { get; set; }
-        
+
+        public ISimpleUser To { get; private set; } = new SimpleUser();
+
         public string NotificationName { get; set; }
 
         public string Title { get; set; }
@@ -28,10 +30,8 @@ namespace Plato.Internal.Notifications.Abstractions
         public int CreatedUserId { get; set; }
 
         public DateTimeOffset? CreatedDate { get; set; }
-
-        public ISimpleUser User { get; private set; } = new SimpleUser();
-
-        public ISimpleUser CreatedBy { get; private set; } = new SimpleUser();
+        
+        public ISimpleUser From { get; private set; } = new SimpleUser();
 
         public void PopulateModel(IDataReader dr)
         {
@@ -44,17 +44,17 @@ namespace Plato.Internal.Notifications.Abstractions
                 UserId = Convert.ToInt32(dr["UserId"]);
                 if (UserId > 0)
                 {
-                    User.Id = UserId;
+                    To.Id = UserId;
                     if (dr.ColumnIsNotNull("UserName"))
-                        User.UserName = Convert.ToString(dr["UserName"]);
+                        To.UserName = Convert.ToString(dr["UserName"]);
                     if (dr.ColumnIsNotNull("DisplayName"))
-                        User.DisplayName = Convert.ToString(dr["DisplayName"]);
+                        To.DisplayName = Convert.ToString(dr["DisplayName"]);
                     if (dr.ColumnIsNotNull("Alias"))
-                        User.Alias = Convert.ToString(dr["Alias"]);
+                        To.Alias = Convert.ToString(dr["Alias"]);
                     if (dr.ColumnIsNotNull("PhotoUrl"))
-                        User.PhotoUrl = Convert.ToString(dr["PhotoUrl"]);
+                        To.PhotoUrl = Convert.ToString(dr["PhotoUrl"]);
                     if (dr.ColumnIsNotNull("PhotoColor"))
-                        User.PhotoColor = Convert.ToString(dr["PhotoColor"]);
+                        To.PhotoColor = Convert.ToString(dr["PhotoColor"]);
                 }
             }
             
@@ -81,17 +81,17 @@ namespace Plato.Internal.Notifications.Abstractions
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
                 if (CreatedUserId > 0)
                 {
-                    CreatedBy.Id = CreatedUserId;
+                    From.Id = CreatedUserId;
                     if (dr.ColumnIsNotNull("CreatedUserName"))
-                        CreatedBy.UserName = Convert.ToString(dr["CreatedUserName"]);
+                        From.UserName = Convert.ToString(dr["CreatedUserName"]);
                     if (dr.ColumnIsNotNull("CreatedDisplayName"))
-                        CreatedBy.DisplayName = Convert.ToString(dr["CreatedDisplayName"]);
+                        From.DisplayName = Convert.ToString(dr["CreatedDisplayName"]);
                     if (dr.ColumnIsNotNull("CreatedAlias"))
-                        CreatedBy.Alias = Convert.ToString(dr["CreatedAlias"]);
+                        From.Alias = Convert.ToString(dr["CreatedAlias"]);
                     if (dr.ColumnIsNotNull("CreatedPhotoUrl"))
-                        CreatedBy.PhotoUrl = Convert.ToString(dr["CreatedPhotoUrl"]);
+                        From.PhotoUrl = Convert.ToString(dr["CreatedPhotoUrl"]);
                     if (dr.ColumnIsNotNull("CreatedPhotoColor"))
-                        CreatedBy.PhotoColor = Convert.ToString(dr["CreatedPhotoColor"]);
+                        From.PhotoColor = Convert.ToString(dr["CreatedPhotoColor"]);
                 }
             }
                 

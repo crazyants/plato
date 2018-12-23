@@ -94,7 +94,9 @@ namespace Plato.Discuss.History.Subscribers
                 EntityId = entity.Id,
                 Message = entity.Message,
                 Html = entity.Html,
-                CreatedUserId = entity.ModifiedUserId,
+                CreatedUserId = entity.ModifiedUserId > 0
+                    ? entity.ModifiedUserId
+                    : entity.CreatedUserId,
                 CreatedDate = DateTimeOffset.UtcNow
             });
 

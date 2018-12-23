@@ -31,9 +31,9 @@ namespace Plato.Internal.Repositories.Users
             byte[] contentBlob,
             string contentType,
             float contentLength,
-            DateTime? createdDate,
+            DateTimeOffset? createdDate,
             int createdUserId,
-            DateTime? modifiedDate,
+            DateTimeOffset? modifiedDate,
             int modifiedUserId)
         {
             var bannerId = 0;
@@ -41,17 +41,17 @@ namespace Plato.Internal.Repositories.Users
             {
                 bannerId = await context.ExecuteScalarAsync<int>(
                     CommandType.StoredProcedure,
-                    "plato_sp_InsertUpdateUserBanner",
+                    "InsertUpdateUserBanner",
                     id,
                     userId,
                     name.ToEmptyIfNull().TrimToSize(255),
                     contentBlob ?? new byte[0], // don't allow nulls so we can determine parameter type
                     contentType.ToEmptyIfNull().TrimToSize(75),
                     contentLength,
-                    createdDate,
                     createdUserId,
-                    modifiedDate,
+                    createdDate.ToDateIfNull(),
                     modifiedUserId,
+                    modifiedDate,
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
 

@@ -46,14 +46,6 @@ namespace Plato.Entities.Services
         {
             var result = new CommandResult<TEntity>();
 
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (model.CreatedUserId == 0)
-            {
-                model.CreatedUserId = user?.Id ?? 0;
-            }
-         
-            model.CreatedDate = DateTime.UtcNow;
-        
             // Validate
             if (model.Id > 0)
             {
@@ -62,19 +54,29 @@ namespace Plato.Entities.Services
 
             if (model.FeatureId == 0)
             {
-                return result.Failed(new CommandError($"{nameof(model.FeatureId)} must be greater than zero when creating an entity"));
+                throw new ArgumentOutOfRangeException(nameof(model.FeatureId));
             }
-
+            
             if (String.IsNullOrWhiteSpace(model.Title))
             {
-                return result.Failed(new CommandError($"{nameof(model.Title)} is required"));
+                throw new ArgumentNullException(nameof(model.Title));
             }
 
             if (String.IsNullOrWhiteSpace(model.Message))
             {
-                return result.Failed(new CommandError($"{nameof(model.Message)} is required"));
+                throw new ArgumentNullException(nameof(model.Message));
             }
 
+            if (model.CreatedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
+            }
+
+            if (model.CreatedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.CreatedDate));
+            }
+            
             // Parse Html and message abstract
             model.Html = await ParseEntityHtml(model.Message);
             model.Abstract = await ParseEntityAbstract(model.Message);
@@ -118,18 +120,33 @@ namespace Plato.Entities.Services
             // Validate
             if (model.Id <= 0)
             {
-                return result.Failed(new CommandError($"{nameof(model.Id)} must be a valid existing entity id"));
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
             }
 
+            if (model.FeatureId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.FeatureId));
+            }
+            
             if (String.IsNullOrWhiteSpace(model.Title))
             {
-                return result.Failed(new CommandError($"{nameof(model.Title)} is required"));
+                throw new ArgumentNullException(nameof(model.Title));
             }
 
             if (String.IsNullOrWhiteSpace(model.Message))
             {
-                return result.Failed(new CommandError($"{nameof(model.Message)} is required"));
+                throw new ArgumentNullException(nameof(model.Message));
             }
+
+            //if (model.ModifiedUserId <= 0)
+            //{
+            //    throw new ArgumentOutOfRangeException(nameof(model.ModifiedUserId));
+            //}
+
+            //if (model.ModifiedDate == null)
+            //{
+            //    throw new ArgumentNullException(nameof(model.ModifiedDate));
+            //}
 
             // Parse Html and message abstract
             model.Html = await ParseEntityHtml(model.Message);

@@ -55,17 +55,22 @@ namespace Plato.Discuss.History.Controllers
                 })
                 .OrderBy("Id", OrderBy.Desc)
                 .ToList();
-            
-            var before = entity.Html;
+
+
+            // Compare previous to current
+            // If no previous exists use current
+            var html = history.Html;
             if (previousHistory?.Data != null)
             {
-                before = previousHistory?.Data[0].Html;
+                html = PrepareDifAsync(
+                    previousHistory.Data[0].Html,
+                    history.Html);
             }
 
             var viewModel = new HistoryIndexViewModel()
             {
                 History = history,
-                Html = PrepareDifAsync(before, history.Html)
+                Html = html
             };
 
             return View(viewModel);

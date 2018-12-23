@@ -9,6 +9,8 @@
     overflow: auto;
 }
 
+.history-dropdown .list-left + .list-body { margin-left: 34px; }
+
 /* diff css */
 
 .inserted-line { background-color:rgba(156,204,79,.5); }

@@ -73,13 +73,13 @@ namespace Plato.Notifications.Controllers
                 foreach (var userNotification in userNotifications.Data)
                 {
 
-                    var userUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
+                    var toUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
                     {
                         ["Area"] = "Plato.Users",
                         ["Controller"] = "Home",
                         ["Action"] = "Display",
-                        ["Id"] = userNotification.User.Id,
-                        ["Alias"] = userNotification.User.Alias
+                        ["Id"] = userNotification.To.Id,
+                        ["Alias"] = userNotification.To.Alias
                     });
 
                     var fromUrl = baseUrl + _contextFacade.GetRouteUrl(new RouteValueDictionary()
@@ -87,8 +87,8 @@ namespace Plato.Notifications.Controllers
                         ["Area"] = "Plato.Users",
                         ["Controller"] = "Home",
                         ["Action"] = "Display",
-                        ["Id"] = userNotification.CreatedBy.Id,
-                        ["Alias"] = userNotification.CreatedBy.Alias
+                        ["Id"] = userNotification.From.Id,
+                        ["Alias"] = userNotification.From.Alias
                     });
 
                     var url = userNotification.Url;
@@ -106,18 +106,20 @@ namespace Plato.Notifications.Controllers
                     results.Data.Add(new UserNotificationApiResult()
                     {
                         Id = userNotification.Id,
-                        User = new UserApiResult()
+                        To = new UserApiResult()
                         {
-                            Id = userNotification.User.Id,
-                            DisplayName = userNotification.User.DisplayName,
-                            UserName = userNotification.User.UserName,
-                            Url = userUrl
+                            Id = userNotification.To.Id,
+                            DisplayName = userNotification.To.DisplayName,
+                            UserName = userNotification.To.UserName,
+                            Avatar = userNotification.To.Avatar,
+                            Url = toUrl
                         },
                         From = new UserApiResult()
                         {
-                            Id = userNotification.CreatedBy.Id,
-                            DisplayName = userNotification.CreatedBy.DisplayName,
-                            UserName = userNotification.CreatedBy.UserName,
+                            Id = userNotification.From.Id,
+                            DisplayName = userNotification.From.DisplayName,
+                            UserName = userNotification.From.UserName,
+                            Avatar = userNotification.From.Avatar,
                             Url = fromUrl
                         },
                         Title = userNotification.Title,

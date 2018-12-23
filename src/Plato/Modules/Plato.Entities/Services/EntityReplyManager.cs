@@ -38,36 +38,47 @@ namespace Plato.Entities.Services
 
         public async Task<ICommandResult<TReply>> CreateAsync(TReply reply)
         {
-            
-            var result = new CommandResult<TReply>();
-            
+
+            // Validate
+            if (reply == null)
+            {
+                throw new ArgumentNullException(nameof(reply));
+            }
+
             if (reply.Id > 0)
             {
-                return result.Failed(new CommandError($"{nameof(reply.Id)} cannot be greater than zero when creating a reply"));
+                throw new ArgumentOutOfRangeException(nameof(reply.Id));
             }
 
             if (reply.EntityId <= 0)
             {
-                return result.Failed(new CommandError($"{nameof(reply.EntityId)} must must be greater than zero"));
+                throw new ArgumentOutOfRangeException(nameof(reply.EntityId));
             }
-        
+            
             if (String.IsNullOrWhiteSpace(reply.Message))
             {
-                return result.Failed(new CommandError($"{nameof(reply.Message)} is required"));
+                throw new ArgumentNullException(nameof(reply.Message));
+            }
+            
+            if (reply.CreatedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(reply.EntityId));
             }
 
+            if (reply.CreatedDate == null)
+            {
+                throw new ArgumentNullException(nameof(reply.CreatedDate));
+            }
+
+            var result = new CommandResult<TReply>();
+
+            // Ensure the entity exists
             var entity = await _entityStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
                 return result.Failed(new CommandError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
-            
-            //var user = await _contextFacade.GetAuthenticatedUserAsync();
-            //if (reply.CreatedUserId == 0)
-            //{
-            //    reply.CreatedUserId = user?.Id ?? 0;
-            //}
-     
+
             // Parse Html and abstract
             reply.Html = await ParseEntityHtml(reply.Message);
             reply.Abstract = await ParseEntityAbstract(reply.Message);
@@ -104,33 +115,46 @@ namespace Plato.Entities.Services
         public async Task<ICommandResult<TReply>> UpdateAsync(TReply reply)
         {
 
-            var result = new CommandResult<TReply>();
-
+            // Validate
+            if (reply == null)
+            {
+                throw new ArgumentNullException(nameof(reply));
+            }
+            
             if (reply.Id <= 0)
             {
-                return result.Failed(new CommandError($"{nameof(reply.Id)} must be a valid existing reply id"));
+                throw new ArgumentOutOfRangeException(nameof(reply.Id));
+            }
+            
+            if (reply.EntityId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(reply.EntityId));
             }
             
             if (String.IsNullOrWhiteSpace(reply.Message))
             {
-                return result.Failed(new CommandError($"{nameof(reply.Message)} is required"));
+                throw new ArgumentNullException(nameof(reply.Message));
+            }
+
+            if (reply.ModifiedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(reply.ModifiedUserId));
             }
             
+            if (reply.ModifiedDate == null)
+            {
+                throw new ArgumentNullException(nameof(reply.ModifiedDate));
+            }
+            
+            var result = new CommandResult<TReply>();
+
+            // Ensure entity exists
             var entity = await _entityStore.GetByIdAsync(reply.EntityId);
             if (entity == null)
             {
                 return result.Failed(new CommandError($"An entity with the Id '{reply.EntityId}' could not be found"));
             }
             
-            //// Update modified details
-            //var user = await _contextFacade.GetAuthenticatedUserAsync();
-            //if (user != null)
-            //{
-            //    reply.ModifiedUserId = user.Id;
-            //}
-            
-            //reply.ModifiedDate = DateTime.UtcNow;
-
             // Parse Html and message abstract
             reply.Html = await ParseEntityHtml(reply.Message);
             reply.Abstract = await ParseEntityAbstract(reply.Message);

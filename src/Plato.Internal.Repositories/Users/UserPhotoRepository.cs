@@ -64,10 +64,10 @@ namespace Plato.Internal.Repositories.Users
                 photo.ContentBlob,
                 photo.ContentType,
                 photo.ContentLength,
-                photo.CreatedDate,
                 photo.CreatedUserId,
-                photo.ModifiedDate,
-                photo.ModifiedUserId);
+                photo.CreatedDate,
+                photo.ModifiedUserId,
+                photo.ModifiedDate);
 
             if (id > 0)
                 return await SelectByIdAsync(id);
@@ -124,10 +124,10 @@ namespace Plato.Internal.Repositories.Users
             byte[] contentBlob,
             string contentType,
             float contentLength,
-            DateTime? createdDate,
             int createdUserId,
-            DateTime? modifiedDate,
-            int modifiedUserId)
+            DateTimeOffset? createdDate,
+            int modifiedUserId,
+            DateTimeOffset? modifiedDate)
         {
             using (var context = _dbContext)
             {
@@ -140,10 +140,10 @@ namespace Plato.Internal.Repositories.Users
                     contentBlob ?? new byte[0], // don't allow nulls so we can determine parameter type
                     contentType.ToEmptyIfNull().TrimToSize(75),
                     contentLength,
-                    createdDate.ToDateIfNull(),
                     createdUserId,
-                    modifiedDate.ToDateIfNull(),
+                    createdDate.ToDateIfNull(),
                     modifiedUserId,
+                    modifiedDate,
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
         }
