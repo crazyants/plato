@@ -4,15 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Plato.Internal.Shell.Extensions;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Abstractions.Extensions;
 using Plato.Internal.Models.Shell;
 using Plato.Internal.Features;
 using Plato.Internal.Features.Abstractions;
-using Plato.Internal.Hosting.Abstractions;
-using Plato.Internal.Shell.Abstractions;
 
 namespace Plato.Internal.Shell
 {
@@ -34,7 +31,6 @@ namespace Plato.Internal.Shell
             _serviceProvider = serviceProvider;
             _loggerFactory = loggerFactory;
             _logger = logger;
-       
         }
 
         public IServiceProvider CreateContainer(IShellSettings settings, ShellBlueprint blueprint)

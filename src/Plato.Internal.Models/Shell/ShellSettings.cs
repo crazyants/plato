@@ -32,7 +32,6 @@ namespace Plato.Internal.Models.Shell
             TablePrefix = settings.TablePrefix;           
             Theme = settings.Theme;
             State = settings.State;
-
         }
 
         public IDictionary<string, string> Configuration => _values;

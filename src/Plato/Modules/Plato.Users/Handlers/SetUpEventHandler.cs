@@ -380,7 +380,7 @@ namespace Plato.Users.Handlers
                     DisplayName = "Plato Bot",
                     EmailConfirmed = true,
                     LockoutEnabled = true,
-                    PhotoUrl = "images/bit.png",
+                    PhotoUrl = "/images/bot.png",
                     PhotoColor = _userColorProvider.GetColor(),
                     UserType = UserType.Bot
                 }, context.AdminPassword);

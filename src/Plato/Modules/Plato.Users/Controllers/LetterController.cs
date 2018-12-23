@@ -17,6 +17,7 @@ namespace Plato.Users.Controllers
             _letterRenderer = letterRenderer;
         }
 
+        [HttpGet, ResponseCache(Duration = 1200)]
         public Task Get(char letter, string color)
         {
 

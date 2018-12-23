@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Plato.Internal.FileSystem.Abstractions;
@@ -12,16 +13,20 @@ namespace Plato.Internal.FileSystem.Uploads
 
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<PhysicalUploadFolder> _logger;
- 
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        private static string _pathToUploadFolder;
         private const int MaxFileNameLength = 32;
 
         private static string InternalRootPath = "wwwroot/uploads";
 
         public PhysicalUploadFolder(
             IPlatoFileSystem parentFileSystem,
-            ILogger<PhysicalUploadFolder> logger)
+            ILogger<PhysicalUploadFolder> logger,
+            IHostingEnvironment hostingEnvironment)
         {
             _logger = logger;
+            _hostingEnvironment = hostingEnvironment;
 
             if (!parentFileSystem.DirectoryExists(InternalRootPath))
             {
@@ -31,6 +36,12 @@ namespace Plato.Internal.FileSystem.Uploads
             var root = parentFileSystem.GetDirectoryInfo(InternalRootPath).FullName;
             _fileSystem = new PlatoFileSystem(root, new PhysicalFileProvider(root), _logger);
 
+            if (_pathToUploadFolder == null)
+            {
+                _pathToUploadFolder = _fileSystem.Combine(_hostingEnvironment.ContentRootPath,
+                    "wwwroot",
+                    "uploads");
+            }
         }
 
         // Saves a unique file and returns the file name

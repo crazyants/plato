@@ -21,6 +21,7 @@ namespace Plato.Users.ViewProviders
     {
 
         private static string _pathToAvatarFolder;
+        private static string _urltoAvatarFolder;
 
         private readonly UserManager<User> _userManager;
         private readonly IPlatoUserStore<User> _platoUserStore;
@@ -49,6 +50,10 @@ namespace Plato.Users.ViewProviders
                 );
             }
 
+            if (_urltoAvatarFolder == null)
+            {
+                _urltoAvatarFolder = $"/uploads/{shellSettings.Location}/avatars/";
+            }
 
         }
 
@@ -126,7 +131,7 @@ namespace Plato.Users.ViewProviders
 
                 if (model.AvatarFile != null)
                 {
-                    await UpdateUserPhoto(user, model.AvatarFile);
+                   user.PhotoUrl = await UpdateUserPhoto(user, model.AvatarFile);
                 }
 
                 // Update user
@@ -146,7 +151,7 @@ namespace Plato.Users.ViewProviders
 
         #region "Private Methods"
 
-        async Task UpdateUserPhoto(User user, IFormFile file)
+        async Task<string> UpdateUserPhoto(User user, IFormFile file)
         {
 
             if (file == null)
@@ -157,42 +162,44 @@ namespace Plato.Users.ViewProviders
             var stream = file.OpenReadStream();
 
             var avatarFileName = await _uploadFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToAvatarFolder);
+            
 
+            return _urltoAvatarFolder + avatarFileName;
 
-            byte[] bytes = null;
+            //byte[] bytes = null;
 
-            if (stream != null)
-            {
-                bytes = stream.StreamToByteArray();
-            }
-            if (bytes == null)
-            {
-                return;
-            }
+            //if (stream != null)
+            //{
+            //    bytes = stream.StreamToByteArray();
+            //}
+            //if (bytes == null)
+            //{
+            //    return;
+            //}
 
-            var id = 0;
-            var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
-            if (existingPhoto != null)
-            {
-                id = existingPhoto.Id;
-            }
+            //var id = 0;
+            //var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
+            //if (existingPhoto != null)
+            //{
+            //    id = existingPhoto.Id;
+            //}
 
-            var userPhoto = new UserPhoto
-            {
-                Id = id,
-                UserId = user.Id,
-                Name = file.FileName,
-                ContentType = file.ContentType,
-                ContentLength = file.Length,
-                ContentBlob = bytes,
-                CreatedUserId = user.Id,
-                CreatedDate = DateTime.UtcNow
-            };
+            //var userPhoto = new UserPhoto
+            //{
+            //    Id = id,
+            //    UserId = user.Id,
+            //    Name = file.FileName,
+            //    ContentType = file.ContentType,
+            //    ContentLength = file.Length,
+            //    ContentBlob = bytes,
+            //    CreatedUserId = user.Id,
+            //    CreatedDate = DateTime.UtcNow
+            //};
 
-            if (id > 0)
-                userPhoto = await _userPhotoStore.UpdateAsync(userPhoto);
-            else
-                userPhoto = await _userPhotoStore.CreateAsync(userPhoto);
+            //if (id > 0)
+            //    userPhoto = await _userPhotoStore.UpdateAsync(userPhoto);
+            //else
+            //    userPhoto = await _userPhotoStore.CreateAsync(userPhoto);
 
         }
         

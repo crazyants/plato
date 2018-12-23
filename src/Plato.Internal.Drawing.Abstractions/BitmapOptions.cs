@@ -4,7 +4,7 @@
     public class BitmapOptions
     {
 
-        public string FontFamily { get; } = "Trebuchet MS, Verdana, Arial";
+        public string FontFamily { get; } = "Trebuchet MS";
 
         public int Width { get; set; } = 250;
 

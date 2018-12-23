@@ -15,8 +15,12 @@
                 return;
             }
 
+            var letter = user.DisplayName != null 
+                ? user.DisplayName.ToUpper().Substring(0, 1) 
+                : "-";
+
             // Else fallback to our letter service
-            Url = $"/users/letter/{user.DisplayName.Substring(0, 1)}/{user.PhotoColor}";
+            Url = $"/users/letter/{letter}/{user.PhotoColor}";
 
         }
 
