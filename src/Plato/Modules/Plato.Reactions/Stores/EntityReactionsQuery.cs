@@ -148,11 +148,11 @@ namespace Plato.Reactions.Stores
         {
             var sb = new StringBuilder();
             sb.Append("er.*, ")
-                .Append("u.UserName, ")
+                .Append("u.UserName,")
                 .Append("u.DisplayName,")
-                .Append("u.FirstName,")
-                .Append("u.LastName,")
-                .Append("u.Alias");
+                .Append("u.Alias,")
+                .Append("u.PhotoUrl,")
+                .Append("u.PhotoColor");
             return sb.ToString();
 
         }

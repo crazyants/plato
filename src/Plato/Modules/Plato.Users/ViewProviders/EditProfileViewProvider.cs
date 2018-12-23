@@ -33,28 +33,19 @@ namespace Plato.Users.ViewProviders
             IPlatoUserStore<User> platoUserStore,
             UserManager<User> userManager,
             IHostingEnvironment hostEnvironment,
-            IFileStore fileStore, 
-            IUserPhotoStore<UserPhoto> userPhotoStore, 
+            IFileStore fileStore,
+            IUserPhotoStore<UserPhoto> userPhotoStore,
             IUploadFolder uploadFolder)
         {
             _platoUserStore = platoUserStore;
             _userManager = userManager;
             _userPhotoStore = userPhotoStore;
             _uploadFolder = uploadFolder;
+
+            // paths
+            _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "avatars" );
+            _urltoAvatarFolder = $"/uploads/{shellSettings.Location}/avatars/";
             
-            if (_pathToAvatarFolder == null)
-            {
-                _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath,
-                    shellSettings.Location,
-                    "avatars"
-                );
-            }
-
-            if (_urltoAvatarFolder == null)
-            {
-                _urltoAvatarFolder = $"/uploads/{shellSettings.Location}/avatars/";
-            }
-
         }
 
         #region "Implementation"
@@ -160,49 +151,60 @@ namespace Plato.Users.ViewProviders
             }
 
             var stream = file.OpenReadStream();
+            byte[] bytes = null;
+            if (stream != null)
+            {
+                bytes = stream.StreamToByteArray();
+            }
 
-            var avatarFileName = await _uploadFolder.SaveUniqueFileAsync(stream, file.FileName, _pathToAvatarFolder);
+            // Ensure we have a valid byte array
+            if (bytes == null)
+            {
+                return string.Empty;
+            }
             
+            // Get any existing photo
+            var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
 
-            return _urltoAvatarFolder + avatarFileName;
+            // Upload the new file
+            var fileName = await _uploadFolder.SaveFileAsync(stream, file.FileName, _pathToAvatarFolder);
+           
+            // Ensure the new file was created
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                // Delete any existing file
+                if (existingPhoto != null)
+                {
+                    _uploadFolder.DeleteFile(existingPhoto.Name, _pathToAvatarFolder);
+                }
+            }
 
-            //byte[] bytes = null;
-
-            //if (stream != null)
-            //{
-            //    bytes = stream.StreamToByteArray();
-            //}
-            //if (bytes == null)
-            //{
-            //    return;
-            //}
-
-            //var id = 0;
-            //var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
-            //if (existingPhoto != null)
-            //{
-            //    id = existingPhoto.Id;
-            //}
-
-            //var userPhoto = new UserPhoto
-            //{
-            //    Id = id,
-            //    UserId = user.Id,
-            //    Name = file.FileName,
-            //    ContentType = file.ContentType,
-            //    ContentLength = file.Length,
-            //    ContentBlob = bytes,
-            //    CreatedUserId = user.Id,
-            //    CreatedDate = DateTime.UtcNow
-            //};
-
-            //if (id > 0)
-            //    userPhoto = await _userPhotoStore.UpdateAsync(userPhoto);
-            //else
-            //    userPhoto = await _userPhotoStore.CreateAsync(userPhoto);
+            // Insert or update photo entry
+            var id = existingPhoto?.Id ?? 0;
+            var userPhoto = new UserPhoto
+            {
+                Id = id,
+                UserId = user.Id,
+                Name = fileName,
+                ContentType = file.ContentType,
+                ContentLength = file.Length,
+                ContentBlob = bytes,
+                CreatedUserId = user.Id,
+                CreatedDate = DateTime.UtcNow
+            };
+            
+            var newOrUpdatedPhoto = id > 0
+                ? await _userPhotoStore.UpdateAsync(userPhoto)
+                : await _userPhotoStore.CreateAsync(userPhoto);
+            if (newOrUpdatedPhoto != null)
+            {
+                return _urltoAvatarFolder + newOrUpdatedPhoto.Name;
+            }
+            
+            return string.Empty;
 
         }
-        
+
         #endregion
 
     }

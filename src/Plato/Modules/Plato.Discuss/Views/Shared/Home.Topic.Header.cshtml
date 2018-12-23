@@ -7,7 +7,7 @@
 
 <div class="list-left">
     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">
-        <avatar data-toggle="tooltip" title="@Model.Entity.CreatedBy.DisplayName" class="avatar" user-id="@Model.Entity.CreatedBy.Id" />
+        <avatar data-toggle="tooltip" title="@Model.Entity.CreatedBy.DisplayName" class="avatar" url="@Model.Entity.CreatedBy.Avatar.Url" />
     </a>
 </div>
 <div class="list-body">

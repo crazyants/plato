@@ -9,10 +9,13 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Internal.Abstractions.Extensions;
+using Plato.Internal.FileSystem.Abstractions;
 using Plato.Internal.Layout.ViewProviders;
 using Plato.Internal.Layout.ModelBinding;
+using Plato.Internal.Models.Shell;
 using Plato.Internal.Models.Users;
 using Plato.Internal.Navigation;
+using Plato.Internal.Stores.Abstractions.Files;
 using Plato.Internal.Stores.Abstractions.Users;
 using Plato.Users.Models;
 using Plato.Users.Services;
@@ -23,32 +26,44 @@ namespace Plato.Users.ViewProviders
     public class AdminViewProvider : BaseViewProvider<User>
     {
 
+        private static string _pathToAvatarFolder;
+        private static string _urltoAvatarFolder;
+
         private readonly IPlatoUserManager<User> _platoUserManager;
         private readonly UserManager<User> _userManager;
         private readonly IHostingEnvironment _hostEnvironment;
         private readonly IUserPhotoStore<UserPhoto> _userPhotoStore;
-        
+        private readonly IUploadFolder _uploadFolder;
+
         private readonly IUrlHelper _urlHelper;
 
         private readonly IStringLocalizer T;
 
         public AdminViewProvider(
+            IShellSettings shellSettings,
             UserManager<User> userManager,
             IActionContextAccessor actionContextAccesor,
-            IHostingEnvironment hostEnvironment,
             IUrlHelperFactory urlHelperFactory,
             IUserPhotoStore<UserPhoto> userPhotoStore,
             IStringLocalizer<AdminViewProvider> stringLocalizer,
-            IPlatoUserManager<User> platoUserManager)
+            IPlatoUserManager<User> platoUserManager,
+            IHostingEnvironment hostEnvironment,
+            IFileStore fileStore,
+            IUploadFolder uploadFolder)
         {
             _userManager = userManager;
             _hostEnvironment = hostEnvironment;
+            _uploadFolder = uploadFolder;
             _userPhotoStore = userPhotoStore;
             _urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccesor.ActionContext);
             _platoUserManager = platoUserManager;
         
             T = stringLocalizer;
-            
+
+            // paths
+            _pathToAvatarFolder = fileStore.Combine(hostEnvironment.ContentRootPath, shellSettings.Location, "avatars");
+            _urltoAvatarFolder = $"/uploads/{shellSettings.Location}/avatars/";
+
         }
 
         #region "Implementation"
@@ -91,6 +106,7 @@ namespace Plato.Users.ViewProviders
                 DisplayName = user.DisplayName,
                 UserName = user.UserName,
                 Email = user.Email,
+                Avatar = user.Avatar,
                 Location = details.Profile.Location,
                 Url = details.Profile.Url,
                 Bio = details.Profile.Bio,
@@ -180,7 +196,7 @@ namespace Plato.Users.ViewProviders
                 // Update photo
                 if (model.AvatarFile != null)
                 {
-                    await UpdateUserPhoto(user, model.AvatarFile);
+                    user.PhotoUrl = await UpdateUserPhoto(user, model.AvatarFile);
                 }
 
                 //user.EmailConfirmed = true;
@@ -243,37 +259,50 @@ namespace Plato.Users.ViewProviders
 
         #region "Private Methods"
 
-        async Task UpdateUserPhoto(User user, IFormFile file)
+        async Task<string> UpdateUserPhoto(User user, IFormFile file)
         {
 
             if (file == null)
             {
                 throw new ArgumentNullException(nameof(file));
             }
-                
-            byte[] bytes = null;
+
             var stream = file.OpenReadStream();
+            byte[] bytes = null;
             if (stream != null)
             {
                 bytes = stream.StreamToByteArray();
             }
+
+            // Ensure we have a valid byte array
             if (bytes == null)
             {
-                return;
+                return string.Empty;
             }
 
-            var id = 0;
+            // Get any existing photo
             var existingPhoto = await _userPhotoStore.GetByUserIdAsync(user.Id);
-            if (existingPhoto != null)
+
+            // Upload the new file
+            var fileName = await _uploadFolder.SaveFileAsync(stream, file.FileName, _pathToAvatarFolder);
+
+            // Ensure the new file was created
+            if (!string.IsNullOrEmpty(fileName))
             {
-                id = existingPhoto.Id;
+                // Delete any existing file
+                if (existingPhoto != null)
+                {
+                    _uploadFolder.DeleteFile(existingPhoto.Name, _pathToAvatarFolder);
+                }
             }
 
+            // Insert or update photo entry
+            var id = existingPhoto?.Id ?? 0;
             var userPhoto = new UserPhoto
             {
                 Id = id,
                 UserId = user.Id,
-                Name = file.FileName,
+                Name = fileName,
                 ContentType = file.ContentType,
                 ContentLength = file.Length,
                 ContentBlob = bytes,
@@ -281,14 +310,19 @@ namespace Plato.Users.ViewProviders
                 CreatedDate = DateTime.UtcNow
             };
 
-            if (id > 0)
-                userPhoto = await _userPhotoStore.UpdateAsync(userPhoto);
-            else
-                userPhoto = await _userPhotoStore.CreateAsync(userPhoto);
-            
+            var newOrUpdatedPhoto = id > 0
+                ? await _userPhotoStore.UpdateAsync(userPhoto)
+                : await _userPhotoStore.CreateAsync(userPhoto);
+            if (newOrUpdatedPhoto != null)
+            {
+                return _urltoAvatarFolder + newOrUpdatedPhoto.Name;
+            }
+
+            return string.Empty;
+
         }
 
-       
+
         public async Task<bool> IsNewUser(string userId)
         {
             return await _userManager.FindByIdAsync(userId) == null;

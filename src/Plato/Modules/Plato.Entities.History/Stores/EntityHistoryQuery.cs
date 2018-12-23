@@ -153,15 +153,12 @@ namespace Plato.Entities.History.Stores
         string BuildPopulateSelect()
         {
             var sb = new StringBuilder();
-            sb.Append("h.*, ")
-                .Append("u.Email, ")
-                .Append("u.UserName, ")
-                .Append("u.DisplayName, ")
-                .Append("u.NormalizedUserName, ")
-                .Append("u.FirstName, ")
-                .Append("u.LastName, ")
-                .Append("u.Alias");
-
+            sb.Append("h.*,")
+                .Append("u.UserName,")
+                .Append("u.DisplayName,")
+                .Append("u.Alias,")
+                .Append("u.PhotoUrl,")
+                .Append("u.PhotoColor");
             return sb.ToString();
 
         }

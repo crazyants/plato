@@ -206,11 +206,10 @@ namespace Plato.Entities.History.Handlers
                                 u.Email, 
                                 u.UserName, 
                                 u.DisplayName, 
-                                u.NormalizedUserName,
-                                u.FirstName,
-                                u.LastName,
-                                u.Alias
-                                FROM {prefix}_EntityHistory h WITH (nolock) 
+                                u.Alias,
+                                u.PhotoUrl,
+                                u.PhotoColor
+                            FROM {prefix}_EntityHistory h WITH (nolock) 
                                 LEFT OUTER JOIN {prefix}_Users u ON h.CreatedUserId = u.Id 
                                 WHERE (
                                     h.Id = @Id 

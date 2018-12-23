@@ -13,7 +13,6 @@ namespace Plato.Internal.FileSystem.Uploads
 
         private readonly IPlatoFileSystem _fileSystem;
         private readonly ILogger<PhysicalUploadFolder> _logger;
-        private readonly IHostingEnvironment _hostingEnvironment;
 
         private static string _pathToUploadFolder;
         private const int MaxFileNameLength = 32;
@@ -26,7 +25,6 @@ namespace Plato.Internal.FileSystem.Uploads
             IHostingEnvironment hostingEnvironment)
         {
             _logger = logger;
-            _hostingEnvironment = hostingEnvironment;
 
             if (!parentFileSystem.DirectoryExists(InternalRootPath))
             {
@@ -38,14 +36,16 @@ namespace Plato.Internal.FileSystem.Uploads
 
             if (_pathToUploadFolder == null)
             {
-                _pathToUploadFolder = _fileSystem.Combine(_hostingEnvironment.ContentRootPath,
+                _pathToUploadFolder = _fileSystem.Combine(hostingEnvironment.ContentRootPath,
                     "wwwroot",
                     "uploads");
             }
         }
 
         // Saves a unique file and returns the file name
-        public async Task<string> SaveUniqueFileAsync(
+  
+
+        public async Task<string> SaveFileAsync(
             Stream stream,
             string fileName, 
             string path)
@@ -97,6 +97,25 @@ namespace Plato.Internal.FileSystem.Uploads
 
             return fileName;
             
+        }
+
+        public bool DeleteFile(string fileName, string path)
+        {
+            
+            if (!path.EndsWith("\\"))
+            {
+                path = path + "\\";
+            }
+
+
+            var fullPath = path + fileName;
+
+            if (_fileSystem.FileExists(fullPath))
+            {
+                _fileSystem.DeleteFile(fullPath);
+            }
+
+            return false;
         }
 
     }

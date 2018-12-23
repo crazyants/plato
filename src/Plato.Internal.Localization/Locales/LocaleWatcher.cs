@@ -46,7 +46,7 @@ namespace Plato.Internal.Localization.Locales
                             Path = @locale.Descriptor.DirectoryInfo.FullName
                         };
 
-                        watcher.Changed += async (sender, args) =>
+                        watcher.Changed += (sender, args) =>
                         {
                             _localeProvider.Dispose();
                             _localeStore.Dispose();

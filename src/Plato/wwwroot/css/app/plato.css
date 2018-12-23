@@ -305,7 +305,7 @@
     position: relative;
     border-radius: .15rem;
     background-color: #B4D0FF;
-    border-radius: 2px;
+    border-radius: 50%;
 }
 
 .avatar > span {
@@ -316,6 +316,12 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+   
+}
+
+.avatar, 
+.avatar > span {
+    border-radius: 50%;
 }
 
 .avatar-sm { width: 28px; height: 28px; }

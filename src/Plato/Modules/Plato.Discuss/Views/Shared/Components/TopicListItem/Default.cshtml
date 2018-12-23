@@ -5,7 +5,7 @@
 
 <div class="list-left">
     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Topic.CreatedUserId" asp-route-alias="@Model.Topic.CreatedBy.Alias">
-        <avatar data-toggle="tooltip" title="@Model.Topic.CreatedBy.DisplayName" class="avatar" user-id="@Model.Topic.CreatedBy.Id" />
+        <avatar data-toggle="tooltip" title="@Model.Topic.CreatedBy.DisplayName" class="avatar" url="@Model.Topic.CreatedBy.Avatar.Url" />
     </a>
 </div>
 <div class="list-body">
@@ -55,7 +55,7 @@
                         ? "reply"
                         : "replies";
                     <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@user.Id" asp-route-alias="@user.Alias">
-                        <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" user-id="@user.Id"/>
+                        <avatar data-toggle="tooltip" title="@user.DisplayName - @user.TotalReplies.ToPrettyInt() @T[replies]" class="avatar avatar-sm" url="@user.Avatar.Url"/>
                     </a>
                 }
             </div>

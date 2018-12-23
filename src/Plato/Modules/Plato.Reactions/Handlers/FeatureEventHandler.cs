@@ -197,8 +197,7 @@ namespace Plato.Reactions.Handlers
                 new SchemaProcedure(
                         $"SelectEntityReactionById",
                         @" SELECT er.*, 
-                                    u.UserName, 
-                                    u.NormalizedUserName,
+                                    u.UserName,                              
                                     u.DisplayName,                                  
                                     u.Alias,
                                     u.PhotoUrl,
@@ -216,12 +215,11 @@ namespace Plato.Reactions.Handlers
                 .CreateProcedure(
                     new SchemaProcedure("SelectEntityReactionsByEntityId",
                             @"SELECT er.*, 
-                                    u.UserName, 
-                                    u.NormalizedUserName,
-                                    u.DisplayName,
-                                    u.FirstName,
-                                    u.LastName,
-                                    u.Alias                                   
+                                    u.UserName,                               
+                                    u.DisplayName,                                 
+                                    u.Alias,
+                                    u.PhotoUrl,
+                                    u.PhotoColor
                                 FROM {prefix}_EntityReactions er WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users u ON er.CreatedUserId = u.Id                                    
                                 WHERE (
@@ -241,10 +239,10 @@ namespace Plato.Reactions.Handlers
                             @"SELECT er.*, 
                                     u.UserName, 
                                     u.NormalizedUserName,
-                                    u.DisplayName,
-                                    u.FirstName,
-                                    u.LastName,
-                                    u.Alias                                   
+                                    u.DisplayName,                                    
+                                    u.Alias,
+                                    u.PhotoUrl,
+                                    u.PhotoColor
                                 FROM {prefix}_EntityReactions er WITH (nolock) 
                                     LEFT OUTER JOIN {prefix}_Users u ON er.CreatedUserId = u.Id                                    
                                 WHERE (

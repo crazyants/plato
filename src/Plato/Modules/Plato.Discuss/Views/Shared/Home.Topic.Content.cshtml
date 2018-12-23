@@ -50,7 +50,7 @@
         <div class="topic-reply">
             <div class="topic-reply-left">
                 <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@reply.CreatedUserId" asp-route-alias="@reply.CreatedBy.Alias" class="avatar-link">
-                    <avatar data-toggle="tooltip" title="@reply.CreatedBy.DisplayName" class="avatar" user-id="@reply.CreatedBy.Id" />
+                    <avatar data-toggle="tooltip" title="@reply.CreatedBy.DisplayName" class="avatar" url="@reply.CreatedBy.Avatar.Url" />
                 </a>
             </div>
             <div class="topic-reply-body">

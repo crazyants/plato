@@ -33,7 +33,7 @@
                         <form asp-route-area="Plato.Users" asp-route-controller="Account" asp-route-action="LogOff" method="post" class="d-flex align-items-center">
                             <div class="dropdown">
                                 <a href="#" role="button" data-toggle="dropdown">
-                                    <avatar class="avatar" user-id="@this.CurrentUser.Id" />
+                                    <avatar class="avatar" url="@this.CurrentUser.Avatar.Url" />
                                 </a>
                                 <div class="dropdown-arrow"></div>
                                 <div class="dropdown-menu dropdown-menu-right">
@@ -76,7 +76,7 @@
                                 </li>
                                 <li class="nav-item dropdown account">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                        <avatar class="avatar mr-2" user-id="@this.CurrentUser.Id"/> @this.CurrentUser.DisplayName
+                                        <avatar class="avatar mr-2" url="@this.CurrentUser.Avatar.Url"/> @this.CurrentUser.DisplayName
                                     </a>
                                     <div class="dropdown-arrow"></div>
                                     <div class="dropdown-menu dropdown-menu-right">

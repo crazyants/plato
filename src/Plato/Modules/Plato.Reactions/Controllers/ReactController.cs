@@ -59,7 +59,7 @@ namespace Plato.Reactions.Controllers
                 if (delete.Succeeded)
                 {
                     // return 202 accepted to confirm delete
-                    return base.Accepted(await _simpleReactionsStore.GetSimpleReactionsAsync(model.EntityId, model.EntityReplyId));
+                    return base.AcceptedDelete(await _simpleReactionsStore.GetSimpleReactionsAsync(model.EntityId, model.EntityReplyId));
                 }
             }
             

@@ -51,7 +51,7 @@ namespace Plato.WebApi.Controllers
             });
         }
 
-        public ObjectResult Accepted(object result)
+        public ObjectResult AcceptedDelete(object result)
         {
             return new ObjectResult(new
             {

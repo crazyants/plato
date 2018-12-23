@@ -8,6 +8,12 @@
         public UserAvatar(ISimpleUser user)
         {
 
+            if (user.Id <= 0)
+            {
+                Url = "/images/photo.png";
+                return;
+            }
+
             // If we have a photo Url use that
             if (!string.IsNullOrEmpty(user.PhotoUrl))
             {

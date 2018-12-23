@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
+using Plato.Internal.Models.Users;
 
 namespace Plato.Users.ViewModels
 {
@@ -50,6 +51,8 @@ namespace Plato.Users.ViewModels
         public DateTimeOffset? LastLoginDate { get; set; }
 
         // -------
+
+        public UserAvatar Avatar { get; set; }
         
         public bool IsNewUser { get; set; }
         
