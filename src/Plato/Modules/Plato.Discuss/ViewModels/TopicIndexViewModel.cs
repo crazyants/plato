@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
 using Plato.Discuss.Models;
 using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Navigation;
@@ -30,20 +27,6 @@ namespace Plato.Discuss.ViewModels
         }
         
     }
-
-    public class TopicIndexParams
-    {
-
-        [DataMember(Name = "channel")]
-        public int ChannelId { get; set; }
-        
-        public int CreatedByUserId { get; set; }
-
-        public int LabelId { get; set; }
-
-        public int TagId { get; set; }
-
-    }
     
     [DataContract]
     public class TopicIndexOptions
@@ -63,13 +46,27 @@ namespace Plato.Discuss.ViewModels
 
         public bool EnableCard { get; set; } = true;
 
-        public TopicIndexParams Params { get; set; } = new TopicIndexParams();
+        public TopicIndexParams Params { get; set; }
         
         public TopicIndexOptions()
         {
             Params = new TopicIndexParams();
         }
         
+    }
+
+    public class TopicIndexParams
+    {
+
+        [DataMember(Name = "channel")]
+        public int ChannelId { get; set; }
+
+        public int CreatedByUserId { get; set; }
+
+        public int LabelId { get; set; }
+
+        public int TagId { get; set; }
+
     }
 
     public class SortColumn

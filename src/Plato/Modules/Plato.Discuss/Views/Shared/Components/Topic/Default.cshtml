@@ -1,0 +1,44 @@
+﻿@model TopicViewModel
+
+<card>
+    <card-title>
+        <h6 class="card-title d-inline-block">@T["Topic"]</h6>
+        @if (Model.Topic.IsPrivate)
+        {
+            <span class="badge badge-primary">
+                @T["Private"]
+            </span>
+        }
+        @if (Model.Topic.IsDeleted)
+        {
+            <span class="badge badge-danger">
+                @T["Deleted"]
+            </span>
+        }
+        @if (Model.Topic.IsClosed)
+        {
+            <span class="badge badge-success">
+                @T["Closed"]
+            </span>
+        }
+        @if (Model.Topic.IsPinned)
+        {
+            <span title="@T["Pinned"]" data-toggle="tooltip" class="btn btn-sm btn-secondary">
+                <i class="fal fa-thumbtack"></i>
+            </span>
+        }
+        <navigation name="topic"
+                    model="@Model.Topic"
+                    class="nav navbar p-0 float-right"
+                    child-ul-css-class="dropdown-menu" />
+    </card-title>
+    <card-body class="card-body-flush">
+        <div class="markdown-body m-3" data-provide="markdownBody">
+            @Html.Raw(@Model.Topic.Html)
+        </div>
+        <navigation name="topic-footer"
+                    model="@Model.Topic"
+                    enable-list="false" />
+    </card-body>
+
+</card>

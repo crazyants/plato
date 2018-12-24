@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Plato.Discuss.Models;
 using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
-using Plato.Internal.Data.Abstractions;
 using Plato.Internal.Layout.ModelBinding;
 using Plato.Internal.Layout.ViewProviders;
-using Plato.Internal.Navigation;
 using Plato.Internal.Abstractions.Extensions;
 
 namespace Plato.Discuss.ViewProviders
@@ -23,27 +20,19 @@ namespace Plato.Discuss.ViewProviders
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
         private readonly IPostManager<Topic> _topicManager;
-        private readonly IPostManager<Reply> _replyManager;
-        private readonly IActionContextAccessor _actionContextAccessor;
-        private readonly IEntityUsersStore _entityUsersStore;
-
+  
         private readonly HttpRequest _request;
         
         public TopicViewProvider(
             IHttpContextAccessor httpContextAccessor,
-            IPostManager<Reply> replyManager,
             IEntityReplyStore<Reply> entityReplyStore,
-            IActionContextAccessor actionContextAccessor,
             IEntityStore<Topic> entityStore,
-            IPostManager<Topic> topicManager,
-            IEntityUsersStore entityUsersStore)
+            IPostManager<Topic> topicManager)
         {
-            _replyManager = replyManager;
+    
             _entityReplyStore = entityReplyStore;
-            _actionContextAccessor = actionContextAccessor;
             _entityStore = entityStore;
             _topicManager = topicManager;
-            _entityUsersStore = entityUsersStore;
             _request = httpContextAccessor.HttpContext.Request;
         }
 
@@ -62,48 +51,19 @@ namespace Plato.Discuss.ViewProviders
 
         }
         
-        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic viewModel, IViewProviderContext context)
+        public override async Task<IViewProviderResult> BuildDisplayAsync(Topic topic, IViewProviderContext context)
         {
-
-            // Get view data
-            var options = new TopicIndexOptions();
-            var pager = new PagerOptions();
-
-            // Get entity
-            var topic = await _entityStore.GetByIdAsync(viewModel.Id);
-            if (topic == null)
-            {
-                return await BuildIndexAsync(viewModel, context);
-            }
-
+            
+            var viewModel = context.Controller.HttpContext.Items[typeof(TopicViewModel)] as TopicViewModel;
+            
             // Increment entity view count
             await IncrementTopicViewCount(topic);
-            
-            // Get replies
-            var replies = await GetEntityReplies(topic.Id, options, pager);
-
-            // Get top 20 participants
-            var users = await _entityUsersStore.QueryAsync()
-                .Take(1, 20)
-                .Select<EntityUserQueryParams>(q =>
-                {
-                    q.EntityId.Equals(topic.Id);
-                })
-                .OrderBy("t.TotalReplies", OrderBy.Desc)
-                .ToList();
-
-            // Build view model
-            var topivViewModel = new HomeTopicViewModel(replies, pager)
-            {
-                Entity = topic,
-                Users = users
-            };
-            
+        
             return Views(
-                View<HomeTopicViewModel>("Home.Topic.Header", model => topivViewModel).Zone("header"),
-                View<HomeTopicViewModel>("Home.Topic.Tools", model => topivViewModel).Zone("tools"),
-                View<HomeTopicViewModel>("Home.Topic.Sidebar", model => topivViewModel).Zone("sidebar"),
-                View<HomeTopicViewModel>("Home.Topic.Content", model => topivViewModel).Zone("content"),
+                View<Topic>("Home.Topic.Header", model => topic).Zone("header"),
+                View<Topic>("Home.Topic.Tools", model => topic).Zone("tools"),
+                View<Topic>("Home.Topic.Sidebar", model => topic).Zone("sidebar"),
+                View<TopicViewModel>("Home.Topic.Content", model => viewModel).Zone("content"),
                 View<EditReplyViewModel>("Home.Topic.Footer", model => new EditReplyViewModel()
                 {
                     EntityId = topic.Id,
@@ -188,6 +148,7 @@ namespace Plato.Discuss.ViewProviders
             if (await ValidateModelAsync(topic, context.Updater))
             {
                 
+                
                 // Update
                 var result = await _topicManager.UpdateAsync(topic);
 
@@ -210,32 +171,11 @@ namespace Plato.Discuss.ViewProviders
         
         #region "Private Methods"
         
-        async Task<IPagedResults<Reply>> GetEntityReplies(
-            int entityId,
-            TopicIndexOptions topicIndexOptions,
-            PagerOptions pagerOptions)
-        {
-            return await _entityReplyStore.QueryAsync()
-                .Take(pagerOptions.Page, pagerOptions.PageSize)
-                .Select<EntityReplyQueryParams>(q =>
-                {
-                    q.EntityId.Equals(entityId);
-                    q.HideSpam.True();
-                    q.HidePrivate.True();
-                    q.HideDeleted.True();
-                })
-                .OrderBy("CreatedDate", OrderBy.Asc)
-                .ToList();
-        }
-        
         async Task IncrementTopicViewCount(Topic topic)
         {
-            
             topic.TotalViews = topic.TotalViews + 1;
             topic.DailyViews = topic.TotalViews.ToSafeDevision(DateTimeOffset.Now.DayDifference(topic.CreatedDate));
-
             await _entityStore.UpdateAsync(topic);
-
         }
 
         #endregion

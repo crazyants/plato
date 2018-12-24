@@ -1,19 +1,19 @@
-﻿@model HomeTopicViewModel
+﻿@model Topic
 @{
-    var replies = @Model.Entity.TotalReplies == 1
+    var replies = @Model.TotalReplies == 1
         ? "reply"
         : "replies";
 }
 
 <div class="list-left">
-    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">
-        <avatar data-toggle="tooltip" title="@Model.Entity.CreatedBy.DisplayName" class="avatar" url="@Model.Entity.CreatedBy.Avatar.Url" />
+    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.CreatedUserId" asp-route-alias="@Model.CreatedBy.Alias">
+        <avatar data-toggle="tooltip" title="@Model.CreatedBy.DisplayName" class="avatar" url="@Model.CreatedBy.Avatar.Url" />
     </a>
 </div>
 <div class="list-body">
     <h4>
-        @Model.Entity.Title
-        @if (Model.Entity.IsPinned)
+        @Model.Title
+        @if (Model.IsPinned)
         {
             <span title="@T["Pinned"]" data-toggle="tooltip" class="d-inline-block">
                 <i class="fal fa-thumbtack"></i>
@@ -22,10 +22,10 @@
     </h4>
     <span class="text-muted">
         @T["Posted"]
-        <date utc="@Model.Entity.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
+        <date utc="@Model.CreatedDate" itemprop="createdDate" data-toggle="tooltip" />
         @T["by"]
-        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Entity.CreatedUserId" asp-route-alias="@Model.Entity.CreatedBy.Alias">@Model.Entity.CreatedBy.DisplayName</a>
-        - @Model.Entity.TotalReplies.ToPrettyInt() @T[replies]
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.CreatedUserId" asp-route-alias="@Model.CreatedBy.Alias">@Model.CreatedBy.DisplayName</a>
+        - @Model.TotalReplies.ToPrettyInt() @T[replies]
     </span>
 </div>
 <hr />

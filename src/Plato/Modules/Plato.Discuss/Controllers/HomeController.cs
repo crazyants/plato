@@ -158,8 +158,7 @@ namespace Plato.Discuss.Controllers
 
             return Index(opts, pager);
         }
-
-
+        
         public Task<IActionResult> Get(
           TopicIndexOptions opts,
           PagerOptions pager)
@@ -209,8 +208,7 @@ namespace Plato.Discuss.Controllers
             return Task.FromResult((IActionResult) View(viewModel));
 
         }
-
-
+        
         // -----------------
         // add new topic
         // -----------------
@@ -314,8 +312,8 @@ namespace Plato.Discuss.Controllers
 
         public async Task<IActionResult> Topic(
             int id,
-            TopicIndexOptions topicIndexOptions,
-            PagerOptions pagerOptions)
+            TopicOptions opts,
+            PagerOptions pager)
         {
 
             var topic = await _entityStore.GetByIdAsync(id);
@@ -325,15 +323,15 @@ namespace Plato.Discuss.Controllers
             }
             
             // default options
-            if (topicIndexOptions == null)
+            if (opts == null)
             {
-                topicIndexOptions = new TopicIndexOptions();
+                opts = new TopicOptions();
             }
 
             // default pager
-            if (pagerOptions == null)
+            if (pager == null)
             {
-                pagerOptions = new PagerOptions();
+                pager = new PagerOptions();
             }
 
             // Build breadcrumb
@@ -350,13 +348,25 @@ namespace Plato.Discuss.Controllers
                 );
             });
 
-        
             // Maintain previous route data when generating page links
-            var routeData = new RouteData();
-            routeData.Values.Add("search", topicIndexOptions.Search);
-            routeData.Values.Add("sort", topicIndexOptions.Sort);
-            routeData.Values.Add("page", pagerOptions.Page);
+            // Get default options
+            var defaultViewOptions = new TopicViewModel();
+            var defaultPagerOptions = new PagerOptions();
             
+            if (pager.Page != defaultPagerOptions.Page)
+                this.RouteData.Values.Add("pager.page", pager.Page);
+            if (pager.PageSize != defaultPagerOptions.PageSize)
+                this.RouteData.Values.Add("pager.size", pager.PageSize);
+
+            opts.Params.TopicId = topic.Id;
+
+            // Add view options to context for use within view adaptors
+            this.HttpContext.Items[typeof(TopicViewModel)] = new TopicViewModel()
+            {
+                Options = opts,
+                Pager = pager
+            };
+
             // Build view
             var result = await _topicViewProvider.ProvideDisplayAsync(topic, this);
 
