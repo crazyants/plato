@@ -1,0 +1,54 @@
+﻿@model TopicReplyListItemViewModel
+
+<div class="topic-reply">
+    <div class="topic-reply-left">
+        <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Reply.CreatedUserId" asp-route-alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
+            <avatar data-toggle="tooltip" title="@Model.Reply.CreatedBy.DisplayName" class="avatar" url="@Model.Reply.CreatedBy.Avatar.Url" />
+        </a>
+    </div>
+    <div class="topic-reply-body">
+        <card>
+            <card-title>
+                <div class="card-title float-left">
+                    <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@Model.Reply.CreatedUserId" asp-route-alias="@Model.Reply.CreatedBy.Alias" class="avatar-link">
+                        @Model.Reply.CreatedBy.DisplayName
+                    </a>
+                    @T["posted "]
+                    <span data-toggle="tooltip" title="@Model.Reply.CreatedDate">
+                        @Model.Reply.CreatedDate.ToPrettyDate()
+                    </span>
+                    @if (Model.Reply.IsPrivate)
+                    {
+                        <span class="badge badge-primary">
+                            @T["Private"]
+                        </span>
+                    }
+                    @if (Model.Reply.IsDeleted)
+                    {
+                        <span class="badge badge-danger">
+                            @T["Deleted"]
+                        </span>
+                    }
+                    @if (Model.Reply.IsClosed)
+                    {
+                        <span class="badge badge-success">
+                            @T["Closed"]
+                        </span>
+                    }
+                </div>
+                <navigation name="topicreply"
+                            model="@Model.Reply"
+                            class="nav navbar p-0 float-right"
+                            child-ul-css-class="dropdown-menu" />
+            </card-title>
+            <card-body class="card-body-flush">
+                <div class="markdown-body m-3" data-provide="markdownBody">
+                    @Html.Raw(@Model.Reply.Html)
+                </div>
+                <navigation name="topicreply-footer"
+                            model="@Model.Reply"
+                            enable-list="false" />
+            </card-body>
+        </card>
+    </div>
+</div>

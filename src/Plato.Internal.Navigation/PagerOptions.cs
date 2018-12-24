@@ -5,22 +5,34 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Plato.Internal.Navigation
 {
+
+    public class InfiniteScrollOptions
+    {
+        public bool Enabled { get; set; } = true;
+
+        public string CallbackUrl { get; set; }
+
+    }
+
     public class PagerOptions
     {
+        private int _total;
+        private int _totalPages;
 
         public int Page { get; set; } = 1;
 
         public int PageSize { get; set; } = 20;
-
-        private int _total;
-
+        
         public int Total => _total;
 
         public bool Enabled { get; set; } = true;
+        
+        public int TotalPages => _totalPages;
 
         public void SetTotal(int total)
         {
             _total = total;
+            _totalPages = PageSize > 0 ? (int)Math.Ceiling((double)total / PageSize) : 1;
         }
 
         public PagerOptions()

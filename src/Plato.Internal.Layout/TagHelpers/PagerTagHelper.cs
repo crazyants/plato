@@ -22,7 +22,7 @@ namespace Plato.Internal.Layout.TagHelpers
 
         private const int NumberOfPagesToShow = 4;
         private int _totalPageCount;
-
+        
         public PagerOptions Model { get; set; }
 
         public IStringLocalizer T { get; set; }

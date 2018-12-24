@@ -1850,7 +1850,285 @@ $(function (win, doc, $) {
         };
 
     }();
-    
+
+    /* scrollSpy */
+    var scrollSpy = function () {
+
+        var dataKey = "scrollSpy",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            delta: 0.95,
+            onScroll: function () { },
+            onTrigger: function () { }
+        };
+
+        var methods = {
+            timer: null,
+            init: function ($caller, methodName) {
+
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                this.bind($caller);
+
+            },
+            bind: function ($caller) {
+
+                $caller.bind("scroll", function (e) {
+                    
+                    if ($caller.data(dataKey).onScroll) {
+                        $caller.data(dataKey).onScroll(e);
+                    }
+
+                    var wintop = $(win).scrollTop(),
+                        docheight = $(doc).height(),
+                        winheight = $(win).height(),
+                        delta = $caller.data(dataKey).delta;
+
+                    if ((wintop / (docheight - winheight)) > delta) {
+                        if ($caller.data(dataKey).onTrigger) {
+                            $caller.data(dataKey).onTrigger(e);
+                        }
+                    }
+
+                });
+
+            },
+            unbind: function ($caller) {
+                $caller.unbind("scroll");
+            }
+
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).scrollSpy()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().scrollSpy()
+                    var $caller = $(window);
+                    if (!$(this).data(dataIdKey)) {
+                        var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                        $caller.data(dataIdKey, id);
+                        $caller.data(dataKey, $.extend({}, defaults, options));
+                    } else {
+                        $caller.data(dataKey, $.extend({}, $caller.data(dataKey), options));
+                    }
+                    methods.init($caller, methodName);
+                }
+
+            }
+
+        };
+
+    }();
+
+    /* InfiniteScroll */
+    var infiniteScroll = function () {
+
+        var dataKey = "infiniteScroll",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {
+            pagerKey: "pager.page"
+        };
+
+        var methods = {
+            _loading: false,
+            _page: 1,
+            _totalPages: 1,
+            init: function ($caller, methodName) {
+
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                // Allow setting of default page via data attribute
+                if ($caller.data("infiniteScrollPage")) {
+                    var page = parseInt($caller.data("infiniteScrollPage"));
+                    if (!isNaN(page)) {
+                        methods._page = page;
+                    }
+                }
+
+                // Allow setting of default page via data attribute
+                if ($caller.data("infiniteScrollTotalPages")) {
+                    var totalPages = parseInt($caller.data("infiniteScrollTotalPages"));
+                    if (!isNaN(totalPages)) {
+                        methods._totalPages = totalPages;
+                    }
+                }
+                
+                this.bind($caller);
+
+            },
+            bind: function ($caller) {
+                
+                $().scrollSpy({
+                    onTrigger: function () {
+                        if (!methods._loading && (methods._page < methods._totalPages)) {
+                            methods.loadNextPage($caller);
+                        }
+                    }
+                });
+
+            },
+            unbind: function ($caller) {
+                $().scrollSpy("unbind");
+            },
+            loadNextPage: function ($caller) {
+
+                // Ensure we have a callback url
+                var url = methods.getUrl($caller);
+                if (url === "") {
+                    return;
+                }
+
+                // Indicate load
+                methods._loading = true;
+                methods._page++;
+
+                // Show loader
+                var $loader = methods.getLoader($caller);
+                if ($loader) {
+                    $loader.show();
+                }
+
+                // Append our page index to the callback url
+                url += url.indexOf("&") >= 0 ? "&" : "?";
+                url += defaults.pagerKey + "=" + methods._page;
+
+                // Request
+                win.$.Plato.Http({
+                    url: url,
+                    method: "GET"
+                }).done(function (data) {
+                    if ($loader) {
+                        $loader.hide();
+                    }
+                    if (data !== "") {
+                        $($caller).append(data);
+                    }
+                    methods._loading = false;
+                });
+
+            },
+            getUrl: function($caller) {
+                if ($caller.data("infiniteScrollUrl")) {
+                    return $caller.data("infiniteScrollUrl");
+                }
+                return "";
+            },
+            getLoader: function ($caller) {
+                var loaderSelector = $caller.data("infinateScrollLoadingSelector");
+                if (loaderSelector) {
+                    var $loader = $(loaderSelector);
+                    if ($loader.length > 0) {
+                        return $loader;
+                    }
+                }
+                return null;
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).infiniteScroll()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().infiniteScroll()
+                    var $caller = $(window);
+                    if (!$(this).data(dataIdKey)) {
+                        var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                        $caller.data(dataIdKey, id);
+                        $caller.data(dataKey, $.extend({}, defaults, options));
+                    } else {
+                        $caller.data(dataKey, $.extend({}, $caller.data(dataKey), options));
+                    }
+                    methods.init($caller, methodName);
+                }
+
+            }
+
+        };
+
+    }();
+
+
     /* filterList */
     var filterList = function () {
 
@@ -3759,6 +4037,8 @@ $(function (win, doc, $) {
         autoComplete: autoComplete.init,
         typeSpy: typeSpy.init,
         blurSpy: blurSpy.init,
+        scrollSpy: scrollSpy.init,
+        infiniteScroll: infiniteScroll.init,
         filterList: filterList.init,
         tagIt: tagIt.init,
         userAutoComplete: userAutoComplete.init,
@@ -3831,6 +4111,9 @@ $(function (win, doc, $) {
         
         /* markdownBody */
         this.find('[data-provide="markdownBody"]').markdownBody();
+
+        /* infiniteScroll */
+        this.find('[data-provide="infiniteScroll"]').infiniteScroll();
         
     }
 

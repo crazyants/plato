@@ -27,7 +27,7 @@ namespace Plato.Discuss.ViewModels
         }
         
     }
-    
+
     [DataContract]
     public class TopicIndexOptions
     {
@@ -48,9 +48,12 @@ namespace Plato.Discuss.ViewModels
 
         public TopicIndexParams Params { get; set; }
         
+        public InfiniteScrollOptions InfiniteScrollOptions { get; set; }
+
         public TopicIndexOptions()
         {
             Params = new TopicIndexParams();
+            InfiniteScrollOptions = new InfiniteScrollOptions();
         }
         
     }

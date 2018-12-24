@@ -6,7 +6,7 @@
     pager = @Model.Pager
 }))
 
-<script section="Footer">
+@*<script section="Footer">
 
     $(function(win, doc, $) {
 
@@ -45,18 +45,14 @@
             
         };
         
-        $(win).scroll(function () {
-
-            var wintop = $(win).scrollTop(),
-                docheight = $(doc).height(),
-                winheight = $(win).height(),
-                delta = 0.95;
-
-            if (!loadingNewPage && (wintop / (docheight - winheight)) > delta) {
-                loadPage();
+        $().scrollSpy({
+            onTrigger: function () {
+                if (!loadingNewPage) {
+                    loadPage();
+                }
             }
         });
-
+        
     }(window, document, jQuery));
 
-</script>
+</script>*@

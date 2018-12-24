@@ -84,7 +84,12 @@
         
         @if (Model.Results != null)
         {
-            <ul id="topicList" class="list-group list-group-flush list-group-hover">
+            <ul data-provide="infiniteScroll"
+                data-infinite-scroll-url="@Model.Options.InfiniteScrollOptions.CallbackUrl"
+                data-infinite-scroll-page="@Model.Pager.Page"
+                data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
+                data-infinate-scroll-loading-selector="#topicListLoader"
+                class="list-group list-group-flush list-group-hover">
                 @foreach (var topic in Model.Results.Data)
                 {
                     <li class="list-group-item list-group-item-action pt-4">
@@ -116,7 +121,7 @@
     </card-body>
 </card>
 
-@if (Model.Pager.Enabled)
+@if (Model.Pager.Enabled && !Model.Options.InfiniteScrollOptions.Enabled)
 {
     <div class="mt-4 mb-4">
         <pager model="@Model.Pager"></pager>

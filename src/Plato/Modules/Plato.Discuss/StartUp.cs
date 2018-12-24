@@ -107,10 +107,10 @@ namespace Plato.Discuss
 
             // discuss get
             routes.MapAreaRoute(
-                name: "DiscussGet",
+                name: "DiscussGetTopics",
                 areaName: "Plato.Discuss",
                 template: "discuss/get",
-                defaults: new { controller = "Home", action = "Get" }
+                defaults: new { controller = "Home", action = "GetTopics" }
             );
 
 

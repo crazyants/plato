@@ -1,69 +1,16 @@
 ﻿@model TopicViewModel
 
-
-@if (Model.Pager.Total > Model.Pager.PageSize)
-{
-    <div class="mt-4">
-        <pager model="@Model.Pager"></pager>
-    </div>
-}
-
 @if (Model.Replies != null)
 {
     @foreach (var reply in Model.Replies.Data)
     {
-        <div class="topic-reply">
-            <div class="topic-reply-left">
-                <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@reply.CreatedUserId" asp-route-alias="@reply.CreatedBy.Alias" class="avatar-link">
-                    <avatar data-toggle="tooltip" title="@reply.CreatedBy.DisplayName" class="avatar" url="@reply.CreatedBy.Avatar.Url" />
-                </a>
-            </div>
-            <div class="topic-reply-body">
-                <card>
-                    <card-title>
-                        <div class="card-title float-left">
-                            <a asp-route-area="Plato.Users" asp-route-controller="Home" asp-route-action="Display" asp-route-id="@reply.CreatedUserId" asp-route-alias="@reply.CreatedBy.Alias" class="avatar-link">
-                                @reply.CreatedBy.DisplayName
-                            </a>
-                            @T["posted "]
-                            <span data-toggle="tooltip" title="@reply.CreatedDate">
-                                @reply.CreatedDate.ToPrettyDate()
-                            </span>
-                            @if (reply.IsPrivate)
-                            {
-                                <span class="badge badge-primary">
-                                    @T["Private"]
-                                </span>
-                            }
-                            @if (reply.IsDeleted)
-                            {
-                                <span class="badge badge-danger">
-                                    @T["Deleted"]
-                                </span>
-                            }
-                            @if (reply.IsClosed)
-                            {
-                                <span class="badge badge-success">
-                                    @T["Closed"]
-                                </span>
-                            }
-                        </div>
-                        <navigation name="topicreply"
-                                    model="reply"
-                                    class="nav navbar p-0 float-right"
-                                    child-ul-css-class="dropdown-menu" />
-                    </card-title>
-                    <card-body class="card-body-flush">
-                        <div class="markdown-body m-3" data-provide="markdownBody">
-                            @Html.Raw(@reply.Html)
-                        </div>
-                        <navigation name="topicreply-footer"
-                                    model="reply"
-                                    enable-list="false" />
-                    </card-body>
-                </card>
-            </div>
-        </div>
+        @await DisplayAsync(new View("TopicReplyListItem", new
+        {
+            model = new TopicReplyListItemViewModel()
+            {
+                Reply = reply
+            }
+        }))
     }
 }
 else

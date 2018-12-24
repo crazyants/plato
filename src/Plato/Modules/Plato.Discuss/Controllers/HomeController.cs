@@ -121,6 +121,9 @@ namespace Plato.Discuss.Controllers
             if (pager.PageSize != defaultPagerOptions.PageSize)
                 this.RouteData.Values.Add("pager.size", pager.PageSize);
             
+            // Build infinate scroll options
+            opts.InfiniteScrollOptions = GetIndexInfiniteScrollOptions();
+
             // Add view options to context for use within view adaptors
             this.HttpContext.Items[typeof(TopicIndexViewModel)] = new TopicIndexViewModel()
             {
@@ -159,7 +162,7 @@ namespace Plato.Discuss.Controllers
             return Index(opts, pager);
         }
         
-        public Task<IActionResult> Get(
+        public Task<IActionResult> GetTopics(
           TopicIndexOptions opts,
           PagerOptions pager)
         {
@@ -601,6 +604,20 @@ namespace Plato.Discuss.Controllers
         #endregion
 
         #region "Private Methods"
+
+        InfiniteScrollOptions GetIndexInfiniteScrollOptions()
+        {
+            
+            // Swaps current action for "Get" action and removes current page 
+            var routeValues = new RouteValueDictionary(this.RouteData.Values) { ["action"] = nameof(GetTopics) };
+            routeValues.Remove("pager.page");
+
+            return new InfiniteScrollOptions()
+            {
+                CallbackUrl = _contextFacade.GetRouteUrl(routeValues)
+            };
+
+        }
 
         string GetSampleMarkDown(int number)
         {
