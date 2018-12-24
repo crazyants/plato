@@ -193,7 +193,7 @@ $(function (win, doc, $) {
 
                                 var id = $(this).attr("data-notification-id"),
                                     $target = $caller.find("#notification" + id);
-
+                                
                                 $badge.notificationsBadge("pulseIn");
                                 $target.slideUp("fast", function () {
 
@@ -202,7 +202,7 @@ $(function (win, doc, $) {
 
                                     win.$.Plato.Http({
                                         method: "DELETE",
-                                        url: 'api/notifications/users/delete?id=' + id
+                                        url: 'api/notifications/user/delete?id=' + id
                                     }).done(function(response) {
                                         if (response.statusCode === 200) {
                                             methods.update($caller);

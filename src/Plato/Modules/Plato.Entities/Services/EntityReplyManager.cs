@@ -136,15 +136,15 @@ namespace Plato.Entities.Services
                 throw new ArgumentNullException(nameof(reply.Message));
             }
 
-            if (reply.ModifiedUserId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(reply.ModifiedUserId));
-            }
+            //if (reply.ModifiedUserId <= 0)
+            //{
+            //    throw new ArgumentOutOfRangeException(nameof(reply.ModifiedUserId));
+            //}
             
-            if (reply.ModifiedDate == null)
-            {
-                throw new ArgumentNullException(nameof(reply.ModifiedDate));
-            }
+            //if (reply.ModifiedDate == null)
+            //{
+            //    throw new ArgumentNullException(nameof(reply.ModifiedDate));
+            //}
             
             var result = new CommandResult<TReply>();
 

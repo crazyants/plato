@@ -13,8 +13,7 @@ namespace Plato.Internal.Drawing.Letters
     {
 
         private MemoryStream _stream;
-        private readonly Random _random = new Random();
-
+     
         private readonly IDisposableBitmap _renderer;
 
         public InMemoryLetterRenderer(IDisposableBitmap renderer)
