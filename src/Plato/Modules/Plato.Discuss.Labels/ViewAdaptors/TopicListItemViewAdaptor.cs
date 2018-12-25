@@ -122,7 +122,7 @@ namespace Plato.Discuss.Labels.ViewAdaptors
             var viewModel = _actionContextAccessor.ActionContext.HttpContext.Items[typeof(TopicIndexViewModel)] as TopicIndexViewModel;
         
             // Get all entities for our current view
-            var entities = await _topicService.Get(
+            var entities = await _topicService.GetTopicsAsync(
                 viewModel?.Options, 
                 viewModel?.Pager);
 

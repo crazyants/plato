@@ -14,7 +14,7 @@ namespace Plato.Discuss.Services
 
     public interface ITopicService
     {
-        Task<IPagedResults<Topic>> Get(TopicIndexOptions options, PagerOptions pager);
+        Task<IPagedResults<Topic>> GetTopicsAsync(TopicIndexOptions options, PagerOptions pager);
 
     }
 
@@ -38,7 +38,7 @@ namespace Plato.Discuss.Services
             _roleStore = roleStore;
         }
 
-        public async Task<IPagedResults<Topic>> Get(TopicIndexOptions options, PagerOptions pager)
+        public async Task<IPagedResults<Topic>> GetTopicsAsync(TopicIndexOptions options, PagerOptions pager)
         {
             
             if (options == null)

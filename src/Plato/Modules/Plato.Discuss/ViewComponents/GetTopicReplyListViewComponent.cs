@@ -6,25 +6,26 @@ using Plato.Internal.Navigation;
 
 namespace Plato.Discuss.ViewComponents
 {
-    public class GetTopicListViewComponent : ViewComponent
+
+    public class GetTopicReplyListViewComponent : ViewComponent
     {
         
-        private readonly ITopicService _topicService;
+        private readonly IReplyService _replyService;
 
-        public GetTopicListViewComponent(
-            ITopicService topicService)
+        public GetTopicReplyListViewComponent(
+            IReplyService replyService)
         {
-            _topicService = topicService;
+            _replyService = replyService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
-            TopicIndexOptions options,
+            TopicOptions options,
             PagerOptions pager)
         {
 
             if (options == null)
             {
-                options = new TopicIndexOptions();
+                options = new TopicOptions();
             }
 
             if (pager == null)
@@ -35,29 +36,27 @@ namespace Plato.Discuss.ViewComponents
             return View(await GetViewModel(options, pager));
 
         }
-        
-        async Task<TopicIndexViewModel> GetViewModel(
-            TopicIndexOptions options,
+
+        async Task<TopicViewModel> GetViewModel(
+            TopicOptions options,
             PagerOptions pager)
         {
-
-            // Get results
-            var results = await _topicService.GetTopicsAsync(options, pager);
-
+            
+            var results = await _replyService.GetRepliesAsync(options, pager);
+            
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);
-            
+
             // Return view model
-            return new TopicIndexViewModel
+            return new TopicViewModel
             {
-                Results = results,
                 Options = options,
-                Pager = pager
-            }; 
+                Pager = pager,
+                Replies = results
+        };
 
         }
 
     }
-    
-}
 
+}

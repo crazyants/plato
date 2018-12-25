@@ -28,7 +28,7 @@
             </span>
         }
         <navigation name="topic"
-                    model="@Model.Topic"
+                    model="Model.Topic"
                     class="nav navbar p-0 float-right"
                     child-ul-css-class="dropdown-menu" />
     </card-title>
@@ -37,7 +37,7 @@
             @Html.Raw(@Model.Topic.Html)
         </div>
         <navigation name="topic-footer"
-                    model="@Model.Topic"
+                    model="Model.Topic"
                     enable-list="false" />
     </card-body>
 

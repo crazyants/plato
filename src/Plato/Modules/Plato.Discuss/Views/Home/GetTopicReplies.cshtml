@@ -1,0 +1,11 @@
+﻿@model TopicViewModel
+@{
+    Layout = null;
+}
+
+@await DisplayAsync(new View("GetTopicReplyList", new
+{
+    options = @Model.Options,
+    pager = @Model.Pager
+}))
+

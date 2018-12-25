@@ -25,9 +25,12 @@ namespace Plato.Discuss.ViewModels
 
         public TopicParams Params { get; set; }
 
+        public InfiniteScrollOptions InfiniteScrollOptions { get; set; }
+
         public TopicOptions()
         {
             Params = new TopicParams();
+            InfiniteScrollOptions = new InfiniteScrollOptions();
         }
     }
 
@@ -35,7 +38,7 @@ namespace Plato.Discuss.ViewModels
     public class TopicParams
     {
 
-        public int TopicId { get; set; }
+        public int EntityId { get; set; }
 
     }
 }

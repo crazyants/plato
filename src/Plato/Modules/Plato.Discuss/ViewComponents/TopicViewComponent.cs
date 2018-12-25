@@ -41,12 +41,12 @@ namespace Plato.Discuss.ViewComponents
             TopicOptions options)
         {
 
-            if (options.Params.TopicId <= 0)
+            if (options.Params.EntityId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(options.Params.TopicId));
+                throw new ArgumentOutOfRangeException(nameof(options.Params.EntityId));
             }
 
-            var topic = await _entityStore.GetByIdAsync(options.Params.TopicId);
+            var topic = await _entityStore.GetByIdAsync(options.Params.EntityId);
             if (topic == null)
             {
                 throw new ArgumentNullException();

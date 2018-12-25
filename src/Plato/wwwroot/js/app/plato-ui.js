@@ -2040,7 +2040,7 @@ $(function (win, doc, $) {
                 // Append our page index to the callback url
                 url += url.indexOf("&") >= 0 ? "&" : "?";
                 url += defaults.pagerKey + "=" + methods._page;
-
+                
                 // Request
                 win.$.Plato.Http({
                     url: url,

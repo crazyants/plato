@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Plato.Discuss.Models;
+using Plato.Discuss.Services;
 using Plato.Discuss.ViewModels;
 using Plato.Entities.Stores;
 using Plato.Internal.Navigation;
@@ -15,12 +16,16 @@ namespace Plato.Discuss.ViewComponents
         private readonly IEntityStore<Topic> _entityStore;
         private readonly IEntityReplyStore<Reply> _entityReplyStore;
 
+        private readonly IReplyService _replyService;
+
         public TopicReplyListViewComponent(
             IEntityReplyStore<Reply> entityReplyStore,
-            IEntityStore<Topic> entityStore)
+            IEntityStore<Topic> entityStore,
+            IReplyService replyService)
         {
             _entityReplyStore = entityReplyStore;
             _entityStore = entityStore;
+            _replyService = replyService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(
@@ -48,31 +53,9 @@ namespace Plato.Discuss.ViewComponents
             TopicOptions options,
             PagerOptions pager)
         {
-
-            if (options.Params.TopicId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(options.Params.TopicId));
-            }
-
-            var topic = await _entityStore.GetByIdAsync(options.Params.TopicId);
-            if (topic == null)
-            {
-                throw new ArgumentNullException();
-            }
             
-            // Get results
-            var results =     await _entityReplyStore.QueryAsync()
-                .Take(pager.Page, pager.PageSize)
-                .Select<EntityReplyQueryParams>(q =>
-                {
-                    q.EntityId.Equals(topic.Id);
-                    q.HideSpam.True();
-                    q.HidePrivate.True();
-                    q.HideDeleted.True();
-                })
-                .OrderBy("CreatedDate")
-                .ToList();
-
+            var results = await _replyService.GetRepliesAsync(options, pager);
+            
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);
 
@@ -81,7 +64,6 @@ namespace Plato.Discuss.ViewComponents
             {
                 Options = options,
                 Pager = pager,
-                Topic = topic,
                 Replies = results
         };
 

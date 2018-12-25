@@ -63,6 +63,7 @@ namespace Plato.Discuss
 
             // Services
             services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<IReplyService, ReplyService>();
 
             // Notification providers
             services.AddScoped<INotificationTypeProvider, EmailNotifications>();
@@ -105,7 +106,7 @@ namespace Plato.Discuss
                 defaults: new { controller = "Home", action = "Index" }
             );
 
-            // discuss get
+            // get topics
             routes.MapAreaRoute(
                 name: "DiscussGetTopics",
                 areaName: "Plato.Discuss",
@@ -113,7 +114,14 @@ namespace Plato.Discuss
                 defaults: new { controller = "Home", action = "GetTopics" }
             );
 
-
+            // get replies
+            routes.MapAreaRoute(
+                name: "DiscussGetTopicReplies",
+                areaName: "Plato.Discuss",
+                template: "discuss/topic/get/{id}/{alias?}",
+                defaults: new { controller = "Home", action = "GetTopicReplies" }
+            );
+            
             // discuss popular
             routes.MapAreaRoute(
                 name: "DiscussPopular",

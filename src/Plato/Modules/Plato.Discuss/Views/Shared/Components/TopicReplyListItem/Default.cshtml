@@ -37,7 +37,7 @@
                     }
                 </div>
                 <navigation name="topicreply"
-                            model="@Model.Reply"
+                            model="Model.Reply"
                             class="nav navbar p-0 float-right"
                             child-ul-css-class="dropdown-menu" />
             </card-title>
@@ -46,7 +46,7 @@
                     @Html.Raw(@Model.Reply.Html)
                 </div>
                 <navigation name="topicreply-footer"
-                            model="@Model.Reply"
+                            model="Model.Reply"
                             enable-list="false" />
             </card-body>
         </card>

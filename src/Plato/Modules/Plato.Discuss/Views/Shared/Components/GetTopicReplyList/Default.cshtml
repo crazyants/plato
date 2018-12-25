@@ -1,0 +1,15 @@
+﻿@model TopicViewModel
+
+@if (Model.Replies != null)
+{
+    @foreach (var reply in Model.Replies.Data)
+    {
+        @await DisplayAsync(new View("TopicReplyListItem", new
+        {
+            model = new TopicReplyListItemViewModel()
+            {
+                Reply = reply
+            }
+        }))
+    }
+}

@@ -110,7 +110,7 @@ namespace Plato.Discuss.ViewComponents
                 Value = OrderBy.Asc
             },
         };
-        
+
         private readonly ITopicService _topicService;
 
         public TopicListViewComponent(
@@ -133,10 +133,8 @@ namespace Plato.Discuss.ViewComponents
             {
                 pager = new PagerOptions();
             }
-
-            var model = await GetViewModel(options, pager);
             
-            return View(model);
+            return View(await GetViewModel(options, pager));
 
         }
         
@@ -146,7 +144,7 @@ namespace Plato.Discuss.ViewComponents
         {
 
             // Get results
-            var results = await _topicService.Get(options, pager);
+            var results = await _topicService.GetTopicsAsync(options, pager);
 
             // Set total on pager
             pager.SetTotal(results?.Total ?? 0);

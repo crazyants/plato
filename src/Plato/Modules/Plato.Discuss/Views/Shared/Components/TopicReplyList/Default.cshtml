@@ -2,16 +2,28 @@
 
 @if (Model.Replies != null)
 {
-    @foreach (var reply in Model.Replies.Data)
-    {
-        @await DisplayAsync(new View("TopicReplyListItem", new
+    <div data-provide="infiniteScroll"
+         data-infinite-scroll-url="@Model.Options.InfiniteScrollOptions.CallbackUrl"
+         data-infinite-scroll-page="@Model.Pager.Page"
+         data-infinite-scroll-total-pages="@Model.Pager.TotalPages"
+         data-infinate-scroll-loading-selector="#replyListLoader">
+        @foreach (var reply in Model.Replies.Data)
         {
-            model = new TopicReplyListItemViewModel()
+            @await DisplayAsync(new View("TopicReplyListItem", new
             {
-                Reply = reply
-            }
-        }))
-    }
+                model = new TopicReplyListItemViewModel()
+                {
+                    Reply = reply
+                }
+            }))
+        }
+        <div id="replyListLoader" style="display: none;">
+            <p class="text-center">
+                <i class="fal fa-2x fa-spinner fa-spin py-4"></i>
+            </p>
+        </div>
+    </div>
+
 }
 else
 {
@@ -25,7 +37,7 @@ else
     </div>
 }
 
-@if (Model.Pager.Total > Model.Pager.PageSize)
+@if (Model.Pager.Enabled && !Model.Options.InfiniteScrollOptions.Enabled)
 {
     <div class="mt-4">
         <pager model="@Model.Pager"></pager>
