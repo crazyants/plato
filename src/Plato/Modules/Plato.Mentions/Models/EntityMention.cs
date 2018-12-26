@@ -38,8 +38,8 @@ namespace Plato.Mentions.Models
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
-            
+                CreatedDate = (DateTimeOffset)dr["CreatedDate"];
+
         }
 
     }

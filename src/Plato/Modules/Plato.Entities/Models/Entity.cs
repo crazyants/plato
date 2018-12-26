@@ -227,8 +227,8 @@ namespace Plato.Entities.Models
             }
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
-            
+                CreatedDate = (DateTimeOffset)dr["CreatedDate"];
+
             if (dr.ColumnIsNotNull("ModifiedUserId"))
                 ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
 
@@ -248,8 +248,8 @@ namespace Plato.Entities.Models
             }
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
-
+                ModifiedDate = (DateTimeOffset)dr["ModifiedDate"];
+         
             if (dr.ColumnIsNotNull("LastReplyId"))
                 LastReplyId = Convert.ToInt32(dr["LastReplyId"]);
 
@@ -270,7 +270,7 @@ namespace Plato.Entities.Models
             }
             
             if (dr.ColumnIsNotNull("LastReplyDate"))
-                LastReplyDate = DateTimeOffset.Parse(Convert.ToString((dr["LastReplyDate"])));
+                LastReplyDate = (DateTimeOffset)dr["LastReplyDate"];
 
             if (dr.ColumnIsNotNull("Rank"))
                 Rank = Convert.ToInt32(dr["Rank"]);

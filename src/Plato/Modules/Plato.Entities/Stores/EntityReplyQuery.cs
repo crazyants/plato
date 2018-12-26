@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Plato.Entities.Models;
@@ -396,7 +397,7 @@ namespace Plato.Entities.Stores
             if (_query.SortColumns.Count == 0) return null;
             var sb = new StringBuilder();
             var i = 0;
-            foreach (var sortColumn in _query.SortColumns)
+            foreach (var sortColumn in GetSafeSortColumns())
             {
                 sb.Append(GetQualifiedColumnName(sortColumn.Key));
                 if (sortColumn.Value != OrderBy.Asc)
@@ -408,7 +409,74 @@ namespace Plato.Entities.Stores
             return sb.ToString();
         }
 
+        IDictionary<string, OrderBy> GetSafeSortColumns()
+        {
+            var ourput = new Dictionary<string, OrderBy>();
+            foreach (var sortColumn in _query.SortColumns)
+            {
+                var columnName = GetSortColumn(sortColumn.Key);
+                if (String.IsNullOrEmpty(columnName))
+                {
+                    throw new Exception($"No sort column could be found for the supplied key of '{sortColumn.Key}'");
+                }
+                ourput.Add(columnName, sortColumn.Value);
+
+            }
+
+            return ourput;
+        }
+
+        string GetSortColumn(string columnName)
+        {
+
+            if (String.IsNullOrEmpty(columnName))
+            {
+                return string.Empty;
+            }
+
+            switch (columnName.ToLowerInvariant())
+            {
+                case "id":
+                    return "r.Id";
+                case "message":
+                    return "r.Message";
+                case "html":
+                    return "r.Html";
+                case "abstract":
+                    return "r.Abtract";
+                case "private":
+                    return "r.IsPrivate";
+                case "isprivate":
+                    return "r.IsPrivate";
+                case "spam":
+                    return "r.IsSpam";
+                case "isspam":
+                    return "r.IsSpam";
+                case "pinned":
+                    return "r.IsPinned";
+                case "ispinned":
+                    return "r.IsPinned";
+                case "closed":
+                    return "r.IsClosed";
+                case "isclosed":
+                    return "r.IsClosed";
+                case "created":
+                    return "r.CreatedDate";
+                case "createddate":
+                    return "r.CreatedDate";
+                case "modified":
+                    return "r.ModifiedDate";
+                case "modifieddate":
+                    return "r.ModifiedDate";
+               
+            }
+
+            return string.Empty;
+
+        }
+        
         #endregion
+
     }
 
     #endregion

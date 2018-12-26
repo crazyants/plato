@@ -23,6 +23,10 @@ namespace Plato.Discuss.ViewModels
     public class TopicOptions
     {
 
+        public string Sort { get; set; } = "CreatedDate";
+
+        public OrderBy Order { get; set; } = OrderBy.Asc;
+
         public TopicParams Params { get; set; }
 
         public InfiniteScrollOptions InfiniteScrollOptions { get; set; }

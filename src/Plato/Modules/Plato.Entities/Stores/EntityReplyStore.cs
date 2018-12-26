@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Plato.Entities.Models;
 using Plato.Entities.Repositories;
-using Plato.Internal.Cache;
 using Plato.Internal.Cache.Abstractions;
 using Plato.Internal.Data.Abstractions;
 
@@ -58,7 +56,7 @@ namespace Plato.Entities.Stores
             {
                 if (_logger.IsEnabled(LogLevel.Information))
                 {
-                    _logger.LogInformation("Update entity reply with id {1}",
+                    _logger.LogInformation("Updated entity reply with id {1}",
                        updatedReply.Id);
                 }
                 //_cacheManager.CancelTokens(typeof(EntityStore), reply.EntityId);

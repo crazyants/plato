@@ -53,7 +53,7 @@ namespace Plato.Follows.Models
             }
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
+                CreatedDate = (DateTimeOffset)dr["CreatedDate"];
 
         }
     }

@@ -59,15 +59,15 @@ namespace Plato.Tags.Models
                 TotalFollows = Convert.ToInt32(dr["TotalFollows"]);
 
             if (dr.ColumnIsNotNull("LastSeenDate"))
-                LastSeenDate = DateTimeOffset.Parse(Convert.ToString((dr["LastSeenDate"])));
+                LastSeenDate = (DateTimeOffset)dr["LastSeenDate"];
 
             if (dr.ColumnIsNotNull("CreatedUserId"))
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
-            
-            
+                CreatedDate = (DateTimeOffset)dr["CreatedDate"];
+
+
         }
 
     }

@@ -130,13 +130,13 @@ namespace Plato.Categories.Models
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
+                CreatedDate = (DateTimeOffset)dr["CreatedDate"];
 
             if (dr.ColumnIsNotNull("ModifiedUserId"))
                 ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
+                ModifiedDate = (DateTimeOffset)dr["ModifiedDate"];
         }
 
         public int CompareTo(ICategory other)

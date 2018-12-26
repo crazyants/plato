@@ -29,7 +29,7 @@ namespace Plato.Internal.Models.Badges
                 UserId = Convert.ToInt32(dr["UserId"]);
             
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
+                CreatedDate = (DateTimeOffset)dr["CreatedDate"];
 
         }
 

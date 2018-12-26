@@ -79,7 +79,6 @@ namespace Plato.Tags.Handlers
                         Name = "CreatedDate",
                         DbType = DbType.DateTimeOffset
                     }
-                    
                 }
         };
         
@@ -118,7 +117,7 @@ namespace Plato.Tags.Handlers
                 new SchemaColumn()
                 {
                     Name = "CreatedDate",
-                    DbType = DbType.DateTime
+                    DbType = DbType.DateTimeOffset
                 }
             }
         };

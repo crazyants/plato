@@ -27,7 +27,9 @@ namespace Plato.Discuss.Services
             _entityReplyStore = entityReplyStore;
         }
 
-        public async Task<IPagedResults<Reply>> GetRepliesAsync(TopicOptions options, PagerOptions pager)
+        public async Task<IPagedResults<Reply>> GetRepliesAsync(
+            TopicOptions options,
+            PagerOptions pager)
         {
 
             return  await _entityReplyStore.QueryAsync()
@@ -39,7 +41,7 @@ namespace Plato.Discuss.Services
                     q.HidePrivate.True();
                     q.HideDeleted.True();
                 })
-                .OrderBy("CreatedDate")
+                .OrderBy(options.Sort, options.Order)
                 .ToList();
 
         }

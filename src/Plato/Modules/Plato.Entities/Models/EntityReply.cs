@@ -12,6 +12,8 @@ namespace Plato.Entities.Models
 
         public int Id { get; set; }
         
+        public int ParentId { get; set; }
+
         public int EntityId { get; set; }
         
         public int CategoryId { get; set; }
@@ -34,13 +36,15 @@ namespace Plato.Entities.Models
 
         public bool IsClosed { get; set; }
 
+        public bool IsAnswer { get; set; }
+
         public int TotalReactions { get; set; }
 
         public int TotalReports { get; set; }
         
-        public int MeanReactions { get; set; }
-        
-        public int MeanReports { get; set; }
+        public int TotalLinks { get; set; }
+
+        public int TotalImages { get; set; }
 
         public int CreatedUserId { get; set; }
 
@@ -119,8 +123,8 @@ namespace Plato.Entities.Models
             }
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
-
+                CreatedDate = (DateTimeOffset)dr["CreatedDate"];
+            
             if (dr.ColumnIsNotNull("ModifiedUserId"))
                 ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
 
@@ -140,7 +144,7 @@ namespace Plato.Entities.Models
             }
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
+                ModifiedDate = (DateTimeOffset)dr["CreatedDate"];
 
         }
         

@@ -10,6 +10,8 @@ namespace Plato.Entities.Models
     {
         int Id { get; set; }
 
+        int ParentId { get; set; }
+
         int EntityId { get; set; }
 
         int CategoryId { get; set; }
@@ -32,13 +34,15 @@ namespace Plato.Entities.Models
 
         bool IsClosed { get; set; }
 
+        bool IsAnswer { get; set; }
+        
         int TotalReactions { get; set; }
 
         int TotalReports { get; set; }
 
-        int MeanReactions { get; set; }
+        int TotalLinks { get; set; }
 
-        int MeanReports { get; set; }
+        int TotalImages { get; set; }
 
         int CreatedUserId { get; set; }
 

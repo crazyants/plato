@@ -214,10 +214,10 @@ namespace Plato.Internal.Models.Users
                 PasswordHash = Convert.ToString(dr["PasswordHash"]);
 
             if (dr.ColumnIsNotNull("PasswordExpiryDate"))
-                PasswordExpiryDate = DateTimeOffset.Parse(Convert.ToString((dr["PasswordExpiryDate"])));
+                PasswordExpiryDate = (DateTimeOffset)dr["PasswordExpiryDate"];
 
             if (dr.ColumnIsNotNull("PasswordUpdatedDate"))
-                PasswordUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["PasswordUpdatedDate"])));
+                PasswordUpdatedDate = (DateTimeOffset)dr["PasswordUpdatedDate"];
 
             if (dr.ColumnIsNotNull("SecurityStamp"))
                 SecurityStamp = Convert.ToString(dr["SecurityStamp"]);
@@ -271,25 +271,25 @@ namespace Plato.Internal.Models.Users
                 Visits = Convert.ToInt32(dr["Visits"]);
 
             if (dr.ColumnIsNotNull("VisitsUpdatedDate"))
-                VisitsUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["VisitsUpdatedDate"])));
+                VisitsUpdatedDate = (DateTimeOffset)dr["VisitsUpdatedDate"];
 
             if (dr.ColumnIsNotNull("MinutesActive"))
                 MinutesActive = Convert.ToInt32(dr["MinutesActive"]);
 
             if (dr.ColumnIsNotNull("MinutesActiveUpdatedDate"))
-                MinutesActiveUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["VisitsUpdatedDate"])));
-            
+                MinutesActiveUpdatedDate = (DateTimeOffset)dr["MinutesActiveUpdatedDate"];
+
             if (dr.ColumnIsNotNull("Reputation"))
                 Reputation = Convert.ToInt32(dr["Reputation"]);
             
             if (dr.ColumnIsNotNull("ReputationUpdatedDate"))
-                ReputationUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["ReputationUpdatedDate"])));
-            
+                ReputationUpdatedDate = (DateTimeOffset)dr["ReputationUpdatedDate"];
+
             if (dr.ColumnIsNotNull("Rank"))
                 Rank = Convert.ToInt32(dr["Rank"]);
 
             if (dr.ColumnIsNotNull("RankUpdatedDate"))
-                RankUpdatedDate = DateTimeOffset.Parse(Convert.ToString((dr["RankUpdatedDate"])));
+                RankUpdatedDate = (DateTimeOffset)dr["RankUpdatedDate"];
 
             if (dr.ColumnIsNotNull("Signature"))
                 Signature = Convert.ToString(dr["Signature"]);
@@ -301,7 +301,7 @@ namespace Plato.Internal.Models.Users
                 IsBanned = Convert.ToBoolean(dr["IsBanned"]);
 
             if (dr.ColumnIsNotNull("BanExpiryDate"))
-                BanExpiryDate = DateTimeOffset.Parse(Convert.ToString((dr["BanExpiryDate"])));
+                BanExpiryDate = (DateTimeOffset)dr["BanExpiryDate"];
 
             if (dr.ColumnIsNotNull("UserType"))
                 UserType = (UserType)Convert.ToInt16(dr["UserType"]);
@@ -310,16 +310,16 @@ namespace Plato.Internal.Models.Users
                 CreatedUserId = Convert.ToInt32(dr["CreatedUserId"]);
 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
+                CreatedDate = (DateTimeOffset)dr["CreatedDate"];
 
             if (dr.ColumnIsNotNull("ModifiedUserId"))
                 ModifiedUserId = Convert.ToInt32(dr["ModifiedUserId"]);
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                ModifiedDate = DateTimeOffset.Parse(Convert.ToString((dr["ModifiedDate"])));
-            
+                ModifiedDate = (DateTimeOffset)dr["ModifiedDate"];
+
             if (dr.ColumnIsNotNull("LastLoginDate"))
-                LastLoginDate = DateTimeOffset.Parse(Convert.ToString((dr["LastLoginDate"])));
+                LastLoginDate = (DateTimeOffset)dr["LastLoginDate"];
 
         }
         

@@ -395,29 +395,33 @@ namespace Plato.Discuss.Controllers
             {
                 return NotFound();
             }
-            
-            // Validate model state within all view providers
-            if (await _replyViewProvider.IsModelStateValid(new Reply()
+
+            // Get authenticated user
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
+            // Build reply
+            var reply = new Reply()
             {
-                Id = model.EntityId,
-                Message = model.Message
-            }, this))
+                EntityId = model.EntityId,
+                Message = model.Message,
+                CreatedUserId = user?.Id ?? 0,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            // Validate model state within all view providers
+            if (await _replyViewProvider.IsModelStateValid(reply, this))
             {
 
                 // We need to first add the reply so we have a nuique Id
                 // for all ProvideUpdateAsync methods within any involved view provider
-                var reply = await _replyManager.CreateAsync(new Reply()
-                {
-                    EntityId = model.EntityId,
-                    Message = model.Message
-                });
+                var result = await _replyManager.CreateAsync(reply);
 
                 // Ensure the insert was successful
-                if (reply.Succeeded)
+                if (result.Succeeded)
                 {
 
                     // Execute view providers ProvideUpdateAsync method
-                    await _replyViewProvider.ProvideUpdateAsync(reply.Response, this);
+                    await _replyViewProvider.ProvideUpdateAsync(result.Response, this);
 
                     // Everything was OK
                     _alerter.Success(T["Reply Added Successfully!"]);
@@ -433,7 +437,7 @@ namespace Plato.Discuss.Controllers
                 else
                 {
                     // Errors that may have occurred whilst creating the entity
-                    foreach (var error in reply.Errors)
+                    foreach (var error in result.Errors)
                     {
                         ViewData.ModelState.AddModelError(string.Empty, error.Description);
                     }
@@ -620,9 +624,13 @@ namespace Plato.Discuss.Controllers
                 return NotFound();
             }
 
+            var user = await _contextFacade.GetAuthenticatedUserAsync();
+
             // Update the message
             reply.Message = model.Message;
-       
+            reply.ModifiedUserId = user?.Id ?? 0;
+            reply.ModifiedDate = DateTimeOffset.UtcNow;
+            
             // Validate model state within all view providers
             if (await _replyViewProvider.IsModelStateValid(reply, this))
             {

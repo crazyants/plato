@@ -74,7 +74,7 @@ namespace Plato.Internal.Notifications.Abstractions
                 Url = Convert.ToString(dr["Url"]);
 
             if (dr.ColumnIsNotNull("ReadDate"))
-                ReadDate = DateTimeOffset.Parse(Convert.ToString((dr["ReadDate"])));
+                ReadDate = (DateTimeOffset)dr["ReadDate"];
 
             if (dr.ColumnIsNotNull("CreatedUserId"))
             {
@@ -96,7 +96,7 @@ namespace Plato.Internal.Notifications.Abstractions
             }
                 
             if (dr.ColumnIsNotNull("CreatedDate"))
-                CreatedDate = DateTimeOffset.Parse(Convert.ToString((dr["CreatedDate"])));
+                CreatedDate = (DateTimeOffset)dr["CreatedDate"];
 
         }
 

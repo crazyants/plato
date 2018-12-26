@@ -41,6 +41,7 @@ namespace Plato.Entities.Repositories
 
             var id = await InsertUpdateInternal(
                 reply.Id,
+                reply.ParentId,
                 reply.EntityId,
                 reply.Message,
                 reply.Html,
@@ -51,6 +52,11 @@ namespace Plato.Entities.Repositories
                 reply.IsPinned,
                 reply.IsDeleted,
                 reply.IsClosed,
+                reply.IsAnswer,
+                reply.TotalReactions,
+                reply.TotalReports,
+                reply.TotalLinks,
+                reply.TotalImages,
                 reply.CreatedUserId,
                 reply.CreatedDate,
                 reply.ModifiedUserId,
@@ -147,10 +153,10 @@ namespace Plato.Entities.Repositories
             return reply;
 
         }
-
-
+        
         async Task<int> InsertUpdateInternal(
           int id,
+          int parentId,
           int entityId,
           string message,
           string html,
@@ -161,6 +167,11 @@ namespace Plato.Entities.Repositories
           bool isPinned,
           bool isDeleted,
           bool isClosed,
+          bool isAnswer,
+          int totalReactions,
+          int totalReports,
+          int totalLinks,
+          int totalImages,
           int createdUserId,
           DateTimeOffset? createdDate,
           int modifiedUserId,
@@ -186,6 +197,7 @@ namespace Plato.Entities.Repositories
                     CommandType.StoredProcedure,
                     "InsertUpdateEntityReply",
                     id,
+                    parentId,
                     entityId,
                     message.ToEmptyIfNull(),
                     html.ToEmptyIfNull(),
@@ -196,10 +208,15 @@ namespace Plato.Entities.Repositories
                     isPinned,
                     isDeleted,
                     isClosed,
+                    isAnswer,
+                    totalReactions,
+                    totalReports,
+                    totalLinks,
+                    totalImages,
                     createdUserId,
                     createdDate.ToDateIfNull(),
                     modifiedUserId,
-                    modifiedDate.ToDateIfNull(),
+                    modifiedDate,
                     new DbDataParameter(DbType.Int32, ParameterDirection.Output));
             }
             

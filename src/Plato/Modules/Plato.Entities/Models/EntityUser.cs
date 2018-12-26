@@ -40,7 +40,7 @@ namespace Plato.Entities.Models
                 LastReplyId = Convert.ToInt32(dr["LastReplyId"]);
 
             if (dr.ColumnIsNotNull("LastReplyDate"))
-                LastReplyDate = DateTimeOffset.Parse(Convert.ToString((dr["LastReplyDate"])));
+                LastReplyDate = (DateTimeOffset)dr["LastReplyDate"];
 
             if (dr.ColumnIsNotNull("TotalReplies"))
                 TotalReplies = Convert.ToInt32(dr["TotalReplies"]);
