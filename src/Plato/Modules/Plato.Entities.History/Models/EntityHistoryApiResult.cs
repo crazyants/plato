@@ -14,6 +14,9 @@ namespace Plato.Entities.History.Models
         [DataMember(Name = "text")]
         public string Text { get; set;  }
         
+        [DataMember(Name = "version")]
+        public string Version { get; set; }
+        
         [DataMember(Name = "url")]
         public string Url { get; set; }
 

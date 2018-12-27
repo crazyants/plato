@@ -271,10 +271,14 @@ namespace Plato.Discuss.Controllers
                 // so we have a nuique entity Id for all ProvideUpdateAsync
                 // methods within any involved view provider
                 var newTopic = await _topicManager.CreateAsync(topic);
-
+                
                 // Ensure the insert was successful
                 if (newTopic.Succeeded)
                 {
+
+                    // Indicate new topic to prevent topic update
+                    // on first creation within our topic view provider
+                    newTopic.Response.IsNewTopic = true;
 
                     // Execute view providers ProvideUpdateAsync method
                     await _topicViewProvider.ProvideUpdateAsync(newTopic.Response, this);

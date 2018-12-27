@@ -99,6 +99,7 @@ namespace Plato.Entities.History.Controllers
                     {
                         Id = history.Id,
                         Text = sb.ToString(),
+                        Version = history.Version,
                         CreatedBy = new UserApiResult()
                         {
                             Id = history.CreatedBy.Id,

@@ -22,12 +22,16 @@ namespace Plato.Entities.History.Models
         public short MajorVersion { get; set; }
 
         public short MinorVersion { get; set; }
-        
+
         public int CreatedUserId { get; set; }
 
         public DateTimeOffset? CreatedDate { get; set; }
 
         public SimpleUser CreatedBy { get; set; } = new SimpleUser();
+
+        // ----------
+
+        public string Version => MajorVersion + "." + MinorVersion;
         
         public void PopulateModel(IDataReader dr)
         {

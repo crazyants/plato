@@ -137,6 +137,11 @@ namespace Plato.Discuss.ViewProviders
         
         public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext context)
         {
+            
+            if (topic.IsNewTopic)
+            {
+                return default(IViewProviderResult);
+            }
 
             var entity = await _entityStore.GetByIdAsync(topic.Id);
             if (entity == null)
@@ -147,8 +152,6 @@ namespace Plato.Discuss.ViewProviders
             // Validate 
             if (await ValidateModelAsync(topic, context.Updater))
             {
-                
-                
                 // Update
                 var result = await _topicManager.UpdateAsync(topic);
 
