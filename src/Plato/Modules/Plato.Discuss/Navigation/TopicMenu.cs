@@ -44,7 +44,8 @@ namespace Plato.Discuss.Navigation
                     .Attributes(new Dictionary<string, object>()
                     {
                         {"data-provide", "tooltip"},
-                        {"title", T["Edit"]}
+                        {"title", T["Edit"]},
+                        {"data-entity-id", topic.Id.ToString() }
                     })
                     .Action("Edit", "Home", "Plato.Discuss", new RouteValueDictionary()
                     {
@@ -54,9 +55,9 @@ namespace Plato.Discuss.Navigation
                     .LocalNav()
                 , new string[] {"edit", "text-muted", "text-hidden" });
             
-            // Topic options
+            // Options
             builder
-                .Add(T["Topic Options"], int.MaxValue , options => options
+                .Add(T["Options"], int.MaxValue , options => options
                         .IconCss("fa fa-ellipsis-h")
                         .Attributes(new Dictionary<string, object>()
                         {
@@ -64,15 +65,23 @@ namespace Plato.Discuss.Navigation
                             {"title", T["Options"]}
                         })
                         .Add(T["Share"], share => share
-                            .Action("Index", "Home", "Plato.Discuss")
+                            .Action("Share", "Home", "Plato.Discuss")
+                            .Attributes(new Dictionary<string, object>()
+                            {
+                                {"data-toggle", "dialog"}
+                            })
                             //.Permission(Permissions.ManageRoles)
                             .LocalNav()
                         )
                         .Add(T["Report"], report => report
-                            .Action("Popular", "Home", "Plato.Discuss")
+                            .Action("Report", "Home", "Plato.Discuss")
+                            .Attributes(new Dictionary<string, object>()
+                            {
+                                {"data-toggle", "dialog"}
+                            })
                             //.Permission(Permissions.ManageRoles)
                             .LocalNav()
-                        ), new List<string>() { "options", "text-muted", "dropdown-toggle-no-caret", "text-hidden" }
+                        ), new List<string>() { "topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden" }
                 );
             
         }

@@ -266,6 +266,7 @@ $(function (win, doc, $) {
 
     }();
 
+    // history dropdown - simply populates history on dropdown click
     var historyDropdown = function () {
 
         var dataKey = "historyDropdown",

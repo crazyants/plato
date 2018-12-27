@@ -33,6 +33,10 @@ namespace Plato.Discuss.Navigation
         
             // Get model from navigation builder
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
+            if (reply == null)
+            {
+                return;
+            }
 
             // Edit reply
             builder.Add(T["Edit"], int.MinValue + 1, edit => edit
@@ -49,6 +53,34 @@ namespace Plato.Discuss.Navigation
                     //.Permission(Permissions.ManageRoles)
                     .LocalNav()
                 , new string[] {"edit-reply", "text-muted", "text-hidden"});
+
+
+            // Options
+            builder
+                .Add(T["Options"], int.MaxValue, options => options
+                        .IconCss("fa fa-ellipsis-h")
+                        .Attributes(new Dictionary<string, object>()
+                        {
+                            {"data-provide", "tooltip"},
+                            {"title", T["Options"]}
+                        })
+                        .Add(T["Share"], share => share
+                            .Action("Index", "Home", "Plato.Discuss")
+                            .Attributes(new Dictionary<string, object>()
+                            {
+                                {"data-provide", "tooltip"},
+                                {"title", T["Options"]}
+                            })
+                            //.Permission(Permissions.ManageRoles)
+                            .LocalNav()
+                        )
+                        .Add(T["Report"], report => report
+                            .Action("Popular", "Home", "Plato.Discuss")
+                            //.Permission(Permissions.ManageRoles)
+                            .LocalNav()
+                        ), new List<string>() { "topic-options", "text-muted", "dropdown-toggle-no-caret", "text-hidden" }
+                );
+
         }
 
     }

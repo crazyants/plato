@@ -217,7 +217,107 @@ $(function (win, doc, $) {
         };
 
     }();
-    
+
+    /* dialogSpy */
+    var dialogSpy = function () {
+
+        var dataKey = "dialogSpy",
+            dataIdKey = dataKey + "Id";
+
+        var defaults = {};
+
+        var methods = {
+            init: function ($caller, methodName) {
+
+                if (methodName) {
+                    if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
+                        this[methodName].apply(this, [$caller]);
+                    } else {
+                        alert(methodName + " is not a valid method!");
+                    }
+                    return;
+                }
+
+                methods.bind($caller);
+
+            },
+            bind: function ($caller) {
+                
+                $caller.bind("click",
+                    function (e) {
+
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        $().dialog({
+                            id: "shareDialog",
+                            body: {
+                                url: $(this).attr("href")
+                            },
+                            css: {
+                                modal: "modal fade",
+                                dialog: "modal-dialog modal-lg"
+                            }
+                        }, "show");
+                    });
+
+            }
+        }
+
+        return {
+            init: function () {
+
+                var options = {};
+                var methodName = null;
+                for (var i = 0; i < arguments.length; ++i) {
+                    var a = arguments[i];
+                    switch (a.constructor) {
+                        case Object:
+                            $.extend(options, a);
+                            break;
+                        case String:
+                            methodName = a;
+                            break;
+                        case Boolean:
+                            break;
+                        case Number:
+                            break;
+                        case Function:
+                            break;
+                    }
+                }
+
+                if (this.length > 0) {
+                    // $(selector).dialogSpy()
+                    return this.each(function () {
+                        if (!$(this).data(dataIdKey)) {
+                            var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
+                            $(this).data(dataIdKey, id);
+                            $(this).data(dataKey, $.extend({}, defaults, options));
+                        } else {
+                            $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
+                        }
+                        methods.init($(this), methodName);
+                    });
+                } else {
+                    // $().dialogSpy()
+                    var $caller = $("body");
+                    if (methodName) {
+                        if (methods[methodName]) {
+                            $caller.data(dataKey, $.extend({}, defaults, options));
+                            methods[methodName].apply(this, [$caller]);
+                        } else {
+                            alert(methodName + " is not a valid method!");
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+    }();
+
     /* scrollTo */
     var scrollTo = function () {
 
@@ -2024,6 +2124,9 @@ $(function (win, doc, $) {
             },
             unbind: function ($caller) {
                 $().scrollSpy("unbind");
+                methods._readyList = [];
+                methods._page = 1;
+                methods._loading = false;
             },
             load: function ($caller) {
 
@@ -2082,7 +2185,6 @@ $(function (win, doc, $) {
                             methods._readyList[i]($caller);
                         }
                     }
-
 
                 });
 
@@ -4063,6 +4165,7 @@ $(function (win, doc, $) {
     /* Register Plugins */
     $.fn.extend({
         dialog: dialog.init,
+        dialogSpy: dialogSpy.init,
         scrollTo: scrollTo.init,
         treeView: treeView.init,
         pagedList: pagedList.init,
@@ -4092,6 +4195,13 @@ $(function (win, doc, $) {
 
     $.fn.platoUI = function (opts) {
 
+
+        /* dialog */
+        //this.find('[data-provide="dialog"]').dialog();
+
+        /* dialogSpy */
+        this.find('[data-toggle="dialog"]').dialogSpy();
+        
         /* Scolls to a specific element. Typical usage...
          * <a href="#somelement" data-provide="scroll"> */
         this.find('[data-provide="scroll"]').scrollTo();

@@ -670,7 +670,31 @@ namespace Plato.Discuss.Controllers
             return await Create(0);
 
         }
-        
+
+
+
+        public Task<IActionResult> Share(
+            int entityId,
+            int entityReplyId = 0)
+        {
+
+          
+            // Return view
+            return Task.FromResult((IActionResult)View());
+
+        }
+
+        public Task<IActionResult> Report(
+            int entityId,
+            int entityReplyId = 0)
+        {
+
+
+            // Return view
+            return Task.FromResult((IActionResult)View());
+
+        }
+
         #endregion
 
         #region "Private Methods"
