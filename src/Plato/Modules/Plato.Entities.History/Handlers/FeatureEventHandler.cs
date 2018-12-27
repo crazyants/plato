@@ -216,6 +216,147 @@ namespace Plato.Entities.History.Handlers
                                 )")
                     .ForTable(_entityHistory)
                     .WithParameter(_entityHistory.PrimaryKeyColumn));
+
+
+            // Overwrite InsertUpdateEntityHistory to calculate version numbers
+            builder.CreateProcedure(
+                new SchemaProcedure(
+                        $"InsertUpdateEntityHistory",
+                        @"IF EXISTS (SELECT Id FROM {prefix}_EntityHistory WHERE (Id = @Id))
+                        BEGIN
+
+                           UPDATE {prefix}_EntityHistory SET 
+                               EntityId = @EntityId,
+                               EntityReplyId = @EntityReplyId,
+                               [Message] = @Message,
+                               Html = @Html,
+                               MajorVersion = @MajorVersion,
+                               MinorVersion = @MinorVersion,
+                               CreatedUserId = @CreatedUserId,
+                               CreatedDate = @CreatedDate
+                               WHERE Id = @Id
+
+                             SET @UniqueId = @Id;
+
+                        END
+                        ELSE
+                        BEGIN
+
+                            IF (@EntityReplyId = 0)
+                            BEGIN
+	                            SET @MajorVersion = (
+                                    SELECT TOP 1 IsNull(MajorVersion, 0) FROM 
+                                    {prefix}_EntityHistory WHERE EntityId = @EntityId
+                                    ORDER BY Id DESC
+	                            );
+	                            SET @MinorVersion = (
+                                    SELECT TOP 1 IsNull(MinorVersion, 0) FROM 
+                                    {prefix}_EntityHistory WHERE EntityId = @EntityId
+                                    ORDER BY Id DESC
+	                            );
+                            END
+                            ELSE
+                            BEGIN
+                                SET @MajorVersion = (
+                                    SELECT TOP 1 IsNull(MajorVersion, 0) FROM 
+                                    {prefix}_EntityHistory WHERE EntityReplyId = @EntityReplyId
+                                    ORDER BY Id DESC
+	                            );
+                                SET @MinorVersion = (
+                                    SELECT TOP 1 IsNull(MinorVersion, 0) FROM 
+                                    {prefix}_EntityHistory WHERE EntityReplyId = @EntityReplyId
+                                    ORDER BY Id DESC
+	                            );
+                            END
+                    
+	                        IF (@MinorVersion <= 9)
+		                        SET @MinorVersion = @MinorVersion + 1	
+	                        IF (@MinorVersion = 10)
+		                        SET @MinorVersion = 0;		
+	                        IF (@MinorVersion = 0)
+		                        SET @MajorVersion = (@MajorVersion + 1)
+	                        
+                            INSERT INTO {prefix}_EntityHistory ( 
+                                EntityId,
+                                EntityReplyId,
+                                [Message],
+                                Html,
+                                MajorVersion,
+                                MinorVersion,
+                                CreatedUserId,
+                                CreatedDate
+                            ) VALUES (
+                                @EntityId,
+                                @EntityReplyId,
+                                @Message,
+                                @Html,
+                                IsNull(@MajorVersion, 1),
+                                IsNull(@MinorVersion, 0),
+                                @CreatedUserId,
+                                @CreatedDate
+                            )
+
+                             SET @UniqueId = SCOPE_IDENTITY();
+
+                        END")
+                    .ForTable(_entityHistory)
+                    .WithParameters(new List<SchemaColumn>()
+                    {
+                        new SchemaColumn()
+                        {
+                            Name = "Id",
+                            DbType = DbType.Int32,
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "EntityId",
+                            DbType = DbType.Int32,
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "EntityReplyId",
+                            DbType = DbType.Int32,
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "[Message]",
+                            DbType = DbType.String,
+                            Length = "max"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "Html",
+                            DbType = DbType.String,
+                            Length = "max"
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "MajorVersion",
+                            DbType = DbType.Int16
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "MinorVersion",
+                            DbType = DbType.Int16
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "CreatedUserId",
+                            DbType = DbType.Int32
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "CreatedDate",
+                            DbType = DbType.DateTimeOffset
+                        },
+                        new SchemaColumn()
+                        {
+                            Name = "UniqueId",
+                            DbType = DbType.Int32,
+                            Direction = Direction.Out
+                        }
+                    }));
+
             
             builder.CreateProcedure(new SchemaProcedure("SelectEntityHistoryPaged", StoredProcedureType.SelectPaged)
                 .ForTable(_entityHistory)

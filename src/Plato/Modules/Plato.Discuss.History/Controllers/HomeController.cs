@@ -59,13 +59,11 @@ namespace Plato.Discuss.History.Controllers
 
             // Compare previous to current
             // If no previous exists use current
-            var html = history.Html;
-            if (previousHistory?.Data != null)
-            {
-                html = PrepareDifAsync(
-                    previousHistory.Data[0].Html,
-                    history.Html);
-            }
+            var html = PrepareDifAsync(
+                previousHistory?.Data != null
+                    ? previousHistory.Data[0].Html
+                    : entity.Html,
+                history.Html);
 
             var viewModel = new HistoryIndexViewModel()
             {

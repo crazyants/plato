@@ -31,11 +31,11 @@ namespace Plato.Discuss.History.Subscribers
 
         public void Subscribe()
         {
-            //// Created
-            //_broker.Sub<TEntity>(new MessageOptions()
-            //{
-            //    Key = "EntityCreated"
-            //}, async message => await EntityCreated(message.What));
+            // Created
+            _broker.Sub<TEntity>(new MessageOptions()
+            {
+                Key = "EntityCreated"
+            }, async message => await EntityCreated(message.What));
 
             // Updated
             _broker.Sub<TEntity>(new MessageOptions()
@@ -72,7 +72,7 @@ namespace Plato.Discuss.History.Subscribers
                 EntityId = entity.Id,
                 Message = entity.Message,
                 Html = entity.Html,
-                CreatedUserId = entity.ModifiedUserId,
+                CreatedUserId = entity.CreatedUserId,
                 CreatedDate = DateTimeOffset.UtcNow
             });
 

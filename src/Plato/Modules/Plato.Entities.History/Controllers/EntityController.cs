@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
@@ -18,7 +17,7 @@ using Plato.WebApi.Models;
 
 namespace Plato.Entities.History.Controllers
 {
-    
+
     public class EntityController : BaseWebApiController
     {
 

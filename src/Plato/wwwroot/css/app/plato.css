@@ -170,7 +170,7 @@
 }
 
 .vcard-details { list-style: none; margin: 1rem 0; padding: 0; }
-.vcard-details li { margin: 0; padding: 0; padding-bottom: 0.50rem; }
+.vcard-details li { margin: 0; padding: 0; padding-bottom: 0.25rem; }
 .vcard-details li i { vertical-align: middle; }
 
 /* ------------------------- */

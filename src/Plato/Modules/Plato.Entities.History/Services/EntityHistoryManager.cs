@@ -51,15 +51,16 @@ namespace Plato.Entities.History.Services
                 throw new ArgumentNullException(nameof(model.EntityId));
             }
             
-            // Configure model
-            var user = await _contextFacade.GetAuthenticatedUserAsync();
-            if (model.CreatedUserId == 0)
+            if (model.CreatedUserId <= 0)
             {
-                model.CreatedUserId = user?.Id ?? 0;
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
             }
             
-            model.CreatedDate = DateTime.UtcNow;
-          
+            if (model.CreatedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.CreatedDate));
+            }
+            
             // Invoke EntityHistoryCreating subscriptions
             foreach (var handler in _broker.Pub<EntityHistory>(this, "EntityHistoryCreating"))
             {
@@ -106,6 +107,11 @@ namespace Plato.Entities.History.Services
             if (model.EntityId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
+            }
+
+            if (model.CreatedUserId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
             }
             
             // Invoke EntityHistoryUpdating subscriptions

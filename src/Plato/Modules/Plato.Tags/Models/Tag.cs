@@ -66,8 +66,7 @@ namespace Plato.Tags.Models
 
             if (dr.ColumnIsNotNull("CreatedDate"))
                 CreatedDate = (DateTimeOffset)dr["CreatedDate"];
-
-
+            
         }
 
     }

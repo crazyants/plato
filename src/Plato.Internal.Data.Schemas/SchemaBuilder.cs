@@ -792,6 +792,7 @@ namespace Plato.Internal.Data.Schemas
                         .Append(parameter.NameNormalized)
                         .Append(" ")
                         .Append(parameter.DbTypeNormalized)
+                        .Append(parameter.Direction == Direction.Out ? " output" : "")
                         .Append(i < parameters.Count - 1 ? "," : "")
                         .Append(_newLine);
                     i += 1;

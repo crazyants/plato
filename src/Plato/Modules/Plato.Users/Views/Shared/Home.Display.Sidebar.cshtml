@@ -14,6 +14,9 @@
     </div>
 
     <ul class="vcard-details">
+        <li class="vcard-display-name">
+            <h4 class="d-block p-0 m-0">@Model.DisplayName</h4>
+        </li>
         <li class="vcard-username text-muted">
             @@@Model.UserName
         </li>
@@ -32,9 +35,7 @@
                 </a>
             </li>
         }
-        <li>
-            @T["Last seen:"] <date utc="@Model.LastLoginDate"></date>
-        </li>
+       
     </ul>
 
 </div>

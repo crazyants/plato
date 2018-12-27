@@ -113,15 +113,15 @@ namespace Plato.Discuss.Follow.ViewProviders
         }
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(Topic topic, IViewProviderContext updater)
-        {  
-            
+        {
+
             // Ensure entity exists before attempting to update
             var entity = await _entityStore.GetByIdAsync(topic.Id);
             if (entity == null)
             {
                 return await BuildEditAsync(topic, updater);
             }
-    
+
             // Get the follow checkbox value
             var follow = false;
             foreach (var key in _request.Form.Keys)
@@ -143,12 +143,15 @@ namespace Plato.Discuss.Follow.ViewProviders
                 return await BuildEditAsync(topic, updater);
             }
 
+            var followType = FollowTypes.Topic;
+
             // Add the follow
             if (follow)
             {
                 // Add follow
-                await _followManager.CreateAsync(new Plato.Follows.Models.Follow()
+                await _followManager.CreateAsync(new Follows.Models.Follow()
                 {
+                    Name = followType.Name,
                     ThingId = entity.Id,
                     CreatedUserId = user.Id,
                     CreatedDate = DateTime.UtcNow
@@ -158,9 +161,9 @@ namespace Plato.Discuss.Follow.ViewProviders
             {
                 // Delete the follow
                 var existingFollow = await _followStore.SelectFollowByNameThingIdAndCreatedUserId(
-                        FollowTypes.Topic.Name,
-                        entity.Id,
-                        user.Id);
+                    followType.Name,
+                    entity.Id,
+                    user.Id);
                 if (existingFollow != null)
                 {
                     await _followManager.DeleteAsync(existingFollow);

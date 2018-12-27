@@ -68,18 +68,18 @@ namespace Plato.Follows.Services
 
             var result = new CommandResult<Follow>();
 
-            var follow = await _followStore.CreateAsync(model);
-            if (follow != null)
+            var newFollow = await _followStore.CreateAsync(model);
+            if (newFollow != null)
             {
 
                 // Invoke FollowCreated subscriptions
                 foreach (var handler in _broker.Pub<Follow>(this, "FollowCreated"))
                 {
-                    follow = await handler.Invoke(new Message<Follow>(follow, this));
+                    newFollow = await handler.Invoke(new Message<Follow>(newFollow, this));
                 }
 
                 // Return success
-                return result.Success(follow);
+                return result.Success(newFollow);
 
             }
 
