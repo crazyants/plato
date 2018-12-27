@@ -268,10 +268,14 @@ $(function (win, doc, $) {
         reactions: reactions.init
     });
 
+    // Initial load
     $(doc).ready(function () {
-
         $('[data-provide="reactions"]').reactions();
-
     });
+
+    // infinateScroller load
+    $().infiniteScroll(function ($ele) {
+        $ele.find('[data-provide="reactions"]').reactions();
+    }, "ready");
 
 }(window, document, jQuery));

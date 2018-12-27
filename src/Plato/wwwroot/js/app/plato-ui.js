@@ -1858,9 +1858,9 @@ $(function (win, doc, $) {
             dataIdKey = dataKey + "Id";
 
         var defaults = {
-            delta: 0.95,
+            threshold: 0.95,
             onScroll: function () { },
-            onTrigger: function () { }
+            onEnter: function () { }
         };
 
         var methods = {
@@ -1890,11 +1890,11 @@ $(function (win, doc, $) {
                     var wintop = $(win).scrollTop(),
                         docheight = $(doc).height(),
                         winheight = $(win).height(),
-                        delta = $caller.data(dataKey).delta;
+                        threshold = $caller.data(dataKey).threshold;
 
-                    if ((wintop / (docheight - winheight)) > delta) {
-                        if ($caller.data(dataKey).onTrigger) {
-                            $caller.data(dataKey).onTrigger(e);
+                    if ((wintop / (docheight - winheight)) > threshold) {
+                        if ($caller.data(dataKey).onEnter) {
+                            $caller.data(dataKey).onEnter(e);
                         }
                     }
 
@@ -1966,20 +1966,26 @@ $(function (win, doc, $) {
 
         var dataKey = "infiniteScroll",
             dataIdKey = dataKey + "Id";
-
+        
         var defaults = {
-            pagerKey: "pager.page"
+            pagerKey: "pager.page",
+            onPageLoaded: function($caller) {}
         };
 
         var methods = {
             _loading: false,
             _page: 1,
             _totalPages: 1,
-            init: function ($caller, methodName) {
+            _readyList: [],
+            ready: function ($caller, fn) {
+                methods._readyList.push(fn);
+                return this;
+            },
+            init: function ($caller, methodName, func) {
 
                 if (methodName) {
                     if (this[methodName] !== null && typeof this[methodName] !== "undefined") {
-                        this[methodName].apply(this, [$caller]);
+                        this[methodName].apply(this, [$caller, func]);
                     } else {
                         alert(methodName + " is not a valid method!");
                     }
@@ -2008,9 +2014,9 @@ $(function (win, doc, $) {
             bind: function ($caller) {
                 
                 $().scrollSpy({
-                    onTrigger: function () {
+                    onEnter: function (e) {
                         if (!methods._loading && (methods._page < methods._totalPages)) {
-                            methods.loadNextPage($caller);
+                            methods.load($caller);
                         }
                     }
                 });
@@ -2019,12 +2025,17 @@ $(function (win, doc, $) {
             unbind: function ($caller) {
                 $().scrollSpy("unbind");
             },
-            loadNextPage: function ($caller) {
+            load: function ($caller) {
 
                 // Ensure we have a callback url
                 var url = methods.getUrl($caller);
                 if (url === "") {
                     return;
+                }
+
+                // onLoad event
+                if ($caller.data(dataKey).onLoad) {
+                    $caller.data(dataKey).onLoad($caller);
                 }
 
                 // Indicate load
@@ -2046,13 +2057,33 @@ $(function (win, doc, $) {
                     url: url,
                     method: "GET"
                 }).done(function (data) {
+
+                    // Hide loader
                     if ($loader) {
                         $loader.hide();
                     }
+
+                    // Populate with response
                     if (data !== "") {
                         $($caller).append(data);
                     }
+
+                    // Mark done
                     methods._loading = false;
+
+                    // onLoaded event
+                    if ($caller.data(dataKey).onLoaded) {
+                        $caller.data(dataKey).onLoaded($caller);
+                    }
+
+                    // Execute any registered ready functions
+                    for (var i = 0; i < methods._readyList.length; i++) {
+                        if (typeof methods._readyList[i] === "function") {
+                            methods._readyList[i]($caller);
+                        }
+                    }
+
+
                 });
 
             },
@@ -2079,6 +2110,7 @@ $(function (win, doc, $) {
 
                 var options = {};
                 var methodName = null;
+                var func = null;
                 for (var i = 0; i < arguments.length; ++i) {
                     var a = arguments[i];
                     switch (a.constructor) {
@@ -2093,6 +2125,7 @@ $(function (win, doc, $) {
                         case Number:
                             break;
                         case Function:
+                            func = a;
                             break;
                     }
                 }
@@ -2107,11 +2140,11 @@ $(function (win, doc, $) {
                         } else {
                             $(this).data(dataKey, $.extend({}, $(this).data(dataKey), options));
                         }
-                        methods.init($(this), methodName);
+                        methods.init($(this), methodName, func);
                     });
                 } else {
                     // $().infiniteScroll()
-                    var $caller = $(window);
+                    var $caller = $(win);
                     if (!$(this).data(dataIdKey)) {
                         var id = dataKey + parseInt(Math.random() * 100) + new Date().getTime();
                         $caller.data(dataIdKey, id);
@@ -2119,7 +2152,7 @@ $(function (win, doc, $) {
                     } else {
                         $caller.data(dataKey, $.extend({}, $caller.data(dataKey), options));
                     }
-                    methods.init($caller, methodName);
+                    methods.init($caller, methodName, func);
                 }
 
             }
@@ -2127,8 +2160,7 @@ $(function (win, doc, $) {
         };
 
     }();
-
-
+    
     /* filterList */
     var filterList = function () {
 

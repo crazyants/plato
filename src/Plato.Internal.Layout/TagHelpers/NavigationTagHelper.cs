@@ -187,6 +187,8 @@ namespace Plato.Internal.Layout.TagHelpers
                 if (_level > 0)
                 {
                     ulClass = this.ChildUlCssClass;
+
+                    // opiotnal arrows for dropdown menus
                     if (!String.IsNullOrEmpty(ArrowCss))
                     {
                         sb.Append("<div class=\"")

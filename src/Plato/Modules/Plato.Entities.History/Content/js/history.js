@@ -309,10 +309,14 @@ $(function (win, doc, $) {
         historyDropdown: historyDropdown.init
     });
 
+    // Initial load
     $(doc).ready(function () {
-        
         $('[data-provide="historyDropdown"]').historyDropdown();
-
     });
+
+    // infinateScroller load
+    $().infiniteScroll(function ($ele) {
+        $ele.find('[data-provide="historyDropdown"]').historyDropdown();
+    }, "ready");
 
 }(window, document, jQuery));
