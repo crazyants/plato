@@ -51,7 +51,8 @@ namespace Plato.Discuss.History.Controllers
                 .Select<EntityHistoryQueryParams>(q =>
                 {
                     q.Id.LessThan(history.Id);
-                    q.EntityId.Equals(entity.Id);
+                    q.EntityId.Equals(history.EntityId);
+                    q.EntityReplyId.Equals(history.EntityReplyId);
                 })
                 .OrderBy("Id", OrderBy.Desc)
                 .ToList();
@@ -59,12 +60,12 @@ namespace Plato.Discuss.History.Controllers
 
             // Compare previous to current
             // If no previous exists use current
-            var html = PrepareDifAsync(
-                previousHistory?.Data != null
-                    ? previousHistory.Data[0].Html
-                    : entity.Html,
-                history.Html);
-
+            var html = history.Html;
+            if (previousHistory?.Data != null)
+            {
+                html = PrepareDifAsync(previousHistory.Data[0].Html, history.Html);
+            }
+        
             var viewModel = new HistoryIndexViewModel()
             {
                 History = history,

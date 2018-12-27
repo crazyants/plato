@@ -53,7 +53,7 @@ $(function (win, doc, $) {
 
                 params = params.replace(/\{entityId}/g, entityId);
                 params = params.replace(/\{entityReplyId}/g, entityReplyId);
-
+                
                 // Invoke suggester
                 $caller.pagedList({
                     page: 1,
@@ -77,7 +77,7 @@ $(function (win, doc, $) {
                     },
                     itemCss: "dropdown-item p-2",
                     itemTemplate:
-                        '<a data-history-id="{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url({createdBy.avatar.url}"></span></span></span><span class="list-body">{text}</span></a>',
+                        '<a data-history-id="{id}" class="{itemCss}" href="{url}"><span class="list-left"><span class="avatar avatar-sm" data-toggle="tooltip" title="{createdBy.displayName}"><span style="background-image: url({createdBy.avatar.url}"></span></span></span><span class="list-body"><span class="float-right badge badge-secondary">{version}</span>{text} - {id}</span></a>',
                     parseItemTemplate: function(html, result) {
 
                         if (result.id) {
@@ -90,6 +90,12 @@ $(function (win, doc, $) {
                             html = html.replace(/\{text}/g, result.text);
                         } else {
                             html = html.replace(/\{text}/g, "");
+                        }
+
+                        if (result.version) {
+                            html = html.replace(/\{version}/g, result.version);
+                        } else {
+                            html = html.replace(/\{version}/g, "");
                         }
 
                         // createdBy
@@ -134,6 +140,10 @@ $(function (win, doc, $) {
                         return html;
 
                     },
+                    onItemClick: function ($caller, result, e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    },
                     onLoaded: function($pagedList, results) {
                         
                         $pagedList.find(".dropdown-item").click(function (e) {
@@ -170,17 +180,33 @@ $(function (win, doc, $) {
 
             },
             update: function($caller) {
-                $caller.pagedList("bind");
+                $caller.pagedList("unbind");
             },
             getEntityId: function($caller) {
-                return typeof $caller.data("entityId") !== "undefined"
+                var output = typeof $caller.data("entityId") !== "undefined" && $caller.data("entityId") !== null
                     ? $caller.data("entityId")
                     : $caller.data(dataKey).entityId;
+                if (output !== null) {
+                    var id = parseInt(output);
+                    if (!isNaN(id)) {
+                        return id;
+                    }
+
+                }
+                return 0;
             },
             getEntityReplyId: function ($caller) {
-                return typeof $caller.data("entityReplyId") !== "undefined"
+                var output = typeof $caller.data("entityReplyId") !== "undefined" && $caller.data("entityReplyId") !== null
                     ? $caller.data("entityReplyId")
                     : $caller.data(dataKey).entityReplyId;
+                if (output !== null) {
+                    var id = parseInt(output);
+                    if (!isNaN(id)) {
+                        return id;
+                    }
+
+                }
+                return 0;
             }
         }
 

@@ -166,7 +166,7 @@ namespace Plato.Categories.Stores
             var sb = new StringBuilder();
 
             // Id
-            if (_query.Params.Id.Value > 0)
+            if (_query.Params.Id.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
@@ -174,7 +174,7 @@ namespace Plato.Categories.Stores
             }
 
             // CategoryId
-            if (_query.Params.CategoryId.Value > 0)
+            if (_query.Params.CategoryId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.CategoryId.Operator);

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Plato.Discuss.Models;
 using Plato.Internal.Navigation;
 
-namespace Plato.Discuss.Navigation
+namespace Plato.Discuss.History.Navigation
 {
     public class TopicReplyMenu : INavigationProvider
     {
@@ -22,7 +20,7 @@ namespace Plato.Discuss.Navigation
             T = localizer;
             _actionContextAccessor = actionContextAccessor;
         }
-
+        
         public void BuildNavigation(string name, NavigationBuilder builder)
         {
 
@@ -30,25 +28,20 @@ namespace Plato.Discuss.Navigation
             {
                 return;
             }
-        
+
             // Get model from navigation builder
+            var topic = builder.ActionContext.HttpContext.Items[typeof(Topic)] as Topic;
             var reply = builder.ActionContext.HttpContext.Items[typeof(Reply)] as Reply;
 
-            // Edit reply
-            builder.Add(T["Edit"], int.MinValue + 1, edit => edit
-                    .IconCss("fal fa-pencil")
-                    .Attributes(new Dictionary<string, object>()
+            builder
+                .Add(T["History"], int.MinValue, history => history
+                    .View("HistoryMenu", new
                     {
-                        {"data-provide", "tooltip"},
-                        {"title", T["Edit"]}
+                        topic,
+                        reply
                     })
-                    .Action("EditReply", "Home", "Plato.Discuss", new RouteValueDictionary()
-                    {
-                        ["id"] = reply?.Id ?? 0
-                    })
-                    //.Permission(Permissions.ManageRoles)
-                    .LocalNav()
-                , new string[] {"edit-reply", "text-muted", "text-hidden"});
+                );
+            
         }
 
     }

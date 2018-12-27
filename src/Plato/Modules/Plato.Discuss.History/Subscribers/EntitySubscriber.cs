@@ -11,33 +11,28 @@ namespace Plato.Discuss.History.Subscribers
 
     public class EntitySubscriber<TEntity> : IBrokerSubscriber where TEntity : class, IEntity
     {
-
-        private readonly IEntityHistoryStore<EntityHistory> _entityHistoryStore;
+        
         private readonly IEntityHistoryManager<EntityHistory> _entityHistoryManager;
-
         private readonly IBroker _broker;
       
         public EntitySubscriber(
             IBroker broker,
-            IEntityHistoryManager<EntityHistory> entityHistoryManager,
-            IEntityHistoryStore<EntityHistory> entityHistoryStore)
+            IEntityHistoryManager<EntityHistory> entityHistoryManager)
         {
             _broker = broker;
             _entityHistoryManager = entityHistoryManager;
-            _entityHistoryStore = entityHistoryStore;
         }
 
         #region "Implementation"
 
         public void Subscribe()
         {
-            // Created
+   
             _broker.Sub<TEntity>(new MessageOptions()
             {
                 Key = "EntityCreated"
             }, async message => await EntityCreated(message.What));
-
-            // Updated
+            
             _broker.Sub<TEntity>(new MessageOptions()
             {
                 Key = "EntityUpdated"
@@ -65,9 +60,9 @@ namespace Plato.Discuss.History.Subscribers
 
         async Task<TEntity> EntityCreated(TEntity entity)
         {
-            
-            // Create entity history entry
-            var result = await _entityHistoryManager.CreateAsync(new EntityHistory()
+
+            // Create entity history point
+            await _entityHistoryManager.CreateAsync(new EntityHistory()
             {
                 EntityId = entity.Id,
                 Message = entity.Message,
@@ -75,12 +70,7 @@ namespace Plato.Discuss.History.Subscribers
                 CreatedUserId = entity.CreatedUserId,
                 CreatedDate = DateTimeOffset.UtcNow
             });
-
-            if (result.Succeeded)
-            {
-
-            }
-
+            
             return entity;
             
         }
@@ -88,22 +78,15 @@ namespace Plato.Discuss.History.Subscribers
         async Task<TEntity> EntityUpdated(TEntity entity)
         {
 
-            // Create entity history entry
-            var result = await _entityHistoryManager.CreateAsync(new EntityHistory()
+            // Create entity history point
+            await _entityHistoryManager.CreateAsync(new EntityHistory()
             {
                 EntityId = entity.Id,
                 Message = entity.Message,
                 Html = entity.Html,
-                CreatedUserId = entity.ModifiedUserId > 0
-                    ? entity.ModifiedUserId
-                    : entity.CreatedUserId,
+                CreatedUserId = entity.ModifiedUserId,
                 CreatedDate = DateTimeOffset.UtcNow
             });
-
-            if (result.Succeeded)
-            {
-
-            }
 
             return entity;
 

@@ -176,7 +176,7 @@ namespace Plato.Mentions.Stores
             var sb = new StringBuilder();
 
             // UserId
-            if (_query.Params.UserId.Value > 0)
+            if (_query.Params.UserId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.UserId.Operator);
@@ -184,7 +184,7 @@ namespace Plato.Mentions.Stores
             }
 
             // EntityId
-            if (_query.Params.EntityId.Value > 0)
+            if (_query.Params.EntityId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityId.Operator);
@@ -192,7 +192,7 @@ namespace Plato.Mentions.Stores
             }
 
             // EntityReplyId
-            if (_query.Params.EntityReplyId.Value > 0)
+            if (_query.Params.EntityReplyId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityReplyId.Operator);

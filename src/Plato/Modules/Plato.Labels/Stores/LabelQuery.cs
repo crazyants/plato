@@ -182,21 +182,21 @@ namespace Plato.Labels.Stores
             var sb = new StringBuilder();
 
             // Id
-            if (_query.Params.Id.Value > 0)
+            if (_query.Params.Id.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
                 sb.Append(_query.Params.Id.ToSqlString("l.Id"));
             }
 
-            if (_query.Params.FeatureId.Value > 0)
+            if (_query.Params.FeatureId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.FeatureId.Operator);
                 sb.Append(_query.Params.FeatureId.ToSqlString("l.FeatureId"));
             }
 
-            if (_query.Params.EntityId.Value > 0)
+            if (_query.Params.EntityId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityId.Operator);

@@ -189,7 +189,7 @@ namespace Plato.Tags.Stores
             var sb = new StringBuilder();
 
             // Id
-            if (_query.Params.Id.Value > 0)
+            if (_query.Params.Id.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
@@ -197,7 +197,7 @@ namespace Plato.Tags.Stores
             }
 
             // FeatureId
-            if (_query.Params.FeatureId.Value > 0)
+            if (_query.Params.FeatureId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.FeatureId.Operator);
@@ -205,7 +205,7 @@ namespace Plato.Tags.Stores
             }
 
             // EntityId
-            if (_query.Params.EntityId.Value > 0)
+            if (_query.Params.EntityId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityId.Operator);
@@ -217,7 +217,7 @@ namespace Plato.Tags.Stores
             }
 
             // EntityReplyId
-            if (_query.Params.EntityReplyId.Value > 0)
+            if (_query.Params.EntityReplyId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityReplyId.Operator);

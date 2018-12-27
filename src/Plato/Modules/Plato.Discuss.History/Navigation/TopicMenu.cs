@@ -40,7 +40,7 @@ namespace Plato.Discuss.History.Navigation
             }
             
             builder
-                .Add(T["Edit History"], int.MinValue, history => history
+                .Add(T["History"], int.MinValue, history => history
                     .View("HistoryMenu", new
                     {
                         topic = topic

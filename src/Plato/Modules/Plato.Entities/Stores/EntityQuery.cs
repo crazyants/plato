@@ -568,7 +568,7 @@ namespace Plato.Entities.Stores
             var sb = new StringBuilder();
 
             // Id
-            if (_query.Params.Id.Value > 0)
+            if (_query.Params.Id.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
@@ -576,7 +576,7 @@ namespace Plato.Entities.Stores
             }
 
             // RoleId
-            if (_query.Params.RoleId.Value > 0)
+            if (_query.Params.RoleId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.RoleId.Operator);
@@ -589,7 +589,7 @@ namespace Plato.Entities.Stores
             }
 
             // FeatureId
-            if (_query.Params.FeatureId.Value > 0)
+            if (_query.Params.FeatureId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.FeatureId.Operator);
@@ -597,7 +597,7 @@ namespace Plato.Entities.Stores
             }
 
             // CategoryId
-            if (_query.Params.CategoryId.Value > 0)
+            if (_query.Params.CategoryId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.CategoryId.Operator);
@@ -606,7 +606,7 @@ namespace Plato.Entities.Stores
 
             // LabelId
             // --> Only available if the Labels feature is enabled
-            if (_query.Params.LabelId.Value > 0)
+            if (_query.Params.LabelId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.LabelId.Operator);
@@ -620,7 +620,7 @@ namespace Plato.Entities.Stores
 
             // TagId
             // --> Only available if the Tags feature is enabled
-            if (_query.Params.TagId.Value > 0)
+            if (_query.Params.TagId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.TagId.Operator);
@@ -634,7 +634,7 @@ namespace Plato.Entities.Stores
 
 
             // CreatedUserId
-            if (_query.Params.CreatedUserId.Value > 0)
+            if (_query.Params.CreatedUserId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.CreatedUserId.Operator);

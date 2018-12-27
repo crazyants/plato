@@ -115,7 +115,7 @@ namespace Plato.Internal.Stores.Abstractions
             _builder = new StringBuilder();
         }
 
-        public int Value { get; private set; }
+        public int Value { get; private set; } = -1; // use negative 1 as the default to allow us to query for zeros
 
         public string Operator => _operator == QueryOperator.And ? " AND " : " OR ";
 

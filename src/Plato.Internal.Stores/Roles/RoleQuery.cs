@@ -137,7 +137,7 @@ namespace Plato.Internal.Stores.Roles
         {
             var sb = new StringBuilder();
             
-            if (_query.Params.Id.Value > 0)
+            if (_query.Params.Id.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);

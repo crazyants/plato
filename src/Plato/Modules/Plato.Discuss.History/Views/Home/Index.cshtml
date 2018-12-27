@@ -16,7 +16,7 @@
             }
             @T["edited"]
             <span data-toggle="tooltip" title="@Model.History.CreatedDate">
-                @Model.History.CreatedDate.ToPrettyDate()
+                <date utc="@Model.History.CreatedDate"></date>
             </span>
 
         </h6>

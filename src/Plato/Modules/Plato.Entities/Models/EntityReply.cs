@@ -144,7 +144,7 @@ namespace Plato.Entities.Models
             }
 
             if (dr.ColumnIsNotNull("ModifiedDate"))
-                ModifiedDate = (DateTimeOffset)dr["CreatedDate"];
+                ModifiedDate = (DateTimeOffset)dr["ModifiedDate"];
 
         }
         

@@ -26,6 +26,7 @@ namespace Plato.Discuss.History
 
             // Register navigation provider
             services.AddScoped<INavigationProvider, TopicMenu>();
+            services.AddScoped<INavigationProvider, TopicReplyMenu>();
 
             // Register message broker subscribers
             services.AddScoped<IBrokerSubscriber, EntitySubscriber<Topic>>();

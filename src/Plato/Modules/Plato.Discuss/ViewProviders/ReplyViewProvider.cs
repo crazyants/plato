@@ -97,7 +97,12 @@ namespace Plato.Discuss.ViewProviders
 
         public override async Task<IViewProviderResult> BuildUpdateAsync(Reply reply, IViewProviderContext context)
         {
-          
+            
+            if (reply.IsNewReply)
+            {
+                return default(IViewProviderResult);
+            }
+
             // Ensure the reply exists
             if (await _replyStore.GetByIdAsync(reply.Id) == null)
             {
@@ -127,4 +132,5 @@ namespace Plato.Discuss.ViewProviders
         }
 
     }
+
 }

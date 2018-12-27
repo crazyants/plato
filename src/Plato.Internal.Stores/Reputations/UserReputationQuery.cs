@@ -170,7 +170,7 @@ namespace Plato.Internal.Stores.Reputations
             var sb = new StringBuilder();
 
             // Id
-            if (_query.Params.Id.Value > 0)
+            if (_query.Params.Id.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
@@ -186,7 +186,7 @@ namespace Plato.Internal.Stores.Reputations
             }
 
             // UserId
-            if (_query.Params.UserId.Value > 0)
+            if (_query.Params.UserId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);

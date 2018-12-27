@@ -163,7 +163,7 @@ namespace Plato.Labels.Stores
             var sb = new StringBuilder();
 
             // LabelId
-            if (_query.Params.LabelId.Value > 0)
+            if (_query.Params.LabelId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.LabelId.Operator);
@@ -171,7 +171,7 @@ namespace Plato.Labels.Stores
             }
 
             // EntityId
-            if (_query.Params.EntityId.Value > 0)
+            if (_query.Params.EntityId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityId.Operator);

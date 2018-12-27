@@ -259,7 +259,7 @@ namespace Plato.Discuss.Controllers
             }, this))
             {
 
-                // Get fully composed type from all involved view providers
+                // Get composed type from all involved view providers
                 var topic = await _topicViewProvider.GetComposedType(this);
 
                 // Populated created by
@@ -386,7 +386,7 @@ namespace Plato.Discuss.Controllers
             
         }
         
-        // reply to topic
+        // post new reply
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -423,6 +423,9 @@ namespace Plato.Discuss.Controllers
                 // Ensure the insert was successful
                 if (result.Succeeded)
                 {
+
+                    // Indicate this is a new reply so our view provider won't attempt to update
+                    result.Response.IsNewReply = true;
 
                     // Execute view providers ProvideUpdateAsync method
                     await _replyViewProvider.ProvideUpdateAsync(result.Response, this);

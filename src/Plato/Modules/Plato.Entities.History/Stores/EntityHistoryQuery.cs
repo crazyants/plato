@@ -192,7 +192,7 @@ namespace Plato.Entities.History.Stores
             var sb = new StringBuilder();
 
             // Id
-            if (_query.Params.Id.Value > 0)
+            if (_query.Params.Id.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.Id.Operator);
@@ -200,16 +200,15 @@ namespace Plato.Entities.History.Stores
             }
             
             // EntityId
-            if (_query.Params.EntityId.Value > 0)
+            if (_query.Params.EntityId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityId.Operator);
                 sb.Append(_query.Params.EntityId.ToSqlString("h.EntityId"));
             }
-
-
+            
             // EntityReplyId
-            if (_query.Params.EntityReplyId.Value > 0)
+            if (_query.Params.EntityReplyId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityReplyId.Operator);

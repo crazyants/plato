@@ -202,7 +202,7 @@ namespace Plato.Entities.Stores
             var sb = new StringBuilder();
 
             // EntityId
-            if (_query.Params.EntityId.Value > 0)
+            if (_query.Params.EntityId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.EntityId.Operator);

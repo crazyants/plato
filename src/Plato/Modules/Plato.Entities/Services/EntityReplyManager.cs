@@ -62,7 +62,7 @@ namespace Plato.Entities.Services
             
             if (reply.CreatedUserId <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(reply.EntityId));
+                throw new ArgumentOutOfRangeException(nameof(reply.CreatedUserId));
             }
 
             if (reply.CreatedDate == null)

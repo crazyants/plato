@@ -27,7 +27,6 @@ namespace Plato.Discuss.History.ViewComponents
             {
                 Topic = topic,
                 Reply = reply,
-        
             };
 
             return Task.FromResult((IViewComponentResult) View(viewModel));

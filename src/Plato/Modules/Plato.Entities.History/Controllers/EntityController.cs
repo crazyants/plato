@@ -22,21 +22,18 @@ namespace Plato.Entities.History.Controllers
     {
 
         private readonly IEntityHistoryStore<EntityHistory> _userNotificationStore;
-        private readonly IPlatoUserStore<User> _ploatUserStore;
         private readonly IContextFacade _contextFacade;
+
         public IHtmlLocalizer T { get; }
 
         public IStringLocalizer S { get; }
 
         public EntityController(
-            IPlatoUserStore<User> platoUserStore,
-            IUrlHelperFactory urlHelperFactory,
             IContextFacade contextFacade,
             IHtmlLocalizer htmlLocalizer,
             IStringLocalizer stringLocalizer,
             IEntityHistoryStore<EntityHistory> userNotificationStore)
         {
-            _ploatUserStore = platoUserStore;
             _contextFacade = contextFacade;
             _userNotificationStore = userNotificationStore;
 
@@ -91,7 +88,9 @@ namespace Plato.Entities.History.Controllers
                     var sb = new StringBuilder();
                     sb.Append(history.CreatedBy.DisplayName)
                         .Append(" ")
-                        .Append(T["edited"].Value)
+                        .Append(history.MajorVersion == 1 && history.MinorVersion == 0
+                            ? T["created"].Value
+                            : T["edited"].Value)
                         .Append(" ")
                         .Append(history.CreatedDate.ToPrettyDate());
                         
@@ -155,16 +154,8 @@ namespace Plato.Entities.History.Controllers
                 .Take(page, pageSize)
                 .Select<EntityHistoryQueryParams>(q =>
                 {
-                    if (entityId > 0)
-                    {
-                        q.EntityId.Equals(entityId);
-                    }
-
-                    if (entityReplyId > 0)
-                    {
-                        q.EntityReplyId.Equals(entityId);
-                    }
-                    
+                    q.EntityId.Equals(entityId);
+                    q.EntityReplyId.Equals(entityReplyId);
                 })
                 .OrderBy(sortBy, sortOrder)
                 .ToList();

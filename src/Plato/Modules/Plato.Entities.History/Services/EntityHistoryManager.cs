@@ -5,8 +5,6 @@ using Plato.Entities.History.Stores;
 using Plato.Internal.Abstractions;
 using Plato.Internal.Hosting.Abstractions;
 using Plato.Internal.Messaging.Abstractions;
-using Plato.Internal.Stores.Abstractions.Roles;
-using Plato.Internal.Text.Abstractions;
 
 namespace Plato.Entities.History.Services
 {
@@ -50,12 +48,20 @@ namespace Plato.Entities.History.Services
             {
                 throw new ArgumentNullException(nameof(model.EntityId));
             }
-            
+
+            // Ensure reply Id is 0 or above
+            if (model.EntityReplyId < 0)
+            {
+                throw new ArgumentNullException(nameof(model.EntityReplyId));
+            }
+
+            // We always need a CreatedUserId
             if (model.CreatedUserId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
             }
-            
+
+            // We always need a CreatedDate
             if (model.CreatedDate == null)
             {
                 throw new ArgumentNullException(nameof(model.CreatedDate));
@@ -97,7 +103,7 @@ namespace Plato.Entities.History.Services
                 throw new ArgumentNullException(nameof(model));
             }
 
-            // We always need an Id for updates
+            // We always need an Id above 0 for updates
             if (model.Id <= 0)
             {
                 throw new ArgumentNullException(nameof(model.Id));
@@ -109,11 +115,24 @@ namespace Plato.Entities.History.Services
                 throw new ArgumentOutOfRangeException(nameof(model.EntityId));
             }
 
+            // Ensure reply Id is 0 or above
+            if (model.EntityReplyId < 0)
+            {
+                throw new ArgumentNullException(nameof(model.EntityReplyId));
+            }
+
+            // We always need a CreatedUserId
             if (model.CreatedUserId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(model.CreatedUserId));
             }
-            
+
+            // We always need a CreatedDate
+            if (model.CreatedDate == null)
+            {
+                throw new ArgumentNullException(nameof(model.CreatedDate));
+            }
+
             // Invoke EntityHistoryUpdating subscriptions
             foreach (var handler in _broker.Pub<EntityHistory>(this, "EntityHistoryUpdating"))
             {

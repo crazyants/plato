@@ -178,7 +178,7 @@ namespace Plato.Notifications.Stores
             var sb = new StringBuilder();
 
             // UserId
-            if (_query.Params.UserId.Value > 0)
+            if (_query.Params.UserId.Value > -1)
             {
                 if (!string.IsNullOrEmpty(sb.ToString()))
                     sb.Append(_query.Params.UserId.Operator);
